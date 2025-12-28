@@ -277,7 +277,7 @@ class MavenDependencyResult implements org.netbeans.modules.project.dependency.D
             if (sourceListeners == null || sourceListeners.isEmpty()) {
                 return;
             }
-            ll = sourceListeners.toArray(new ChangeListener[sourceListeners.size()]);
+            ll = sourceListeners.toArray(new ChangeListener[0]);
         }
         ChangeEvent e = new ChangeEvent(this);
         for (ChangeListener l : ll) {

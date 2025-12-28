@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -72,11 +73,11 @@ import org.openide.util.Utilities;
 /**
  * an instance resides in project lookup, allows to get notified on project and 
  * relative path changes.
- * <p/>
+ * <p>
  * <b>From version 2.148</b> plugin-specific services can be registered using {@link ProjectServiceProvider} 
  * annotation in subfolders of the project Lookup registration area whose names follow a Plugin group and 
  * artifact ID. 
- * <p/>
+ * </p>
  * <div class="nonnormative">
  * {@snippet file="org/netbeans/modules/maven/NbMavenProjectImplTest.java" region="ProjectServiceProvider.pluginSpecific"}
  * Shows a service, that will become available from project Lookup whenever the project uses {@code org.netbeans.modules.maven:test.plugin}
@@ -202,6 +203,14 @@ public final class NbMavenProject {
         return MavenProjectCache.isFallbackproject(getMavenProject());
     }
     
+    /**
+     * Returns timestamp of project (metadata) load. Returns negative number,
+     * if the timestamp is not known or project is not loaded.
+     * @return timestamp.
+     */
+    public long getLoadTimestamp() {
+        return project.getLoadTimestamp();
+    }
 
     @Messages({
         "Progress_Download=Downloading Maven dependencies", 
@@ -303,6 +312,15 @@ public final class NbMavenProject {
      */
     public @NonNull MavenProject getEvaluatedProject(ProjectActionContext context) {
         return project.getEvaluatedProject(context);
+    }
+    
+    /**
+     * Returns the original project, or waits for reload task if already pending. Use with care, as
+     * the method blocks until the project reload eventually finishes in the reload thread / RP.
+     * @return possibly reloaded Maven project.
+     */
+    public @NonNull CompletableFuture<MavenProject> getFreshProject() {
+        return project.getFreshOriginalMavenProject();
     }
     
     /**

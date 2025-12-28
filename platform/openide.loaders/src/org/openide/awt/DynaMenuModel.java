@@ -46,7 +46,7 @@ import org.openide.util.actions.Presenter;
  * @author mkleint
  */
 class DynaMenuModel {
-    private static final Icon BLANK_ICON = new ImageIcon(ImageUtilities.loadImage("org/openide/loaders/empty.gif")); // NOI18N
+    private static final Icon BLANK_ICON = ImageUtilities.loadIcon("org/openide/loaders/empty.gif"); // NOI18N
     
     private List<JComponent> menuItems;
     private HashMap<DynamicMenuContent, JComponent[]> actionToMenuMap;
@@ -181,7 +181,7 @@ class DynaMenuModel {
                     }
                 }
                 for (int i = 0; i < newones.length; i++) {
-                    ///TODO now what to do with icon alignments..
+                    //TODO now what to do with icon alignments..
                     JComponent one = newones[i];
                     menu.getPopupMenu().add(one, i + menuIndex);
                     changed = true;

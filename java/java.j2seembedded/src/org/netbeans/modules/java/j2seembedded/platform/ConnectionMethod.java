@@ -332,13 +332,13 @@ public final class ConnectionMethod {
         }
         final String _port = props.get(PLAT_PROP_PORT);
         if (_port == null) {
-            throw new IllegalStateException("No platfrom port");    //NOI18N
+            throw new IllegalStateException("No platform port");    //NOI18N
         }
         try {
             final int port = Integer.parseInt(_port);
             return new ConnectionMethod(host, port, Authentification.load(props));
         } catch (NumberFormatException nfe) {
-            throw new IllegalStateException("Invalid platfrom port: " + _port);    //NOI18N
+            throw new IllegalStateException("Invalid platform port: " + _port);    //NOI18N
         }
     }
 

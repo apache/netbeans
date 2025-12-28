@@ -29,7 +29,7 @@
                     <code-name-base>org.netbeans.libs.jstl</code-name-base>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>2.31</specification-version>
+                        <specification-version>2.66</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -81,30 +81,12 @@
                         <specification-version>1.6</specification-version>
                     </run-dependency>
                 </dependency>
-                <!--
-                <dependency>
-                    <code-name-base>org.netbeans.modules.j2ee.jboss4</code-name-base>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.12</specification-version>
-                    </run-dependency>
-                </dependency>
-                -->
                 <dependency>
                     <code-name-base>org.netbeans.modules.j2ee.persistence.kit</code-name-base>
                     <run-dependency>
                         <specification-version>1.0</specification-version>
                     </run-dependency>
                 </dependency>
-                <!--
-                <dependency>
-                    <code-name-base>org.netbeans.modules.j2ee.weblogic9</code-name-base>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.10</specification-version>
-                    </run-dependency>
-                </dependency>
-                -->
                 <dependency>
                     <code-name-base>org.netbeans.modules.java.kit</code-name-base>
                     <run-dependency>
@@ -123,15 +105,6 @@
                         <specification-version>1.0</specification-version>
                     </run-dependency>
                 </dependency>
-                <!--
-                <dependency>
-                    <code-name-base>org.netbeans.modules.javaee.wildfly</code-name-base>
-                    <run-dependency>
-                        <release-version>1</release-version>
-                        <specification-version>1.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                -->
                 <dependency>
                     <code-name-base>org.netbeans.modules.languages.apacheconf</code-name-base>
                     <run-dependency>
@@ -149,13 +122,6 @@
                     <code-name-base>org.netbeans.modules.web.beans</code-name-base>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.jakarta.web.beans</code-name-base>
-                    <run-dependency>
-                        <release-version>1</release-version>
                         <specification-version>2.0</specification-version>
                     </run-dependency>
                 </dependency>

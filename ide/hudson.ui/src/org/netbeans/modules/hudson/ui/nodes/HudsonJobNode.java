@@ -116,7 +116,7 @@ public class HudsonJobNode extends AbstractNode {
         }
         actions.add(new ViewConfigAction(job));
         actions.add(SystemAction.get(PropertiesAction.class));
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     @Override

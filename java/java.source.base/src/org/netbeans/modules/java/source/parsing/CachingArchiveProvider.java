@@ -200,7 +200,7 @@ public final class CachingArchiveProvider {
                 Exceptions.printStackTrace(e);
             }
         }
-        return res.toArray(new URL[res.size()]);
+        return res.toArray(new URL[0]);
     }
 
     /**

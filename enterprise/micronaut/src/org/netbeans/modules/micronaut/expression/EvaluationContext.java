@@ -107,15 +107,19 @@ public final class EvaluationContext {
         return scope;
     }
 
-    public List<ExecutableElement> getContextMethods() {
+    public List<? extends Element> getContextElements() {
         if (contextClasses == null) {
             initializeContextClasses();
         }
-        List<ExecutableElement> methods = new ArrayList<>();
+        List<Element> elements = new ArrayList<>();
         for (TypeElement contextClass : contextClasses) {
-            methods.addAll(ElementFilter.methodsIn(contextClass.getEnclosedElements()));
+            elements.addAll(ElementFilter.methodsIn(contextClass.getEnclosedElements()));
         }
-        return methods;
+        ExecutableElement enclosingMethod = scope.getEnclosingMethod();
+        if (enclosingMethod != null && !enclosingMethod.getParameters().isEmpty()) {
+            elements.addAll(enclosingMethod.getParameters());
+        }
+        return elements;
     }
 
     private void initializeContextClasses() {

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.maven.format.checkstyle;
 
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 import java.io.IOException;
 import java.io.InputStream;
@@ -103,7 +102,7 @@ private static String PROP_NEWLINE_WHILE = "org-netbeans-modules-editor-indent.t
                return is;
             }
         });
-        try {
+        try (checkstyleStream) {
             Document doc = bldr.build(checkstyleStream);
             Element root = doc.getRootElement();
             processModule(root, "", props);
@@ -114,8 +113,6 @@ private static String PROP_NEWLINE_WHILE = "org-netbeans-modules-editor-indent.t
             Exceptions.printStackTrace(ex);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
-        } finally {
-            IOUtil.close(checkstyleStream);
         }
         return props;
 
@@ -231,7 +228,7 @@ private static String PROP_NEWLINE_WHILE = "org-netbeans-modules-editor-indent.t
 
     private void processWhiteSpaceAround(Map<String, String> moduleProps, Properties props) {
         List<Token> tokens = getApplicableTokens(moduleProps, "tokens");
-        props.setProperty(PROP_SPACE_AROUND_ASSIGN_OPS, new Boolean (tokens.contains(Token.ASSIGN)
+        props.setProperty(PROP_SPACE_AROUND_ASSIGN_OPS, Boolean.valueOf(tokens.contains(Token.ASSIGN)
                                                                   || tokens.contains(Token.BAND_ASSIGN)
                                                                   || tokens.contains(Token.BOR_ASSIGN)
                                                                   || tokens.contains(Token.BXOR_ASSIGN)
@@ -245,7 +242,7 @@ private static String PROP_NEWLINE_WHILE = "org-netbeans-modules-editor-indent.t
 
 //where does this get set?        props.setProperty(PROP_SPACE_AROUND_UNARY_OPS, new Boolean ().toString());
 
-        props.setProperty(PROP_SPACE_AROUND_BINARY_OPS, new Boolean (tokens.contains(Token.AND)
+        props.setProperty(PROP_SPACE_AROUND_BINARY_OPS, Boolean.valueOf(tokens.contains(Token.AND)
                                                                   || tokens.contains(Token.BOR)
                                                                   || tokens.contains(Token.BSR)
                                                                   || tokens.contains(Token.BXOR)
@@ -264,10 +261,10 @@ private static String PROP_NEWLINE_WHILE = "org-netbeans-modules-editor-indent.t
                                                                   || tokens.contains(Token.SL)
                                                                   || tokens.contains(Token.SR)).toString());
 
-        props.setProperty(PROP_SPACE_AROUND_TERNARY_OPS, new Boolean (tokens.contains(Token.QUESTION)).toString());
-        props.setProperty(PROP_SPACE_BEFORE_FOR_LEFT, new Boolean (tokens.contains(Token.LITERAL_FOR)).toString());
-        props.setProperty(PROP_SPACE_BEFORE_FOR_PAREN, new Boolean (tokens.contains(Token.LITERAL_FOR)).toString());
-        props.setProperty(PROP_SPACE_BEFORE_WHILE_LEFT, new Boolean (tokens.contains(Token.LITERAL_WHILE)).toString());
+        props.setProperty(PROP_SPACE_AROUND_TERNARY_OPS, Boolean.valueOf(tokens.contains(Token.QUESTION)).toString());
+        props.setProperty(PROP_SPACE_BEFORE_FOR_LEFT, Boolean.valueOf(tokens.contains(Token.LITERAL_FOR)).toString());
+        props.setProperty(PROP_SPACE_BEFORE_FOR_PAREN, Boolean.valueOf(tokens.contains(Token.LITERAL_FOR)).toString());
+        props.setProperty(PROP_SPACE_BEFORE_WHILE_LEFT, Boolean.valueOf(tokens.contains(Token.LITERAL_WHILE)).toString());
         //#221067 no LPAREN and RPAREN inside withespacearound - http://checkstyle.sourceforge.net/config_whitespace.html
         //props.setProperty(PROP_SPACE_WITHIN_PAREN, new Boolean (tokens.contains(Token.LPAREN) || tokens.contains(Token.RPAREN)).toString());
 
@@ -280,9 +277,9 @@ private static String PROP_NEWLINE_WHILE = "org-netbeans-modules-editor-indent.t
     private static String PROP_SPACE_AFTER_COLON = "org-netbeans-modules-editor-indent.text.x-java.CodeStyle.project.spaceAfterColon";
     private void processWhiteSpaceAfter(Map<String, String> moduleProps, Properties props) {
         List<Token> tokens = getApplicableTokens(moduleProps, "tokens");
-        props.setProperty(PROP_SPACE_AFTER_COMMA, new Boolean (tokens.contains(Token.COMMA)).toString());
-        props.setProperty(PROP_SPACE_AFTER_CAST, new Boolean (tokens.contains(Token.TYPECAST)).toString());
-        props.setProperty(PROP_SPACE_AFTER_SEMI, new Boolean (tokens.contains(Token.SEMI)).toString());
+        props.setProperty(PROP_SPACE_AFTER_COMMA, Boolean.valueOf(tokens.contains(Token.COMMA)).toString());
+        props.setProperty(PROP_SPACE_AFTER_CAST, Boolean.valueOf(tokens.contains(Token.TYPECAST)).toString());
+        props.setProperty(PROP_SPACE_AFTER_SEMI, Boolean.valueOf(tokens.contains(Token.SEMI)).toString());
     }
 
     private static String PROP_EXPAND_TABS = "org-netbeans-modules-editor-indent.CodeStyle.project.expand-tabs";

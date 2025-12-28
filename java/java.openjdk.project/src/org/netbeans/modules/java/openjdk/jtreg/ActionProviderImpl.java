@@ -427,7 +427,7 @@ public class ActionProviderImpl implements ActionProvider {
 
         listAllRoots(jdkRoot, new LinkedList<>(sourceDirPaths), roots);
 
-        return ClassPathSupport.createClassPath(roots.toArray(new FileObject[roots.size()]));
+        return ClassPathSupport.createClassPath(roots.toArray(new FileObject[0]));
     }
 
     private static void listAllRoots(FileObject currentDir, List<String> remainders, List<FileObject> roots) {

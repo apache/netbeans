@@ -18,108 +18,61 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.stream.Stream;
 
 /**
  *
  * @author lkishalmi
  */
-public abstract class HCLCollection<T> extends HCLExpression {
+public sealed interface HCLCollection<T> extends HCLExpression {
 
-    public final List<T> elements;
+    public record Tuple(List<HCLExpression> elements) implements  HCLCollection<HCLExpression> {
 
-    public HCLCollection(List<T> elements) {
-        this.elements = Collections.unmodifiableList(elements);
-    }
-    
-    public static final class Tuple extends HCLCollection<HCLExpression> {
-
-
-        public Tuple(List<HCLExpression> elements) {
-            super(elements);
+        public Tuple {
+            elements = List.copyOf(elements);
         }
-        
+
         @Override
         public String asString() {
             StringJoiner sj = new StringJoiner(",", "[", "]");
             for (HCLExpression element : elements) {
-                sj.add(element.asString());
+                sj.add(HCLExpression.asString(element));
             }
             return sj.toString();
         }
 
-        @Override
-        public List<? extends HCLExpression> getChildren() {
-            return elements;
-        }
-        
     }
-    
-    public static final class ObjectElement {
-        public final HCLExpression key;
-        public final HCLExpression value;
-        public final int group;
 
-        public ObjectElement(HCLExpression key, HCLExpression value, int group) {
-            this.key = key;
-            this.value = value;
-            this.group = group;
+    public record ObjectElement(HCLExpression key, HCLExpression value) implements HCLExpression {
+        @Override
+        public String asString() {
+            return HCLExpression.asString(key) + "=" + HCLExpression.asString(value);
         }
 
         @Override
-        public String toString() {
-            return key.asString() + "=" + value.asString();
+        public List<? extends HCLExpression> elements() {
+            return Stream.of(key, value)
+                    .filter(Objects::nonNull)
+                    .toList();
         }
-        
-        
     }
     
-    public static final class Object extends HCLCollection<ObjectElement> {
+    public record Object(List<ObjectElement> elements) implements HCLCollection<ObjectElement> {
 
-        private final List<? extends HCLExpression> parts;
-        private final List<? extends HCLExpression> keys;
-        private final List<? extends HCLExpression> values;
-        
-        public Object(List<ObjectElement> elements) {
-            super(elements);
-            List<HCLExpression> p = new ArrayList<>(elements.size() * 2);
-            List<HCLExpression> k = new ArrayList<>(elements.size());
-            List<HCLExpression> v = new ArrayList<>(elements.size());
-            for (ObjectElement e : elements) {
-                k.add(e.key);
-                v.add(e.value);
-                p.add(e.key);
-                p.add(e.value);
-            }
-            parts = Collections.unmodifiableList(p);
-            keys = Collections.unmodifiableList(k);
-            values = Collections.unmodifiableList(v);
+        public Object {
+            elements = List.copyOf(elements);
         }
 
         @Override
         public String asString() {
             StringJoiner sj = new StringJoiner(",", "{", "}");
             for (ObjectElement element : elements) {
-                sj.add(element.toString());
+                sj.add(HCLExpression.asString(element));
             }
             return sj.toString();
-        }
-
-        public List<? extends HCLExpression> getKeys() {
-            return keys;
-        }
-        
-        public List<? extends HCLExpression> getValues() {
-            return values;
-        }
-        
-        @Override
-        public List<? extends HCLExpression> getChildren() {
-            return parts;
-        }
-        
+        }        
     }
 }

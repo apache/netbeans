@@ -37,7 +37,7 @@ public final class VariablesFormatter implements Cloneable {
     private boolean includeSubTypes = true;
     private String valueFormatCode = "";    // NOI18N
     private String childrenFormatCode = ""; // NOI18N
-    private Map<String, String> childrenVariables = new LinkedHashMap<String, String>();
+    private Map<String, String> childrenVariables = new LinkedHashMap<>();
     private boolean useChildrenVariables = false;
     private String childrenExpandTestCode = ""; // NOI18N
     private boolean isDefault = false;
@@ -117,7 +117,7 @@ public final class VariablesFormatter implements Cloneable {
     /**
      * Set the value of classTypes
      *
-     * @param classTypes new value of classTypes
+     * @param classTypesCommaSeparated new value of classTypes
      */
     public void setClassTypes(String classTypesCommaSeparated) {
         this.classTypes = classTypesCommaSeparated.split("[, ]+");
@@ -135,7 +135,7 @@ public final class VariablesFormatter implements Cloneable {
     /**
      * Set the value of includeSubtypes
      *
-     * @param includeSubtypes new value of includeSubtypes
+     * @param includeSubTypes new value of includeSubtypes
      */
     public void setIncludeSubTypes(boolean includeSubTypes) {
         this.includeSubTypes = includeSubTypes;
@@ -253,7 +253,7 @@ public final class VariablesFormatter implements Cloneable {
         VariablesFormatter f = new VariablesFormatter(name);
         f.childrenExpandTestCode = childrenExpandTestCode;
         f.childrenFormatCode = childrenFormatCode;
-        f.childrenVariables = new LinkedHashMap<String, String>(childrenVariables);
+        f.childrenVariables = new LinkedHashMap<>(childrenVariables);
         f.classTypes = classTypes.clone();
         f.enabled = enabled;
         f.includeSubTypes = includeSubTypes;
@@ -271,7 +271,7 @@ public final class VariablesFormatter implements Cloneable {
         if (formatters == null) {
             formatters = defaultFormatters;
         } else {
-            Map<String, VariablesFormatter> fm = new LinkedHashMap<String, VariablesFormatter>(defaultFormatters.length);
+            Map<String, VariablesFormatter> fm = new LinkedHashMap<>(defaultFormatters.length);
             for (VariablesFormatter vf : defaultFormatters) {
                 fm.put(vf.getName(), vf);
             }
@@ -299,6 +299,10 @@ public final class VariablesFormatter implements Cloneable {
                         "MSG_MapFormatter=Default Map Formatter",
                         "MSG_MapEntryFormatter=Default Map.Entry Formatter",
                         "MSG_EnumFormatter=Default Enum Formatter",
+                        "MSG_BigDecimalFormatter=Default BigDecimal Formatter",
+                        "MSG_BigIntegerFormatter=Default BigInteger Formatter",
+                        "MSG_JavadocASTFormatter=Default com.sun.source.doctree.DocTree Formatter",
+                        "MSG_JavacASTFormatter=Default com.sun.source.tree.Tree Formatter",
                         })
     private static VariablesFormatter[] createDefaultFormatters() {
         VariablesFormatter charSequence = new VariablesFormatter(Bundle.MSG_CharSequenceFormatter());
@@ -340,22 +344,49 @@ public final class VariablesFormatter implements Cloneable {
         enumFormatter.setValueFormatCode("toString()");
         enumFormatter.isDefault = true;
 
-        return new VariablesFormatter[] { charSequence, collection, map, mapEntry, enumFormatter };
+        VariablesFormatter bigDecimalFormatter = new VariablesFormatter(Bundle.MSG_BigDecimalFormatter());
+        bigDecimalFormatter.setClassTypes("java.math.BigDecimal");
+        bigDecimalFormatter.setIncludeSubTypes(true);
+        bigDecimalFormatter.setValueFormatCode("toPlainString()");
+        bigDecimalFormatter.isDefault = true;
+
+        VariablesFormatter bigIntegerFormatter = new VariablesFormatter(Bundle.MSG_BigIntegerFormatter());
+        bigIntegerFormatter.setClassTypes("java.math.BigInteger");
+        bigIntegerFormatter.setIncludeSubTypes(true);
+        bigIntegerFormatter.setValueFormatCode("toString()");
+        bigIntegerFormatter.isDefault = true;
+
+        VariablesFormatter javadocASTFormatter = new VariablesFormatter(Bundle.MSG_JavadocASTFormatter());
+        javadocASTFormatter.setClassTypes("com.sun.source.doctree.DocTree");
+        javadocASTFormatter.setIncludeSubTypes(true);
+        javadocASTFormatter.setValueFormatCode("toString()");
+        javadocASTFormatter.isDefault = true;
+
+        VariablesFormatter javacASTFormatter = new VariablesFormatter(Bundle.MSG_JavacASTFormatter());
+        javacASTFormatter.setClassTypes("com.sun.source.tree.Tree");
+        javacASTFormatter.setIncludeSubTypes(true);
+        javacASTFormatter.setValueFormatCode("toString()");
+        javacASTFormatter.isDefault = true;
+
+        return new VariablesFormatter[] { charSequence, collection, map, mapEntry, enumFormatter,
+            bigDecimalFormatter, bigIntegerFormatter, javadocASTFormatter, javacASTFormatter };
     }
 
 
 
     @DebuggerServiceRegistration(types=Properties.Reader.class)
     public static class ReaderWriter implements Properties.Reader {
-        
+
         private static final String OLD_VariablesFormatter_CLASS_NAME =
                 "org.netbeans.modules.debugger.jpda.ui.VariablesFormatter";     // NOI18N
 
+        @Override
         public String[] getSupportedClassNames() {
             return new String[] { OLD_VariablesFormatter_CLASS_NAME,
                                   VariablesFormatter.class.getName() };
         }
 
+        @Override
         public Object read(String className, Properties properties) {
             String name = properties.getString("name", "<EMPTY>");
             VariablesFormatter f = new VariablesFormatter(name);
@@ -371,6 +402,7 @@ public final class VariablesFormatter implements Cloneable {
             return f;
         }
 
+        @Override
         public void write(Object object, Properties properties) {
             VariablesFormatter f = (VariablesFormatter) object;
             properties.setString("name", f.getName());
@@ -384,6 +416,6 @@ public final class VariablesFormatter implements Cloneable {
             properties.setString("childrenExpandTestCode", f.getChildrenExpandTestCode());
             properties.setBoolean("isDefault", f.isDefault);
         }
-        
+
     }
 }

@@ -32,10 +32,13 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import javax.swing.text.Position.Bias;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.preprocessorbridge.spi.JavaFileFilterImplementation;
 import org.netbeans.modules.java.source.TestUtil;
+import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.api.UserTask;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileSystem;
@@ -329,6 +332,23 @@ public class ModificationResultTest extends NbTestCase {
         } finally {
             TestUtil.setJavaFileFilter(null);
         }
+    }
+
+    public void testMultipleFilesWithErrors() throws Exception {
+        FileSystem fs = FileUtil.createMemoryFileSystem();
+        FileObject root = fs.getRoot();
+        FileObject test1 = FileUtil.createData(root, "test/Test1.java");
+        FileObject test2 = FileUtil.createData(root, "test/Test2.java");
+
+        TestUtilities.copyStringToFile(test1, "package test; public class Test1 { public class A1 extends Test2.A2 { public int t(Unknown u) { return this.doesNotExist(u); } } public class B1 {} private void x(java.io.File f) { boolean b = f.isDirectory(); } }");
+        TestUtilities.copyStringToFile(test2, "package test; public class Test2 { public class A2 {} public class B2 extends Test1.B1 { public int t(Unknown u) { return this.doesNotExist(u); } } private void x(java.io.File f) { boolean b = f.isDirectory(); } }");
+
+        ModificationResult.runModificationTask(Arrays.asList(Source.create(test1), Source.create(test2)), new UserTask() {
+            @Override
+            public void run(ResultIterator resultIterator) throws Exception {
+                WorkingCopy.get(resultIterator.getParserResult()).toPhase(Phase.RESOLVED);
+            }
+        });
     }
 
     private static final class JavaFileFilterImplementationImpl implements JavaFileFilterImplementation {

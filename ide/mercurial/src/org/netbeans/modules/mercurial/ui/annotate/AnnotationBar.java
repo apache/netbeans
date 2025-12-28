@@ -73,6 +73,7 @@ import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
 import javax.swing.text.View;
 import org.netbeans.api.diff.Difference;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.EditorStyleConstants;
@@ -88,7 +89,6 @@ import org.netbeans.modules.mercurial.HgProgressSupport;
 import org.netbeans.modules.mercurial.Mercurial;
 import org.netbeans.modules.mercurial.OutputLogger;
 import org.netbeans.modules.mercurial.WorkingCopyInfo;
-import org.netbeans.modules.mercurial.kenai.HgKenaiAccessor;
 import org.netbeans.modules.mercurial.ui.diff.DiffAction;
 import org.netbeans.modules.mercurial.ui.log.HgLogMessage;
 import org.netbeans.modules.mercurial.ui.log.HgLogMessage.HgRevision;
@@ -98,7 +98,6 @@ import org.netbeans.modules.mercurial.ui.update.RevertModificationsAction;
 import org.netbeans.modules.mercurial.util.HgCommand;
 import org.netbeans.modules.mercurial.util.HgUtils;
 import org.netbeans.modules.versioning.util.Utils;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor.KenaiUser;
 import org.netbeans.spi.diff.DiffProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -204,11 +203,6 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
      * Repository root of annotated file
      */
     private File repositoryRoot;
-
-    /**
-     * Holdes kenai users
-     */
-    private Map<String, KenaiUser> kenaiUsersMap = null;
 
     /*
      * Holds parent/previous revisions for each line revision
@@ -380,22 +374,6 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
         });
 
         final String url = HgUtils.getRemoteRepository(repositoryRoot);
-        final boolean isKenaiRepository = url != null && HgKenaiAccessor.getInstance().isKenai(url);
-        if(isKenaiRepository) {
-            kenaiUsersMap = new HashMap<String, KenaiUser>();
-            Iterator<AnnotateLine> it = lines.iterator();
-            while (it.hasNext()) {
-                AnnotateLine line = it.next();
-                String author = line.getAuthor();
-                if(author != null && !author.equals("") && !kenaiUsersMap.containsKey(author)) {
-                    KenaiUser ku = HgKenaiAccessor.getInstance().forName(author, url);
-                    if(ku != null) {
-                        kenaiUsersMap.put(author, ku);
-                    }
-                }
-            }
-        }
-                
         // lazy listener registration
         caret = textComponent.getCaret();
         if (caret != null) {
@@ -631,23 +609,6 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
         });
         popupMenu.add(previousAnnotationsMenu);
 
-        if(isKenai() && al != null) {
-            String author = al.getAuthor();
-            final int lineNr = al.getLineNum();
-            final KenaiUser ku = kenaiUsersMap.get(author);
-            if(ku != null) {
-                popupMenu.addSeparator();
-                JMenuItem chatMenu = new JMenuItem(NbBundle.getMessage(AnnotationBar.class, "CTL_MenuItem_Chat", author));
-                chatMenu.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        ku.startChat(KenaiUser.getChatLink(getCurrentFileObject(), lineNr));
-                    }
-                });
-                popupMenu.add(chatMenu);
-            }
-        }
-
         JMenuItem menu;
         menu = new JMenuItem(loc.getString("CTL_MenuItem_CloseAnnotations")); // NOI18N
         menu.addActionListener(new ActionListener() {
@@ -880,7 +841,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
         int line = -1;
         int offset = carett.getDot();
         try {
-            line = Utilities.getLineOffset(doc, offset);
+            line = LineDocumentUtils.getLineIndex(doc, offset);
         } catch (BadLocationException ex) {
             Mercurial.LOG.log(Level.SEVERE, "Can not get line for caret at offset ", offset); // NOI18N
             clearRecentFeedback();
@@ -990,9 +951,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
             longestString = elementAnnotationsSubstitute;
         } else {
             synchronized(elementAnnotations) {
-                Iterator<AnnotateLine> it = elementAnnotations.values().iterator();
-                while (it.hasNext()) {
-                    AnnotateLine line = it.next();
+                for (AnnotateLine line : elementAnnotations.values()) {
                     String displayName = getDisplayName(line); // NOI18N
                     if (displayName.length() > longestString.length()) {
                         longestString = displayName;
@@ -1002,7 +961,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
         }
         char[] data = longestString.toCharArray();
         int w = getGraphics().getFontMetrics().charsWidth(data, 0,  data.length);
-        return w + 4 + (isKenai() ? 18 : 0);
+        return w + 4;
     }
 
     private String getDisplayName(AnnotateLine line) {
@@ -1077,17 +1036,6 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
         int texty = yBase + editorUI.getLineAscent();
         int textx = 2;
         g.drawString(annotation, textx, texty);
-    }
-
-    boolean isKenai() {
-        return kenaiUsersMap != null && kenaiUsersMap.size() > 0;
-    }
-
-    KenaiUser getKenaiUser(String author) {
-        if(kenaiUsersMap == null) {
-            return null;
-        }
-        return kenaiUsersMap.get(author);
     }
 
     /**
@@ -1266,7 +1214,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
                 JTextComponent component = editorUI.getComponent();
                 BaseTextUI textUI = (BaseTextUI)component.getUI();
                 int clickOffset = textUI.viewToModel(component, new Point(0, e.getY()));
-                line = Utilities.getLineOffset(doc, clickOffset);
+                line = LineDocumentUtils.getLineIndex(doc, clickOffset);
             }catch (BadLocationException ble){
             }
         }

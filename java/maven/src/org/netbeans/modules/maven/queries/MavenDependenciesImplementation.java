@@ -40,7 +40,9 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.PlexusContainerException;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
+import org.netbeans.modules.maven.api.Constants;
 import org.netbeans.modules.maven.api.NbMavenProject;
+import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.modules.maven.embedder.DependencyTreeFactory;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
@@ -64,6 +66,9 @@ import org.openide.util.NbBundle;
  */
 @ProjectServiceProvider(service = ProjectDependenciesImplementation.class, projectType="org-netbeans-modules-maven")
 public class MavenDependenciesImplementation implements ProjectDependenciesImplementation {
+    private static final String ELEMENT_PATH = "path"; // NOI18N
+    private static final String ELEMENT_PROCESSOR_PATHS = "annotationProcessorPaths"; // NOI18N
+
     private static final Logger LOG = Logger.getLogger(MavenDependenciesImplementation.class.getName());
     
     private final Project project;
@@ -140,12 +145,16 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
     
     private ArtifactSpec mavenToArtifactSpec(Artifact a) {
         FileObject f = a.getFile() == null ? null : FileUtil.toFileObject(a.getFile());
+        String v = a.getVersion();
+        if ("".equals(v)) { // NOI18N
+            v = null;
+        }
         if (a.isSnapshot()) {
             return ArtifactSpec.createSnapshotSpec(a.getGroupId(), a.getArtifactId(), 
-                    a.getType(), a.getClassifier(), a.getVersion(), a.isOptional(), f, a);
+                    a.getType(), a.getClassifier(), v, a.isOptional(), f, a);
         } else {
             return ArtifactSpec.createVersionSpec(a.getGroupId(), a.getArtifactId(), 
-                    a.getType(), a.getClassifier(), a.getVersion(), a.isOptional(), f, a);
+                    a.getType(), a.getClassifier(), v, a.isOptional(), f, a);
         }
     }
     
@@ -188,6 +197,16 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
             }
             Dependency dep = Dependency.create(a, s, Collections.emptyList(), d);
             children.add(dep);
+        }
+        PluginPropertyUtils.PluginConfigPathParams params = new PluginPropertyUtils.PluginConfigPathParams(
+            Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER, ELEMENT_PROCESSOR_PATHS, ELEMENT_PATH);
+        List<Artifact> arts = PluginPropertyUtils.getPluginPathProperty(project, params, false, null);
+        if (arts != null) {
+            for (Artifact a : arts) {
+                ArtifactSpec ann = mavenToArtifactSpec(a);
+                Dependency annDep = Dependency.create(ann, Scopes.PROCESS, Collections.emptyList(), ann);
+                children.add(annDep);
+            }
         }
 
         ArtifactSpec prjSpec = mavenToArtifactSpec(proj.getArtifact());
@@ -270,7 +289,6 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
             }
         }
         Set<Scope> allScopes = Stream.concat(scopes.stream(), scopes.stream().flatMap(x -> impliedBy(x).stream())).collect(Collectors.toSet());
-        Set<ArtifactSpec> broken = new HashSet<>();
         Dependency.Filter compositeFiter = new Dependency.Filter() {
             @Override
             public boolean accept(Scope s, ArtifactSpec a) {
@@ -279,8 +297,23 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
             }
         };
         
-        return new MavenDependencyResult(nbMavenProject.getMavenProject(), 
-                convertDependencies(n, compositeFiter, broken), new ArrayList<>(scopes), broken, 
+        Converter c = new Converter(compositeFiter);
+
+        // TODO: temporary hack: one has to explicitly ask for PROCESS, to avoid implications from RUNTIME scope at the moment
+        if (scopes.contains(Scopes.PROCESS)) {
+            PluginPropertyUtils.PluginConfigPathParams params = new PluginPropertyUtils.PluginConfigPathParams(
+                Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER, "annotationProcessorPaths", "path" // NOI18N
+            );
+            // TODO: process transitive dependencies as proper children
+            List<Artifact> arts = PluginPropertyUtils.getPluginPathProperty(project, params, true, null);
+            if (arts == null) {
+                arts = Collections.emptyList();
+            }
+            c.annotationProcessors = arts;
+        }
+        
+        Dependency root = c.convertDependencies(n);
+        return new MavenDependencyResult(nbMavenProject.getMavenProject(), root, new ArrayList<>(scopes), c.broken, 
                 project, nbMavenProject);
     }
     
@@ -317,72 +350,121 @@ public class MavenDependenciesImplementation implements ProjectDependenciesImple
         }
     }
     
-    private void findRealNodes(org.apache.maven.shared.dependency.tree.DependencyNode n, Map<String, List<org.apache.maven.shared.dependency.tree.DependencyNode>> result) {
-        if (n.getArtifact() == null) {
-            return;
-        }
-        Artifact a = n.getArtifact();
-        if (n.getState() != org.apache.maven.shared.dependency.tree.DependencyNode.INCLUDED) {
-            return;
-        }
-        // register (if not present) using plain artifact ID, but also using the full path, which will be preferred for the lookup.
-        result.putIfAbsent(a.getId(), n.getChildren());
-        result.put(getFullArtifactId(a), n.getChildren());
-        
-        for (org.apache.maven.shared.dependency.tree.DependencyNode c : n.getChildren()) {
-            findRealNodes(c, result);
-        }
-    }
+    private class Converter {
+        final Map<String, List<org.apache.maven.shared.dependency.tree.DependencyNode>> realNodes = new HashMap<>();
+        final Dependency.Filter filter;
+        final Set<ArtifactSpec> broken = new HashSet<>();
+        List<Artifact> annotationProcessors = Collections.emptyList();
 
-    private Dependency convertDependencies(org.apache.maven.shared.dependency.tree.DependencyNode n, Dependency.Filter filter, Set<ArtifactSpec> broken) {
-        Map<String, List<org.apache.maven.shared.dependency.tree.DependencyNode>> realNodes = new HashMap<>();
-        findRealNodes(n, realNodes);
-        return convert2(true, n, filter, realNodes, broken);
+        public Converter(Dependency.Filter filter) {
+            this.filter = filter;
+        }
+
+        private void findRealNodes(org.apache.maven.shared.dependency.tree.DependencyNode n) {
+            if (n.getArtifact() == null) {
+                return;
+            }
+            Artifact a = n.getArtifact();
+            if (n.getState() != org.apache.maven.shared.dependency.tree.DependencyNode.INCLUDED) {
+                return;
+            }
+            // register (if not present) using plain artifact ID, but also using the full path, which will be preferred for the lookup.
+            realNodes.putIfAbsent(a.getId(), n.getChildren());
+            realNodes.put(getFullArtifactId(a), n.getChildren());
+
+            for (org.apache.maven.shared.dependency.tree.DependencyNode c : n.getChildren()) {
+                findRealNodes(c);
+            }
+        }
+
+        private Dependency convertDependencies(org.apache.maven.shared.dependency.tree.DependencyNode n) {
+            findRealNodes(n);
+            return convert2(true, n, new HashSet<>());
+        }
+
+
+        private Dependency convert2(boolean root, org.apache.maven.shared.dependency.tree.DependencyNode n, Set<ArtifactSpec> visited) {
+            List<Dependency> ch = new ArrayList<>();
+            
+            ArtifactSpec currentArtifact = mavenToArtifactSpec(n.getArtifact());
+            
+            if (!visited.add(currentArtifact)) {
+                // Cycle detected
+                return null;
+            }
+            
+            List<org.apache.maven.shared.dependency.tree.DependencyNode> children = n.getChildren();
+            org.apache.maven.artifact.Artifact thisArtifact = n.getArtifact();
+            org.apache.maven.artifact.Artifact relatedArtifact = n.getRelatedArtifact();
+
+            switch (n.getState()) {
+                case org.apache.maven.shared.dependency.tree.DependencyNode.OMITTED_FOR_CYCLE:
+                case org.apache.maven.shared.dependency.tree.DependencyNode.OMITTED_FOR_DUPLICATE:
+                    // TODO: unless the client specifies NOT to eliminate duplicates from the tree,
+                    // we need to include the duplicate including the children, to form a correct full dependency tree. 
+                    if (relatedArtifact != null) {
+                        children = realNodes.get(getFullArtifactId(relatedArtifact));
+                    }
+                    if (children == null) {
+                        children = realNodes.getOrDefault(n.getArtifact().getId(), n.getChildren());
+                    }
+                    break;
+                case org.apache.maven.shared.dependency.tree.DependencyNode.OMITTED_FOR_CONFLICT:
+                    // there are two cases when OMITTED_FOR_CONFLICT is used: 
+                    // 1. another version is actually used, which means that unless the client requests to omit 
+                    //    duplicates, we need to include the ACTUAL dependency's artifact version and its children.
+                    // 2. different artifact is related, meaning this dependency is forcibly excluded. In this
+                    //    case, the dependency should not be reported at all unless (TODO:) client requests full 
+                    //    dependency info
+                    if (relatedArtifact != null) {
+                        if (Objects.equals(relatedArtifact.getGroupId(), thisArtifact.getGroupId()) &&
+                            Objects.equals(relatedArtifact.getArtifactId(), thisArtifact.getArtifactId())) {
+                            thisArtifact = relatedArtifact;
+                            // TODO: report the original artifact to the client when Relations appear in the API.
+                            // use children from the artifact:
+                            children = realNodes.getOrDefault(relatedArtifact.getId(), n.getChildren());
+                        } else {
+                            // exclude the artifact
+                            return null;
+                        }
+                    } else {
+                        // the conflict is not known. Omit, because we do not have any information and this 
+                        // artifact does not appear in the tree.
+                        return null;
+                    }
+            }
+
+            try {
+                if (root && !annotationProcessors.isEmpty()) {
+                    for (Artifact a : annotationProcessors) {
+                        ArtifactSpec annoSpec = mavenToArtifactSpec(a);
+                        ch.add(Dependency.create(annoSpec, Scopes.PROCESS, Collections.emptyList(), annoSpec));
+                    }
+                }
+
+                for (org.apache.maven.shared.dependency.tree.DependencyNode c : children) {
+                    Dependency cd = convert2(false, c, visited);
+                    if (cd != null) {
+                        ch.add(cd);
+                    }
+                }
+                ArtifactSpec aspec;
+                aspec = mavenToArtifactSpec(thisArtifact);
+                if (aspec.getLocalFile() == null) {
+                    broken.add(aspec);
+                }
+                Scope s = scope(thisArtifact);
+
+                if (!root && !filter.accept(s, aspec)) {
+                    return null;
+                }
+
+                return Dependency.create(aspec, s, ch, n);
+            } finally {
+                visited.remove(currentArtifact);
+            }
+        }
     }
-    
-    private Dependency convert2(boolean root, org.apache.maven.shared.dependency.tree.DependencyNode n, Dependency.Filter filter, Map<String, List<org.apache.maven.shared.dependency.tree.DependencyNode>> realNodes, Set<ArtifactSpec> broken) {
-        List<Dependency> ch = new ArrayList<>();
-        
-        List<org.apache.maven.shared.dependency.tree.DependencyNode> children = null;
-        
-        if (n.getState() == org.apache.maven.shared.dependency.tree.DependencyNode.OMITTED_FOR_CONFLICT || 
-            n.getState() == org.apache.maven.shared.dependency.tree.DependencyNode.OMITTED_FOR_DUPLICATE) {
-            // attempt to find / copy the children subtree, [refer full artifact path.
-            if (n.getRelatedArtifact() != null) {
-                children = realNodes.get(getFullArtifactId(n.getRelatedArtifact()));
-            }
-            if (children == null) {
-                children = realNodes.getOrDefault(n.getArtifact().getId(), n.getChildren());
-            }
-        } else {
-            children = n.getChildren();
-        }
-        
-        for (org.apache.maven.shared.dependency.tree.DependencyNode c : children) {
-            Dependency cd = convert2(false, c, filter, realNodes, broken);
-            if (cd != null) {
-                ch.add(cd);
-            }
-        }
-        Artifact a = n.getArtifact();
-        ArtifactSpec aspec;
-        String cs = a.getClassifier();
-        if ("".equals(cs)) {
-            cs = null;
-        }
-        aspec = mavenToArtifactSpec(a);
-        if (aspec.getLocalFile() == null) {
-            broken.add(aspec);
-        }
-        Scope s = scope(a);
-        
-        if (!root && !filter.accept(s, aspec)) {
-            return null;
-        }
-        
-        return Dependency.create(aspec, s, ch, n);
-    }
-    
     
     static boolean dependencyEquals(Dependency dspec, org.apache.maven.model.Dependency mavenD) {
         ArtifactSpec spec = dspec.getArtifact();

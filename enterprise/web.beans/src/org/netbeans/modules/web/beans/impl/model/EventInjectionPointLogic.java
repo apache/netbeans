@@ -58,11 +58,10 @@ import org.netbeans.modules.web.beans.impl.model.AbstractAssignabilityChecker.As
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 abstract class EventInjectionPointLogic extends ParameterInjectionPointLogic {
     
-    public static final String EVENT_INTERFACE = 
-        "javax.enterprise.event.Event";             // NOI18N
+    public static final String EVENT_INTERFACE = "javax.enterprise.event.Event"; // NOI18N
+    public static final String EVENT_INTERFACE_JAKARTA = "jakarta.enterprise.event.Event"; // NOI18N
 
 
     EventInjectionPointLogic(WebBeansModelImplementation model ) {
@@ -84,7 +83,10 @@ abstract class EventInjectionPointLogic extends ParameterInjectionPointLogic {
             return null;
         }
         
-        TypeMirror type = getParameterType(element, parent, EVENT_INTERFACE);
+        TypeMirror type = getParameterType(element, parent, EVENT_INTERFACE_JAKARTA);
+        if (type == null) {
+            type = getParameterType(element, parent, EVENT_INTERFACE);
+        }
         if ( type == null || type.getKind() == TypeKind.ERROR ){
             return Collections.emptyList();
         }
@@ -211,7 +213,26 @@ abstract class EventInjectionPointLogic extends ParameterInjectionPointLogic {
                                     element instanceof VariableElement )
                             {
                                 Name name = ((TypeElement)typeElement).getQualifiedName();
-                                if ( EVENT_INTERFACE.contentEquals( name )){
+                                if ( EVENT_INTERFACE.contentEquals( name ) ){
+                                    eventInjection.add( (VariableElement) element);
+                                }
+                            }
+                        }
+                    });
+            getModel().getHelper().getAnnotationScanner().findAnnotations(INJECT_ANNOTATION_JAKARTA,
+                    EnumSet.of( ElementKind.FIELD),  new AnnotationHandler() {
+
+                        @Override
+                        public void handleAnnotation( TypeElement type,
+                                Element element, AnnotationMirror annotation )
+                        {
+                           Element typeElement = getCompilationController().getTypes().
+                                   asElement( element.asType() );
+                            if ( typeElement instanceof TypeElement &&
+                                    element instanceof VariableElement )
+                            {
+                                Name name = ((TypeElement)typeElement).getQualifiedName();
+                                if ( EVENT_INTERFACE_JAKARTA.contentEquals( name ) ){
                                     eventInjection.add( (VariableElement) element);
                                 }
                             }
@@ -340,7 +361,8 @@ abstract class EventInjectionPointLogic extends ParameterInjectionPointLogic {
                 if ( annotation == null ){
                     continue;
                 }
-                if ( OBSERVES_ANNOTATION.contentEquals( annotation.getQualifiedName())){
+                if (OBSERVES_ANNOTATION.contentEquals(annotation.getQualifiedName())
+                        || OBSERVES_ANNOTATION_JAKARTA.contentEquals(annotation.getQualifiedName())) {
                     return new Triple<VariableElement, Integer, Void>(parameter, index, null);
                 }
             }
@@ -378,8 +400,10 @@ abstract class EventInjectionPointLogic extends ParameterInjectionPointLogic {
             eventInjectionPoints.iterator();iterator.hasNext() ; ) 
         {
             VariableElement injection = iterator.next();
-            TypeMirror type = getParameterType(injection, null, EVENT_INTERFACE);
-            
+            TypeMirror type = getParameterType(injection, null, EVENT_INTERFACE_JAKARTA);
+            if(type == null) {
+                type = getParameterType(injection, null, EVENT_INTERFACE);
+            }
             boolean assignable = isAssignable(type, parameterType, 
                     checker);
             
@@ -428,8 +452,10 @@ abstract class EventInjectionPointLogic extends ParameterInjectionPointLogic {
         List<ObserverTriple> result = new LinkedList<ObserverTriple>();
         CompilationController compilationController = 
             getModel().getHelper().getCompilationController();
-        TypeElement observesType = compilationController.getElements().getTypeElement(
-                OBSERVES_ANNOTATION);
+        TypeElement observesType = compilationController.getElements().getTypeElement(OBSERVES_ANNOTATION_JAKARTA);
+        if (observesType == null) {
+            observesType = compilationController.getElements().getTypeElement(OBSERVES_ANNOTATION);
+        }
         if ( observesType == null ){
             return result;
         }
@@ -453,8 +479,8 @@ abstract class EventInjectionPointLogic extends ParameterInjectionPointLogic {
                     List<? extends AnnotationMirror> annotationMirrors = 
                         compilationController.getElements().
                         getAllAnnotationMirrors( parameter);
-                    if ( getModel().getHelper().hasAnnotation( annotationMirrors, 
-                            OBSERVES_ANNOTATION) ){
+                    if (getModel().getHelper().hasAnnotation(annotationMirrors, OBSERVES_ANNOTATION)
+                            || getModel().getHelper().hasAnnotation(annotationMirrors, OBSERVES_ANNOTATION_JAKARTA)) {
                         result.add( new ObserverTriple( method, parameter, index)  );
                     }
                     index++;

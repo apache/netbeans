@@ -117,10 +117,14 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
     /** Visitor method: Translate a single node.
      */
     public Tree translate(Tree tree) {
+        return translate(tree, null);
+    }
+
+    public Tree translate(Tree tree, Object p) {
 	if (tree == null) {
 	    return null;
         } else {
-	    Tree t = tree.accept(this, null);
+	    Tree t = tree.accept(this, p);
             
             if (tree2Tag != null && tree != t && tmaker != null) {
                 t = tmaker.asReplacementOf(t, tree, true);
@@ -154,7 +158,14 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
      *  return type is guaranteed to be the same as the input type
      */
     public <T extends Tree> T translateStable(T tree) {
-	Tree t2 = translate(tree);
+        return translateStable(tree, null);
+    }
+
+    /** Visitor method: Translate a single node.
+     *  return type is guaranteed to be the same as the input type
+     */
+    public <T extends Tree> T translateStable(T tree, Object p) {
+	Tree t2 = translate(tree, p);
 	if(t2!=null && t2.getClass()!=tree.getClass()) {
 	    if(t2.getClass()!=tree.getClass()) {
                 //possibly import analysis rewrote QualIdentTree->IdentifierTree or QIT->MemberSelectTree:
@@ -334,7 +345,8 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
     @Override
     public Tree visitClass(ClassTree tree, Object p) {
         Element oldSym = currentSym;
-        importAnalysis.classEntered(tree);
+        boolean isAnonymous = p instanceof NewClassTree;
+        importAnalysis.classEntered(tree, isAnonymous);
         currentSym = model.getElement(tree);
 	ClassTree result = rewriteChildren(tree);
         importAnalysis.classLeft();
@@ -615,10 +627,6 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
         return rewriteChildren(tree);
     }
     @Override
-    public Tree visitStringTemplate(StringTemplateTree tree, Object p) {
-        return rewriteChildren(tree);
-    }
-    @Override
     public Tree visitAnyPattern(AnyPatternTree tree, Object p) {
         return rewriteChildren(tree);
     }
@@ -642,7 +650,7 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
         Set<? extends Element> newImports = importAnalysis.getImports();
         if (copy != null && newImports != null && !newImports.isEmpty()) {
             imps = GeneratorUtilitiesAccessor.getInstance()
-                                             .addImports(GeneratorUtilities.get(copy), tree, imps, newImports)
+                                             .addImports(GeneratorUtilities.get(copy), tree, imps, newImports, el -> overlay.moduleOf(elements, el))
                                              .getImports();
         }
         
@@ -690,15 +698,18 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
 	Tree extending = translateClassRef(tree.getExtendsClause());
 	List<? extends ExpressionTree> implementing = 
             translateClassRef((List<? extends ExpressionTree>)tree.getImplementsClause());
+	List<? extends ExpressionTree> permits =
+            translateClassRef((List<? extends ExpressionTree>)tree.getPermitsClause());
         importAnalysis.enterVisibleThroughClasses(tree);
 	List<? extends Tree> defs = translate(tree.getMembers());
         boolean typeChanged = !typarams.equals(tree.getTypeParameters()) || 
             extending != tree.getExtendsClause() ||
-            !implementing.equals(tree.getImplementsClause());
+            !implementing.equals(tree.getImplementsClause()) ||
+            !permits.equals(tree.getPermitsClause());
 	if (typeChanged || mods != tree.getModifiers() || 
             !defs.equals(tree.getMembers())) {
 	    ClassTree n = make.Class(mods, tree.getSimpleName(), typarams,
-                                     extending, implementing, defs);
+                                     extending, implementing, permits, defs);
             if (!typeChanged) {
                 model.setElement(n, model.getElement(tree));
                 model.setType(n, model.getType(tree));
@@ -1092,7 +1103,7 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
             (List<? extends ExpressionTree>)translate(tree.getTypeArguments());
 	ExpressionTree clazz = translateClassRef(tree.getIdentifier());
 	List<? extends ExpressionTree> args = translate(tree.getArguments());
-	ClassTree def = translateStable(tree.getClassBody());
+	ClassTree def = translateStable(tree.getClassBody(), tree);
 	if (encl!=tree.getEnclosingExpression() || 
                 !typeargs.equals(tree.getTypeArguments()) || clazz!=tree.getIdentifier() || 
                 !args.equals(tree.getArguments()) || def!=tree.getClassBody()) {
@@ -1540,19 +1551,6 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
             model.setType(n, model.getType(tree));
             copyCommentTo(tree, n);
             copyPosTo(tree, n);
-            tree = n;
-        }
-        return tree;
-    }
-
-    private StringTemplateTree rewriteChildren(StringTemplateTree tree) {
-        ExpressionTree newProcessor = (ExpressionTree) translate(tree.getProcessor());
-        List<? extends ExpressionTree> newExpressions = translate(tree.getExpressions());
-        if (newProcessor != tree.getProcessor()|| !Objects.equals(newExpressions, tree.getExpressions())) {
-            StringTemplateTree n = make.StringTemplate(newProcessor, tree.getFragments(), newExpressions);
-            model.setType(n, model.getType(tree));
-            copyCommentTo(tree,n);
-            copyPosTo(tree,n);
             tree = n;
         }
         return tree;

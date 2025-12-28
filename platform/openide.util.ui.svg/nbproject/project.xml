@@ -26,11 +26,12 @@
             <code-name-base>org.openide.util.ui.svg</code-name-base>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>org.netbeans.libs.batik.read</code-name-base>
+                    <code-name-base>org.netbeans.libs.jsvg</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.0</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

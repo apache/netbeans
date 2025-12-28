@@ -35,14 +35,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -52,7 +50,6 @@ import javax.swing.ButtonModel;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.ListCellRenderer;
 import javax.swing.JEditorPane;
 import javax.swing.JList;
 import javax.swing.ListModel;
@@ -62,7 +59,6 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.jumpto.type.TypeBrowser;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.editor.JumpList;
-import org.netbeans.modules.jumpto.EntityComparator;
 import org.netbeans.modules.jumpto.common.AbstractModelFilter;
 import org.netbeans.modules.jumpto.common.CurrentSearch;
 import org.netbeans.modules.jumpto.common.ItemRenderer;
@@ -95,7 +91,7 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
     static final Logger LOGGER = Logger.getLogger(GoToTypeAction.class.getName()); // Used from the panel as well
 
     private SearchType nameKind;
-    private static ListModel EMPTY_LIST_MODEL = new DefaultListModel();
+    private static ListModel<TypeDescriptor> EMPTY_LIST_MODEL = new DefaultListModel<>();
     private static final RequestProcessor rp = new RequestProcessor ("GoToTypeAction-RequestProcessor",1);      //NOI18N
     private static final RequestProcessor PROFILE_RP = new RequestProcessor("GoToTypeAction-Profile",1);        //NOI18N
     private Worker running;
@@ -122,26 +118,27 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
 
     public GoToTypeAction(String title, TypeBrowser.Filter typeFilter, boolean multiSelection, TypeProvider... typeProviders) {
         super( NbBundle.getMessage( GoToTypeAction.class,"TXT_GoToType") );
-        putValue("PopupMenuText", NbBundle.getBundle(GoToTypeAction.class).getString("editor-popup-TXT_GoToType")); // NOI18N
+        putValue("PopupMenuText", NbBundle.getMessage(GoToTypeAction.class, "editor-popup-TXT_GoToType")); // NOI18N
         this.title = title;
         this.typeFilter = typeFilter;
-        this.implicitTypeProviders = typeProviders.length == 0 ? null : Collections.unmodifiableCollection(Arrays.asList(typeProviders));
+        this.implicitTypeProviders = typeProviders.length == 0 ? null : List.of(typeProviders);
         this.multiSelection = multiSelection;
-        this.currentSearch = new CurrentSearch(() -> new AbstractModelFilter<TypeDescriptor>() {
-            @Override
-            @NonNull
-            protected String getItemValue(@NonNull final TypeDescriptor item) {
-                return item.getSimpleName();
-            }
-            @Override
-            protected void update(@NonNull final TypeDescriptor item) {
-                String searchText = getSearchText();
-                if (searchText == null) {
-                    searchText = "";    //NOI18N
+        this.currentSearch = new CurrentSearch<>(
+                () -> new AbstractModelFilter<>() {
+                    @Override
+                    protected String getItemValue(@NonNull final TypeDescriptor item) {
+                        return item.getSimpleName();
+                    }
+                    @Override
+                    protected void update(@NonNull final TypeDescriptor item) {
+                        String searchText = getSearchText();
+                        if (searchText == null) {
+                            searchText = "";    //NOI18N
+                        }
+                        TypeProviderAccessor.DEFAULT.setHighlightText(item, searchText);
+                    }
                 }
-                TypeProviderAccessor.DEFAULT.setHighlightText(item, searchText);
-            }
-        });
+        );
     }
 
     @Override
@@ -164,7 +161,7 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
     }
 
     public Iterable<? extends TypeDescriptor> getSelectedTypes(final boolean visible, String initSearchText) {
-        Iterable<? extends TypeDescriptor> result = Collections.emptyList();
+        Iterable<? extends TypeDescriptor> result = List.of();
         try {
             panel = new GoToPanel(this, multiSelection);
             dialog = createDialog(panel);
@@ -207,8 +204,8 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
 
 
     @Override
-    public ListCellRenderer getListCellRenderer(
-            @NonNull final JList list,
+    public ItemRenderer<TypeDescriptor> getListCellRenderer(
+            @NonNull final JList<TypeDescriptor> list,
             @NonNull final ButtonModel caseSensitive) {
         Parameters.notNull("list", list);   //NOI18N
         Parameters.notNull("caseSensitive", caseSensitive); //NOI18N
@@ -217,7 +214,6 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
                 caseSensitive,
                 new TypeDescriptorConvertor()).build();
     }
-
 
     @Override
     public boolean setListModel( GoToPanel panel, String text ) {
@@ -252,12 +248,12 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
         }
 
         final boolean exact = text.endsWith(" "); // NOI18N
-        text = text.trim();
+        text = text.strip();
         if ( text.isEmpty() || !Utils.isValidInput(text)) {
             currentSearch.filter(
                     SearchType.EXACT_NAME,
                     text,
-                    Collections.singletonMap(AbstractModelFilter.OPTION_CLEAR, Boolean.TRUE));
+                    Map.of(AbstractModelFilter.OPTION_CLEAR, Boolean.TRUE));
             panel.revalidateModel();
             return false;
         }
@@ -501,13 +497,13 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
                     caseSensitive,
                     GoToSettings.getDefault().isSortingPreferOpenProjects());
             itemsComparator = ic;
-            final Models.MutableListModel baseModel = Models.mutable(
+            final Models.MutableListModel<TypeDescriptor> baseModel = Models.mutable(
                 ic,
                 currentSearch.resetFilter(),
                 null);
-            final ListModel model = typeFilter != null ?
-                    FilteredListModel.create(baseModel, new FilterAdaptor(typeFilter), NbBundle.getMessage(GoToTypeAction.class, "LBL_Computing")) :
-                    baseModel;
+            ListModel<TypeDescriptor> model = typeFilter != null
+                    ? FilteredListModel.create(baseModel, new FilterAdaptor(typeFilter), null)
+                    : baseModel;
             for (;;) {
                 final int[] retry = new int[1];
 
@@ -613,6 +609,8 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
                     final TypeProvider.Result result = TypeProviderAccessor.DEFAULT.createResult(items, message, context);
                     provider.computeTypeNames(context, result);
                     retry[0] = mergeRetryTimeOut(retry[0], TypeProviderAccessor.DEFAULT.getRetry(result));
+                } catch (Exception ex) {
+                    LOGGER.log(Level.SEVERE, "Provider ''" + provider.getDisplayName() + "'' yields an exception", ex);
                 } finally {
                     current = null;
                 }
@@ -652,7 +650,7 @@ public class GoToTypeAction extends AbstractAction implements GoToPanel.ContentP
 
     private class DialogButtonListener implements ActionListener {
 
-        private GoToPanel panel;
+        private final GoToPanel panel;
 
         public DialogButtonListener( GoToPanel panel ) {
             this.panel = panel;

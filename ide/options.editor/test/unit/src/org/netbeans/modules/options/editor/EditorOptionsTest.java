@@ -88,7 +88,7 @@ public class EditorOptionsTest extends NbTestCase {
             controllers.add (pc);
             lookups.add (pc.getLookup ());
         }
-        Lookup masterLookup = new ProxyLookup(lookups.toArray (new Lookup [lookups.size ()]));
+        Lookup masterLookup = new ProxyLookup(lookups.toArray (new Lookup [0]));
         for(OptionsPanelController pc : controllers) {
             JComponent c = pc.getComponent (masterLookup);
             pc.update ();
@@ -104,7 +104,7 @@ public class EditorOptionsTest extends NbTestCase {
             controllers.add (pc);
             lookups.add (pc.getLookup ());
         }
-        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[lookups.size()]));
+        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[0]));
         for(OptionsPanelController pc : controllers) {
             JComponent c = pc.getComponent (masterLookup);
             pc.update ();
@@ -120,7 +120,7 @@ public class EditorOptionsTest extends NbTestCase {
             controllers.add (pc);
             lookups.add (pc.getLookup ());
         }
-        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[lookups.size()]));
+        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[0]));
         for(OptionsPanelController pc : controllers) {
             JComponent c = pc.getComponent (masterLookup);
             pc.update();
@@ -138,7 +138,7 @@ public class EditorOptionsTest extends NbTestCase {
             controllers.add (pc);
             lookups.add (pc.getLookup ());
         }
-        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[lookups.size()]));
+        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[0]));
         
         // 2) create panels & call cancel on all PanelControllers
         for(OptionsPanelController pc : controllers) {
@@ -158,7 +158,7 @@ public class EditorOptionsTest extends NbTestCase {
             controllers.add (pc);
             lookups.add (pc.getLookup ());
         }
-        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[lookups.size()]));
+        Lookup masterLookup = new ProxyLookup(lookups.toArray(new Lookup[0]));
         
         // 2) create panels & call cancel on all PanelControllers
         for(OptionsPanelController pc : controllers) {

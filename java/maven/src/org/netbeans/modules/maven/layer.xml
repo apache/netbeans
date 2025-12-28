@@ -53,6 +53,7 @@
                 <file name="settings.xml" url="settings.template.xml">
                     <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                     <attr name="template.openFile" boolvalue="false"/>
+                    <attr name="position" intvalue="110"/>
                 </file>
             </folder>
         </folder>
@@ -180,6 +181,12 @@
                 <folder name="org.sonatype.nexus.maven.staging.deploy.DeployLifecycleParticipant">
                     <attr name="ignoreOnModelLoad" boolvalue="true"/>
                 </folder>
+                <folder name="eu.maveniverse.maven.njord.extension3.NjordSessionLifecycleParticipant">
+                    <attr name="ignoreOnModelLoad" boolvalue="true"/>
+                </folder>
+                <folder name="eu.maveniverse.maven.shared.extension.RuntimeRequirementEnforcerLifecycleParticipant">
+                    <attr name="ignoreOnModelLoad" boolvalue="true"/>
+                </folder>
             </folder>
             <file name="nbactions.xml" url="nbactions.xml"/>
             <folder name="RunGoals">
@@ -189,6 +196,9 @@
                 <file name="org.codehaus.mojo:exec-maven-plugin">
                     <attr name="goals" stringvalue="exec"/>
                 </file>
+            </folder>
+            <folder name="configuredPlugins">
+                <!-- Placeholder -->
             </folder>
         </folder>
     </folder>

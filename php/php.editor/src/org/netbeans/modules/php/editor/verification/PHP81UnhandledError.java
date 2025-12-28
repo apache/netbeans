@@ -252,6 +252,7 @@ public final class PHP81UnhandledError extends UnhandledErrorRule {
 
         private boolean isNumber(Scalar scalar) {
             return scalar.getScalarType() == Scalar.Type.INT
+                    || scalar.getScalarType() == Scalar.Type.FLOAT
                     || scalar.getScalarType() == Scalar.Type.REAL;
         }
 

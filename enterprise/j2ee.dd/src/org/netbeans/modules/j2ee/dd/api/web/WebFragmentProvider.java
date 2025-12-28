@@ -79,7 +79,12 @@ public final class WebFragmentProvider {
 
     private WebFragment createWebFragment(FileObject fo, String version) throws IOException, SAXException {
         try {
-            if (WebFragment.VERSION_6_0.equals(version)) {
+            if (WebFragment.VERSION_6_1.equals(version)) {
+                try (InputStream inputStream = fo.getInputStream()) {
+                    return org.netbeans.modules.j2ee.dd.impl.web.model_6_1_frag.WebFragment.createGraph(inputStream);
+                }
+            } else 
+                if (WebFragment.VERSION_6_0.equals(version)) {
                 try (InputStream inputStream = fo.getInputStream()) {
                     return org.netbeans.modules.j2ee.dd.impl.web.model_6_0_frag.WebFragment.createGraph(inputStream);
                 }

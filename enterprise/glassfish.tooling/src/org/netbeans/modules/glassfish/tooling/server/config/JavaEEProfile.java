@@ -28,10 +28,7 @@ import java.util.Map;
  */
 public enum JavaEEProfile {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** JavaEE 1.2. */
     v1_2(Version.v1_2, Type.FULL, "1.2"),
 
@@ -84,12 +81,15 @@ public enum JavaEEProfile {
     v10_0_0_web(Version.v10_0_0, Type.WEB, "10.0.0-web"),
 
     /** JakartaEE 10 full profile. */
-    v10_0_0(Version.v10_0_0, Type.FULL, "10.0.0");
+    v10_0_0(Version.v10_0_0, Type.FULL, "10.0.0"),
+    
+    /** JakartaEE 11 web profile. */
+    v11_0_0_web(Version.v11_0_0, Type.WEB, "11.0.0-web"),
 
-    ////////////////////////////////////////////////////////////////////////////
+    /** JakartaEE 11 full profile. */
+    v11_0_0(Version.v11_0_0, Type.FULL, "11.0.0");
+
     // Inner enums                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** JavaEE profile type. */
     public enum Type {
         /** Web profile. */
@@ -144,7 +144,9 @@ public enum JavaEEProfile {
         /** JakartaEE 9.1. */
         v9_1_0("9.1.0"),
         /** JakartaEE 10 */
-        v10_0_0("10.0.0");
+        v10_0_0("10.0.0"),
+        /** JakartaEE 11 */
+        v11_0_0("11.0.0");
 
         /** JavaEE profile type name. */
         private final String name;
@@ -170,10 +172,7 @@ public enum JavaEEProfile {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish JavaEE profile enumeration length. */
     public static final int length = JavaEEProfile.values().length;
 
@@ -197,10 +196,7 @@ public enum JavaEEProfile {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create JavaEE profile names to be recognized.
      * <p/>
@@ -287,10 +283,7 @@ public enum JavaEEProfile {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** JavaEE profile version. */
     private final Version version;
 
@@ -300,10 +293,7 @@ public enum JavaEEProfile {
     /** Name of JavaEE profile value. */
     private final String name;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of JavaEE profiles supported by Glassfish.
      * <p/>
@@ -318,10 +308,7 @@ public enum JavaEEProfile {
         this.name = name;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Converts JavaEE profile version value to <code>String</code>.
      * <p/>

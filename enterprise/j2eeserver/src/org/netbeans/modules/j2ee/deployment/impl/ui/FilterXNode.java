@@ -74,7 +74,7 @@ public class FilterXNode extends FilterNode {
             actions.addAll(Arrays.asList(xnode.getActions(context)));
         }
         actions.addAll(Arrays.asList(getOriginal().getActions(context)));
-        return (Action[]) actions.toArray(new Action[actions.size()]);
+        return (Action[]) actions.toArray(new Action[0]);
     }
 
     public org.openide.nodes.Node.Cookie getCookie(Class type) {
@@ -130,6 +130,6 @@ public class FilterXNode extends FilterNode {
         if (top != null)
             retList.add(top);
         retList.addAll(ret.values());
-        return (PropertySet[]) retList.toArray(new PropertySet[retList.size()]);
+        return (PropertySet[]) retList.toArray(new PropertySet[0]);
     }
 }

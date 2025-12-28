@@ -18,85 +18,40 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
  *
  * @author lkishalmi
  */
-public abstract class HCLTemplate extends HCLExpression {
+public sealed interface HCLTemplate extends HCLExpression {
     
-    public final List<Part> parts;
+    List<? extends Part> parts();
 
-    public HCLTemplate(List<Part> parts) {
-        this.parts = Collections.unmodifiableList(parts);
-    }
-    
-    @Override
-    public List<? extends HCLExpression> getChildren() {
-        return Collections.emptyList();
-    }
-    
-    public abstract static class Part {
-        public final String value;
-
-        public Part(String value) {
-            this.value = value;
-        }        
-    }
-    
-    public final static class StringPart extends Part {
-        
+    public sealed interface Part {
         public static final StringPart NL = new StringPart("\n");
 
-        public StringPart(String value) {
-            super(value);
+        String value();
+        default String asString() {
+            if (this instanceof StringPart) return value();
+            if (this instanceof InterpolationPart) return "${" + value() + "}";
+            if (this instanceof TemplatePart) return "%{" + value() + "}";
+            return null;
         }
 
-        @Override
-        public String toString() {
-            return value;
-        }
+        public record StringPart(String value) implements Part {}
+        /**
+         * This is just a temporal implementation as the template expression
+         * should really form a tree.
+         */
+        public record InterpolationPart(String value) implements Part {}
+        public record TemplatePart(String value) implements Part {}
     }
     
-    public final static class InterpolationPart extends Part {
+    public record HereDoc(String marker, int indent, List<Part> parts) implements HCLTemplate {
 
-        public InterpolationPart(String value) {
-            super(value);
-        }
-
-        @Override
-        public String toString() {
-            return "${" + value + "}";
-        }
-    }
-
-    /**
-     * This is just a temporal implementation as the template expression
-     * should really form a tree.
-     */
-    public final static class TemplatePart extends Part {
-        
-        public TemplatePart(String value) {
-            super(value);
-        }
-
-        @Override
-        public String toString() {
-            return "%{" + value + "}";
-        }
-        
-    }
-    
-    public final static class HereDoc extends HCLTemplate {
-        public final String marker;
-        public final int indent;
-
-        public HereDoc(String marker, int indent, List<Part> parts) {
-            super(parts);
-            this.marker = marker;
-            this.indent = indent;
+        public HereDoc {
+            parts = List.copyOf(parts);
         }
 
         public boolean isIndented() {
@@ -115,10 +70,10 @@ public abstract class HCLTemplate extends HCLExpression {
         }
     }
     
-    public final static class StringTemplate extends HCLTemplate {
+    public record StringTemplate(List<Part> parts) implements HCLTemplate {
 
-        public StringTemplate(List<Part> parts) {
-            super(parts);
+        public StringTemplate {
+            parts = List.copyOf(parts);
         }
 
         @Override

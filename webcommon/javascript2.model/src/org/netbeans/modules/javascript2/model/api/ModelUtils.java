@@ -1769,8 +1769,6 @@ public class ModelUtils {
             while (token.id() != JsTokenId.OPERATOR_SEMICOLON
                     && token.id() != JsTokenId.BRACKET_RIGHT_CURLY && token.id() != JsTokenId.BRACKET_LEFT_CURLY
                     && token.id() != JsTokenId.BRACKET_LEFT_PAREN
-                    && token.id() != JsTokenId.BLOCK_COMMENT
-                    && token.id() != JsTokenId.LINE_COMMENT
                     && token.id() != JsTokenId.OPERATOR_ASSIGNMENT
                     && token.id() != JsTokenId.OPERATOR_PLUS) {
 
@@ -1791,7 +1789,7 @@ public class ModelUtils {
                         }
                     }
                 }
-                if (token.id() != JsTokenId.EOL) {
+                if (token.id() != JsTokenId.WHITESPACE && token.id() != JsTokenId.EOL && token.id() != JsTokenId.BLOCK_COMMENT && token.id() != JsTokenId.LINE_COMMENT) {
                     if (token.id() != JsTokenId.OPERATOR_DOT && token.id() != JsTokenId.OPERATOR_OPTIONAL_ACCESS) {
                         if (token.id() == JsTokenId.BRACKET_RIGHT_PAREN) {
                             parenBalancer++;
@@ -1847,7 +1845,7 @@ public class ModelUtils {
                         wasLastDot = true;
                     }
                 } else {
-                    if (!wasLastDot && ts.movePrevious()) {
+                    if (token.id() != JsTokenId.BLOCK_COMMENT && token.id() != JsTokenId.LINE_COMMENT && !wasLastDot && ts.movePrevious()) {
                         // check whether it's continuatino of previous line
                         token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.WHITESPACE, JsTokenId.BLOCK_COMMENT, JsTokenId.LINE_COMMENT));
                         if (token.id() != JsTokenId.OPERATOR_DOT && token.id() != JsTokenId.OPERATOR_OPTIONAL_ACCESS) {

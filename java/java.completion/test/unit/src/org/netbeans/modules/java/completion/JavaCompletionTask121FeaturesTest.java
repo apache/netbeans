@@ -19,7 +19,17 @@
 
 package org.netbeans.modules.java.completion;
 
+import java.util.concurrent.CountDownLatch;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.GlobalPathRegistry;
+import org.netbeans.api.java.source.ClassIndexListener;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.RootsEvent;
+import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.api.java.source.TypesEvent;
 import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.netbeans.modules.parsing.api.indexing.IndexingManager;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 
 /**
  *
@@ -28,6 +38,7 @@ import org.netbeans.modules.java.source.parsing.JavacParser;
 public class JavaCompletionTask121FeaturesTest extends CompletionTestBase {
 
     private static final String SOURCE_LEVEL = "21"; //NOI18N
+    private ClassPath classPathRegistered;
 
     public JavaCompletionTask121FeaturesTest(String testName) {
         super(testName);
@@ -115,6 +126,88 @@ public class JavaCompletionTask121FeaturesTest extends CompletionTestBase {
 
     public void TODOtestNoCrash() throws Exception {
         performTest("SwitchPatternMatching", 1275, "case R(var s,", "AutoCompletion_Guard_PatternMatchingSwitch.pass", SOURCE_LEVEL);
+    }
+
+    public void testSealedTypeSwitch1() throws Exception {
+        performTest("SwitchWithSealedType", 1084, null, "sealedTypeSwitch.pass", SOURCE_LEVEL);
+    }
+
+    public void testSealedTypeSwitch2() throws Exception {
+        performTest("SwitchWithSealedType", 1084, "java.lang.", "javaLangSubPackages.pass", SOURCE_LEVEL);
+    }
+
+    public void testSealedTypeSwitch3() throws Exception {
+        performTest("SwitchWithSealedType", 1084, "java.lang.annotation.", "empty.pass", SOURCE_LEVEL);
+    }
+
+    public void testSealedTypeSwitchTypeFiltering() throws Exception {
+        performTest("SwitchWithSealedType", 1084, "J j -> {} case ", "sealedTypeSwitchJFiltered.pass", SOURCE_LEVEL);
+    }
+
+    public void testSealedTypeSwitchTypeFilteringGuard() throws Exception {
+        performTest("SwitchWithSealedType", 1084, "J j when j == null -> {} case ", "sealedTypeSwitch.pass", SOURCE_LEVEL);
+    }
+
+    public void testSealedTypeSwitchTypeFilteringQualified() throws Exception {
+        performTest("SwitchWithSealedType", 1084, "J j -> {} case test.Test.", "sealedTypeSwitchJFilteredQualified.pass", SOURCE_LEVEL);
+    }
+
+    public void testSealedTypeSwitchTypeFilteringQualifiedPackage() throws Exception {
+        performTest("SwitchWithSealedType", 1084, "J j -> {} case test.", "sealedTypeSwitchJFilteredQualifiedPackage.pass", SOURCE_LEVEL);
+    }
+
+    public void testSealedTypeSwitchEnumFiltering() throws Exception {
+        performTest("SwitchWithSealedType", 1084, "EJ.A -> {} case ", "sealedTypeSwitchEJAFiltered.pass", SOURCE_LEVEL);
+    }
+
+    public void testSealedTypeSwitchEnumFilteringQualified1() throws Exception {
+        performTest("SwitchWithSealedType", 1084, "EJ.A -> {} case test.Test.", "sealedTypeSwitchEJAFilteredQualified1.pass", SOURCE_LEVEL);
+    }
+
+    public void testSealedTypeSwitchEnumFilteringQualified2() throws Exception {
+        performTest("SwitchWithSealedType", 1084, "EJ.A -> {} case test.Test.EJ.", "sealedTypeSwitchEJAFilteredQualified2.pass", SOURCE_LEVEL);
+    }
+
+    public void testNonSealedTypeSwitch1() throws Exception {
+        performTest("SwitchWithNonSealedType", 1070, null, "nonSealedTypeSwitch.pass", SOURCE_LEVEL);
+    }
+
+    @Override
+    protected void afterTestSetup() throws Exception {
+        if (getName().startsWith("testSealed")) {
+            classPathRegistered = ClassPathSupport.createClassPath(getWorkDir().toURI().toURL());
+            CountDownLatch started = new CountDownLatch(1);
+            ClasspathInfo info = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, classPathRegistered);
+            ClassIndexListener listener = new ClassIndexListener() {
+                @Override
+                public void typesAdded(TypesEvent event) {}
+                @Override
+                public void typesRemoved(TypesEvent event) {}
+                @Override
+                public void typesChanged(TypesEvent event) {}
+                @Override
+                public void rootsAdded(RootsEvent event) {
+                    started.countDown();
+                }
+                @Override
+                public void rootsRemoved(RootsEvent event) {}
+            };
+            info.getClassIndex().addClassIndexListener(listener);
+            GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, new ClassPath[] {classPathRegistered});
+            IndexingManager.getDefault().refreshAllIndices(true, true, getWorkDir());
+            started.await();
+            info.getClassIndex().removeClassIndexListener(listener);
+            SourceUtils.waitScanFinished();
+        }
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        if (classPathRegistered != null) {
+            GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, new ClassPath[] {classPathRegistered});
+            SourceUtils.waitScanFinished();
+        }
+        super.tearDown();
     }
 
     static {

@@ -28,7 +28,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -41,6 +40,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
+import org.netbeans.api.db.explorer.JDBCDriver;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.lib.ddl.DDLException;
@@ -54,6 +54,8 @@ import org.netbeans.modules.db.explorer.dlg.ConnectProgressDialog;
 import org.netbeans.modules.db.explorer.dlg.ConnectionDialog;
 import org.netbeans.modules.db.explorer.dlg.ConnectionDialogMediator;
 import org.netbeans.modules.db.explorer.dlg.SchemaPanel;
+import org.netbeans.modules.db.util.DriverListUtil;
+import org.netbeans.modules.db.util.JdbcUrl;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -62,7 +64,6 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.awt.ActionState;
 import org.openide.util.ContextAwareAction;
-import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
@@ -127,6 +128,7 @@ public class ConnectAction extends AbstractAction implements ContextAwareAction,
         // when using the progress bar.  The flag is set in the property
         // change listener when the status changes to "failed".          
         volatile boolean failed = false;
+        volatile SQLException sqlException = null;
 
         /** Shows notification if DatabaseConnection fails. */
         final ExceptionListener excListener = new ExceptionListener() {
@@ -140,13 +142,15 @@ public class ConnectAction extends AbstractAction implements ContextAwareAction,
                 }
 
                 String message = null;
+                sqlException = exc instanceof SQLException ? (SQLException)exc : null;
                 if (exc instanceof ClassNotFoundException) {
                     message = MessageFormat.format(NbBundle.getMessage(ConnectAction.class, "EXC_ClassNotFound"), exc.getMessage()); //NOI18N
                 } else {
                     StringBuilder buffer = new StringBuilder();
                     buffer.append(DbUtilities.formatError(NbBundle.getMessage(ConnectAction.class, "ERR_UnableToConnect"), exc.getMessage())); //NOI18N
                     if (exc instanceof DDLException && exc.getCause() instanceof SQLException) {
-                        SQLException sqlEx = ((SQLException) exc.getCause()).getNextException();
+                        sqlException = (SQLException) exc.getCause();
+                        SQLException sqlEx = sqlException.getNextException();
                         while (sqlEx != null) {
                             buffer.append("\n\n").append(sqlEx.getMessage()); // NOI18N
                             sqlEx = sqlEx.getNextException();
@@ -328,16 +332,18 @@ public class ConnectAction extends AbstractAction implements ContextAwareAction,
                 } catch (Exception exc) {
                     String message = MessageFormat.format(NbBundle.getMessage (ConnectAction.class, "ERR_UnableToConnect"), exc.getMessage()); // NOI18N
                     DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(message, NotifyDescriptor.ERROR_MESSAGE));
-                    
+                    sqlException = exc instanceof SQLException ? (SQLException)exc : null;
                     failed = true;
                 }
                 dbcon.removeExceptionListener(excListener);
-                if ( failed ) {
+                if (failed && sqlException != null) {
                     // If the connection fails with a progress bar only, then 
                     // display the full Connect dialog so the user can give it
                     // another shot after changing some values, like the username
                     // or password.
-                    showDialog(dbcon, true);
+                    Throwable cause = sqlException.getCause();
+                    if (cause == null || !(cause instanceof ClassNotFoundException))
+                        showDialog(dbcon, true);
                 }
             }
         }
@@ -365,13 +371,20 @@ public class ConnectAction extends AbstractAction implements ContextAwareAction,
         }
 
         private boolean supportsConnectWithoutUsername(DatabaseConnection dc) {
-            try {
-                return dc.findJDBCDriver().getClassName().equals("org.sqlite.JDBC") //NOI18N
-                        || dc.findJDBCDriver().getClassName().equals("org.h2.Driver"); //NOI18N
-            } catch (NullPointerException ex) {
-                // Most probably findJDBCDriver failed to find a driver
+            JDBCDriver driver = dc.findJDBCDriver();
+            if (driver == null) {
                 return false;
             }
+            List<JdbcUrl> urls = DriverListUtil.getJdbcUrls(driver);
+            if (urls.isEmpty()) {
+                return false;
+            }
+            for (JdbcUrl url : urls) {
+                if (url.isUsernamePasswordDisplayed()) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private void connectWithNewInfo(DatabaseConnection dbcon, Credentials input) {

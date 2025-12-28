@@ -246,8 +246,10 @@ public final class DDProvider {
             return new org.netbeans.modules.j2ee.dd.impl.application.model_8.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
         } else if (Application.VERSION_9.equals(version)) {
             return new org.netbeans.modules.j2ee.dd.impl.application.model_9.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
-        }else if (Application.VERSION_10.equals(version)) {
+        } else if (Application.VERSION_10.equals(version)) {
             return new org.netbeans.modules.j2ee.dd.impl.application.model_10.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+        } else if (Application.VERSION_11.equals(version)) {
+            return new org.netbeans.modules.j2ee.dd.impl.application.model_11.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
         }
         return jar;
     }
@@ -274,6 +276,10 @@ public final class DDProvider {
                 return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_8.xsd"); //NOI18N
             } else if ("https://jakarta.ee/xml/ns/jakartaee/application_9.xsd".equals(systemId)) {
                 return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_9.xsd"); //NOI18N
+            } else if ("https://jakarta.ee/xml/ns/jakartaee/application_10.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_10.xsd"); //NOI18N
+            } else if ("https://jakarta.ee/xml/ns/jakartaee/application_11.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_11.xsd"); //NOI18N
             } else {
                 // use the default behaviour
                 return null;
@@ -390,7 +396,11 @@ public final class DDProvider {
                     Node vNode = attrs.getNamedItem("version");//NOI18N
                     if(vNode != null) {
                         String versionValue = vNode.getNodeValue();
-                        if (Application.VERSION_9.equals(versionValue)) {
+                        if (Application.VERSION_11.equals(versionValue)) {
+                            version = Application.VERSION_11;
+                        } else if (Application.VERSION_10.equals(versionValue)) {
+                            version = Application.VERSION_10;
+                        } else if (Application.VERSION_9.equals(versionValue)) {
                             version = Application.VERSION_9;
                         } else if (Application.VERSION_8.equals(versionValue)) {
                             version = Application.VERSION_8;

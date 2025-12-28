@@ -33,6 +33,7 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.CharBuffer;
+import java.nio.file.Files;
 import java.sql.Clob;
 import java.sql.SQLException;
 import org.openide.util.Exceptions;
@@ -55,7 +56,7 @@ public class FileBackedClob implements Clob {
 
     public FileBackedClob() throws SQLException {
         try {
-            backingFile = File.createTempFile("netbeans-db-blob", null);
+            backingFile = Files.createTempFile("netbeans-db-blob", null).toFile();
             backingFile.deleteOnExit();
         } catch (IOException ex) {
             throw new SQLException(ex);

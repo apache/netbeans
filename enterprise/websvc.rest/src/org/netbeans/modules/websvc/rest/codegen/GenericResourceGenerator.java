@@ -220,15 +220,15 @@ public class GenericResourceGenerator extends AbstractGenerator {
                         annotations.add(RestConstants.PATH_ANNOTATION);
                         annotationAttributes.add(bean.getUriTemplate());
                     }
-                    if ( cdiEnabled){
+                    if (cdiEnabled) {
                         annotations.add( Constants.REQUESTED_SCOPE);
                         annotationAttributes.add(null);
                     }
-                    if ( annotations.size() >0 ){
-                        JavaSourceHelper.addClassAnnotation(copy,
-                                annotations.toArray( new String[annotations.size()]) ,
-                                annotationAttributes.toArray( 
-                                        new Object[annotationAttributes.size()]));
+                    if (annotations.size() > 0){
+                        JavaSourceHelper.addClassAnnotation(
+                                copy,
+                                annotations.toArray(new String[0]),
+                                annotationAttributes.toArray(new Object[0]));
                     }
                     ClassTree initial = JavaSourceHelper.getTopLevelClassTree(copy);
                     ClassTree tree = addMethods(copy, initial);
@@ -266,7 +266,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
         if (rbean.getQueryParameters().size() > 0) {
             result.add(jakartaNamespace ? RestConstants.QUERY_PARAM_JAKARTA : RestConstants.QUERY_PARAM);
         }
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
     
     protected ClassTree addMethods(WorkingCopy copy, ClassTree tree) {
@@ -530,7 +530,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             params.addAll(Arrays.asList(bean.getUriParams()));
         }
         params.addAll(Arrays.asList(getParamNames(queryParams)));
-        return params.toArray(new String[params.size()]);
+        return params.toArray(new String[0]);
     }
     
     private String[] getGetParamTypes(List<ParameterInfo> queryParams) {
@@ -539,7 +539,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             types.addAll(Arrays.asList(getUriParamTypes()));
         }
         types.addAll(Arrays.asList(getParamTypeNames(queryParams)));
-        return types.toArray(new String[types.size()]);
+        return types.toArray(new String[0]);
     }
     
     private Object[] getParamAnnotationAttributes(int allParamCount) {
@@ -591,7 +591,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             annos.add(annotations);
         }
     
-        return annos.toArray(new String[annos.size()][]);
+        return annos.toArray(new String[0][]);
     }
     
     private Object[][] getGetParamAnnotationAttrs(List<ParameterInfo> queryParams) {
@@ -614,14 +614,14 @@ public class GenericResourceGenerator extends AbstractGenerator {
             attrs.add(annotationAttrs);
         }
     
-        return attrs.toArray(new Object[attrs.size()][]);
+        return attrs.toArray(new Object[0][]);
     }
     
     private String[] getPostPutParams() {
         if (bean.isRootResource()) {
             List<String> params = new ArrayList<String>(Arrays.asList(bean.getUriParams()));
             params.add("content");  // NOI18N
-            return params.toArray(new String[params.size()]);
+            return params.toArray(new String[0]);
         } else {
             return new String[] {"content"}; //NOI18N
         }
@@ -660,7 +660,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             results.add(param.getName());
         }
         
-        return results.toArray(new String[results.size()]);
+        return results.toArray(new String[0]);
     }
     
     private String[] getParamTypeNames(List<ParameterInfo> params) {
@@ -670,7 +670,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             results.add(param.getTypeName());
         }
         
-        return results.toArray(new String[results.size()]);
+        return results.toArray(new String[0]);
     }
     
     private Object[] getParamValues(List<ParameterInfo> params) {
@@ -686,7 +686,7 @@ public class GenericResourceGenerator extends AbstractGenerator {
             results.add(defaultValue);
         }
         
-        return results.toArray(new Object[results.size()]);
+        return results.toArray(new Object[0]);
     }
 
     private GenericResourceBean getSubresourceBean() {

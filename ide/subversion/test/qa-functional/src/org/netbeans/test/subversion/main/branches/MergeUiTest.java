@@ -135,23 +135,23 @@ public class MergeUiTest extends JellyTestCase {
             //moro.selectRepositoryFolder("ok");
             
             
-////            assertEquals("Wrong folder selection!!!", "tags", moro.getRepositoryFolder());
+// //            assertEquals("Wrong folder selection!!!", "tags", moro.getRepositoryFolder());
 //            moro.setRepositoryFolder("");
 //            //1. two repository operator
 //            moro.cboMergeFrom().selectItem(2);
 //            MergeTwoRepoOperator mtro = new MergeTwoRepoOperator();
 //            //mtro.verify();
 //            rbo = mtro.browseRepositoryFolder1();
-////            rbo.selectFolder("trunk");
-////            rbo.selectFolder("branches");
-////            rbo.selectFolder("tags");
+// //            rbo.selectFolder("trunk");
+// //            rbo.selectFolder("branches");
+// //            rbo.selectFolder("tags");
 //            rbo.ok();
 //            assertEquals("Wrong folder selection!!!", "tags", mtro.getRepositoryFolder1());
 //            mtro.setRepositoryFolder1("");
 //            rbo = mtro.browseRepositoryFolder2();
-////            rbo.selectFolder("tags");
-////            rbo.selectFolder("branches");
-////            rbo.selectFolder("trunk");
+// //            rbo.selectFolder("tags");
+// //            rbo.selectFolder("branches");
+// //            rbo.selectFolder("trunk");
 //            rbo.ok();
 //            assertEquals("Wrong folder selection!!!", "trunk", mtro.getRepositoryFolder2());
 //            mtro.setRepositoryFolder2("");
@@ -161,9 +161,9 @@ public class MergeUiTest extends JellyTestCase {
 //            MergeOriginOperator moo = new MergeOriginOperator();
 //            //moo.verify();
 //            rbo = moo.browseRepositoryFolder();
-////            rbo.selectFolder("trunk");
-////            rbo.selectFolder("branches");
-////            rbo.selectFolder("tags");
+// //            rbo.selectFolder("trunk");
+// //            rbo.selectFolder("branches");
+// //            rbo.selectFolder("tags");
         } catch (Exception e) {
             throw new Exception("Test failed: " + e);
         } finally {

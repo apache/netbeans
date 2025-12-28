@@ -19,6 +19,8 @@
 package org.netbeans.modules.web.beans.impl.model;
 
 import java.lang.annotation.ElementType;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,16 +32,20 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.Annotatio
 import org.netbeans.modules.web.beans.analysis.analyzer.annotation.InterceptorBindingVerifier;
 import org.netbeans.modules.web.beans.analysis.analyzer.annotation.TargetVerifier;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INTERCEPTOR_BINDING_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.INTERCEPTOR_BINDING_FQN_JAKARTA;
+
 
 /**
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 class InterceptorBindingChecker extends RuntimeAnnotationChecker {
-    
-    static final String INTERCEPTOR_BINDING = "javax.interceptor.InterceptorBinding"; // NOI18N
-    
+
+    private static final List<String> ANNOTATIONS = List.of(
+            INTERCEPTOR_BINDING_FQN, INTERCEPTOR_BINDING_FQN_JAKARTA
+    );
+
     InterceptorBindingChecker(AnnotationModelHelper helper){
         init( null,  helper );
     }
@@ -60,8 +66,8 @@ class InterceptorBindingChecker extends RuntimeAnnotationChecker {
      * @see org.netbeans.modules.web.beans.impl.model.RuntimeAnnotationChecker#getAnnotation()
      */
     @Override
-    protected String getAnnotation() {
-        return INTERCEPTOR_BINDING;
+    protected List<String> getAnnotation() {
+        return ANNOTATIONS;
     }
     
     

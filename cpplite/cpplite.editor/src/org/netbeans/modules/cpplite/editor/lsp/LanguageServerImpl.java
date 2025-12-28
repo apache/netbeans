@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.ProcessBuilder.Redirect;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +78,10 @@ public class LanguageServerImpl implements LanguageServerProvider {
         Utils.settings().addPreferenceChangeListener(new PreferenceChangeListener() {
             @Override
             public void preferenceChange(PreferenceChangeEvent evt) {
-                if (evt.getKey() == null || Utils.KEY_CCLS_PATH.equals(evt.getKey()) || Utils.KEY_CLANGD_PATH.equals(evt.getKey())) {
+                if (evt.getKey() == null
+                        || Utils.KEY_CCLS_PATH.equals(evt.getKey())
+                        || Utils.KEY_CLANGD_PATH.equals(evt.getKey())
+                        || Utils.KEY_PREFFERED_LS.equals(evt.getKey())) {
                     prj2Server.remove(prj);
                     restarter.restart();
                     Utils.settings().removePreferenceChangeListener(this);
@@ -88,13 +90,13 @@ public class LanguageServerImpl implements LanguageServerProvider {
         });
         String ccls = Utils.getCCLSPath();
         String clangd = Utils.getCLANGDPath();
-        if (ccls != null || clangd != null) {
+        if ((ccls != null && new File(ccls).canExecute())
+                || (clangd != null && new File(clangd).canExecute())) {
             Pair<Process, LanguageServerDescription> serverEntry = prj2Server.compute(prj, (p, pair) -> {
                 if (pair != null && pair.first().isAlive()) {
                     return pair;
                 }
                 try {
-                    List<String> command = new ArrayList<>();
 
                     CProjectConfigurationProvider config = getProjectSettings(prj);
                     config.addChangeListener(new ChangeListener() {
@@ -105,22 +107,40 @@ public class LanguageServerImpl implements LanguageServerProvider {
                             config.removeChangeListener(this);
                         }
                     });
-                    File compileCommandDirs = getCompileCommandsDir(config);
 
+
+                    File compileCommandDirs = getCompileCommandsDir(config);
                     if (compileCommandDirs != null) {
-                        if (ccls != null) {
-                            command.add(ccls);
-                            StringBuilder initOpt = new StringBuilder();
-                            initOpt.append("--init={\"compilationDatabaseDirectory\":\"");
-                            initOpt.append(compileCommandDirs.getAbsolutePath());
-                            initOpt.append("\"}");
-                            command.add(initOpt.toString());
-                        } else {
-                            command.add(clangd);
-                            command.add("--compile-commands-dir=" + compileCommandDirs.getAbsolutePath());
-                            command.add("--clang-tidy");
-                            command.add("--completion-style=detailed");
+                        Map<String, String> serverKey2Path = new HashMap<>();
+
+                        serverKey2Path.put(Utils.KEY_CCLS_PATH, ccls);
+                        serverKey2Path.put(Utils.KEY_CLANGD_PATH, clangd);
+
+                        List<String> command = null;
+
+                        SERVER_FOUND:
+                        for (String serverCandidate : new String[] {Utils.getPreferredLs(),
+                                                                    Utils.KEY_CCLS_PATH,
+                                                                    Utils.KEY_CLANGD_PATH}) {
+                            String currentServer = serverKey2Path.get(serverCandidate);
+                            if (currentServer != null && new File(currentServer).canExecute()) {
+                                command = switch (serverCandidate) {
+                                    case Utils.KEY_CCLS_PATH -> List.of(
+                                            currentServer,
+                                            "--init={\"compilationDatabaseDirectory\":\"" + compileCommandDirs.getAbsolutePath() + "\"}"
+                                    );
+                                    case Utils.KEY_CLANGD_PATH -> List.of(
+                                            currentServer,
+                                            "--compile-commands-dir=" + compileCommandDirs.getAbsolutePath(),
+                                            "--clang-tidy",
+                                            "--completion-style=detailed"
+                                    );
+                                    default -> throw new InternalError("Unknown server key: " + serverCandidate);
+                                };
+                                break SERVER_FOUND;
+                            }
                         }
+
                         ProcessBuilder builder = new ProcessBuilder(command);
                         if (LOG.isLoggable(Level.FINEST)) {
                             builder.redirectError(Redirect.INHERIT);

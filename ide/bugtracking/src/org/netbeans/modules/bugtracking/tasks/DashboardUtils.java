@@ -321,7 +321,7 @@ public class DashboardUtils {
             RepositoryImpl repository = getRepository(e.getKey());
             if (repository != null) {
                 List<String> l = e.getValue();
-                Collection<IssueImpl> issues = repository.getIssueImpls(l.toArray(new String[l.size()]));
+                Collection<IssueImpl> issues = repository.getIssueImpls(l.toArray(new String[0]));
                 if (issues != null) {
                     tasks.addAll(issues);
                 }

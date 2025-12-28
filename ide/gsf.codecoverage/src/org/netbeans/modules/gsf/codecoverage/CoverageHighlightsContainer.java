@@ -209,7 +209,7 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
 
             int lineStart = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
             if (lineStart == -1) {
-                lineStart = LineDocumentUtils.getLineStart(doc, offset);
+                lineStart = LineDocumentUtils.getLineStartOffset(doc, offset);
             }
             List<Position> positions = lastPositions;
             if (positions != null) {
@@ -315,7 +315,7 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
             try {
                 int lineStart = LineDocumentUtils.getLineFirstNonWhitespace(doc, startOffsetBoundary);
                 if (lineStart == -1) {
-                    lineStart = LineDocumentUtils.getLineStart(doc, startOffsetBoundary);
+                    lineStart = LineDocumentUtils.getLineStartOffset(doc, startOffsetBoundary);
                     index = findPositionIndex(positions, lineStart);
                     if (index < 0) {
                         index = -index;
@@ -329,14 +329,14 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
             for (; index < positions.size(); index++) {
                 Position pos = positions.get(index);
                 int offset = pos.getOffset();
-                offset = LineDocumentUtils.getLineStart(doc, offset);
-                if (offset > endOffsetBoundary) {
-                    break;
-                }
-                if (offset >= startOffsetBoundary) {
-                    startOffset = offset;
-                    try {
-                        endOffset = LineDocumentUtils.getLineEnd(doc, offset);
+                try {
+                    offset = LineDocumentUtils.getLineStartOffset(doc, offset);
+                    if (offset > endOffsetBoundary) {
+                        break;
+                    }
+                    if (offset >= startOffsetBoundary) {
+                        startOffset = offset;
+                        endOffset = LineDocumentUtils.getLineEndOffset(doc, offset);
                         if (endOffset < doc.getLength()) {
                             endOffset++; // Include end of line
                         }
@@ -357,11 +357,11 @@ public class CoverageHighlightsContainer extends AbstractHighlightsContainer imp
                             default:
                                 throw new IllegalArgumentException();
                         }
-                    } catch (BadLocationException ex) {
-                        Exceptions.printStackTrace(ex);
+                        index++;
+                        return true;
                     }
-                    index++;
-                    return true;
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
 

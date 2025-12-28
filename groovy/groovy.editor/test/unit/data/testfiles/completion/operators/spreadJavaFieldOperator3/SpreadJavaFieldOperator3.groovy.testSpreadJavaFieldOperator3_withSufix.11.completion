@@ -1,9 +1,0 @@
-Code completion result for source line:
-['abc', 'def']*.@|byt
-(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-------------------------------------
-FIELD      CASE_INSENSITIVE_ORDER          [STATIC,   Comparator<String>
-FIELD      blank                           [PUBLIC]   boolean
-FIELD      bytes                           [PUBLIC]   byte[]
-FIELD      class                           [PUBLIC]   Class
-FIELD      empty                           [PUBLIC]   boolean

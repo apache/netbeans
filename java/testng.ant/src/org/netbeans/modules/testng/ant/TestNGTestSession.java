@@ -163,7 +163,7 @@ public class TestNGTestSession extends TestSession {
                 roots.addAll(Arrays.asList(platform.getSourceFolders().getRoots()));
             }
 
-            result = ClassPathSupport.createClassPath(roots.toArray(new FileObject[roots.size()]));
+            result = ClassPathSupport.createClassPath(roots.toArray(new FileObject[0]));
 
             return result;
         }

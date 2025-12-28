@@ -30,10 +30,7 @@ import org.netbeans.modules.payara.tooling.utils.ServerUtils;
  */
 public class PayaraServerEntity implements PayaraServer {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara server name in IDE. Used as key attribute. */
     private String name;
 
@@ -63,11 +60,15 @@ public class PayaraServerEntity implements PayaraServer {
      *  (PayaraModule.DOCKER_ATTR). */
     private boolean docker;
 
-    /** Docker instance
+    /** WSL instance
+     *  (PayaraModule.WSL_ATTR). */
+    private boolean wsl;
+
+    /** Docker host path
      *  (PayaraModule.HOST_PATH_ATTR). */
     private String hostPath;
 
-    /** Docker instance
+    /** Docker container path
      *  (PayaraModule.CONTAINER_PATH_ATTR). */
     private String containerPath;
 
@@ -100,10 +101,7 @@ public class PayaraServerEntity implements PayaraServer {
     /** Payara server administration interface type. */
     private PayaraAdminInterface adminInterface;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs empty class instance. No default values are set.
      */
@@ -152,10 +150,7 @@ public class PayaraServerEntity implements PayaraServer {
         this.serverHome = serverHome;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Payara server name.
      * <p/>
@@ -446,7 +441,7 @@ public class PayaraServerEntity implements PayaraServer {
      */
     @Override
     public boolean isRemote() {
-        return domainsFolder == null;
+        return domainsFolder == null || docker || wsl;
     }
 
     @Override
@@ -458,6 +453,14 @@ public class PayaraServerEntity implements PayaraServer {
         this.docker = docker;
     }
 
+    @Override
+    public boolean isWSL() {
+        return wsl;
+    }
+    
+    public void setWSL(boolean wsl) {
+        this.wsl = wsl;
+    }
     @Override
     public String getHostPath() {
         return hostPath;

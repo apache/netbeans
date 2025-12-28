@@ -43,7 +43,6 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -243,20 +242,13 @@ public class Utilities {
         return null;
     }
 
-    private static final Map<Class, List<Kind>> class2Kind;
+    private static final Map<Class<?>, List<Kind>> class2Kind;
     
     static {
-        class2Kind = new HashMap<Class, List<Kind>>();
-        
-        for (Kind k : Kind.values()) {
-            Class c = k.asInterface();
-            List<Kind> kinds = class2Kind.get(c);
-            
-            if (kinds == null) {
-                class2Kind.put(c, kinds = new ArrayList<Kind>());
-            }
-            
-            kinds.add(k);
+        class2Kind = new HashMap<>();
+        for (Kind kind : Kind.values()) {
+            class2Kind.computeIfAbsent(kind.asInterface(), k -> new ArrayList<>())
+                      .add(kind);
         }
     }
     
@@ -268,16 +260,24 @@ public class Utilities {
         
         if (class2Kind.get(MethodTree.class).contains(leaf.getKind())) {
             MethodTree method = (MethodTree) leaf;
-            List<Tree> rightTrees = new ArrayList<Tree>();
+            TreePath parentPath = decl.getParentPath();
+            List<Tree> rightTrees = new ArrayList<>();
 
-            rightTrees.addAll(method.getParameters());
+            boolean ignoreParameters = parentPath.getLeaf().getKind() == Kind.RECORD &&
+                                       !method.getParameters().isEmpty() &&
+                                       info.getTreeUtilities().isSynthetic(new TreePath(decl, method.getParameters().get(0)));
+
+            if (!ignoreParameters) {
+                rightTrees.addAll(method.getParameters());
+            }
+
             rightTrees.addAll(method.getThrows());
             rightTrees.add(method.getBody());
 
             Name name = method.getName();
             
             if (method.getReturnType() == null)
-                name = ((ClassTree) decl.getParentPath().getLeaf()).getSimpleName();
+                name = ((ClassTree) parentPath.getLeaf()).getSimpleName();
             
             return findIdentifierSpanImpl(info, leaf, method.getReturnType(), rightTrees, name.toString(), info.getCompilationUnit(), info.getTrees().getSourcePositions());
         }
@@ -285,9 +285,15 @@ public class Utilities {
             VariableTree var = (VariableTree) leaf;
             // see #240912 - lambda implicit-typed parameter has synthetic type, shouldn't be searched.
             boolean typeSynthetic = var.getType() == null || info.getTreeUtilities().isSynthetic(new TreePath(decl, var.getType()));
-            return findIdentifierSpanImpl(info, leaf, 
+            return findIdentifierSpanImpl(
+                    info,
+                    leaf, 
                     typeSynthetic ? null : var.getType(), 
-                    Collections.singletonList(var.getInitializer()), var.getName().toString(), info.getCompilationUnit(), info.getTrees().getSourcePositions());
+                    Collections.singletonList(var.getInitializer()), // No List.of(), may be null
+                    var.getName().toString(),
+                    info.getCompilationUnit(),
+                    info.getTrees().getSourcePositions()
+            );
         }
         if (class2Kind.get(MemberSelectTree.class).contains(leaf.getKind())) {
             return findIdentifierSpanImpl(info, (MemberSelectTree) leaf, info.getCompilationUnit(), info.getTrees().getSourcePositions());
@@ -298,7 +304,7 @@ public class Utilities {
         if (class2Kind.get(ClassTree.class).contains(leaf.getKind())) {
             String name = ((ClassTree) leaf).getSimpleName().toString();
             
-            if (name.length() == 0)
+            if (name.isEmpty())
                 return null;
             
             SourcePositions positions = info.getTrees().getSourcePositions();
@@ -381,13 +387,11 @@ public class Utilities {
 
     public static int[] findIdentifierSpan( final TreePath decl, final CompilationInfo info, final Document doc) {
         final int[] result = new int[] {-1, -1};
-        Runnable r = new Runnable() {
-            public void run() {
-                Token<JavaTokenId> t = findIdentifierSpan(info, doc, decl);
-                if (t != null) {
-                    result[0] = t.offset(null);
-                    result[1] = t.offset(null) + t.length();
-                }
+        Runnable r = () -> {
+            Token<JavaTokenId> t = findIdentifierSpan(info, doc, decl);
+            if (t != null) {
+                result[0] = t.offset(null);
+                result[1] = t.offset(null) + t.length();
             }
         };
         if (doc != null) {
@@ -401,10 +405,8 @@ public class Utilities {
     public static Token<JavaTokenId> findIdentifierSpan(final CompilationInfo info, final Document doc, final TreePath decl) {
         @SuppressWarnings("unchecked")
         final Token<JavaTokenId>[] result = new Token[1];
-        Runnable r = new Runnable() {
-            public void run() {
-                result[0] = findIdentifierSpanImpl(info, decl);
-            }
+        Runnable r = () -> {
+            result[0] = findIdentifierSpanImpl(info, decl);
         };
         if (doc != null) {
             doc.render(r);
@@ -431,8 +433,8 @@ public class Utilities {
             if (o == null) {
                 continue;
             }
-            if (o instanceof Tree) {
-                int offset = (int)pos.getEndPosition(cu, (Tree)o);
+            if (o instanceof Tree tree) {
+                int offset = (int)pos.getEndPosition(cu, tree);
                 if (offset >= 0) {
                     return offset;
                 }
@@ -460,7 +462,7 @@ public class Utilities {
         }
         int startPos = -1;
         switch (cltree.getKind()) {
-            case CLASS: case INTERFACE: case ENUM: {
+            case CLASS, INTERFACE, ENUM -> {
                 ClassTree ct = (ClassTree)cltree;
                 startPos = findSubtreeEnd(cu, positions,
                         ct.getImplementsClause(),
@@ -468,14 +470,11 @@ public class Utilities {
                         ct.getTypeParameters(),
                         ct.getModifiers()
                 );
-                break;
             }
-                
-            case METHOD:  {
+            case METHOD -> {
                 // if the method contains some parameters, skip to the end of the parameter list
                 MethodTree mt = (MethodTree)cltree;
                 startPos = findSubtreeEnd(cu, positions, mt.getDefaultValue(), mt.getThrows(), mt.getParameters(), mt.getModifiers());
-                break;
             }
         }
         if (startPos > start) {
@@ -506,14 +505,13 @@ public class Utilities {
     
     public static int findBodyStart(final CompilationInfo info, final Tree cltree, final CompilationUnitTree cu, final SourcePositions positions, final Document doc) {
         Kind kind = cltree.getKind();
-        if (!TreeUtilities.CLASS_TREE_KINDS.contains(kind) && kind != Kind.METHOD && !cltree.getKind().toString().equals("RECORD"))
+        if (!TreeUtilities.CLASS_TREE_KINDS.contains(kind) && kind != Kind.METHOD) {
             throw new IllegalArgumentException("Unsupported kind: "+ kind);
+        }
         final int[] result = new int[1];
         
-        doc.render(new Runnable() {
-            public void run() {
-                result[0] = findBodyStartImpl(info, cltree, cu, positions, doc);
-            }
+        doc.render(() -> {
+            result[0] = findBodyStartImpl(info, cltree, cu, positions, doc);
         });
         
         return result[0];
@@ -554,10 +552,8 @@ public class Utilities {
     public static int findLastBracket(final Tree tree, final CompilationUnitTree cu, final SourcePositions positions, final Document doc) {
         final int[] result = new int[1];
         
-        doc.render(new Runnable() {
-            public void run() {
-                result[0] = findLastBracketImpl(tree, cu, positions, doc);
-            }
+        doc.render(() -> {
+            result[0] = findLastBracketImpl(tree, cu, positions, doc);
         });
         
         return result[0];
@@ -571,7 +567,7 @@ public class Utilities {
         //XXX: do not use instanceof:
         if (leaf instanceof MethodTree || leaf instanceof VariableTree || leaf instanceof ClassTree
                 || leaf instanceof MemberSelectTree || leaf instanceof AnnotatedTypeTree || leaf instanceof MemberReferenceTree
-                || "BINDING_PATTERN".equals(leaf.getKind().name())) {
+                || leaf.getKind() == Kind.BINDING_PATTERN) {
             return findIdentifierSpan(info, doc, tree);
         }
         
@@ -609,34 +605,16 @@ public class Utilities {
         @SuppressWarnings("unchecked")
         final Token<JavaTokenId>[] result = new Token[1];
         
-        doc.render(new Runnable() {
-            public void run() {
-                result[0] = createHighlightImpl(info, doc, tree);
-            }
+        doc.render(() -> {
+            result[0] = createHighlightImpl(info, doc, tree);
         });
         
         return result[0];
     }
     
-    private static final Set<String> keywords;
-    private static final Set<String> nonCtorKeywords;
-    
-    static {
-        keywords = new HashSet<String>();
-        
-        keywords.add("true");
-        keywords.add("false");
-        keywords.add("null");
-        keywords.add("this");
-        keywords.add("super");
-        keywords.add("class");
+    private static final Set<String> keywords = Set.of("true", "false", "null", "this", "super", "class");
+    private static final Set<String> nonCtorKeywords = Set.of("true", "false", "null", "class");
 
-        nonCtorKeywords = new HashSet<String>(keywords);
-        nonCtorKeywords.remove("this");
-        nonCtorKeywords.remove("super");
-
-    }
-    
     public static boolean isKeyword(Tree tree) {
         if (tree.getKind() == Kind.IDENTIFIER) {
             return keywords.contains(((IdentifierTree) tree).getName().toString());

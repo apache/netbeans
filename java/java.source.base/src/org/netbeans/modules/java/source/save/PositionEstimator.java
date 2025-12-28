@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 import javax.swing.text.StyledDocument;
 import org.netbeans.api.editor.guards.GuardedSection;
 import org.netbeans.api.editor.guards.GuardedSectionManager;
@@ -148,7 +149,6 @@ public abstract class PositionEstimator {
         return matrix; 
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // implementors
     static class ImplementsEstimator extends BaseEstimator {
         ImplementsEstimator(List<? extends Tree> oldL, 
@@ -168,6 +168,18 @@ public abstract class PositionEstimator {
         }
     }
     
+    static class PermitsEstimator extends BaseEstimator {
+        private static final java.lang.String CONSTANT = "permits";
+        PermitsEstimator(List<? extends Tree> oldL,
+                         List<? extends Tree> newL,
+                         DiffContext diffContext)
+        {
+            super(token -> token.id() != JavaTokenId.IDENTIFIER &&
+                           !CONSTANT.contentEquals(token.text()),
+                  CONSTANT, oldL, newL, diffContext);
+        }
+    }
+
     static class ThrowsEstimator extends BaseEstimator {
         ThrowsEstimator(List<? extends ExpressionTree> oldL, 
                         List<? extends ExpressionTree> newL,
@@ -187,7 +199,7 @@ public abstract class PositionEstimator {
 
         @Override
         public String head() {
-            return precToken.fixedText() + " ";
+            return prefixTokenText + " ";
         }
         
     }
@@ -202,7 +214,7 @@ public abstract class PositionEstimator {
 
         @Override
         public String head() {
-            return precToken.fixedText();
+            return prefixTokenText;
         }
 
         @Override
@@ -814,7 +826,8 @@ public abstract class PositionEstimator {
     
     private abstract static class BaseEstimator extends PositionEstimator {
         
-        JavaTokenId precToken;
+        Predicate<Token<JavaTokenId>> prefixTokenAcceptor;
+        String prefixTokenText;
         private ArrayList<String> separatorList;
 
         private BaseEstimator(JavaTokenId precToken,
@@ -822,11 +835,22 @@ public abstract class PositionEstimator {
                 List<? extends Tree> newL,
                 DiffContext diffContext)
         {
+            this(token -> token.id() != precToken, precToken.fixedText(),
+                  oldL, newL, diffContext);
+        }
+
+        private BaseEstimator(Predicate<Token<JavaTokenId>> prefixTokenAcceptor,
+                String prefixTokenText,
+                List<? extends Tree> oldL,
+                List<? extends Tree> newL,
+                DiffContext diffContext)
+        {
             super(oldL, newL, diffContext);
-            this.precToken = precToken;
+            this.prefixTokenAcceptor = prefixTokenAcceptor;
+            this.prefixTokenText = prefixTokenText;
         }
         
-        public String head() { return " " + precToken.fixedText() + " "; }
+        public String head() { return " " + prefixTokenText + " "; }
         public String sep()  { return ", "; }
         
         @SuppressWarnings("empty-statement")
@@ -848,7 +872,7 @@ public abstract class PositionEstimator {
                 int beforer = -1;
                 if (first) {
                     // go back to throws keywrd.
-                    while (seq.movePrevious() && seq.token().id() != precToken) ;
+                    while (seq.movePrevious() && prefixTokenAcceptor.test(seq.token())) ;
                     int throwsIndex = seq.index();
                     beforer = throwsIndex+1;
                     // go back to closing )
@@ -868,7 +892,8 @@ public abstract class PositionEstimator {
                             separatedText = '\n' + separatedText;
                     separatorList.add(separatedText);
                     int separator = seq.index();
-                    int afterSeparator = separator + 1; // bug
+                    while (seq.moveNext() && seq.token().id() == WHITESPACE);
+                    int afterSeparator = seq.index();
                     if (afterPrevious == separator) {
                         afterPrevious = -1;
                     }
@@ -930,10 +955,6 @@ public abstract class PositionEstimator {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-    
     /**
      * Provides position estimator for features in type declaration.
      */
@@ -1764,7 +1785,6 @@ public abstract class PositionEstimator {
         }
 
     }
-    ////////////////////////////////////////////////////////////////////////////
     // Utility methods
     @SuppressWarnings("empty-statement")
     int moveBelowGuarded(int pos) {
@@ -1949,6 +1969,7 @@ public abstract class PositionEstimator {
             LINE_COMMENT, 
             BLOCK_COMMENT,
             JAVADOC_COMMENT,
+            JAVADOC_COMMENT_LINE_RUN,
             WHITESPACE
     );
 

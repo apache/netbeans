@@ -31,31 +31,13 @@ import org.netbeans.spi.java.hints.HintContext;
  *
  * @author Jan Lahoda
  */
-public final class HintDescription {
-
-    private final HintMetadata metadata;
-    private final Trigger trigger;
-    private final Worker worker;
-    private final AdditionalQueryConstraints additionalConstraints;
-    private final String hintText;
-    private final Set<Options> options;
-
-    private HintDescription(HintMetadata metadata, Trigger trigger, Worker worker, AdditionalQueryConstraints additionalConstraints, String hintText, Set<Options> options) {
-        this.metadata = metadata;
-        this.trigger = trigger;
-        this.worker = worker;
-        this.additionalConstraints = additionalConstraints;
-        this.hintText = hintText;
-        this.options = options;
-    }
-
-    static HintDescription create(HintMetadata metadata, Trigger trigger, Worker worker, AdditionalQueryConstraints additionalConstraints, String hintText, Set<Options> options) {
-        return new HintDescription(metadata, trigger, worker, additionalConstraints, hintText, options);
-    }
+public record HintDescription(
+        HintMetadata metadata, Trigger trigger, Worker worker,
+        AdditionalQueryConstraints additionalConstraints, String hintText, Set<Options> options) {
 
     @Override
     public String toString() {
-        return "[HintDescription:" + trigger + "]";
+        return "[HintDescription:" + metadata + "]";
     }
 
     public AdditionalQueryConstraints getAdditionalConstraints() {
@@ -88,14 +70,13 @@ public final class HintDescription {
 
     }
 
-    public static final class AdditionalQueryConstraints {
-        public final Set<String> requiredErasedTypes;
+    public record AdditionalQueryConstraints(Set<String> requiredErasedTypes) {
 
         public AdditionalQueryConstraints(Set<String> requiredErasedTypes) {
             this.requiredErasedTypes = Collections.unmodifiableSet(new HashSet<>(requiredErasedTypes));
         }
 
-        private static final AdditionalQueryConstraints EMPTY = new AdditionalQueryConstraints(Collections.<String>emptySet());
+        private static final AdditionalQueryConstraints EMPTY = new AdditionalQueryConstraints(Set.of());
         public static AdditionalQueryConstraints empty() {
             return EMPTY;
         }

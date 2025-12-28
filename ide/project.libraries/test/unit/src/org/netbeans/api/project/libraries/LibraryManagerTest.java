@@ -119,7 +119,7 @@ public class LibraryManagerTest extends NbTestCase {
         assertEquals ("Libraries count", 3, libs.length);
         List<LibraryImplementation> newLibs = new ArrayList<LibraryImplementation>(Arrays.asList(impls));
         newLibs.add (newLibImplementation);
-        assertLibsEquals(libs, newLibs.toArray(new LibraryImplementation[newLibs.size()]));
+        assertLibsEquals(libs, newLibs.toArray(new LibraryImplementation[0]));
         lm.removeLibrary(newLibrary);
         libs = lm.getLibraries();
         assertEquals("Libraries count",2,libs.length);

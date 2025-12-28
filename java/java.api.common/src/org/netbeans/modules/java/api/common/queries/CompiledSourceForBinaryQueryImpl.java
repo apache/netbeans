@@ -157,7 +157,7 @@ class CompiledSourceForBinaryQueryImpl implements SourceForBinaryQueryImplementa
                                 roots.add(root);
                             }
                         }
-                        return roots.toArray(new FileObject[roots.size()]);
+                        return roots.toArray(new FileObject[0]);
                     }
                 }
             }

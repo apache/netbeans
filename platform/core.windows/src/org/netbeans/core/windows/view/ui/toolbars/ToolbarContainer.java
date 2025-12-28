@@ -258,7 +258,7 @@ final class ToolbarContainer extends JPanel {
         if( null != className ) {
             try {
                 Class klzz = Lookup.getDefault().lookup( ClassLoader.class ).loadClass( className );
-                Object inst = klzz.newInstance();
+                Object inst = klzz.getDeclaredConstructor().newInstance();
                 if( inst instanceof JComponent ) {
                     JComponent dragarea = ( JComponent ) inst;
                     dragarea.setCursor( Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR) );

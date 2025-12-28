@@ -76,7 +76,7 @@ public class DeleteCreateTest extends NbTestCase {
         fo1.getParent().createData(fo1.getName());             
         
         // get intercepted events 
-        String[] nonAtomic = DeleteCreateTestAnnotationProvider.instance.events.toArray(new String[DeleteCreateTestAnnotationProvider.instance.events.size()]);
+        String[] nonAtomic = DeleteCreateTestAnnotationProvider.instance.events.toArray(new String[0]);
         DeleteCreateTestAnnotationProvider.instance.events.clear();
         
         // atomic delete and create
@@ -93,7 +93,7 @@ public class DeleteCreateTest extends NbTestCase {
         };
         fo2.getFileSystem().runAtomicAction(a);        
         // get intercepted events 
-        String[] atomic = DeleteCreateTestAnnotationProvider.instance.events.toArray(new String[DeleteCreateTestAnnotationProvider.instance.events.size()]);
+        String[] atomic = DeleteCreateTestAnnotationProvider.instance.events.toArray(new String[0]);
         
         Logger l = Logger.getLogger(DeleteCreateTest.class.getName());
         l.info("- atomic events ----------------------------------");
@@ -121,7 +121,7 @@ public class DeleteCreateTest extends NbTestCase {
         fo1.getParent().createFolder(fo1.getName());
 
         // get intercepted events
-        String[] nonAtomic = DeleteCreateTestAnnotationProvider.instance.events.toArray(new String[DeleteCreateTestAnnotationProvider.instance.events.size()]);
+        String[] nonAtomic = DeleteCreateTestAnnotationProvider.instance.events.toArray(new String[0]);
         DeleteCreateTestAnnotationProvider.instance.events.clear();
 
         // atomic delete and create
@@ -138,7 +138,7 @@ public class DeleteCreateTest extends NbTestCase {
         };
         fo2.getFileSystem().runAtomicAction(a);
         // get intercepted events
-        String[] atomic = DeleteCreateTestAnnotationProvider.instance.events.toArray(new String[DeleteCreateTestAnnotationProvider.instance.events.size()]);
+        String[] atomic = DeleteCreateTestAnnotationProvider.instance.events.toArray(new String[0]);
 
         Logger l = Logger.getLogger(DeleteCreateTest.class.getName());
         l.info("- atomic events ----------------------------------");

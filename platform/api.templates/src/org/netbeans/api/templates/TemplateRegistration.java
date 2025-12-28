@@ -135,9 +135,9 @@ public @interface TemplateRegistration {
      * </pre>
      * There is a tutorial describing usage of HTML UI in NetBeans wizards:
      * <ul>
-     *   <li>when coding <a href="@TOP@overview-summary.html#html-and-js">logic in JavaScript</a>
-     *   <li>when coding <a href="@TOP@overview-summary.html#html-and-java">logic in Java</a>
-     *   <li>when providing UI for <a href="@TOP@overview-summary.html#html-and-maven">Maven Archetypes</a>
+     *   <li>when coding <a href="@TOP@index.html#html-and-js">logic in JavaScript</a>
+     *   <li>when coding <a href="@TOP@index.html#html-and-java">logic in Java</a>
+     *   <li>when providing UI for <a href="@TOP@index.html#html-and-maven">Maven Archetypes</a>
      * </ul>
      * Creating portable UI for wizards has never been easier!
      * 

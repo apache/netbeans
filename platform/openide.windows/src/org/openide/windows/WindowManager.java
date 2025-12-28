@@ -41,7 +41,7 @@ import org.openide.util.Lookup;
  * Allows the work with window system components, i.e. <code>Mode</code>s, <code>TopComponentGroup</code>s
  * and provides handling of operations provided over <code>TopComponent</code>s.
  * <p>
- * <b><font color="red"><em>Important note: Do not provide implementation of this abstract class unless you are window system provider!</em></font></b>
+ * <b><span style="color:red"><em>Important note: Do not provide implementation of this abstract class unless you are window system provider!</em></span></b>
  *
  * @author Jaroslav Tulach
  */
@@ -610,7 +610,7 @@ public abstract class WindowManager extends Object implements Serializable {
                 openedTcs.add(tc);
             }
         }
-        return openedTcs.toArray(new TopComponent[openedTcs.size()]);
+        return openedTcs.toArray(new TopComponent[0]);
     }
 
     /**

@@ -27,6 +27,7 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -416,9 +417,8 @@ public final class GitUtils {
     }
 
     /**
-     *
-     * @param ctx
-     * @return
+     * Returns the repository and its roots. May open a selection dialog if
+     * there is more than one repository in the provided context.
      */
     public static HashMap.SimpleImmutableEntry<File, File[]> getActionRoots(VCSContext ctx) {
         Set<File> rootsSet = ctx.getRootFiles();
@@ -447,10 +447,10 @@ public final class GitUtils {
                     NbBundle.getMessage(GitUtils.class, "FileSelector.jLabel1.text"), //NOI18N
                     new HelpCtx("org.netbeans.modules.git.FileSelector"), //NOI18N
                     GitModuleConfig.getDefault().getPreferences());
-            if(fs.show(repoRoots.toArray(new File[repoRoots.size()]))) {
+            if(fs.show(repoRoots.toArray(new File[0]))) {
                 File selection = fs.getSelectedFile();
                 List<File> l = map.get(selection);
-                return new HashMap.SimpleImmutableEntry<File, File[]>(selection, l.toArray(new File[l.size()]));
+                return new HashMap.SimpleImmutableEntry<File, File[]>(selection, l.toArray(new File[0]));
             } else {
                 return null;
             }
@@ -459,7 +459,7 @@ public final class GitUtils {
         } else {
             File root = map.keySet().iterator().next();
             List<File> l = map.get(root);
-            return new HashMap.SimpleImmutableEntry<File, File[]>(root, l.toArray(new File[l.size()]));
+            return new HashMap.SimpleImmutableEntry<File, File[]>(root, l.toArray(new File[0]));
         }
     }
 
@@ -473,7 +473,7 @@ public final class GitUtils {
         File[] files = null;
         if(ctx != null) {
             Set<File> s = ctx.getRootFiles();
-            files = s.toArray(new File[s.size()]);
+            files = s.toArray(new File[0]);
         }
         if (files != null) {
             List<File> l = new LinkedList<File>();
@@ -483,7 +483,7 @@ public final class GitUtils {
                     l.add(file);
                 }
             }
-            files = l.toArray(new File[l.size()]);
+            files = l.toArray(new File[0]);
         }
         return files;
     }
@@ -523,7 +523,7 @@ public final class GitUtils {
             }
         }
 
-        return ret.toArray(new File[ret.size()]);
+        return ret.toArray(new File[0]);
     }
 
     /**
@@ -544,7 +544,7 @@ public final class GitUtils {
                 fileList.addAll(Arrays.asList(GitUtils.flatten(splitRoots, includedStatuses)));
             }
         }
-        return fileList.toArray(new File[fileList.size()]);
+        return fileList.toArray(new File[0]);
     }
 
     /**
@@ -655,7 +655,7 @@ public final class GitUtils {
         }
         Git.getInstance().getFileStatusCache().refreshAllRoots(Collections.<File, Collection<File>>singletonMap(repository, files), pm);
         if (!pm.isCanceled()) {
-            final VCSContext context = VCSContext.forNodes(nodes.toArray(new Node[nodes.size()]));
+            final VCSContext context = VCSContext.forNodes(nodes.toArray(new Node[0]));
             EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run() {
@@ -730,7 +730,7 @@ public final class GitUtils {
         }
         if (!openFiles.isEmpty()) {
             Git.getInstance().headChanged(openFiles);
-            Git.getInstance().getHistoryProvider().fireHistoryChange(openFiles.toArray(new File[openFiles.size()]));
+            Git.getInstance().getHistoryProvider().fireHistoryChange(openFiles.toArray(new File[0]));
         }
     }
 
@@ -742,7 +742,7 @@ public final class GitUtils {
             String revisionToOpen, boolean showAnnotations, ProgressMonitor pm) throws IOException {
         File file1 = VersionsCache.getInstance().getFileRevision(originalFile, revision1, pm);
         if (file1 == null) { // can be null if the file does not exist or is empty in the given revision
-            file1 = File.createTempFile("tmp", "-" + originalFile.getName(), Utils.getTempFolder()); //NOI18N
+            file1 = Files.createTempFile(Utils.getTempFolder().toPath(), "tmp", "-" + originalFile.getName()).toFile(); //NOI18N
             file1.deleteOnExit();
         }
         if (pm.isCanceled()) {
@@ -750,7 +750,7 @@ public final class GitUtils {
         }
         File file = VersionsCache.getInstance().getFileRevision(originalFile, revisionToOpen, pm);
         if (file == null) { // can be null if the file does not exist or is empty in the given revision
-            file = File.createTempFile("tmp", "-" + originalFile.getName(), Utils.getTempFolder()); //NOI18N
+            file = Files.createTempFile(Utils.getTempFolder().toPath(), "tmp", "-" + originalFile.getName()).toFile(); //NOI18N
             file.deleteOnExit();
         }
         if (pm.isCanceled()) {
@@ -767,7 +767,7 @@ public final class GitUtils {
             return;
         }
         if (file == null) { // can be null if the file does not exist or is empty in the given revision
-            file = File.createTempFile("tmp", "-" + originalFile.getName(), Utils.getTempFolder()); //NOI18N
+            file = Files.createTempFile(Utils.getTempFolder().toPath(), "tmp", "-" + originalFile.getName()).toFile(); //NOI18N
             file.deleteOnExit();
         }
         openInRevision(file, originalFile, lineNumber, revision, showAnnotations, pm);
@@ -878,7 +878,7 @@ public final class GitUtils {
     }
 
     public static <T> T runWithoutIndexing (Callable<T> callable, List<File> files) throws GitException {
-        return runWithoutIndexing(callable, files.toArray(new File[files.size()]));
+        return runWithoutIndexing(callable, files.toArray(new File[0]));
     }
 
     static ThreadLocal<Set<File>> indexingFiles = new ThreadLocal<Set<File>>();

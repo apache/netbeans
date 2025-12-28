@@ -1029,11 +1029,11 @@ public class WizardDescriptor extends DialogDescriptor {
 
             if (defaultSize == null) {
                 //Plastic look and feel...
-                defaultSize = new Integer(11);
+                defaultSize = 11;
             }
 
             // enable auto-resizing policy only for fonts bigger thne default
-            if ((controlFont != null) && (controlFont.getSize() > defaultSize.intValue())) { //NOI18N
+            if ((controlFont != null) && (controlFont.getSize() > defaultSize)) { //NOI18N
 
                 Window parentWindow = SwingUtilities.getWindowAncestor((Component) getMessage());
 
@@ -1156,21 +1156,6 @@ public class WizardDescriptor extends DialogDescriptor {
         waitingComponent = null;
         changeStateInProgress = false;
     }
-
-    /* commented out - issue #32927. Replaced by javadoc info in WizardDescriptor.Panel
-    private static final Set warnedPanelIsComponent = new WeakSet(); // Set<Class>
-    private static synchronized void warnPanelIsComponent(Class c) {
-        if (warnedPanelIsComponent.add(c)) {
-            StringBuffer buffer = new StringBuffer(150);
-            buffer.append("WARNING - the WizardDescriptor.Panel implementation "); // NOI18N
-            buffer.append(c.getName());
-            buffer.append(" provides itself as the result of getComponent().\n"); // NOI18N
-            buffer.append("This hurts performance and can cause a clash when Component.isValid() is overridden.\n"); // NOI18N
-            buffer.append("Please use a separate component class, see details at http://performance.netbeans.org/howto/dialogs/wizard-panels.html."); // NOI18N
-            err.log(ErrorManager.WARNING, buffer.toString());
-        }
-    }
-    */
 
     /** Tryes to get property from getProperty() if doesn't succeed then tryes at
      * supplied <CODE>JComponent</CODE>s client property.
@@ -1400,7 +1385,7 @@ public class WizardDescriptor extends DialogDescriptor {
             ((contentSelectedIndex - 1) < contentData.length)) ? contentData[contentSelectedIndex - 1] : ""; // NOI18N
         try {
             previousButton.getAccessibleContext().setAccessibleDescription(
-                NbBundle.getMessage(WizardDescriptor.class, "ACSD_PREVIOUS", new Integer(contentSelectedIndex), stepName)
+                NbBundle.getMessage(WizardDescriptor.class, "ACSD_PREVIOUS", contentSelectedIndex, stepName)
             );
         } catch (IllegalArgumentException iae) {
             err.log (Level.INFO, iae.getLocalizedMessage() + " while setting ACSD_PREVIOUS with params " + stepName + ", " + contentSelectedIndex, iae); // NOI18N
@@ -1409,7 +1394,7 @@ public class WizardDescriptor extends DialogDescriptor {
             ((contentSelectedIndex + 1) >= 0)) ? contentData[contentSelectedIndex + 1] : ""; // NOI18N
         try {
             nextButton.getAccessibleContext().setAccessibleDescription(
-                NbBundle.getMessage(WizardDescriptor.class, "ACSD_NEXT", new Integer(contentSelectedIndex + 2), stepName)
+                NbBundle.getMessage(WizardDescriptor.class, "ACSD_NEXT", contentSelectedIndex + 2, stepName)
             );
         } catch (IllegalArgumentException iae) {
             err.log (Level.INFO, iae.getLocalizedMessage() + " while setting ACSD_NEXT with params " + stepName + ", " + (contentSelectedIndex + 2), iae); // NOI18N
@@ -1555,7 +1540,7 @@ public class WizardDescriptor extends DialogDescriptor {
             err.fine("is BackgroundInstantiatingIterator");
         } else if (panels instanceof ProgressInstantiatingIterator) {
             err.fine("is ProgressInstantiatingIterator");
-            handle = ProgressHandleFactory.createHandle (PROGRESS_BAR_DISPLAY_NAME);
+            handle = ProgressHandle.createHandle(PROGRESS_BAR_DISPLAY_NAME);
             final JComponent progressComp = ProgressHandleFactory.createProgressComponent (handle);
             final JLabel detailComp = ProgressHandleFactory.createDetailLabelComponent (handle);
             Mutex.EVENT.readAccess( new Runnable() {
@@ -1570,7 +1555,7 @@ public class WizardDescriptor extends DialogDescriptor {
             err.log (Level.FINE, "Show progressPanel controlled by iterator later.");
         } else if (panels instanceof AsynchronousInstantiatingIterator) {
             err.fine("is AsynchronousInstantiatingIterator");
-            handle = ProgressHandleFactory.createHandle (PROGRESS_BAR_DISPLAY_NAME);
+            handle = ProgressHandle.createHandle(PROGRESS_BAR_DISPLAY_NAME);
 
             final JComponent progressComp = ProgressHandleFactory.createProgressComponent (handle);
             final JLabel mainLabelComp = ProgressHandleFactory.createMainLabelComponent (handle);
@@ -2058,7 +2043,7 @@ public class WizardDescriptor extends DialogDescriptor {
          */
         @SuppressWarnings("unchecked") // exists so that other code does not have to do it
         public ArrayIterator(List<Panel<Data>> panels) {
-            this.panels = panels.toArray(new Panel[panels.size()]);
+            this.panels = panels.toArray(new Panel[0]);
             index = 0;
         }
 
@@ -3111,8 +3096,7 @@ public class WizardDescriptor extends DialogDescriptor {
                         return null;
                     }
 
-                    return NbBundle.getMessage(
-                        WizardDescriptor.class, "ACSD_WizardPanel", new Integer(selectedIndex + 1), panelName.getText(),
+                    return NbBundle.getMessage(WizardDescriptor.class, "ACSD_WizardPanel", selectedIndex + 1, panelName.getText(),
                         rightComponent.getAccessibleContext().getAccessibleDescription()
                     );
                 }

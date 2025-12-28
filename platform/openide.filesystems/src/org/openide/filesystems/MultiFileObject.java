@@ -495,12 +495,12 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
             addList.removeAll(exclude.keySet());
         }
 
-        String[] res = addList.toArray(new String[addList.size()]);
+        String[] res = addList.toArray(new String[0]);
 
         return res;
     }
 
-    /** When refreshing, also update the state of delegates.
+    /* When refreshing, also update the state of delegates.
     */
     /** [PENDING] expected rename of some refresh method */
 

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.109.0
+#Version 1.117.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -2411,7 +2411,7 @@ meth protected org.openide.nodes.Sheet createSheet()
 meth protected org.openide.util.actions.SystemAction[] createActions()
 meth public org.openide.util.HelpCtx getHelpCtx()
 supr org.openide.nodes.AbstractNode
-hfds HELP_ID,ICON_BASE
+hfds HELP_ID,ICON_BASE,LOGGER
 hcls AnnotationTypesSubnodes
 
 CLSS public abstract interface org.openide.awt.DynamicMenuContent

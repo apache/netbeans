@@ -394,7 +394,7 @@ public final class Models {
                 final Pair<List<T>,List<T>> data = getData();
                 data.second().addAll(values);
                 if (comparator != null) {
-                    Collections.sort(data.second(), comparator);
+                    data.second().sort(comparator);
                 }
                 success = casData(data.first(), data.second());
             } while (!success);

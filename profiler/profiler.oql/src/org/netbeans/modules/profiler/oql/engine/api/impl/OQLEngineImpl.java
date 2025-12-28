@@ -382,6 +382,7 @@ public class OQLEngineImpl {
         try {
             ScriptEngineManager manager = Scripting.newBuilder().allowAllAccess(true).build();
             engine = manager.getEngineByName("JavaScript"); // NOI18N
+            engine.put("ArrayDump", Class.forName("org.netbeans.lib.profiler.heap.ArrayDump"));
             InputStream strm = getInitStream();
             CompiledScript cs = ((Compilable)engine).compile(new InputStreamReader(strm));
             cs.eval();

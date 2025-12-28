@@ -43,13 +43,12 @@ import com.sun.source.util.TreePath;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 public class InterceptorFactory implements Factory {
     
-    static final String INTERCEPTOR_BINDING = "InterceptorBinding";         // NOI18N
+    static final String INTERCEPTOR_BINDING = "InterceptorBinding"; // NOI18N
     
-    private static final String INTERCEPTOR_BINDING_FQN = 
-            "javax.interceptor." +INTERCEPTOR_BINDING;                      // NOI18N
+    private static final String INTERCEPTOR_BINDING_FQN = "javax.interceptor." +INTERCEPTOR_BINDING; // NOI18N
+    private static final String INTERCEPTOR_BINDING_FQN_JAKARTA = "jakarta.interceptor." +INTERCEPTOR_BINDING; // NOI18N
 
     /* (non-Javadoc)
      * @see org.netbeans.spi.editor.codegen.CodeGenerator.Factory#create(org.openide.util.Lookup)
@@ -65,7 +64,9 @@ public class InterceptorFactory implements Factory {
                 
                 TypeElement interceptorBinding = controller.getElements().
                     getTypeElement( INTERCEPTOR_BINDING_FQN );
-                if ( interceptorBinding == null ){
+                TypeElement interceptorBindingJakarta = controller.getElements().
+                    getTypeElement( INTERCEPTOR_BINDING_FQN_JAKARTA );
+                if ( interceptorBinding == null && interceptorBindingJakarta == null ){
                     return result;
                 }
                 int dot = component.getCaret().getDot();
@@ -83,16 +84,27 @@ public class InterceptorFactory implements Factory {
                 List<? extends AnnotationMirror> annotations = controller.
                     getElements().getAllAnnotationMirrors( contextElement );
                 boolean isInterceptorBinding = false;
+                boolean isInterceptorBindingJakarta = false;
                 for (AnnotationMirror annotation : annotations) {
                     Element annotationElement = controller.getTypes().asElement( 
                             annotation.getAnnotationType());
-                    if ( interceptorBinding.equals( annotationElement) ){
+                    if (interceptorBinding != null && interceptorBinding.equals(annotationElement)) {
                         isInterceptorBinding = true;
                         break;
                     }
+                    if (interceptorBindingJakarta != null && interceptorBindingJakarta.equals(annotationElement)) {
+                        isInterceptorBindingJakarta = true;
+                        break;
+                    }
                 }
-                if ( isInterceptorBinding ){
-                    result.add( new InterceptorGenerator( 
+                if ( isInterceptorBindingJakarta ){
+                    result.add( new InterceptorGenerator(
+                            true,
+                            contextElement.getSimpleName().toString(),
+                            controller.getFileObject()) );
+                } else if ( isInterceptorBinding ){
+                    result.add( new InterceptorGenerator(
+                            false,
                             contextElement.getSimpleName().toString(), 
                             controller.getFileObject()) );
                 }

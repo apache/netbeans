@@ -27,12 +27,18 @@ import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -44,6 +50,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.MessageParams;
@@ -349,6 +356,17 @@ public class Utils {
         return new Position(line, column);
     }
 
+    public static int getOffset(FileObject file, Position pos) {
+        try {
+            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+            StyledDocument doc = ec.openDocument();
+
+            return getOffset(doc, pos);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
     public static int getOffset(StyledDocument doc, Position pos) {
         return NbDocument.findLineOffset(doc,pos.getLine()) + pos.getCharacter();
     }
@@ -542,7 +560,12 @@ public class Utils {
         }
     }
     
+    private static String nonNull(String t) {
+        return t == null ? "" : t;
+    }
+    
     public static WorkspaceEdit workspaceEditFromApi(org.netbeans.api.lsp.WorkspaceEdit edit, String uri, NbCodeLanguageClient client) {
+        Set<String> createdResources = new HashSet<>();
         List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = new ArrayList<>();
         for (Union2<org.netbeans.api.lsp.TextDocumentEdit, org.netbeans.api.lsp.ResourceOperation> parts : edit.getDocumentChanges()) {
             if (parts.hasFirst()) {
@@ -554,7 +577,15 @@ public class Utils {
                     }
                     FileObject fo = file;
                     if (fo != null) {
-                        List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), te.getNewText())).collect(Collectors.toList());
+                        List<TextEdit> edits = parts.first().getEdits().stream().map(te -> new TextEdit(new Range(Utils.createPosition(fo, te.getStartOffset()), Utils.createPosition(fo, te.getEndOffset())), nonNull(te.getNewText()))).collect(Collectors.toList());
+                        TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
+                        documentChanges.add(Either.forLeft(tde));
+                    } else if (createdResources.contains(docUri)) {
+                        // PENDING: now accept just initial content. In theory, no edits can overlap, so for a new resource,
+                        // only inserts with 0 offset are permitted.
+                        List<TextEdit> edits = parts.first().getEdits().stream().filter(te -> te.getStartOffset() == 0 && te.getEndOffset() == 0).
+                                map(te -> new TextEdit(new Range(new Position(0, 0), new Position(0, 0)), nonNull(te.getNewText()))).
+                                collect(Collectors.toList());
                         TextDocumentEdit tde = new TextDocumentEdit(new VersionedTextDocumentIdentifier(docUri, -1), edits);
                         documentChanges.add(Either.forLeft(tde));
                     }
@@ -563,12 +594,24 @@ public class Utils {
                 }
             } else {
                 if (parts.second() instanceof org.netbeans.api.lsp.ResourceOperation.CreateFile) {
-                    documentChanges.add(Either.forRight(new CreateFile(((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile())));
+                    String res = ((org.netbeans.api.lsp.ResourceOperation.CreateFile) parts.second()).getNewFile();
+                    documentChanges.add(Either.forRight(new CreateFile(res)));
+                    createdResources.add(res);
                 } else {
                     throw new IllegalStateException(String.valueOf(parts.second()));
                 }
             }
         }
         return new WorkspaceEdit(documentChanges);
+    }
+
+    public static Predicate<String> codeActionKindFilter(List<String> only) {
+        return k -> only == null ||
+                    only.stream()
+                        .anyMatch(o -> k.equals(o) || k.startsWith(o + "."));
+    }
+
+    public static boolean wrappedBoolean2Boolean(Boolean b, boolean defaultValue) {
+        return b != null ? b : defaultValue;
     }
 }

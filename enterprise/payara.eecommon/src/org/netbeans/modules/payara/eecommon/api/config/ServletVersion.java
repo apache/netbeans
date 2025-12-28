@@ -54,7 +54,7 @@ public final class ServletVersion extends J2EEBaseVersion {
         "6.0", 6000	// NOI18N
         );
 
-    /** -----------------------------------------------------------------------
+    /*
      *  Implementation
      */
 

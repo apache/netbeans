@@ -88,7 +88,7 @@ public class ConstrainedBinaryIndexerTest extends IndexingTestBase {
         for(Map.Entry<String, Set<ClassPath>> entry : registeredClasspaths.entrySet()) {
             String id = entry.getKey();
             Set<ClassPath> classpaths = entry.getValue();
-            GlobalPathRegistry.getDefault().unregister(id, classpaths.toArray(new ClassPath[classpaths.size()]));
+            GlobalPathRegistry.getDefault().unregister(id, classpaths.toArray(new ClassPath[0]));
         }
 
         super.tearDown();

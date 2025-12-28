@@ -22,20 +22,19 @@ package org.netbeans.libs.git.jgit.commands;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.eclipse.jgit.ignore.IgnoreNode.MatchResult;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.CoreConfig;
@@ -64,7 +63,7 @@ public abstract class IgnoreUnignoreCommand extends GitCommand {
         super(repository, gitFactory, monitor);
         this.files = files;
         this.monitor = monitor;
-        this.ignoreFiles = new LinkedHashSet<File>();
+        this.ignoreFiles = new LinkedHashSet<>();
         this.listener = listener;
     }
 
@@ -104,7 +103,7 @@ public abstract class IgnoreUnignoreCommand extends GitCommand {
     private void changeIgnoreStatus (File f) throws IOException {
         File parent = f;
         boolean isDirectory = f.isDirectory() && (! Files.isSymbolicLink(f.toPath()));
-        StringBuilder sb = new StringBuilder('/');
+        StringBuilder sb = new StringBuilder();
         if (isDirectory) {
             sb.append('/');
         }
@@ -129,68 +128,56 @@ public abstract class IgnoreUnignoreCommand extends GitCommand {
         return addStatement(ignoreRules, gitIgnore, path, isDirectory, forceWrite, true) == MatchResult.CHECK_PARENT;
     }
 
-    protected final void save (File gitIgnore, List<IgnoreRule> ignoreRules) throws IOException {
-        BufferedWriter bw = null;
-        File tmpFile = File.createTempFile(Constants.DOT_GIT_IGNORE, "tmp", gitIgnore.getParentFile()); //NOI18N
+    protected final void save(File gitIgnore, List<IgnoreRule> ignoreRules) throws IOException {
         try {
-            bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tmpFile), Constants.CHARSET));
-            for (ListIterator<IgnoreRule> it = ignoreRules.listIterator(); it.hasNext(); ) {
-                String s = it.next().getPattern(false);
-                bw.write(s, 0, s.length());
-                bw.newLine();
-            }
-        } finally {
-            if (bw != null) {
-                try {
-                    bw.close();
-                } catch (IOException ex) { }
-            }
-            if (!tmpFile.renameTo(gitIgnore)) {
-                // cannot rename directly, try backup and delete te original .gitignore
-                File tmpCopy = generateTempFile(Constants.DOT_GIT_IGNORE, gitIgnore.getParentFile()); //NOI18N
-                boolean success = false;
-                if (gitIgnore.renameTo(tmpCopy)) {
-                    // and try to rename again
-                    success = tmpFile.renameTo(gitIgnore);
-                    if (!success) {
-                        // restore te original .gitignore file
-                        tmpCopy.renameTo(gitIgnore);
+            Path tmpFile = Files.createTempFile(gitIgnore.getParentFile().toPath(), Constants.DOT_GIT_IGNORE, "tmp"); //NOI18N
+            try {
+                String lineSeparator = probeLineSeparator(gitIgnore.toPath());
+                try (BufferedWriter writer = Files.newBufferedWriter(tmpFile)) {
+                    for (IgnoreRule rule : ignoreRules) {
+                        writer.write(rule.getPattern(false));
+                        writer.write(lineSeparator);
                     }
-                    tmpCopy.delete();
                 }
-                if (!success) {
-                    tmpFile.delete();
-                    throw new IOException("Cannot write to " + gitIgnore.getAbsolutePath());
-                }
+                Files.move(tmpFile, gitIgnore.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } finally {
+                Files.deleteIfExists(tmpFile);
             }
-
+        } catch (IOException ex) {
+            throw new IOException("Cannot update .gitignore at " + gitIgnore.getAbsolutePath(), ex);
         }
         ignoreFiles.add(gitIgnore);
     }
 
-    private List<IgnoreRule> parse (File gitIgnore) throws IOException {
-        List<IgnoreRule> rules = new LinkedList<IgnoreRule>();
+    private List<IgnoreRule> parse(File gitIgnore) throws IOException {
         if (gitIgnore.exists()) {
-            BufferedReader br = null;
-            try {
-                br = new BufferedReader(new InputStreamReader(new FileInputStream(gitIgnore), Constants.CHARSET));
-                String txt;
-                while ((txt = br.readLine()) != null) {
-                    rules.add(new IgnoreRule(txt));
-                }
-            } finally {
-                if (br != null) {
-                    try {
-                        br.close();
-                    } catch (IOException ex) { }
+            try (Stream<String> lines = Files.lines(gitIgnore.toPath())) {
+                return lines.map(IgnoreRule::new)
+                            .collect(Collectors.toCollection(LinkedList::new));
+            }
+        }
+        return new LinkedList<>();
+    }
+
+    @SuppressWarnings("NestedAssignment")
+    private static String probeLineSeparator(Path file) throws IOException {
+        if (Files.exists(file)) {
+            try (BufferedReader br = Files.newBufferedReader(file)) {
+                int current;
+                int last = -1;
+                while ((current = br.read()) != -1) {
+                    if (current == '\n') {
+                        return last == '\r' ? "\r\n" : "\n";
+                    }
+                    last = current;
                 }
             }
         }
-        return rules;
+        return System.lineSeparator();
     }
 
     public File[] getModifiedIgnoreFiles () {
-        return ignoreFiles.toArray(new File[ignoreFiles.size()]);
+        return ignoreFiles.toArray(File[]::new);
     }
 
     protected abstract MatchResult addStatement (List<IgnoreRule> ignoreRules, File gitIgnore, String path, boolean isDirectory, boolean forceWrite, boolean writable) throws IOException;
@@ -212,14 +199,6 @@ public abstract class IgnoreUnignoreCommand extends GitCommand {
             return addStatement(ignoreRules, excludeFile, path, directory, false, false);
         }
         return MatchResult.NOT_IGNORED;
-    }
-
-    private File generateTempFile (String basename, File parent) {
-        File tempFile = new File(parent, basename);
-        while (tempFile.exists()) {
-            tempFile = new File(parent, basename + Long.toString(System.currentTimeMillis()));
-        }
-        return tempFile;
     }
 
     private File getGlobalExcludeFile () {

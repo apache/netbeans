@@ -19,12 +19,13 @@
 package org.netbeans.modules.maven.indexer;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import org.apache.maven.search.api.MAVEN;
 import org.apache.maven.search.api.SearchRequest;
 import org.apache.maven.search.backend.smo.SmoSearchBackend;
@@ -43,7 +44,10 @@ final class SMORequestResult implements ResultImplementation<NBVersionInfo> {
 
     // if we paginate too much we will get throttled
     private static final int MAX_PAGES = 10;
-    private static final long TIMEOUT = 20_000;
+
+    // response time is fairly unpredictable
+            static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(15);
+    private static final Duration SEARCH_TIMEOUT = Duration.ofSeconds(20);
 
     private final SmoSearchBackend smo;
     private SmoSearchResponse response;
@@ -58,7 +62,7 @@ final class SMORequestResult implements ResultImplementation<NBVersionInfo> {
         } catch (IOException ex) {
             LOG.log(Level.INFO, "SMO "+request+" failed", ex);
             this.response = null;
-            this.list = Collections.emptyList();
+            this.list = List.of();
         }
     }
 
@@ -76,7 +80,7 @@ final class SMORequestResult implements ResultImplementation<NBVersionInfo> {
                         null,
                         null,
                         rec.getValue(MAVEN.CLASSIFIER)))
-                .collect(Collectors.toList());
+                .toList();
         }
         return list;
     }
@@ -87,9 +91,9 @@ final class SMORequestResult implements ResultImplementation<NBVersionInfo> {
             return;
         }
         List<NBVersionInfo> fullList = new ArrayList<>(getResults());
-        long start = System.currentTimeMillis();
+        Instant timeout = Instant.now().plus(SEARCH_TIMEOUT);
         int page = 0;
-        while (isPartial() && page++ < MAX_PAGES && (System.currentTimeMillis()-start) < TIMEOUT) {
+        while (isPartial() && page++ < MAX_PAGES && Instant.now().isBefore(timeout)) {
             list = null;
             try {
                 response = search(response.getSearchRequest().nextPage());

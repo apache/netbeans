@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,84 +19,41 @@
     under the License.
 
 -->
-<!-- Generator: Adobe Illustrator 23.0.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#FFFFFF;}
-	.st1{opacity:0.25;}
-	.st2{fill:#FAFAFA;}
-	.st3{opacity:0.33;}
-	.st4{fill:none;stroke:#474747;stroke-miterlimit:10;}
-	.st5{opacity:0.42;}
-	.st6{fill:#CAE3FF;}
-	.st7{opacity:0.2;}
-	.st8{opacity:0.03;}
-	.st9{opacity:0.1;}
-	.st10{opacity:0.15;}
-	.st11{opacity:0.45;}
-	.st12{fill:#FFE1B0;}
-	.st13{fill:#B3DBFF;}
-	.st14{fill:#FBDC7C;}
-	.st15{fill:#FFDB43;}
-	.st16{fill:#E79B00;}
-	.st17{fill:#3883CE;}
-	.st18{fill:none;stroke:#003399;stroke-width:1.375;stroke-miterlimit:10;}
-	.st19{fill:#E8513D;}
-	.st20{fill:#1E1E1E;}
-	.st21{fill:#FFC36D;}
-	.st22{fill:#9FCBFF;}
-	.st23{fill:#E9F7FF;}
-	.st24{fill:#62707C;}
-	.st25{fill:#7A8896;}
-	.st26{fill:#57BFFF;}
-	.st27{fill:#E69D35;}
-	.st28{fill:#9CFF73;}
-	.st29{fill:#4891CC;}
-	.st30{fill:#474747;}
-	.st31{fill:#CCA05E;}
-	.st32{opacity:0.67;}
-	.st33{opacity:0.3;}
-	.st34{fill:#EAEAEA;}
-	.st35{fill:#FFE945;}
-	.st36{fill:#FFCF8C;}
-	.st37{fill:#FF5252;}
-	.st38{opacity:0.12;}
-	.st39{fill:#45A5F4;}
-	.st40{fill:url(#SVGID_1_);}
-	.st41{fill:url(#SVGID_2_);}
-	.st42{opacity:0.05;}
-	.st43{fill:#3D81F5;}
-	.st44{fill:#CECECE;}
-	.st45{fill:#B5B5B5;}
-	.st46{opacity:0.4;}
-	.st47{fill:#595959;}
-	.st48{fill:#80FF80;}
-	.st49{fill:#C8FF80;}
-	.st50{fill:#FFEE80;}
-	.st51{fill:#FFA680;}
-	.st52{fill:#FF8080;}
-	.st53{fill:none;}
-	.st54{fill:#007AFF;}
-	.st55{fill:#EFFF78;}
-	.st56{fill:#FFDA00;}
-	.st57{fill:#3EADFF;}
-	.st58{opacity:0.67;fill:#FFFFFF;}
-	.st59{fill:#2E92FF;}
-	.st60{fill:#3AEA00;}
-	.st61{fill:#303030;}
-</style>
-<g>
-	<path class="st16" d="M15.561,13.439L9.197,7.075L7.075,9.197l6.364,6.364c0.586,0.586,1.536,0.586,2.121,0
-		C16.146,14.975,16.146,14.025,15.561,13.439z"/>
-	<g class="st3">
-		<path d="M9.197,8.136l5.834,5.833c0.292,0.293,0.292,0.768,0,1.061c-0.142,0.142-0.33,0.22-0.53,0.22s-0.389-0.078-0.53-0.22
-			L8.136,9.197L9.197,8.136 M9.197,7.075L7.075,9.197l6.364,6.364C13.732,15.854,14.116,16,14.5,16s0.768-0.146,1.061-0.439
-			c0.586-0.586,0.586-1.536,0-2.121L9.197,7.075L9.197,7.075z"/>
-	</g>
-</g>
-<circle class="st6" cx="7" cy="7" r="6"/>
-<path class="st17" d="M7,2c2.757,0,5,2.243,5,5s-2.243,5-5,5S2,9.757,2,7S4.243,2,7,2 M7,1C3.686,1,1,3.686,1,7s2.686,6,6,6
-	s6-2.686,6-6S10.314,1,7,1L7,1z"/>
-<line class="st18" x1="4" y1="6.85" x2="10" y2="6.85"/>
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #3883ce;
+      }
+
+      .st1 {
+        fill: none;
+        stroke: #039;
+        stroke-miterlimit: 10;
+        stroke-width: 1.375px;
+      }
+
+      .st2 {
+        opacity: .33;
+      }
+
+      .st3 {
+        fill: #cae3ff;
+      }
+
+      .st4 {
+        fill: #e79b00;
+      }
+    </style>
+  </defs>
+  <g>
+    <path class="st4" d="M15.561,13.439l-6.364-6.364-2.121,2.121,6.364,6.364c.586.586,1.536.586,2.121,0,.586-.586.586-1.536,0-2.121Z"/>
+    <g class="st2">
+      <path d="M9.197,8.136l5.834,5.834c.292.292.292.768,0,1.061-.142.142-.33.22-.53.22s-.389-.078-.53-.22l-5.834-5.834,1.061-1.061M9.197,7.075l-2.121,2.121,6.364,6.364c.293.293.677.439,1.061.439s.768-.146,1.061-.439c.586-.586.586-1.536,0-2.121l-6.364-6.364h0Z"/>
+    </g>
+  </g>
+  <circle class="st3" cx="7" cy="7" r="6"/>
+  <path class="st0" d="M7,2c2.757,0,5,2.243,5,5s-2.243,5-5,5-5-2.243-5-5S4.243,2,7,2M7,1C3.686,1,1,3.686,1,7s2.686,6,6,6,6-2.686,6-6S10.314,1,7,1h0Z"/>
+  <line class="st1" x1="4" y1="6.85" x2="10" y2="6.85"/>
 </svg>

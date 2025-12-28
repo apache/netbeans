@@ -1354,7 +1354,7 @@ public final class DefaultPlugin extends JUnitPlugin {
 //        button.getAccessibleContext().setAccessibleName("AN_Select");
 //        button.getAccessibleContext().setAccessibleDescription("AD_Select");
 //        
-////        Object selectOption = bundle.getString("LBL_Select");        //NOI18N
+// //        Object selectOption = bundle.getString("LBL_Select");        //NOI18N
 //        Object answer = DialogDisplayer.getDefault().notify(
 //                new DialogDescriptor(
 //                        wrapDialogContent(panel),
@@ -1457,8 +1457,8 @@ public final class DefaultPlugin extends JUnitPlugin {
             }
 
             if (hasJUnit3 || hasJUnit4 || hasJUnit5) {
-                junitVer = hasJUnit3 ? JUnitVersion.JUNIT3
-                        : hasJUnit4 ? JUnitVersion.JUNIT4 : JUnitVersion.JUNIT5;
+                junitVer = hasJUnit5 ? JUnitVersion.JUNIT5
+                        : hasJUnit4 ? JUnitVersion.JUNIT4 : JUnitVersion.JUNIT3;
                 if (LOG_JUNIT_VER.isLoggable(FINEST)) {
                     LOG_JUNIT_VER.finest(" - detected version " + junitVer);//NOI18N
                 }
@@ -1654,8 +1654,7 @@ public final class DefaultPlugin extends JUnitPlugin {
             libsToAdd = null;
         }
         if (librariesToRemove != null) {
-            libsToRemove = librariesToRemove.toArray(
-                                        new Library[librariesToRemove.size()]);
+            libsToRemove = librariesToRemove.toArray(new Library[0]);
         } else {
             libsToRemove = null;
         }

@@ -22,6 +22,7 @@ package org.netbeans.libs.git.jgit.commands;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -32,7 +33,6 @@ import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheBuildIterator;
 import org.eclipse.jgit.dircache.DirCacheBuilder;
 import org.eclipse.jgit.dircache.DirCacheEntry;
-import org.eclipse.jgit.errors.CorruptObjectException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.FileMode;
@@ -128,7 +128,7 @@ public class ResetCommand extends GitCommand {
                             treeWalk.reset();
                             treeWalk.addTree(new DirCacheBuildIterator(builder));
                             treeWalk.addTree(commit.getTree());
-                            List<File> toDelete = new LinkedList<File>();
+                            List<File> toDelete = new LinkedList<>();
                             String lastAddedPath = null;
                             while (treeWalk.next() && !monitor.isCanceled()) {
                                 File path = new File(repository.getWorkTree(), treeWalk.getPathString());
@@ -159,7 +159,7 @@ public class ResetCommand extends GitCommand {
                                         DirCacheEntry e = new DirCacheEntry(treeWalk.getPathString());
                                         AbstractTreeIterator it = treeWalk.getTree(1, AbstractTreeIterator.class);
                                         e.setFileMode(it.getEntryFileMode());
-                                        e.setLastModified(System.currentTimeMillis());
+                                        e.setLastModified(Instant.now());
                                         e.setObjectId(it.getEntryObjectId());
                                         e.smudgeRacilyClean();
                                         builder.add(e);
@@ -216,17 +216,13 @@ public class ResetCommand extends GitCommand {
                     }
                 }
             }
-        } catch (NoWorkTreeException ex) {
-            throw new GitException(ex);
-        } catch (CorruptObjectException ex) {
-            throw new GitException(ex);
-        } catch (IOException ex) {
+        } catch (NoWorkTreeException | IOException ex) {
             throw new GitException(ex);
         }
     }
 
     private void deleteFile (File file, File[] roots) {
-        Set<File> rootFiles = new HashSet<File>(Arrays.asList(roots));
+        Set<File> rootFiles = new HashSet<>(Arrays.asList(roots));
         File[] children;
         while (file != null && !rootFiles.contains(file) && ((children = file.listFiles()) == null || children.length == 0)) {
             // file is an empty folder

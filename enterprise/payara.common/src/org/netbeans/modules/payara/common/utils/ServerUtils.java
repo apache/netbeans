@@ -37,20 +37,14 @@ import org.openide.util.NbBundle;
  */
 public class ServerUtils {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(ServerUtils.class);
     /** Domains folder prefix. */
     private static final String DOMAINS_FOLDER_PREFIX = "GF_";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get the file attribute with the specified name as {@see String}.
      * <p/>
@@ -160,7 +154,7 @@ public class ServerUtils {
                     "PayaraInstance.getDomainsFolder.versionIsNull",
                     instance.getDisplayName()));
         }
-        boolean useBuild = version.getBuild() > 0;
+        boolean useBuild = version.getBuild() != null && !version.getBuild().isEmpty();
         boolean useUpdate = useBuild || version.getUpdate() > 0;
         // Allocate 2 characters per version number part and 1 character
         // per separator.
@@ -175,7 +169,7 @@ public class ServerUtils {
             sb.append(Short.toString(version.getUpdate()));
             if (useBuild) {
                 sb.append(PayaraPlatformVersionAPI.SEPARATOR);
-                sb.append(Short.toString(version.getBuild()));
+                sb.append(version.getBuild());
             }
         }
         return sb.toString();

@@ -153,7 +153,7 @@ public class NewModuleWizardIterator implements WizardDescriptor.AsynchronousIns
         if (c instanceof JComponent) { // assume Swing components
             JComponent jc = (JComponent)c;
             // Step #.
-            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(0));
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 0);
             // Step name (actually the whole list for reference).
             jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
         }
@@ -212,7 +212,7 @@ public class NewModuleWizardIterator implements WizardDescriptor.AsynchronousIns
     protected final void fireChangeEvent() {
         ChangeListener[] ls;
         synchronized (listeners) {
-            ls = listeners.toArray(new ChangeListener[listeners.size()]);
+            ls = listeners.toArray(new ChangeListener[0]);
         }
         ChangeEvent ev = new ChangeEvent(this);
         for (ChangeListener l : ls) {

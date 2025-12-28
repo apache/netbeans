@@ -464,6 +464,9 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
             // Only TomEE versions 8/9 of type Plus/PluME support full profile
             if (manager.getTomEEType().ordinal() >= 3 ) {
                 switch (manager.getTomEEVersion()) {
+                    case TOMEE_100:
+                        profiles.add(Profile.JAKARTA_EE_10_FULL);
+                        break;
                     case TOMEE_90:
                         profiles.add(Profile.JAKARTA_EE_9_1_FULL);
                         break;
@@ -478,6 +481,9 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
                 }
             }
             switch (manager.getTomEEVersion()) {
+                case TOMEE_100:
+                    profiles.add(Profile.JAKARTA_EE_10_WEB);
+                    break;
                 case TOMEE_90:
                     profiles.add(Profile.JAKARTA_EE_9_1_WEB);
                     break;
@@ -506,7 +512,7 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
         } else {
             switch (manager.getTomcatVersion()) {
                 case TOMCAT_110:
-                    profiles.add(Profile.JAKARTA_EE_10_WEB);
+                    profiles.add(Profile.JAKARTA_EE_11_WEB);
                     break;
                 case TOMCAT_101:
                     profiles.add(Profile.JAKARTA_EE_10_WEB);
@@ -521,6 +527,7 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
                     profiles.add(Profile.JAVA_EE_7_WEB);
                     profiles.add(Profile.JAVA_EE_6_WEB);
                     profiles.add(Profile.JAVA_EE_5);
+                    break;
                 case TOMCAT_80:
                     profiles.add(Profile.JAVA_EE_7_WEB);
                     profiles.add(Profile.JAVA_EE_6_WEB);
@@ -548,9 +555,14 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
     public Set<String> getSupportedJavaPlatformVersions() {
         Set<String> versions = new HashSet<>(16);
 
-        // TomEE has different supported Java versions
+        // TomEE has different supported Java versions.
+        // The Java Security Manager (JSM) has been permanently disabled 
+        // as of JDK 24. Only TomEE 10+ will work with Java 24+.
         if (manager.isTomEE()) {
             switch (manager.getTomEEVersion()) {
+                case TOMEE_100:
+                    versions = versionRange(17, 26);
+                    break;
                 case TOMEE_90:
                     versions = versionRange(11, 23);
                     break;
@@ -572,20 +584,20 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
         } else {
             switch (manager.getTomcatVersion()) {
                 case TOMCAT_110:
-                    versions = versionRange(21, 23);
+                    versions = versionRange(17, 26);
                     break;
                 case TOMCAT_101:
-                    versions = versionRange(11, 23);
+                    versions = versionRange(11, 26);
                     break;
                 case TOMCAT_100:
                 case TOMCAT_90:
-                    versions = versionRange(8, 23);
+                    versions = versionRange(8, 26);
                     break;
                 case TOMCAT_80:
-                    versions = versionRange(7, 23);
+                    versions = versionRange(7, 26);
                     break;
                 case TOMCAT_70:
-                    versions = versionRange(6, 23);
+                    versions = versionRange(6, 26);
                     break;
                 case TOMCAT_60:
                     versions = versionRange(5, 8);

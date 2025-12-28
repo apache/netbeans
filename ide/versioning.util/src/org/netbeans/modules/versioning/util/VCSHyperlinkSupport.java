@@ -36,11 +36,7 @@ import javax.swing.plaf.TextUI;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
 import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor.KenaiUser;
-import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
 
 /**
  * Implementation provides hyperlink support for VCS anotation bar and history views
@@ -49,7 +45,7 @@ import org.openide.util.NbBundle;
  */
 public class VCSHyperlinkSupport {
     private static Logger LOG = Logger.getLogger(VCSHyperlinkSupport.class.getName());
-    private Map<String, List<Hyperlink>> linkers = new HashMap<String, List<Hyperlink>>();
+    private final Map<String, List<Hyperlink>> linkers = new HashMap<>();
 
     public <T extends Hyperlink> T getLinker(Class<T> t, int idx) {
         return getLinker(t, Integer.toString(idx));
@@ -72,7 +68,7 @@ public class VCSHyperlinkSupport {
         if(l == null) return;
         List<Hyperlink> list = linkers.get(idx);
         if(list == null) {
-            list = new ArrayList<Hyperlink>();
+            list = new ArrayList<>();
         }
         list.add(l);
         linkers.put(idx, list);
@@ -240,6 +236,7 @@ public class VCSHyperlinkSupport {
             for (int i = 0; i < start.length; i++) {
                 if (bounds != null && bounds[i] != null && bounds[i].contains(p)) {
                     component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    component.setToolTipText(hp.getTooltip(text, start[i], end[i]));
                     return true;
                 }
             }
@@ -263,100 +260,6 @@ public class VCSHyperlinkSupport {
             for (int i = 0; i < length; i++) {
                 sd.setCharacterAttributes(sd.getLength() - text.length() + start[i], end[i] - start[i], issueHyperlinkStyle, false);
             }
-        }
-    }
-
-    public static class AuthorLinker extends StyledDocumentHyperlink {
-        private static final String AUTHOR_ICON_STYLE   = "authorIconStyle";    // NOI18N
-
-        private Rectangle bounds;
-        private final int docstart;
-        private final int docend;
-        private final KenaiUser kenaiUser;
-        private final String author;
-        private final Style authorStyle;
-        private final String insertToChat;
-
-        public AuthorLinker(KenaiUser kenaiUser, Style authorStyle, StyledDocument sd, String author) throws BadLocationException {
-            this(kenaiUser, authorStyle, sd, author, null);
-        }
-
-        public AuthorLinker(KenaiUser kenaiUser, Style authorStyle, StyledDocument sd, String author, String insertToChat) throws BadLocationException {
-            this.kenaiUser = kenaiUser;
-            this.author = author;
-            this.authorStyle = authorStyle;
-            this.insertToChat = insertToChat;
-
-            int doclen = sd.getLength();
-            int textlen = author.length();
-
-            docstart = doclen;
-            docend = doclen + textlen;
-        }
-
-        @Override
-        public void computeBounds(JTextPane textPane) {
-            computeBounds(textPane, null);
-        }
-        
-        public void computeBounds(JTextPane textPane, BoundsTranslator translator) {
-            Rectangle tpBounds = textPane.getBounds();
-            TextUI tui = textPane.getUI();
-            this.bounds = new Rectangle();
-            try {
-                Rectangle startr = tui.modelToView(textPane, docstart, Position.Bias.Forward).getBounds();
-                Rectangle endr = tui.modelToView(textPane, docend, Position.Bias.Backward).getBounds();
-                if(kenaiUser.getIcon() != null) {
-                    endr.x += kenaiUser.getIcon().getIconWidth();
-                }
-                this.bounds = new Rectangle(tpBounds.x + startr.x, startr.y, endr.x - startr.x, startr.height);
-                
-                if (null != translator) {
-                    translator.correctTranslation(textPane, this.bounds);
-                }
-            } catch (BadLocationException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-
-        @Override
-        public boolean mouseClicked(Point p) {
-            if (bounds != null && bounds.contains(p)) {
-                if(insertToChat != null) {
-                    kenaiUser.startChat(insertToChat);
-                } else {
-                    kenaiUser.startChat();
-                }
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public boolean mouseMoved(Point p, JComponent component) {
-            if (bounds != null && bounds.contains(p)) {
-                component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                component.setToolTipText(NbBundle.getMessage(VCSHyperlinkSupport.class, "LBL_StartChat", author));
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public void insertString(StyledDocument sd, Style style) throws BadLocationException {
-            if(style == null) {
-                style = authorStyle;
-            }
-            sd.insertString(sd.getLength(), author, style);
-
-            String iconStyleName = AUTHOR_ICON_STYLE + author;
-            Style iconStyle = sd.getStyle(iconStyleName);
-            if(iconStyle == null) {
-                iconStyle = sd.addStyle(iconStyleName, null);
-                StyleConstants.setIcon(iconStyle, kenaiUser.getIcon());
-            }
-            sd.insertString(sd.getLength(), " ", style);
-            sd.insertString(sd.getLength(), " ", iconStyle);
         }
     }
 

@@ -52,7 +52,7 @@ import javax.swing.event.ListSelectionEvent;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressRunnable;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
@@ -305,7 +305,7 @@ public final class FolderList extends javax.swing.JPanel {
                 }
             };
             final ScanTask task = new ScanTask();
-            ProgressUtils.showProgressDialogAndRun(task, NbBundle.getMessage(FolderList.class, "TXT_SearchingSourceRoots"), false);
+            BaseProgressUtils.showProgressDialogAndRun(task, NbBundle.getMessage(FolderList.class, "TXT_SearchingSourceRoots"), false);
             final List<File> toAdd = toAddRef.get();
             final List<File> related = new LinkedList<File>();
             if (relatedFolderList != null && relatedFolderFilter != null && toAdd != null) {
@@ -320,11 +320,11 @@ public final class FolderList extends javax.swing.JPanel {
                     }
                 }
             }
-            final File[] toAddArr = toAdd == null ? files : toAdd.toArray(new File[toAdd.size()]);
+            final File[] toAddArr = toAdd == null ? files : toAdd.toArray(new File[0]);
             Set<File> invalidRoots = new HashSet<File>();
             addFiles(toAddArr, invalidRoots);
             if (!related.isEmpty()) {
-                relatedFolderList.addFiles(related.toArray(new File[related.size()]), invalidRoots);
+                relatedFolderList.addFiles(related.toArray(new File[0]), invalidRoots);
             }
             File cd = chooser.getCurrentDirectory();
             if (cd != null) {

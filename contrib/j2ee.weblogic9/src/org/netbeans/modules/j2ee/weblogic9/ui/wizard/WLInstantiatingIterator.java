@@ -358,9 +358,7 @@ public class WLInstantiatingIterator  implements WizardDescriptor.InstantiatingI
         this.serverVersion = serverVersion;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Panels section
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * The steps names for the wizard: Server Location & Instance properties
      */
@@ -486,9 +484,7 @@ public class WLInstantiatingIterator  implements WizardDescriptor.InstantiatingI
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Listeners section
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * The registered listeners
      */

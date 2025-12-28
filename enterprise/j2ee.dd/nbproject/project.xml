@@ -248,10 +248,6 @@
                 <package>org.netbeans.modules.j2ee.dd.spi.ejb</package>
                 <package>org.netbeans.modules.j2ee.dd.spi.web</package>
             </public-packages>
-	    <class-path-extension>
-                <runtime-relative-path>ext/javaee-api-5.jar</runtime-relative-path>
-                <binary-origin>external/javaee-api-5.jar</binary-origin>
-            </class-path-extension>
         </data>
     </configuration>
 </project>

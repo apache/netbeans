@@ -276,7 +276,7 @@ public class JUnitProjectOpenedHook implements LookupProvider {
                 try {
                     updateProjectProperties(p);
                     Collection<FileObject> testFolders = JUnitUtils.getTestFolders(p);
-                    ProjectClassPathModifier.addLibraries(new Library[]{junit4lib, hamcrestlib}, testFolders.toArray(new FileObject[testFolders.size()])[0], ClassPath.COMPILE);
+                    ProjectClassPathModifier.addLibraries(new Library[]{junit4lib, hamcrestlib}, testFolders.toArray(new FileObject[0])[0], ClassPath.COMPILE);
                     getJUnitProjectProblemsProvider(p).setProblem(null);
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);

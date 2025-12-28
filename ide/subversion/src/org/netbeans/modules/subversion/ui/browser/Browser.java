@@ -198,7 +198,7 @@ public final class Browser implements VetoableChangeListener, BrowserClient, Tre
                 ret.add(((RepositoryPathNode) node).getEntry().getRepositoryFile());
             }
         }
-        return ret.toArray(new RepositoryFile[ret.size()]);
+        return ret.toArray(new RepositoryFile[0]);
     }
 
     private boolean show() {
@@ -248,7 +248,7 @@ public final class Browser implements VetoableChangeListener, BrowserClient, Tre
             }
             nodesToSelect.add(segmentParentNode);
         }
-        return nodesToSelect.toArray(new Node[nodesToSelect.size()]);
+        return nodesToSelect.toArray(new Node[0]);
     }
 
     /**
@@ -258,7 +258,7 @@ public final class Browser implements VetoableChangeListener, BrowserClient, Tre
         SvnProgressSupport[] progressSupports;
         synchronized(supportList) {
             cancelled = true;
-            progressSupports = supportList.toArray(new SvnProgressSupport[supportList.size()]);
+            progressSupports = supportList.toArray(new SvnProgressSupport[0]);
             supportList.clear();
         }
 

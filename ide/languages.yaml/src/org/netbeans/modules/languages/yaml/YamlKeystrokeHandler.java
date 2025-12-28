@@ -26,6 +26,7 @@ import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.document.LineDocumentUtils;
+import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -37,6 +38,7 @@ import org.netbeans.modules.csl.api.KeystrokeHandler;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.StructureItem;
 import org.netbeans.modules.csl.spi.ParserResult;
+import org.netbeans.modules.editor.indent.spi.CodeStylePreferences;
 import org.openide.util.Exceptions;
 
 /**
@@ -131,8 +133,8 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
                 caret.setDot(send + 2);
                 return true;
             }
-            int lineStart = LineDocumentUtils.getLineStart(doc, dotPos);
-            int lineEnd = LineDocumentUtils.getLineEnd(doc, dotPos);
+            int lineStart = LineDocumentUtils.getLineStartOffset(doc, dotPos);
+            int lineEnd = LineDocumentUtils.getLineEndOffset(doc, dotPos);
             char[] line = doc.getChars(lineStart, lineEnd - lineStart);
 
             int quotes = 0;
@@ -169,7 +171,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
                     Token<?> token = ts.token();
                     if (token.id() == YamlTokenId.TEXT && doc.getText(dotPos - 1, 1).charAt(0) == '<') {
                         // See if there's anything ahead
-                        int first = LineDocumentUtils.getNextNonWhitespace(doc, dotPos, LineDocumentUtils.getLineEnd(doc, dotPos));
+                        int first = LineDocumentUtils.getNextNonWhitespace(doc, dotPos, LineDocumentUtils.getLineEndOffset(doc, dotPos));
                         if (first == -1) {
                             doc.insertString(dotPos, "%%>", null); // NOI18N
                             caret.setDot(dotPos + 1);
@@ -187,7 +189,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
                             }
                         } else if (tokenText.endsWith("<")) {
                             // See if there's anything ahead
-                            int first = LineDocumentUtils.getNextNonWhitespace(doc, dotPos, LineDocumentUtils.getLineEnd(doc, dotPos));
+                            int first = LineDocumentUtils.getNextNonWhitespace(doc, dotPos, LineDocumentUtils.getLineEndOffset(doc, dotPos));
                             if (first == -1) {
                                 doc.insertString(dotPos, "%%>", null); // NOI18N
                                 caret.setDot(dotPos + 1);
@@ -226,7 +228,6 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
 
     @Override
     public boolean charBackspaced(Document doc, int dotPos, JTextComponent target, char ch) throws BadLocationException {
-        Caret caret = target.getCaret();
         if (ch == '%' && dotPos > 0 && dotPos <= doc.getLength() - 2) {
             String s = doc.getText(dotPos - 1, 3);
             if ("<%>".equals(s)) { // NOI18N
@@ -278,8 +279,8 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
         // Basically, use the same indent as the current line, unless the caret is immediately preceeded by a ":" (possibly with whitespace
         // in between)
 
-        int lineBegin = LineDocumentUtils.getLineStart(doc, offset);
-        int lineEnd = LineDocumentUtils.getLineEnd(doc, offset);
+        int lineBegin = LineDocumentUtils.getLineStartOffset(doc, offset);
+        int lineEnd = LineDocumentUtils.getLineEndOffset(doc, offset);
 
         if (lineBegin == offset && lineEnd == offset) {
             // Pressed return on a blank newline - do nothing
@@ -289,9 +290,9 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
         int indent = getLineIndent(doc, offset);
         String linePrefix = doc.getText(lineBegin, offset - lineBegin);
         String lineSuffix = doc.getText(offset, lineEnd + 1 - offset);
-        if (linePrefix.trim().endsWith(":") && lineSuffix.trim().length() == 0) {
+        if (linePrefix.stripTrailing().endsWith(":") && lineSuffix.isBlank()) {
             // Yes, new key: increase indent
-            indent += IndentUtils.getIndentSize(doc);
+            indent += getIndentSize(doc);
         } else {
             // No, just use same indent as parent
         }
@@ -310,7 +311,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
         if (remove > 0) {
             doc.remove(offset, remove);
         }
-        String str = IndentUtils.getIndentString(indent);
+        String str = " ".repeat(indent);
         int newPos = offset + str.length();
         doc.insertString(offset, str, null);
         caret.setDot(offset);
@@ -367,11 +368,11 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
 
     public static int getLineIndent(BaseDocument doc, int offset) {
         try {
-            int start = LineDocumentUtils.getLineStart(doc, offset);
+            int start = LineDocumentUtils.getLineStartOffset(doc, offset);
             int end;
 
             if (LineDocumentUtils.isLineWhitespace(doc, start)) {
-                end = LineDocumentUtils.getLineEnd(doc, offset);
+                end = LineDocumentUtils.getLineEndOffset(doc, offset);
             } else {
                 end = LineDocumentUtils.getLineFirstNonWhitespace(doc, start);
             }
@@ -384,6 +385,11 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
 
             return 0;
         }
+    }
+
+    private static int getIndentSize(Document doc) {
+        return CodeStylePreferences.get(doc).getPreferences()
+                .getInt(SimpleValueNames.INDENT_SHIFT_WIDTH, 2);
     }
 
 }

@@ -29,7 +29,6 @@ import org.netbeans.spi.tasklist.FileTaskScanner;
 import org.netbeans.spi.tasklist.PushTaskScanner;
 import org.netbeans.spi.tasklist.Task;
 import org.openide.filesystems.FileObject;
-import org.openide.util.WeakSet;
 
 /**
  * @author S. Aubrecht
@@ -45,7 +44,7 @@ public class TaskList {
     
     private Map<TaskGroup, List<Task>> group2tasks = new HashMap<TaskGroup,List<Task>>( 10 );
     
-    private final WeakSet<Listener> listeners = new WeakSet<Listener>( 2 );
+    private final Set<Listener> listeners = Collections.newSetFromMap(new WeakHashMap<>(2));
     
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     
@@ -409,7 +408,7 @@ public class TaskList {
     private void fireTasksAdded( List<Task> tasks ) {
         TaskList.Listener[] tmp; 
         synchronized( listeners ) {
-            tmp = listeners.toArray(new TaskList.Listener[listeners.size()]);
+            tmp = listeners.toArray(new TaskList.Listener[0]);
         }
         for ( Listener l : tmp ) {
             l.tasksAdded( tasks );
@@ -419,7 +418,7 @@ public class TaskList {
     private void fireTasksRemoved( List<Task> tasks ) {
         TaskList.Listener[] tmp; 
         synchronized( listeners ) {
-            tmp = listeners.toArray(new TaskList.Listener[listeners.size()]);
+            tmp = listeners.toArray(new TaskList.Listener[0]);
         }
         for ( Listener l : tmp ) {
             l.tasksRemoved( tasks );
@@ -429,7 +428,7 @@ public class TaskList {
     private void fireCleared() {
         TaskList.Listener[] tmp; 
         synchronized( listeners ) {
-            tmp = listeners.toArray(new TaskList.Listener[listeners.size()]);
+            tmp = listeners.toArray(new TaskList.Listener[0]);
         }
         for( Listener l : tmp) {
             l.cleared();

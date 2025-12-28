@@ -45,9 +45,12 @@
           <isFunctionBody/>
           <!-- Block Statements -->
           <ExpressionStatement start='21' end='32'>
-            <IdentNode start='21' end='31'>
-              <name>new.target</name>
-            </IdentNode>
+            <AccessNode property='target' start='21' end='31'>
+              <!-- AccessNode Base -->
+              <IdentNode start='21' end='24'>
+                <name>new</name>
+              </IdentNode>
+            </AccessNode>
           </ExpressionStatement>
         </Block>
       </FunctionNode>

@@ -67,6 +67,8 @@ public class RenamePanel extends JPanel implements CustomRefactoringPanel {
                 RenamePanel.this.parent.stateChanged(null);
             }
         });
+
+        RenamePanel.this.parent.stateChanged(null);
     }
 
     @Override

@@ -22,11 +22,10 @@
 <html>
 <head>
 <title>Modules API</title>
-<link rel="stylesheet" href="../../../../prose.css" type="text/css">
 </head>
 <body>
 
-<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="@TOP@/index.html">Overview</a></p>
 
 <h1>Javadoc</h1>
 
@@ -36,7 +35,7 @@ Javadoc,
 
 particularly that for the
 
-<a href="../ModuleInstall.html"><code>ModuleInstall</code></a>
+{@link org.openide.modules.ModuleInstall ModuleInstall }
 
 class. Other classes in the package are generally not useful to module
 authors.
@@ -85,7 +84,7 @@ authors.
 
 <div class="nonnormative">
 
-<h2><a name="what-are">What are Modules?</a></h2>
+<h2 id="what-are">What are Modules?</h2>
 
 <em>Modules</em> permit NetBeans to be extended
 dynamically. All of the NetBeans APIs are designed to be used for purposes
@@ -100,7 +99,7 @@ format should be rather familiar; classes constituting the module are
 <a href="#how-jar">archived in the JAR</a>, and special entries in the
 <a href="#how-manifest">manifest file</a> are recognized.
 
-<h3><a name="rel-std">Related Standards</a></h3>
+<h3 id="rel-std">Related Standards</h3>
 
 To the greatest extent possible, NetBeans has designed the module
 system to reuse standard technologies when they are sufficient, and to
@@ -137,12 +136,12 @@ giving additional more specific deployment information.
 
 </div>
 
-<h2><a name="how-to">How to Create a New Module</a></h2>
+<h2 id="how-to">How to Create a New Module</h2>
 
 <p>For basic cases, you should need to do very little to create a module
 besides writing the basic source code.</p>
 
-<h3><a name="how-jar">Build a JAR</a></h3>
+<h3 id="how-jar">Build a JAR</h3>
 
 <p>All module implementation classes must reside in a JAR file. If you
 want to split up a large application into several pieces, perhaps
@@ -150,7 +149,7 @@ so as to make independent upgrades possible, you should do so by
 creating multiple modules and relating them using <a
 href="#how-vers">versioning</a>.</p>
 
-<h3><a name="how-manifest">Writing the manifest</a></h3>
+<h3 id="how-manifest">Writing the manifest</h3>
 
 A module is recognized as such by NetBeans, by virtue of its having
 a special magic tag in the global section of the manifest:
@@ -279,7 +278,7 @@ parsing it otherwise.
 
 </div>
 
-<h3><a name="how-main">Using a custom module class</a></h3>
+<h3 id="how-main">Using a custom module class</h3>
 
 With the <code>OpenIDE-Module-Install</code> attribute, you may specify
 a custom class which will handle any complex aspects of the module's
@@ -293,11 +292,11 @@ only handle the exceptional parts.
 
 <p>To use a main install class, just extend the
 
-<a href="../ModuleInstall.html"><code>ModuleInstall</code></a>
+{@link org.openide.modules.ModuleInstall ModuleInstall }
 
 base class. Your class must be able to be
 
-<a href="@JDK@/java/beans/Beans.html#instantiate-java.lang.ClassLoader-java.lang.String-">instantiated as a JavaBean</a>.
+{@link java.beans.Beans#instantiate(java.lang.ClassLoader,java.lang.String) instantiated as a JavaBean}.
 
 There are several methods which you may override, and may do anything
 which is required to make the module cleanly enter and exit NetBeans.</p>
@@ -312,8 +311,8 @@ import org.openide.modules.ModuleInstall;
 import org.openide.filesystems.FileUtil;
 import java.net.*;
 
-public class ModuleHandler extends <a href="../ModuleInstall.html">ModuleInstall</a> {
-  public void <a href="../ModuleInstall.html#installed--">installed</a>() {
+public class ModuleHandler extends {@link org.openide.modules.ModuleInstall ModuleInstall } {
+  public void {@link org.openide.modules.ModuleInstall#installed() installed }() {
     // This module has been installed for the first time! Notify authors.
     HttpURLConnection conn = (HttpURLConnection)
       (new URL ("http://www.modulemakers.com/clip_disp/installed.cgi").openConnection ());
@@ -324,15 +323,15 @@ public class ModuleHandler extends <a href="../ModuleInstall.html">ModuleInstall
   }
 
   // Nothing special required here.
-  // public void <a href="../ModuleInstall.html#restored--">restored</a>() {
+  // public void {@link org.openide.modules.ModuleInstall#restored() restored }() {
   // }
 
   // Do not need to do anything special on uninstall.
   // Tools action will be removed automatically.
-  // public void <a href="../ModuleInstall.html#uninstalled--">uninstalled</a>() {
+  // public void {@link org.openide.modules.ModuleInstall#uninstalled() uninstalled }() {
   // }
 
-  public boolean <a href="../ModuleInstall.html#closing--">closing</a>() {
+  public boolean {@link org.openide.modules.ModuleInstall#closing() closing}() {
     // Ask the user to save any open, modified clipboard contents.
     // If the user selects "Cancel" on one of these dialogs, don't exit yet!
     return DisplayClipboardAction.askAboutExiting ();
@@ -354,7 +353,7 @@ acceptable to use in <code>restored</code>, including
 
 <p>The
 
-<a href="../ModuleInstall.html#updated-int-java.lang.String-"><code>ModuleInstall.updated(...)</code></a>
+{@link org.openide.modules.ModuleInstall#updated(int,java.lang.String) ModuleInstall.updated(...) }
 
 method will be called just once when
 a module is updated to a new version - when the new version is loaded
@@ -370,7 +369,7 @@ in order for it to be used. For example, an external application may need
 to be installed in order for it to do anything. Or it may require a valid
 license key. In such cases, the
 
-<a href="../ModuleInstall.html#validate--"><code>ModuleInstall.validate()</code></a>
+{@link org.openide.modules.ModuleInstall#validate() ModuleInstall.validate() }
 
 method may be overridden to check for this external resource and throw
 a (preferably politely localized) <code>IllegalStateException</code>
@@ -381,7 +380,7 @@ called, as it may be done when deciding whether to even begin loading.</p>
 
 <div class="nonnormative">
 
-<h4><a name="installation-clean">"Installation-clean" modules</a></h4>
+<h4 id="installation-clean">"Installation-clean" modules</h4>
 
 Since NetBeans can better manage modules when their resources are
 declared to exist, rather than procedurally installed, it is desirable
@@ -459,7 +458,7 @@ complicates ad-hoc module installation though Auto Update may be fine.
 
 </div>
 
-<h3><a name="how-layer">Using an installation layer</a></h3>
+<h3 id="how-layer">Using an installation layer</h3>
 
 <p>You may specify the global tag
 <code>OpenIDE-Module-Layer</code> in addition to or instead of a
@@ -470,7 +469,7 @@ understood by <code>XMLFileSystem</code>.
 
 Its contents specify some files that the module will add to the
 
-<a href="@org-openide-filesystems@/org/openide/filesystems/Repository.html#getDefaultFileSystem--">system filesystem</a>
+<a href="@org-openide-filesystems@/org/openide/filesystems/Repository.html#getDefaultFileSystem()">system filesystem</a>
 
 controlling much of NetBeans' configuration. This filesystem is composed of many read-only XML layer filesystems
 as well as a writable layer corresponding to the <code>config</code> subdirectory of the user directory.</p>
@@ -555,7 +554,7 @@ for example, menus are
 in the order the instance-bearing data objects occur in the data
 folder. The call
 
-<a href="@org-openide-loaders@/org/openide/loaders/DataFolder.html#setOrder-org.openide.loaders.DataObject:A-"><code>DataFolder.setOrder(DataObject[])</code></a>
+<a href="@org-openide-loaders@/org/openide/loaders/DataFolder.html#setOrder(org.openide.loaders.DataObject%5B%5D)"><code>DataFolder.setOrder(DataObject[])</code></a>
 
 suffices to arbitrarily change folder order, but usually it is
 desirable to create the proper order declaratively in the XML. For
@@ -564,7 +563,7 @@ this reason, <code>DataFolder</code> understands special attributes
 Specifically: if there are data objects A and B in the folder,
 represented by
 
-<a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getPrimaryFile--">primary files</a>
+<a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#getPrimaryFile()">primary files</a>
 
 <samp>afile</samp> and <samp>bfile</samp>,
 and <samp>afile</samp> has an attribute named <code>position</code> whose numeric value is less
@@ -599,7 +598,7 @@ any bearing on the ordering.
 
 <p>There is also an older, now-deprecated system based on relative ordering attributes.</p>
 
-<p>More details are available in <a href="@org-openide-filesystems@/org/openide/filesystems/FileUtil.html#getOrder-java.util.Collection-boolean-"><code>FileUtil.getOrder</code></a>.</p>
+<p>More details are available in <a href="@org-openide-filesystems@/org/openide/filesystems/FileUtil.html#getOrder(java.util.Collection,boolean)"><code>FileUtil.getOrder</code></a>.</p>
 
 <p>The resource path pointing to the layer is automatically localized
 by NetBeans every time the module is installed or restored; if there
@@ -621,7 +620,7 @@ files installed by the core.
 <p>NetBeans recognizes several special file attributes, typically set in layers, which can control UI.
 For example, the labels of menus created from folders beneath <samp>Menu/</samp>
 are derived from the "localized display name" of the layer folder, when defined.
-See <a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.html#getDecorator--"><code>FileSystem.getDecorator()</code></a> 
+See <a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.html#getDecorator()"><code>FileSystem.getDecorator()</code></a> 
 (formerly <code>getStatus()</code>)for details.</p>
 
 <h4>Reverting user's modifications</h4>
@@ -639,7 +638,7 @@ its initial state as defined in XML layers. Please note that is <strong>*not*</s
 possible to reset <code>FileObject</code>'s attributes.
 </p>
 
-<h3><a name="how-vers">Using versioning</a></h3>
+<h3 id="how-vers">Using versioning</h3>
 
 Module <em>versioning</em> provides a way for modules to specify
 which module they are (i.e. that one JAR is an upgrade from
@@ -690,7 +689,7 @@ may also <em>require</em> one or more tokens. A module which requires some token
 may only be enabled by the system if for each such token, there is at least one other
 module which provides that token and is already enabled. 
 
-<a name="7.1"></a>
+<a id="7.1"></a>
 Since version 7.1 there is also support for <code>OpenIDE-Module-Needs</code>
 which is a weaker version of requires as it does not impose any restriction on
 the ordering of module. The <code>OpenIDE-Module-Needs</code> is useful for
@@ -798,7 +797,8 @@ equal to</strong> the requested version. Note that you may not request
 an exact specification version. This is the preferred form for module
 dependencies.
 
-<p>Remember, if requesting a dependency on a module which has a
+<br>
+Remember, if requesting a dependency on a module which has a
 release number, you <em>must</em> give that release number as part of
 the feature name, whether or not you also ask for a specification
 version.
@@ -889,7 +889,7 @@ This includes information about provided tokens.
 
 <li>For packages, use the Java
 
-<a href="@JDK@/java/lang/Package.html"><code>Package</code></a>
+{@link java.lang.Package Package }
 
 class, or examine the manifest of the JAR you depend upon.
 
@@ -939,7 +939,7 @@ defining and handling a custom XML DTD.)
 may still be accessed using reflection from the system classloader,
 just not from a module classloader.</p>
 
-<a name="friend"></a>
+<a id="friend"></a>
 <p>Additionally, sometimes a module with an API in public packages wishes to
 provide access only to certain "friend" modules. This is
 possible if the module declares public packages together with a list
@@ -964,7 +964,7 @@ classes, as if both modules formed part of the same code base.</p>
 
 document which gives a fuller, more informal explanation.</p>
 
-<h3><a name="how-os-specific">Writing an OS dependent module</a></h3>
+<h3 id="how-os-specific">Writing an OS dependent module</h3>
 
 <em>Since 4.44</em> a module can request to be enabled only on certain class
 of an operating system 
@@ -1003,7 +1003,7 @@ enabling it only on Mac OS X (as is the case of the NetBeans
 applemenu module).
 </p>
 
-<h3><a name="how-i18n-branding">Localization and branding support</a></h3>
+<h3 id="how-i18n-branding">Localization and branding support</h3>
 
 <p>
     Existing <a href="i18n-branding.html">Internationalization, Localization, and Branding</a>
@@ -1012,17 +1012,17 @@ applemenu module).
 </p>
 
 
-<h2><a name="std-sec">Standard Module Sections</a></h2>
+<h2 id="std-sec">Standard Module Sections</h2>
 
 <p>Formerly some items in NetBeans were installed via JAR manifest sections using
 the <code>OpenIDE-Module-Class</code> attribute. All such registrations are now
 deprecated, generally replaced with layer-based registrations.</p>
 
-<h2><a name="deploy">Deployment of Modules</a></h2>
+<h2 id="deploy">Deployment of Modules</h2>
 
 <p>This section describes how a module may be deployed to a user's NetBeans instance.</p>
 
-<h3><a name="enablement">Enablement</a></h3>
+<h3 id="enablement">Enablement</h3>
 
 <p>
     The standard module system permits modules to be in several states, controlled
@@ -1070,14 +1070,14 @@ deprecated, generally replaced with layer-based registrations.</p>
     </p>
 </div>
 
-<h3><a name="related-files">Related Files</a></h3>
+<h3 id="related-files">Related Files</h3>
 
 <p>Sometimes a module may need to bundle other files besides the
 module JAR alongside it. No concrete mechanism for doing so is
 specified in the Modules API. However, if there is such a mechanism,
 then it is possible for the module to find these other files.
 
-<a href="../InstalledFileLocator.html"><code>InstalledFileLocator</code></a>
+{@link org.openide.modules.InstalledFileLocator InstalledFileLocator}
 
 permits such packaging mechanisms to let modules find their associated
 files, as of 3.21.</p>
@@ -1085,7 +1085,7 @@ files, as of 3.21.</p>
 <p class="nonnormative">In the current implementation, modules may be
 bundled with other files using
 
-<a href="https://netbeans.apache.org/projects/autoupdate/nbm/nbm_package.html#structure">NBM files</a>
+<a href="https://netbeans.apache.org/projects/autoupdate/nbm/nbm_package#structure">NBM files</a>
 
 as provided by Auto Update, and the NetBeans build process premerges
 modules in the selected module config into one large installation
@@ -1095,7 +1095,7 @@ structure might however change in the future, so
 <code>InstalledFileLocator</code> is the only safe way to find such
 bundled resources.</p>
 
-<h3><a name="deprecation">Deprecation</a></h3>
+<h3 id="deprecation">Deprecation</h3>
 
 <p>Sometimes you may have an API module which you wish to deprecate in its
 entirely - it is only available for purposes of backwards compatibility.
@@ -1108,7 +1108,7 @@ This
 message may be displayed somehow if a non-deprecated module depending on your
 deprecated module is enabled.</p>
 
-<h3><a name="refactoring">Refactoring</a></h3>
+<h3 id="refactoring">Refactoring</h3>
 
 <p>Sometimes as the developer of an API module, you may wish to make
 major changes in how your APIs are laid out physically in modules.
@@ -1133,7 +1133,7 @@ must be available before any module is even loaded.</p>
 
 <p><em>As of 3.33</em></p>
 
-<h3><a name="order">Module install order</a></h3>
+<h3 id="order">Module install order</h3>
 
 It may be possible for multiple modules to be installed at once, or
 for a module to specify a dependency which is not satisfied. How
@@ -1168,7 +1168,7 @@ means that you should "factor out" the common required
 functionality into a new module which the original ones will then
 specify legal dependencies on.
 
-<h3><a name="listing">List of all modules</a></h3>
+<h3 id="listing">List of all modules</h3>
 
 Though a module should not generally need to know or care what other
 modules are installed - anything it needs should be a dependency, and
@@ -1177,7 +1177,7 @@ is desirable to obtain the list of all modules in the system. This can
 be easily accomplished as follows:
 
 <pre>
-Collection&lt;ModuleInfo&gt; modules = Lookup.getDefault().lookupAll(<a href="../ModuleInfo.html">ModuleInfo</a>.class);
+Collection&lt;ModuleInfo&gt; modules = Lookup.getDefault().lookupAll({@link org.openide.modules.ModuleInfo ModuleInfo}.class);
 </pre>
 
 The resulting <code>ModuleInfo</code> objects give basic information
@@ -1232,7 +1232,7 @@ missing a valid license key), simply use
 
 <p>When rewriting the module XML be sure to use
 
-<a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.html#runAtomicAction-org.openide.filesystems.FileSystem.AtomicAction-"><code>FileSystem.runAtomic(FileSystem.AtomicAction)</code></a>
+<a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.html#runAtomicAction(org.openide.filesystems.FileSystem.AtomicAction)"><code>FileSystem.runAtomic(FileSystem.AtomicAction)</code></a>
 
 to wrap the reading of the old XML and the writing of the new, to
 prevent file changes from being fired halfway through.</p>
@@ -1251,7 +1251,7 @@ prevent file changes from being fired halfway through.</p>
 
 <div class="nonnormative">
 
-<h3><a name="security">Security</a></h3>
+<h3 id="security">Security</h3>
 
 In the current API there is no particular provision for security in
 modules: all modules are assumed to be trusted, and have access to
@@ -1279,7 +1279,7 @@ creation.
 
 </div>
 
-<h3><a name="jni">JNI</a></h3>
+<h3 id="jni">JNI</h3>
 
 <p>It is possible to run modules making use of JNI native implementations inside
 NetBeans. You may place the native libraries (DLL or shared-object) beneath
@@ -1322,11 +1322,6 @@ this feature cannot be enabled more than once in a single VM session.
 JARs loaded from the classpath (application classloader) are never
 reloaded, so it may be possible to include the native-dependent
 classes in such a JAR and make use of it from a module JAR.</p>
-
-<p class="nonnormative">NetBeans currently includes a <a
-href="https://github.com/twall/jna">JNA</a> wrapper module which can also be used
-for native access. As of this writing, however, this module exports only a
-friend API, so it is not available for use from arbitrary modules.<p>
 
 <hr>@FOOTER@
 

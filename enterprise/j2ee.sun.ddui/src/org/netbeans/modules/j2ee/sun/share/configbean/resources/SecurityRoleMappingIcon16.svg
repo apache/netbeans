@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #deb46e;
+      }
+
+      .st1 {
+        fill: #b08640;
+      }
+
+      .st2 {
+        opacity: .33;
+      }
+
+      .st3 {
+        fill: #e8e9ea;
+      }
+
+      .st4 {
+        fill: #5e6367;
+      }
+    </style>
+  </defs>
+  <g>
+    <path class="st3" d="M9.5,10.214V3.7c0-.276-.224-.5-.5-.5h-2c-.276,0-.5.224-.5.5v6.514h-3V3.431c.347-1.657,1.66-2.931,3.112-2.931h2.776c1.45,0,2.716,1.246,3.078,3.031l.036.377-.002,6.306h-3Z"/>
+    <path class="st4" d="M9.388,1c1.198,0,2.253,1.06,2.579,2.584l.033.324v5.806h-2V3.7c0-.552-.448-1-1-1h-2c-.552,0-1,.448-1,1v6.014h-2V3.537c.335-1.476,1.421-2.537,2.612-2.537h2.776M9.388,0h-2.776c-1.691,0-3.202,1.411-3.612,3.431v7.283h4V3.7h2v7.014h4V3.857l-.043-.426c-.41-2.02-1.878-3.431-3.569-3.431h0Z"/>
+  </g>
+  <g>
+    <rect class="st0" x="1" y="6" width="14" height="9"/>
+    <g class="st2">
+      <path d="M14,7v7H2v-7h12M15,6H1v9h14V6h0Z"/>
+    </g>
+  </g>
+  <rect class="st1" x="2" y="8" width="12" height="1"/>
+  <rect class="st1" x="2" y="10" width="12" height="1"/>
+  <rect class="st1" x="2" y="12" width="12" height="1"/>
+</svg>

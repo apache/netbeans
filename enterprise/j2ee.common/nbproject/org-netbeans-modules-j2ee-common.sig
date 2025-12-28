@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.125
+#Version 1.133
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -640,6 +640,7 @@ meth public boolean isCdi11Supported()
 meth public boolean isCdi20Supported()
 meth public boolean isCdi30Supported()
 meth public boolean isCdi40Supported()
+meth public boolean isCdi41Supported()
 meth public boolean isEjb30Supported()
 meth public boolean isEjb31LiteSupported()
 meth public boolean isEjb31Supported()

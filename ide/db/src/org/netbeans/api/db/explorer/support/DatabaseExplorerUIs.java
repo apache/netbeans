@@ -21,7 +21,6 @@ package org.netbeans.api.db.explorer.support;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -150,7 +149,7 @@ public final class DatabaseExplorerUIs {
                     connectionList.clear();
                     connectionList.addAll(
                             Arrays.asList(connectionManager.getConnections()));
-                    Collections.sort(connectionList, new ConnectionComparator());
+                    connectionList.sort(new ConnectionComparator());
                     fireContentsChanged(this, 0,
                             Math.max(connectionList.size(), oldLength));
                 }

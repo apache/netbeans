@@ -25,17 +25,23 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
@@ -70,6 +76,8 @@ import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
 import org.netbeans.modules.maven.InternalActionDelegate;
+import org.netbeans.modules.maven.problems.SanityBuildAction.SanityBuildNeededChecker;
+import org.openide.util.Cancellable;
 import org.openide.util.Pair;
 
 /**
@@ -81,9 +89,10 @@ import org.openide.util.Pair;
 @ProjectServiceProvider(service = { 
         ProjectProblemsProvider.class, 
         InternalActionDelegate.class,
+        SanityBuildNeededChecker.class,
     }, projectType = "org-netbeans-modules-maven"
 )
-public class MavenModelProblemsProvider implements ProjectProblemsProvider, InternalActionDelegate {
+public class MavenModelProblemsProvider implements ProjectProblemsProvider, InternalActionDelegate, SanityBuildNeededChecker {
     static final RequestProcessor RP  = new RequestProcessor(MavenModelProblemsProvider.class);
     private static final Logger LOG = Logger.getLogger(MavenModelProblemsProvider.class.getName());
     
@@ -235,6 +244,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                 List<ProjectProblem> toRet = null;
                 while (round <= 1) {
                     try {
+                        LOG.log(Level.FINER, "Analysing project {0}@{1}, round {2}", new Object[] { prj, System.identityHashCode(prj), round });
                         boolean ok = false;
                         synchronized (MavenModelProblemsProvider.this) {
                             try {
@@ -243,7 +253,9 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                                 toRet = new ArrayList<>();
                                 MavenExecutionResult res = MavenProjectCache.getExecutionResult(prj);
                                 if (res != null && res.hasExceptions()) {
-                                    toRet.addAll(reportExceptions(res));
+                                    Collection<ProjectProblem> exceptions = reportExceptions(res);
+                                    LOG.log(Level.FINE, "Project has loaded with exceptions: {0}", exceptions);
+                                    toRet.addAll(exceptions);
                                 }
                                 //#217286 doArtifactChecks can call FileOwnerQuery and attempt to aquire the project mutex.
                                 toRet.addAll(doArtifactChecks(prj));
@@ -253,6 +265,9 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                                 break;
                             } finally {
                                 if (ok || round > 0) {
+                                    LOG.log(Level.FINER, "Project {0} problems: {1}, sanity {2}, ok {3}, round {4}", new Object[] {
+                                        prj, sanityBuildStatus, ok, round
+                                    });
                                     //mark the project model as checked once and cached
                                     prj.setContextValue(MavenModelProblemsProvider.class.getName(), new Object());
                                     // change globals before exiting synchronized section
@@ -314,6 +329,11 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
         problemReporter.addMissingArtifact(a, checkMissing);
     }
     
+    private static String artifactId(Artifact a) {
+        return a.getGroupId() + ":" + a.getArtifactId() + ":" + a.getVersion() + ":" + 
+                (a.getClassifier() == null ? "" : a.getClassifier()) + "/" + a.getType();
+    }
+    
     @NbBundle.Messages({
         "ERR_SystemScope=A 'system' scope dependency was not found. Code completion is affected.",
         "MSG_SystemScope=There is a 'system' scoped dependency in the project but the path to the binary is not valid.\n"
@@ -330,6 +350,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
     })
     public Collection<ProjectProblem> doArtifactChecks(@NonNull MavenProject project) {
         List<ProjectProblem> toRet = new ArrayList<ProjectProblem>();
+        LOG.log(Level.FINE, "Performing artifact checks for {0}", project);
         
         if (MavenProjectCache.unknownBuildParticipantObserved(project)) {
             StringBuilder sb = new StringBuilder();
@@ -342,9 +363,34 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
         
         boolean missingNonSibling = false;
         List<Artifact> missingJars = new ArrayList<Artifact>();
-        for (Artifact art : project.getArtifacts()) {
+        List<Artifact> artifactsToCheck = new ArrayList<>(project.getArtifacts());
+        MavenProject partial = MavenProjectCache.getPartialProject(project);
+        Collection<Artifact> placeholders = MavenProjectCache.getPlaceholderArtifacts(project);
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.log(Level.FINER, "Checking artifacts: {0}", artifactsToCheck);
+            if (partial != null && partial != project) {
+                Collection<Artifact> partialPlaceholders = MavenProjectCache.getPlaceholderArtifacts(partial);
+                LOG.log(Level.FINER, "Partial project for {0}@{1} is: {2}@{3}, placeholder artifacts: {4}", new Object[] { 
+                    project, System.identityHashCode(project), partial, System.identityHashCode(partial), partialPlaceholders
+                });
+            }
+            LOG.log(Level.FINER, "Placeholder artifacts for {0}@{1}: {2}", new Object[] { 
+                project, System.identityHashCode(project), placeholders
+            });
+        }
+        
+        Collection<Artifact> toCheck = new HashSet<>(project.getArtifacts());
+        if (placeholders != null) {
+            // the placeholder artifacts are typically without a scope, so ignore scope when merging with other reported pieces.
+            Set<String> ids = toCheck.stream().map(MavenModelProblemsProvider::artifactId).collect(Collectors.toSet());
+            placeholders.stream().filter(a -> !ids.contains(artifactId(a))).forEach(toCheck::add);
+        }
+        
+        for (Artifact art : toCheck) {
             File file = art.getFile();
+            LOG.log(Level.FINEST, "Checking {0}", art);
             if (file == null || !file.exists()) {                
+                LOG.log(Level.FINEST, "File does not exist for {0}", art);
                 if(Artifact.SCOPE_SYSTEM.equals(art.getScope())){
                     //TODO create a correction action for this.
                     toRet.add(ProjectProblem.createWarning(ERR_SystemScope(), MSG_SystemScope(), new ProblemReporterImpl.MavenProblemResolver(OpenPOMAction.instance().createContextAwareInstance(Lookups.fixed(project)), "SCOPE_DEPENDENCY")));
@@ -354,6 +400,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                         missingNonSibling = true;
                     } else {
                         final URL archiveUrl = FileUtil.urlForArchiveOrDir(file);
+                        LOG.log(Level.FINEST, "File for {0} is {1}, archive URL {2}", new Object[] { art, file, archiveUrl });
                         if (archiveUrl != null) { //#236050 null check
                             //a.getFile should be already normalized
                             SourceForBinaryQuery.Result2 result = SourceForBinaryQuery.findSourceRoots2(archiveUrl);
@@ -366,6 +413,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                     missingJars.add(art);
                 }
             } else if (NbArtifactFixer.isFallbackFile(file)) {
+                LOG.log(Level.FINEST, "Artifact is a fallback {0} with file {1}", new Object[] { art, file });
                 addMissingArtifact(art);
                 missingJars.add(art);
                 missingNonSibling = true;
@@ -376,6 +424,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
             for (Artifact art : missingJars) {
                 mess.append(art.getId()).append('\n');
             }
+            LOG.log(Level.FINER, "Project is missing artifacts: {0}, nonlocal = {1}", new Object[] { missingJars, missingNonSibling });
             if (missingNonSibling) {
                 toRet.add(ProjectProblem.createWarning(ERR_NonLocal(), MSG_NonLocal(mess), createSanityBuildAction()));
             } else {
@@ -421,6 +470,7 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
         synchronized (this) {
             SanityBuildAction a = cachedSanityBuild.get();
             sanityBuildStatus = true;
+            LOG.log(Level.FINE, "Creating sanity build action for {0}", project.getProjectDirectory());
             if (a != null) {
                 Future<ProjectProblemsProvider.Result> r = a.getPendingResult();
                 if (r != null) {
@@ -508,6 +558,34 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
         return primingProvider;
     }
     
+    /**
+     * Finds a suitable Consumer for cancellable in the action context Lookup.
+     * I didn't want to provide yet another public interface, so this code checks for a Consumer,
+     * whose implementation class specializes the T type to org.openide.Cancellable
+     * If the context lookup can accept a Cancellable implementation, we provide one, that can cancel 
+     * the running process.
+     * @param context action context
+     * @param primingHandle future capable of cancelling the priming build
+     * @return true, if attached.
+     */
+    private boolean attachCancellable(Lookup context, CompletableFuture primingHandle) {
+        Consumer<Cancellable> c = context.lookup(Consumer.class);
+        if (c != null) {
+            int index = 0;
+            Class[] interfaces = c.getClass().getInterfaces();
+            for (Type t  : c.getClass().getGenericInterfaces()) {
+                if (interfaces[index].getName().equals(Consumer.class.getName())) {
+                    if (((ParameterizedType)t).getActualTypeArguments()[0].getTypeName().equals(Cancellable.class.getName())) {
+                        c.accept(() -> primingHandle.cancel(true));
+                        return true;
+                    }
+                }
+                index++;
+            }
+        }
+        return false;
+    }
+    
     private class PrimingActionProvider implements ActionProvider {
         @Override
         public String[] getSupportedActions() {
@@ -529,8 +607,9 @@ public class MavenModelProblemsProvider implements ProjectProblemsProvider, Inte
                 listener.finished(true);
             } else {
                 LOG.log(Level.FINE, "Resolving sanity build action");
-                CompletableFuture<ProjectProblemsProvider.Result> r = saba.resolve(context);
-                r.whenComplete((a, e) -> {
+                CompletableFuture<ProjectProblemsProvider.Result> primingHandle = saba.resolve(context);
+                attachCancellable(context, primingHandle);
+                primingHandle.whenComplete((a, e) -> {
                    listener.finished(e == null); 
                 });
             }

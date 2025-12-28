@@ -62,7 +62,7 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
 
     private static final Logger LOGGER = Logger.getLogger(JsErrorManager.class.getName());
 
-    private static final int MAX_MESSAGE_LENGTH = 100;
+    private static final int MAX_MESSAGE_LENGTH = 250;
 
     private static final boolean SHOW_BADGES_EMBEDDED = Boolean.getBoolean(JsErrorManager.class.getName() + ".showBadgesEmbedded");
 
@@ -192,13 +192,14 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
                 for (ParserError error : parserErrors) {
                     errors.add(error.toSimpleError(snapshot, language));
                 }
-                Collections.sort(errors, POSITION_COMPARATOR);
+                errors.sort(POSITION_COMPARATOR);
                 convertedErrors = convert(snapshot, errors);
             }
         }
         return Collections.unmodifiableList(convertedErrors);
     }
 
+    @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
     JsErrorManager fillErrors(JsErrorManager original) {
         assert this.snapshot == original.snapshot : this.snapshot + ":" + original.snapshot;
         assert this.language == original.language : this.language + ":" + original.language;
@@ -410,13 +411,13 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
         SimpleError toSimpleError(
                 @NonNull final Snapshot snapshot,
                 @NonNull final Language<JsTokenId> language) {
-            String message = this.message;
+            String simpleMessage = this.message;
             int offset = -1;
-            Matcher matcher = ERROR_MESSAGE_PATTERN.matcher(message);
+            Matcher matcher = ERROR_MESSAGE_PATTERN.matcher(simpleMessage);
             if (matcher.matches()) {
-                message = matcher.group(1);
+                simpleMessage = matcher.group(1);
             }
-            message = REPLACE_POINTER_PATTERN.matcher(message).replaceAll(""); // NOI18N
+            simpleMessage = REPLACE_POINTER_PATTERN.matcher(simpleMessage).replaceAll(""); // NOI18N
 
             if (this.token > 0) {
                 offset = Token.descPosition(this.token);
@@ -456,7 +457,7 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
                     }
                 }
             }
-            return new SimpleError(message, true, offset, offset+1);
+            return new SimpleError(simpleMessage, true, offset, offset+1);
         }
     }
 
@@ -471,7 +472,6 @@ public class JsErrorManager extends ErrorManager implements ANTLRErrorListener {
 
         @Override
         SimpleError toSimpleError(Snapshot snapshot, Language<JsTokenId> language) {
-            String message = this.message;
             LineDocument doc = (LineDocument)snapshot.getSource().getDocument(false);
             if (doc == null) {
                 LOGGER.log(Level.WARNING, "No document found");

@@ -54,6 +54,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.windows.TopComponent;
 
 /**
@@ -274,14 +275,14 @@ public class HtmlPaletteCompletionProvider implements CompletionProvider {
         protected Action action;
         protected String category;
         protected String item;
-        protected Image icon;
+        protected ImageIcon icon;
         protected int completionExpressionStartOffset;
 
         public PaletteCompletionItem(Action action, int completionExpressionStartOffset, String category, String item, Image icon) {
             this.action = action;
             this.category = category;
             this.item = item;
-            this.icon = icon;
+            this.icon = ImageUtilities.icon2ImageIcon(ImageUtilities.image2Icon(icon));
             this.completionExpressionStartOffset = completionExpressionStartOffset;
         }
 
@@ -298,7 +299,7 @@ public class HtmlPaletteCompletionProvider implements CompletionProvider {
         }
 
         public ImageIcon getIcon() {
-            return new ImageIcon(icon);
+            return icon;
         }
 
         @Override

@@ -86,7 +86,7 @@ public class ShowAllChangesAction extends SystemAction {
                 allNodes.add(node);
             }
 
-            final VCSContext ctx = VCSContext.forNodes(allNodes.toArray(new Node[allNodes.size()]));
+            final VCSContext ctx = VCSContext.forNodes(allNodes.toArray(new Node[0]));
             final String title;
             if (projects.length == 1) {
                 Project project = projects[0];

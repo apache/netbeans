@@ -211,7 +211,7 @@ public abstract class AXIComponent extends AbstractComponent<AXIComponent>
             return null;
         Set<AXIComponent> keySet = listenerMap.keySet();
         return Collections.unmodifiableList(
-                Arrays.asList(keySet.toArray(new AXIComponent[keySet.size()])));
+                Arrays.asList(keySet.toArray(new AXIComponent[0])));
     }
         
     private PropertyChangeListener getWeakListener(AXIComponent proxy, boolean remove) {
@@ -422,9 +422,7 @@ public abstract class AXIComponent extends AbstractComponent<AXIComponent>
         this.peer = peer;
     }
         
-    ///////////////////////////////////////////////////////////////////
-    //////////Implements AbstractComponent's abstract methods//////////
-    ///////////////////////////////////////////////////////////////////
+    //Implements AbstractComponent's abstract methods
     protected void appendChildQuietly(AXIComponent newComponent, List<AXIComponent> children) {
         if(getComponentType() == ComponentType.PROXY) {
             getOriginal().appendChildQuietly(newComponent, children);
@@ -614,9 +612,7 @@ public abstract class AXIComponent extends AbstractComponent<AXIComponent>
         }        
     }
     
-    /////////////////////////////////////////////////////////////////////////////
-    ////////// Following methods are applicable for proxies only ////////////////
-    /////////////////////////////////////////////////////////////////////////////
+    // Following methods are applicable for proxies only
     /**
      * The proxy component receives an event notification.
      */
@@ -702,9 +698,7 @@ public abstract class AXIComponent extends AbstractComponent<AXIComponent>
         }
     }
     
-    /////////////////////////////////////////////////////////////////////
-    ////////////////////////// member variables /////////////////////////
-    /////////////////////////////////////////////////////////////////////
+    // member variables
     /**
      * Peer schema component.
      */

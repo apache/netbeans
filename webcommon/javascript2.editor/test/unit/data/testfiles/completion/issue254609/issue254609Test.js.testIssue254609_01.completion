@@ -2,6 +2,7 @@ Code completion result for source line:
 n|;//test1
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
+CLASS      new                             [PUBLIC]   metaproperties.js
 FIELD      name: String                    [PUBLIC]   controllers.js
 KEYWORD    new                                        null
 KEYWORD    null                                       null

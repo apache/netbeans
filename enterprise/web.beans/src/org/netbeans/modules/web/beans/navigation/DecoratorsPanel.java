@@ -40,11 +40,11 @@ import org.openide.util.NbBundle;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 public class DecoratorsPanel extends BindingsPanel {
 
     private static final long serialVersionUID = -5097678699872215262L;
     private static final String DELEGATE = "javax.decorator.Delegate";  // NOI18N
+    private static final String DELEGATE_JAKARTA = "jakarta.decorator.Delegate";  // NOI18N
 
     public DecoratorsPanel( Object[] subject, MetadataModel<WebBeansModel> metaModel,
             WebBeansModel model, JavaHierarchyModel treeModel )
@@ -83,8 +83,11 @@ public class DecoratorsPanel extends BindingsPanel {
     private boolean hasDelegate( Element element , CompilationController controller){
         List<? extends AnnotationMirror> allAnnotationMirrors = controller.
             getElements().getAllAnnotationMirrors( element);
-        TypeElement delegate = controller.getElements().getTypeElement( DELEGATE);
-        if( delegate == null ){
+        TypeElement delegate = controller.getElements().getTypeElement(DELEGATE_JAKARTA);
+        if (delegate == null) {
+            delegate = controller.getElements().getTypeElement(DELEGATE);
+        }
+        if (delegate == null) {
             return false;
         }
         for (AnnotationMirror annotationMirror : allAnnotationMirrors) {

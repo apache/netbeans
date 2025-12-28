@@ -416,7 +416,7 @@ final class SuiteSources implements Sources,
                     roots.add(d.srcDir);
                     roots.add(d.srcGenDir);
                 }
-                return new ImmutableResult(roots.toArray(new FileObject[roots.size()]));
+                return new ImmutableResult(roots.toArray(new FileObject[0]));
             }
         }
         for (Group group : this.groups) {
@@ -803,7 +803,7 @@ final class SuiteSources implements Sources,
             if (srcGenDir != null) {
                 roots.add(srcGenDir);
             }
-            sourceCP = ClassPathSupport.createClassPath(roots.toArray(new FileObject[roots.size()]));
+            sourceCP = ClassPathSupport.createClassPath(roots.toArray(new FileObject[0]));
 
             if (mxPrj.annotationProcessors().isEmpty()) {
                 processorPath = null;

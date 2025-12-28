@@ -40,6 +40,7 @@ import org.openide.util.NbBundle;
     "PhpVersion.PHP_81=PHP 8.1",
     "PhpVersion.PHP_82=PHP 8.2",
     "PhpVersion.PHP_83=PHP 8.3",
+    "PhpVersion.PHP_84=PHP 8.4",
 })
 public enum PhpVersion {
 
@@ -109,6 +110,11 @@ public enum PhpVersion {
      * @since 2.93
      */
     PHP_83(Bundle.PhpVersion_PHP_83()),
+    /**
+     * PHP 8.4.
+     * @since 2.100
+     */
+    PHP_84(Bundle.PhpVersion_PHP_84()),
     ;
 
     private final String displayName;
@@ -245,6 +251,17 @@ public enum PhpVersion {
     }
 
     /**
+     * Check whether this version supports final const. (as of PHP 8.1)
+     *
+     * @return {@code true} if this version supports final const, {@code false}
+     * otherwise
+     * @since 2.101
+     */
+    public boolean hasFinalConst() {
+        return this.compareTo(PhpVersion.PHP_81) >= 0;
+    }
+
+    /**
      * Check whether this version supports the null, false, and true types.
      *
      * @return {@code true} if this version supports null, false, and true
@@ -275,6 +292,48 @@ public enum PhpVersion {
      */
     public boolean hasOverrideAttribute() {
         return this.compareTo(PhpVersion.PHP_83) >= 0;
+    }
+
+    /**
+     * Check whether this version supports [#\Deprecated] attribute. (as of PHP
+     * 8.4)
+     *
+     * @return {@code true} if this version supports [#\Deprecated] attribute,
+     * {@code false} otherwise
+     * @since 2.101
+     */
+    public boolean hasDeprecatedAttribute() {
+        return this.compareTo(PhpVersion.PHP_84) >= 0;
+    }
+
+    /**
+     * Check whether this version supports final property(field). (as of PHP
+     * 8.4) e.g. `final public string $s;`
+     *
+     * @return {@code true} if this version supports final property,
+     * {@code false} otherwise
+     * @see
+     * <a href="https://www.php.net/manual/ja/language.oop5.final.php">Final
+     * Keyword</a>
+     * @since 2.101
+     */
+    public boolean hasFinalProperty() {
+        return this.compareTo(PhpVersion.PHP_84) >= 0;
+    }
+
+    /**
+     * Check whether this version supports Asymmetric Visibility. (as of PHP
+     * 8.4) e.g. `private(set)`, `protected(set)`
+     *
+     * @return {@code true} if this version supports Asymmetric Visibility,
+     * {@code false} otherwise
+     * @see
+     * <a href="https://wiki.php.net/rfc/asymmetric-visibility-v2">Asymmetric
+     * Visibility v2</a>
+     * @since 2.101
+     */
+    public boolean hasAsymmetricVisibility() {
+        return this.compareTo(PhpVersion.PHP_84) >= 0;
     }
 
     /**
@@ -310,9 +369,10 @@ public enum PhpVersion {
         PHP_73(LocalDate.of(2018, 12, 6), LocalDate.of(2020, 12, 6), LocalDate.of(2021, 12, 6)),
         PHP_74(LocalDate.of(2019, 11, 28), LocalDate.of(2021, 11, 28), LocalDate.of(2022, 11, 28)),
         PHP_80(LocalDate.of(2020, 11, 26), LocalDate.of(2022, 11, 26), LocalDate.of(2023, 11, 26)),
-        PHP_81(LocalDate.of(2021, 11, 25), LocalDate.of(2023, 11, 25), LocalDate.of(2024, 11, 25)),
-        PHP_82(LocalDate.of(2022, 12, 8), LocalDate.of(2024, 12, 8), LocalDate.of(2025, 12, 8)),
-        PHP_83(LocalDate.of(2023, 11, 23), LocalDate.of(2025, 11, 23), LocalDate.of(2026, 11, 23)),
+        PHP_81(LocalDate.of(2021, 11, 25), LocalDate.of(2023, 11, 25), LocalDate.of(2025, 12, 31)),
+        PHP_82(LocalDate.of(2022, 12, 8), LocalDate.of(2024, 12, 31), LocalDate.of(2026, 12, 31)),
+        PHP_83(LocalDate.of(2023, 11, 23), LocalDate.of(2025, 12, 31), LocalDate.of(2027, 12, 31)),
+        PHP_84(LocalDate.of(2024, 11, 21), LocalDate.of(2026, 12, 31), LocalDate.of(2028, 12, 31)),
         ;
 
         private final LocalDate initialRelease;

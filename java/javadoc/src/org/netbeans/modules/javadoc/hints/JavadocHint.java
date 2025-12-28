@@ -45,9 +45,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import javax.swing.text.Position;
 import org.netbeans.api.java.queries.AccessibilityQuery;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreePathHandle;
@@ -149,7 +147,7 @@ public final class JavadocHint {
             }
 
             errors = new ArrayList<>();
-            GenerateJavadocFix javadocFix = new GenerateJavadocFix(description, handle, resolveSourceVersion(javac.getFileObject()));
+            GenerateJavadocFix javadocFix = new GenerateJavadocFix(description, handle, ctx.getInfo().getSourceVersion());
             errors.add(ErrorDescriptionFactory.forSpan(ctx, positions[0], positions[1], NbBundle.getMessage(Analyzer.class, "MISSING_JAVADOC_DESC"), javadocFix.toEditorFix()));
         }
         return errors;

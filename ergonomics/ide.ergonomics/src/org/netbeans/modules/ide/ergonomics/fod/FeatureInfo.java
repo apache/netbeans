@@ -403,7 +403,7 @@ public final class FeatureInfo {
             }
         }
         xpaths.add(xpathList.substring(start, i));
-        return xpaths.toArray(new String[xpaths.size()]);
+        return xpaths.toArray(new String[0]);
     }
 
 }

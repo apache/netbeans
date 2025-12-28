@@ -348,7 +348,7 @@ public class NodeJsDataProvider {
                 if (jsonValue instanceof JSONObject) {
                     JSONObject jsonModule = (JSONObject) jsonValue;
                     jsonValue = jsonModule.get(NAME);
-                    if (jsonValue instanceof String && moduleName.equals(((String) jsonValue).toLowerCase())) {
+                    if (jsonValue instanceof String && moduleName.equalsIgnoreCase(((String) jsonValue))) {
                         jsonValue = jsonModule.get(DESCRIPTION);
                         if (jsonValue instanceof String) {
                             return (String) jsonValue;

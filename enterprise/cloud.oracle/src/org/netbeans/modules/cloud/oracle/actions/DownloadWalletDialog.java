@@ -18,17 +18,16 @@
  */
 package org.netbeans.modules.cloud.oracle.actions;
 
-import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import java.awt.Dialog;
 import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
 import javax.swing.JFileChooser;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.netbeans.modules.cloud.oracle.database.DatabaseItem;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -60,7 +59,7 @@ import org.openide.windows.WindowManager;
 })
 final class DownloadWalletDialog extends AbstractPasswordPanel {
 
-    public static final String WALLETS_PATH = "Databases/Wallets"; // NOI18N
+    public static final String WALLETS_PATH = "Database/Wallets"; // NOI18N
     private static final String LAST_USED_DIR = "lastUsedDir";
     
     /**
@@ -74,7 +73,7 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
         dbPasswordField.getDocument().addDocumentListener(docListener);
     }
     
-    static Optional<WalletInfo> showDialog(OCIItem db) {
+    static Optional<WalletInfo> showDialog(DatabaseItem db) {
         File home = new File(System.getProperty("user.home")); //NOI18N
         String lastUsedDir = NbPreferences.forModule(DownloadWalletAction.class).get(LAST_USED_DIR, home.getAbsolutePath()); //NOI18N
                 
@@ -92,7 +91,7 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
                 String dbUser = dlgPanel.dbUserField.getText();
                 char[] dbPasswd = dlgPanel.dbPasswordField.getPassword();
                 NbPreferences.forModule(DownloadWalletAction.class).put(LAST_USED_DIR, path); //NOI18N
-                return Optional.of(new WalletInfo(path, generatePassword(), dbUser, dbPasswd, db.getKey().getValue()));
+                return Optional.of(new WalletInfo(path, generatePassword(), dbUser, dbPasswd, db));
             }
         } else {
             try {
@@ -111,7 +110,7 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
                     return Optional.empty();
                 }
                 char[] password = inp.getInputText().toCharArray();
-                return Optional.of(new WalletInfo(walletsDir.getAbsolutePath(), generatePassword(), username, password, db.getKey().getValue()));
+                return Optional.of(new WalletInfo(walletsDir.getAbsolutePath(), generatePassword(), username, password, (DatabaseItem) db));
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -302,18 +301,18 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
     }
     
     static class WalletInfo {
-        private String path;
-        private char[] walletPassword;
-        private String dbUser;
+        private final String path;
+        private final char[] walletPassword;
+        private final String dbUser;
         private char[] dbPassword;
-        private String ocid;
+        private final DatabaseItem db;
 
-        public WalletInfo(String path, char[] walletPassword, String dbUser, char[] dbPassword, String ocid) {
+        public WalletInfo(String path, char[] walletPassword, String dbUser, char[] dbPassword, DatabaseItem db) {
             this.path = path;
             this.walletPassword = walletPassword;
             this.dbUser = dbUser;
             this.dbPassword = dbPassword;
-            this.ocid = ocid;
+            this.db = db;
         }
 
         public String getPath() {
@@ -332,8 +331,8 @@ final class DownloadWalletDialog extends AbstractPasswordPanel {
             return dbPassword;
         }
 
-        public String getOcid() {
-            return ocid;
+        public DatabaseItem getDb() {
+            return db;
         }
     }
 

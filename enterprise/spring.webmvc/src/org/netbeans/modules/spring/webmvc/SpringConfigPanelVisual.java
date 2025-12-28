@@ -288,17 +288,14 @@ public class SpringConfigPanelVisual extends javax.swing.JPanel {
                         springLibs.add(new SpringLibrary(library));
                     }
                 }
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        cbSpringVersion.setModel(new DefaultComboBoxModel(items.toArray(new String[items.size()])));
-                        int selectedIndex = cbSpringVersion.getSelectedIndex();
-                        if (selectedIndex < springLibs.size()) {
-                            springLibrary = springLibs.get(selectedIndex);
-                            libsInitialized = true;
-                            repaint();
-                            fireChange();
-                        }
+                SwingUtilities.invokeLater(() -> {
+                    cbSpringVersion.setModel(new DefaultComboBoxModel(items.toArray(new String[0])));
+                    int selectedIndex = cbSpringVersion.getSelectedIndex();
+                    if (selectedIndex < springLibs.size()) {
+                        springLibrary = springLibs.get(selectedIndex);
+                        libsInitialized = true;
+                        repaint();
+                        fireChange();
                     }
                 });
                 LOG.log(Level.FINEST, "Time spent in {0} initLibraries = {1} ms",

@@ -63,6 +63,7 @@ import org.openide.explorer.view.NodeRenderer;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
@@ -534,7 +535,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
                         } catch (IOException ex) {
                             Exceptions.printStackTrace(ex);
                         }
-                        Collections.sort(items, new Comparator() {
+                        items.sort(new Comparator() {
                             private Comparator COLLATOR = Collator.getInstance();
 
                             @Override
@@ -553,7 +554,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
                                 return COLLATOR.compare(p1.getDisplayName(), p2.getDisplayName());
                             }
                         });
-                        model = new DefaultComboBoxModel(items.toArray(new ClassItem[items.size()]));
+                        model = new DefaultComboBoxModel(items.toArray(new ClassItem[0]));
                     } else {
                         model = new DefaultComboBoxModel();
                     }
@@ -739,7 +740,7 @@ private void bypassRefactoringCheckBoxItemStateChanged(java.awt.event.ItemEvent 
             } else if (value instanceof Node) {
                 Node node = (Node) value;
                 setText(node.getHtmlDisplayName());
-                setIcon(new ImageIcon(node.getIcon(BeanInfo.ICON_COLOR_16x16)));
+                setIcon(ImageUtilities.image2Icon(node.getIcon(BeanInfo.ICON_COLOR_16x16)));
             } else {
                 // #49954: render a specially inserted class somehow.
                 String item = (String) value;

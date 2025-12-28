@@ -779,7 +779,7 @@ public class TreeBuilder implements DocDefHandler, TreeParser, HasPrefixGuesser 
             for (int i = 0; i < maxSize; ++i)
                 System.out.println("ret["+i+"]="+ret[i]);
         */
-        return (GraphNode[]) ret.toArray(new GraphNode[ret.size()]);
+        return (GraphNode[]) ret.toArray(new GraphNode[0]);
     }
 
     private void getNodes(GraphLink l, List ret,

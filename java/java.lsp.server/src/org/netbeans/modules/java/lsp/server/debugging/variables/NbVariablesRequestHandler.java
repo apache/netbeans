@@ -113,7 +113,7 @@ public final class NbVariablesRequestHandler {
                 } catch (UnknownTypeException e) {
                     throw ErrorUtilities.createResponseErrorException(e.getMessage(), ResponseErrorCode.InternalError);
                 }
-                response.setVariables(list.toArray(new Variable[list.size()]));
+                response.setVariables(list.toArray(new Variable[0]));
             }
             long t2 = System.nanoTime();
             LOGGER.log(LOGLEVEL, "variables() END after {0} ns", (t2 - t1));

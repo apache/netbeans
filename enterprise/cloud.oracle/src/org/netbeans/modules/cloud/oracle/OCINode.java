@@ -19,17 +19,19 @@
 package org.netbeans.modules.cloud.oracle;
 
 import com.oracle.bmc.auth.BasicAuthenticationDetailsProvider;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
 import org.openide.nodes.AbstractNode;
+import org.openide.nodes.ChildFactory;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.ContextAwareAction;
 import org.openide.util.Lookup;
+import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 
@@ -41,18 +43,22 @@ public class OCINode extends AbstractNode {
     private RefreshListener refreshListener;
 
     private final OCIItem item;
-    private final CloudChildFactory factory;
+    private final ChildFactory factory;
     private final OCISessionInitiator session;
 
     public OCINode(OCIItem item) {
-        this(new CloudChildFactory(item), item, OCIManager.getDefault().getActiveSession(), Lookups.fixed(item));
+        this(new CloudChildFactory(item), item, OCIManager.getDefault().getActiveProfile(item), Lookups.fixed(item));
     }
     
     public OCINode(OCIItem item, OCISessionInitiator session) {
         this(new CloudChildFactory(session, item), item, session, Lookups.fixed(item, session));
     }
     
-    private OCINode(CloudChildFactory factory, OCIItem item, OCISessionInitiator session, Lookup lookup) {
+    public OCINode(OCIItem item, ChildFactory factory) {
+        this(factory, item, null, Lookups.singleton(item));
+    }
+    
+    private OCINode(ChildFactory factory, OCIItem item, OCISessionInitiator session, Lookup lookup) {
         super(Children.create(factory, true), lookup);
         setName(item.getName());
         this.item = item;
@@ -63,11 +69,11 @@ public class OCINode extends AbstractNode {
     }
     
     public OCINode(OCIItem item, Children children) {
-        super(children, Lookups.fixed(item, OCIManager.getDefault().getActiveSession()));
+        super(children, Lookups.fixed(item));
         setName(item.getName());
         this.item = item;
         this.factory = null;
-        this.session = OCIManager.getDefault().getActiveSession();
+        this.session = OCIManager.getDefault().getActiveProfile(item);
         refreshListener = new RefreshListener();
         item.addChangeListener(refreshListener);
     }
@@ -111,9 +117,20 @@ public class OCINode extends AbstractNode {
     }
     
     public void refresh() {
-        if (factory != null) {
-            factory.refreshKeys();
-        }
+        RequestProcessor.getDefault().post(() -> {
+            if (factory != null && factory instanceof RefreshableKeys) {
+                ((RefreshableKeys) factory).refreshKeys();
+            }
+            update(item);
+        });
+    }
+    
+    public void update(OCIItem item) {
+        
+    }
+    
+    public OCIItem getItem() {
+        return this.item;
     }
 
     @Override
@@ -121,10 +138,11 @@ public class OCINode extends AbstractNode {
         return super.getHandle();
     }
 
-    private final class RefreshListener implements ChangeListener {
+    private final class RefreshListener implements PropertyChangeListener {
         @Override
-        public void stateChanged(ChangeEvent e) {
+        public void propertyChange(PropertyChangeEvent evt) {
             refresh();
+            fireDisplayNameChange("", getDisplayName());
         }
     }
     

@@ -531,13 +531,13 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
         for (int i=0; i < lines.size(); i++) {
             int ival = lines.get(i);
             if (line < ival) {
-                lines.add(i, new Integer(line));
+                lines.add(i, line);
                 return;
             }
             else if (line == ival)
                 return;
         }
-        lines.add(new Integer(line));
+        lines.add(line);
     }
     
     /**
@@ -1182,7 +1182,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
                 if (propertyEditorClass == null)
                     return null;
                 try {
-                    return propertyEditorClass.newInstance();
+                    return propertyEditorClass.getDeclaredConstructor().newInstance();
                 }
                 catch (Exception ex) { //should not happen
                     ex.printStackTrace();
@@ -1262,7 +1262,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
 
             if (otherValuesAllowed)
                 try {
-                    setValue(new Integer(Integer.parseInt(str)));
+                    setValue(Integer.valueOf(str));
                 } 
                 catch (NumberFormatException e) {} // ignore
         }
@@ -1286,9 +1286,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
             tags = new String[] {
                 getBundle().getString("VALUE_relative") // NOI18N
             };
-            values = new Integer[] {
-                new Integer(GridBagConstraints.RELATIVE)
-            };
+            values = new Integer[] {GridBagConstraints.RELATIVE};
             javaInitStrings = new String[] {
                 "java.awt.GridBagConstraints.RELATIVE" // NOI18N
             };
@@ -1304,8 +1302,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
                 getBundle().getString("VALUE_remainder") // NOI18N
             };
             values = new Integer[] {
-                new Integer(GridBagConstraints.RELATIVE),
-                new Integer(GridBagConstraints.REMAINDER)
+                GridBagConstraints.RELATIVE, GridBagConstraints.REMAINDER
             };
             javaInitStrings = new String[] {
                 "java.awt.GridBagConstraints.RELATIVE", // NOI18N
@@ -1324,10 +1321,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
                 getBundle().getString("VALUE_fill_both") // NOI18N
             };
             values = new Integer[] {
-                new Integer(GridBagConstraints.NONE),
-                new Integer(GridBagConstraints.HORIZONTAL),
-                new Integer(GridBagConstraints.VERTICAL),
-                new Integer(GridBagConstraints.BOTH)
+                GridBagConstraints.NONE, GridBagConstraints.HORIZONTAL, GridBagConstraints.VERTICAL, GridBagConstraints.BOTH
             };
             javaInitStrings = new String[] {
                 "java.awt.GridBagConstraints.NONE", // NOI18N
@@ -1380,7 +1374,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
                 tagList.add(bundle.getString("VALUE_anchor_below_baseline_leading")); // NOI18N
                 tagList.add(bundle.getString("VALUE_anchor_below_baseline_trailing")); // NOI18N
             }
-            tags = tagList.toArray(new String[tagList.size()]);
+            tags = tagList.toArray(new String[0]);
 
             // Values
             List<Integer> valueList = new LinkedList<Integer>();
@@ -1413,7 +1407,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
                 valueList.add(2048); // GridBagConstraints.BELOW_BASELINE_LEADING
                 valueList.add(2304); // GridBagConstraints.BELOW_BASELINE_TRAILING
             }
-            values = valueList.toArray(new Integer[valueList.size()]);
+            values = valueList.toArray(new Integer[0]);
 
             // Java initialization strings
             List<String> initStringList = new LinkedList<String>();
@@ -1445,7 +1439,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
                 initStringList.add("java.awt.GridBagConstraints.BELOW_BASELINE_LEADING"); // NOI18N
                 initStringList.add("java.awt.GridBagConstraints.BELOW_BASELINE_TRAILING"); // NOI18N
             }
-            javaInitStrings = initStringList.toArray(new String[initStringList.size()]);
+            javaInitStrings = initStringList.toArray(new String[0]);
 
             otherValuesAllowed = false;
         }

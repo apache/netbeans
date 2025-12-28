@@ -39,12 +39,15 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.ElementFilter;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.j2ee.core.api.support.java.GenerationUtils;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
 import org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Parameters;
 
 /**
@@ -53,15 +56,22 @@ import org.openide.util.Parameters;
  * @author Erno Mononen
  */
 public abstract class EntityManagerGenerationStrategySupport implements EntityManagerGenerationStrategy{
-    
     protected static final String ENTITY_MANAGER_FQN = "javax.persistence.EntityManager"; //NOI18N
+    private static final String ENTITY_MANAGER_JAKARTA_FQN = "jakarta.persistence.EntityManager"; //NOI18N
     protected static final String ENTITY_MANAGER_FACTORY_FQN = "javax.persistence.EntityManagerFactory"; //NOI18N
+    private static final String ENTITY_MANAGER_FACTORY_JAKARTA_FQN = "jakarta.persistence.EntityManagerFactory"; //NOI18N
     protected static final String USER_TX_FQN = "javax.transaction.UserTransaction"; //NOI18N
+    private static final String USER_TX_JAKARTA_FQN = "jakarta.transaction.UserTransaction"; //NOI18N
     protected static final String PERSISTENCE_CONTEXT_FQN = "javax.persistence.PersistenceContext"; //NOI18N
+    private static final String PERSISTENCE_CONTEXT_JAKARTA_FQN = "jakarta.persistence.PersistenceContext"; //NOI18N
     protected static final String PERSISTENCE_UNIT_FQN = "javax.persistence.PersistenceUnit"; //NOI18N
+    private static final String PERSISTENCE_UNIT_JAKARTA_FQN = "jakarta.persistence.PersistenceUnit"; //NOI18N
     protected static final String POST_CONSTRUCT_FQN = "javax.annotation.PostConstruct"; //NOI18N
+    private static final String POST_CONSTRUCT_JAKARTA_FQN = "jakarta.annotation.PostConstruct"; //NOI18N
     protected static final String PRE_DESTROY_FQN = "javax.annotation.PreDestroy"; //NOI18N
+    private static final String PRE_DESTROY_JAKARTA_FQN = "jakarta.annotation.PreDestroy"; //NOI18N
     protected static final String RESOURCE_FQN = "javax.annotation.Resource"; //NOI18N
+    private static final String RESOURCE_JAKARTA_FQN = "jakarta.annotation.Resource"; //NOI18N
     
     protected static final String ENTITY_MANAGER_DEFAULT_NAME = "em"; //NOI18N
     protected static final String ENTITY_MANAGER_FACTORY_DEFAULT_NAME = "emf"; //NOI18N
@@ -132,7 +142,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
     }
     
     FieldInfo getEntityManagerFactoryFieldInfo(){
-        VariableTree existing = getField(ENTITY_MANAGER_FACTORY_FQN);
+        VariableTree existing = getField(getEntityManagerFactoryFqn());
         if (existing != null){
             return new FieldInfo(existing.getName().toString(), true);
         }
@@ -140,7 +150,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
     }
     
     FieldInfo getEntityManagerFieldInfo(){
-        VariableTree existing = getField(ENTITY_MANAGER_FQN);
+        VariableTree existing = getField(getEntityManagerFqn());
         if (existing != null){
             return new FieldInfo(existing.getName().toString(), true);
         }
@@ -240,34 +250,22 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
      * @param emName the name of the entity manager
      */
     protected String generateCallLines(String emName) {
-        String version = Persistence.VERSION_1_0;
-        if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {// we have persistence unit with specific version, should use it
-            version =  Persistence.VERSION_3_1;
-        } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) {// we have persistence unit with specific version, should use it
-            version =  Persistence.VERSION_3_0;
-        } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) {// we have persistence unit with specific version, should use it
-            version =  Persistence.VERSION_2_2;
-        } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {// we have persistence unit with specific version, should use it
-            version =  Persistence.VERSION_2_1;
-        } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) {// we have persistence unit with specific version, should use it
-            version =  Persistence.VERSION_2_0;
-        }
-        return MessageFormat.format(getGenerationOptions().getOperation().getBody(version), new Object[] {
+        return MessageFormat.format(getGenerationOptions().getOperation().getBody(getPersistenceVersion()), new Object[] {
             emName,
             getGenerationOptions().getParameterName(),
             getGenerationOptions().getParameterType(),
             getGenerationOptions().getReturnType(),
             getGenerationOptions().getQueryAttribute()});
     }
-    
+
     protected VariableTree createUserTransaction(){
         VariableTree result = getTreeMaker().Variable(
                 getTreeMaker().Modifiers(
                         Collections.<Modifier>singleton(Modifier.PRIVATE),
-                        Collections.<AnnotationTree>singletonList(getGenUtils().createAnnotation(RESOURCE_FQN))
+                        Collections.<AnnotationTree>singletonList(getGenUtils().createAnnotation(getResourceFqn()))
                 ),
                 "utx", //NOI18N
-                getTreeMaker().Identifier(USER_TX_FQN),
+                getTreeMaker().Identifier(getUserTxFqn()),
                 null);
         result = (VariableTree) importFQNs(result);
         return result;
@@ -277,7 +275,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         return getTreeMaker().Variable(getTreeMaker().Modifiers(
                 Collections.<Modifier>emptySet(), Collections.<AnnotationTree>emptyList()),
                 name,
-                getTypeTree(ENTITY_MANAGER_FACTORY_FQN),
+                getTypeTree(getEntityManagerFactoryFqn()),
                 getTreeMaker().MethodInvocation(
                 Collections.<ExpressionTree>emptyList(),
                 getTreeMaker().MemberSelect(
@@ -308,25 +306,25 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         switch(init){
             
             case INJECT :
-                anns.add(getGenUtils().createAnnotation(PERSISTENCE_CONTEXT_FQN, Collections.singletonList(getGenUtils().createAnnotationArgument("unitName", getPersistenceUnitName()))));//NOI18N
+                anns.add(getGenUtils().createAnnotation(getPersistenceContextFqn(), Collections.singletonList(getGenUtils().createAnnotationArgument("unitName", getPersistenceUnitName()))));//NOI18N
                 break;
                 
             case EMF:
-                existingEmf = getField(ENTITY_MANAGER_FACTORY_FQN);
+                existingEmf = getField(getEntityManagerFactoryFqn());
                 assert existingEmf != null : "EntityManagerFactory does not exist in the class";
                 expressionTree = getTreeMaker().Literal(existingEmf.getName().toString() + ".createEntityManager();"); //NOI18N
                 break;
                 
             case INIT:
                 
-                existingEmf = getField(ENTITY_MANAGER_FACTORY_FQN);
+                existingEmf = getField(getEntityManagerFactoryFqn());
                 if (existingEmf != null){
                     emfName = existingEmf.getName().toString();
                 } else {
                     needsEmf = true;
                 }
                 
-                AnnotationTree postConstruct = getGenUtils().createAnnotation(POST_CONSTRUCT_FQN);
+                AnnotationTree postConstruct = getGenUtils().createAnnotation(getPostConstructFqn());
                 MethodTree initMethod = getTreeMaker().Method(
                         getTreeMaker().Modifiers(Collections.<Modifier>singleton(Modifier.PUBLIC), Collections.<AnnotationTree>singletonList(postConstruct)),
                         makeUnique("init"),
@@ -340,7 +338,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
                 
                 result = getTreeMaker().addClassMember(getClassTree(), initMethod);
                 
-                AnnotationTree preDestroy = getGenUtils().createAnnotation(PRE_DESTROY_FQN);
+                AnnotationTree preDestroy = getGenUtils().createAnnotation(getPreDestroyFqn());
                 MethodTree destroyMethod = getTreeMaker().Method(
                         getTreeMaker().Modifiers(Collections.<Modifier>singleton(Modifier.PUBLIC), Collections.<AnnotationTree>singletonList(preDestroy)),
                         makeUnique("destroy"),
@@ -356,14 +354,14 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
                 
                 if(needsEmf){
                     ExpressionTree annArgument = getGenUtils().createAnnotationArgument("name", getPersistenceUnitName());//NOI18N
-                    AnnotationTree puAnn = getGenUtils().createAnnotation(PERSISTENCE_UNIT_FQN, Collections.<ExpressionTree>singletonList(annArgument));
+                    AnnotationTree puAnn = getGenUtils().createAnnotation(getPersistenceUnitFqn(), Collections.<ExpressionTree>singletonList(annArgument));
                     VariableTree emf = getTreeMaker().Variable(
                             getTreeMaker().Modifiers(
                             Collections.<Modifier>singleton(Modifier.PRIVATE),
                             Collections.<AnnotationTree>singletonList(puAnn)
                             ),
                             emfName,
-                            getTypeTree(ENTITY_MANAGER_FACTORY_FQN),
+                            getTypeTree(getEntityManagerFactoryFqn()),
                             null);
                     result = getTreeMaker().insertClassMember(result, getIndexForField(result), emf);
                 }
@@ -377,7 +375,7 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
                 anns
                 ),
                 ENTITY_MANAGER_DEFAULT_NAME,
-                getTypeTree(ENTITY_MANAGER_FQN),
+                getTypeTree(getEntityManagerFqn()),
                 expressionTree);
         
         return getTreeMaker().insertClassMember(result, getIndexForField(result), entityManager);
@@ -450,7 +448,137 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
     public void setGenerationOptions(GenerationOptions generationOptions) {
         this.generationOptions = generationOptions;
     }
-    
+
+    private String getPersistenceVersion() {
+        ClassPath cp = workingCopy.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
+        FileObject javaxEntityManagerFo = cp == null ? null : cp.findResource("javax/persistence/EntityManager.class");
+        FileObject jakartaEntityManagerFo = cp == null ? null : cp.findResource("jakarta/persistence/EntityManager.class");
+        String version;
+        if(jakartaEntityManagerFo != null || javaxEntityManagerFo == null) {
+            version = Persistence.VERSION_3_0;
+        } else {
+            version = Persistence.VERSION_1_0;
+        }
+        if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) {// we have persistence unit with specific version, should use it
+            version =  Persistence.VERSION_3_2;
+        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {// we have persistence unit with specific version, should use it
+            version = Persistence.VERSION_3_1;
+        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) {// we have persistence unit with specific version, should use it
+            version = Persistence.VERSION_3_0;
+        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) {// we have persistence unit with specific version, should use it
+            version = Persistence.VERSION_2_2;
+        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {// we have persistence unit with specific version, should use it
+            version = Persistence.VERSION_2_1;
+        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) {// we have persistence unit with specific version, should use it
+            version = Persistence.VERSION_2_0;
+        }
+        return version;
+    }
+
+    protected String getEntityManagerFqn() {
+        String version = getPersistenceVersion();
+            switch(version) {
+            case Persistence.VERSION_1_0:
+            case Persistence.VERSION_2_0:
+            case Persistence.VERSION_2_1:
+            case Persistence.VERSION_2_2:
+                return ENTITY_MANAGER_FQN;
+            default:
+                return ENTITY_MANAGER_JAKARTA_FQN;
+        }
+    }
+
+    protected String getEntityManagerFactoryFqn() {
+        String version = getPersistenceVersion();
+        switch(version) {
+            case Persistence.VERSION_1_0:
+            case Persistence.VERSION_2_0:
+            case Persistence.VERSION_2_1:
+            case Persistence.VERSION_2_2:
+                return ENTITY_MANAGER_FACTORY_FQN;
+            default:
+                return ENTITY_MANAGER_FACTORY_JAKARTA_FQN;
+        }
+    }
+
+    protected String getUserTxFqn() {
+        String version = getPersistenceVersion();
+        switch(version) {
+            case Persistence.VERSION_1_0:
+            case Persistence.VERSION_2_0:
+            case Persistence.VERSION_2_1:
+            case Persistence.VERSION_2_2:
+                return USER_TX_FQN;
+            default:
+                return USER_TX_JAKARTA_FQN;
+        }
+    }
+
+    protected String getPersistenceContextFqn() {
+        String version = getPersistenceVersion();
+        switch(version) {
+            case Persistence.VERSION_1_0:
+            case Persistence.VERSION_2_0:
+            case Persistence.VERSION_2_1:
+            case Persistence.VERSION_2_2:
+                return PERSISTENCE_CONTEXT_FQN;
+            default:
+                return PERSISTENCE_CONTEXT_JAKARTA_FQN;
+        }
+    }
+
+    protected String getPersistenceUnitFqn() {
+        String version = getPersistenceVersion();
+        switch(version) {
+            case Persistence.VERSION_1_0:
+            case Persistence.VERSION_2_0:
+            case Persistence.VERSION_2_1:
+            case Persistence.VERSION_2_2:
+                return PERSISTENCE_UNIT_FQN;
+            default:
+                return PERSISTENCE_UNIT_JAKARTA_FQN;
+        }
+    }
+
+    protected String getPostConstructFqn() {
+        String version = getPersistenceVersion();
+        switch(version) {
+            case Persistence.VERSION_1_0:
+            case Persistence.VERSION_2_0:
+            case Persistence.VERSION_2_1:
+            case Persistence.VERSION_2_2:
+                return POST_CONSTRUCT_FQN;
+            default:
+                return POST_CONSTRUCT_JAKARTA_FQN;
+        }
+    }
+
+    protected String getPreDestroyFqn() {
+        String version = getPersistenceVersion();
+        switch(version) {
+            case Persistence.VERSION_1_0:
+            case Persistence.VERSION_2_0:
+            case Persistence.VERSION_2_1:
+            case Persistence.VERSION_2_2:
+                return PRE_DESTROY_FQN;
+            default:
+                return PRE_DESTROY_JAKARTA_FQN;
+        }
+    }
+
+    protected String getResourceFqn() {
+        String version = getPersistenceVersion();
+        switch(version) {
+            case Persistence.VERSION_1_0:
+            case Persistence.VERSION_2_0:
+            case Persistence.VERSION_2_1:
+            case Persistence.VERSION_2_2:
+                return RESOURCE_FQN;
+            default:
+                return RESOURCE_JAKARTA_FQN;
+        }
+    }
+
     /**
      * Encapsulates info of a field.
      */

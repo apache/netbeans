@@ -481,7 +481,6 @@ public class BeanProp implements BaseProperty {
         return bindings.size();
     }
     
-    //////
     //
     //	Add, Get, Remove values
     //
@@ -899,7 +898,7 @@ public class BeanProp implements BaseProperty {
      *
      *	If the property is an indexed value, the operation is not allowed.
      *
-     *	If the propery didn't have any value (no DOM node yet), a DOMBinding
+     *	If the property didn't have any value (no DOM node yet), a DOMBinding
      *	is created and takes care of setting the new value.
      *
      */
@@ -1136,10 +1135,6 @@ public class BeanProp implements BaseProperty {
     //
     //	Values methods.
     //
-    //////////////////
-    
-    
-    /////////////////////
     //
     //	Attributes methods
     //
@@ -1334,10 +1329,6 @@ public class BeanProp implements BaseProperty {
     //
     //	Attributes methods
     //
-    ///////////////////////
-    
-    
-    
     /**
      *	Called back by the DOMBinding when another bean removed the binding.
      *	This allows an automatic update of all the bean trees sharing the
@@ -1702,7 +1693,7 @@ public class BeanProp implements BaseProperty {
 		    c = this.propClass.getDeclaredConstructor(cc);
 		}
 		catch(NoSuchMethodException me) {
-		    return (BaseBean)this.propClass.newInstance();
+		    return (BaseBean)this.propClass.getDeclaredConstructor().newInstance();
 		}
 		
 		//  Do not initialize the default values
@@ -1734,7 +1725,7 @@ public class BeanProp implements BaseProperty {
      *	(One node of the bean graph). Whatever the case is, there is a DOM Node
      *	that correspond to this property.
      *
-     *	Also, the propery might be either a single value property or an
+     *	Also, the property might be either a single value property or an
      *	array. In the first case, only one Node of the DOM graph can match
      *	the property (if not, this is fatal error in building the bean graph).
      *	In the second case, this property contains an array referencing the

@@ -14,4 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-F20DA0BA9579D4152B57CF67538A1B8279C77CB0 org.graalvm.truffle:truffle-api:20.3.0
+BC925B49DCE52653AFBA11F65100CF9D83171D40 org.graalvm.truffle:truffle-api:24.0.0
+2F3EE79085E59314C8B4AB9D40AC2A118E8CBA15 org.graalvm.truffle:truffle-runtime:24.0.0
+1DFB80E64DCD92460C2ACCAC4C90935FE6CDDF12 org.graalvm.truffle:truffle-compiler:24.0.0

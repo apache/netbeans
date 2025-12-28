@@ -21,7 +21,6 @@ package org.netbeans.modules.maven.junit.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,17 +28,19 @@ import javax.swing.Action;
 import org.netbeans.api.extexecution.print.LineConvertors;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.gsf.testrunner.api.Testcase;
 import org.netbeans.modules.gsf.testrunner.api.TestMethodNodeAction;
+import org.netbeans.modules.gsf.testrunner.api.Testcase;
 import org.netbeans.modules.junit.ui.api.JUnitTestMethodNode;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.NestedClass;
 import org.netbeans.spi.project.SingleMethod;
-import static org.netbeans.spi.project.SingleMethod.COMMAND_DEBUG_SINGLE_METHOD;
-import static org.netbeans.spi.project.SingleMethod.COMMAND_RUN_SINGLE_METHOD;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.Lookups;
+
+import static org.netbeans.spi.project.SingleMethod.COMMAND_DEBUG_SINGLE_METHOD;
+import static org.netbeans.spi.project.SingleMethod.COMMAND_RUN_SINGLE_METHOD;
 
 /**
  * mkleint: copied from junit module
@@ -71,8 +72,31 @@ public class MavenJUnitTestMethodNode extends JUnitTestMethodNode {
             if (suiteProject != null) {
                 ActionProvider actionProvider = suiteProject.getLookup().lookup(ActionProvider.class);
                 if (actionProvider != null) {
-                    SingleMethod methodSpec = new SingleMethod(testFO, testcase.getName());
-                    Lookup nodeContext = Lookups.singleton(methodSpec);
+                    String mName = testcase.getName();
+                    String tcName= testcase.getClassName();
+                    if (tcName != null
+                            && mName.startsWith(tcName)
+                            && mName.charAt(tcName.length()) == '.') {
+                        mName = mName.substring(tcName.length() + 1);
+                    }
+                    SingleMethod methodSpec;
+                    if (tcName != null && tcName.contains("$")) {
+                        String[] nestedSplit = tcName.split("\\$", 2);
+                        String[] topLevelSplit = nestedSplit[0].split("\\.");
+                        methodSpec = new SingleMethod(mName, new NestedClass(nestedSplit[1].replace("$", "."), topLevelSplit[topLevelSplit.length - 1], testFO));
+                    } else {
+                        if(tcName != null) {
+                            String[] topLevelSplit = tcName.split("\\.");
+                            if(! testFO.getName().equals(topLevelSplit[topLevelSplit.length - 1])) {
+                                methodSpec = new SingleMethod(mName, new NestedClass("", topLevelSplit[topLevelSplit.length - 1], testFO));
+                            } else {
+                                methodSpec = new SingleMethod(testFO, mName);
+                            }
+                        } else {
+                            methodSpec = new SingleMethod(testFO, mName);
+                        }
+                    }
+                    Lookup nodeContext = Lookups.fixed(methodSpec);
 
                     for (String action : actionProvider.getSupportedActions()) {
                         if (unitTest
@@ -112,7 +136,7 @@ public class MavenJUnitTestMethodNode extends JUnitTestMethodNode {
             }
         }
 
-        Collections.sort(actions, (a, b) -> {
+        actions.sort((a, b) -> {
             String aName = (String)a.getValue(Action.NAME);
             String bName = (String)b.getValue(Action.NAME);
             if(aName == null) {
@@ -130,7 +154,7 @@ public class MavenJUnitTestMethodNode extends JUnitTestMethodNode {
         }
         actions.addAll(Arrays.asList(super.getActions(context)));
 
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     public FileObject getTestcaseFileObject() {

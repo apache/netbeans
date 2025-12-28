@@ -41,7 +41,7 @@
           <description>
               A <a href="@TOP@/org/netbeans/spi/quicksearch/SearchProvider.html">SearchProvider</a> that 
               is searching and cannot find a result can check whether the result is still valid, using
-              <a href="@TOP@/org/netbeans/spi/quicksearch/SearchResponse.html#isObsolete--"><code>SearchResponse.isObsolete()</code></a>.
+              <a href="@TOP@/org/netbeans/spi/quicksearch/SearchResponse.html#isObsolete()"><code>SearchResponse.isObsolete()</code></a>.
               It was only possible to check for terminated search when a new item was added.
           </description>
           <class package="org.netbeans.spi.quicksearch" name="SearchResponse"/>
@@ -65,7 +65,6 @@
 -->
     <head>
       <title>Change History for the Progress API</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>
 

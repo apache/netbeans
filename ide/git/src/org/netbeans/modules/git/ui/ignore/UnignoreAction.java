@@ -129,6 +129,6 @@ public class UnignoreAction extends MultipleRepositoryAction {
                 toUnignore.add(root);
             }
         }
-        return toUnignore.toArray(new File[toUnignore.size()]);
+        return toUnignore.toArray(new File[0]);
     }
 }

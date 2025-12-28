@@ -20,15 +20,16 @@
 package org.openide.filesystems;
 
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.beans.BeanInfo;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Set;
+import java.util.logging.Level;
 import static org.openide.filesystems.FileSystem.LOG;
 import org.openide.modules.PatchFor;
 import org.openide.util.Exceptions;
@@ -284,7 +285,11 @@ public abstract class FileSystemCompat {
                 Object value = fo.getAttribute(attr);
                 if (value != null) {
                     if (value instanceof URL) {
-                        return Toolkit.getDefaultToolkit().getImage((URL) value);
+                        try {
+                            return ImageUtilities.loadImage(((URL) value).toURI());
+                        } catch (URISyntaxException e) {
+                            LOG.log(Level.WARNING, "Annotation has invalid icon URI", e);
+                        }
                     } else if (value instanceof Image) {
                         // #18832
                         return (Image) value;

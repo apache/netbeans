@@ -385,8 +385,7 @@ public abstract class CommonProfilerTestCase extends NbTestCase {
             al.add(new ClientUtils.SourceCodeSelection(this.rootMethods[i][0], this.rootMethods[i][1], this.rootMethods[i][2]));
         }
 
-        settings.setInstrumentationRootMethods((ClientUtils.SourceCodeSelection[]) al.toArray(new ClientUtils.SourceCodeSelection[al
-                                                                                                                                  .size()]));
+        settings.setInstrumentationRootMethods((ClientUtils.SourceCodeSelection[]) al.toArray(new ClientUtils.SourceCodeSelection[0]));
     }
 
     protected void setTargetVM(ProfilerEngineSettings settings) {

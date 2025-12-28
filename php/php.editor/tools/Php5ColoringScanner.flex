@@ -923,6 +923,18 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
     return PHPTokenId.PHP_PUBLIC;
 }
 
+<ST_PHP_IN_SCRIPTING>"public(set)" {
+    return PHPTokenId.PHP_PUBLIC_SET;
+}
+
+<ST_PHP_IN_SCRIPTING>"protected(set)" {
+    return PHPTokenId.PHP_PROTECTED_SET;
+}
+
+<ST_PHP_IN_SCRIPTING>"private(set)" {
+    return PHPTokenId.PHP_PRIVATE_SET;
+}
+
 <ST_PHP_IN_SCRIPTING>"readonly" {
     return PHPTokenId.PHP_READONLY;
 }

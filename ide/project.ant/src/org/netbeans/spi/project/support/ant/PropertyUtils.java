@@ -515,7 +515,7 @@ public class PropertyUtils {
             //Fix for issue #57304
             l.add(Character.toString(dosHack));
         }
-        return l.toArray(new String[l.size()]);
+        return l.toArray(new String[0]);
     }
 
     private static final Pattern VALID_PROPERTY_NAME = Pattern.compile("[-._a-zA-Z0-9]+"); // NOI18N

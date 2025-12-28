@@ -37,6 +37,7 @@ import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.xtext.xbase.lib.Pure;
+import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.modules.java.lsp.server.Utils;
@@ -53,6 +54,10 @@ public abstract class CodeActionsProvider {
     public static final String CODE_ACTIONS_PROVIDER_CLASS = "providerClass";
     public static final String DATA = "data";
     protected static final String ERROR = "<error>"; //NOI18N
+
+    public @CheckForNull Set<String> getSupportedCodeActionKinds() {
+        return null;
+    }
 
     public abstract List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception;
 

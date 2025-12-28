@@ -174,14 +174,14 @@
    <li>
     <p>
      J2SE-specific portion of <a
-     href="https://netbeans.apache.org/projects/buildsys/j2se-project-ui-spec.html#Dialog_Library_Manager">Java
+     href="https://netbeans.apache.org/projects/buildsys/j2se-project-ui-spec#Dialog_Library_Manager">Java
      Platform Manager</a>.
     </p>
    </li>
    <li>
     <p>
      Class-library-specific portion of <a
-     href="https://netbeans.apache.org/projects/buildsys/j2se-project-ui-spec.html#Dialog_Java_Platform_Manager">Library
+     href="https://netbeans.apache.org/projects/buildsys/j2se-project-ui-spec#Dialog_Java_Platform_Manager">Library
      Manager</a>.
     </p>
    </li>

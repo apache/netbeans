@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.51
+#Version 4.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -7,6 +7,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -35,14 +36,14 @@ innr public static Nodes
 innr public static Root
 innr public static Text
 innr public static Visitor
-meth public abstract void accept(org.netbeans.modules.web.jsps.parserapi.ELNode$Visitor) throws javax.servlet.jsp.JspException
+meth public abstract void accept(org.netbeans.modules.web.jsps.parserapi.ELNode$Visitor)
 supr java.lang.Object
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.ELNode$ELText
  outer org.netbeans.modules.web.jsps.parserapi.ELNode
 cons public init(java.lang.String)
 meth public java.lang.String getText()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.ELNode$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.ELNode$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.ELNode
 hfds text
 
@@ -53,14 +54,12 @@ meth public java.lang.String getName()
 meth public java.lang.String getPrefix()
 meth public java.lang.String getUri()
 meth public java.lang.String[] getParameters()
-meth public javax.servlet.jsp.tagext.FunctionInfo getFunctionInfo()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.ELNode$Visitor) throws javax.servlet.jsp.JspException
-meth public void setFunctionInfo(javax.servlet.jsp.tagext.FunctionInfo)
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.ELNode$Visitor)
 meth public void setMethodName(java.lang.String)
 meth public void setParameters(java.lang.String[])
 meth public void setUri(java.lang.String)
 supr org.netbeans.modules.web.jsps.parserapi.ELNode
-hfds functionInfo,methodName,name,parameters,prefix,uri
+hfds methodName,name,parameters,prefix,uri
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.ELNode$Nodes
  outer org.netbeans.modules.web.jsps.parserapi.ELNode
@@ -71,7 +70,7 @@ meth public java.lang.String getMapName()
 meth public java.util.Iterator<org.netbeans.modules.web.jsps.parserapi.ELNode> iterator()
 meth public void add(org.netbeans.modules.web.jsps.parserapi.ELNode)
 meth public void setMapName(java.lang.String)
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.ELNode$Visitor) throws javax.servlet.jsp.JspException
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.ELNode$Visitor)
 supr java.lang.Object
 hfds list,mapName
 
@@ -79,7 +78,7 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.ELNode$Root
  outer org.netbeans.modules.web.jsps.parserapi.ELNode
 cons public init(org.netbeans.modules.web.jsps.parserapi.ELNode$Nodes)
 meth public org.netbeans.modules.web.jsps.parserapi.ELNode$Nodes getExpression()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.ELNode$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.ELNode$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.ELNode
 hfds expr
 
@@ -87,17 +86,17 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.ELNode$Text
  outer org.netbeans.modules.web.jsps.parserapi.ELNode
 cons public init(java.lang.String)
 meth public java.lang.String getText()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.ELNode$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.ELNode$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.ELNode
 hfds text
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.ELNode$Visitor
  outer org.netbeans.modules.web.jsps.parserapi.ELNode
 cons public init()
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.ELNode$ELText) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.ELNode$Function) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.ELNode$Root) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.ELNode$Text) throws javax.servlet.jsp.JspException
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.ELNode$ELText)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.ELNode$Function)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.ELNode$Root)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.ELNode$Text)
 supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.modules.web.jsps.parserapi.JspParserAPI
@@ -305,13 +304,13 @@ meth public void setBeginJavaLine(int)
 meth public void setBody(org.netbeans.modules.web.jsps.parserapi.Node$Nodes)
 meth public void setEndJavaLine(int)
 supr java.lang.Object
-hfds ZERO_VARIABLE_INFO,isDummy
+hfds isDummy
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$AttributeDirective
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$AttributeGenerator
@@ -319,7 +318,7 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$AttributeGenerat
 cons public init(org.netbeans.modules.web.jsps.parserapi.Mark,java.lang.String,org.netbeans.modules.web.jsps.parserapi.Node$CustomTag)
 meth public java.lang.String getName()
 meth public org.netbeans.modules.web.jsps.parserapi.Node$CustomTag getTag()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 hfds name,tag
 
@@ -344,15 +343,16 @@ hfds hasIncludeAction,hasParamAction,hasScriptingVars,hasSetProperty,hasUseBean,
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$Comment
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$CustomTag
  outer org.netbeans.modules.web.jsps.parserapi.Node
-cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node,javax.servlet.jsp.tagext.TagFileInfo)
-cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node,javax.servlet.jsp.tagext.TagInfo,java.lang.Class)
-cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node,javax.servlet.jsp.tagext.TagFileInfo)
-cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node,javax.servlet.jsp.tagext.TagInfo,java.lang.Class)
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node,boolean,boolean,java.util.Set<java.lang.String>)
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node,java.lang.Class)
+fld public final static int AT_BEGIN = 1
+fld public final static int AT_END = 2
+fld public final static int NESTED = 0
 meth public boolean checkIfAttributeIsJspFragment(java.lang.String)
 meth public boolean hasEmptyBody()
 meth public boolean implementsBodyTag()
@@ -368,44 +368,38 @@ meth public java.lang.String getPrefix()
 meth public java.lang.String getTagHandlerPoolName()
 meth public java.lang.String getURI()
 meth public java.util.Vector getScriptingVars(int)
-meth public javax.servlet.jsp.tagext.TagData getTagData()
-meth public javax.servlet.jsp.tagext.TagFileInfo getTagFileInfo()
-meth public javax.servlet.jsp.tagext.TagInfo getTagInfo()
-meth public javax.servlet.jsp.tagext.TagVariableInfo[] getTagVariableInfos()
-meth public javax.servlet.jsp.tagext.VariableInfo[] getVariableInfos()
 meth public org.netbeans.modules.web.jsps.parserapi.Node$ChildInfo getChildInfo()
 meth public org.netbeans.modules.web.jsps.parserapi.Node$CustomTag getCustomTagParent()
 meth public org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute[] getJspAttributes()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 meth public void setCustomTagParent(org.netbeans.modules.web.jsps.parserapi.Node$CustomTag)
 meth public void setJspAttributes(org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute[])
 meth public void setNumCount(java.lang.Integer)
 meth public void setScriptingVars(java.util.Vector,int)
-meth public void setTagData(javax.servlet.jsp.tagext.TagData)
 meth public void setTagHandlerClass(java.lang.Class)
 meth public void setTagHandlerPoolName(java.lang.String)
 supr org.netbeans.modules.web.jsps.parserapi.Node
-hfds atBeginScriptingVars,atEndScriptingVars,childInfo,customNestingLevel,customTagParent,implementsBodyTag,implementsDynamicAttributes,implementsIterationTag,implementsSimpleTag,implementsTryCatchFinally,jspAttrs,nestedScriptingVars,numCount,prefix,tagData,tagFileInfo,tagHandlerClass,tagHandlerPoolName,tagInfo,uri,varInfos
+hfds BODY_TAGS,DYNAMIC_ATTRIBUTES,ITERATION_TAGS,SIMPLE_TAGS,TRY_CATCH_FINALLY_TAGS,atBeginScriptingVars,atEndScriptingVars,childInfo,customNestingLevel,customTagParent,fragmentAttributes,implementsBodyTag,implementsDynamicAttributes,implementsIterationTag,implementsSimpleTag,implementsTryCatchFinally,isTagFile,jspAttrs,nestedScriptingVars,numCount,prefix,tagHandlerClass,tagHandlerPoolName,uri
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$Declaration
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node$ScriptingElement
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$DoBodyAction
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$ELExpression
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 meth public org.netbeans.modules.web.jsps.parserapi.ELNode$Nodes getEL()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 meth public void setEL(org.netbeans.modules.web.jsps.parserapi.ELNode$Nodes)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 hfds el
@@ -414,14 +408,14 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$Expression
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node$ScriptingElement
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$FallBackAction
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$ForwardAction
@@ -429,7 +423,7 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$ForwardAction
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 meth public org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute getPage()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 meth public void setPage(org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 hfds page
@@ -438,7 +432,7 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$GetProperty
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$IncludeAction
@@ -446,7 +440,7 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$IncludeAction
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 meth public org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute getPage()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 meth public void setPage(org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 hfds page
@@ -455,14 +449,14 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$IncludeDirective
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$InvokeAction
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute
@@ -486,7 +480,7 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$JspBody
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 meth public org.netbeans.modules.web.jsps.parserapi.Node$ChildInfo getChildInfo()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 hfds childInfo
 
@@ -496,7 +490,7 @@ cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 meth public org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute getNameAttribute()
 meth public org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute[] getJspAttributes()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 meth public void setJspAttributes(org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute[])
 meth public void setNameAttribute(org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute)
 supr org.netbeans.modules.web.jsps.parserapi.Node
@@ -505,19 +499,19 @@ hfds jspAttrs,nameAttr
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$JspOutput
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$JspRoot
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$JspText
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$NamedAttribute
@@ -525,14 +519,13 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$NamedAttribute
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 meth public boolean isTrim()
-meth public java.lang.String getLocalName()
 meth public java.lang.String getName()
 meth public java.lang.String getPrefix()
 meth public java.lang.String getText()
 meth public org.netbeans.modules.web.jsps.parserapi.Node$ChildInfo getChildInfo()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
-hfds childInfo,localName,name,prefix,trim
+hfds childInfo,name,prefix,trim
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$Nodes
  outer org.netbeans.modules.web.jsps.parserapi.Node
@@ -545,7 +538,7 @@ meth public org.netbeans.modules.web.jsps.parserapi.Node getNode(int)
 meth public org.netbeans.modules.web.jsps.parserapi.Node$Root getRoot()
 meth public void add(org.netbeans.modules.web.jsps.parserapi.Node)
 meth public void remove(org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr java.lang.Object
 hfds list,root
 
@@ -554,7 +547,7 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$PageDirective
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 meth public java.util.List<java.lang.String> getImports()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 meth public void addImport(java.lang.String)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 hfds imports
@@ -564,7 +557,7 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$ParamAction
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 meth public org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute getValue()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 meth public void setValue(org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 hfds value
@@ -573,7 +566,7 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$ParamsAction
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$PlugIn
@@ -582,7 +575,7 @@ cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 meth public org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute getHeight()
 meth public org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute getWidth()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 meth public void setHeight(org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute)
 meth public void setWidth(org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute)
 supr org.netbeans.modules.web.jsps.parserapi.Node
@@ -596,7 +589,7 @@ meth public boolean isXmlSyntax()
 meth public java.lang.String getJspConfigPageEncoding()
 meth public java.lang.String getPageEncoding()
 meth public org.netbeans.modules.web.jsps.parserapi.Node$Root getParentRoot()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 meth public void setIsDefaultPageEncoding(boolean)
 meth public void setIsEncodingSpecifiedInProlog(boolean)
 meth public void setJspConfigPageEncoding(java.lang.String)
@@ -615,7 +608,7 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$Scriptlet
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node$ScriptingElement
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$SetProperty
@@ -623,7 +616,7 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$SetProperty
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 meth public org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute getValue()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 meth public void setValue(org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 hfds value
@@ -633,7 +626,7 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$TagDirective
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 meth public java.util.List<java.lang.String> getImports()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 meth public void addImport(java.lang.String)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 hfds imports
@@ -641,14 +634,14 @@ hfds imports
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$TaglibDirective
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$TemplateText
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 meth public boolean isAllSpace()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 meth public void ltrim()
 meth public void rtrim()
 supr org.netbeans.modules.web.jsps.parserapi.Node
@@ -657,7 +650,7 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$UninterpretedTag
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 meth public org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute[] getJspAttributes()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 meth public void setJspAttributes(org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute[])
 supr org.netbeans.modules.web.jsps.parserapi.Node
 hfds jspAttrs
@@ -667,7 +660,7 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$UseBean
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 meth public org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute getBeanName()
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 meth public void setBeanName(org.netbeans.modules.web.jsps.parserapi.Node$JspAttribute)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 hfds beanName
@@ -676,52 +669,52 @@ CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$VariableDirectiv
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init(java.lang.String,org.xml.sax.Attributes,org.xml.sax.Attributes,org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
 cons public init(org.xml.sax.Attributes,org.netbeans.modules.web.jsps.parserapi.Mark,org.netbeans.modules.web.jsps.parserapi.Node)
-meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor) throws javax.servlet.jsp.JspException
+meth public void accept(org.netbeans.modules.web.jsps.parserapi.Node$Visitor)
 supr org.netbeans.modules.web.jsps.parserapi.Node
 
 CLSS public static org.netbeans.modules.web.jsps.parserapi.Node$Visitor
  outer org.netbeans.modules.web.jsps.parserapi.Node
 cons public init()
-meth protected void doVisit(org.netbeans.modules.web.jsps.parserapi.Node) throws javax.servlet.jsp.JspException
-meth protected void visitBody(org.netbeans.modules.web.jsps.parserapi.Node) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$AttributeDirective) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$AttributeGenerator) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$Comment) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$CustomTag) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$Declaration) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$DoBodyAction) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$ELExpression) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$Expression) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$FallBackAction) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$ForwardAction) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$GetProperty) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$IncludeAction) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$IncludeDirective) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$InvokeAction) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$JspBody) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$JspElement) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$JspOutput) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$JspRoot) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$JspText) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$NamedAttribute) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$PageDirective) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$ParamAction) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$ParamsAction) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$PlugIn) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$Root) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$Scriptlet) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$SetProperty) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$TagDirective) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$TaglibDirective) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$TemplateText) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$UninterpretedTag) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$UseBean) throws javax.servlet.jsp.JspException
-meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$VariableDirective) throws javax.servlet.jsp.JspException
+meth protected void doVisit(org.netbeans.modules.web.jsps.parserapi.Node)
+meth protected void visitBody(org.netbeans.modules.web.jsps.parserapi.Node)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$AttributeDirective)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$AttributeGenerator)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$Comment)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$CustomTag)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$Declaration)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$DoBodyAction)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$ELExpression)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$Expression)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$FallBackAction)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$ForwardAction)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$GetProperty)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$IncludeAction)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$IncludeDirective)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$InvokeAction)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$JspBody)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$JspElement)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$JspOutput)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$JspRoot)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$JspText)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$NamedAttribute)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$PageDirective)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$ParamAction)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$ParamsAction)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$PlugIn)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$Root)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$Scriptlet)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$SetProperty)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$TagDirective)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$TaglibDirective)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$TemplateText)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$UninterpretedTag)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$UseBean)
+meth public void visit(org.netbeans.modules.web.jsps.parserapi.Node$VariableDirective)
 supr java.lang.Object
 
 CLSS public abstract org.netbeans.modules.web.jsps.parserapi.PageInfo
-cons public init(java.util.Map<java.lang.String,javax.servlet.jsp.tagext.TagLibraryInfo>,java.util.Map<java.lang.String,java.lang.String>,java.util.Map<java.lang.String,java.util.LinkedList<java.lang.String>>,java.util.Map,java.util.List<java.lang.String>,java.util.List<java.lang.String>,java.util.List,java.util.List,java.util.List<java.lang.String>,java.util.Set<java.lang.String>)
-fld public final static java.lang.String JSP_SERVLET_BASE = "javax.servlet.http.HttpServlet"
+cons public init(java.util.Map<java.lang.String,org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo>,java.util.Map<java.lang.String,java.lang.String>,java.util.Map<java.lang.String,java.util.LinkedList<java.lang.String>>,java.util.Map<java.lang.String,java.lang.String>,java.util.List<java.lang.String>,java.util.List<java.lang.String>,java.util.List,java.util.List,java.util.List<java.lang.String>,java.util.Set<java.lang.String>)
+fld public final static java.lang.String JSP_SERVLET_BASE = "jakarta.servlet.http.HttpServlet"
 innr public abstract interface static BeanData
 meth public boolean containsPrefix(java.lang.String)
 meth public boolean hasJspRoot()
@@ -737,7 +730,6 @@ meth public boolean isSession()
 meth public boolean isTagFile()
 meth public boolean isThreadSafe()
 meth public int getBuffer()
-meth public java.lang.String functionInfoToString(javax.servlet.jsp.tagext.FunctionInfo,java.lang.String)
 meth public java.lang.String getAutoFlush()
 meth public java.lang.String getBufferValue()
 meth public java.lang.String getContentType()
@@ -756,11 +748,10 @@ meth public java.lang.String getLanguage(boolean)
 meth public java.lang.String getOmitXmlDecl()
 meth public java.lang.String getSession()
 meth public java.lang.String getURI(java.lang.String)
-meth public java.lang.String tagFileToString(javax.servlet.jsp.tagext.TagFileInfo,java.lang.String)
-meth public java.lang.String tagInfoToString(javax.servlet.jsp.tagext.TagInfo,java.lang.String)
-meth public java.lang.String tagLibraryInfoToString(javax.servlet.jsp.tagext.TagLibraryInfo,java.lang.String)
+meth public java.lang.String tagFileToString(org.netbeans.modules.web.jsps.parserapi.TagFileInfo,java.lang.String)
+meth public java.lang.String tagInfoToString(org.netbeans.modules.web.jsps.parserapi.TagInfo,java.lang.String)
+meth public java.lang.String tagLibraryInfoToString(org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo,java.lang.String)
 meth public java.lang.String toString()
-meth public java.util.Collection<javax.servlet.jsp.tagext.TagLibraryInfo> getTaglibs()
 meth public java.util.List getIncludeCoda()
 meth public java.util.List getIncludePrelude()
 meth public java.util.List<java.lang.String> getDependants()
@@ -768,21 +759,21 @@ meth public java.util.List<java.lang.String> getImports()
 meth public java.util.Map getApproxXmlPrefixMapper()
 meth public java.util.Map getXMLPrefixMapper()
 meth public java.util.Map<java.lang.String,java.lang.String> getJspPrefixMapper()
-meth public java.util.Map<java.lang.String,javax.servlet.jsp.tagext.TagLibraryInfo> getTagLibraries()
-meth public javax.servlet.jsp.tagext.TagInfo getTagInfo()
-meth public javax.servlet.jsp.tagext.TagLibraryInfo getTaglib(java.lang.String)
+meth public java.util.Map<java.lang.String,org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo> getTagLibraries()
 meth public org.netbeans.modules.web.jsps.parserapi.PageInfo$BeanData[] getBeans()
+meth public org.netbeans.modules.web.jsps.parserapi.TagInfo getTagInfo()
+meth public org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo getTaglib(java.lang.String)
 meth public void addDependant(java.lang.String)
 meth public void addImport(java.lang.String)
 meth public void addImports(java.util.List<java.lang.String>)
 meth public void addPrefix(java.lang.String)
 meth public void addPrefixMapping(java.lang.String,java.lang.String)
-meth public void addTaglib(java.lang.String,javax.servlet.jsp.tagext.TagLibraryInfo)
+meth public void addTaglib(java.lang.String,org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo)
 meth public void popPrefixMapping(java.lang.String)
 meth public void pushPrefixMapping(java.lang.String,java.lang.String)
-meth public void setAutoFlush(java.lang.String) throws javax.servlet.jsp.JspException
+meth public void setAutoFlush(java.lang.String)
 meth public void setBeans(org.netbeans.modules.web.jsps.parserapi.PageInfo$BeanData[])
-meth public void setBufferValue(java.lang.String) throws javax.servlet.jsp.JspException
+meth public void setBufferValue(java.lang.String)
 meth public void setContentType(java.lang.String)
 meth public void setDoctypeName(java.lang.String)
 meth public void setDoctypePublic(java.lang.String)
@@ -794,17 +785,17 @@ meth public void setHasJspRoot(boolean)
 meth public void setIncludeCoda(java.util.Vector)
 meth public void setIncludePrelude(java.util.Vector)
 meth public void setInfo(java.lang.String)
-meth public void setIsELIgnored(java.lang.String) throws javax.servlet.jsp.JspException
-meth public void setIsErrorPage(java.lang.String) throws javax.servlet.jsp.JspException
+meth public void setIsELIgnored(java.lang.String)
+meth public void setIsErrorPage(java.lang.String)
 meth public void setIsJspPrefixHijacked(boolean)
-meth public void setIsThreadSafe(java.lang.String) throws javax.servlet.jsp.JspException
+meth public void setIsThreadSafe(java.lang.String)
 meth public void setLanguage(java.lang.String)
 meth public void setOmitXmlDecl(java.lang.String)
 meth public void setScriptingInvalid(boolean)
 meth public void setScriptless(boolean)
-meth public void setSession(java.lang.String) throws javax.servlet.jsp.JspException
+meth public void setSession(java.lang.String)
 meth public void setTagFile(boolean)
-meth public void setTagInfo(javax.servlet.jsp.tagext.TagInfo)
+meth public void setTagInfo(org.netbeans.modules.web.jsps.parserapi.TagInfo)
 supr java.lang.Object
 hfds TAG_FILE_INFO_COMPARATOR,approxXmlPrefixMapper,autoFlush,beans,buffer,bufferValue,contentType,defaultExtends,defaultLanguage,dependants,doctypeName,doctypePublic,doctypeSystem,errorPage,hasJspRoot,imports,includeCoda,includePrelude,info,isAutoFlush,isELIgnored,isELIgnoredValue,isErrorPage,isErrorPageValue,isJspPrefixHijacked,isSession,isTagFile,isThreadSafe,isThreadSafeValue,jspPrefixMapper,language,omitXmlDecl,pluginDcls,prefixes,scriptingInvalid,scriptless,session,tagInfo,taglibsMap,xmlPrefixMapper,xtends
 
@@ -812,6 +803,103 @@ CLSS public abstract interface static org.netbeans.modules.web.jsps.parserapi.Pa
  outer org.netbeans.modules.web.jsps.parserapi.PageInfo
 meth public abstract java.lang.String getClassName()
 meth public abstract java.lang.String getId()
+
+CLSS public org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo
+cons public init()
+cons public init(java.lang.String,boolean,java.lang.String,boolean)
+cons public init(java.lang.String,boolean,java.lang.String,boolean,boolean)
+meth public boolean isCanBeRequestTime()
+meth public boolean isFragment()
+meth public boolean isRequired()
+meth public java.lang.String getName()
+meth public java.lang.String getTypeName()
+meth public void setCanBeRequestTime(boolean)
+meth public void setFragment(boolean)
+meth public void setName(java.lang.String)
+meth public void setRequired(boolean)
+meth public void setTypeName(java.lang.String)
+supr java.lang.Object
+hfds canBeRequestTime,fragment,name,required,typeName
+
+CLSS public org.netbeans.modules.web.jsps.parserapi.TagFileInfo
+cons public init()
+cons public init(java.lang.String,java.lang.String,org.netbeans.modules.web.jsps.parserapi.TagInfo)
+meth public java.lang.String getName()
+meth public java.lang.String getPath()
+meth public org.netbeans.modules.web.jsps.parserapi.TagInfo getTagInfo()
+meth public void setName(java.lang.String)
+meth public void setPath(java.lang.String)
+meth public void setTagInfo(org.netbeans.modules.web.jsps.parserapi.TagInfo)
+supr java.lang.Object
+hfds name,path,tagInfo
+
+CLSS public org.netbeans.modules.web.jsps.parserapi.TagInfo
+cons public init()
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo,java.lang.Object,java.util.List<org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo>)
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo,java.lang.Object,org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo[])
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo,java.util.List<org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo>)
+fld public final static java.lang.String BODY_CONTENT_EMPTY = "empty"
+fld public final static java.lang.String BODY_CONTENT_JSP = "JSP"
+fld public final static java.lang.String BODY_CONTENT_SCRIPTLESS = "scriptless"
+fld public final static java.lang.String BODY_CONTENT_TAG_DEPENDENT = "tagdependent"
+meth public java.lang.String getBodyContent()
+meth public java.lang.String getDisplayName()
+meth public java.lang.String getInfoString()
+meth public java.lang.String getTagClassName()
+meth public java.lang.String getTagName()
+meth public java.util.List<org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo> getAttributes()
+meth public java.util.List<org.netbeans.modules.web.jsps.parserapi.TagVariableInfo> getVariables()
+meth public java.util.List<org.netbeans.modules.web.jsps.parserapi.VariableInfo> getRuntimeVariables()
+meth public org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo getTagLibrary()
+meth public void setBodyContent(java.lang.String)
+meth public void setDisplayName(java.lang.String)
+meth public void setInfoString(java.lang.String)
+meth public void setTagClassName(java.lang.String)
+meth public void setTagLibrary(org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo)
+meth public void setTagName(java.lang.String)
+supr java.lang.Object
+hfds attributes,bodyContent,displayName,infoString,runtimeVariables,tagClassName,tagLibrary,tagName,variables
+
+CLSS public org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.util.List<org.netbeans.modules.web.jsps.parserapi.TagInfo>,java.util.List<org.netbeans.modules.web.jsps.parserapi.TagFileInfo>)
+meth public java.lang.String getInfoString()
+meth public java.lang.String getPrefixString()
+meth public java.lang.String getReliableURN()
+meth public java.lang.String getRequiredVersion()
+meth public java.lang.String getShortName()
+meth public java.lang.String getTlibversion()
+meth public java.lang.String getURI()
+meth public java.util.List<org.netbeans.modules.web.jsps.parserapi.TagFileInfo> getTagFiles()
+meth public java.util.List<org.netbeans.modules.web.jsps.parserapi.TagInfo> getTags()
+meth public org.netbeans.modules.web.jsps.parserapi.TagFileInfo getTagFile(java.lang.String)
+meth public org.netbeans.modules.web.jsps.parserapi.TagInfo getTag(java.lang.String)
+meth public void setInfoString(java.lang.String)
+meth public void setPrefixString(java.lang.String)
+meth public void setReliableURN(java.lang.String)
+meth public void setRequiredVersion(java.lang.String)
+meth public void setShortName(java.lang.String)
+meth public void setTlibversion(java.lang.String)
+meth public void setURI(java.lang.String)
+supr java.lang.Object
+hfds URI,infoString,prefixString,reliableURN,requiredVersion,shortName,tagFiles,tags,tlibversion
+
+CLSS public org.netbeans.modules.web.jsps.parserapi.TagVariableInfo
+cons public init()
+cons public init(java.lang.String,java.lang.String,java.lang.String,boolean,int)
+meth public boolean isDeclare()
+meth public int getScope()
+meth public java.lang.String getClassName()
+meth public java.lang.String getNameFromAttribute()
+meth public java.lang.String getNameGiven()
+meth public void setClassName(java.lang.String)
+meth public void setDeclare(boolean)
+meth public void setNameFromAttribute(java.lang.String)
+meth public void setNameGiven(java.lang.String)
+meth public void setScope(int)
+supr java.lang.Object
+hfds className,declare,nameFromAttribute,nameGiven,scope
 
 CLSS public final org.netbeans.modules.web.jsps.parserapi.TldChangeEvent
 cons public init(java.lang.Object,org.netbeans.modules.web.api.webmodule.WebModule)
@@ -822,4 +910,16 @@ hfds serialVersionUID,webModule
 CLSS public abstract interface org.netbeans.modules.web.jsps.parserapi.TldChangeListener
 intf java.util.EventListener
 meth public abstract void tldChange(org.netbeans.modules.web.jsps.parserapi.TldChangeEvent)
+
+CLSS public org.netbeans.modules.web.jsps.parserapi.VariableInfo
+cons public init()
+cons public init(java.lang.String,java.lang.String,boolean)
+meth public boolean isDeclare()
+meth public java.lang.String getClassName()
+meth public java.lang.String getVarName()
+meth public void setClassName(java.lang.String)
+meth public void setDeclare(boolean)
+meth public void setVarName(java.lang.String)
+supr java.lang.Object
+hfds className,declare,varName
 

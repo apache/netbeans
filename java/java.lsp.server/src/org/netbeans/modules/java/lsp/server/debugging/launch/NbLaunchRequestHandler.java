@@ -32,9 +32,12 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 
 import org.apache.commons.lang3.StringUtils;
@@ -51,6 +54,7 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.java.lsp.server.LspServerState;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.netbeans.modules.java.lsp.server.debugging.NbSourceProvider;
+import org.netbeans.modules.java.lsp.server.debugging.launch.NbLaunchDelegate.LaunchType;
 import org.netbeans.modules.java.lsp.server.debugging.utils.ErrorUtilities;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.DialogDescriptor;
@@ -68,7 +72,7 @@ import org.openide.util.lookup.Lookups;
  * @author martin
  */
 public final class NbLaunchRequestHandler {
-
+    private static final Logger LOG = Logger.getLogger(NbLaunchRequestHandler.class.getName());
     private NbLaunchDelegate activeLaunchHandler;
 
     public CompletableFuture<Void> launch(Map<String, Object> launchArguments, DebugAdapterContext context) {
@@ -87,9 +91,10 @@ public final class NbLaunchRequestHandler {
         String filePath = (String)launchArguments.get("file");
         String projectFilePath = (String)launchArguments.get("projectFile");
         String mainFilePath = (String)launchArguments.get("mainClass");
+        LaunchType launchType = LaunchType.from(launchArguments);
 
         if (!isNative && (StringUtils.isBlank(mainFilePath) && StringUtils.isBlank(filePath) && StringUtils.isBlank(projectFilePath)
-                          || modulePaths.isEmpty() && classPaths.isEmpty())) {
+                          || modulePaths.isEmpty() && classPaths.isEmpty()) && launchType != LaunchType.RUN_TEST) {
             if (modulePaths.isEmpty() && classPaths.isEmpty()) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                     "Failed to launch debuggee VM. Missing modulePaths/classPaths options in launch configuration.",
@@ -145,7 +150,10 @@ public final class NbLaunchRequestHandler {
                         case 1:
                             handleSelectedMainClass.accept(mainClasses.get(0));
                             break;
-                        case 2:
+                        default:
+                            if(mainClasses.size() > 10){
+                                LOG.log(Level.WARNING, "The number of main classes is large :{0}", mainClasses.size());
+                            }
                             List<NotifyDescriptor.QuickPick.Item> mainClassItems =
                                     mainClasses.stream()
                                                .map(eh -> new Item(eh.getQualifiedName(), eh.getQualifiedName()))
@@ -187,11 +195,14 @@ public final class NbLaunchRequestHandler {
         }
 
         if (!isNative) {
-            if (StringUtils.isBlank((String)launchArguments.get("vmArgs"))) {
+            List<String> vmArgList = NbLaunchDelegate.argsToStringList(launchArguments.get("vmArgs"));
+            if (vmArgList.isEmpty()) {
                 launchArguments.put("vmArgs", String.format("-Dfile.encoding=%s", context.getDebuggeeEncoding().name()));
             } else {
+                vmArgList = new ArrayList<>(vmArgList);
+                vmArgList.add(String.format("-Dfile.encoding=%s", context.getDebuggeeEncoding().name()));
                 // if vmArgs already has the file.encoding settings, duplicate options for jvm will not cause an error, the right most value wins
-                launchArguments.put("vmArgs", String.format("%s -Dfile.encoding=%s", launchArguments.get("vmArgs"), context.getDebuggeeEncoding().name()));
+                launchArguments.put("vmArgs", vmArgList);
             }
         }
         context.setDebugMode(!noDebug);
@@ -202,15 +213,62 @@ public final class NbLaunchRequestHandler {
             filePath = projectFilePath;
         }
         boolean preferProjActions = true; // True when we prefer project actions to the current (main) file actions.
-        if (filePath == null || mainFilePath != null) {
-            // main overides the current file
-            preferProjActions = false;
-            filePath = mainFilePath;
-        }
+        Object preferProj = launchArguments.get("project");
+        if(preferProj instanceof Boolean) preferProjActions = (Boolean) preferProj;
         FileObject file = null;
         File nativeImageFile = null;
         if (!isNative) {
-            file = getFileObject(filePath);
+            if (filePath == null || mainFilePath != null) {
+                // main overides the current file
+                preferProjActions = false;
+
+                file = getFileObject(mainFilePath);
+
+                if (file == null) {
+                    LspServerState state = Lookup.getDefault().lookup(LspServerState.class);
+
+                    if (state != null) {
+                        for (FileObject workspaceFolder : state.getClientWorkspaceFolders()) {
+                            file = workspaceFolder.getFileObject(mainFilePath);
+
+                            if (file != null) {
+                                break;
+                            }
+                        }
+
+                        if (file == null) {
+                            return state.openedProjects().thenCompose(prjs -> {
+                                FileObject[] sourceRoots =
+                                    Arrays.stream(prjs)
+                                          .flatMap(p -> Arrays.stream(ProjectUtils.getSources(p).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)))
+                                          .map(sg -> sg.getRootFolder())
+                                          .toArray(s -> new FileObject[s]);
+
+                                ClasspathInfo cpInfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(sourceRoots));
+                                FileObject mainClassFile = SourceUtils.getFile(ElementHandle.createTypeElementHandle(ElementKind.CLASS, mainFilePath), cpInfo);
+                                if (mainClassFile == null) {
+                                    CompletableFuture<Void> currentResult = new CompletableFuture<>();
+                                    ErrorUtilities.completeExceptionally(currentResult,
+                                        "The main class specified as: \"" + mainFilePath + "\" cannot be found as neither an absolute path, a path relative to any workspace folder or a class name.",
+                                        ResponseErrorCode.ServerNotInitialized);
+                                    return currentResult;
+                                } else {
+                                    Map<String, Object> newLaunchArguments = new HashMap<>(launchArguments);
+                                    newLaunchArguments.put("mainClass", mainClassFile.toURI().toString());
+                                    return launch(newLaunchArguments, context);
+                                }
+                            });
+                        }
+                    } else {
+                        ErrorUtilities.completeExceptionally(resultFuture,
+                            "Failed to launch debuggee VM. Wrong context.",
+                            ResponseErrorCode.ServerNotInitialized);
+                        return resultFuture;
+                    }
+                }
+            } else {
+                file = getFileObject(filePath);
+            }
             if (file == null) {
                 ErrorUtilities.completeExceptionally(resultFuture,
                         "Missing file: " + filePath,
@@ -241,8 +299,9 @@ public final class NbLaunchRequestHandler {
             context.setSourcePaths((String[]) launchArguments.get("sourcePaths"));
         }
         String singleMethod = (String)launchArguments.get("methodName");
-        boolean testRun = (Boolean) launchArguments.getOrDefault("testRun", Boolean.FALSE);
-        activeLaunchHandler.nbLaunch(file, preferProjActions, nativeImageFile, singleMethod, launchArguments, context, !noDebug, testRun, new OutputListener(context)).thenRun(() -> {
+        String nestedClass = (String)launchArguments.get("nestedClass");
+        boolean testInParallel = (Boolean) launchArguments.getOrDefault("testInParallel", Boolean.FALSE);
+        activeLaunchHandler.nbLaunch(file, preferProjActions, nativeImageFile, singleMethod, nestedClass, launchArguments, context, !noDebug, launchType, new OutputListener(context), testInParallel).thenRun(() -> {
             activeLaunchHandler.postLaunch(launchArguments, context);
             resultFuture.complete(null);
         }).exceptionally(e -> {
@@ -260,7 +319,7 @@ public final class NbLaunchRequestHandler {
                 try {
                     URI uri = new URI(filePath);
                     ioFile = Utilities.toFile(uri);
-                } catch (URISyntaxException ex) {
+                } catch (URISyntaxException | IllegalArgumentException ex) {
                     // Not a valid file
                 }
             }

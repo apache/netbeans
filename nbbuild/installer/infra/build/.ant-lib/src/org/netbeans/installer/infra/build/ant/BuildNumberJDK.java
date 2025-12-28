@@ -35,14 +35,13 @@ import org.netbeans.installer.infra.build.ant.utils.Utils;
  * @author Jiri Rechtacek
  */
 public class BuildNumberJDK extends Task {
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     /**
      * The input file.
      */
     private File file;
     
-    // setters //////////////////////////////////////////////////////////////////////
+    // setters
     /**
      * Setter for the <code>file</code> attribute.
      * 
@@ -52,7 +51,7 @@ public class BuildNumberJDK extends Task {
         this.file = new File(path);
     }
     
-    // execution ////////////////////////////////////////////////////////////////////
+    // execution
     /**
      * Executes the task. The input file is parsed and three properties identifying
      * the JDK build are set.
@@ -107,7 +106,6 @@ public class BuildNumberJDK extends Task {
         }
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     /**
      * Pattern for which to look in the input file.

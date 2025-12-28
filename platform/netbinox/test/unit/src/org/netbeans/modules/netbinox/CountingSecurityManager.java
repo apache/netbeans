@@ -162,7 +162,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
             try {
                 ClassLoader l = Thread.currentThread().getContextClassLoader();
                 Class<?> manClass = Class.forName("org.netbeans.TopSecurityManager", false, l);
-                man = (SecurityManager) manClass.newInstance();
+                man = (SecurityManager) manClass.getDeclaredConstructor().newInstance();
             } catch (Exception ex) {
                 throw new IllegalStateException(ex);
             }

@@ -134,19 +134,19 @@ public class NotifyDescriptor extends Object {
     //
 
     /** Return value if YES is chosen. */
-    public static final Object YES_OPTION = new Integer(JOptionPane.YES_OPTION);
+    public static final Object YES_OPTION = JOptionPane.YES_OPTION;
 
     /** Return value if NO is chosen. */
-    public static final Object NO_OPTION = new Integer(JOptionPane.NO_OPTION);
+    public static final Object NO_OPTION = JOptionPane.NO_OPTION;
 
     /** Return value if CANCEL is chosen. */
-    public static final Object CANCEL_OPTION = new Integer(JOptionPane.CANCEL_OPTION);
+    public static final Object CANCEL_OPTION = JOptionPane.CANCEL_OPTION;
 
     /** Return value if OK is chosen. */
-    public static final Object OK_OPTION = new Integer(JOptionPane.OK_OPTION);
+    public static final Object OK_OPTION = JOptionPane.OK_OPTION;
 
     /** Return value if user closes the window without pressing any button. */
-    public static final Object CLOSED_OPTION = new Integer(JOptionPane.CLOSED_OPTION);
+    public static final Object CLOSED_OPTION = JOptionPane.CLOSED_OPTION;
 
     //
     // Option types
@@ -329,7 +329,7 @@ public class NotifyDescriptor extends Object {
     * usage, the message is just a <code>String</code>.  However, the type
     * of this parameter is actually <code>Object</code>.  Its interpretation depends on
     * its type:
-    * <dl compact>
+    * <dl>
     * <dt><code>Object[]</code><dd> A recursively interpreted series of messages.
     * <dt>{@link Component}<dd> The <code>Component</code> is displayed in the dialog.
     * <dt>{@link javax.swing.Icon}<dd> The <code>Icon</code> is wrapped in a {@link JLabel} and displayed in the dialog.
@@ -414,7 +414,7 @@ public class NotifyDescriptor extends Object {
 
         int oldType = messageType;
         messageType = newType;
-        firePropertyChange(PROP_MESSAGE_TYPE, new Integer(oldType), new Integer(messageType));
+        firePropertyChange(PROP_MESSAGE_TYPE, oldType, messageType);
     }
 
     /**
@@ -460,7 +460,7 @@ public class NotifyDescriptor extends Object {
 
         int oldType = optionType;
         optionType = newType;
-        firePropertyChange(PROP_OPTION_TYPE, new Integer(oldType), new Integer(optionType));
+        firePropertyChange(PROP_OPTION_TYPE, oldType, optionType);
     }
 
     /**
@@ -481,7 +481,7 @@ public class NotifyDescriptor extends Object {
     * The usual value for the options parameter is an array of
     * <code>String</code>s.  But the parameter type is an array of <code>Object</code>s.  Its
     * interpretation depends on its type:
-    * <dl compact>
+    * <dl>
     * <dt>{@link Component}<dd>The component is added to the button row directly.
     * <dt>{@link javax.swing.Icon}<dd>A {@link javax.swing.JButton} is created with this icon as its label.
     * <dt>anything else<dd>The <code>Object</code> is {@link Object#toString converted} to a string and the result is used to
@@ -521,7 +521,7 @@ public class NotifyDescriptor extends Object {
     * The usual value for the options parameter is an array of
     * <code>String</code>s.  But the parameter type is an array of <code>Object</code>s.  Its
     * interpretation depends on its type:
-    * <dl compact>
+    * <dl>
     * <dt>{@link Component}<dd>The component is added to the button row directly.
     * <dt>{@link javax.swing.Icon}<dd>A {@link javax.swing.JButton} is created with this icon as its label.
     * <dt>anything else<dd>The <code>Object</code> is {@link Object#toString converted} to a string and the result is used to
@@ -1038,7 +1038,7 @@ public class NotifyDescriptor extends Object {
         /**
          * Property whose value is the input text, an event is fired
          * when the input text's value changes,
-         * if enabled using {@link #setInputTextEventsEnabled(boolean) }.
+         * if enabled using {@link #setInputTextEventEnabled(boolean) }.
          *
          * @since 7.70
          */

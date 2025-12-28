@@ -210,6 +210,24 @@ public class ConvertToSwitchPatternInstanceOfTest extends NbTestCase {
     }
     
     @Test
+    public void testSwitchWithNullExceptionSwitchIsFirst() throws Exception {
+        HintTest.create()
+                .input("""
+                       package test;
+                       public class Test {
+                           private static void test(Object o) {
+                               switch (o) {
+                                   case String s -> {}
+                               }
+                           }
+                       }
+                       """, false)
+                .sourceLevel("21")
+                .run(ConvertToSwitchPatternInstanceOf.class)
+                .assertWarnings();
+    }
+
+    @Test
     public void testSimpleSwitchWithNullNoHint() throws Exception {
         HintTest.create()
                 .input("package test;\n"

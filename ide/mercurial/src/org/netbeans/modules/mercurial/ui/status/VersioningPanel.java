@@ -33,7 +33,6 @@ import org.netbeans.modules.mercurial.ui.diff.Setup;
 import org.netbeans.modules.versioning.spi.VCSContext;
 import org.netbeans.modules.versioning.util.NoContentPanel;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.*;
 import org.openide.windows.TopComponent;
@@ -224,7 +223,7 @@ class VersioningPanel extends JPanel implements ExplorerManager.Provider, Prefer
             return;
         }
         // XXX attach Cancelable hook
-        final ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(VersioningPanel.class, "MSG_Refreshing_Versioning_View")); // NOI18N
+        final ProgressHandle ph = ProgressHandle.createHandle(NbBundle.getMessage(VersioningPanel.class, "MSG_Refreshing_Versioning_View")); // NOI18N
         try {
             Thread.interrupted();  // clear interupted status
             ph.start();
@@ -298,7 +297,7 @@ class VersioningPanel extends JPanel implements ExplorerManager.Provider, Prefer
     
     private SyncFileNode [] getNodes(VCSContext context, int includeStatus) {
         Set<File> rootFiles = context.getRootFiles();
-        File [] files = Mercurial.getInstance().getFileStatusCache().listFiles(rootFiles.toArray(new File[rootFiles.size()]), includeStatus);
+        File [] files = Mercurial.getInstance().getFileStatusCache().listFiles(rootFiles.toArray(new File[0]), includeStatus);
         Set<File> repositories = HgUtils.getRepositoryRoots(context);
 
         java.util.List<HgFileNode> fnodes = new LinkedList<HgFileNode>();

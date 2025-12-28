@@ -22,7 +22,6 @@ package org.netbeans.modules.profiler.heapwalk.model;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -250,15 +249,15 @@ public class BrowserUtils {
     }
 
     public static ImageIcon createGCRootIcon(ImageIcon icon) {
-        return new ImageIcon(ImageUtilities.mergeImages(icon.getImage(), ICON_GCROOT.getImage(), 0, 0));
+        return ImageUtilities.icon2ImageIcon(ImageUtilities.mergeIcons(icon, ICON_GCROOT, 0, 0));
     }
 
     public static ImageIcon createLoopIcon(ImageIcon icon) {
-        return new ImageIcon(ImageUtilities.mergeImages(icon.getImage(), ICON_LOOP.getImage(), 0, 0));
+        return ImageUtilities.icon2ImageIcon(ImageUtilities.mergeIcons(icon, ICON_LOOP, 0, 0));
     }
 
     public static ImageIcon createStaticIcon(ImageIcon icon) {
-        return new ImageIcon(ImageUtilities.mergeImages(icon.getImage(), ICON_STATIC.getImage(), 0, 0));
+        return ImageUtilities.icon2ImageIcon(ImageUtilities.mergeIcons(icon, ICON_STATIC, 0, 0));
     }
 
     public static HeapWalkerNode[] lazilyCreateChildren(final HeapWalkerNode parent, final ChildrenComputer childrenComputer) {

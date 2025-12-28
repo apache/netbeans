@@ -23,6 +23,7 @@ import java.awt.event.*;
 import java.lang.ref.WeakReference;
 import java.util.function.Consumer;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.PopupMenuEvent;
@@ -610,7 +611,11 @@ public class QuickSearch {
         public SearchPanel(JComponent component, boolean alwaysShown) {
             this.component = component;
             this.alwaysShown = alwaysShown;
-            if (isAquaLaF) {
+
+            Border customBorder = UIManager.getBorder("NbExplorerView.quicksearch.border.instance");
+            if (customBorder != null) {
+                setBorder(customBorder);
+            } else if (isAquaLaF) {
                 setBorder(BorderFactory.createEmptyBorder(9,6,8,2));
             } else {
                 setBorder(BorderFactory.createEmptyBorder(2,6,2,2));
@@ -886,7 +891,7 @@ public class QuickSearch {
         /**
          * Called to select a next occurrence of the search result.
          * The client should update the visual representation of the search results
-         * and then return.<p>
+         * and then return.
          * @param forward The direction of the next search result.
          *                <code>true</code> for forward direction,
          *                <code>false</code> for backward direction.

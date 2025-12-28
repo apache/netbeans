@@ -22,7 +22,6 @@ package org.netbeans.spi.editor.highlighting;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
@@ -122,7 +121,7 @@ public final class ZOrder {
      */
     /* package */ static HighlightsLayer[] sort(HighlightsLayer[] layers) throws TopologicalSortException {
         List<? extends HighlightsLayer> list = sort(Arrays.asList(layers));
-        return list.toArray(new HighlightsLayer [list.size()]);
+        return list.toArray(new HighlightsLayer[0]);
     }
 
     /* package */ int getRack() {
@@ -159,7 +158,7 @@ public final class ZOrder {
     ) throws TopologicalSortException {
         List<HighlightsLayer> sortedLayers = new ArrayList<HighlightsLayer>(layers);
         
-        Collections.sort(sortedLayers, COMPARATOR);
+        sortedLayers.sort(COMPARATOR);
         
         // Print the sorted layers
         if (LOG.isLoggable(Level.FINEST)) {

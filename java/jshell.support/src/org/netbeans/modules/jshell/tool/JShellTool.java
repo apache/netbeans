@@ -622,7 +622,7 @@ public class JShellTool implements MessageHandler {
         return editor = BUILT_IN_EDITOR;
     }
 
-    /**
+    /*
      * Process the command line arguments.
      * Set options.
      * @param args the command line arguments
@@ -1594,7 +1594,7 @@ public class JShellTool implements MessageHandler {
                 at.nextToken();  // so that options are not interpreted as jshell options
             }
             this.at = at;
-            this.command = ed.toArray(new String[ed.size()]);
+            this.command = ed.toArray(String[]::new);
             this.hasCommand = command.length > 0;
             this.defaultOption = at.hasOption("-default");
             this.deleteOption = at.hasOption("-delete");

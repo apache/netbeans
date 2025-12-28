@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -269,7 +270,7 @@ public abstract class CatalogRepoProvider implements ArchetypeProvider {
                         }
                     }
 
-                    File temp = File.createTempFile("maven", "catalog"); //NOI18N
+                    File temp = Files.createTempFile("maven", "catalog").toFile(); //NOI18N
                     try {
                         wagon.get("archetype-catalog.xml", temp); //NOI18N
                         //only overwrite the old file or create file if the content is there.

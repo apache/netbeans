@@ -322,13 +322,13 @@ public abstract class SaasClientCodeGenerator implements SaasClientCodeGeneratio
     protected String[] getGetParamNames(List<ParameterInfo> queryParams) {
         ArrayList<String> params = new ArrayList<String>();
         params.addAll(Arrays.asList(getParamNames(queryParams)));
-        return params.toArray(new String[params.size()]);
+        return params.toArray(new String[0]);
     }
     
     protected String[] getGetParamTypes(List<ParameterInfo> queryParams) {
         ArrayList<String> types = new ArrayList<String>();
         types.addAll(Arrays.asList(getParamTypeNames(queryParams)));
-        return types.toArray(new String[types.size()]);
+        return types.toArray(new String[0]);
     }
     
     
@@ -339,7 +339,7 @@ public abstract class SaasClientCodeGenerator implements SaasClientCodeGeneratio
             results.add(getParameterName(param, true, true, true));
         }
         
-        return results.toArray(new String[results.size()]);
+        return results.toArray(new String[0]);
     }
     
     protected String[] getParamTypeNames(List<ParameterInfo> params) {
@@ -349,7 +349,7 @@ public abstract class SaasClientCodeGenerator implements SaasClientCodeGeneratio
             results.add(param.getTypeName());
         }
         
-        return results.toArray(new String[results.size()]);
+        return results.toArray(new String[0]);
     }
     
     protected String getParameterName(ParameterInfo param) {
@@ -388,7 +388,7 @@ public abstract class SaasClientCodeGenerator implements SaasClientCodeGeneratio
             results.add(defaultValue);
         }
         
-        return results.toArray(new Object[results.size()]);
+        return results.toArray(new Object[0]);
     }
     
     public void setDropLocation(JTextComponent targetComponent) {
@@ -408,11 +408,11 @@ public abstract class SaasClientCodeGenerator implements SaasClientCodeGeneratio
     }
     
     protected void addVariablePattern(String pattern, int count) {
-        nFinder.addPattern(pattern, new Integer(count));
+        nFinder.addPattern(pattern, Integer.valueOf(count));
     }
     
     protected void updateVariableNames(List<ParameterInfo> params) {
-        nFinder.addPattern(VAR_NAMES_RESULT_DECL, new Integer(0));
+        nFinder.addPattern(VAR_NAMES_RESULT_DECL, Integer.valueOf(0));
         try {
             String text = getTargetDocument().getText(0, getTargetDocument().getLength());
             nFinder.updateVariableDecl(text, params);
@@ -421,7 +421,7 @@ public abstract class SaasClientCodeGenerator implements SaasClientCodeGeneratio
     }
     
     protected void updateVariableNamesForWS(List<? extends WSParameter> params) {
-        nFinder.addPattern(VAR_NAMES_RESULT_DECL, new Integer(0));
+        nFinder.addPattern(VAR_NAMES_RESULT_DECL, Integer.valueOf(0));
         try {
             String text = getTargetDocument().getText(0, getTargetDocument().getLength());
             nFinder.updateVariableDeclForWS(text, params);

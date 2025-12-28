@@ -141,7 +141,7 @@ public final class PersistenceHandler implements PersistenceObserver {
                     }
                 }
             }
-            wm.setRecentViewList(idList.toArray( new String[idList.size()]));
+            wm.setRecentViewList(idList.toArray(new String[0]));
         }
 
         wm.setEditorAreaConstraints(wmc.editorAreaConstraints);
@@ -625,7 +625,7 @@ public final class PersistenceHandler implements PersistenceObserver {
                 tcIdList.add(tc_id);
             }
         }
-        wmc.tcIdViewList = tcIdList.toArray(new String [tcIdList.size()]);
+        wmc.tcIdViewList = tcIdList.toArray(new String [0]);
 
         return wmc;
     }
@@ -761,7 +761,7 @@ public final class PersistenceHandler implements PersistenceObserver {
             tcRefCfgList.add(tcRefCfg);
         }
 
-        modeCfg.tcRefConfigs = tcRefCfgList.toArray(new TCRefConfig[tcRefCfgList.size()]);
+        modeCfg.tcRefConfigs = tcRefCfgList.toArray(new TCRefConfig[0]);
         return modeCfg;
     }
 

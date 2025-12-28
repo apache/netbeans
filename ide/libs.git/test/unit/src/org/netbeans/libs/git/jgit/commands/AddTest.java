@@ -525,7 +525,7 @@ public class AddTest extends AbstractGitTestCase {
         DirCacheEntry e = repository.readDirCache().getEntry(link.getName());
         assertEquals(FileMode.SYMLINK, e.getFileMode());
         ObjectId id = e.getObjectId();
-        assertTrue((ts - 1000) < e.getLastModified() && (ts + 1000) > e.getLastModified());
+        assertTrue((ts - 1000) < e.getLastModifiedInstant().toEpochMilli() && (ts + 1000) > e.getLastModifiedInstant().toEpochMilli());
         try(ObjectReader reader = repository.getObjectDatabase().newReader()) {
             assertTrue(reader.has(e.getObjectId()));
             byte[] bytes = reader.open(e.getObjectId()).getBytes();
@@ -541,7 +541,7 @@ public class AddTest extends AbstractGitTestCase {
             assertEquals(FileMode.SYMLINK, e2.getFileMode());
             assertEquals(id, e2.getObjectId());
             assertEquals(0, e2.getLength());
-            assertTrue((ts - 1000) < e2.getLastModified() && (ts + 1000) > e2.getLastModified());
+            assertTrue((ts - 1000) < e.getLastModifiedInstant().toEpochMilli() && (ts + 1000) > e.getLastModifiedInstant().toEpochMilli());
             assertTrue(reader.has(e2.getObjectId()));
             bytes = reader.open(e2.getObjectId()).getBytes();
             assertEquals(path, RawParseUtils.decode(bytes));

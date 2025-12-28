@@ -63,7 +63,7 @@ extide/gradle/netbeans-gradle-tooling/gradle/wrapper/gradle-wrapper.jar
 extide/gradle/release/modules/gradle/netbeans-gradle-tooling.jar
 
 # ide.launcher is a special semi-module, does not have nbproject/project.xml, so is not recognized:
-nb/ide.launcher/external/launcher-external-binaries-1-94a19f0.zip
+nb/ide.launcher/external/launcher-external-binaries-4-8e2bc77e581e.zip
 
 # webcommon/libs.oracle.jsparser builds a test-only binaries into build/webcommon. Not distributed.
 contrib/libs.oracle.jsparser/build/webcommon/**
@@ -73,9 +73,6 @@ nbbuild/installer/mac/newbuild/dmg/template.sparseimage.bz2
 
 # Used in a pure ant project (installer), so not identified as a project
 nbbuild/installer/jnlp/external/*
-
-# Temporary product of building VSCode extension
-java/java.lsp.server/nbcode/dist/nbcode.zip
 
 # Simple Rust empty template project
 rust/rust.project/src/org/netbeans/modules/rust/project/templates/RustProjectTemplateProject.zip

@@ -290,7 +290,7 @@ final class ActionProviderSupport {
                     while (stok.hasMoreTokens()) {
                         targetNames.add(stok.nextToken());
                     }
-                    targets.put(cmdNameKey, targetNames.toArray(new String[targetNames.size()]));
+                    targets.put(cmdNameKey, targetNames.toArray(new String[0]));
                 }
             }
         }
@@ -709,7 +709,7 @@ final class ActionProviderSupport {
                 }
             }
         }
-        return testFiles.isEmpty() ? null : testFiles.toArray(new FileObject[testFiles.size()]);
+        return testFiles.isEmpty() ? null : testFiles.toArray(new FileObject[0]);
     }
 
     static String[] setupTestSingle(
@@ -802,7 +802,7 @@ final class ActionProviderSupport {
                 }
                 return testFOs.isEmpty() ?
                     null:
-                    testFOs.toArray(new FileObject[testFOs.size()]);
+                    testFOs.toArray(new FileObject[0]);
             }
         }
         if (checkInSrcDir && testRoots.length > 0) {
@@ -839,7 +839,7 @@ final class ActionProviderSupport {
                     }
                     return testFOs.isEmpty() ?
                         null :
-                        testFOs.toArray(new FileObject[testFOs.size()]);
+                        testFOs.toArray(new FileObject[0]);
                 }
             }
         }

@@ -106,7 +106,7 @@ public final class ArrayDiff {
             HashSet<Integer> results = new HashSet<Integer>(old.length);
             for (int i = 0; i < old.length; i++) {
                 if (!set.contains(old[i])) {
-                    results.add(new Integer(i));
+                    results.add(i);
                 }
             }
             deleted = results;
@@ -126,7 +126,7 @@ public final class ArrayDiff {
             Set<Integer> results = new HashSet<Integer>(nue.length);
             for (int i = 0; i < nue.length; i++) {
                 if (!set.contains(nue[i])) {
-                    results.add(new Integer(i));
+                    results.add(i);
                 }
             }
             added = results;
@@ -149,10 +149,10 @@ public final class ArrayDiff {
         for (int i = 0; i < max; i++) {
             if (i < old.length && i < nue.length) {
                 if (!old[i].equals(nue[i])) {
-                    results.add(new Integer(i));
+                    results.add(i);
                 }
             } else {
-                results.add(new Integer(i));
+                results.add(i);
             }
         }
         return results;
@@ -173,7 +173,7 @@ public final class ArrayDiff {
                 boolean isMoved = (i < nue.length
                         && !nue[i].equals(old[i])) || i >= nue.length;
                 if (isMoved) {
-                    results.add(new Integer(i));
+                    results.add(i);
                 }
             }
         }
@@ -181,7 +181,7 @@ public final class ArrayDiff {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("<ArrayDiff: deleted indices: [");
         sb.append(outCol(getDeletedIndices()));
         sb.append("] added indices: [");
@@ -196,7 +196,7 @@ public final class ArrayDiff {
 
     private static String outCol(Collection c) {
         Iterator i = c.iterator();
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         while (i.hasNext()) {
             Object o = i.next();
             result.append(o.toString());

@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +38,6 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipError;
 import java.util.zip.ZipFile;
 import javax.lang.model.SourceVersion;
 import javax.tools.JavaFileObject;
@@ -363,12 +361,12 @@ public class CachingArchive implements Archive, FileChangeListener {
                         entry = e.nextElement();
                     } catch (IllegalArgumentException iae) {
                         throw new IOException(iae);
-                    } catch (ZipError ze) {
+                    } catch (Exception ex) {
                         // the JAR may be corrupted somehow; no further entry read
                         // will probably succeed, so just skip the rest of the jar.
                         Exceptions.printStackTrace(
                                 Exceptions.attachLocalizedMessage(
-                                Exceptions.attachSeverity(ze, Level.WARNING),
+                                Exceptions.attachSeverity(ex, Level.WARNING),
                                 Bundle.ERR_CorruptedZipFile(file)));
                         break;
                     }

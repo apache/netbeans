@@ -77,6 +77,7 @@ import org.netbeans.modules.git.client.GitProgressSupport;
 import org.netbeans.modules.git.ui.branch.BranchSynchronizer;
 import org.netbeans.modules.git.ui.branch.CreateBranchAction;
 import org.netbeans.modules.git.ui.branch.DeleteBranchAction;
+import org.netbeans.modules.git.ui.branch.RenameBranchAction;
 import org.netbeans.modules.git.ui.branch.SetTrackingAction;
 import org.netbeans.modules.git.ui.checkout.CheckoutRevisionAction;
 import org.netbeans.modules.git.ui.diff.DiffAction;
@@ -89,6 +90,8 @@ import org.netbeans.modules.git.ui.merge.MergeRevisionAction;
 import org.netbeans.modules.git.ui.push.PushAction;
 import org.netbeans.modules.git.ui.push.PushMapping;
 import org.netbeans.modules.git.ui.push.PushToUpstreamAction;
+import org.netbeans.modules.git.ui.repository.remote.AddRemoteConfig;
+import org.netbeans.modules.git.ui.repository.remote.RemoveRemoteAction;
 import org.netbeans.modules.git.ui.repository.remote.RemoveRemoteConfig;
 import org.netbeans.modules.git.ui.stash.ApplyStashAction;
 import org.netbeans.modules.git.ui.stash.SaveStashAction;
@@ -1035,7 +1038,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             }
             if (branchMergeWith != null) {
                 keys = new ArrayList<GitBranchInfo>(keys);
-                Collections.sort(keys, new Comparator<GitBranchInfo>() {
+                keys.sort(new Comparator<GitBranchInfo>() {
                     @Override
                     public int compare (GitBranchInfo i1, GitBranchInfo i2) {
                         assert i1.mergedStatus != null;
@@ -1226,6 +1229,23 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                         });
                     }
                 });
+                actions.add(new AbstractAction(NbBundle.getMessage(RenameBranchAction.class, "LBL_RenameBranchAction_PopupName")) { //NOI18N
+                    @Override
+                    public void actionPerformed (ActionEvent e) {
+                        EventQueue.invokeLater(new Runnable() {
+                            @Override
+                            public void run () {
+                                RenameBranchAction action = SystemAction.get(RenameBranchAction.class);
+                                action.renameBranch(repo, branch);
+                            }
+                        });
+                    }
+                    
+                    @Override
+                    public boolean isEnabled() {
+                        return branch != GitBranch.NO_BRANCH;
+                    }
+                });
                 Action a = new AbstractAction(NbBundle.getMessage(DeleteBranchAction.class, "LBL_DeleteBranchAction_PopupName")) { //NOI18N
                     @Override
                     public void actionPerformed (ActionEvent e) {
@@ -1353,7 +1373,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                     }
                 }
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -1780,7 +1800,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                 a.putValue(PROP_DELETE_ACTION, Boolean.TRUE);
                 actions.add(a);
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -2032,7 +2052,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                 actions.add(null);
                 actions.add(a);
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -2073,6 +2093,26 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
         @Override
         public String getName () {
             return NbBundle.getMessage(RepositoryBrowserPanel.class, "LBL_RepositoryPanel.RemotesNode.name"); //NOI18N
+        }
+
+        @Override
+        protected Action[] getPopupActions(boolean context) {
+            if (options.contains(Option.ENABLE_POPUP)) {
+                final File repo = lookupRepository(this);
+                List<Action> actions = new LinkedList<>();
+                actions.add(new AbstractAction(NbBundle.getMessage(RepositoryBrowserPanel.class, "LBL_RepositoryPanel.RemotesNode.add")) { //NOI18N
+                    @Override
+                    public void actionPerformed (ActionEvent e) {
+                        EventQueue.invokeLater(() -> {
+                            new AddRemoteConfig().addRemote(repo);
+                        });
+                    }
+                });
+
+                return actions.toArray(Action[]::new);
+            } else {
+                return new Action[0];
+            }
         }
     }
 
@@ -2213,7 +2253,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                     });
                 }
             });
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
     }
 
@@ -2248,7 +2288,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                     urls.add(new RemoteUri(s, true));
                 }
             }
-            Collections.sort(urls, new Comparator<RemoteUri>() {
+            urls.sort(new Comparator<RemoteUri>() {
                 @Override
                 public int compare (RemoteUri o1, RemoteUri o2) {
                     return o1.uri.compareTo(o2.uri);
@@ -2321,7 +2361,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                     }
                 });
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
     }
     //</editor-fold>

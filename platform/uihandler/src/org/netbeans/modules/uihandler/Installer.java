@@ -35,6 +35,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -66,7 +67,6 @@ import javax.swing.event.HyperlinkListener;
 import javax.xml.parsers.ParserConfigurationException;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.lib.uihandler.LogRecords;
 import org.netbeans.lib.uihandler.PasswdEncryption;
 import org.netbeans.modules.exceptions.ExceptionsSettings;
@@ -1181,7 +1181,7 @@ public class Installer extends ModuleInstall implements Runnable {
         ProgressHandle h = null;
         //Do not show progress UI for metrics upload
         if (dataType != DataType.DATA_METRICS) {
-            h = ProgressHandleFactory.createHandle(NbBundle.getMessage(Installer.class, "MSG_UploadProgressHandle"));
+            h = ProgressHandle.createHandle(NbBundle.getMessage(Installer.class, "MSG_UploadProgressHandle"));
         }
         try {
             return uLogs(h, postURL, id, attrs, recs, dataType, isErrorReport, slownData, isOOM, isAfterRestart);
@@ -1420,7 +1420,7 @@ public class Installer extends ModuleInstall implements Runnable {
                 return new URL(m.group(1));
             } else {
                 assert redir != null;
-                File f = File.createTempFile("uipage", "html");
+                File f = Files.createTempFile("uipage", "html").toFile();
                 f.deleteOnExit();
                 try (FileWriter w = new FileWriter(f)) {
                     w.write(redir.toString());
@@ -1793,7 +1793,7 @@ public class Installer extends ModuleInstall implements Runnable {
                     URLConnection conn = url.openConnection();
                     conn.setRequestProperty("User-Agent", "NetBeans");
                     conn.setConnectTimeout(5000);
-                    tmp = File.createTempFile("uigesture", ".html");
+                    tmp = Files.createTempFile("uigesture", ".html").toFile();
                     tmp.deleteOnExit();
                     try (FileOutputStream os = new FileOutputStream(tmp)) {
                         Map<String, String> replacements = new HashMap<>();
@@ -2538,7 +2538,7 @@ public class Installer extends ModuleInstall implements Runnable {
         private void showProfilerSnapshot(ActionEvent e){
              File tempFile = null;
              try { 
-                 tempFile = File.createTempFile("selfsampler", ".npss"); // NOI18N
+                 tempFile = Files.createTempFile("selfsampler", ".npss").toFile(); // NOI18N
                  tempFile = FileUtil.normalizeFile(tempFile);
                  try (OutputStream os = new FileOutputStream(tempFile)) {
                      os.write(slownData.getNpsContent());

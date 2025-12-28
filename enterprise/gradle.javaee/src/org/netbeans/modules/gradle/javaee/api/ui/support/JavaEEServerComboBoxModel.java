@@ -49,7 +49,7 @@ public final class JavaEEServerComboBoxModel extends AbstractListModel<J2eePlatf
                 //Simply not add this item to the list
             }
         }
-        platforms = order.toArray(new J2eePlatformModel[order.size()]);
+        platforms = order.toArray(new J2eePlatformModel[0]);
     }
 
 

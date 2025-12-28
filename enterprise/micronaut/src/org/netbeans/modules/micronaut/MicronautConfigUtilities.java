@@ -69,7 +69,7 @@ import org.springframework.boot.configurationmetadata.ConfigurationMetadataSourc
  */
 public class MicronautConfigUtilities {
 
-    private static final Pattern REGEXP = Pattern.compile("^(application|bootstrap)(-\\w*)*\\.(yml|properties)$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern REGEXP = Pattern.compile("^(application|bootstrap)(-\\w*)*\\.(yml|yaml|properties)$", Pattern.CASE_INSENSITIVE);
 
     public static final String YAML_MIME = "text/x-yaml";
     public static final String PROPERTIES_MIME = "text/x-properties";
@@ -126,7 +126,7 @@ public class MicronautConfigUtilities {
                                     }
                                 }
                             } else {
-                                int lineEnd = LineDocumentUtils.getLineEnd(lineDocument, offset);
+                                int lineEnd = LineDocumentUtils.getLineEndOffset(lineDocument, offset);
                                 String text = lineDocument.getText(lineStart, lineEnd - lineStart);
                                 if (!text.startsWith("#") && !text.startsWith("!")) {
                                     int colIdx = text.indexOf(':');

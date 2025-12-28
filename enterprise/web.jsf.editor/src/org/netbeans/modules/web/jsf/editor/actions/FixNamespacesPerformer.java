@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
@@ -78,8 +79,8 @@ class FixNamespacesPerformer {
                 int from = attribute.from();
                 int to = attribute.to();
                 //check if the line before the area is white
-                int lineBeginning = Utilities.getRowStart(baseDocument, attribute.from());
-                int firstNonWhite = Utilities.getFirstNonWhiteBwd(baseDocument, attribute.from());
+                int lineBeginning = LineDocumentUtils.getLineStartOffset(baseDocument, attribute.from());
+                int firstNonWhite = LineDocumentUtils.getPreviousNonWhitespace(baseDocument, attribute.from());
                 if (lineBeginning > firstNonWhite) {
                     //delete the white content before the area inclusing the newline
                     from = lineBeginning - 1; // (-1 => includes the line end)

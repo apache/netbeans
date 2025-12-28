@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
 import org.netbeans.modules.cloud.oracle.NodeProvider;
-import org.netbeans.modules.cloud.oracle.OCIManager;
 import org.netbeans.modules.cloud.oracle.OCINode;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.openide.nodes.Children;
@@ -58,28 +57,34 @@ public class KeyNode extends OCINode {
      *
      * @return Returns {@code ChildrenProvider} which fetches List of {@code KeyItem} for given {@code VaultItem}
      */
-    public static ChildrenProvider<VaultItem, KeyItem> getKeys() {
-        return vault -> {
+    public static ChildrenProvider.SessionAware<VaultItem, KeyItem> getKeys() {
+        return (vault, session) -> {
             Vault v = Vault.builder()
-                    .compartmentId(vault.compartmentId)
+                    .compartmentId(vault.getCompartmentId())
                     .id(vault.getKey().getValue())
-                    .managementEndpoint(vault.managementEndpoint)
+                    .managementEndpoint(vault.getManagementEndpoint())
                     .build();
             KmsManagementClient client = KmsManagementClient.builder()
                     .vault(v)
-                    .build(OCIManager.getDefault().getActiveProfile().getConfigProvider());
+                    .build(session.getAuthenticationProvider());
             ListKeysRequest listKeysRequest = ListKeysRequest.builder()
                     .compartmentId(vault.getCompartmentId())
                     .limit(88)
                     .build();
 
+            String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+            String regionCode = session.getRegion().getRegionCode();
+
             return client.listKeys(listKeysRequest)
                     .getItems()
                     .stream()
                     .map(d -> new KeyItem(
-                    OCID.of(d.getId(), "Vault/Key"), //NOI18N
-                    d.getDisplayName(),
-                    d.getCompartmentId())
+                            OCID.of(d.getId(), "Vault/Key"), //NOI18N
+                            d.getCompartmentId(),
+                            d.getDisplayName(),
+                            vault.getKey().getValue(),
+                            tenancyId,
+                            regionCode)
                     )
                     .collect(Collectors.toList());
         };

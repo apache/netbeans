@@ -341,7 +341,7 @@ public class FolderLookup extends FolderInstance {
             while ((l = (Lookup)ois.readObject()) != null) {
                 ls.add(l);
             }
-            Lookup[] arr = ls.toArray(new Lookup[ls.size()]);
+            Lookup[] arr = ls.toArray(new Lookup[0]);
             DataFolder df = (DataFolder)ois.readObject ();
             String root = (String)ois.readObject ();
             
@@ -373,7 +373,7 @@ public class FolderLookup extends FolderInstance {
 
             lookups.set(0, pairs);
 
-            Lookup[] arr = lookups.toArray(new Lookup[lookups.size()]);
+            Lookup[] arr = lookups.toArray(new Lookup[0]);
             setLookups (DISPATCH, arr);
             if (fl.err().isLoggable(Level.FINE)) fl.err ().fine("Changed lookups: " + lookups); // NOI18N
         }

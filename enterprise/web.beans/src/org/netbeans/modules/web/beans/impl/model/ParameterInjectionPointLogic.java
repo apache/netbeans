@@ -34,6 +34,8 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeMirror;
+import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.source.ClasspathInfo;
 
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.AnnotationModelHelper;
@@ -49,21 +51,19 @@ import org.openide.util.NbBundle;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 abstract class ParameterInjectionPointLogic extends FieldInjectionPointLogic 
     implements WebBeansModelProvider 
 {
-    
-    static final String CONTEXT_DEPENDENT_ANNOTATION = 
-        "javax.enterprise.context.Dependent";                       // NOI18N
+    static final String CONTEXT_DEPENDENT_ANNOTATION = "javax.enterprise.context.Dependent"; // NOI18N
+    static final String CONTEXT_DEPENDENT_ANNOTATION_JAKARTA = "jakarta.enterprise.context.Dependent"; // NOI18N
 
-    static final String DISPOSES_ANNOTATION = 
-            "javax.enterprise.inject.Disposes";                     // NOI18N
-    
-    static final String OBSERVES_ANNOTATION = 
-            "javax.enterprise.event.Observes";                      // NOI18N
-    
-    
+    static final String DISPOSES_ANNOTATION = "javax.enterprise.inject.Disposes"; // NOI18N
+    static final String DISPOSES_ANNOTATION_JAKARTA = "jakarta.enterprise.inject.Disposes"; // NOI18N
+
+    static final String OBSERVES_ANNOTATION = "javax.enterprise.event.Observes"; // NOI18N
+    static final String OBSERVES_ANNOTATION_JAKARTA = "jakarta.enterprise.event.Observes"; // NOI18N
+
+
     ParameterInjectionPointLogic( WebBeansModelImplementation model ) {
         super( model );
     }
@@ -102,26 +102,28 @@ abstract class ParameterInjectionPointLogic extends FieldInjectionPointLogic
             if ( variableElement.equals( element )){
                 index = i;
             }
-            else if ( AnnotationObjectProvider.hasAnnotation(variableElement,
-                    DISPOSES_ANNOTATION, getModel().getHelper()) ||
-                    AnnotationObjectProvider.hasAnnotation(variableElement,
-                            OBSERVES_ANNOTATION, getModel().getHelper()) )
+            else if (AnnotationObjectProvider.hasAnnotation(variableElement, DISPOSES_ANNOTATION, getModel().getHelper())
+                    || AnnotationObjectProvider.hasAnnotation(variableElement, OBSERVES_ANNOTATION, getModel().getHelper())
+                    || AnnotationObjectProvider.hasAnnotation(variableElement, DISPOSES_ANNOTATION_JAKARTA, getModel().getHelper())
+                    || AnnotationObjectProvider.hasAnnotation(variableElement, OBSERVES_ANNOTATION_JAKARTA, getModel().getHelper()))
             {
                 isInjectionPoint = true;
             }
         }
         TypeMirror elementType = strategy.getType( getModel(), parameterTypes.get(index));
-        
+
         DependencyInjectionResult result = null;
-        boolean disposes = AnnotationObjectProvider.hasAnnotation( element, 
-                DISPOSES_ANNOTATION, getModel().getHelper());
-        boolean observes = AnnotationObjectProvider.hasAnnotation( element, 
-                OBSERVES_ANNOTATION, getModel().getHelper());
-        if ( isInjectionPoint || AnnotationObjectProvider.hasAnnotation( parentMethod, 
-                INJECT_ANNOTATION, getModel().getHelper()) ||
-                AnnotationObjectProvider.hasAnnotation( parentMethod, 
-                        PRODUCER_ANNOTATION, getModel().getHelper()) || disposes||
-                        observes)
+        boolean disposes = AnnotationObjectProvider.hasAnnotation(element, DISPOSES_ANNOTATION, getModel().getHelper())
+                || AnnotationObjectProvider.hasAnnotation(element, DISPOSES_ANNOTATION_JAKARTA, getModel().getHelper());
+        boolean observes = AnnotationObjectProvider.hasAnnotation(element, OBSERVES_ANNOTATION, getModel().getHelper())
+                || AnnotationObjectProvider.hasAnnotation(element, OBSERVES_ANNOTATION_JAKARTA, getModel().getHelper());
+        if ( isInjectionPoint
+                || AnnotationObjectProvider.hasAnnotation( parentMethod, INJECT_ANNOTATION, getModel().getHelper())
+                || AnnotationObjectProvider.hasAnnotation( parentMethod, PRODUCER_ANNOTATION, getModel().getHelper()) 
+                || AnnotationObjectProvider.hasAnnotation( parentMethod, INJECT_ANNOTATION_JAKARTA, getModel().getHelper())
+                || AnnotationObjectProvider.hasAnnotation( parentMethod, PRODUCER_ANNOTATION_JAKARTA, getModel().getHelper())
+                || disposes
+                || observes)
         {
             result = doFindVariableInjectable(element, elementType , false, cancel );
             isInjectionPoint = true;
@@ -164,7 +166,10 @@ abstract class ParameterInjectionPointLogic extends FieldInjectionPointLogic
      */
     @Override
     public boolean isDynamicInjectionPoint( VariableElement element ) {
-        TypeMirror type = getParameterType(element, null, INSTANCE_INTERFACE);
+        TypeMirror type = getParameterType(element, null, INSTANCE_INTERFACE_JAKARTA);
+        if (type == null) {
+            type = getParameterType(element, null, INSTANCE_INTERFACE);
+        }
         if ( type != null ){
             try {
                 return isInjectionPoint(element);
@@ -216,7 +221,16 @@ abstract class ParameterInjectionPointLogic extends FieldInjectionPointLogic
         if (scope != null) {
             return scope;
         }
-        return CONTEXT_DEPENDENT_ANNOTATION;
+
+        ClassPath cp = helper.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
+        boolean jakartaInjectPresent = cp.findResource("jakarta/inject/Qualifier.class") != null;
+        boolean javaxInjectPresent = cp.findResource("javax/inject/Qualifier.class") != null;
+
+        if (jakartaInjectPresent || !javaxInjectPresent) {
+            return CONTEXT_DEPENDENT_ANNOTATION_JAKARTA;
+        } else {
+            return CONTEXT_DEPENDENT_ANNOTATION;
+        }
     }
     
     static String getDeclaredScope( Element element , 

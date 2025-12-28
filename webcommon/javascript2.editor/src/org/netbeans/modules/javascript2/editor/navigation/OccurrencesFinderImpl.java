@@ -30,6 +30,7 @@ import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.csl.api.OccurrencesFinder;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.javascript2.editor.options.ui.MarkOccurencesSettings;
 import org.netbeans.modules.javascript2.model.api.JsElement.Kind;
 import org.netbeans.modules.javascript2.model.api.JsObject;
 import org.netbeans.modules.javascript2.model.api.JsReference;
@@ -59,7 +60,9 @@ public class OccurrencesFinderImpl extends OccurrencesFinder<JsParserResult> {
 
     @Override
     public Map<OffsetRange, ColoringAttributes> getOccurrences() {
-        return range2Attribs;
+        return range2Attribs != null
+                ? Collections.unmodifiableMap(range2Attribs)
+                : Collections.emptyMap();
     }
 
     @Override
@@ -96,6 +99,20 @@ public class OccurrencesFinderImpl extends OccurrencesFinder<JsParserResult> {
     @Override
     public void cancel() {
         cancelled = true;
+    }
+
+    @Override
+    public boolean isKeepMarks() {
+        return MarkOccurencesSettings
+                .getCurrentNode()
+                .getBoolean(MarkOccurencesSettings.KEEP_MARKS, true);
+    }
+
+    @Override
+    public boolean isMarkOccurrencesEnabled() {
+        return MarkOccurencesSettings
+                .getCurrentNode()
+                .getBoolean(MarkOccurencesSettings.ON_OFF, true);
     }
 
     private static List<OffsetRange> findMemberUsage(JsObject object, String fqnType, String property, int offset, Set<String> processedObjects) {

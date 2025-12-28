@@ -30,6 +30,11 @@ import org.netbeans.modules.web.beans.analysis.analyzer.ModelAnalyzer.Result;
 import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.NAMED;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.NAMED_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.SPECIALIZES;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.SPECIALIZES_JAKARTA;
+
 
 /**
  * @author ads
@@ -45,14 +50,12 @@ public class NamedModelAnalyzer implements ClassAnalyzer {
             WebBeansModel model, AtomicBoolean cancel,
             Result result )
     {
-        if ( !AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES, 
-                model.getCompilationController()))
+        if (!AnnotationUtil.hasAnnotation(element, model, SPECIALIZES_JAKARTA, SPECIALIZES))
         {
             return;
         }
         result.requireCdiEnabled(element, model);
-        if ( !AnnotationUtil.hasAnnotation(element, AnnotationUtil.NAMED, 
-                model.getCompilationController()))
+        if (!AnnotationUtil.hasAnnotation(element, model, NAMED_JAKARTA, NAMED))
         {
             return;
         }

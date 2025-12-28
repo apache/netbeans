@@ -487,7 +487,7 @@ public class ResetTest extends AbstractGitTestCase {
         DirCacheEntry e1 = new DirCacheEntry(file.getName(), 1);
         e1.setCreationTime(e.getCreationTime());
         e1.setFileMode(e.getFileMode());
-        e1.setLastModified(e.getLastModified());
+        e1.setLastModified(e.getLastModifiedInstant());
         e1.setLength(e.getLength());
         e1.setObjectId(e.getObjectId());
         builder.add(e1);

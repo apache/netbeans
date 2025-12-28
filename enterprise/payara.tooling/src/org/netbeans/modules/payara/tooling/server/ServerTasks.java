@@ -48,10 +48,7 @@ import org.netbeans.modules.payara.tooling.server.parser.JvmConfigReader.JvmOpti
  */
 public class ServerTasks {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     public enum StartMode {
         /** Regular server start. */
         START,
@@ -61,10 +58,7 @@ public class ServerTasks {
         PROFILE;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(ServerTasks.class);
 

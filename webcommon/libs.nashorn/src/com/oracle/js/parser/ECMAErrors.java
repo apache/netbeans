@@ -73,7 +73,7 @@ public final class ECMAErrors {
      */
     public static String getMessage(final String msgId, final String... args) {
         try {
-            return new MessageFormat(MESSAGES_BUNDLE.getString(msgId)).format(args);
+            return new MessageFormat(MESSAGES_BUNDLE.getString(msgId)).format(args) + " [#" + msgId + "]";
         } catch (final MissingResourceException e) {
             throw new RuntimeException("no message resource found for message id: " + msgId);
         }

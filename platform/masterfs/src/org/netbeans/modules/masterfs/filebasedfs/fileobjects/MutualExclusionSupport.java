@@ -20,7 +20,6 @@
 package org.netbeans.modules.masterfs.filebasedfs.fileobjects;
 
 
-import org.openide.util.WeakSet;
 
 import java.io.IOException;
 import java.lang.ref.Reference;
@@ -39,8 +38,8 @@ public final class MutualExclusionSupport<K> {
     private static final int TRIES = Integer.getInteger(               //#229903
             "org.netbeans.modules.masterfs.mutualexclusion.tries", 10); //NOI18N
 
-    private final Map<K,Set<Closeable>> exclusive = Collections.synchronizedMap(new WeakHashMap<K,Set<Closeable>>());
-    private final Map<K,Set<Closeable>> shared = Collections.synchronizedMap(new WeakHashMap<K,Set<Closeable>>());
+    private final Map<K,Set<Closeable>> exclusive = Collections.synchronizedMap(new WeakHashMap<>());
+    private final Map<K,Set<Closeable>> shared = Collections.synchronizedMap(new WeakHashMap<>());
 
     public MutualExclusionSupport() {
     }
@@ -58,7 +57,7 @@ public final class MutualExclusionSupport<K> {
 
             if (!isInUse) {            
                 if (expectedCounter == null) {
-                    expectedCounter = new WeakSet<Closeable>();
+                    expectedCounter = Collections.newSetFromMap(new WeakHashMap<>());
                     expected.put(key, expectedCounter);
                 }
                 isInUse = !isShared && expectedCounter.size() > 0;            
@@ -145,7 +144,7 @@ public final class MutualExclusionSupport<K> {
 
         private Closeable(final K key, final boolean isShared) {
             this.isShared = isShared;
-            this.keyRef = new WeakReference<K>(key);
+            this.keyRef = new WeakReference<>(key);
             assert populateStack();
         }
 

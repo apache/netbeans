@@ -28,8 +28,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,6 +61,8 @@ import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -76,11 +80,14 @@ import org.netbeans.modules.nativeimage.api.debug.NIDebugger;
 import org.netbeans.modules.nativeimage.api.debug.StartDebugParameters;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.api.project.ContainedProjectFilter;
+import org.netbeans.spi.project.NestedClass;
 import org.netbeans.spi.project.ProjectConfiguration;
 import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.netbeans.spi.project.SingleMethod;
 
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -105,16 +112,18 @@ import org.openide.util.lookup.ProxyLookup;
     "ERR_LaunchDefaultConfiguration=the default one.",
     "# {0} - the recommended configuration",
     "ERR_LaunchSupportiveConfigName=\"{0}\"",
+    "CTL_NativeImageDebugger=Native Image Debugger"
 })
 public abstract class NbLaunchDelegate {
 
     private final RequestProcessor requestProcessor = new RequestProcessor(NbLaunchDelegate.class);
     private final Map<DebugAdapterContext, DebuggerManagerListener> debuggerListeners = new ConcurrentHashMap<>();
+    private final static String JAVA_FILE_EXT = ".java";
 
     public abstract void preLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
 
     public abstract void postLaunch(Map<String, Object> launchArguments, DebugAdapterContext context);
-    
+
     protected void notifyFinished(DebugAdapterContext ctx, boolean success) {
         // Remove a possibly staled debugger listener
         DebuggerManagerListener listener = debuggerListeners.remove(ctx);
@@ -124,16 +133,29 @@ public abstract class NbLaunchDelegate {
     }
 
     public final CompletableFuture<Void> nbLaunch(FileObject toRun, boolean preferProjActions, @NullAllowed File nativeImageFile,
-                                                  @NullAllowed String method, Map<String, Object> launchArguments, DebugAdapterContext context,
-                                                  boolean debug, boolean testRun, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages) {
+                                                  @NullAllowed String method, @NullAllowed String nestedClassName, Map<String, Object> launchArguments, DebugAdapterContext context,
+                                                  boolean debug, LaunchType launchType, Consumer<NbProcessConsole.ConsoleMessage> consoleMessages,
+                                                  boolean testInParallel) {
         CompletableFuture<Void> launchFuture = new CompletableFuture<>();
         NbProcessConsole ioContext = new NbProcessConsole(consoleMessages);
+        NestedClass nestedClass;
+        if (nestedClassName != null) {
+            int topLevelClassSeparatorIdx = nestedClassName.indexOf(".");
+            String topLevelClassName = nestedClassName.substring(0, topLevelClassSeparatorIdx);
+            String nestedName = nestedClassName.substring(topLevelClassSeparatorIdx + 1);
+            nestedClass = new NestedClass(nestedName, topLevelClassName, toRun);
+        } else {
+            nestedClass = null;
+        }
         SingleMethod singleMethod;
         if (method != null) {
-            singleMethod = new SingleMethod(toRun, method);
+            singleMethod = nestedClass != null ?
+                    new SingleMethod(method, nestedClass)
+                    : new SingleMethod(toRun, method);
         } else {
             singleMethod = null;
         }
+        
         ActionProgress progress = new ActionProgress() {
             private final AtomicInteger count = new AtomicInteger(0);
             private final AtomicBoolean finalSuccess = new AtomicBoolean(true);
@@ -154,6 +176,13 @@ public abstract class NbLaunchDelegate {
         };
         if (nativeImageFile == null) {
             Project prj = FileOwnerQuery.getOwner(toRun);
+            ContainedProjectFilter projectFilter;
+            if (testInParallel) {
+                projectFilter = getProjectFilter(prj, launchArguments);
+            } else {
+                projectFilter = null;
+            }
+            
             class W extends Writer {
                 @Override
                 public void write(char[] cbuf, int off, int len) throws IOException {
@@ -167,7 +196,7 @@ public abstract class NbLaunchDelegate {
 
                 @Override
                 public void flush() throws IOException {
-                    // nop 
+                    // nop
                 }
 
                 @Override
@@ -176,7 +205,7 @@ public abstract class NbLaunchDelegate {
                 }
             }
             W writer = new W();
-            CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(prj, preferProjActions, toRun, singleMethod, debug, testRun, ioContext);
+            CompletableFuture<Pair<ActionProvider, String>> commandFuture = findTargetWithPossibleRebuild(prj, preferProjActions, toRun, singleMethod, nestedClass, debug, launchType, ioContext, testInParallel, projectFilter);
             commandFuture.thenAccept((providerAndCommand) -> {
                 ExplicitProcessParameters params = createExplicitProcessParameters(launchArguments);
                 OperationContext ctx = OperationContext.find(Lookup.getDefault());
@@ -199,10 +228,10 @@ public abstract class NbLaunchDelegate {
                         testProgressHandler != null ? Lookups.fixed(contextObject, ioContext, progress, testProgressHandler) : Lookups.fixed(contextObject, ioContext, progress),
                         Lookup.getDefault()
                 );
-                
+
                 ProjectConfiguration selectConfiguration = null;
                 ProjectConfigurationProvider<ProjectConfiguration> pcp = null;
-                
+
                 Object o = launchArguments.get("launchConfiguration");
                 if (o instanceof String) {
                     if (prj != null) {
@@ -218,23 +247,22 @@ public abstract class NbLaunchDelegate {
                 runContext.add(params);
                 runContext.add(ioContext);
                 runContext.add(progress);
-                
-                Lookup lookup;
-                if (singleMethod != null) {
-                    runContext.add(singleMethod);
-                }
+
                 if (selectConfiguration != null) {
                     runContext.add(selectConfiguration);
                 }
-                
-                lookup = Lookups.fixed(runContext.toArray(new Object[runContext.size()]));
+
+                Lookup lookup = new ProxyLookup(
+                    createTargetLookup(prj, singleMethod, nestedClass, toRun, projectFilter),
+                    Lookups.fixed(runContext.toArray(new Object[runContext.size()]))
+                );
                 // the execution Lookup is fully populated now. If the Project supports Configurations,
-                // check if the action is actually enabled in the prescribed configuration. If it is not, 
+                // check if the action is actually enabled in the prescribed configuration. If it is not,
                 if (pcp != null) {
                     final ActionProvider ap = providerAndCommand.first();
                     final String cmd = providerAndCommand.second();
                     if (!ap.isActionEnabled(cmd, lookup)) {
-                        
+
                         // attempt to locate a different configuration that enables the action:
                         ProjectConfiguration supportive = null;
                         int confIndex = runContext.indexOf(selectConfiguration);
@@ -245,7 +273,7 @@ public abstract class NbLaunchDelegate {
                         boolean defConfig = true;
                         for (ProjectConfiguration c : pcp.getConfigurations()) {
                             runContext.set(confIndex, c);
-                            Lookup tryConf = Lookups.fixed(runContext.toArray(new Object[runContext.size()]));
+                            Lookup tryConf = Lookups.fixed(runContext.toArray(new Object[0]));
                             if (ap.isActionEnabled(cmd, tryConf)) {
                                 supportive = c;
                                 break;
@@ -255,10 +283,10 @@ public abstract class NbLaunchDelegate {
                         String msg;
                         String recommended = defConfig ? Bundle.ERR_LaunchDefaultConfiguration(): Bundle.ERR_LaunchSupportiveConfigName(supportive.getDisplayName());
                         if (debug) {
-                            msg = supportive == null ? 
+                            msg = supportive == null ?
                                  Bundle.ERR_UnsupportedLaunchDebug() : Bundle.ERR_UnsupportedLaunchDebugConfig(selectConfiguration.getDisplayName(),  recommended);
                         } else {
-                            msg = supportive == null ? 
+                            msg = supportive == null ?
                                  Bundle.ERR_UnsupportedLaunch() : Bundle.ERR_UnsupportedLaunchConfig(selectConfiguration.getDisplayName(), recommended);
                         }
                         LanguageClient client = context.getLspSession().getLookup().lookup(LanguageClient.class);
@@ -358,6 +386,7 @@ public abstract class NbLaunchDelegate {
     private static ExplicitProcessParameters createExplicitProcessParameters(Map<String, Object> launchArguments) {
         List<String> args = argsToStringList(launchArguments.get("args"));
         List<String> vmArgs = argsToStringList(launchArguments.get("vmArgs"));
+
         String cwd = Objects.toString(launchArguments.get("cwd"), null);
         Object envObj = launchArguments.get("env");
         Map<String, String> env = envObj != null ? (Map<String, String>) envObj : Collections.emptyMap();
@@ -437,6 +466,7 @@ public abstract class NbLaunchDelegate {
         StartDebugParameters.Builder parametersBuilder = StartDebugParameters.newBuilder(command)
                 .debugger(miDebugger)
                 .debuggerDisplayObjects(false)
+                .displayName(Bundle.CTL_NativeImageDebugger())
                 .executionDescriptor(executionDescriptor)
                 .lookup(contextLookup);
         StartDebugParameters parameters = parametersBuilder.build();
@@ -469,27 +499,26 @@ public abstract class NbLaunchDelegate {
     }
 
     @NonNull
-    private static List<String> argsToStringList(Object o) {
+    static List<String> argsToStringList(Object o) {
         if (o == null) {
             return Collections.emptyList();
         }
         if (o instanceof List) {
             for (Object item : (List)o) {
-                if (!(o instanceof String)) {
+                if (!(item instanceof String)) {
                     throw new IllegalArgumentException("Only string parameters expected");
                 }
             }
             return (List<String>)o;
         } else if (o instanceof String) {
-            List<String> res = new ArrayList<>();
             return Arrays.asList(BaseUtilities.parseParameters(o.toString()));
         } else {
             throw new IllegalArgumentException("Expected String or String list");
         }
     }
-    
-    private static CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(Project proj, boolean preferProjActions, FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun, NbProcessConsole ioContext) throws IllegalArgumentException {
-        Pair<ActionProvider, String> providerAndCommand = findTarget(proj, preferProjActions, toRun, singleMethod, debug, testRun);
+
+    private static CompletableFuture<Pair<ActionProvider, String>> findTargetWithPossibleRebuild(Project proj, boolean preferProjActions, FileObject toRun, SingleMethod singleMethod, NestedClass nestedClass, boolean debug, LaunchType launchType, NbProcessConsole ioContext, boolean testInParallel, ContainedProjectFilter projectFilter) throws IllegalArgumentException {
+        Pair<ActionProvider, String> providerAndCommand = findTarget(proj, preferProjActions, toRun, singleMethod, nestedClass, debug, launchType, testInParallel, projectFilter);
         if (providerAndCommand != null) {
             return CompletableFuture.completedFuture(providerAndCommand);
         }
@@ -505,7 +534,7 @@ public abstract class NbLaunchDelegate {
             @Override
             public void finished(boolean success) {
                 if (success) {
-                    Pair<ActionProvider, String> providerAndCommand = findTarget(proj, preferProjActions, toRun, singleMethod, debug, testRun);
+                    Pair<ActionProvider, String> providerAndCommand = findTarget(proj, preferProjActions, toRun, singleMethod, nestedClass, debug, launchType, testInParallel, projectFilter);
                     if (providerAndCommand != null) {
                         afterBuild.complete(providerAndCommand);
                         return;
@@ -538,23 +567,40 @@ public abstract class NbLaunchDelegate {
         return afterBuild;
     }
 
-    protected static @CheckForNull Pair<ActionProvider, String> findTarget(Project prj, boolean preferProjActions, FileObject toRun, SingleMethod singleMethod, boolean debug, boolean testRun) {
+    protected static @CheckForNull Pair<ActionProvider, String> findTarget(Project prj, boolean preferProjActions, FileObject toRun, SingleMethod singleMethod, NestedClass nestedClass, boolean debug, LaunchType launchType, boolean testInParallel, ContainedProjectFilter projectFilter) {
         ClassPath sourceCP = ClassPath.getClassPath(toRun, ClassPath.SOURCE);
-        FileObject fileRoot = sourceCP != null ? sourceCP.findOwnerRoot(toRun) : null;
         boolean mainSource;
-        if (fileRoot != null) {
-            mainSource = UnitTestForSourceQuery.findUnitTests(fileRoot).length > 0;
+        if (launchType == LaunchType.RUN_MAIN) {
+            mainSource = true;
+        } else if (launchType == LaunchType.RUN_TEST) {
+            mainSource = false;
         } else {
-            mainSource = !testRun;
+            mainSource = true;
+            if (sourceCP != null) {
+                FileObject root = sourceCP.findOwnerRoot(toRun);
+                if (root != null) {
+                    if (UnitTestForSourceQuery.findSources(root).length > 0) {
+                        String relativePath = FileUtil.getRelativePath(root, toRun);
+                        if (relativePath != null && relativePath.toLowerCase(Locale.ENGLISH).endsWith(JAVA_FILE_EXT)) {
+                            String className = relativePath.substring(0, relativePath.length() - JAVA_FILE_EXT.length()).replace('/', '.');
+                            ClasspathInfo cpi = ClasspathInfo.create(toRun);
+                            mainSource = SourceUtils.isMainClass(className, cpi, true);
+                        }
+                    }
+                }
+            }
         }
         ActionProvider provider = null;
         String command = null;
         Collection<ActionProvider> actionProviders = findActionProviders(prj);
-        Lookup testLookup = preferProjActions && prj != null ? Lookups.singleton(prj) : (singleMethod != null) ? Lookups.fixed(toRun, singleMethod) : Lookups.singleton(toRun);
+        Lookup testLookup = createTargetLookup(preferProjActions ? prj : null, singleMethod, nestedClass, toRun, projectFilter);
         String[] actions;
-        if (!mainSource && singleMethod != null) {
+       
+        if (testInParallel) {
+            actions = new String[] {ActionProvider.COMMAND_TEST_PARALLEL, ActionProvider.COMMAND_RUN};
+        } else if (!mainSource && singleMethod != null) {
             actions = debug ? new String[] {SingleMethod.COMMAND_DEBUG_SINGLE_METHOD}
-                            : new String[] {SingleMethod.COMMAND_RUN_SINGLE_METHOD};
+                                : new String[] {SingleMethod.COMMAND_RUN_SINGLE_METHOD};
         } else {
             if (preferProjActions && prj != null) {
                 actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG}
@@ -564,7 +610,7 @@ public abstract class NbLaunchDelegate {
                 if (debug && !mainSource) {
                     // We are calling COMMAND_DEBUG_TEST_SINGLE instead of a missing COMMAND_DEBUG_TEST
                     // This is why we need to add the file to the lookup
-                    testLookup = (singleMethod != null) ? Lookups.fixed(toRun, singleMethod) : Lookups.singleton(toRun);
+                    testLookup = createTargetLookup(null, singleMethod, nestedClass, toRun, projectFilter);
                 }
             } else {
                 actions = debug ? mainSource ? new String[] {ActionProvider.COMMAND_DEBUG_SINGLE}
@@ -625,11 +671,42 @@ public abstract class NbLaunchDelegate {
         return Pair.of(provider, command);
     }
 
-    private static Collection<ActionProvider> findActionProviders(Project prj) {
+    static Lookup createTargetLookup(Project prj, SingleMethod singleMethod, NestedClass nestedClass, FileObject toRun, ContainedProjectFilter projectFilter) {
+        List<Lookup> arr = new ArrayList<>();
+        if (prj != null) {
+            arr.add(Lookups.singleton(prj));
+        }
+        if (singleMethod != null) {
+            Lookup methodLookup = Lookups.singleton(singleMethod);
+            arr.add(methodLookup);
+        }
+        if (nestedClass != null) {
+            Lookup nestedClassLookup = Lookups.singleton(nestedClass);
+            arr.add(nestedClassLookup);
+        }
+        if (projectFilter != null) {
+            Lookup projectLookup = Lookups.singleton(projectFilter);
+            arr.add(projectLookup);
+        }
+        if (toRun != null) {
+            arr.add(toRun.getLookup());
+        }
+        return new ProxyLookup(arr.toArray(new Lookup[0]));
+    }
+    
+    static ContainedProjectFilter getProjectFilter(Project prj, Map<String, Object> launchArguments) {
+        List<String> projectsArg = argsToStringList(launchArguments.get("projects"));
+        List<Project> projects = ProjectUtils.getContainedProjects(prj, false).stream()
+            .filter(project -> projectsArg.contains(project.getProjectDirectory().getName()))
+            .toList();
+        return ContainedProjectFilter.of(projects).orElse(null);
+    }
+
+    static Collection<ActionProvider> findActionProviders(Project prj) {
         Collection<ActionProvider> actionProviders = new ArrayList<>();
         if (prj != null) {
-            ActionProvider ap = prj.getLookup().lookup(ActionProvider.class);
-            actionProviders.add(ap);
+            Collection<? extends ActionProvider> ap = prj.getLookup().lookupAll(ActionProvider.class);
+            actionProviders.addAll(ap);
         }
         actionProviders.addAll(Lookup.getDefault().lookupAll(ActionProvider.class));
         return actionProviders;
@@ -664,5 +741,22 @@ public abstract class NbLaunchDelegate {
             }
         }
         return actionProviders;
+    }
+
+    public enum LaunchType {
+        AUTODETECT,
+        RUN_MAIN,
+        RUN_TEST;
+
+        static LaunchType from(Map<String, Object> launchArguments) {
+            Object testRunValue = launchArguments.get("testRun");
+
+            if (testRunValue instanceof Boolean) {
+                Boolean testRunSetting = (Boolean) testRunValue;
+                return testRunSetting ? RUN_TEST : RUN_MAIN;
+            } else {
+                return AUTODETECT;
+            }
+        }
     }
 }

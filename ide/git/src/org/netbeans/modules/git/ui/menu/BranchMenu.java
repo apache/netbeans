@@ -29,6 +29,8 @@ import org.netbeans.libs.git.GitBranch;
 import org.netbeans.modules.git.Annotator;
 import org.netbeans.modules.git.ui.branch.CherryPickAction;
 import org.netbeans.modules.git.ui.branch.CreateBranchAction;
+import org.netbeans.modules.git.ui.branch.RenameBranchAction;
+import org.netbeans.modules.git.ui.branch.DeleteBranchAction;
 import org.netbeans.modules.git.ui.branch.SetTrackingAction;
 import org.netbeans.modules.git.ui.checkout.AbstractCheckoutAction;
 import org.netbeans.modules.git.ui.checkout.SwitchBranchAction;
@@ -98,6 +100,7 @@ public final class BranchMenu extends DynamicMenu {
             Utils.setAcceleratorBindings(Annotator.ACTIONS_PATH_PREFIX, action);
             Actions.connect(item, action, false);
             menu.add(item);
+
             item = new JMenuItem();
             action = (Action) SystemAction.get(ManageTagsAction.class);
             Utils.setAcceleratorBindings(Annotator.ACTIONS_PATH_PREFIX, action);
@@ -116,9 +119,21 @@ public final class BranchMenu extends DynamicMenu {
             Utils.setAcceleratorBindings(Annotator.ACTIONS_PATH_PREFIX, action);
             Actions.connect(item, action, false);
             menu.add(item);
-            
+
+            item = new JMenuItem();
+            action = (Action) SystemAction.get(RenameBranchAction.class);
+            Utils.setAcceleratorBindings(Annotator.ACTIONS_PATH_PREFIX, action);
+            Actions.connect(item, action, false);
+            menu.add(item);
+
             item = new JMenuItem();
             action = (Action) SystemAction.get(CherryPickAction.class);
+            Utils.setAcceleratorBindings(Annotator.ACTIONS_PATH_PREFIX, action);
+            Actions.connect(item, action, false);
+            menu.add(item);
+            
+            item = new JMenuItem();
+            action = (Action) SystemAction.get(DeleteBranchAction.class);
             Utils.setAcceleratorBindings(Annotator.ACTIONS_PATH_PREFIX, action);
             Actions.connect(item, action, false);
             menu.add(item);
@@ -163,7 +178,11 @@ public final class BranchMenu extends DynamicMenu {
             org.openide.awt.Mnemonics.setLocalizedText(item, item.getText());
             item = menu.add(SystemActionBridge.createAction(SystemAction.get(RebaseAction.class), NbBundle.getMessage(RebaseAction.class, "LBL_RebaseAction_PopupName"), lkp)); //NOI18N
             org.openide.awt.Mnemonics.setLocalizedText(item, item.getText());
+            item = menu.add(SystemActionBridge.createAction(SystemAction.get(RenameBranchAction.class), NbBundle.getMessage(RenameBranchAction.class, "LBL_RenameBranchAction_PopupName"), lkp)); //NOI18N
+            org.openide.awt.Mnemonics.setLocalizedText(item, item.getText());
             item = menu.add(SystemActionBridge.createAction(SystemAction.get(CherryPickAction.class), NbBundle.getMessage(CherryPickAction.class, "LBL_CherryPickAction_PopupName"), lkp)); //NOI18N
+            org.openide.awt.Mnemonics.setLocalizedText(item, item.getText());
+            item = menu.add(SystemActionBridge.createAction(SystemAction.get(DeleteBranchAction.class), NbBundle.getMessage(DeleteBranchAction.class, "LBL_DeleteBranchAction_PopupName"), lkp)); //NOI18N
             org.openide.awt.Mnemonics.setLocalizedText(item, item.getText());
         }        
         return menu;

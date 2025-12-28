@@ -112,7 +112,7 @@ public class Manager extends Object {
             return path;
         } else {
             throw new IOException("Cannot determine NbJUnit home. Please make sure you have "+NBJUNIT_HOME
-                        +" propery set in your "+JUNIT_PROPERTIES_FILENAME+" file.");
+                        +" property set in your "+JUNIT_PROPERTIES_FILENAME+" file.");
         }
 
     }    
@@ -140,7 +140,7 @@ public class Manager extends Object {
             
             // instantiate the diff class
             clazz = Class.forName(diffImplName);
-            diffImpl = clazz.newInstance();
+            diffImpl = clazz.getDeclaredConstructor().newInstance();
 
             if (diffImpl instanceof Diff) {
                 impl = (Diff) diffImpl;

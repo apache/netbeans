@@ -158,7 +158,7 @@ class FontPanel extends JPanel {
 	}
 
 	public FontDescr[] toArray() {
-	    return fonts.toArray(new FontDescr[fonts.size()]);
+	    return fonts.toArray(new FontDescr[0]);
 	}
 
 	public FontDescr descrByName(String fontName) {

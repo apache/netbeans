@@ -30,10 +30,7 @@ import org.netbeans.modules.payara.tooling.PayaraIdeException;
  */
 public class CommandException extends PayaraIdeException {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Exception message for unsupported Payara version. */
     static final String UNSUPPORTED_VERSION = "Unsupported Payara version";
 
@@ -69,6 +66,9 @@ public class CommandException extends PayaraIdeException {
 
     /** Exception message for illegal <code>Command</code> instance provided. */
     static final String ILLEGAL_COMAND_INSTANCE = "Illegal command instance provided";
+    
+    /** Exception message for application path in the mapped host path. */
+    static final String DOCKER_HOST_APPLICATION_PATH = "Application should be in same drive as docker host container path mapping";
 
     /** Exception message for illegal <code>null</code> value provided. */
     static final String ILLEGAL_NULL_VALUE
@@ -88,10 +88,7 @@ public class CommandException extends PayaraIdeException {
     public static final String INVALID_BOOLEAN_CONSTANT
             = "Invalid String representing boolean constant.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>CommandException</code> without
      * detail message.

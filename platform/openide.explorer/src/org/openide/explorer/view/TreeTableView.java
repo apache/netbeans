@@ -37,7 +37,6 @@ import java.beans.PropertyChangeListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Map;
@@ -1513,9 +1512,8 @@ public class TreeTableView extends BeanTreeView {
             private void sortNodes() {
                 Node[] origNodes = original.getChildren().getNodes();
                 if (isSortingActive()) {
-                    Node[] sortedNodes = new Node[origNodes.length];
-                    System.arraycopy(origNodes, 0, sortedNodes, 0, origNodes.length);
-                    Collections.sort(Arrays.asList(sortedNodes), getRowComparator());
+                    Node[] sortedNodes = Arrays.copyOf(origNodes, origNodes.length);
+                    Arrays.sort(sortedNodes, getRowComparator());
                     setKeys(sortedNodes);
                 } else {
                     setKeys(origNodes);

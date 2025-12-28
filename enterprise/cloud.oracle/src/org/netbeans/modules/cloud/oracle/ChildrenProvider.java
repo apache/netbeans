@@ -37,7 +37,7 @@ public interface ChildrenProvider<T extends OCIItem, U extends OCIItem> {
      */
     public interface SessionAware<T extends OCIItem, U extends OCIItem> extends ChildrenProvider<T, U> {
         public default List<U> apply(T t) {
-            return apply(t, OCIManager.getDefault().getActiveSession());
+            return apply(t, OCIManager.getDefault().getActiveProfile(t));
         }
         
         /**

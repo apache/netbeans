@@ -113,6 +113,7 @@ public class CustomizerRunWeb extends BaseRunCustomizer {
         WEB_PROFILES.add(Profile.JAKARTA_EE_9_WEB);
         WEB_PROFILES.add(Profile.JAKARTA_EE_9_1_WEB);
         WEB_PROFILES.add(Profile.JAKARTA_EE_10_WEB);
+        WEB_PROFILES.add(Profile.JAKARTA_EE_11_WEB);
 
         FULL_PROFILES = new TreeSet<>(Profile.UI_COMPARATOR);
         FULL_PROFILES.add(Profile.JAVA_EE_5);
@@ -123,6 +124,7 @@ public class CustomizerRunWeb extends BaseRunCustomizer {
         FULL_PROFILES.add(Profile.JAKARTA_EE_9_FULL);
         FULL_PROFILES.add(Profile.JAKARTA_EE_9_1_FULL);
         FULL_PROFILES.add(Profile.JAKARTA_EE_10_FULL);
+        FULL_PROFILES.add(Profile.JAKARTA_EE_11_FULL);
     }
 
     @Messages({

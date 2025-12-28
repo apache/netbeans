@@ -309,7 +309,7 @@ public class SafeDeleteVariableTest extends RefactoringTestBase {
                                 handles.add(TreePathHandle.create(javac.getTrees().getPath(cut, member), javac));
                             }
                         }
-                        r[0] = new SafeDeleteRefactoring((Lookups.fixed(handles.toArray(new TreePathHandle[handles.size()]))));
+                        r[0] = new SafeDeleteRefactoring((Lookups.fixed(handles.toArray(new TreePathHandle[0]))));
                     }
                     r[0].setCheckInComments(checkInComments);
                 }

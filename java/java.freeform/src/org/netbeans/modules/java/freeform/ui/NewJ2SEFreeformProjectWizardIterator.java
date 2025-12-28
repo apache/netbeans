@@ -141,14 +141,14 @@ public class NewJ2SEFreeformProjectWizardIterator implements WizardDescriptor.Pr
             JComponent jc = (JComponent)c;
             l.add(jc.getName());
         }
-        String[] steps = l.toArray(new String[l.size()]);
+        String[] steps = l.toArray(new String[0]);
         
         for (int i = 0; i < panels.length; i++) {
             Component c = panels[i].getComponent();
             assert c instanceof JComponent;
             JComponent jc = (JComponent)c;
             // Step #.
-            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(i));
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
             // Step name (actually the whole list for reference).
             jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
             // set title

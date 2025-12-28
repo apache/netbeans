@@ -37,14 +37,9 @@ import org.openide.util.NbBundle;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 public class ObserversPanel extends BindingsPanel {
 
     private static final long serialVersionUID = -5038408349629504998L;
-    
-    static final String OBSERVES_ANNOTATION = 
-        "javax.enterprise.event.Observes";                      // NOI18N
-
 
     public ObserversPanel( Object[] subject, 
             MetadataModel<WebBeansModel> metaModel , WebBeansModel model , 

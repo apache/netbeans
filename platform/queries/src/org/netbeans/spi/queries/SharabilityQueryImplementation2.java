@@ -43,7 +43,7 @@ import org.netbeans.api.queries.SharabilityQuery.Sharability;
  * {@link org.openide.filesystems} with respect to threading semantics.
  * </p>
  * @see org.netbeans.api.queries.SharabilityQuery
- * @see <a href="@org-netbeans-modules-project-ant@/org/netbeans/spi/project/support/ant/AntProjectHelper.html#createSharabilityQuery2-org.netbeans.spi.project.support.ant.PropertyEvaluator-java.lang.String:A-java.lang.String:A-"><code>AntProjectHelper.createSharabilityQuery(...)</code></a>
+ * @see <a href="@org-netbeans-modules-project-ant@/org/netbeans/spi/project/support/ant/AntProjectHelper.html#createSharabilityQuery2(org.netbeans.spi.project.support.ant.PropertyEvaluator,java.lang.String%5B%5D,java.lang.String%5B%5D)"><code>AntProjectHelper.createSharabilityQuery(...)</code></a>
  * @author Jesse Glick
  * @author Alexander Simon
  * @since 1.27

@@ -1272,14 +1272,8 @@ public abstract class Properties {
                 }
                 Collection c;
                 try {
-                    c = (Collection) Class.forName (typeID.substring (2)).newInstance ();
-                } catch (ClassNotFoundException ex) {
-                    LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
-                    return defaultValue;
-                } catch (InstantiationException ex) {
-                    LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
-                    return defaultValue;
-                } catch (IllegalAccessException ex) {
+                    c = (Collection) Class.forName(typeID.substring(2)).getDeclaredConstructor().newInstance();
+                } catch (ReflectiveOperationException ex) {
                     LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
                     return defaultValue;
                 }
@@ -1338,14 +1332,8 @@ public abstract class Properties {
                 }
                 Map m;
                 try {
-                    m = (Map) Class.forName (typeID.substring (2)).newInstance ();
-                } catch (ClassNotFoundException ex) {
-                    LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
-                    return defaultValue;
-                } catch (InstantiationException ex) {
-                    LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
-                    return defaultValue;
-                } catch (IllegalAccessException ex) {
+                    m = (Map) Class.forName(typeID.substring(2)).getDeclaredConstructor().newInstance();
+                } catch (ReflectiveOperationException ex) {
                     LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
                     return defaultValue;
                 }
@@ -1466,17 +1454,17 @@ public abstract class Properties {
             @Override
             public Object read(String className, Properties properties) {
                 if (classNames[0].equals(className)) {
-                    return Boolean.valueOf(properties.getBoolean(propertyName, false));
+                    return properties.getBoolean(propertyName, false);
                 } else if (classNames[1].equals(className)) {
                     return properties.getByte(propertyName, (byte)0);
                 } else if (classNames[2].equals(className)) {
-                    return new Character(properties.getChar(propertyName, (char) 0));
+                    return properties.getChar(propertyName, (char)0);
                 } else if (classNames[3].equals(className)) {
                     return properties.getShort(propertyName, (short)0);
                 } else if (classNames[4].equals(className)) {
-                    return Integer.valueOf(properties.getInt(propertyName, 0));
+                    return properties.getInt(propertyName, 0);
                 } else if (classNames[5].equals(className)) {
-                    return new Long(properties.getLong(propertyName, 0l));
+                    return properties.getLong(propertyName, 0l);
                 } else if (classNames[6].equals(className)) {
                     return properties.getFloat(propertyName, 0f);
                 } else if (classNames[7].equals(className)) {
@@ -1487,22 +1475,22 @@ public abstract class Properties {
 
             @Override
             public void write(Object object, Properties properties) {
-                if (object instanceof Boolean) {
-                    properties.setBoolean(propertyName, ((Boolean) object).booleanValue());
-                } else if (object instanceof Byte) {
-                    properties.setByte(propertyName, ((Byte) object).byteValue());
-                } else if (object instanceof Character) {
-                    properties.setChar(propertyName, ((Character) object).charValue());
-                } else if (object instanceof Short) {
-                    properties.setShort(propertyName, ((Short) object).shortValue());
-                } else if (object instanceof Integer) {
-                    properties.setInt(propertyName, ((Integer) object).intValue());
-                } else if (object instanceof Long) {
-                    properties.setLong(propertyName, ((Long) object).longValue());
-                } else if (object instanceof Float) {
-                    properties.setFloat(propertyName, ((Float) object).floatValue());
-                } else if (object instanceof Double) {
-                    properties.setDouble(propertyName, ((Double) object).doubleValue());
+                if (object instanceof Boolean b) {
+                    properties.setBoolean(propertyName, b);
+                } else if (object instanceof Byte b) {
+                    properties.setByte(propertyName, b);
+                } else if (object instanceof Character c) {
+                    properties.setChar(propertyName, c);
+                } else if (object instanceof Short s) {
+                    properties.setShort(propertyName, s);
+                } else if (object instanceof Integer i) {
+                    properties.setInt(propertyName, i);
+                } else if (object instanceof Long l) {
+                    properties.setLong(propertyName, l);
+                } else if (object instanceof Float f) {
+                    properties.setFloat(propertyName, f);
+                } else if (object instanceof Double d) {
+                    properties.setDouble(propertyName, d);
                 }
             }
             

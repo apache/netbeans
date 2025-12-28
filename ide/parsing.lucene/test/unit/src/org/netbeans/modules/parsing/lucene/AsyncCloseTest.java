@@ -20,9 +20,9 @@ package org.netbeans.modules.parsing.lucene;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -69,25 +69,22 @@ public class AsyncCloseTest extends NbTestCase {
     public void testAsyncClose() throws Exception {
         final CountDownLatch slot = new CountDownLatch(1);
         final CountDownLatch signal = new CountDownLatch(1);
-        final  CountDownLatch done = new CountDownLatch(1);
-        final AtomicReference<Exception> exception = new AtomicReference<Exception>();
+        final CountDownLatch done = new CountDownLatch(1);
+        final AtomicReference<Exception> exception = new AtomicReference<>();
 
         final Index index = IndexManager.createTransactionalIndex(indexFolder, new KeywordAnalyzer());
-        final Thread worker = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    index.store(
-                       new ArrayList<String>(Arrays.asList("foo")), //NOI18N
-                       Collections.<String>emptySet(),
-                       new TestInsertConvertor(slot, signal),
-                       new TestDeleteConvertor(),
-                       true);
-                } catch (Exception ex) {
-                    exception.set(ex);
-                } finally {
-                    done.countDown();
-                }
+        final Thread worker = new Thread(() -> {
+            try {
+                index.store(
+                        new ArrayList<>(List.of("foo")), //NOI18N
+                        Collections.emptySet(),
+                        new TestInsertConvertor(slot, signal),
+                        new TestDeleteConvertor(),
+                        true);
+            } catch (Exception ex) {
+                exception.set(ex);
+            } finally {
+                done.countDown();
             }
         });
         worker.start();
@@ -102,8 +99,8 @@ public class AsyncCloseTest extends NbTestCase {
     public void testConcurrentReadWrite() throws Exception {
         final Index index = IndexManager.createTransactionalIndex(indexFolder, new KeywordAnalyzer());
         index.store(
-            new ArrayList<String>(Arrays.asList("a")), //NOI18N
-            Collections.<String>emptySet(),
+            new ArrayList<>(List.of("a")), //NOI18N
+            Collections.emptySet(),
             new TestInsertConvertor(),
             new TestDeleteConvertor(),
             true);
@@ -111,30 +108,27 @@ public class AsyncCloseTest extends NbTestCase {
         final CountDownLatch slot = new CountDownLatch(1);
         final CountDownLatch signal = new CountDownLatch(1);
         final CountDownLatch done = new CountDownLatch(1);
-        final AtomicReference<Exception> result = new AtomicReference<Exception>();
+        final AtomicReference<Exception> result = new AtomicReference<>();
 
-        final Thread worker = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    index.store(
-                           new ArrayList<String>(Arrays.asList("b")), //NOI18N
-                           Collections.<String>emptySet(),
-                           new TestInsertConvertor(slot, signal),
-                           new TestDeleteConvertor(),
-                           true);
-                } catch (Exception e) {
-                    result.set(e);
-                } finally {
-                    done.countDown();
-                }
+        final Thread worker = new Thread(() -> {
+            try {
+                index.store(
+                        new ArrayList<>(List.of("b")), //NOI18N
+                        Collections.emptySet(),
+                        new TestInsertConvertor(slot, signal),
+                        new TestDeleteConvertor(),
+                        true);
+            } catch (Exception e) {
+                result.set(e);
+            } finally {
+                done.countDown();
             }
         });
 
         worker.start();
         signal.await();
 
-        final Collection<String> data = new ArrayList<String>();
+        final Collection<String> data = new ArrayList<>();
         index.query(
             data,
             new Convertor<Document,String>(){

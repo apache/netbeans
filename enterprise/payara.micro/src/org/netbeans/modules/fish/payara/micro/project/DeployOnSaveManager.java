@@ -59,6 +59,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import static org.openide.util.NbBundle.getMessage;
 
+@Deprecated
 public final class DeployOnSaveManager {
 
     public static enum DeploymentState {
@@ -506,7 +507,7 @@ public final class DeployOnSaveManager {
                 ClassLoader reloadedClassLoader = customDefClassLoaders.get(reloadedPackageName);
                 if (reloadedClassLoader != null) {
                     Class reloadedClass = reloadedClassLoader.loadClass(reloadedClassName);
-                    reloadedClass.getMethod("execute").invoke(reloadedClass.newInstance());
+                    reloadedClass.getMethod("execute").invoke(reloadedClass.getDeclaredConstructor().newInstance());
                 }
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);

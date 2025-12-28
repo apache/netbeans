@@ -166,7 +166,13 @@
             </folder> <!-- pdf -->
         </folder> <!-- application -->
     </folder> <!-- Loaders -->
-
+    <folder name="Dashboard">
+        <folder name="Widgets">
+            <file name="RecentFilesWidget.instance">
+                <attr name="instanceClass" stringvalue="org.netbeans.modules.openfile.RecentFilesWidget"/>
+            </file>
+        </folder>
+    </folder>
     <folder name="Menu">
         <folder name="Help">
             <file name="netbeans-kb.url" url="netbeans-kb.url">

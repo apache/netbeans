@@ -18,13 +18,12 @@
  */
 package org.netbeans.modules.gradle;
 
-import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.NbGradleProject.LoadOptions;
 
 /**
  *
  * @author lkishalmi
  */
 public interface GradleProjectLoader {
-
-    GradleProject loadProject(NbGradleProject.Quality aim, String descriptionOpt, boolean ignoreCache, boolean interactive, String... args);
+    public GradleProject loadProject(LoadOptions options, String... args);
 }

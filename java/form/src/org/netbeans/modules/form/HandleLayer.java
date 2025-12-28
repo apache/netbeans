@@ -24,7 +24,6 @@ import java.awt.datatransfer.*;
 import java.awt.dnd.*;
 import java.awt.event.*;
 import java.awt.geom.Area;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import javax.swing.*;
@@ -98,7 +97,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
     private boolean draggingSuspended;
 
     private SelectionDragger selectionDragger;
-    private Image resizeHandle;
+    private Icon resizeHandle;
 
     private DropTarget dropTarget;
     private DropTargetListener dropListener;
@@ -357,32 +356,32 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
             g.drawRect(x, y, width, height);
             g.setStroke(oldStroke);
             if (inLayout) {
-                Image resizeHandle = resizeHandle();
-                int iconHeight = resizeHandle.getHeight(null);
-                int iconWidth = resizeHandle.getWidth(null);
+                Icon resizeHandle = resizeHandle();
+                int iconHeight = resizeHandle.getIconHeight();
+                int iconWidth = resizeHandle.getIconWidth();
                 if ((resizable & LayoutSupportManager.RESIZE_LEFT) != 0) {
-                    g.drawImage(resizeHandle, x-iconWidth+1, y+(height-iconHeight)/2, null);
+                    resizeHandle.paintIcon(null, g, x-iconWidth+1, y+(height-iconHeight)/2);
                     if ((resizable & LayoutSupportManager.RESIZE_UP) != 0) {
-                        g.drawImage(resizeHandle, x-iconWidth+1, y-iconHeight+1, null);
+                        resizeHandle.paintIcon(null, g, x-iconWidth+1, y-iconHeight+1);
                     }
                     if ((resizable & LayoutSupportManager.RESIZE_DOWN) != 0) {
-                        g.drawImage(resizeHandle, x-iconWidth+1, y+height, null);
+                        resizeHandle.paintIcon(null, g, x-iconWidth+1, y+height);
                     }
                 }
                 if ((resizable & LayoutSupportManager.RESIZE_RIGHT) != 0) {
-                    g.drawImage(resizeHandle, x+width, y+(height-iconHeight)/2, null);
+                    resizeHandle.paintIcon(null, g, x+width, y+(height-iconHeight)/2);
                     if ((resizable & LayoutSupportManager.RESIZE_UP) != 0) {
-                        g.drawImage(resizeHandle, x+width, y-iconHeight+1, null);
+                        resizeHandle.paintIcon(null, g, x+width, y-iconHeight+1);
                     }
                     if ((resizable & LayoutSupportManager.RESIZE_DOWN) != 0) {
-                        g.drawImage(resizeHandle, x+width, y+height, null);
+                        resizeHandle.paintIcon(null, g, x+width, y+height);
                     }
                 }
                 if ((resizable & LayoutSupportManager.RESIZE_UP) != 0) {
-                    g.drawImage(resizeHandle, x+(width-iconWidth)/2, y-iconHeight+1, null);
+                    resizeHandle.paintIcon(null, g, x+(width-iconWidth)/2, y-iconHeight+1);
                 }
                 if ((resizable & LayoutSupportManager.RESIZE_DOWN) != 0) {
-                    g.drawImage(resizeHandle, x+(width-iconWidth)/2, y+height, null);
+                    resizeHandle.paintIcon(null, g, x+(width-iconWidth)/2, y+height);
                 }
             }
         }
@@ -585,7 +584,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
                             Rectangle bound = compBounds.get(button);
                             cutOrder.add(new int[] {columns ? bound.x : bound.y, j});
                         }
-                        Collections.sort(cutOrder, new Comparator<int[]>() {
+                        cutOrder.sort(new Comparator<int[]>() {
                             @Override
                             public int compare(int[] i1, int[] i2) {
                                 return (i1[0] == i2[0]) ? (i1[1] - i2[1]) : (i1[0] - i2[0]);
@@ -702,9 +701,9 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
         counts[start ? 0 : 1]++;
     }
     
-    private Image resizeHandle() {
+    private Icon resizeHandle() {
         if (resizeHandle == null) {
-            resizeHandle = ImageUtilities.loadImageIcon("org/netbeans/modules/form/resources/resize_handle.png", false).getImage(); // NOI18N
+            resizeHandle = ImageUtilities.loadIcon("org/netbeans/modules/form/resources/resize_handle.png", false); // NOI18N
         }
         return resizeHandle;
     }
@@ -994,7 +993,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
         if (compList == null) { // just one component
             return new Component[] { deepestComp };
         } else {
-            return compList.toArray(new Component[compList.size()]);
+            return compList.toArray(new Component[0]);
         }
     }
 
@@ -1332,7 +1331,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
         }
 
         return workingComps.isEmpty() ? null :
-            workingComps.toArray(new RADVisualComponent[workingComps.size()]);
+            workingComps.toArray(new RADVisualComponent[0]);
     }
 
     boolean endDragging(MouseEvent e) {
@@ -3411,7 +3410,7 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
                 } else {
                     icon = node.getIcon(java.beans.BeanInfo.ICON_COLOR_16x16);
                 }
-                showingComponents[0] = new JLabel(new ImageIcon(icon));
+                showingComponents[0] = new JLabel(ImageUtilities.image2Icon(icon));
                 Dimension dim = showingComponents[0].getPreferredSize();
                 hotSpot = new Point(dim.width/2, dim.height/2);
                 if (hotSpot.x < 0) {

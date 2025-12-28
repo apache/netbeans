@@ -30,7 +30,7 @@
     <answer id="resources-read">
         <api group="layer" name="CloudOracleDatabaseActions" type="export" category="private" >
             <p>
-                "Cloud/Oracle/Databases/Actions" folder contains actions working with <code>OCIItem</code>
+                "Cloud/Oracle/Database/Actions" folder contains actions working with <code>OCIItem</code>
             </p>
         </api>
         <api group="layer" name="CloudOracleCompartmentActions" type="export" category="private" >

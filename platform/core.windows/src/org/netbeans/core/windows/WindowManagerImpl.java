@@ -153,10 +153,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         }
     }
 
-    /////////////////////////
     // API impelementation >>
-    /////////////////////////
-    
     // PENDING revise this method, it is dangerous to expose the GUI.
     /** Provides access to the MainWindow of the IDE.
      * Implements <code>WindowManager</code> abstract method.
@@ -290,10 +287,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         changeSupport.removePropertyChangeListener(l);
     }
 
-    ////////////////////////
     // API implementation <<
-    ////////////////////////
-
 //    /** Activates <code>TopComponent</code>, if it is opened. */
 //    private boolean activateTopComponent(TopComponent tc) {
 //        if(tc != null) {
@@ -326,10 +320,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
 
     // XXX For backward compatibility (Workspace class), this is the only (fake) workspace.
     // There are not supported workspaces any more.
-    ///////////////////////////////////////
     // Start of  Workspace implementation>>
-    ///////////////////////////////////////
-    
     /** Gets the programmatic unique name of this workspace.
      * Implements <code>Workspace</code> interface method.
      * @return the programmatic name of only workspace impl
@@ -637,11 +628,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
     @Override
     public void remove () {
     }
-    ////////////////////////////////////
     // End of Workspace implementation<<
-    ////////////////////////////////////
-
-    //////////////////////////////
     // TopComponentGroup>>
     public void addTopComponentGroup(TopComponentGroupImpl tcGroup) {
         central.addTopComponentGroup(tcGroup);
@@ -655,12 +642,8 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         return central.getTopComponentGroups();
     }
     // TopComponentGroup<<
-    //////////////////////////////
+    // Copy from older WorkspaceImpl>>
 
-    
-    /// Copy from older WorkspaceImpl>>
-
-    ////////////////////////////////////////////////////////
     // PENDING some of the next methods could make inner API
     /** Creates new mode.
      * @param name a unique programmatic name of the mode 
@@ -1185,7 +1168,6 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
     }
 
     
-    /////////////////////////
     // Notifications>>
     public void notifyTopComponentOpened(TopComponent tc) {
         // Inform component instance.
@@ -1201,9 +1183,6 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         notifyRegistryTopComponentClosed(tc);
     }
     // Notifications<<
-    /////////////////////////
-
-    /////////////////////////////
     // Registry notifications
     static void notifyRegistryTopComponentActivated(final TopComponent tc) {
         ((RegistryImpl)getDefault().getRegistry()).topComponentActivated(tc);
@@ -1227,8 +1206,6 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
         ((RegistryImpl)getDefault().getRegistry()).selectedNodesChanged(tc, nodes);
     }
     // Registry notifications
-    /////////////////////////////
-
     /** Overrides superclass method, to enhance access modifier. */
     @Override
     public void componentShowing(TopComponent tc) {
@@ -1357,14 +1334,28 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
                 central.switchMaximizedMode( null );
                 topComponentClose( tc );
             } else {
-                TopComponent recentTc = null;
+                ModeImpl activateMode = null;
+                TopComponent activateTC = null;
                 if( mode.getKind() == Constants.MODE_KIND_EDITOR && !inCloseAll ) {
                     //an editor document is being closed so let's find the most recent editor to select
-                    recentTc = central.getRecentTopComponent( mode, tc );
+                    activateTC = central.getRecentTopComponent( mode, tc );
+                    if (activateTC != null) {
+                        activateMode = mode;
+                    } else {
+                        /* The closed TopComponent may have been the last one in its mode. Find the
+                        most recent TopComponent in the "editor" mode instead, if present. */
+                        Mode editorMode = findMode("editor");
+                        if (editorMode instanceof ModeImpl && mode != editorMode) {
+                          activateMode = (ModeImpl) editorMode;
+                          activateTC = central.getRecentTopComponent( activateMode, tc );
+                        }
+                    }
                 }
                 mode.close(tc);
-                if( !tc.isOpened() && null != recentTc )
-                    mode.setSelectedTopComponent(recentTc);
+                if( !tc.isOpened() && null != activateTC && null != activateMode ) {
+                    activateTC.requestActive();
+                    activateMode.setSelectedTopComponent(activateTC);
+                }
             }
         }
     }
@@ -1835,7 +1826,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
                 continue;
             editors.add( tc );
         }
-        return editors.toArray( new TopComponent[editors.size()] );
+        return editors.toArray(new TopComponent[0] );
     }
 
     /**
@@ -1895,7 +1886,7 @@ public final class WindowManagerImpl extends WindowManager implements Workspace 
     public TopComponent[] getOpenedTopComponents(Mode mode) {
         if( mode instanceof ModeImpl ) {
             java.util.List<TopComponent> openedTcs = ((ModeImpl)mode).getOpenedTopComponents();
-            return openedTcs.toArray(new TopComponent[openedTcs.size()]);
+            return openedTcs.toArray(new TopComponent[0]);
         }
         return super.getOpenedTopComponents(mode);
     }

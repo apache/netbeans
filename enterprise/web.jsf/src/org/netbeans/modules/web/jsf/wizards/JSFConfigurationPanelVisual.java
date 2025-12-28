@@ -153,14 +153,15 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
     private static volatile boolean jsfLibrariesCacheDirty = true;
     private static final List<Library> JSF_LIBRARIES_CACHE = new CopyOnWriteArrayList<>();
 
-    /** Map used for faster seek of JSF registered libraries. */
+    /** Maps used for faster seek of JSF/Jakarta Faces registered libraries. */
     private static final Map<Boolean, String> JSF_SEEKING_MAP = new LinkedHashMap<>(2);
+    private static final Map<Boolean, String> JSF_SEEKING_MAP_JAKARTA = new LinkedHashMap<>(2);
 
     static {
-        JSF_SEEKING_MAP.put(false, JSFUtils.EJB_STATELESS);    //NOI18N
-        JSF_SEEKING_MAP.put(true, JSFUtils.FACES_EXCEPTION);   //NOI18N
-        JSF_SEEKING_MAP.put(false, JSFUtils.JAKARTAEE_EJB_STATELESS);    //NOI18N
-        JSF_SEEKING_MAP.put(true, JSFUtils.JAKARTAEE_FACES_EXCEPTION);   //NOI18N
+        JSF_SEEKING_MAP.put(false, JSFUtils.EJB_STATELESS);
+        JSF_SEEKING_MAP.put(true, JSFUtils.FACES_EXCEPTION);
+        JSF_SEEKING_MAP_JAKARTA.put(false, JSFUtils.JAKARTAEE_EJB_STATELESS);
+        JSF_SEEKING_MAP_JAKARTA.put(true, JSFUtils.JAKARTAEE_FACES_EXCEPTION);
     }
 
     /**
@@ -1744,6 +1745,9 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
             List<URL> content = library.getContent("classpath"); //NOI18N
             try {
                 Boolean foundJsfLibrary = ClasspathUtil.containsClass(content, JSF_SEEKING_MAP);
+                if (foundJsfLibrary == null) {
+                    foundJsfLibrary = ClasspathUtil.containsClass(content, JSF_SEEKING_MAP_JAKARTA);
+                }
                 if (foundJsfLibrary != null && foundJsfLibrary) {
                     JSF_LIBRARIES_CACHE.add(library);
                 }
@@ -1808,7 +1812,9 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                     setServerLibraryModel(serverJsfLibraries);
                     if (serverJsfLibraries.isEmpty()) {
                         Library preferredLibrary;
-                        if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
+                        if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_11_WEB)) {
+                            preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_4_1_NAME);
+                        } else if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
                             preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_4_0_NAME);
                         } else if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
                             preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_3_0_NAME);
@@ -1862,7 +1868,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                     JsfVersion jsfVersion = JsfVersionUtils.forClasspath(content);
                     LibraryItem item = jsfVersion != null ? new LibraryItem(library, jsfVersion) : new LibraryItem(library, JsfVersion.JSF_1_1);
                     jsfLibraries.add(item);
-                    Collections.sort(jsfLibraries, new Comparator<LibraryItem>() {
+                    jsfLibraries.sort(new Comparator<LibraryItem>() {
                         @Override
                         public int compare(LibraryItem li1, LibraryItem li2) {
                             return li1.getLibrary().getDisplayName().compareTo(li2.getLibrary().getDisplayName());
@@ -1883,7 +1889,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                         for (LibraryItem libraryItem : jsfLibraries) {
                             registeredItems.add(libraryItem.getLibrary().getDisplayName());
                         }
-                        setRegisteredLibraryModel(registeredItems.toArray(new String[registeredItems.size()]));
+                        setRegisteredLibraryModel(registeredItems.toArray(new String[0]));
                         updatePreferredLanguages();
                         updateJsfComponents();
                     }

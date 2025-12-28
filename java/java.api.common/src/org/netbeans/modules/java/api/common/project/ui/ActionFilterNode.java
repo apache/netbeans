@@ -376,7 +376,7 @@ final class ActionFilterNode extends FilterNode implements NodeListener {
                     result.add (SystemAction.get(EditRootAction.class));
                 }
             }            
-            actionCache = result.toArray(new Action[result.size()]);
+            actionCache = result.toArray(new Action[0]);
         }
         return actionCache;
     }

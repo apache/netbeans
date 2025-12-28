@@ -1136,7 +1136,7 @@ public final class CreatedModifiedFiles {
             for (String file : externalFiles) {
                 s.add(prefix + file);
             }
-            return s.toArray(new String[s.size()]);
+            return s.toArray(new String[0]);
         }
 
         @Override

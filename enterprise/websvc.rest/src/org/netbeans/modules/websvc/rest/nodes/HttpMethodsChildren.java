@@ -18,15 +18,11 @@
  */
 package org.netbeans.modules.websvc.rest.nodes;
 
-import org.netbeans.modules.websvc.rest.support.Utils;
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import org.openide.nodes.ChildFactory;
-import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -39,7 +35,6 @@ import org.netbeans.modules.websvc.rest.model.api.RestServices;
 import org.netbeans.modules.websvc.rest.model.api.RestServicesMetadata;
 import org.netbeans.modules.websvc.rest.model.api.RestServicesModel;
 import org.openide.util.Exceptions;
-import org.openide.util.RequestProcessor;
 
 
 
@@ -72,7 +67,7 @@ public class HttpMethodsChildren extends ChildFactory<HttpMethodNode> implements
                                         (HttpMethod) method));
                             }
                         }
-                        Collections.sort( keys , COMPARATOR );
+                        keys.sort(COMPARATOR);
                     }
                     
                     return null;

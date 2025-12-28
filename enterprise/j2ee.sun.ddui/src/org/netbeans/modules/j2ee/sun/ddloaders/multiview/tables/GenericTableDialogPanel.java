@@ -181,14 +181,14 @@ public class GenericTableDialogPanel extends JPanel implements GenericTableDialo
 //
 //            // Validate that this field is an integer value.  Empty is acceptable
 //            // as well (use required field flag to force non-empty fields.)
-////            if(entry.isIntegerField()) {
-////                if(Utils.notInteger(values[i])) {
-////                    Object [] args = new Object [1];
-////                    args[0] = entry.getColumnName();
-////                    errorList.add(MessageFormat.format(bundle.getString("ERR_FieldMustBeInteger"), args));
-////                    continue;
-////                }
-////            }
+// //            if(entry.isIntegerField()) {
+// //                if(Utils.notInteger(values[i])) {
+// //                    Object [] args = new Object [1];
+// //                    args[0] = entry.getColumnName();
+// //                    errorList.add(MessageFormat.format(bundle.getString("ERR_FieldMustBeInteger"), args));
+// //                    continue;
+// //                }
+// //            }
 //        }
 //
 //        return errorList;

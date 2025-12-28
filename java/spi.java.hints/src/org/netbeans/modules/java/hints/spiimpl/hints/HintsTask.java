@@ -41,7 +41,6 @@ import org.netbeans.api.java.source.JavaSourceTaskFactory;
 import org.netbeans.api.java.source.support.CaretAwareJavaSourceTaskFactory;
 import org.netbeans.api.java.source.support.EditorAwareJavaSourceTaskFactory;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.java.hints.providers.spi.PositionRefresherHelper;
 import org.netbeans.modules.java.hints.providers.spi.PositionRefresherHelper.DocumentVersion;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
@@ -104,7 +103,6 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
                 return;
             }
         }
-        long version = doc != null ? DocumentUtilities.getDocumentVersion(doc) : 0;
         long startTime = System.currentTimeMillis();
 
         int caret = CaretAwareJavaSourceTaskFactory.getLastPosition(info.getFileObject());
@@ -126,12 +124,12 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
 
         long endTime = System.currentTimeMillis();
         
-        TIMER.log(Level.FINE, "Jackpot 3.0 Hints Task" + (caretAware ? " - Caret Aware" : ""), new Object[] {info.getFileObject(), endTime - startTime});
+        TIMER.log(Level.FINE, "{1}ms Hints Task: " + (caretAware ? " - Caret Aware" : "") + " {0}", new Object[] {info.getFileObject(), endTime - startTime});
 
         Logger l = caretAware ? TIMER_CARET : TIMER_EDITOR;
 
         for (Entry<String, Long> e : inv.getTimeLog().entrySet()) {
-            l.log(Level.FINE, e.getKey(), new Object[] {info.getFileObject(), e.getValue()});
+            l.log(Level.FINE, "{1}ms {0}", new Object[] {e.getKey(), e.getValue()});
         }
     }
 
@@ -199,16 +197,16 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
 
         @Override
         public List<ErrorDescription> getErrorDescriptionsAt(CompilationInfo info, Context context, Document doc) throws BadLocationException {
-            int rowStart = LineDocumentUtils.getLineStart((BaseDocument) doc, context.getPosition());
-            int rowEnd = LineDocumentUtils.getLineEnd((BaseDocument) doc, context.getPosition());
+            int rowStart = LineDocumentUtils.getLineStartOffset((BaseDocument) doc, context.getPosition());
+            int rowEnd = LineDocumentUtils.getLineEndOffset((BaseDocument) doc, context.getPosition());
 
             return new HintsInvoker(HintsSettings.getSettingsFor(info.getFileObject()), rowStart, rowEnd, context.getCancel()).computeHints(info);
         }
 
         private static void setVersion(Document doc) {
             for (PositionRefresherHelper<?> h : MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class)) {
-                if (h instanceof HintPositionRefresherHelper) {
-                    ((HintPositionRefresherHelper) h).setVersion(doc, new DocumentVersion(doc));
+                if (h instanceof HintPositionRefresherHelper hp) {
+                    hp.setVersion(doc, new DocumentVersion(doc));
                 }
             }
         }
@@ -234,8 +232,8 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
 
         private static void setVersion(Document doc, int caret) {
             for (PositionRefresherHelper<?> h : MimeLookup.getLookup("text/x-java").lookupAll(PositionRefresherHelper.class)) {
-                if (h instanceof SuggestionsPositionRefresherHelper) {
-                    ((SuggestionsPositionRefresherHelper) h).setVersion(doc, new SuggestionsDocumentVersion(doc, caret));
+                if (h instanceof SuggestionsPositionRefresherHelper sp) {
+                    sp.setVersion(doc, new SuggestionsDocumentVersion(doc, caret));
                 }
             }
         }

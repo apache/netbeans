@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.52
+#Version 1.60
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -162,7 +163,7 @@ meth protected org.netbeans.api.java.source.JavaSource getTargetSource()
 meth protected void addImportsToSaasService() throws java.io.IOException
 meth protected void addImportsToTargetFile() throws java.io.IOException
 meth protected void addJaxbLib() throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void addSaasServiceMethod() throws java.io.IOException
 meth protected void createRestConnectionFile(org.netbeans.api.project.Project) throws java.io.IOException
 meth protected void insertSaasServiceAccessCode(boolean) throws java.io.IOException
@@ -328,7 +329,7 @@ meth public static void addInputParamField(org.netbeans.api.java.source.JavaSour
 meth public static void addInputParamFields(org.netbeans.api.java.source.JavaSource,java.util.List<org.netbeans.modules.websvc.saas.codegen.model.ParameterInfo>) throws java.io.IOException
 meth public static void addInputParamFields(org.netbeans.api.java.source.JavaSource,java.util.List<org.netbeans.modules.websvc.saas.codegen.model.ParameterInfo>,javax.lang.model.element.Modifier[]) throws java.io.IOException
 meth public static void addJaxbLib(org.netbeans.api.project.Project) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds JAXB_LIB
 

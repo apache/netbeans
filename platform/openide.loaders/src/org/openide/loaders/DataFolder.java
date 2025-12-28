@@ -1401,7 +1401,7 @@ public class DataFolder extends MultiDataObject implements DataObject.Container 
                     return;
                 }
                 ExTransferable.Multi multi = new ExTransferable.Multi(
-                        transferables.toArray(new Transferable[transferables.size()]) );
+                        transferables.toArray(new Transferable[0]) );
                 super.createPasteTypes (multi, s);
                 if (getPrimaryFile().canWrite()) {
                     dataTransferSupport.createPasteTypes (multi, s);

@@ -128,6 +128,7 @@ final class IntroduceVariableFix extends IntroduceFixBase implements Fix {
     public ChangeInfo implement() throws IOException, BadLocationException, ParseException {
         JButton btnOk = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Ok"));
         JButton btnCancel = new JButton(NbBundle.getMessage(IntroduceHint.class, "LBL_Cancel"));
+        btnCancel.setDefaultCapable(false);
         IntroduceFieldPanel panel = new IntroduceFieldPanel(guessedName, null, duplicatesCount,
                 true, handle.getKind() == Tree.Kind.VARIABLE,
                 IntroduceFieldPanel.VARIABLE,

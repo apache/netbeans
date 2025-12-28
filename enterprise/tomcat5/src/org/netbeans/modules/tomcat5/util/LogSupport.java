@@ -254,9 +254,6 @@ public class LogSupport {
                 links.clear();
             }
         }
-        
-        @Override
-        public void outputLineSelected(OutputEvent ev) {           
-        }
+
     }    
 }

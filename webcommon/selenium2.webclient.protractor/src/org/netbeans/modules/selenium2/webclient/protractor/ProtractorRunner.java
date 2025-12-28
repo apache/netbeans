@@ -378,11 +378,6 @@ class ProtractorRunner {
         }
 
         @Override
-        public void outputLineSelected(OutputEvent ev) {
-            // noop
-        }
-
-        @Override
         public void outputLineAction(OutputEvent ev) {
             RequestProcessor.getDefault().post(new Runnable() {
                 @Override
@@ -390,11 +385,6 @@ class ProtractorRunner {
                     Utils.openFile(file, line, column);
                 }
             });
-        }
-
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
-            // noop
         }
     }
     

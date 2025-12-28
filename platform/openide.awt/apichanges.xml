@@ -307,7 +307,7 @@
             <p>
                 New attributes (popupText, menuText) in @ActionRegistration annotation to provide 
                 text for menu items or popup menu items according to the
-                <a href="@TOP@/org/openide/awt/Actions.html#connect-javax.swing.JMenuItem-javax.swing.Action-boolean-">Actions.connect</a>
+                <a href="@org-openide-awt@/org/openide/awt/Actions.html#connect(javax.swing.JMenuItem,javax.swing.Action,boolean)">Actions.connect</a>
                 method. 
             </p>
         </description>
@@ -358,7 +358,7 @@
         <compatibility addition="yes" binary="compatible" deletion="no" semantic="compatible"/>
         <description>
             <p>
-                <a href="@org-openide-awt@/org/openide/awt/Actions.html#context-java.lang.Class-boolean-boolean-org.openide.util.ContextAwareAction-java.lang.String-java.lang.String-java.lang.String-boolean-">
+                <a href="@org-openide-awt@/org/openide/awt/Actions.html#context(java.lang.Class,boolean,boolean,org.openide.util.ContextAwareAction,java.lang.String,java.lang.String,java.lang.String,boolean)">
                 Action.context</a>, when used from layer accepts <code>"context"</code>
                 attribute.
             </p>
@@ -391,7 +391,7 @@
         <compatibility addition="yes" binary="compatible" deletion="no" semantic="compatible"/>
         <description>
             <p>Instead of registering actions in layer as advocated by various
-            <a href="@TOP@/org/openide/awt/Actions.html#alwaysEnabled-java.awt.event.ActionListener-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#alwaysEnabled(java.awt.event.ActionListener,java.lang.String,java.lang.String,boolean)">
                 action factory methods</a> one can use newly created 
                 <a href="@TOP@/org/openide/awt/ActionRegistration.html">annotations</a>.
             </p>
@@ -461,7 +461,7 @@
         <author login="mmetelka"/>
         <compatibility addition="yes" binary="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
         <description>
-            <a href="@TOP@/org/openide/awt/Actions.html#checkbox-java.lang.String-java.lang.String-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#checkbox(java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean)">
                 checkbox</a>
             added to create an action that represents a key in Preferences.
         </description>
@@ -476,7 +476,7 @@
         <author login="mmetelka"/>
         <compatibility addition="yes" binary="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
         <description>
-            <a href="@TOP@/org/openide/awt/Actions.html#alwaysEnabled-java.awt.event.ActionListener-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#alwaysEnabled(java.awt.event.ActionListener,java.lang.String,java.lang.String,boolean)">
                 alwaysEnabledAction</a>
             was enhanced to understand
             <code>&lt;attr name="PreferencesKey" stringvalue="boolean-key-name"/&gt;</code>
@@ -541,13 +541,13 @@
         <compatibility addition="yes" binary="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
         <description>
             The layer definition used by factory methods for
-            <a href="@TOP@/org/openide/awt/Actions.html#context-java.lang.Class-boolean-boolean-org.openide.util.ContextAwareAction-java.lang.String-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#context(java.lang.Class,boolean,boolean,org.openide.util.ContextAwareAction,java.lang.String,java.lang.String,java.lang.String,boolean)">
             context</a>
             and
-            <a href="@TOP@/org/openide/awt/Actions.html#callback-java.lang.String-javax.swing.Action-boolean-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#callback(java.lang.String,javax.swing.Action,boolean,java.lang.String,java.lang.String,boolean)">
             callback</a>
             and
-            <a href="@TOP@/org/openide/awt/Actions.html#alwaysEnabled-java.awt.event.ActionListener-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#alwaysEnabled(java.awt.event.ActionListener,java.lang.String,java.lang.String,boolean)">
                 alwaysEnabledAction</a>
             were enhanced to understand <code>&lt;attr name="asynchronous" boolvalue="true"/&gt;</code>
             attribute. This extends these new factories with capabilities
@@ -584,10 +584,10 @@
         <description>
             <p>
             Two new factory methods for creating
-            <a href="@TOP@/org/openide/awt/Actions.html#context-java.lang.Class-boolean-boolean-org.openide.util.ContextAwareAction-java.lang.String-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#context(java.lang.Class,boolean,boolean,org.openide.util.ContextAwareAction,java.lang.String,java.lang.String,java.lang.String,boolean)">
             context</a>
             and
-            <a href="@TOP@/org/openide/awt/Actions.html#callback-java.lang.String-javax.swing.Action-boolean-java.lang.String-java.lang.String-boolean-">
+            <a href="@TOP@/org/openide/awt/Actions.html#callback(java.lang.String,javax.swing.Action,boolean,java.lang.String,java.lang.String,boolean)">
             callback</a>
             actions and bunch of
             <a href="@TOP@/org/netbeans/api/actions/package-summary.html">
@@ -700,7 +700,7 @@
         <author login="jtulach"/>
         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="yes" deletion="no" modification="no"/>
         <description>
-        In order to allow dynamic names of actions, the <a href="@TOP@/org/openide/awt/Actions.html#connect-javax.swing.JMenuItem-javax.swing.Action-boolean-">Actions.connect</a>
+        In order to allow dynamic names of actions, the <a href="@TOP@/org/openide/awt/Actions.html#connect(javax.swing.JMenuItem,javax.swing.Action,boolean)">Actions.connect</a>
         method now understands additional properties that influence the text 
         of menu items or popup menu items build for this action.
         </description>
@@ -1072,7 +1072,6 @@
 <htmlcontents>
 <head>
 <title>Change History for the Actions API</title>
-<link rel="stylesheet" href="prose.css" type="text/css"/>
 </head>
 <body>
 <p class="overviewlink">

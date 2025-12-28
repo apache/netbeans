@@ -27,6 +27,13 @@ E46F0CE2219BBCDA94B87D4CB4EF4166DAF6C925 com.oracle.oci.sdk:oci-java-sdk-identit
 A8B7EBCA334E8145469A8FE0365C02A2727218EE com.oracle.oci.sdk:oci-java-sdk-common-httpclient:3.25.3
 AECECCD95E5ED92C73E455B7BA4AC714229041EE com.oracle.oci.sdk:oci-java-sdk-common-httpclient-jersey:3.25.3
 0CEE99CE7AA783353D19C56AC9F1AD72485DDBE8 com.oracle.oci.sdk:oci-java-sdk-addons-apache-configurator-jersey:3.25.3
+7084E5AE185230ACB52943C4AA0D0B8B890686A4 com.oracle.oci.sdk:oci-java-sdk-objectstorage:3.25.3
+D9918C04C60741D1BBEFBCC82E9D3B8BE690D412 com.oracle.oci.sdk:oci-java-sdk-objectstorage-generated:3.25.3
+3088420C75219556F803B55D8B71B96D29D1FC80 com.oracle.oci.sdk:oci-java-sdk-objectstorage-extensions:3.25.3
+A7D98B96CEA17F78E4BB9270B4A60FEBFACF6C78 com.oracle.oci.sdk:oci-java-sdk-core:3.25.3
+2236737DDF39CA3A3BABDB58B41F50C47E861EA7 com.oracle.oci.sdk:oci-java-sdk-containerengine:3.25.3
+923F38FE7186DFCBF921F9B3626832FFFFB8F6E9 com.oracle.oci.sdk:oci-java-sdk-artifacts:3.25.3
+99AE5824FBBABF71475404EE19AA480973CBD790 com.oracle.oci.sdk:oci-java-sdk-monitoring:3.25.3
 
 E5F6CAE5CA7ECAAC1EC2827A9E2D65AE2869CADA org.apache.httpcomponents:httpclient:4.5.13
 853B96D3AFBB7BF8CC303FE27EE96836A10C1834 org.apache.httpcomponents:httpcore:4.4.13

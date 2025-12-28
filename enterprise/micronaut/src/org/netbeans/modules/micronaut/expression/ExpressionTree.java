@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -564,20 +565,20 @@ public abstract class ExpressionTree {
 
         @Override
         protected void resolve(EvaluationContext ctx) {
-            List<ExecutableElement> methods = null;
+            List<? extends Element> elements = null;
             DeclaredType dt = null;
             if (callee == null) {
-                methods = ctx.getContextMethods();
+                elements = ctx.getContextElements();
             } else {
                 TypeMirror calleeTM = callee.getTypeMirror(ctx);
                 if (calleeTM.getKind() == TypeKind.DECLARED) {
                     dt = (DeclaredType) calleeTM;
-                    methods = ElementFilter.methodsIn(((TypeElement) dt.asElement()).getEnclosedElements());
+                    elements = ((TypeElement) dt.asElement()).getEnclosedElements();
                 }
             }
-            if (methods != null && !methods.isEmpty()) {
+            if (elements != null && !elements.isEmpty()) {
                 List<TypeMirror> argTypes = arguments.stream().map(arg -> arg.getTypeMirror(ctx)).collect(Collectors.toList());
-                for (ExecutableElement ee : methods) {
+                for (ExecutableElement ee : ElementFilter.methodsIn(elements)) {
                     TypeMirror enclType = dt != null ? dt : ee.getEnclosingElement().asType();
                     if (enclType.getKind() == TypeKind.DECLARED && identifier.contentEquals(ee.getSimpleName()) && ctx.getTrees().isAccessible(ctx.getScope(), ee, (DeclaredType) enclType)) {
                         ExecutableType et = (ExecutableType) ctx.getTypes().asMemberOf((DeclaredType) enclType, ee);
@@ -656,25 +657,40 @@ public abstract class ExpressionTree {
 
         @Override
         protected void resolve(EvaluationContext ctx) {
-            List<ExecutableElement> methods = null;
+            List<? extends Element> elements = null;
             DeclaredType dt = null;
             if (callee == null) {
-                methods = ctx.getContextMethods();
+                elements = ctx.getContextElements();
             } else {
                 TypeMirror calleeTM = callee.getTypeMirror(ctx);
                 if (calleeTM.getKind() == TypeKind.DECLARED) {
                     dt = (DeclaredType) calleeTM;
-                    methods = ElementFilter.methodsIn(((TypeElement) dt.asElement()).getEnclosedElements());
+                    elements = ((TypeElement) dt.asElement()).getEnclosedElements();
                 }
             }
-            if (methods != null && !methods.isEmpty()) {
-                for (ExecutableElement ee : methods) {
-                    TypeMirror enclType = dt != null ? dt : ee.getEnclosingElement().asType();
-                    if (enclType.getKind() == TypeKind.DECLARED && identifier.equals(getPropertyName(ee)) && ctx.getTrees().isAccessible(ctx.getScope(), ee, (DeclaredType) enclType)) {
-                        ExecutableType et = (ExecutableType) ctx.getTypes().asMemberOf((DeclaredType) enclType, ee);
-                        element = ee;
-                        typeMirror = et.getReturnType();
-                        return;
+            if (elements != null && !elements.isEmpty()) {
+                for (Element e : elements) {
+                    if (e.getKind() == ElementKind.METHOD) {
+                        TypeMirror enclType = dt != null ? dt : e.getEnclosingElement().asType();
+                        if (enclType.getKind() == TypeKind.DECLARED && identifier.equals(getPropertyName((ExecutableElement) e)) && ctx.getTrees().isAccessible(ctx.getScope(), e, (DeclaredType) enclType)) {
+                            ExecutableType et = (ExecutableType) ctx.getTypes().asMemberOf((DeclaredType) enclType, e);
+                            element = e;
+                            typeMirror = et.getReturnType();
+                            return;
+                        }
+                    } else if (e.getKind() == ElementKind.RECORD_COMPONENT) {
+                        TypeMirror enclType = dt != null ? dt : e.getEnclosingElement().asType();
+                        if (enclType.getKind() == TypeKind.DECLARED && identifier.contentEquals(e.getSimpleName()) && ctx.getTrees().isAccessible(ctx.getScope(), e, (DeclaredType) enclType)) {
+                            element = e;
+                            typeMirror = e.asType();
+                            return;
+                        }
+                    } else if (e.getKind() == ElementKind.PARAMETER) {
+                        if (identifier.contentEquals(e.getSimpleName())) {
+                            element = e;
+                            typeMirror = e.asType();
+                            return;
+                        }
                     }
                 }
             }

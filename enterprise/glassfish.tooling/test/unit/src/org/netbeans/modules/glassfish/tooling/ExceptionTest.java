@@ -36,10 +36,7 @@ import org.testng.annotations.Test;
 @Test(groups = {"unit-tests"})
 public class ExceptionTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test GlassFishException with no parameters specified throwing
      * and logging.

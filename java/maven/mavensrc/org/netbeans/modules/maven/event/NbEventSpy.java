@@ -22,7 +22,10 @@ package org.netbeans.modules.maven.event;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.apache.maven.eventspy.AbstractEventSpy;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import org.apache.maven.eventspy.EventSpy;
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.lifecycle.LifecycleExecutionException;
 import org.apache.maven.model.InputLocation;
@@ -31,6 +34,7 @@ import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.descriptor.MojoDescriptor;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.Base64;
@@ -41,16 +45,22 @@ import org.json.simple.JSONObject;
  *
  * @author mkleint
  */
-public class NbEventSpy extends AbstractEventSpy {
+@Named("ide")
+@Singleton
+public class NbEventSpy implements EventSpy {
 
+    @Inject
     private Logger logger;
+
+    @Inject
+    private PlexusContainer container;
     
     //#236768 guard against the mojos executing new mvn build in-JVM
     //needs to be static as the wrapped build will likely get a new instance
     //it's unlikely that we would legally trigger multiple builds inside a single jvm sequentially
     private static final AtomicBoolean insideSession = new AtomicBoolean(false);
     private static final AtomicBoolean ignoreInnerSessionEvents = new AtomicBoolean(false);
-    
+
     @Override
     public void init(Context context) throws Exception {
         //as as by MavenCLI.java
@@ -59,10 +69,10 @@ public class NbEventSpy extends AbstractEventSpy {
         //data.put( "systemProperties", cliRequest.systemProperties );
         //data.put( "userProperties", cliRequest.userProperties );
         //data.put( "versionProperties", CLIReportingUtils.getBuildProperties() );
-        super.init(context); 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onEvent(Object event) throws Exception {
         //event can be:
         //org.apache.maven.execution.ExecutionEvent
@@ -73,7 +83,6 @@ public class NbEventSpy extends AbstractEventSpy {
         //org.apache.maven.execution.MavenExecutionResult
         //org.apache.maven.settings.building.SettingsBuildingRequest
         //org.apache.maven.settings.building.SettingsBuildingResult
-        super.onEvent(event); 
         if (event instanceof ExecutionEvent) {
             ExecutionEvent ex = (ExecutionEvent) event;
             if (ignoreInnerSessionEvents.get()) { //#236768 guard against the mojos executing new mvn build in-JVM
@@ -115,8 +124,8 @@ public class NbEventSpy extends AbstractEventSpy {
                             ignoreInnerSessionEvents.set(true);
                             return;
                         }
-                        ClassRealm cr = ex.getSession().getContainer().getContainerRealm();
-                        if (cr != null) {
+                        if (container != null && container.getContainerRealm() != null) {
+                            ClassRealm cr = container.getContainerRealm();
                             JSONArray array = new JSONArray();
                             do {
                                 URL[] urls = cr.getURLs();
@@ -190,6 +199,12 @@ public class NbEventSpy extends AbstractEventSpy {
                             }
                         }
                     }
+                    MavenProject mp = ex.getProject();
+                    if (mp != null) {
+                        if (mp.getFile() != null) { //file is null in superpom
+                            mojo.put("prjFile", mp.getFile().getParentFile().getAbsolutePath());
+                        }
+                    }
                     root.put("mojo", mojo);    
                 }
                 if (ExecutionEvent.Type.MojoFailed.equals(ex.getType()) && ex.getException() != null) {
@@ -215,8 +230,6 @@ public class NbEventSpy extends AbstractEventSpy {
     }
 
     @Override
-    public void close() throws Exception {
-        super.close(); 
-    }
+    public void close() throws Exception {}
 
 }

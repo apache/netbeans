@@ -393,6 +393,9 @@ public class CodeGenerator {
                 List<Tree> members = new LinkedList<Tree>();
 
                 for (Element m : e.getEnclosedElements()) {
+                    if (m.getKind() == ElementKind.RECORD_COMPONENT) {
+                        continue; // TODO update to 'extend AbstractElementVisitor14'; visiting record components causes UnknownElementException
+                    }
                     Tree member = visit(m);
 
                     if (member != null)
@@ -403,11 +406,15 @@ public class CodeGenerator {
 
                 switch (e.getKind()) {
                     case CLASS:
-                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getSuperclass()), computeSuper(e.getInterfaces()), members));
+                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getSuperclass()), computeSuper(e.getInterfaces()), computeSuper(e.getPermittedSubclasses()), members));
                     case INTERFACE:
-                        return addDeprecated(e, make.Interface(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getInterfaces()), members));
+                        return addDeprecated(e, make.Interface(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getInterfaces()), computeSuper(e.getPermittedSubclasses()), members));
                     case ENUM:
                         return addDeprecated(e, make.Enum(mods, e.getSimpleName(), computeSuper(e.getInterfaces()), members));
+                    case RECORD:
+                        // TODO generates final class atm
+                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), null, computeSuper(e.getInterfaces()), List.of(), members));
+//                        return addDeprecated(e, make.Record(mods, e.getSimpleName(), computeSuper(e.getInterfaces()), members));
                     case ANNOTATION_TYPE:
                         return addDeprecated(e, make.AnnotationType(mods, e.getSimpleName(), members));
                     default:
@@ -782,6 +789,8 @@ public class CodeGenerator {
         IMPLICIT_MODIFIERS = new HashMap<List<ElementKind>, Set<Modifier>>();
 
         IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.ENUM), EnumSet.of(Modifier.STATIC, Modifier.ABSTRACT, Modifier.FINAL));
+        // TODO implement record support
+//        IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.RECORD), EnumSet.of(Modifier.STATIC, Modifier.ABSTRACT, Modifier.FINAL));
         IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.ANNOTATION_TYPE), EnumSet.of(Modifier.STATIC, Modifier.ABSTRACT));
         IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.METHOD, ElementKind.ANNOTATION_TYPE), EnumSet.of(Modifier.ABSTRACT));
         IMPLICIT_MODIFIERS.put(Arrays.asList(ElementKind.METHOD, ElementKind.INTERFACE), EnumSet.of(Modifier.ABSTRACT));

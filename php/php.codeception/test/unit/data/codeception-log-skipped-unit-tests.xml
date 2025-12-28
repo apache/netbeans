@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="unit" tests="13" assertions="74" errors="0" failures="0" skipped="1" useless="0" time="0.043183">
+    <testcase name="testSingleErrorMessage" class="tests\unit\widgets\AlertTest" file="/var/www/new_yyi2/basic/tests/unit/widgets/AlertTest.php" time="0.022930" assertions="5"/>
+    <testcase name="testMultipleErrorMessages" class="tests\unit\widgets\AlertTest" file="/var/www/new_yyi2/basic/tests/unit/widgets/AlertTest.php" time="0.001102" assertions="0">
+      <skipped/>
+    </testcase>
+    <testcase name="testSingleDangerMessage" class="tests\unit\widgets\AlertTest" file="/var/www/new_yyi2/basic/tests/unit/widgets/AlertTest.php" time="0.001268" assertions="5"/>
+    <testcase name="testMultipleDangerMessages" class="tests\unit\widgets\AlertTest" file="/var/www/new_yyi2/basic/tests/unit/widgets/AlertTest.php" time="0.001294" assertions="6"/>
+    <testcase name="testSingleSuccessMessage" class="tests\unit\widgets\AlertTest" file="/var/www/new_yyi2/basic/tests/unit/widgets/AlertTest.php" time="0.001147" assertions="5"/>
+    <testcase name="testMultipleSuccessMessages" class="tests\unit\widgets\AlertTest" file="/var/www/new_yyi2/basic/tests/unit/widgets/AlertTest.php" time="0.001416" assertions="6"/>
+    <testcase name="testSingleInfoMessage" class="tests\unit\widgets\AlertTest" file="/var/www/new_yyi2/basic/tests/unit/widgets/AlertTest.php" time="0.002299" assertions="5"/>
+    <testcase name="testMultipleInfoMessages" class="tests\unit\widgets\AlertTest" file="/var/www/new_yyi2/basic/tests/unit/widgets/AlertTest.php" time="0.002400" assertions="6"/>
+    <testcase name="testSingleWarningMessage" class="tests\unit\widgets\AlertTest" file="/var/www/new_yyi2/basic/tests/unit/widgets/AlertTest.php" time="0.001816" assertions="5"/>
+    <testcase name="testMultipleWarningMessages" class="tests\unit\widgets\AlertTest" file="/var/www/new_yyi2/basic/tests/unit/widgets/AlertTest.php" time="0.001602" assertions="6"/>
+    <testcase name="testSingleMixedMessages" class="tests\unit\widgets\AlertTest" file="/var/www/new_yyi2/basic/tests/unit/widgets/AlertTest.php" time="0.001809" assertions="9"/>
+    <testcase name="testMultipleMixedMessages" class="tests\unit\widgets\AlertTest" file="/var/www/new_yyi2/basic/tests/unit/widgets/AlertTest.php" time="0.002266" assertions="14"/>
+    <testcase name="testFlashIntegrity" class="tests\unit\widgets\AlertTest" file="/var/www/new_yyi2/basic/tests/unit/widgets/AlertTest.php" time="0.001833" assertions="2"/>
+  </testsuite>
+</testsuites>

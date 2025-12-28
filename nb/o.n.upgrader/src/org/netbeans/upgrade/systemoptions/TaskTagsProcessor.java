@@ -19,12 +19,6 @@
 
 package org.netbeans.upgrade.systemoptions;
 
-import java.rmi.UnexpectedException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 /**
  * For: org.netbeans.modules.tasklist.docscan.TaskTags
  * @author Radek Matous
@@ -36,11 +30,10 @@ class TaskTagsProcessor extends PropertyProcessor {
         super("org.netbeans.modules.tasklist.docscan.TaskTags");//NOI18N
     }
     
+    @Override
     void processPropertyImpl(String propertyName, Object value) {
         if ("taskTags".equals(propertyName)) {//NOI18N
-            List l = ((SerParser.ObjectWrapper)value).data;
-            for (Iterator it = l.iterator(); it.hasNext();) {
-                Object elem = (Object) it.next();
+            for (Object elem : ((SerParser.ObjectWrapper)value).data) {
                 if (elem instanceof SerParser.ObjectWrapper) {
                     String clsname = Utils.prettify(((SerParser.ObjectWrapper)elem).classdesc.name);
                     if ("org.netbeans.modules.tasklist.docscan.TaskTag".equals(clsname)) {//NOI18N
@@ -55,9 +48,7 @@ class TaskTagsProcessor extends PropertyProcessor {
     
     private void processTag(final Object value) {
         String tagName = null;
-        List l = ((SerParser.ObjectWrapper)value).data;
-        for (Iterator it = l.iterator(); it.hasNext();) {
-            Object elem = (Object) it.next();
+        for (Object elem : ((SerParser.ObjectWrapper)value).data) {
             if (elem instanceof SerParser.ObjectWrapper) {
                 String val = ((SerParser.NameValue)(((SerParser.ObjectWrapper)elem).data.get(0))).value.toString();
                 assert tagName != null;

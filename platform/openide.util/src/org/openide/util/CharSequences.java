@@ -33,22 +33,23 @@ import java.util.Comparator;
  * behind the scene. Use the here-in provided methods and your strings will be
  * stored as efficiently as possible. As can be seen from the following example,
  * many languages benefit from the <em>compaction</em>:
- * <p>
+ * </p>
  * {@snippet  file="org/openide/util/CharSequencesTest.java" region="createSample"}
  * <p>
  * To compare two sequences use dedicated {@link CharSequences#comparator()}
  * which understands the compacted representation and uses it, prior to falling
  * back to {@code char} by {@code char} comparision:
- * <p>
+ * </p>
  * {@snippet  file="org/openide/util/CharSequencesTest.java" region="compareStrings"}
  * <p>
  * Use {@link CharSequences#indexOf(java.lang.CharSequence, java.lang.CharSequence)} method
  * to search the compacted strings efficiently:
- * <p>
+ * </p>
  * {@snippet  file="org/openide/util/CharSequencesTest.java" region="indexOfSample"}
  * <p>
  * This <a target="_blank" href="https://search.maven.org/artifact/org.netbeans.api/org-openide-util/RELEASE110/jar">
  * library is available on Maven central</a>. Use it with following co-ordinates:
+ * </p>
  * {@snippet  file="org/openide/util/CharSequencesTest.xml" region="CharSequencesPomDependency"}
  *
  * @since 8.3
@@ -113,9 +114,9 @@ public final class CharSequences {
     /**
      * Creates new {@link CharSequence} instance representing the content
      * of another sequence or {@link String} efficiently.
-     * <p>
+     * 
      * {@snippet  file="org/openide/util/CharSequencesTest.java" region="createSample"}
-     * <p>
+     * 
      * @param s existing string or sequence of chars
      * @return immutable char sequence efficiently representing the data
      */
@@ -301,7 +302,6 @@ public final class CharSequences {
         return createFromBytes(b, n, id);
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
     // Memory efficient implementations of CharSequence
     // Comparision between Fixed and String memory consumption:
     // 32-bit JVM

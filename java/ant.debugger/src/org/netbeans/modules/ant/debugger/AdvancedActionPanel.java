@@ -132,7 +132,7 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
         propertiesPane.setText(initialProperties);
         Integer verbosity = (Integer) script.getAttribute(ATTR_VERBOSITY);
         if (verbosity == null) {
-            verbosity = new Integer(AntSettings.getVerbosity());
+            verbosity = AntSettings.getVerbosity();
         }
         verbosityComboBox.setModel(new DefaultComboBoxModel(VERBOSITIES));
         for (int i = 0; i < VERBOSITY_LEVELS.length; i++) {
@@ -297,7 +297,7 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
                 // Run default target.
                 targets = null;
             } else {
-                targets = (String[]) targetsL.toArray(new String[targetsL.size()]);
+                targets = (String[]) targetsL.toArray(new String[0]);
             }
         }
         Properties props = new Properties();
@@ -335,7 +335,7 @@ final class AdvancedActionPanel extends javax.swing.JPanel {
         if (verbosity == AntSettings.getVerbosity()) {
             script.setAttribute(ATTR_VERBOSITY, null);
         } else {
-            script.setAttribute(ATTR_VERBOSITY, new Integer(verbosity));
+            script.setAttribute(ATTR_VERBOSITY, verbosity);
         }
         // Actually run the target(s).
         DebuggerAntLogger.getDefault ().debugFile (project.getFile ());

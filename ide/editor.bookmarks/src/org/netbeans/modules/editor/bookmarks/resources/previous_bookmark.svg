@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,55 +19,33 @@
     under the License.
 
 -->
-<!-- Generator: Adobe Illustrator 24.2.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#FFC36D;stroke:#000000;stroke-miterlimit:10;}
-	.st1{fill:#94E0EF;}
-	.st2{opacity:0.33;}
-	.st3{fill:#E9F7FF;}
-	.st4{fill:#62707C;}
-	.st5{fill:#7A8896;}
-	.st6{fill:#E8513D;}
-	.st7{fill:#EAEAEA;}
-	.st8{fill:#5D5D5D;}
-	.st9{fill:#4A4A4A;}
-	.st10{fill:#383838;}
-	.st11{fill:#6B6B6B;}
-	.st12{fill:#FFC36D;}
-	.st13{fill:#FBDC7C;}
-	.st14{fill:#ADAEAF;}
-	.st15{fill:#CDCDCE;}
-	.st16{fill:#AAABAC;}
-	.st17{fill:#C8C9CA;}
-	.st18{fill:#A8A9AA;}
-	.st19{fill:#C5C6C7;}
-	.st20{fill:#887440;}
-	.st21{fill:#9D8546;}
-	.st22{fill:#AB9867;}
-	.st23{fill:#D3B25F;}
-	.st24{fill:#CCCCCC;}
-	.st25{fill:#818181;}
-	.st26{fill:#7C7C7C;}
-	.st27{fill:#A3A3A3;}
-	.st28{fill:#7D7D7D;}
-	.st29{fill:#8D8D8D;}
-	.st30{fill:#9CFF73;}
-	.st31{fill:#9CFF73;stroke:#000000;stroke-miterlimit:10;}
-	.st32{fill:none;}
-</style>
-<g>
-	<polygon class="st1" points="13,0 6,0 6,7 13,7 16,3.44 	"/>
-	<g class="st2">
-		<path d="M12.545,1l2.138,2.451L12.535,6H7V1H12.545 M13,0H6v7h7l3-3.56L13,0L13,0z"/>
-	</g>
-</g>
-<g>
-	<polygon class="st12" points="0,9.011 0,6.996 5.5,2 11,7 11,9 8,9 8,15 3,15 3,9 	"/>
-	<g class="st2">
-		<path d="M5.5,3.351L10,7.442V8H8H7v1v5H4V9V7.996L2.996,8L1,8.007V7.439L5.5,3.351 M5.5,2L0,6.996v2.015L3,9v6h5V9h3V7L5.5,2
-			L5.5,2z"/>
-	</g>
-</g>
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #a4ddec;
+      }
+
+      .st1 {
+        opacity: .33;
+      }
+
+      .st2 {
+        fill: #f5c47a;
+      }
+    </style>
+  </defs>
+  <g>
+    <polygon class="st0" points="13 0 6 0 6 7 13 7 16 3.44 13 0"/>
+    <g class="st1">
+      <path d="M12.545,1l2.138,2.451-2.148,2.549h-5.535V1h5.545M13,0h-7v7h7l3-3.56-3-3.44h0Z"/>
+    </g>
+  </g>
+  <g>
+    <polygon class="st2" points="0 9.011 0 6.996 5.5 2 11 7 11 9 8 9 8 15 3 15 3 9 0 9.011"/>
+    <g class="st1">
+      <path d="M5.5,3.351l4.5,4.091v.558h-3v6h-3v-6.004l-1.004.004-1.996.007v-.568L5.5,3.351M5.5,2L0,6.996v2.015l3-.011v6h5v-6h3v-2L5.5,2h0Z"/>
+    </g>
+  </g>
 </svg>

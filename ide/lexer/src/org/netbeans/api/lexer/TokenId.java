@@ -70,7 +70,7 @@ package org.netbeans.api.lexer;
  *
  * <p>
  * Detailed information and rules for naming can be found
- * in <A href="https://netbeans.apache.org/projects/lexer/token-id-naming.html">TokenId Naming</A>.
+ * in <A href="https://netbeans.apache.org/projects/lexer/token-id-naming">TokenId Naming</A>.
  *
  * @author Miloslav Metelka
  * @version 1.00

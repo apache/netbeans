@@ -151,7 +151,7 @@ public class WizardUtils {
             }
             result.add(keyStroke);
         }
-        return result.toArray(new KeyStroke[result.size()]);
+        return result.toArray(new KeyStroke[0]);
     }
 
     public static String keyStrokesToString(final KeyStroke[] keyStrokes) {

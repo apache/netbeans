@@ -1087,7 +1087,7 @@ public final class Utilities {
             arr.add(k);
         }
 
-        return arr.toArray(new KeyStroke[arr.size()]);
+        return arr.toArray(new KeyStroke[0]);
     }
 
     /** Adds characters for modifiers to the buffer.
@@ -1420,7 +1420,7 @@ public final class Utilities {
      * frequently does the wrong thing in a multi-screen setup.
      * <p>
      * The use of the NetBeans API
-     * <a href="@org-openide-dialogs@/org/openide/DialogDisplayer.html#getDefault--">DialogDisplayer.getDefault*</a>
+     * <a href="@org-openide-dialogs@/org/openide/DialogDisplayer.html#getDefault()">DialogDisplayer.getDefault*</a>
      * is encouraged to display a dialog.
      *
      * @return A suitable parent component for swing dialogs
@@ -2062,13 +2062,13 @@ public final class Utilities {
      *  <p>Typically you will set the cursor only temporarily:
      *
      *  <pre>
-     *  <font class="comment">// code is running in other then event dispatch thread</font>
+     *  <span class="comment">// code is running in other then event dispatch thread</span>
      *  currentComponent.setCursor(Utilities.createProgressCursor(currentComponent));
-     *  <font class="keyword">try</font> {
-     *      <font class="comment">// perform some work in other than event dispatch thread
-     *      // (do not block UI)</font>
-     *  } <font class="keyword">finally</font> {
-     *      currentComponent.setCursor(<font class="constant">null</font>);
+     *  <span class="keyword">try</span> {
+     *      <span class="comment">// perform some work in other than event dispatch thread
+     *      // (do not block UI)</span>
+     *  } <span class="keyword">finally</span> {
+     *      currentComponent.setCursor(<span class="constant">null</span>);
      *  }
      *  </pre>
      *

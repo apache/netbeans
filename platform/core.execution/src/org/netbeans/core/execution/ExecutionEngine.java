@@ -70,13 +70,13 @@ public final class
     private static final IOTable taskIOs = new IOTable(base, systemIO);
 
     /* table of window:threadgrp */
-    private static WindowTable wtable = new WindowTable();
-
+    private static final WindowTable wtable = new WindowTable();
+    
     /** list of ExecutionListeners */
-    private HashSet<ExecutionListener> executionListeners = new HashSet<ExecutionListener>();
+    private final Set<ExecutionListener> executionListeners;
 
     /** List of running executions */
-    private List<ExecutorTask> runningTasks = Collections.synchronizedList(new ArrayList<ExecutorTask>( 5 ));
+    private final List<ExecutorTask> runningTasks = Collections.synchronizedList(new ArrayList<>(5));
 
     static {
         systemIO.out = new OutputStreamWriter(System.out);
@@ -87,6 +87,8 @@ public final class
     static final long serialVersionUID =9072488605180080803L;
 
     public ExecutionEngine () {
+        this.executionListeners = new HashSet<>();
+        
         /* SysIn is a class that redirects System.in of some running task to
            a window (probably OutWindow).
            SysOut/Err are classes that redirect out/err to the window
@@ -131,13 +133,13 @@ public final class
     * @param executor to start
     * @param info about class to start
     */
+    @Override
     public ExecutorTask execute(String name, Runnable run, final InputOutput inout) {
         TaskThreadGroup g = new TaskThreadGroup(base, "exec_" + name + "_" + number); // NOI18N
-        g.setDaemon(true);
         ExecutorTaskImpl task = new ExecutorTaskImpl();
         synchronized (task.lock) {
             try {
-                new RunClassThread(g, name, number++, inout, this, task, Lookup.getDefault(), run);
+                new RunClassThread(g, name, number++, inout, this, task, Lookup.getDefault(), run).start();
                 task.lock.wait();
             } catch (InterruptedException e) { // #171795
                 inout.closeInputOutput();
@@ -157,9 +159,10 @@ public final class
     *
     * @return class path to libraries
     */
+    @Override
     protected NbClassPath createLibraryPath() {
         List<File> l = Main.getModuleSystem().getModuleJars();
-        return new NbClassPath (l.toArray (new File[l.size ()]));
+        return new NbClassPath (l.toArray (new File[0]));
     }
 
     /** adds a listener */
@@ -181,6 +184,7 @@ public final class
      * @param io an InputOutput
      * @return PermissionCollection for given CodeSource and InputOutput
      */
+    @Override
     protected final PermissionCollection createPermissions(CodeSource cs, InputOutput io) {
         PermissionCollection pc = Policy.getPolicy().getPermissions(cs);
         ThreadGroup grp = Thread.currentThread().getThreadGroup();
@@ -189,9 +193,12 @@ public final class
 
     /** fires event that notifies about new process */
     protected final void fireExecutionStarted (ExecutionEvent ev) {
-        runningTasks.add( ev.getProcess() );
-	@SuppressWarnings("unchecked") 
-        Iterator<ExecutionListener> iter = ((HashSet<ExecutionListener>) executionListeners.clone()).iterator();
+        runningTasks.add(ev.getProcess());
+
+        Iterator<ExecutionListener> iter;
+        synchronized (executionListeners) {
+            iter = (new HashSet<>(executionListeners)).iterator();
+        }
         while (iter.hasNext()) {
             ExecutionListener l = iter.next();
             l.startedExecution(ev);
@@ -199,15 +206,17 @@ public final class
     }
 
     /** fires event that notifies about the end of a process */
-    protected final void fireExecutionFinished (ExecutionEvent ev) {
-        runningTasks.remove( ev.getProcess() );
-	@SuppressWarnings("unchecked") 
-        Iterator<ExecutionListener> iter = ((HashSet<ExecutionListener>) executionListeners.clone()).iterator();
+    protected final void fireExecutionFinished(ExecutionEvent ev) {
+        runningTasks.remove(ev.getProcess());
+
+        Iterator<ExecutionListener> iter;
+        synchronized (executionListeners) {
+            iter = (new HashSet<>(executionListeners)).iterator();
+        }
         while (iter.hasNext()) {
             ExecutionListener l = iter.next();
             l.finishedExecution(ev);
         }
-        ev.getProcess().destroyThreadGroup(base);
     }
 
     static void putWindow(java.awt.Window w, TaskThreadGroup tg) {
@@ -252,6 +261,7 @@ public final class
             this.std = std;
         }
 
+        @Override
         public void write(int b) throws IOException {
             if (std) {
                 getTaskIOs().getOut().write(b);
@@ -292,5 +302,4 @@ public final class
     static PrintStream createPrintStream(boolean stdOut) {
         return new WriterPrintStream(new SysOut(stdOut), stdOut);
     }
-   
 }

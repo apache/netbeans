@@ -54,7 +54,12 @@ public class ReferenceTest {
     
     @Test
     public void testReferences3() throws Exception {
-        var at = elementAt("a^{\nb=true\n}");
+        var at = elementAt( """
+                            a^{
+                                b = true
+                            }
+                            """
+                     );
         assertEquals(2, at.size());
         var it = at.iterator();
         assertTrue(it.next() instanceof HCLBlock);

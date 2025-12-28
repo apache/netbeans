@@ -20,6 +20,6 @@
 
 class ReadonlyProperties {
 
-    readonly const $withConst; // error
+    readonly const READONLY_CONST = "constant"; // error
 
 }

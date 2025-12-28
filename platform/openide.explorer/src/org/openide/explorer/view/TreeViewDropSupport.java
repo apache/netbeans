@@ -797,7 +797,7 @@ final class TreeViewDropSupport implements DropTargetListener, Runnable {
             }
         }
 
-        return diff.toArray(new Node[diff.size()]);
+        return diff.toArray(new Node[0]);
     }
 
     /** Activates or deactivates Drag support on asociated JTree

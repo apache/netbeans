@@ -174,7 +174,7 @@ public final class AppClientProvider extends J2eeModuleProvider
             }
             files.add(FileUtil.toFile(FileUtil.getArchiveFile(fo)));
         }
-        return files.toArray(new File[files.size()]);
+        return files.toArray(new File[0]);
     }
 
     @Override
@@ -351,24 +351,32 @@ public final class AppClientProvider extends J2eeModuleProvider
         if (p == null) {
             return AppClient.VERSION_6_0;
         }
-        if (Profile.JAKARTA_EE_10_FULL.equals(p) || Profile.JAKARTA_EE_10_WEB.equals(p)) {
-            return AppClient.VERSION_10_0;
-        } else if (Profile.JAKARTA_EE_9_1_FULL.equals(p) || Profile.JAKARTA_EE_9_1_WEB.equals(p)) {
-            return AppClient.VERSION_9_0;
-        } else if (Profile.JAKARTA_EE_9_FULL.equals(p) || Profile.JAKARTA_EE_9_WEB.equals(p)) {
-            return AppClient.VERSION_9_0;
-        } else if (Profile.JAKARTA_EE_8_FULL.equals(p) || Profile.JAKARTA_EE_8_FULL.equals(p)) {
-            return AppClient.VERSION_8_0;
-        } else if (Profile.JAVA_EE_8_FULL.equals(p) || Profile.JAVA_EE_8_WEB.equals(p)) {
-            return AppClient.VERSION_8_0;
-        } else if (Profile.JAVA_EE_7_FULL.equals(p) || Profile.JAVA_EE_7_WEB.equals(p)) {
-            return AppClient.VERSION_7_0;
-        } else if (Profile.JAVA_EE_5.equals(p)) {
-            return AppClient.VERSION_5_0;
-        } else if (Profile.J2EE_14.equals(p)) {
-            return AppClient.VERSION_1_4;
-        } else {
-            return AppClient.VERSION_6_0;
+        switch (p) {
+            case JAKARTA_EE_11_FULL:
+            case JAKARTA_EE_11_WEB:
+                return AppClient.VERSION_11_0;
+            case JAKARTA_EE_10_FULL:
+            case JAKARTA_EE_10_WEB:
+                return AppClient.VERSION_10_0;
+            case JAKARTA_EE_9_1_FULL:
+            case JAKARTA_EE_9_1_WEB:
+            case JAKARTA_EE_9_FULL:
+            case JAKARTA_EE_9_WEB:
+                return AppClient.VERSION_9_0;
+            case JAKARTA_EE_8_FULL:
+            case JAKARTA_EE_8_WEB:
+            case JAVA_EE_8_FULL:
+            case JAVA_EE_8_WEB:
+                return AppClient.VERSION_8_0;
+            case JAVA_EE_7_FULL:
+            case JAVA_EE_7_WEB:
+                return AppClient.VERSION_7_0;
+            case JAVA_EE_5:
+                return AppClient.VERSION_5_0;
+            case J2EE_14:
+                return AppClient.VERSION_1_4;
+            default:
+                return AppClient.VERSION_6_0;
         }
     }
     

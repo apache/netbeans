@@ -35,6 +35,13 @@
                     <code-name-base>org.apache.commons.logging</code-name-base>
                     <run-dependency/>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.snakeyaml_engine</code-name-base>
+                    <run-dependency>
+                        <release-version>2</release-version>
+                        <specification-version>2.3</specification-version>
+                    </run-dependency>
+                </dependency>
             </module-dependencies>
             <public-packages>
                 <package>com.fasterxml.jackson.annotation</package>
@@ -74,6 +81,8 @@
                 <package>com.fasterxml.jackson.databind.util</package>
                 <package>com.fasterxml.jackson.dataformat.cbor</package>
                 <package>com.fasterxml.jackson.dataformat.cbor.databind</package>
+                <package>com.fasterxml.jackson.dataformat.yaml</package>
+                <package>com.fasterxml.jackson.dataformat.yaml.snakeyaml.error</package>
                 <package>com.fasterxml.jackson.datatype.jsr310</package>
                 <package>com.fasterxml.jackson.datatype.jsr310.deser</package>
                 <package>com.fasterxml.jackson.datatype.jsr310.deser.key</package>
@@ -85,28 +94,32 @@
                 <package>com.fasterxml.jackson.module.jaxb.ser</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jackson/jackson-annotations-2.16.1.jar</runtime-relative-path>
-                <binary-origin>external/jackson-annotations-2.16.1.jar</binary-origin>
+                <runtime-relative-path>ext/jackson/jackson-annotations-2.17.2.jar</runtime-relative-path>
+                <binary-origin>external/jackson-annotations-2.17.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jackson/jackson-core-2.16.1.jar</runtime-relative-path>
-                <binary-origin>external/jackson-core-2.16.1.jar</binary-origin>
+                <runtime-relative-path>ext/jackson/jackson-core-2.17.2.jar</runtime-relative-path>
+                <binary-origin>external/jackson-core-2.17.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jackson/jackson-databind-2.16.1.jar</runtime-relative-path>
-                <binary-origin>external/jackson-databind-2.16.1.jar</binary-origin>
+                <runtime-relative-path>ext/jackson/jackson-databind-2.17.2.jar</runtime-relative-path>
+                <binary-origin>external/jackson-databind-2.17.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jackson/jackson-dataformat-cbor-2.16.1.jar</runtime-relative-path>
-                <binary-origin>external/jackson-dataformat-cbor-2.16.1.jar</binary-origin>
+                <runtime-relative-path>ext/jackson/jackson-dataformat-cbor-2.17.2.jar</runtime-relative-path>
+                <binary-origin>external/jackson-dataformat-cbor-2.17.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jackson/jackson-datatype-jsr310-2.16.1.jar</runtime-relative-path>
-                <binary-origin>external/jackson-datatype-jsr310-2.16.1.jar</binary-origin>
+                <runtime-relative-path>ext/jackson/jackson-dataformat-yaml-2.17.2.jar</runtime-relative-path>
+                <binary-origin>external/jackson-dataformat-yaml-2.17.2.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jackson/jackson-module-jaxb-annotations-2.16.1.jar</runtime-relative-path>
-                <binary-origin>external/jackson-module-jaxb-annotations-2.16.1.jar</binary-origin>
+                <runtime-relative-path>ext/jackson/jackson-datatype-jsr310-2.17.2.jar</runtime-relative-path>
+                <binary-origin>external/jackson-datatype-jsr310-2.17.2.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jackson/jackson-module-jaxb-annotations-2.17.2.jar</runtime-relative-path>
+                <binary-origin>external/jackson-module-jaxb-annotations-2.17.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

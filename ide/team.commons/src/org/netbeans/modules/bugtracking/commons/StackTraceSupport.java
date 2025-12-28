@@ -142,7 +142,7 @@ class StackTraceSupport {
        }
        if ( !st.isEmpty() ) {
            start = adjustFirstLinePosition(text, start);
-           result.add( new StackTracePosition(st.toArray(new StackTraceElement[st.size()]), start, last) );
+           result.add( new StackTracePosition(st.toArray(new StackTraceElement[0]), start, last) );
        }
 
 //       int i = 0;

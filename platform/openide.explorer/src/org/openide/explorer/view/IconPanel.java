@@ -26,14 +26,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.beans.BeanInfo;
+import javax.swing.Icon;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 
 final class IconPanel extends JPanel implements ListCellRenderer {
-    private Image thumbImage;
+    private Icon thumbIcon;
     private boolean selected;
     private boolean focused;
 
@@ -44,7 +46,7 @@ final class IconPanel extends JPanel implements ListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         Node node = Visualizer.findNode(value);
-        thumbImage = node.getIcon(BeanInfo.ICON_COLOR_32x32);
+        thumbIcon = ImageUtilities.image2Icon(node.getIcon(BeanInfo.ICON_COLOR_32x32));
         this.selected = isSelected;
         label.setOpaque(selected);
         if (selected) {
@@ -111,17 +113,16 @@ final class IconPanel extends JPanel implements ListCellRenderer {
                 g.drawRect(18, 18, getWidth() - (2 * 18), getHeight() - (2 * 18));
                 g.setStroke(new BasicStroke(1f));
             }
-            g.drawImage(thumbImage,
-                getWidth() / 2 - thumbImage.getWidth(this) / 2,
-                getHeight() / 2 - thumbImage.getHeight(this) / 2, this
-            );
+            thumbIcon.paintIcon(this, g,
+                getWidth() / 2 - thumbIcon.getIconWidth() / 2,
+                getHeight() / 2 - thumbIcon.getIconHeight() / 2);
         }
 
         @Override
         public Dimension getPreferredSize() {
             return new Dimension(
-                thumbImage.getWidth(this) + getInsets().left + getInsets().right,
-                thumbImage.getHeight(this) + getInsets().top + getInsets().bottom
+                thumbIcon.getIconWidth() + getInsets().left + getInsets().right,
+                thumbIcon.getIconHeight() + getInsets().top + getInsets().bottom
             );
         }
     }

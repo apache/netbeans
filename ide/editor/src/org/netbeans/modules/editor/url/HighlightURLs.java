@@ -30,6 +30,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
 import javax.swing.text.Position.Bias;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
@@ -167,9 +168,9 @@ public final class HighlightURLs implements DocumentListener, Runnable {
                         
                         if (endOffset == (-1)) return;
                         
-                        startOffset = Utilities.getRowStart(doc, startOffset);
+                        startOffset = LineDocumentUtils.getLineStartOffset(doc, startOffset);
                         endOffset = Math.min(doc.getLength(), endOffset);
-                        endOffset = Utilities.getRowEnd(doc, endOffset);
+                        endOffset = LineDocumentUtils.getLineEndOffset(doc, endOffset);
 
                         text[0] = DocumentUtilities.getText(doc, startOffset, endOffset - startOffset);
                         version[0] = DocumentUtilities.getDocumentVersion(doc);

@@ -69,7 +69,7 @@ public final class SerParser implements ObjectStreamConstants {
     
     private final InputStream is;
     private int seq = 0;
-    private final List<Object> refs = new ArrayList<Object>(100);
+    private final List<Object> refs = new ArrayList<>(100);
     
     public SerParser(InputStream is) {
         this.is = is;
@@ -98,7 +98,7 @@ public final class SerParser implements ObjectStreamConstants {
         if (s.magic != STREAM_MAGIC || s.version != STREAM_VERSION) {
            throw new CorruptException("stream version mismatch: " + hexify(s.magic) + " != " + hexify(STREAM_MAGIC) + " or " + hexify(s.version) + " != " +  hexify(STREAM_VERSION)); // NOI18N
         }
-        s.contents = new ArrayList<Object>(10);
+        s.contents = new ArrayList<>(10);
         while (peek() != -1) {
             s.contents.add(readContent());
         }
@@ -158,7 +158,7 @@ public final class SerParser implements ObjectStreamConstants {
         return "0x" + pad(s1, 4) + pad(s2, 4); // NOI18N
     }
     static String hexify(byte[] b) {
-        StringBuffer buf = new StringBuffer(2 + b.length * 2);
+        StringBuilder buf = new StringBuilder(2 + b.length * 2);
         buf.append("0x"); // NOI18N
         for (int i = 0; i < b.length; i++) {
             int x = b[i];
@@ -172,7 +172,7 @@ public final class SerParser implements ObjectStreamConstants {
         if (i == size) {
             return s;
         } else {
-            StringBuffer b = new StringBuffer(size);
+            StringBuilder b = new StringBuilder(size);
             for (int k = 0; k < size - i; k++) {
                 b.append('0'); // NOI18N
             }
@@ -254,6 +254,7 @@ public final class SerParser implements ObjectStreamConstants {
         public short magic;
         public short version;
         public List<Object> contents;
+        @Override
         public String toString() {
             return "Stream[contents=" + contents + "]"; // NOI18N
         }
@@ -304,6 +305,7 @@ public final class SerParser implements ObjectStreamConstants {
     public static final class ObjectWrapper {
         public ClassDesc classdesc;
         public List<Object> data; // <Union2<NameValue,Object>>
+        @Override
         public String toString() {
             return "Object[class=" + classdesc.name + ",data=<omitted>]"; // NOI18N
         }
@@ -316,6 +318,7 @@ public final class SerParser implements ObjectStreamConstants {
         }
         public final FieldDesc name;
         public final Object value;
+        @Override
         public String toString() {
             return name.toString() + "=" + value.toString(); // NOI18N
         }
@@ -331,6 +334,7 @@ public final class SerParser implements ObjectStreamConstants {
         public List<FieldDesc> fields;
         public List annotation; // List<Object>
         public ClassDesc superclass;
+        @Override
         public String toString() {
             return "Class[name=" + name + "]"; // NOI18N
         }
@@ -340,8 +344,8 @@ public final class SerParser implements ObjectStreamConstants {
         ObjectWrapper ow = new ObjectWrapper();
         ow.classdesc = readClassDesc();
         makeRef(ow);
-        ow.data = new ArrayList<Object> (10);
-        LinkedList<ClassDesc> hier = new LinkedList<ClassDesc>();
+        ow.data = new ArrayList<> (10);
+        LinkedList<ClassDesc> hier = new LinkedList<>();
         for (ClassDesc cd = ow.classdesc; cd != null; cd = cd.superclass) {
             hier.addFirst(cd);
         }
@@ -400,7 +404,7 @@ public final class SerParser implements ObjectStreamConstants {
         cd.serializable = (cdf & SC_SERIALIZABLE) != 0;
         cd.externalizable = (cdf & SC_EXTERNALIZABLE) != 0;
         short count = readShort();
-        cd.fields = new ArrayList<FieldDesc>(count);
+        cd.fields = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             cd.fields.add(readFieldDesc());
         }
@@ -413,12 +417,14 @@ public final class SerParser implements ObjectStreamConstants {
     public static class FieldDesc {
         public String name;
         public String type;
+        @Override
         public String toString() {
             return "Field[name=" + name + ",type=" + type + "]"; // NOI18N
         }
     }
     public static final class ObjFieldDesc extends FieldDesc {
         public boolean array;
+        @Override
         public String toString() {
             return "Field[name=" + name + ",type=" + type + (array ? "[]" : "") + "]"; // NOI18N
         }
@@ -468,7 +474,7 @@ public final class SerParser implements ObjectStreamConstants {
     }
     
     private List<Object> readContents() throws IOException {
-        List<Object> l = new ArrayList<Object>(10);
+        List<Object> l = new ArrayList<>(10);
         while (peek() != TC_ENDBLOCKDATA) {
             l.add(readContent());
         }
@@ -480,6 +486,7 @@ public final class SerParser implements ObjectStreamConstants {
     public static final class ArrayWrapper {
         public ClassDesc classdesc;
         public List<Object> values;
+        @Override
         public String toString() {
             return classdesc.name + "{" + values + "}"; // NOI18N
         }
@@ -498,15 +505,15 @@ public final class SerParser implements ObjectStreamConstants {
             } else if (aw.classdesc.name.equals("[S")) { // NOI18N
                 aw.values.add(readShort());
             } else if (aw.classdesc.name.equals("[I")) { // NOI18N
-                aw.values.add(new Integer(readInt()));
+                aw.values.add(readInt());
             } else if (aw.classdesc.name.equals("[J")) { // NOI18N
-                aw.values.add(new Long(readLong()));
+                aw.values.add(readLong());
             } else if (aw.classdesc.name.equals("[F")) { // NOI18N
                 aw.values.add(Float.intBitsToFloat(readInt()));
             } else if (aw.classdesc.name.equals("[D")) { // NOI18N
                 aw.values.add(Double.longBitsToDouble(readLong()));
             } else if (aw.classdesc.name.equals("[C")) { // NOI18N
-                aw.values.add(new Character((char)readShort()));
+                aw.values.add((char)readShort());
             } else if (aw.classdesc.name.equals("[Z")) { // NOI18N
                 aw.values.add(readByte() == 1 ? Boolean.TRUE : Boolean.FALSE);
             } else {
@@ -562,15 +569,15 @@ public final class SerParser implements ObjectStreamConstants {
             } else if (fd.type.equals("S")) { // NOI18N
                 values.add(new NameValue(fd, readShort()));
             } else if (fd.type.equals("I")) { // NOI18N
-                values.add(new NameValue(fd, new Integer(readInt())));
+                values.add(new NameValue(fd, readInt()));
             } else if (fd.type.equals("J")) { // NOI18N
-                values.add(new NameValue(fd, new Long(readLong())));
+                values.add(new NameValue(fd, readLong()));
             } else if (fd.type.equals("F")) { // NOI18N
                 values.add(new NameValue(fd, Float.intBitsToFloat(readInt())));
             } else if (fd.type.equals("D")) { // NOI18N
                 values.add(new NameValue(fd, Double.longBitsToDouble(readLong())));
             } else if (fd.type.equals("C")) { // NOI18N
-                values.add(new NameValue(fd, new Character((char)readShort())));
+                values.add(new NameValue(fd, (char)readShort()));
             } else if (fd.type.equals("Z")) { // NOI18N
                 values.add(new NameValue(fd, readByte() == 1 ? Boolean.TRUE : Boolean.FALSE));
             } else {

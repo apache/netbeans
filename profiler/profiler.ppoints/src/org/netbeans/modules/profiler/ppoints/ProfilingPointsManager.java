@@ -478,7 +478,7 @@ public final class ProfilingPointsManager extends ProfilingPointsProcessor
     public List<ProfilingPoint> getSortedProfilingPoints(Lookup.Provider project, int sortBy, boolean sortOrder) {
         List<ProfilingPoint> sortedProfilingPoints = getProfilingPoints(project, ProfilerIDESettings.getInstance().
                                                                         getIncludeProfilingPointsDependencies(), false);
-        Collections.sort(sortedProfilingPoints, new ProfilingPointsComparator(sortBy, sortOrder));
+        sortedProfilingPoints.sort(new ProfilingPointsComparator(sortBy, sortOrder));
 
         return sortedProfilingPoints;
     }

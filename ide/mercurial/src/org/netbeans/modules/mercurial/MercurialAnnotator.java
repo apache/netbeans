@@ -174,7 +174,6 @@ public class MercurialAnnotator extends VCSAnnotator implements PropertyChangeLi
         for (File file : context.getRootFiles()) {
             if (file.isDirectory()) {
                 folderAnnotation = true;
-                Utils.addFolderToLog(file);
                 break;
             }
         }
@@ -321,7 +320,7 @@ public class MercurialAnnotator extends VCSAnnotator implements PropertyChangeLi
                 actions.add(SystemAction.get(ViewAction.class));
                 actions.add(SystemAction.get(PropertiesAction.class));
             }
-            Utils.setAcceleratorBindings(ACTIONS_PATH_PREFIX, actions.toArray(new Action[actions.size()]));
+            Utils.setAcceleratorBindings(ACTIONS_PATH_PREFIX, actions.toArray(new Action[0]));
         } else {
             Lookup context = ctx.getElements();
             if (noneVersioned){
@@ -355,7 +354,7 @@ public class MercurialAnnotator extends VCSAnnotator implements PropertyChangeLi
                 actions.add(SystemActionBridge.createAction(SystemAction.get(PropertiesAction.class), loc.getString("CTL_PopupMenuItem_Properties"), context)); //NOI18N
             }
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
     /**

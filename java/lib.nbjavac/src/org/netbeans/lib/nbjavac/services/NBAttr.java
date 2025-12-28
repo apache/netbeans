@@ -54,11 +54,13 @@ public class NBAttr extends Attr {
     }
 
     private final CancelService cancelService;
+    private final NBResolve rs;
     private final TreeMaker tm;
 
     public NBAttr(Context context) {
         super(context);
         cancelService = CancelService.instance(context);
+        rs = NBResolve.instance(context);
         tm = TreeMaker.instance(context);
     }
 

@@ -47,7 +47,6 @@ import net.java.html.json.Function;
 import net.java.html.json.Model;
 import net.java.html.json.ModelOperation;
 import net.java.html.json.Property;
-import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -383,7 +382,7 @@ public final class MoveRefactoring extends CodeRefactoring {
                     if (handle.getKind() == Tree.Kind.CLASS) {
                         refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(handle.getFileObject()));
                     } else {
-                        JavaMoveMembersProperties properties = new JavaMoveMembersProperties(selectedElements.toArray(new TreePathHandle[selectedElements.size()]));
+                        JavaMoveMembersProperties properties = new JavaMoveMembersProperties(selectedElements.toArray(new TreePathHandle[0]));
                         properties.setVisibility(JavaMoveMembersProperties.Visibility.valueOf(ui.getSelectedVisibility().name()));
                         properties.setDelegate(ui.isKeepMethodSelected());
                         properties.setUpdateJavaDoc(ui.getSelectedJavaDoc() == JavaDoc.UPDATE);
@@ -407,7 +406,7 @@ public final class MoveRefactoring extends CodeRefactoring {
                 } else {
                     refactoring.setTarget(Lookup.EMPTY);
                 }
-                client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "Move")));
+                sendRefactoringChanges(client, refactoring, "Move");
             } catch (Exception ex) {
                 if (client == null) {
                     Exceptions.printStackTrace(
@@ -420,6 +419,9 @@ public final class MoveRefactoring extends CodeRefactoring {
         }
 
         private static Project getSelectedProject(NamedPath selectedProject) {
+            if (selectedProject == null) {
+                return null;
+            }
             try {
                 String path = selectedProject.getPath();
                 return path != null ? FileOwnerQuery.getOwner(Utils.fromUri(path)) : null;
@@ -429,6 +431,9 @@ public final class MoveRefactoring extends CodeRefactoring {
         }
 
         private static FileObject getSelectedRoot(NamedPath selectedRoot) {
+            if (selectedRoot == null) {
+                return null;
+            }
             try {
                 String path = selectedRoot.getPath();
                 return path != null ? Utils.fromUri(path) : null;

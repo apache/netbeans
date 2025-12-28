@@ -32,6 +32,7 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OccurrencesFinder;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.javascript2.editor.options.ui.json.MarkOccurencesSettings;
 import org.netbeans.modules.javascript2.editor.parser.JsonParserResult;
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 import org.netbeans.modules.javascript2.lexer.api.LexUtilities;
@@ -59,7 +60,9 @@ public class JsonOccurrencesFinder extends OccurrencesFinder<JsonParserResult> {
 
     @Override
     public Map<OffsetRange, ColoringAttributes> getOccurrences() {
-        return range2Attribs;
+        return range2Attribs != null
+                ? Collections.unmodifiableMap(range2Attribs)
+                : Collections.emptyMap();
     }
 
     @Override
@@ -80,6 +83,20 @@ public class JsonOccurrencesFinder extends OccurrencesFinder<JsonParserResult> {
     @Override
     public void cancel() {
         cancelled.set(true);
+    }
+
+    @Override
+    public boolean isKeepMarks() {
+        return MarkOccurencesSettings
+                .getCurrentNode()
+                .getBoolean(MarkOccurencesSettings.KEEP_MARKS, true);
+    }
+
+    @Override
+    public boolean isMarkOccurrencesEnabled() {
+        return MarkOccurencesSettings
+                .getCurrentNode()
+                .getBoolean(MarkOccurencesSettings.ON_OFF, true);
     }
 
     @NonNull

@@ -4,6 +4,7 @@ Version: 1.14.1
 Origin: GitHub
 License: Apache-2.0
 URL: https://github.com/timboudreau/simplevalidation/
+Files: simplevalidation-1.14.1.jar simplevalidation-swing-1.14.1.jar
 
                                  Apache License
                            Version 2.0, January 2004

@@ -132,7 +132,7 @@ public final class MergePane extends DEditorPane implements HighlightsContainer,
 
     private HighLight[] getHighlights () {
         synchronized (highlights) {
-            return highlights.toArray(new HighLight[highlights.size()]);
+            return highlights.toArray(new HighLight[0]);
         }
     }
 
@@ -226,7 +226,7 @@ public final class MergePane extends DEditorPane implements HighlightsContainer,
                 if (hilite.getStartOffset() > endOffset) break;
                 list.add(hilite);
             }
-            highlights = list.toArray(new HighLight[list.size()]);
+            highlights = list.toArray(new HighLight[0]);
         }
 
         @Override

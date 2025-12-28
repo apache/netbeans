@@ -3,7 +3,7 @@ Version: 2.6.1
 Description: A light-weight and dynamic dependency injection framework
 License: EPL-v20
 Origin: https://github.com/eclipse-ee4j/glassfish-hk2
-Files: hk2-api-2.6.1.jar, hk2-locator-2.6.1.jar, hk2-utils-2.6.1.jar, aopalliance-repackaged-2.6.1.jar, jakarta.inject-2.6.1.jar, osgi-resource-locator-1.0.3.jar
+Files: hk2-api-2.6.1.jar, hk2-locator-2.6.1.jar, hk2-utils-2.6.1.jar, aopalliance-repackaged-2.6.1.jar, osgi-resource-locator-1.0.3.jar
 
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.

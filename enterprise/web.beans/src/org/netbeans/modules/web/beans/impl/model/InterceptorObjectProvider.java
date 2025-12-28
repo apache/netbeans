@@ -18,9 +18,11 @@
  */
 package org.netbeans.modules.web.beans.impl.model;
 
+import java.util.List;
 import javax.lang.model.element.TypeElement;
 
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.AnnotationModelHelper;
+import org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil;
 
 
 /**
@@ -31,7 +33,7 @@ class InterceptorObjectProvider extends AbstractObjectProvider<InterceptorObject
 
     InterceptorObjectProvider( AnnotationModelHelper helper )
     {
-        super(InterceptorObject.INTERCEPTOR, helper);
+        super(List.of(AnnotationUtil.INTERCEPTOR, AnnotationUtil.INTERCEPTOR_JAKARTA), helper);
     }
 
     /* (non-Javadoc)

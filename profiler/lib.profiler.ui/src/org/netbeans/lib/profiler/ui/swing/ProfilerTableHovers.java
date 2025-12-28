@@ -175,8 +175,6 @@ final class ProfilerTableHovers {
 //                             JLayeredPane.POPUP_LAYER).length > 0;
 //            } else if (p instanceof Window) {
 //                break;
-//            } else if (p instanceof JApplet) {
-//                break;
 //            }
 //        }
 //        

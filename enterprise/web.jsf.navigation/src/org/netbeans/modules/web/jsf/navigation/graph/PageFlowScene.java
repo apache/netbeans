@@ -48,6 +48,7 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.InputMap;
 import javax.swing.KeyStroke;
 import javax.swing.border.Border;
@@ -76,7 +77,6 @@ import org.netbeans.modules.web.jsf.navigation.graph.actions.PageFlowPopupProvid
 import org.netbeans.modules.web.jsf.navigation.graph.layout.ConnectionWrapperLayout;
 import org.openide.actions.DeleteAction;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Utilities;
 import org.openide.util.actions.CallbackSystemAction;
 import org.openide.util.actions.SystemAction;
 
@@ -125,12 +125,12 @@ public class PageFlowScene extends GraphPinScene<Page, NavigationCaseEdge, Pin> 
     private PFObjectSceneListener pfObjectSceneListener;
     private static Paint PAINT_BACKGROUND;
     static {
-        Image sourceImage = ImageUtilities.loadImage("org/netbeans/modules/web/jsf/navigation/graph/resources/paper_grid.png"); // NOI18N
-        int width = sourceImage.getWidth(null);
-        int height = sourceImage.getHeight(null);
+        Icon sourceIcon = ImageUtilities.loadIcon("org/netbeans/modules/web/jsf/navigation/graph/resources/paper_grid.png"); // NOI18N
+        int width = sourceIcon.getIconWidth();
+        int height = sourceIcon.getIconHeight();
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = image.createGraphics();
-        graphics.drawImage(sourceImage, 0, 0, null);
+        sourceIcon.paintIcon(null, graphics, 0, 0);
         graphics.dispose();
         PAINT_BACKGROUND = new TexturePaint(image, new Rectangle(0, 0, width, height));
     }

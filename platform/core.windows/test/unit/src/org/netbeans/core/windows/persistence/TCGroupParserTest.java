@@ -37,9 +37,7 @@ public class TCGroupParserTest extends NbTestCase {
         super(testName);
     }
     
-    ////////////////////////////////
     //Testing CORRECT data
-    ////////////////////////////////
     /** Test of loaded data
      */
     public void testLoadTCGroup00 () throws Exception {
@@ -120,9 +118,7 @@ public class TCGroupParserTest extends NbTestCase {
         System.out.println("TCGroupParserTest.testSaveTCGroup01 FINISH");
     }
     
-    ////////////////////////////////////////
     //Tests of handling of INVALID data
-    ////////////////////////////////////////
     /** Test of missing file
      */
     public void testLoadTCGroup00Invalid () throws Exception {

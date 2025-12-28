@@ -35,6 +35,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.swing.Icon;
 import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
@@ -77,10 +78,15 @@ import org.netbeans.spi.editor.hints.Severity;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.NotifyDescriptor.QuickPick.Item;
+import org.openide.awt.NotificationDisplayer;
+import org.openide.awt.NotificationDisplayer.Category;
+import org.openide.awt.NotificationDisplayer.Priority;
+import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -166,7 +172,7 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
             }
             assert file != null;
             List<ErrorDescription> diags = pdp.getDiagnostics().stream().map(d -> {
-                LazyFixList fixList = allowCodeActions ? new DiagnosticFixList(pdp.getUri(), d) : ErrorDescriptionFactory.lazyListForFixes(Collections.emptyList());
+                LazyFixList fixList = allowCodeActions ? new DiagnosticFixList(doc, pdp.getUri(), d) : ErrorDescriptionFactory.lazyListForFixes(Collections.emptyList());
                 return ErrorDescriptionFactory.createErrorDescription(severityMap.get(d.getSeverity()), d.getMessage(), fixList, file, Utils.getOffset(doc, d.getRange().getStart()), Utils.getOffset(doc, d.getRange().getEnd()));
             }).collect(Collectors.toList());
             HintsController.setErrors(doc, LanguageClientImpl.class.getName(), diags);
@@ -191,29 +197,30 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
     }
 
     @Override
-    public void showMessage(MessageParams arg0) {
-        int messageType;
+    public void showMessage(MessageParams params) {
+        MessageType type = Optional.ofNullable(params.getType()).orElse(MessageType.Log);
+        Icon icon;
+        Category category;
 
-        switch (Optional.ofNullable(arg0.getType()).orElse(MessageType.Log)) {
+        switch (type) {
             default:
             case Log:
+                LOG.log(Level.FINE, params.getMessage());
+                return ;
             case Info:
-                messageType = NotifyDescriptor.INFORMATION_MESSAGE;
-                break;
+                StatusDisplayer.getDefault().setStatusText(params.getMessage());
+                return ;
             case Warning:
-                messageType = NotifyDescriptor.WARNING_MESSAGE;
+                icon = ImageUtilities.loadImageIcon("org/netbeans/modules/lsp/client/resources/warning.png", false);
+                category = Category.WARNING;
                 break;
             case Error:
-                messageType = NotifyDescriptor.ERROR_MESSAGE;
+                icon = ImageUtilities.loadImageIcon("org/netbeans/modules/lsp/client/resources/error_16.png", false);
+                category = Category.ERROR;
                 break;
         }
 
-        NotifyDescriptor nd = new NotifyDescriptor.Message(
-                arg0.getMessage(),
-                messageType
-        );
-
-        DialogDisplayer.getDefault().notifyLater(nd);
+        NotificationDisplayer.getDefault().notify(params.getMessage(), icon, params.getMessage(), null, Priority.NORMAL, category);
     }
 
     @Override
@@ -302,12 +309,14 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
 
         private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
         private final String fileUri;
+        private final Document doc;
         private final Diagnostic diagnostic;
         private List<Fix> fixes;
         private boolean computing;
         private boolean computed;
 
-        public DiagnosticFixList(String fileUri, Diagnostic diagnostic) {
+        public DiagnosticFixList(Document doc, String fileUri, Diagnostic diagnostic) {
+            this.doc = doc;
             this.fileUri = fileUri;
             this.diagnostic = diagnostic;
         }
@@ -334,17 +343,19 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
                 computing = true;
                 bindings.runOnBackground(() -> {
                     try {
-                        List<Either<Command, CodeAction>> commands =
-                                bindings.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(fileUri),
-                                        diagnostic.getRange(),
-                                        new CodeActionContext(Collections.singletonList(diagnostic)))).get();
-
                         List<Fix> newFixes = Collections.emptyList();
 
-                        if (commands != null) {
-                            newFixes = commands.stream()
-                                    .map(cmd -> new CommandBasedFix(cmd))
-                                    .collect(Collectors.toList());
+                        if (Utils.getOffset(doc, diagnostic.getRange().getEnd()) < doc.getEndPosition().getOffset()) {
+                            List<Either<Command, CodeAction>> commands
+                                    = bindings.getTextDocumentService().codeAction(new CodeActionParams(new TextDocumentIdentifier(fileUri),
+                                            diagnostic.getRange(),
+                                            new CodeActionContext(Collections.singletonList(diagnostic)))).get();
+
+                            if (commands != null) {
+                                newFixes = commands.stream()
+                                        .map(cmd -> new CommandBasedFix(cmd))
+                                        .collect(Collectors.toList());
+                            }
                         }
 
                         synchronized (this) {
@@ -355,7 +366,7 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
                         pcs.firePropertyChange(PROP_COMPUTED, null, null);
                         pcs.firePropertyChange(PROP_FIXES, null, null);
                     } catch (InterruptedException | ExecutionException ex) {
-                        Exceptions.printStackTrace(ex);
+                        LOG.log(Level.INFO, "Failure fetching DiagnosticFixList (at least typescript server has known problems)", ex);
                     }
                 });
             }

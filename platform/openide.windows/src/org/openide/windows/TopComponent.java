@@ -46,10 +46,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Objects;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -127,10 +129,10 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
     private static Object defaultLookupLock = new Object();
 
     /** Classes that have been warned about overriding preferredID() */
-    private static final Set<Class> warnedTCPIClasses = new WeakSet<Class>();
+    private static final Set<Class> warnedTCPIClasses = Collections.newSetFromMap(new WeakHashMap<>());
 
     /** Used to print warning about getPersistenceType */
-    private static final Set<Class> warnedClasses = new WeakSet<Class>();
+    private static final Set<Class> warnedClasses = Collections.newSetFromMap(new WeakHashMap<>());
 
     /** reference to Lookup with default implementation for the
      * component or the lookup associated with the component itself
@@ -797,7 +799,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
      * if it is not already.
      * <p>Subclasses should override this method to transfer focus to desired
      * focusable component. <code>TopComponent</code> itself is not focusable.
-     * See for example <a href="@org-openide-text@/org/openide/text/CloneableEditor.html#requestFocus--">CloneableEditor#requestFocus</a>.
+     * See for example <a href="@org-openide-text@/org/openide/text/CloneableEditor.html#requestFocus()">CloneableEditor#requestFocus</a>.
      * <p><strong>Note:</strong> Use {@link #requestActive} instead to make TopComponent active
      * in the window system (not only focused). This method should be considered deprecated
      * for calling from outside; but it may be overridden (inside of which you may call super).
@@ -817,7 +819,7 @@ public class TopComponent extends JComponent implements Externalizable, Accessib
      * if it is not already.
      * <p>Subclasses should override this method to transfer focus to desired
      * focusable component. <code>TopComponent</code> itself is not focusable.
-     * See for example <a href="@org-openide-text@/org/openide/text/CloneableEditor.html#requestFocusInWindow--">CloneableEditor#requestFocusInWindow</a>.
+     * See for example <a href="@org-openide-text@/org/openide/text/CloneableEditor.html#requestFocusInWindow()">CloneableEditor#requestFocusInWindow</a>.
      * <p><strong>Note:</strong> Use {@link #requestActive} instead to make TopComponent active
      * in the window system (not only focused). This method should be considered deprecated
      * for calling from outside; but it may be overridden (inside of which you may call super).

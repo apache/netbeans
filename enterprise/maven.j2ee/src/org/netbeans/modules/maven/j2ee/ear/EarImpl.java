@@ -258,6 +258,8 @@ public class EarImpl implements EarImplementation, EarImplementation2,
     @Override
     public String getModuleVersion() {
         Profile prf = getJ2eeProfile();
+        if (prf == Profile.JAKARTA_EE_11_FULL || prf == Profile.JAKARTA_EE_11_FULL) return Application.VERSION_11;
+        if (prf == Profile.JAKARTA_EE_10_FULL || prf == Profile.JAKARTA_EE_10_FULL) return Application.VERSION_10;
         if (prf == Profile.JAKARTA_EE_9_1_FULL || prf == Profile.JAKARTA_EE_9_FULL) return Application.VERSION_9;
         if (prf == Profile.JAKARTA_EE_8_FULL || prf == Profile.JAVA_EE_8_FULL) return Application.VERSION_8;
         if (prf == Profile.JAVA_EE_7_FULL) return Application.VERSION_7;
@@ -441,7 +443,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 }
             }
         }
-        return toRet.toArray(new J2eeModule[toRet.size()]);
+        return toRet.toArray(new J2eeModule[0]);
     }
 
     @Override

@@ -214,7 +214,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.68.0.3</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.0.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -431,7 +432,6 @@
             </test-dependencies>
             <friend-packages>
                 <friend>org.netbeans.modules.bugtracking.bridge</friend>
-                <friend>org.netbeans.modules.kenai.ui</friend>
                 <friend>org.netbeans.modules.odcs.subversion</friend>
                 <package>org.netbeans.modules.subversion.api</package>
             </friend-packages>

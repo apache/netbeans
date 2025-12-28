@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.32.0
+#Version 1.40.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -45,5 +45,5 @@ meth public void removePreferenceChangeListener(java.util.prefs.PreferenceChange
 meth public void setBreakAtFirstLine(boolean)
 meth public void setLiveEdit(boolean)
 supr java.lang.Object
-hfds DEBUGGER_PREFS,INSTANCE,PROP_BRK_1ST,PROP_LIVE_EDIT,prefs
+hfds INSTANCE
 

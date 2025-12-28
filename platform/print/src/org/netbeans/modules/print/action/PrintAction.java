@@ -152,7 +152,7 @@ public final class PrintAction extends IconAction {
             return null;
         }
 //out("result: " + providers);
-        return providers.toArray(new PrintProvider[providers.size()]);
+        return providers.toArray(new PrintProvider[0]);
     }
 
     private PrintProvider getCookieProvider(Node node) {

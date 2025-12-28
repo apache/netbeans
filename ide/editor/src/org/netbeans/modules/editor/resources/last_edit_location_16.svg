@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -19,57 +19,44 @@
     under the License.
 
 -->
-<!-- Generator: Adobe Illustrator 25.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Vector_Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-	 y="0px" width="16px" height="16px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#E9F7FF;}
-	.st1{fill:#527C99;}
-	.st2{fill:#FFC36D;}
-	.st3{opacity:0.33;}
-	.st4{fill:#E79B00;}
-	.st5{fill:#CAE3FF;}
-	.st6{fill:#3883CE;}
-	.st7{fill:#FBDC7C;}
-	.st8{fill:#FFDB43;}
-	.st9{fill:none;stroke:#003399;stroke-width:1.375;stroke-miterlimit:10;}
-	.st10{fill:#E8513D;}
-	.st11{fill:#9FCBFF;}
-	.st12{fill:#62707C;}
-	.st13{fill:#7A8896;}
-	.st14{fill:#57BFFF;}
-	.st15{fill:#E69D35;}
-	.st16{fill:#9CFF73;}
-	.st17{fill:none;stroke:#000000;stroke-miterlimit:10;}
-	.st18{fill:#EAEAEA;}
-	.st19{fill:#E57067;}
-	.st20{fill:#94E0EF;}
-	.st21{fill:#4A4A4A;}
-	.st22{fill:#727272;}
-	.st23{fill:#EDEDED;}
-	.st24{fill:#5B5B5B;}
-	.st25{fill:#E9E9E9;}
-	.st26{opacity:0.4;}
-	.st27{opacity:0.15;}
-	.st28{fill:#C3E3FF;}
-	.st29{fill:#0084D3;}
-	.st30{opacity:0.5;fill:#E9F7FF;}
-	.st31{opacity:0.66;}
-</style>
-<rect class="st30" width="14" height="14"/>
-<polygon class="st1" points="13.5,7.5 13.5,13.5 0.5,13.5 0.5,0.5 5.5,0.5 13.5,0.5 14,0.5 14,0 0,0 0,14 14,14 14,7.5 "/>
-<g>
-	<polygon class="st2" points="16,8 16,1 14.5,1 13,5 11,5 11,3 9,3 5,7.5 9,12 11,12 11,10 16,10.003 	"/>
-	<g class="st3">
-		<path d="M15.5,1.5L15,9h-3.999L10,8.999V11H9.449L6.338,7.5L9.449,4H10v2h3.5L15,1.5H15.5z M16,1h-1.5L13,5h-2V3H9L5,7.5L9,12h2
-			v-2l5,0.003V8V1L16,1z"/>
-	</g>
-</g>
-<g class="st31">
-	<rect x="3" y="3" width="1" height="8"/>
-	<rect x="2" y="2" width="1" height="1"/>
-	<rect x="4" y="2" width="1" height="1"/>
-	<rect x="2" y="11" width="1" height="1"/>
-	<rect x="4" y="11" width="1" height="1"/>
-</g>
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #5b7b95;
+      }
+
+      .st1 {
+        opacity: .66;
+      }
+
+      .st2 {
+        opacity: .33;
+      }
+
+      .st3 {
+        fill: #ebf6fd;
+      }
+
+      .st4 {
+        fill: #f5c47a;
+      }
+    </style>
+  </defs>
+  <rect class="st3" width="14" height="14"/>
+  <polygon class="st0" points="14 1 14 0 0 0 0 14 14 14 14 7.5 13 7.5 13 13 1 13 1 1 14 1"/>
+  <g>
+    <polygon class="st4" points="16 8 16 1 14.5 1 13 5 11 5 11 3 9 3 5 7.5 9 12 11 12 11 10 16 10.003 16 8"/>
+    <g class="st2">
+      <path d="M15.5,1.5l-.5,7.5h-5s0,2,0,2h-.551l-3.111-3.5,3.111-3.5h.551v2h3.5l1.5-4.5h.5ZM16,1h-1.5l-1.5,4h-2v-2h-2l-4,4.5,4,4.5h2v-2l5,.003V1h0Z"/>
+    </g>
+  </g>
+  <g class="st1">
+    <rect x="3" y="2.5" width="1" height="9"/>
+    <rect x="2" y="2" width="1" height="1"/>
+    <rect x="4" y="2" width="1" height="1"/>
+    <rect x="2" y="11" width="1" height="1"/>
+    <rect x="4" y="11" width="1" height="1"/>
+  </g>
 </svg>

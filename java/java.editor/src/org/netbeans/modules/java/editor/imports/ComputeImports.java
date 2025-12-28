@@ -596,9 +596,20 @@ public final class ComputeImports {
                         }
                     }
 
-                    if (type != null && type.getKind() == TypeKind.PACKAGE) {
+                    if (type.getKind() == TypeKind.PACKAGE) {
+                        TreePath parent = getCurrentPath().getParentPath();
+                        Element fullPackage = el;
+                        while (parent != null) {
+                            Element parentElement = info.getTrees().getElement(parent);
+                            if (parentElement != null && parentElement.getKind() == ElementKind.PACKAGE) {
+                                fullPackage = parentElement;
+                                parent = parent.getParentPath();
+                            } else {
+                                break;
+                            }
+                        }
                         //does the package really exists?
-                        String s = ((PackageElement) el).getQualifiedName().toString();
+                        String s = ((PackageElement) fullPackage).getQualifiedName().toString();
                         Element thisPack = info.getTrees().getElement(new TreePath(info.getCompilationUnit()));
                         ModuleElement module = thisPack != null ? info.getElements().getModuleOf(thisPack) : null;
                         PackageElement pack = module != null ? info.getElements().getPackageElement(module, s) : info.getElements().getPackageElement(s);

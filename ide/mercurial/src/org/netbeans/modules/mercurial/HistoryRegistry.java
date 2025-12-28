@@ -190,7 +190,7 @@ public class HistoryRegistry {
                 changePaths = Arrays.asList(cps == null ? new HgLogMessageChangedPath[0] : cps);
             }
             if (changePaths != null) {
-                lm.refreshChangedPaths(changePaths.toArray(new HgLogMessageChangedPath[changePaths.size()]));
+                lm.refreshChangedPaths(changePaths.toArray(new HgLogMessageChangedPath[0]));
                 changesets.put(changesetId, changePaths);
                 if (persist && !changePaths.isEmpty() && !"false".equals(System.getProperty("versioning.mercurial.historycache.enable", "true"))) { //NOI18N
                     persistPaths(repository, changePaths, lm.getCSetShortID());
@@ -200,7 +200,7 @@ public class HistoryRegistry {
                 LOG.log(Level.FINE, " loading changePaths for {0} took {1}", new Object[] { changesetId, System.currentTimeMillis() - t1}); // NOI18N
             }
         } else {
-            lm.refreshChangedPaths(changePaths.toArray(new HgLogMessageChangedPath[changePaths.size()]));
+            lm.refreshChangedPaths(changePaths.toArray(new HgLogMessageChangedPath[0]));
         }
         return changePaths;
     }

@@ -101,7 +101,7 @@ public class Utils {
     public static VCSContext contextForLookup(Lookup lookup) {
         Lookup.Result<Node> result = lookup.lookup(new Lookup.Template<Node>(Node.class));
         Collection<? extends Node> nodes = result.allInstances();
-        return VCSContext.forNodes(nodes.toArray(new Node[nodes.size()]));
+        return VCSContext.forNodes(nodes.toArray(new Node[0]));
     }
         
     public static VCSContext contextForFileObjects(Set<? extends FileObject> files) {

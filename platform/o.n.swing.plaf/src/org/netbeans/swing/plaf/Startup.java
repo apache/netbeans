@@ -158,8 +158,8 @@ public final class Startup {
           LookAndFeel lf = UIManager.getLookAndFeel();
           if (uiClass != lf.getClass()) {
               try {
-                lf = (LookAndFeel) uiClass.newInstance();
-              } catch (IllegalAccessException | InstantiationException ex) {
+                lf = (LookAndFeel) uiClass.getDeclaredConstructor().newInstance();
+              } catch (ReflectiveOperationException ex) {
                   return new LFInstanceOrName(uiClass.getName());
               }
           }
@@ -240,12 +240,12 @@ public final class Startup {
         if (curCustoms != null) {
             Integer in = (Integer) UIManager.get(LFCustoms.CUSTOM_FONT_SIZE); //NOI18N
             if (in == null && UIManager.getLookAndFeel().getClass() == MetalLookAndFeel.class) {
-                in = new Integer (11);
+                in = 11;
             }
 
             //#161761: Do not want to use font size param for GTK L&F because it causes mixed font size
             if ((in != null) && !UIUtils.isGtkLF()) {
-                AllLFCustoms.initCustomFontSize (in.intValue());
+                AllLFCustoms.initCustomFontSize (in);
             }
             installLFCustoms (curCustoms);
             if (isLFChange) {
@@ -385,7 +385,7 @@ public final class Startup {
         }
         try {
             Class klazz = UIUtils.classForName( uiClassName );
-            Object inst = klazz.newInstance();
+            Object inst = klazz.getDeclaredConstructor().newInstance();
             if( inst instanceof LFCustoms )
                 return ( LFCustoms ) inst;
         } catch( ClassNotFoundException e ) {
@@ -417,7 +417,7 @@ public final class Startup {
                 return new GtkLFCustoms();
             } else {
                 try {
-                    return (LFCustoms) UIUtils.classForName(FORCED_CUSTOMS).newInstance();
+                    return (LFCustoms) UIUtils.classForName(FORCED_CUSTOMS).getDeclaredConstructor().newInstance();
                 } catch (Exception e) {
                     System.err.println("UI customizations class not found: " //NOI18N
                         + FORCED_CUSTOMS); //NOI18N
@@ -520,7 +520,7 @@ public final class Startup {
      *          provide a font with the requested size.  Results are undefined for values less than 0 or greater
      *          than any hard limit the platform imposes on font size.
      * @param themeURL An optional URL for a theme file, or null. Theme file format documentation can be found
-     *        <a href="https://netbeans.apache.org/projects/ui/themes/themes.html">here</a>.
+     *        <a href="https://netbeans.apache.org/projects/ui/themes/themes">here</a>.
      */
     public static void run (Class uiClass, int uiFontSize, URL themeURL) {
         run(uiClass, uiFontSize, themeURL, null);
@@ -536,7 +536,7 @@ public final class Startup {
      *          provide a font with the requested size.  Results are undefined for values less than 0 or greater
      *          than any hard limit the platform imposes on font size.
      * @param themeURL An optional URL for a theme file, or null. Theme file format documentation can be found
-     *        <a href="https://netbeans.apache.org/projects/ui/themes/themes.html">here</a>.
+     *        <a href="https://netbeans.apache.org/projects/ui/themes/themes">here</a>.
      * @param rb resource bundle to use for branding or null. Allows NetBeans to provide enhanced version
      *          of bundle that knows how to deal with branding. The bundle shall have the same keys as
      *          <code>org.netbeans.swing.plaf.Bundle</code> bundle has.
@@ -546,7 +546,7 @@ public final class Startup {
         if (instance == null) {
           // Modify default font size to the font size passed as a command-line parameter
             if(uiFontSize>0) {
-                Integer customFontSize = new Integer (uiFontSize);
+                Integer customFontSize = Integer.valueOf(uiFontSize);
                 UIManager.put (LFCustoms.CUSTOM_FONT_SIZE, customFontSize);
             }
             Startup.uiClass = uiClass;

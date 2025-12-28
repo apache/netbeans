@@ -111,6 +111,6 @@ class SharabilityQueryImpl implements SharabilityQueryImplementation2, PropertyC
         }
         props.addAll(additionalSourceRoots);
 
-        return helper.createSharabilityQuery2(evaluator, props.toArray(new String[props.size()]), buildDirectories);
+        return helper.createSharabilityQuery2(evaluator, props.toArray(new String[0]), buildDirectories);
     }
 }

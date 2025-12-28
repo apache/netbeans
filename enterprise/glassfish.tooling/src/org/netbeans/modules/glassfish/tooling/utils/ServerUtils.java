@@ -46,10 +46,7 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
  */
 public class ServerUtils {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner Classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////   
-
     /**
      * Filtering the set of directories with GlassFish server home subdirectory
      * shown to the user in file filter.
@@ -98,7 +95,6 @@ public class ServerUtils {
             pattern = Pattern.compile(namePattern);
         }
 
-        @Override
         /**
          * Test whether or not the specified pathname is valid GlassFish server.
          * <p/>
@@ -106,16 +102,14 @@ public class ServerUtils {
          * @return Returns <code>true</code> when given <code>File</code>
          *         should be included or <code>false</code> otherwise.
          */
+        @Override
         public boolean accept(final File file) {
             return pattern.matcher(file.getName()).matches();
         }
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(ServerUtils.class);
 
@@ -265,10 +259,7 @@ public class ServerUtils {
             = Pattern.compile(MANIFEST_COMPONENT_COMP_REGEX,
             Pattern.CASE_INSENSITIVE);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Search for <code>.jar</code> file matching given pattern
      * in <code>&lt;serverHome&gt;/modules</code> directory tree.

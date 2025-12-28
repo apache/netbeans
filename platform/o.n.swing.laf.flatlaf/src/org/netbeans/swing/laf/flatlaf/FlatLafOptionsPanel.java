@@ -139,6 +139,7 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
         advPanel = new javax.swing.JPanel();
         customPropertiesLabel = new javax.swing.JLabel();
         customPropertiesButton = new javax.swing.JButton();
+        showFileChooserFavoritesCheckBox = new javax.swing.JCheckBox();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -205,7 +206,7 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
             .addGroup(advPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(advPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(customPropertiesLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
+                    .addComponent(customPropertiesLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 368, Short.MAX_VALUE)
                     .addGroup(advPanelLayout.createSequentialGroup()
                         .addComponent(customPropertiesButton)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -221,6 +222,13 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        org.openide.awt.Mnemonics.setLocalizedText(showFileChooserFavoritesCheckBox, org.openide.util.NbBundle.getMessage(FlatLafOptionsPanel.class, "FlatLafOptionsPanel.showFileChooserFavoritesCheckBox.text")); // NOI18N
+        showFileChooserFavoritesCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showFileChooserFavoritesCheckBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -234,12 +242,12 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
                     .addComponent(underlineMenuSelectionCheckBox)
                     .addComponent(alwaysShowMnemonicsCheckBox)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
                         .addComponent(accentColorLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(accentColorField, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(needsRestartLabel)))
+                        .addComponent(needsRestartLabel))
+                    .addComponent(showFileChooserFavoritesCheckBox))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -249,7 +257,7 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
                     .addComponent(accentColorField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(needsRestartLabel)
                     .addComponent(accentColorLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(useWindowDecorationsCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(unifiedTitleBarCheckBox)
@@ -259,9 +267,11 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
                 .addComponent(underlineMenuSelectionCheckBox)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(alwaysShowMnemonicsCheckBox)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(showFileChooserFavoritesCheckBox)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(advPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -317,6 +327,10 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
         fireChanged();
     }//GEN-LAST:event_accentColorFieldActionPerformed
 
+    private void showFileChooserFavoritesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showFileChooserFavoritesCheckBoxActionPerformed
+        fireChanged();
+    }//GEN-LAST:event_showFileChooserFavoritesCheckBoxActionPerformed
+
     private void fireChanged() {
         boolean isChanged = false;
         if(!Objects.equals(accentColorField.getSelectedColor(), getPrefsAccentColorOrDefault())
@@ -324,7 +338,8 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
                 || unifiedTitleBarCheckBox.isSelected() != FlatLafPrefs.isUnifiedTitleBar()
                 || menuBarEmbeddedCheckBox.isSelected() != FlatLafPrefs.isMenuBarEmbedded()
                 || underlineMenuSelectionCheckBox.isSelected() != FlatLafPrefs.isUnderlineMenuSelection()
-                || alwaysShowMnemonicsCheckBox.isSelected() != FlatLafPrefs.isAlwaysShowMnemonics()) {
+                || alwaysShowMnemonicsCheckBox.isSelected() != FlatLafPrefs.isAlwaysShowMnemonics()
+                || showFileChooserFavoritesCheckBox.isSelected() != FlatLafPrefs.isShowFileChooserFavorites()) {
             isChanged = true;
         }
         controller.changed(isChanged);
@@ -337,6 +352,7 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
         menuBarEmbeddedCheckBox.setSelected(FlatLafPrefs.isMenuBarEmbedded());
         underlineMenuSelectionCheckBox.setSelected(FlatLafPrefs.isUnderlineMenuSelection());
         alwaysShowMnemonicsCheckBox.setSelected(FlatLafPrefs.isAlwaysShowMnemonics());
+        showFileChooserFavoritesCheckBox.setSelected(FlatLafPrefs.isShowFileChooserFavorites());
 
         updateEnabled();
     }
@@ -349,6 +365,7 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
         FlatLafPrefs.setMenuBarEmbedded(menuBarEmbeddedCheckBox.isSelected());
         FlatLafPrefs.setUnderlineMenuSelection(underlineMenuSelectionCheckBox.isSelected());
         FlatLafPrefs.setAlwaysShowMnemonics(alwaysShowMnemonicsCheckBox.isSelected());
+        FlatLafPrefs.setShowFileChooserFavorites(showFileChooserFavoritesCheckBox.isSelected());
 
         if (!Objects.equals(accentColor, currentAccentColor)
                 || SystemInfo.isLinux && useWindowDecorationsCheckBox.isSelected() != currentUseWindowDecorations) {
@@ -397,6 +414,7 @@ public class FlatLafOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel customPropertiesLabel;
     private javax.swing.JCheckBox menuBarEmbeddedCheckBox;
     private javax.swing.JLabel needsRestartLabel;
+    private javax.swing.JCheckBox showFileChooserFavoritesCheckBox;
     private javax.swing.JCheckBox underlineMenuSelectionCheckBox;
     private javax.swing.JCheckBox unifiedTitleBarCheckBox;
     private javax.swing.JCheckBox useWindowDecorationsCheckBox;

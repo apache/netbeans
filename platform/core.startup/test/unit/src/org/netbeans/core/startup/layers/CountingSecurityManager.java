@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -109,7 +110,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
 
         @Override
         public int hashCode() {
-            return this.hashCode();
+            return Objects.hashCode(this);
         }
 
         @Override
@@ -167,7 +168,7 @@ final class CountingSecurityManager extends SecurityManager implements Callable<
             try {
                 ClassLoader l = Thread.currentThread().getContextClassLoader();
                 Class<?> manClass = Class.forName("org.netbeans.TopSecurityManager", false, l);
-                man = (SecurityManager) manClass.newInstance();
+                man = (SecurityManager) manClass.getDeclaredConstructor().newInstance();
             } catch (Exception ex) {
                 throw new IllegalStateException(ex);
             }

@@ -19,11 +19,7 @@
 
 package org.netbeans.upgrade;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
 import javax.swing.JPanel;
-import javax.swing.event.ChangeListener;
 import org.openide.util.NbBundle;
 
 
@@ -35,35 +31,20 @@ final class AutoUpgradePanel extends JPanel {
     private String source;
     private String note;
 
-    /** Creates new form UpgradePanel */
-    public AutoUpgradePanel (String directory, String note) {
+    public AutoUpgradePanel(String directory) {
+        this(directory, "");
+    }
+
+    public AutoUpgradePanel(String directory, String note) {
         this.source = directory;
         this.note = note;
         initComponents();
         initAccessibility();
     }
 
-    /** Remove a listener to changes of the panel's validity.
-     * @param l the listener to remove
-     */
-    void removeChangeListener(ChangeListener l) {
-        changeListeners.remove(l);
-    }
-
-    /** Add a listener to changes of the panel's validity.
-     * @param l the listener to add
-     * @see #isValid
-     */
-    void addChangeListener(ChangeListener l) {
-        if (!changeListeners.contains(l)) {
-            changeListeners.add(l);
-        }
-    }
-
     private void initAccessibility() {
-        this.getAccessibleContext().setAccessibleDescription(bundle.getString("MSG_Confirmation")); // NOI18N
+        this.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(AutoUpgradePanel.class, "MSG_Confirmation")); // NOI18N
     }
-    
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -94,7 +75,7 @@ final class AutoUpgradePanel extends JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(txtVersions, javax.swing.GroupLayout.DEFAULT_SIZE, 583, Short.MAX_VALUE)
+            .addComponent(txtVersions, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -106,7 +87,5 @@ final class AutoUpgradePanel extends JPanel {
     private javax.swing.JTextArea txtVersions;
     // End of variables declaration//GEN-END:variables
 
-    private static final ResourceBundle bundle = NbBundle.getBundle(AutoUpgradePanel.class);
-    private List<ChangeListener> changeListeners = new ArrayList<ChangeListener>(1);
     
 }

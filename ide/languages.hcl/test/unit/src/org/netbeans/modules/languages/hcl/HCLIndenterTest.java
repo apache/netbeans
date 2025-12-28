@@ -67,32 +67,98 @@ public class HCLIndenterTest extends NbTestCase {
 
     @Test
     public void testIndentedNL1() throws Exception {
-        performNewLineIndentationTest("  a = 1\n|", "  a = 1\n\n  ");
+        performNewLineIndentationTest(
+              """
+                a = 1
+              |\
+              """,
+              """
+                a = 1
+
+               \s\
+              """);
     }
     
     @Test
     public void testIndentedNL2() throws Exception {
-        performNewLineIndentationTest("  a = 1\n \n|", "  a = 1\n \n\n  ");
+        performNewLineIndentationTest(
+                """
+                  a = 1
+                \s
+                |\
+                """,
+                """
+                  a = 1
+                \s
+                
+                \s\s\
+                """
+        );
     }
 
     @Test
     public void testIndentedBlockNL1() throws Exception {
-        performNewLineIndentationTest("locals {|}", "locals {\n}");
+        performNewLineIndentationTest(
+                """
+                locals {|}\
+                """,
+                """
+                locals {
+                }\
+                """
+        );
     }
 
     @Test
     public void testIndentedBlockNL2() throws Exception {
-        performNewLineIndentationTest("locals {\n  a = [|]}", "locals {\n  a = [\n]}");
+        performNewLineIndentationTest(
+                """
+                locals {
+                  a = [|]}\
+                """,
+                """
+                locals {
+                  a = [
+                ]}\
+                """
+        );
     }
 
     @Test
     public void testIndentedBlockNL3() throws Exception {
-        performNewLineIndentationTest("locals {\n  a = [|\n  ]\n}", "locals {\n  a = [\n    \n  ]\n}");
+        performNewLineIndentationTest(
+                """
+                locals {
+                  a = [|
+                  ]
+                }\
+                """,
+                """
+                locals {
+                  a = [
+                   \s
+                  ]
+                }\
+                """
+        );
     }
 
     @Test
     public void testIndentedBlockNL4() throws Exception {
-        performNewLineIndentationTest("locals {\n\n|\n}", "locals {\n\n\n  \n}");
+        performNewLineIndentationTest(
+                """
+                locals {
+                
+                |
+                }\
+                """,
+                """
+                locals {
+                
+                
+                 \s
+                }\
+                """);
     }
 
     
@@ -118,19 +184,78 @@ public class HCLIndenterTest extends NbTestCase {
 
     @Test
     public void testEmptyLine() throws Exception {
-        performLineIndentationTest("locals {\n  |\n}\n", "locals {\n\n}\n");
+        performLineIndentationTest(
+                """
+                locals {
+                  |
+                }
+                """,
+                """
+                locals {
+
+                }
+                """
+        );
     }
 
     public void testReindent1() throws Exception {
-        performSpanIndentationTest("|   locals {\n a = 1\n   \nb = 2\n}|\n", "locals {\n  a = 1\n\n  b = 2\n}\n");
+        performSpanIndentationTest(
+                """
+                |   locals {
+                 a = 1
+                  \s
+                b = 2
+                }|
+                """,
+                """
+                locals {
+                  a = 1
+                
+                  b = 2
+                }
+                """);
     }
     
     public void testReindent2() throws Exception {
-        performSpanIndentationTest("|a = {\nb = [[\n\"one\"\n], [\n\"two\"\n]]\n}|\n", "a = {\n  b = [[\n      \"one\"\n    ], [\n      \"two\"\n  ]]\n}\n");
+        performSpanIndentationTest(
+                """
+                |a = {
+                b = [[
+                "one"
+                ], [
+                "two"
+                ]]
+                }|
+                """,
+                """
+                a = {
+                  b = [[
+                      "one"
+                    ], [
+                      "two"
+                  ]]
+                }
+                """
+        );
     }
     
     public void testReindentHeredoc() throws Exception {
-        performSpanIndentationTest("|a = <<-EOT\n    This\n    multi\n    line\nEOT|\n", "a = <<-EOT\n    This\n    multi\n    line\nEOT\n");
+        performSpanIndentationTest(
+                """
+                |a = <<-EOT
+                    This
+                    multi
+                    line
+                EOT|
+                """,
+                """
+                a = <<-EOT
+                    This
+                    multi
+                    line
+                EOT
+                """
+        );
     }
     
     private void performNewLineIndentationTest(String code, String golden) throws Exception {
@@ -138,7 +263,7 @@ public class HCLIndenterTest extends NbTestCase {
 
         assertNotSame(-1, pos);
 
-        code = code.replaceAll(Pattern.quote("|"), "");
+        code = code.replace("|", "");
 
         doc.insertString(0, code, null);
         Indent indent = Indent.get(doc);
@@ -153,7 +278,7 @@ public class HCLIndenterTest extends NbTestCase {
 
         assertNotSame(-1, pos);
 
-        code = code.replaceAll(Pattern.quote("|"), "");
+        code = code.replace("|", "");
 
         doc.insertString(0, code, null);
         Indent indent = Indent.get(doc);

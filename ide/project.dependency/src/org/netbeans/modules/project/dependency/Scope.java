@@ -24,11 +24,11 @@ import java.util.Objects;
  * Represents "scope" (maven term) or "configuration" (gradle term). Eeach project type
  * may define multiple additional Scopes, but should support the abstract ones defined in
  * {@link Scopes}. 
- * <p/>
+ * <p>
  * Scopes are identified by its {@link #name name}; two scopes with the same name are equal.
  * Project implementations may provide their own scopes with standard names since they
  * may use different include/imply hierarchy.
- * <p/>
+ * <p>
  * Scope instances created by the build system 
  * @author sdedic
  */

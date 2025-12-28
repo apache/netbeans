@@ -465,7 +465,6 @@ public class OutputTabOperator extends JComponentOperator {
         outputPaneOperator();
     }
 
-    /****************************** Actions *****************************/
     /** Performs copy action. */
     public void copy() {
         copyAction.perform(outputPaneOperator());

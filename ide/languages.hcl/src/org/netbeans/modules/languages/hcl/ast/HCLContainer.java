@@ -18,59 +18,44 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
-public abstract class HCLContainer extends HCLAddressableElement {
-    final List<HCLElement> elements = new LinkedList<>();
+public sealed abstract class HCLContainer implements HCLElement permits HCLBlock, HCLDocument {
 
-    final List<HCLBlock> blocks = new LinkedList<>();
-    final List<HCLAttribute> attributes = new LinkedList<>();
+    protected final List<HCLElement> elements;
+    private final List<HCLBlock> blocks;
+    private final List<HCLAttribute> attributes;
 
-    public HCLContainer(HCLContainer parent) {
-        super(parent);
+    protected HCLContainer(List<HCLElement> elements) {
+        Objects.requireNonNull(elements, "elements can be empty, but cannot be null");
+        this.elements = List.copyOf(elements);
+        this.blocks = elements.stream().filter(HCLBlock.class::isInstance).map(HCLBlock.class::cast).toList();
+        this.attributes = elements.stream().filter(HCLAttribute.class::isInstance).map(HCLAttribute.class::cast).toList();
     }
 
-    public void add(HCLBlock block) {
-        elements.add(block);
-        blocks.add(block);
+    public boolean hasBlock() {
+        return !blocks.isEmpty();
     }
 
-    public void add(HCLAttribute attr) {
-        elements.add(attr);
-        attributes.add(attr);
-    }
-
-    @Override
-    public HCLContainer getContainer() {
-        return (HCLContainer) parent;
-    }
-
-    public Collection<? extends HCLBlock> getBlocks() {
-        return Collections.unmodifiableCollection(blocks);
-    }
-
-    public Collection<? extends HCLAttribute> getAttributes() {
-        return Collections.unmodifiableCollection(attributes);
-    }
-
-    public boolean hasAttributes() {
+    public boolean hasAttribute() {
         return !attributes.isEmpty();
     }
 
-    @Override
-    public final void accept(Visitor v) {
-        if (!v.visit(this)) {
-            for (HCLElement element : elements) {
-                element.accept(v);
-            }
-        }
+    public List<HCLBlock> blocks() {
+        return blocks;
     }
 
+    public List<HCLAttribute> attributes() {
+        return attributes;
+    }
+    
+    @Override
+    public List<? extends HCLElement> elements() {
+        return elements;
+    }
 }

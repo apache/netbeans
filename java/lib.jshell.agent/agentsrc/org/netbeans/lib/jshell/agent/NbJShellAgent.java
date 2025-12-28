@@ -175,7 +175,7 @@ public class NbJShellAgent implements Runnable, ClassFileTransformer {
             }
         }
         ClassLoader agentClassLoader = new URLClassLoader(
-                urls.toArray(new URL[urls.size()]), 
+                urls.toArray(new URL[0]), 
                 getClass().getClassLoader());
         try {
             agentClassLoader.loadClass("org.netbeans.lib.jshell.agent.AgentWorker"); // NOI18N
@@ -321,7 +321,7 @@ public class NbJShellAgent implements Runnable, ClassFileTransformer {
         }
     }
     
-    ////////////////////// INSTRUMENTATION PART ///////////////////////////////////
+    // INSTRUMENTATION PART
     private static final String CLASS_INIT_NAME = "<clinit>"; // NOI18N
     private static final String CLASS_INIT_DESC = "()V"; // NOI18N
     private static final String JAVA_LANG_CLASS = "java/lang/Class"; // NOI18N

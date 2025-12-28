@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -576,7 +577,7 @@ public class FtpClient implements RemoteClient {
         // try to calculate the time difference between remote and local pc
         removeProtocolCommandListener();
         try {
-            File tmpFile = File.createTempFile("netbeans-timestampdiff-", ".txt"); // NOI18N
+            File tmpFile = Files.createTempFile("netbeans-timestampdiff-", ".txt").toFile(); // NOI18N
             long now = tmpFile.lastModified();
 
             final String remotePath = configuration.getInitialDirectory() + "/" + tmpFile.getName(); // NOI18N

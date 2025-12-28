@@ -1,2 +1,0 @@
-Apache Struts Taglib
-Copyright 2000-2007 The Apache Software Foundation

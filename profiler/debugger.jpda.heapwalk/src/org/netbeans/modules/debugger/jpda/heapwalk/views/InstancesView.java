@@ -25,8 +25,10 @@ import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -41,7 +43,6 @@ import org.netbeans.api.debugger.jpda.JPDAThread;
 import org.netbeans.modules.profiler.heapwalk.HeapFragmentWalker;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.WeakSet;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
@@ -188,7 +189,7 @@ public class InstancesView extends TopComponent {
     
     private class DebuggerSessionListener extends DebuggerManagerAdapter {
         
-        private Set<JPDADebugger> attachedTo = new WeakSet<JPDADebugger>();
+        private Set<JPDADebugger> attachedTo = Collections.newSetFromMap(new WeakHashMap<>());
         private int lastState = -1;
         
         public int getState() {

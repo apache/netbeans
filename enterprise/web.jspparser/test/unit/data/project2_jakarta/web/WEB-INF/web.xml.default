@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+                Sun Public License Notice
+
+The contents of this file are subject to the Sun Public License
+Version 1.0 (the "License"). You may not use this file except in
+compliance with the License. A copy of the License is available at
+http://www.sun.com/
+
+The Original Code is NetBeans. The Initial Developer of the Original
+Code is Sun Microsystems, Inc. Portions Copyright 1997-2000 Sun
+Microsystems, Inc. All Rights Reserved.
+-->
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         metadata-complete="false"
+         version="6.0">
+
+  <!--<servlet>
+    <servlet-name>FrontController</servlet-name>
+    <servlet-class>org.klopp.FrontController</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>FrontController</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FrontController</servlet-name>
+    <url-pattern>/docs/*</url-pattern>
+  </servlet-mapping>
+ -->
+    <servlet>
+        <servlet-name>NewServlet</servlet-name>
+        <servlet-class>NewServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>NewServlet</servlet-name>
+        <url-pattern>/NewServlet</url-pattern>
+    </servlet-mapping>
+    <session-config>
+    <session-timeout>
+            30
+        </session-timeout>
+  </session-config>
+  <welcome-file-list>
+    <welcome-file>
+            inludePreludeCoda.jsp
+        </welcome-file>
+  </welcome-file-list>
+    <jsp-config>
+        <jsp-property-group>
+            <description>Testing Prelude and Coda</description>
+            <display-name>Test</display-name>
+            <url-pattern>/inludePreludeCoda.jsp</url-pattern>
+            <include-prelude>/codaprelude/header.jsp</include-prelude>
+            <include-coda>/codaprelude/footer.jsp</include-coda>
+            </jsp-property-group>
+        </jsp-config>
+    </web-app>

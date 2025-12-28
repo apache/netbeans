@@ -124,7 +124,6 @@ import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
-import static com.sun.source.tree.Tree.Kind.*;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.Trees;
@@ -153,6 +152,8 @@ import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.JavaFixUtilities;
 import org.openide.util.Pair;
+
+import static com.sun.source.tree.Tree.Kind.*;
 
 /**
  *
@@ -190,12 +191,12 @@ public class Utilities {
         return makeNameUnique(info, s, name, Collections.<String>emptySet(), prefix, suffix, acceptExistingPrefixes);
     }
     
-    private static final Map<String, String> TYPICAL_KEYWORD_CONVERSIONS = new HashMap<String, String>() {{
-        put("class", "clazz");
-        put("interface", "intf");
-        put("new", "nue");
-        put("static", "statik");
-    }};
+    private static final Map<String, String> TYPICAL_KEYWORD_CONVERSIONS = Map.of(
+        "class", "clazz",
+        "interface", "intf",
+        "new", "nue",
+        "static", "statik"
+    );
     
     public static String makeNameUnique(CompilationInfo info, Scope s, String name, String prefix, String suffix) {
         return makeNameUnique(info, s, name, Collections.<String>emptySet(), prefix, suffix);
@@ -1815,18 +1816,16 @@ public class Utilities {
         }
     }
 
-    private static final Set<String> PRIMITIVE_NAMES = new HashSet<String>(8);
-    
-    static {
-        PRIMITIVE_NAMES.add("java.lang.Integer"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Character"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Long"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Byte"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Short"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Boolean"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Float"); // NOI18N
-        PRIMITIVE_NAMES.add("java.lang.Double"); // NOI18N
-    }
+    private static final Set<String> PRIMITIVE_NAMES = Set.of(
+        "java.lang.Integer", // NOI18N
+        "java.lang.Character", // NOI18N
+        "java.lang.Long", // NOI18N
+        "java.lang.Byte", // NOI18N
+        "java.lang.Short", // NOI18N
+        "java.lang.Boolean", // NOI18N
+        "java.lang.Float", // NOI18N
+        "java.lang.Double" // NOI18N
+    );
 
     public static TypeKind getPrimitiveKind(CompilationInfo ci, TypeMirror tm) {
         if (tm == null) {
@@ -1917,10 +1916,10 @@ public class Utilities {
         JavaFileObject prev = log.useSource(new DummyJFO());
         Enter enter = Enter.instance(jti.getContext());
         
-        Log.DiagnosticHandler discardHandler = new Log.DiscardDiagnosticHandler(log) {
+        Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             private Diagnostic.Kind f = filter == null ? Diagnostic.Kind.ERROR : filter;
             @Override
-            public void report(JCDiagnostic diag) {
+            public void reportReady(JCDiagnostic diag) {
                 if (diag.getKind().compareTo(f) >= 0) {
                     errors.add(diag);
                 }
@@ -3339,16 +3338,16 @@ public class Utilities {
             if (isSwitchExpression) {
                 switchType = SWITCH_TYPE.SWITCH_EXPRESSION;
                 if (statements.get(0).getKind() == Tree.Kind.RETURN) {
-                    body = ((JCTree.JCReturn) statements.get(0)).getExpression();
+                    body = ((ReturnTree) statements.get(0)).getExpression();
                 } else {
-                    JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statements.get(0);
-                    body = ((JCTree.JCAssign) jceTree.expr).rhs;
-                    leftVariable = ((JCTree.JCAssign) jceTree.expr).lhs;
+                    ExpressionStatementTree esTree = (ExpressionStatementTree) statements.get(0);
+                    body = ((AssignmentTree) esTree.getExpression()).getExpression();
+                    leftVariable = ((AssignmentTree) esTree.getExpression()).getVariable();
                 }
                 if (body.getKind() == Tree.Kind.TYPE_CAST) {
-                        typeCastTree = ((JCTree.JCTypeCast)body).getType();
-                        body = ((JCTree.JCTypeCast)body).getExpression();
-                    }
+                    typeCastTree = ((TypeCastTree) body).getType();
+                    body = ((TypeCastTree) body).getExpression();
+                }
                 newCases.add(make.CasePatterns(patterns, ct.getGuard(), make.ExpressionStatement((ExpressionTree) body)));
             } else {
                 newCases.add(make.CasePatterns(patterns, ct.getGuard(), body));
@@ -3394,24 +3393,18 @@ public class Utilities {
         } else {
             return null;
         }
-   }
+    }
     
     private static Name getLeftTreeName(StatementTree statement) {
         if (statement.getKind() != Kind.EXPRESSION_STATEMENT) {
             return null;
         }
-        JCTree.JCExpressionStatement jceTree = (JCTree.JCExpressionStatement) statement;
-        if (jceTree.expr.getKind() != Kind.ASSIGNMENT) {
+        ExpressionStatementTree esTree = (ExpressionStatementTree) statement;
+        if (esTree.getExpression().getKind() != Kind.ASSIGNMENT) {
             return null;
         }
-        JCTree.JCAssign assignTree = (JCTree.JCAssign) jceTree.expr;
-        return ((JCTree.JCIdent) assignTree.lhs).name;
+        AssignmentTree assignTree = (AssignmentTree) esTree.getExpression();
+        return ((IdentifierTree) assignTree.getVariable()).getName();
     }
 
-    public static boolean isJDKVersionLower(int previewUntilJDK){
-        if(Integer.valueOf(SourceVersion.latest().name().split(UNDERSCORE)[1]).compareTo(previewUntilJDK)<=0)
-            return true;
-
-        return false;
-    }
 }

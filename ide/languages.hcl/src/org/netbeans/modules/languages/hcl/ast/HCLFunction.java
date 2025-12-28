@@ -19,43 +19,30 @@
 package org.netbeans.modules.languages.hcl.ast;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
  *
  * @author lkishalmi
  */
-public class HCLFunction extends HCLExpression {
+public record HCLFunction(HCLIdentifier name, List<HCLExpression> args, boolean expand) implements HCLExpression {
 
-    final HCLIdentifier name;
-    final List<HCLExpression> args;
-    final boolean expand;
-
-    public HCLFunction(HCLIdentifier name, List<HCLExpression> args, boolean expand) {
-        this.name = name;
-        this.args = args;
-        this.expand = expand;
-    }
-
-    public HCLIdentifier getName() {
-        return name;
-    }
-
-    public List<HCLExpression> getArgs() {
-        return args;
+    public HCLFunction {
+        Objects.requireNonNull(name, "name cannot be null");
+        Objects.requireNonNull(args, "args can be empty, but cannot be null");
+        args = List.copyOf(args);
     }
 
     @Override
     public String asString() {
         StringJoiner sargs = new StringJoiner(",", "(", expand ? "...)" : ")");
-        args.forEach((arg) -> sargs.add(arg.toString()));
-        return name + sargs.toString();
+        args.forEach((arg) -> sargs.add(arg.asString()));
+        return name.asString() + sargs.toString();
     }
 
     @Override
-    public List<? extends HCLExpression> getChildren() {
-        return args;
-    }
-
-    
+    public List<? extends HCLExpression> elements() {
+        return args();
+    }    
 }

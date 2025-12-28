@@ -846,6 +846,24 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                             "?>\n");
     }
 
+    public void testFunctionGuessingFloatReturnType() throws Exception {
+        insertBreak( "<?php\n" +
+                            "/**^\n" +
+                            "function foo() {\n" +
+                            "    return 1.2;\n" +
+                            "}\n" +
+                            "?>\n",
+                            "<?php\n" +
+                            "/**\n" +
+                            " * \n" +
+                            " * @return float^\n" +
+                            " */\n" +
+                            "function foo() {\n" +
+                            "    return 1.2;\n" +
+                            "}\n" +
+                            "?>\n");
+    }
+
     public void testFunctionGuessingNullReturnType() throws Exception {
         insertBreak( "<?php\n" +
                             "/**^\n" +
@@ -908,6 +926,124 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                             "       return 'str';\n" +
                             "    }\n" +
                             "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n");
+    }
+
+    public void testCommentAndFunctionInDifferentBlocks_01()  throws Exception {
+        insertBreak( "<?php\n" +
+                            "function bar() {\n" +
+                            "/**^\n" +
+                            "}\n" +
+                            "function foo() {\n" +
+                            "    if (true) {\n" +
+                            "       return 'str';\n" +
+                            "    }\n" +
+                            "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n",
+                            "<?php\n" +
+                            "function bar() {\n" +
+                            "/**\n" +
+                            " * ^\n" +
+                            " */\n" +
+                            "}\n" +
+                            "function foo() {\n" +
+                            "    if (true) {\n" +
+                            "       return 'str';\n" +
+                            "    }\n" +
+                            "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n");
+    }
+
+    public void testCommentAndFunctionInDifferentBlocks_02()  throws Exception {
+        insertBreak( "<?php\n" +
+                            "class TestClass {\n" +
+                            "/**^\n" +
+                            "}\n" +
+                            "function foo() {\n" +
+                            "    if (true) {\n" +
+                            "       return 'str';\n" +
+                            "    }\n" +
+                            "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n",
+                            "<?php\n" +
+                            "class TestClass {\n" +
+                            "/**\n" +
+                            " * ^\n" +
+                            " */\n" +
+                            "}\n" +
+                            "function foo() {\n" +
+                            "    if (true) {\n" +
+                            "       return 'str';\n" +
+                            "    }\n" +
+                            "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n");
+    }
+
+    public void testCommentAndFunctionInDifferentBlocks_03()  throws Exception {
+        insertBreak( "<?php\n" +
+                            "class TestClass {\n" +
+                            "    public function test() {\n" +
+                            "        /**^\n" +
+                            "    }\n" +
+                            "}\n" +
+                            "function foo() {\n" +
+                            "    if (true) {\n" +
+                            "       return 'str';\n" +
+                            "    }\n" +
+                            "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n",
+                            "<?php\n" +
+                            "class TestClass {\n" +
+                            "    public function test() {\n" +
+                            "        /**\n" +
+                            "         * ^\n" +
+                            "         */\n" +
+                            "    }\n" +
+                            "}\n" +
+                            "function foo() {\n" +
+                            "    if (true) {\n" +
+                            "       return 'str';\n" +
+                            "    }\n" +
+                            "    return [1, 2];\n" +
+                            "}\n" +
+                            "?>\n");
+    }
+
+    public void testCommentAndMethodInDifferentBlocks_01()  throws Exception {
+        insertBreak( "<?php\n" +
+                            "class TestClass {\n" +
+                            "    public function test1() {\n" +
+                            "        /**^\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public function test2() {\n" +
+                            "       if (true) {\n" +
+                            "           return 'str';\n" +
+                            "       }\n" +
+                            "       return [1, 2];\n" +
+                            "    }\n" +
+                            "}\n" +
+                            "?>\n",
+                            "<?php\n" +
+                            "class TestClass {\n" +
+                            "    public function test1() {\n" +
+                            "        /**\n" +
+                            "         * ^\n" +
+                            "         */\n" +
+                            "    }\n" +
+                            "\n" +
+                            "    public function test2() {\n" +
+                            "       if (true) {\n" +
+                            "           return 'str';\n" +
+                            "       }\n" +
+                            "       return [1, 2];\n" +
+                            "    }\n" +
                             "}\n" +
                             "?>\n");
     }

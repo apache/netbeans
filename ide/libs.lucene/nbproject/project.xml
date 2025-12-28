@@ -26,7 +26,7 @@
             <code-name-base>org.netbeans.libs.lucene</code-name-base>
             <module-dependencies/>
             <public-packages>
-                <subpackages>org</subpackages>
+                <subpackages>org.apache.lucene</subpackages>
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/lucene-core-3.6.2.jar</runtime-relative-path>

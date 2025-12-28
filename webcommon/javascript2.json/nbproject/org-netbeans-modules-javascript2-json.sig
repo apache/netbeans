@@ -1,5 +1,11 @@
 #Signature file v4.1
-#Version 1.25
+#Version 1.33
+
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
 
 CLSS public java.lang.Object
 cons public init()
@@ -14,6 +20,32 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.annotation.Annotation
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.Class<? extends java.lang.annotation.Annotation> annotationType()
+meth public abstract java.lang.String toString()
+
+CLSS public abstract interface !annotation java.lang.annotation.Documented
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation java.lang.annotation.Retention
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.RetentionPolicy value()
+
+CLSS public abstract interface !annotation java.lang.annotation.Target
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public abstract org.antlr.v4.runtime.Lexer
 cons public init()
@@ -334,10 +366,12 @@ supr java.lang.Object
 hfds delegates,listeners,listens,pcl
 
 CLSS public org.netbeans.modules.javascript2.json.parser.JsonBaseListener
+ anno 0 java.lang.Deprecated()
 cons public init()
 supr org.netbeans.modules.javascript2.json.parser.JsonParserBaseListener
 
 CLSS public org.netbeans.modules.javascript2.json.parser.JsonBaseVisitor<%0 extends java.lang.Object>
+ anno 0 java.lang.Deprecated()
 cons public init()
 supr org.netbeans.modules.javascript2.json.parser.JsonParserBaseVisitor<{org.netbeans.modules.javascript2.json.parser.JsonBaseVisitor%0}>
 
@@ -401,9 +435,6 @@ meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 supr java.lang.Object
 hfds atnState
-
-CLSS public abstract interface org.netbeans.modules.javascript2.json.parser.JsonListener
-intf org.netbeans.modules.javascript2.json.parser.JsonParserListener
 
 CLSS public org.netbeans.modules.javascript2.json.parser.JsonParser
 cons public init(org.antlr.v4.runtime.TokenStream)
@@ -597,9 +628,6 @@ meth public abstract {org.netbeans.modules.javascript2.json.parser.JsonParserVis
 meth public abstract {org.netbeans.modules.javascript2.json.parser.JsonParserVisitor%0} visitPair(org.netbeans.modules.javascript2.json.parser.JsonParser$PairContext)
 meth public abstract {org.netbeans.modules.javascript2.json.parser.JsonParserVisitor%0} visitValue(org.netbeans.modules.javascript2.json.parser.JsonParser$ValueContext)
 
-CLSS public abstract interface org.netbeans.modules.javascript2.json.parser.JsonVisitor<%0 extends java.lang.Object>
-intf org.netbeans.modules.javascript2.json.parser.JsonParserVisitor<{org.netbeans.modules.javascript2.json.parser.JsonVisitor%0}>
-
 CLSS public org.netbeans.modules.javascript2.json.parser.ParseTreeToXml
 cons public init(org.netbeans.modules.javascript2.json.parser.JsonLexer,org.netbeans.modules.javascript2.json.parser.JsonParser)
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -614,7 +642,7 @@ meth public org.w3c.dom.Document visitValue(org.netbeans.modules.javascript2.jso
 meth public static java.lang.String stringify(org.w3c.dom.Document) throws java.io.IOException
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
-supr org.netbeans.modules.javascript2.json.parser.JsonBaseVisitor<org.w3c.dom.Document>
+supr org.netbeans.modules.javascript2.json.parser.JsonParserBaseVisitor<org.w3c.dom.Document>
 hfds currentNode,doc,lexer,parser
 
 CLSS public abstract interface org.netbeans.modules.javascript2.json.spi.JsonOptionsQueryImplementation

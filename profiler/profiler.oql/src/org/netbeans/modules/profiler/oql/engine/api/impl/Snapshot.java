@@ -39,12 +39,9 @@ import static org.netbeans.lib.profiler.utils.VMUtils.*;
 import org.openide.util.Enumerations;
 
 /**
- *
- * @author      Jaroslav Bachorik
- */
-/**
  * A helper class for OQL engine allowing easy access to the underlying
  * heapwalker model
+ * @author      Jaroslav Bachorik
  */
 public class Snapshot {
     private final Heap delegate;

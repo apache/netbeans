@@ -70,6 +70,7 @@ import org.netbeans.libs.git.jgit.commands.PushCommand;
 import org.netbeans.libs.git.jgit.commands.RebaseCommand;
 import org.netbeans.libs.git.jgit.commands.RemoveCommand;
 import org.netbeans.libs.git.jgit.commands.RemoveRemoteCommand;
+import org.netbeans.libs.git.jgit.commands.RenameBranchCommand;
 import org.netbeans.libs.git.jgit.commands.RenameCommand;
 import org.netbeans.libs.git.jgit.commands.ResetCommand;
 import org.netbeans.libs.git.jgit.commands.RevertCommand;
@@ -130,7 +131,7 @@ import org.netbeans.libs.git.progress.StatusListener;
  * </ol>
  * @author Ondra Vrabec
  */
-public final class GitClient {
+public final class GitClient implements AutoCloseable {
     private final DelegateListener delegateListener;
     private GitClassFactory gitFactory;
 
@@ -308,7 +309,7 @@ public final class GitClient {
 
     GitClient (JGitRepository gitRepository) throws GitException {
         this.gitRepository = gitRepository;
-        listeners = new HashSet<NotificationListener>();
+        listeners = new HashSet<>();
         delegateListener = new DelegateListener();
         gitRepository.increaseClientUsage();
     }
@@ -1084,6 +1085,14 @@ public final class GitClient {
     }
 
     /**
+     * Calls {@link #release()}.
+     */
+    @Override
+    public void close() {
+        release();
+    }
+
+    /**
      * Removes given files/folders from the index and/or from the working tree
      * @param roots files/folders to remove, can not be empty
      * @param cached if <code>true</code> the working tree will not be affected
@@ -1130,6 +1139,19 @@ public final class GitClient {
     public void rename (File source, File target, boolean after, ProgressMonitor monitor) throws GitException {
         Repository repository = gitRepository.getRepository();
         RenameCommand cmd = new RenameCommand(repository, getClassFactory(), source, target, after, monitor, delegateListener);
+        cmd.execute();
+    }
+    
+    /**
+     * Renames a branch in the repository
+     * @param oldName current branch name
+     * @param newName desired branch name
+     * @param monitor progress monitor
+     * @throws GitException an unexpected error occurs
+     */
+    public void renameBranch (String oldName, String newName, ProgressMonitor monitor) throws GitException {
+        Repository repository = gitRepository.getRepository();
+        RenameBranchCommand cmd = new RenameBranchCommand(repository, getClassFactory(), oldName, newName, monitor);
         cmd.execute();
     }
     
@@ -1387,7 +1409,7 @@ public final class GitClient {
     private void notifyFile (File file, String relativePathToRoot) {
         List<NotificationListener> lists;
         synchronized (listeners) {
-            lists = new LinkedList<NotificationListener>(listeners);
+            lists = new LinkedList<>(listeners);
         }
         for (NotificationListener list : lists) {
             if (list instanceof FileListener) {
@@ -1399,7 +1421,7 @@ public final class GitClient {
     private void notifyStatus (GitStatus status) {
         List<NotificationListener> lists;
         synchronized (listeners) {
-            lists = new LinkedList<NotificationListener>(listeners);
+            lists = new LinkedList<>(listeners);
         }
         for (NotificationListener list : lists) {
             if (list instanceof StatusListener) {
@@ -1411,7 +1433,7 @@ public final class GitClient {
     private void notifyRevisionInfo (GitRevisionInfo info) {
         List<NotificationListener> lists;
         synchronized (listeners) {
-            lists = new LinkedList<NotificationListener>(listeners);
+            lists = new LinkedList<>(listeners);
         }
         for (NotificationListener list : lists) {
             if (list instanceof RevisionInfoListener) {

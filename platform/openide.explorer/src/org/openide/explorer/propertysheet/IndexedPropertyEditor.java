@@ -344,7 +344,7 @@ class IndexedPropertyEditor extends Object implements ExPropertyEditor {
 
         if (indexedProperty.getElementType().isPrimitive()) {
             if (getConvertedType().equals(Integer.class)) {
-                value = new Integer(0);
+                value = 0;
             }
 
             if (getConvertedType().equals(Boolean.class)) {
@@ -356,7 +356,7 @@ class IndexedPropertyEditor extends Object implements ExPropertyEditor {
             }
 
             if (getConvertedType().equals(Character.class)) {
-                value = new Character('\u0000');
+                value = '\u0000';
             }
 
             if (getConvertedType().equals(Double.class)) {
@@ -368,7 +368,7 @@ class IndexedPropertyEditor extends Object implements ExPropertyEditor {
             }
 
             if (getConvertedType().equals(Long.class)) {
-                value = new Long(0L);
+                value = 0L;
             }
 
             if (getConvertedType().equals(Short.class)) {
@@ -376,7 +376,7 @@ class IndexedPropertyEditor extends Object implements ExPropertyEditor {
             }
         } else {
             try {
-                value = getConvertedType().newInstance();
+                value = getConvertedType().getDeclaredConstructor().newInstance();
             } catch (Exception x) {
                 // ignore any exception - if this fails just
                 // leave null as the value

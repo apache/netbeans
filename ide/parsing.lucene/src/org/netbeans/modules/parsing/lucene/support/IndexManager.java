@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.KeywordAnalyzer;
@@ -108,21 +107,9 @@ public final class IndexManager {
         assert action != null;
         lock.writeLock().lock();                    
         try {
-            return ProvidedExtensions.priorityIO(new Callable<R>() {
-                @Override
-                public R call() throws Exception {
-                    return action.run();
-                }
-            });
-        } catch (IOException ioe) {
-            //rethrow ioe
-            throw ioe;
-        } catch (InterruptedException ie) {
-            //rethrow ioe
-            throw ie;
-        } catch (RuntimeException re) {
-            //rethrow ioe
-            throw re;
+            return ProvidedExtensions.priorityIO(action::run);
+        } catch (IOException | InterruptedException | RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             throw new IOException(e);
         } finally {
@@ -147,21 +134,9 @@ public final class IndexManager {
         try {
             lock.readLock().lock();
             try {
-                return ProvidedExtensions.priorityIO(new Callable<R>() {
-                    @Override
-                    public R call() throws Exception {
-                        return action.run();
-                    }
-                });
-            } catch (IOException ioe) {
-                //rethrow ioe
-                throw ioe;
-            } catch (InterruptedException ie) {
-                //rethrow ioe
-                throw ie;
-            } catch (RuntimeException re) {
-                //rethrow ioe
-                throw re;
+                return ProvidedExtensions.priorityIO(action::run);
+            } catch (IOException | InterruptedException | RuntimeException e) {
+                throw e;
             } catch (Exception e) {
                 throw new IOException(e);
             } finally {
@@ -186,21 +161,9 @@ public final class IndexManager {
         assert action != null;
         suspend();
         try {
-            return ProvidedExtensions.priorityIO(new Callable<R>() {
-                @Override
-                public R call() throws Exception {
-                    return action.run();
-                }
-            });
-        } catch (IOException ioe) {
-            //rethrow ioe
-            throw ioe;
-        } catch (InterruptedException ie) {
-            //rethrow ioe
-            throw ie;
-        } catch (RuntimeException re) {
-            //rethrow ioe
-            throw re;
+            return ProvidedExtensions.priorityIO(action::run);
+        } catch (IOException | InterruptedException | RuntimeException e) {
+            throw e;
         } catch (Exception e) {
             throw new IOException(e);
         } finally {
@@ -230,7 +193,7 @@ public final class IndexManager {
         return createTransactionalIndex(cacheFolder, analyzer);
     }
     
-/**
+    /**
      * Creates a new {@link Index} for given folder with given lucene Analyzer.
      * The returned {@link Index} is not cached, next call with the same arguments returns a different instance
      * of {@link Index}. The caller is responsible to cache the returned {@link Index}.
@@ -262,10 +225,10 @@ public final class IndexManager {
         Parameters.notNull("cacheFolder", cacheFolder); //NOI18N
         Parameters.notNull("analyzer", analyzer);       //NOI18N
         if (!cacheFolder.canRead()) {
-            throw new IOException(String.format("Cannot read cache folder: %s.", cacheFolder.getAbsolutePath()));   //NOI18N
+            throw new IOException("Cannot read cache folder: %s.".formatted(cacheFolder.getAbsolutePath()));   //NOI18N
         }
         if (isWritable && !cacheFolder.canWrite()) {
-            throw new IOException(String.format("Cannot write to cache folder: %s.", cacheFolder.getAbsolutePath()));   //NOI18N
+            throw new IOException("Cannot write to cache folder: %s.".formatted(cacheFolder.getAbsolutePath()));   //NOI18N
         }
         final Index.Transactional index = factory.createIndex(cacheFolder, analyzer);
         assert index != null;
@@ -308,8 +271,8 @@ public final class IndexManager {
      * @since 2.4
      */
     @NonNull
-    public static Map<File,Index> getOpenIndexes() {
-        final Map<File,Index> result = new HashMap<File, Index>();
+    public static Map<File, Index> getOpenIndexes() {
+        Map<File, Index> result = new HashMap<>();
         synchronized (indexes) {
             for (Map.Entry<File,Reference<Index>> e : indexes.entrySet()) {
                 final File folder = e.getKey();
@@ -400,7 +363,6 @@ public final class IndexManager {
      * The returned {@link DocumentIndex} is not cached, next call with the same arguments returns a different instance
      * of {@link DocumentIndex}. The caller is responsible to cache the returned {@link DocumentIndex}.
      * @param index the low level index to which the document based index delegates
-     * @param cache the document caching provider
      * @return the document based index
      * @since 2.19
      */
@@ -415,6 +377,7 @@ public final class IndexManager {
      * The returned {@link DocumentIndex} is not cached, next call with the same arguments returns a different instance
      * of {@link DocumentIndex}. The caller is responsible to cache the returned {@link DocumentIndex}.
      * @param index the low level index to which the document based index delegates
+     * @param cache the document caching provider
      * @return the document based index
      * @since 2.19
      */
@@ -438,7 +401,7 @@ public final class IndexManager {
     @NonNull
     public static DocumentIndex.Transactional createTransactionalDocumentIndex (
             final @NonNull File cacheFolder) throws IOException {
-        Parameters.notNull("cacheFolder", cacheFolder);     //NOI18N                 //NOI18N
+        Parameters.notNull("cacheFolder", cacheFolder);     //NOI18N
         return createTransactionalDocumentIndex(cacheFolder, new SimpleDocumentIndexCache());
     }
 
@@ -474,8 +437,7 @@ public final class IndexManager {
         return new IndexDocumentImpl(primaryKey);
     }
 
-    private static final Map<File,Reference<Index>> indexes =
-            Collections.synchronizedMap(new HashMap<File, Reference<Index>>());
+    private static final Map<File, Reference<Index>> indexes = Collections.synchronizedMap(new HashMap<>());
 
     private static class Ref extends WeakReference<Index> implements Runnable {
 
@@ -512,7 +474,8 @@ public final class IndexManager {
     private static Collection<? extends ScanSuspendImplementation> getScanSuspendImpls() {
         Collection<? extends ScanSuspendImplementation> result = scanSuspendImpls;
         if (result == null) {
-            scanSuspendImpls = result = new ArrayList<>(res.allInstances());
+            result = new ArrayList<>(res.allInstances());
+            scanSuspendImpls = result;
         }
         return result;
     }
@@ -526,10 +489,7 @@ public final class IndexManager {
         }
 
         @Override
-        public Index.WithTermFrequencies.TermFreq setTermFreq(
-            @NonNull final TermFreq into,
-            @NonNull final Term term,
-            final int freq) {
+        public Index.WithTermFrequencies.TermFreq setTermFreq(@NonNull TermFreq into, @NonNull Term term, int freq) {
             into.setTerm(term);
             into.setFreq(freq);
             return into;

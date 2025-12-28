@@ -24,7 +24,7 @@ package org.netbeans.modules.j2ee.dd.api.web;
  * for deployment descriptor(web-fragment.xml) file.<br>
  * For getting the root (WebFragment object) use the {@link WebFragmentProvider#getWebFragmentRoot(org.openide.filesystems.FileObject) } method.
  *
- *<p><b><font color="red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></font></b>
+ *<p><b><span style="color:red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></span></b>
  *</p>
  */
 public interface WebFragment extends org.netbeans.modules.j2ee.dd.api.common.RootInterface, WebApp {

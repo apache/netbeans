@@ -585,7 +585,7 @@ public final class ClasspathInfo {
                     entry.getURL());
             }
         }
-        return roots.toArray(new URI[roots.size()]);
+        return roots.toArray(new URI[0]);
     }
 
 

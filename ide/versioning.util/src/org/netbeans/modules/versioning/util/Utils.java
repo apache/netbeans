@@ -65,7 +65,6 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.api.queries.FileEncodingQuery;
-import org.netbeans.api.queries.VersioningQuery;
 import org.netbeans.modules.versioning.core.api.VCSFileProxy;
 import org.netbeans.modules.versioning.spi.VersioningSystem;
 import org.openide.ErrorManager;
@@ -257,28 +256,6 @@ public final class Utils {
             }
         }
         return filesToCheckout;
-    }
-
-    /**
-     * Some folders are special and versioning should not look for metadata in
-     * them. Folders like /net with automount enabled may take a long time to
-     * answer I/O on their children, so
-     * <code>VCSFileProxy.exists("/net/.git")</code> will freeze until it
-     * timeouts. You should call this method before asking any I/O on children
-     * of this folder you are unsure to actually exist. This does not mean
-     * however that whole subtree should be excluded from version control, only
-     * that you should not look for the metadata directly in this folder.
-     * Returns <code>true</code> if the given folder is among such folders.
-     *
-     * @param folderPath path to a folder to query
-     * @return <code>true</code> if the folder identified by the given path
-     * should be skipped when searching for metadata.
-     * @since 1.54
-     * @deprecated  use isForbiddenFolder(File) or isForbiddenFolder(VCSFileProxy)
-     */
-    @Deprecated
-    public static boolean isForbiddenFolder (String folderPath) {
-        return forbiddenFolders.contains(folderPath);
     }
 
     /**
@@ -511,8 +488,8 @@ public final class Utils {
             Set<File> allFiles = new HashSet<File>(Arrays.asList(files));
             allFiles.removeAll(flat);
             return new File[][] {
-                flat.toArray(new File[flat.size()]),
-                allFiles.toArray(new File[allFiles.size()])
+                flat.toArray(new File[0]),
+                allFiles.toArray(new File[0])
             };
         }
     }
@@ -866,21 +843,6 @@ public final class Utils {
     }
 
     /**
-     * Asks for permission to scan a given folder for versioning metadata. Misconfigured automount daemons may
-     * try to look for a "CVS" server if asked for "/net/CVS/Entries" file for example causing hangs and full load.
-     * Versioning systems must NOT scan a folder if this method returns true and should consider it as unversioned.
-     * 
-     * @deprecated Use {@link VersioningSupport#isExcluded(java.io.File) } instead
-     * @param folder a folder to query
-     * @link http://www.netbeans.org/issues/show_bug.cgi?id=105161
-     * @return true if scanning for versioning system metadata is forbidden in the given folder, false otherwise
-     */
-    @Deprecated
-    public static boolean isScanForbidden(File folder) {
-        return VersioningSupport.isExcluded(folder);
-    }
-
-    /**
      * Opens a file in the editor area.
      *
      * @param file a File to open
@@ -1169,24 +1131,12 @@ public final class Utils {
         repositoryUrl = repositoryUrl.toLowerCase();
         if (repositoryUrl.contains("github.com")) { //NOI18N
             return "GITHUB"; //NOI18N
-        } else if (repositoryUrl.contains("gitorious.org")) { //NOI18N
-            return "GITORIOUS"; //NOI18N
         } else if (repositoryUrl.contains("bitbucket.org")) { //NOI18N
             return "BITBUCKET"; //NOI18N
         } else if (repositoryUrl.contains("sourceforge.net")) { //NOI18N
             return "SOURCEFORGE"; //NOI18N
-        } else if (repositoryUrl.contains("googlecode.com") //NOI18N
-                || repositoryUrl.contains("code.google.com") //NOI18N
-                || repositoryUrl.contains("googlesource.com")) { //NOI18N
-            return "GOOGLECODE"; //NOI18N
-        } else if (repositoryUrl.contains("kenai.com")) { //NOI18N
-            return "KENAI"; //NOI18N
-        } else if (repositoryUrl.contains("java.net")) { //NOI18N
-            return "JAVANET"; //NOI18N
         } else if (repositoryUrl.contains("netbeans.org")) { //NOI18N
             return "NETBEANS"; //NOI18N
-        } else if (repositoryUrl.contains("codeplex.com")) { //NOI18N
-            return "CODEPLEX"; //NOI18N
         } else if (repositoryUrl.contains(".eclipse.org")) { //NOI18N
             return "ECLIPSE"; //NOI18N
         } else {
@@ -1272,34 +1222,6 @@ public final class Utils {
             }
         }
         return false;
-    }
-
-    /**
-     * Parses system property value and returns a priority for the given versioning system.
-     * The property should be defined as {@code versioning.versioningSystem.priority}.
-     * @param versioningSystem name of the vcs
-     * @return priority or {@link Integer#MAX_VALUE} as default
-     * @deprecated should not be used any more
-     */
-    @Deprecated
-    public static Integer getPriority (String versioningSystem) {
-        Integer value = null;
-        String propName = "versioning." + versioningSystem + ".priority"; //NOI18N
-        String sValue = System.getProperty(propName, null);
-        if (sValue != null && !sValue.isEmpty()) {
-            try {
-                value = Integer.parseInt(sValue);
-                if (value <= 0) {
-                    value = null;
-                }
-            } catch (NumberFormatException ex) {
-                Logger.getLogger(Utils.class.getName()).log(Level.INFO, "Wrong priority ({0}) value {1}, using default value", new Object[] {propName, sValue}); //NOI18N
-            }
-        }
-        if (value == null) {
-            value = Integer.MAX_VALUE;
-        }
-        return value;
     }
 
     private static File getTempDir (boolean deleteOnExit) {
@@ -1436,47 +1358,6 @@ public final class Utils {
         }
     }
 
-    // -----
-    // Usages logging based on repository URL (for Kenai)
-
-    private static VCSKenaiAccessor kenaiAccessor;
-    private static final LinkedList<File> loggedRoots = new LinkedList<File>();
-    private static final List<File> foldersToCheck = new LinkedList<File>();
-    private static Runnable loggingTask = null;
-
-    public static void logVCSKenaiUsage(String vcs, String repositoryUrl) {
-        VCSKenaiAccessor kenaiSup = getKenaiAccessor();
-        if (kenaiSup != null) {
-            kenaiSup.logVcsUsage(vcs, repositoryUrl);
-        }
-    }
-
-    private static VCSKenaiAccessor getKenaiAccessor() {
-        if (kenaiAccessor == null) {
-            kenaiAccessor = Lookup.getDefault().lookup(VCSKenaiAccessor.class);
-        }
-        return kenaiAccessor;
-    }
-
-    /*
-     * Makes sure repository of given versioned folder is logged for usage
-     * (if on Kenai). Versioned folders are collected and a task invoked in 2s
-     * to process them. Roots are remembered so no subfolder is processed again
-     * (it's enough to log one usage per repository). Called from annotators so
-     * all user visible repositories are logged.
-     */
-    public static void addFolderToLog(File folder) {
-        if (!checkFolderLogged(folder, false)) {
-            synchronized(foldersToCheck) {
-                foldersToCheck.add(folder);
-                if (loggingTask == null) {
-                    loggingTask = new LogTask();
-                    Utils.postParallel(loggingTask, 2000);
-                }
-            }
-        }
-    }
-
     /**
      * Determines versioning systems that manage files in given context.
      * 
@@ -1492,60 +1373,7 @@ public final class Utils {
                 owners.add(vs);
             }
         }
-        return (VersioningSystem[]) owners.toArray(new VersioningSystem[owners.size()]);
-    }
-
-    private static class LogTask implements Runnable {
-        @Override
-        public void run() {
-            File[] folders;
-            synchronized (foldersToCheck) {
-                folders = foldersToCheck.toArray(new File[foldersToCheck.size()]);
-                foldersToCheck.clear();
-                loggingTask = null;
-            }
-            for (File f : folders) {
-                if (!checkFolderLogged(f, false)) { // if other task has not processed the root yet
-                    VersioningSystem vs = VersioningSupport.getOwner(f);
-                    if (vs != null) {
-                        File root = vs.getTopmostManagedAncestor(f);
-                        if (root != null) {
-                            checkFolderLogged(root, true); // remember the root
-                            FileObject rootFO = FileUtil.toFileObject(root);
-                            if (rootFO != null) {
-                                String url = VersioningQuery.getRemoteLocation(rootFO.toURI());
-                                if (url != null) {
-                                    Object name = vs.getProperty(VersioningSystem.PROP_DISPLAY_NAME);
-                                    if (!(name instanceof String)) {
-                                        name = vs.getClass().getSimpleName();
-                                    }
-                                    logVCSKenaiUsage(name.toString(), url);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private static boolean checkFolderLogged(File folder, boolean add) {
-        synchronized(loggedRoots) {
-            for (File f : loggedRoots) {
-                String ancestorPath = f.getPath();
-                String folderPath = folder.getPath();
-                if (folderPath.startsWith(ancestorPath)
-                        && (folderPath.length() == ancestorPath.length()
-                             || folderPath.charAt(ancestorPath.length()) == File.separatorChar)) {
-                    // folder is the same or subfolder of already logged one
-                    return true;
-                }
-            }
-            if (add) {
-                loggedRoots.add(folder);
-            }
-        }
-        return false;
+        return (VersioningSystem[]) owners.toArray(new VersioningSystem[0]);
     }
 
     /**
@@ -1697,7 +1525,7 @@ public final class Utils {
             File rootFile = FileUtil.toFile(srcRootFo);
             set.add(rootFile);
         }
-        return set.toArray(new File[set.size()]);
+        return set.toArray(new File[0]);
     }    
     
     public static void setAcceleratorBindings(String pathPrefix, Action... actions) {

@@ -18,9 +18,12 @@
  */
 package org.netbeans.modules.jumpto.type;
 
+import java.util.Arrays;
 import java.util.BitSet;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.EventListenerList;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import org.netbeans.api.annotations.common.NonNull;
@@ -28,20 +31,20 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.jumpto.common.Models.Filter;
 
 
-final class FilteredListModel implements ListModel, Runnable, ListDataListener {
+final class FilteredListModel<E> implements ListModel<E>, Runnable, ListDataListener {
 
     /** means that the value has not yet been assigned */
-    private static int NOT_TESTED = Short.MIN_VALUE - 1;
-    private static int EMPTY_VALUE = Short.MIN_VALUE - 2;
+    private static final int NOT_TESTED = Short.MIN_VALUE - 1;
+    private static final int EMPTY_VALUE = Short.MIN_VALUE - 2;
     /** skips extensive asserts - needed for performance tests */
-    private static final boolean skipExpensiveAsserts = Boolean.getBoolean ("org.openide.explorer.view.LazyListModel.skipExpensiveAsserts"); // NOI18N
+    private static final boolean SKIP_EXPENSIVE_ASSERTS = Boolean.getBoolean ("org.openide.explorer.view.LazyListModel.skipExpensiveAsserts"); // NOI18N
     private boolean log;
-    private ListModel listModel;
-    private Filter filter;
+    private final ListModel<E> listModel;
+    private final Filter<E> filter;
     /** the value to return when nothing else can be returned */
-    private Object defaultValue;
+    private final E defaultValue;
     /** simple event listener list */
-    private javax.swing.event.EventListenerList list = new javax.swing.event.EventListenerList ();
+    private final EventListenerList list = new javax.swing.event.EventListenerList ();
 
     /** the size of the original list we now know it has */
     private int originalSize;
@@ -57,17 +60,13 @@ final class FilteredListModel implements ListModel, Runnable, ListDataListener {
     /** dirty means that we should really update assumptions */
     private boolean markDirty;
 
-    private FilteredListModel (ListModel m, Filter f, Object defaultValue) {
+    private FilteredListModel (ListModel<E> m, Filter<E> f, E defaultValue) {
         this.listModel = m;
         this.filter = f;
         this.defaultValue = defaultValue;
 
         // JST-PENDING: Weak or not?
         m.addListDataListener (this);
-    }
-
-    final Filter getFilter () {
-        return filter;
     }
 
     /** Makes itself dirty and schedules an update.
@@ -182,7 +181,7 @@ final class FilteredListModel implements ListModel, Runnable, ListDataListener {
     private boolean externalContraints () {
         assert external != null : "Not null"; // NOI18N
         assert external.length >= size : "Length " + external.length + " >= " + size; // NOI18N
-        if (!skipExpensiveAsserts) {
+        if (!SKIP_EXPENSIVE_ASSERTS) {
             for (int i = 1; i < size; i++) {
                 assert external[i - 1] != NOT_TESTED || external[i] != EMPTY_VALUE : "There cannot be empty value after not tested value"; // NOI18N
                 assert external[i - 1] != EMPTY_VALUE || external[i] != NOT_TESTED : "Not tested cannot immediatelly follow empty value"; // NOI18N
@@ -202,11 +201,11 @@ final class FilteredListModel implements ListModel, Runnable, ListDataListener {
     /** Factory method to create new filtering lazy model.
      */
     @NonNull
-    static FilteredListModel create (
-            @NonNull final ListModel listModel,
-            @NonNull final Filter filter,
-            @NullAllowed final Object defValue) {
-        return new FilteredListModel(listModel, filter, defValue);
+    static <E> FilteredListModel<E> create (
+            @NonNull final ListModel<E> listModel,
+            @NonNull final Filter<E> filter,
+            @NullAllowed final E defValue) {
+        return new FilteredListModel<>(listModel, filter, defValue);
     }
 
     //
@@ -231,21 +230,20 @@ final class FilteredListModel implements ListModel, Runnable, ListDataListener {
         for (int i = arr.length - 1; i >= 0; i -= 2) {
             ListDataListener l = (ListDataListener)arr[i];
             switch (ev.getType ()) {
-                case ListDataEvent.CONTENTS_CHANGED: l.contentsChanged (ev); break;
-                case ListDataEvent.INTERVAL_ADDED: l.intervalAdded (ev); break;
-                case ListDataEvent.INTERVAL_REMOVED: l.intervalRemoved (ev); break;
-                default:
-                    throw new IllegalArgumentException  ("Unknown type: " + ev.getType ());
+                case ListDataEvent.CONTENTS_CHANGED -> l.contentsChanged (ev);
+                case ListDataEvent.INTERVAL_ADDED -> l.intervalAdded (ev);
+                case ListDataEvent.INTERVAL_REMOVED -> l.intervalRemoved (ev);
+                default -> throw new IllegalArgumentException  ("Unknown type: " + ev.getType ());
             }
         }
     }
 
     /** Is this index accepted.
      */
-    private boolean accepted (int indx, Object[] result) {
-        Object v = listModel.getElementAt (indx);
+    private boolean accepted (int indx, AtomicReference<E> result) {
+        E v = listModel.getElementAt (indx);
         if (filter.accept (v)) {
-            result[0] = v;
+            result.set(v);
             return true;
         }
 
@@ -260,9 +258,7 @@ final class FilteredListModel implements ListModel, Runnable, ListDataListener {
             originalSize = listModel.getSize ();
             size = listModel.getSize ();
             external = new int[size];
-            for (int i = 0; i < size; i++) {
-                external[i] = NOT_TESTED;
-            }
+            Arrays.fill(external, 0, size, NOT_TESTED);
             checked = new BitSet (size);
         }
         assert externalContraints () : "Constraints failed"; // NOI18N
@@ -275,7 +271,7 @@ final class FilteredListModel implements ListModel, Runnable, ListDataListener {
     /** If value is not know for given index and CREATE.get() is Boolean.FALSE it returns defaultValue.
      */
     @Override
-    public Object getElementAt(int index) {
+    public E getElementAt(int index) {
         initialize ();
 
         if (log) {
@@ -292,7 +288,7 @@ final class FilteredListModel implements ListModel, Runnable, ListDataListener {
             return defaultValue;
         }
 
-        if (CREATE != null && !CREATE.booleanValue()) {
+        if (CREATE != null && !CREATE) {
             assert Thread.holdsLock(CREATE) : "Only one thread (from tests) can access this"; // NOI18N
             return defaultValue;
         }
@@ -316,19 +312,19 @@ final class FilteredListModel implements ListModel, Runnable, ListDataListener {
         int myMinIndex = getExternal (minIndex) + 1; // one after the index of the first non-1 index
         int myMaxIndex = getExternal (maxIndex);
 
-        assert myMaxIndex >= myMaxIndex : "Must be greater"; // NOI18N
+        assert myMaxIndex >= myMinIndex : "Must be greater"; // NOI18N
         if (myMaxIndex != myMinIndex) {
             int myIndex = myMinIndex + (index - minIndex) - 1;
             if (myIndex >= myMaxIndex) {
                 myIndex = myMaxIndex - 1;
             }
 
-            Object[] result = new Object[1];
+            AtomicReference<E> result = new AtomicReference<>();
             if (accepted (myIndex, result)) {
                 assert external[index] == NOT_TESTED : "External index " + index + " still needs to be unset: " + external[index];
                 external[index] = myIndex;
                 checked.set (index);
-                return result[0];
+                return result.get();
             }
 
             boolean checkBefore = true;
@@ -339,7 +335,7 @@ final class FilteredListModel implements ListModel, Runnable, ListDataListener {
                     if (checkBefore && accepted (myIndex - i, result)) {
                         external[index] = myIndex - i;
                         checked.set (index);
-                        return result[0];
+                        return result.get();
                     }
                 }
                 if (checkAfter) {
@@ -347,7 +343,7 @@ final class FilteredListModel implements ListModel, Runnable, ListDataListener {
                     if (checkAfter && accepted (myIndex + i, result)) {
                         external[index] = myIndex + i;
                         checked.set (index);
-                        return result[0];
+                        return result.get();
                     }
                 }
             }
@@ -382,9 +378,7 @@ final class FilteredListModel implements ListModel, Runnable, ListDataListener {
         }
         size = originalSize;
         external = new int[size];
-        for (int i = 0; i < size; i++) {
-            external[i] = NOT_TESTED;
-        }
+        Arrays.fill(external, 0, size, NOT_TESTED);
         checked = new BitSet (size);
         assert externalContraints () : "Constraints failed"; // NOI18N
     }

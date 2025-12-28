@@ -19,7 +19,6 @@
 package org.netbeans.modules.java.hints.jdk;
 
 import com.sun.source.tree.BindingPatternTree;
-import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.PatternTree;
@@ -27,7 +26,6 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.IdentifierTree;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,8 +47,8 @@ import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.CodeStyleUtils;
 import org.netbeans.api.java.source.WorkingCopy;
-import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.support.CancellableTreePathScanner;
+import org.netbeans.modules.java.hints.Feature;
 import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
@@ -76,11 +74,9 @@ import org.openide.util.NbBundle;
  */
 public class ConvertToNestedRecordPattern {
 
-    private static final int RECORD_PATTERN_PREVIEW_JDK_VERSION = 19;
-
     @TriggerTreeKind(Tree.Kind.DECONSTRUCTION_PATTERN)
     public static ErrorDescription convertToNestedRecordPattern(HintContext ctx) {
-        if (Utilities.isJDKVersionLower(RECORD_PATTERN_PREVIEW_JDK_VERSION) && !CompilerOptionsQuery.getOptions(ctx.getInfo().getFileObject()).getArguments().contains("--enable-preview")) {
+        if (!Feature.RECORD_PATTERN.isEnabled(ctx.getInfo())) {
             return null;
         }
         TreePath t = ctx.getPath();
@@ -220,7 +216,7 @@ public class ConvertToNestedRecordPattern {
                 BindingPatternTree bTree = (BindingPatternTree) tp.getLeaf();
                 VariableTree v = bTree.getVariable();
                 type = (TypeElement) wc.getTrees().getElement(TreePath.getPath(t, v.getType()));
-                if (type == null || type.getRecordComponents().size() == 0) {
+                if (type == null || type.getRecordComponents().isEmpty()) {
                     continue;
                 }
                 outer:
@@ -254,10 +250,8 @@ public class ConvertToNestedRecordPattern {
             while (t != null && t.getLeaf().getKind() != Tree.Kind.BLOCK) {
                 t = t.getParentPath();
             }
-
-            List<Tree> removeList = replaceOccurrences.stream().map(tph -> tph.resolve(wc).getLeaf()).collect(Collectors.toList());
-            for (Tree tree : removeList) {
-                StatementTree statementTree = (StatementTree) tree;
+            for (TreePathHandle tph : replaceOccurrences) {
+                StatementTree statementTree = (StatementTree) tph.resolve(wc).getLeaf();
                 Utilities.removeStatements(wc, TreePath.getPath(t, statementTree), null);
             }
             wc.rewrite(ctx.getPath().getLeaf(), d);

@@ -585,7 +585,7 @@ class LayoutAligner implements LayoutConstants {
                     && (LayoutInterval.getCurrentSize(gapInterval, dimension) == preGap)) {
                     LayoutInterval gap = cloneGap(gapInterval);
                     newSequenceList.add(gap);
-                    gapSizes.put(gap, new Integer(preGap));
+                    gapSizes.put(gap, preGap);
                     if (alignment == TRAILING) {
                         sequenceResizable = sequenceResizable || LayoutInterval.canResize(gap);
                     }
@@ -626,7 +626,7 @@ class LayoutAligner implements LayoutConstants {
                         gapFound = true;
                         LayoutInterval gap = cloneGap(gapInterval);
                         newSequenceList.add(gap);
-                        gapSizes.put(gap, new Integer(gapSize));
+                        gapSizes.put(gap, gapSize);
                         if (((alignment == TRAILING) && !afterDefiningInterval)
                             || ((alignment == LEADING) && afterDefiningInterval)) {
                             sequenceResizable = sequenceResizable || LayoutInterval.canResize(gap);
@@ -664,7 +664,7 @@ class LayoutAligner implements LayoutConstants {
                     && (LayoutInterval.getCurrentSize(gapInterval, dimension) == postGap)) {
                     LayoutInterval gap = cloneGap(gapInterval);
                     newSequenceList.add(gap);
-                    gapSizes.put(gap, new Integer(postGap));
+                    gapSizes.put(gap, postGap);
                     if (alignment == LEADING) {
                         sequenceResizable = sequenceResizable || LayoutInterval.canResize(gap);
                     }
@@ -712,7 +712,7 @@ class LayoutAligner implements LayoutConstants {
                                 int maxSize = gapCandidate.getMaximumSize();
                                 if (diff > 0) {
                                     if (size != null) {
-                                        int actualSize = size.intValue();
+                                        int actualSize = size;
                                         diff += prefSize - actualSize;
                                     }
                                     if (minSize >= 0) {
@@ -820,7 +820,7 @@ class LayoutAligner implements LayoutConstants {
         }
 
         // Sort layout components according to their current bounds
-        Collections.sort(transferedComponents, new Comparator<LayoutInterval>() {
+        transferedComponents.sort(new Comparator<LayoutInterval>() {
             @Override
             public int compare(LayoutInterval interval1, LayoutInterval interval2) {
                 LayoutComponent comp = interval1.getComponent();

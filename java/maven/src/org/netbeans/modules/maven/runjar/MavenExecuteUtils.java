@@ -482,7 +482,7 @@ public final class MavenExecuteUtils {
         for (String part : propertySplitter(l, true)) {
             result.add(part);
         }
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
 
     private static boolean isNullOrEmpty(String s) {

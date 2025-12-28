@@ -143,6 +143,20 @@ public class JavadocLexerTest extends NbTestCase {
         LexerTestUtilities.assertNextTokenEquals(ts, JavadocTokenId.OTHER_TEXT, "}");
     }
 
+    public void testMarkdown() {
+        String text = "///@see\n/// @see";
+
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, JavadocTokenId.language());
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts, JavadocTokenId.OTHER_TEXT, "///");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavadocTokenId.TAG, "@see");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavadocTokenId.OTHER_TEXT, "\n/// ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavadocTokenId.TAG, "@see");
+
+        assertFalse(ts.moveNext());
+    }
+
 //    public void testModification1() throws Exception {
 //        PlainDocument doc = new PlainDocument();
 //        doc.putProperty(Language.class, JavadocTokenId.language());

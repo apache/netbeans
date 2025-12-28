@@ -944,6 +944,8 @@ public final class DatabaseConnection implements DBConnection {
 
             throw ddle;
         } catch (Throwable t) {
+            // Log JDBC errors that extend from Error rather than Exception, e.g. a NoClassDefFoundError originating from a JDBC driver.
+            LOGGER.log(Level.WARNING, "JDBC connection error", t); // NOI18N
             String message = NbBundle.getMessage (DatabaseConnection.class, "EXC_CannotEstablishConnection", // NOI18N
                         db, drv, t.getMessage());
             DialogDisplayer.getDefault ().notifyLater (new NotifyDescriptor.Exception (t, message));

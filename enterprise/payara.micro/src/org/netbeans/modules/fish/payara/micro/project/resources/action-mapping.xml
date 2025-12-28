@@ -34,6 +34,12 @@
         </goals>
         <properties>
             <netbeans.deploy>false</netbeans.deploy>
+            <deployWar>true</deployWar>
+            <exploded>true</exploded>
+            <autoDeploy>true</autoDeploy>
+            <liveReload>true</liveReload>
+            <keepState>true</keepState>
+            <trimLog>true</trimLog>
         </properties>
     </action>
     <action>
@@ -51,6 +57,12 @@
         <properties>
             <netbeans.deploy>false</netbeans.deploy>
             <netbeans.deploy.clientUrlPart>${webpagePath}</netbeans.deploy.clientUrlPart>
+            <deployWar>true</deployWar>
+            <exploded>true</exploded>
+            <autoDeploy>true</autoDeploy>
+            <liveReload>true</liveReload>
+            <keepState>true</keepState>
+            <trimLog>true</trimLog>
         </properties>
     </action>
     <action>
@@ -70,6 +82,12 @@
             <jpda.listen>true</jpda.listen>
             <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
             <netbeans.deploy>false</netbeans.deploy>
+            <deployWar>true</deployWar>
+            <exploded>true</exploded>
+            <autoDeploy>true</autoDeploy>
+            <liveReload>true</liveReload>
+            <keepState>true</keepState>
+            <trimLog>true</trimLog>
         </properties>
     </action>
     <action>
@@ -90,6 +108,12 @@
             <netbeans.deploy.clientUrlPart>${webpagePath}</netbeans.deploy.clientUrlPart>
             <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
             <netbeans.deploy>false</netbeans.deploy>
+            <deployWar>true</deployWar>
+            <exploded>true</exploded>
+            <autoDeploy>true</autoDeploy>
+            <liveReload>true</liveReload>
+            <keepState>true</keepState>
+            <trimLog>true</trimLog>
         </properties>
     </action>
     <action>
@@ -109,6 +133,12 @@
             <exec.executable>java</exec.executable>
             <netbeans.deploy>false</netbeans.deploy>
             <netbeans.deploy.profilemode>true</netbeans.deploy.profilemode>
+            <deployWar>true</deployWar>
+            <exploded>true</exploded>
+            <autoDeploy>true</autoDeploy>
+            <liveReload>true</liveReload>
+            <keepState>true</keepState>
+            <trimLog>true</trimLog>
         </properties>
     </action>
     <action>
@@ -129,6 +159,12 @@
             <netbeans.deploy>false</netbeans.deploy>
             <netbeans.deploy.profilemode>true</netbeans.deploy.profilemode>
             <netbeans.deploy.clientUrlPart>${webpagePath}</netbeans.deploy.clientUrlPart>
+            <deployWar>true</deployWar>
+            <exploded>true</exploded>
+            <autoDeploy>true</autoDeploy>
+            <liveReload>true</liveReload>
+            <keepState>true</keepState>
+            <trimLog>true</trimLog>
         </properties>
     </action>
     

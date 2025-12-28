@@ -98,7 +98,7 @@ public class ComputeOverriding {
         Logger.getLogger("TIMER").log(Level.FINE, "Overridden Scanner", //NOI18N
                     new Object[] {info.getFileObject(), endTime1 - startTime1});
         
-        Map<ElementHandle<? extends Element>, List<ElementDescription>> result = new HashMap<ElementHandle<? extends Element>, List<ElementDescription>>();
+        Map<ElementHandle<? extends Element>, List<ElementDescription>> result = new HashMap<>();
         
         for (ElementHandle<TypeElement> td : v.type2Declaration.keySet()) {
             if (isCanceled())
@@ -111,10 +111,7 @@ public class ComputeOverriding {
             }
         }
         
-        if (isCanceled())
-            return null;
-        else
-            return result;
+        return isCanceled() ? null : result;
     }
     
     private synchronized boolean isCanceled() {
@@ -123,7 +120,7 @@ public class ComputeOverriding {
     
     private static void sortOutMethods(CompilationInfo info, Map<Name, List<ExecutableElement>> where, Element td, boolean current) {
         if (current) {
-            Map<Name, List<ExecutableElement>> newlyAdded = new HashMap<Name, List<ExecutableElement>>();
+            Map<Name, List<ExecutableElement>> newlyAdded = new HashMap<>();
             
             OUTTER: for (ExecutableElement ee : ElementFilter.methodsIn(td.getEnclosedElements())) {
                 Name name = ee.getSimpleName();
@@ -137,13 +134,8 @@ public class ComputeOverriding {
                     }
                 }
                 
-                List<ExecutableElement> lee = newlyAdded.get(name);
-                
-                if (lee == null) {
-                    newlyAdded.put(name, lee = new ArrayList<ExecutableElement>());
-                }
-                
-                lee.add(ee);
+                newlyAdded.computeIfAbsent(name, k -> new ArrayList<ExecutableElement>())
+                          .add(ee);
             }
             
             for (Map.Entry<Name, List<ExecutableElement>> e : newlyAdded.entrySet()) {
@@ -169,14 +161,15 @@ public class ComputeOverriding {
         Map<ElementHandle<ExecutableElement>, List<ElementDescription>> result = data.data.get(forType);
 
         if (result == null) {
-            data.data.put(forType, result = new HashMap<ElementHandle<ExecutableElement>, List<ElementDescription>>());
+            result = new HashMap<>();
+            data.data.put(forType, result);
             
             if (cancel.get())
                 return null;
 
             LOG.log(Level.FINE, "type: {0}", forType.getQualifiedName()); //NOI18N
 
-            final Map<Name, List<ExecutableElement>> name2Method = new HashMap<Name, List<ExecutableElement>>();
+            final Map<Name, List<ExecutableElement>> name2Method = new HashMap<>();
 
             TypeElement resolvedType = forType.resolve(info);
 
@@ -199,8 +192,8 @@ public class ComputeOverriding {
                     continue;
                 }
 
-                Set<ExecutableElement> seenMethods = new HashSet<ExecutableElement>();
-                List<ElementDescription> descriptions = new LinkedList<ElementDescription>();
+                Set<ExecutableElement> seenMethods = new HashSet<>();
+                List<ElementDescription> descriptions = new LinkedList<>();
 
                 for (ExecutableElement overridee : lee) {
                     if (info.getElements().overrides(ee, overridee, SourceUtils.getEnclosingTypeElement(ee))) {
@@ -219,7 +212,7 @@ public class ComputeOverriding {
         return result;
     }
     
-    private static final Map<Reference<Elements>, DataHolder> CACHE = new HashMap<Reference<Elements>, DataHolder>();
+    private static final Map<Reference<Elements>, DataHolder> CACHE = new HashMap<>();
 
     private static DataHolder getDataFromCache(CompilationInfo info) {
         Elements elements = info.getElements();
@@ -246,7 +239,7 @@ public class ComputeOverriding {
     private static final class DataHolder {
         private final Map<ElementHandle<TypeElement>, Map<ElementHandle<ExecutableElement>, List<ElementDescription>>> data;
         public DataHolder() {
-            data = new HashMap<ElementHandle<TypeElement>, Map<ElementHandle<ExecutableElement>, List<ElementDescription>>>();
+            data = new HashMap<>();
         }
     }
 
@@ -254,6 +247,7 @@ public class ComputeOverriding {
         public CleaningWR(Elements el) {
             super(el, Utilities.activeReferenceQueue());
         }
+        @Override
         public void run() {
             synchronized(CACHE) {
                 CACHE.remove(this);

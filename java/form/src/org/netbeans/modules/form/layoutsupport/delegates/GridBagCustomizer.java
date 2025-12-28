@@ -57,8 +57,8 @@ public final class GridBagCustomizer extends JPanel implements Customizer
     static final int PLUS = 1;
     static final int MINUS = -1;
 
-    private static final ImageIcon REMAINDER_ICON = new ImageIcon(
-        GridBagCustomizer.class.getResource("/org/netbeans/modules/form/layoutsupport/resources/remainder.gif")); // NOI18N
+    private static final Icon REMAINDER_ICON = ImageUtilities.loadIcon(
+        "org/netbeans/modules/form/layoutsupport/resources/remainder.gif"); // NOI18N
 
 //    private DesignGridBagLayout designLayout;
     private GridBagLayoutSupport layoutSupport;
@@ -222,7 +222,7 @@ public final class GridBagCustomizer extends JPanel implements Customizer
         Iterator<GBComponentProxy> it = selected.iterator();
         while (it.hasNext())
 //            setProperty((GBComponentProxy)it.next(), DesignGridBagLayout.PROP_ANCHOR, new Integer(anchor));
-            setProperty(it.next(), "anchor", new Integer(anchor)); // NOI18N
+            setProperty(it.next(), "anchor", anchor); // NOI18N
     }
 
     void setFill(int fill) {
@@ -230,7 +230,7 @@ public final class GridBagCustomizer extends JPanel implements Customizer
         Iterator<GBComponentProxy> it = selected.iterator();
         while (it.hasNext())
 //            setProperty((GBComponentProxy)it.next(), DesignGridBagLayout.PROP_FILL, new Integer(fill));
-            setProperty(it.next(), "fill", new Integer(fill)); // NOI18N
+            setProperty(it.next(), "fill", fill); // NOI18N
     };
 
 
@@ -247,7 +247,7 @@ public final class GridBagCustomizer extends JPanel implements Customizer
             setProperty(p,
 //                        what == HORIZONTAL ? DesignGridBagLayout.PROP_IPADX : DesignGridBagLayout.PROP_IPADY ,
                         what == HORIZONTAL ? "ipadx" : "ipady" , // NOI18N
-                        new Integer(value));
+                        value);
         }
     }
 
@@ -306,7 +306,7 @@ public final class GridBagCustomizer extends JPanel implements Customizer
             setProperty(p,
 //                        what == HORIZONTAL ? DesignGridBagLayout.PROP_GRIDWIDTH : DesignGridBagLayout.PROP_GRIDHEIGHT ,
                         what == HORIZONTAL ? "gridwidth" : "gridheight" , // NOI18N
-                        new Integer(value));
+                        value);
         }
     }
 
@@ -808,8 +808,8 @@ public final class GridBagCustomizer extends JPanel implements Customizer
                 if (!dragLabel.getLastIndex().equals(dragLabel.getOriginalIndex())) {
 //                    setProperty(this, DesignGridBagLayout.PROP_GRIDX, new Integer(dragLabel.getLastIndex().x));
 //                    setProperty(this, DesignGridBagLayout.PROP_GRIDY, new Integer(dragLabel.getLastIndex().y));
-                    setProperty(this, "gridx", new Integer(dragLabel.getLastIndex().x)); // NOI18N
-                    setProperty(this, "gridy", new Integer(dragLabel.getLastIndex().y)); // NOI18N
+                    setProperty(this, "gridx", dragLabel.getLastIndex().x); // NOI18N
+                    setProperty(this, "gridy", dragLabel.getLastIndex().y); // NOI18N
                 }
 
                 designLayeredPane.remove(dragLabel);

@@ -97,7 +97,7 @@ public abstract class TokenAcceptor {
     
     public static class Resolution extends NumberPostfixAcceptor {
 
-        private static final List<String> POSTFIXES = Arrays.asList(new String[]{"dpi", "dppx", "dpcm"}); //NOI18N
+        private static final List<String> POSTFIXES = Arrays.asList(new String[]{"dpi", "dppx", "dpcm", "x"}); //NOI18N
 
         public Resolution(String id) {
             super(id);
@@ -303,8 +303,9 @@ public abstract class TokenAcceptor {
         //!!! if a longer postfix has sub-postfix which equals to any of the shortest
         //postfixes, then it needs to be before the sub-postfix postfix (e.g. rem - em)!!!
         private static final List<String> POSTFIXES = Arrays.asList(new String[]{
-            "rem", "vmin", "vmax", "ex", "em", "vw", "vh", "ch",
-            "cm", "mm", "in", "pt", "pc", "px"}); //NOI18N
+            "rem", "vmin", "vmax", "cqmin", "cqmax", "ex", "em", "vw", "vh", "ch",
+            "cm", "mm", "in", "pt", "pc", "px",
+            "cqw", "cqh", "cqi", "cqb"}); //NOI18N
 
         public Length(String id) {
             super(id);

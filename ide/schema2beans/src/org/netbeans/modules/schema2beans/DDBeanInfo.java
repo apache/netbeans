@@ -80,7 +80,7 @@ public class DDBeanInfo extends SimpleBeanInfo {
 		}
 	    }
 	}
-	properties = (PropertyDescriptor[])al.toArray(new PropertyDescriptor[al.size()]);
+	properties = (PropertyDescriptor[])al.toArray(new PropertyDescriptor[0]);
 	
     }
     

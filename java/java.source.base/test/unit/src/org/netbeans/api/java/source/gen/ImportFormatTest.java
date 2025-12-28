@@ -399,7 +399,7 @@ public class ImportFormatTest extends GeneratorTestMDRCompat {
                 List<ImportTree> imports = new ArrayList<ImportTree>(cut.getImports());
                 ImportTree oneImport = imports.remove(4);
                 imports.add(4, make.Import(make.Identifier("java.util.Collection"), false));
-                Collections.sort(imports, new Comparator() {
+                imports.sort(new Comparator() {
                     public int compare(Object o1, Object o2) {
                         if (o1 == o2) {
                             return 0;

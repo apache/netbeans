@@ -271,6 +271,6 @@ public final class NewTestWizardIterator implements WizardDescriptor.Instantiati
                 result.add(sg);
             }            
         }
-        return result.toArray(new SourceGroup[result.size()]);
+        return result.toArray(new SourceGroup[0]);
     }
 }

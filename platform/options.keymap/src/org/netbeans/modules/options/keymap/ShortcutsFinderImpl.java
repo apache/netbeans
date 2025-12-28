@@ -172,7 +172,7 @@ public class ShortcutsFinderImpl implements ShortcutsFinder {
         if (shortcuts == null) {
             return new String [0];
         }
-        return shortcuts.toArray (new String [shortcuts.size ()]);
+        return shortcuts.toArray (new String [0]);
     }
     
     protected void clearShortcuts(String profile) {

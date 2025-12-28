@@ -32,10 +32,7 @@ import org.openide.util.NbBundle;
  */
 public class WarnPanel extends javax.swing.JPanel {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Display warning message and handle <i>Show this warning next time</i> check box.
      * <p/>
@@ -84,17 +81,11 @@ public class WarnPanel extends javax.swing.JPanel {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Warning message to be shown in the panel. */
     private final String warning;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates new warning panel with show again check box.
      * <p/>
@@ -107,10 +98,7 @@ public class WarnPanel extends javax.swing.JPanel {
         this.showAgain.setSelected(showAgain);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get value of show again check box.
      * <p/>
@@ -120,10 +108,7 @@ public class WarnPanel extends javax.swing.JPanel {
         return showAgain.isSelected();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Generated GUI code                                                     //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

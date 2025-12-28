@@ -5,5 +5,5 @@ contact_links:
     url: https://github.com/apache/netbeans/discussions/
     about: Ask a question or request support for using Apache NetBeans.
   - name: Mailing lists
-    url: https://netbeans.apache.org/community/mailing-lists.html
+    url: https://netbeans.apache.org/community/mailing-lists
     about: Subscribe to the users, dev or announce mailing lists for Apache NetBeans.

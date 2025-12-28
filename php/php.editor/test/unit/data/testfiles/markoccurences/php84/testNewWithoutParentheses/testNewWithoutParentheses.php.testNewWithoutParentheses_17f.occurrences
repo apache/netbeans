@@ -1,0 +1,12 @@
+        $example = new Example()->|>MARK_OCCURRENCES:returnThis<|()?->privateField;
+        $example = new Example()->|>MARK_OCCURRENCES:returnThis<|()->publicMethod();
+        $example = new Example()->|>MARK_OCCURRENCES:returnThis<|()::$protectedStaticField;
+        $example = new Example()?->|>MARK_OCCURRENCES:returnThis<|()::PRIVATE_CONST;
+        $example = new Example()->|>MARK_OCCURRENCES:returnThis<|()::privateStaticMethod();
+    public function |>MARK_OCCURRENCES:returnT^his<|(): self {
+new Example()->|>MARK_OCCURRENCES:returnThis<|()->publicField; // test
+new Example()->|>MARK_OCCURRENCES:returnThis<|()::$publicStaticField; // test
+new Example()->|>MARK_OCCURRENCES:returnThis<|()::IMPLICIT_PUBLIC_CONST; // test
+new Example()->|>MARK_OCCURRENCES:returnThis<|()::PUBLIC_CONST; // test
+new Example()->|>MARK_OCCURRENCES:returnThis<|()->publicMethod(); // test
+new Example()->|>MARK_OCCURRENCES:returnThis<|()::publicStaticMethod(); // test

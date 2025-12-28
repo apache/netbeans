@@ -155,6 +155,7 @@
        that represent archetypes. The archetypes are defined by the following file attributes:
      </p>
        <table>
+           <caption>Archetype attributes</caption>
            <tbody>
                <tr><td>groupId</td><td>mandatory</td><td></td></tr>
                <tr><td>artifactId</td><td>mandatory</td><td></td></tr>
@@ -169,8 +170,8 @@
     <api group="lookup" name="ActionConfiguration" type="import" category="official">
         <p>
             Project API clients may place <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ProjectConfiguration.html">ProjectConfiguration</a> 
-            instance in the <b>context Lookup</b> passed to <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html#isActionEnabled-java.lang.String-org.openide.util.Lookup-">ActionProvider.isActionEnabled()</a> or 
-            <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html#invokeAction-java.lang.String-org.openide.util.Lookup-">ActionProvider.invokeAction()</a>. If such instance is present, the action is configured according to settings in the selected configuration.
+            instance in the <b>context Lookup</b> passed to <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html#isActionEnabled(java.lang.String,org.openide.util.Lookup)">ActionProvider.isActionEnabled()</a> or 
+            <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html#invokeAction(java.lang.String,org.openide.util.Lookup)">ActionProvider.invokeAction()</a>. If such instance is present, the action is configured according to settings in the selected configuration.
             If not present, the active configuration is used. See example in <a href="@TOP@/org/netbeans/modules/maven/api/NbMavenProject.html">NbMavenProject</a> documentation.
         </p>
     </api>

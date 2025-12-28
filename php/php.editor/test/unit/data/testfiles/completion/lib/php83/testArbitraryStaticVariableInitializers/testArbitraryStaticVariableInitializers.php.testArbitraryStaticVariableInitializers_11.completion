@@ -1,0 +1,4 @@
+Code completion result for source line:
+static $example2 = $variab|le;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   int $variable                   [PUBLIC]   testArbitraryStaticVariableInitializers.php

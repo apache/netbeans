@@ -15,7 +15,20 @@
 # specific language governing permissions and limitations
 # under the License.
 
+A1B306DD295439765D0FD2F9B00A48501C892B88 org.glassfish.web:jakarta.servlet.jsp:3.0.0
+64280BAE9C1140FE4F007E87A9E2D1EA198BA200 org.glassfish:jakarta.el:5.0.0-M1
+302D7A9D82F8361EBB4F6944121E2A9E58EC1C9A org.glassfish.main.common:glassfish-ee-api:7.0.25
+423B91AB51675B6E58449A23ECB07A85C70FD3CC org.glassfish.main.common:common-util:7.0.25
 13192D5874B787C0CE0C70B35E95181E8B683A1C org.glassfish.web:jakarta.servlet.jsp:2.3.6
 F48473482C0E3E714F87186D9305BCAE30B7F5CB org.glassfish:jakarta.el:3.0.4
 9A3D933B7B079AD73C43878BF09AC47586FAC897 org.glassfish.main.common:glassfish-ee-api:5.1.0
 CED8804F81DB0C9099786472C615A12EA592C44B org.glassfish.main.common:common-util:5.1.0
+# Binary dependencies required for the unittest data (test projects). Only
+# required at build/test time. Don't change/update unless unittest changes are
+# intended.
+34A035507F0270F1C6B7722D728BD7B5A9BBAC4C jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:1.2.7
+F5A092DE3B2B087C14CA4B8D6F2C77A1F6802828 org.glassfish.web:jakarta.servlet.jsp.jstl:1.2.6
+8CFF7DC1E492911F3DD7640EBFB60D6206A1DD40 commons-logging:commons-logging:1.3.1
+3993114CD341AFA42B2C2841C88EF653FA7EF3EE jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.2
+078909A1354585B2A7A2D3B4E348FCEFF8B6D180 org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1
+8CFF7DC1E492911F3DD7640EBFB60D6206A1DD40 commons-logging:commons-logging:1.3.1

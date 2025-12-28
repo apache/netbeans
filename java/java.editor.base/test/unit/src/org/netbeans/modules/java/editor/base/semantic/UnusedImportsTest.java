@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.lang.model.SourceVersion;
 
 import javax.swing.text.Document;
 
@@ -364,6 +365,134 @@ public class UnusedImportsTest extends NbTestCase {
 
         performUnusedImportsTestForFile("module-info.java",
                                         "import java.util.List;\n");
+    }
+
+    public void testModuleImport1() throws Exception {
+        SourceUtilsTestUtil.setCompilerOptions(src, List.of("--enable-preview"));
+        SourceUtilsTestUtil.setSourceLevel(src, "" + SourceVersion.latest().ordinal());
+        writeFilesAndWaitForScan(src,
+                                 new File("test/Main.java",
+                                          """
+                                          package test;
+                                          import module java.base;
+                                          public class Main {
+                                              List<String> l = new ArrayList<>();
+                                          }
+                                          """));
+
+        performUnusedImportsTest();
+    }
+
+    public void testModuleImport2() throws Exception {
+        SourceUtilsTestUtil.setCompilerOptions(src, List.of("--enable-preview"));
+        SourceUtilsTestUtil.setSourceLevel(src, "" + SourceVersion.latest().ordinal());
+        writeFilesAndWaitForScan(src,
+                                 new File("test/Main.java",
+                                          """
+                                          package test;
+                                          import module java.base;
+                                          import java.util.*;
+                                          public class Main {
+                                              List<String> l = new ArrayList<>();
+                                          }
+                                          """));
+
+        performUnusedImportsTest("import module java.base;\n");
+    }
+
+    public void testModuleImport3() throws Exception {
+        SourceUtilsTestUtil.setCompilerOptions(src, List.of("--enable-preview"));
+        SourceUtilsTestUtil.setSourceLevel(src, "" + SourceVersion.latest().ordinal());
+        writeFilesAndWaitForScan(src,
+                                 new File("module-info.java",
+                                          """
+                                          module m {
+                                              requires transitive java.compiler;
+                                          }
+                                          """),
+                                 new File("test/Main.java",
+                                          """
+                                          package test;
+                                          import module m;
+                                          public class Main {
+                                              ToolProvider p;
+                                          }
+                                          """));
+
+        performUnusedImportsTest();
+    }
+
+    public void testModuleImport4() throws Exception {
+        SourceUtilsTestUtil.setCompilerOptions(src, List.of("--enable-preview"));
+        SourceUtilsTestUtil.setSourceLevel(src, "" + SourceVersion.latest().ordinal());
+        writeFilesAndWaitForScan(src,
+                                 new File("module-info.java",
+                                          """
+                                          module m {
+                                              requires java.compiler;
+                                          }
+                                          """),
+                                 new File("test/Main.java",
+                                          """
+                                          package test;
+                                          import module m;
+                                          public class Main {
+                                              ToolProvider p;
+                                          }
+                                          """));
+
+        performUnusedImportsTest("import module m;\n");
+    }
+
+    public void testModuleImport5() throws Exception {
+        SourceUtilsTestUtil.setCompilerOptions(src, List.of("--enable-preview"));
+        SourceUtilsTestUtil.setSourceLevel(src, "" + SourceVersion.latest().ordinal());
+        writeFilesAndWaitForScan(src,
+                                 new File("module-info.java",
+                                          """
+                                          module m {
+                                              requires java.compiler;
+                                          }
+                                          """),
+                                 new File("test/Main.java",
+                                          """
+                                          package test;
+                                          import module m;
+                                          import module java.compiler;
+                                          public class Main {
+                                              ToolProvider p;
+                                          }
+                                          """));
+
+        performUnusedImportsTest("import module m;\n");
+    }
+
+    public void testModuleImportSamePackage() throws Exception {
+        SourceUtilsTestUtil.setCompilerOptions(src, List.of("--enable-preview"));
+        SourceUtilsTestUtil.setSourceLevel(src, "" + SourceVersion.latest().ordinal());
+        writeFilesAndWaitForScan(src,
+                                 new File("module-info.java",
+                                          """
+                                          module m {
+                                              exports m_api;
+                                          }
+                                          """),
+                                 new File("test/Test.java",
+                                          """
+                                          package m_api;
+                                          public class Test {
+                                          }
+                                          """),
+                                 new File("test/Main.java",
+                                          """
+                                          package m_api;
+                                          import module m;
+                                          public class Main {
+                                              Test p;
+                                          }
+                                          """));
+
+        performUnusedImportsTest("import module m;\n");
     }
 
     private void performUnusedImportsTest(String... golden) throws Exception {

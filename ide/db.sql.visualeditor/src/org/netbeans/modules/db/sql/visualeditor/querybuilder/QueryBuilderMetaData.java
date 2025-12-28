@@ -280,9 +280,9 @@ public class QueryBuilderMetaData {
             }
         } else {
             for (int icnt = 0; icnt < cols.size(); icnt++) {
-                if (columnName.equalsIgnoreCase((String) cols.get(icnt))) {
-                    col.setColumnName(col.getColumnName(), (String) cols.get(icnt));
-                    Log.getLogger().finest(" adjust colname to " + (String) cols.get(icnt));
+                if (columnName.equalsIgnoreCase(cols.get(icnt))) {
+                    col.setColumnName(col.getColumnName(), cols.get(icnt));
+                    Log.getLogger().finest(" adjust colname to " + cols.get(icnt));
                     if (col.getTableSpec() == null) {
                         col.setTableSpec(col.getTableSpec(), checkedTable);
                         Log.getLogger().finest(" adjust table to " + checkedTable);
@@ -435,8 +435,8 @@ public class QueryBuilderMetaData {
         // Convert from List<table, schema> to "table.schema", expected by query editor
         List<String> result = new ArrayList<>();
         for (List<String> fullTable : tables) {
-            String schema = (String) fullTable.get(0);
-            String table = (String) fullTable.get(1);
+            String schema = fullTable.get(0);
+            String table  = fullTable.get(1);
             result.add(((schema == null) || (schema.equals(""))) ? table : schema + "." + table);
         }
         return result;
@@ -528,10 +528,10 @@ public class QueryBuilderMetaData {
 //         */
 //     }
 
-    /**
+    /*
      * Returns the list of table names in the specified schema
      */
-    /**** JFB
+    /* *** JFB
     private List getTablesInternal(String type, String schemaName) {
 	if (Log.isLoggable() ) Log.log("enter tablesInternal "+type+","+schemaName) ;
 	List tableNames = new ArrayList();
@@ -565,7 +565,7 @@ public class QueryBuilderMetaData {
     }
     ***/
 
-    /**
+    /*
      * Returns the set of columns in the specified table.
      * This is obtained from the DbMetaData.
      */
@@ -690,7 +690,7 @@ public class QueryBuilderMetaData {
         return result;
     }
 
-    /**
+    /*
      * Returns either the exported or imported keys for this table, depending on the flag
      */
     /*

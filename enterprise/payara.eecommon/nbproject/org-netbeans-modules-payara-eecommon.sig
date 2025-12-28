@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.18.0
+#Version 2.26.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -755,7 +755,7 @@ supr java.lang.Object
 
 CLSS public org.netbeans.modules.payara.eecommon.api.HttpMonitorHelper
 cons public init()
-meth public !varargs static boolean synchronizeMonitor(java.lang.String,java.lang.String,boolean,java.lang.String[]) throws java.io.IOException,org.xml.sax.SAXException
+meth public !varargs static boolean synchronizeMonitor(java.lang.String,java.lang.String,boolean,boolean,java.lang.String[]) throws java.io.IOException,org.xml.sax.SAXException
 supr java.lang.Object
 hfds MONITOR_FILTER_CLASS,MONITOR_FILTER_NAME,MONITOR_FILTER_PATTERN,MONITOR_INTERNALPORT_PARAM_NAME,MONITOR_MODULE_NAME,httpMonitorInfo,monitorInfoListener,monitorLookupListener,monitorSpy,res
 hcls ModuleSpy,MonitorInfoListener,MonitorLookupListener
@@ -805,7 +805,6 @@ meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 meth public void outputLineAction(org.openide.windows.OutputEvent)
 meth public void outputLineCleared(org.openide.windows.OutputEvent)
-meth public void outputLineSelected(org.openide.windows.OutputEvent)
 supr java.lang.Object
 hfds hashCode,line,msg,path
 
@@ -897,6 +896,7 @@ hfds destFolder,ext,name,result,source
 
 CLSS public final org.netbeans.modules.payara.eecommon.api.config.AppClientVersion
 fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_10_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_11_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_1_3
 fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_1_4
 fld public final static org.netbeans.modules.payara.eecommon.api.config.AppClientVersion APP_CLIENT_5_0
@@ -910,6 +910,7 @@ supr org.netbeans.modules.payara.eecommon.api.config.J2EEBaseVersion
 
 CLSS public final org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion
 fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_10_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_11_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_1_3
 fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_1_4
 fld public final static org.netbeans.modules.payara.eecommon.api.config.ApplicationVersion APPLICATION_5_0
@@ -1146,6 +1147,7 @@ CLSS public final org.netbeans.modules.payara.eecommon.api.config.J2EEVersion
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion J2EE_1_3
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion J2EE_1_4
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_10_0
+fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_11_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_8_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_9_0
 fld public final static org.netbeans.modules.payara.eecommon.api.config.J2EEVersion JAKARTAEE_9_1
@@ -1434,9 +1436,9 @@ meth public abstract org.openide.util.Lookup getLookup()
 
 CLSS public abstract interface org.openide.windows.OutputListener
 intf java.util.EventListener
-meth public abstract void outputLineAction(org.openide.windows.OutputEvent)
-meth public abstract void outputLineCleared(org.openide.windows.OutputEvent)
-meth public abstract void outputLineSelected(org.openide.windows.OutputEvent)
+meth public void outputLineAction(org.openide.windows.OutputEvent)
+meth public void outputLineCleared(org.openide.windows.OutputEvent)
+meth public void outputLineSelected(org.openide.windows.OutputEvent)
 
 CLSS public org.openide.windows.TopComponent
 cons public init()

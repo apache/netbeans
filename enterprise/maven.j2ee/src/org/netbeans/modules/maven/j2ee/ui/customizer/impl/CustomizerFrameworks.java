@@ -40,7 +40,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionListener;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.InstanceRemovedException;
@@ -476,7 +476,7 @@ public class CustomizerFrameworks extends JPanel implements ApplyChangesCustomiz
                 @Override
                 public void run() {
                     // it mostly results into lenghty opperation, show progress dialog
-                    ProgressUtils.showProgressDialogAndRun(new Runnable() {
+                    BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
                         @Override
                         public void run() {
                             // include newly added extenders into webmodule
@@ -516,7 +516,7 @@ public class CustomizerFrameworks extends JPanel implements ApplyChangesCustomiz
                         Exceptions.printStackTrace(ex);
                     } catch (TimeoutException ex) {
                         // End of the 300ms period, continue in processing but display progress dialog
-                        ProgressUtils.showProgressDialogAndRun(new Runnable() {
+                        BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
                             @Override
                             public void run() {
                                 try {

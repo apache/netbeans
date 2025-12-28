@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -138,7 +139,6 @@ import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
 import org.openide.windows.WindowManager;
 import org.openide.windows.WindowSystemEvent;
@@ -200,7 +200,7 @@ public final class PhpProject implements Project {
     public static final String PROP_FRAMEWORKS = "frameworks"; // NOI18N
     public static final String PROP_WEB_ROOT = "webRoot"; // NOI18N
     final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
-    private final Set<PropertyChangeListener> propertyChangeListeners = new WeakSet<>();
+    private final Set<PropertyChangeListener> propertyChangeListeners = Collections.newSetFromMap(new WeakHashMap<>());
 
     // css preprocessors
     final CssPreprocessorsListener cssPreprocessorsListener = new CssPreprocessorsListener() {
@@ -848,6 +848,8 @@ public final class PhpProject implements Project {
             // autoconfigured?
             checkAutoconfigured();
 
+            ComputeTestMethodAnnotations.getInstance().register();
+
             // #187060 - exception in projectOpened => project IS NOT opened (so move it at the end of the hook)
             getCopySupport().projectOpened();
 
@@ -886,6 +888,8 @@ public final class PhpProject implements Project {
                 }
 
             } finally {
+                ComputeTestMethodAnnotations.getInstance().unregister();
+
                 // #187060 - exception in projectClosed => project IS closed (so do it in finally block)
                 getCopySupport().projectClosed();
                 // #192386
@@ -1260,7 +1264,7 @@ public final class PhpProject implements Project {
             addRoots(roots, project.getTestRoots());
             addRoots(roots, project.getSeleniumRoots());
             addIncludePath(roots, PhpSourcePath.getIncludePath(project.getSourcesDirectory()));
-            return roots.toArray(new FileObject[roots.size()]);
+            return roots.toArray(new FileObject[0]);
         }
 
         // #197968

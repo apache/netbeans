@@ -689,7 +689,7 @@
                             </Variable>
                         </VariableNames>
                         <InitialValues>
-                            <Scalar start='1349' end='1352' type='REAL' value='1.2'/>
+                            <Scalar start='1349' end='1352' type='FLOAT' value='1.2'/>
                         </InitialValues>
                     </FieldsDeclaration>
                     <FieldsDeclaration start='1373' end='1421' modifier='private static'>

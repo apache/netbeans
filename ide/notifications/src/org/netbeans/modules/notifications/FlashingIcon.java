@@ -24,13 +24,11 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.BorderFactory;
@@ -41,10 +39,10 @@ import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.netbeans.modules.notifications.center.NotificationCenterManager;
+import org.openide.awt.GraphicsUtils;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.RequestProcessor.Task;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
@@ -223,25 +221,56 @@ class FlashingIcon extends JLabel implements MouseListener, PropertyChangeListen
         } else {
             icon = ImageUtilities.loadImageIcon("org/netbeans/modules/notifications/resources/notifications.png", true);
         }
-        BufferedImage countIcon = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = countIcon.createGraphics();
-        g.setFont(getFont().deriveFont(10f));
+        Font font = getFont().deriveFont(10f);
         Color color;
         if ("Nimbus".equals(UIManager.getLookAndFeel().getID())) {
             color = isError ? Color.RED : Color.BLACK;
         } else {
             color = isError ? UIManager.getColor("nb.errorForeground") : UIManager.getColor("Label.foreground");
         }
-        g.setColor(color);
-        if (unread < 10) {
-            g.setFont(g.getFont().deriveFont(Font.BOLD));
-            g.drawString(Integer.toString(unread), 5, 10);
-        } else if (unread < 100) {
-            g.drawString(Integer.toString(unread), 3, 10);
-        } else {
-            g.drawString("...", 2, 10);
+        /* Use a proper Icon implementation rather than going through BufferedImage, to get sharp
+        results on HiDPI/Retina screens. */
+        return new CountIcon(icon, font, color, unread);
+    }
+
+    private static final class CountIcon implements Icon {
+        private final Icon baseIcon;
+        private final Font font;
+        private final Color color;
+        private final int unread;
+
+        public CountIcon(Icon baseIcon, Font font, Color color, int unread) {
+            this.baseIcon = baseIcon;
+            this.font = font;
+            this.color = color;
+            this.unread = unread;
         }
-        return new ImageIcon(ImageUtilities.mergeImages(icon.getImage(), countIcon, 0, 0));
+
+        @Override
+        public int getIconWidth() {
+            return 16;
+        }
+
+        @Override
+        public int getIconHeight() {
+            return 16;
+        }
+
+        @Override
+        public void paintIcon(Component c, Graphics g, int x, int y) {
+            GraphicsUtils.configureDefaultRenderingHints(g);
+            baseIcon.paintIcon(c, g, x, y);
+            g.setFont(font);
+            g.setColor(color);
+            if (unread < 10) {
+                g.setFont(font.deriveFont(Font.BOLD));
+                g.drawString(Integer.toString(unread), x + 5, y + 10);
+            } else if (unread < 100) {
+                g.drawString(Integer.toString(unread), x + 3, y + 10);
+            } else {
+                g.drawString("...", x + 2, y + 10);
+            }
+        }
     }
 
     private class MyIcon implements Icon {

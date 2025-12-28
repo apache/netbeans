@@ -37,10 +37,7 @@ import org.openide.util.NbBundle;
  */
 public abstract class InstancePanel extends javax.swing.JPanel {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Properties for check box fields.
      */
@@ -207,10 +204,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = GlassFishLogger.get(InstancePanel.class);
@@ -218,14 +212,8 @@ public abstract class InstancePanel extends javax.swing.JPanel {
     /** Maximum port number value. */
     private static final int MAX_PORT_VALUE = 0x10000 - 0x01;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish server instance to be modified. */
     protected final GlassfishInstance instance;
     
@@ -255,10 +243,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
     /** Configuration file <code>domain.xml</code> was parsed successfully. */
     protected boolean configFileParsed;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Abstract methods                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Host field initialization.
      * <p/>
@@ -281,10 +266,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
      */
     protected abstract String getHost();
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of common GlassFish server properties editor.
      * <p/>
@@ -300,10 +282,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
                 .setDocumentFilter(new Filter.PortNumber());
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Installation and domain directories fields initialization.
      * <p/>
@@ -598,10 +577,7 @@ public abstract class InstancePanel extends javax.swing.JPanel {
         passwordField.setEchoChar(showPasswordFlag ? '\0' : '*');        
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Generated GUI code                                                     //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

@@ -81,9 +81,13 @@ public final class AppClientVersion extends J2EEBaseVersion {
         "10.0", 10000,	// NOI18N
         "10.0", 10000	// NOI18N
         );
-    /** -----------------------------------------------------------------------
-     *  Implementation
+    
+    /** Represents application-client version 11.0
      */
+    public static final AppClientVersion APP_CLIENT_11_0 = new AppClientVersion(
+        "11.0", 11000,	// NOI18N
+        "11.0", 11000	// NOI18N
+        );
 
     /** Creates a new instance of AppClientVersion 
      */
@@ -122,6 +126,8 @@ public final class AppClientVersion extends J2EEBaseVersion {
             result = APP_CLIENT_9_0;
         } else if(APP_CLIENT_10_0.toString().equals(version)) {
             result = APP_CLIENT_10_0;
+        } else if(APP_CLIENT_11_0.toString().equals(version)) {
+            result = APP_CLIENT_11_0;
         }
 
         return result;

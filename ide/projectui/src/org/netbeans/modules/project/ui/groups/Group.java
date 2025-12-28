@@ -31,8 +31,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -326,7 +326,7 @@ public abstract class Group {
     public static void onShutdown(Set<Project> prjs) {
         Group active = getActiveGroup();
         String oldGroupName = active != null ? active.getName() : null;
-        Set<Project> stayOpened = new HashSet<Project>(prjs);
+        Set<Project> stayOpened = new LinkedHashSet<>(prjs);
         Map<Project, Set<DataObject>> documents = getOpenedDocuments(stayOpened, true);
         for (Project p : stayOpened) {
             Set<DataObject> oldDocuments = documents.get(p);
@@ -335,18 +335,18 @@ public abstract class Group {
     }
 
     private static void persistDocumentsInGroup(Project p, Set<DataObject> get, String oldGroupName) {
-        Set<String> urls = new HashSet<String>();
+        Set<String> urls = new LinkedHashSet<>();
         if (get != null) {
             for (DataObject dob : get) {
                 //same way of creating string as in ProjectUtilities
                 urls.add(dob.getPrimaryFile().toURL().toExternalForm());
             }
         }
-        ProjectUtilities.storeProjectOpenFiles(p, urls, oldGroupName);
+        ProjectUtilities.storeProjectOpenFiles(p, new ArrayList<>(urls), oldGroupName);
     }
 
     private static Map<Project, Set<DataObject>> getOpenedDocuments(final Set<Project> listOfProjects, boolean shutdown) {
-        final Map<Project, Set<DataObject>> toRet = new HashMap<Project, Set<DataObject>>();
+        Map<Project, Set<DataObject>> toRet = new LinkedHashMap<>();
         Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
@@ -364,11 +364,8 @@ public abstract class Group {
                                 Project owner = FileOwnerQuery.getOwner(fobj);
 
                                 if (listOfProjects.contains(owner)) {
-                                    if (!toRet.containsKey(owner)) {
-                                        // add project
-                                        toRet.put(owner, new LinkedHashSet<DataObject>());
-                                    }
-                                    toRet.get(owner).add(dobj);
+                                    toRet.computeIfAbsent(owner, k -> new LinkedHashSet<>())
+                                         .add(dobj); // add project
                                 }
                             }
                         }
@@ -379,9 +376,7 @@ public abstract class Group {
             assert !SwingUtilities.isEventDispatchThread();
             try {
                 SwingUtilities.invokeAndWait(runnable);
-            } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (InvocationTargetException ex) {
+            } catch (InterruptedException | InvocationTargetException ex) {
                 Exceptions.printStackTrace(ex);
             }
         } else {
@@ -455,6 +450,7 @@ public abstract class Group {
             EventQueue.invokeLater(new Runnable() {
                 @Override public void run() {
                     ProjectTab.findDefault(ProjectTab.ID_LOGICAL).setGroup(Group.this);
+                    ProjectTab.findDefault(ProjectTab.ID_PHYSICAL).setGroup(Group.this);
                 }
             });
         }
@@ -554,6 +550,7 @@ public abstract class Group {
         EventQueue.invokeLater(new Runnable() {
             @Override public void run() {
                 ProjectTab.findDefault(ProjectTab.ID_LOGICAL).setGroup(g);
+                ProjectTab.findDefault(ProjectTab.ID_PHYSICAL).setGroup(g);
             }
         });
         String handleLabel;
@@ -567,7 +564,19 @@ public abstract class Group {
             h.start(200);
             ProjectUtilities.WaitCursor.show();
             final OpenProjectList opl = OpenProjectList.getDefault();
-            Set<Project> oldOpen = new HashSet<Project>(Arrays.asList(opl.getOpenProjects()));
+            
+            Set<Project> oldOpen = new HashSet<>();
+            for (Project open : opl.getOpenProjects()) {
+                // TODO fix this properly, e.g investigate if:
+                //  - getOpenProjects() should only return unboxed projects 
+                //       risk: called by public API
+                //  - review/fix the broken hashcode/equals contracts
+                //       risk: code contains hacks which account for this already, e.g if (a.equals(b) || b.equals(a))
+                // for now: unbox potential fod.FeatureNonProject wrapper since it breaks Sets/Maps due to incompatible hashcode/equals impls
+                Project real = open.getLookup().lookup(Project.class);
+                oldOpen.add(real != null ? real : open);
+            }
+
             //TODO switching to no group always clears the opened project list.
             Set<Project> newOpen = g != null ? g.getProjects(h, 10, 100) : getProjectsByPreferences(noneGroupPref, h, 10, 100);
             final Set<Project> toClose = new HashSet<Project>(oldOpen);
@@ -583,11 +592,11 @@ public abstract class Group {
             try {
                 h.progress(Group_progress_closing(toClose.size()), 110);
                 //close and remember the last opened files in the old group
-                opl.close(toClose.toArray(new Project[toClose.size()]), false, oldGroupName);
+                opl.close(toClose.toArray(new Project[0]), false, oldGroupName);
                 h.switchToIndeterminate();
                 h.progress(Group_progress_opening(toOpen.size()));
                 //open the projects with current group
-                opl.open(toOpen.toArray(new Project[toOpen.size()]), false, false, h, null);
+                opl.open(toOpen.toArray(new Project[0]), false, false, h, null);
                 
                 if(!isNewGroup) {
                     //for old and new group project intersection, save the old files list,

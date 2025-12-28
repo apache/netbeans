@@ -53,14 +53,15 @@ class StackLineAnalyser {
     private static final RequestProcessor RP = new RequestProcessor(StackLineAnalyser.class);
 
     private static final String IDENTIFIER =
-        "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";    // NOI18N
+        "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
     private static final Pattern LINE_PATTERN = Pattern.compile(
-        "at\\s+" +                                       //  initial at // NOI18N
-        "("+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?" + // optional module name // NOI18N
-        "(("+IDENTIFIER+"(\\."+IDENTIFIER+")*)\\.)?("+IDENTIFIER+")" + // class name // NOI18N
-        "\\.("+IDENTIFIER+"|\\<init\\>|\\<clinit\\>)\\s*"+ // method name
-        "\\((?:"+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?"+IDENTIFIER+"(\\.(?:\\p{javaJavaIdentifierPart}+))?"+ // '(File.java' // NOI18N
-        "\\:([0-9]*)\\)");                              // ':123)' // NOI18N
+        "at\\s+" +                                                      // initial 'at'
+        "(?:<\\w+>\\s+)?" +                                             // optional identification of a language like <java>
+        "("+IDENTIFIER+"\\S*/)?" +                                      // optional module name like 'java.base/' or 'Mavenproject1@0.1-SNAPSHOT/'
+        "(("+IDENTIFIER+"(\\."+IDENTIFIER+")*)\\.)?("+IDENTIFIER+")" +  // class name
+        "\\.("+IDENTIFIER+"|\\<init\\>|\\<clinit\\>)\\s*"+              // method name
+        "\\((?:"+IDENTIFIER+"(?:\\."+IDENTIFIER+")*/)?"+IDENTIFIER+"(\\.(?:\\p{javaJavaIdentifierPart}+))?"+ // '(File.java'
+        "\\:([0-9]*)\\)");                                              // ':123)'
 
     static boolean matches(String line) {
         Matcher matcher = LINE_PATTERN.matcher(line);
@@ -117,6 +118,10 @@ class StackLineAnalyser {
             this.startOffset = startOffset;
             this.endOffset = endOffset;
             this.extension = extension;
+        }
+
+        int getLineNumber() {
+            return lineNumber;
         }
 
         int getStartOffset () {

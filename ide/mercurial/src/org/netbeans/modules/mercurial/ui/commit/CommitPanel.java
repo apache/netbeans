@@ -385,10 +385,10 @@ public class CommitPanel extends AutoResizingPanel implements PreferenceChangeLi
         jLabel1.setLabelFor(messageTextArea);
         Mnemonics.setLocalizedText(jLabel1, getMessage("CTL_CommitForm_Message")); // NOI18N
 
-        recentLink.setIcon(new ImageIcon(getClass().getResource("/org/netbeans/modules/mercurial/resources/icons/recent_messages.png"))); // NOI18N
+        recentLink.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/mercurial/resources/icons/recent_messages.png")); // NOI18N
         recentLink.setToolTipText(getMessage("CTL_CommitForm_RecentMessages")); // NOI18N
 
-        templateLink.setIcon(new ImageIcon(getClass().getResource("/org/netbeans/modules/mercurial/resources/icons/load_template.png"))); // NOI18N
+        templateLink.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/mercurial/resources/icons/load_template.png")); // NOI18N
         templateLink.setToolTipText(getMessage("CTL_CommitForm_LoadTemplate")); // NOI18N
         
         Mnemonics.setLocalizedText(cbAllFiles, getMessage("CTL_CommitForm_CommitAllFiles.text")); //NOI18N
@@ -672,7 +672,7 @@ public class CommitPanel extends AutoResizingPanel implements PreferenceChangeLi
                 allCookies.add(cookies[0]);
             }
         }
-        return allCookies.toArray(new EditorCookie[allCookies.size()]);
+        return allCookies.toArray(new EditorCookie[0]);
     }
 
     /**

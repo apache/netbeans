@@ -139,7 +139,7 @@
  <answer id="arch-what">
   <p>
    General user interface implementation for the project system. <a
-   href="https://netbeans.apache.org/projects/buildsys/build-sys-ui-spec.html">UI
+   href="https://netbeans.apache.org/projects/buildsys/build-sys-ui-spec">UI
    Specification</a>
   </p>
  </answer>
@@ -603,11 +603,11 @@
       <api name="org.netbeans.ui.actions.UI_ACTION_BUTTON_PRESS" category="friend" group="logger" type="export">
       There is a special support for notifying when an action wrapped by
       <code>LookupSensitiveAction</code> is 
-      invoked and how. The support is using <a href="@JDK@/java/util/logging/Logger.html">
+      invoked and how. The support is using <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">
       Logger.getLogger("org.netbeans.ui.actions")
-      </a> and sents a <a href="@JDK@/java/util/logging/LogRecord.html">LogRecord</a>
+      </a> and sents a <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">LogRecord</a>
       with message <code>UI_ACTION_BUTTON_PRESS</code>, 
-      <code>FINER</code> <a href="@JDK@/java/util/logging/LogRecord.html">level</a>
+      <code>FINER</code> <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogRecord.html">level</a>
       and paramerters:
       <ul>
           <li>{<b>0</b>} instance of the button</li>

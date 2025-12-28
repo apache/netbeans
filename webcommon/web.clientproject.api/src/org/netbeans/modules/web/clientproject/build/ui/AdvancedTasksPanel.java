@@ -35,7 +35,6 @@ import javax.swing.AbstractListModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.GroupLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -60,6 +59,7 @@ import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Mnemonics;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
 
@@ -119,7 +119,7 @@ public final class AdvancedTasksPanel extends JPanel {
     private void init(String tasksLabel, List<String> tasks, boolean showSimpleTasks) {
         assert EventQueue.isDispatchThread();
         Mnemonics.setLocalizedText(this.tasksLabel, tasksLabel);
-        tasksComboBox.setModel(new DefaultComboBoxModel(tasks.toArray(new String[tasks.size()])));
+        tasksComboBox.setModel(new DefaultComboBoxModel(tasks.toArray(new String[0])));
         tasksList.setModel(tasksListModel);
         tasksList.setCellRenderer(new AdvancedTaskListCellRenderer());
         showSimpleTasksCheckBox.setSelected(showSimpleTasks);
@@ -334,7 +334,7 @@ public final class AdvancedTasksPanel extends JPanel {
         tasksList.setMinimumSize(new Dimension(60, 80));
         tasksScrollPane.setViewportView(tasksList);
 
-        addButton.setIcon(new ImageIcon(getClass().getResource("/org/netbeans/modules/web/clientproject/ui/resources/add.png"))); // NOI18N
+        addButton.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/web/clientproject/ui/resources/add.png"));
         addButton.setToolTipText(NbBundle.getMessage(AdvancedTasksPanel.class, "AdvancedTasksPanel.addButton.toolTipText")); // NOI18N
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -342,7 +342,7 @@ public final class AdvancedTasksPanel extends JPanel {
             }
         });
 
-        removeButton.setIcon(new ImageIcon(getClass().getResource("/org/netbeans/modules/web/clientproject/ui/resources/remove.png"))); // NOI18N
+        removeButton.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/web/clientproject/ui/resources/remove.png"));
         removeButton.setToolTipText(NbBundle.getMessage(AdvancedTasksPanel.class, "AdvancedTasksPanel.removeButton.toolTipText")); // NOI18N
         removeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -350,7 +350,7 @@ public final class AdvancedTasksPanel extends JPanel {
             }
         });
 
-        upButton.setIcon(new ImageIcon(getClass().getResource("/org/netbeans/modules/web/clientproject/ui/resources/up.png"))); // NOI18N
+        upButton.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/web/clientproject/ui/resources/up.png"));
         upButton.setToolTipText(NbBundle.getMessage(AdvancedTasksPanel.class, "AdvancedTasksPanel.upButton.toolTipText")); // NOI18N
         upButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
@@ -358,7 +358,7 @@ public final class AdvancedTasksPanel extends JPanel {
             }
         });
 
-        downButton.setIcon(new ImageIcon(getClass().getResource("/org/netbeans/modules/web/clientproject/ui/resources/down.png"))); // NOI18N
+        downButton.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/web/clientproject/ui/resources/down.png"));
         downButton.setToolTipText(NbBundle.getMessage(AdvancedTasksPanel.class, "AdvancedTasksPanel.downButton.toolTipText")); // NOI18N
         downButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {

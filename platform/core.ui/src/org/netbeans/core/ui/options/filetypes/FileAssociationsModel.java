@@ -125,7 +125,7 @@ final class FileAssociationsModel extends MIMEResolver.UIHelpers {
     List<String> getExtensions() {
         init();
         ArrayList<String> list = new ArrayList<String>(extensionToMimeAll.keySet());
-        Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
+        list.sort(String.CASE_INSENSITIVE_ORDER);
         return list;
     }
 

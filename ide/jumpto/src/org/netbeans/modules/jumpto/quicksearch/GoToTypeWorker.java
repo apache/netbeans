@@ -107,7 +107,7 @@ public class GoToTypeWorker implements Runnable {
         ts.addAll(items);
         items.clear();
         items.addAll(ts); //eliminate duplicates
-        Collections.sort(items, TypeComparator.create(GoToSettings.SortingType.LEXICOGRAPHIC, text, false, true));
+        items.sort(TypeComparator.create(GoToSettings.SortingType.LEXICOGRAPHIC, text, false, true));
         return items;
     }
 
@@ -135,11 +135,7 @@ public class GoToTypeWorker implements Runnable {
             try {
                 tp.cleanup();
             } catch (Throwable t) {
-                if (t instanceof ThreadDeath) {
-                    throw (ThreadDeath) t;
-                } else {
-                    Exceptions.printStackTrace(t);
-                }
+                Exceptions.printStackTrace(t);
             }
         }
     }

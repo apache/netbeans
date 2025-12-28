@@ -32,16 +32,14 @@ import org.openide.util.*;
 */
 public class InstanceSupport extends Object implements InstanceCookie.Of {
     /** entry to work with */
-    private MultiDataObject.Entry entry;
+    private final MultiDataObject.Entry entry;
 
     /** throw exception during loading of the class */
     private Throwable clazzException;
 
     /** the class of the instance */
-    private Class clazz;
+    private Class<?> clazz;
 
-    /** the class is applet */
-    private Boolean applet;
     /** the class is bean */
     private Boolean bean;
 
@@ -66,6 +64,7 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
     /* The bean name for the instance.
     * @return the name for the instance
     */
+    @Override
     public String instanceName () {
         // XXX does this make any sense? Is this method useful for anything?
         String p = instanceOrigin().getPath();
@@ -91,32 +90,27 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
     * @exception IOException an I/O error occured
     * @exception ClassNotFoundException the class has not been found
     */
-    public Class<?> instanceClass()
-    throws java.io.IOException, ClassNotFoundException {
+    @Override
+    public Class<?> instanceClass() throws IOException, ClassNotFoundException {
         return instanceClass(null);
     }
     
     final Class<?> instanceClass(ClassLoader cl)
     throws java.io.IOException, ClassNotFoundException {
         if (clazzException != null) {
-            if (clazzException instanceof IOException)
-                throw (IOException)clazzException;
-            else if (clazzException instanceof ClassNotFoundException)
-                throw (ClassNotFoundException)clazzException;
-            else
-                throw (ThreadDeath)clazzException;
+            if (clazzException instanceof IOException ioe)
+                throw ioe;
+            else if (clazzException instanceof ClassNotFoundException cnf)
+                throw cnf;
         }
         if (clazz != null) return clazz;
         //System.out.println ("getClass " + fileName ); // NOI18N
         try {
-            if (isSerialized ()) { // NOI18N
+            if (isSerialized()) {
                 // read class from ser file
-                InputStream is = instanceOrigin ().getInputStream ();
-                try {
+                try (InputStream is = instanceOrigin().getInputStream()) {
                     clazz = readClass (is);
                     return clazz;
-                } finally {
-                    is.close ();
                 }
             } else {
                 // find class by class loader
@@ -124,22 +118,16 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
                 if (clazz == null) throw new ClassNotFoundException (instanceName());
                 return clazz;
             }
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Exceptions.attachMessage(ex, "From file: " + entry.getFile()); // NOI18N
             clazzException = ex;
             throw ex;
-        } catch (ClassNotFoundException ex) {
-            Exceptions.attachMessage(ex, "From file: " + entry.getFile()); // NOI18N
-            clazzException = ex;
-            throw ex;
-        } catch (RuntimeException re) {
+        } catch (RuntimeException | LinkageError re) {
             // turn other throwables into class not found ex.
             clazzException = new ClassNotFoundException("From file: " + entry.getFile() + " due to: " + re.toString(), re);  // NOI18N
             throw (ClassNotFoundException) clazzException;
-        } catch (LinkageError le) {
-            clazzException = new ClassNotFoundException("From file: " + entry.getFile() + " due to: " + le.toString(), le);  // NOI18N
-            throw (ClassNotFoundException) clazzException;
         }
+        
     }
 
     /*Query to found out if the object created by this cookie is 
@@ -152,12 +140,11 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
     * @param type the class type we want to check
     * @return true if this cookie can produce object of given type
     */
+    @Override
     public boolean instanceOf(Class<?> type) {
         try {
             return type.isAssignableFrom (instanceClass ());
-        } catch (IOException ex) {
-            return false;
-        } catch (ClassNotFoundException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             return false;
         }
     }
@@ -175,16 +162,15 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
     * @exception IOException an I/O error occured
     * @exception ClassNotFoundException the class has not been found
     */
-    public Object instanceCreate ()
-    throws java.io.IOException, ClassNotFoundException {
+    @Override
+    public Object instanceCreate() throws IOException, ClassNotFoundException {
         try {
             if (isSerialized ()) {
                 // create from ser file
                 BufferedInputStream bis = new BufferedInputStream(instanceOrigin().getInputStream(), 1024);
-                org.openide.util.io.NbObjectInputStream nbis = new org.openide.util.io.NbObjectInputStream(bis);
-                Object o = nbis.readObject();
-                nbis.close();
-                return o;
+                try (org.openide.util.io.NbObjectInputStream nbis = new org.openide.util.io.NbObjectInputStream(bis)) {
+                    return nbis.readObject();
+                }
             } else {
                 Class<?> c = instanceClass ();
                 if (SharedClassObject.class.isAssignableFrom (c)) {
@@ -203,28 +189,18 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
             throw ex;
         } catch (ClassNotFoundException ex) {
             throw ex;
-        } catch (Exception e) {
+        } catch (Exception | LinkageError e) {
             // turn other throwables into class not found ex.
-            throw new ClassNotFoundException("Cannot instantiate " + instanceName() + " for " + entry.getFile(), e); // NOI18N
-        } catch (LinkageError e) {
             throw new ClassNotFoundException("Cannot instantiate " + instanceName() + " for " + entry.getFile(), e); // NOI18N
         }
     }
 
-    /** Is this an applet?
-    * @return <code>true</code> if this class is a <code>java.applet.Applet</code>
-    * @deprecated This method probably should not be used, as it catches a variety of potentially
-    *             serious exceptions and errors, and swallows them so as to produce a simple boolean
-    *             result. (Notifying them all would be inappropriate as they typically come from user
-    *             code.) Better to directly parse the bytecode, using e.g. the classfile module,
-    *             which is immune to this class of errors.
+    /** 
+    * Returns false.
     */
     @Deprecated
-    public boolean isApplet () {
-        if (applet != null) return applet.booleanValue ();
-        boolean b = instanceOf (java.applet.Applet.class);
-        applet = b ? Boolean.TRUE : Boolean.FALSE;
-        return b;
+    public boolean isApplet() {
+        return false;
     }
 
     /** Is this a standalone executable?
@@ -247,12 +223,11 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
             return Modifier.isPublic (m) && Modifier.isStatic (m) && Void.TYPE.equals (
                        main.getReturnType ()
                    );
-        } catch (Exception ex) {
-            return false;
-        } catch (LinkageError re) {
+        } catch (Exception | LinkageError ex) {
             // false when other errors occur (NoClassDefFoundError etc...)
             return false;
         }
+        
     }
 
     /** Is this a JavaBean?
@@ -265,7 +240,7 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
     */
     @Deprecated
     public boolean isJavaBean () {
-        if (bean != null) return bean.booleanValue ();
+        if (bean != null) return bean;
         
         // if from ser file => definitely it is a java bean
         if (isSerialized ()) {
@@ -281,7 +256,7 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
                 bean = Boolean.FALSE;
                 return false;
             }
-            Constructor c;
+            Constructor<?> c;
             try {
                 c = clazz.getConstructor (new Class [0]);
             } catch (NoSuchMethodException e) {
@@ -295,7 +270,7 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
             // check: if the class is an inner class, all outer classes have
             // to be public and in the static context:
             
-            for (Class outer = clazz.getDeclaringClass(); outer != null; outer = outer.getDeclaringClass()) {
+            for (Class<?> outer = clazz.getDeclaringClass(); outer != null; outer = outer.getDeclaringClass()) {
                 // check if the enclosed class is static
                 if (!Modifier.isStatic(modif))
                     return false;
@@ -330,13 +305,12 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
     public boolean isInterface () {
         try {
             return instanceClass ().isInterface ();
-        } catch (IOException ex) {
-            return false;
-        } catch (ClassNotFoundException cnfe) {
+        } catch (IOException | ClassNotFoundException ex) {
             return false;
         }
     }
 
+    @Override
     public String toString () {
         return instanceName ();
     }
@@ -406,7 +380,7 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
     * @return the class of that stream
     * @exception IOException if something fails
     */
-    private Class readClass (InputStream is) throws IOException, ClassNotFoundException {
+    private Class<?> readClass(InputStream is) throws IOException, ClassNotFoundException {
         /** object input stream */
         class OIS extends ObjectInputStream {
             public OIS (InputStream iss) throws IOException {
@@ -416,9 +390,8 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
             /** Throws exception to signal the kind of class found.
             */
             @Override
-            public Class resolveClass (ObjectStreamClass osc)
-            throws IOException, ClassNotFoundException {
-                Class c = findClass (osc.getName (), null);
+            public Class<?> resolveClass(ObjectStreamClass osc) throws IOException, ClassNotFoundException {
+                Class<?> c = findClass (osc.getName (), null);
                 if (c == writeRepl) {
                     // if this is write replace of shared object then 
                     // continue in reading
@@ -429,10 +402,10 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
                 // of the primary object
                 throw new ClassEx (c);
             }
-        };
+        }
 
+        // closed externally
         ObjectInputStream ois = new OIS (new BufferedInputStream (is));
-
         try {
             ois.readObject ();
             // should not happen
@@ -444,7 +417,7 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
     }
     
     /** the variable for access to SharedClassObject$WriteReplace */
-    private static Class writeRepl;
+    private static Class<?> writeRepl;
     static {
         try {
             writeRepl = Class.forName ("org.openide.util.SharedClassObject$WriteReplace"); // NOI18N
@@ -458,10 +431,10 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
     * @return the class for the name
     * @exception ClassNotFoundException if the class cannot be found
     */
-    private Class findClass (String name, ClassLoader customLoader) throws ClassNotFoundException {
+    private Class<?> findClass(String name, ClassLoader customLoader) throws ClassNotFoundException {
         ClassLoader loader = null;
         try {
-            Class c;
+            Class<?> c;
             try {
                 if (customLoader != null) {
                     c = customLoader.loadClass(name);
@@ -503,9 +476,9 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
     /** Trivial supporting instance cookie for already-existing objects.
     */
     public static class Instance extends Object implements InstanceCookie.Of {
-        /** the object to represent */
-        private Object obj;
 
+        /** the object to represent */
+        private final Object obj;
 
         /** Create a new instance cookie.
          * @param obj the object to represent in this cookie
@@ -517,6 +490,7 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
         /* The bean name for the instance.
         * @return the name for the instance
         */
+        @Override
         public String instanceName () {
             return obj.getClass ().getName ();
         }
@@ -527,6 +501,7 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
         *
         * @return the class of the instance
          */
+        @Override
         public Class<?> instanceClass() {
             return obj.getClass ();
         }
@@ -534,26 +509,28 @@ public class InstanceSupport extends Object implements InstanceCookie.Of {
         /*
         * @return an object to work with
         */
+        @Override
         public Object instanceCreate () {
             return obj;
         }
 
+        @Override
         public boolean instanceOf(Class<?> type) {
             return type.isAssignableFrom (instanceClass ());
         }
     }
 
-    /** The exception to use to signal succesful find of a class.
+    /** The exception to use to signal successful find of a class.
     * Used in method readClass.
     */
     private static class ClassEx extends IOException {
         /** founded class */
-        public Class clazz;
+        public Class<?> clazz;
 
         static final long serialVersionUID =4810039297880922426L;
         /** @param c the class
         */
-        public ClassEx (Class c) {
+        public ClassEx(Class<?> c) {
             clazz = c;
         }
     }

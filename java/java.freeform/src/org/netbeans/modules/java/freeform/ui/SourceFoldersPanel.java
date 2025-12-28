@@ -28,7 +28,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -519,7 +518,7 @@ private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent ev
                 roots.add(f);
             }
         }
-        v.setRoots(roots.toArray(new File[roots.size()]));
+        v.setRoots(roots.toArray(new File[0]));
         DialogDescriptor dd = new DialogDescriptor(v.getVisualizerPanel(),
                 NbBundle.getMessage(SourceFoldersPanel.class, "SourceFoldersPanel.title.includeExclude"));
         dd.setOptionType(NotifyDescriptor.OK_CANCEL_OPTION);
@@ -893,8 +892,8 @@ private void includesExcludesButtonActionPerformed(java.awt.event.ActionEvent ev
         }
         if (notEmpty) {
             FolderComparator comparator = new FolderComparator();
-            Collections.sort(finalSourceFolders, comparator);
-            Collections.sort(finalTestFolders, comparator);
+            finalSourceFolders.sort(comparator);
+            finalTestFolders.sort(comparator);
             for (SourceFolder sf : finalSourceFolders) {
                 model.addSourceFolder(sf, false);
             }

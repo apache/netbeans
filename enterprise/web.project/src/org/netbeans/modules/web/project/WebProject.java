@@ -1568,7 +1568,7 @@ public final class WebProject implements Project {
                 } else {
                     set.addAll(WebProject.this.getPrivilegedTemplates());
                 }
-                return set.toArray(new String[set.size()]);
+                return set.toArray(new String[0]);
             }
         }
 
@@ -1581,14 +1581,19 @@ public final class WebProject implements Project {
                 }
                 projectCap = J2eeProjectCapabilities.forProject(project);
                 Profile profile = Profile.fromPropertiesString(eval.getProperty(WebProjectProperties.J2EE_PLATFORM));
-                isEE5 = profile == Profile.JAVA_EE_5;
-                serverSupportsEJB31 = ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_6_FULL) ||
-                        ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_7_FULL) ||
-                        ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_8_FULL) ||
-                        ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_8_FULL);
-                serverSupportsEJB40 = ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_9_FULL)
-                        || ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_9_1_FULL)
-                        || ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_10_FULL);
+                isEE5 = (profile == Profile.JAVA_EE_5);
+                
+                for (Profile _profile : ProjectUtil.getSupportedProfiles(project)) {
+                    if (_profile.isFullProfile()) {
+                        if (_profile.isAtLeast(Profile.JAKARTA_EE_9_FULL)) {
+                            serverSupportsEJB40 = true;
+                            break;
+                        } else if (_profile.isAtLeast(Profile.JAVA_EE_6_FULL)) {
+                            serverSupportsEJB31 = true;
+                            break;
+                        }
+                    }
+                }
                 checked = true;
             }
         }
@@ -2439,13 +2444,14 @@ public final class WebProject implements Project {
                     || Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile)
                     || Profile.JAKARTA_EE_9_FULL.equals(profile) || Profile.JAKARTA_EE_9_WEB.equals(profile)
                     || Profile.JAKARTA_EE_9_1_FULL.equals(profile) || Profile.JAKARTA_EE_9_1_WEB.equals(profile)
-                    || Profile.JAKARTA_EE_10_FULL.equals(profile) || Profile.JAKARTA_EE_10_WEB.equals(profile)) {
+                    || Profile.JAKARTA_EE_10_FULL.equals(profile) || Profile.JAKARTA_EE_10_WEB.equals(profile)
+                    || Profile.JAKARTA_EE_11_FULL.equals(profile) || Profile.JAKARTA_EE_11_WEB.equals(profile)) {
                 lookups.add(ee6);
             }
             if ("true".equals(project.evaluator().getProperty(WebProjectProperties.DISPLAY_BROWSER))) {
                 lookups.add(Lookups.singleton(browserProvider));
             }
-            setLookups(lookups.toArray(new Lookup[lookups.size()]));
+            setLookups(lookups.toArray(new Lookup[0]));
         }
 
         public void propertyChange(PropertyChangeEvent evt) {

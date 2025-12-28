@@ -77,7 +77,7 @@ public class WSDLSchemaValidator extends XsdBasedValidator {
             }
         }
 
-        Schema schema = getCompiledSchema(isList.toArray(new Source[isList.size()]), new CentralLSResourceResolver(extSchemaFactories), new SchemaErrorHandler());
+        Schema schema = getCompiledSchema(isList.toArray(new Source[0]), new CentralLSResourceResolver(extSchemaFactories), new SchemaErrorHandler());
         
         return schema;
     }

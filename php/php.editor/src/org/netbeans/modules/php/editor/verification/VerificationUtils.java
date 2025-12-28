@@ -44,8 +44,8 @@ public final class VerificationUtils {
         OffsetRange result = OffsetRange.NONE;
         if (caretOffset != -1) {
             try {
-                int lineBegin = caretOffset >= 0 ? LineDocumentUtils.getLineStart(doc, caretOffset) : -1;
-                int lineEnd = (lineBegin != -1) ? LineDocumentUtils.getLineEnd(doc, caretOffset) : -1;
+                int lineBegin = caretOffset >= 0 ? LineDocumentUtils.getLineStartOffset(doc, caretOffset) : -1;
+                int lineEnd = (lineBegin != -1) ? LineDocumentUtils.getLineEndOffset(doc, caretOffset) : -1;
                 if (lineBegin > -1 && lineEnd != -1 && lineBegin <= lineEnd) {
                     result = new OffsetRange(lineBegin, lineEnd);
                 }

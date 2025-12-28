@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.19
+#Version 1.27
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -28,7 +29,7 @@ meth protected java.net.InetAddress getHostAddress(java.net.URL)
 meth protected java.net.URLConnection openConnection(java.net.URL,java.net.Proxy) throws java.io.IOException
 meth protected void parseURL(java.net.URL,java.lang.String,int,int)
 meth protected void setURL(java.net.URL,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void setURL(java.net.URL,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 supr java.lang.Object
 
@@ -107,7 +108,7 @@ hfds LOG,codeRef,debugger,depth,frameInstance,hostClassName,hostMethodName,isHos
 
 CLSS public final org.netbeans.modules.debugger.jpda.truffle.frames.TruffleStackInfo
 cons public init(org.netbeans.api.debugger.jpda.JPDADebugger,org.netbeans.api.debugger.jpda.JPDAThread,org.netbeans.api.debugger.jpda.ObjectVariable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.netbeans.api.debugger.jpda.JPDADebugger,org.netbeans.api.debugger.jpda.JPDAThread,org.netbeans.api.debugger.jpda.ObjectVariable,boolean)
 meth public boolean hasInternalFrames()
 meth public boolean hasJavaFrames()
@@ -187,11 +188,13 @@ meth public static org.netbeans.modules.debugger.jpda.truffle.vars.TruffleVariab
 
 CLSS public org.netbeans.modules.javascript2.debug.breakpoints.JSLineBreakpoint
 cons public init(org.netbeans.modules.javascript2.debug.EditorLineHandler)
+fld public final static java.lang.String PROP_ACTIVE = "active"
 fld public final static java.lang.String PROP_CONDITION = "condition"
 fld public final static java.lang.String PROP_FILE = "fileChanged"
 fld public final static java.lang.String PROP_LINE_NUMBER = "lineNumber"
 fld public final static java.lang.String PROP_URL = "url"
 meth protected void dispose()
+meth public boolean isActive()
 meth public boolean isEnabled()
 meth public final boolean isConditional()
 meth public final java.lang.String getCondition()
@@ -206,7 +209,7 @@ meth public void enable()
 meth public void setLine(int)
 meth public void setLineHandler(org.netbeans.modules.javascript2.debug.EditorLineHandler)
 supr org.netbeans.api.debugger.Breakpoint
-hfds condition,isEnabled,line,lineChangesWeak,lineChangeslistener,myListener,myWeakListener
+hfds active,condition,isEnabled,line,lineChangesWeak,lineChangeslistener,myListener,myWeakListener
 hcls FileRemoveListener,LineChangesListener
 
 CLSS public abstract org.openide.filesystems.URLMapper
@@ -219,7 +222,7 @@ meth public abstract org.openide.filesystems.FileObject[] getFileObjects(java.ne
 meth public static java.net.URL findURL(org.openide.filesystems.FileObject,int)
 meth public static org.openide.filesystems.FileObject findFileObject(java.net.URL)
 meth public static org.openide.filesystems.FileObject[] findFileObjects(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds CACHE_JUST_COMPUTING,cache,result,threadCache
 hcls DefaultURLMapper

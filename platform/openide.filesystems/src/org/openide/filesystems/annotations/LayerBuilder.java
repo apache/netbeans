@@ -372,7 +372,14 @@ public final class LayerBuilder {
             return resource.substring(1);
         } else {
             try {
-                return new URI(null, findPackage(originatingElement).replace('.', '/') + "/", null).resolve(new URI(null, resource, null)).getPath();
+                String packagePath = findPackage(originatingElement).replace('.', '/');
+                String pathPrefix;
+                if(packagePath.isEmpty()) {
+                    pathPrefix = "";
+                } else {
+                    pathPrefix = packagePath + "/";
+                }
+                return new URI(null, pathPrefix, null).resolve(new URI(null, resource, null)).getPath();
             } catch (URISyntaxException x) {
                 throw new LayerGenerationException(x.toString(), originatingElement);
             }

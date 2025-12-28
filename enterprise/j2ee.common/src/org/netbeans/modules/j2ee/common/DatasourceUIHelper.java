@@ -30,7 +30,6 @@ import java.awt.event.KeyEvent;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -608,7 +607,7 @@ public final class DatasourceUIHelper {
         datasources.addAll(serverDatasources);
         
         ArrayList<Datasource> sortedDatasources = new ArrayList<Datasource>(datasources);
-        Collections.sort(sortedDatasources, new DatasourceComparator());
+        sortedDatasources.sort(new DatasourceComparator());
         return sortedDatasources;
     }
 

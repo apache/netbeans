@@ -520,7 +520,7 @@ public class VisibilityChangeTest extends IndexingTestBase {
         URI[] clearIndexedFiles() {
             synchronized (indexedFiles) {
                 try {
-                    return indexedFiles.toArray(new URI[indexedFiles.size()]);
+                    return indexedFiles.toArray(new URI[0]);
                 } finally {
                     indexedFiles.clear();
                 }
@@ -530,7 +530,7 @@ public class VisibilityChangeTest extends IndexingTestBase {
         URI[] clearRemovedFiles() {
             synchronized (removedFiles) {
                 try {
-                    return removedFiles.toArray(new URI[removedFiles.size()]);
+                    return removedFiles.toArray(new URI[0]);
                 } finally {
                     removedFiles.clear();
                 }

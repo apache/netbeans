@@ -22,7 +22,7 @@ package org.netbeans.modules.j2ee.dd.api.common;
  * Compound interface grouping together all methods from CommonDDBean, DescriptionInterface,
  * DisplayNameInterface, CreateCapability, FindCapability and IconInterface.
  *
- *<p><b><font color="red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></font></b>
+ *<p><b><span style="color:red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></span></b>
  *</p>
  *
  * @author Milan Kuchtiak

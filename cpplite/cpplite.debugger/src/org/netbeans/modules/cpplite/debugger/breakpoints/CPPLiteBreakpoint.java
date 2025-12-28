@@ -303,7 +303,7 @@ public final class CPPLiteBreakpoint extends Breakpoint {
             if (antEngines == null) {
                 return null;
             } else {
-                return antEngines.toArray(new DebuggerEngine[antEngines.size()]);
+                return antEngines.toArray(new DebuggerEngine[0]);
             }
         }
 

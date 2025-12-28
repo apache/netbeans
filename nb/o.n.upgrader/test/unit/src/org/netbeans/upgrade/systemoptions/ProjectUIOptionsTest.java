@@ -42,9 +42,11 @@ public class ProjectUIOptionsTest extends BasicTestForImport {
     public ProjectUIOptionsTest(String testName) {
         super(testName, "org-netbeans-modules-project-ui-OpenProjectList.settings");
     }
+    @Override
     public void testPreferencesNodePath() throws Exception {
         assertPreferencesNodePath("/org/netbeans/modules/projectui");
     }
+    @Override
     public void testPropertyNames() throws Exception {
         assertPropertyNames(new String[] {
                 LAST_OPEN_PROJECT_DIR,

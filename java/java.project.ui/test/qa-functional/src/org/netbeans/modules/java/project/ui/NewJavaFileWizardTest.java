@@ -46,8 +46,6 @@ public class NewJavaFileWizardTest extends JellyTestCase {
     private static final String JAVA_ENUM_FILE_TYPE = "Java Enum";
     private static final String JAVA_ANNOTATION_TYPE_FILE_TYPE = "Java Annotation Type";
     private static final String JAVA_EXCEPTION_FILE_TYPE = "Java Exception";
-    private static final String JAPPLET_FILE_TYPE = "JApplet";
-    private static final String APPLET_FILE_TYPE = "Applet";
     private static final String JAVA_MAIN_CLASS_FILE_TYPE = "Java Main Class";
     private static final String JAVA_SINGLETON_CLASS_FILE_TYPE = "Java Singleton Class";
     private static final String EMPTY_JAVA_FILE_TYPE = "Empty Java File";
@@ -130,22 +128,6 @@ public class NewJavaFileWizardTest extends JellyTestCase {
         wizardOperator.selectFileType(JAVA_EXCEPTION_FILE_TYPE);
         wizardOperator.next();
         assertExtensionBoxIsPresent();
-        assertImplementationBoxIsPresent();
-        wizardOperator.cancel();
-    }
-
-    public void testNewJAppletWizardShouldContainOnlyImplementationBox() {
-        wizardOperator.selectFileType(JAPPLET_FILE_TYPE);
-        wizardOperator.next();
-        assertExtensionBoxIsNotPresent();
-        assertImplementationBoxIsPresent();
-        wizardOperator.cancel();
-    }
-
-    public void testNewAppletWizardShouldContainOnlyImplementationBox() {
-        wizardOperator.selectFileType(APPLET_FILE_TYPE);
-        wizardOperator.next();
-        assertExtensionBoxIsNotPresent();
         assertImplementationBoxIsPresent();
         wizardOperator.cancel();
     }

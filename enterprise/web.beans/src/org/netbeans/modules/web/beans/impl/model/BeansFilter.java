@@ -28,7 +28,6 @@ import javax.lang.model.element.TypeElement;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 class BeansFilter extends Filter<TypeElement> {
     
     static BeansFilter get() {
@@ -46,7 +45,7 @@ class BeansFilter extends Filter<TypeElement> {
         {
             TypeElement element = iterator.next();
             String name = element.getQualifiedName().toString();
-            if (name.startsWith("java.") ||name.startsWith("javax.")) { // NOI18N
+            if (name.startsWith("java.") ||name.startsWith("javax.") ||name.startsWith("jakarta.")) { // NOI18N
                 iterator.remove();
             }
         }

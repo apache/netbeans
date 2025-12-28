@@ -100,6 +100,7 @@ import org.openide.util.BaseUtilities;
 import org.eclipse.aether.repository.Authentication;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.impl.VersionResolver;
 import org.eclipse.aether.internal.impl.EnhancedLocalRepositoryManagerFactory;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.NoLocalRepositoryManagerException;
@@ -107,6 +108,7 @@ import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.util.repository.DefaultAuthenticationSelector;
 import org.eclipse.aether.util.repository.DefaultMirrorSelector;
 import org.eclipse.aether.util.repository.DefaultProxySelector;
+import org.netbeans.modules.maven.embedder.impl.NbVersionResolver2;
 
 /**
  * Handle for the embedded Maven system, used to parse POMs and more.
@@ -123,6 +125,7 @@ public final class MavenEmbedder {
     private final SettingsBuilder settingsBuilder;
     private final EmbedderConfiguration embedderConfiguration;
     private final SettingsDecrypter settingsDecrypter;
+    private final NbVersionResolver2 versionResolver;
     private long settingsTimestamp;
     private static final Object lastLocalRepositoryLock = new Object();
     private static URI lastLocalRepository;
@@ -137,6 +140,13 @@ public final class MavenEmbedder {
         this.settingsBuilder = plexus.lookup(SettingsBuilder.class);
         this.populator = plexus.lookup(MavenExecutionRequestPopulator.class);
         settingsDecrypter = plexus.lookup(SettingsDecrypter.class);
+        
+        VersionResolver vr = plexus.lookup(VersionResolver.class);
+        if (vr instanceof NbVersionResolver2 vr2) {
+            versionResolver = vr2;
+        } else {
+            versionResolver = null;
+        }
     }
     
     public PlexusContainer getPlexus() {
@@ -235,7 +245,7 @@ public final class MavenEmbedder {
     
     public MavenExecutionResult readProjectWithDependencies(MavenExecutionRequest req, boolean useWorkspaceResolution) {
         if (useWorkspaceResolution) {
-            req.setWorkspaceReader(new NbWorkspaceReader());
+            req.setWorkspaceReader(new NbWorkspaceReader(versionResolver));
         }
         File pomFile = req.getPom();
         MavenExecutionResult result = new DefaultMavenExecutionResult();
@@ -258,7 +268,7 @@ public final class MavenEmbedder {
 
     public List<MavenExecutionResult> readProjectsWithDependencies(MavenExecutionRequest req, List<File> poms, boolean useWorkspaceResolution) {
         if (useWorkspaceResolution) {
-            req.setWorkspaceReader(new NbWorkspaceReader());
+            req.setWorkspaceReader(new NbWorkspaceReader(versionResolver));
         }
 //        File pomFile = req.getPom();
         
@@ -316,10 +326,10 @@ public final class MavenEmbedder {
 //                        }
 //                    }
 //                } else {
-////                        for (File f : poms) {
+// //                        for (File f : poms) {
 //                        DefaultMavenExecutionResult r = new DefaultMavenExecutionResult();
 //                        results.put(pom, r.addException(ex));                
-////                        } 
+// //                        } 
 //                }
 //            }
 //        }
@@ -376,7 +386,7 @@ public final class MavenEmbedder {
      * @throws ArtifactNotFoundException 
      * @deprecated the Maven API used swallows certain {@link ArtifactNotFoundException} and does not report properly to the caller. Use {@link #resolveArtifact} instead.
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public void resolve(Artifact sources, List<ArtifactRepository> remoteRepositories, ArtifactRepository localRepository) throws ArtifactResolutionException, ArtifactNotFoundException {
         setUpLegacySupport();
         ArtifactResolutionRequest req = new ArtifactResolutionRequest();
@@ -438,13 +448,12 @@ public final class MavenEmbedder {
      * In particular beware that groupId and/or version may be null if inherited from a parent; use {@link Model#getParent} to resolve.
      * Internally calls <code>executeModelBuilder</code> so if you need to call both just use the execute method.
      * @param pom a POM to inspect
-     * @param embedder an embedder to use
      * @return a list of models, starting with the specified POM, going through any parents, finishing with the Maven superpom (with a null artifactId)
      * @throws ModelBuildingException if the POM or parents could not even be parsed; warnings are not reported
      */
     public List<Model> createModelLineage(File pom) throws ModelBuildingException {
         ModelBuildingResult res = executeModelBuilder(pom);
-        List<Model> toRet = new ArrayList<Model>();
+        List<Model> toRet = new ArrayList<>();
 
         for (String id : res.getModelIds()) {
             Model m = res.getRawModel(id);
@@ -540,12 +549,12 @@ public final class MavenEmbedder {
 
         LifecycleMapping lifecycleMapping = lookupComponent(LifecycleMapping.class);
         if (lifecycleMapping != null) {
-            Set<String> phases = new TreeSet<String>();
+            Set<String> phases = new TreeSet<>();
             Map<String, Lifecycle> lifecycles = lifecycleMapping.getLifecycles();
             for (Lifecycle lifecycle : lifecycles.values()) {
                 phases.addAll(lifecycle.getPhases().keySet());
             }
-            return new ArrayList<String>(phases);
+            return new ArrayList<>(phases);
         }
 
         return Collections.<String>emptyList();

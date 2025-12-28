@@ -36,6 +36,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import org.netbeans.api.java.platform.JavaPlatform;
+import org.netbeans.modules.gradle.java.spi.support.JavaToolchainSupport;
+import org.openide.filesystems.FileObject;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
@@ -65,7 +68,7 @@ public class SourceSetPanel extends javax.swing.JPanel {
     private static final String PROJECT_ICON = "org.netbeans.modules/gradle/resources/gradle.png"; //NOI18N
     private static final String ARTIFACT_ICON = "org.netbeans.modules/gradle/resources/module-artifact.png"; //NOI18N
 
-    final Icon folderIcon = new ImageIcon(NodeUtils.getTreeFolderIcon(false));
+    final Icon folderIcon = ImageUtilities.image2Icon(NodeUtils.getTreeFolderIcon(false));
     final Icon projectIcon = ImageUtilities.loadImageIcon(PROJECT_ICON, false);
     final Icon artifactIcon = ImageUtilities.loadImageIcon(ARTIFACT_ICON, false);
 
@@ -79,10 +82,28 @@ public class SourceSetPanel extends javax.swing.JPanel {
     /**
      * Creates new form SourceSetPanel
      */
+    @Messages({
+        "# {0} - platform home",
+        "LBL_BrokenPlatform=<html><font color='!nb.errorForeground'>Broken Platform at {0}</font>"
+    })
     public SourceSetPanel(GradleJavaSourceSet sourceSet, File relativeTo) {
         this.sourceSet = sourceSet;
         relativeRoot = relativeTo.toPath();
         initComponents();
+        
+        File javaHome = sourceSet.getCompilerJavaHome(GradleJavaSourceSet.SourceType.JAVA);
+        JavaPlatform platform = javaHome != null
+                ? JavaToolchainSupport.getDefault().platformByHome(javaHome)
+                : JavaPlatform.getDefault();
+
+        if (platform != null && platform.isValid()) {
+            jtPlatform.setText(platform.getDisplayName());
+            FileObject home = platform.getInstallFolders().iterator().next();
+            jtPlatform.setToolTipText(home.getPath());
+        } else {
+            jtPlatform.setText(Bundle.LBL_BrokenPlatform(javaHome));
+        }
+        
         if (sourceSet.getSourcesCompatibility().equals(sourceSet.getTargetCompatibility())) {
             tfSourceLevel.setText(sourceSet.getSourcesCompatibility());
         } else {
@@ -178,6 +199,8 @@ public class SourceSetPanel extends javax.swing.JPanel {
         tfSourceLevel = new javax.swing.JTextField();
         tfOutputResources = new javax.swing.JTextField();
         tfOutputClasses = new javax.swing.JTextField();
+        lbPlatform = new javax.swing.JLabel();
+        jtPlatform = new javax.swing.JTextField();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(SourceSetPanel.class, "SourceSetPanel.jLabel1.text")); // NOI18N
 
@@ -218,6 +241,11 @@ public class SourceSetPanel extends javax.swing.JPanel {
 
         tfOutputClasses.setEditable(false);
 
+        lbPlatform.setLabelFor(jtPlatform);
+        org.openide.awt.Mnemonics.setLocalizedText(lbPlatform, org.openide.util.NbBundle.getMessage(SourceSetPanel.class, "SourceSetPanel.lbPlatform.text")); // NOI18N
+
+        jtPlatform.setEditable(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -225,11 +253,7 @@ public class SourceSetPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tpDetails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfSourceLevel, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE))
+                    .addComponent(tpDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -237,7 +261,17 @@ public class SourceSetPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tfOutputResources)
-                            .addComponent(tfOutputClasses))))
+                            .addComponent(tfOutputClasses)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                            .addComponent(lbPlatform, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(tfSourceLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jtPlatform))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -245,10 +279,14 @@ public class SourceSetPanel extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbPlatform)
+                    .addComponent(jtPlatform, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(tfSourceLevel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tpDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                .addComponent(tpDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
@@ -318,6 +356,8 @@ public class SourceSetPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JTextField jtPlatform;
+    private javax.swing.JLabel lbPlatform;
     private javax.swing.JList<File> lsAnnotationProcessors;
     private javax.swing.JList<File> lsCompile;
     private javax.swing.JList<File> lsRuntime;

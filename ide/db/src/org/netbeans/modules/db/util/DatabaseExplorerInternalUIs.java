@@ -21,7 +21,6 @@ package org.netbeans.modules.db.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -135,7 +134,7 @@ public final class DatabaseExplorerInternalUIs {
                 }
             }
 
-            Collections.sort(driverList, new DriverTypeComparator());
+            driverList.sort(new DriverTypeComparator());
         }
 
         @Override
@@ -165,7 +164,7 @@ public final class DatabaseExplorerInternalUIs {
             driverList.addAll(types);
             setSelectedItem(types.get(0));
 
-            Collections.sort(driverList, new DriverTypeComparator());
+            driverList.sort(new DriverTypeComparator());
             fireContentsChanged(this, 0, driverList.size());
         }
 
@@ -262,7 +261,7 @@ public final class DatabaseExplorerInternalUIs {
                 }
             }
 
-            Collections.sort(driverList, new JDBCDriverComparator());
+            driverList.sort(new JDBCDriverComparator());
         }
 
         private void updateDriverList() {
@@ -276,7 +275,7 @@ public final class DatabaseExplorerInternalUIs {
                 }
             }
 
-            Collections.sort(driverList, new JDBCDriverComparator());
+            driverList.sort(new JDBCDriverComparator());
         }
 
         @Override
@@ -304,7 +303,7 @@ public final class DatabaseExplorerInternalUIs {
             driverList.add(driver);
             setSelectedItem(driver);
 
-            Collections.sort(driverList, new JDBCDriverComparator());
+            driverList.sort(new JDBCDriverComparator());
             fireContentsChanged(this, 0, driverList.size());
         }
 

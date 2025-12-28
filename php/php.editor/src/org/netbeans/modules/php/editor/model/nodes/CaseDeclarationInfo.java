@@ -77,6 +77,10 @@ public class CaseDeclarationInfo extends ASTNodeInfo<Identifier> {
         return PhpModifiers.fromBitMask(caseDeclaration.getModifier());
     }
 
+    public CaseDeclaration getCaseDeclaration() {
+        return caseDeclaration;
+    }
+
     @CheckForNull
     protected static String getCaseValue(Expression expr) {
         if (expr instanceof Scalar) {

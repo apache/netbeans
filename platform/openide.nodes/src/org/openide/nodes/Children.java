@@ -1182,7 +1182,7 @@ public abstract class Children extends Object {
             */
             public Collection<Node> nodes(Object source) {
                 List<Node> al = new ArrayList<Node>(getCollection());
-                Collections.sort(al, comp);
+                al.sort(comp);
 
                 return al;
             }
@@ -1942,15 +1942,7 @@ public abstract class Children extends Object {
                 clazz = Thread.currentThread().getContextClassLoader().loadClass("org.netbeans.api.project.ProjectManager"); // NOI18N
                 method = clazz.getMethod("mutex"); // NOI18N
                 return (Mutex) method.invoke(null);
-            } catch (ClassNotFoundException e) {
-                return FALLBACK;
-            } catch (IllegalAccessException e) {
-                return FALLBACK;
-            } catch (IllegalArgumentException e) {
-                return FALLBACK;
-            } catch (InvocationTargetException e) {
-                return FALLBACK;
-            } catch (NoSuchMethodException e) {
+            } catch (ReflectiveOperationException | ExceptionInInitializerError | IllegalArgumentException e) {
                 return FALLBACK;
             } catch (ClassCastException e) { // observed to occur in MemoryValidationTest
                 Class<?> type = method.getReturnType();

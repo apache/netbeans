@@ -18,20 +18,39 @@
  */
 package org.netbeans.modules.cpplite.editor.lsp.options;
 
+import java.awt.Component;
 import java.io.File;
+import java.util.ResourceBundle;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JFileChooser;
+import javax.swing.JList;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.modules.cpplite.editor.Utils;
+import org.openide.util.NbBundle;
 
 final class CPPLitePanel extends javax.swing.JPanel {
 
+    private final ResourceBundle bundle = NbBundle.getBundle(CPPLitePanel.class);
     private final CPPLiteOptionsPanelController controller;
 
     CPPLitePanel(CPPLiteOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
+        preferredLsChooser.setModel(new DefaultComboBoxModel<>(Utils.AVAILABLE_LS));
+        preferredLsChooser.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                String translatedValue = String.valueOf(value);
+                String translationKey = "languageServer." + value;
+                if(bundle.containsKey(translationKey)) {
+                    translatedValue = bundle.getString(translationKey);
+                }
+                return super.getListCellRendererComponent(list, translatedValue, index, isSelected, cellHasFocus);
+            }
+        });
         DocumentListener pathsModified = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -57,18 +76,38 @@ final class CPPLitePanel extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
-        jLabel1 = new javax.swing.JLabel();
+        cclsLabel = new javax.swing.JLabel();
         cclsPath = new javax.swing.JTextField();
         cclsBrowse = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        clangdLabel = new javax.swing.JLabel();
         clangdPath = new javax.swing.JTextField();
         clangdBrowse = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
+        preferredLsLabel = new javax.swing.JLabel();
+        preferredLsChooser = new javax.swing.JComboBox<>();
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.jLabel1.text")); // NOI18N
+        setLayout(new java.awt.GridBagLayout());
+
+        org.openide.awt.Mnemonics.setLocalizedText(cclsLabel, org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.cclsLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 6, 6);
+        add(cclsLabel, gridBagConstraints);
 
         cclsPath.setText(org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.cclsPath.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 6, 6);
+        add(cclsPath, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(cclsBrowse, org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.cclsBrowse.text")); // NOI18N
         cclsBrowse.addActionListener(new java.awt.event.ActionListener() {
@@ -76,10 +115,30 @@ final class CPPLitePanel extends javax.swing.JPanel {
                 cclsBrowseActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 6, 6);
+        add(cclsBrowse, gridBagConstraints);
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.jLabel2.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(clangdLabel, org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.clangdLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 6, 6);
+        add(clangdLabel, gridBagConstraints);
 
         clangdPath.setText(org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.clangdPath.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 6, 6);
+        add(clangdPath, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(clangdBrowse, org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.clangdBrowse.text")); // NOI18N
         clangdBrowse.addActionListener(new java.awt.event.ActionListener() {
@@ -87,48 +146,43 @@ final class CPPLitePanel extends javax.swing.JPanel {
                 clangdBrowseActionPerformed(evt);
             }
         });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 6, 6);
+        add(clangdBrowse, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.jLabel3.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 6, 6);
+        add(jLabel3, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.weighty = 1.0;
+        add(filler1, gridBagConstraints);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cclsPath)
-                            .addComponent(clangdPath))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(clangdBrowse)
-                            .addComponent(cclsBrowse)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(cclsPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cclsBrowse))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(clangdPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(clangdBrowse))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        org.openide.awt.Mnemonics.setLocalizedText(preferredLsLabel, org.openide.util.NbBundle.getMessage(CPPLitePanel.class, "CPPLitePanel.preferredLsLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 6, 6);
+        add(preferredLsLabel, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
+        gridBagConstraints.insets = new java.awt.Insets(6, 6, 6, 6);
+        add(preferredLsChooser, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void cclsBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cclsBrowseActionPerformed
@@ -150,11 +204,13 @@ final class CPPLitePanel extends javax.swing.JPanel {
     void load() {
         cclsPath.setText(Utils.getCCLSPath());
         clangdPath.setText(Utils.getCLANGDPath());
+        preferredLsChooser.setSelectedItem(Utils.getPreferredLs());
     }
 
     void store() {
         Utils.settings().put(Utils.KEY_CCLS_PATH, cclsPath.getText());
         Utils.settings().put(Utils.KEY_CLANGD_PATH, clangdPath.getText());
+        Utils.settings().put(Utils.KEY_PREFFERED_LS, (String) preferredLsChooser.getSelectedItem());
     }
 
     boolean valid() {
@@ -164,11 +220,14 @@ final class CPPLitePanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cclsBrowse;
+    private javax.swing.JLabel cclsLabel;
     private javax.swing.JTextField cclsPath;
     private javax.swing.JButton clangdBrowse;
+    private javax.swing.JLabel clangdLabel;
     private javax.swing.JTextField clangdPath;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.Box.Filler filler1;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JComboBox<String> preferredLsChooser;
+    private javax.swing.JLabel preferredLsLabel;
     // End of variables declaration//GEN-END:variables
 }

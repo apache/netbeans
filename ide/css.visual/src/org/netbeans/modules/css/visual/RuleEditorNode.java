@@ -46,6 +46,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.css.lib.api.properties.FixedTextGrammarElement;
@@ -358,7 +359,7 @@ public class RuleEditorNode extends AbstractNode {
                 }
                 
                 //sort alpha
-                Collections.sort(categoryDeclarations, PropertyUtils.getDeclarationsComparator());
+                categoryDeclarations.sort(PropertyUtils.getDeclarationsComparator());
 
                 PropertyCategoryPropertySet propertyCategoryPropertySet = new PropertyCategoryPropertySet(entry.getKey());
                 propertyCategoryPropertySet.addAll(categoryDeclarations);
@@ -375,7 +376,7 @@ public class RuleEditorNode extends AbstractNode {
                     if (allInCat.isEmpty()) {
                         continue; //skip empty categories (when filtering)
                     }
-                    Collections.sort(allInCat, PropertyUtils.getPropertyDefinitionsComparator());
+                    allInCat.sort(PropertyUtils.getPropertyDefinitionsComparator());
 
                     PropertyCategoryPropertySet propertySet = propertySetsMap.get(cat);
                     if (propertySet == null) {
@@ -435,7 +436,7 @@ public class RuleEditorNode extends AbstractNode {
                 }
                 //sort aplha
                 Comparator<PropertyDeclaration> comparator = PropertyUtils.createDeclarationsComparator(getRule(), panel.getCreatedDeclarationsIdsList());
-                Collections.sort(filtered, comparator);
+                filtered.sort(comparator);
                 set.addAll(filtered);
                 
                 //do NOT show all properties
@@ -471,7 +472,7 @@ public class RuleEditorNode extends AbstractNode {
                 set.addAll(filteredExisting);
                 
                 List<PropertyDefinition> all = new ArrayList<>(filterByPrefix(Properties.getPropertyDefinitions(file, true)));
-                Collections.sort(all, PropertyUtils.getPropertyDefinitionsComparator());
+                all.sort(PropertyUtils.getPropertyDefinitionsComparator());
 
                 //remove already used
                 for (PropertyDeclaration d : set.getDeclarations()) {
@@ -872,7 +873,7 @@ public class RuleEditorNode extends AbstractNode {
                                 @Override
                                 public void run() {
                                     try {
-                                        int lineOffset = 1 + Utilities.getLineOffset((BaseDocument) doc, doc_from);
+                                        int lineOffset = 1 + LineDocumentUtils.getLineIndex((BaseDocument) doc, doc_from);
                                         sb.append(':');
                                         sb.append(lineOffset);
                                     } catch (BadLocationException ex) {

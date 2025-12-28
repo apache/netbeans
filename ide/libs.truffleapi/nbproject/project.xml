@@ -30,7 +30,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.11</specification-version>
+                        <specification-version>1.25</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>
@@ -42,17 +42,32 @@
                 <package>com.oracle.truffle.api.frame</package>
                 <package>com.oracle.truffle.api.instrumentation</package>
                 <package>com.oracle.truffle.api.interop</package>
+                <package>com.oracle.truffle.api.io</package>
                 <package>com.oracle.truffle.api.library</package>
+                <package>com.oracle.truffle.api.memory</package>
                 <package>com.oracle.truffle.api.nodes</package>
                 <package>com.oracle.truffle.api.object</package>
                 <package>com.oracle.truffle.api.object.dsl</package>
                 <package>com.oracle.truffle.api.profiles</package>
+                <package>com.oracle.truffle.api.provider</package>
                 <package>com.oracle.truffle.api.source</package>
+                <package>com.oracle.truffle.api.staticobject</package>
+                <package>com.oracle.truffle.api.strings</package>
                 <package>com.oracle.truffle.api.utilities</package>
+                <package>com.oracle.truffle.polyglot</package>
+                <package>org.graalvm.shadowed.org.jcodings</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/truffle-api-20.3.0.jar</runtime-relative-path>
-                <binary-origin>external/truffle-api-20.3.0.jar</binary-origin>
+                <runtime-relative-path>ext/truffle-api-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/truffle-api-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/truffle-compiler-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/truffle-compiler-24.0.0.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/truffle-runtime-24.0.0.jar</runtime-relative-path>
+                <binary-origin>external/truffle-runtime-24.0.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

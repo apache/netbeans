@@ -221,7 +221,7 @@ public final class WebBrowsers {
                 browsers.add(new BrowserWrapper(browser, others++));
             }
         }
-        Collections.sort(browsers, new Comparator<BrowserWrapper>() {
+        browsers.sort(new Comparator<BrowserWrapper>() {
             @Override
             public int compare(BrowserWrapper o1, BrowserWrapper o2) {
                 return o1.getOrder() - o2.getOrder();

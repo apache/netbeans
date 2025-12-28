@@ -155,3 +155,5 @@ $match = match ($type) {
     "loooooong condition" => 2,
     default => 0,
 };
+
+new (trim(' Example '))()->field;

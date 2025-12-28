@@ -86,7 +86,6 @@ import org.netbeans.modules.debugger.jpda.models.JPDAThreadImpl;
 
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 
 /**
  * Upload backend classed to the JVM.
@@ -111,7 +110,7 @@ public final class RemoteServices {
     
     private static final RequestProcessor AUTORESUME_AFTER_SUSPEND_RP = new RequestProcessor("Autoresume after suspend", 1);    // NOI18N
     
-    private static final Set<PropertyChangeListener> serviceListeners = new WeakSet<>();
+    private static final Set<PropertyChangeListener> serviceListeners = Collections.newSetFromMap(new WeakHashMap<>());
 
     private RemoteServices() {}
     
@@ -180,11 +179,7 @@ public final class RemoteServices {
     
     private static int getTargetMajorVersion(VirtualMachine vm) throws InternalExceptionWrapper, VMDisconnectedExceptionWrapper {
         String version = VirtualMachineWrapper.version(vm);
-        int dot = version.indexOf(".");
-        if (dot < 0) {
-            dot = version.length();
-        }
-        return Integer.parseInt(version.substring(0, dot));
+        return Runtime.Version.parse(version).feature();
     }
 
     public static ClassObjectReference uploadBasicClasses(JPDAThreadImpl t, String basicClassName) throws InvalidTypeException, ClassNotLoadedException, IncompatibleThreadStateException, InvocationException, IOException, PropertyVetoException, InternalExceptionWrapper, VMDisconnectedExceptionWrapper, ObjectCollectedExceptionWrapper, UnsupportedOperationExceptionWrapper, ClassNotPreparedExceptionWrapper {

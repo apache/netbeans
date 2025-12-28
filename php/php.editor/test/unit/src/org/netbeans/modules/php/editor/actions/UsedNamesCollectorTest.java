@@ -84,6 +84,14 @@ public class UsedNamesCollectorTest extends PHPTestBase {
         performTest("useCase_10", "class Class^Name {");
     }
 
+    public void testUseCase_11() throws Exception {
+        performTest("useCase_11", "class Class^Name {");
+    }
+
+    public void testUseCase_12() throws Exception {
+        performTest("useCase_12", "class Class^Name {");
+    }
+
     public void testIssue209755() throws Exception {
         performTest("issue209755", "class Class^Name {");
     }
@@ -130,6 +138,14 @@ public class UsedNamesCollectorTest extends PHPTestBase {
 
     public void testGH6162_01() throws Exception {
         performTest("gh6162_01", "class Test ^{}");
+    }
+
+    public void testGH7123_01() throws Exception {
+        performTest("gh7123_01", "class GH7123_01^{}");
+    }
+
+    public void testGH7123_02() throws Exception {
+        performTest("gh7123_02", "class GH7123_02^{");
     }
 
     protected void performTest(String fileName, String caretLine) throws Exception {

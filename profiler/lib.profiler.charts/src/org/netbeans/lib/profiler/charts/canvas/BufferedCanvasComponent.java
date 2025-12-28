@@ -343,7 +343,7 @@ public abstract class BufferedCanvasComponent extends JComponent {
 //                    gr.setColor(Color.black);
 //                    gr.fillRect(0, 0, getWidth(), getHeight()); // Clears the image.
 //
-////                    g.drawImage(bimage,null,0,0);
+// //                    g.drawImage(bimage,null,0,0);
 //                } finally {
 //                    // It's always best to dispose of your Graphics objects.
 //                    g.dispose();
@@ -403,8 +403,8 @@ public abstract class BufferedCanvasComponent extends JComponent {
         // TODO: some of the queries could be cached instead of polling,
         // for example isShowing(), isOpaque(), getParent() etc.
 
-//////        // Shouldn't access graphics - no buffering would cause flickering
-//////        if (bufferType == BUFFER_NONE) return false;
+//        // Shouldn't access graphics - no buffering would cause flickering
+//        if (bufferType == BUFFER_NONE) return false;
 
         // Cannot access graphics - there are some child components
         if (getComponentCount() != 0) return false;

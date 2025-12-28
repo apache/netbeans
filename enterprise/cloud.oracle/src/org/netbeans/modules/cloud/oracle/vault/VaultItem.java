@@ -18,29 +18,29 @@
  */
 package org.netbeans.modules.cloud.oracle.vault;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import org.netbeans.modules.cloud.oracle.adm.URLProvider;
 import org.netbeans.modules.cloud.oracle.items.OCID;
 import org.netbeans.modules.cloud.oracle.items.OCIItem;
+import org.openide.util.Exceptions;
 
 /**
  *
  * @author Jan Horvath
  */
-public class VaultItem extends OCIItem {
-    String compartmentId;
-    String managementEndpoint;
+public class VaultItem extends OCIItem implements URLProvider {
+    private String managementEndpoint;
 
-    public VaultItem(OCID id, String name, String compartmentId, String managementEndpoint) {
-        super(id, name);
-        this.compartmentId = compartmentId;
+    public VaultItem(OCID id, String compartment, String name, String managementEndpoint, String tenancyId, String regionCode) {
+        super(id, compartment, name, tenancyId, regionCode);
         this.managementEndpoint = managementEndpoint;
     }
 
     public VaultItem() {
         super();
-    }
-
-    public String getCompartmentId() {
-        return compartmentId;
     }
 
     public String getManagementEndpoint() {
@@ -49,7 +49,20 @@ public class VaultItem extends OCIItem {
     
     @Override
     public int maxInProject() {
-        return Integer.MAX_VALUE;
+        return 1;
+    }
+    
+    @Override
+    public URL getURL() {
+        if (getKey().getValue() != null && getRegion() != null) {
+            try {
+                URI uri = new URI(String.format("https://cloud.oracle.com/security/kms/vaults/%s?region=%s", getKey().getValue(), getRegion()));
+                return uri.toURL();
+            } catch (MalformedURLException | URISyntaxException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        } 
+        return null;
     }
     
 }

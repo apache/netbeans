@@ -460,14 +460,13 @@ metabuild.hash=${metabuild.hash}</echo>
       <include name="${nb.cluster.platform.dir}/lib/nbexec" />
     </fixcrlf>
   </target>
-  
   <target name="-download-nb-windows-launchers" depends="init,-check-nb-cluster" if="has.nb.cluster">
     <downloadbinaries cache="${binaries.cache}" server="${binaries.server}" repos="${binaries.repos}">
         <manifest dir="${nb_all}" includes="nb/ide.launcher/external/binaries-list"/>
     </downloadbinaries>
 
     <mkdir dir="${netbeans.dest.dir}/bin" />
-    <unzip src="../nb/ide.launcher/external/launcher-external-binaries-1-94a19f0.zip" dest="${netbeans.dest.dir}/bin">
+    <unzip src="../nb/ide.launcher/external/launcher-external-binaries-4-8e2bc77e581e.zip" dest="${netbeans.dest.dir}/bin">
         <patternset>
             <include name="netbeans*.exe"/>
         </patternset>

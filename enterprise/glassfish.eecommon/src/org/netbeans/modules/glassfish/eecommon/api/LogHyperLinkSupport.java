@@ -257,9 +257,6 @@ public class LogHyperLinkSupport {
             }
         }
 
-        @Override
-        public void outputLineSelected(OutputEvent ev) {
-        }
     }
 
     /**

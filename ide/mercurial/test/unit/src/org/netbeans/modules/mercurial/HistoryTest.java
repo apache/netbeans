@@ -281,7 +281,7 @@ public class HistoryTest extends AbstractHgTestCase {
 
     private HgLogMessageChangedPath[] getCachedPaths (String revision) {
         List<HgLogMessageChangedPath> paths = HistoryRegistry.getInstance().getCachedPaths(revision);
-        return paths == null ? new HgLogMessageChangedPath[0] : paths.toArray(new HgLogMessageChangedPath[paths.size()]);
+        return paths == null ? new HgLogMessageChangedPath[0] : paths.toArray(new HgLogMessageChangedPath[0]);
     }
 
     private void assertPaths (Map<String, String> expected, HgLogMessageChangedPath[] paths) {

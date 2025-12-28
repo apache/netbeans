@@ -1,0 +1,6 @@
+Code completion result for source line:
+}->|;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicMethod()                  [PUBLIC]   {}
+METHOD     publicStaticMethod()            [STATIC]   {}
+VARIABLE   int publicField                 [PUBLIC]   {}

@@ -39,9 +39,9 @@ public class MethodParamsTipPaintComponent extends JToolTip {
     private int descent;
     private FontMetrics fontMetrics;
 
-    private List<List<String>> params;
-    private int idx;
-    private JTextComponent component;
+    private final List<List<String>> params;
+    private final int idx;
+    private final JTextComponent component;
 
     public MethodParamsTipPaintComponent(List<List<String>> params, int idx, JTextComponent component){
         super();
@@ -119,11 +119,6 @@ public class MethodParamsTipPaintComponent extends JToolTip {
     }
 
     protected int getWidth(String s, Font font) {
-        if (font == null) return fontMetrics.stringWidth(s);
-        return getFontMetrics(font).stringWidth(s);
-    }
-
-    protected int getHeight(String s, Font font) {
         if (font == null) return fontMetrics.stringWidth(s);
         return getFontMetrics(font).stringWidth(s);
     }

@@ -283,7 +283,7 @@ public final class ModelUtils {
             }
         }
         if (scp != null) {
-                String semiType = VariousUtils.getSemiType(tokenSequence, VariousUtils.State.START, scp);
+                String semiType = VariousUtils.getSemiType(tokenSequence, VariousUtils.State.START, scp, model);
                 if (semiType != null) {
                     return VariousUtils.getType(scp, semiType, offset, true);
                 }

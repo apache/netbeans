@@ -659,7 +659,7 @@ public final class ProjectCustomizer {
                     }
                 }
             }
-            return toRet.toArray(new ProjectCustomizer.Category[toRet.size()]);
+            return toRet.toArray(new ProjectCustomizer.Category[0]);
         }
         
         private void includeSubcats(ProjectCustomizer.Category[] cats, ProjectCustomizer.CompositeCategoryProvider provider) {
@@ -747,26 +747,29 @@ public final class ProjectCustomizer {
 
     private static final class EncodingModel extends DefaultComboBoxModel {
 
-        EncodingModel (String originalEncoding) {
+        EncodingModel(String originalEncoding) {
             Charset defEnc = null;
-            for (Charset c : Charset.availableCharsets().values()) {
-                if (c.name().equals(originalEncoding)) {
-                    defEnc = c;
-                } else if (c.aliases().contains(originalEncoding)) { //Mobility - can have hand-entered encoding
-                    defEnc = c;
+            if (originalEncoding != null) {
+                for (Charset c : Charset.availableCharsets().values()) {
+                    if (c.name().equals(originalEncoding)) {
+                        defEnc = c;
+                    } else if (c.aliases().contains(originalEncoding)) { //Mobility - can have hand-entered encoding
+                        defEnc = c;
+                    }
+                    addElement(c);
                 }
-                addElement(c);
-            }
-            if (originalEncoding != null && defEnc == null) {
-                //Create artificial Charset to keep the original value
-                //May happen when the project was set up on the platform
-                //which supports more encodings
-                try {
-                    defEnc = new UnknownCharset (originalEncoding);
-                    addElement(defEnc);
-                } catch (IllegalCharsetNameException e) {
-                    //The source.encoding property is completely broken
-                    LOG.log(Level.INFO, "IllegalCharsetName: {0}", originalEncoding);
+
+                if (defEnc == null) {
+                    //Create artificial Charset to keep the original value
+                    //May happen when the project was set up on the platform
+                    //which supports more encodings
+                    try {
+                        defEnc = new UnknownCharset(originalEncoding);
+                        addElement(defEnc);
+                    } catch (IllegalCharsetNameException e) {
+                        //The source.encoding property is completely broken
+                        LOG.log(Level.INFO, "IllegalCharsetName: {0}", originalEncoding);
+                    }
                 }
             }
             if (defEnc == null) {

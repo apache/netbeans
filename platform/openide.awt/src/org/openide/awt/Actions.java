@@ -103,15 +103,6 @@ public class Actions {
      */
     private static Icon nonNullIcon(Icon i) {
         return null;
-
-        /*if (i != null) {
-            return i;
-        } else {
-            if (BLANK_ICON == null) {
-                BLANK_ICON = new ImageIcon(Utilities.loadImage("org/openide/resources/actions/empty.gif", true)); // NOI18N
-            }
-            return BLANK_ICON;
-        }*/
     }
 
     /** Method that finds the keydescription assigned to this action.
@@ -951,13 +942,6 @@ public class Actions {
         */
         public String getLabel(int index);
 
-        /** Gets shortcut for specific index
-        * @index of the submenu item
-        * @return menushortcut for this menu item
-        */
-
-        //    public MenuShortcut getMenuShortcut(int index);
-
         /** Get context help for the specified item.
         * This can be used to associate help with individual items.
         * You may return <code>null</code> to just use the context help for
@@ -1557,7 +1541,10 @@ public class Actions {
                 return;
             }
 
-            if (!popup) {
+            /* I believe the empty icon was originally set to make the text of items with and
+            without icons align. But a JCheckBoxMenuItem without an icon will include its own
+            checkmark icon, which we want to preserve. */
+            if (!popup && !(button instanceof JCheckBoxMenuItem)) {
                 button.setIcon(ImageUtilities.loadImageIcon("org/openide/resources/actions/empty.gif", true)); // NOI18N
             }
         }
@@ -1690,7 +1677,7 @@ public class Actions {
                 }
                 multi.setEnabled(true);
             }
-            return currentOnes.toArray(new JMenuItem[currentOnes.size()]);
+            return currentOnes.toArray(new JMenuItem[0]);
             
         }
 

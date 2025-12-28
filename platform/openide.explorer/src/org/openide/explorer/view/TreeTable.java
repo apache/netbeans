@@ -160,6 +160,11 @@ class TreeTable extends JTable implements Runnable {
         imp2.put(KeyStroke.getKeyStroke("PASTE"), "none"); // NOI18N
         imp2.put(KeyStroke.getKeyStroke("CUT"), "none"); // NOI18N
 
+        if (Utilities.isMac()) {
+            // On Windows, this shortcut is already present in JTable's InputMap.
+            imp.put(Utilities.stringToKey("F2"), "startEditing");
+        }
+
         imp.put(
             KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, false), ACTION_FOCUS_NEXT
         );
@@ -1553,8 +1558,7 @@ class TreeTable extends JTable implements Runnable {
                         if (list.isEmpty()) {
                             clearSelection();
                         } else {
-                            int[] rows = (int[]) Utilities.toPrimitiveArray(
-                                    list.toArray(new Integer[list.size()])
+                            int[] rows = (int[]) Utilities.toPrimitiveArray(list.toArray(new Integer[0])
                                 );
                             tree.setSelectionRows(rows);
                         }

@@ -20,6 +20,7 @@ package org.openide.awt;
 
 import java.util.Collections;
 import java.util.Objects;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import javax.swing.Action;
 import org.openide.util.Lookup;
@@ -44,9 +45,9 @@ final class StatefulAction<T> extends ContextAction<T> {
      */
     private boolean first = true;
     
-    public StatefulAction(Performer performer, ContextSelection selectMode, Lookup actionContext, Class type, boolean surviveFocusChange, 
+    public StatefulAction(Supplier<Performer<T>> performerSupplier, ContextSelection selectMode, Lookup actionContext, Class type, boolean surviveFocusChange,
             StatefulMonitor enableMonitor, StatefulMonitor valueMonitor) {
-        super(performer, selectMode, actionContext, type, surviveFocusChange, enableMonitor);
+        super(performerSupplier, selectMode, actionContext, type, surviveFocusChange, enableMonitor);
         this.checkValueMonitor = valueMonitor;
     }
 
@@ -124,7 +125,8 @@ final class StatefulAction<T> extends ContextAction<T> {
     public Action createContextAwareInstance(Lookup actionContext) {
         StatefulMonitor checkMon = checkValueMonitor.createContextMonitor(actionContext);
         StatefulMonitor enableMon = enableMonitor == null ? null : enableMonitor.createContextMonitor(actionContext);
-        Action a = new StatefulAction<>(performer, 
+        Action a = new StatefulAction<T>(
+                performerSupplier,
                 selectMode, 
                 actionContext, 
                 type, 

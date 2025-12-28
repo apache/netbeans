@@ -322,9 +322,7 @@ class XMLResultItem implements CompletionItem {
     
     Color getPaintColor() { return LFCustoms.shiftColor(COLOR); }
     
-    ////////////////////////////////////////////////////////////////////////////////
-    ///////////////////methods from CompletionItem interface////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////
+    //methods from CompletionItem interface
     public CompletionTask createDocumentationTask() {
         return null; //no documentation supported for now
         //return new AsyncCompletionTask(new DocQuery(this));

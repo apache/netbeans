@@ -69,7 +69,9 @@ public final class BeanImplementsBI {
             Collection<String> businessInterFaces = new ArrayList<>();
 
             processAnnotation(businessInterFaces, ctx.getClazz(), EJBAPIAnnotations.LOCAL);
+            processAnnotation(businessInterFaces, ctx.getClazz(), EJBAPIAnnotations.LOCAL_JAKARTA);
             processAnnotation(businessInterFaces, ctx.getClazz(), EJBAPIAnnotations.REMOTE);
+            processAnnotation(businessInterFaces, ctx.getClazz(), EJBAPIAnnotations.REMOTE_JAKARTA);
 
             if (businessInterFaces.size() > 0) {
                 Collection<String> implementedInterfaces = new TreeSet<>();

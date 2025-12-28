@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.56
+#Version 1.64
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -364,7 +365,7 @@ meth public final void doFinishClick()
 meth public final void doNextClick()
 meth public final void doPreviousClick()
 meth public final void setPanels(org.openide.WizardDescriptor$Iterator)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.Object getProperty(java.lang.String)
 meth public java.lang.Object getValue()
 meth public java.text.MessageFormat getTitleFormat()
@@ -398,10 +399,10 @@ meth public abstract void storeSettings({org.openide.WizardDescriptor$Panel%0})
 
 CLSS public final org.openide.util.HelpCtx
 cons public init(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 cons public init(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.util.HelpCtx DEFAULT_HELP
 innr public abstract interface static Displayer
 innr public abstract interface static Provider

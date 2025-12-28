@@ -84,6 +84,7 @@ public enum DefaultLibraryInfo implements LibraryInfo {
     // PrimeFaces
     PRIMEFACES(
             sortedSet(
+                    "primefaces",
                     "http://primefaces.org/ui"
             ),
             "PrimeFaces",
@@ -95,6 +96,14 @@ public enum DefaultLibraryInfo implements LibraryInfo {
             ),
             "PrimeFaces Mobile",
             "pm"
+    ), //NOI18N
+    PRIMEFACES_EXTENSIONS(
+            sortedSet(
+                    "primefaces.extensions",
+                    "http://primefaces.org/ui/extensions"
+            ),
+            "PrimeFaces Extensions",
+            "pe"
     ), //NOI18N
 
     // JSF 2.2+
@@ -113,6 +122,16 @@ public enum DefaultLibraryInfo implements LibraryInfo {
             ),
             "Passthrough",
             "p"
+    ), //NOI18N
+
+    // OmniFaces
+    OMNIFACES(
+            sortedSet(
+                    "omnifaces",
+                    "http://omnifaces.org/ui"
+            ),
+            "OmniFaces",
+            "o"
     ); //NOI18N
 
     private final Set<String> allValidNamespaces;

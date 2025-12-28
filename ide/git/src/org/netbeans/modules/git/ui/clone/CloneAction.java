@@ -250,7 +250,7 @@ public class CloneAction implements ActionListener, HelpCtx.Provider {
                                     }
                                     if (!isCanceled() && !toInit.isEmpty() && confirmSubmoduleInit(toInit)) {
                                         setDisplayName(Bundle.MSG_Clone_progress_initializingSubmodules(), 1);
-                                        client.initializeSubmodules(toInit.toArray(new File[toInit.size()]), getProgressMonitor());
+                                        client.initializeSubmodules(toInit.toArray(new File[0]), getProgressMonitor());
                                         setDisplayName(Bundle.MSG_Clone_progress_updatingSubmodules(), 1);
                                         for (File submoduleRoot : toInit) {
                                             if (isCanceled()) {

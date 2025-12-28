@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 
 
 /** Useful utility and methods to work with exceptions as
- * described in detail in the  <a href="@TOP@/org/openide/util/doc-files/logging.html">NetBeans logging guide</a>.
+ * described in detail in the  <a href="@org-openide-util@/org/openide/util/doc-files/logging.html">NetBeans logging guide</a>.
  * Allows to annotate exceptions with messages, extract such messages
  * and provides a common utility method to report an exception.
  * 

@@ -151,7 +151,7 @@ public class AbstractObjectVariable extends AbstractVariable implements ObjectVa
                 this.genericType = getTypeDescription(new PushbackReader(new StringReader(genericSignature), 1));
             }
         } catch (IOException e) {
-            /// invalid signature
+            // invalid signature
         }
     }
 
@@ -1021,12 +1021,9 @@ public class AbstractObjectVariable extends AbstractVariable implements ObjectVa
             classStaticFields.clear();
             allInheretedFields.clear();
         }
-        this.fields = classFields.toArray (new Field [classFields.size ()]);
-        this.inheritedFields = allInheretedFields.toArray (
-            new Field [allInheretedFields.size ()]
-        );
-        this.staticFields = classStaticFields.toArray
-                (new Field [classStaticFields.size ()]);
+        this.fields = classFields.toArray(new Field[0]);
+        this.inheritedFields = allInheretedFields.toArray(new Field[0]);
+        this.staticFields = classStaticFields.toArray(new Field[0]);
     }
     
     org.netbeans.api.debugger.jpda.Field getField (

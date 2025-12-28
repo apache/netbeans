@@ -20,21 +20,27 @@ package org.netbeans.modules.maven.junit;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import javax.lang.model.element.ElementKind;
 import javax.swing.event.ChangeListener;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.artifact.Artifact;
@@ -48,6 +54,9 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.ElementHandle;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.gsf.testrunner.api.RerunHandler;
@@ -69,6 +78,7 @@ import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.maven.api.output.OutputProcessor;
 import org.netbeans.modules.maven.api.output.OutputVisitor;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
@@ -83,13 +93,11 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     private static final String TESTTYPE_UNIT = "UNIT";  //NOI81N
     private static final String TESTTYPE_INTEGRATION = "INTEGRATION";  //NOI81N
 
-    private TestSession session;
     private String testType;
     private String reportNameSuffix;
     private final Pattern runningPattern;
     private final Pattern outDirPattern2;
     private final Pattern outDirPattern;
-    private File outputDir;
     private String runningTestClass;
     private final Set<String> usedNames;
     private final long startTimeStamp;
@@ -97,35 +105,35 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     private static final Logger LOG = Logger.getLogger(JUnitOutputListenerProvider.class.getName());
     private final RunConfig config;
     private boolean surefireRunningInParallel = false;
-    private ArrayList<String> runningTestClasses;
-    private ArrayList<String> runningTestClassesInParallel;
+    private final Map<String, Set<File>> runningTestClass2outputDirs = new HashMap<>();
+    private final ArrayList<String> runningTestClassesInParallel = new ArrayList<>();
+    private final Map<Project, File> project2outputDirs = new HashMap<>();
+    private final Map<File, TestSession> outputDir2sessions = new HashMap<>();
     
     private static final String GROUP_FILE_NAME = "dir";
     
     public JUnitOutputListenerProvider(RunConfig config) {
-        runningPattern = Pattern.compile("(?:\\[surefire\\] )?Running (.*)", Pattern.DOTALL); //NOI18N        
+        runningPattern = Pattern.compile("(?:\\[(?:INFO|surefire)\\] )?Running (.*)", Pattern.DOTALL); //NOI18N
         outDirPattern = Pattern.compile ("(?:\\[INFO\\] )?Surefire report directory\\: (?<" + GROUP_FILE_NAME + ">.*)", Pattern.DOTALL); //NOI18N
         outDirPattern2 = Pattern.compile("(?:\\[INFO\\] )?Setting reports dir\\: (?<" + GROUP_FILE_NAME + ">.*)", Pattern.DOTALL); //NOI18N
         this.config = config;
-        usedNames = new HashSet<String>();
+        usedNames = new HashSet<>();
         startTimeStamp = System.currentTimeMillis();
-        runningTestClasses = new ArrayList<String>();
-        runningTestClassesInParallel = new ArrayList<String>();
         surefireRunningInParallel = isSurefireRunningInParallel();
     }
     
     private boolean isSurefireRunningInParallel() {
         // http://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html
         // http://maven.apache.org/surefire/maven-surefire-plugin/examples/fork-options-and-parallel-execution.html
-        String parallel = PluginPropertyUtils.getPluginProperty(config.getMavenProject(),
+        String parallel = config.getProperties().containsKey("parallel") ? config.getProperties().get("parallel") : PluginPropertyUtils.getPluginProperty(config.getMavenProject(),
                 Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE, "parallel", "test", "parallel"); //NOI18N
         if (parallel != null) {
             return true;
         }
-        String forkMode = PluginPropertyUtils.getPluginProperty(config.getMavenProject(),
+        String forkMode = config.getProperties().containsKey("forkMode") ? config.getProperties().get("forkMode") : PluginPropertyUtils.getPluginProperty(config.getMavenProject(),
                 Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE, "forkMode", "test", "forkMode"); //NOI18N
         if ("perthread".equals(forkMode)) {
-            String threadCount = PluginPropertyUtils.getPluginProperty(config.getMavenProject(),
+            String threadCount = config.getProperties().containsKey("threadCount") ? config.getProperties().get("threadCount") : PluginPropertyUtils.getPluginProperty(config.getMavenProject(),
                 Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE, "threadCount", "test", "threadCount");
             if (threadCount != null) {
                 if (Integer.parseInt(threadCount) > 1) {
@@ -133,7 +141,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                 }
             }
         }
-        String forkCount = PluginPropertyUtils.getPluginProperty(config.getMavenProject(),
+        String forkCount = config.getProperties().containsKey("forkCount") ? config.getProperties().get("forkCount") : PluginPropertyUtils.getPluginProperty(config.getMavenProject(),
                 Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE, "forkCount", "test", "forkCount");
         if (forkCount != null) {
             int index = forkCount.indexOf("C");
@@ -167,22 +175,20 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     public @Override void processLine(String line, OutputVisitor visitor) {
         Matcher match = outDirPattern.matcher(line);
         if (match.matches()) {
-            outputDir = new File(match.group(GROUP_FILE_NAME));
-            if (session == null) {
-                createSession(outputDir);
-            }
+            File outputDir = new File(match.group(GROUP_FILE_NAME));
+            LOG.log(Level.FINER, "Line matches reports directory: {0}", outputDir);
+            createSession(outputDir);
             return;
         }
         match = outDirPattern2.matcher(line);
         if (match.matches()) {
-            outputDir = new File(match.group(GROUP_FILE_NAME));
-            if (session == null) {
-                createSession(outputDir);
-            }
+            File outputDir = new File(match.group(GROUP_FILE_NAME));
+            LOG.log(Level.FINER, "Line matches reports directory: {0}", outputDir);
+            createSession(outputDir);
             return;
         }
-        
-        if (session == null) {
+
+        if (outputDir2sessions.isEmpty()) {
             return;
         }
         match = runningPattern.matcher(line);
@@ -190,12 +196,18 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
             if (surefireRunningInParallel) {
                 // make sure results are displayed in case of a failure
                 runningTestClassesInParallel.add(match.group(1));
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "Got running test: line {0}, class: {1}. Parallel run: {2}", new Object[] { line, match.group(1), 
+                        runningTestClassesInParallel.toString() });
+                }
             } else {
-                if (runningTestClass != null && outputDir != null) {
+                if (runningTestClass != null) {
+                    LOG.log(Level.FINE, "Got running test SINGLE: line {0}, class: {1}", new Object[] { line, match.group(1) });
                     // match.group(1) should be the FQN of a running test class but let's check to be on the safe side
                     // If the matcher matches it means that we have a new test class running,
                     // if not it probably means that this is user's text, e.g. "Running my cool test", so we can safely ignore it
                     if (!isFullJavaId(match.group(1))) {
+                        LOG.log(Level.FINE, "Not full java id match!");
                         return;
                     }
                     // tests are running sequentially, so update Test Results Window
@@ -207,10 +219,10 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
         match = testSuiteStatsPattern.matcher(line);
         if (match.matches() && surefireRunningInParallel) {
             runningTestClass = match.group(6);
-            if (runningTestClass != null && outputDir != null && !runningTestClasses.contains(runningTestClass)) {
-                // When using reuseForks=true and a forkCount value larger than one,
-                // the same output is produced many times, so show it only once in Test Results window
-                runningTestClasses.add(runningTestClass);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Got test statistics: {0}, running classes: {1}", new Object[] { match.group(6), runningTestClassesInParallel.toString() });
+            }
+            if (runningTestClass != null) {
                 // runningTestClass should be the FQN of a running test class but let's check to be on the safe side
                 // If the matcher matches it means that we have a new test class running,
                 // if not it probably means that this is user's text, e.g. "Running my cool test", so we can safely ignore it
@@ -222,12 +234,15 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                 runningTestClassesInParallel.remove(runningTestClass);
                 // runningTestClass might be the last one so make it null to avoid appearing twice when sequenceEnd() is called
                 runningTestClass = null;
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "Statistics done for {0}. Cleaning runnintTestClass, stillRunning: {1}", new Object[] { match.group(6), runningTestClassesInParallel.toString() });
+                }
             }
         }
     }
     
     private static final String SECONDS_REGEX = "s(?:ec(?:ond)?(?:s|\\(s\\))?)?"; //NOI18N
-    private static final String TESTSUITE_STATS_REGEX = "Tests run: +([0-9]+), +Failures: +([0-9]+), +Errors: +([0-9]+), +Skipped: +([0-9]+), +Time elapsed: +(.+)" + SECONDS_REGEX + " - in (.*)";
+    private static final String TESTSUITE_STATS_REGEX = "Tests run: +([0-9]+), +Failures: +([0-9]+), +Errors: +([0-9]+), +Skipped: +([0-9]+), +Time elapsed: +(.+)" + SECONDS_REGEX + " *(?: * <+ FAILURE! *)?-+ in (.*)";
     private static final Pattern testSuiteStatsPattern = Pattern.compile(TESTSUITE_STATS_REGEX);
     
     static boolean isTestSuiteStats(String line) {
@@ -250,7 +265,6 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     }
 
     public @Override void sequenceStart(String sequenceId, OutputVisitor visitor) {
-        session = null;
         reportNameSuffix = null;
         testType = null;
         String reportsDirectory = null;
@@ -262,7 +276,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                 // http://maven.apache.org/surefire/maven-surefire-plugin/test-mojo.html#reportsDirectory
                 reportsDirectory = getReportsDirectory(
                     Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE,
-                    "test", "${project.build.directory}/surefire-reports"); //NOI81N
+                    "test", visitor, "${project.build.directory}/surefire-reports"); //NOI81N
             }
             reportNameSuffix = PluginPropertyUtils.getPluginProperty(
                 config.getMavenProject(), Constants.GROUP_APACHE_PLUGINS,
@@ -272,14 +286,15 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
 	} else if ("mojo-execute#failsafe:integration-test".equals(sequenceId)) {  //NOI81N
 	    reportsDirectory = getReportsDirectory(
                 Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_FAILSAFE,
-                "integration-test", "${project.build.directory}/failsafe-reports");  //NOI81N
+                "integration-test", visitor, "${project.build.directory}/failsafe-reports");  //NOI81N
             reportNameSuffix = PluginPropertyUtils.getPluginProperty(
                 config.getMavenProject(), Constants.GROUP_APACHE_PLUGINS,
                 Constants.PLUGIN_FAILSAFE, "reportNameSuffix", "integration-test",  //NOI81N
                 "surefire.reportNameSuffix");  //NOI81N
             testType = TESTTYPE_INTEGRATION;  //NOI81N
         }
-        if (null != reportsDirectory) {
+        if (reportsDirectory != null) {
+            File outputDir = null;
             File absoluteFile = new File(reportsDirectory);
             // configuration might be "target/directory", which is relative
             // to the maven project or an absolute path
@@ -307,23 +322,46 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                     }
                 }
             }
-            if (null != outputDir) {
+            if (outputDir != null) {
                 createSession(outputDir);
+                OutputVisitor.Context context = visitor.getContext();
+                // may be null when EventSpy is not active
+                Project project = context != null && context.getCurrentProject() != null
+                                ? context.getCurrentProject()
+                                : FileOwnerQuery.getOwner(Utilities.toURI(outputDir));
+                if (project != null) {
+                    project2outputDirs.put(project, outputDir);
+                }
             }
         }
     }
 
-    private String getReportsDirectory(String groupId, String artifactId, String goal, String fallbackExpression) {
-        String reportsDirectory = PluginPropertyUtils.getPluginProperty(config.getMavenProject(),
+    private String getReportsDirectory(String groupId, String artifactId, String goal, OutputVisitor visitor, String fallbackExpression) {
+        MavenProject currentProject = null;
+        // get maven module from context if available
+        OutputVisitor.Context context = visitor.getContext();
+        if (context != null) {
+            Project cp = context.getCurrentProject();
+            if (cp != null) {
+                NbMavenProject subProject = cp.getLookup().lookup(NbMavenProject.class);
+                if (subProject != null) {
+                    currentProject = subProject.getMavenProject();
+                }
+            }
+        }
+        if (currentProject == null) {
+            currentProject = config.getMavenProject();
+        }
+        String reportsDirectory = PluginPropertyUtils.getPluginProperty(currentProject,
            groupId, artifactId, "reportsDirectory", goal, null); // NOI18N
-        if (null == reportsDirectory) {
+        if (reportsDirectory == null) {
             // fallback to default value
             try {
                 Object defaultValue = PluginPropertyUtils
-                    .createEvaluator(config.getMavenProject())
+                    .createEvaluator(currentProject)
                     .evaluate(fallbackExpression);
-                if (defaultValue instanceof String) {
-                    reportsDirectory = (String) defaultValue;
+                if (defaultValue instanceof String str) {
+                    reportsDirectory = str;
                 }
             } catch (ExpressionEvaluationException ex) {
                 // NOP could not resolved default value
@@ -347,14 +385,14 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     })
     private String createSessionName(String projectId) {
         String name;
-        if(testType != null && testType.equals(TESTTYPE_INTEGRATION)) {
+        if (TESTTYPE_INTEGRATION.equals(testType)) {
             name = Bundle.LBL_TESTTYPE_INTEGRATION(projectId);
         } else {
             name = Bundle.LBL_TESTTYPE_UNIT(projectId);
         }
         int index = 2;
         while (usedNames.contains(name)) {
-            if (testType != null && testType.equals(TESTTYPE_INTEGRATION)) {
+            if (TESTTYPE_INTEGRATION.equals(testType)) {
                 name = Bundle.LBL_TESTTYPE_INTEGRATION_INDEXED(projectId, index);
             } else {
                 name = Bundle.LBL_TESTTYPE_UNIT_INDEXED(projectId, index);
@@ -376,59 +414,71 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     }
     
     private void createSession(File nonNormalizedFile) {
-        if (session == null) {
+        if (!outputDir2sessions.containsKey(nonNormalizedFile)) {
             File fil = FileUtil.normalizeFile(nonNormalizedFile);
-	    Project prj = FileOwnerQuery.getOwner(Utilities.toURI(fil));
-	    if (prj != null) {
-		NbMavenProject mvnprj = prj.getLookup().lookup(NbMavenProject.class);
-		if (mvnprj != null) {
+            Project prj = FileOwnerQuery.getOwner(Utilities.toURI(fil));
+            LOG.log(Level.FINE, "Creating session for project {0}", prj);
+            if (prj != null) {
+                NbMavenProject mvnprj = prj.getLookup().lookup(NbMavenProject.class);
+                if (mvnprj != null) {
+                    LOG.log(Level.FINE, "Maven project instance: {0}", mvnprj);
                     File projectFile = FileUtil.toFile(prj.getProjectDirectory());
                     if (projectFile != null) {
                         UnitTestsUsage.getInstance().logUnitTestUsage(Utilities.toURI(projectFile), getJUnitVersion(config.getMavenProject()));
                     }
-		    TestSession.SessionType type = TestSession.SessionType.TEST;
-		    String action = config.getActionName();
-		    if (action != null) { //custom
-			if (action.contains("debug")) { //NOI81N
-			    type = TestSession.SessionType.DEBUG;
-			}
-		    }
-		    final TestSession.SessionType fType = type;
+                    TestSession.SessionType type = TestSession.SessionType.TEST;
+                    String action = config.getActionName();
+                    if (action != null) { //custom
+                        if (action.contains("debug")) { //NOI81N
+                            type = TestSession.SessionType.DEBUG;
+                        }
+                    }
+                    final TestSession.SessionType fType = type;
                     CoreManager junitManager = getManagerProvider();
                     if (junitManager != null) {
                         junitManager.registerNodeFactory();
                     }
-                    session = new TestSession(createSessionName(mvnprj.getMavenProject().getId()), prj, TestSession.SessionType.TEST);
-		    session.setRerunHandler(new RerunHandler() {
-			public @Override
-			void rerun() {
-			    RunUtils.executeMaven(config);
-			}
+                    TestSession session = new TestSession(createSessionName(mvnprj.getMavenProject().getId()), prj, TestSession.SessionType.TEST);
+                    outputDir2sessions.put(nonNormalizedFile, session);
+                    LOG.log(Level.FINE, "Created session: {0}", session);
+                    session.setRerunHandler(new RerunHandler() {
+                        public @Override
+                        void rerun() {
+                            RunUtils.executeMaven(config);
+                        }
 
-			public @Override
-			void rerun(Set<Testcase> tests) {
-			    RunConfig brc = RunUtils.cloneRunConfig(config);
-			    StringBuilder tst = new StringBuilder();
-			    Map<String, Collection<String>> methods = new HashMap<String, Collection<String>>();
+                        public @Override
+                        void rerun(Set<Testcase> tests) {
+                            RunConfig brc = RunUtils.cloneRunConfig(config);
+                            StringBuilder tst = new StringBuilder();
+                            Map<String, Collection<String>> methods = new HashMap<>();
                             //#222776 calculate the approximate space the failed tests will occupy on the cmd line.
                             //important on windows which places a limit on the length.
                             int windowslimitcount = 0;
-			    for (Testcase tc : tests) {
-				//TODO just when is the classname null??
-				if (tc.getClassName() != null) {
-				    Collection<String> lst = methods.get(tc.getClassName());
-				    if (lst == null) {
-					lst = new ArrayList<String>();
-					methods.put(tc.getClassName(), lst);
+                            for (Testcase tc : tests) {
+                                //TODO just when is the classname null??
+                                String tcName= tc.getClassName();
+                                if (tcName != null) {
+                                    Collection<String> lst = methods.get(tc.getClassName());
+                                    if (lst == null) {
+                                        lst = new ArrayList<>();
+                                        methods.put(tc.getClassName(), lst);
                                         windowslimitcount = windowslimitcount + tc.getClassName().length() + 1; // + 1 for ,
-				    }
-				    lst.add(tc.getName());
-                                    windowslimitcount = windowslimitcount + tc.getName().length() + 1; // + 1 for # or +
-				}
-			    }
+                                    }
+                                    String mName = tc.getName();
+
+                                    if (tcName!=null
+                                            && mName.startsWith(tcName)
+                                            && mName.charAt(tcName.length())=='.'){
+                                        mName = mName.substring(tcName.length()+1);
+                                    }
+                                    lst.add(mName);
+                                    windowslimitcount = windowslimitcount + mName.length() + 1; // + 1 for # or +
+                                }
+                            }
                             boolean exceedsWindowsLimit = Utilities.isWindows() && windowslimitcount > 6000; //just be conservative here, the limit is more (8000+)
-			    for (Map.Entry<String, Collection<String>> ent : methods.entrySet()) {
-				tst.append(",");
+                            for (Map.Entry<String, Collection<String>> ent : methods.entrySet()) {
+                                tst.append(",");
                                 if (exceedsWindowsLimit) {
                                     String clazzName = ent.getKey();
                                     int lastDot = ent.getKey().lastIndexOf(".");
@@ -440,58 +490,60 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                                     tst.append(ent.getKey());
                                 }
 
-				//#name only in surefire > 2.7.2 and junit > 4.0 or testng
-				// bug works with the setting also for junit 3.x
-				tst.append("#");
-				boolean first = true;
-				for (String meth : ent.getValue()) {
-				    if (!first) {
-					tst.append("+");
-				    }
-				    first = false;
-				    tst.append(meth);
-				}
-			    }
-			    if (tst.length() > 0) {
-				brc.setProperty("test", tst.substring(1));
-			    }
-			    RunUtils.executeMaven(brc);
-			}
+                                //#name only in surefire > 2.7.2 and junit > 4.0 or testng
+                                // bug works with the setting also for junit 3.x
+                                tst.append("#");
+                                boolean first = true;
+                                for (String meth : ent.getValue()) {
+                                    if (!first) {
+                                        tst.append("+");
+                                    }
+                                    first = false;
+                                    tst.append(meth);
+                                }
+                            }
+                            if (tst.length() > 0) {
+                                brc.setProperty("test", tst.substring(1));
+                            }
+                            RunUtils.executeMaven(brc);
+                        }
 
-			public @Override
-			boolean enabled(RerunType type) {
-			    //debug should now properly update debug port in runconfig...
-			    if (fType.equals(TestSession.SessionType.TEST) || fType.equals(TestSession.SessionType.DEBUG)) {
-				if (RerunType.ALL.equals(type)) {
-				    return true;
-				}
-				if (RerunType.CUSTOM.equals(type)) {
-				    if (usingTestNG(config.getMavenProject())) { //#214334 test for testng has to come first, as itself depends on junit
-					return usingSurefire28(config.getMavenProject());
-				    } else if (usingJUnit4(config.getMavenProject())) { //#214334
-					return usingSurefire2121(config.getMavenProject());
-				    } else if (getJUnitVersion(config.getMavenProject()).equals("JUNIT5")){
+                        public @Override
+                        boolean enabled(RerunType type) {
+                            //debug should now properly update debug port in runconfig...
+                            if (fType.equals(TestSession.SessionType.TEST) || fType.equals(TestSession.SessionType.DEBUG)) {
+                                if (RerunType.ALL.equals(type)) {
+                                    return true;
+                                }
+                                if (RerunType.CUSTOM.equals(type)) {
+                                    if (usingTestNG(config.getMavenProject())) { //#214334 test for testng has to come first, as itself depends on junit
+                                        return usingSurefire28(config.getMavenProject());
+                                    } else if (usingJUnit4(config.getMavenProject())) { //#214334
+                                        return usingSurefire2121(config.getMavenProject());
+                                    } else if (getJUnitVersion(config.getMavenProject()).equals("JUNIT5")){
                                         return usingSurefire2220(config.getMavenProject());
                                     }
-				}
-			    }
-			    return false;
-			}
+                                }
+                            }
+                            return false;
+                        }
 
-			public @Override
-			void addChangeListener(ChangeListener listener) {
-			}
+                        public @Override
+                        void addChangeListener(ChangeListener listener) {
+                        }
 
-			public @Override
-			void removeChangeListener(ChangeListener listener) {
-			}
-		    });
-		    if (junitManager != null) {
+                        public @Override
+                        void removeChangeListener(ChangeListener listener) {
+                        }
+                    });
+                    if (junitManager != null) {
                         junitManager.testStarted(session);
                     }
-		}
-	    }
-	}
+                }
+            }
+        } else {
+            LOG.log(Level.FINE, "Session for directory {0} already opened", nonNormalizedFile);
+        }
     }
     
     private boolean usingSurefire219(MavenProject prj) {
@@ -555,25 +607,42 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
             }
         }
         return false;
-    }    
+    }
 
     public @Override void sequenceEnd(String sequenceId, OutputVisitor visitor) {
-        if (session == null) {
+        if (outputDir2sessions.isEmpty()) {
             return;
         }
-        if (runningTestClass != null && outputDir != null) {
+        if (runningTestClass != null) {
             generateTest();
         }
-        CoreManager junitManager = getManagerProvider();
-        if (junitManager != null) {
-            junitManager.sessionFinished(session);
+        File outputDir = null;
+        OutputVisitor.Context context = visitor.getContext();
+        if (context != null && context.getCurrentProject() != null) {
+            outputDir = project2outputDirs.remove(context.getCurrentProject());
+        } else if (runningTestClass != null) {
+            // fallback if EventSpy is not active
+            Set<File> dirs = runningTestClass2outputDirs.get(runningTestClass);
+            if (dirs != null) {
+                for (File dir : outputDir2sessions.keySet()) {
+                    if (dirs.contains(dir)) {
+                        outputDir = dir;
+                        break;
+                    }
+                }
+            }
+        }
+        if (outputDir != null) {
+            TestSession session = outputDir2sessions.remove(outputDir);
+            if (session != null) {
+                project2outputDirs.remove(session.getProject());
+                CoreManager junitManager = getManagerProvider();
+                if (junitManager != null) {
+                    junitManager.sessionFinished(session);
+                }
+            }
         }
         runningTestClass = null;
-        outputDir = null;
-        session = null;
-        surefireRunningInParallel = false;
-        runningTestClasses = null;
-        runningTestClassesInParallel = null;
     }
 
     private static final Pattern COMPARISON_PATTERN = Pattern.compile(".*expected:<(.*)> but was:<(.*)>$"); //NOI18N
@@ -594,7 +663,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
         }
         if (text != null) {
             String[] strs = StringUtils.split(text, "\n");
-            List<String> lines = new ArrayList<String>();
+            List<String> lines = new ArrayList<>();
             if (message != null) {
                 lines.add(message);
             }
@@ -608,37 +677,87 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
     }
 
     public @Override void sequenceFail(String sequenceId, OutputVisitor visitor) {
-        // try to get the failed test class. How can this be solved if it is not the first one in the list?
-        if(surefireRunningInParallel) {
-            if(runningTestClassesInParallel.isEmpty()) {
-                // no test case is currently running, so do nothing (is this a more serious failure?)
-                return;
+        OutputVisitor.Context context = visitor.getContext();
+        if (context != null) {
+            Project currentProject = context.getCurrentProject();
+            LOG.log(Level.FINE, "Got sequenceFail: {0}, line {1}", new Object[] {currentProject, visitor.getLine()});
+            // try to get the failed test class. How can this be solved if it is not the first one in the list?
+            if (currentProject != null && surefireRunningInParallel) {
+                String saveRunningTestClass = runningTestClass;
+
+                for (String s : runningTestClassesInParallel) {
+                    File outputDir = locateOutputDirAndWait(s, false);
+                    // match the output dir to the project
+                    if (outputDir != null) {
+                        Project outputOwner = FileOwnerQuery.getOwner(FileUtil.toFileObject(outputDir));
+                        if (outputOwner == currentProject) {
+                            LOG.log(Level.FINE, "Found unfinished test {0} in {1}, trying to finish", new Object[] {s, currentProject});
+                            runningTestClass = s;
+                            if (Objects.equals(saveRunningTestClass, s)) {
+                                saveRunningTestClass = null;
+                            }
+                            generateTest();
+                        }
+                    }
+                }
+                runningTestClass = saveRunningTestClass;
             }
-            runningTestClass = runningTestClassesInParallel.get(0);
         }
         sequenceEnd(sequenceId, visitor);
     }
+    
+    private File locateOutputDirAndWait(String candidateClass, boolean consume) {
+        String suffix = reportNameSuffix == null ? "" : "-" + reportNameSuffix;
+        File outputDir = null;
+        // Test report might be in flight, so scan for it multiple times.
+        // Problems were observed with surefire running tests in parallel and
+        // also single threaded mode at leat on linus.
+        try {
+            for (int i = 1; i <= 40; i++) {
+                outputDir = locateOutputDir(candidateClass, suffix, consume);
+                if (outputDir != null) {
+                    LOG.log(Level.FINE, "Found output dir for test {0} in {1}. iteration ", new Object[]{candidateClass, i});
+                    break;
+                }
+                Thread.sleep(500);
+            }
+        } catch (InterruptedException ex) {
+        }
+        return outputDir;
+    }
 
     private void generateTest() {
-        String suffix = reportNameSuffix;
-        if (suffix == null) {
-            suffix = "";
-        } else {
-            //#204480
-            suffix = "-" + suffix;
+        LOG.log(Level.FINE, "generateTest called for class {0}, ", new Object[] { runningTestClass });
+        File outputDir = locateOutputDirAndWait(runningTestClass, true);
+        if (outputDir == null) {
+            LOG.log(Level.WARNING, "Output directory is not created");
         }
-        File report = new File(outputDir, "TEST-" + runningTestClass + suffix + ".xml");
-        if (!report.isFile() || report.lastModified() < startTimeStamp) { //#219097 ignore results from previous invokation.
-            if(surefireRunningInParallel) { // try waiting a bit to give time for the result file to be created
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-            if (!report.isFile() || report.lastModified() < startTimeStamp) { // and now try again
-                return;
-            }
+        String suffix = reportNameSuffix == null ? "" : "-" + reportNameSuffix;
+        File report = outputDir != null ? new File(outputDir, "TEST-" + runningTestClass + suffix + ".xml") : null;
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Reading report file {0}, class {1}, timestamp {2}", new Object[] { report, runningTestClass, report == null ? -1 : 
+                    new Date(report.lastModified()) });
+        }
+        TestSession session = outputDir != null ? outputDir2sessions.get(outputDir) : null;
+        if (outputDir == null || report == null || session == null) {
+            LOG.log(Level.FINE, "No session for outdir {0}", outputDir);
+            return;
+        }
+        Map<ClasspathInfo,Path> classpathInfo = Map.of();
+        NbMavenProject nbMavenProject = session.getProject()
+                .getLookup()
+                .lookup(NbMavenProject.class);
+        if(nbMavenProject != null) {
+            classpathInfo = nbMavenProject
+                    .getMavenProject()
+                    .getTestCompileSourceRoots()
+                    .stream()
+                    .map(p -> (p.endsWith("/") || p.endsWith("\\")) ? p : (p + "/"))
+                    .map(p -> new File(p))
+                    .collect(Collectors.toMap(
+                        f -> ClasspathInfo.create(f),
+                        f -> f.toPath()
+                    ));
         }
         if (report.length() > 50 * 1024 * 1024) {
             LOG.log(Level.INFO, "Skipping report file as size is too big (> 50MB): {0}", report.getPath());
@@ -650,6 +769,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
             try {
                 document = builder.build(report);
             } catch (Exception x) {
+                LOG.log(Level.WARNING, "Exception reading from file {0}", report);
                 try { // maybe the report file was not created yet, try waiting a bit and then try again
                     Thread.sleep(500);
                     document = builder.build(report);
@@ -660,6 +780,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                 }
             }
             if(document == null) {
+                LOG.log(Level.WARNING, "No document read from dir {0}", outputDir);
                 return;
             }
             Element testSuite = document.getRootElement();
@@ -668,7 +789,7 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
             session.addSuite(suite);
             CoreManager junitManager = getManagerProvider();
             if (junitManager != null) {
-                junitManager.displaySuiteRunning(session, suite.getName());
+                junitManager.displaySuiteRunning(session, suite);
             }
             File output = new File(outputDir, runningTestClass + suffix + "-output.txt");
             
@@ -734,7 +855,19 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                         classname = classname.substring(0, classname.length() - nameSuffix.length());
                     }
                     test.setClassName(classname);
-                    test.setLocation(test.getClassName().replace('.', '/') + ".java");
+                    String relativePath = null;
+                    for (Entry<ClasspathInfo, Path> ci : classpathInfo.entrySet()) {
+                        FileObject fo = SourceUtils.getFile(ElementHandle.createTypeElementHandle(ElementKind.CLASS, classname), ci.getKey());
+                        if (fo != null) {
+                            relativePath = ci.getValue().relativize(FileUtil.toFile(fo).toPath()).toString();
+                            break;
+                        }
+                    }
+                    if (relativePath != null) {
+                        test.setLocation(relativePath);
+                    } else {
+                        test.setLocation(classname.replace('.', '/').split("\\$")[0] + ".java");
+                    }
                 }
                 session.addTestCase(test);
             }
@@ -753,22 +886,44 @@ public class JUnitOutputListenerProvider implements OutputProcessor {
                     junitManager.displayOutput(session, FileUtils.fileRead(output), false);
                 }
             }
-        } catch (IOException x) {
-            LOG.log(Level.WARNING, "parsing " + report, x);
-        } catch (ParseException x) {
+        } catch (IOException | ParseException x) {
             LOG.log(Level.WARNING, "parsing " + report, x);
         }
     }
 
+    private File locateOutputDir(String runningTestClass, String suffix, boolean consume) {
+        Set<File> outputDirs = runningTestClass2outputDirs.computeIfAbsent(runningTestClass, t -> new HashSet<>());
+        LOG.log(Level.FINE, "trying output dirs for class {0}: {1}, sessions: {2}", new Object[] { runningTestClass, outputDirs, outputDir2sessions.keySet() });
+        for (File outputDir : outputDir2sessions.keySet()) {
+            if (!outputDirs.contains(outputDir)) {
+                // When using reuseForks=true and a forkCount value larger than one,
+                // the same output is produced many times, so show it only once in Test Results window
+                File report = new File(outputDir, "TEST-" + runningTestClass + suffix + ".xml");
+                if (report.isFile() && report.lastModified() >= startTimeStamp) { //#219097 ignore results from previous invokation.
+                    LOG.log(Level.FINE, "Adding output dir {0} for report {1}", new Object[] { outputDir, report });
+                    if (consume) {
+                        outputDirs.add(outputDir);
+                    }
+                    return outputDir;
+                } else {
+                    LOG.log(Level.FINE, "Report file  {0} exists, but is old; ignoring", report);
+                }
+            } else {
+                LOG.log(Level.FINE, "Output dir already created, not reporting again: {0}", outputDir.getAbsolutePath());
+            }
+        }
+        return null;
+    }
+
     private void logText(String text, Testcase test, boolean failure) {
         StringTokenizer tokens = new StringTokenizer(text, "\n"); //NOI18N
-        List<String> lines = new ArrayList<String>();
+        List<String> lines = new ArrayList<>();
         while (tokens.hasMoreTokens()) {
             lines.add(tokens.nextToken());
         }
         CoreManager junitManager = getManagerProvider();
         if (junitManager != null) {
-            junitManager.displayOutput(session, text, failure);
+            junitManager.displayOutput(test.getSession(), text, failure);
         }
         test.addOutputLines(lines);
     }

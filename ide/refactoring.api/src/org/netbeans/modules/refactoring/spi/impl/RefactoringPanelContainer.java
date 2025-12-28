@@ -301,9 +301,9 @@ public class RefactoringPanelContainer extends TopComponent {
             RefactoringPanel panel = getCurrentPanel();
             if (panel != null) {
                 if (prev) {
-                    panel.selectPrevUsage();
+                    panel.selectPrevUsage(true);
                 } else {
-                    panel.selectNextUsage(); 
+                    panel.selectNextUsage(true);
                 }
             }
         }

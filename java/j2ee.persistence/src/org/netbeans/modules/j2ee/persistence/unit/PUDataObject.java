@@ -184,7 +184,10 @@ public class PUDataObject extends XmlMultiViewDataObject {
                 Persistence newPersistence;
                 Persistence cleanPersistence;
                 try (InputStream is = getEditorSupport().getInputStream()) {
-                    if(Persistence.VERSION_3_1.equals(version)) {
+                    if(Persistence.VERSION_3_2.equals(version)) {
+                        newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.Persistence.createGraph(is);
+                        cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.Persistence();
+                    } else if(Persistence.VERSION_3_1.equals(version)) {
                         newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.Persistence.createGraph(is);
                         cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.Persistence();
                     } else if(Persistence.VERSION_3_0.equals(version)) {

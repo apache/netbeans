@@ -62,40 +62,38 @@ import com.sun.source.tree.VariableTree;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil;
-import org.netbeans.modules.web.beans.api.model.BeanArchiveType;
 
 /**
  * @author ads
  */
-// @todo: Support JakartaEE
 abstract class FieldInjectionPointLogic {
 
-    static final String PRODUCER_ANNOTATION = 
-                    "javax.enterprise.inject.Produces";             // NOI18N
+    static final String PRODUCER_ANNOTATION = "javax.enterprise.inject.Produces";         // NOI18N
+    static final String PRODUCER_ANNOTATION_JAKARTA = "jakarta.enterprise.inject.Produces";         // NOI18N
 
-    static final String ANY_QUALIFIER_ANNOTATION = 
-                     "javax.enterprise.inject.Any";                 // NOI18N
+    static final String ANY_QUALIFIER_ANNOTATION = "javax.enterprise.inject.Any";         // NOI18N
+    static final String ANY_QUALIFIER_ANNOTATION_JAKARTA = "jakarta.enterprise.inject.Any";         // NOI18N
 
-    static final String DEFAULT_QUALIFIER_ANNOTATION = 
-                     "javax.enterprise.inject.Default";             // NOI18N
+    static final String DEFAULT_QUALIFIER_ANNOTATION = "javax.enterprise.inject.Default"; // NOI18N
+    static final String DEFAULT_QUALIFIER_ANNOTATION_JAKARTA = "jakarta.enterprise.inject.Default"; // NOI18N
 
-    static final String NEW_QUALIFIER_ANNOTATION = 
-                      "javax.enterprise.inject.New";                // NOI18N
+    static final String NEW_QUALIFIER_ANNOTATION = "javax.enterprise.inject.New";         // NOI18N
+    static final String NEW_QUALIFIER_ANNOTATION_JAKARTA = "jakarta.enterprise.inject.New";         // NOI18N
     
-    static final String NAMED_QUALIFIER_ANNOTATION = 
-                       "javax.inject.Named";                        // NOI18N
+    static final String NAMED_QUALIFIER_ANNOTATION = "javax.inject.Named";                // NOI18N
+    static final String NAMED_QUALIFIER_ANNOTATION_JAKARTA = "jakarta.inject.Named";                // NOI18N
 
-    static final String INJECT_ANNOTATION = 
-                        "javax.inject.Inject";                      // NOI18N
+    static final String INJECT_ANNOTATION = "javax.inject.Inject";                        // NOI18N
+    static final String INJECT_ANNOTATION_JAKARTA = "jakarta.inject.Inject";                        // NOI18N
     
-    static final String INSTANCE_INTERFACE = 
-                        "javax.enterprise.inject.Instance";         // NOI18N
+    static final String INSTANCE_INTERFACE = "javax.enterprise.inject.Instance";          // NOI18N
+    static final String INSTANCE_INTERFACE_JAKARTA = "jakarta.enterprise.inject.Instance";          // NOI18N
     
-    static final String TYPED_RESTRICTION = 
-                        "javax.enterprise.inject.Typed";            // NOI18N
+    static final String TYPED_RESTRICTION = "javax.enterprise.inject.Typed";              // NOI18N
+    static final String TYPED_RESTRICTION_JAKARTA = "jakarta.enterprise.inject.Typed";              // NOI18N
     
-    static final String DELEGATE_ANNOTATION =
-                        "javax.decorator.Delegate";                 // NOI18N
+    static final String DELEGATE_ANNOTATION = "javax.decorator.Delegate";                 // NOI18N
+    static final String DELEGATE_ANNOTATION_JAKARTA = "jakarta.decorator.Delegate";                 // NOI18N
 
     static final Logger LOGGER = Logger.getLogger(WebBeansModelProvider.class
             .getName());
@@ -131,9 +129,11 @@ abstract class FieldInjectionPointLogic {
         }
         
         TypeMirror elementType = strategy.getType(getModel(), parent , element );
-        
-        if(elementType instanceof DeclaredType && AnnotationUtil.PROVIDER.equals(""+((DeclaredType)elementType).asElement())) {
-            List<? extends TypeMirror> typeArguments = ((DeclaredType)elementType).getTypeArguments();
+       
+        if (elementType instanceof DeclaredType
+                && (AnnotationUtil.PROVIDER.equals("" + ((DeclaredType) elementType).asElement())
+                || AnnotationUtil.PROVIDER_JAKARTA.equals("" + ((DeclaredType) elementType).asElement()))) {
+            List<? extends TypeMirror> typeArguments = ((DeclaredType) elementType).getTypeArguments();
             if(typeArguments!=null && typeArguments.size()>0) {
                 //in case of Provider we need to inspects type argument instead of Provider type, see #245546
                 elementType = typeArguments.get(0);
@@ -199,10 +199,10 @@ abstract class FieldInjectionPointLogic {
             TypeElement annotationElement = (TypeElement)type.asElement();
             if ( annotationElement != null ){
                 annotationName = annotationElement.getQualifiedName().toString();
-                defaultQualifier = annotationElement.getQualifiedName().contentEquals( 
-                    DEFAULT_QUALIFIER_ANNOTATION);
-                newQualifier = annotationElement.getQualifiedName().contentEquals( 
-                    NEW_QUALIFIER_ANNOTATION );
+                defaultQualifier = annotationElement.getQualifiedName().contentEquals(DEFAULT_QUALIFIER_ANNOTATION)
+                        || annotationElement.getQualifiedName().contentEquals(DEFAULT_QUALIFIER_ANNOTATION_JAKARTA);
+                newQualifier = annotationElement.getQualifiedName().contentEquals(NEW_QUALIFIER_ANNOTATION)
+                        || annotationElement.getQualifiedName().contentEquals(NEW_QUALIFIER_ANNOTATION_JAKARTA);
             }
         }
         if ( (quilifierAnnotations.size() == 0 && anyQualifier) ||
@@ -321,8 +321,8 @@ abstract class FieldInjectionPointLogic {
             if ( annotationElement == null ){
                 continue;
             }
-            if ( ANY_QUALIFIER_ANNOTATION.equals( 
-                    annotationElement.getQualifiedName().toString()))
+            if (ANY_QUALIFIER_ANNOTATION.equals(annotationElement.getQualifiedName().toString())
+                    || ANY_QUALIFIER_ANNOTATION_JAKARTA.equals(annotationElement.getQualifiedName().toString()))
             {
                 anyQualifier = true;
             }
@@ -331,13 +331,13 @@ abstract class FieldInjectionPointLogic {
             {
                 quilifierAnnotations.add( annotationMirror );
             }
-            if ( PRODUCER_ANNOTATION.contentEquals( 
-                    annotationElement.getQualifiedName()))
+            if (PRODUCER_ANNOTATION.contentEquals(annotationElement.getQualifiedName())
+                    || PRODUCER_ANNOTATION_JAKARTA.contentEquals(annotationElement.getQualifiedName()))
             {
                 isProducer = true;
             }
-            else if ( INJECT_ANNOTATION.contentEquals( 
-                    annotationElement.getQualifiedName()))
+            else if ( INJECT_ANNOTATION.contentEquals(annotationElement.getQualifiedName())
+                    || INJECT_ANNOTATION_JAKARTA.contentEquals(annotationElement.getQualifiedName()))
             {
                 hasInject = true;
             }
@@ -588,21 +588,22 @@ abstract class FieldInjectionPointLogic {
     private Set<Element> getAllProductions( ){
         final Set<Element> result = new HashSet<Element>();
         try {
-            getModel().getHelper().getAnnotationScanner().findAnnotations( 
-                    PRODUCER_ANNOTATION, 
-                    EnumSet.of( ElementKind.FIELD, ElementKind.METHOD), 
-                    new AnnotationHandler() {
-                        @Override
-                        public void handleAnnotation( TypeElement type, 
-                                Element element,AnnotationMirror annotation )
-                        {
-                                result.add( element );
-                        }
+            getModel().getHelper().getAnnotationScanner().findAnnotations(
+                    PRODUCER_ANNOTATION,
+                    EnumSet.of(ElementKind.FIELD, ElementKind.METHOD),
+                    (TypeElement type, Element element, AnnotationMirror annotation) -> {
+                        result.add(element);
+                    });
+            getModel().getHelper().getAnnotationScanner().findAnnotations(
+                    PRODUCER_ANNOTATION_JAKARTA,
+                    EnumSet.of(ElementKind.FIELD, ElementKind.METHOD),
+                    (TypeElement type, Element element, AnnotationMirror annotation) -> {
+                        result.add(element);
                     });
         }
         catch (InterruptedException e) {
-            LOGGER.warning("Finding annotation "+PRODUCER_ANNOTATION+
-                    " was interrupted"); // NOI18N
+            LOGGER.warning("Finding annotation " + PRODUCER_ANNOTATION + "/" // NOI18N
+                    + PRODUCER_ANNOTATION_JAKARTA + " was interrupted"); // NOI18N
         }
         return result;
     }
@@ -684,8 +685,11 @@ abstract class FieldInjectionPointLogic {
          * In this case original method will have @Default along with 
          * qualifiers "inherited" from specialized methods.  
          */
-        boolean hasDefault = getModel().getHelper().getAnnotationsByType( 
-                qualifierAnnotations ).get(DEFAULT_QUALIFIER_ANNOTATION) != null ;
+        boolean hasDefault
+                = getModel().getHelper().getAnnotationsByType(
+                        qualifierAnnotations).get(DEFAULT_QUALIFIER_ANNOTATION) != null
+                || getModel().getHelper().getAnnotationsByType(
+                        qualifierAnnotations).get(DEFAULT_QUALIFIER_ANNOTATION_JAKARTA) != null;
         Set<Element> currentBindings = new HashSet<Element>();
         for (AnnotationMirror annotationMirror : qualifierAnnotations) {
             if(cancel.get()) {
@@ -737,15 +741,14 @@ abstract class FieldInjectionPointLogic {
                         public void handleAnnotation( TypeElement type, 
                                 Element element,AnnotationMirror annotation )
                                 {
-                                    if (AnnotationObjectProvider.hasAnnotation(
-                                            element, PRODUCER_ANNOTATION,
-                                            getModel().getHelper()))
+                                    if (AnnotationObjectProvider.hasAnnotation(element, PRODUCER_ANNOTATION, getModel().getHelper())
+                                            || AnnotationObjectProvider.hasAnnotation(element, PRODUCER_ANNOTATION_JAKARTA, getModel().getHelper()))
                                     {
                                         bindings.add(element);
                                         bindings.addAll(getChildSpecializes(
                                                 element, getModel(), cancel));
-                                        if (annotationFQN
-                                                .contentEquals(DEFAULT_QUALIFIER_ANNOTATION))
+                                        if (annotationFQN.contentEquals(DEFAULT_QUALIFIER_ANNOTATION)
+                                                || annotationFQN.contentEquals(DEFAULT_QUALIFIER_ANNOTATION_JAKARTA))
                                         {
                                             currentBindings.addAll(bindings);
                                         }
@@ -787,7 +790,9 @@ abstract class FieldInjectionPointLogic {
          * qualifiers "inherited" from specialized beans.  
          */
         boolean hasDefault = getModel().getHelper().getAnnotationsByType( 
-                qualifierAnnotations ).get(DEFAULT_QUALIFIER_ANNOTATION) != null ;
+                qualifierAnnotations ).get(DEFAULT_QUALIFIER_ANNOTATION) != null;
+        boolean hasDefaultJakarta = getModel().getHelper().getAnnotationsByType(
+                qualifierAnnotations ).get(DEFAULT_QUALIFIER_ANNOTATION_JAKARTA) != null;
         Set<BindingQualifier> defaultQualifiers = new HashSet<BindingQualifier>();
         for (AnnotationMirror annotationMirror : qualifierAnnotations) {
             DeclaredType type = annotationMirror.getAnnotationType();
@@ -800,7 +805,8 @@ abstract class FieldInjectionPointLogic {
             PersistentObjectManager<BindingQualifier> manager = getModel()
                     .getManager(annotationFQN);
             Collection<BindingQualifier> bindings = manager.getObjects();
-            if (annotationFQN.contentEquals(DEFAULT_QUALIFIER_ANNOTATION)) {
+            if (annotationFQN.contentEquals(DEFAULT_QUALIFIER_ANNOTATION)
+                    || annotationFQN.contentEquals(DEFAULT_QUALIFIER_ANNOTATION_JAKARTA)) {
                 defaultQualifiers.addAll(bindings);
             }
             else {
@@ -812,16 +818,25 @@ abstract class FieldInjectionPointLogic {
                                         getModel().getHelper()))
                         {
                             defaultQualifiers.add(new BindingQualifier(
-                                    getModel().getHelper(), binding
-                                            .getTypeElement(),
-                                    DEFAULT_QUALIFIER_ANNOTATION));
+                                    getModel().getHelper(), binding.getTypeElement(),DEFAULT_QUALIFIER_ANNOTATION));
+                        }
+                    }
+                }
+                if (hasDefaultJakarta) {
+                    for (BindingQualifier binding : bindings) {
+                        if (AnnotationObjectProvider
+                                .checkDefault(binding.getTypeElement(),
+                                        getModel().getHelper()))
+                        {
+                            defaultQualifiers.add(new BindingQualifier(
+                                    getModel().getHelper(), binding.getTypeElement(),DEFAULT_QUALIFIER_ANNOTATION_JAKARTA));
                         }
                     }
                 }
             }
         }
         
-        if ( hasDefault ){
+        if ( hasDefault || hasDefaultJakarta ){
             bindingCollections.add( defaultQualifiers );
         }
         

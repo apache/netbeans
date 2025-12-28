@@ -157,7 +157,7 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
 
                 actions.add(new RepositoryMenu(ActionDestination.MainMenu, null));
             }
-            Utils.setAcceleratorBindings(ACTIONS_PATH_PREFIX, actions.toArray(new Action[actions.size()]));
+            Utils.setAcceleratorBindings(ACTIONS_PATH_PREFIX, actions.toArray(new Action[0]));
         } else {
             Lookup lkp = context.getElements();
             if (noneVersioned) {                    
@@ -193,7 +193,7 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
             }
         }
 
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     public void refreshFormat () {
@@ -202,7 +202,7 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
     }
 
     public LabelVariable[] getProjectVariables () {
-        return PROJECT_ANNOTATION_VARIABLES.toArray(new LabelVariable[PROJECT_ANNOTATION_VARIABLES.size()]);
+        return PROJECT_ANNOTATION_VARIABLES.toArray(new LabelVariable[0]);
     }
 
     private void addAction(String name, VCSContext context, List<Action> actions) {
@@ -229,7 +229,6 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
         for (File file : context.getRootFiles()) {
             if (file.isDirectory()) {
                 folderAnnotation = true;
-                Utils.addFolderToLog(file);
                 break;
             }
         }
@@ -688,7 +687,7 @@ public class Annotator extends VCSAnnotator implements PropertyChangeListener {
             for (LabelVariable var : this) {
                 patterns.add(var.getPattern());
             }
-            return patterns.toArray(new String[patterns.size()]);
+            return patterns.toArray(new String[0]);
         }
     }
 }

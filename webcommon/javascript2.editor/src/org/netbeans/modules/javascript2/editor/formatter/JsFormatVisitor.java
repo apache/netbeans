@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
@@ -66,7 +67,7 @@ import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
  *
  * @author Petr Hejl
  */
-public class JsFormatVisitor extends NodeVisitor {
+public class JsFormatVisitor extends NodeVisitor<LexicalContext> {
 
     private static final Set<TokenType> UNARY_TYPES = EnumSet.noneOf(TokenType.class);
 
@@ -217,7 +218,7 @@ public class JsFormatVisitor extends NodeVisitor {
         if (whileNode.isDoWhile()) {
             // within parens spaces
             int leftStart;
-            Block body = whileNode.getBody();
+//            Block body = whileNode.getBody();
 //            if (isVirtual(body)) {
 //                // unfortunately due to condition at the end of do-while
 //                // we have to care about virtual block
@@ -236,7 +237,7 @@ public class JsFormatVisitor extends NodeVisitor {
             if (whileToken != null) {
                 FormatToken beforeWhile = whileToken.previous();
                 if (beforeWhile != null) {
-                    tokenUtils.appendToken(beforeWhile, FormatToken.forFormat(FormatToken.Kind.BEFORE_WHILE_KEYWORD));
+                    TokenUtils.appendToken(beforeWhile, FormatToken.forFormat(FormatToken.Kind.BEFORE_WHILE_KEYWORD));
                 }
             }
             if (handleLoop(whileNode, FormatToken.Kind.AFTER_DO_START)) {
@@ -403,13 +404,13 @@ public class JsFormatVisitor extends NodeVisitor {
             List<Statement> statements = body.getStatements();
             if (!statements.isEmpty()) {
                 Statement last = statements.get(statements.size() - 1);
-                if (last instanceof BlockStatement) {
-                    body = ((BlockStatement) last).getBlock();
+                if (last instanceof BlockStatement blockStatement) {
+                    body = blockStatement.getBlock();
                 }
             }
         }
         if (isVirtual(body) && functionNode.getKind() == FunctionNode.Kind.ARROW) {
-            Token nonEmpty = tokenUtils.getPreviousNonEmptyToken(getStart(body));
+            Token<? extends JsTokenId> nonEmpty = tokenUtils.getPreviousNonEmptyToken(getStart(body));
             if (nonEmpty != null) {
                 FormatToken token = tokenStream.getToken(ts.offset());
                 if (token != null) {
@@ -703,11 +704,11 @@ public class JsFormatVisitor extends NodeVisitor {
 
             PropertyNode propertyNode = (PropertyNode) property;
             if (propertyNode.getGetter() != null) {
-                FunctionNode getter = (FunctionNode) propertyNode.getGetter();
+                FunctionNode getter = propertyNode.getGetter();
                 markPropertyFinish(getFinish(getter), objectFinish, false);
             }
             if (propertyNode.getSetter() != null) {
-                FunctionNode setter = (FunctionNode) propertyNode.getSetter();
+                FunctionNode setter = propertyNode.getSetter();
                 markPropertyFinish(getFinish(setter), objectFinish, false);
             }
 
@@ -899,7 +900,7 @@ public class JsFormatVisitor extends NodeVisitor {
     }
 
     @Override
-    public boolean enterLiteralNode(LiteralNode literalNode) {
+    public boolean enterLiteralNode(LiteralNode<?> literalNode) {
         Object value = literalNode.getValue();
         if (value instanceof Node[]) {
             int start = getStart(literalNode);
@@ -953,7 +954,7 @@ public class JsFormatVisitor extends NodeVisitor {
             return false;
         }
         int finish = getFinish(varNode) - 1;
-        Token nextToken = tokenUtils.getNextNonEmptyToken(finish);
+        Token<? extends JsTokenId> nextToken = tokenUtils.getNextNonEmptyToken(finish);
         if (nextToken != null && nextToken.id() == JsTokenId.OPERATOR_COMMA) {
             FormatToken formatToken = tokenStream.getToken(ts.offset());
             if (formatToken != null) {
@@ -1017,7 +1018,7 @@ public class JsFormatVisitor extends NodeVisitor {
             if (paramToken != null) {
                 // there might be "a, ...z" for example so we want the mark before the rest
                 // parameter
-                Token previousNonEmpty = tokenUtils.getPreviousNonEmptyToken(paramToken.getOffset());
+                Token<? extends JsTokenId> previousNonEmpty = tokenUtils.getPreviousNonEmptyToken(paramToken.getOffset());
                 if (previousNonEmpty != null && previousNonEmpty.id() == JsTokenId.OPERATOR_REST) {
                     paramToken = tokenStream.getToken(ts.offset());
                 }
@@ -1033,10 +1034,9 @@ public class JsFormatVisitor extends NodeVisitor {
 
     private void handleFunctionCallChain(CallNode callNode) {
         Node function = callNode.getFunction();
-        if (function instanceof AccessNode) {
-            Node base = ((AccessNode) function).getBase();
-            if (base instanceof CallNode) {
-                CallNode chained = (CallNode) base;
+        if (function instanceof AccessNode accessNode) {
+            Node base = accessNode.getBase();
+            if (base instanceof CallNode chained) {
                 int finish = getFinish(chained);
                 FormatToken formatToken = tokenUtils.getNextToken(finish, JsTokenId.OPERATOR_DOT);
                 if (formatToken != null) {
@@ -1087,6 +1087,7 @@ public class JsFormatVisitor extends NodeVisitor {
                 afterBlock, true);
     }
 
+    @SuppressWarnings({"NestedAssignment", "AssertWithSideEffects"})
     private void handleVirtualBlock(Block block, FormatToken.Kind indentationInc,
             FormatToken.Kind indentationDec, FormatToken.Kind afterBlock, boolean markStatements) {
 
@@ -1117,7 +1118,7 @@ public class JsFormatVisitor extends NodeVisitor {
         //Node statement = block.getStatements().get(0);
 
         // indentation mark & block start
-        Token token = tokenUtils.getPreviousNonEmptyToken(getStart(block));
+        Token<? extends JsTokenId> token = tokenUtils.getPreviousNonEmptyToken(getStart(block));
 
         if (token != null) {
             FormatToken formatToken = tokenStream.getToken(ts.offset());
@@ -1176,12 +1177,12 @@ public class JsFormatVisitor extends NodeVisitor {
                  * the second b=2. So we iterate subsequent VarNodes searching the
                  * last one and the proper finish token.
                  */
-                if (statement instanceof VarNode) {
-                    if (((VarNode) statement).isDestructuring()) {
+                if (statement instanceof VarNode varNode) {
+                    if (varNode.isDestructuring()) {
                         destructuring = true;
                         continue;
                     }
-                    if (!isDeclaration((VarNode) statement)) {
+                    if (!isDeclaration(varNode)) {
                         int index = i + 1;
                         Node lastVarNode = statement;
 
@@ -1191,7 +1192,7 @@ public class JsFormatVisitor extends NodeVisitor {
                                 i--;
                                 break;
                             } else {
-                                Token token = tokenUtils.getPreviousNonEmptyToken(getStart(next));
+                                Token<? extends JsTokenId> token = tokenUtils.getPreviousNonEmptyToken(getStart(next));
                                 if (token != null && (JsTokenId.KEYWORD_VAR == token.id()
                                         || JsTokenId.KEYWORD_CONST == token.id()
                                         || JsTokenId.RESERVED_LET == token.id())) {
@@ -1233,23 +1234,22 @@ public class JsFormatVisitor extends NodeVisitor {
         }
     }
 
-    private void handleClassElement(PropertyNode property, int start) {
-        property.accept(this);
+    private void handleClassElement(PropertyNode propertyNode, int start) {
+        propertyNode.accept(this);
 
-        PropertyNode propertyNode = (PropertyNode) property;
         if (propertyNode.getGetter() != null) {
-            FunctionNode getter = (FunctionNode) propertyNode.getGetter();
+            FunctionNode getter = propertyNode.getGetter();
             markClassElementFinish(getStart(getter), getFinish(getter), start,
                     false, propertyNode.getGetter());
         }
         if (propertyNode.getSetter() != null) {
-            FunctionNode setter = (FunctionNode) propertyNode.getSetter();
+            FunctionNode setter = propertyNode.getSetter();
             markClassElementFinish(getStart(setter), getFinish(setter), start,
                     false, propertyNode.getSetter());
         }
 
         // mark property end
-        markClassElementFinish(getStart(property), getFinish(property), start,
+        markClassElementFinish(getStart(propertyNode), getFinish(propertyNode), start,
                 true, propertyNode.getValue());
     }
 
@@ -1402,9 +1402,9 @@ public class JsFormatVisitor extends NodeVisitor {
             return null;
         }
 
-        Token ret = null;
+        Token<? extends JsTokenId> ret = null;
         while (ts.moveNext()) {
-            Token token = ts.token();
+            Token<? extends JsTokenId> token = ts.token();
             if ((token.id() != JsTokenId.BLOCK_COMMENT && token.id() != JsTokenId.DOC_COMMENT
                 && token.id() != JsTokenId.LINE_COMMENT && token.id() != JsTokenId.EOL
                 && token.id() != JsTokenId.WHITESPACE)) {
@@ -1415,7 +1415,7 @@ public class JsFormatVisitor extends NodeVisitor {
 
         if (ret != null) {
             while (ts.movePrevious() && ts.offset() >= start) {
-                Token current = ts.token();
+                Token<? extends JsTokenId> current = ts.token();
                 if (current.id() != JsTokenId.WHITESPACE) {
                     ret = current;
                     break;
@@ -1428,13 +1428,14 @@ public class JsFormatVisitor extends NodeVisitor {
     }
 
     private int getStart(Node node) {
+        Objects.requireNonNull(node);
         // unfortunately in binary node the token represents operator
         // so string fix would not work
-        if (node instanceof BinaryNode) {
-            return getStart((BinaryNode) node);
+        if (node instanceof BinaryNode binaryNode) {
+            return getStart(binaryNode);
         }
-        if (node instanceof FunctionNode) {
-            return getFunctionStart((FunctionNode) node);
+        if (node instanceof FunctionNode functionNode) {
+            return getFunctionStart(functionNode);
         }
         // All this magic is because nashorn nodes and tokens don't contain the
         // quotes for string. Due to this we call this method to add 1 to start
@@ -1466,8 +1467,7 @@ public class JsFormatVisitor extends NodeVisitor {
     private int getFinish(Node node) {
         // we are fixing the wrong finish offset here
         // only function node has last token
-        if (node instanceof FunctionNode) {
-            FunctionNode function = (FunctionNode) node;
+        if (node instanceof FunctionNode function) {
             if (node.getStart() == node.getFinish()) {
                 long lastToken = function.getLastToken();
                 TokenType type = com.oracle.js.parser.Token.descType(lastToken);
@@ -1495,12 +1495,11 @@ public class JsFormatVisitor extends NodeVisitor {
                     return getFinish(fn);
                 }
             }
-        } else if (node instanceof VarNode) {
-            VarNode var = (VarNode) node;
+        } else if (node instanceof VarNode var) {
             if (var.getInit() instanceof ClassNode) {
                 return getFinish(var.getInit());
             }
-            Token token = tokenUtils.getNextNonEmptyToken(getFinishFixed(node) - 1);
+            Token<? extends JsTokenId> token = tokenUtils.getNextNonEmptyToken(getFinishFixed(node) - 1);
             if (token != null && JsTokenId.OPERATOR_SEMICOLON == token.id()) {
                 return ts.offset() + 1;
             } else {
@@ -1546,8 +1545,8 @@ public class JsFormatVisitor extends NodeVisitor {
         if (varNode.isFunctionDeclaration() || varNode.isExport() || varNode.isDestructuring()) {
             return true;
         }
-        if (varNode.getInit() instanceof ClassNode) {
-            IdentNode cIdent = ((ClassNode) varNode.getInit()).getIdent();
+        if (varNode.getInit() instanceof ClassNode classNode) {
+            IdentNode cIdent = classNode.getIdent();
             IdentNode vIdent = varNode.getName();
             // this is artificial var node for simple class declaration
             if (cIdent != null

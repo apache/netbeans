@@ -216,7 +216,7 @@ public class CommitAction extends ContextAction {
         SvnModuleConfig.getDefault().setSortingStatus(PANEL_PREFIX, data.getSortingState());
         if (startCommit) {
             // if OK setup sequence of add, remove and commit calls
-            startCommitTask(panel, data, ctx, roots.toArray(new File[roots.size()]), hooks);
+            startCommitTask(panel, data, ctx, roots.toArray(new File[0]), hooks);
         } else {
             prepareSupport.cancel();
         }
@@ -279,7 +279,7 @@ public class CommitAction extends ContextAction {
                 }
             }
         });
-        nodes = nodesList.toArray(new SvnFileNode[nodesList.size()]);
+        nodes = nodesList.toArray(new SvnFileNode[0]);
         return nodes;
     }
 
@@ -409,7 +409,7 @@ public class CommitAction extends ContextAction {
                 for (File file : roots) {
                     filesSet.add(file);
                 }
-                contextFiles = filesSet.toArray(new File[filesSet.size()]);
+                contextFiles = filesSet.toArray(new File[0]);
 
                 FileStatusCache cache = Subversion.getInstance().getStatusCache();
                 if (deepScanEnabled) {
@@ -748,7 +748,7 @@ public class CommitAction extends ContextAction {
                 for (List<File> l : managedTrees) {
                     hookFiles.addAll(l);
                 }
-                SvnHookContext context = new SvnHookContext(hookFiles.toArray(new File[hookFiles.size()]), message, null);
+                SvnHookContext context = new SvnHookContext(hookFiles.toArray(new File[0]), message, null);
                 for (SvnHook hook : hooks) {
                     try {
                         // XXX handle returned context
@@ -775,7 +775,7 @@ public class CommitAction extends ContextAction {
 
                 // one commit for each wc
                 List<File> commitList = itCandidates.next();
-                File[] commitedFiles = commitList.toArray(new File[commitList.size()]);
+                File[] commitedFiles = commitList.toArray(new File[0]);
 
                 CommitCmd cmd = new CommitCmd(client, support, message, handleHooks ? logs : null);
                 // handle recursive commits - deleted and copied folders can't be commited non recursively
@@ -833,7 +833,7 @@ public class CommitAction extends ContextAction {
                     return;
                 }
             }
-            SvnUtils.refreshFS(commitCandidates.toArray(new File[commitCandidates.size()]));
+            SvnUtils.refreshFS(commitCandidates.toArray(new File[0]));
         } catch (SVNClientException ex) {
             support.annotate(ex);
         } finally {
@@ -856,7 +856,7 @@ public class CommitAction extends ContextAction {
         }
         
         private void commitFiles (List<File> commitFiles, boolean recursive) throws SVNClientException {
-            File[] files = commitFiles.toArray(new File[commitFiles.size()]);
+            File[] files = commitFiles.toArray(new File[0]);
             long revision = client.commit(files, message, recursive);
             if (files.length > 0 && !supp.isCanceled() && revision > -1) {
                 ISVNLogMessage revisionLog = getLogMessage (files, revision);
@@ -933,7 +933,7 @@ public class CommitAction extends ContextAction {
                         logs.get(i).getRevision().getNumber(),
                         logs.get(i).getDate()));
         }
-        SvnHookContext context = new SvnHookContext(files.toArray(new File[files.size()]), message, entries);
+        SvnHookContext context = new SvnHookContext(files.toArray(new File[0]), message, entries);
         for (SvnHook hook : hooks) {
             hook.afterCommit(context);
         }
@@ -1225,6 +1225,6 @@ public class CommitAction extends ContextAction {
     }
 
     private static void deleteMissingFiles (List<File> removeCandidates, SvnClient client) throws SVNClientException {
-        client.remove(removeCandidates.toArray(new File[removeCandidates.size()]), true);
+        client.remove(removeCandidates.toArray(new File[0]), true);
     }
 }

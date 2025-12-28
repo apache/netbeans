@@ -439,7 +439,7 @@ public class DelegatingVCS extends org.netbeans.modules.versioning.core.spi.Vers
             // global actions
             l.addAll(Arrays.asList(ga));
             
-            return  l.toArray(new Action[l.size()]);
+            return  l.toArray(new Action[0]);
         }        
     }
     
@@ -456,7 +456,7 @@ public class DelegatingVCS extends org.netbeans.modules.versioning.core.spi.Vers
                 ret.add(action);
             }
         }        
-        return ret != null ? ret.toArray(new Action[ret.size()]) : new Action[0];
+        return ret != null ? ret.toArray(new Action[0]) : new Action[0];
     }
     
     // package private due unit tests
@@ -471,7 +471,7 @@ public class DelegatingVCS extends org.netbeans.modules.versioning.core.spi.Vers
                 ret.add(action);
             }
         }
-        return ret.toArray(new Action[ret.size()]);
+        return ret.toArray(new Action[0]);
     }
 
     private boolean isAlive() {

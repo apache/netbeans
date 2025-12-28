@@ -22,14 +22,11 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Logger;
 import javax.lang.model.element.TypeElement;
-import javax.servlet.jsp.tagext.TagFileInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
@@ -44,10 +41,13 @@ import org.netbeans.api.jsp.lexer.JspTokenId;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider;
+import org.netbeans.modules.web.jsps.parserapi.TagFileInfo;
+import org.netbeans.modules.web.jsps.parserapi.TagInfo;
+import org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo;
 import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditCookie;
 import org.openide.filesystems.FileObject;
@@ -422,7 +422,7 @@ public class JspHyperlinkProvider implements HyperlinkProvider {
                                 }
                             });
 
-                    ProgressUtils.runOffEventDispatchThread(compute,
+                    BaseProgressUtils.runOffEventDispatchThread(compute,
                             NbBundle.getMessage(JspHyperlinkProvider.class, "MSG_goto-source"),
                             cancel,
                             false);

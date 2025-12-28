@@ -63,20 +63,12 @@ public class RequestedUrlEvalResponse extends EvalResponse {
     private static class OutputListenerImpl implements OutputListener {
 
         @Override
-        public void outputLineSelected(OutputEvent ev) {
-        }
-
-        @Override
         public void outputLineAction(OutputEvent ev) {
             try {
                 HtmlBrowser.URLDisplayer.getDefault().showURL(new URL(ev.getLine()));
             } catch (MalformedURLException ex) {
                 LOGGER.log(Level.WARNING, null, ex);
             }
-        }
-
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
         }
 
     }

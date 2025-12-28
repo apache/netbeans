@@ -18,8 +18,14 @@ KEYWORD    null                                       null
 KEYWORD    object                                     null
 KEYWORD    parent                                     null
 KEYWORD    private                                    null
+KEYWORD    private(set)                               null
 KEYWORD    protected                                  null
+KEYWORD    protected private(set)                     null
+KEYWORD    protected(set)                             null
 KEYWORD    public                                     null
+KEYWORD    public private(set)                        null
+KEYWORD    public protected(set)                      null
+KEYWORD    public(set)                                null
 KEYWORD    readonly                                   null
 KEYWORD    self                                       null
 KEYWORD    static                                     null

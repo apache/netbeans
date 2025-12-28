@@ -26,11 +26,20 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.swing.Icon;
+import javax.swing.text.StyledDocument;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
+import org.netbeans.api.java.queries.UnitTestForSourceQuery;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.lsp.Diagnostic;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -43,10 +52,13 @@ import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport.Kind;
+import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -66,11 +78,61 @@ public class MicronautSymbolSearcher implements IndexSearcher {
         if (project == null || !textForQuery.startsWith("@") || IndexingManager.getDefault().isIndexing()) {
             return Collections.emptySet();
         }
-        Set<Descriptor> symbols = new HashSet<>();
+        if (textForQuery.equals("@/")) {
+            RequestProcessor.getDefault().post(() -> {
+                try {
+                    Diagnostic.ReporterControl control = Diagnostic.findReporterControl(Lookup.getDefault(), project.getProjectDirectory());
+                    Set<FileObject> duplicates = getSymbolsWithPathDuplicates(project, null).stream().map(descriptor -> descriptor.getFileObject()).collect(Collectors.toSet());
+                    if (!duplicates.isEmpty()) {
+                        control.diagnosticChanged(duplicates, "text/x-java");
+                    }
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            });
+        }
+        return getSymbols(project, textForQuery);
+    }
+
+    static Set<SymbolDescriptor> getSymbolsWithPathDuplicates(Project project, FileObject fo) throws IOException {
+        EditorCookie ec = fo != null ? fo.getLookup().lookup(EditorCookie.class) : null;
+        StyledDocument doc = ec != null ? ec.openDocument() : null;
+        Set<SymbolDescriptor> duplicates = new HashSet<>();
+        Map<String, SymbolDescriptor> map = new HashMap<>();
+        for (SymbolDescriptor symbol : getSymbols(project, "@/")) {
+            if (doc == null || symbol.getFileObject() != fo) {
+                SymbolDescriptor previous = map.put(symbol.getSimpleName().replaceAll("\\{.*}", "{}"), symbol);
+                if (previous != null) {
+                    duplicates.add(symbol);
+                    duplicates.add(previous);
+                }
+            }
+        }
+        JavaSource js = doc != null ? JavaSource.forDocument(doc) : null;
+        if (js != null) {
+            js.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                for (MicronautSymbolFinder.SymbolLocation sl : MicronautSymbolFinder.scan(cc, true)) {
+                    SymbolDescriptor symbol = new SymbolDescriptor(sl.getName(), fo, sl.getSelectionStart(), sl.getSelectionEnd());
+                    SymbolDescriptor previous = map.put(symbol.getSimpleName().replaceAll("\\{.*}", "{}"), symbol);
+                    if (previous != null) {
+                        duplicates.add(symbol);
+                        duplicates.add(previous);
+                    }
+                }
+            }, true);
+        }
+        return duplicates;
+    }
+
+    private static Set<SymbolDescriptor> getSymbols(Project project, String textForQuery) {
+        Set<SymbolDescriptor> symbols = new HashSet<>();
         for (SourceGroup sg : ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA)) {
             try {
-                FileObject cacheRoot = getCacheRoot(sg.getRootFolder().toURL());
+                FileObject root = sg.getRootFolder();
+                FileObject cacheRoot = getCacheRoot(root.toURL());
                 if (cacheRoot != null) {
+                    cacheRoot.refresh();
                     Enumeration<? extends FileObject> children = cacheRoot.getChildren(true);
                     while (children.hasMoreElements()) {
                         FileObject child = children.nextElement();
@@ -79,12 +141,22 @@ public class MicronautSymbolSearcher implements IndexSearcher {
                         }
                     }
                 }
-            } catch (IOException ex) {}
+                if (UnitTestForSourceQuery.findUnitTests(root).length > 0) {
+                    ClassPath bootCP = ClassPath.getClassPath(root, ClassPath.BOOT);
+                    ClassPath execCP = ClassPath.getClassPath(root, ClassPath.EXECUTE);
+                    ClasspathInfo cpInfo = ClasspathInfo.create(bootCP != null ? bootCP : ClassPath.EMPTY, execCP != null ? execCP : ClassPath.EMPTY, null);
+                    for (MicronautSymbolFinder.ClassSymbolLocation loc : MicronautSymbolFinder.getSymbolsFromDependencies(cpInfo, textForQuery)) {
+                        symbols.add(new SymbolDescriptor(loc.getName(), loc.getFile(), loc.getKind(), loc.getSignatures()));
+                    }
+                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
         return symbols;
     }
 
-    private static void loadSymbols(FileObject input, String textForQuery, Set<Descriptor> symbols) {
+    private static void loadSymbols(FileObject input, String textForQuery, Set<SymbolDescriptor> symbols) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(input.getInputStream(), StandardCharsets.UTF_8))) {
             FileObject fo = null;
             String line;
@@ -120,28 +192,30 @@ public class MicronautSymbolSearcher implements IndexSearcher {
         return dataFolder != null ? FileUtil.createFolder(dataFolder, MicronautSymbolFinder.NAME + "/" + MicronautSymbolFinder.VERSION) : null; //NOI18N
     }
 
-    private static class SymbolDescriptor extends IndexSearcher.Descriptor implements org.netbeans.modules.csl.api.ElementHandle {
+    static class SymbolDescriptor extends IndexSearcher.Descriptor {
 
-        private final String name;
-        private final FileObject fo;
+        private final Handle handle;
         private final Project project;
-        private final OffsetRange range;
+
+        private SymbolDescriptor(String name, FileObject fo, String kind, String[] singatures) {
+            this.project = FileOwnerQuery.getOwner(fo);
+            String uri = FileUtil.isArchiveArtifact(fo) ? FileUtil.getArchiveRoot(FileUtil.getArchiveFile(fo)).toURI().toString() + '?' + kind + '#' + String.join(":", singatures) : null;
+            this.handle = new Handle(uri, fo, name, OffsetRange.NONE);
+        }
 
         private SymbolDescriptor(String name, FileObject fo, int start, int end) {
-            this.name = name;
-            this.fo = fo;
             this.project = FileOwnerQuery.getOwner(fo);
-            this.range = new OffsetRange(start, end);
+            this.handle = new Handle(null, fo, name, new OffsetRange(start, end));
         }
 
         @Override
         public org.netbeans.modules.csl.api.ElementHandle getElement() {
-            return this;
+            return handle;
         }
 
         @Override
         public String getSimpleName() {
-            return name;
+            return handle.getName();
         }
 
         @Override
@@ -176,12 +250,12 @@ public class MicronautSymbolSearcher implements IndexSearcher {
 
         @Override
         public FileObject getFileObject() {
-            return fo;
+            return handle.getFileObject();
         }
 
         @Override
         public int getOffset() {
-            return range.getStart();
+            return handle.range.getStart();
         }
 
         @Override
@@ -189,74 +263,97 @@ public class MicronautSymbolSearcher implements IndexSearcher {
             GsfUtilities.open(getFileObject(), getOffset(), null);
         }
 
-
-        @Override
-        public String getMimeType() {
-            return getFileObject().getMIMEType();
-        }
-
-        @Override
-        public String getName() {
-            return getSimpleName();
-        }
-
-        @Override
-        public String getIn() {
-            return getOuterName();
-        }
-
-        @Override
-        public org.netbeans.modules.csl.api.ElementKind getKind() {
-            return org.netbeans.modules.csl.api.ElementKind.INTERFACE;
-        }
-
-        @Override
-        public Set<Modifier> getModifiers() {
-            return Collections.singleton(Modifier.PUBLIC);
-        }
-
-        @Override
-        public boolean signatureEquals(org.netbeans.modules.csl.api.ElementHandle handle) {
-            if (handle instanceof SymbolDescriptor) {
-                return this.getName().equals(handle.getName());
-            } else {
-                return false;
-            }
-        }
-
-        @Override
-        public OffsetRange getOffsetRange(ParserResult result) {
-            return range;
-        }
-
         @Override
         public int hashCode() {
-            int hash = 3;
-            hash = 67 * hash + Objects.hashCode(this.fo);
-            hash = 67 * hash + Objects.hashCode(this.range);
-            hash = 67 * hash + Objects.hashCode(this.name);
-            return hash;
+            return handle.hashCode();
         }
 
         @Override
         public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
+            return handle.equals(obj);
+        }
+
+        private static class Handle extends org.netbeans.modules.csl.api.ElementHandle.UrlHandle {
+
+            private final FileObject fo;
+            private final String name;
+            private final OffsetRange range;
+
+            public Handle(String url, FileObject fo, String name, OffsetRange range) {
+                super(url);
+                this.fo = fo;
+                this.name = name;
+                this.range = range;
             }
-            if (obj == null) {
-                return false;
+
+            @Override
+            public FileObject getFileObject() {
+                return fo;
             }
-            if (getClass() != obj.getClass()) {
-                return false;
+
+            @Override
+            public String getMimeType() {
+                return getFileObject().getMIMEType();
             }
-            final SymbolDescriptor other = (SymbolDescriptor) obj;
-            if (!Objects.equals(this.name, other.name)) {
-                return false;
+
+            @Override
+            public String getName() {
+                return name;
             }
-            if (!Objects.equals(this.fo, other.fo)) {
-                return false;
+
+            @Override
+            public org.netbeans.modules.csl.api.ElementKind getKind() {
+                return org.netbeans.modules.csl.api.ElementKind.INTERFACE;
             }
-            return Objects.equals(this.range, other.range);
+
+            @Override
+            public Set<Modifier> getModifiers() {
+                return Collections.singleton(Modifier.PUBLIC);
+            }
+
+            @Override
+            public boolean signatureEquals(org.netbeans.modules.csl.api.ElementHandle handle) {
+                if (handle instanceof Handle) {
+                    return this.getName().equals(handle.getName());
+                } else {
+                    return false;
+                }
+            }
+
+            @Override
+            public OffsetRange getOffsetRange(ParserResult result) {
+                return range;
+            }
+
+            @Override
+            public int hashCode() {
+                int hash = 3;
+                hash = 67 * hash + Objects.hashCode(this.fo);
+                hash = 67 * hash + Objects.hashCode(this.range);
+                hash = 67 * hash + Objects.hashCode(this.name);
+                return hash;
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                if (this == obj) {
+                    return true;
+                }
+                if (obj == null) {
+                    return false;
+                }
+                if (getClass() != obj.getClass()) {
+                    return false;
+                }
+                final Handle other = (Handle) obj;
+                if (!Objects.equals(this.name, other.name)) {
+                    return false;
+                }
+                if (!Objects.equals(this.fo, other.fo)) {
+                    return false;
+                }
+                return Objects.equals(this.range, other.range);
+            }
         }
     }
 }

@@ -45,7 +45,7 @@ import javax.swing.text.AttributeSet;
  * &quot;Nb.[return value of the custom look and feel's getID() method]LFCustoms&quot;.
  * <p>
  * Given that all this class does is return some keys and values, in the future it may be replaced by an
- * XML file similar to <a href="https://netbeans.apache.org/projects/ui/themes/themes.html">theme files</a>.
+ * XML file similar to <a href="https://netbeans.apache.org/projects/ui/themes/themes">theme files</a>.
  * <p>
  * This class defines a number of relatively self-explanatory UIManager keys for things used in various parts
  * of NetBeans.
@@ -436,4 +436,11 @@ public abstract class LFCustoms {
     public static final String OPTIONS_USE_UI_DEFAULT_COLORS = "nb.options.useUIDefaultsColors";
     public static final String OPTIONS_CATEGORIES_SEPARATOR_COLOR = "nb.options.categories.separatorColor";
     public static final String OPTIONS_CATEGORIES_BUTTON_USE_NIMBUS = "nb.options.categories.button.useNimbusCategoryButton";
+
+    /**
+     * FileChooser
+     */
+    public static final String FILECHOOSER_SHORTCUTS_FILESFUNCTION = "FileChooser.shortcuts.filesFunction";
+    public static final String FILECHOOSER_SHORTCUTS_PANEL_FACTORY = "FileChooser.shortcuts.panel.factory";
+    public static final String FILECHOOSER_FAVORITES_ENABLED = "FileChooser.favorites.enabled";
 }

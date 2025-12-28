@@ -31,10 +31,12 @@ import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.EditorActionRegistration;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseAction;
+
 import static org.netbeans.editor.BaseAction.MAGIC_POSITION_RESET;
 import static org.netbeans.editor.BaseAction.UNDO_MERGE_RESET;
+
 import org.netbeans.modules.html.editor.api.HtmlKit;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
 import org.netbeans.modules.parsing.api.ParserManager;
@@ -111,7 +113,7 @@ public class FixNamespacesAction extends BaseAction {
                 }
             };
 
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     try {

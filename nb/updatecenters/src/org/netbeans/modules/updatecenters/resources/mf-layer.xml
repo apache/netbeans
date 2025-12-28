@@ -45,16 +45,6 @@
          <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
          <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
       </file>
-      
-      <file name="82pluginportal-update-provider.instance">
-          <attr name="displayName" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#Services/AutoupdateType/82pluginportal-update-provider.instance"/>
-          <attr name="iconBase" stringvalue="org/netbeans/modules/updatecenters/resources/updateAction.gif"/>
-          <attr name="url" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#URL_82PluginPortal"/>
-          <attr name="category" stringvalue="STANDARD"/>
-          <attr name="enabled" boolvalue="false"/>
-          <attr name="instanceOf" stringvalue="org.netbeans.spi.autoupdate.UpdateProvider"/>
-          <attr name="instanceCreate" methodvalue="org.netbeans.modules.autoupdate.updateprovider.AutoupdateCatalogFactory.createUpdateProvider"/>
-      </file>
 
       <file name="3rdparty.instance">
           <attr name="displayName" bundlevalue="org.netbeans.modules.updatecenters.resources.Bundle#3rdparty"/>

@@ -85,7 +85,7 @@ public class CreateKnowledgeBaseAction implements ActionListener {
                 progressHandle.start();
                 
                 try (ApplicationDependencyManagementClient client
-                        = new ApplicationDependencyManagementClient(OCIManager.getDefault().getConfigProvider())) {
+                        = new ApplicationDependencyManagementClient(OCIManager.getDefault().getActiveProfile(context).getConfigProvider())) {
 
                     CreateKnowledgeBaseDetails params = CreateKnowledgeBaseDetails.builder()
                             .compartmentId(context.getKey().getValue())

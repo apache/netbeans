@@ -74,7 +74,7 @@ public final class ConfigurationFiles extends FileChangeAdapter implements Impor
                 && configDir.isFolder()
                 && configDir.isValid()) {
             List<FileObject> fileObjects = getConfigFilesRecursively(configDir);
-            Collections.sort(fileObjects, new Comparator<FileObject>() {
+            fileObjects.sort(new Comparator<FileObject>() {
                 @Override
                 public int compare(FileObject o1, FileObject o2) {
                     // php files go last

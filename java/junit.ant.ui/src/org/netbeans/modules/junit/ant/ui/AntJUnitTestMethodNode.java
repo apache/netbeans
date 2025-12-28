@@ -108,7 +108,7 @@ public class AntJUnitTestMethodNode extends JUnitTestMethodNode {
         }
         actions.addAll(Arrays.asList(super.getActions(context)));
 
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     
 }

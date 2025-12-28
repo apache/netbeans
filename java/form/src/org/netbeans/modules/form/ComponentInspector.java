@@ -112,6 +112,7 @@ public class ComponentInspector extends JPanel
 
     private void createComponents() {
         treeView = new BeanTreeView();
+        treeView.setAutoWaitCursor(false);
         treeView.setDragSource(true);
         treeView.setDropTarget(true);
         treeView.getAccessibleContext().setAccessibleName(
@@ -280,7 +281,7 @@ public class ComponentInspector extends JPanel
                 }
             }
             if (list.size() < selected.length) {
-                selected = list.toArray(new Node[list.size()]);
+                selected = list.toArray(new Node[0]);
             }
         }
         return selected;

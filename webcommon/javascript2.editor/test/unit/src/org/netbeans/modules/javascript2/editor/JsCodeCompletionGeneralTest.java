@@ -61,11 +61,11 @@ public class JsCodeCompletionGeneralTest extends JsCodeCompletionBase {
     }
 
     public void testIssue215777_01() throws Exception {
-        checkCompletion("testfiles/completion/issue215777.js", "var x= Math.^", false);
+        checkCompletion("testfiles/completion/issue215777_01.js", "var x= Math.^", false);
     }
 
     public void testIssue215777_02() throws Exception {
-        checkCompletion("testfiles/completion/issue215777.js", "var x=Math.^", false);
+        checkCompletion("testfiles/completion/issue215777_02.js", "var x=Math.^", false);
     }
 
     public void testIssue217100_01() throws Exception {

@@ -67,17 +67,22 @@ import com.sun.source.tree.Tree;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 class InterceptorGenerator implements CodeGenerator {
     
     private static final Logger LOG = Logger.getLogger( 
             InterceptorGenerator.class.getName() );
     
     private static final String INTERCEPTOR = "javax.interceptor.Interceptor";  // NOI18N
+    private static final String INTERCEPTOR_JAKARTA = "jakarta.interceptor.Interceptor";  // NOI18N
 
-    InterceptorGenerator( String bindingName, FileObject bindingFileObject ) {
-        myBindingName = bindingName;
-        myBindingFileObject = bindingFileObject;
+    private final boolean jakartaNamespace;
+    private final String myBindingName;
+    private final FileObject myBindingFileObject;
+
+    InterceptorGenerator( boolean jakartaNamespace, String bindingName, FileObject bindingFileObject ) {
+        this.jakartaNamespace = jakartaNamespace;
+        this.myBindingName = bindingName;
+        this.myBindingFileObject = bindingFileObject;
     }
 
     /* (non-Javadoc)
@@ -199,7 +204,7 @@ class InterceptorGenerator implements CodeGenerator {
 
                     ModifiersTree modifiers = tree.getModifiers();
 
-                    modifiers = addAnnotation(INTERCEPTOR, maker, modifiers);
+                    modifiers = addAnnotation(jakartaNamespace ? INTERCEPTOR_JAKARTA : INTERCEPTOR, maker, modifiers);
                     TypeElement annotation = handle.resolve( copy );
                     if ( annotation != null ){
                         modifiers = addAnnotation(annotation.getQualifiedName().toString(), 
@@ -259,7 +264,4 @@ class InterceptorGenerator implements CodeGenerator {
         return null;
     }
 
-
-    private String myBindingName; 
-    private FileObject myBindingFileObject;
 }

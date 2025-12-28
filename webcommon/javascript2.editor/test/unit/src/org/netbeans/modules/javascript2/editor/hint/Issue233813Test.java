@@ -66,7 +66,7 @@ public class Issue233813Test extends HintTestBase {
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/testfiles/hints/issue233813")));
         return Collections.singletonMap(
             JS_SOURCE_ID,
-            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

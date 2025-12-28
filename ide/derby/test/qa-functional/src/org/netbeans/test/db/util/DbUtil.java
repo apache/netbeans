@@ -20,6 +20,7 @@
 package org.netbeans.test.db.util;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
@@ -42,10 +43,10 @@ public class DbUtil {
         File clientJar = new File(location, "lib/derbyclient.jar");
         Connection con = null;
         try {
-            System.out.println("> Creating Derby connection using: "+clientJar.toURL());
-            URL[] driverURLs = new URL[]{clientJar.toURL()};
+            System.out.println("> Creating Derby connection using: "+clientJar.toURI().toURL());
+            URL[] driverURLs = new URL[]{clientJar.toURI().toURL()};
             DbURLClassLoader loader = new DbURLClassLoader(driverURLs);
-            Driver driver = (Driver) Class.forName(DRIVER_CLASS_NAME, true, loader).newInstance();
+            Driver driver = (Driver) Class.forName(DRIVER_CLASS_NAME, true, loader).getDeclaredConstructor().newInstance();
             con = driver.connect(dbURL, null);
         } catch (MalformedURLException ex) {
             Exceptions.attachMessage(ex, "Cannot convert to URL: "+clientJar);
@@ -53,7 +54,7 @@ public class DbUtil {
         } catch (SQLException ex) {
             Exceptions.attachMessage(ex, "Cannot conect to: "+dbURL);
             Exceptions.printStackTrace(ex);
-        } catch (InstantiationException ex) {
+        } catch (InstantiationException | NoSuchMethodException | InvocationTargetException ex) {
             Exceptions.attachMessage(ex, "Cannot instantiate: "+DRIVER_CLASS_NAME+" from: "+clientJar);
             Exceptions.printStackTrace(ex);
         } catch (IllegalAccessException ex) {

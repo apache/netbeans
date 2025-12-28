@@ -76,7 +76,8 @@ public final class EjbFacadeVisualPanel2 extends JPanel implements DocumentListe
                     ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_8_FULL);
             boolean serverSupportsEJB40 = ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_9_FULL)
                     || ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_9_1_FULL)
-                    || ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_10_FULL);
+                    || ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_10_FULL)
+                    || ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_11_FULL);
             if (!projectCap.isEjb31Supported() && !serverSupportsEJB31 
                     && !projectCap.isEjb40Supported()&& !serverSupportsEJB40){
                 remoteCheckBox.setVisible(false);
@@ -98,7 +99,7 @@ public final class EjbFacadeVisualPanel2 extends JPanel implements DocumentListe
         inProjectCombo.setVisible(show);
         if (show && projectsList == null) {
             List<Project> projects = SessionEJBWizardPanel.getProjectsList(project);
-            projectsList = new DefaultComboBoxModel(projects.toArray(new Project[projects.size()]));
+            projectsList = new DefaultComboBoxModel(projects.toArray(new Project[0]));
             final ListCellRenderer defaultRenderer = inProjectCombo.getRenderer();
             if (!projects.isEmpty()){
                 inProjectCombo.setRenderer(new ListCellRenderer() {

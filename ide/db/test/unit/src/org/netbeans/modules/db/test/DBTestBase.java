@@ -30,10 +30,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Properties;
-import java.util.logging.Filter;
-import java.util.logging.Handler;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
@@ -697,7 +694,7 @@ public abstract class DBTestBase extends TestBase {
     private Driver getDriver() throws Exception {
         if (driver == null) {
             URLClassLoader driverLoader = new URLClassLoader(new URL[]{new URL(driverJar)});
-            driver = (Driver)driverLoader.loadClass(driverClassName).newInstance();
+            driver = (Driver)driverLoader.loadClass(driverClassName).getDeclaredConstructor().newInstance();
         }
 
         return driver;

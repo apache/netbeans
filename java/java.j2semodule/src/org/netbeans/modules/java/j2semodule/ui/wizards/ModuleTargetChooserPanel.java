@@ -142,7 +142,7 @@ public class ModuleTargetChooserPanel implements WizardDescriptor.Panel<WizardDe
     private void fireChange() {
         ChangeListener[] ls;
         synchronized (listeners) {
-            ls = listeners.toArray(new ChangeListener[listeners.size()]);
+            ls = listeners.toArray(new ChangeListener[0]);
         }
         ChangeEvent ev = new ChangeEvent(this);
         for (ChangeListener l : ls) {

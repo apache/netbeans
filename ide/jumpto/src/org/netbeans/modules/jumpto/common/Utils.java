@@ -69,8 +69,7 @@ public class Utils {
             @NullAllowed final String camelCasePart) {
         int wildcard = Utils.containsWildCard(text);
         if (exact) {
-            //nameKind = isCaseSensitive ? SearchType.EXACT_NAME : SearchType.CASE_INSENSITIVE_EXACT_NAME;
-            return SearchType.EXACT_NAME;
+            return isCaseSensitive ? SearchType.EXACT_NAME : SearchType.CASE_INSENSITIVE_EXACT_NAME;
         } else if (wildcard != -1) {
             return isCaseSensitive ? SearchType.REGEXP : SearchType.CASE_INSENSITIVE_REGEXP;
         } else if ((Utils.isAllUpper(text) && text.length() > 1) || Queries.isCamelCase(text, camelCaseSeparator, camelCasePart)) {

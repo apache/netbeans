@@ -109,7 +109,7 @@ public class MoveMembersRefactoringPlugin extends JavaRefactoringPlugin {
         }
         ClasspathInfo cpInfo;
         if (!handles.isEmpty()) {
-            cpInfo = RefactoringUtils.getClasspathInfoFor(handles.toArray(new TreePathHandle[handles.size()]));
+            cpInfo = RefactoringUtils.getClasspathInfoFor(handles.toArray(new TreePathHandle[0]));
         } else {
             cpInfo = JavaRefactoringUtils.getClasspathInfoFor((FileObject)properties.getPreSelectedMembers()[0].getFileObject());
         }

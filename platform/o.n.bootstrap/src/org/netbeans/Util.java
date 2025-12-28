@@ -20,10 +20,13 @@
 package org.netbeans;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.openide.util.*;
 import org.openide.modules.*;
 
@@ -57,7 +60,7 @@ public final class Util {
         if (prefix.length() < 3) prefix += '.';
         if (prefix.length() < 3) prefix += '.';
         String suffix = "-test.jar"; // NOI18N
-        File physicalModuleFile = File.createTempFile(prefix, suffix);
+        File physicalModuleFile = Files.createTempFile(prefix, suffix).toFile();
         physicalModuleFile.deleteOnExit();
         InputStream is = new FileInputStream(moduleFile);
         try {
@@ -216,6 +219,12 @@ public final class Util {
             // Satisfied sample class.
             return true;
         }
+    }
+
+    static List<Class<?>> getStack() {
+        return StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(
+                stream -> stream.map(frame -> frame.getDeclaringClass())
+                                .collect(Collectors.toList()));
     }
 
     /** 
@@ -448,7 +457,7 @@ public final class Util {
     static final class ModuleLookup extends Lookup {
         ModuleLookup() {}
         private final Set<Module> modules = new HashSet<Module>(100);
-        private final Set<ModuleResult> results = new WeakSet<ModuleResult>(10);
+        private final Set<ModuleResult> results = Collections.newSetFromMap(new WeakHashMap<>(10));
         /** Add a module to the set. */
         public void add(Module m) {
             synchronized (modules) {
@@ -520,7 +529,7 @@ public final class Util {
                     if (listeners.isEmpty()) {
                         return;
                     }
-                    _listeners = listeners.toArray(new LookupListener[listeners.size()]);
+                    _listeners = listeners.toArray(new LookupListener[0]);
                 }
                 LookupEvent ev = new LookupEvent(this);
                 for (int i = 0; i < _listeners.length; i++) {

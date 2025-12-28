@@ -216,6 +216,10 @@ public final class CodeStyle {
         return preferences.getBoolean(BLANK_LINES_EOF, getDefaultAsBoolean(BLANK_LINES_EOF));
     }
 
+    public boolean getBlankLinesEmptyFunctionBody() {
+        return preferences.getBoolean(BLANK_LINES_EMPTY_FUNCTION_BODY, getDefaultAsBoolean(BLANK_LINES_EMPTY_FUNCTION_BODY));
+    }
+
     /**
      *
      * @return true it the fields will be group without php doc together (no empty line between them)
@@ -480,6 +484,10 @@ public final class CodeStyle {
 
     public boolean spaceWithinAttributeDeclParens() {
         return preferences.getBoolean(SPACE_WITHIN_ATTRIBUTE_DECL_PARENS, getDefaultAsBoolean(SPACE_WITHIN_ATTRIBUTE_DECL_PARENS));
+    }
+
+    public boolean spaceWithinOtherParens() {
+        return preferences.getBoolean(SPACE_WITHIN_OTHER_PARENS, getDefaultAsBoolean(SPACE_WITHIN_OTHER_PARENS));
     }
 
     public boolean spaceBeforeComma() {

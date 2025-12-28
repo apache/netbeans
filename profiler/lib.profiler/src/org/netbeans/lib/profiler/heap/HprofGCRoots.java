@@ -67,7 +67,7 @@ class HprofGCRoots {
                 computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_VM_INTERNAL), rootList);
                 computeGCRootsFor(heap.getHeapTagBound(HprofHeap.ROOT_JNI_MONITOR), rootList);
 
-                Collections.sort(rootList, new Comparator() {
+                rootList.sort(new Comparator() {
                     public int compare(Object o1, Object o2) {
                         HprofGCRoot r1 = (HprofGCRoot) o1;
                         HprofGCRoot r2 = (HprofGCRoot) o2;

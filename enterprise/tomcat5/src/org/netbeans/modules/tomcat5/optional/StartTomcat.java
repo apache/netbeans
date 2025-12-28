@@ -663,8 +663,9 @@ public final class StartTomcat extends StartServer implements ProgressObject {
                 return false;
             }
         } else {
-            int timeout = tm.getTomcatProperties().getRunningCheckTimeout();
-            return !Utils.pingTomcat(tm.getServerPort(), timeout, tm.getServerHeader(), tm.getPlainUri());
+            TomcatProperties tp = tm.getTomcatProperties();
+            int timeout = tp.getRunningCheckTimeout();
+            return !Utils.pingTomcat(tm.getServerPort(), timeout, tm.getServerHeader(), tm.getPlainUri(), tp.getUsername(), tp.getPassword());
         }
     }
     
@@ -772,7 +773,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
     }
     
     private String getJavaHome(JavaPlatform platform) {
-        FileObject fo = (FileObject)platform.getInstallFolders().iterator().next();
+        FileObject fo = platform.getInstallFolders().iterator().next();
         return FileUtil.toFile(fo).getAbsolutePath();
     }
     

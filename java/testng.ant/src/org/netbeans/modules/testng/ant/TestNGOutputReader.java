@@ -1055,7 +1055,7 @@ final class TestNGOutputReader {
                         matcher.group(2)));
             }
         }
-        t.setStackTrace(txt.toArray(new String[txt.size()]));
+        t.setStackTrace(txt.toArray(new String[0]));
         testSession.getCurrentTestCase().setTrouble(t);
 
 	if (currentTime != -1 && currentSuitename != null) {

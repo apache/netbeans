@@ -57,7 +57,7 @@ public class DBSchemaFileList {
         }
 
         List<FileObject> tempDBSchemaList = new ArrayList<>(dbschema2DisplayName.keySet());
-        Collections.sort(tempDBSchemaList, new DBSchemaComparator());
+        tempDBSchemaList.sort(new DBSchemaComparator());
 
         dbschemaList = Collections.unmodifiableList(tempDBSchemaList);
     }

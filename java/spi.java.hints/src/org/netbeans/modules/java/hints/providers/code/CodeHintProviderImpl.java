@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,7 +67,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbCollections;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -80,10 +80,6 @@ public class CodeHintProviderImpl implements HintProvider {
     
     @Override
     public Map<HintMetadata, ? extends Collection<? extends HintDescription>> computeHints() {
-        return computeHints(findLoader(), "META-INF/nb-hints/hints");
-    }
-
-    private Map<HintMetadata, ? extends Collection<? extends HintDescription>> computeHints(ClassLoader l, String path) {
         Map<HintMetadata, Collection<HintDescription>> result = new HashMap<>();
         
         for (ClassWrapper c : FSWrapper.listClasses()) {
@@ -116,7 +112,7 @@ public class CodeHintProviderImpl implements HintProvider {
         if (metadata != null) {
             String id = metadata.id();
 
-            if (id == null || id.length() == 0) {
+            if (id == null || id.isEmpty()) {
                 id = clazz.getName();
             }
             hm = fromAnnotation(id, clazz, null, metadata);
@@ -131,7 +127,7 @@ public class CodeHintProviderImpl implements HintProvider {
             if (localMetadataAnnotation != null) {
                 String localID = localMetadataAnnotation.id();
 
-                if (localID == null || localID.length() == 0) {
+                if (localID == null || localID.isEmpty()) {
                     localID = clazz.getName() + "." + m.getName();
                 }
 
@@ -155,7 +151,7 @@ public class CodeHintProviderImpl implements HintProvider {
                                               .setKind(metadata.hintKind())
                                               .setCustomizerProvider(createCustomizerProvider(clazz, method, id, metadata))
                                               .addSuppressWarnings(metadata.suppressWarnings())
-                                              .addOptions(Options.fromHintOptions(metadata.options()).toArray(new Options[0]))
+                                              .addOptions(Options.fromHintOptions(metadata.options()).toArray(Options[]::new))
                                               .setSourceVersion(metadata.minSourceVersion())
                                               .build();
         return hm;
@@ -280,13 +276,8 @@ public class CodeHintProviderImpl implements HintProvider {
     }
 
     private static void addHint(Map<HintMetadata, Collection<HintDescription>> hints, HintMetadata metadata, HintDescription hint) {
-        Collection<HintDescription> list = hints.get(metadata);
-
-        if (list == null) {
-            hints.put(metadata, list = new LinkedList<>());
-        }
-
-        list.add(hint);
+        hints.computeIfAbsent(metadata, k -> new LinkedList<>())
+             .add(hint);
     }
 
     //accessed by tests:
@@ -318,18 +309,18 @@ public class CodeHintProviderImpl implements HintProvider {
                     return null;
                 }
 
-                if (result instanceof Iterable) {
+                if (result instanceof Iterable iterable) {
                     List<ErrorDescription> out = new LinkedList<>();
 
-                    for (ErrorDescription ed : NbCollections.iterable(NbCollections.checkedIteratorByFilter(((Iterable) result).iterator(), ErrorDescription.class, false))) {
+                    for (ErrorDescription ed : NbCollections.iterable(NbCollections.checkedIteratorByFilter(iterable.iterator(), ErrorDescription.class, false))) {
                         out.add(ed);
                     }
 
                     return out;
                 }
 
-                if (result instanceof ErrorDescription) {
-                    return Collections.singletonList((ErrorDescription) result);
+                if (result instanceof ErrorDescription desc) {
+                    return List.of(desc);
                 }
 
                 //XXX: log if result was ignored...
@@ -339,7 +330,7 @@ public class CodeHintProviderImpl implements HintProvider {
                 boolean newOccurrence;
                 
                 synchronized (this) {
-                    if (exceptionThrownFor == null) exceptionThrownFor = new WeakSet<>();
+                    if (exceptionThrownFor == null) exceptionThrownFor = Collections.newSetFromMap(new WeakHashMap<>());
                     newOccurrence = exceptionThrownFor.add(ctx.getInfo().getFileObject());
                 }
                 
@@ -363,13 +354,7 @@ public class CodeHintProviderImpl implements HintProvider {
 
     }
 
-    private static final class DelegatingCustomizerProvider implements CustomizerProvider {
-
-        private final Class<? extends CustomizerProvider> component;
-
-        public DelegatingCustomizerProvider(Class<? extends CustomizerProvider> component) {
-            this.component = component;
-        }
+    private record DelegatingCustomizerProvider(Class<? extends CustomizerProvider> component) implements CustomizerProvider {
 
         @Override
         public JComponent getCustomizer(Preferences prefs) {

@@ -80,7 +80,8 @@ public class Util {
                     }
                 }
             }
-            if(Persistence.VERSION_3_1.equals(persistence.getVersion())
+            if(Persistence.VERSION_3_2.equals(persistence.getVersion())
+                    || Persistence.VERSION_3_1.equals(persistence.getVersion())
                     || Persistence.VERSION_3_0.equals(persistence.getVersion())) {
                 availProps.replaceAll(s -> s.replace(PersistenceUnit.JAVAX_NAMESPACE, PersistenceUnit.JAKARTA_NAMESPACE));
             }

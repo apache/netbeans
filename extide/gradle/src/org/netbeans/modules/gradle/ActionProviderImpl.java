@@ -26,7 +26,6 @@ import org.netbeans.modules.gradle.api.execute.RunConfig;
 import org.netbeans.modules.gradle.api.execute.RunUtils;
 import org.netbeans.modules.gradle.actions.ActionToTaskUtils;
 import org.netbeans.modules.gradle.execute.GradleExecutorOptionsPanel;
-import org.netbeans.modules.gradle.spi.actions.GradleActionsProvider;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -126,7 +125,7 @@ public class ActionProviderImpl implements ActionProvider {
         actions.add(ActionProvider.COMMAND_PRIME);
         actions.add(COMMAND_DL_SOURCES);
         actions.add(COMMAND_DL_JAVADOC);
-        return actions.toArray(new String[actions.size()]);
+        return actions.toArray(new String[0]);
     }
     
     @Override
@@ -189,6 +188,7 @@ public class ActionProviderImpl implements ActionProvider {
         "# {0} - artifactId", "TXT_ApplyCodeChanges=Apply Code Changes ({0})",
         "# {0} - artifactId", "TXT_Profile=Profile ({0})",
         "# {0} - artifactId", "TXT_Test=Test ({0})",
+        "# {0} - artifactId", "TXT_Test_Parallel=Test In Parallel ({0})",
         "# {0} - artifactId", "TXT_Build=Build ({0})",
         "# {0} - artifactId", "TXT_Delete=Delete ({0})",
     })
@@ -214,6 +214,9 @@ public class ActionProviderImpl implements ActionProvider {
                 break;
             case ActionProvider.COMMAND_TEST:
                 title = TXT_Test(prjLabel);
+                break;
+            case ActionProvider.COMMAND_TEST_PARALLEL:
+                title = TXT_Test_Parallel(prjLabel);
                 break;
             case ActionProvider.COMMAND_RUN_SINGLE:
                 title = TXT_Run(dobjName);
@@ -584,8 +587,8 @@ public class ActionProviderImpl implements ActionProvider {
 
         if (!keys.isEmpty()) {
             KeyValueTableModel kvModel = new KeyValueTableModel("input:",
-                    keys.toArray(new String[keys.size()]),
-                    defaults.toArray(new String[defaults.size()])
+                    keys.toArray(new String[0]),
+                    defaults.toArray(new String[0])
             );
             JPanel panel = new JPanel(new BorderLayout());
             JTable table = new JTable(kvModel);

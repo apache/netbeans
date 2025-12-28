@@ -19,6 +19,7 @@
 package org.netbeans.modules.php.editor.completion;
 
 import java.io.File;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.php.api.PhpVersion;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -38,15 +39,6 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
     @Override
     protected FileObject[] createSourceClassPathsForTest() {
         return new FileObject[]{FileUtil.toFileObject(new File(getDataDir(), "/testfiles/completion/lib/php80/" + getTestDirName()))};
-    }
-
-    private String getTestDirName() {
-        String name = getName();
-        int indexOf = name.indexOf("_");
-        if (indexOf != -1) {
-            name = name.substring(0, indexOf);
-        }
-        return name;
     }
 
     private String getTestPath() {
@@ -1672,4 +1664,11 @@ public class PHP80CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion(getTestPath(), "    #[^]", false);
     }
 
+    public void testParseException() throws Exception {
+        try {
+            checkCompletion(getTestPath(), "use function TestA\\myFunction^", false);
+        } catch (ParseException e) {
+            fail("Must not throw ParseException.");
+        }
+    }
 }

@@ -245,7 +245,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
                     for (VCSHistoryProvider.HistoryEntry he : vcsHistory) {
                         entries.add(new HistoryEntry(he, false));
                     }
-                    rootNode.addVCSEntries(entries.toArray(new HistoryEntry[entries.size()]), 0);
+                    rootNode.addVCSEntries(entries.toArray(new HistoryEntry[0]), 0);
                 } finally {
                     rootNode.loadingVCSFinished(currentDateFrom);
                     EventQueue.invokeLater(new Runnable() {
@@ -293,7 +293,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
                     ret.add(root);
                 }
             }            
-            return ret.toArray(new Node[ret.size()]);                            
+            return ret.toArray(new Node[0]);                            
         }                   
         
         private Node findEqualInChildren(Node node, Node toFind) {
@@ -601,7 +601,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
                 loadVCSEntries(History.toProxies(tc.getFiles()), true);
             }
         });
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
     private class FileTablePanel extends JPanel implements ExplorerManager.Provider, TreeExpansionListener {
         private final BrowserTreeTableView treeView;    

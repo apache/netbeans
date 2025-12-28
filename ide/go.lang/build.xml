@@ -64,8 +64,8 @@ package org.antlr.parser.golang;
         <property name="golang.outdir" location="${src.dir}/org/antlr/parser/golang"/>
         <mkdir dir="${golang.outdir}"/>
 
-        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${golang.grammar.version}/golang/GoLexer.g4" dest="${golang.outdir}"/>
-        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${golang.grammar.version}/golang/GoParser.g4" dest="${golang.outdir}"/>
+        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${golang.grammar.version}/golang/GoLexer.g4" dest="${golang.outdir}/g4"/>
+        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${golang.grammar.version}/golang/GoParser.g4" dest="${golang.outdir}/g4"/>
         <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${golang.grammar.version}/golang/Java/GoParserBase.java" dest="${golang.outdir}"/>
 
         <replace file="${golang.outdir}/GoParserBase.java">
@@ -82,14 +82,14 @@ import java.util.List;]]></replacevalue>
         </replaceregexp>
     </target>
 
-    <target name="generate-golang-parser" description="Regenerate the Go parser" depends="init">
+    <target name="generate-golang-parser" description="Regenerate the Go parser" depends="init" extensionOf="-pre-compile">
         <property name="golang.outdir" location="${src.dir}/org/antlr/parser/golang"/>
         <path id="antlr4.tool">
             <fileset dir="../../ide/libs.antlr4.runtime/external" includes="*.jar"/>
             <fileset dir="../../ide/libs.antlr3.runtime/external" includes="antlr-runtime-*.jar"/>
         </path>
 
-        <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="${golang.outdir}">
+        <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="${golang.outdir}/g4">
             <arg value="-o"/>
             <arg value="${golang.outdir}"/>
             <arg value="-visitor"/>

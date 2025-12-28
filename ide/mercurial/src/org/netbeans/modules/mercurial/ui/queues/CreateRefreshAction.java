@@ -160,7 +160,7 @@ abstract class CreateRefreshAction extends ContextAction {
 
                         File[] hookFiles = null;
                         if (hooks.size() > 0) {
-                            hookFiles = commitCandidates.toArray(new File[commitCandidates.size()]);
+                            hookFiles = commitCandidates.toArray(new File[0]);
                         }
                         HgModuleConfig.getDefault().setLastUsedQPatchMessage(patchName, message);
                         HgQueueHookContext context = new HgQueueHookContext(hookFiles, message, patchName);
@@ -187,7 +187,7 @@ abstract class CreateRefreshAction extends ContextAction {
                         HgUtils.notifyException(ex);
                     } finally {
                         Mercurial.getInstance().getFileStatusCache().refreshAllRoots(filesToRefresh);
-                        Mercurial.getInstance().getMercurialHistoryProvider().fireHistoryChange(filesToRefresh.toArray(new File[filesToRefresh.size()]));
+                        Mercurial.getInstance().getMercurialHistoryProvider().fireHistoryChange(filesToRefresh.toArray(new File[0]));
                         logger.outputInRed(NbBundle.getMessage(CreateRefreshAction.class, "MSG_CREATE_REFRESH_DONE." + bundleKeyPostfix)); // NOI18N
                         logger.output(""); // NOI18N
                     }

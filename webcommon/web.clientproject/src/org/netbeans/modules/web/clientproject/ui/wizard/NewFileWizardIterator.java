@@ -173,7 +173,7 @@ public class NewFileWizardIterator implements WizardDescriptor.InstantiatingIter
         groups.addAll(Arrays.asList(ClientSideProjectUtilities.getSourceGroups(project, WebClientProjectConstants.SOURCES_TYPE_HTML5_SITE_ROOT)));
         groups.addAll(Arrays.asList(ClientSideProjectUtilities.getSourceGroups(project, WebClientProjectConstants.SOURCES_TYPE_HTML5)));
         if (!groups.isEmpty()) {
-            return groups.toArray(new SourceGroup[groups.size()]);
+            return groups.toArray(new SourceGroup[0]);
         }
         return allGroups;
     }

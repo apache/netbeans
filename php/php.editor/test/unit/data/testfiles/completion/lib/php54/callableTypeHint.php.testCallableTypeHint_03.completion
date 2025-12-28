@@ -1,7 +1,9 @@
 Code completion result for source line:
 function __construct(|callable $arg) {
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+PACKAGE    AliasedNameTest                 [PUBLIC]   null
 PACKAGE    Foo                             [PUBLIC]   null
+PACKAGE    Test                            [PUBLIC]   null
 CLASS      CallableClass                   [PUBLIC]   callableTypeHint.php
 ------------------------------------
 PACKAGE    Bar                             [PUBLIC]   Foo
@@ -9,6 +11,7 @@ CLASS      AliasedClassName                [PUBLIC]   Foo\Bar
 CLASS      AnonymousObject                 [PUBLIC]   anonymousObjectVariables.php
 CLASS      BaseClass                       [PUBLIC]   traits.php
 CLASS      MyCls                           [PUBLIC]   anonymousObjectVariablesNs.php
+CLASS      TestClass                       [PUBLIC]   Test
 CLASS      TraitedClass                    [PUBLIC]   traits.php
 CLASS      WithMultiUses                   [PUBLIC]   traitsMultiUse.php
 KEYWORD    array                                      null

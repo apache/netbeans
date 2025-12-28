@@ -29,10 +29,7 @@ public class CommandDeleteResource extends CommandTarget {
 
     private static final String COMMAND_PREFIX = "delete-";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Name of the resource. */
     String name;
 

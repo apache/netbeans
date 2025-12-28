@@ -21,7 +21,6 @@ package org.netbeans.modules.java.hints.providers.spi;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +34,7 @@ import org.openide.util.Parameters;
 public abstract class Trigger {
     private static final String[] NO_OPTIONS = new String[0];
     
-    private Set<String> options = Collections.emptySet();
+    private Set<String> options = Set.of();
     
     Trigger() {}
     
@@ -45,14 +44,14 @@ public abstract class Trigger {
     
     public void setOptions(String[] opts) {
         if (opts == null || opts.length == 0) {
-            options = Collections.emptySet();
+            options = Set.of();
         } else {
             options = new HashSet<>(Arrays.asList(opts));
         }
     }
     
     public String[] getOptions() {
-        return options.isEmpty() ? NO_OPTIONS : options.toArray(new String[0]);
+        return options.isEmpty() ? NO_OPTIONS : options.toArray(String[]::new);
     }
 
     /**Invoke the given hint's worker on the specified {@link Tree.Kind}(s).

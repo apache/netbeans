@@ -280,7 +280,7 @@ public final class ShortcutWizard extends WizardDescriptor {
         List<DataObject> children = new ArrayList<DataObject>(Arrays.asList(folder.getChildren()));
         if (children.remove(shadow)) {
             children.add(shadow);
-            folder.setOrder(children.toArray(new DataObject[children.size()]));
+            folder.setOrder(children.toArray(new DataObject[0]));
         } else {
             LOG.warning("#175981: could not find " + shadow + " among " + children);
         }

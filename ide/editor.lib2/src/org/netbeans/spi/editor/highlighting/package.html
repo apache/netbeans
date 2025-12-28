@@ -19,7 +19,7 @@
 
 -->
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 
 <html>
   <head>
@@ -45,7 +45,7 @@
   </p>
 
 
-  <h3>Key parts of the SPI</h3>
+  <h2>Key parts of the SPI</h2>
   
   <p>
   The very basic idea behind the SPI is to render a document as a sandwich of
@@ -61,36 +61,36 @@
   
   <p>
   The whole SPI is organized around the
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/HighlightsLayer.html">HighlightsLayer</a></code>
+  {@link HighlightsLayer HighlightsLayer }
   class, which is the ultimate thing that modules need to implement in order to provide
   a list of highlights for a document. The <code>HighlightsLayer</code>s are created
-  by <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/HighlightsLayerFactory.html">HighlightsLayerFactory</a></code>,
+  by {@link HighlightsLayerFactory HighlightsLayerFactory },
   which should be registered in <code>MimeLookup</code> under the mime-type of a document
   that the layer should be used for. All layers registered for one type of a document
   are ordedred according to the
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/ZOrder.html">ZOrder</a></code>
+  {@link ZOrder ZOrder}
   they provide. Besides of <code>ZOrder</code> the layers provide additional information
   about nature of highlights they maintain.
   </p>
 
   <p>
   The <code>HighlightsLayer</code> class implements
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/HighlightsContainer.html">HighlightsContainer</a></code>
+  {@link HighlightsContainer HighlightsContainer }
   interface, which is the fundamental part of the SPI.
   The <code>HighlightsContainer</code> interface allows to get a list of highlighs
   and to listen on changes in highlights that it contains.
   Besides of <code>HighlightsLayer</code> there are two other implementations of
   this interface and they are
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/support/OffsetsBag.html">OffsetsBag</a></code>
+  {@link org.netbeans.spi.editor.highlighting.support.OffsetsBag OffsetsBag}
   and
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/support/PositionsBag.html">PositionsBag</a></code>.
+  {@link org.netbeans.spi.editor.highlighting.support.PositionsBag PositionsBag}.
   Both <code>OffsetsBag</code> and <code>PositionsBag</code> classes allow adding
   and removing highlights dynamically. The highlights can be added either one-by-one
   or in chunks; each change is reported to listeners.
   </p>
   
   
-  <h3>HighlightsLayer registration</h3>
+  <h2>HighlightsLayer registration</h2>
   
   <p>
   The registration of <code>HighlightsLayer</code>s has to be done through an
@@ -116,14 +116,14 @@
   <p>
   The <code>HLFactory</code> class will simply return a new instance of
   the module's implementation of the <code>HighlightsLayer</code> class from its
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/HighlightsLayerFactory.html#createLayers-org.netbeans.spi.editor.highlighting.HighlightsLayerFactory.Context-">createLayers</a></code>
+  {@link HighlightsLayerFactory#createLayers(org.netbeans.spi.editor.highlighting.HighlightsLayerFactory.Context) createLayers }
   method. The parameter of the <code>createLayers</code> method provides access to
   a <code>JTextComponent</code> and its <code>Document</code>, which the layer
   is being created for. The method can create and return multiple <code>HighlightsLayer</code>s.
   </p>
 
   
-  <h3>HighlightsLayer lifecycle</h3>
+  <h2>HighlightsLayer lifecycle</h2>
   
   <p>The lifecycle of <code>HighlightsLayer</code>s is tied to the lifecycle of
   <code>Document</code>. The infrastructure creates new instances of layers by calling
@@ -138,12 +138,12 @@
   </p>
   
   
-  <h3>Locking and <code>Document</code> changes</h3>
+  <h2>Locking and <code>Document</code> changes</h2>
   
   <p>
   The basics of the locking and events model of Swing documents is
   described in the javadoc of the
-  <a href="@JDK@/javax/swing/text/AbstractDocument.html">javax.swing.text.AbstractDocument</a>
+  <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/AbstractDocument.html">javax.swing.text.AbstractDocument</a>
   class. Netbeans documents use the same patterns and so does the Highlighting SPI,
   because of its tight relation to documents. The fundamentals of the Swing documents
   locking model are that any changes to a document are done under the
@@ -157,7 +157,7 @@
   starting offset, ending offset and a set of attributes. The offsets are usually passed
   in and out accross the SPI boundaries in form of <code>int</code>s and even though
   some implementations (e.g. <code>PositionsBag</code>) use
-  <code><a href="@JDK@/javax/swing/text/Position.html">Position</a></code>s
+  <code><a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/Position.html">Position</a></code>s
   the esential rule is that any calls in and out from the SPI have to be made
   under the document's read lock. Let's have a look on a few examples demonstrating
   what this means.
@@ -192,7 +192,7 @@
   does is always done on the caller's thread. This means that the above described
   constraints hardly cause any limitation for practical use. The majority of
   things happening around a document are done from within
-  <code><a href="@JDK@/javax/swing/event/DocumentListener.html">DocumentListener</a></code>s,
+  <code><a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/event/DocumentListener.html">DocumentListener</a></code>s,
   which hold the document's read lock anyway.
   </p>
   
@@ -205,12 +205,12 @@
   </p>
   
   
-  <h3>Z-order</h3>
+  <h2>Z-order</h2>
   <p>
   Since there can be multiple layers suplying highlights for one document and the
   highlights can generally overlap it is important to sort the layers according
   to their Z-order. For this purpose each layer has to supply an appropriate
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/highlighting/ZOrder.html">ZOrder</a></code>.
+  {@link ZOrder ZOrder}.
   </p>
   
   <p>
@@ -250,7 +250,7 @@
   -->
 
   
-  <h3>Using <code>AttributeSet</code></h3>
+  <h2>Using <code>AttributeSet</code></h2>
   <p>
   The Highlighting SPI uses <code>javax.swing.text.AttributeSet</code> to define
   attributes for particular highlights. These attributes can be anything,
@@ -298,19 +298,19 @@
   
   <p>
   The <code>AttributeSet</code>s used for highlighting are often created by calling
-  <code><a href="@org-netbeans-modules-editor-settings@/org/netbeans/api/editor/settings/FontColorSettings.html">FontColorSettings</a></code>
+  {@link org.netbeans.api.editor.settings.FontColorSettings FontColorSettings }
   and it is a responsibility of this class to prevent excesive creation of
   <code>AttributeSet</code>s it provides. However, if your highlighting layer creates
   its own <code>AttributeSet</code>s they should always be cached and reused. You can
   use methods from the
-  <code><a href="@org-netbeans-modules-editor-settings@/org/netbeans/api/editor/settings/AttributesUtilities.html">AttributesUtilities</a></code>
+  {@link org.netbeans.api.editor.settings.AttributesUtilities AttributesUtilities }
   class for creating immutable <code>AttributeSet</code>s.
   </p>
   
   
-  <h3><a name="usecases">Use cases</a></h3>
+  <h2 id="usecases">Use cases</h2>
   
-  <h4>Use case 1. - Caret selection</h4>
+  <h3>Use case 1. - Caret selection</h3>
 
   <p>
   The Netbeans editor as any other modern editor allows selecting blocks of text
@@ -339,7 +339,7 @@
   a visual appearance of the highlighted text as possible.
   </p>
   
-  <h4>Use case 2. - Syntax highlighting</h4>
+  <h3>Use case 2. - Syntax highlighting</h3>
   
   <p>
   This type of a document coloring shows 'words' or characters in different colors
@@ -352,7 +352,7 @@
   <p>
   Syntax highlighting in Netbeans editor is based on a lexical analysis done by
   lexer plug-ins registered for various types of documents. The lexers are written
-  using the APIs provided by the <a href="https://netbeans.apache.org/projects/lexer/index.html">Lexer module</a>.
+  using the APIs provided by the <a href="https://netbeans.apache.org/projects/lexer">Lexer module</a>.
   During the lexical analysis text gets split into tokens of different types and
   categories. Each token type or category can have defined its own coloring information
   such as font and foreground and background colors, etc. Tokens know their position
@@ -373,7 +373,7 @@
   the bottom of the hierarchy of highlighting layers.
   </p>
   
-  <h4>Use case 3. - Semantic highlighting</h4>
+  <h3>Use case 3. - Semantic highlighting</h3>
   
   <p>
   In fact semantic coloring regardless of the language it is provided for is
@@ -399,7 +399,7 @@
   are available they should be accepted and re-used by the Highlighting SPI.
   </p>
   
-  <h4>Use case 4. - Embedded languages</h4>
+  <h3>Use case 4. - Embedded languages</h3>
 
   <p>
   An embedded language is a language of a part of a document that is different
@@ -426,7 +426,7 @@
   no text they recognize.
   </p>
   
-  <h4><a name="usecase5">Use case 5. - Filtering layers used for JTextComponent</a></h4>
+  <h3 id="usecase5">Use case 5. - Filtering layers used for JTextComponent</h3>
   
   <p>
   In certain situations <code>JTextComponent</code> or <code>JEditorPane</code>
@@ -499,7 +499,7 @@
   </pre>
   
   
-  <h4>Other usecases</h4>
+  <h3>Other usecases</h3>
   
   <p>
   The main usecases described above are certainly not the only usecases of the

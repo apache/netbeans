@@ -145,7 +145,7 @@ public final class MultiViewTopComponent
         if( canSplit() ) {
             acts.add(new SplitAction(true));
         }
-        return acts.toArray(new Action[acts.size()]);
+        return acts.toArray(new Action[0]);
     }
     
     @Override
@@ -297,7 +297,7 @@ public final class MultiViewTopComponent
                 }
             }, mvp == model.getSelectedPerspective(), lookup, showing ) );
         }
-        return res.toArray( new SubComponent[res.size()] );
+        return res.toArray(new SubComponent[0] );
     }
 
     @Override

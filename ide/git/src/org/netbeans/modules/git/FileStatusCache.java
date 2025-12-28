@@ -207,7 +207,7 @@ public class FileStatusCache {
                 try {
                     // find all files with not up-to-date or ignored status
                     client = git.getClient(repository);
-                    interestingFiles = client.getStatus(refreshEntry.getValue().toArray(new File[refreshEntry.getValue().size()]), pm);
+                    interestingFiles = client.getStatus(refreshEntry.getValue().toArray(File[]::new), pm);
                     if (pm.isCanceled()) {
                         return;
                     }
@@ -295,10 +295,7 @@ public class FileStatusCache {
         }
 
         // check to roots if they apply to the given status
-        if (containsFilesIntern(roots, includeStatus, false, addExcluded, 0, repositories)) {
-            return true;
-        }
-        return false;
+        return containsFilesIntern(roots, includeStatus, false, addExcluded, 0, repositories);
     }
         
     /**
@@ -343,7 +340,7 @@ public class FileStatusCache {
         }
         // check also the root files for status and add them eventually
         set.addAll(listFilesIntern(roots, includeStatus, false, repositories));
-        return set.toArray(new File[set.size()]);
+        return set.toArray(File[]::new);
     }
     
     /**
@@ -487,16 +484,13 @@ public class FileStatusCache {
         }
         if (addAsExcluded) {
             // add ignored file to cache
-            rp.post(new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (FileStatusCache.this) {
-                        FileInformation info = getInfo(file);
-                        if (info == null || info.containsStatus(Status.UPTODATE)) {
-                            refreshFileStatus(file, file.isDirectory() 
-                                    ? new FileInformation(EnumSet.of(Status.NOTVERSIONED_EXCLUDED), true)
-                                    : FILE_INFORMATION_EXCLUDED);
-                        }
+            rp.post(() -> {
+                synchronized (FileStatusCache.this) {
+                    FileInformation info1 = getInfo(file);
+                    if (info1 == null || info1.containsStatus(Status.UPTODATE)) {
+                        refreshFileStatus(file, file.isDirectory()
+                                ? new FileInformation(EnumSet.of(Status.NOTVERSIONED_EXCLUDED), true)
+                                : FILE_INFORMATION_EXCLUDED);
                     }
                 }
             });
@@ -751,7 +745,7 @@ public class FileStatusCache {
         Map<File, Set<File>> conflicts = new HashMap<>();
         Map<File, Set<File>> ignores = new HashMap<>();
         for (IndexUpdateItem item : updates) {
-            File file = item.getFile();
+            File file = item.file();
             File parent = file.getParentFile();
             if (parent != null) {
                 Set<File> modified = get(modifications, parent, modifiedFiles);
@@ -764,7 +758,7 @@ public class FileStatusCache {
                     ignored.remove(file);
                 }
                 if (item.isAdd()) {
-                    FileInformation fi = item.getInfo();
+                    FileInformation fi = item.info();
                     if (fi.containsStatus(Status.NOTVERSIONED_EXCLUDED)) {
                         if (USE_IGNORE_INDEX) {
                             ignored.add(file);
@@ -789,13 +783,8 @@ public class FileStatusCache {
         }
     }
 
-    private Set<File> get (Map<File, Set<File>> cached, File parent, CacheIndex index) {
-        Set<File> modified = cached.get(parent);
-        if (modified == null) {
-            modified = new HashSet<>(Arrays.asList(index.get(parent)));
-            cached.put(parent, modified);
-        }
-        return modified;
+    private Set<File> get(Map<File, Set<File>> cached, File parent, CacheIndex index) {
+        return cached.computeIfAbsent(parent, k -> new HashSet<>(Arrays.asList(index.get(parent))));
     }
 
     /**
@@ -895,61 +884,21 @@ public class FileStatusCache {
 
     private void addUnderRoot (HashMap<File, Collection<File>> rootFiles, File repository, File file) {
         // file is a gitlink inside another repository, we need to refresh also the file's status explicitely
-        Collection<File> filesUnderRoot = rootFiles.get(repository);
-        if (filesUnderRoot == null) {
-            filesUnderRoot = new HashSet<>();
-            rootFiles.put(repository, filesUnderRoot);
-        }
+        Collection<File> filesUnderRoot = rootFiles.computeIfAbsent(repository, k -> new HashSet<>());
         GitUtils.prepareRootFiles(repository, filesUnderRoot, file);
     }
 
-    public static class ChangedEvent {
-
-        private final File file;
-        private final FileInformation oldInfo;
-        private final FileInformation newInfo;
-
-        public ChangedEvent(File file, FileInformation oldInfo, FileInformation newInfo) {
-            this.file = file;
-            this.oldInfo = oldInfo;
-            this.newInfo = newInfo;
-        }
-
-        public File getFile() {
-            return file;
-        }
-
+    public record ChangedEvent(File file, FileInformation oldInfo, FileInformation newInfo) {
         public FileInformation getOldInfo() {
             return oldInfo;
         }
-
         public FileInformation getNewInfo() {
             return newInfo;
         }
-    }
-
-    private static class IndexUpdateItem {
-
-        private final File file;
-        private final FileInformation fi;
-        private final boolean add;
-
-        public IndexUpdateItem (File file, FileInformation fi, boolean toBeAdded) {
-            this.file = file;
-            this.fi = fi;
-            this.add = toBeAdded;
-        }
-
-        public File getFile () {
+        public File getFile() {
             return file;
         }
-
-        public FileInformation getInfo () {
-            return fi;
-        }
-
-        public boolean isAdd () {
-            return add;
-        }
     }
+
+    private record IndexUpdateItem(File file, FileInformation info, boolean isAdd) {}
 }

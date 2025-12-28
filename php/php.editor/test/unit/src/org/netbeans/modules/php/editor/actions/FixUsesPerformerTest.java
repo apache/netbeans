@@ -1928,6 +1928,18 @@ public class FixUsesPerformerTest extends PHPTestBase {
         performTest("$const1 = NS1_CONST^ANT;", selections, true, options);
     }
 
+    public void testGH7123_01() throws Exception {
+        String[] selections = new String[] {};
+        Options options = new Options.Builder(PhpVersion.PHP_81).build();
+        performTest("class GH7123_01{}^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
+    public void testGH7123_02() throws Exception {
+        String[] selections = new String[] {};
+        Options options = new Options.Builder(PhpVersion.PHP_81).build();
+        performTest("class GH7123_02{^", createSelections(selections, ItemVariant.Type.CLASS), true, options);
+    }
+
     private String getTestResult(final String fileName, final String caretLine, final List<Selection> selections, final boolean removeUnusedUses, final Options options) throws Exception {
         FileObject testFile = getTestFile(fileName);
 

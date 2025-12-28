@@ -62,7 +62,7 @@ public final class LocalFileSystemEx extends LocalFileSystem {
         synchronized (allLocks) {
             pLocks.removeAll(invalid);
         }
-        return l.toArray(new String[l.size()]);
+        return l.toArray(new String[0]);
     }
 
     public static boolean hasLocks() {

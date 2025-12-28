@@ -586,7 +586,7 @@ public abstract class TreeViewProvider {
         if (l.isEmpty()) {
             n = null;
         } else {
-            n = l.toArray(new TreeDataProvider[l.size()]);
+            n = l.toArray(new TreeDataProvider[0]);
         }
         if (Objects.deepEquals(old, n)) {
             return;

@@ -39,17 +39,11 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class FetchLogRemote extends FetchLogPiped {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(FetchLogPiped.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara remote server log fetcher.
      * <p/>
@@ -87,10 +81,7 @@ public class FetchLogRemote extends FetchLogPiped {
         super(executor, server, skip);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Runnable call() Method                                                  //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Remote server log lines reading task.
      * <p/>

@@ -234,8 +234,8 @@ public class FetchTest extends AbstractGitTestCase {
         RevTag tag = new RevWalk(repo).parseTag(ref.getObjectId());
         
         Map<String, GitTransportUpdate> updates = client.fetch("origin", NULL_PROGRESS_MONITOR);
-        Map<String, Ref> tags = repository.getTags();
-        assertEquals(tag.getId(), tags.get(tag.getTagName()).getTarget().getObjectId());
+        Ref tagRef = repository.getRefDatabase().findRef(tag.getTagName());
+        assertEquals(tag.getId(), tagRef.getTarget().getObjectId());
         assertEquals(1, updates.size());
         assertUpdate(updates.get(tag.getTagName()), tag.getTagName(), tag.getTagName(), tag.getId().getName(), null, new URIish(otherWT.toURI().toURL()).toString(), Type.TAG, GitRefUpdateResult.NEW);
     }

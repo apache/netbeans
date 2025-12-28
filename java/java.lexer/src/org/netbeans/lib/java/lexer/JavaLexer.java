@@ -321,6 +321,13 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                 case '/':
                     switch (nextChar()) {
                         case '/': // in single-line comment
+                            switch (nextChar()) {
+                                case '/': return finishJavadocLineRun();
+                                case '\r': consumeNewline();
+                                case '\n':
+                                case EOF:
+                                    return token(JavaTokenId.LINE_COMMENT);
+                            }
                             while (true)
                                 switch (nextChar()) {
                                     case '\r': consumeNewline();
@@ -1426,6 +1433,34 @@ public class JavaLexer implements Lexer<JavaTokenId> {
             default:
                 backup(1);
                 return token(JavaTokenId.DOUBLE_LITERAL);
+        }
+    }
+
+    private Token<JavaTokenId> finishJavadocLineRun() {
+        while (true) {
+            //finish current line:
+            LINE: while (true) {
+                switch (nextChar()) {
+                    case '\r': consumeNewline();
+                    case '\n': break LINE;
+                    case EOF:
+                        return token(JavaTokenId.JAVADOC_COMMENT_LINE_RUN);
+                }
+            }
+
+            //at the next line, if it starts with "<whitespace>///", include it in the run,
+            //otherwise finish the run:
+            int mark = input.readLength();
+            int c;
+
+            while (Character.isWhitespace(c = nextChar()) && c != '\r' && c != '\n' && c != EOF)
+                ;
+
+            if (c != '/' || nextChar() != '/' || nextChar() != '/') {
+                input.backup(input.readLengthEOF()- mark);
+
+                return token(JavaTokenId.JAVADOC_COMMENT_LINE_RUN);
+            }
         }
     }
     

@@ -39,7 +39,7 @@ public class OCIChildFactory extends ChildFactory<OCIItem> {
     
     public OCIChildFactory(OCIItem parent) {
         this.parent = parent;
-        this.session = OCIManager.getDefault().getActiveSession();
+        this.session = OCIManager.getDefault().getActiveProfile(parent);
     }
 
     public OCIChildFactory(OCIItem parent, OCISessionInitiator session) {

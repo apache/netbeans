@@ -85,7 +85,7 @@ public class LayerUtils {
         if (roots.isEmpty()) {
             LOG.log(Level.WARNING, "no resource path for {0}", project);
         }
-        return ClassPathSupport.createClassPath(roots.toArray(new FileObject[roots.size()]));
+        return ClassPathSupport.createClassPath(roots.toArray(new FileObject[0]));
     }
     
     /**
@@ -140,7 +140,7 @@ public class LayerUtils {
                     }
                 }
                 if (!urls.isEmpty()) {
-                    return urls.toArray(new URL[urls.size()]);
+                    return urls.toArray(new URL[0]);
                 }
             }
         return new URL[] {u};

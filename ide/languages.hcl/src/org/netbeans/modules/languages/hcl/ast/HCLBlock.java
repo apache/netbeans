@@ -18,35 +18,50 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
  *
  * @author Laszlo Kishalmi
  */
-public class HCLBlock extends HCLContainer {
+public final class HCLBlock extends HCLContainer  {
 
-    private List<HCLIdentifier> declaration;
-    private String id;
+    private final String id;
 
-    public HCLBlock(HCLContainer parent) {
-        super(parent);
+    private final List<HCLIdentifier> declaration;
+
+    public HCLBlock(List<HCLIdentifier> declaration, List<HCLElement> elements) {
+        super(elements);
+        Objects.requireNonNull(declaration, "declaration cannot be null");
+        if (declaration.isEmpty()) {
+            throw new IllegalArgumentException("declaration cannot be empty");
+        }
+        this.declaration = List.copyOf(declaration);
+        this.id = declaration.stream().map(d -> d.id()).collect(Collectors.joining("."));
     }
 
-    void setDeclaration(List<HCLIdentifier> declaration) {
-        this.declaration = Collections.unmodifiableList(declaration);
-        id = declaration.stream().map(d -> d.id()).collect(Collectors.joining("."));
+    public List<HCLIdentifier> declaration() {
+        return declaration;
     }
 
-    
-    @Override
     public String id() {
         return id;
     }
+    @Override
+    public String toString() {
+        return "HCLBlock[declaration=" + declaration + ", elements=" + elements + "]";
+    }
 
-    public List<HCLIdentifier> getDeclaration() {
-        return declaration;
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof HCLBlock that ? Objects.equals(this.declaration, that.declaration) && Objects.equals(this.elements, that.elements) : false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(declaration, elements);
     }
 }

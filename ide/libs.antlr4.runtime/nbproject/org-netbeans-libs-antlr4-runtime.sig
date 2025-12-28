@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.23.0
+#Version 1.31.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -1066,7 +1066,7 @@ supr org.antlr.v4.runtime.ParserRuleContext
 
 CLSS public org.antlr.v4.runtime.RuntimeMetaData
 cons public init()
-fld public final static java.lang.String VERSION = "4.11.1"
+fld public final static java.lang.String VERSION = "4.13.1"
 meth public static java.lang.String getMajorMinorVersion(java.lang.String)
 meth public static java.lang.String getRuntimeVersion()
 meth public static void checkVersion(java.lang.String,java.lang.String)
@@ -1899,10 +1899,10 @@ fld protected org.antlr.v4.runtime.dfa.DFA _dfa
 fld protected org.antlr.v4.runtime.misc.DoubleKeyMap<org.antlr.v4.runtime.atn.PredictionContext,org.antlr.v4.runtime.atn.PredictionContext,org.antlr.v4.runtime.atn.PredictionContext> mergeCache
 fld public final org.antlr.v4.runtime.dfa.DFA[] decisionToDFA
 fld public final static boolean TURN_OFF_LR_LOOP_ENTRY_BRANCH_OPT
-fld public final static boolean debug = false
-fld public final static boolean debug_list_atn_decisions = false
-fld public final static boolean dfa_debug = false
-fld public final static boolean retry_debug = false
+fld public static boolean debug
+fld public static boolean dfa_debug
+fld public static boolean retry_debug
+fld public static boolean trace_atn_sim
 meth protected boolean canDropLoopEntryEdgeInLeftRecursiveRule(org.antlr.v4.runtime.atn.ATNConfig)
 meth protected boolean evalSemanticContext(org.antlr.v4.runtime.atn.SemanticContext,org.antlr.v4.runtime.ParserRuleContext,int,boolean)
 meth protected int execATN(org.antlr.v4.runtime.dfa.DFA,org.antlr.v4.runtime.dfa.DFAState,org.antlr.v4.runtime.TokenStream,int,org.antlr.v4.runtime.ParserRuleContext)

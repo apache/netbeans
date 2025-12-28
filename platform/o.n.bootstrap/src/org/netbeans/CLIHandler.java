@@ -45,7 +45,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.RequestProcessor;
@@ -60,7 +59,7 @@ import org.openide.util.Task;
  * @author Jaroslav Tulach
  * @since org.netbeans.core/1 1.18
  * @see "#32054"
- * @see <a href="https://netbeans.apache.org/projects/platform/openide/proposals/arch/cli.html">Specification</a>
+ * @see <a href="https://netbeans.apache.org/projects/platform/openide/proposals/arch/cli">Specification</a>
  */
 public abstract class CLIHandler extends Object {
     /** lenght of the key used for connecting */
@@ -580,7 +579,7 @@ public abstract class CLIHandler extends Object {
                 enterState(10, block);
                 
                 final byte[] arr = new byte[KEY_LENGTH];
-                new Random().nextBytes(arr);
+                new SecureRandom().nextBytes(arr);
 
                 
                 final RandomAccessFile os = raf;
@@ -948,7 +947,7 @@ public abstract class CLIHandler extends Object {
                 }
                 List<String> l = new ArrayList<String>(Arrays.asList(a));
                 l.removeAll(Collections.singleton(null));
-                args = l.toArray(new String[l.size()]);
+                args = l.toArray(new String[0]);
             } else {
                 args = argsBackup.clone();
             }

@@ -18,15 +18,18 @@
  */
 package org.netbeans.modules.java.lsp.server.protocol;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
-import com.sun.source.tree.ClassTree;
-import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,12 +37,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
-import org.eclipse.lsp4j.MessageParams;
-import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ShowDocumentParams;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.UnitTestForSourceQuery;
@@ -55,14 +59,20 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.gsf.testrunner.api.TestCreatorProvider;
 import org.netbeans.modules.gsf.testrunner.plugin.CommonTestUtilProvider;
 import org.netbeans.modules.gsf.testrunner.plugin.GuiUtilsProvider;
+import org.netbeans.modules.java.lsp.server.URITranslator;
 import org.netbeans.modules.java.lsp.server.Utils;
+import org.netbeans.modules.java.lsp.server.input.InputBoxStep;
+import org.netbeans.modules.java.lsp.server.input.InputService;
+import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
+import org.netbeans.modules.java.lsp.server.input.QuickPickStep;
+import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.parsing.api.ResultIterator;
 import org.openide.filesystems.FileChangeAdapter;
 import org.openide.filesystems.FileChangeListener;
 import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.URLMapper;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
@@ -72,38 +82,32 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Dusan Balek
  */
-@ServiceProvider(service = CodeActionsProvider.class, position = 100)
+@ServiceProvider(service = CodeActionsProvider.class, position = 9)
 public final class TestClassGenerator extends CodeActionsProvider {
 
     private static final String GENERATE_TEST_CLASS_COMMAND = "nbls.java.generate.testClass";
+    private static final String FRAMEWORKS =  "frameworks";
+    private static final String CLASS_NAME =  "className";
+
+    private final Gson gson = new Gson();
 
     @Override
     @NbBundle.Messages({
-        "# {0} - the testing framework to be used, e.g. JUnit, TestNG,...",
-        "# {1} - the location where the test class will be created",
-        "DN_GenerateTestClass=Create Test Class [{0} in {1}]"
+        "DN_GenerateTestClass=Generate Tests..."
     })
     public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
+        List<String> only = params.getContext().getOnly();
+        if (only == null || !only.contains(CodeActionKind.Source)) {
+            return Collections.emptyList();
+        }
         CompilationController info = resultIterator.getParserResult() != null ? CompilationController.get(resultIterator.getParserResult()) : null;
         if (info == null) {
             return Collections.emptyList();
         }
-        info.toPhase(JavaSource.Phase.RESOLVED);
+        info.toPhase(JavaSource.Phase.PARSED);
         int offset = getOffset(info, params.getRange().getStart());
         TreePath tp = info.getTreeUtilities().pathFor(offset);
         if (!TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
-            return Collections.emptyList();
-        }
-        ClassTree cls = (ClassTree) tp.getLeaf();
-        SourcePositions sourcePositions = info.getTrees().getSourcePositions();
-        int startPos = (int) sourcePositions.getStartPosition(tp.getCompilationUnit(), cls);
-        String code = info.getText();
-	if (startPos < 0 || offset < 0 || offset < startPos || offset >= code.length()) {
-            return Collections.emptyList();
-        }
-        String headerText = code.substring(startPos, offset);
-        int idx = headerText.indexOf('{');
-        if (idx >= 0) {
             return Collections.emptyList();
         }
         ClassPath cp = info.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
@@ -122,9 +126,8 @@ public final class TestClassGenerator extends CodeActionsProvider {
         List<CodeAction> result = new ArrayList<>();
         for (Map.Entry<Object, List<String>> entrySet : validCombinations.entrySet()) {
             Object location = entrySet.getKey();
-            for (String testingFramework : entrySet.getValue()) {
-                result.add((createCodeAction(client, Bundle.DN_GenerateTestClass(testingFramework, getLocationText(location)), CodeActionKind.Refactor, null, GENERATE_TEST_CLASS_COMMAND, Utils.toUri(fileObject), testingFramework, Utils.toUri(getTargetFolder(location)))));
-            }
+            List<QuickPickItem> testingFrameworks = entrySet.getValue().stream().map(framework -> new QuickPickItem(framework)).collect(Collectors.toList());
+            result.add((createCodeAction(client, Bundle.DN_GenerateTestClass(), CodeActionKind.Source, null, GENERATE_TEST_CLASS_COMMAND, Utils.toUri(fileObject), getTargetFolderUri(location), testingFrameworks)));
         }
 	return result;
     }
@@ -135,7 +138,12 @@ public final class TestClassGenerator extends CodeActionsProvider {
     }
 
     @Override
+    @NbBundle.Messages({
+        "DN_SelectFramework=Select a test framework to use",
+        "DN_ProvideClassName=Please type the target test class name"
+    })
     public CompletableFuture<Object> processCommand(NbCodeLanguageClient client, String command, List<Object> arguments) {
+        CompletableFuture<Object> future = new CompletableFuture<>();
         try {
             if (arguments.size() > 2) {
                 String uri = ((JsonPrimitive) arguments.get(0)).getAsString();
@@ -143,53 +151,88 @@ public final class TestClassGenerator extends CodeActionsProvider {
                 if (fileObject == null) {
                     throw new IllegalArgumentException(String.format("Cannot resolve source file from uri: %s", uri));
                 }
-                String testingFramework = ((JsonPrimitive) arguments.get(1)).getAsString();
-                String targetUri = ((JsonPrimitive) arguments.get(2)).getAsString();
-                FileObject targetFolder = Utils.fromUri(targetUri);
+                String targetUri = ((JsonPrimitive) arguments.get(1)).getAsString();
+                FileObject targetFolder = getTargetFolder(targetUri);
                 if (targetFolder == null) {
                     throw new IllegalArgumentException(String.format("Cannot resolve target folder from uri: %s", targetUri));
                 }
-                Collection<? extends Lookup.Item<TestCreatorProvider>> providers = Lookup.getDefault().lookupResult(TestCreatorProvider.class).allItems();
-                for (final Lookup.Item<TestCreatorProvider> provider : providers) {
-                    if (provider.getDisplayName().equals(testingFramework)) {
-                        final TestCreatorProvider.Context context = new TestCreatorProvider.Context(new FileObject[]{fileObject});
-                        context.setSingleClass(true);
-                        context.setTargetFolder(targetFolder);
-                        context.setTestClassName(getPreffiledName(fileObject, testingFramework));
-                        FileChangeListener fcl = new FileChangeAdapter() {
-                            @Override
-                            public void fileDataCreated(FileEvent fe) {
-                                RequestProcessor.getDefault().post(() -> {
-                                    client.showDocument(new ShowDocumentParams(Utils.toUri(fe.getFile())));
-                                }, 1000);
+                List<QuickPickItem> testingFrameworks = Arrays.asList(gson.fromJson((JsonArray)arguments.get(2), QuickPickItem[].class));
+                InputService.Registry inputServiceRegistry = Lookup.getDefault().lookup(InputService.Registry.class);
+                if (inputServiceRegistry != null) {
+                    int totalSteps = testingFrameworks.size() > 1 ? 2 : 1;
+                    String inputId = inputServiceRegistry.registerInput(params -> {
+                        CompletableFuture<Either<QuickPickStep, InputBoxStep>> f = new CompletableFuture<>();
+                        if (params.getStep() < totalSteps) {
+                            Either<List<QuickPickItem>,String> frameworkData = params.getData().get(FRAMEWORKS);
+                            if (frameworkData != null) {
+                                List<QuickPickItem> selectedFrameworks = frameworkData.getLeft();
+                                for (QuickPickItem testingFramework : testingFrameworks) {
+                                    testingFramework.setPicked(selectedFrameworks.contains(testingFramework));
+                                }
                             }
-                        };
-                        targetFolder.addRecursiveListener(fcl);
-                        try {
-                            provider.getInstance().createTests(context);
-                        } finally {
-                            RequestProcessor.getDefault().post(() -> {
-                                targetFolder.removeRecursiveListener(fcl);
-                            }, 1000);
+                            f.complete(Either.forLeft(new QuickPickStep(totalSteps, FRAMEWORKS, Bundle.DN_SelectFramework(), testingFrameworks)));
+                        } else if (params.getStep() == totalSteps) {
+                            Either<List<QuickPickItem>,String> frameworkData = params.getData().get(FRAMEWORKS);
+                            QuickPickItem selectedFramework = (frameworkData != null ? frameworkData.getLeft() : testingFrameworks).get(0);
+                            f.complete(Either.forRight(new InputBoxStep(totalSteps, CLASS_NAME, Bundle.DN_ProvideClassName(), getPreffiledName(fileObject, selectedFramework.getLabel()))));
+                        } else {
+                            f.complete(null);
                         }
-                    }
+                        return f;
+                    });
+                    client.showMultiStepInput(new ShowMutliStepInputParams(inputId, Bundle.DN_GenerateDelegateMethod())).thenAccept(result -> {
+                        Either<List<QuickPickItem>, String> frameworkData = result.get(FRAMEWORKS);
+                        QuickPickItem selectedFramework = (frameworkData != null ? frameworkData.getLeft() : testingFrameworks).get(0);
+                        Either<List<QuickPickItem>, String> classNameData = result.get(CLASS_NAME);
+                        String className = classNameData != null ? classNameData.getRight() : null;
+                        future.complete(selectedFramework != null && className != null ? generate(client, fileObject, targetFolder, className, selectedFramework.getLabel()) : null);
+                    });
                 }
             } else {
                 throw new IllegalArgumentException(String.format("Illegal number of arguments received for command: %s", command));
             }
         } catch (JsonSyntaxException | IllegalArgumentException | MalformedURLException ex) {
-            client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
+            future.completeExceptionally(ex);
         }
-        return CompletableFuture.completedFuture(true);
+        return future;
     }
 
-    private static String getLocationText(Object location) {
-	String text = location instanceof SourceGroup
-		? ((SourceGroup) location).getDisplayName()
-		: location instanceof FileObject
-		? FileUtil.getFileDisplayName((FileObject) location)
-		: location.toString();
-	return text;
+    private boolean generate(NbCodeLanguageClient client, FileObject fileObject, FileObject targetFolder, String className, String testingFramework) {
+        Collection<? extends Lookup.Item<TestCreatorProvider>> providers = Lookup.getDefault().lookupResult(TestCreatorProvider.class).allItems();
+        for (final Lookup.Item<TestCreatorProvider> provider : providers) {
+            if (provider.getDisplayName().equals(testingFramework)) {
+                final TestCreatorProvider.Context context = new TestCreatorProvider.Context(new FileObject[]{fileObject});
+                context.setSingleClass(true);
+                context.setTargetFolder(targetFolder);
+                context.setTestClassName(className);
+                AtomicReference<FileChangeListener> fcl = new AtomicReference<>();
+                fcl.set(new FileChangeAdapter() {
+                    @Override
+                    public void fileDataCreated(FileEvent fe) {
+                        RequestProcessor.getDefault().post(() -> {
+                            client.showDocument(new ShowDocumentParams(Utils.toUri(fe.getFile())));
+                        }, 1000);
+                        FileChangeListener l = fcl.getAndSet(null);
+                        if (l != null) {
+                            targetFolder.removeRecursiveListener(l);
+                        }
+                    }
+                });
+                targetFolder.addRecursiveListener(fcl.get());
+                try {
+                    provider.getInstance().createTests(context);
+                } finally {
+                    RequestProcessor.getDefault().post(() -> {
+                        FileChangeListener l = fcl.getAndSet(null);
+                        if (l != null) {
+                            targetFolder.removeRecursiveListener(l);
+                        }
+                    }, 10000);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     private static Map<Object, List<String>> getValidCombinations(CompilationInfo info) {
@@ -264,18 +307,30 @@ public final class TestClassGenerator extends CodeActionsProvider {
 	return selectedFramework.equals(testngFramework) ? "NG" : "";
     }
 
-    private static FileObject getTargetFolder(Object selectedLocation) {
+    private static String getTargetFolderUri(Object selectedLocation) throws URISyntaxException {
 	if (selectedLocation == null) {
 	    return null;
 	}
 	if (selectedLocation instanceof SourceGroup) {
-	    return ((SourceGroup) selectedLocation).getRootFolder();
+	    return Utils.toUri(((SourceGroup) selectedLocation).getRootFolder());
 	}
         if (selectedLocation instanceof URL) {
-	    return URLMapper.findFileObject((URL) selectedLocation);
+	    return URITranslator.getDefault().uriToLSP(((URL) selectedLocation).toURI().toString());
 	}
 	assert selectedLocation instanceof FileObject;
-	return (FileObject) selectedLocation;
+	return Utils.toUri((FileObject) selectedLocation);
+    }
+
+    private static FileObject getTargetFolder(String uri) throws MalformedURLException {
+        FileObject targetFolder = Utils.fromUri(uri);
+        if (targetFolder == null) {
+            File file = BaseUtilities.toFile(URI.create(uri));
+            if (file != null && !file.exists()) {
+                file.mkdirs();
+            }
+            targetFolder = Utils.fromUri(uri);
+        }
+        return targetFolder != null && targetFolder.isFolder() ? targetFolder : null;
     }
 
     private static String getTargetFolderPath(Object selectedLocation) {

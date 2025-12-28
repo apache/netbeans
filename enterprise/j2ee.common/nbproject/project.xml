@@ -522,7 +522,6 @@
                 <friend>org.netbeans.modules.visualweb.dataconnectivity</friend>
                 <friend>org.netbeans.modules.visualweb.project.jsf</friend>
                 <friend>org.netbeans.modules.web.beans</friend>
-                <friend>org.netbeans.modules.jakarta.web.beans</friend>
                 <friend>org.netbeans.modules.web.core</friend>
                 <friend>org.netbeans.modules.web.freeform</friend>
                 <friend>org.netbeans.modules.web.jsf</friend>
@@ -530,7 +529,6 @@
                 <friend>org.netbeans.modules.web.jsf.richfaces</friend>
                 <friend>org.netbeans.modules.web.primefaces</friend>
                 <friend>org.netbeans.modules.web.project</friend>
-                <friend>org.netbeans.modules.web.struts</friend>
                 <friend>org.netbeans.modules.websvc.core</friend>
                 <friend>org.netbeans.modules.websvc.jaxrpc</friend>
                 <friend>org.netbeans.modules.websvc.restapi</friend>

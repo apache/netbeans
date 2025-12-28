@@ -155,7 +155,7 @@ public abstract class DataLoader extends SharedClassObject implements DataObject
             }
         }
         
-        return list.toArray(new SystemAction[list.size()]);
+        return list.toArray(new SystemAction[0]);
     }
     
     /** Swing actions getter, used from DataNode */
@@ -443,7 +443,7 @@ public abstract class DataLoader extends SharedClassObject implements DataObject
     */
     @Override
     public void writeExternal (ObjectOutput oo) throws IOException {
-        oo.writeObject( new Integer(LOADER_VERSION) );
+        oo.writeObject(LOADER_VERSION);
         
         SystemAction[] arr = (SystemAction[])getProperty (PROP_ACTIONS);
         if (arr == null) {
@@ -531,7 +531,7 @@ public abstract class DataLoader extends SharedClassObject implements DataObject
             }
             if (main == null && !isdefault) {
                 // Whole action list was successfully read.
-                setActions(ll.toArray(new SystemAction[ll.size()]));
+                setActions(ll.toArray(new SystemAction[0]));
             } // Else do not try to override the default action list if it is incomplete anyway.
         }
         

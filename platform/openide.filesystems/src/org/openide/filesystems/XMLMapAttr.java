@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.AbstractMap;
@@ -922,9 +921,9 @@ final class XMLMapAttr implements Map {
                     case 1:
                         return Short.valueOf(value);
                     case 2:
-                        return new Integer(value); //(objI);
+                        return Integer.valueOf(value); //(objI);
                     case 3:
-                        return new Long(value);
+                        return Long.valueOf(value);
                     case 4:
                         return Float.valueOf(value);
                     case 5:
@@ -935,7 +934,7 @@ final class XMLMapAttr implements Map {
                         if (value.trim().length() != 1) {
                             break;
                         }
-                        return new Character(value.charAt(0));
+                        return value.charAt(0);
                     case 8:
                         return value;
                     case 9:

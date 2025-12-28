@@ -21,8 +21,8 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>src/org/antlr/parser/golang/GoLexer.g4</file>
-        <file>src/org/antlr/parser/golang/GoParser.g4</file>
+        <file>src/org/antlr/parser/golang/g4/GoLexer.g4</file>
+        <file>src/org/antlr/parser/golang/g4/GoParser.g4</file>
         <file>src/org/antlr/parser/golang/GoParserBase.java</file>
         <license ref="BSD-antlr-go-grammar" />
     </fileset>

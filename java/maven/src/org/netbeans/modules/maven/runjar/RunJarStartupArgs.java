@@ -70,7 +70,7 @@ public class RunJarStartupArgs implements LateBoundPrerequisitesChecker {
         for (String part : MavenExecuteUtils.propertySplitter(l, true)) {
             result.add(part);
         }
-        return result.toArray(new String[result.size()]);
+        return result.toArray(new String[0]);
     }
     
     @Override public boolean checkRunConfig(RunConfig config, ExecutionContext con) {

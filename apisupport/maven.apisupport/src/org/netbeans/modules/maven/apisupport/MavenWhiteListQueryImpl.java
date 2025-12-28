@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
@@ -44,7 +45,6 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
-import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.netbeans.api.annotations.common.NonNull;
@@ -62,7 +62,6 @@ import org.netbeans.spi.whitelist.WhiteListQueryImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -81,7 +80,7 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
     private static final RequestProcessor RP = new RequestProcessor(MavenWhiteListQueryImpl.class.getName(), 3);
     private static final Logger LOG = Logger.getLogger(MavenWhiteListQueryImpl.class.getName());
 
-    private final Set<MavenWhiteListImplementation> results = Collections.synchronizedSet(new WeakSet<MavenWhiteListImplementation>());
+    private final Set<MavenWhiteListImplementation> results = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     
     //TODO add static cache across projects for dependency jar's contents.
     
@@ -367,18 +366,14 @@ public class MavenWhiteListQueryImpl implements WhiteListQueryImplementation {
     private Manifest getManifest(FileObject root) {
         FileObject manifestFo = root.getFileObject("META-INF/MANIFEST.MF");
         if (manifestFo != null) {
-            InputStream is = null;
-            try {
-                is = manifestFo.getInputStream();
-                return new Manifest(is);
+            try (InputStream is = manifestFo.getInputStream()) {
+                Manifest manifest = new Manifest(is);
+                return manifest;
             } catch (IOException ex) {
                 //Exceptions.printStackTrace(ex);
-            } finally {
-                IOUtil.close(is);
             }
         }
         return null;
-
     }
     
     private static class MavenWhiteListImplementation implements WhiteListImplementation {

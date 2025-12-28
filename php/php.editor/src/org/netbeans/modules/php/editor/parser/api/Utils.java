@@ -26,6 +26,7 @@ import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
+import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
@@ -78,16 +79,24 @@ public final class Utils {
                 int start = possible.getEndOffset() + 1;
                 int end = getNodeRangeLocatorEndOffset(node);
                 if (start <= end) {
+                    //Check that a possible comment and a node are in the same block
+                    ASTNode nodeAtStartOffset = getNodeAtOffset(root, start);
+                    if (nodeAtStartOffset instanceof Block) {
+                        if (node.getStartOffset() > nodeAtStartOffset.getEndOffset()) {
+                            return null;
+                        }
+                    }
+
                     List<ASTNode> nodes = (new NodeRangeLocator()).locate(root, new OffsetRange(start, end));
                     if (!nodes.isEmpty()) {
                         if (!isConstantDeclaration(nodes, node)
                                 && !isFieldDeclaration(nodes, node)) {
-                            possible = null;
+                            return null;
                         }
                     }
                 } else {
                     // e.g. public self|A /* comment */ |null $unionType; (start > end)
-                    possible = null;
+                   return null;
                 }
             }
         }

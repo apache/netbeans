@@ -92,15 +92,15 @@ class LayoutOperations implements LayoutConstants {
                 LayoutInterval li = (LayoutInterval) it.next();
                 if (idx < startIndex) {
                     if (toRemainL == null) {
-                        toRemainL = new LinkedList<Object>();
-                        toRemainL.add(new Integer(LayoutInterval.getEffectiveAlignment(li)));
+                        toRemainL = new LinkedList<>();
+                        toRemainL.add(LayoutInterval.getEffectiveAlignment(li));
                     }
                     toRemainL.add(li);
                 }
                 else if (idx > endIndex) {
                     if (toRemainT == null) {
-                        toRemainT = new LinkedList<Object>();
-                        toRemainT.add(new Integer(LayoutInterval.getEffectiveAlignment(li)));
+                        toRemainT = new LinkedList<>();
+                        toRemainT.add(LayoutInterval.getEffectiveAlignment(li));
                     }
                     toRemainT.add(li);
                 }
@@ -203,7 +203,7 @@ class LayoutOperations implements LayoutConstants {
 //            group.setMinimumSize(USE_PREFERRED_SIZE);
 //            group.setMaximumSize(USE_PREFERRED_SIZE);
 //        }
-////        group.setGroupAlignment(alignment);
+// //        group.setGroupAlignment(alignment);
 
         // fill the group
         for (Iterator it=list.iterator(); it.hasNext(); ) {

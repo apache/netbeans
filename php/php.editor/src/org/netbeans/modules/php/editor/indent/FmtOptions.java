@@ -104,6 +104,7 @@ public final class FmtOptions {
     public static final String BLANK_LINES_BEFORE_FIELDS = "blankLinesBeforeField"; //NOI18N
     public static final String BLANK_LINES_BETWEEN_FIELDS = "blankLinesBetweenField"; //NOI18N
     public static final String BLANK_LINES_AFTER_FIELDS = "blankLinesAfterField"; //NOI18N
+    public static final String BLANK_LINES_EMPTY_FUNCTION_BODY = "blankLinesEmptyFunctionBody"; //NOI18N
     public static final String BLANK_LINES_EOF = "blankLinesEndOfFile"; //NOI18N
     public static final String BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES = "blankLinesGroupFieldsWithoutDocAndAttributes"; //NOI18N
     public static final String BLANK_LINES_BEFORE_FUNCTION = "blankLinesBeforeFunction"; //NOI18N
@@ -170,6 +171,7 @@ public final class FmtOptions {
     public static final String SPACE_WITHIN_ARRAY_BRACKETS = "spaceWithinArrayBrackets"; //NOI18N
     public static final String SPACE_WITHIN_ATTRIBUTE_BRACKETS = "spaceWithinAttributeBrackets"; //NOI18N
     public static final String SPACE_WITHIN_ATTRIBUTE_DECL_PARENS = "spaceWithinAttributeDeclParens"; //NOI18N
+    public static final String SPACE_WITHIN_OTHER_PARENS = "spaceWithinOtherParens"; //NOI18N
     public static final String SPACE_BEFORE_COMMA = "spaceBeforeComma"; //NOI18N
     public static final String SPACE_AFTER_COMMA = "spaceAfterComma"; //NOI18N
     public static final String SPACE_BEFORE_SEMI = "spaceBeforeSemi"; //NOI18N
@@ -300,6 +302,7 @@ public final class FmtOptions {
             {BLANK_LINES_AFTER_CLASS_HEADER, "0"}, //NOI18N
             {BLANK_LINES_BEFORE_CLASS_END, "0"}, //NOI18N
             {BLANK_LINES_BEFORE_FIELDS, "1"}, //NOI18N
+            {BLANK_LINES_EMPTY_FUNCTION_BODY, TRUE},
             {BLANK_LINES_EOF, FALSE},
             {BLANK_LINES_GROUP_FIELDS_WITHOUT_DOC_AND_ATTRIBUTES, TRUE},
             {BLANK_LINES_BETWEEN_FIELDS, "1"}, //NOI18N
@@ -368,6 +371,7 @@ public final class FmtOptions {
             {SPACE_WITHIN_ARRAY_BRACKETS, FALSE},
             {SPACE_WITHIN_ATTRIBUTE_BRACKETS, FALSE},
             {SPACE_WITHIN_ATTRIBUTE_DECL_PARENS, FALSE},
+            {SPACE_WITHIN_OTHER_PARENS, FALSE},
             {SPACE_BEFORE_COMMA, FALSE},
             {SPACE_AFTER_COMMA, TRUE},
             {SPACE_BEFORE_SEMI, FALSE},
@@ -635,8 +639,8 @@ public final class FmtOptions {
             @Override
             public PreferencesCustomizer create(Preferences preferences) {
                 try {
-                    return new CategorySupport(preferences, id, panelClass.newInstance(), previewText, forcedOptions);
-                } catch (InstantiationException | IllegalAccessException e) {
+                    return new CategorySupport(preferences, id, panelClass.getDeclaredConstructor().newInstance(), previewText, forcedOptions);
+                } catch (ReflectiveOperationException e) {
                     LOGGER.log(Level.WARNING, "Exception during creating formatter customiezer", e);
                     return null;
                 }
@@ -922,7 +926,7 @@ public final class FmtOptions {
             for (Preferences p : delegates) {
                 keys.addAll(Arrays.asList(p.keys()));
             }
-            return keys.toArray(new String[keys.size()]);
+            return keys.toArray(new String[0]);
         }
 
         @Override

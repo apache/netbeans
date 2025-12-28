@@ -388,7 +388,7 @@ public class SwingLayoutCodeGenerator {
         while (linkGroupsIt.hasNext()) {
             List<String> l = linkGroupsIt.next();
             // sort so that the generated line is always the same when no changes were made
-            Collections.sort(l, new Comparator<String>() {
+            l.sort(new Comparator<String>() {
                 @Override
                 public int compare(String id1, String id2) {
                     ComponentInfo info1 = componentIDMap.get(id1);

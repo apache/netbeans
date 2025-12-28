@@ -33,8 +33,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.EventObject;
 import java.util.HashMap;
@@ -490,7 +488,7 @@ public class Outline extends ETable {
                         }
                     }
                     tempSortMap = tsm;
-                    Collections.sort(rows, c);
+                    rows.sort(c);
                     tempSortMap = null;
                 }
                 int [] res = new int[rows.size()];
@@ -803,7 +801,11 @@ public class Outline extends ETable {
         }
             
         boolean res = false;
-        if (!isTreeColumn || e instanceof MouseEvent && row >= 0 && isEditEvent(row, column, (MouseEvent) e)) {
+        if (!isTreeColumn ||
+                e instanceof MouseEvent && row >= 0 && isEditEvent(row, column, (MouseEvent) e) ||
+                // Allow F2 to be used to invoke Rename.
+                e instanceof ActionEvent && row >= 0)
+        {
             res = super.editCellAt(row, column, e);
         }
         if( res && isTreeColumn && row >= 0 && null != getEditorComponent() ) {

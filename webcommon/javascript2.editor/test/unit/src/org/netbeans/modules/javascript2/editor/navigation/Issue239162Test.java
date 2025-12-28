@@ -81,7 +81,7 @@ public class Issue239162Test extends JsWithBase{
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/testfiles/navigation/239162")));
         return Collections.singletonMap(
             JS_SOURCE_ID,
-            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

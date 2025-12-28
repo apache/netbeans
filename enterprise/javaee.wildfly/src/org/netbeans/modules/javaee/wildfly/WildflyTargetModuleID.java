@@ -112,7 +112,7 @@ public class WildflyTargetModuleID implements TargetModuleID {
 
     @Override
     public TargetModuleID[] getChildTargetModuleID() {
-        return (TargetModuleID[]) childs.toArray(new TargetModuleID[childs.size()]);
+        return (TargetModuleID[]) childs.toArray(new TargetModuleID[0]);
     }
 
     //Retrieve a list of identifiers of the children of this deployed module.

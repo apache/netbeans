@@ -18,9 +18,7 @@
  */
 package org.netbeans.modules.git.ui.history;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics;
 import org.openide.explorer.ExplorerManager;
 import org.openide.nodes.Node;
 import org.openide.nodes.AbstractNode;
@@ -38,7 +36,6 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import org.netbeans.swing.etable.ETableColumnModel;
-import org.netbeans.swing.outline.RenderDataProvider;
 import org.openide.explorer.view.OutlineView;
 import org.openide.xml.XMLUtil;
 
@@ -63,7 +60,6 @@ class DiffTreeTable extends OutlineView {
         setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         setupColumns();
-        getOutline().setRenderDataProvider( new NoLeafIconRenderDataProvider( getOutline().getRenderDataProvider() ) );
     }
     
     @SuppressWarnings("unchecked")
@@ -77,26 +73,23 @@ class DiffTreeTable extends OutlineView {
         setPropertyColumnDescription(RevisionNode.COLUMN_NAME_DATE, loc.getString("LBL_DiffTree_Column_Time_Desc"));
         setPropertyColumnDescription(RevisionNode.COLUMN_NAME_USERNAME, loc.getString("LBL_DiffTree_Column_Username_Desc"));
         setPropertyColumnDescription(RevisionNode.COLUMN_NAME_MESSAGE, loc.getString("LBL_DiffTree_Column_Message_Desc"));
+        TableColumn msgColumn = getOutline().getColumn(loc.getString("LBL_DiffTree_Column_Message"));
+        msgColumn.setCellRenderer(new MessageRenderer(getOutline().getCellRenderer(0, msgColumn.getModelIndex())));
         TableColumnModel model = getOutline().getColumnModel();
         if (model instanceof ETableColumnModel) {
             ((ETableColumnModel) model).setColumnHidden(model.getColumn(1), true);
         }
         setDefaultColumnSizes();
-        TableColumn column = getOutline().getColumn(loc.getString("LBL_DiffTree_Column_Message"));
-        column.setCellRenderer(new MessageRenderer(getOutline().getDefaultRenderer(String.class)));
     }
     
     private void setDefaultColumnSizes() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (getOutline().getColumnCount() == 4) {
-                    int width = getWidth();
-                    getOutline().getColumnModel().getColumn(0).setPreferredWidth(width * 25 / 100);
-                    getOutline().getColumnModel().getColumn(1).setPreferredWidth(width * 15 / 100);
-                    getOutline().getColumnModel().getColumn(2).setPreferredWidth(width * 10 / 100);
-                    getOutline().getColumnModel().getColumn(3).setPreferredWidth(width * 50 / 100);
-                }
+        SwingUtilities.invokeLater(() -> {
+            if (getOutline().getColumnCount() == 4) {
+                int width1 = getWidth();
+                getOutline().getColumnModel().getColumn(0).setPreferredWidth(width1 * 25 / 100);
+                getOutline().getColumnModel().getColumn(1).setPreferredWidth(width1 * 15 / 100);
+                getOutline().getColumnModel().getColumn(2).setPreferredWidth(width1 * 10 / 100);
+                getOutline().getColumnModel().getColumn(3).setPreferredWidth(width1 * 50 / 100);
             }
         });
     }
@@ -119,7 +112,7 @@ class DiffTreeTable extends OutlineView {
     }
 
     void setSelection (RepositoryRevision.Event... events) {
-        List<Node> nodes = new ArrayList<Node>(events.length);
+        List<Node> nodes = new ArrayList<>(events.length);
         for (RepositoryRevision.Event event : events) {
             RevisionNode node = (RevisionNode) getNode(rootNode, event);
             if (node != null) {
@@ -128,7 +121,7 @@ class DiffTreeTable extends OutlineView {
         }
         ExplorerManager em = ExplorerManager.find(this);
         try {
-            em.setSelectedNodes(nodes.toArray(new Node[nodes.size()]));
+            em.setSelectedNodes(nodes.toArray(Node[]::new));
         } catch (PropertyVetoException e) {
             ErrorManager.getDefault().notify(e);
         }
@@ -195,13 +188,19 @@ class DiffTreeTable extends OutlineView {
                     String tooltip = tooltips.get(val);
                     if (tooltip == null) {
                         tooltip = val.replace("\r\n", "\n").replace("\r", "\n"); //NOI18N
-                        try {
-                            tooltip = XMLUtil.toElementContent(tooltip);
-                        } catch (CharConversionException e1) {
-                            Logger.getLogger(DiffTreeTable.class.getName()).log(Level.INFO, "Can not HTML escape: ", tooltip);  //NOI18N
+                        boolean highlighterActive = tooltip.startsWith("<html>");
+                        if (!highlighterActive) {
+                            try {
+                                tooltip = XMLUtil.toElementContent(tooltip);
+                            } catch (CharConversionException e1) {
+                                Logger.getLogger(DiffTreeTable.class.getName()).log(Level.INFO, "Can not HTML escape: " + tooltip);  //NOI18N
+                            }
                         }
                         if (tooltip.contains("\n")) {
-                            tooltip = "<html><body><p>" + tooltip.replace("\n", "<br>") + "</p></body></html>"; //NOI18N
+                            tooltip = tooltip.replace("\n", "<br>");
+                            if (!highlighterActive) {
+                                tooltip = "<html><body><p>" + tooltip + "</p></body></html>"; //NOI18N
+                            }
                             c.setToolTipText(tooltip);
                         }
                         tooltips.put(val, tooltip);
@@ -235,94 +234,28 @@ class DiffTreeTable extends OutlineView {
         }
     }
 
-    private class NoLeafIconRenderDataProvider implements RenderDataProvider {
-        private RenderDataProvider delegate;
-        public NoLeafIconRenderDataProvider( RenderDataProvider delegate ) {
-            this.delegate = delegate;
-        }
-
-        @Override
-        public String getDisplayName(Object o) {
-            return delegate.getDisplayName(o);
-        }
-
-        @Override
-        public boolean isHtmlDisplayName(Object o) {
-            return delegate.isHtmlDisplayName(o);
-        }
-
-        @Override
-        public Color getBackground(Object o) {
-            return delegate.getBackground(o);
-        }
-
-        @Override
-        public Color getForeground(Object o) {
-            return delegate.getForeground(o);
-        }
-
-        @Override
-        public String getTooltipText(Object o) {
-            return delegate.getTooltipText(o);
-        }
-
-        @Override
-        public Icon getIcon(Object o) {
-            if( getOutline().getOutlineModel().isLeaf(o) )
-                return NO_ICON;
-            return null;
-        }
-
-    }
-    private static final Icon NO_ICON = new NoIcon();
-    private static class NoIcon implements Icon {
-
-        @Override
-        public void paintIcon(Component c, Graphics g, int x, int y) {
-
-        }
-
-        @Override
-        public int getIconWidth() {
-            return 0;
-        }
-
-        @Override
-        public int getIconHeight() {
-            return 0;
-        }
-    }
-    private class RevisionsRootNodeChildren extends Children.Keys {
+    private class RevisionsRootNodeChildren extends Children.Keys<RepositoryRevision> {
     
-        public RevisionsRootNodeChildren() {
-        }
+        private RevisionsRootNodeChildren() {}
 
         @Override
         protected void addNotify() {
             refreshKeys();
         }
         
-        @SuppressWarnings("unchecked")
         @Override
         protected void removeNotify() {
-            setKeys(Collections.EMPTY_SET);
+            setKeys(Collections.emptySet());
         }
     
-        @SuppressWarnings("unchecked")
         private void refreshKeys() {
             setKeys(results);
             repaint();
         }
     
         @Override
-        protected Node[] createNodes(Object key) {
-            RevisionNode node;
-            if (key instanceof RepositoryRevision) {
-                node = new RevisionNode((RepositoryRevision) key, master);
-            } else { // key instanceof RepositoryRevision.Event
-                node = new RevisionNode(((RepositoryRevision.Event) key), master);
-            }
-            return new Node[] { node };
+        protected Node[] createNodes(RepositoryRevision key) {
+            return new Node[] { new RevisionNode((RepositoryRevision) key, master) };
         }
     }
 }

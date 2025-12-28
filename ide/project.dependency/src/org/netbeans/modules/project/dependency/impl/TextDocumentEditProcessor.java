@@ -20,8 +20,9 @@ package org.netbeans.modules.project.dependency.impl;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -33,6 +34,7 @@ import org.netbeans.api.lsp.TextDocumentEdit;
 import org.netbeans.api.lsp.TextEdit;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.NbBundle;
 
 /**
@@ -47,9 +49,18 @@ public class TextDocumentEditProcessor {
     private FileObject targetFile;
     private EditorCookie editor;
     private LineDocument document;
+    private int failedOperation = -1;
     
     public TextDocumentEditProcessor(TextDocumentEdit edits) {
         this.edits = edits;
+    }
+    
+    public int getFailedOperationIndex() {
+        return failedOperation;
+    }
+    
+    public boolean isEditCompleted() {
+        return failedOperation == edits.getEdits().size();
     }
 
     public boolean isForkDocument() {
@@ -81,7 +92,8 @@ public class TextDocumentEditProcessor {
         "ERR_FailedToEditDocument=Failed to edit document {0}",
     })
     private void open() throws IOException {
-        FileObject fo = ProjectModificationResultImpl.fromString(edits.getDocument());
+        URL u = URI.create(edits.getDocument()).toURL();
+        FileObject fo = URLMapper.findFileObject(u);
         if (fo == null || !fo.isValid()) {
             throw new FileNotFoundException(edits.getDocument());
         }
@@ -145,7 +157,9 @@ public class TextDocumentEditProcessor {
                 }
         );
         if (err[0] != null) {
-            throw new IOException(Bundle.ERR_FailedToEditDocument(edits.getDocument()));
+            IOException e = new IOException(Bundle.ERR_FailedToEditDocument(edits.getDocument()));
+            e.initCause(err[0]);
+            throw e;
         }
         
         if (isSaveAfterEdit() && !isForkDocument()) {
@@ -161,11 +175,12 @@ public class TextDocumentEditProcessor {
     
     public void performEdits() throws BadLocationException {
         List<TextEdit> newEdits = new ArrayList<>(edits.getEdits());
-        Collections.sort(newEdits, ProjectModificationResultImpl.textEditComparator(edits.getEdits()).reversed());
+        newEdits.sort(ProjectModificationResultImpl.textEditComparator(edits.getEdits()).reversed());
         
         for (TextEdit te : edits.getEdits()) {
             int s = te.getStartOffset();
             int e = te.getEndOffset();
+            failedOperation++;
             // let positions that point at the start of the buffer remain in its place: first 
             // insert the text AFTER the deleted part, then delete.
             if (te.getNewText() != null && !te.getNewText().isEmpty()) {

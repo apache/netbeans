@@ -72,7 +72,7 @@ public final class FormPropertyEditorManager {
         Class type = property.getValueType();
         FormModel form = property.getPropertyContext().getFormModel();
         List<PropertyEditor> list = findEditors(type, form, true);
-        return list.toArray(new PropertyEditor[list.size()]);
+        return list.toArray(new PropertyEditor[0]);
     }
 
     public static synchronized void registerEditor(Class propertyType, Class editorClass) {
@@ -304,7 +304,7 @@ public final class FormPropertyEditorManager {
 
     private static PropertyEditor createEditorInstance(Class cls) {
         try {
-            return (PropertyEditor) cls.newInstance();
+            return (PropertyEditor) cls.getDeclaredConstructor().newInstance();
         } catch (Exception ex) {
             log(ex, "Error instantiating property editor: "+cls.getName()); // NOI18N
         } catch (LinkageError ex) {

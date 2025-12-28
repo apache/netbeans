@@ -75,6 +75,7 @@ public final class MdbWizard implements WizardDescriptor.InstantiatingIterator {
         "jakarta.jakartaee-web-api-9.0.0", //NOI18N
         "jakarta.jakartaee-web-api-9.1.0", //NOI18N
         "jakarta.jakartaee-web-api-10.0.0", //NOI18N
+        "jakarta.jakartaee-web-api-11.0.0" //NOI18N
     };
     private static final String[] SESSION_STEPS = new String[]{
         NbBundle.getMessage(MdbWizard.class, "LBL_SpecifyEJBInfo"), //NOI18N
@@ -89,6 +90,7 @@ public final class MdbWizard implements WizardDescriptor.InstantiatingIterator {
         MAVEN_JAVAEE_API_LIBS.put(Profile.JAKARTA_EE_9_FULL, "jakarta.jakartaee-api-9.0.0"); //NOI18N
         MAVEN_JAVAEE_API_LIBS.put(Profile.JAKARTA_EE_9_1_FULL, "jakarta.jakartaee-api-9.1.0"); //NOI18N
         MAVEN_JAVAEE_API_LIBS.put(Profile.JAKARTA_EE_10_FULL, "jakarta.jakartaee-api-10.0.0"); //NOI18N
+        MAVEN_JAVAEE_API_LIBS.put(Profile.JAKARTA_EE_11_FULL, "jakarta.jakartaee-api-11.0.0"); //NOI18N
     }
 
     @Override
@@ -186,7 +188,9 @@ public final class MdbWizard implements WizardDescriptor.InstantiatingIterator {
     private Profile getTargetFullProfile() {
         Profile profile = JavaEEProjectSettings.getProfile(Templates.getProject(wiz));
         if (profile != null) {
-            if (profile.isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
+            if (profile.isAtLeast(Profile.JAKARTA_EE_11_WEB)) {
+              return Profile.JAKARTA_EE_11_FULL;
+            } else if (profile.isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
               return Profile.JAKARTA_EE_10_FULL;
             } else if (profile.isAtLeast(Profile.JAKARTA_EE_9_1_WEB)) {
               return Profile.JAKARTA_EE_9_1_FULL;
@@ -217,7 +221,7 @@ public final class MdbWizard implements WizardDescriptor.InstantiatingIterator {
                 toRemove.add(library);
             }
         }
-        return Utils.removeLibraryFromClasspath(Templates.getProject(wiz), toRemove.toArray(new Library[toRemove.size()]));
+        return Utils.removeLibraryFromClasspath(Templates.getProject(wiz), toRemove.toArray(new Library[0]));
     }
 
     private void enhanceProjectClasspath(Profile targetProfile) throws IOException {

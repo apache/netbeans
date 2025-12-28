@@ -202,7 +202,7 @@ public class DbDriverManager {
         ClassLoader l = getClassLoader(jdbcDriver);
         Object driver;
         try {
-            driver = Class.forName(jdbcDriver.getClassName(), true, l).newInstance();
+            driver = Class.forName(jdbcDriver.getClassName(), true, l).getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             SQLException sqlex = createDriverNotFoundException();
             sqlex.initCause(e);

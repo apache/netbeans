@@ -1,0 +1,16 @@
+|-deprecated01 [202, 226] : DEPRECATED{ESCAPED{deprecated01}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecated02 [269, 293] : DEPRECATED{ESCAPED{deprecated02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecated03 [345, 369] : DEPRECATED{ESCAPED{deprecated03}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecated04 [398, 422] : ESCAPED{deprecated04}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecatedWithPhpDoc01 [496, 530] : DEPRECATED{ESCAPED{deprecatedWithPhpDoc01}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecatedWithPhpDoc02 [604, 638] : DEPRECATED{ESCAPED{deprecatedWithPhpDoc02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecatedWithParam01 [701, 734] : DEPRECATED{ESCAPED{deprecatedWithParam01}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecatedWithParam02 [813, 846] : DEPRECATED{ESCAPED{deprecatedWithParam02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecatedFQN [872, 897] : DEPRECATED{ESCAPED{deprecatedFQN}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecatedFQN02 [943, 970] : DEPRECATED{ESCAPED{deprecatedFQN02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecatedFQN03 [1026, 1053] : DEPRECATED{ESCAPED{deprecatedFQN03}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecatedFQN04 [1084, 1111] : ESCAPED{deprecatedFQN04}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecatedFQNWithPhpDoc01 [1186, 1223] : DEPRECATED{ESCAPED{deprecatedFQNWithPhpDoc01}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecatedFQNWithPhpDoc02 [1292, 1329] : DEPRECATED{ESCAPED{deprecatedFQNWithPhpDoc02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecatedFQNWithParam01 [1393, 1429] : DEPRECATED{ESCAPED{deprecatedFQNWithParam01}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>
+|-deprecatedFQNWithParam02 [1509, 1545] : DEPRECATED{ESCAPED{deprecatedFQNWithParam02}}ESCAPED{(}ESCAPED{)}<font color="#999999">:ESCAPED{void}</font>

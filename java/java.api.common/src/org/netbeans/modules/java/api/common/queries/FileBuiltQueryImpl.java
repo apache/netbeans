@@ -125,8 +125,8 @@ final class FileBuiltQueryImpl implements FileBuiltQueryImplementation, Property
             }
         }
         return helper.createGlobFileBuiltQuery(evaluator,
-                from.toArray(new String[from.size()]),
-                to.toArray(new String[to.size()]));
+                from.toArray(new String[0]),
+                to.toArray(new String[0]));
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

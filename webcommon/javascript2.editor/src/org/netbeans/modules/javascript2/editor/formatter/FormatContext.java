@@ -21,7 +21,6 @@ package org.netbeans.modules.javascript2.editor.formatter;
 import com.oracle.js.parser.ir.FunctionNode;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
@@ -122,7 +121,7 @@ public final class FormatContext {
         for (Context.Region region : context.indentRegions()) {
             regions.add(new Region(region));
         }
-        Collections.sort(regions, REGION_COMPARATOR);
+        regions.sort(REGION_COMPARATOR);
 
         dumpRegions();
 

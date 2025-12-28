@@ -59,6 +59,7 @@
     <fontcolor name="class" />
     <fontcolor name="interface" />
     <fontcolor name="enum" />
+    <fontcolor name="record" />
     
     <fontcolor name="unused" foreColor="gray"/>
     <fontcolor name="deprecated" strikeThrough="404040" />

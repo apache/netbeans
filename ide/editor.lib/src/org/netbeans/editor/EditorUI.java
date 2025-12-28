@@ -66,6 +66,7 @@ import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.editor.ext.ExtKit;
 import org.netbeans.api.editor.StickyWindowSupport;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.ext.ToolTipSupport;
 import org.netbeans.modules.editor.lib.ColoringMap;
 import org.netbeans.modules.editor.lib.EditorExtPackageAccessor;
@@ -158,7 +159,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
     /** Should the search words be colored? */
     boolean highlightSearch;
     
-    /** Enable displaying line numbers. Both this flag and <tt>lineNumberVisibleSetting</tt>
+    /** Enable displaying line numbers. Both this flag and <code>lineNumberVisibleSetting</code>
     * must be true to have the line numbers visible in the window. This flag is false
     * by default. It's turned on automatically if the getExtComponent is called.
     */
@@ -330,7 +331,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
         updateLineHeight(c);
     }
 
-    /** Called when the <tt>BaseTextUI</tt> is being installed
+    /** Called when the <code>BaseTextUI</code> is being installed
     * into the component.
     */
     protected void installUI(JTextComponent c) {
@@ -381,7 +382,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
         }
     }
 
-    /** Called when the <tt>BaseTextUI</tt> is being uninstalled
+    /** Called when the <code>BaseTextUI</code> is being uninstalled
     * from the component.
     */
     protected void uninstallUI(JTextComponent c) {
@@ -444,9 +445,9 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
     }
 
     /** Get the lock assuring the component will not be changed
-    * by <tt>installUI()</tt> or <tt>uninstallUI()</tt>.
+    * by <code>installUI()</code> or <code>uninstallUI()</code>.
     * It's useful for the classes that want to listen for the
-    * component change in <tt>EditorUI</tt>.
+    * component change in <code>EditorUI</code>.
     */
     public Object getComponentLock() {
         if (componentLock == null) {
@@ -1153,7 +1154,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
             try {
                 if (maxDigitCount <= 0) {
                     BaseDocument doc = getDocument();
-                    int lineCnt = Utilities.getLineOffset(doc, doc.getLength()) + 1;
+                    int lineCnt = LineDocumentUtils.getLineIndex(doc, doc.getLength()) + 1;
                     maxDigitCount = Integer.toString(lineCnt).length();
                 }
 

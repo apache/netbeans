@@ -35,6 +35,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.api.dashboard</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0</release-version>
+                        <specification-version>0.2</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.api.progress</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -303,7 +312,6 @@
                 <friend>org.netbeans.modules.apisupport.ant</friend>
                 <friend>org.netbeans.modules.java.j2seproject</friend>
                 <friend>org.netbeans.modules.maven</friend>
-                <friend>org.netbeans.modules.welcome</friend>
                 <package>org.netbeans.modules.project.ui.api</package>
                 <package>org.netbeans.modules.project.ui.spi</package>
             </friend-packages>

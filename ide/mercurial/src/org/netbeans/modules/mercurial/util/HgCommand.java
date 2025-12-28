@@ -37,6 +37,7 @@ import java.net.PasswordAuthentication;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,7 +66,6 @@ import org.netbeans.modules.mercurial.OutputLogger;
 import org.netbeans.modules.mercurial.WorkingCopyInfo;
 import org.netbeans.modules.mercurial.commands.StatusCommand;
 import org.netbeans.modules.mercurial.config.HgConfigFiles;
-import org.netbeans.modules.mercurial.kenai.HgKenaiAccessor;
 import org.netbeans.modules.mercurial.ui.branch.HgBranch;
 import org.netbeans.modules.mercurial.ui.log.HgLogMessage;
 import org.netbeans.modules.mercurial.ui.log.HgLogMessage.HgRevision;
@@ -924,7 +924,6 @@ public abstract class HgCommand<T> implements Callable<T> {
         if (repository == null || toUrl == null) return null;
 
         InterRepositoryCommand command = new InterRepositoryCommand();
-        command.acquireCredentialsFirst = true;
         command.defaultUrl = new HgConfigFiles(repository).getDefaultPush(false);
         command.hgCommandType = HG_PUSH_CMD;
         command.logger = logger;
@@ -1205,7 +1204,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                 }
             }
         }
-        return branches.toArray(new HgBranch[branches.size()]);
+        return branches.toArray(new HgBranch[0]);
     }
 
     private static HgTag[] processTags (List<String> lines, File repository, OutputLogger logger) throws HgException {
@@ -1266,7 +1265,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                 tags.add(new HgTag(t.name, info, t.local, !HG_TIP_CONST.equals(t.name)));
             }
         }
-        return tags.toArray(new HgTag[tags.size()]);
+        return tags.toArray(new HgTag[0]);
     }
 
     public static HgLogMessage[] getIncomingMessages(final File root, String toRevision, String branchName,
@@ -2237,14 +2236,8 @@ public abstract class HgCommand<T> implements Callable<T> {
 
         List<String> list = null;
         boolean retry = true;
-        // acquire credentials for kenai
         PasswordAuthentication credentials = null;
-        HgKenaiAccessor supp = HgKenaiAccessor.getInstance();
         String rawUrl = repository.toUrlStringWithoutUserInfo();
-        if (supp.isKenai(rawUrl) && supp.isLoggedIntoKenai(rawUrl)) {
-            credentials = supp.getPasswordAuthentication(rawUrl, false);
-        }
-
         HgURL url = repository;
         while (retry) {
             retry = false;
@@ -2288,9 +2281,8 @@ public abstract class HgCommand<T> implements Callable<T> {
                         }
                     } else {
                         // save credentials
-                        if (url.getPassword() != null && !supp.isKenai(rawUrl)) { // not kenai, credentials can be saved
+                        if (url.getPassword() != null) {
                             try {
-                                // for kenai this is handled in CloneAction
                                 HgModuleConfig.getDefault().setProperty(target, HgConfigFiles.HG_DEFAULT_PULL,
                                         new HgURL(url.toUrlStringWithoutUserInfo(), url.getUsername(), null).toCompleteUrlString());
                             } catch (URISyntaxException ex) {
@@ -2372,7 +2364,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                 commitMessage = HG_COMMIT_DEFAULT_MESSAGE;
             }
             // Create temporary file.
-            tempfile = File.createTempFile(HG_COMMIT_TEMPNAME, HG_COMMIT_TEMPNAME_SUFFIX);
+            tempfile = Files.createTempFile(HG_COMMIT_TEMPNAME, HG_COMMIT_TEMPNAME_SUFFIX).toFile();
 
             // Write to temp file
             BufferedWriter out = new BufferedWriter(ENCODING == null 
@@ -2772,7 +2764,7 @@ public abstract class HgCommand<T> implements Callable<T> {
              }
         }
         List<HgLogMessage> messages = processLogMessages(repository, null, list, false);
-        return messages.toArray(new HgLogMessage[messages.size()]);
+        return messages.toArray(new HgLogMessage[0]);
     }
 
     public static HgBranch[] getBranches (File repository, OutputLogger logger) throws HgException {
@@ -3418,7 +3410,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                 }
             }
         }
-        return patches.toArray(new QPatch[patches.size()]);
+        return patches.toArray(new QPatch[0]);
     }
 
     public static Queue[] qListQueues (File repository) throws HgException {
@@ -3550,7 +3542,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         if (patches.isEmpty() && !list.isEmpty()) {
             Mercurial.LOG.log(Level.INFO, "parsePatches(): No qpatches found: {0}", list);
         }
-        return patches.toArray(new QPatch[patches.size()]);
+        return patches.toArray(new QPatch[0]);
     }
 
     private static Queue[] parseQueues (List<String> list) {
@@ -3567,7 +3559,7 @@ public abstract class HgCommand<T> implements Callable<T> {
         if (queues.isEmpty() && !list.isEmpty()) {
             Mercurial.LOG.log(Level.INFO, "parseQueues(): No qqueue found: {0}", list);
         }
-        return queues.toArray(new Queue[queues.size()]);
+        return queues.toArray(new Queue[0]);
     }
 
     public static void qCreatePatch (File repository, Collection<File> includedFiles, Collection<File> excludedFiles,
@@ -3614,7 +3606,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                 commitMessage = HG_COMMIT_DEFAULT_MESSAGE;
             }
             // Create temporary file.
-            tempfile = File.createTempFile(HG_COMMIT_TEMPNAME, HG_COMMIT_TEMPNAME_SUFFIX);
+            tempfile = Files.createTempFile(HG_COMMIT_TEMPNAME, HG_COMMIT_TEMPNAME_SUFFIX).toFile();
 
             // Write to temp file
             BufferedWriter out = new BufferedWriter(ENCODING == null 
@@ -3944,9 +3936,8 @@ public abstract class HgCommand<T> implements Callable<T> {
 
                     String template = str.substring("--template=".length()); //NOI18N
 
-                    File tempFile = File.createTempFile(
-                                                "hg-output-style",      //NOI18N
-                                                null);    //extension (default)
+                    File tempFile = Files.createTempFile("hg-output-style", //NOI18N
+                            null).toFile();    //extension (default)
                     Writer writer = ENCODING == null 
                             ? new OutputStreamWriter(new FileOutputStream(tempFile)) 
                             : new OutputStreamWriter(new FileOutputStream(tempFile), ENCODING);
@@ -4152,21 +4143,9 @@ public abstract class HgCommand<T> implements Callable<T> {
         PasswordAuthentication credentials = null;
         String msg = cmdOutput.get(cmdOutput.size() - 1).toLowerCase();
         if (isAuthMsg(msg) && showLoginDialog) {
-            HgKenaiAccessor support = HgKenaiAccessor.getInstance();
-            if(support.isKenai(url)) {
-                checkKenaiPermissions(hgCommand, url, support);
-                // try to login
-                credentials = handleKenaiAuthorisation(support, url);
-            } else {
-                credentials = credentialsSupport.getUsernamePasswordCredentials(repository, url, userName);
-            }
+            credentials = credentialsSupport.getUsernamePasswordCredentials(repository, url, userName);
         }
         return credentials;
-    }
-
-    private static PasswordAuthentication handleKenaiAuthorisation(HgKenaiAccessor support, String url) {
-        PasswordAuthentication pa = support.getPasswordAuthentication(url, true);
-        return pa;
     }
 
     public static boolean isAuthMsg(String msg) {
@@ -4730,7 +4709,6 @@ public abstract class HgCommand<T> implements Callable<T> {
         protected String hgCommand;
         protected String hgCommandType;
         protected String defaultUrl;
-        protected boolean acquireCredentialsFirst;
         protected boolean outputDetails;
         protected List<String> additionalOptions;
         protected UserCredentialsSupport credentialsSupport;
@@ -4765,19 +4743,8 @@ public abstract class HgCommand<T> implements Callable<T> {
             boolean retry = true;
             boolean showLoginWindow = !Boolean.TRUE.equals(disabledUI.get());
             credentials = null;
-            HgKenaiAccessor supp = HgKenaiAccessor.getInstance();
             String rawUrl = remoteUrl.toUrlStringWithoutUserInfo();
-            acquireCredentialsFirst |= supp.isLoggedIntoKenai(rawUrl);
-            if (supp.isKenai(rawUrl)) {
-                if (acquireCredentialsFirst) {
-                    // will force user to login into kenai, if he isn't yet
-                    credentials = supp.getPasswordAuthentication(rawUrl, false);
-                    if (credentials == null) {
-                        // show log window only once, user probably canceled
-                        showLoginWindow = false;
-                    }
-                }
-            } else if (remoteUrl.getUsername() != null && remoteUrl.getPassword() == null) {
+            if (remoteUrl.getUsername() != null && remoteUrl.getPassword() == null) {
                 char[] password = KeyringSupport.read(HgUtils.PREFIX_VERSIONING_MERCURIAL_URL, remoteUrl.toHgCommandStringWithNoPassword()); //NOI18N
                 if (password != null) {
                     credentials = new PasswordAuthentication(remoteUrl.getUsername(), password);
@@ -4831,7 +4798,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                             if ((credentials = handleAuthenticationError(list, repository, rawUrl, credentials == null ? "" : credentials.getUserName(), credentialsSupport, hgCommandType, showLoginWindow)) != null) { //NOI18N
                                 // auth redone, try again
                                 retry = true;
-                                if (!supp.isKenai(rawUrl) && credentials != null) {
+                                if (credentials != null) {
                                     try {
                                         KeyringSupport.save(HgUtils.PREFIX_VERSIONING_MERCURIAL_URL, new HgURL(remoteUrl.toHgCommandUrlString(), credentials.getUserName(), null).toHgCommandStringWithNoPassword(), credentials.getPassword().clone(), null);
                                     } catch (URISyntaxException ex) {
@@ -4845,7 +4812,7 @@ public abstract class HgCommand<T> implements Callable<T> {
                     }
                 }
             } finally {
-                if (!supp.isKenai(rawUrl) && credentials != null) {
+                if (credentials != null) {
                     savePathProperties();
                     Arrays.fill(credentials.getPassword(), '\0');
                 }
@@ -4859,16 +4826,6 @@ public abstract class HgCommand<T> implements Callable<T> {
                     saveCredentials(pathProp);
                 }
             }
-        }
-    }
-
-    private static void checkKenaiPermissions (String hgCommand, String repositoryUrl, HgKenaiAccessor ka) throws HgException {
-        if (HG_PUSH_CMD.equals(hgCommand)) { //NOI18N
-            if (!ka.canWrite(repositoryUrl)) {
-                throw new HgException(NbBundle.getMessage(Repository.class, "MSG_Repository.kenai.insufficientRights.write")); //NOI18N
-            }
-        } else if (!ka.canRead(repositoryUrl)) {
-            throw new HgException(NbBundle.getMessage(Repository.class, "MSG_Repository.kenai.insufficientRights.read")); //NOI18N
         }
     }
 

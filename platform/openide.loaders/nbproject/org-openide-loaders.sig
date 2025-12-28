@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.92
+#Version 7.100
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -597,8 +597,6 @@ meth public final void setName(java.lang.String)
 meth public final void setPriority(int)
 meth public final void stop()
  anno 0 java.lang.Deprecated()
-meth public final void stop(java.lang.Throwable)
- anno 0 java.lang.Deprecated()
 meth public final void suspend()
  anno 0 java.lang.Deprecated()
 meth public int countStackFrames()
@@ -621,8 +619,6 @@ meth public static void setDefaultUncaughtExceptionHandler(java.lang.Thread$Unca
 meth public static void sleep(long) throws java.lang.InterruptedException
 meth public static void sleep(long,int) throws java.lang.InterruptedException
 meth public static void yield()
-meth public void destroy()
- anno 0 java.lang.Deprecated()
 meth public void interrupt()
 meth public void run()
 meth public void setContextClassLoader(java.lang.ClassLoader)
@@ -3171,14 +3167,15 @@ cons public init(java.lang.String,int)
 meth public boolean isDisplayOverflowOnHover()
 meth public java.awt.Dimension getPreferredSize()
 meth public void addNotify()
+meth public void doLayout()
+meth public void invalidate()
 meth public void removeAll()
 meth public void removeNotify()
 meth public void setDisplayOverflowOnHover(boolean)
 meth public void setOrientation(int)
 meth public void updateUI()
-meth public void validate()
 supr javax.swing.JToolBar
-hfds PROP_DRAGGER,PROP_JDEV_DISABLE_OVERFLOW,PROP_PREF_ICON_SIZE,awtEventListener,componentAdapter,displayOverflowOnHover,overflowButton,overflowToolbar,popup,showingPopup
+hfds PROP_DRAGGER,PROP_JDEV_DISABLE_OVERFLOW,PROP_PREF_ICON_SIZE,awtEventListener,componentAdapter,displayOverflowOnHover,overflowButton,overflowToolbar,popup,showingPopup,updateOverflow
 hcls SafePopupMenu,SafeToolBar,ToolbarArrowIcon
 
 CLSS public abstract interface org.openide.awt.UndoRedo
@@ -4655,7 +4652,7 @@ meth public void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void saveDocument() throws java.io.IOException
 meth public void setMIMEType(java.lang.String)
 supr org.openide.windows.CloneableOpenSupport
-hfds ERR,LOCAL_CLOSE_DOCUMENT,LOCK_PRINTING,PROP_PANE,alreadyModified,annotationsLoaded,checkModificationLock,docFilter,inUserQuestionExceptionHandler,isSaving,kit,lastReusable,lastSaveTime,lastSelected,lineSet,lineSetLineVector,listener,listeners,listeningOnEnv,lookup,mimeType,openClose,positionManager,preventModification,printing,propertyChangeSupport,reloadDialogOpened,undoRedo,warnedClasses
+hfds ERR,LOCAL_CLOSE_DOCUMENT,LOCK_PRINTING,PROP_PANE,alreadyModified,annotationsLoaded,checkModificationLock,docFilter,filteredDocRef,inUserQuestionExceptionHandler,isSaving,kit,lastReusable,lastSaveTime,lastSelected,lineSet,lineSetLineVector,listener,listeners,listeningOnEnv,lookup,mimeType,openClose,positionManager,preventModification,printing,propertyChangeSupport,reloadDialogOpened,undoRedo,warnedClasses
 hcls DocFilter,Listener,PlainEditorKit
 
 CLSS public abstract interface static org.openide.text.CloneableEditorSupport$Env

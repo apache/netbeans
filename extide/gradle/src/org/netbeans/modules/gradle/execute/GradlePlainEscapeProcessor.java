@@ -28,9 +28,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.gradle.output.GradleProcessorFactory;
 import org.openide.util.Lookup;
 import org.openide.windows.IOColorPrint;
 import org.openide.windows.IOColors;
@@ -57,13 +56,20 @@ public class GradlePlainEscapeProcessor implements EscapeProcessor {
     public GradlePlainEscapeProcessor(InputOutput io, RunConfig cfg, boolean error) {
         this.io = io;
         output = new IODisplayer();
-        Project prj = cfg.getProject();
-        if (prj != null) {
-            processorsFromLookup(prj.getLookup(), cfg);
+        if (cfg != null) {
+            Project prj = cfg.getProject();
+            if (prj != null) {
+                processorsFromLookup(prj.getLookup(), cfg);
+            }
         }
         outType = error ? ERROR : OUTPUT;
-        processors.add(TASK_LINE_PROCESSOR);
-        processors.add(STATIC_STRING_PROCESSOR);
+        processors.add(GradleProcessorFactory.URL_PROCESSOR);
+        processors.add(GradleProcessorFactory.TASK_LINE_PROCESSOR);
+        processors.add(GradleProcessorFactory.STATIC_STRING_PROCESSOR);
+    }
+
+    public GradlePlainEscapeProcessor(InputOutput io, boolean error) {
+        this(io, null, error);
     }
 
     private void processorsFromLookup(Lookup lookup, RunConfig cfg) {
@@ -138,51 +144,4 @@ public class GradlePlainEscapeProcessor implements EscapeProcessor {
 
     }
     
-    private static final OutputProcessor TASK_LINE_PROCESSOR = new OutputProcessor() {
-        final Pattern TASK_LINE = Pattern.compile("> Task (:[\\w:\\-]+)( [\\w\\-]+)?"); //NOI18N
-        @Override
-        public boolean processLine(OutputDisplayer out, String line) {
-            Matcher m = TASK_LINE.matcher(line);
-            boolean ret = m.matches();
-            if (ret) {
-                String task = m.group(1);
-                String state = m.group(2);
-                out.print("> Task "); //NOI18N
-                out.print(task);
-                if (state != null) {
-                    OutputType type = LOG_WARNING;
-                    if (state.endsWith("EXECUTED") || state.endsWith("UP-TO-DATE") || state.endsWith("FROM-CACHE")) { //NOI18N
-                        type = LOG_SUCCESS;
-                    } else if (state.endsWith("FAILED")) { //NOI18N
-                        type = LOG_FAILURE;
-                    }
-                    out.print(state , null, type);
-                }
-            }
-            return ret;
-        }
-    };
-            
-    private static final OutputProcessor STATIC_STRING_PROCESSOR = new OutputProcessor() {
-        private static final String BUILD_FAILED_MSG = "BUILD FAILED"; //NOI18N
-        private static final String BUILD_SUCCESS_MSG = "BUILD SUCCESSFUL"; //NOI18N
-        private static final String COD_INCUBATION_MSG = "Configuration on demand is an incubating feature."; //NOI18N
-        private static final String CONFIG_CACHE_MGS = "Configuration cache "; //NOI18N
-        
-        @Override
-        public boolean processLine(OutputDisplayer out, String line) {
-            OutputType type = null;
-            if (line.startsWith(COD_INCUBATION_MSG) || line.startsWith(CONFIG_CACHE_MGS)) {
-                type = LOG_DEBUG;
-            } else if (line.startsWith(BUILD_SUCCESS_MSG)) {
-                type = LOG_SUCCESS;
-            } else if (line.startsWith(BUILD_FAILED_MSG)) {
-                type = LOG_FAILURE;
-            }
-            if (type != null) {
-                out.print(line, null, type);
-            }
-            return type != null;
-        }
-    };
 }

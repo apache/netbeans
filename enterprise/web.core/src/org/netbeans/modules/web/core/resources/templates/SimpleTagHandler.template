@@ -7,10 +7,17 @@
 package ${package};
 </#if>
 
+<#if jakartaPackages>
+import jakarta.servlet.jsp.JspWriter;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.JspFragment;
+import jakarta.servlet.jsp.tagext.SimpleTagSupport;
+<#else>
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.JspFragment;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
+</#if>
 
 /**
  *
@@ -19,7 +26,7 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 public class ${name} extends SimpleTagSupport {
 
     /**
-     * Called by the container to invoke this tag. 
+     * Called by the container to invoke this tag.
      * The implementation of this method is provided by the tag library developer,
      * and handles all tag processing, body iteration, etc.
      */

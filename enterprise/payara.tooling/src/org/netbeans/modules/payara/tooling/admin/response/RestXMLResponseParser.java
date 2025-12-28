@@ -59,7 +59,6 @@ public class RestXMLResponseParser extends RestResponseParser {
      */
     @Override
     public RestActionReport parse(InputStream in) {
-        //System.out.println("FACTORY: " + factory);
         try {
             XMLEventReader reader = factory.createFilteredReader(factory.createXMLEventReader(in), filter);
             if (reader.hasNext() && MAP.equals(reader.nextEvent().asStartElement().getName().getLocalPart())) {

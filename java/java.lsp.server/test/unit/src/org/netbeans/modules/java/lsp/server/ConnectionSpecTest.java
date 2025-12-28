@@ -121,7 +121,7 @@ public class ConnectionSpecTest {
             String reply = os.toString("UTF-8");
             String exp = "Pipe server listening at port ";
             assertTrue(reply, reply.startsWith(exp));
-            int port = Integer.parseInt(reply.substring(exp.length()));
+            int port = Integer.parseInt(reply.substring(exp.length(), reply.indexOf('\n', exp.length())));
             assertTrue("port is specified: " + port, port >= 1024);
             try (ConnectionSpec second = ConnectionSpec.parse("connect:" + port)) {
                 second.prepare("Pipe client", in, os, new LspSession(), ConnectionSpecTest::setCopy, ConnectionSpecTest::copy);

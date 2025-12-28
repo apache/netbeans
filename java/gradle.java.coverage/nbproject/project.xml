@@ -119,7 +119,7 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>gradle/org.jacoco.core.jar</runtime-relative-path>
-                <binary-origin>external/org.jacoco.core-0.8.7.jar</binary-origin>
+                <binary-origin>external/org.jacoco.core-0.8.12.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

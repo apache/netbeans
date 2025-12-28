@@ -30,7 +30,6 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.lib.profiler.ProfilerClient;
-import org.netbeans.lib.profiler.ProfilerEngineSettings;
 import org.netbeans.lib.profiler.ProfilerLogger;
 import org.netbeans.lib.profiler.TargetAppRunner;
 import org.netbeans.lib.profiler.client.ClientUtils;
@@ -127,7 +126,7 @@ public final class ResultsManager {
     //    ProfilingResultsDispatcher.getDefault().reset();
     //    if (instr == CommonConstants.INSTR_RECURSIVE_FULL || instr == CommonConstants.INSTR_RECURSIVE_SAMPLED) {
     //      // TODO reset cpu profiling results collectors
-    ////      CPUCallGraphBuilder.resetCollectors();
+    // //      CPUCallGraphBuilder.resetCollectors();
     //    } else if (instr == CommonConstants.INSTR_OBJECT_ALLOCATIONS || instr == CommonConstants.INSTR_OBJECT_LIVENESS) {
     //      MemoryCallGraphBuilder mcgb = Profiler.getDefault().getTargetAppRunner().getProfilerClient().getMemoryCallGraphBuilder();
     //      mcgb.resetCollectors();
@@ -639,8 +638,7 @@ public final class ResultsManager {
                     files.add(child);
             }
 
-            Collections.sort(files,
-                             new Comparator() {
+            files.sort(new Comparator() {
                     public int compare(Object o1, Object o2) {
                         FileObject f1 = (FileObject) o1;
                         FileObject f2 = (FileObject) o2;
@@ -685,8 +683,7 @@ public final class ResultsManager {
                 }
             }
 
-            Collections.sort(files,
-                             new Comparator() {
+            files.sort(new Comparator() {
                     public int compare(Object o1, Object o2) {
                         FileObject f1 = (FileObject) o1;
                         FileObject f2 = (FileObject) o2;

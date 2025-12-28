@@ -71,7 +71,6 @@ final class RunClassThread extends Thread implements IOThreadIfc {
         this.originalLookup = originalLookup;
         // #33789 - this thread must not be daemon otherwise it is immediately destroyed
         setDaemon(false);
-        this.start();
     }
 
     /** runs the thread
@@ -166,6 +165,7 @@ final class RunClassThread extends Thread implements IOThreadIfc {
         }
     } // run method
 
+    @Override
     public InputOutput getInputOutput() {
         return io;
     }

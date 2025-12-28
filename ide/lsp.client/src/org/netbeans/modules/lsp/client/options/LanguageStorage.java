@@ -27,22 +27,25 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeEvent;
-import org.eclipse.tm4e.core.registry.IRegistryOptions;
-import org.eclipse.tm4e.core.registry.Registry;
+import org.netbeans.modules.lsp.client.debugger.api.RegisterDAPBreakpoints;
+import org.eclipse.tm4e.core.internal.grammar.raw.RawGrammarReader;
+import org.eclipse.tm4e.core.registry.IGrammarSource;
+import org.netbeans.core.spi.multiview.MultiViewFactory;
 import org.netbeans.modules.textmate.lexer.TextmateTokenId;
 import org.netbeans.spi.navigator.NavigatorPanel;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataLoaderPool;
 import org.openide.loaders.DataObject;
+import org.openide.modules.OnStart;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbPreferences;
 
 /**
@@ -51,6 +54,23 @@ import org.openide.util.NbPreferences;
  */
 public class LanguageStorage {
 
+    /**
+     * Startup handler for language store. This handler reapplies the language
+     * descriptions at startup so that the runtime view matches the one expected
+     * by the running IDE. This is mostly relevant when the IDE requires new
+     * files (like the MultiView description when that feature was introduced).
+     */
+    @OnStart
+    public static class StartupHandler implements Runnable {
+
+        @Override
+        public void run() {
+            // load language definitions and reapply them
+            store(load());
+        }
+
+    }
+
     private static final String KEY = "language.descriptions";
 
     static List<LanguageDescription> load() {
@@ -58,6 +78,7 @@ public class LanguageStorage {
         return Arrays.stream(new Gson().fromJson(descriptions, LanguageDescription[].class)).collect(Collectors.toList());
     }
 
+    @Messages("Source=&Source")
     static void store(List<LanguageDescription> languages) {
         Set<String> originalMimeTypes = load().stream().map(ld -> ld.mimeType).collect(Collectors.toSet());
         Set<String> mimeTypesToClear = new HashSet<>(originalMimeTypes);
@@ -72,7 +93,7 @@ public class LanguageStorage {
                     Exceptions.printStackTrace(ex);
                 }
             }
-            
+
             for (FileObject children : mimeResolver.getChildren()) {
                 if ("synthetic".equals(children.getAttribute(LanguageServersPanel.class.getName()))) {
                     try {
@@ -131,6 +152,19 @@ public class LanguageStorage {
                     loader.setAttribute("dataObjectClass", GenericDataObject.class.getName());
                     loader.setAttribute("mimeType", description.mimeType);
 
+                    deleteConfigFileIfExists("Editors/" + description.mimeType + "/MultiView/source.instance");
+                    FileObject multiViewRegistration = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/MultiView/source.instance");
+                    Method createMultiViewDescription = MultiViewFactory.class.getDeclaredMethod("createMultiViewDescription", Map.class);
+                    multiViewRegistration.setAttribute("methodvalue:instanceCreate", createMultiViewDescription);
+                    multiViewRegistration.setAttribute("instanceClass", "org.netbeans.core.multiview.ContextAwareDescription");
+                    multiViewRegistration.setAttribute("class", GenericDataObject.class.getName());
+                    multiViewRegistration.setAttribute("mimeType", description.mimeType);
+                    multiViewRegistration.setAttribute("displayName", Bundle.Source());
+                    multiViewRegistration.setAttribute("preferredID", "lsp.source");
+                    multiViewRegistration.setAttribute("persistenceType", 1);
+                    multiViewRegistration.setAttribute("position", 100);
+                    multiViewRegistration.setAttribute("method", "createEditor");
+
                     FileObject icon = FileUtil.getConfigFile("Loaders/" + description.mimeType + "/Factories/icon.png");
                     if (icon != null) {
                         icon.delete();
@@ -144,8 +178,9 @@ public class LanguageStorage {
                         }
 
                         loader.setAttribute("iconBase", icon.getNameExt());
+                        multiViewRegistration.setAttribute("iconBase", icon.getNameExt());
                     }
-                    
+
                     if (description.languageServer != null && !description.languageServer.isEmpty()) {
                         FileObject langServer = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/org-netbeans-modules-lsp-client-options-GenericLanguageServer.instance");
                         langServer.setAttribute("command", description.languageServer.split(" "));
@@ -153,7 +188,25 @@ public class LanguageStorage {
                             langServer.setAttribute("name", description.name);
                         }
                     }
-                    
+
+                    deleteConfigFileIfExists("Editors/" + description.mimeType + "/generic-breakpoints.instance");
+                    deleteConfigFileIfExists("Editors/" + description.mimeType + "/GlyphGutterActions/generic-toggle-breakpoint.shadow");
+
+                    if (description.debugger) {
+                        FileObject genericBreakpoints = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/generic-breakpoints.instance");
+
+                        genericBreakpoints.setAttribute("instanceOf", RegisterDAPBreakpoints.class.getName());
+                        Method newInstance = RegisterDAPBreakpoints.class.getDeclaredMethod("newInstance");
+                        genericBreakpoints.setAttribute("methodvalue:instanceCreate", newInstance);
+
+                        FileObject genericGutterAction = FileUtil.createData(FileUtil.getConfigRoot(), "Editors/" + description.mimeType + "/GlyphGutterActions/generic-toggle-breakpoint.shadow");
+
+                        genericGutterAction.setAttribute("originalFile", "Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance");
+                        genericGutterAction.setAttribute("position", 500);
+                    } else {
+                        //TODO: remove
+                    }
+
                     mimeTypesToClear.remove(description.mimeType);
                 } catch (Exception ex) {
                     Exceptions.printStackTrace(ex);
@@ -162,18 +215,12 @@ public class LanguageStorage {
 
             for (String mimeType : mimeTypesToClear) {
                 try {
-                    FileObject syntax = FileUtil.getConfigFile("Editors/" + mimeType + "/syntax.json");
-                    if (syntax != null) {
-                        syntax.delete();
-                    }
-                    FileObject langServer = FileUtil.getConfigFile("Editors/" + mimeType + "/org-netbeans-modules-lsp-client-options-GenericLanguageServer.instance");
-                    if (langServer != null) {
-                        langServer.delete();
-                    }
-                    FileObject loader = FileUtil.getConfigFile("Loaders/" + mimeType + "/Factories/data-object.instance");
-                    if (loader != null) {
-                        loader.delete();
-                    }
+                    deleteConfigFileIfExists("Editors/" + mimeType + "/syntax.json");
+                    deleteConfigFileIfExists("Editors/" + mimeType + "/org-netbeans-modules-lsp-client-options-GenericLanguageServer.instance");
+                    deleteConfigFileIfExists("Loaders/" + mimeType + "/Factories/data-object.instance");
+                    deleteConfigFileIfExists("Editors/" + mimeType + "/generic-breakpoints.instance");
+                    deleteConfigFileIfExists("Editors/" + mimeType + "/GlyphGutterActions/generic-toggle-breakpoint.shadow");
+                    deleteConfigFileIfExists("Editors/" + mimeType + "/MultiView/source.instance");
                 } catch (Exception ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -213,24 +260,18 @@ public class LanguageStorage {
         NbPreferences.forModule(LanguageServersPanel.class).put(KEY, new Gson().toJson(languages));
     }
 
-    private static String findScope(File grammar) throws Exception {
-        IRegistryOptions opts = new IRegistryOptions() {
-            @Override
-            public String getFilePath(String scopeName) {
-                return null;
-            }
-            @Override
-            public InputStream getInputStream(String scopeName) throws IOException {
-                return null;
-            }
-            @Override
-            public Collection<String> getInjections(String scopeName) {
-                return null;
-            }
-        };
-        return new Registry(opts).loadGrammarFromPathSync(grammar).getScopeName();
+    private static void deleteConfigFileIfExists(String path) throws IOException {
+        FileObject file = FileUtil.getConfigFile(path);
+
+        if (file != null) {
+            file.delete();
+        }
     }
-    
+
+    private static String findScope(File grammar) throws Exception {
+        return RawGrammarReader.readGrammar(IGrammarSource.fromFile(grammar.toPath())).getScopeName();
+    }
+
     public static class LanguageDescription {
 
         public String id;
@@ -240,6 +281,7 @@ public class LanguageStorage {
         public String name;
         public String icon;
         public String mimeType;
+        public boolean debugger;
 
         public LanguageDescription() {
             this.id = null;
@@ -248,16 +290,18 @@ public class LanguageStorage {
             this.languageServer = null;
             this.name = null;
             this.icon = null;
+            this.debugger = false;
             this.mimeType = null;
         }
 
-        public LanguageDescription(String id, String extensions, String syntaxGrammar, String languageServer, String name, String icon) {
+        public LanguageDescription(String id, String extensions, String syntaxGrammar, String languageServer, String name, String icon, boolean debugger) {
             this.id = id;
             this.extensions = extensions;
             this.syntaxGrammar = syntaxGrammar;
             this.languageServer = languageServer;
             this.name = name;
             this.icon = icon;
+            this.debugger = debugger;
             this.mimeType = "text/x-ext-" + id;
         }
 

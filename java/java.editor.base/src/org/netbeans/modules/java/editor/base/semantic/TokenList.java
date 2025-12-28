@@ -365,17 +365,28 @@ public class TokenList {
     }
 
     public void resetToIndex(int index) {
-        if (ts == null) {
-            return ;
-        }
+        doc.render(() -> {
+            if (cancel.get()) {
+                return ;
+            }
 
-        ts.moveIndex(index);
-        ts.moveNext();
+            if (ts == null) {
+                return ;
+            }
+
+            if (!ts.isValid()) {
+                cancel.set(true);
+                return ;
+            }
+
+            ts.moveIndex(index);
+            ts.moveNext();
+        });
     }
 
     private static List<TokenSequence<?>> embeddedTokenSequences(TokenHierarchy<Document> th, int offset) {
         TokenSequence<?> embedded = th.tokenSequence();
-        List<TokenSequence<?>> sequences = new ArrayList<TokenSequence<?>>();
+        List<TokenSequence<?>> sequences = new ArrayList<>();
 
         do {
             TokenSequence<?> seq = embedded;

@@ -23,7 +23,7 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 import org.apache.jasper.JspC;
 import org.apache.jasper.Options;
 import org.apache.jasper.compiler.JspConfig;

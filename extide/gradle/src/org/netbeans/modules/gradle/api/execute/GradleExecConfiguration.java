@@ -44,7 +44,7 @@ import org.openide.util.Lookup;
  * The configuration can be defined by the user using the UI. There are no API calls (yet) to 
  * create or manage Configurations.
  * <p>
- * <a name="request-for-invocation"></a>One can <b>request action invocation</b> in a specific {@link GradleExecConfiguration}. In that
+ * <a id="request-for-invocation"></a>One can <b>request action invocation</b> in a specific {@link GradleExecConfiguration}. In that
  * case, {@link ActionMapping} for the action specific for the selected configuration (if defined) will be used. Also, if the {@link #getCommandLineArgs()}
  * or {@link #getProjectProperties()} are not empty, their values will be combined with the {@link ActionMapping} settings.
  * To invoke a Project Action with a specific Configuration, place the Configuration instance in the Action's context Lookup:

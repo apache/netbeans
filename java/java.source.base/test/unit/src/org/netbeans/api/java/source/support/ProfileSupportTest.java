@@ -186,7 +186,7 @@ public class ProfileSupportTest extends NbTestCase {
                     v.getRequiredProfile()));
         }
         for (List<Pair<ElementHandle<TypeElement>,SourceLevelQuery.Profile>> l : resM.values()) {
-            Collections.sort(l, new Comparator<Pair<ElementHandle<TypeElement>,SourceLevelQuery.Profile>>() {
+            l.sort(new Comparator<Pair<ElementHandle<TypeElement>,SourceLevelQuery.Profile>>() {
                 @Override
                 public int compare(
                         Pair<ElementHandle<TypeElement>, SourceLevelQuery.Profile> o1,

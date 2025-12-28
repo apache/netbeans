@@ -133,7 +133,7 @@ public class ConnectionList {
 
     public DatabaseConnection[] getConnections() {
         Collection<? extends DatabaseConnection> dbconns = result.allInstances();
-        return dbconns.toArray(new DatabaseConnection[dbconns.size()]);
+        return dbconns.toArray(new DatabaseConnection[0]);
     }
 
     public DatabaseConnection getConnection(DatabaseConnection impl) {

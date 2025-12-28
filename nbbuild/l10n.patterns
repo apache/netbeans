@@ -66,6 +66,7 @@ exclude **/FastInfoset.jar:
 exclude **/appframework-1.0.3.jar:
 exclude **/shale-remoting-1.0.4.jar:
 exclude **/jsp-parser-ext.jar:
+exclude **/jsp-parser-ext-jakarta.jar:
 exclude **/groovy-all.jar:
 exclude **/dynalang-0.3.jar:
 exclude **/itext-2.0.5.jar:

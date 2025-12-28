@@ -257,9 +257,7 @@ public class ServerLocationVisual extends javax.swing.JPanel {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner Classes
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * Simple key listener that delegates the event to its parent's listeners
      *

@@ -49,9 +49,12 @@
             <CallNode start='19' end='31'>
               <!-- CallNode Arguments -->
               <!-- CallNode Function -->
-              <IdentNode start='19' end='29'>
-                <name>new.target</name>
-              </IdentNode>
+              <AccessNode property='target' start='19' end='29'>
+                <!-- AccessNode Base -->
+                <IdentNode start='19' end='22'>
+                  <name>new</name>
+                </IdentNode>
+              </AccessNode>
             </CallNode>
           </ExpressionStatement>
         </Block>

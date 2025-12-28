@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.81.0
+#Version 1.89.0
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -23,7 +24,7 @@ supr java.lang.Object
 
 CLSS public org.netbeans.modules.project.ui.api.ProjectTemplates
 fld public final static java.lang.String PRESELECT_CATEGORY = "PRESELECT_CATEGORY"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String PRESELECT_TEMPLATE = "PRESELECT_TEMPLATE"
 supr java.lang.Object
 

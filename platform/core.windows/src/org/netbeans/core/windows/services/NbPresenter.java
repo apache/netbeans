@@ -80,8 +80,6 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.basic.BasicLookAndFeel;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import org.netbeans.core.windows.Constants;
 import org.openide.DialogDescriptor;
 import org.openide.NotificationLineSupport;
@@ -103,8 +101,6 @@ import org.openide.util.Utilities;
  */
 class NbPresenter extends JDialog
 implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparator<Object> {
-
-    private static Boolean isJava17 = null;
 
     protected NotifyDescriptor descriptor;
 
@@ -458,7 +454,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
      */
     private JOptionPane createOptionPane() {
         Object msg = descriptor.getMessage();
-        boolean override = true;
+        boolean limitLineWidth = true;
         String strMsg = null, strMsgLower;
 
         if (msg instanceof String) {
@@ -469,22 +465,22 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
             //so that html text will be displayed correctly in JOptionPane
             strMsg = (String)msg;
             strMsgLower = strMsg.toLowerCase();
-            override = !strMsgLower.startsWith("<html>"); // NOI18N
+            limitLineWidth = !strMsgLower.startsWith("<html>"); // NOI18N
         }
         if (msg instanceof javax.accessibility.Accessible) {
             strMsg = ((javax.accessibility.Accessible)msg).getAccessibleContext().getAccessibleDescription();
         }
 
         JOptionPane optionPane;
-        if (override) {
+        if (limitLineWidth) {
             // initialize component (override max char count per line in a message)
             optionPane = new JOptionPane(
-            msg,
-            descriptor.getMessageType(),
-            0, // options type
-            null, // icon
-            new Object[0], // options
-            null // value
+                msg,
+                descriptor.getMessageType(),
+                0, // options type
+                null, // icon
+                new Object[0], // options
+                null // value
             ) {
                 @Override
                 public int getMaxCharactersPerLineCount() {
@@ -494,29 +490,23 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         } else {
             //Do not override JOptionPane.getMaxCharactersPerLineCount for html text
             optionPane = new JOptionPane(
-            msg,
-            descriptor.getMessageType(),
-            0, // options type
-            null, // icon
-            new Object[0], // options
-            null // value
+                msg,
+                descriptor.getMessageType(),
+                0, // options type
+                null, // icon
+                new Object[0], // options
+                null // value
             );
         }
 
-        if (UIManager.getLookAndFeel().getClass() == MetalLookAndFeel.class ||
-            UIManager.getLookAndFeel().getClass() == BasicLookAndFeel.class) {
-            optionPane.setUI(new javax.swing.plaf.basic.BasicOptionPaneUI() {
-                @Override
-                public Dimension getMinimumOptionPaneSize() {
-                    if (minimumSize == null) {
-                        //minimumSize = UIManager.getDimension("OptionPane.minimumSize");
-                        // this is called before defaults initialized?!!!
-                        return new Dimension(MinimumWidth, 50);
-                    }
-                    return new Dimension(minimumSize.width, 50);
-                }
-            });
+        // javax.swing.plaf.basic.BasicOptionPaneUI uses hardcoded min height of 90,
+        // if no other default is set. Min height should be about the size of the
+        // used icon, so that dialogs with single-line messages can size themself properly.
+        Dimension minSize = UIManager.getDimension("OptionPane.minimumSize");
+        if (minSize != null) {
+            minSize.setSize(minSize.getWidth(), 38);
         }
+
         optionPane.setWantsInput(false);
         optionPane.getAccessibleContext().setAccessibleDescription(strMsg);
         if( null != strMsg ) {
@@ -620,6 +610,16 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         return result;
     }
 
+    private boolean shouldUseMacButtonOrder() {
+        String testLooksAsMacProp = System.getProperty("xtest.looks_as_mac");
+        if (testLooksAsMacProp != null) {
+            // For NbPresenterTest.
+            return testLooksAsMacProp.equalsIgnoreCase("true");
+        } else {
+            return UIManager.getBoolean("OptionPane.isYesLast");
+        }
+    }
+
     protected final void initializeButtons() {
         // -----------------------------------------------------------------------------
         // If there were any buttons previously, remove them and removeActionListener from them
@@ -644,9 +644,9 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         currentPrimaryButtons = null;
         currentSecondaryButtons = null;
 
-        boolean isAqua = "Aqua".equals (UIManager.getLookAndFeel().getID()) || //NOI18N
-                        "true".equalsIgnoreCase (System.getProperty ("xtest.looks_as_mac"));
-        if (isAqua) {
+        final boolean useMacButtonOrder = shouldUseMacButtonOrder();
+
+        if (useMacButtonOrder) {
             //No mac dialogs with buttons on side
             currentAlign = DialogDescriptor.BOTTOM_ALIGN;
         }
@@ -656,18 +656,21 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         //      I hope that my change will not cause additional ones ;-)
         //    if (descriptor.getOptionType () == NotifyDescriptor.DEFAULT_OPTION) {
         if (primaryOptions != null) {
-            if (isAqua) {
+            if (useMacButtonOrder) {
                 Arrays.sort(primaryOptions, this);
             }
             currentPrimaryButtons = new Component [primaryOptions.length];
             for (int i = 0; i < primaryOptions.length; i++) {
-                if (primaryOptions[i] == NotifyDescriptor.YES_OPTION) {
-                    currentPrimaryButtons[i] = stdYesButton;
+                if (primaryOptions[i] == NotifyDescriptor.OK_OPTION ||
+                        primaryOptions[i] == NotifyDescriptor.YES_OPTION) {
+                    if (Arrays.asList(primaryOptions).contains(NotifyDescriptor.NO_OPTION)) {
+                        currentPrimaryButtons[i] = stdYesButton;
+                    } else {
+                        currentPrimaryButtons[i] = stdOKButton;
+                        stdOKButton.setEnabled(descriptor.isValid());
+                    }
                 } else if (primaryOptions[i] == NotifyDescriptor.NO_OPTION) {
                     currentPrimaryButtons[i] = stdNoButton;
-                } else if (primaryOptions[i] == NotifyDescriptor.OK_OPTION) {
-                    currentPrimaryButtons[i] = stdOKButton;
-                    stdOKButton.setEnabled(descriptor.isValid());
                 } else if (primaryOptions[i] == NotifyDescriptor.CANCEL_OPTION) {
                     currentPrimaryButtons[i] = stdCancelButton;
                 } else if (primaryOptions[i] == NotifyDescriptor.CLOSED_OPTION) {
@@ -689,7 +692,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         } else { // predefined option types
             switch (descriptor.getOptionType()) {
                 case NotifyDescriptor.YES_NO_OPTION:
-                    if (isAqua) {
+                    if (useMacButtonOrder) {
                         currentPrimaryButtons = new Component[2];
                         currentPrimaryButtons[0] = stdNoButton;
                         currentPrimaryButtons[1] = stdYesButton;
@@ -701,7 +704,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                     break;
                 case NotifyDescriptor.YES_NO_CANCEL_OPTION:
                     currentPrimaryButtons = new Component[3];
-                    if (isAqua) {
+                    if (useMacButtonOrder) {
                         currentPrimaryButtons[0] = stdCancelButton;
                         currentPrimaryButtons[1] = stdNoButton;
                         currentPrimaryButtons[2] = stdYesButton;
@@ -713,7 +716,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                     break;
                 case NotifyDescriptor.OK_CANCEL_OPTION:
                 default:
-                    if (isAqua) {
+                    if (useMacButtonOrder) {
                         currentPrimaryButtons = new Component[2];
                         currentPrimaryButtons[0] = stdCancelButton;
                         currentPrimaryButtons[1] = stdOKButton;
@@ -767,7 +770,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
             } else {
                 if (currentPrimaryButtons == null) currentPrimaryButtons = new Component[] { };
                 Component[] cPB2 = new Component[currentPrimaryButtons.length + 1];
-                if (isAqua) { //NOI18N
+                if (useMacButtonOrder) { //NOI18N
                     //Mac default dlg button should be rightmost, not the help button
                     System.arraycopy(currentPrimaryButtons, 0, cPB2, 1, currentPrimaryButtons.length);
                     cPB2[0] = stdHelpButton;
@@ -888,7 +891,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
         boolean result = false;
         try {
             String resValue = NbBundle.getMessage(NbPresenter.class, "HelpButtonAtTheLeftSide" ); //NOI18N
-            result = "true".equals( resValue.toLowerCase() ); //NOI18N
+            result = "true".equalsIgnoreCase(resValue); //NOI18N
         } catch( MissingResourceException e ) {
             //ignore
         }
@@ -1288,8 +1291,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
     private class ButtonListener implements ActionListener, ComponentListener, PropertyChangeListener {
         ButtonListener() {}
         public void actionPerformed(ActionEvent evt) {
-            boolean isAqua = "Aqua".equals (UIManager.getLookAndFeel().getID()) || //NOI18N
-                            "true".equalsIgnoreCase (System.getProperty ("xtest.looks_as_mac"));
+            boolean useMacButtonOrder = shouldUseMacButtonOrder();
 
             Object pressedOption = evt.getSource();
             // handle ESCAPE
@@ -1310,7 +1312,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                 }
 
                 Object[] options = descriptor.getOptions();
-                if (isAqua && options != null) {
+                if (useMacButtonOrder && options != null) {
                     Arrays.sort (options, NbPresenter.this);
                 }
 
@@ -1320,7 +1322,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                 options.length == (currentPrimaryButtons.length -
                     ((currentHelp != null) ? 1 : 0))
                 ) {
-                    int offset = currentHelp != null && isAqua ?
+                    int offset = currentHelp != null && useMacButtonOrder ?
                         -1 : 0;
                     for (int i = 0; i < currentPrimaryButtons.length; i++) {
                         if (evt.getSource() == currentPrimaryButtons[i]) {
@@ -1330,7 +1332,7 @@ implements PropertyChangeListener, WindowListener, Mutex.Action<Void>, Comparato
                 }
 
                 options = descriptor.getAdditionalOptions();
-                if (isAqua && options != null) {
+                if (useMacButtonOrder && options != null) {
                     Arrays.sort (options, NbPresenter.this);
                 }
 

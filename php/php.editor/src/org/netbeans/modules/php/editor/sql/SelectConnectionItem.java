@@ -41,7 +41,7 @@ import org.openide.util.NbBundle;
  */
 public class SelectConnectionItem implements CompletionItem {
 
-    private static final ImageIcon CONNECTION_ICON = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/php/editor/resources/connection.gif")); // NOI18N
+    private static final ImageIcon CONNECTION_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/php/editor/resources/connection.gif", false); // NOI18N
 
     private Document doc;
     private DatabaseConnection dbconn;

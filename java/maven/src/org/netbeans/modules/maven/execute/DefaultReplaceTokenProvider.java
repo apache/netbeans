@@ -48,6 +48,8 @@ import org.netbeans.modules.maven.configurations.M2ConfigProvider;
 import org.netbeans.modules.maven.spi.actions.ActionConvertor;
 import org.netbeans.modules.maven.spi.actions.ReplaceTokenProvider;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.api.project.ContainedProjectFilter;
+import org.netbeans.spi.project.NestedClass;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.netbeans.spi.project.SingleMethod;
 import org.netbeans.spi.project.support.ant.EditableProperties;
@@ -72,6 +74,7 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
     static final String CLASSNAME = "className";//NOI18N
     static final String CLASSNAME_EXT = "classNameWithExtension";//NOI18N
     static final String PACK_CLASSNAME = "packageClassName";//NOI18N
+    static final String PROJECTS = "projects";//NOI18N
     static final String ABSOLUTE_PATH = "absolutePathName";
     public static final String METHOD_NAME = "nb.single.run.methodName"; //NOI18N
     private static final String VARIABLE_PREFIX = "var."; //NOI18N
@@ -96,11 +99,28 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
             files.add(method.getFile());
         }
 
-        return files.toArray(new FileObject[files.size()]);
+        return files.toArray(new FileObject[0]);
+    }
+
+    private static NestedClass extractNestedClassFromLookup(Lookup lookup) {
+        NestedClass nestedClass = lookup.lookup(NestedClass.class);
+        if (nestedClass != null) {
+            return nestedClass;
+        }
+
+        SingleMethod sm = lookup.lookup(SingleMethod.class);
+        if (sm != null) {
+            return sm.getNestedClass();
+        }
+
+        return null;
     }
 
     @Override public Map<String, String> createReplacements(String actionName, Lookup lookup) {
+        NestedClass nestedClass = extractNestedClassFromLookup(lookup);
         FileObject[] fos = extractFileObjectsfromLookup(lookup);
+        List<Project> projects = extractProjectsFromLookup(lookup);
+        
         SourceGroup group = findGroup(ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA), fos);
         HashMap<String, String> replaceMap = new HashMap<String, String>();
         // read environment variables in the IDE and prefix them with "env." just in case someone uses it as variable in the action mappings
@@ -138,7 +158,8 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
                     if (!isTest && !(ActionProvider.COMMAND_TEST_SINGLE.equals(actionName) ||
                                      ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(actionName) ||
                                      ActionProvider.COMMAND_PROFILE_TEST_SINGLE.equals(actionName) ||
-                                     ActionProvider.COMMAND_TEST.equals(actionName))) {
+                                     ActionProvider.COMMAND_TEST.equals(actionName) ||
+                                     ActionProvider.COMMAND_TEST_PARALLEL.equals(actionName))) {
                         // Execution can not have more files separated by commas. Only test can.
                         break;
                     } else {
@@ -148,9 +169,9 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
                     classname.append(',');
                     classnameExt.append(',');
                 }
+                String rel = FileUtil.getRelativePath(group.getRootFolder(), file);
+                assert rel != null;
                 if (file.isFolder()) {
-                    String rel = FileUtil.getRelativePath(group.getRootFolder(), file);
-                    assert rel != null;
                     String pkg = rel.replace('/', '.');
                     if (!pkg.isEmpty()) {
                         packClassname.append(pkg).append(".**."); // test everything under this package recusively
@@ -162,22 +183,18 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
                     classname.append(pkg); // ?
                     classnameExt.append(pkg); // ??
                 } else { // XXX do we need to limit to text/x-java? What about files of other type?
-                    String relP = FileUtil.getRelativePath(group.getRootFolder(), file.getParent());
-                    assert relP != null;
-                    StringBuilder cn = new StringBuilder();
-                    if (!relP.isEmpty()) {
-                        cn.append(relP.replace('/', '.')).append('.');
-                    }
-                    String n = file.getName();
-                    cn.append(n);
-                    if (uniqueClassNames.add(cn.toString())) {
+                    String cn = SourceUtils.classNameFor(ClasspathInfo.create(file), rel, nestedClass);
+                    int idx = cn.lastIndexOf('.');
+                    String n = idx < 0 ? cn : cn.substring(idx + 1);
+                    if (uniqueClassNames.add(cn)) {
                         packClassname.append(cn);
                         classname.append(n);
                     } else {
                         packClassname.deleteCharAt(packClassname.length() - 1); // Delete the comma
                         classname.deleteCharAt(classname.length() - 1);
                     }
-                    classnameExt.append(file.getNameExt());
+                    classnameExt.append(n).append('.').append(file.getExt());
+                    String relP = FileUtil.getRelativePath(group.getRootFolder(), file.getParent());
                     if (MavenSourcesImpl.NAME_SOURCE.equals(group.getName()) &&
                         (ActionProvider.COMMAND_TEST_SINGLE.equals(actionName) ||
                          ActionProvider.COMMAND_DEBUG_TEST_SINGLE.equals(actionName) ||
@@ -233,6 +250,10 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
         if (classnameExt.length() > 0) { //#213671
             replaceMap.put(CLASSNAME_EXT, classnameExt.toString());
         }
+        if (projects != null && !projects.isEmpty()) {
+            List<String> projectReplacements = createProjectsReplacement(projects);
+            replaceMap.put(PROJECTS, String.join(",", projectReplacements));
+        }
 
         Collection<? extends SingleMethod> methods = lookup.lookupAll(SingleMethod.class);
         if (methods.size() == 1) {
@@ -250,7 +271,19 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
         }
         return replaceMap;
     }
-
+    
+    private List<Project> extractProjectsFromLookup(Lookup lookup) {
+        ContainedProjectFilter projectFilter = lookup.lookup(ContainedProjectFilter.class);
+        return projectFilter == null ? null : projectFilter.getProjectsToProcess();
+    }
+    
+    private List<String> createProjectsReplacement(List<Project> projects) {
+        return projects
+                .stream()
+                .map(prj -> prj.getProjectDirectory().getName())
+                .toList();
+    }
+    
     private void addSelectedFiles(boolean testRoots, FileObject[] candidates, HashSet<String> test) {
         NbMavenProjectImpl prj = project.getLookup().lookup(NbMavenProjectImpl.class);
         if (prj != null) {

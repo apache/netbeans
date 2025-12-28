@@ -19,6 +19,7 @@
 package org.netbeans.modules.web.beans.impl.model;
 
 import java.lang.annotation.ElementType;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,18 +29,20 @@ import javax.lang.model.element.AnnotationMirror;
 import org.netbeans.modules.web.beans.analysis.analyzer.annotation.ScopeVerifier;
 import org.netbeans.modules.web.beans.analysis.analyzer.annotation.TargetVerifier;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.SCOPE_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.SCOPE_FQN_JAKARTA;
+
 
 /**
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 class ScopeChecker extends RuntimeAnnotationChecker {
-    
-    static String SCOPE = "javax.inject.Scope";                         // NOI18N
-    
-    static String NORMAL_SCOPE = "javax.enterprise.context.NormalScope";// NOI18N
-    
+
+    private static final List<String> ANNOTATIONS = List.of(
+            SCOPE_FQN, SCOPE_FQN_JAKARTA
+    );
+
     static ScopeChecker get(){
         return new ScopeChecker();
     }
@@ -56,8 +59,8 @@ class ScopeChecker extends RuntimeAnnotationChecker {
      * @see org.netbeans.modules.web.beans.impl.model.RuntimeAnnotationChecker#getAnnotation()
      */
     @Override
-    protected String getAnnotation() {
-        return SCOPE;
+    protected List<String> getAnnotation() {
+        return ANNOTATIONS;
     }
     
     /* (non-Javadoc)

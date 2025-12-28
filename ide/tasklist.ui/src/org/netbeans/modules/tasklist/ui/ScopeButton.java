@@ -22,12 +22,12 @@ package org.netbeans.modules.tasklist.ui;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
 import javax.swing.ToolTipManager;
 import org.netbeans.modules.tasklist.impl.Accessor;
 import org.netbeans.modules.tasklist.impl.TaskManagerImpl;
 import org.netbeans.spi.tasklist.TaskScanningScope;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -43,7 +43,7 @@ class ScopeButton extends JToggleButton implements PropertyChangeListener {
         this.tm = tm;
         this.scope = scope;
         setText( null );
-        setIcon( new ImageIcon( Accessor.getIcon( scope ) ) );
+        setIcon( ImageUtilities.image2Icon( Accessor.getIcon( scope ) ) );
         ToolTipManager.sharedInstance().registerComponent(this);
         setFocusable( false );
     }

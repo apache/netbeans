@@ -160,26 +160,44 @@ public class AppClientProjectGenerator {
         
         // create application-client.xml
         String resource;
-        if(j2eeProfile == null) {
+        if(null == j2eeProfile) {
             resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
-        } else if (Profile.JAKARTA_EE_10_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_10_WEB.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-10.xml"; // NOI18N
-        } else if (Profile.JAKARTA_EE_9_1_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_9_1_WEB.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-9.xml"; // NOI18N
-        } else if (Profile.JAKARTA_EE_9_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_9_WEB.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-9.xml"; // NOI18N
-        } else if (Profile.JAKARTA_EE_8_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_8_WEB.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-8.xml"; // NOI18N
-        } else if (Profile.JAVA_EE_8_FULL.equals(j2eeProfile) || Profile.JAVA_EE_8_WEB.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-8.xml"; // NOI18N
-        } else if (Profile.JAVA_EE_7_FULL.equals(j2eeProfile) || Profile.JAVA_EE_7_WEB.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-7.xml"; // NOI18N
-        } else if (Profile.JAVA_EE_5.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-5.xml"; // NOI18N
-        } else if (Profile.J2EE_14.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-1.4.xml"; // NOI18N
-        } else {
-            resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
+        } else { 
+            switch (j2eeProfile) {
+                case JAKARTA_EE_11_FULL:
+                case JAKARTA_EE_11_WEB:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-11.xml"; // NOI18N
+                    break;
+                case JAKARTA_EE_10_FULL:
+                case JAKARTA_EE_10_WEB:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-10.xml"; // NOI18N
+                    break;
+                case JAKARTA_EE_9_1_FULL:
+                case JAKARTA_EE_9_1_WEB:
+                case JAKARTA_EE_9_FULL:
+                case JAKARTA_EE_9_WEB:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-9.xml"; // NOI18N
+                    break;
+                case JAKARTA_EE_8_FULL:
+                case JAKARTA_EE_8_WEB:
+                case JAVA_EE_8_FULL:
+                case JAVA_EE_8_WEB:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-8.xml"; // NOI18N
+                    break;
+                case JAVA_EE_7_FULL:
+                case JAVA_EE_7_WEB:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-7.xml"; // NOI18N
+                    break;
+                case JAVA_EE_5:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-5.xml"; // NOI18N
+                    break;
+                case J2EE_14:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-1.4.xml"; // NOI18N
+                    break;
+                default:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
+                    break;
+            }
         }
         FileObject foSource = FileUtil.getConfigFile(resource);
         FileObject ddFile = FileUtil.copyFile(foSource, confRoot, "application-client"); //NOI18N
@@ -389,26 +407,44 @@ public class AppClientProjectGenerator {
         } else {
             // XXX just temporary, since now the import would fail due to another bug
             String resource;
-            if (j2eeProfile == null) {
+            if (null == j2eeProfile) {
                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
-            } else if (Profile.JAKARTA_EE_10_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_10_WEB.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-10.xml"; // NOI18N
-            } else if (Profile.JAKARTA_EE_9_1_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_9_1_WEB.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-9.xml"; // NOI18N
-            } else if (Profile.JAKARTA_EE_9_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_9_WEB.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-9.xml"; // NOI18N
-            } else if (Profile.JAKARTA_EE_8_FULL.equals(j2eeProfile) || Profile.JAKARTA_EE_8_WEB.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-8.xml"; // NOI18N
-            } else if (Profile.JAVA_EE_8_FULL.equals(j2eeProfile) || Profile.JAVA_EE_8_WEB.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-8.xml"; // NOI18N
-            } else if (Profile.JAVA_EE_7_FULL.equals(j2eeProfile) || Profile.JAVA_EE_7_WEB.equals(j2eeProfile)) {
-                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-7.xml"; // NOI18N
-            } else if (Profile.JAVA_EE_5.equals(j2eeProfile)) {
-                resource = "org-netbeans-modules-j2ee-clientproject/application-client-5.xml"; // NOI18N
-            } else if (Profile.J2EE_14.equals(j2eeProfile)) {
-                resource = "org-netbeans-modules-j2ee-clientproject/application-client-1.4.xml"; // NOI18N
             } else {
-                resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
+                switch (j2eeProfile) {
+                    case JAKARTA_EE_11_FULL:
+                    case JAKARTA_EE_11_WEB:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-11.xml"; // NOI18N
+                        break;
+                    case JAKARTA_EE_10_FULL:
+                    case JAKARTA_EE_10_WEB:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-10.xml"; // NOI18N
+                        break;
+                    case JAKARTA_EE_9_1_FULL:
+                    case JAKARTA_EE_9_1_WEB:
+                    case JAKARTA_EE_9_FULL:
+                    case JAKARTA_EE_9_WEB:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-9.xml"; // NOI18N
+                        break;
+                    case JAKARTA_EE_8_FULL:
+                    case JAKARTA_EE_8_WEB:
+                    case JAVA_EE_8_FULL:
+                    case JAVA_EE_8_WEB:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-8.xml"; // NOI18N
+                        break;
+                    case JAVA_EE_7_FULL:
+                    case JAVA_EE_7_WEB:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-7.xml"; // NOI18N
+                        break;
+                    case JAVA_EE_5:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-5.xml"; // NOI18N
+                        break;
+                    case J2EE_14:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-1.4.xml"; // NOI18N
+                        break;
+                    default:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
+                        break;
+                }
             }
             FileUtil.copyFile(FileUtil.getConfigFile(resource),
                     confFolderFO, "application-client"); //NOI18N

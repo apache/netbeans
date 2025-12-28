@@ -622,7 +622,7 @@ public class ClassPathTest extends NbTestCase {
                 roots.add(Utilities.toURI(f).toURL());
             }
         }
-        final ClassLoader bootLoader = new URLClassLoader(roots.toArray(new URL[roots.size()]), null);
+        final ClassLoader bootLoader = new URLClassLoader(roots.toArray(new URL[0]), null);
         
         final String classPathProp = System.getProperty("java.class.path");     //NOI18N
         roots = new ArrayList<URL> ();
@@ -642,10 +642,10 @@ public class ClassPathTest extends NbTestCase {
             roots.add(url);
         }
         
-        final ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+        final ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
 //        final ClassLoader loader = ClassLoaderSupport.create(cp,bootLoader);
 //        final ClassLoader loader = new URLClassLoader(roots.toArray(new URL[roots.size()]),bootLoader);
-        final ClassLoader loader = new URLClassLoader(roots2.toArray(new URL[roots2.size()]),bootLoader);
+        final ClassLoader loader = new URLClassLoader(roots2.toArray(new URL[0]),bootLoader);
         
         final Set<String> classNames = getClassNames (cp);
         int noLoaded = 0;

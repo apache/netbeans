@@ -433,9 +433,9 @@ class LocalHistoryStoreImpl implements LocalHistoryStore {
 //        }
 //
 //        // XXX do we even need this
-////        for(Entry<File, HistoryEntry> entry : afterRevert.entrySet()) {
-////
-////        }
+// //        for(Entry<File, HistoryEntry> entry : afterRevert.entrySet()) {
+// //
+// //        }
 //        return ret.toArray(new StoreEntry[ret.size()]);
 //
 //    }
@@ -906,7 +906,7 @@ class LocalHistoryStoreImpl implements LocalHistoryStore {
                 }
             }
             if(newEntries.size() > 0) {
-                writeHistory(historyFile, newEntries.toArray(new HistoryEntry[newEntries.size()]), false);
+                writeHistory(historyFile, newEntries.toArray(new HistoryEntry[0]), false);
             } else {
                 historyFile.delete();
                 historyObsolete = true;

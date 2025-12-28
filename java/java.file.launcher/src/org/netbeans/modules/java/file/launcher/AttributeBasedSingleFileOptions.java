@@ -18,7 +18,9 @@
  */
 package org.netbeans.modules.java.file.launcher;
 
+import java.net.URI;
 import javax.swing.event.ChangeListener;
+import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
 import org.openide.filesystems.FileAttributeEvent;
@@ -28,11 +30,15 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Lookup;
+import org.openide.util.NbPreferences;
+import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
 import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service=SingleFileOptionsQueryImplementation.class)
 public class AttributeBasedSingleFileOptions implements SingleFileOptionsQueryImplementation {
+
+    private static final RequestProcessor WORKER = new RequestProcessor(AttributeBasedSingleFileOptions.class.getName(), 1, false, false);
 
     @Override
     public Result optionsFor(FileObject file) {
@@ -65,6 +71,15 @@ public class AttributeBasedSingleFileOptions implements SingleFileOptionsQueryIm
         private final FileChangeListener attributeChanges = new FileChangeAdapter() {
             @Override
             public void fileAttributeChanged(FileAttributeEvent fe) {
+                if (root != null && registerRoot()) {
+                    //propagation of flags from files to the root is usually only
+                    //started when the root is indexed. And when the registerRoot
+                    //flag is flipped to true on a file in a non-indexed root,
+                    //there's no  other mechanism to propagate the flag to the root.
+                    //So, when the flag is set to true on a file, force the propagation
+                    //of the flags for the given root:
+                    WORKER.post(() -> SharedRootData.ensureRootRegistered(root));
+                }
                 cs.fireChange();
             }
         };
@@ -91,7 +106,22 @@ public class AttributeBasedSingleFileOptions implements SingleFileOptionsQueryIm
 
             vmOptionsObj = root != null ? root.getAttribute(SingleSourceFileUtil.FILE_VM_OPTIONS) : null;
 
-            return vmOptionsObj != null ? (String) vmOptionsObj : "";
+            String globalVmOptions = NbPreferences.forModule(JavaPlatformManager.class).get(SingleSourceFileUtil.GLOBAL_VM_OPTIONS, ""); // NOI18N
+
+            return vmOptionsObj != null ? (String) vmOptionsObj + " " + globalVmOptions : globalVmOptions; // NOI18N
+        }
+
+        @Override
+        public URI getWorkDirectory() {
+            return root != null ? root.toURI() : source.getParent().toURI();
+        }
+
+        @Override
+        public boolean registerRoot() {
+            Object value = source != null ? source.getAttribute(SingleSourceFileUtil.FILE_REGISTER_ROOT)
+                                          : root != null ? root.getAttribute(SingleSourceFileUtil.FILE_REGISTER_ROOT)
+                                                         : null;
+            return SingleSourceFileUtil.isTrue(value);
         }
 
         @Override

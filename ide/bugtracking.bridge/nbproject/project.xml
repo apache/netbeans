@@ -100,7 +100,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.40</specification-version>
+                        <release-version>2</release-version>
+                        <specification-version>2.0.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -171,10 +172,6 @@
             <test-dependencies>
                 <test-type>
                     <name>unit</name>
-                    <test-dependency>
-                        <code-name-base>org.eclipse.equinox.common</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.libs.junit4</code-name-base>
                         <compile-dependency/>

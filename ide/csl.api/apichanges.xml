@@ -25,6 +25,25 @@
 <apidef name="csl.api">Common Scripting Language API</apidef>
 </apidefs>
 <changes>
+    <change id="OccurrencesFinder.KeepMarks">
+        <api name="csl.api"/>
+        <summary>Enable controlling highlighting of occurrences</summary>
+        <version major="2" minor="88"/>
+        <date day="17" month="9" year="2025"/>
+        <author login="matthiasblaesing"/>
+        <compatibility addition="yes" deletion="no" modification="no" binary="compatible" source="compatible" deprecation="no"/>
+        <description>
+            <p>
+                Add two accessors <code>isMarkOccurrencesEnabled</code> and
+                <code>isKeepMarks</code> to <code>OccurrencesFinder</code>. The
+                intention is, that implementors of <code>OccurrencesFinder</code>
+                can indicate, whether highlighting of occurrenes is enabled and
+                if highlights should be retained, after the caret is moved off
+                the highlighted item.
+            </p>
+        </description>
+        <class package="org.netbeans.modules.csl.api" name="OccurrencesFinder"/>
+    </change>
     <change id="StructureItem.InheritedItem">
         <api name="csl.api"/>
         <summary>Adding a new StructureItem.InheritedItem interface</summary>
@@ -295,7 +314,6 @@
 <htmlcontents>
 <head>
     <title>Change History for the Common Scripting Language API</title>
-    <link rel="stylesheet" href="prose.css" type="text/css"/>
 </head>
 <body>
     <standard-changelists module-code-name="org.netbeans.modules.csl.api"/>

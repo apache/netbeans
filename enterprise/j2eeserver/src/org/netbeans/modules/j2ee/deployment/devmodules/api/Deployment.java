@@ -510,7 +510,7 @@ public final class Deployment {
                 }
             }
         }
-        return (String[]) result.toArray(new String[result.size()]);
+        return (String[]) result.toArray(new String[0]);
     }
 
     /**

@@ -468,4 +468,77 @@ public class RemoveUnnecessaryTest extends NbTestCase {
                 .run(RemoveUnnecessary.class)
                 .assertWarnings();
     }
+
+    public void testRuleSwitch1() throws Exception {
+        HintTest.create()
+                .input("""
+                       package test;
+                       public class Test {
+                           public void testContinue(int i) {
+                               switch (i) {
+                                   case 0 -> { return ; }
+                                   case 1 -> { return ; }
+                                   default -> { }
+                               }
+                               System.err.println("not end");
+                           }
+                       }
+                       """)
+                .sourceLevel("17")
+                .run(RemoveUnnecessary.class)
+                .assertWarnings();
+    }
+
+    public void testRuleSwitch2() throws Exception {
+        HintTest.create()
+                .input("""
+                       package test;
+                       public class Test {
+                           public void testContinue(int i) {
+                               switch (i) {
+                                   case 0 -> { return ; }
+                                   case 1 -> { return ; }
+                                   default -> { }
+                               }
+                           }
+                       }
+                       """)
+                .sourceLevel("17")
+                .run(RemoveUnnecessary.class)
+                .assertWarnings("4:24-4:32:verifier:Unnecessary return statement",
+                                "5:24-5:32:verifier:Unnecessary return statement");
+    }
+
+    public void testRuleSwitchExpression() throws Exception {
+        HintTest.create()
+                .input("""
+                       package test;
+                       public class Test {
+                           public int testContinue(int i) {
+                               return switch (i) {
+                                   case 0 -> { return 0; } //illegal
+                                   case 1 -> { return 0; } //illegal
+                                   default -> -1;
+                               };
+                           }
+                       }
+                       """,
+                       false)
+                .sourceLevel("17")
+                .run(RemoveUnnecessary.class)
+                .assertWarnings();
+    }
+
+    public void testStandaloneReturn() throws Exception {
+    HintTest.create()
+            .input("""
+                   package test;
+                   public class Test {
+                   }
+                   return;
+                   """,
+                   false)
+            .run(RemoveUnnecessary.class)
+            .assertWarnings();
+    }
 }

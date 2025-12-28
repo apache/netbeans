@@ -26,11 +26,13 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import javax.swing.text.Document;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.micronaut.NbSuiteTestBase;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
 import org.openide.cookies.EditorCookie;
@@ -43,7 +45,7 @@ import org.openide.util.lookup.Lookups;
  *
  * @author Dusan Balek
  */
-public class MicronautExpressionLanguageCompletionTestBase extends NbTestCase {
+public class MicronautExpressionLanguageCompletionTestBase extends NbSuiteTestBase {
 
     private Project project;
 
@@ -52,12 +54,11 @@ public class MicronautExpressionLanguageCompletionTestBase extends NbTestCase {
     }
 
     protected @Override void setUp() throws Exception {
+        super.setUp();
         clearWorkDir();
-        System.setProperty("test.reload.sync", "true");
         FileObject dataFO = FileUtil.toFileObject(getDataDir());
         FileObject testApp = dataFO.getFileObject("maven/micronaut4/simple");
-        FileObject prjCopy = FileUtil.copyFile(testApp, FileUtil.toFileObject(getWorkDir()), "mn4-cc");
-        project = openAndPrimeProject(prjCopy);
+        project = openPrimeAndIndexProject(testApp);
     }
 
     protected void performTest(String text, int offset, String goldenFileName) throws Exception {
@@ -76,6 +77,9 @@ public class MicronautExpressionLanguageCompletionTestBase extends NbTestCase {
         new MicronautDataCompletionCollector().collectCompletions(doc, 175 + offset, null, completion -> {
             items.add(completion);
         });
+        if (text.length() > 0) {
+            doc.remove(175, text.length());
+        }
         items.sort((c1, c2) -> {
             return c1.getSortText().compareTo(c2.getSortText());
         });
@@ -103,7 +107,7 @@ public class MicronautExpressionLanguageCompletionTestBase extends NbTestCase {
         assertFile(output, goldenFile, diffFile);
     }
 
-    private Project openAndPrimeProject(FileObject prjCopy) throws Exception {
+    private Project openPrimeAndIndexProject(FileObject prjCopy) throws Exception {
         Project p = ProjectManager.getDefault().findProject(prjCopy);
         assertNotNull(p);
         OpenProjects.getDefault().open(new Project[] { p }, true);
@@ -124,6 +128,13 @@ public class MicronautExpressionLanguageCompletionTestBase extends NbTestCase {
         };
         ap.invokeAction(ActionProvider.COMMAND_PRIME, Lookups.fixed(progress));
         primingLatch.await(10, TimeUnit.MINUTES);
+
+        CountDownLatch indexingLatch = new CountDownLatch(1);
+        JavaSource.create(ClasspathInfo.create(prjCopy)).runWhenScanFinished(info -> {
+            indexingLatch.countDown();
+        }, true);
+        indexingLatch.await(10, TimeUnit.MINUTES);
+
         return p;
     }
 }

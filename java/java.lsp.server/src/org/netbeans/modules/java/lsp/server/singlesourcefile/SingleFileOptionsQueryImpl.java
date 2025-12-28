@@ -18,113 +18,215 @@
  */
 package org.netbeans.modules.java.lsp.server.singlesourcefile;
 
+import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.WeakHashMap;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.file.launcher.api.SourceLauncher;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
-import org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient;
+import org.netbeans.modules.java.lsp.server.protocol.Workspace;
+import org.openide.filesystems.FileChangeAdapter;
+import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Lookup;
+import org.openide.util.Parameters;
 
 public abstract class SingleFileOptionsQueryImpl implements SingleFileOptionsQueryImplementation {
 
-    private final Map<NbCodeLanguageClient, ResultImpl> client2Options = new WeakHashMap<>();
-    private final GlobalResultImpl globalOptions = new GlobalResultImpl();
+    private final Map<Workspace, WorkspaceSettings> workspace2Settings = new WeakHashMap<>();
+    private final Map<Workspace, Map<FileObject, ResultImpl>> workspace2Folder2Options = new WeakHashMap<>();
 
     @Override
     public Result optionsFor(FileObject file) {
         if (isSingleSourceFile(file)) {
-            NbCodeLanguageClient client = Lookup.getDefault().lookup(NbCodeLanguageClient.class);
+            Workspace workspace = Lookup.getDefault().lookup(Workspace.class);
+            FileObject workspaceFolder = workspace != null ? findWorkspaceFolder(workspace, file) : null;
 
-            if (client != null) {
-                return getResult(client);
+            if (workspaceFolder != null) {
+                return getResult(workspace, workspaceFolder);
             } else {
-                return globalOptions;
+                List<Workspace> workspaces;
+
+                synchronized (this) {
+                    workspaces = new ArrayList<>(workspace2Settings.keySet());
+                }
+
+                int count = 0;
+                for (Workspace w : workspaces) {
+                    if (w == null)
+                        continue;   // Since a WeakHashMap is in use, it is possible to receive a null value.
+                    FileObject folder = findWorkspaceFolder(w, file);
+                    if (folder != null) {
+                        return getResult(w, folder);
+                    }
+                    if (count++ == 0 && workspace == null)
+                        workspace = w;
+                }
+
+                if (count == 1) {
+                    // Since this is a single source file, associate it with the single open workspace,
+                    // even when it is not a descendant of one of the root folders.
+                    FileObject folder;
+                    if (file.isFolder()) {
+                        folder = file;
+                    } else {
+                        folder = file.getParent();
+                        if (folder == null)
+                            folder = file;
+                    }
+                    return getResult(workspace, folder);
+                }
+                return null;
             }
         }
         return null;
     }
 
-    private static final class ResultImpl implements Result {
+    private synchronized Result getResult(Workspace workspace, FileObject workspaceFolder) {
+        Map<FileObject, ResultImpl> folder2Result =
+                workspace2Folder2Options.computeIfAbsent(workspace, w -> new HashMap<>());
+        return folder2Result.computeIfAbsent(workspaceFolder, f -> new ResultImpl(folder2Result,
+                workspaceFolder,
+                getWorkspaceSettings(workspace)));
+    }
+
+    static FileObject findWorkspaceFolder(Workspace workspace, FileObject file) {
+        for (FileObject workspaceFolder : workspace.getClientWorkspaceFolders()) {
+            if (FileUtil.isParentOf(workspaceFolder, file) || workspaceFolder == file) {
+                return workspaceFolder;
+            }
+        }
+
+        //in case file is a source root, and the workspace folder is nested inside the root:
+        for (FileObject workspaceFolder : workspace.getClientWorkspaceFolders()) {
+            if (FileUtil.isParentOf(file, workspaceFolder)) {
+                return workspaceFolder;
+            }
+        }
+
+        return null;
+    }
+
+    private static final class ResultImpl extends FileChangeAdapter implements Result, ChangeListener {
 
         private final ChangeSupport cs = new ChangeSupport(this);
-        private String options = "";
+        private final Map<FileObject, ResultImpl> workspaceFolders2Results;
+        private final FileObject workspaceFolder;
+        private final WorkspaceSettings workspaceSettings;
+
+        public ResultImpl(Map<FileObject, ResultImpl> workspaceFolders2Results,
+                          FileObject workspaceFolder,
+                          WorkspaceSettings workspaceSettings) {
+            this.workspaceFolders2Results = workspaceFolders2Results;
+            this.workspaceFolder = workspaceFolder;
+            this.workspaceSettings = workspaceSettings;
+
+            workspaceSettings.addChangeListener(this);
+            workspaceFolder.addFileChangeListener(this);
+        }
 
         @Override
+        public String getOptions() {
+            String options = workspaceSettings.getOptions();
+            return options != null ? options : "";
+        }
+
+        @Override
+        public URI getWorkDirectory() {
+            String cwd = workspaceSettings.getWorkDirectory();
+            FileObject workDir = cwd != null ? FileUtil.toFileObject(new File(cwd))
+                                             : workspaceFolder;
+            return workDir.toURI();
+        }
+
+        @Override
+        public boolean registerRoot() {
+            return true;
+        }
+
+        @Override
+        public void addChangeListener(ChangeListener l) {
+            cs.addChangeListener(l);
+        }
+
+        @Override
+        public void removeChangeListener(ChangeListener l) {
+            cs.removeChangeListener(l);
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent ce) {
+            cs.fireChange();
+        }
+
+        @Override
+        public void fileDeleted(FileEvent fe) {
+            workspaceFolders2Results.remove(workspaceFolder);
+        }
+
+    }
+
+    private final class WorkspaceSettings {
+
+        private final ChangeSupport cs = new ChangeSupport(this);
+
+        private String options;
+        private String workdirDirectory;
+
         public synchronized String getOptions() {
             return options;
         }
 
-        public boolean setOptions(String options) {
+        public synchronized String getWorkDirectory() {
+            return workdirDirectory;
+        }
+
+        public boolean setOptions(String options, String workingDirectory) {
+            boolean modified = false;
             synchronized (this) {
-                if (Objects.equals(this.options, options)) {
-                    return false;
+                if (!Objects.equals(this.options, options)) {
+                    this.options = options;
+                    modified = true;
                 }
-                this.options = options;
+                if (!Objects.equals(this.workdirDirectory, workingDirectory)) {
+                    this.workdirDirectory = workingDirectory;
+                    modified = true;
+                }
             }
-            cs.fireChange();
-            return true;
+            if (modified) {
+                cs.fireChange();
+            }
+            return modified;
         }
 
-        @Override
         public void addChangeListener(ChangeListener l) {
             cs.addChangeListener(l);
         }
 
-        @Override
         public void removeChangeListener(ChangeListener l) {
             cs.removeChangeListener(l);
         }
 
     }
 
-    private final class GlobalResultImpl implements Result {
-
-        private final ChangeSupport cs = new ChangeSupport(this);
-
-        @Override
-        public String getOptions() {
-            List<String> options = new ArrayList<>();
-
-            synchronized (SingleFileOptionsQueryImpl.this) {
-                for (ResultImpl r : client2Options.values()) {
-                    options.add(r.getOptions());
-                }
-            }
-
-            return SourceLauncher.joinCommandLines(options);
-        }
-
-        @Override
-        public void addChangeListener(ChangeListener l) {
-            cs.addChangeListener(l);
-        }
-
-        @Override
-        public void removeChangeListener(ChangeListener l) {
-            cs.removeChangeListener(l);
-        }
-
+    public boolean setConfiguration(Workspace workspace, String vmOptions, String workDirectory) {
+        return getWorkspaceSettings(workspace).setOptions(vmOptions, workDirectory);
     }
 
-    public boolean setConfiguration(NbCodeLanguageClient client, String vmOptions) {
-        if (getResult(client).setOptions(vmOptions)) {
-            globalOptions.cs.fireChange();
-            return true;
-        }
-        return false;
-    }
-
-    private synchronized ResultImpl getResult(NbCodeLanguageClient client) {
-        return client2Options.computeIfAbsent(client, cl -> {
-            return new ResultImpl();
+    private synchronized WorkspaceSettings getWorkspaceSettings(Workspace workspace) {
+        Parameters.notNull("workspace", workspace);
+        return workspace2Settings.computeIfAbsent(workspace, w -> {
+            return new WorkspaceSettings();
         });
     }
 

@@ -190,7 +190,7 @@
                         group="java.io.File" 
                         name="nbexec" 
                         type="export" 
-                        url="https://netbeans.apache.org/projects/platform/articles/installation.html#launcher"
+                        url="https://netbeans.apache.org/projects/platform/articles/installation#launcher"
                     /> launcher is fully featured and
                     supported. It should work on any Unix flavor. Implemented as
                     a shell script. 
@@ -215,7 +215,7 @@
                         group="java.io.File" 
                         name="nbexec.exe" 
                         type="export" 
-                        url="https://netbeans.apache.org/projects/platform/articles/installation.html#launcher"
+                        url="https://netbeans.apache.org/projects/platform/articles/installation#launcher"
                     />
                     launcher is fully featured and
                     supported. <!-- <samp>runidew.exe</samp> is similar but avoids
@@ -477,7 +477,7 @@
             <li>
                 <api type="export" group="systemproperty" name="netbeans.dirs" category="friend">
                     Additional secondary NetBeans installation directories as proposed in <a
-                    href="https://netbeans.apache.org/projects/platform/articles/installation.html">installation structure</a>
+                    href="https://netbeans.apache.org/projects/platform/articles/installation">installation structure</a>
                     design document.
                 </api>
             </li>
@@ -684,7 +684,7 @@
             <li>
                 <api type="export" group="cli" name="--fontsize" category="deprecated">
                     Specify base fontsize. Deprecated in favor of using <a
-                    href="https://netbeans.apache.org/projects/ui/themes/themes.html">themes</a>
+                    href="https://netbeans.apache.org/projects/ui/themes/themes">themes</a>
                     which is much more general. But this is a convenient quick
                     settings, handy for projection screens and so on.
                 </api>
@@ -759,9 +759,6 @@
         load from JARs is rather buggy when it comes to changing or removing the
         JAR during the JVM session.
         </p>
-        <api category="friend" group="java" name="Javeleon" type="import" url="https://bz.apache.org/netbeans/show_bug.cgi?id=195074">
-            <p>When present as a Java agent on the boot classpath, Javeleon is invoked reflectively to enhance module reloading.</p>
-        </api>
     </answer>
 
 
@@ -1407,7 +1404,7 @@
 -->
  <answer id="arch-usecases">
      <usecase id="invalidate.cache" name="Invalidating Caches">
-        <a name="usecase-invalidate.cache"></a>
+        <a id="usecase-invalidate.cache"></a>
         <p>
             NetBeans Module system is optimized to eliminate useless I/O
             operations on start (as a result the <a href="http://wiki.apidesign.org/wiki/Netbinox">
@@ -1490,16 +1487,16 @@ $ rm -r /tmp/nb/
          </p>
      </usecase>
      <usecase name="Patch classes" id="patch">
-         <a name="usecase-patch"></a>
+         <a id="usecase-patch"></a>
          <p>
          In case one wants to modify other classes before they get loaded into
          the VM, one can register its own
          <code>Agent-Class</code> and then be called whenever another
          class is defined. The behavior matches as closely as possible the one
-         provided by <a href="@JDK@/java/lang/instrument/package-summary.html">
+         provided by <a href="@JDK@@JDKMODULE_JAVA_INSTRUMENT@/java/lang/instrument/package-summary.html">
          JDK instrument package</a>. To patch bytecode of other classes
          register your class in manifest and in its static <code>agentmain</code> method
-         add your own <a href="@JDK@/java/lang/instrument/ClassFileTransformer.html">ClassFileTransformer</a>
+         add your own <a href="@JDK@@JDKMODULE_JAVA_INSTRUMENT@/java/lang/instrument/ClassFileTransformer.html">ClassFileTransformer</a>
          which will then be consulted whenever new classes are loaded.
          </p>
          <pre>
@@ -1532,7 +1529,7 @@ public class Transformer implements ClassFileTransformer {
      </usecase>
      
      <usecase id="modfrag" name="Module Fragments">
-         <a name="usecase-modfrag"></a>
+         <a id="usecase-modfrag"></a>
          <p>
             This is a specific case of <a href="#usecase-patch">Patch Classes</a> use-case.
             To maintain binary compatibility when <b>removing</b> methods from API classes,

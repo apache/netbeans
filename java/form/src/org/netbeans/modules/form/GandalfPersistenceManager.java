@@ -4606,8 +4606,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
     private PropertyEditor createPropertyEditor(Class editorClass,
                                                 Class propertyType,
                                                 FormProperty property)
-        throws InstantiationException,
-               IllegalAccessException
+        throws ReflectiveOperationException
     {
         PropertyEditor ed = null;
         if (editorClass.equals(RADConnectionPropertyEditor.class)) {
@@ -4623,7 +4622,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
                 ed = RADProperty.createDefaultEnumEditor(propertyType);
             }
         } else {
-            ed = (PropertyEditor) editorClass.newInstance();
+            ed = (PropertyEditor) editorClass.getDeclaredConstructor().newInstance();
         }
 
         if (property != null)
@@ -5575,10 +5574,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
             try {
                 prEd = createPropertyEditor(editorClass, propertyType, null);
             }
-            catch (Exception ex) {
-                t = ex;
-            }
-            catch (LinkageError ex) {
+            catch (Exception | LinkageError ex) {
                 t = ex;
             }
             if (t != null) {
@@ -5938,7 +5934,7 @@ public class GandalfPersistenceManager extends PersistenceManager {
             // sort the attributes by attribute name
             // probably not necessary, but there is no guarantee that
             // the order of attributes will remain the same in DOM
-            Collections.sort(attribList, new Comparator<org.w3c.dom.Node>() {
+            attribList.sort(new Comparator<org.w3c.dom.Node>() {
                 @Override
                 public int compare(org.w3c.dom.Node n1, org.w3c.dom.Node n2) {
                     return n1.getNodeName().compareTo(n2.getNodeName());
@@ -6448,11 +6444,11 @@ public class GandalfPersistenceManager extends PersistenceManager {
         else if (defaultFormInfoNames[3].equals(shortName))
             return javax.swing.JInternalFrame.class;
         else if (defaultFormInfoNames[4].equals(shortName))
-            return javax.swing.JApplet.class;
+            return null;
         else if (defaultFormInfoNames[5].equals(shortName))
             return java.awt.Frame.class;
         else if (defaultFormInfoNames[6].equals(shortName))
-            return java.applet.Applet.class;
+            return null;
         else if (defaultFormInfoNames[7].equals(shortName))
             return java.awt.Dialog.class;
         else if (defaultFormInfoNames[8].equals(shortName))
@@ -6472,12 +6468,8 @@ public class GandalfPersistenceManager extends PersistenceManager {
             shortName = defaultFormInfoNames[2];
         else if (javax.swing.JInternalFrame.class.isAssignableFrom(formType))
             shortName = defaultFormInfoNames[3];
-        else if (javax.swing.JApplet.class.isAssignableFrom(formType))
-            shortName = defaultFormInfoNames[4];
         else if (java.awt.Frame.class.isAssignableFrom(formType))
             shortName = defaultFormInfoNames[5];
-        else if (java.applet.Applet.class.isAssignableFrom(formType))
-            shortName = defaultFormInfoNames[6];
         else if (java.awt.Dialog.class.isAssignableFrom(formType))
             shortName = defaultFormInfoNames[7];
         else if (java.awt.Panel.class.isAssignableFrom(formType))

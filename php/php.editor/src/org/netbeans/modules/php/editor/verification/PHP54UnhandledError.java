@@ -156,7 +156,7 @@ public class PHP54UnhandledError extends UnhandledErrorRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            if (node.getScalarType().equals(Scalar.Type.REAL) && node.getStringValue().startsWith(BINARY_PREFIX)) {
+            if ((node.getScalarType().equals(Scalar.Type.FLOAT) || node.getScalarType().equals(Scalar.Type.REAL)) && node.getStringValue().startsWith(BINARY_PREFIX)) {
                 createError(node);
             }
             if (node.getScalarType().equals(Scalar.Type.SYSTEM) && "__TRAIT__".equals(node.getStringValue())) { // NOI18N

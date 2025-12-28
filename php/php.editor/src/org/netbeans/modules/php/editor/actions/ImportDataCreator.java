@@ -64,7 +64,7 @@ public class ImportDataCreator {
 
     private static Collection<FullyQualifiedElement> sortFQElements(final Collection<FullyQualifiedElement> filteredFQElements) {
         final List<FullyQualifiedElement> sortedFQElements = new ArrayList<>(filteredFQElements);
-        Collections.sort(sortedFQElements, new FQElementsComparator());
+        sortedFQElements.sort(new FQElementsComparator());
         return sortedFQElements;
     }
 
@@ -182,7 +182,28 @@ public class ImportDataCreator {
     private Collection<FullyQualifiedElement> filterExactUnqualifiedName(final Collection<FullyQualifiedElement> possibleFQElements, final String typeName) {
         Collection<FullyQualifiedElement> result = new HashSet<>();
         for (FullyQualifiedElement fqElement : possibleFQElements) {
-            if (fqElement.getFullyQualifiedName().toString().endsWith(typeName)) {
+            // type name: e.g. Foo, Name\Space\Foo, \Name\Space\Foo
+            // GH-7546 if an element name has the same prefix and suffix(e.g. Foo2Foo),
+            // the following check is incorrect
+            // `fqElement.getFullyQualifiedName().toString().endsWith(typeName)`
+            // so, compare the segments, instead
+            QualifiedName qualifiedTypeName = QualifiedName.create(typeName);
+            List<String> segments = qualifiedTypeName.getSegments();
+            Collections.reverse(segments);
+            List<String> elementSegments = fqElement.getFullyQualifiedName().getSegments();
+            Collections.reverse(elementSegments);
+            boolean exactUnqualifiedName = true;
+            if (!segments.isEmpty() && segments.size() <= elementSegments.size()) {
+                for (int i = 0; i < segments.size(); i++) {
+                    if (!segments.get(i).equals(elementSegments.get(i))) {
+                        exactUnqualifiedName = false;
+                        break;
+                    }
+                }
+            } else {
+                exactUnqualifiedName = false;
+            }
+            if (exactUnqualifiedName) {
                 result.add(fqElement);
             }
         }

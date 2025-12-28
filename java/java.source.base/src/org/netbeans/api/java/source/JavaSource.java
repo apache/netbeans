@@ -502,8 +502,6 @@ public final class JavaSource {
                 assert cc != null;
                 cc.setJavaSource(this.js);
                 task.run (cc);
-                final JavacTaskImpl jt = cc.impl.getJavacTask();
-                Log.instance(jt.getContext()).nerrors = 0;
             }
             else {
                 Parser.Result result = findEmbeddedJava (resultIterator);
@@ -515,8 +513,6 @@ public final class JavaSource {
                 assert cc != null;
                 cc.setJavaSource(this.js);
                 task.run (cc);
-                final JavacTaskImpl jt = cc.impl.getJavacTask();
-                Log.instance(jt.getContext()).nerrors = 0;
             }
         }
 
@@ -673,8 +669,6 @@ public final class JavaSource {
                     copy.toPhase(Phase.PARSED);
                 }
                 task.run(copy);
-                final JavacTaskImpl jt = copy.impl.getJavacTask();
-                Log.instance(jt.getContext()).nerrors = 0;
                 final List<ModificationResult.Difference> diffs = copy.getChanges(result.tag2Span);
                 if (diffs != null && diffs.size() > 0) {
                     final FileObject file = copy.getFileObject();

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.41.0
+#Version 1.49.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -29,6 +29,7 @@ meth public org.netbeans.modules.java.hints.test.api.HintTest preference(java.la
 meth public org.netbeans.modules.java.hints.test.api.HintTest preference(java.lang.String,int)
 meth public org.netbeans.modules.java.hints.test.api.HintTest preference(java.lang.String,java.lang.String)
 meth public org.netbeans.modules.java.hints.test.api.HintTest setCaretMarker(char)
+meth public org.netbeans.modules.java.hints.test.api.HintTest sourceLevel(int)
 meth public org.netbeans.modules.java.hints.test.api.HintTest sourceLevel(java.lang.String)
 meth public org.netbeans.modules.java.hints.test.api.HintTest$HintOutput run(java.lang.Class<?>) throws java.lang.Exception
 meth public org.netbeans.modules.java.hints.test.api.HintTest$HintOutput run(java.lang.Class<?>,java.lang.String) throws java.lang.Exception

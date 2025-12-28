@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.77
+#Version 2.85
 
 CLSS public abstract interface !annotation com.google.common.annotations.GwtCompatible
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -100,10 +100,14 @@ cons protected init()
 intf com.google.common.base.Predicate<java.lang.Character>
 meth public abstract boolean matches(char)
 meth public boolean apply(java.lang.Character)
- anno 0 java.lang.Deprecated()
+ anno 0 com.google.errorprone.annotations.InlineMe(java.lang.String replacement="this.matches(character)", java.lang.String[] imports=[], java.lang.String[] staticImports=[])
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean matchesAllOf(java.lang.CharSequence)
 meth public boolean matchesAnyOf(java.lang.CharSequence)
 meth public boolean matchesNoneOf(java.lang.CharSequence)
+meth public boolean test(java.lang.Character)
+ anno 0 com.google.errorprone.annotations.InlineMe(java.lang.String replacement="this.matches(character)", java.lang.String[] imports=[], java.lang.String[] staticImports=[])
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public com.google.common.base.CharMatcher and(com.google.common.base.CharMatcher)
 meth public com.google.common.base.CharMatcher negate()
 meth public com.google.common.base.CharMatcher or(com.google.common.base.CharMatcher)
@@ -127,28 +131,28 @@ meth public static com.google.common.base.CharMatcher anyOf(java.lang.CharSequen
 meth public static com.google.common.base.CharMatcher ascii()
 meth public static com.google.common.base.CharMatcher breakingWhitespace()
 meth public static com.google.common.base.CharMatcher digit()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static com.google.common.base.CharMatcher forPredicate(com.google.common.base.Predicate<? super java.lang.Character>)
 meth public static com.google.common.base.CharMatcher inRange(char,char)
 meth public static com.google.common.base.CharMatcher invisible()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static com.google.common.base.CharMatcher is(char)
 meth public static com.google.common.base.CharMatcher isNot(char)
 meth public static com.google.common.base.CharMatcher javaDigit()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static com.google.common.base.CharMatcher javaIsoControl()
 meth public static com.google.common.base.CharMatcher javaLetter()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static com.google.common.base.CharMatcher javaLetterOrDigit()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static com.google.common.base.CharMatcher javaLowerCase()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static com.google.common.base.CharMatcher javaUpperCase()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static com.google.common.base.CharMatcher none()
 meth public static com.google.common.base.CharMatcher noneOf(java.lang.CharSequence)
 meth public static com.google.common.base.CharMatcher singleWidth()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static com.google.common.base.CharMatcher whitespace()
 supr java.lang.Object
 hfds DISTINCT_CHARS
@@ -157,39 +161,28 @@ hcls And,Any,AnyOf,Ascii,BitSetMatcher,BreakingWhitespace,Digit,FastMatcher,ForP
 CLSS public final com.google.common.base.Charsets
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
 fld public final static java.nio.charset.Charset ISO_8859_1
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.nio.charset.Charset US_ASCII
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.nio.charset.Charset UTF_16
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.nio.charset.Charset UTF_16BE
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.nio.charset.Charset UTF_16LE
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.nio.charset.Charset UTF_8
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 
-CLSS public abstract com.google.common.base.Converter<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-cons protected init()
-intf com.google.common.base.Function<{com.google.common.base.Converter%0},{com.google.common.base.Converter%1}>
-meth protected abstract {com.google.common.base.Converter%0} doBackward({com.google.common.base.Converter%1})
-meth protected abstract {com.google.common.base.Converter%1} doForward({com.google.common.base.Converter%0})
-meth public boolean equals(java.lang.Object)
-meth public com.google.common.base.Converter<{com.google.common.base.Converter%1},{com.google.common.base.Converter%0}> reverse()
-meth public final <%0 extends java.lang.Object> com.google.common.base.Converter<{com.google.common.base.Converter%0},{%%0}> andThen(com.google.common.base.Converter<{com.google.common.base.Converter%1},{%%0}>)
-meth public final {com.google.common.base.Converter%1} apply({com.google.common.base.Converter%0})
- anno 0 java.lang.Deprecated()
-meth public final {com.google.common.base.Converter%1} convert({com.google.common.base.Converter%0})
-meth public java.lang.Iterable<{com.google.common.base.Converter%1}> convertAll(java.lang.Iterable<? extends {com.google.common.base.Converter%0}>)
-meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> com.google.common.base.Converter<{%%0},{%%1}> from(com.google.common.base.Function<? super {%%0},? extends {%%1}>,com.google.common.base.Function<? super {%%1},? extends {%%0}>)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Converter<{%%0},{%%0}> identity()
+CLSS public abstract com.google.common.base.Converter
+intf com.google.common.base.Function
 supr java.lang.Object
-hfds handleNullAutomatically,reverse
-hcls ConverterComposition,FunctionBasedConverter,IdentityConverter,ReverseConverter
 
 CLSS public final com.google.common.base.Defaults
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static <%0 extends java.lang.Object> {%%0} defaultValue(java.lang.Class<{%%0}>)
 supr java.lang.Object
 hfds DOUBLE_DEFAULT,FLOAT_DEFAULT
 
@@ -212,14 +205,13 @@ CLSS public final com.google.common.base.Equivalence$Wrapper
 intf java.io.Serializable
 supr java.lang.Object
 
-CLSS public abstract com.google.common.base.FinalizablePhantomReference<%0 extends java.lang.Object>
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-cons protected init({com.google.common.base.FinalizablePhantomReference%0},com.google.common.base.FinalizableReferenceQueue)
+CLSS public abstract com.google.common.base.FinalizablePhantomReference
 intf com.google.common.base.FinalizableReference
-supr java.lang.ref.PhantomReference<{com.google.common.base.FinalizablePhantomReference%0}>
+supr java.lang.ref.PhantomReference
 
 CLSS public abstract interface com.google.common.base.FinalizableReference
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
+ anno 0 com.google.errorprone.annotations.DoNotMock(java.lang.String value="Use an instance of one of the Finalizable*Reference classes")
 meth public abstract void finalizeReferent()
 
 CLSS public com.google.common.base.FinalizableReferenceQueue
@@ -231,22 +223,16 @@ supr java.lang.Object
 hfds FINALIZER_CLASS_NAME,frqRef,logger,queue,startFinalizer,threadStarted
 hcls DecoupledLoader,DirectLoader,FinalizerLoader,SystemLoader
 
-CLSS public abstract com.google.common.base.FinalizableSoftReference<%0 extends java.lang.Object>
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-cons protected init({com.google.common.base.FinalizableSoftReference%0},com.google.common.base.FinalizableReferenceQueue)
+CLSS public abstract com.google.common.base.FinalizableSoftReference
 intf com.google.common.base.FinalizableReference
-supr java.lang.ref.SoftReference<{com.google.common.base.FinalizableSoftReference%0}>
+supr java.lang.ref.SoftReference
 
-CLSS public abstract com.google.common.base.FinalizableWeakReference<%0 extends java.lang.Object>
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-cons protected init({com.google.common.base.FinalizableWeakReference%0},com.google.common.base.FinalizableReferenceQueue)
+CLSS public abstract com.google.common.base.FinalizableWeakReference
 intf com.google.common.base.FinalizableReference
-supr java.lang.ref.WeakReference<{com.google.common.base.FinalizableWeakReference%0}>
+supr java.lang.ref.WeakReference
 
 CLSS public abstract interface com.google.common.base.Function
 intf java.util.function.Function
-meth public abstract boolean equals(java.lang.Object)
-meth public abstract java.lang.Object apply(java.lang.Object)
 
 CLSS public final com.google.common.base.Functions
 supr java.lang.Object
@@ -258,73 +244,36 @@ hfds separator
 CLSS public final static com.google.common.base.Joiner$MapJoiner
  outer com.google.common.base.Joiner
 meth public <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.lang.Iterable<? extends java.util.Map$Entry<?,?>>) throws java.io.IOException
+ anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.util.Iterator<? extends java.util.Map$Entry<?,?>>) throws java.io.IOException
+ anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public <%0 extends java.lang.Appendable> {%%0} appendTo({%%0},java.util.Map<?,?>) throws java.io.IOException
+ anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.Joiner$MapJoiner useForNull(java.lang.String)
 meth public java.lang.String join(java.lang.Iterable<? extends java.util.Map$Entry<?,?>>)
 meth public java.lang.String join(java.util.Iterator<? extends java.util.Map$Entry<?,?>>)
 meth public java.lang.String join(java.util.Map<?,?>)
 meth public java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.lang.Iterable<? extends java.util.Map$Entry<?,?>>)
+ anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.util.Iterator<? extends java.util.Map$Entry<?,?>>)
+ anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public java.lang.StringBuilder appendTo(java.lang.StringBuilder,java.util.Map<?,?>)
+ anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 supr java.lang.Object
 hfds joiner,keyValueSeparator
 
 CLSS public final com.google.common.base.MoreObjects
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-innr public final static ToStringHelper
-meth public static <%0 extends java.lang.Object> {%%0} firstNonNull({%%0},{%%0})
-meth public static com.google.common.base.MoreObjects$ToStringHelper toStringHelper(java.lang.Class<?>)
-meth public static com.google.common.base.MoreObjects$ToStringHelper toStringHelper(java.lang.Object)
-meth public static com.google.common.base.MoreObjects$ToStringHelper toStringHelper(java.lang.String)
 supr java.lang.Object
 
-CLSS public final static com.google.common.base.MoreObjects$ToStringHelper
- outer com.google.common.base.MoreObjects
-meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,boolean)
-meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,char)
-meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,double)
-meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,float)
-meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,int)
-meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,java.lang.Object)
-meth public com.google.common.base.MoreObjects$ToStringHelper add(java.lang.String,long)
-meth public com.google.common.base.MoreObjects$ToStringHelper addValue(boolean)
-meth public com.google.common.base.MoreObjects$ToStringHelper addValue(char)
-meth public com.google.common.base.MoreObjects$ToStringHelper addValue(double)
-meth public com.google.common.base.MoreObjects$ToStringHelper addValue(float)
-meth public com.google.common.base.MoreObjects$ToStringHelper addValue(int)
-meth public com.google.common.base.MoreObjects$ToStringHelper addValue(java.lang.Object)
-meth public com.google.common.base.MoreObjects$ToStringHelper addValue(long)
-meth public com.google.common.base.MoreObjects$ToStringHelper omitNullValues()
-meth public java.lang.String toString()
+CLSS public final com.google.common.base.MoreObjects$ToStringHelper
 supr java.lang.Object
 hfds className,holderHead,holderTail,omitEmptyValues,omitNullValues
-hcls UnconditionalValueHolder,ValueHolder
 
 CLSS public final com.google.common.base.Objects
 supr java.lang.Object
 
-CLSS public abstract com.google.common.base.Optional<%0 extends java.lang.Object>
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=true)
+CLSS public abstract com.google.common.base.Optional
 intf java.io.Serializable
-meth public abstract <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> transform(com.google.common.base.Function<? super {com.google.common.base.Optional%0},{%%0}>)
-meth public abstract boolean equals(java.lang.Object)
-meth public abstract boolean isPresent()
-meth public abstract com.google.common.base.Optional<{com.google.common.base.Optional%0}> or(com.google.common.base.Optional<? extends {com.google.common.base.Optional%0}>)
-meth public abstract int hashCode()
-meth public abstract java.lang.String toString()
-meth public abstract java.util.Set<{com.google.common.base.Optional%0}> asSet()
-meth public abstract {com.google.common.base.Optional%0} get()
-meth public abstract {com.google.common.base.Optional%0} or(com.google.common.base.Supplier<? extends {com.google.common.base.Optional%0}>)
-meth public abstract {com.google.common.base.Optional%0} or({com.google.common.base.Optional%0})
-meth public abstract {com.google.common.base.Optional%0} orNull()
-meth public java.util.Optional<{com.google.common.base.Optional%0}> toJavaUtil()
-meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> absent()
-meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> fromJavaUtil(java.util.Optional<{%%0}>)
-meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> fromNullable({%%0})
-meth public static <%0 extends java.lang.Object> com.google.common.base.Optional<{%%0}> of({%%0})
-meth public static <%0 extends java.lang.Object> java.lang.Iterable<{%%0}> presentInstances(java.lang.Iterable<? extends com.google.common.base.Optional<? extends {%%0}>>)
-meth public static <%0 extends java.lang.Object> java.util.Optional<{%%0}> toJavaUtil(com.google.common.base.Optional<{%%0}>)
 supr java.lang.Object
 hfds serialVersionUID
 
@@ -333,9 +282,6 @@ supr java.lang.Object
 
 CLSS public abstract interface com.google.common.base.Predicate
 intf java.util.function.Predicate
-meth public abstract boolean apply(java.lang.Object)
-meth public abstract boolean equals(java.lang.Object)
-meth public boolean test(java.lang.Object)
 
 CLSS public final com.google.common.base.Predicates
 supr java.lang.Object
@@ -372,13 +318,12 @@ supr java.lang.Object
 hfds INVALID_ENTRY_MESSAGE,entrySplitter,outerSplitter
 
 CLSS public final !enum com.google.common.base.StandardSystemProperty
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
 fld public final static com.google.common.base.StandardSystemProperty FILE_SEPARATOR
 fld public final static com.google.common.base.StandardSystemProperty JAVA_CLASS_PATH
 fld public final static com.google.common.base.StandardSystemProperty JAVA_CLASS_VERSION
 fld public final static com.google.common.base.StandardSystemProperty JAVA_COMPILER
 fld public final static com.google.common.base.StandardSystemProperty JAVA_EXT_DIRS
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static com.google.common.base.StandardSystemProperty JAVA_HOME
 fld public final static com.google.common.base.StandardSystemProperty JAVA_IO_TMPDIR
 fld public final static com.google.common.base.StandardSystemProperty JAVA_LIBRARY_PATH
@@ -402,20 +347,18 @@ fld public final static com.google.common.base.StandardSystemProperty PATH_SEPAR
 fld public final static com.google.common.base.StandardSystemProperty USER_DIR
 fld public final static com.google.common.base.StandardSystemProperty USER_HOME
 fld public final static com.google.common.base.StandardSystemProperty USER_NAME
-meth public java.lang.String key()
-meth public java.lang.String toString()
-meth public java.lang.String value()
-meth public static com.google.common.base.StandardSystemProperty valueOf(java.lang.String)
-meth public static com.google.common.base.StandardSystemProperty[] values()
-supr java.lang.Enum<com.google.common.base.StandardSystemProperty>
+supr java.lang.Enum
 hfds key
 
 CLSS public final com.google.common.base.Stopwatch
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
 meth public boolean isRunning()
 meth public com.google.common.base.Stopwatch reset()
+ anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.Stopwatch start()
+ anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public com.google.common.base.Stopwatch stop()
+ anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
 meth public java.lang.String toString()
 meth public java.time.Duration elapsed()
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
@@ -438,37 +381,7 @@ CLSS public final com.google.common.base.Suppliers
 supr java.lang.Object
 
 CLSS public final com.google.common.base.Throwables
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
-meth public static <%0 extends java.lang.Throwable, %1 extends java.lang.Throwable> void propagateIfPossible(java.lang.Throwable,java.lang.Class<{%%0}>,java.lang.Class<{%%1}>) throws {%%0},{%%1}
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static <%0 extends java.lang.Throwable> void propagateIfInstanceOf(java.lang.Throwable,java.lang.Class<{%%0}>) throws {%%0}
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
- anno 0 java.lang.Deprecated()
-meth public static <%0 extends java.lang.Throwable> void propagateIfPossible(java.lang.Throwable,java.lang.Class<{%%0}>) throws {%%0}
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static <%0 extends java.lang.Throwable> void throwIfInstanceOf(java.lang.Throwable,java.lang.Class<{%%0}>) throws {%%0}
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static <%0 extends java.lang.Throwable> {%%0} getCauseAs(java.lang.Throwable,java.lang.Class<{%%0}>)
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static boolean lazyStackTraceIsLazy()
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
- anno 0 java.lang.Deprecated()
-meth public static java.lang.RuntimeException propagate(java.lang.Throwable)
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
- anno 0 java.lang.Deprecated()
-meth public static java.lang.String getStackTraceAsString(java.lang.Throwable)
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-meth public static java.lang.Throwable getRootCause(java.lang.Throwable)
-meth public static java.util.List<java.lang.StackTraceElement> lazyStackTrace(java.lang.Throwable)
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
- anno 0 java.lang.Deprecated()
-meth public static java.util.List<java.lang.Throwable> getCausalChain(java.lang.Throwable)
-meth public static void propagateIfPossible(java.lang.Throwable)
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
- anno 0 java.lang.Deprecated()
-meth public static void throwIfUnchecked(java.lang.Throwable)
 supr java.lang.Object
-hfds JAVA_LANG_ACCESS_CLASSNAME,SHARED_SECRETS_CLASSNAME,getStackTraceDepthMethod,getStackTraceElementMethod,jla
 
 CLSS public abstract com.google.common.base.Ticker
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -489,14 +402,25 @@ CLSS public final com.google.common.base.Verify
 supr java.lang.Object
 
 CLSS public com.google.common.base.VerifyException
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
-cons public init()
-cons public init(java.lang.String)
-cons public init(java.lang.String,java.lang.Throwable)
-cons public init(java.lang.Throwable)
 supr java.lang.RuntimeException
 
 CLSS abstract interface com.google.common.base.package-info
+ anno 0 com.google.errorprone.annotations.CheckReturnValue()
+ anno 0 org.jspecify.annotations.NullMarked()
+
+CLSS public abstract interface !annotation com.google.errorprone.annotations.CheckReturnValue
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, CONSTRUCTOR, TYPE, PACKAGE])
+intf java.lang.annotation.Annotation
+
+CLSS public abstract interface !annotation com.google.errorprone.annotations.DoNotMock
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Inherited()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, ANNOTATION_TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String value()
 
 CLSS public abstract com.google.inject.AbstractModule
 cons public init()
@@ -638,6 +562,7 @@ meth public abstract java.util.Set<com.google.inject.spi.TypeConverterBinding> g
 meth public abstract void injectMembers(java.lang.Object)
 
 CLSS public com.google.inject.Key<%0 extends java.lang.Object>
+ anno 0 com.google.errorprone.annotations.CheckReturnValue()
 cons protected init()
 cons protected init(java.lang.Class<? extends java.lang.annotation.Annotation>)
 cons protected init(java.lang.annotation.Annotation)
@@ -858,13 +783,19 @@ cons public init()
 intf java.io.Closeable
 meth public abstract int read() throws java.io.IOException
 meth public boolean markSupported()
+meth public byte[] readAllBytes() throws java.io.IOException
+meth public byte[] readNBytes(int) throws java.io.IOException
 meth public int available() throws java.io.IOException
 meth public int read(byte[]) throws java.io.IOException
 meth public int read(byte[],int,int) throws java.io.IOException
+meth public int readNBytes(byte[],int,int) throws java.io.IOException
 meth public long skip(long) throws java.io.IOException
+meth public long transferTo(java.io.OutputStream) throws java.io.IOException
+meth public static java.io.InputStream nullInputStream()
 meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
+meth public void skipNBytes(long) throws java.io.IOException
 supr java.lang.Object
 
 CLSS public abstract java.io.OutputStream
@@ -872,6 +803,7 @@ cons public init()
 intf java.io.Closeable
 intf java.io.Flushable
 meth public abstract void write(int) throws java.io.IOException
+meth public static java.io.OutputStream nullOutputStream()
 meth public void close() throws java.io.IOException
 meth public void flush() throws java.io.IOException
 meth public void write(byte[]) throws java.io.IOException
@@ -892,6 +824,8 @@ meth public int read() throws java.io.IOException
 meth public int read(char[]) throws java.io.IOException
 meth public int read(java.nio.CharBuffer) throws java.io.IOException
 meth public long skip(long) throws java.io.IOException
+meth public long transferTo(java.io.Writer) throws java.io.IOException
+meth public static java.io.Reader nullReader()
 meth public void mark(int) throws java.io.IOException
 meth public void reset() throws java.io.IOException
 supr java.lang.Object
@@ -911,6 +845,7 @@ meth public abstract void write(char[],int,int) throws java.io.IOException
 meth public java.io.Writer append(char) throws java.io.IOException
 meth public java.io.Writer append(java.lang.CharSequence) throws java.io.IOException
 meth public java.io.Writer append(java.lang.CharSequence,int,int) throws java.io.IOException
+meth public static java.io.Writer nullWriter()
 meth public void write(char[]) throws java.io.IOException
 meth public void write(int) throws java.io.IOException
 meth public void write(java.lang.String) throws java.io.IOException
@@ -928,8 +863,9 @@ meth public abstract void close() throws java.lang.Exception
 CLSS public abstract java.lang.ClassLoader
 cons protected init()
 cons protected init(java.lang.ClassLoader)
+cons protected init(java.lang.String,java.lang.ClassLoader)
 meth protected final java.lang.Class<?> defineClass(byte[],int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="1.1")
 meth protected final java.lang.Class<?> defineClass(java.lang.String,byte[],int,int)
 meth protected final java.lang.Class<?> defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
 meth protected final java.lang.Class<?> defineClass(java.lang.String,java.nio.ByteBuffer,java.security.ProtectionDomain)
@@ -938,21 +874,31 @@ meth protected final java.lang.Class<?> findSystemClass(java.lang.String) throws
 meth protected final void resolveClass(java.lang.Class<?>)
 meth protected final void setSigners(java.lang.Class<?>,java.lang.Object[])
 meth protected java.lang.Class<?> findClass(java.lang.String) throws java.lang.ClassNotFoundException
+meth protected java.lang.Class<?> findClass(java.lang.String,java.lang.String)
 meth protected java.lang.Class<?> loadClass(java.lang.String,boolean) throws java.lang.ClassNotFoundException
 meth protected java.lang.Object getClassLoadingLock(java.lang.String)
 meth protected java.lang.Package definePackage(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.net.URL)
 meth protected java.lang.Package getPackage(java.lang.String)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth protected java.lang.Package[] getPackages()
 meth protected java.lang.String findLibrary(java.lang.String)
 meth protected java.net.URL findResource(java.lang.String)
+meth protected java.net.URL findResource(java.lang.String,java.lang.String) throws java.io.IOException
 meth protected java.util.Enumeration<java.net.URL> findResources(java.lang.String) throws java.io.IOException
 meth protected static boolean registerAsParallelCapable()
+meth public final boolean isRegisteredAsParallelCapable()
 meth public final java.lang.ClassLoader getParent()
+meth public final java.lang.Module getUnnamedModule()
+meth public final java.lang.Package getDefinedPackage(java.lang.String)
+meth public final java.lang.Package[] getDefinedPackages()
 meth public java.io.InputStream getResourceAsStream(java.lang.String)
 meth public java.lang.Class<?> loadClass(java.lang.String) throws java.lang.ClassNotFoundException
+meth public java.lang.String getName()
 meth public java.net.URL getResource(java.lang.String)
 meth public java.util.Enumeration<java.net.URL> getResources(java.lang.String) throws java.io.IOException
+meth public java.util.stream.Stream<java.net.URL> resources(java.lang.String)
 meth public static java.io.InputStream getSystemResourceAsStream(java.lang.String)
+meth public static java.lang.ClassLoader getPlatformClassLoader()
 meth public static java.lang.ClassLoader getSystemClassLoader()
 meth public static java.net.URL getSystemResource(java.lang.String)
 meth public static java.util.Enumeration<java.net.URL> getSystemResources(java.lang.String) throws java.io.IOException
@@ -970,13 +916,17 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -985,6 +935,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -1027,6 +978,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -1060,6 +1012,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.ThreadGroup,java.lang.Runnable)
 cons public init(java.lang.ThreadGroup,java.lang.Runnable,java.lang.String)
 cons public init(java.lang.ThreadGroup,java.lang.Runnable,java.lang.String,long)
+cons public init(java.lang.ThreadGroup,java.lang.Runnable,java.lang.String,long,boolean)
 cons public init(java.lang.ThreadGroup,java.lang.String)
 fld public final static int MAX_PRIORITY = 10
 fld public final static int MIN_PRIORITY = 1
@@ -1075,22 +1028,21 @@ meth public final int getPriority()
 meth public final java.lang.String getName()
 meth public final java.lang.ThreadGroup getThreadGroup()
 meth public final void checkAccess()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="17")
 meth public final void join() throws java.lang.InterruptedException
 meth public final void join(long) throws java.lang.InterruptedException
 meth public final void join(long,int) throws java.lang.InterruptedException
 meth public final void resume()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="1.2")
 meth public final void setDaemon(boolean)
 meth public final void setName(java.lang.String)
 meth public final void setPriority(int)
 meth public final void stop()
- anno 0 java.lang.Deprecated()
-meth public final void stop(java.lang.Throwable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="1.2")
 meth public final void suspend()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="1.2")
 meth public int countStackFrames()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="1.2")
 meth public java.lang.ClassLoader getContextClassLoader()
 meth public java.lang.StackTraceElement[] getStackTrace()
 meth public java.lang.String toString()
@@ -1105,12 +1057,11 @@ meth public static java.lang.Thread currentThread()
 meth public static java.lang.Thread$UncaughtExceptionHandler getDefaultUncaughtExceptionHandler()
 meth public static java.util.Map<java.lang.Thread,java.lang.StackTraceElement[]> getAllStackTraces()
 meth public static void dumpStack()
+meth public static void onSpinWait()
 meth public static void setDefaultUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler)
 meth public static void sleep(long) throws java.lang.InterruptedException
 meth public static void sleep(long,int) throws java.lang.InterruptedException
 meth public static void yield()
-meth public void destroy()
- anno 0 java.lang.Deprecated()
 meth public void interrupt()
 meth public void run()
 meth public void setContextClassLoader(java.lang.ClassLoader)
@@ -1172,14 +1123,21 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public java.lang.ref.PhantomReference<%0 extends java.lang.Object>
 cons public init({java.lang.ref.PhantomReference%0},java.lang.ref.ReferenceQueue<? super {java.lang.ref.PhantomReference%0}>)
 meth public {java.lang.ref.PhantomReference%0} get()
 supr java.lang.ref.Reference<{java.lang.ref.PhantomReference%0}>
 
 CLSS public abstract java.lang.ref.Reference<%0 extends java.lang.Object>
+meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth public boolean enqueue()
 meth public boolean isEnqueued()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="16")
+meth public final boolean refersTo({java.lang.ref.Reference%0})
+meth public static void reachabilityFence(java.lang.Object)
 meth public void clear()
 meth public {java.lang.ref.Reference%0} get()
 supr java.lang.Object
@@ -1196,6 +1154,8 @@ cons public init({java.lang.ref.WeakReference%0},java.lang.ref.ReferenceQueue<? 
 supr java.lang.ref.Reference<{java.lang.ref.WeakReference%0}>
 
 CLSS public java.net.URLClassLoader
+cons public init(java.lang.String,java.net.URL[],java.lang.ClassLoader)
+cons public init(java.lang.String,java.net.URL[],java.lang.ClassLoader,java.net.URLStreamHandlerFactory)
 cons public init(java.net.URL[])
 cons public init(java.net.URL[],java.lang.ClassLoader)
 cons public init(java.net.URL[],java.lang.ClassLoader,java.net.URLStreamHandlerFactory)
@@ -1216,6 +1176,7 @@ supr java.security.SecureClassLoader
 CLSS public java.security.SecureClassLoader
 cons protected init()
 cons protected init(java.lang.ClassLoader)
+cons protected init(java.lang.String,java.lang.ClassLoader)
 meth protected final java.lang.Class<?> defineClass(java.lang.String,byte[],int,int,java.security.CodeSource)
 meth protected final java.lang.Class<?> defineClass(java.lang.String,java.nio.ByteBuffer,java.security.CodeSource)
 meth protected java.security.PermissionCollection getPermissions(java.security.CodeSource)
@@ -1294,6 +1255,8 @@ meth public void remove()
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry
+meth public !varargs static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> ofEntries(java.util.Map$Entry<? extends {%%0},? extends {%%1}>[])
+ anno 0 java.lang.SafeVarargs()
 meth public abstract boolean containsKey(java.lang.Object)
 meth public abstract boolean containsValue(java.lang.Object)
 meth public abstract boolean equals(java.lang.Object)
@@ -1310,6 +1273,19 @@ meth public abstract {java.util.Map%1} put({java.util.Map%0},{java.util.Map%1})
 meth public abstract {java.util.Map%1} remove(java.lang.Object)
 meth public boolean remove(java.lang.Object,java.lang.Object)
 meth public boolean replace({java.util.Map%0},{java.util.Map%1},{java.util.Map%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map$Entry<{%%0},{%%1}> entry({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> copyOf(java.util.Map<? extends {%%0},? extends {%%1}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
 meth public void forEach(java.util.function.BiConsumer<? super {java.util.Map%0},? super {java.util.Map%1}>)
 meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
 meth public {java.util.Map%1} compute({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
@@ -1323,6 +1299,9 @@ meth public {java.util.Map%1} replace({java.util.Map%0},{java.util.Map%1})
 CLSS public abstract interface java.util.concurrent.Callable<%0 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
 meth public abstract {java.util.concurrent.Callable%0} call() throws java.lang.Exception
+
+CLSS public abstract interface java.util.concurrent.ThreadFactory
+meth public abstract java.lang.Thread newThread(java.lang.Runnable)
 
 CLSS public abstract interface java.util.function.BiPredicate<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
@@ -1345,20 +1324,11 @@ meth public java.util.function.Predicate<{java.util.function.Predicate%0}> and(j
 meth public java.util.function.Predicate<{java.util.function.Predicate%0}> negate()
 meth public java.util.function.Predicate<{java.util.function.Predicate%0}> or(java.util.function.Predicate<? super {java.util.function.Predicate%0}>)
 meth public static <%0 extends java.lang.Object> java.util.function.Predicate<{%%0}> isEqual(java.lang.Object)
+meth public static <%0 extends java.lang.Object> java.util.function.Predicate<{%%0}> not(java.util.function.Predicate<? super {%%0}>)
 
 CLSS public abstract interface java.util.function.Supplier<%0 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
 meth public abstract {java.util.function.Supplier%0} get()
-
-CLSS public abstract interface !annotation javax.annotation.Nonnull
-intf java.lang.annotation.Annotation
-meth public abstract !hasdefault javax.annotation.meta.When when()
-
-CLSS public abstract interface !annotation javax.inject.Inject
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, CONSTRUCTOR, FIELD])
-intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation javax.inject.Named
  anno 0 java.lang.annotation.Documented()
@@ -1391,7 +1361,7 @@ intf java.lang.annotation.Annotation
 CLSS public abstract interface javax.xml.namespace.NamespaceContext
 meth public abstract java.lang.String getNamespaceURI(java.lang.String)
 meth public abstract java.lang.String getPrefix(java.lang.String)
-meth public abstract java.util.Iterator getPrefixes(java.lang.String)
+meth public abstract java.util.Iterator<java.lang.String> getPrefixes(java.lang.String)
 
 CLSS public abstract interface javax.xml.stream.XMLStreamWriter
 meth public abstract java.lang.Object getProperty(java.lang.String)
@@ -1451,7 +1421,7 @@ cons public init()
 cons public init(java.lang.String[])
 fld public final static int SC_PERMANENT_REDIRECT = 308
 fld public final static java.lang.String REDIRECT_LOCATIONS = "http.protocol.redirect-locations"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.apache.http.impl.client.DefaultRedirectStrategy INSTANCE
 intf org.apache.http.client.RedirectStrategy
 meth protected boolean isRedirectable(java.lang.String)
@@ -1517,14 +1487,14 @@ fld protected org.codehaus.plexus.PlexusContainer container
 intf org.apache.maven.Maven
 meth protected <%0 extends java.lang.Object> java.util.Collection<{%%0}> getProjectScopedExtensionComponents(java.util.Collection<org.apache.maven.project.MavenProject>,java.lang.Class<{%%0}>)
 meth protected org.codehaus.plexus.logging.Logger getLogger()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.execution.MavenExecutionResult execute(org.apache.maven.execution.MavenExecutionRequest)
 meth public org.eclipse.aether.RepositorySystemSession newRepositorySession(org.apache.maven.execution.MavenExecutionRequest)
 supr java.lang.Object
 hfds eventCatapult,graphBuilder,legacySupport,lifecycleStarter,logger,repositorySessionFactory,sessionScope
 
 CLSS public org.apache.maven.DefaultProjectDependenciesResolver
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 0 org.codehaus.plexus.component.annotations.Component(boolean isolatedRealm=false, java.lang.Class<?> role=class org.apache.maven.ProjectDependenciesResolver, java.lang.String alias="", java.lang.String composer="", java.lang.String configurator="", java.lang.String description="", java.lang.String factory="", java.lang.String hint="", java.lang.String instantiationStrategy="", java.lang.String lifecycleHandler="", java.lang.String profile="", java.lang.String type="", java.lang.String version="")
 cons public init()
 intf org.apache.maven.ProjectDependenciesResolver
@@ -1547,7 +1517,7 @@ supr org.apache.maven.MavenExecutionException
 
 CLSS public abstract interface org.apache.maven.Maven
 fld public final static java.lang.String POMv4 = "pom.xml"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.execution.MavenExecutionResult execute(org.apache.maven.execution.MavenExecutionRequest)
 
 CLSS public org.apache.maven.MavenExecutionException
@@ -1578,7 +1548,7 @@ cons public init(java.lang.String,org.codehaus.plexus.util.dag.CycleDetectedExce
 supr org.apache.maven.BuildFailureException
 
 CLSS public abstract interface org.apache.maven.ProjectDependenciesResolver
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.Set<org.apache.maven.artifact.Artifact> resolve(java.util.Collection<? extends org.apache.maven.project.MavenProject>,java.util.Collection<java.lang.String>,org.apache.maven.execution.MavenSession) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
 meth public abstract java.util.Set<org.apache.maven.artifact.Artifact> resolve(org.apache.maven.project.MavenProject,java.util.Collection<java.lang.String>,java.util.Collection<java.lang.String>,org.apache.maven.execution.MavenSession) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
 meth public abstract java.util.Set<org.apache.maven.artifact.Artifact> resolve(org.apache.maven.project.MavenProject,java.util.Collection<java.lang.String>,java.util.Collection<java.lang.String>,org.apache.maven.execution.MavenSession,java.util.Set<org.apache.maven.artifact.Artifact>) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
@@ -1797,7 +1767,7 @@ cons protected init(java.lang.String,java.lang.String,org.codehaus.plexus.compon
 cons public init(java.lang.String,java.lang.String)
 cons public init(java.lang.String,java.lang.String,java.net.MalformedURLException)
 cons public init(java.lang.String,java.lang.Throwable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getRepositoryId()
 supr java.lang.Exception
 hfds repositoryId
@@ -1810,9 +1780,9 @@ supr org.apache.maven.artifact.InvalidRepositoryException
 hfds layoutId
 
 CLSS public abstract interface org.apache.maven.artifact.factory.ArtifactFactory
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String ROLE
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.artifact.Artifact createArtifact(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 meth public abstract org.apache.maven.artifact.Artifact createArtifactWithClassifier(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 meth public abstract org.apache.maven.artifact.Artifact createBuildArtifact(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
@@ -1879,43 +1849,43 @@ CLSS public abstract interface org.apache.maven.artifact.handler.manager.Artifac
 fld public final static java.lang.String ROLE
 meth public abstract org.apache.maven.artifact.handler.ArtifactHandler getArtifactHandler(java.lang.String)
 meth public abstract void addHandlers(java.util.Map<java.lang.String,org.apache.maven.artifact.handler.ArtifactHandler>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public org.apache.maven.artifact.handler.manager.DefaultArtifactHandlerManager
  anno 0 org.codehaus.plexus.component.annotations.Component(boolean isolatedRealm=false, java.lang.Class<?> role=class org.apache.maven.artifact.handler.manager.ArtifactHandlerManager, java.lang.String alias="", java.lang.String composer="", java.lang.String configurator="", java.lang.String description="", java.lang.String factory="", java.lang.String hint="", java.lang.String instantiationStrategy="", java.lang.String lifecycleHandler="", java.lang.String profile="", java.lang.String type="", java.lang.String version="")
 cons public init()
 intf org.apache.maven.artifact.handler.manager.ArtifactHandlerManager
 meth public java.util.Set<java.lang.String> getHandlerTypes()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.artifact.handler.ArtifactHandler getArtifactHandler(java.lang.String)
 meth public void addHandlers(java.util.Map<java.lang.String,org.apache.maven.artifact.handler.ArtifactHandler>)
 supr java.lang.Object
 hfds allHandlers,artifactHandlers
 
 CLSS public abstract org.apache.maven.artifact.metadata.AbstractArtifactMetadata
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons protected init(org.apache.maven.artifact.Artifact)
 intf org.apache.maven.artifact.metadata.ArtifactMetadata
 supr org.apache.maven.repository.legacy.metadata.AbstractArtifactMetadata
 
 CLSS public abstract interface org.apache.maven.artifact.metadata.ArtifactMetadata
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf org.apache.maven.repository.legacy.metadata.ArtifactMetadata
 meth public abstract void merge(org.apache.maven.artifact.metadata.ArtifactMetadata)
 
 CLSS public org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.Throwable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.Throwable,org.apache.maven.artifact.Artifact)
 cons public init(java.lang.Throwable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.apache.maven.repository.legacy.metadata.ArtifactMetadataRetrievalException
 
 CLSS public abstract interface org.apache.maven.artifact.metadata.ArtifactMetadataSource
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf org.apache.maven.repository.legacy.metadata.ArtifactMetadataSource
 meth public abstract java.util.List<org.apache.maven.artifact.versioning.ArtifactVersion> retrieveAvailableVersions(org.apache.maven.artifact.Artifact,org.apache.maven.artifact.repository.ArtifactRepository,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>) throws org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException
 meth public abstract java.util.List<org.apache.maven.artifact.versioning.ArtifactVersion> retrieveAvailableVersions(org.apache.maven.repository.legacy.metadata.MetadataResolutionRequest) throws org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException
@@ -1924,19 +1894,19 @@ meth public abstract org.apache.maven.artifact.metadata.ResolutionGroup retrieve
 meth public abstract org.apache.maven.artifact.metadata.ResolutionGroup retrieve(org.apache.maven.repository.legacy.metadata.MetadataResolutionRequest) throws org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException
 
 CLSS public org.apache.maven.artifact.metadata.ResolutionGroup
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.apache.maven.artifact.Artifact,java.util.Set<org.apache.maven.artifact.Artifact>,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>)
 cons public init(org.apache.maven.artifact.Artifact,org.apache.maven.artifact.Artifact,java.util.Set<org.apache.maven.artifact.Artifact>,java.util.Map<java.lang.String,org.apache.maven.artifact.Artifact>,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>)
 supr org.apache.maven.repository.legacy.metadata.ResolutionGroup
 
 CLSS public abstract interface org.apache.maven.artifact.repository.ArtifactRepository
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract boolean isBlacklisted()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract boolean isBlocked()
 meth public abstract boolean isProjectAware()
 meth public abstract boolean isUniqueVersion()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.lang.String getBasedir()
 meth public abstract java.lang.String getId()
 meth public abstract java.lang.String getKey()
@@ -1955,7 +1925,7 @@ meth public abstract org.apache.maven.artifact.repository.layout.ArtifactReposit
 meth public abstract org.apache.maven.repository.Proxy getProxy()
 meth public abstract void setAuthentication(org.apache.maven.artifact.repository.Authentication)
 meth public abstract void setBlacklisted(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void setBlocked(boolean)
 meth public abstract void setId(java.lang.String)
 meth public abstract void setLayout(org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout)
@@ -1972,15 +1942,15 @@ fld public final static java.lang.String ROLE
 meth public abstract org.apache.maven.artifact.repository.ArtifactRepository createArtifactRepository(java.lang.String,java.lang.String,java.lang.String,org.apache.maven.artifact.repository.ArtifactRepositoryPolicy,org.apache.maven.artifact.repository.ArtifactRepositoryPolicy) throws org.apache.maven.artifact.UnknownRepositoryLayoutException
 meth public abstract org.apache.maven.artifact.repository.ArtifactRepository createArtifactRepository(java.lang.String,java.lang.String,org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout,org.apache.maven.artifact.repository.ArtifactRepositoryPolicy,org.apache.maven.artifact.repository.ArtifactRepositoryPolicy)
 meth public abstract org.apache.maven.artifact.repository.ArtifactRepository createDeploymentArtifactRepository(java.lang.String,java.lang.String,java.lang.String,boolean) throws org.apache.maven.artifact.UnknownRepositoryLayoutException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.artifact.repository.ArtifactRepository createDeploymentArtifactRepository(java.lang.String,java.lang.String,org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout,boolean)
 meth public abstract org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout getLayout(java.lang.String) throws org.apache.maven.artifact.UnknownRepositoryLayoutException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void setGlobalChecksumPolicy(java.lang.String)
 meth public abstract void setGlobalUpdatePolicy(java.lang.String)
 
 CLSS public org.apache.maven.artifact.repository.ArtifactRepositoryPolicy
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 cons public init(boolean,java.lang.String,java.lang.String)
 cons public init(org.apache.maven.artifact.repository.ArtifactRepositoryPolicy)
@@ -2017,7 +1987,7 @@ supr java.lang.Object
 hfds passphrase,password,privateKey,username
 
 CLSS public org.apache.maven.artifact.repository.DefaultArtifactRepository
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.String,org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout)
 cons public init(java.lang.String,java.lang.String,org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout,boolean)
 cons public init(java.lang.String,java.lang.String,org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout,org.apache.maven.artifact.repository.ArtifactRepositoryPolicy,org.apache.maven.artifact.repository.ArtifactRepositoryPolicy)
@@ -2138,7 +2108,7 @@ supr java.lang.Object
 hfds authentication,basedir,blocked,id,layout,mirroredRepositories,protocol,proxy,releases,snapshots,url
 
 CLSS public abstract interface org.apache.maven.artifact.repository.RepositoryCache
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.lang.Object get(org.apache.maven.artifact.repository.RepositoryRequest,java.lang.Object)
 meth public abstract void put(org.apache.maven.artifact.repository.RepositoryRequest,java.lang.Object,java.lang.Object)
 
@@ -2153,7 +2123,7 @@ meth public abstract org.apache.maven.artifact.repository.RepositoryRequest setO
 meth public abstract org.apache.maven.artifact.repository.RepositoryRequest setRemoteRepositories(java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>)
 
 CLSS public abstract interface org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String ROLE
 meth public abstract java.lang.String getId()
 meth public abstract java.lang.String pathOf(org.apache.maven.artifact.Artifact)
@@ -2479,10 +2449,10 @@ supr java.lang.Exception
 hfds LS,artifact,artifactId,classifier,groupId,originalMessage,path,remoteRepositories,type,version
 
 CLSS public abstract interface org.apache.maven.artifact.resolver.ArtifactCollector
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf org.apache.maven.repository.legacy.resolver.LegacyArtifactCollector
 meth public abstract org.apache.maven.artifact.resolver.ArtifactResolutionResult collect(java.util.Set<org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.Artifact,org.apache.maven.artifact.repository.ArtifactRepository,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.metadata.ArtifactMetadataSource,org.apache.maven.artifact.resolver.filter.ArtifactFilter,java.util.List<org.apache.maven.artifact.resolver.ResolutionListener>) throws org.apache.maven.artifact.resolver.ArtifactResolutionException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public org.apache.maven.artifact.resolver.ArtifactNotFoundException
 cons protected init(java.lang.String,org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>)
@@ -2581,26 +2551,26 @@ hfds artifacts,circularDependencyExceptions,errorArtifactExceptions,exceptions,m
 
 CLSS public abstract interface org.apache.maven.artifact.resolver.ArtifactResolver
 fld public final static java.lang.String ROLE
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.artifact.resolver.ArtifactResolutionResult resolve(org.apache.maven.artifact.resolver.ArtifactResolutionRequest)
 meth public abstract org.apache.maven.artifact.resolver.ArtifactResolutionResult resolveTransitively(java.util.Set<org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.repository.ArtifactRepository,org.apache.maven.artifact.metadata.ArtifactMetadataSource) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.artifact.resolver.ArtifactResolutionResult resolveTransitively(java.util.Set<org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.repository.ArtifactRepository,org.apache.maven.artifact.metadata.ArtifactMetadataSource,java.util.List<org.apache.maven.artifact.resolver.ResolutionListener>) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.artifact.resolver.ArtifactResolutionResult resolveTransitively(java.util.Set<org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.Artifact,java.util.Map<java.lang.String,org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.repository.ArtifactRepository,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.metadata.ArtifactMetadataSource) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.artifact.resolver.ArtifactResolutionResult resolveTransitively(java.util.Set<org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.Artifact,java.util.Map<java.lang.String,org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.repository.ArtifactRepository,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.metadata.ArtifactMetadataSource,org.apache.maven.artifact.resolver.filter.ArtifactFilter) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.artifact.resolver.ArtifactResolutionResult resolveTransitively(java.util.Set<org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.Artifact,java.util.Map<java.lang.String,org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.repository.ArtifactRepository,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.metadata.ArtifactMetadataSource,org.apache.maven.artifact.resolver.filter.ArtifactFilter,java.util.List<org.apache.maven.artifact.resolver.ResolutionListener>) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.artifact.resolver.ArtifactResolutionResult resolveTransitively(java.util.Set<org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.Artifact,org.apache.maven.artifact.repository.ArtifactRepository,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.metadata.ArtifactMetadataSource,org.apache.maven.artifact.resolver.filter.ArtifactFilter) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void resolve(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.repository.ArtifactRepository) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void resolve(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.repository.ArtifactRepository,org.apache.maven.wagon.events.TransferListener) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void resolveAlways(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.repository.ArtifactRepository) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public org.apache.maven.artifact.resolver.CyclicDependencyException
 cons public init(java.lang.String,org.apache.maven.artifact.Artifact)
@@ -2630,7 +2600,7 @@ supr java.lang.Object
 hfds ignoredArtifacts,indent,logger
 
 CLSS public org.apache.maven.artifact.resolver.DefaultArtifactCollector
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 0 org.codehaus.plexus.component.annotations.Component(boolean isolatedRealm=false, java.lang.Class<?> role=class org.apache.maven.artifact.resolver.ArtifactCollector, java.lang.String alias="", java.lang.String composer="", java.lang.String configurator="", java.lang.String description="", java.lang.String factory="", java.lang.String hint="", java.lang.String instantiationStrategy="", java.lang.String lifecycleHandler="", java.lang.String profile="", java.lang.String type="", java.lang.String version="")
  anno 0 org.codehaus.plexus.component.annotations.Component(boolean isolatedRealm=false, java.lang.Class<?> role=class org.apache.maven.repository.legacy.resolver.LegacyArtifactCollector, java.lang.String alias="", java.lang.String composer="", java.lang.String configurator="", java.lang.String description="", java.lang.String factory="", java.lang.String hint="", java.lang.String instantiationStrategy="", java.lang.String lifecycleHandler="", java.lang.String profile="", java.lang.String type="", java.lang.String version="")
 cons public init()
@@ -2671,7 +2641,7 @@ supr java.lang.Object
 CLSS public org.apache.maven.artifact.resolver.MultipleArtifactsNotFoundException
 cons public init(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.Artifact>,java.util.List<org.apache.maven.artifact.Artifact>,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>)
 cons public init(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.Artifact>,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.apache.maven.artifact.Artifact> getMissingArtifacts()
 meth public java.util.List<org.apache.maven.artifact.Artifact> getResolvedArtifacts()
 supr org.apache.maven.artifact.resolver.ArtifactResolutionException
@@ -2684,7 +2654,7 @@ CLSS public abstract interface org.apache.maven.artifact.resolver.ResolutionList
 fld public final static int FINISH_PROCESSING_CHILDREN = 3
 fld public final static int INCLUDE_ARTIFACT = 4
 fld public final static int MANAGE_ARTIFACT = 7
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int MANAGE_ARTIFACT_SCOPE = 13
 fld public final static int MANAGE_ARTIFACT_SYSTEM_PATH = 14
 fld public final static int MANAGE_ARTIFACT_VERSION = 12
@@ -2700,7 +2670,7 @@ fld public final static java.lang.String ROLE
 meth public abstract void endProcessChildren(org.apache.maven.artifact.Artifact)
 meth public abstract void includeArtifact(org.apache.maven.artifact.Artifact)
 meth public abstract void manageArtifact(org.apache.maven.artifact.Artifact,org.apache.maven.artifact.Artifact)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void omitForCycle(org.apache.maven.artifact.Artifact)
 meth public abstract void omitForNearer(org.apache.maven.artifact.Artifact,org.apache.maven.artifact.Artifact)
 meth public abstract void restrictRange(org.apache.maven.artifact.Artifact,org.apache.maven.artifact.Artifact,org.apache.maven.artifact.versioning.VersionRange)
@@ -2711,7 +2681,7 @@ meth public abstract void updateScope(org.apache.maven.artifact.Artifact,java.la
 meth public abstract void updateScopeCurrentPom(org.apache.maven.artifact.Artifact,java.lang.String)
 
 CLSS public abstract interface org.apache.maven.artifact.resolver.ResolutionListenerForDepMgmt
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void manageArtifactScope(org.apache.maven.artifact.Artifact,org.apache.maven.artifact.Artifact)
 meth public abstract void manageArtifactSystemPath(org.apache.maven.artifact.Artifact,org.apache.maven.artifact.Artifact)
 meth public abstract void manageArtifactVersion(org.apache.maven.artifact.Artifact,org.apache.maven.artifact.Artifact)
@@ -2903,7 +2873,7 @@ cons public init(java.lang.String)
 supr java.lang.Exception
 
 CLSS public org.apache.maven.artifact.versioning.ManagedVersionMap
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.util.Map<java.lang.String,org.apache.maven.artifact.Artifact>)
 meth public java.lang.String toString()
 supr java.util.HashMap<java.lang.String,org.apache.maven.artifact.Artifact>
@@ -2939,7 +2909,7 @@ meth public org.apache.maven.artifact.versioning.ArtifactVersion getRecommendedV
 meth public org.apache.maven.artifact.versioning.ArtifactVersion getSelectedVersion(org.apache.maven.artifact.Artifact) throws org.apache.maven.artifact.versioning.OverConstrainedVersionException
 meth public org.apache.maven.artifact.versioning.ArtifactVersion matchVersion(java.util.List<org.apache.maven.artifact.versioning.ArtifactVersion>)
 meth public org.apache.maven.artifact.versioning.VersionRange cloneOf()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.artifact.versioning.VersionRange restrict(org.apache.maven.artifact.versioning.VersionRange)
 meth public static org.apache.maven.artifact.versioning.VersionRange createFromVersion(java.lang.String)
 meth public static org.apache.maven.artifact.versioning.VersionRange createFromVersionSpec(java.lang.String) throws org.apache.maven.artifact.versioning.InvalidVersionSpecificationException
@@ -3027,7 +2997,7 @@ fld public final static char NON_RECURSIVE = 'N'
 fld public final static char OFFLINE = 'o'
 fld public final static char QUIET = 'q'
 fld public final static char SET_SYSTEM_PROPERTY = 'D'
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static char SET_USER_PROPERTY = 'D'
 fld public final static char SHOW_VERSION = 'V'
 fld public final static char UPDATE_SNAPSHOTS = 'U'
@@ -3043,6 +3013,7 @@ fld public final static java.lang.String ENCRYPT_PASSWORD = "ep"
 fld public final static java.lang.String FAIL_AT_END = "fae"
 fld public final static java.lang.String FAIL_FAST = "ff"
 fld public final static java.lang.String FAIL_NEVER = "fn"
+fld public final static java.lang.String IGNORE_TRANSITIVE_REPOSITORIES = "itr"
 fld public final static java.lang.String LOG_FILE = "l"
 fld public final static java.lang.String NO_TRANSFER_PROGRESS = "ntp"
 fld public final static java.lang.String PROJECT_LIST = "pl"
@@ -3052,6 +3023,7 @@ fld public final static java.lang.String THREADS = "T"
 meth public org.apache.commons.cli.CommandLine parse(java.lang.String[]) throws org.apache.commons.cli.ParseException
 meth public void displayHelp(java.io.PrintStream)
 supr java.lang.Object
+hfds RAW_STREAMS
 
 CLSS public final org.apache.maven.cli.CLIReportingUtils
 cons public init()
@@ -3178,6 +3150,7 @@ cons public init()
 intf org.apache.maven.execution.MavenExecutionRequest
 meth public boolean isCacheNotFound()
 meth public boolean isCacheTransferError()
+meth public boolean isIgnoreTransitiveRepositories()
 meth public boolean isInteractiveMode()
 meth public boolean isNoSnapshotUpdates()
 meth public boolean isOffline()
@@ -3246,6 +3219,7 @@ meth public org.apache.maven.execution.MavenExecutionRequest setGlobalChecksumPo
 meth public org.apache.maven.execution.MavenExecutionRequest setGlobalSettingsFile(java.io.File)
 meth public org.apache.maven.execution.MavenExecutionRequest setGlobalToolchainsFile(java.io.File)
 meth public org.apache.maven.execution.MavenExecutionRequest setGoals(java.util.List<java.lang.String>)
+meth public org.apache.maven.execution.MavenExecutionRequest setIgnoreTransitiveRepositories(boolean)
 meth public org.apache.maven.execution.MavenExecutionRequest setInactiveProfiles(java.util.List<java.lang.String>)
 meth public org.apache.maven.execution.MavenExecutionRequest setInteractiveMode(boolean)
 meth public org.apache.maven.execution.MavenExecutionRequest setLocalRepository(org.apache.maven.artifact.repository.ArtifactRepository)
@@ -3260,7 +3234,7 @@ meth public org.apache.maven.execution.MavenExecutionRequest setPluginArtifactRe
 meth public org.apache.maven.execution.MavenExecutionRequest setPluginGroups(java.util.List<java.lang.String>)
 meth public org.apache.maven.execution.MavenExecutionRequest setPom(java.io.File)
 meth public org.apache.maven.execution.MavenExecutionRequest setPomFile(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.execution.MavenExecutionRequest setProfiles(java.util.List<org.apache.maven.model.Profile>)
 meth public org.apache.maven.execution.MavenExecutionRequest setProjectPresent(boolean)
 meth public org.apache.maven.execution.MavenExecutionRequest setProxies(java.util.List<org.apache.maven.settings.Proxy>)
@@ -3292,7 +3266,7 @@ meth public void setDegreeOfConcurrency(int)
 meth public void setMultiModuleProjectDirectory(java.io.File)
 meth public void setProjectBuildingConfiguration(org.apache.maven.project.ProjectBuildingRequest)
 supr java.lang.Object
-hfds activeProfiles,basedir,builderId,cacheNotFound,cacheTransferError,data,degreeOfConcurrency,eventSpyDispatcher,excludedProjects,executionListener,globalChecksumPolicy,globalSettingsFile,globalToolchainsFile,goals,inactiveProfiles,interactiveMode,isProjectPresent,localRepository,localRepositoryPath,loggingLevel,makeBehavior,mirrors,multiModuleProjectDirectory,noSnapshotUpdates,offline,pluginArtifactRepositories,pluginGroups,pom,profiles,projectBuildingRequest,proxies,reactorFailureBehavior,recursive,remoteRepositories,repositoryCache,resumeFrom,selectedProjects,servers,showErrors,startTime,systemProperties,toolchains,transferListener,updateSnapshots,useLegacyLocalRepositoryManager,useReactor,userProperties,userSettingsFile,userToolchainsFile,workspaceReader
+hfds activeProfiles,basedir,builderId,cacheNotFound,cacheTransferError,data,degreeOfConcurrency,eventSpyDispatcher,excludedProjects,executionListener,globalChecksumPolicy,globalSettingsFile,globalToolchainsFile,goals,ignoreTransitiveRepositories,inactiveProfiles,interactiveMode,isProjectPresent,localRepository,localRepositoryPath,loggingLevel,makeBehavior,mirrors,multiModuleProjectDirectory,noSnapshotUpdates,offline,pluginArtifactRepositories,pluginGroups,pom,profiles,projectBuildingRequest,proxies,reactorFailureBehavior,recursive,remoteRepositories,repositoryCache,resumeFrom,selectedProjects,servers,showErrors,startTime,systemProperties,toolchains,transferListener,updateSnapshots,useLegacyLocalRepositoryManager,useReactor,userProperties,userSettingsFile,userToolchainsFile,workspaceReader
 
 CLSS public org.apache.maven.execution.DefaultMavenExecutionRequestPopulator
  anno 0 javax.inject.Named(java.lang.String value="")
@@ -3301,7 +3275,7 @@ cons public init(org.apache.maven.bridge.MavenRepositorySystem)
 intf org.apache.maven.execution.MavenExecutionRequestPopulator
 meth public org.apache.maven.execution.MavenExecutionRequest populateDefaults(org.apache.maven.execution.MavenExecutionRequest) throws org.apache.maven.execution.MavenExecutionRequestPopulationException
 meth public org.apache.maven.execution.MavenExecutionRequest populateFromSettings(org.apache.maven.execution.MavenExecutionRequest,org.apache.maven.settings.Settings) throws org.apache.maven.execution.MavenExecutionRequestPopulationException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.execution.MavenExecutionRequest populateFromToolchains(org.apache.maven.execution.MavenExecutionRequest,org.apache.maven.toolchain.model.PersistedToolchains) throws org.apache.maven.execution.MavenExecutionRequestPopulationException
 supr java.lang.Object
 hfds repositorySystem
@@ -3324,7 +3298,7 @@ supr java.lang.Object
 hfds buildSummaries,dependencyResolutionResult,exceptions,project,topologicallySortedProjects
 
 CLSS public org.apache.maven.execution.DefaultRuntimeInformation
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 0 org.codehaus.plexus.component.annotations.Component(boolean isolatedRealm=false, java.lang.Class<?> role=class org.apache.maven.execution.RuntimeInformation, java.lang.String alias="", java.lang.String composer="", java.lang.String configurator="", java.lang.String description="", java.lang.String factory="", java.lang.String hint="", java.lang.String instantiationStrategy="", java.lang.String lifecycleHandler="", java.lang.String profile="", java.lang.String type="", java.lang.String version="")
 cons public init()
 intf org.apache.maven.execution.RuntimeInformation
@@ -3401,6 +3375,7 @@ fld public final static java.lang.String REACTOR_MAKE_DOWNSTREAM = "make-downstr
 fld public final static java.lang.String REACTOR_MAKE_UPSTREAM = "make-upstream"
 meth public abstract boolean isCacheNotFound()
 meth public abstract boolean isCacheTransferError()
+meth public abstract boolean isIgnoreTransitiveRepositories()
 meth public abstract boolean isInteractiveMode()
 meth public abstract boolean isNoSnapshotUpdates()
 meth public abstract boolean isOffline()
@@ -3409,7 +3384,7 @@ meth public abstract boolean isRecursive()
 meth public abstract boolean isShowErrors()
 meth public abstract boolean isUpdateSnapshots()
 meth public abstract boolean isUseLegacyLocalRepository()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract int getDegreeOfConcurrency()
 meth public abstract int getLoggingLevel()
 meth public abstract java.io.File getGlobalSettingsFile()
@@ -3469,6 +3444,7 @@ meth public abstract org.apache.maven.execution.MavenExecutionRequest setGlobalC
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setGlobalSettingsFile(java.io.File)
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setGlobalToolchainsFile(java.io.File)
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setGoals(java.util.List<java.lang.String>)
+meth public abstract org.apache.maven.execution.MavenExecutionRequest setIgnoreTransitiveRepositories(boolean)
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setInactiveProfiles(java.util.List<java.lang.String>)
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setInteractiveMode(boolean)
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setLocalRepository(org.apache.maven.artifact.repository.ArtifactRepository)
@@ -3499,7 +3475,7 @@ meth public abstract org.apache.maven.execution.MavenExecutionRequest setToolcha
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setTransferListener(org.eclipse.aether.transfer.TransferListener)
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setUpdateSnapshots(boolean)
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setUseLegacyLocalRepository(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setUserProperties(java.util.Properties)
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setUserSettingsFile(java.io.File)
 meth public abstract org.apache.maven.execution.MavenExecutionRequest setUserToolchainsFile(java.io.File)
@@ -3520,7 +3496,7 @@ supr java.lang.Exception
 CLSS public abstract interface org.apache.maven.execution.MavenExecutionRequestPopulator
 meth public abstract org.apache.maven.execution.MavenExecutionRequest populateDefaults(org.apache.maven.execution.MavenExecutionRequest) throws org.apache.maven.execution.MavenExecutionRequestPopulationException
 meth public abstract org.apache.maven.execution.MavenExecutionRequest populateFromSettings(org.apache.maven.execution.MavenExecutionRequest,org.apache.maven.settings.Settings) throws org.apache.maven.execution.MavenExecutionRequestPopulationException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.execution.MavenExecutionRequest populateFromToolchains(org.apache.maven.execution.MavenExecutionRequest,org.apache.maven.toolchain.model.PersistedToolchains) throws org.apache.maven.execution.MavenExecutionRequestPopulationException
 
 CLSS public abstract interface org.apache.maven.execution.MavenExecutionResult
@@ -3538,59 +3514,59 @@ meth public abstract void addBuildSummary(org.apache.maven.execution.BuildSummar
 
 CLSS public org.apache.maven.execution.MavenSession
 cons public init(org.codehaus.plexus.PlexusContainer,org.apache.maven.execution.MavenExecutionRequest,org.apache.maven.execution.MavenExecutionResult,java.util.List<org.apache.maven.project.MavenProject>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.codehaus.plexus.PlexusContainer,org.apache.maven.execution.MavenExecutionRequest,org.apache.maven.execution.MavenExecutionResult,org.apache.maven.project.MavenProject)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.codehaus.plexus.PlexusContainer,org.apache.maven.settings.Settings,org.apache.maven.artifact.repository.ArtifactRepository,org.apache.maven.monitor.event.EventDispatcher,org.apache.maven.execution.ReactorManager,java.util.List<java.lang.String>,java.lang.String,java.util.Properties,java.util.Date)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.codehaus.plexus.PlexusContainer,org.apache.maven.settings.Settings,org.apache.maven.artifact.repository.ArtifactRepository,org.apache.maven.monitor.event.EventDispatcher,org.apache.maven.execution.ReactorManager,java.util.List<java.lang.String>,java.lang.String,java.util.Properties,java.util.Properties,java.util.Date)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.codehaus.plexus.PlexusContainer,org.eclipse.aether.RepositorySystemSession,org.apache.maven.execution.MavenExecutionRequest,org.apache.maven.execution.MavenExecutionResult)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf java.lang.Cloneable
 meth public boolean isOffline()
 meth public boolean isParallel()
 meth public boolean isUsingPOMsFromFilesystem()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.Object lookup(java.lang.String) throws org.codehaus.plexus.component.repository.exception.ComponentLookupException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.Object lookup(java.lang.String,java.lang.String) throws org.codehaus.plexus.component.repository.exception.ComponentLookupException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getExecutionRootDirectory()
 meth public java.lang.String getReactorFailureBehavior()
 meth public java.util.Date getStartTime()
 meth public java.util.List<java.lang.Object> lookupList(java.lang.String) throws org.codehaus.plexus.component.repository.exception.ComponentLookupException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<java.lang.String> getGoals()
 meth public java.util.List<java.lang.String> getPluginGroups()
 meth public java.util.List<org.apache.maven.project.MavenProject> getAllProjects()
 meth public java.util.List<org.apache.maven.project.MavenProject> getProjects()
 meth public java.util.List<org.apache.maven.project.MavenProject> getSortedProjects()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Map<java.lang.String,java.lang.Object> getPluginContext(org.apache.maven.plugin.descriptor.PluginDescriptor,org.apache.maven.project.MavenProject)
 meth public java.util.Map<java.lang.String,java.lang.Object> lookupMap(java.lang.String) throws org.codehaus.plexus.component.repository.exception.ComponentLookupException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Map<java.lang.String,org.apache.maven.project.MavenProject> getProjectMap()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Properties getExecutionProperties()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Properties getSystemProperties()
 meth public java.util.Properties getUserProperties()
 meth public org.apache.maven.artifact.repository.ArtifactRepository getLocalRepository()
 meth public org.apache.maven.artifact.repository.RepositoryCache getRepositoryCache()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.execution.MavenExecutionRequest getRequest()
 meth public org.apache.maven.execution.MavenExecutionResult getResult()
 meth public org.apache.maven.execution.MavenSession clone()
 meth public org.apache.maven.execution.ProjectDependencyGraph getProjectDependencyGraph()
 meth public org.apache.maven.monitor.event.EventDispatcher getEventDispatcher()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.project.MavenProject getCurrentProject()
 meth public org.apache.maven.project.MavenProject getTopLevelProject()
 meth public org.apache.maven.project.ProjectBuildingRequest getProjectBuildingRequest()
 meth public org.apache.maven.settings.Settings getSettings()
 meth public org.codehaus.plexus.PlexusContainer getContainer()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.eclipse.aether.RepositorySystemSession getRepositorySession()
 meth public void setAllProjects(java.util.List<org.apache.maven.project.MavenProject>)
 meth public void setCurrentProject(org.apache.maven.project.MavenProject)
@@ -3642,7 +3618,7 @@ meth public abstract void beforeProjectExecution(org.apache.maven.execution.Proj
 meth public abstract void beforeProjectLifecycleExecution(org.apache.maven.execution.ProjectExecutionEvent) throws org.apache.maven.lifecycle.LifecycleExecutionException
 
 CLSS public org.apache.maven.execution.ReactorManager
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.util.List<org.apache.maven.project.MavenProject>) throws org.apache.maven.project.DuplicateProjectException,org.codehaus.plexus.util.dag.CycleDetectedException
 fld public final static java.lang.String FAIL_AT_END = "fail-at-end"
 fld public final static java.lang.String FAIL_FAST = "fail-fast"
@@ -3669,7 +3645,7 @@ supr java.lang.Object
 hfds blackList,buildFailuresByProject,buildSuccessesByProject,failureBehavior,pluginContextsByProjectAndPluginKey,sorter
 
 CLSS public abstract interface org.apache.maven.execution.RuntimeInformation
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.artifact.versioning.ArtifactVersion getApplicationVersion()
 
 CLSS public org.apache.maven.lifecycle.DefaultLifecycleExecutor
@@ -3680,7 +3656,7 @@ meth public !varargs org.apache.maven.lifecycle.MavenExecutionPlan calculateExec
 meth public !varargs org.apache.maven.lifecycle.MavenExecutionPlan calculateExecutionPlan(org.apache.maven.execution.MavenSession,java.lang.String[]) throws org.apache.maven.lifecycle.LifecycleNotFoundException,org.apache.maven.lifecycle.LifecyclePhaseNotFoundException,org.apache.maven.plugin.InvalidPluginDescriptorException,org.apache.maven.plugin.MojoNotFoundException,org.apache.maven.plugin.PluginDescriptorParsingException,org.apache.maven.plugin.PluginManagerException,org.apache.maven.plugin.PluginNotFoundException,org.apache.maven.plugin.PluginResolutionException,org.apache.maven.plugin.prefix.NoPluginFoundForPrefixException,org.apache.maven.plugin.version.PluginVersionResolutionException
 meth public java.util.List<org.apache.maven.project.MavenProject> executeForkedExecutions(org.apache.maven.plugin.MojoExecution,org.apache.maven.execution.MavenSession) throws org.apache.maven.lifecycle.LifecycleExecutionException
 meth public java.util.Map<java.lang.String,org.apache.maven.lifecycle.Lifecycle> getPhaseToLifecycleMap()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Set<org.apache.maven.model.Plugin> getPluginsBoundByDefaultToAllLifecycles(java.lang.String)
 meth public void calculateForkedExecutions(org.apache.maven.plugin.MojoExecution,org.apache.maven.execution.MavenSession) throws org.apache.maven.lifecycle.LifecycleNotFoundException,org.apache.maven.lifecycle.LifecyclePhaseNotFoundException,org.apache.maven.plugin.InvalidPluginDescriptorException,org.apache.maven.plugin.MojoNotFoundException,org.apache.maven.plugin.PluginDescriptorParsingException,org.apache.maven.plugin.PluginNotFoundException,org.apache.maven.plugin.PluginResolutionException,org.apache.maven.plugin.prefix.NoPluginFoundForPrefixException,org.apache.maven.plugin.version.PluginVersionResolutionException
 meth public void execute(org.apache.maven.execution.MavenSession)
@@ -3709,7 +3685,7 @@ meth public java.lang.String getId()
 meth public java.lang.String toString()
 meth public java.util.List<java.lang.String> getPhases()
 meth public java.util.Map<java.lang.String,java.lang.String> getDefaultPhases()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Map<java.lang.String,org.apache.maven.lifecycle.mapping.LifecyclePhase> getDefaultLifecyclePhases()
 supr java.lang.Object
 hfds defaultPhases,id,phases
@@ -3728,7 +3704,7 @@ hfds project
 
 CLSS public abstract interface org.apache.maven.lifecycle.LifecycleExecutor
 fld public final static java.lang.String ROLE
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract !varargs org.apache.maven.lifecycle.MavenExecutionPlan calculateExecutionPlan(org.apache.maven.execution.MavenSession,boolean,java.lang.String[]) throws org.apache.maven.lifecycle.LifecycleNotFoundException,org.apache.maven.lifecycle.LifecyclePhaseNotFoundException,org.apache.maven.plugin.InvalidPluginDescriptorException,org.apache.maven.plugin.MojoNotFoundException,org.apache.maven.plugin.PluginDescriptorParsingException,org.apache.maven.plugin.PluginManagerException,org.apache.maven.plugin.PluginNotFoundException,org.apache.maven.plugin.PluginResolutionException,org.apache.maven.plugin.prefix.NoPluginFoundForPrefixException,org.apache.maven.plugin.version.PluginVersionResolutionException
 meth public abstract !varargs org.apache.maven.lifecycle.MavenExecutionPlan calculateExecutionPlan(org.apache.maven.execution.MavenSession,java.lang.String[]) throws org.apache.maven.lifecycle.LifecycleNotFoundException,org.apache.maven.lifecycle.LifecyclePhaseNotFoundException,org.apache.maven.plugin.InvalidPluginDescriptorException,org.apache.maven.plugin.MojoNotFoundException,org.apache.maven.plugin.PluginDescriptorParsingException,org.apache.maven.plugin.PluginManagerException,org.apache.maven.plugin.PluginNotFoundException,org.apache.maven.plugin.PluginResolutionException,org.apache.maven.plugin.prefix.NoPluginFoundForPrefixException,org.apache.maven.plugin.version.PluginVersionResolutionException
 meth public abstract java.util.List<org.apache.maven.project.MavenProject> executeForkedExecutions(org.apache.maven.plugin.MojoExecution,org.apache.maven.execution.MavenSession) throws org.apache.maven.lifecycle.LifecycleExecutionException
@@ -3757,7 +3733,7 @@ intf java.lang.Iterable<org.apache.maven.lifecycle.internal.ExecutionPlanItem>
 meth public int size()
 meth public java.util.Iterator<org.apache.maven.lifecycle.internal.ExecutionPlanItem> iterator()
 meth public java.util.List<org.apache.maven.plugin.MojoExecution> getExecutions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.apache.maven.plugin.MojoExecution> getMojoExecutions()
 meth public java.util.Set<org.apache.maven.model.Plugin> getNonThreadSafePlugins()
 meth public java.util.Set<org.apache.maven.plugin.descriptor.MojoDescriptor> getNonThreadSafeMojos()
@@ -3778,13 +3754,13 @@ supr java.lang.Exception
 
 CLSS public org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.util.List<org.apache.maven.lifecycle.mapping.Lifecycle>)
 intf org.apache.maven.lifecycle.mapping.LifecycleMapping
 meth public java.util.List<java.lang.String> getOptionalMojos(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Map<java.lang.String,java.lang.String> getPhases(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Map<java.lang.String,org.apache.maven.lifecycle.mapping.Lifecycle> getLifecycles()
 supr java.lang.Object
 hfds lifecycleMap,lifecycles,phases
@@ -3793,22 +3769,22 @@ CLSS public org.apache.maven.lifecycle.mapping.Lifecycle
 cons public init()
 meth public java.lang.String getId()
 meth public java.util.Map<java.lang.String,java.lang.String> getPhases()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Map<java.lang.String,org.apache.maven.lifecycle.mapping.LifecyclePhase> getLifecyclePhases()
 meth public void setId(java.lang.String)
 meth public void setLifecyclePhases(java.util.Map<java.lang.String,org.apache.maven.lifecycle.mapping.LifecyclePhase>)
 meth public void setPhases(java.util.Map<java.lang.String,java.lang.String>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds id,lifecyclePhases,optionalMojos
 
 CLSS public abstract interface org.apache.maven.lifecycle.mapping.LifecycleMapping
 fld public final static java.lang.String ROLE
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.List<java.lang.String> getOptionalMojos(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.Map<java.lang.String,java.lang.String> getPhases(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.Map<java.lang.String,org.apache.maven.lifecycle.mapping.Lifecycle> getLifecycles()
 
 CLSS public org.apache.maven.lifecycle.mapping.LifecycleMojo
@@ -3828,7 +3804,7 @@ cons public init(java.lang.String)
 meth public java.lang.String toString()
 meth public java.util.List<org.apache.maven.lifecycle.mapping.LifecycleMojo> getMojos()
 meth public static java.util.Map<java.lang.String,java.lang.String> toLegacyMap(java.util.Map<java.lang.String,org.apache.maven.lifecycle.mapping.LifecyclePhase>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void set(java.lang.String)
 meth public void setMojos(java.util.List<org.apache.maven.lifecycle.mapping.LifecycleMojo>)
 supr java.lang.Object
@@ -4854,6 +4830,7 @@ meth public org.apache.maven.model.building.ModelBuildingResult build(org.apache
 meth public org.apache.maven.model.building.Result<? extends org.apache.maven.model.Model> buildRawModel(java.io.File,int,boolean)
 supr java.lang.Object
 hfds dependencyManagementImporter,dependencyManagementInjector,inheritanceAssembler,lifecycleBindingsInjector,modelInterpolator,modelNormalizer,modelPathTranslator,modelProcessor,modelUrlNormalizer,modelValidator,pluginConfigurationExpander,pluginManagementInjector,profileActivationFilePathInterpolator,profileInjector,profileSelector,reportConfigurationExpander,reportingConverter,superPomProvider
+hcls InterpolateString
 
 CLSS public org.apache.maven.model.building.DefaultModelBuilderFactory
 cons public init()
@@ -4963,7 +4940,7 @@ intf org.apache.maven.model.building.ModelSource2
 meth public boolean equals(java.lang.Object)
 meth public int hashCode()
 meth public java.io.File getPomFile()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.net.URI getLocationURI()
 meth public org.apache.maven.model.building.ModelSource2 getRelatedSource(java.lang.String)
 supr org.apache.maven.building.FileSource
@@ -4980,7 +4957,7 @@ meth public abstract org.apache.maven.model.building.ModelProblemCollector getPr
 
 CLSS public org.apache.maven.model.building.ModelBuildingException
 cons public init(org.apache.maven.model.Model,java.lang.String,java.util.List<org.apache.maven.model.building.ModelProblem>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.apache.maven.model.building.ModelBuildingResult)
 meth public java.lang.String getModelId()
 meth public java.util.List<org.apache.maven.model.building.ModelProblem> getProblems()
@@ -5108,7 +5085,7 @@ intf org.apache.maven.model.io.ModelReader
 intf org.apache.maven.model.locator.ModelLocator
 
 CLSS public abstract interface org.apache.maven.model.building.ModelSource
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf org.apache.maven.building.Source
 
 CLSS public abstract interface org.apache.maven.model.building.ModelSource2
@@ -5137,14 +5114,14 @@ supr java.lang.Object
 hfds errors,problems,value
 
 CLSS public org.apache.maven.model.building.StringModelSource
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.CharSequence)
 cons public init(java.lang.CharSequence,java.lang.String)
 intf org.apache.maven.model.building.ModelSource
 supr org.apache.maven.building.StringSource
 
 CLSS public org.apache.maven.model.building.UrlModelSource
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.net.URL)
 intf org.apache.maven.model.building.ModelSource
 supr org.apache.maven.building.UrlSource
@@ -5320,7 +5297,7 @@ supr java.lang.Exception
 hfds plugin
 
 CLSS public org.apache.maven.plugin.DebugConfigurationListener
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.codehaus.plexus.logging.Logger)
 intf org.codehaus.plexus.component.configurator.ConfigurationListener
 meth public void notifyFieldChangeUsingReflection(java.lang.String,java.lang.Object,java.lang.Object)
@@ -5411,7 +5388,7 @@ meth public org.apache.maven.plugin.descriptor.PluginDescriptor get(org.apache.m
 meth public void flush()
 meth public void put(org.apache.maven.plugin.PluginDescriptorCache$Key,org.apache.maven.plugin.descriptor.PluginDescriptor)
 supr java.lang.Object
-hfds descriptors
+hfds descriptors,keys
 hcls CacheKey
 
 CLSS public org.apache.maven.plugin.DefaultPluginRealmCache
@@ -5657,7 +5634,7 @@ supr java.lang.Exception
 hfds pluginKey
 
 CLSS public abstract interface org.apache.maven.plugin.PluginManager
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String ROLE
 meth public abstract java.lang.Object getPluginComponent(org.apache.maven.model.Plugin,java.lang.String,java.lang.String) throws org.apache.maven.plugin.PluginManagerException,org.codehaus.plexus.component.repository.exception.ComponentLookupException
 meth public abstract java.util.Map<java.lang.String,java.lang.Object> getPluginComponents(org.apache.maven.model.Plugin,java.lang.String) throws org.apache.maven.plugin.PluginManagerException,org.codehaus.plexus.component.repository.exception.ComponentLookupException
@@ -5708,7 +5685,7 @@ CLSS public org.apache.maven.plugin.PluginParameterExpressionEvaluator
 cons public init(org.apache.maven.execution.MavenSession)
 cons public init(org.apache.maven.execution.MavenSession,org.apache.maven.plugin.MojoExecution)
 cons public init(org.apache.maven.execution.MavenSession,org.apache.maven.plugin.MojoExecution,org.apache.maven.project.path.PathTranslator,org.codehaus.plexus.logging.Logger,org.apache.maven.project.MavenProject,java.util.Properties)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf org.codehaus.plexus.component.configurator.expression.TypeAwareExpressionEvaluator
 meth public java.io.File alignToBaseDirectory(java.io.File)
 meth public java.lang.Object evaluate(java.lang.String) throws org.codehaus.plexus.component.configurator.expression.ExpressionEvaluationException
@@ -5745,6 +5722,7 @@ meth public abstract org.apache.maven.plugin.PluginRealmCache$CacheRecord load()
 
 CLSS public org.apache.maven.plugin.PluginResolutionException
 cons public init(org.apache.maven.model.Plugin,java.lang.Throwable)
+cons public init(org.apache.maven.model.Plugin,java.util.List<java.lang.Exception>,java.lang.Throwable)
 meth public org.apache.maven.model.Plugin getPlugin()
 supr java.lang.Exception
 hfds plugin
@@ -5814,7 +5792,7 @@ supr java.lang.Object
 hfds name,value
 
 CLSS public org.apache.maven.profiles.DefaultMavenProfilesBuilder
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 0 org.codehaus.plexus.component.annotations.Component(boolean isolatedRealm=false, java.lang.Class<?> role=class org.apache.maven.profiles.MavenProfilesBuilder, java.lang.String alias="", java.lang.String composer="", java.lang.String configurator="", java.lang.String description="", java.lang.String factory="", java.lang.String hint="", java.lang.String instantiationStrategy="", java.lang.String lifecycleHandler="", java.lang.String profile="", java.lang.String type="", java.lang.String version="")
 cons public init()
 intf org.apache.maven.profiles.MavenProfilesBuilder
@@ -5823,9 +5801,9 @@ supr org.codehaus.plexus.logging.AbstractLogEnabled
 hfds PROFILES_XML_FILE
 
 CLSS public org.apache.maven.profiles.DefaultProfileManager
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.codehaus.plexus.PlexusContainer)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.codehaus.plexus.PlexusContainer,java.util.Properties)
 intf org.apache.maven.profiles.ProfileManager
 meth public java.util.List getActiveProfiles() throws org.apache.maven.profiles.activation.ProfileActivationException
@@ -5845,7 +5823,7 @@ supr java.lang.Object
 hfds activatedIds,deactivatedIds,defaultIds,logger,profileSelector,profilesById,requestProperties
 
 CLSS public abstract interface org.apache.maven.profiles.MavenProfilesBuilder
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String ROLE
 meth public abstract org.apache.maven.profiles.ProfilesRoot buildProfiles(java.io.File) throws java.io.IOException,org.codehaus.plexus.util.xml.pull.XmlPullParserException
 
@@ -5871,7 +5849,7 @@ supr java.lang.Object
 hfds activation,id,pluginRepositories,properties,repositories
 
 CLSS public abstract interface org.apache.maven.profiles.ProfileManager
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.List getActiveProfiles() throws org.apache.maven.profiles.activation.ProfileActivationException
 meth public abstract java.util.List getIdsActivatedByDefault()
 meth public abstract java.util.List<java.lang.String> getExplicitlyActivatedIds()
@@ -5886,7 +5864,7 @@ meth public abstract void explicitlyDeactivate(java.lang.String)
 meth public abstract void explicitlyDeactivate(java.util.List<java.lang.String>)
 
 CLSS public org.apache.maven.profiles.ProfilesConversionUtils
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.apache.maven.model.Profile convertFromProfileXmlProfile(org.apache.maven.profiles.Profile)
 supr java.lang.Object
 
@@ -5985,7 +5963,7 @@ supr java.lang.Object
 hfds filter,project,session
 
 CLSS public org.apache.maven.project.DefaultMavenProjectBuilder
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 0 org.codehaus.plexus.component.annotations.Component(boolean isolatedRealm=false, java.lang.Class<?> role=class org.apache.maven.project.MavenProjectBuilder, java.lang.String alias="", java.lang.String composer="", java.lang.String configurator="", java.lang.String description="", java.lang.String factory="", java.lang.String hint="", java.lang.String instantiationStrategy="", java.lang.String lifecycleHandler="", java.lang.String profile="", java.lang.String type="", java.lang.String version="")
 cons public init()
 intf org.apache.maven.project.MavenProjectBuilder
@@ -6037,7 +6015,7 @@ hfds dependencyResolver,logger,modelBuilder,modelCacheFactory,modelProcessor,pro
 hcls InterimResult,InternalConfig
 
 CLSS public org.apache.maven.project.DefaultProjectBuilderConfiguration
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 intf org.apache.maven.project.ProjectBuilderConfiguration
 meth public java.util.Date getBuildStartTime()
@@ -6070,7 +6048,7 @@ intf org.apache.maven.project.ProjectBuildingRequest
 meth public boolean isProcessPlugins()
 meth public boolean isResolveDependencies()
 meth public boolean isResolveVersionRanges()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public int getValidationLevel()
 meth public java.util.Date getBuildStartTime()
 meth public java.util.List<java.lang.String> getActiveProfileIds()
@@ -6090,7 +6068,7 @@ meth public org.apache.maven.project.ProjectBuildingRequest setProcessPlugins(bo
 meth public org.apache.maven.project.ProjectBuildingRequest setRemoteRepositories(java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>)
 meth public org.apache.maven.project.ProjectBuildingRequest setResolveDependencies(boolean)
 meth public org.apache.maven.project.ProjectBuildingRequest setResolveVersionRanges(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.project.ProjectBuildingRequest setSystemProperties(java.util.Properties)
 meth public org.apache.maven.project.ProjectBuildingRequest setUserProperties(java.util.Properties)
 meth public org.apache.maven.project.ProjectBuildingRequest setValidationLevel(int)
@@ -6141,9 +6119,10 @@ hfds extensionRealms,hashCode
 
 CLSS public org.apache.maven.project.DependencyResolutionException
 cons public init(org.apache.maven.project.DependencyResolutionResult,java.lang.String,java.lang.Throwable)
+meth public java.lang.String getMessage()
 meth public org.apache.maven.project.DependencyResolutionResult getResult()
 supr java.lang.Exception
-hfds result
+hfds detailMessage,result
 
 CLSS public abstract interface org.apache.maven.project.DependencyResolutionRequest
 meth public abstract org.apache.maven.project.DependencyResolutionRequest setMavenProject(org.apache.maven.project.MavenProject)
@@ -6170,10 +6149,10 @@ hfds DEFAULT_MESSAGE,artifact,project
 
 CLSS public org.apache.maven.project.DuplicateProjectException
 cons public init(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.io.File,java.io.File,java.lang.String)
 cons public init(java.lang.String,java.lang.Exception)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.io.File getConflictingProjectFile()
 meth public java.io.File getExistingProjectFile()
 meth public java.lang.String getProjectId()
@@ -6196,13 +6175,13 @@ meth public org.apache.maven.project.ExtensionDescriptor build(java.io.InputStre
 supr java.lang.Object
 
 CLSS public org.apache.maven.project.InvalidProjectModelException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.String,java.io.File)
 cons public init(java.lang.String,java.lang.String,java.io.File,org.apache.maven.project.validation.ModelValidationResult)
 cons public init(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.String,java.lang.String,org.apache.maven.project.validation.ModelValidationResult)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.apache.maven.project.validation.ModelValidationResult getValidationResult()
 supr org.apache.maven.project.ProjectBuildingException
 hfds validationResult
@@ -6227,7 +6206,7 @@ meth protected org.apache.maven.artifact.repository.ArtifactRepository getSnapsh
 meth protected void setAttachedArtifacts(java.util.List<org.apache.maven.artifact.Artifact>)
 meth protected void setCompileSourceRoots(java.util.List<java.lang.String>)
 meth protected void setScriptSourceRoots(java.util.List<java.lang.String>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void setTestCompileSourceRoots(java.util.List<java.lang.String>)
 meth public boolean equals(java.lang.Object)
 meth public boolean hasLifecyclePhase(java.lang.String)
@@ -6246,7 +6225,7 @@ meth public java.lang.String getId()
 meth public java.lang.String getInceptionYear()
 meth public java.lang.String getModelVersion()
 meth public java.lang.String getModulePathAdjustment(org.apache.maven.project.MavenProject) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getName()
 meth public java.lang.String getPackaging()
 meth public java.lang.String getUrl()
@@ -6258,32 +6237,32 @@ meth public java.util.List<java.lang.String> getFilters()
 meth public java.util.List<java.lang.String> getModules()
 meth public java.util.List<java.lang.String> getRuntimeClasspathElements() throws org.apache.maven.artifact.DependencyResolutionRequiredException
 meth public java.util.List<java.lang.String> getScriptSourceRoots()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<java.lang.String> getSystemClasspathElements() throws org.apache.maven.artifact.DependencyResolutionRequiredException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<java.lang.String> getTestClasspathElements() throws org.apache.maven.artifact.DependencyResolutionRequiredException
 meth public java.util.List<java.lang.String> getTestCompileSourceRoots()
 meth public java.util.List<org.apache.maven.artifact.Artifact> getAttachedArtifacts()
 meth public java.util.List<org.apache.maven.artifact.Artifact> getCompileArtifacts()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.apache.maven.artifact.Artifact> getRuntimeArtifacts()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.apache.maven.artifact.Artifact> getSystemArtifacts()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.apache.maven.artifact.Artifact> getTestArtifacts()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.apache.maven.artifact.repository.ArtifactRepository> getPluginArtifactRepositories()
 meth public java.util.List<org.apache.maven.artifact.repository.ArtifactRepository> getRemoteArtifactRepositories()
 meth public java.util.List<org.apache.maven.model.Contributor> getContributors()
 meth public java.util.List<org.apache.maven.model.Dependency> getCompileDependencies()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.apache.maven.model.Dependency> getDependencies()
 meth public java.util.List<org.apache.maven.model.Dependency> getRuntimeDependencies()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.apache.maven.model.Dependency> getSystemDependencies()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.apache.maven.model.Dependency> getTestDependencies()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.apache.maven.model.Developer> getDevelopers()
 meth public java.util.List<org.apache.maven.model.Extension> getBuildExtensions()
 meth public java.util.List<org.apache.maven.model.License> getLicenses()
@@ -6291,7 +6270,7 @@ meth public java.util.List<org.apache.maven.model.MailingList> getMailingLists()
 meth public java.util.List<org.apache.maven.model.Plugin> getBuildPlugins()
 meth public java.util.List<org.apache.maven.model.Profile> getActiveProfiles()
 meth public java.util.List<org.apache.maven.model.ReportPlugin> getReportPlugins()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.apache.maven.model.Repository> getPluginRepositories()
 meth public java.util.List<org.apache.maven.model.Repository> getRepositories()
 meth public java.util.List<org.apache.maven.model.Resource> getResources()
@@ -6302,27 +6281,27 @@ meth public java.util.List<org.eclipse.aether.repository.RemoteRepository> getRe
 meth public java.util.Map<java.lang.String,java.util.List<java.lang.String>> getInjectedProfileIds()
 meth public java.util.Map<java.lang.String,org.apache.maven.artifact.Artifact> getArtifactMap()
 meth public java.util.Map<java.lang.String,org.apache.maven.artifact.Artifact> getExtensionArtifactMap()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Map<java.lang.String,org.apache.maven.artifact.Artifact> getManagedVersionMap()
 meth public java.util.Map<java.lang.String,org.apache.maven.artifact.Artifact> getPluginArtifactMap()
 meth public java.util.Map<java.lang.String,org.apache.maven.artifact.Artifact> getReportArtifactMap()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Map<java.lang.String,org.apache.maven.project.MavenProject> getProjectReferences()
 meth public java.util.Properties getProperties()
 meth public java.util.Set<org.apache.maven.artifact.Artifact> createArtifacts(org.apache.maven.artifact.factory.ArtifactFactory,java.lang.String,org.apache.maven.artifact.resolver.filter.ArtifactFilter) throws org.apache.maven.project.artifact.InvalidDependencyVersionException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Set<org.apache.maven.artifact.Artifact> getArtifacts()
 meth public java.util.Set<org.apache.maven.artifact.Artifact> getDependencyArtifacts()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Set<org.apache.maven.artifact.Artifact> getExtensionArtifacts()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Set<org.apache.maven.artifact.Artifact> getPluginArtifacts()
 meth public java.util.Set<org.apache.maven.artifact.Artifact> getReportArtifacts()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.artifact.Artifact getArtifact()
 meth public org.apache.maven.artifact.Artifact getParentArtifact()
 meth public org.apache.maven.artifact.Artifact replaceWithActiveArtifact(org.apache.maven.artifact.Artifact)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.artifact.repository.ArtifactRepository getDistributionManagementArtifactRepository()
 meth public org.apache.maven.model.Build getBuild()
 meth public org.apache.maven.model.CiManagement getCiManagement()
@@ -6336,17 +6315,17 @@ meth public org.apache.maven.model.Plugin getPlugin(java.lang.String)
 meth public org.apache.maven.model.PluginManagement getPluginManagement()
 meth public org.apache.maven.model.Prerequisites getPrerequisites()
 meth public org.apache.maven.model.Reporting getReporting()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.model.Scm getScm()
 meth public org.apache.maven.project.MavenProject clone()
 meth public org.apache.maven.project.MavenProject getExecutionProject()
 meth public org.apache.maven.project.MavenProject getParent()
 meth public org.apache.maven.project.ProjectBuildingRequest getProjectBuildingRequest()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.codehaus.plexus.classworlds.realm.ClassRealm getClassRealm()
 meth public org.codehaus.plexus.util.xml.Xpp3Dom getGoalConfiguration(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 meth public org.codehaus.plexus.util.xml.Xpp3Dom getReportConfiguration(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.eclipse.aether.graph.DependencyFilter getExtensionDependencyFilter()
 meth public void addAttachedArtifact(org.apache.maven.artifact.Artifact)
 meth public void addCompileSourceRoot(java.lang.String)
@@ -6358,11 +6337,13 @@ meth public void addMailingList(org.apache.maven.model.MailingList)
 meth public void addProjectReference(org.apache.maven.project.MavenProject)
 meth public void addResource(org.apache.maven.model.Resource)
 meth public void addScriptSourceRoot(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addTestCompileSourceRoot(java.lang.String)
 meth public void addTestResource(org.apache.maven.model.Resource)
 meth public void attachArtifact(java.lang.String,java.lang.String,java.io.File)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public void removeCompileSourceRoot(java.lang.String)
+meth public void removeTestCompileSourceRoot(java.lang.String)
 meth public void setActiveProfiles(java.util.List<org.apache.maven.model.Profile>)
 meth public void setArtifact(org.apache.maven.artifact.Artifact)
 meth public void setArtifactFilter(org.apache.maven.artifact.resolver.filter.ArtifactFilter)
@@ -6376,14 +6357,14 @@ meth public void setContextValue(java.lang.String,java.lang.Object)
 meth public void setContributors(java.util.List<org.apache.maven.model.Contributor>)
 meth public void setDependencies(java.util.List<org.apache.maven.model.Dependency>)
 meth public void setDependencyArtifacts(java.util.Set<org.apache.maven.artifact.Artifact>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setDescription(java.lang.String)
 meth public void setDevelopers(java.util.List<org.apache.maven.model.Developer>)
 meth public void setDistributionManagement(org.apache.maven.model.DistributionManagement)
 meth public void setExecutionProject(org.apache.maven.project.MavenProject)
 meth public void setExecutionRoot(boolean)
 meth public void setExtensionArtifacts(java.util.Set<org.apache.maven.artifact.Artifact>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setExtensionDependencyFilter(org.eclipse.aether.graph.DependencyFilter)
 meth public void setFile(java.io.File)
 meth public void setGroupId(java.lang.String)
@@ -6406,27 +6387,28 @@ meth public void setPluginArtifactRepositories(java.util.List<org.apache.maven.a
 meth public void setPluginArtifacts(java.util.Set<org.apache.maven.artifact.Artifact>)
 meth public void setPomFile(java.io.File)
 meth public void setProjectBuildingRequest(org.apache.maven.project.ProjectBuildingRequest)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setReleaseArtifactRepository(org.apache.maven.artifact.repository.ArtifactRepository)
 meth public void setRemoteArtifactRepositories(java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>)
 meth public void setReportArtifacts(java.util.Set<org.apache.maven.artifact.Artifact>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setReporting(org.apache.maven.model.Reporting)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setResolvedArtifacts(java.util.Set<org.apache.maven.artifact.Artifact>)
 meth public void setScm(org.apache.maven.model.Scm)
 meth public void setSnapshotArtifactRepository(org.apache.maven.artifact.repository.ArtifactRepository)
 meth public void setUrl(java.lang.String)
 meth public void setVersion(java.lang.String)
 meth public void writeModel(java.io.Writer) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void writeOriginalModel(java.io.Writer) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds LOGGER,activeProfiles,artifact,artifactFilter,artifactMap,artifacts,attachedArtifacts,basedir,classRealm,collectedProjects,compileSourceRoots,context,dependencyArtifacts,executionProject,executionRoot,extensionArtifactMap,extensionArtifacts,extensionDependencyFilter,file,injectedProfileIds,lifecyclePhases,managedVersionMap,model,moduleAdjustments,originalModel,parent,parentArtifact,parentFile,pluginArtifactMap,pluginArtifactRepositories,pluginArtifacts,projectBuilderConfiguration,projectReferences,releaseArtifactRepository,remoteArtifactRepositories,remotePluginRepositories,remoteProjectRepositories,reportArtifactMap,reportArtifacts,resolvedArtifacts,scriptSourceRoots,snapshotArtifactRepository,testCompileSourceRoots
+hcls LoggingList
 
 CLSS public abstract interface org.apache.maven.project.MavenProjectBuilder
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.project.MavenProject build(java.io.File,org.apache.maven.artifact.repository.ArtifactRepository,org.apache.maven.profiles.ProfileManager) throws org.apache.maven.project.ProjectBuildingException
 meth public abstract org.apache.maven.project.MavenProject build(java.io.File,org.apache.maven.project.ProjectBuilderConfiguration) throws org.apache.maven.project.ProjectBuildingException
 meth public abstract org.apache.maven.project.MavenProject buildFromRepository(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.repository.ArtifactRepository) throws org.apache.maven.project.ProjectBuildingException
@@ -6451,7 +6433,7 @@ cons public init(java.lang.String,java.lang.String)
 supr org.apache.maven.artifact.InvalidRepositoryException
 
 CLSS public final org.apache.maven.project.ModelUtils
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 meth public static java.util.List<org.apache.maven.model.Plugin> orderAfterMerge(java.util.List<org.apache.maven.model.Plugin>,java.util.List<org.apache.maven.model.Plugin>,java.util.List<org.apache.maven.model.Plugin>)
 meth public static java.util.List<org.apache.maven.model.Repository> mergeRepositoryLists(java.util.List<org.apache.maven.model.Repository>,java.util.List<org.apache.maven.model.Repository>)
@@ -6468,7 +6450,7 @@ meth public abstract org.apache.maven.project.ProjectBuildingResult build(org.ap
 meth public abstract org.apache.maven.project.ProjectBuildingResult build(org.apache.maven.model.building.ModelSource,org.apache.maven.project.ProjectBuildingRequest) throws org.apache.maven.project.ProjectBuildingException
 
 CLSS public abstract interface org.apache.maven.project.ProjectBuilderConfiguration
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.Date getBuildStartTime()
 meth public abstract java.util.Properties getExecutionProperties()
 meth public abstract java.util.Properties getUserProperties()
@@ -6487,7 +6469,7 @@ cons public init(java.lang.String,java.lang.String,java.lang.Throwable)
 cons public init(java.util.List<org.apache.maven.project.ProjectBuildingResult>)
 meth public java.io.File getPomFile()
 meth public java.lang.String getPomLocation()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getProjectId()
 meth public java.util.List<org.apache.maven.project.ProjectBuildingResult> getResults()
 supr java.lang.Exception
@@ -6503,7 +6485,7 @@ innr public final static !enum RepositoryMerging
 meth public abstract boolean isProcessPlugins()
 meth public abstract boolean isResolveDependencies()
 meth public abstract boolean isResolveVersionRanges()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract int getValidationLevel()
 meth public abstract java.util.Date getBuildStartTime()
 meth public abstract java.util.List<java.lang.String> getActiveProfileIds()
@@ -6523,7 +6505,7 @@ meth public abstract org.apache.maven.project.ProjectBuildingRequest setReposito
 meth public abstract org.apache.maven.project.ProjectBuildingRequest setRepositorySession(org.eclipse.aether.RepositorySystemSession)
 meth public abstract org.apache.maven.project.ProjectBuildingRequest setResolveDependencies(boolean)
 meth public abstract org.apache.maven.project.ProjectBuildingRequest setResolveVersionRanges(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.project.ProjectBuildingRequest setSystemProperties(java.util.Properties)
 meth public abstract org.apache.maven.project.ProjectBuildingRequest setUserProperties(java.util.Properties)
 meth public abstract org.apache.maven.project.ProjectBuildingRequest setValidationLevel(int)
@@ -6599,7 +6581,7 @@ supr java.lang.Object
 hfds dag,projectMap,sortedProjects,topLevelProject
 
 CLSS public final org.apache.maven.project.ProjectUtils
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.util.List<org.apache.maven.artifact.repository.ArtifactRepository> buildArtifactRepositories(java.util.List<org.apache.maven.model.Repository>,org.apache.maven.artifact.repository.ArtifactRepositoryFactory,org.codehaus.plexus.PlexusContainer) throws org.apache.maven.artifact.InvalidRepositoryException
 meth public static org.apache.maven.artifact.repository.ArtifactRepository buildArtifactRepository(org.apache.maven.model.Repository,org.apache.maven.artifact.repository.ArtifactRepositoryFactory,org.codehaus.plexus.PlexusContainer) throws org.apache.maven.artifact.InvalidRepositoryException
 meth public static org.apache.maven.artifact.repository.ArtifactRepository buildDeploymentArtifactRepository(org.apache.maven.model.DeploymentRepository,org.apache.maven.artifact.repository.ArtifactRepositoryFactory,org.codehaus.plexus.PlexusContainer) throws org.apache.maven.artifact.InvalidRepositoryException
@@ -6609,7 +6591,7 @@ CLSS public abstract interface org.apache.maven.project.RepositorySessionDecorat
 meth public abstract org.eclipse.aether.RepositorySystemSession decorate(org.apache.maven.project.MavenProject,org.eclipse.aether.RepositorySystemSession)
 
 CLSS public org.apache.maven.project.path.DefaultPathTranslator
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 0 org.codehaus.plexus.component.annotations.Component(boolean isolatedRealm=false, java.lang.Class<?> role=class org.apache.maven.project.path.PathTranslator, java.lang.String alias="", java.lang.String composer="", java.lang.String configurator="", java.lang.String description="", java.lang.String factory="", java.lang.String hint="", java.lang.String instantiationStrategy="", java.lang.String lifecycleHandler="", java.lang.String profile="", java.lang.String type="", java.lang.String version="")
 cons public init()
 intf org.apache.maven.project.path.PathTranslator
@@ -6621,7 +6603,7 @@ supr java.lang.Object
 hfds BASEDIR_EXPRESSIONS
 
 CLSS public abstract interface org.apache.maven.project.path.PathTranslator
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String ROLE
 meth public abstract java.lang.String alignToBaseDirectory(java.lang.String,java.io.File)
 meth public abstract java.lang.String unalignFromBaseDirectory(java.lang.String,java.io.File)
@@ -6694,7 +6676,7 @@ supr java.lang.Object
 hfds EXTERNAL_HTTP_WILDCARD,EXTERNAL_WILDCARD,WILDCARD
 
 CLSS public org.apache.maven.repository.DelegatingLocalArtifactRepository
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.apache.maven.artifact.repository.ArtifactRepository)
 meth public boolean equals(java.lang.Object)
 meth public int hashCode()
@@ -6711,7 +6693,7 @@ meth public org.apache.maven.artifact.repository.ArtifactRepositoryPolicy getSna
 meth public org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout getLayout()
 meth public org.apache.maven.repository.LocalArtifactRepository getIdeWorkspace()
 meth public org.apache.maven.repository.LocalArtifactRepository getIdeWorspace()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setBuildReactor(org.apache.maven.repository.LocalArtifactRepository)
 meth public void setIdeWorkspace(org.apache.maven.repository.LocalArtifactRepository)
 supr org.apache.maven.artifact.repository.MavenArtifactRepository
@@ -6781,7 +6763,7 @@ meth public java.lang.String getScope()
 meth public java.lang.String toString()
 meth public java.util.List<org.apache.maven.artifact.repository.ArtifactRepository> getRemoteRepositories()
 meth public java.util.List<org.apache.maven.artifact.repository.ArtifactRepository> getRemoteRepostories()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Map getManagedVersionMap()
 meth public java.util.Set<org.apache.maven.artifact.Artifact> getArtifactDependencies()
 meth public org.apache.maven.artifact.repository.ArtifactRepository getLocalRepository()
@@ -6796,7 +6778,7 @@ meth public org.apache.maven.repository.MetadataResolutionRequest setLocalReposi
 meth public org.apache.maven.repository.MetadataResolutionRequest setManagedVersionMap(java.util.Map)
 meth public org.apache.maven.repository.MetadataResolutionRequest setRemoteRepositories(java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>)
 meth public org.apache.maven.repository.MetadataResolutionRequest setRemoteRepostories(java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.repository.MetadataResolutionRequest setScope(java.lang.String)
 supr java.lang.Object
 hfds artifactDependencies,asDirtyTree,asGraph,asList,asResolvedTree,localRepository,mad,managedVersionMap,remoteRepositories,scope
@@ -6938,9 +6920,9 @@ CLSS public org.apache.maven.repository.legacy.DefaultWagonManager
 cons public init()
 intf org.apache.maven.repository.legacy.WagonManager
 meth public org.apache.maven.wagon.Wagon getWagon(java.lang.String) throws org.apache.maven.wagon.UnsupportedProtocolException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.wagon.Wagon getWagon(org.apache.maven.wagon.repository.Repository) throws org.apache.maven.wagon.UnsupportedProtocolException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void getArtifact(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.wagon.events.TransferListener,boolean) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException
 meth public void getArtifact(org.apache.maven.artifact.Artifact,org.apache.maven.artifact.repository.ArtifactRepository,org.apache.maven.wagon.events.TransferListener,boolean) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException
 meth public void getArtifactMetadata(org.apache.maven.artifact.metadata.ArtifactMetadata,org.apache.maven.artifact.repository.ArtifactRepository,java.io.File,java.lang.String) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException
@@ -7015,9 +6997,9 @@ hfds originalMessage,repositoryId,serialVersionUID
 
 CLSS public abstract interface org.apache.maven.repository.legacy.WagonManager
 meth public abstract org.apache.maven.wagon.Wagon getWagon(java.lang.String) throws org.apache.maven.wagon.UnsupportedProtocolException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.wagon.Wagon getWagon(org.apache.maven.wagon.repository.Repository) throws org.apache.maven.repository.legacy.WagonConfigurationException,org.apache.maven.wagon.UnsupportedProtocolException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void getArtifact(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.wagon.events.TransferListener,boolean) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException
 meth public abstract void getArtifact(org.apache.maven.artifact.Artifact,org.apache.maven.artifact.repository.ArtifactRepository,org.apache.maven.wagon.events.TransferListener,boolean) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException
 meth public abstract void getArtifactMetadata(org.apache.maven.artifact.metadata.ArtifactMetadata,org.apache.maven.artifact.repository.ArtifactRepository,java.io.File,java.lang.String) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException
@@ -7052,12 +7034,12 @@ meth public abstract void storeInLocalRepository(org.apache.maven.artifact.repos
 
 CLSS public org.apache.maven.repository.legacy.metadata.ArtifactMetadataRetrievalException
 cons public init(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.Throwable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.Throwable,org.apache.maven.artifact.Artifact)
 cons public init(java.lang.Throwable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.artifact.Artifact getArtifact()
 supr java.lang.Exception
 hfds artifact
@@ -7091,9 +7073,9 @@ supr java.lang.Object
 hfds defaultConflictResolver,legacySupport,logger
 
 CLSS public abstract interface org.apache.maven.repository.legacy.resolver.LegacyArtifactCollector
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.artifact.resolver.ArtifactResolutionResult collect(java.util.Set<org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.Artifact,java.util.Map<java.lang.String,org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.repository.ArtifactRepository,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.metadata.ArtifactMetadataSource,org.apache.maven.artifact.resolver.filter.ArtifactFilter,java.util.List<org.apache.maven.artifact.resolver.ResolutionListener>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.apache.maven.artifact.resolver.ArtifactResolutionResult collect(java.util.Set<org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.Artifact,java.util.Map<java.lang.String,org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.repository.ArtifactRepository,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.metadata.ArtifactMetadataSource,org.apache.maven.artifact.resolver.filter.ArtifactFilter,java.util.List<org.apache.maven.artifact.resolver.ResolutionListener>,java.util.List<org.apache.maven.repository.legacy.resolver.conflict.ConflictResolver>)
 meth public abstract org.apache.maven.artifact.resolver.ArtifactResolutionResult collect(java.util.Set<org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.Artifact,java.util.Map<java.lang.String,org.apache.maven.artifact.Artifact>,org.apache.maven.artifact.resolver.ArtifactResolutionRequest,org.apache.maven.artifact.metadata.ArtifactMetadataSource,org.apache.maven.artifact.resolver.filter.ArtifactFilter,java.util.List<org.apache.maven.artifact.resolver.ResolutionListener>,java.util.List<org.apache.maven.repository.legacy.resolver.conflict.ConflictResolver>)
 
@@ -7178,7 +7160,7 @@ supr org.apache.maven.settings.TrackableBase
 hfds id
 
 CLSS public abstract interface org.apache.maven.settings.MavenSettingsBuilder
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String ALT_GLOBAL_SETTINGS_XML_LOCATION = "org.apache.maven.global-settings"
 fld public final static java.lang.String ALT_LOCAL_REPOSITORY_LOCATION = "maven.repo.local"
 fld public final static java.lang.String ALT_USER_SETTINGS_XML_LOCATION = "org.apache.maven.user-settings"
@@ -7298,7 +7280,7 @@ supr java.lang.Object
 hfds checksumPolicy,enabled,updatePolicy
 
 CLSS public org.apache.maven.settings.RuntimeInfo
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 cons public init(java.io.File)
 fld public final static java.io.File DEFAULT_USER_SETTINGS_FILE
@@ -7348,7 +7330,7 @@ meth public java.util.List<org.apache.maven.settings.Proxy> getProxies()
 meth public java.util.List<org.apache.maven.settings.Server> getServers()
 meth public java.util.Map<java.lang.String,org.apache.maven.settings.Profile> getProfilesAsMap()
 meth public org.apache.maven.settings.Mirror getMirrorOf(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.settings.Proxy getActiveProxy()
 meth public org.apache.maven.settings.Server getServer(java.lang.String)
 meth public org.apache.maven.settings.Settings clone()
@@ -7462,11 +7444,11 @@ supr java.lang.Object
 hfds columnNumber,exception,lineNumber,message,severity,source
 
 CLSS public org.apache.maven.settings.building.FileSettingsSource
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.io.File)
 intf org.apache.maven.settings.building.SettingsSource
 meth public java.io.File getSettingsFile()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.apache.maven.building.FileSource
 
 CLSS public abstract interface org.apache.maven.settings.building.SettingsBuilder
@@ -7519,24 +7501,24 @@ CLSS public abstract interface org.apache.maven.settings.building.SettingsProble
 meth public abstract void add(org.apache.maven.settings.building.SettingsProblem$Severity,java.lang.String,int,int,java.lang.Exception)
 
 CLSS public abstract interface org.apache.maven.settings.building.SettingsSource
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf org.apache.maven.building.Source
 
 CLSS public org.apache.maven.settings.building.StringSettingsSource
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.CharSequence)
 cons public init(java.lang.CharSequence,java.lang.String)
 intf org.apache.maven.settings.building.SettingsSource
 meth public java.lang.String getSettings()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.apache.maven.building.StringSource
 
 CLSS public org.apache.maven.settings.building.UrlSettingsSource
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.net.URL)
 intf org.apache.maven.settings.building.SettingsSource
 meth public java.net.URL getSettingsUrl()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.apache.maven.building.UrlSource
 
 CLSS public org.apache.maven.settings.crypto.DefaultSettingsDecrypter
@@ -7928,11 +7910,11 @@ meth protected void fireTransferError(org.apache.maven.wagon.resource.Resource,j
 meth protected void fireTransferProgress(org.apache.maven.wagon.events.TransferEvent,byte[],int)
 meth protected void getTransfer(org.apache.maven.wagon.resource.Resource,java.io.File,java.io.InputStream) throws org.apache.maven.wagon.TransferFailedException
 meth protected void getTransfer(org.apache.maven.wagon.resource.Resource,java.io.File,java.io.InputStream,boolean,int) throws org.apache.maven.wagon.TransferFailedException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void getTransfer(org.apache.maven.wagon.resource.Resource,java.io.File,java.io.InputStream,boolean,long) throws org.apache.maven.wagon.TransferFailedException
 meth protected void getTransfer(org.apache.maven.wagon.resource.Resource,java.io.OutputStream,java.io.InputStream) throws org.apache.maven.wagon.TransferFailedException
 meth protected void getTransfer(org.apache.maven.wagon.resource.Resource,java.io.OutputStream,java.io.InputStream,boolean,int) throws org.apache.maven.wagon.TransferFailedException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void getTransfer(org.apache.maven.wagon.resource.Resource,java.io.OutputStream,java.io.InputStream,boolean,long) throws org.apache.maven.wagon.TransferFailedException
 meth protected void postProcessListeners(org.apache.maven.wagon.resource.Resource,java.io.File,int) throws org.apache.maven.wagon.TransferFailedException
 meth protected void putTransfer(org.apache.maven.wagon.resource.Resource,java.io.File,java.io.OutputStream,boolean) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
@@ -7940,7 +7922,7 @@ meth protected void putTransfer(org.apache.maven.wagon.resource.Resource,java.io
 meth protected void transfer(org.apache.maven.wagon.resource.Resource,java.io.File,java.io.OutputStream,boolean) throws org.apache.maven.wagon.ResourceDoesNotExistException,org.apache.maven.wagon.TransferFailedException,org.apache.maven.wagon.authorization.AuthorizationException
 meth protected void transfer(org.apache.maven.wagon.resource.Resource,java.io.InputStream,java.io.OutputStream,int) throws java.io.IOException
 meth protected void transfer(org.apache.maven.wagon.resource.Resource,java.io.InputStream,java.io.OutputStream,int,int) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void transfer(org.apache.maven.wagon.resource.Resource,java.io.InputStream,java.io.OutputStream,int,long) throws java.io.IOException
 meth public boolean hasSessionListener(org.apache.maven.wagon.events.SessionListener)
 meth public boolean hasTransferListener(org.apache.maven.wagon.events.TransferListener)
@@ -8446,10 +8428,10 @@ CLSS public org.apache.maven.wagon.shared.http.EncodingUtil
 cons public init()
 meth public !varargs static java.lang.String encodeURLToString(java.lang.String,java.lang.String[])
 meth public static java.lang.String encodeURLToString(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String encodeURLToString(java.lang.String,java.lang.String)
 meth public static java.net.URI encodeURL(java.lang.String) throws java.net.MalformedURLException,java.net.URISyntaxException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 
 CLSS public org.apache.maven.wagon.shared.http.HttpConfiguration
@@ -8526,6 +8508,7 @@ hfds LOGGER,SC_PERMANENT_REDIRECT
 CLSS public abstract interface org.codehaus.plexus.ContainerConfiguration
 meth public abstract boolean getAutoWiring()
 meth public abstract boolean getJSR250Lifecycle()
+meth public abstract boolean getStrictClassPathScanning()
 meth public abstract java.lang.String getClassPathScanning()
 meth public abstract java.lang.String getComponentVisibility()
 meth public abstract java.lang.String getContainerConfiguration()
@@ -8542,6 +8525,7 @@ meth public abstract org.codehaus.plexus.ContainerConfiguration setContextCompon
 meth public abstract org.codehaus.plexus.ContainerConfiguration setJSR250Lifecycle(boolean)
 meth public abstract org.codehaus.plexus.ContainerConfiguration setName(java.lang.String)
 meth public abstract org.codehaus.plexus.ContainerConfiguration setRealm(org.codehaus.plexus.classworlds.realm.ClassRealm)
+meth public abstract org.codehaus.plexus.ContainerConfiguration setStrictClassPathScanning(boolean)
 meth public abstract org.codehaus.plexus.classworlds.ClassWorld getClassWorld()
 meth public abstract org.codehaus.plexus.classworlds.realm.ClassRealm getRealm()
 meth public abstract org.codehaus.plexus.context.Context getContextComponent()
@@ -8551,6 +8535,7 @@ cons public init()
 intf org.codehaus.plexus.ContainerConfiguration
 meth public boolean getAutoWiring()
 meth public boolean getJSR250Lifecycle()
+meth public boolean getStrictClassPathScanning()
 meth public java.lang.String getClassPathScanning()
 meth public java.lang.String getComponentVisibility()
 meth public java.lang.String getContainerConfiguration()
@@ -8567,11 +8552,12 @@ meth public org.codehaus.plexus.ContainerConfiguration setContextComponent(org.c
 meth public org.codehaus.plexus.ContainerConfiguration setJSR250Lifecycle(boolean)
 meth public org.codehaus.plexus.ContainerConfiguration setName(java.lang.String)
 meth public org.codehaus.plexus.ContainerConfiguration setRealm(org.codehaus.plexus.classworlds.realm.ClassRealm)
+meth public org.codehaus.plexus.ContainerConfiguration setStrictClassPathScanning(boolean)
 meth public org.codehaus.plexus.classworlds.ClassWorld getClassWorld()
 meth public org.codehaus.plexus.classworlds.realm.ClassRealm getRealm()
 meth public org.codehaus.plexus.context.Context getContextComponent()
 supr java.lang.Object
-hfds autoWiring,classPathScanning,classRealm,classWorld,componentVisibility,configurationPath,configurationUrl,contextComponent,contextData,jsr250Lifecycle
+hfds autoWiring,classPathScanning,classRealm,classWorld,componentVisibility,configurationPath,configurationUrl,contextComponent,contextData,jsr250Lifecycle,strictClassPathScanning
 
 CLSS public final org.codehaus.plexus.DefaultPlexusContainer
 cons public !varargs init(org.codehaus.plexus.ContainerConfiguration,com.google.inject.Module[]) throws org.codehaus.plexus.PlexusContainerException
@@ -8619,7 +8605,7 @@ meth public void releaseAll(java.util.Map<java.lang.String,?>)
 meth public void setLoggerManager(org.codehaus.plexus.logging.LoggerManager)
  anno 0 com.google.inject.Inject(boolean optional=true)
 supr java.lang.Object
-hfds DEFAULT_REALM_NAME,NO_CUSTOM_MODULES,classRealmManager,componentVisibility,containerModule,containerRealm,context,defaultsModule,descriptorMap,disposing,isAutoWiringEnabled,logger,loggerManager,loggerManagerProvider,lookupRealm,plexusBeanLocator,plexusBeanManager,plexusRank,qualifiedBeanLocator,scanning,variables
+hfds DEFAULT_REALM_NAME,NO_CUSTOM_MODULES,componentVisibility,containerModule,containerRealm,context,defaultsModule,descriptorMap,disposing,isAutoWiringEnabled,logger,loggerManager,loggerManagerProvider,lookupRealm,plexusBeanLocator,plexusBeanManager,plexusRank,qualifiedBeanLocator,realmManager,scanning,strictClassPathScanning,variables
 hcls BootModule,ContainerModule,DefaultsModule,LoggerManagerProvider,LoggerProvider,SLF4JLoggerFactoryProvider
 
 CLSS public abstract interface org.codehaus.plexus.MutablePlexusContainer
@@ -8780,6 +8766,7 @@ supr org.codehaus.plexus.classworlds.ClassWorldException
 hfds id
 
 CLSS public abstract interface !annotation org.codehaus.plexus.component.annotations.Component
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -8800,6 +8787,7 @@ meth public abstract !hasdefault java.lang.String version()
 meth public abstract java.lang.Class<?> role()
 
 CLSS public abstract interface !annotation org.codehaus.plexus.component.annotations.Configuration
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -8809,6 +8797,7 @@ meth public abstract !hasdefault java.lang.String name()
 meth public abstract java.lang.String value()
 
 CLSS public abstract interface !annotation org.codehaus.plexus.component.annotations.Requirement
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Inherited()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -9439,17 +9428,17 @@ meth public static java.lang.String toString(java.io.InputStream,java.lang.Strin
 meth public static java.lang.String toString(java.io.Reader) throws java.io.IOException
 meth public static java.lang.String toString(java.io.Reader,int) throws java.io.IOException
 meth public static void bufferedCopy(java.io.InputStream,java.io.OutputStream) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void close(java.io.InputStream)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void close(java.io.OutputStream)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void close(java.io.Reader)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void close(java.io.Writer)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void close(java.nio.channels.Channel)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void copy(byte[],java.io.OutputStream) throws java.io.IOException
 meth public static void copy(byte[],java.io.OutputStream,int) throws java.io.IOException
 meth public static void copy(byte[],java.io.Writer) throws java.io.IOException
@@ -9499,7 +9488,9 @@ meth public boolean matchPath(java.lang.String,boolean)
 meth public boolean matchPatternStart(java.lang.String,boolean)
 meth public boolean startsWith(java.lang.String)
 meth public char[][] getTokenizedPathChars()
+meth public java.lang.String getSource()
 meth public java.lang.String[] getTokenizedPathString()
+meth public static java.lang.String[] tokenizePathToString(java.lang.String,java.lang.String)
 meth public static org.codehaus.plexus.util.MatchPattern fromString(java.lang.String)
 supr java.lang.Object
 hfds regexPattern,separator,source,tokenized,tokenizedChar
@@ -9510,6 +9501,7 @@ meth public boolean matches(java.lang.String,boolean)
 meth public boolean matches(java.lang.String,char[][],boolean)
 meth public boolean matches(java.lang.String,java.lang.String[],boolean)
 meth public boolean matchesPatternStart(java.lang.String,boolean)
+meth public java.util.List<java.lang.String> getSources()
 meth public static org.codehaus.plexus.util.MatchPatterns from(java.lang.Iterable<java.lang.String>)
 supr java.lang.Object
 hfds patterns
@@ -9623,7 +9615,9 @@ fld public final static java.lang.String ANT_HANDLER_PREFIX = "%ant["
 fld public final static java.lang.String PATTERN_HANDLER_PREFIX = "["
 fld public final static java.lang.String PATTERN_HANDLER_SUFFIX = "]"
 fld public final static java.lang.String REGEX_HANDLER_PREFIX = "%regex["
+meth public static boolean isAntPrefixedPattern(java.lang.String)
 meth public static boolean isOutOfDate(java.io.File,java.io.File,int)
+meth public static boolean isRegexPrefixedPattern(java.lang.String)
 meth public static boolean match(char[],char[],boolean)
 meth public static boolean match(java.lang.String,java.lang.String)
 meth public static boolean match(java.lang.String,java.lang.String,boolean)
@@ -9632,13 +9626,14 @@ meth public static boolean matchPath(java.lang.String,java.lang.String,boolean)
 meth public static boolean matchPath(java.lang.String,java.lang.String,java.lang.String,boolean)
 meth public static boolean matchPatternStart(java.lang.String,java.lang.String)
 meth public static boolean matchPatternStart(java.lang.String,java.lang.String,boolean)
+meth public static java.lang.String extractPattern(java.lang.String,java.lang.String)
 meth public static java.lang.String removeWhitespace(java.lang.String)
 meth public static org.codehaus.plexus.util.SelectorUtils getInstance()
 supr java.lang.Object
 hfds instance
 
 CLSS public org.codehaus.plexus.util.StringInputStream
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 meth public boolean markSupported()
 meth public int read() throws java.io.IOException
@@ -9649,7 +9644,7 @@ supr java.io.InputStream
 hfds in
 
 CLSS public org.codehaus.plexus.util.StringOutputStream
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 meth public java.lang.String toString()
 meth public void write(byte[]) throws java.io.IOException
@@ -9663,7 +9658,7 @@ cons public init()
 meth public static boolean contains(java.lang.String,char)
 meth public static boolean contains(java.lang.String,java.lang.String)
 meth public static boolean equals(java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean equalsIgnoreCase(java.lang.String,java.lang.String)
 meth public static boolean isAlpha(java.lang.String)
 meth public static boolean isAlphaSpace(java.lang.String)
@@ -9697,9 +9692,9 @@ meth public static java.lang.String chopNewline(java.lang.String)
 meth public static java.lang.String clean(java.lang.String)
 meth public static java.lang.String concatenate(java.lang.Object[])
 meth public static java.lang.String defaultString(java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String defaultString(java.lang.Object,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String deleteWhitespace(java.lang.String)
 meth public static java.lang.String difference(java.lang.String,java.lang.String)
 meth public static java.lang.String escape(java.lang.String)
@@ -9855,11 +9850,11 @@ meth public static int executeCommandLine(org.codehaus.plexus.util.cli.Commandli
 meth public static int executeCommandLine(org.codehaus.plexus.util.cli.Commandline,org.codehaus.plexus.util.cli.StreamConsumer,org.codehaus.plexus.util.cli.StreamConsumer) throws org.codehaus.plexus.util.cli.CommandLineException
 meth public static int executeCommandLine(org.codehaus.plexus.util.cli.Commandline,org.codehaus.plexus.util.cli.StreamConsumer,org.codehaus.plexus.util.cli.StreamConsumer,int) throws org.codehaus.plexus.util.cli.CommandLineException
 meth public static java.lang.String quote(java.lang.String) throws org.codehaus.plexus.util.cli.CommandLineException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String quote(java.lang.String,boolean) throws org.codehaus.plexus.util.cli.CommandLineException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String quote(java.lang.String,boolean,boolean,boolean) throws org.codehaus.plexus.util.cli.CommandLineException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String toString(java.lang.String[])
 meth public static java.lang.String[] translateCommandline(java.lang.String) throws java.lang.Exception
 meth public static java.util.Properties getSystemEnvVars()
@@ -9883,11 +9878,11 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,org.codehaus.plexus.util.cli.shell.Shell)
 cons public init(org.codehaus.plexus.util.cli.shell.Shell)
 fld protected final static java.lang.String OS_NAME = "os.name"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld protected final static java.lang.String WINDOWS = "Windows"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld protected java.lang.String executable
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld protected java.util.Map<java.lang.String,java.lang.String> envVars
 fld protected java.util.Vector<org.codehaus.plexus.util.cli.Arg> arguments
 innr public Marker
@@ -9910,17 +9905,17 @@ meth public long getPid()
 meth public org.codehaus.plexus.util.cli.Arg createArg()
 meth public org.codehaus.plexus.util.cli.Arg createArg(boolean)
 meth public org.codehaus.plexus.util.cli.Commandline$Argument createArgument()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.codehaus.plexus.util.cli.Commandline$Argument createArgument(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.codehaus.plexus.util.cli.Commandline$Marker createMarker()
 meth public org.codehaus.plexus.util.cli.shell.Shell getShell()
 meth public static java.lang.String quoteArgument(java.lang.String) throws org.codehaus.plexus.util.cli.CommandLineException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String toString(java.lang.String[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String[] translateCommandline(java.lang.String) throws java.lang.Exception
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addArg(org.codehaus.plexus.util.cli.Arg)
 meth public void addArg(org.codehaus.plexus.util.cli.Arg,boolean)
 meth public void addArguments(java.lang.String[])
@@ -10026,7 +10021,7 @@ meth public java.util.List<java.lang.String> getParentLabels(java.lang.String)
 meth public java.util.List<java.lang.String> getSuccessorLabels(java.lang.String)
 meth public java.util.List<org.codehaus.plexus.util.dag.Vertex> getVertices()
 meth public java.util.List<org.codehaus.plexus.util.dag.Vertex> getVerticies()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Set<java.lang.String> getLabels()
 meth public org.codehaus.plexus.util.dag.Vertex addVertex(java.lang.String)
 meth public org.codehaus.plexus.util.dag.Vertex getVertex(java.lang.String)
@@ -10154,7 +10149,7 @@ meth public abstract void writeMarkup(java.lang.String)
 meth public abstract void writeText(java.lang.String)
 
 CLSS public org.codehaus.plexus.util.xml.XmlReader
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.io.File) throws java.io.IOException
 cons public init(java.io.InputStream) throws java.io.IOException
 cons public init(java.io.InputStream,boolean) throws java.io.IOException
@@ -10325,9 +10320,9 @@ fld public final static java.lang.String SELF_COMBINATION_MERGE = "merge"
 fld public final static java.lang.String SELF_COMBINATION_MODE_ATTRIBUTE = "combine.self"
 fld public final static java.lang.String SELF_COMBINATION_OVERRIDE = "override"
 meth public static boolean isEmpty(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean isNotEmpty(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.codehaus.plexus.util.xml.Xpp3Dom mergeXpp3Dom(org.codehaus.plexus.util.xml.Xpp3Dom,org.codehaus.plexus.util.xml.Xpp3Dom)
 meth public static org.codehaus.plexus.util.xml.Xpp3Dom mergeXpp3Dom(org.codehaus.plexus.util.xml.Xpp3Dom,org.codehaus.plexus.util.xml.Xpp3Dom,java.lang.Boolean)
 meth public void writeToSerializer(java.lang.String,org.codehaus.plexus.util.xml.pull.XmlSerializer,org.codehaus.plexus.util.xml.Xpp3Dom) throws java.io.IOException
@@ -10538,11 +10533,11 @@ cons public init(java.lang.String,org.codehaus.plexus.util.xml.pull.XmlPullParse
 fld protected int column
 fld protected int row
 fld protected java.lang.Throwable detail
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public int getColumnNumber()
 meth public int getLineNumber()
 meth public java.lang.Throwable getDetail()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void printStackTrace()
 supr java.lang.Exception
 
@@ -10630,6 +10625,7 @@ meth public void metadataResolving(org.eclipse.aether.RepositoryEvent)
 supr java.lang.Object
 
 CLSS public final org.eclipse.aether.ConfigurationProperties
+fld public final static boolean DEFAULT_FOLLOW_REDIRECTS = true
 fld public final static boolean DEFAULT_HTTP_PREEMPTIVE_AUTH = false
 fld public final static boolean DEFAULT_HTTP_REUSE_CONNECTIONS = true
 fld public final static boolean DEFAULT_IMPLICIT_PRIORITIES = false
@@ -10638,6 +10634,7 @@ fld public final static boolean DEFAULT_PERSISTED_CHECKSUMS = true
 fld public final static int DEFAULT_CONNECT_TIMEOUT = 10000
 fld public final static int DEFAULT_HTTP_CONNECTION_MAX_TTL = 300
 fld public final static int DEFAULT_HTTP_MAX_CONNECTIONS_PER_ROUTE = 50
+fld public final static int DEFAULT_HTTP_MAX_REDIRECTS = 5
 fld public final static int DEFAULT_HTTP_RETRY_HANDLER_COUNT = 3
 fld public final static int DEFAULT_REQUEST_TIMEOUT = 1800000
 fld public final static java.lang.String CONNECT_TIMEOUT = "aether.connector.connectTimeout"
@@ -10649,8 +10646,11 @@ fld public final static java.lang.String HTTPS_SECURITY_MODE_DEFAULT = "default"
 fld public final static java.lang.String HTTPS_SECURITY_MODE_INSECURE = "insecure"
 fld public final static java.lang.String HTTP_CONNECTION_MAX_TTL = "aether.connector.http.connectionMaxTtl"
 fld public final static java.lang.String HTTP_CREDENTIAL_ENCODING = "aether.connector.http.credentialEncoding"
+fld public final static java.lang.String HTTP_EXPECT_CONTINUE = "aether.connector.http.expectContinue"
+fld public final static java.lang.String HTTP_FOLLOW_REDIRECTS = "aether.connector.http.followRedirects"
 fld public final static java.lang.String HTTP_HEADERS = "aether.connector.http.headers"
 fld public final static java.lang.String HTTP_MAX_CONNECTIONS_PER_ROUTE = "aether.connector.http.maxConnectionsPerRoute"
+fld public final static java.lang.String HTTP_MAX_REDIRECTS = "aether.connector.http.maxRedirects"
 fld public final static java.lang.String HTTP_PREEMPTIVE_AUTH = "aether.connector.http.preemptiveAuth"
 fld public final static java.lang.String HTTP_RETRY_HANDLER_COUNT = "aether.connector.http.retryHandler.count"
 fld public final static java.lang.String HTTP_RETRY_HANDLER_INTERVAL = "aether.connector.http.retryHandler.interval"
@@ -10886,7 +10886,7 @@ meth public abstract org.eclipse.aether.resolution.ArtifactDescriptorPolicy getA
 meth public abstract org.eclipse.aether.resolution.ResolutionErrorPolicy getResolutionErrorPolicy()
 meth public abstract org.eclipse.aether.transfer.TransferListener getTransferListener()
 meth public abstract org.eclipse.aether.transform.FileTransformerManager getFileTransformerManager()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public org.eclipse.aether.RequestTrace
 cons protected init(org.eclipse.aether.RequestTrace,java.lang.Object)
@@ -10992,6 +10992,299 @@ hfds classifier,extension,id,properties
 
 CLSS abstract interface org.eclipse.aether.artifact.package-info
 
+CLSS public final org.eclipse.aether.collection.CollectRequest
+cons public init()
+cons public init(java.util.List<org.eclipse.aether.graph.Dependency>,java.util.List<org.eclipse.aether.graph.Dependency>,java.util.List<org.eclipse.aether.repository.RemoteRepository>)
+cons public init(org.eclipse.aether.graph.Dependency,java.util.List<org.eclipse.aether.graph.Dependency>,java.util.List<org.eclipse.aether.repository.RemoteRepository>)
+cons public init(org.eclipse.aether.graph.Dependency,java.util.List<org.eclipse.aether.repository.RemoteRepository>)
+meth public java.lang.String getRequestContext()
+meth public java.lang.String toString()
+meth public java.util.List<org.eclipse.aether.graph.Dependency> getDependencies()
+meth public java.util.List<org.eclipse.aether.graph.Dependency> getManagedDependencies()
+meth public java.util.List<org.eclipse.aether.repository.RemoteRepository> getRepositories()
+meth public org.eclipse.aether.RequestTrace getTrace()
+meth public org.eclipse.aether.artifact.Artifact getRootArtifact()
+meth public org.eclipse.aether.collection.CollectRequest addDependency(org.eclipse.aether.graph.Dependency)
+meth public org.eclipse.aether.collection.CollectRequest addManagedDependency(org.eclipse.aether.graph.Dependency)
+meth public org.eclipse.aether.collection.CollectRequest addRepository(org.eclipse.aether.repository.RemoteRepository)
+meth public org.eclipse.aether.collection.CollectRequest setDependencies(java.util.List<org.eclipse.aether.graph.Dependency>)
+meth public org.eclipse.aether.collection.CollectRequest setManagedDependencies(java.util.List<org.eclipse.aether.graph.Dependency>)
+meth public org.eclipse.aether.collection.CollectRequest setRepositories(java.util.List<org.eclipse.aether.repository.RemoteRepository>)
+meth public org.eclipse.aether.collection.CollectRequest setRequestContext(java.lang.String)
+meth public org.eclipse.aether.collection.CollectRequest setRoot(org.eclipse.aether.graph.Dependency)
+meth public org.eclipse.aether.collection.CollectRequest setRootArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.collection.CollectRequest setTrace(org.eclipse.aether.RequestTrace)
+meth public org.eclipse.aether.graph.Dependency getRoot()
+supr java.lang.Object
+hfds context,dependencies,managedDependencies,repositories,root,rootArtifact,trace
+
+CLSS public final org.eclipse.aether.collection.CollectResult
+cons public init(org.eclipse.aether.collection.CollectRequest)
+meth public java.lang.String toString()
+meth public java.util.List<java.lang.Exception> getExceptions()
+meth public java.util.List<org.eclipse.aether.graph.DependencyCycle> getCycles()
+meth public org.eclipse.aether.collection.CollectRequest getRequest()
+meth public org.eclipse.aether.collection.CollectResult addCycle(org.eclipse.aether.graph.DependencyCycle)
+meth public org.eclipse.aether.collection.CollectResult addException(java.lang.Exception)
+meth public org.eclipse.aether.collection.CollectResult setRoot(org.eclipse.aether.graph.DependencyNode)
+meth public org.eclipse.aether.graph.DependencyNode getRoot()
+supr java.lang.Object
+hfds cycles,exceptions,request,root
+
+CLSS public abstract interface org.eclipse.aether.collection.CollectStepData
+meth public abstract java.lang.String getContext()
+meth public abstract java.util.List<org.eclipse.aether.graph.DependencyNode> getPath()
+meth public abstract org.eclipse.aether.graph.Dependency getNode()
+
+CLSS public abstract interface org.eclipse.aether.collection.DependencyCollectionContext
+meth public abstract java.util.List<org.eclipse.aether.graph.Dependency> getManagedDependencies()
+meth public abstract org.eclipse.aether.RepositorySystemSession getSession()
+meth public abstract org.eclipse.aether.artifact.Artifact getArtifact()
+meth public abstract org.eclipse.aether.graph.Dependency getDependency()
+
+CLSS public org.eclipse.aether.collection.DependencyCollectionException
+cons public init(org.eclipse.aether.collection.CollectResult)
+cons public init(org.eclipse.aether.collection.CollectResult,java.lang.String)
+cons public init(org.eclipse.aether.collection.CollectResult,java.lang.String,java.lang.Throwable)
+meth public org.eclipse.aether.collection.CollectResult getResult()
+supr org.eclipse.aether.RepositoryException
+hfds result
+
+CLSS public abstract interface org.eclipse.aether.collection.DependencyGraphTransformationContext
+meth public abstract java.lang.Object get(java.lang.Object)
+meth public abstract java.lang.Object put(java.lang.Object,java.lang.Object)
+meth public abstract org.eclipse.aether.RepositorySystemSession getSession()
+
+CLSS public abstract interface org.eclipse.aether.collection.DependencyGraphTransformer
+meth public abstract org.eclipse.aether.graph.DependencyNode transformGraph(org.eclipse.aether.graph.DependencyNode,org.eclipse.aether.collection.DependencyGraphTransformationContext) throws org.eclipse.aether.RepositoryException
+
+CLSS public final org.eclipse.aether.collection.DependencyManagement
+cons public init()
+meth public java.lang.Boolean getOptional()
+meth public java.lang.String getScope()
+meth public java.lang.String getVersion()
+meth public java.util.Collection<org.eclipse.aether.graph.Exclusion> getExclusions()
+meth public java.util.Map<java.lang.String,java.lang.String> getProperties()
+meth public org.eclipse.aether.collection.DependencyManagement setExclusions(java.util.Collection<org.eclipse.aether.graph.Exclusion>)
+meth public org.eclipse.aether.collection.DependencyManagement setOptional(java.lang.Boolean)
+meth public org.eclipse.aether.collection.DependencyManagement setProperties(java.util.Map<java.lang.String,java.lang.String>)
+meth public org.eclipse.aether.collection.DependencyManagement setScope(java.lang.String)
+meth public org.eclipse.aether.collection.DependencyManagement setVersion(java.lang.String)
+supr java.lang.Object
+hfds exclusions,optional,properties,scope,version
+
+CLSS public abstract interface org.eclipse.aether.collection.DependencyManager
+meth public abstract org.eclipse.aether.collection.DependencyManagement manageDependency(org.eclipse.aether.graph.Dependency)
+meth public abstract org.eclipse.aether.collection.DependencyManager deriveChildManager(org.eclipse.aether.collection.DependencyCollectionContext)
+
+CLSS public abstract interface org.eclipse.aether.collection.DependencySelector
+meth public abstract boolean selectDependency(org.eclipse.aether.graph.Dependency)
+meth public abstract org.eclipse.aether.collection.DependencySelector deriveChildSelector(org.eclipse.aether.collection.DependencyCollectionContext)
+
+CLSS public abstract interface org.eclipse.aether.collection.DependencyTraverser
+meth public abstract boolean traverseDependency(org.eclipse.aether.graph.Dependency)
+meth public abstract org.eclipse.aether.collection.DependencyTraverser deriveChildTraverser(org.eclipse.aether.collection.DependencyCollectionContext)
+
+CLSS public org.eclipse.aether.collection.UnsolvableVersionConflictException
+cons public init(java.util.Collection<? extends java.util.List<? extends org.eclipse.aether.graph.DependencyNode>>)
+meth public java.util.Collection<? extends java.util.List<? extends org.eclipse.aether.graph.DependencyNode>> getPaths()
+meth public java.util.Collection<java.lang.String> getVersions()
+supr org.eclipse.aether.RepositoryException
+hfds paths,versions
+
+CLSS public abstract interface org.eclipse.aether.collection.VersionFilter
+innr public abstract interface static VersionFilterContext
+meth public abstract org.eclipse.aether.collection.VersionFilter deriveChildFilter(org.eclipse.aether.collection.DependencyCollectionContext)
+meth public abstract void filterVersions(org.eclipse.aether.collection.VersionFilter$VersionFilterContext) throws org.eclipse.aether.RepositoryException
+
+CLSS public abstract interface static org.eclipse.aether.collection.VersionFilter$VersionFilterContext
+ outer org.eclipse.aether.collection.VersionFilter
+intf java.lang.Iterable<org.eclipse.aether.version.Version>
+meth public abstract int getCount()
+meth public abstract java.util.Iterator<org.eclipse.aether.version.Version> iterator()
+meth public abstract java.util.List<org.eclipse.aether.repository.RemoteRepository> getRepositories()
+meth public abstract org.eclipse.aether.RepositorySystemSession getSession()
+meth public abstract org.eclipse.aether.graph.Dependency getDependency()
+meth public abstract org.eclipse.aether.repository.ArtifactRepository getRepository(org.eclipse.aether.version.Version)
+meth public abstract org.eclipse.aether.version.VersionConstraint getVersionConstraint()
+
+CLSS abstract interface org.eclipse.aether.collection.package-info
+
+CLSS public final org.eclipse.aether.deployment.DeployRequest
+cons public init()
+meth public java.lang.String toString()
+meth public java.util.Collection<org.eclipse.aether.artifact.Artifact> getArtifacts()
+meth public java.util.Collection<org.eclipse.aether.metadata.Metadata> getMetadata()
+meth public org.eclipse.aether.RequestTrace getTrace()
+meth public org.eclipse.aether.deployment.DeployRequest addArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.deployment.DeployRequest addMetadata(org.eclipse.aether.metadata.Metadata)
+meth public org.eclipse.aether.deployment.DeployRequest setArtifacts(java.util.Collection<org.eclipse.aether.artifact.Artifact>)
+meth public org.eclipse.aether.deployment.DeployRequest setMetadata(java.util.Collection<org.eclipse.aether.metadata.Metadata>)
+meth public org.eclipse.aether.deployment.DeployRequest setRepository(org.eclipse.aether.repository.RemoteRepository)
+meth public org.eclipse.aether.deployment.DeployRequest setTrace(org.eclipse.aether.RequestTrace)
+meth public org.eclipse.aether.repository.RemoteRepository getRepository()
+supr java.lang.Object
+hfds artifacts,metadata,repository,trace
+
+CLSS public final org.eclipse.aether.deployment.DeployResult
+cons public init(org.eclipse.aether.deployment.DeployRequest)
+meth public java.lang.String toString()
+meth public java.util.Collection<org.eclipse.aether.artifact.Artifact> getArtifacts()
+meth public java.util.Collection<org.eclipse.aether.metadata.Metadata> getMetadata()
+meth public org.eclipse.aether.deployment.DeployRequest getRequest()
+meth public org.eclipse.aether.deployment.DeployResult addArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.deployment.DeployResult addMetadata(org.eclipse.aether.metadata.Metadata)
+meth public org.eclipse.aether.deployment.DeployResult setArtifacts(java.util.Collection<org.eclipse.aether.artifact.Artifact>)
+meth public org.eclipse.aether.deployment.DeployResult setMetadata(java.util.Collection<org.eclipse.aether.metadata.Metadata>)
+supr java.lang.Object
+hfds artifacts,metadata,request
+
+CLSS public org.eclipse.aether.deployment.DeploymentException
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+supr org.eclipse.aether.RepositoryException
+
+CLSS abstract interface org.eclipse.aether.deployment.package-info
+
+CLSS public final org.eclipse.aether.graph.DefaultDependencyNode
+cons public init(org.eclipse.aether.artifact.Artifact)
+cons public init(org.eclipse.aether.graph.Dependency)
+cons public init(org.eclipse.aether.graph.DependencyNode)
+intf org.eclipse.aether.graph.DependencyNode
+meth public boolean accept(org.eclipse.aether.graph.DependencyVisitor)
+meth public int getManagedBits()
+meth public java.lang.String getRequestContext()
+meth public java.lang.String toString()
+meth public java.util.Collection<? extends org.eclipse.aether.artifact.Artifact> getAliases()
+meth public java.util.List<? extends org.eclipse.aether.artifact.Artifact> getRelocations()
+meth public java.util.List<org.eclipse.aether.graph.DependencyNode> getChildren()
+meth public java.util.List<org.eclipse.aether.repository.RemoteRepository> getRepositories()
+meth public java.util.Map<java.lang.Object,java.lang.Object> getData()
+meth public org.eclipse.aether.artifact.Artifact getArtifact()
+meth public org.eclipse.aether.graph.Dependency getDependency()
+meth public org.eclipse.aether.version.Version getVersion()
+meth public org.eclipse.aether.version.VersionConstraint getVersionConstraint()
+meth public void setAliases(java.util.Collection<? extends org.eclipse.aether.artifact.Artifact>)
+meth public void setArtifact(org.eclipse.aether.artifact.Artifact)
+meth public void setChildren(java.util.List<org.eclipse.aether.graph.DependencyNode>)
+meth public void setData(java.lang.Object,java.lang.Object)
+meth public void setData(java.util.Map<java.lang.Object,java.lang.Object>)
+meth public void setManagedBits(int)
+meth public void setOptional(java.lang.Boolean)
+meth public void setRelocations(java.util.List<? extends org.eclipse.aether.artifact.Artifact>)
+meth public void setRepositories(java.util.List<org.eclipse.aether.repository.RemoteRepository>)
+meth public void setRequestContext(java.lang.String)
+meth public void setScope(java.lang.String)
+meth public void setVersion(org.eclipse.aether.version.Version)
+meth public void setVersionConstraint(org.eclipse.aether.version.VersionConstraint)
+supr java.lang.Object
+hfds aliases,artifact,children,context,data,dependency,managedBits,relocations,repositories,version,versionConstraint
+
+CLSS public final org.eclipse.aether.graph.Dependency
+cons public init(org.eclipse.aether.artifact.Artifact,java.lang.String)
+cons public init(org.eclipse.aether.artifact.Artifact,java.lang.String,java.lang.Boolean)
+cons public init(org.eclipse.aether.artifact.Artifact,java.lang.String,java.lang.Boolean,java.util.Collection<org.eclipse.aether.graph.Exclusion>)
+meth public boolean equals(java.lang.Object)
+meth public boolean isOptional()
+meth public int hashCode()
+meth public java.lang.Boolean getOptional()
+meth public java.lang.String getScope()
+meth public java.lang.String toString()
+meth public java.util.Collection<org.eclipse.aether.graph.Exclusion> getExclusions()
+meth public org.eclipse.aether.artifact.Artifact getArtifact()
+meth public org.eclipse.aether.graph.Dependency setArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.graph.Dependency setExclusions(java.util.Collection<org.eclipse.aether.graph.Exclusion>)
+meth public org.eclipse.aether.graph.Dependency setOptional(java.lang.Boolean)
+meth public org.eclipse.aether.graph.Dependency setScope(java.lang.String)
+supr java.lang.Object
+hfds artifact,exclusions,optional,scope
+hcls Exclusions
+
+CLSS public abstract interface org.eclipse.aether.graph.DependencyCycle
+meth public abstract java.util.List<org.eclipse.aether.graph.Dependency> getCyclicDependencies()
+meth public abstract java.util.List<org.eclipse.aether.graph.Dependency> getPrecedingDependencies()
+
+CLSS public abstract interface org.eclipse.aether.graph.DependencyFilter
+meth public abstract boolean accept(org.eclipse.aether.graph.DependencyNode,java.util.List<org.eclipse.aether.graph.DependencyNode>)
+
+CLSS public abstract interface org.eclipse.aether.graph.DependencyNode
+fld public final static int MANAGED_EXCLUSIONS = 16
+fld public final static int MANAGED_OPTIONAL = 4
+fld public final static int MANAGED_PROPERTIES = 8
+fld public final static int MANAGED_SCOPE = 2
+fld public final static int MANAGED_VERSION = 1
+meth public abstract boolean accept(org.eclipse.aether.graph.DependencyVisitor)
+meth public abstract int getManagedBits()
+meth public abstract java.lang.String getRequestContext()
+meth public abstract java.util.Collection<? extends org.eclipse.aether.artifact.Artifact> getAliases()
+meth public abstract java.util.List<? extends org.eclipse.aether.artifact.Artifact> getRelocations()
+meth public abstract java.util.List<org.eclipse.aether.graph.DependencyNode> getChildren()
+meth public abstract java.util.List<org.eclipse.aether.repository.RemoteRepository> getRepositories()
+meth public abstract java.util.Map<?,?> getData()
+meth public abstract org.eclipse.aether.artifact.Artifact getArtifact()
+meth public abstract org.eclipse.aether.graph.Dependency getDependency()
+meth public abstract org.eclipse.aether.version.Version getVersion()
+meth public abstract org.eclipse.aether.version.VersionConstraint getVersionConstraint()
+meth public abstract void setArtifact(org.eclipse.aether.artifact.Artifact)
+meth public abstract void setChildren(java.util.List<org.eclipse.aether.graph.DependencyNode>)
+meth public abstract void setData(java.lang.Object,java.lang.Object)
+meth public abstract void setData(java.util.Map<java.lang.Object,java.lang.Object>)
+meth public abstract void setOptional(java.lang.Boolean)
+meth public abstract void setRequestContext(java.lang.String)
+meth public abstract void setScope(java.lang.String)
+
+CLSS public abstract interface org.eclipse.aether.graph.DependencyVisitor
+meth public abstract boolean visitEnter(org.eclipse.aether.graph.DependencyNode)
+meth public abstract boolean visitLeave(org.eclipse.aether.graph.DependencyNode)
+
+CLSS public final org.eclipse.aether.graph.Exclusion
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public java.lang.String getArtifactId()
+meth public java.lang.String getClassifier()
+meth public java.lang.String getExtension()
+meth public java.lang.String getGroupId()
+meth public java.lang.String toString()
+supr java.lang.Object
+hfds artifactId,classifier,extension,groupId
+
+CLSS abstract interface org.eclipse.aether.graph.package-info
+
+CLSS public final org.eclipse.aether.installation.InstallRequest
+cons public init()
+meth public java.lang.String toString()
+meth public java.util.Collection<org.eclipse.aether.artifact.Artifact> getArtifacts()
+meth public java.util.Collection<org.eclipse.aether.metadata.Metadata> getMetadata()
+meth public org.eclipse.aether.RequestTrace getTrace()
+meth public org.eclipse.aether.installation.InstallRequest addArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.installation.InstallRequest addMetadata(org.eclipse.aether.metadata.Metadata)
+meth public org.eclipse.aether.installation.InstallRequest setArtifacts(java.util.Collection<org.eclipse.aether.artifact.Artifact>)
+meth public org.eclipse.aether.installation.InstallRequest setMetadata(java.util.Collection<org.eclipse.aether.metadata.Metadata>)
+meth public org.eclipse.aether.installation.InstallRequest setTrace(org.eclipse.aether.RequestTrace)
+supr java.lang.Object
+hfds artifacts,metadata,trace
+
+CLSS public final org.eclipse.aether.installation.InstallResult
+cons public init(org.eclipse.aether.installation.InstallRequest)
+meth public java.lang.String toString()
+meth public java.util.Collection<org.eclipse.aether.artifact.Artifact> getArtifacts()
+meth public java.util.Collection<org.eclipse.aether.metadata.Metadata> getMetadata()
+meth public org.eclipse.aether.installation.InstallRequest getRequest()
+meth public org.eclipse.aether.installation.InstallResult addArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.installation.InstallResult addMetadata(org.eclipse.aether.metadata.Metadata)
+meth public org.eclipse.aether.installation.InstallResult setArtifacts(java.util.Collection<org.eclipse.aether.artifact.Artifact>)
+meth public org.eclipse.aether.installation.InstallResult setMetadata(java.util.Collection<org.eclipse.aether.metadata.Metadata>)
+supr java.lang.Object
+hfds artifacts,metadata,request
+
+CLSS public org.eclipse.aether.installation.InstallationException
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+supr org.eclipse.aether.RepositoryException
+
+CLSS abstract interface org.eclipse.aether.installation.package-info
+
 CLSS public abstract org.eclipse.aether.metadata.AbstractMetadata
 cons public init()
 intf org.eclipse.aether.metadata.Metadata
@@ -11003,6 +11296,23 @@ meth public java.lang.String toString()
 meth public org.eclipse.aether.metadata.Metadata setFile(java.io.File)
 meth public org.eclipse.aether.metadata.Metadata setProperties(java.util.Map<java.lang.String,java.lang.String>)
 supr java.lang.Object
+
+CLSS public final org.eclipse.aether.metadata.DefaultMetadata
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.eclipse.aether.metadata.Metadata$Nature)
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.eclipse.aether.metadata.Metadata$Nature,java.io.File)
+cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String,org.eclipse.aether.metadata.Metadata$Nature,java.util.Map<java.lang.String,java.lang.String>,java.io.File)
+cons public init(java.lang.String,java.lang.String,java.lang.String,org.eclipse.aether.metadata.Metadata$Nature)
+cons public init(java.lang.String,java.lang.String,org.eclipse.aether.metadata.Metadata$Nature)
+cons public init(java.lang.String,org.eclipse.aether.metadata.Metadata$Nature)
+meth public java.io.File getFile()
+meth public java.lang.String getArtifactId()
+meth public java.lang.String getGroupId()
+meth public java.lang.String getType()
+meth public java.lang.String getVersion()
+meth public java.util.Map<java.lang.String,java.lang.String> getProperties()
+meth public org.eclipse.aether.metadata.Metadata$Nature getNature()
+supr org.eclipse.aether.metadata.AbstractMetadata
+hfds artifactId,file,groupId,nature,properties,type,version
 
 CLSS public abstract interface org.eclipse.aether.metadata.MergeableMetadata
 intf org.eclipse.aether.metadata.Metadata
@@ -11021,6 +11331,17 @@ meth public abstract java.util.Map<java.lang.String,java.lang.String> getPropert
 meth public abstract org.eclipse.aether.metadata.Metadata setFile(java.io.File)
 meth public abstract org.eclipse.aether.metadata.Metadata setProperties(java.util.Map<java.lang.String,java.lang.String>)
 meth public abstract org.eclipse.aether.metadata.Metadata$Nature getNature()
+
+CLSS public final static !enum org.eclipse.aether.metadata.Metadata$Nature
+ outer org.eclipse.aether.metadata.Metadata
+fld public final static org.eclipse.aether.metadata.Metadata$Nature RELEASE
+fld public final static org.eclipse.aether.metadata.Metadata$Nature RELEASE_OR_SNAPSHOT
+fld public final static org.eclipse.aether.metadata.Metadata$Nature SNAPSHOT
+meth public static org.eclipse.aether.metadata.Metadata$Nature valueOf(java.lang.String)
+meth public static org.eclipse.aether.metadata.Metadata$Nature[] values()
+supr java.lang.Enum<org.eclipse.aether.metadata.Metadata$Nature>
+
+CLSS abstract interface org.eclipse.aether.metadata.package-info
 
 CLSS abstract interface org.eclipse.aether.package-info
 
@@ -11285,12 +11606,196 @@ hfds key,type
 
 CLSS abstract interface org.eclipse.aether.repository.package-info
 
+CLSS public org.eclipse.aether.resolution.ArtifactDescriptorException
+cons public init(org.eclipse.aether.resolution.ArtifactDescriptorResult)
+cons public init(org.eclipse.aether.resolution.ArtifactDescriptorResult,java.lang.String)
+cons public init(org.eclipse.aether.resolution.ArtifactDescriptorResult,java.lang.String,java.lang.Throwable)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult getResult()
+supr org.eclipse.aether.RepositoryException
+hfds result
+
 CLSS public abstract interface org.eclipse.aether.resolution.ArtifactDescriptorPolicy
 fld public final static int IGNORE_ERRORS = 3
 fld public final static int IGNORE_INVALID = 2
 fld public final static int IGNORE_MISSING = 1
 fld public final static int STRICT = 0
 meth public abstract int getPolicy(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.resolution.ArtifactDescriptorPolicyRequest)
+
+CLSS public final org.eclipse.aether.resolution.ArtifactDescriptorPolicyRequest
+cons public init()
+cons public init(org.eclipse.aether.artifact.Artifact,java.lang.String)
+meth public java.lang.String getRequestContext()
+meth public java.lang.String toString()
+meth public org.eclipse.aether.artifact.Artifact getArtifact()
+meth public org.eclipse.aether.resolution.ArtifactDescriptorPolicyRequest setArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorPolicyRequest setRequestContext(java.lang.String)
+supr java.lang.Object
+hfds artifact,context
+
+CLSS public final org.eclipse.aether.resolution.ArtifactDescriptorRequest
+cons public init()
+cons public init(org.eclipse.aether.artifact.Artifact,java.util.List<org.eclipse.aether.repository.RemoteRepository>,java.lang.String)
+meth public java.lang.String getRequestContext()
+meth public java.lang.String toString()
+meth public java.util.List<org.eclipse.aether.repository.RemoteRepository> getRepositories()
+meth public org.eclipse.aether.RequestTrace getTrace()
+meth public org.eclipse.aether.artifact.Artifact getArtifact()
+meth public org.eclipse.aether.resolution.ArtifactDescriptorRequest addRepository(org.eclipse.aether.repository.RemoteRepository)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorRequest setArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorRequest setRepositories(java.util.List<org.eclipse.aether.repository.RemoteRepository>)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorRequest setRequestContext(java.lang.String)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorRequest setTrace(org.eclipse.aether.RequestTrace)
+supr java.lang.Object
+hfds artifact,context,repositories,trace
+
+CLSS public final org.eclipse.aether.resolution.ArtifactDescriptorResult
+cons public init(org.eclipse.aether.resolution.ArtifactDescriptorRequest)
+meth public java.lang.String toString()
+meth public java.util.Collection<org.eclipse.aether.artifact.Artifact> getAliases()
+meth public java.util.List<java.lang.Exception> getExceptions()
+meth public java.util.List<org.eclipse.aether.artifact.Artifact> getRelocations()
+meth public java.util.List<org.eclipse.aether.graph.Dependency> getDependencies()
+meth public java.util.List<org.eclipse.aether.graph.Dependency> getManagedDependencies()
+meth public java.util.List<org.eclipse.aether.repository.RemoteRepository> getRepositories()
+meth public java.util.Map<java.lang.String,java.lang.Object> getProperties()
+meth public org.eclipse.aether.artifact.Artifact getArtifact()
+meth public org.eclipse.aether.repository.ArtifactRepository getRepository()
+meth public org.eclipse.aether.resolution.ArtifactDescriptorRequest getRequest()
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult addAlias(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult addDependency(org.eclipse.aether.graph.Dependency)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult addException(java.lang.Exception)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult addManagedDependency(org.eclipse.aether.graph.Dependency)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult addRelocation(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult addRepository(org.eclipse.aether.repository.RemoteRepository)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult setAliases(java.util.Collection<org.eclipse.aether.artifact.Artifact>)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult setArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult setDependencies(java.util.List<org.eclipse.aether.graph.Dependency>)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult setExceptions(java.util.List<java.lang.Exception>)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult setManagedDependencies(java.util.List<org.eclipse.aether.graph.Dependency>)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult setProperties(java.util.Map<java.lang.String,java.lang.Object>)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult setRelocations(java.util.List<org.eclipse.aether.artifact.Artifact>)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult setRepositories(java.util.List<org.eclipse.aether.repository.RemoteRepository>)
+meth public org.eclipse.aether.resolution.ArtifactDescriptorResult setRepository(org.eclipse.aether.repository.ArtifactRepository)
+supr java.lang.Object
+hfds aliases,artifact,dependencies,exceptions,managedDependencies,properties,relocations,repositories,repository,request
+
+CLSS public final org.eclipse.aether.resolution.ArtifactRequest
+cons public init()
+cons public init(org.eclipse.aether.artifact.Artifact,java.util.List<org.eclipse.aether.repository.RemoteRepository>,java.lang.String)
+cons public init(org.eclipse.aether.graph.DependencyNode)
+meth public java.lang.String getRequestContext()
+meth public java.lang.String toString()
+meth public java.util.List<org.eclipse.aether.repository.RemoteRepository> getRepositories()
+meth public org.eclipse.aether.RequestTrace getTrace()
+meth public org.eclipse.aether.artifact.Artifact getArtifact()
+meth public org.eclipse.aether.graph.DependencyNode getDependencyNode()
+meth public org.eclipse.aether.resolution.ArtifactRequest addRepository(org.eclipse.aether.repository.RemoteRepository)
+meth public org.eclipse.aether.resolution.ArtifactRequest setArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.resolution.ArtifactRequest setDependencyNode(org.eclipse.aether.graph.DependencyNode)
+meth public org.eclipse.aether.resolution.ArtifactRequest setRepositories(java.util.List<org.eclipse.aether.repository.RemoteRepository>)
+meth public org.eclipse.aether.resolution.ArtifactRequest setRequestContext(java.lang.String)
+meth public org.eclipse.aether.resolution.ArtifactRequest setTrace(org.eclipse.aether.RequestTrace)
+supr java.lang.Object
+hfds artifact,context,node,repositories,trace
+
+CLSS public org.eclipse.aether.resolution.ArtifactResolutionException
+cons public init(java.util.List<org.eclipse.aether.resolution.ArtifactResult>)
+cons public init(java.util.List<org.eclipse.aether.resolution.ArtifactResult>,java.lang.String)
+cons public init(java.util.List<org.eclipse.aether.resolution.ArtifactResult>,java.lang.String,java.lang.Throwable)
+meth public java.util.List<org.eclipse.aether.resolution.ArtifactResult> getResults()
+meth public org.eclipse.aether.resolution.ArtifactResult getResult()
+supr org.eclipse.aether.RepositoryException
+hfds results
+
+CLSS public final org.eclipse.aether.resolution.ArtifactResult
+cons public init(org.eclipse.aether.resolution.ArtifactRequest)
+meth public boolean isMissing()
+meth public boolean isResolved()
+meth public java.lang.String toString()
+meth public java.util.List<java.lang.Exception> getExceptions()
+meth public org.eclipse.aether.artifact.Artifact getArtifact()
+meth public org.eclipse.aether.repository.ArtifactRepository getRepository()
+meth public org.eclipse.aether.repository.LocalArtifactResult getLocalArtifactResult()
+meth public org.eclipse.aether.resolution.ArtifactRequest getRequest()
+meth public org.eclipse.aether.resolution.ArtifactResult addException(java.lang.Exception)
+meth public org.eclipse.aether.resolution.ArtifactResult setArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.resolution.ArtifactResult setRepository(org.eclipse.aether.repository.ArtifactRepository)
+meth public void setLocalArtifactResult(org.eclipse.aether.repository.LocalArtifactResult)
+supr java.lang.Object
+hfds artifact,exceptions,localArtifactResult,repository,request
+
+CLSS public final org.eclipse.aether.resolution.DependencyRequest
+cons public init()
+cons public init(org.eclipse.aether.collection.CollectRequest,org.eclipse.aether.graph.DependencyFilter)
+cons public init(org.eclipse.aether.graph.DependencyNode,org.eclipse.aether.graph.DependencyFilter)
+meth public java.lang.String toString()
+meth public org.eclipse.aether.RequestTrace getTrace()
+meth public org.eclipse.aether.collection.CollectRequest getCollectRequest()
+meth public org.eclipse.aether.graph.DependencyFilter getFilter()
+meth public org.eclipse.aether.graph.DependencyNode getRoot()
+meth public org.eclipse.aether.resolution.DependencyRequest setCollectRequest(org.eclipse.aether.collection.CollectRequest)
+meth public org.eclipse.aether.resolution.DependencyRequest setFilter(org.eclipse.aether.graph.DependencyFilter)
+meth public org.eclipse.aether.resolution.DependencyRequest setRoot(org.eclipse.aether.graph.DependencyNode)
+meth public org.eclipse.aether.resolution.DependencyRequest setTrace(org.eclipse.aether.RequestTrace)
+supr java.lang.Object
+hfds collectRequest,filter,root,trace
+
+CLSS public org.eclipse.aether.resolution.DependencyResolutionException
+cons public init(org.eclipse.aether.resolution.DependencyResult,java.lang.String,java.lang.Throwable)
+cons public init(org.eclipse.aether.resolution.DependencyResult,java.lang.Throwable)
+meth public org.eclipse.aether.resolution.DependencyResult getResult()
+supr org.eclipse.aether.RepositoryException
+hfds result
+
+CLSS public final org.eclipse.aether.resolution.DependencyResult
+cons public init(org.eclipse.aether.resolution.DependencyRequest)
+meth public java.lang.String toString()
+meth public java.util.List<java.lang.Exception> getCollectExceptions()
+meth public java.util.List<org.eclipse.aether.graph.DependencyCycle> getCycles()
+meth public java.util.List<org.eclipse.aether.resolution.ArtifactResult> getArtifactResults()
+meth public org.eclipse.aether.graph.DependencyNode getRoot()
+meth public org.eclipse.aether.resolution.DependencyRequest getRequest()
+meth public org.eclipse.aether.resolution.DependencyResult setArtifactResults(java.util.List<org.eclipse.aether.resolution.ArtifactResult>)
+meth public org.eclipse.aether.resolution.DependencyResult setCollectExceptions(java.util.List<java.lang.Exception>)
+meth public org.eclipse.aether.resolution.DependencyResult setCycles(java.util.List<org.eclipse.aether.graph.DependencyCycle>)
+meth public org.eclipse.aether.resolution.DependencyResult setRoot(org.eclipse.aether.graph.DependencyNode)
+supr java.lang.Object
+hfds artifactResults,collectExceptions,cycles,request,root
+
+CLSS public final org.eclipse.aether.resolution.MetadataRequest
+cons public init()
+cons public init(org.eclipse.aether.metadata.Metadata)
+cons public init(org.eclipse.aether.metadata.Metadata,org.eclipse.aether.repository.RemoteRepository,java.lang.String)
+meth public boolean isDeleteLocalCopyIfMissing()
+meth public boolean isFavorLocalRepository()
+meth public java.lang.String getRequestContext()
+meth public java.lang.String toString()
+meth public org.eclipse.aether.RequestTrace getTrace()
+meth public org.eclipse.aether.metadata.Metadata getMetadata()
+meth public org.eclipse.aether.repository.RemoteRepository getRepository()
+meth public org.eclipse.aether.resolution.MetadataRequest setDeleteLocalCopyIfMissing(boolean)
+meth public org.eclipse.aether.resolution.MetadataRequest setFavorLocalRepository(boolean)
+meth public org.eclipse.aether.resolution.MetadataRequest setMetadata(org.eclipse.aether.metadata.Metadata)
+meth public org.eclipse.aether.resolution.MetadataRequest setRepository(org.eclipse.aether.repository.RemoteRepository)
+meth public org.eclipse.aether.resolution.MetadataRequest setRequestContext(java.lang.String)
+meth public org.eclipse.aether.resolution.MetadataRequest setTrace(org.eclipse.aether.RequestTrace)
+supr java.lang.Object
+hfds context,deleteLocalCopyIfMissing,favorLocalRepository,metadata,repository,trace
+
+CLSS public final org.eclipse.aether.resolution.MetadataResult
+cons public init(org.eclipse.aether.resolution.MetadataRequest)
+meth public boolean isMissing()
+meth public boolean isResolved()
+meth public boolean isUpdated()
+meth public java.lang.Exception getException()
+meth public java.lang.String toString()
+meth public org.eclipse.aether.metadata.Metadata getMetadata()
+meth public org.eclipse.aether.resolution.MetadataRequest getRequest()
+meth public org.eclipse.aether.resolution.MetadataResult setException(java.lang.Exception)
+meth public org.eclipse.aether.resolution.MetadataResult setMetadata(org.eclipse.aether.metadata.Metadata)
+meth public org.eclipse.aether.resolution.MetadataResult setUpdated(boolean)
+supr java.lang.Object
+hfds exception,metadata,request,updated
 
 CLSS public abstract interface org.eclipse.aether.resolution.ResolutionErrorPolicy
 fld public final static int CACHE_ALL = 3
@@ -11299,6 +11804,425 @@ fld public final static int CACHE_NOT_FOUND = 1
 fld public final static int CACHE_TRANSFER_ERROR = 2
 meth public abstract int getArtifactPolicy(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.resolution.ResolutionErrorPolicyRequest<org.eclipse.aether.artifact.Artifact>)
 meth public abstract int getMetadataPolicy(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.resolution.ResolutionErrorPolicyRequest<org.eclipse.aether.metadata.Metadata>)
+
+CLSS public final org.eclipse.aether.resolution.ResolutionErrorPolicyRequest<%0 extends java.lang.Object>
+cons public init()
+cons public init({org.eclipse.aether.resolution.ResolutionErrorPolicyRequest%0},org.eclipse.aether.repository.RemoteRepository)
+meth public java.lang.String toString()
+meth public org.eclipse.aether.repository.RemoteRepository getRepository()
+meth public org.eclipse.aether.resolution.ResolutionErrorPolicyRequest<{org.eclipse.aether.resolution.ResolutionErrorPolicyRequest%0}> setItem({org.eclipse.aether.resolution.ResolutionErrorPolicyRequest%0})
+meth public org.eclipse.aether.resolution.ResolutionErrorPolicyRequest<{org.eclipse.aether.resolution.ResolutionErrorPolicyRequest%0}> setRepository(org.eclipse.aether.repository.RemoteRepository)
+meth public {org.eclipse.aether.resolution.ResolutionErrorPolicyRequest%0} getItem()
+supr java.lang.Object
+hfds item,repository
+
+CLSS public final org.eclipse.aether.resolution.VersionRangeRequest
+cons public init()
+cons public init(org.eclipse.aether.artifact.Artifact,java.util.List<org.eclipse.aether.repository.RemoteRepository>,java.lang.String)
+meth public java.lang.String getRequestContext()
+meth public java.lang.String toString()
+meth public java.util.List<org.eclipse.aether.repository.RemoteRepository> getRepositories()
+meth public org.eclipse.aether.RequestTrace getTrace()
+meth public org.eclipse.aether.artifact.Artifact getArtifact()
+meth public org.eclipse.aether.resolution.VersionRangeRequest addRepository(org.eclipse.aether.repository.RemoteRepository)
+meth public org.eclipse.aether.resolution.VersionRangeRequest setArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.resolution.VersionRangeRequest setRepositories(java.util.List<org.eclipse.aether.repository.RemoteRepository>)
+meth public org.eclipse.aether.resolution.VersionRangeRequest setRequestContext(java.lang.String)
+meth public org.eclipse.aether.resolution.VersionRangeRequest setTrace(org.eclipse.aether.RequestTrace)
+supr java.lang.Object
+hfds artifact,context,repositories,trace
+
+CLSS public org.eclipse.aether.resolution.VersionRangeResolutionException
+cons public init(org.eclipse.aether.resolution.VersionRangeResult)
+cons public init(org.eclipse.aether.resolution.VersionRangeResult,java.lang.String)
+cons public init(org.eclipse.aether.resolution.VersionRangeResult,java.lang.String,java.lang.Throwable)
+meth public org.eclipse.aether.resolution.VersionRangeResult getResult()
+supr org.eclipse.aether.RepositoryException
+hfds result
+
+CLSS public final org.eclipse.aether.resolution.VersionRangeResult
+cons public init(org.eclipse.aether.resolution.VersionRangeRequest)
+meth public java.lang.String toString()
+meth public java.util.List<java.lang.Exception> getExceptions()
+meth public java.util.List<org.eclipse.aether.version.Version> getVersions()
+meth public org.eclipse.aether.repository.ArtifactRepository getRepository(org.eclipse.aether.version.Version)
+meth public org.eclipse.aether.resolution.VersionRangeRequest getRequest()
+meth public org.eclipse.aether.resolution.VersionRangeResult addException(java.lang.Exception)
+meth public org.eclipse.aether.resolution.VersionRangeResult addVersion(org.eclipse.aether.version.Version)
+meth public org.eclipse.aether.resolution.VersionRangeResult setRepository(org.eclipse.aether.version.Version,org.eclipse.aether.repository.ArtifactRepository)
+meth public org.eclipse.aether.resolution.VersionRangeResult setVersionConstraint(org.eclipse.aether.version.VersionConstraint)
+meth public org.eclipse.aether.resolution.VersionRangeResult setVersions(java.util.List<org.eclipse.aether.version.Version>)
+meth public org.eclipse.aether.version.Version getHighestVersion()
+meth public org.eclipse.aether.version.Version getLowestVersion()
+meth public org.eclipse.aether.version.VersionConstraint getVersionConstraint()
+supr java.lang.Object
+hfds exceptions,repositories,request,versionConstraint,versions
+
+CLSS public final org.eclipse.aether.resolution.VersionRequest
+cons public init()
+cons public init(org.eclipse.aether.artifact.Artifact,java.util.List<org.eclipse.aether.repository.RemoteRepository>,java.lang.String)
+meth public java.lang.String getRequestContext()
+meth public java.lang.String toString()
+meth public java.util.List<org.eclipse.aether.repository.RemoteRepository> getRepositories()
+meth public org.eclipse.aether.RequestTrace getTrace()
+meth public org.eclipse.aether.artifact.Artifact getArtifact()
+meth public org.eclipse.aether.resolution.VersionRequest addRepository(org.eclipse.aether.repository.RemoteRepository)
+meth public org.eclipse.aether.resolution.VersionRequest setArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.resolution.VersionRequest setRepositories(java.util.List<org.eclipse.aether.repository.RemoteRepository>)
+meth public org.eclipse.aether.resolution.VersionRequest setRequestContext(java.lang.String)
+meth public org.eclipse.aether.resolution.VersionRequest setTrace(org.eclipse.aether.RequestTrace)
+supr java.lang.Object
+hfds artifact,context,repositories,trace
+
+CLSS public org.eclipse.aether.resolution.VersionResolutionException
+cons public init(org.eclipse.aether.resolution.VersionResult)
+cons public init(org.eclipse.aether.resolution.VersionResult,java.lang.String)
+cons public init(org.eclipse.aether.resolution.VersionResult,java.lang.String,java.lang.Throwable)
+meth public org.eclipse.aether.resolution.VersionResult getResult()
+supr org.eclipse.aether.RepositoryException
+hfds result
+
+CLSS public final org.eclipse.aether.resolution.VersionResult
+cons public init(org.eclipse.aether.resolution.VersionRequest)
+meth public java.lang.String getVersion()
+meth public java.lang.String toString()
+meth public java.util.List<java.lang.Exception> getExceptions()
+meth public org.eclipse.aether.repository.ArtifactRepository getRepository()
+meth public org.eclipse.aether.resolution.VersionRequest getRequest()
+meth public org.eclipse.aether.resolution.VersionResult addException(java.lang.Exception)
+meth public org.eclipse.aether.resolution.VersionResult setRepository(org.eclipse.aether.repository.ArtifactRepository)
+meth public org.eclipse.aether.resolution.VersionResult setVersion(java.lang.String)
+supr java.lang.Object
+hfds exceptions,repository,request,version
+
+CLSS abstract interface org.eclipse.aether.resolution.package-info
+
+CLSS public abstract interface org.eclipse.aether.spi.checksums.ProvidedChecksumsSource
+meth public abstract java.util.Map<java.lang.String,java.lang.String> getProvidedArtifactChecksums(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.spi.connector.ArtifactDownload,org.eclipse.aether.repository.RemoteRepository,java.util.List<org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory>)
+
+CLSS public abstract interface org.eclipse.aether.spi.checksums.TrustedChecksumsSource
+innr public abstract interface static Writer
+meth public abstract java.util.Map<java.lang.String,java.lang.String> getTrustedArtifactChecksums(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.artifact.Artifact,org.eclipse.aether.repository.ArtifactRepository,java.util.List<org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory>)
+meth public abstract org.eclipse.aether.spi.checksums.TrustedChecksumsSource$Writer getTrustedArtifactChecksumsWriter(org.eclipse.aether.RepositorySystemSession)
+
+CLSS public abstract interface static org.eclipse.aether.spi.checksums.TrustedChecksumsSource$Writer
+ outer org.eclipse.aether.spi.checksums.TrustedChecksumsSource
+meth public abstract void addTrustedArtifactChecksums(org.eclipse.aether.artifact.Artifact,org.eclipse.aether.repository.ArtifactRepository,java.util.List<org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory>,java.util.Map<java.lang.String,java.lang.String>) throws java.io.IOException
+
+CLSS public final org.eclipse.aether.spi.connector.ArtifactDownload
+cons public init()
+cons public init(org.eclipse.aether.artifact.Artifact,java.lang.String,java.io.File,java.lang.String)
+meth public boolean isExistenceCheck()
+meth public java.lang.String getChecksumPolicy()
+meth public java.lang.String getRequestContext()
+meth public java.lang.String toString()
+meth public java.util.Collection<java.lang.String> getSupportedContexts()
+meth public java.util.List<org.eclipse.aether.repository.RemoteRepository> getRepositories()
+meth public org.eclipse.aether.spi.connector.ArtifactDownload setArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.spi.connector.ArtifactDownload setChecksumPolicy(java.lang.String)
+meth public org.eclipse.aether.spi.connector.ArtifactDownload setException(org.eclipse.aether.transfer.ArtifactTransferException)
+meth public org.eclipse.aether.spi.connector.ArtifactDownload setExistenceCheck(boolean)
+meth public org.eclipse.aether.spi.connector.ArtifactDownload setFile(java.io.File)
+meth public org.eclipse.aether.spi.connector.ArtifactDownload setListener(org.eclipse.aether.transfer.TransferListener)
+meth public org.eclipse.aether.spi.connector.ArtifactDownload setRepositories(java.util.List<org.eclipse.aether.repository.RemoteRepository>)
+meth public org.eclipse.aether.spi.connector.ArtifactDownload setRequestContext(java.lang.String)
+meth public org.eclipse.aether.spi.connector.ArtifactDownload setSupportedContexts(java.util.Collection<java.lang.String>)
+meth public org.eclipse.aether.spi.connector.ArtifactDownload setTrace(org.eclipse.aether.RequestTrace)
+supr org.eclipse.aether.spi.connector.ArtifactTransfer
+hfds checksumPolicy,context,contexts,existenceCheck,repositories
+
+CLSS public abstract org.eclipse.aether.spi.connector.ArtifactTransfer
+meth public java.io.File getFile()
+meth public org.eclipse.aether.artifact.Artifact getArtifact()
+meth public org.eclipse.aether.spi.connector.ArtifactTransfer setArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.spi.connector.ArtifactTransfer setException(org.eclipse.aether.transfer.ArtifactTransferException)
+meth public org.eclipse.aether.spi.connector.ArtifactTransfer setFile(java.io.File)
+meth public org.eclipse.aether.transfer.ArtifactTransferException getException()
+supr org.eclipse.aether.spi.connector.Transfer
+hfds artifact,exception,file
+
+CLSS public final org.eclipse.aether.spi.connector.ArtifactUpload
+cons public init()
+cons public init(org.eclipse.aether.artifact.Artifact,java.io.File)
+cons public init(org.eclipse.aether.artifact.Artifact,java.io.File,org.eclipse.aether.transform.FileTransformer)
+meth public java.lang.String toString()
+meth public org.eclipse.aether.spi.connector.ArtifactUpload setArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.spi.connector.ArtifactUpload setException(org.eclipse.aether.transfer.ArtifactTransferException)
+meth public org.eclipse.aether.spi.connector.ArtifactUpload setFile(java.io.File)
+meth public org.eclipse.aether.spi.connector.ArtifactUpload setFileTransformer(org.eclipse.aether.transform.FileTransformer)
+meth public org.eclipse.aether.spi.connector.ArtifactUpload setListener(org.eclipse.aether.transfer.TransferListener)
+meth public org.eclipse.aether.spi.connector.ArtifactUpload setTrace(org.eclipse.aether.RequestTrace)
+meth public org.eclipse.aether.transform.FileTransformer getFileTransformer()
+supr org.eclipse.aether.spi.connector.ArtifactTransfer
+hfds fileTransformer
+
+CLSS public final org.eclipse.aether.spi.connector.MetadataDownload
+cons public init()
+cons public init(org.eclipse.aether.metadata.Metadata,java.lang.String,java.io.File,java.lang.String)
+meth public java.lang.String getChecksumPolicy()
+meth public java.lang.String getRequestContext()
+meth public java.lang.String toString()
+meth public java.util.List<org.eclipse.aether.repository.RemoteRepository> getRepositories()
+meth public org.eclipse.aether.spi.connector.MetadataDownload setChecksumPolicy(java.lang.String)
+meth public org.eclipse.aether.spi.connector.MetadataDownload setException(org.eclipse.aether.transfer.MetadataTransferException)
+meth public org.eclipse.aether.spi.connector.MetadataDownload setFile(java.io.File)
+meth public org.eclipse.aether.spi.connector.MetadataDownload setListener(org.eclipse.aether.transfer.TransferListener)
+meth public org.eclipse.aether.spi.connector.MetadataDownload setMetadata(org.eclipse.aether.metadata.Metadata)
+meth public org.eclipse.aether.spi.connector.MetadataDownload setRepositories(java.util.List<org.eclipse.aether.repository.RemoteRepository>)
+meth public org.eclipse.aether.spi.connector.MetadataDownload setRequestContext(java.lang.String)
+meth public org.eclipse.aether.spi.connector.MetadataDownload setTrace(org.eclipse.aether.RequestTrace)
+supr org.eclipse.aether.spi.connector.MetadataTransfer
+hfds checksumPolicy,context,repositories
+
+CLSS public abstract org.eclipse.aether.spi.connector.MetadataTransfer
+meth public java.io.File getFile()
+meth public org.eclipse.aether.metadata.Metadata getMetadata()
+meth public org.eclipse.aether.spi.connector.MetadataTransfer setException(org.eclipse.aether.transfer.MetadataTransferException)
+meth public org.eclipse.aether.spi.connector.MetadataTransfer setFile(java.io.File)
+meth public org.eclipse.aether.spi.connector.MetadataTransfer setMetadata(org.eclipse.aether.metadata.Metadata)
+meth public org.eclipse.aether.transfer.MetadataTransferException getException()
+supr org.eclipse.aether.spi.connector.Transfer
+hfds exception,file,metadata
+
+CLSS public final org.eclipse.aether.spi.connector.MetadataUpload
+cons public init()
+cons public init(org.eclipse.aether.metadata.Metadata,java.io.File)
+meth public java.lang.String toString()
+meth public org.eclipse.aether.spi.connector.MetadataUpload setException(org.eclipse.aether.transfer.MetadataTransferException)
+meth public org.eclipse.aether.spi.connector.MetadataUpload setFile(java.io.File)
+meth public org.eclipse.aether.spi.connector.MetadataUpload setListener(org.eclipse.aether.transfer.TransferListener)
+meth public org.eclipse.aether.spi.connector.MetadataUpload setMetadata(org.eclipse.aether.metadata.Metadata)
+meth public org.eclipse.aether.spi.connector.MetadataUpload setTrace(org.eclipse.aether.RequestTrace)
+supr org.eclipse.aether.spi.connector.MetadataTransfer
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.RepositoryConnector
+intf java.io.Closeable
+meth public abstract void close()
+meth public abstract void get(java.util.Collection<? extends org.eclipse.aether.spi.connector.ArtifactDownload>,java.util.Collection<? extends org.eclipse.aether.spi.connector.MetadataDownload>)
+meth public abstract void put(java.util.Collection<? extends org.eclipse.aether.spi.connector.ArtifactUpload>,java.util.Collection<? extends org.eclipse.aether.spi.connector.MetadataUpload>)
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.RepositoryConnectorFactory
+meth public abstract float getPriority()
+meth public abstract org.eclipse.aether.spi.connector.RepositoryConnector newInstance(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.repository.RemoteRepository) throws org.eclipse.aether.transfer.NoRepositoryConnectorException
+
+CLSS public abstract org.eclipse.aether.spi.connector.Transfer
+meth public abstract java.lang.Exception getException()
+meth public org.eclipse.aether.RequestTrace getTrace()
+meth public org.eclipse.aether.transfer.TransferListener getListener()
+supr java.lang.Object
+hfds listener,trace
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithm
+meth public abstract java.lang.String checksum()
+meth public abstract void update(java.nio.ByteBuffer)
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory
+meth public abstract java.lang.String getFileExtension()
+meth public abstract java.lang.String getName()
+meth public abstract org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithm getAlgorithm()
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactorySelector
+meth public abstract boolean isChecksumExtension(java.lang.String)
+meth public abstract java.util.Collection<org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory> getChecksumAlgorithmFactories()
+meth public abstract java.util.List<org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory> selectList(java.util.Collection<java.lang.String>)
+meth public abstract org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory select(java.lang.String)
+
+CLSS public abstract org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactorySupport
+cons public init(java.lang.String,java.lang.String)
+intf org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory
+meth public java.lang.String getFileExtension()
+meth public java.lang.String getName()
+supr java.lang.Object
+hfds fileExtension,name
+
+CLSS public final org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmHelper
+meth public static java.util.Map<java.lang.String,java.lang.String> calculate(byte[],java.util.List<org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory>) throws java.io.IOException
+meth public static java.util.Map<java.lang.String,java.lang.String> calculate(java.io.File,java.util.List<org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory>) throws java.io.IOException
+supr java.lang.Object
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.checksum.ChecksumPolicy
+innr public final static !enum ChecksumKind
+meth public abstract boolean onChecksumMatch(java.lang.String,org.eclipse.aether.spi.connector.checksum.ChecksumPolicy$ChecksumKind)
+meth public abstract boolean onTransferChecksumFailure(org.eclipse.aether.transfer.ChecksumFailureException)
+meth public abstract void onChecksumError(java.lang.String,org.eclipse.aether.spi.connector.checksum.ChecksumPolicy$ChecksumKind,org.eclipse.aether.transfer.ChecksumFailureException) throws org.eclipse.aether.transfer.ChecksumFailureException
+meth public abstract void onChecksumMismatch(java.lang.String,org.eclipse.aether.spi.connector.checksum.ChecksumPolicy$ChecksumKind,org.eclipse.aether.transfer.ChecksumFailureException) throws org.eclipse.aether.transfer.ChecksumFailureException
+meth public abstract void onNoMoreChecksums() throws org.eclipse.aether.transfer.ChecksumFailureException
+meth public abstract void onTransferRetry()
+
+CLSS public final static !enum org.eclipse.aether.spi.connector.checksum.ChecksumPolicy$ChecksumKind
+ outer org.eclipse.aether.spi.connector.checksum.ChecksumPolicy
+fld public final static org.eclipse.aether.spi.connector.checksum.ChecksumPolicy$ChecksumKind PROVIDED
+fld public final static org.eclipse.aether.spi.connector.checksum.ChecksumPolicy$ChecksumKind REMOTE_EXTERNAL
+fld public final static org.eclipse.aether.spi.connector.checksum.ChecksumPolicy$ChecksumKind REMOTE_INCLUDED
+meth public static org.eclipse.aether.spi.connector.checksum.ChecksumPolicy$ChecksumKind valueOf(java.lang.String)
+meth public static org.eclipse.aether.spi.connector.checksum.ChecksumPolicy$ChecksumKind[] values()
+supr java.lang.Enum<org.eclipse.aether.spi.connector.checksum.ChecksumPolicy$ChecksumKind>
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.checksum.ChecksumPolicyProvider
+meth public abstract java.lang.String getEffectiveChecksumPolicy(org.eclipse.aether.RepositorySystemSession,java.lang.String,java.lang.String)
+meth public abstract org.eclipse.aether.spi.connector.checksum.ChecksumPolicy newChecksumPolicy(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.repository.RemoteRepository,org.eclipse.aether.transfer.TransferResource,java.lang.String)
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.checksum.ProvidedChecksumsSource
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public abstract java.util.Map<java.lang.String,java.lang.String> getProvidedArtifactChecksums(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.spi.connector.ArtifactDownload,java.util.List<org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory>)
+
+CLSS abstract interface org.eclipse.aether.spi.connector.checksum.package-info
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.filter.RemoteRepositoryFilter
+innr public abstract interface static Result
+meth public abstract org.eclipse.aether.spi.connector.filter.RemoteRepositoryFilter$Result acceptArtifact(org.eclipse.aether.repository.RemoteRepository,org.eclipse.aether.artifact.Artifact)
+meth public abstract org.eclipse.aether.spi.connector.filter.RemoteRepositoryFilter$Result acceptMetadata(org.eclipse.aether.repository.RemoteRepository,org.eclipse.aether.metadata.Metadata)
+
+CLSS public abstract interface static org.eclipse.aether.spi.connector.filter.RemoteRepositoryFilter$Result
+ outer org.eclipse.aether.spi.connector.filter.RemoteRepositoryFilter
+meth public abstract boolean isAccepted()
+meth public abstract java.lang.String reasoning()
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.filter.RemoteRepositoryFilterSource
+meth public abstract org.eclipse.aether.spi.connector.filter.RemoteRepositoryFilter getRemoteRepositoryFilter(org.eclipse.aether.RepositorySystemSession)
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.layout.RepositoryLayout
+innr public final static ChecksumLocation
+meth public abstract boolean hasChecksums(org.eclipse.aether.artifact.Artifact)
+meth public abstract java.net.URI getLocation(org.eclipse.aether.artifact.Artifact,boolean)
+meth public abstract java.net.URI getLocation(org.eclipse.aether.metadata.Metadata,boolean)
+meth public abstract java.util.List<org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory> getChecksumAlgorithmFactories()
+meth public abstract java.util.List<org.eclipse.aether.spi.connector.layout.RepositoryLayout$ChecksumLocation> getChecksumLocations(org.eclipse.aether.artifact.Artifact,boolean,java.net.URI)
+meth public abstract java.util.List<org.eclipse.aether.spi.connector.layout.RepositoryLayout$ChecksumLocation> getChecksumLocations(org.eclipse.aether.metadata.Metadata,boolean,java.net.URI)
+
+CLSS public final static org.eclipse.aether.spi.connector.layout.RepositoryLayout$ChecksumLocation
+ outer org.eclipse.aether.spi.connector.layout.RepositoryLayout
+cons public init(java.net.URI,org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory)
+meth public java.lang.String toString()
+meth public java.net.URI getLocation()
+meth public org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory getChecksumAlgorithmFactory()
+meth public static org.eclipse.aether.spi.connector.layout.RepositoryLayout$ChecksumLocation forLocation(java.net.URI,org.eclipse.aether.spi.connector.checksum.ChecksumAlgorithmFactory)
+supr java.lang.Object
+hfds checksumAlgorithmFactory,location
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.layout.RepositoryLayoutFactory
+meth public abstract float getPriority()
+meth public abstract org.eclipse.aether.spi.connector.layout.RepositoryLayout newInstance(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.repository.RemoteRepository) throws org.eclipse.aether.transfer.NoRepositoryLayoutException
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.layout.RepositoryLayoutProvider
+meth public abstract org.eclipse.aether.spi.connector.layout.RepositoryLayout newRepositoryLayout(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.repository.RemoteRepository) throws org.eclipse.aether.transfer.NoRepositoryLayoutException
+
+CLSS abstract interface org.eclipse.aether.spi.connector.layout.package-info
+
+CLSS abstract interface org.eclipse.aether.spi.connector.package-info
+
+CLSS public abstract org.eclipse.aether.spi.connector.transport.AbstractTransporter
+cons protected init()
+intf org.eclipse.aether.spi.connector.transport.Transporter
+meth protected abstract void implClose()
+meth protected abstract void implGet(org.eclipse.aether.spi.connector.transport.GetTask) throws java.lang.Exception
+meth protected abstract void implPeek(org.eclipse.aether.spi.connector.transport.PeekTask) throws java.lang.Exception
+meth protected abstract void implPut(org.eclipse.aether.spi.connector.transport.PutTask) throws java.lang.Exception
+meth protected void utilGet(org.eclipse.aether.spi.connector.transport.GetTask,java.io.InputStream,boolean,long,boolean) throws java.io.IOException,org.eclipse.aether.transfer.TransferCancelledException
+meth protected void utilPut(org.eclipse.aether.spi.connector.transport.PutTask,java.io.OutputStream,boolean) throws java.io.IOException,org.eclipse.aether.transfer.TransferCancelledException
+meth public void close()
+meth public void get(org.eclipse.aether.spi.connector.transport.GetTask) throws java.lang.Exception
+meth public void peek(org.eclipse.aether.spi.connector.transport.PeekTask) throws java.lang.Exception
+meth public void put(org.eclipse.aether.spi.connector.transport.PutTask) throws java.lang.Exception
+supr java.lang.Object
+hfds closed
+
+CLSS public final org.eclipse.aether.spi.connector.transport.GetTask
+cons public init(java.net.URI)
+meth public byte[] getDataBytes()
+meth public java.io.File getDataFile()
+meth public java.io.OutputStream newOutputStream() throws java.io.IOException
+meth public java.io.OutputStream newOutputStream(boolean) throws java.io.IOException
+meth public java.lang.String getDataString()
+meth public java.lang.String toString()
+meth public java.util.Map<java.lang.String,java.lang.String> getChecksums()
+meth public long getResumeOffset()
+meth public org.eclipse.aether.spi.connector.transport.GetTask setChecksum(java.lang.String,java.lang.String)
+meth public org.eclipse.aether.spi.connector.transport.GetTask setDataFile(java.io.File)
+meth public org.eclipse.aether.spi.connector.transport.GetTask setDataFile(java.io.File,boolean)
+meth public org.eclipse.aether.spi.connector.transport.GetTask setListener(org.eclipse.aether.spi.connector.transport.TransportListener)
+supr org.eclipse.aether.spi.connector.transport.TransportTask
+hfds checksums,dataBytes,dataFile,resume
+
+CLSS public final org.eclipse.aether.spi.connector.transport.PeekTask
+cons public init(java.net.URI)
+meth public java.lang.String toString()
+supr org.eclipse.aether.spi.connector.transport.TransportTask
+
+CLSS public final org.eclipse.aether.spi.connector.transport.PutTask
+cons public init(java.net.URI)
+meth public java.io.File getDataFile()
+meth public java.io.InputStream newInputStream() throws java.io.IOException
+meth public java.lang.String toString()
+meth public long getDataLength()
+meth public org.eclipse.aether.spi.connector.transport.PutTask setDataBytes(byte[])
+meth public org.eclipse.aether.spi.connector.transport.PutTask setDataFile(java.io.File)
+meth public org.eclipse.aether.spi.connector.transport.PutTask setDataString(java.lang.String)
+meth public org.eclipse.aether.spi.connector.transport.PutTask setListener(org.eclipse.aether.spi.connector.transport.TransportListener)
+supr org.eclipse.aether.spi.connector.transport.TransportTask
+hfds dataBytes,dataFile
+
+CLSS public abstract org.eclipse.aether.spi.connector.transport.TransportListener
+cons protected init()
+meth public void transportProgressed(java.nio.ByteBuffer) throws org.eclipse.aether.transfer.TransferCancelledException
+meth public void transportStarted(long,long) throws org.eclipse.aether.transfer.TransferCancelledException
+supr java.lang.Object
+
+CLSS public abstract org.eclipse.aether.spi.connector.transport.TransportTask
+meth public java.net.URI getLocation()
+meth public org.eclipse.aether.spi.connector.transport.TransportListener getListener()
+supr java.lang.Object
+hfds EMPTY,NOOP,listener,location
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.transport.Transporter
+fld public final static int ERROR_NOT_FOUND = 1
+fld public final static int ERROR_OTHER = 0
+intf java.io.Closeable
+meth public abstract int classify(java.lang.Throwable)
+meth public abstract void close()
+meth public abstract void get(org.eclipse.aether.spi.connector.transport.GetTask) throws java.lang.Exception
+meth public abstract void peek(org.eclipse.aether.spi.connector.transport.PeekTask) throws java.lang.Exception
+meth public abstract void put(org.eclipse.aether.spi.connector.transport.PutTask) throws java.lang.Exception
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.transport.TransporterFactory
+meth public abstract float getPriority()
+meth public abstract org.eclipse.aether.spi.connector.transport.Transporter newInstance(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.repository.RemoteRepository) throws org.eclipse.aether.transfer.NoTransporterException
+
+CLSS public abstract interface org.eclipse.aether.spi.connector.transport.TransporterProvider
+meth public abstract org.eclipse.aether.spi.connector.transport.Transporter newTransporter(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.repository.RemoteRepository) throws org.eclipse.aether.transfer.NoTransporterException
+
+CLSS abstract interface org.eclipse.aether.spi.connector.transport.package-info
+
+CLSS public abstract interface org.eclipse.aether.spi.io.FileProcessor
+innr public abstract interface static ProgressListener
+meth public abstract boolean mkdirs(java.io.File)
+meth public abstract java.lang.String readChecksum(java.io.File) throws java.io.IOException
+meth public abstract long copy(java.io.File,java.io.File,org.eclipse.aether.spi.io.FileProcessor$ProgressListener) throws java.io.IOException
+meth public abstract void copy(java.io.File,java.io.File) throws java.io.IOException
+meth public abstract void move(java.io.File,java.io.File) throws java.io.IOException
+meth public abstract void write(java.io.File,java.io.InputStream) throws java.io.IOException
+meth public abstract void write(java.io.File,java.lang.String) throws java.io.IOException
+meth public abstract void writeChecksum(java.io.File,java.lang.String) throws java.io.IOException
+
+CLSS public abstract interface static org.eclipse.aether.spi.io.FileProcessor$ProgressListener
+ outer org.eclipse.aether.spi.io.FileProcessor
+meth public abstract void progressed(java.nio.ByteBuffer) throws java.io.IOException
+
+CLSS abstract interface org.eclipse.aether.spi.io.package-info
+
+CLSS public abstract interface org.eclipse.aether.spi.localrepo.LocalRepositoryManagerFactory
+meth public abstract float getPriority()
+meth public abstract org.eclipse.aether.repository.LocalRepositoryManager newInstance(org.eclipse.aether.RepositorySystemSession,org.eclipse.aether.repository.LocalRepository) throws org.eclipse.aether.repository.NoLocalRepositoryManagerException
+
+CLSS abstract interface org.eclipse.aether.spi.localrepo.package-info
+
+CLSS public abstract interface org.eclipse.aether.spi.resolution.ArtifactResolverPostProcessor
+meth public abstract void postProcess(org.eclipse.aether.RepositorySystemSession,java.util.List<org.eclipse.aether.resolution.ArtifactResult>)
+
+CLSS public abstract interface org.eclipse.aether.spi.synccontext.SyncContextFactory
+meth public abstract org.eclipse.aether.SyncContext newInstance(org.eclipse.aether.RepositorySystemSession,boolean)
+
+CLSS abstract interface org.eclipse.aether.spi.synccontext.package-info
 
 CLSS public abstract org.eclipse.aether.transfer.AbstractTransferListener
 cons protected init()
@@ -11337,7 +12261,7 @@ CLSS public org.eclipse.aether.transfer.ChecksumFailureException
 cons public init(boolean,java.lang.String,java.lang.Throwable)
 cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.String,java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
@@ -11470,7 +12394,7 @@ meth public abstract void transferSucceeded(org.eclipse.aether.transfer.Transfer
 
 CLSS public final org.eclipse.aether.transfer.TransferResource
 cons public init(java.lang.String,java.lang.String,java.io.File,org.eclipse.aether.RequestTrace)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.String,java.lang.String,java.io.File,org.eclipse.aether.RequestTrace)
 meth public java.io.File getFile()
 meth public java.lang.String getRepositoryId()
@@ -11491,12 +12415,12 @@ CLSS abstract interface org.eclipse.aether.transfer.package-info
 CLSS public final org.eclipse.aether.util.ChecksumUtils
 meth public static byte[] fromHexString(java.lang.String)
 meth public static java.lang.String read(java.io.File) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String toHexString(byte[])
 meth public static java.util.Map<java.lang.String,java.lang.Object> calc(byte[],java.util.Collection<java.lang.String>) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.util.Map<java.lang.String,java.lang.Object> calc(java.io.File,java.util.Collection<java.lang.String>) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 
 CLSS public final org.eclipse.aether.util.ConfigUtils
@@ -11534,6 +12458,7 @@ meth public static org.eclipse.aether.util.FileUtils$TempFile newTempFile() thro
 meth public static void writeFile(java.nio.file.Path,org.eclipse.aether.util.FileUtils$FileWriter) throws java.io.IOException
 meth public static void writeFileWithBackup(java.nio.file.Path,org.eclipse.aether.util.FileUtils$FileWriter) throws java.io.IOException
 supr java.lang.Object
+hfds IS_WINDOWS
 
 CLSS public abstract interface static org.eclipse.aether.util.FileUtils$CollocatedTempFile
  outer org.eclipse.aether.util.FileUtils
@@ -11560,10 +12485,690 @@ supr java.lang.Object
 hfds digest
 
 CLSS public final org.eclipse.aether.util.StringUtils
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean isEmpty(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.artifact.ArtifactIdUtils
+meth public static boolean equalsBaseId(org.eclipse.aether.artifact.Artifact,org.eclipse.aether.artifact.Artifact)
+meth public static boolean equalsId(org.eclipse.aether.artifact.Artifact,org.eclipse.aether.artifact.Artifact)
+meth public static boolean equalsVersionlessId(org.eclipse.aether.artifact.Artifact,org.eclipse.aether.artifact.Artifact)
+meth public static java.lang.String toBaseId(org.eclipse.aether.artifact.Artifact)
+meth public static java.lang.String toId(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+meth public static java.lang.String toId(org.eclipse.aether.artifact.Artifact)
+meth public static java.lang.String toVersionlessId(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+meth public static java.lang.String toVersionlessId(org.eclipse.aether.artifact.Artifact)
+supr java.lang.Object
+hfds SEP
+
+CLSS public final org.eclipse.aether.util.artifact.DefaultArtifactTypeRegistry
+cons public init()
+intf org.eclipse.aether.artifact.ArtifactTypeRegistry
+meth public java.lang.String toString()
+meth public org.eclipse.aether.artifact.ArtifactType get(java.lang.String)
+meth public org.eclipse.aether.util.artifact.DefaultArtifactTypeRegistry add(org.eclipse.aether.artifact.ArtifactType)
+supr java.lang.Object
+
+CLSS public abstract org.eclipse.aether.util.artifact.DelegatingArtifact
+cons protected init(org.eclipse.aether.artifact.Artifact)
+meth protected abstract org.eclipse.aether.util.artifact.DelegatingArtifact newInstance(org.eclipse.aether.artifact.Artifact)
+meth public boolean equals(java.lang.Object)
+meth public boolean isSnapshot()
+meth public int hashCode()
+meth public java.io.File getFile()
+meth public java.lang.String getArtifactId()
+meth public java.lang.String getBaseVersion()
+meth public java.lang.String getClassifier()
+meth public java.lang.String getExtension()
+meth public java.lang.String getGroupId()
+meth public java.lang.String getProperty(java.lang.String,java.lang.String)
+meth public java.lang.String getVersion()
+meth public java.lang.String toString()
+meth public java.util.Map<java.lang.String,java.lang.String> getProperties()
+meth public org.eclipse.aether.artifact.Artifact setFile(java.io.File)
+meth public org.eclipse.aether.artifact.Artifact setProperties(java.util.Map<java.lang.String,java.lang.String>)
+meth public org.eclipse.aether.artifact.Artifact setVersion(java.lang.String)
+supr org.eclipse.aether.artifact.AbstractArtifact
+hfds delegate
+
+CLSS public final org.eclipse.aether.util.artifact.JavaScopes
+fld public final static java.lang.String COMPILE = "compile"
+fld public final static java.lang.String PROVIDED = "provided"
+fld public final static java.lang.String RUNTIME = "runtime"
+fld public final static java.lang.String SYSTEM = "system"
+fld public final static java.lang.String TEST = "test"
+supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.artifact.OverlayArtifactTypeRegistry
+cons public init(org.eclipse.aether.artifact.ArtifactTypeRegistry)
+intf org.eclipse.aether.artifact.ArtifactTypeRegistry
+meth public java.lang.String toString()
+meth public org.eclipse.aether.artifact.ArtifactType get(java.lang.String)
+meth public org.eclipse.aether.util.artifact.OverlayArtifactTypeRegistry add(org.eclipse.aether.artifact.ArtifactType)
+supr java.lang.Object
+hfds delegate
+
+CLSS public final org.eclipse.aether.util.artifact.SubArtifact
+cons public init(org.eclipse.aether.artifact.Artifact,java.lang.String,java.lang.String)
+cons public init(org.eclipse.aether.artifact.Artifact,java.lang.String,java.lang.String,java.io.File)
+cons public init(org.eclipse.aether.artifact.Artifact,java.lang.String,java.lang.String,java.util.Map<java.lang.String,java.lang.String>)
+cons public init(org.eclipse.aether.artifact.Artifact,java.lang.String,java.lang.String,java.util.Map<java.lang.String,java.lang.String>,java.io.File)
+meth public boolean isSnapshot()
+meth public java.io.File getFile()
+meth public java.lang.String getArtifactId()
+meth public java.lang.String getBaseVersion()
+meth public java.lang.String getClassifier()
+meth public java.lang.String getExtension()
+meth public java.lang.String getGroupId()
+meth public java.lang.String getVersion()
+meth public java.util.Map<java.lang.String,java.lang.String> getProperties()
+meth public org.eclipse.aether.artifact.Artifact setFile(java.io.File)
+meth public org.eclipse.aether.artifact.Artifact setProperties(java.util.Map<java.lang.String,java.lang.String>)
+supr org.eclipse.aether.artifact.AbstractArtifact
+hfds classifier,extension,file,mainArtifact,properties
+
+CLSS abstract interface org.eclipse.aether.util.artifact.package-info
+
+CLSS public final org.eclipse.aether.util.concurrency.ExecutorUtils
+cons public init()
+fld public final static java.util.concurrent.Executor DIRECT_EXECUTOR
+meth public !varargs static int threadCount(org.eclipse.aether.RepositorySystemSession,int,java.lang.String[])
+meth public static java.util.concurrent.Executor executor(int,java.lang.String)
+meth public static java.util.concurrent.ExecutorService threadPool(int,java.lang.String)
+meth public static void shutdown(java.util.concurrent.Executor)
+supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.concurrency.RunnableErrorForwarder
+cons public init()
+meth public java.lang.Runnable wrap(java.lang.Runnable)
+meth public void await()
+supr java.lang.Object
+hfds counter,error,thread
+
+CLSS public final org.eclipse.aether.util.concurrency.WorkerThreadFactory
+cons public init(java.lang.String)
+intf java.util.concurrent.ThreadFactory
+meth public java.lang.Thread newThread(java.lang.Runnable)
+supr java.lang.Object
+hfds POOL_INDEX,factory,namePrefix,threadIndex
+
+CLSS abstract interface org.eclipse.aether.util.concurrency.package-info
+
+CLSS public final org.eclipse.aether.util.filter.AndDependencyFilter
+cons public !varargs init(org.eclipse.aether.graph.DependencyFilter[])
+cons public init(java.util.Collection<org.eclipse.aether.graph.DependencyFilter>)
+intf org.eclipse.aether.graph.DependencyFilter
+meth public boolean accept(org.eclipse.aether.graph.DependencyNode,java.util.List<org.eclipse.aether.graph.DependencyNode>)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public static org.eclipse.aether.graph.DependencyFilter newInstance(org.eclipse.aether.graph.DependencyFilter,org.eclipse.aether.graph.DependencyFilter)
+supr java.lang.Object
+hfds filters
+
+CLSS public final org.eclipse.aether.util.filter.DependencyFilterUtils
+meth public !varargs static org.eclipse.aether.graph.DependencyFilter andFilter(org.eclipse.aether.graph.DependencyFilter[])
+meth public !varargs static org.eclipse.aether.graph.DependencyFilter classpathFilter(java.lang.String[])
+meth public !varargs static org.eclipse.aether.graph.DependencyFilter orFilter(org.eclipse.aether.graph.DependencyFilter[])
+meth public static org.eclipse.aether.graph.DependencyFilter andFilter(java.util.Collection<org.eclipse.aether.graph.DependencyFilter>)
+meth public static org.eclipse.aether.graph.DependencyFilter classpathFilter(java.util.Collection<java.lang.String>)
+meth public static org.eclipse.aether.graph.DependencyFilter notFilter(org.eclipse.aether.graph.DependencyFilter)
+meth public static org.eclipse.aether.graph.DependencyFilter orFilter(java.util.Collection<org.eclipse.aether.graph.DependencyFilter>)
+supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.filter.ExclusionsDependencyFilter
+cons public init(java.util.Collection<java.lang.String>)
+intf org.eclipse.aether.graph.DependencyFilter
+meth public boolean accept(org.eclipse.aether.graph.DependencyNode,java.util.List<org.eclipse.aether.graph.DependencyNode>)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+supr java.lang.Object
+hfds excludes
+
+CLSS public final org.eclipse.aether.util.filter.NotDependencyFilter
+cons public init(org.eclipse.aether.graph.DependencyFilter)
+intf org.eclipse.aether.graph.DependencyFilter
+meth public boolean accept(org.eclipse.aether.graph.DependencyNode,java.util.List<org.eclipse.aether.graph.DependencyNode>)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+supr java.lang.Object
+hfds filter
+
+CLSS public final org.eclipse.aether.util.filter.OrDependencyFilter
+cons public !varargs init(org.eclipse.aether.graph.DependencyFilter[])
+cons public init(java.util.Collection<org.eclipse.aether.graph.DependencyFilter>)
+intf org.eclipse.aether.graph.DependencyFilter
+meth public boolean accept(org.eclipse.aether.graph.DependencyNode,java.util.List<org.eclipse.aether.graph.DependencyNode>)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public static org.eclipse.aether.graph.DependencyFilter newInstance(org.eclipse.aether.graph.DependencyFilter,org.eclipse.aether.graph.DependencyFilter)
+supr java.lang.Object
+hfds filters
+
+CLSS public final org.eclipse.aether.util.filter.PatternExclusionsDependencyFilter
+cons public !varargs init(java.lang.String[])
+cons public !varargs init(org.eclipse.aether.version.VersionScheme,java.lang.String[])
+cons public init(java.util.Collection<java.lang.String>)
+cons public init(org.eclipse.aether.version.VersionScheme,java.util.Collection<java.lang.String>)
+intf org.eclipse.aether.graph.DependencyFilter
+meth protected boolean accept(org.eclipse.aether.artifact.Artifact)
+meth public boolean accept(org.eclipse.aether.graph.DependencyNode,java.util.List<org.eclipse.aether.graph.DependencyNode>)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.filter.PatternInclusionsDependencyFilter
+cons public !varargs init(java.lang.String[])
+cons public !varargs init(org.eclipse.aether.version.VersionScheme,java.lang.String[])
+cons public init(java.util.Collection<java.lang.String>)
+cons public init(org.eclipse.aether.version.VersionScheme,java.util.Collection<java.lang.String>)
+intf org.eclipse.aether.graph.DependencyFilter
+meth protected boolean accept(org.eclipse.aether.artifact.Artifact)
+meth public boolean accept(org.eclipse.aether.graph.DependencyNode,java.util.List<org.eclipse.aether.graph.DependencyNode>)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.filter.ScopeDependencyFilter
+cons public !varargs init(java.lang.String[])
+cons public init(java.util.Collection<java.lang.String>,java.util.Collection<java.lang.String>)
+intf org.eclipse.aether.graph.DependencyFilter
+meth public boolean accept(org.eclipse.aether.graph.DependencyNode,java.util.List<org.eclipse.aether.graph.DependencyNode>)
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+supr java.lang.Object
+hfds excluded,included
+
+CLSS abstract interface org.eclipse.aether.util.filter.package-info
+
+CLSS public final org.eclipse.aether.util.graph.manager.ClassicDependencyManager
+cons public init()
+intf org.eclipse.aether.collection.DependencyManager
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public org.eclipse.aether.collection.DependencyManagement manageDependency(org.eclipse.aether.graph.Dependency)
+meth public org.eclipse.aether.collection.DependencyManager deriveChildManager(org.eclipse.aether.collection.DependencyCollectionContext)
+supr java.lang.Object
+hfds depth,hashCode,managedExclusions,managedLocalPaths,managedOptionals,managedScopes,managedVersions
+hcls Key
+
+CLSS public final org.eclipse.aether.util.graph.manager.DefaultDependencyManager
+cons public init()
+intf org.eclipse.aether.collection.DependencyManager
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public org.eclipse.aether.collection.DependencyManagement manageDependency(org.eclipse.aether.graph.Dependency)
+meth public org.eclipse.aether.collection.DependencyManager deriveChildManager(org.eclipse.aether.collection.DependencyCollectionContext)
+supr java.lang.Object
+hfds hashCode,managedExclusions,managedLocalPaths,managedOptionals,managedScopes,managedVersions
+hcls Key
+
+CLSS public final org.eclipse.aether.util.graph.manager.DependencyManagerUtils
+cons public init()
+fld public final static java.lang.String CONFIG_PROP_VERBOSE = "aether.dependencyManager.verbose"
+fld public final static java.lang.String NODE_DATA_PREMANAGED_EXCLUSIONS = "premanaged.exclusions"
+fld public final static java.lang.String NODE_DATA_PREMANAGED_OPTIONAL = "premanaged.optional"
+fld public final static java.lang.String NODE_DATA_PREMANAGED_PROPERTIES = "premanaged.properties"
+fld public final static java.lang.String NODE_DATA_PREMANAGED_SCOPE = "premanaged.scope"
+fld public final static java.lang.String NODE_DATA_PREMANAGED_VERSION = "premanaged.version"
+meth public static java.lang.Boolean getPremanagedOptional(org.eclipse.aether.graph.DependencyNode)
+meth public static java.lang.String getPremanagedScope(org.eclipse.aether.graph.DependencyNode)
+meth public static java.lang.String getPremanagedVersion(org.eclipse.aether.graph.DependencyNode)
+meth public static java.util.Collection<org.eclipse.aether.graph.Exclusion> getPremanagedExclusions(org.eclipse.aether.graph.DependencyNode)
+meth public static java.util.Map<java.lang.String,java.lang.String> getPremanagedProperties(org.eclipse.aether.graph.DependencyNode)
+supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.graph.manager.NoopDependencyManager
+cons public init()
+fld public final static org.eclipse.aether.collection.DependencyManager INSTANCE
+intf org.eclipse.aether.collection.DependencyManager
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public org.eclipse.aether.collection.DependencyManagement manageDependency(org.eclipse.aether.graph.Dependency)
+meth public org.eclipse.aether.collection.DependencyManager deriveChildManager(org.eclipse.aether.collection.DependencyCollectionContext)
+supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.graph.manager.TransitiveDependencyManager
+cons public init()
+intf org.eclipse.aether.collection.DependencyManager
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public org.eclipse.aether.collection.DependencyManagement manageDependency(org.eclipse.aether.graph.Dependency)
+meth public org.eclipse.aether.collection.DependencyManager deriveChildManager(org.eclipse.aether.collection.DependencyCollectionContext)
+supr java.lang.Object
+hfds depth,hashCode,managedExclusions,managedLocalPaths,managedOptionals,managedScopes,managedVersions
+hcls Key
+
+CLSS abstract interface org.eclipse.aether.util.graph.manager.package-info
+
+CLSS public final org.eclipse.aether.util.graph.selector.AndDependencySelector
+cons public !varargs init(org.eclipse.aether.collection.DependencySelector[])
+cons public init(java.util.Collection<? extends org.eclipse.aether.collection.DependencySelector>)
+intf org.eclipse.aether.collection.DependencySelector
+meth public boolean equals(java.lang.Object)
+meth public boolean selectDependency(org.eclipse.aether.graph.Dependency)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public org.eclipse.aether.collection.DependencySelector deriveChildSelector(org.eclipse.aether.collection.DependencyCollectionContext)
+meth public static org.eclipse.aether.collection.DependencySelector newInstance(org.eclipse.aether.collection.DependencySelector,org.eclipse.aether.collection.DependencySelector)
+supr java.lang.Object
+hfds hashCode,selectors
+
+CLSS public final org.eclipse.aether.util.graph.selector.ExclusionDependencySelector
+cons public init()
+cons public init(java.util.Collection<org.eclipse.aether.graph.Exclusion>)
+intf org.eclipse.aether.collection.DependencySelector
+meth public boolean equals(java.lang.Object)
+meth public boolean selectDependency(org.eclipse.aether.graph.Dependency)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public org.eclipse.aether.collection.DependencySelector deriveChildSelector(org.eclipse.aether.collection.DependencyCollectionContext)
+supr java.lang.Object
+hfds exclusions,hashCode
+hcls ExclusionComparator
+
+CLSS public final org.eclipse.aether.util.graph.selector.OptionalDependencySelector
+cons public init()
+intf org.eclipse.aether.collection.DependencySelector
+meth public boolean equals(java.lang.Object)
+meth public boolean selectDependency(org.eclipse.aether.graph.Dependency)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public org.eclipse.aether.collection.DependencySelector deriveChildSelector(org.eclipse.aether.collection.DependencyCollectionContext)
+supr java.lang.Object
+hfds depth
+
+CLSS public final org.eclipse.aether.util.graph.selector.ScopeDependencySelector
+cons public !varargs init(java.lang.String[])
+cons public init(java.util.Collection<java.lang.String>,java.util.Collection<java.lang.String>)
+intf org.eclipse.aether.collection.DependencySelector
+meth public boolean equals(java.lang.Object)
+meth public boolean selectDependency(org.eclipse.aether.graph.Dependency)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public org.eclipse.aether.collection.DependencySelector deriveChildSelector(org.eclipse.aether.collection.DependencyCollectionContext)
+supr java.lang.Object
+hfds excluded,included,transitive
+
+CLSS public final org.eclipse.aether.util.graph.selector.StaticDependencySelector
+cons public init(boolean)
+intf org.eclipse.aether.collection.DependencySelector
+meth public boolean equals(java.lang.Object)
+meth public boolean selectDependency(org.eclipse.aether.graph.Dependency)
+meth public int hashCode()
+meth public java.lang.String toString()
+meth public org.eclipse.aether.collection.DependencySelector deriveChildSelector(org.eclipse.aether.collection.DependencyCollectionContext)
+supr java.lang.Object
+hfds select
+
+CLSS abstract interface org.eclipse.aether.util.graph.selector.package-info
+
+CLSS public final org.eclipse.aether.util.graph.transformer.ChainedDependencyGraphTransformer
+cons public !varargs init(org.eclipse.aether.collection.DependencyGraphTransformer[])
+intf org.eclipse.aether.collection.DependencyGraphTransformer
+meth public org.eclipse.aether.graph.DependencyNode transformGraph(org.eclipse.aether.graph.DependencyNode,org.eclipse.aether.collection.DependencyGraphTransformationContext) throws org.eclipse.aether.RepositoryException
+meth public static org.eclipse.aether.collection.DependencyGraphTransformer newInstance(org.eclipse.aether.collection.DependencyGraphTransformer,org.eclipse.aether.collection.DependencyGraphTransformer)
+supr java.lang.Object
+hfds transformers
+
+CLSS public final org.eclipse.aether.util.graph.transformer.ConflictIdSorter
+cons public init()
+intf org.eclipse.aether.collection.DependencyGraphTransformer
+meth public org.eclipse.aether.graph.DependencyNode transformGraph(org.eclipse.aether.graph.DependencyNode,org.eclipse.aether.collection.DependencyGraphTransformationContext) throws org.eclipse.aether.RepositoryException
+supr java.lang.Object
+hcls ConflictId,RootQueue
+
+CLSS public final org.eclipse.aether.util.graph.transformer.ConflictMarker
+cons public init()
+intf org.eclipse.aether.collection.DependencyGraphTransformer
+meth public org.eclipse.aether.graph.DependencyNode transformGraph(org.eclipse.aether.graph.DependencyNode,org.eclipse.aether.collection.DependencyGraphTransformationContext) throws org.eclipse.aether.RepositoryException
+supr java.lang.Object
+hcls ConflictGroup,Key
+
+CLSS public final org.eclipse.aether.util.graph.transformer.ConflictResolver
+cons public init(org.eclipse.aether.util.graph.transformer.ConflictResolver$VersionSelector,org.eclipse.aether.util.graph.transformer.ConflictResolver$ScopeSelector,org.eclipse.aether.util.graph.transformer.ConflictResolver$OptionalitySelector,org.eclipse.aether.util.graph.transformer.ConflictResolver$ScopeDeriver)
+fld public final static java.lang.String CONFIG_PROP_VERBOSE = "aether.conflictResolver.verbose"
+fld public final static java.lang.String NODE_DATA_ORIGINAL_OPTIONALITY = "conflict.originalOptionality"
+fld public final static java.lang.String NODE_DATA_ORIGINAL_SCOPE = "conflict.originalScope"
+fld public final static java.lang.String NODE_DATA_WINNER = "conflict.winner"
+innr public abstract static OptionalitySelector
+innr public abstract static ScopeDeriver
+innr public abstract static ScopeSelector
+innr public abstract static VersionSelector
+innr public final static !enum Verbosity
+innr public final static ConflictContext
+innr public final static ConflictItem
+innr public final static ScopeContext
+intf org.eclipse.aether.collection.DependencyGraphTransformer
+meth public org.eclipse.aether.graph.DependencyNode transformGraph(org.eclipse.aether.graph.DependencyNode,org.eclipse.aether.collection.DependencyGraphTransformationContext) throws org.eclipse.aether.RepositoryException
+supr java.lang.Object
+hfds optionalitySelector,scopeDeriver,scopeSelector,versionSelector
+hcls NodeInfo,State
+
+CLSS public final static org.eclipse.aether.util.graph.transformer.ConflictResolver$ConflictContext
+ outer org.eclipse.aether.util.graph.transformer.ConflictResolver
+cons public init(org.eclipse.aether.graph.DependencyNode,java.lang.Object,java.util.Map<org.eclipse.aether.graph.DependencyNode,java.lang.Object>,java.util.Collection<org.eclipse.aether.util.graph.transformer.ConflictResolver$ConflictItem>)
+meth public boolean isIncluded(org.eclipse.aether.graph.DependencyNode)
+meth public java.lang.Boolean getOptional()
+meth public java.lang.String getScope()
+meth public java.lang.String toString()
+meth public java.util.Collection<org.eclipse.aether.util.graph.transformer.ConflictResolver$ConflictItem> getItems()
+meth public org.eclipse.aether.graph.DependencyNode getRoot()
+meth public org.eclipse.aether.util.graph.transformer.ConflictResolver$ConflictItem getWinner()
+meth public void setOptional(java.lang.Boolean)
+meth public void setScope(java.lang.String)
+meth public void setWinner(org.eclipse.aether.util.graph.transformer.ConflictResolver$ConflictItem)
+supr java.lang.Object
+hfds conflictId,conflictIds,items,optional,root,scope,winner
+
+CLSS public final static org.eclipse.aether.util.graph.transformer.ConflictResolver$ConflictItem
+ outer org.eclipse.aether.util.graph.transformer.ConflictResolver
+cons public !varargs init(org.eclipse.aether.graph.DependencyNode,org.eclipse.aether.graph.DependencyNode,int,int,java.lang.String[])
+fld public final static int OPTIONAL_FALSE = 1
+fld public final static int OPTIONAL_TRUE = 2
+meth public boolean isSibling(org.eclipse.aether.util.graph.transformer.ConflictResolver$ConflictItem)
+meth public int getDepth()
+meth public int getOptionalities()
+meth public java.lang.String toString()
+meth public java.util.Collection<java.lang.String> getScopes()
+meth public org.eclipse.aether.graph.Dependency getDependency()
+meth public org.eclipse.aether.graph.DependencyNode getNode()
+supr java.lang.Object
+hfds artifact,depth,node,optionalities,parent,scopes
+
+CLSS public abstract static org.eclipse.aether.util.graph.transformer.ConflictResolver$OptionalitySelector
+ outer org.eclipse.aether.util.graph.transformer.ConflictResolver
+cons public init()
+meth public abstract void selectOptionality(org.eclipse.aether.util.graph.transformer.ConflictResolver$ConflictContext) throws org.eclipse.aether.RepositoryException
+meth public org.eclipse.aether.util.graph.transformer.ConflictResolver$OptionalitySelector getInstance(org.eclipse.aether.graph.DependencyNode,org.eclipse.aether.collection.DependencyGraphTransformationContext) throws org.eclipse.aether.RepositoryException
+supr java.lang.Object
+
+CLSS public final static org.eclipse.aether.util.graph.transformer.ConflictResolver$ScopeContext
+ outer org.eclipse.aether.util.graph.transformer.ConflictResolver
+cons public init(java.lang.String,java.lang.String)
+meth public java.lang.String getChildScope()
+meth public java.lang.String getDerivedScope()
+meth public java.lang.String getParentScope()
+meth public void setDerivedScope(java.lang.String)
+supr java.lang.Object
+hfds childScope,derivedScope,parentScope
+
+CLSS public abstract static org.eclipse.aether.util.graph.transformer.ConflictResolver$ScopeDeriver
+ outer org.eclipse.aether.util.graph.transformer.ConflictResolver
+cons public init()
+meth public abstract void deriveScope(org.eclipse.aether.util.graph.transformer.ConflictResolver$ScopeContext) throws org.eclipse.aether.RepositoryException
+meth public org.eclipse.aether.util.graph.transformer.ConflictResolver$ScopeDeriver getInstance(org.eclipse.aether.graph.DependencyNode,org.eclipse.aether.collection.DependencyGraphTransformationContext) throws org.eclipse.aether.RepositoryException
+supr java.lang.Object
+
+CLSS public abstract static org.eclipse.aether.util.graph.transformer.ConflictResolver$ScopeSelector
+ outer org.eclipse.aether.util.graph.transformer.ConflictResolver
+cons public init()
+meth public abstract void selectScope(org.eclipse.aether.util.graph.transformer.ConflictResolver$ConflictContext) throws org.eclipse.aether.RepositoryException
+meth public org.eclipse.aether.util.graph.transformer.ConflictResolver$ScopeSelector getInstance(org.eclipse.aether.graph.DependencyNode,org.eclipse.aether.collection.DependencyGraphTransformationContext) throws org.eclipse.aether.RepositoryException
+supr java.lang.Object
+
+CLSS public final static !enum org.eclipse.aether.util.graph.transformer.ConflictResolver$Verbosity
+ outer org.eclipse.aether.util.graph.transformer.ConflictResolver
+fld public final static org.eclipse.aether.util.graph.transformer.ConflictResolver$Verbosity FULL
+fld public final static org.eclipse.aether.util.graph.transformer.ConflictResolver$Verbosity NONE
+fld public final static org.eclipse.aether.util.graph.transformer.ConflictResolver$Verbosity STANDARD
+meth public static org.eclipse.aether.util.graph.transformer.ConflictResolver$Verbosity valueOf(java.lang.String)
+meth public static org.eclipse.aether.util.graph.transformer.ConflictResolver$Verbosity[] values()
+supr java.lang.Enum<org.eclipse.aether.util.graph.transformer.ConflictResolver$Verbosity>
+
+CLSS public abstract static org.eclipse.aether.util.graph.transformer.ConflictResolver$VersionSelector
+ outer org.eclipse.aether.util.graph.transformer.ConflictResolver
+cons public init()
+meth public abstract void selectVersion(org.eclipse.aether.util.graph.transformer.ConflictResolver$ConflictContext) throws org.eclipse.aether.RepositoryException
+meth public org.eclipse.aether.util.graph.transformer.ConflictResolver$VersionSelector getInstance(org.eclipse.aether.graph.DependencyNode,org.eclipse.aether.collection.DependencyGraphTransformationContext) throws org.eclipse.aether.RepositoryException
+supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.graph.transformer.JavaDependencyContextRefiner
+cons public init()
+intf org.eclipse.aether.collection.DependencyGraphTransformer
+meth public org.eclipse.aether.graph.DependencyNode transformGraph(org.eclipse.aether.graph.DependencyNode,org.eclipse.aether.collection.DependencyGraphTransformationContext) throws org.eclipse.aether.RepositoryException
+supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.graph.transformer.JavaScopeDeriver
+cons public init()
+meth public void deriveScope(org.eclipse.aether.util.graph.transformer.ConflictResolver$ScopeContext) throws org.eclipse.aether.RepositoryException
+supr org.eclipse.aether.util.graph.transformer.ConflictResolver$ScopeDeriver
+
+CLSS public final org.eclipse.aether.util.graph.transformer.JavaScopeSelector
+cons public init()
+meth public void selectScope(org.eclipse.aether.util.graph.transformer.ConflictResolver$ConflictContext) throws org.eclipse.aether.RepositoryException
+supr org.eclipse.aether.util.graph.transformer.ConflictResolver$ScopeSelector
+
+CLSS public final org.eclipse.aether.util.graph.transformer.NearestVersionSelector
+cons public init()
+meth public void selectVersion(org.eclipse.aether.util.graph.transformer.ConflictResolver$ConflictContext) throws org.eclipse.aether.RepositoryException
+supr org.eclipse.aether.util.graph.transformer.ConflictResolver$VersionSelector
+hcls ConflictGroup
+
+CLSS public final org.eclipse.aether.util.graph.transformer.NoopDependencyGraphTransformer
+cons public init()
+fld public final static org.eclipse.aether.collection.DependencyGraphTransformer INSTANCE
+intf org.eclipse.aether.collection.DependencyGraphTransformer
+meth public org.eclipse.aether.graph.DependencyNode transformGraph(org.eclipse.aether.graph.DependencyNode,org.eclipse.aether.collection.DependencyGraphTransformationContext) throws org.eclipse.aether.RepositoryException
+supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.graph.transformer.SimpleOptionalitySelector
+cons public init()
+meth public void selectOptionality(org.eclipse.aether.util.graph.transformer.ConflictResolver$ConflictContext) throws org.eclipse.aether.RepositoryException
+supr org.eclipse.aether.util.graph.transformer.ConflictResolver$OptionalitySelector
+
+CLSS public final org.eclipse.aether.util.graph.transformer.TransformationContextKeys
+fld public final static java.lang.Object CONFLICT_IDS
+fld public final static java.lang.Object CYCLIC_CONFLICT_IDS
+fld public final static java.lang.Object SORTED_CONFLICT_IDS
+fld public final static java.lang.Object STATS
+supr java.lang.Object
+
+CLSS abstract interface org.eclipse.aether.util.graph.transformer.package-info
+
+CLSS public final org.eclipse.aether.util.graph.traverser.AndDependencyTraverser
+cons public !varargs init(org.eclipse.aether.collection.DependencyTraverser[])
+cons public init(java.util.Collection<? extends org.eclipse.aether.collection.DependencyTraverser>)
+intf org.eclipse.aether.collection.DependencyTraverser
+meth public boolean equals(java.lang.Object)
+meth public boolean traverseDependency(org.eclipse.aether.graph.Dependency)
+meth public int hashCode()
+meth public org.eclipse.aether.collection.DependencyTraverser deriveChildTraverser(org.eclipse.aether.collection.DependencyCollectionContext)
+meth public static org.eclipse.aether.collection.DependencyTraverser newInstance(org.eclipse.aether.collection.DependencyTraverser,org.eclipse.aether.collection.DependencyTraverser)
+supr java.lang.Object
+hfds hashCode,traversers
+
+CLSS public final org.eclipse.aether.util.graph.traverser.FatArtifactTraverser
+cons public init()
+intf org.eclipse.aether.collection.DependencyTraverser
+meth public boolean equals(java.lang.Object)
+meth public boolean traverseDependency(org.eclipse.aether.graph.Dependency)
+meth public int hashCode()
+meth public org.eclipse.aether.collection.DependencyTraverser deriveChildTraverser(org.eclipse.aether.collection.DependencyCollectionContext)
+supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.graph.traverser.StaticDependencyTraverser
+cons public init(boolean)
+intf org.eclipse.aether.collection.DependencyTraverser
+meth public boolean equals(java.lang.Object)
+meth public boolean traverseDependency(org.eclipse.aether.graph.Dependency)
+meth public int hashCode()
+meth public org.eclipse.aether.collection.DependencyTraverser deriveChildTraverser(org.eclipse.aether.collection.DependencyCollectionContext)
+supr java.lang.Object
+hfds traverse
+
+CLSS abstract interface org.eclipse.aether.util.graph.traverser.package-info
+
+CLSS public final org.eclipse.aether.util.graph.version.ChainedVersionFilter
+intf org.eclipse.aether.collection.VersionFilter
+meth public !varargs static org.eclipse.aether.collection.VersionFilter newInstance(org.eclipse.aether.collection.VersionFilter[])
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public org.eclipse.aether.collection.VersionFilter deriveChildFilter(org.eclipse.aether.collection.DependencyCollectionContext)
+meth public static org.eclipse.aether.collection.VersionFilter newInstance(java.util.Collection<? extends org.eclipse.aether.collection.VersionFilter>)
+meth public static org.eclipse.aether.collection.VersionFilter newInstance(org.eclipse.aether.collection.VersionFilter,org.eclipse.aether.collection.VersionFilter)
+meth public void filterVersions(org.eclipse.aether.collection.VersionFilter$VersionFilterContext) throws org.eclipse.aether.RepositoryException
+supr java.lang.Object
+hfds filters,hashCode
+
+CLSS public final org.eclipse.aether.util.graph.version.ContextualSnapshotVersionFilter
+cons public init()
+fld public final static java.lang.String CONFIG_PROP_ENABLE = "aether.snapshotFilter"
+intf org.eclipse.aether.collection.VersionFilter
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public org.eclipse.aether.collection.VersionFilter deriveChildFilter(org.eclipse.aether.collection.DependencyCollectionContext)
+meth public void filterVersions(org.eclipse.aether.collection.VersionFilter$VersionFilterContext)
+supr java.lang.Object
+hfds filter
+
+CLSS public final org.eclipse.aether.util.graph.version.HighestVersionFilter
+cons public init()
+intf org.eclipse.aether.collection.VersionFilter
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public org.eclipse.aether.collection.VersionFilter deriveChildFilter(org.eclipse.aether.collection.DependencyCollectionContext)
+meth public void filterVersions(org.eclipse.aether.collection.VersionFilter$VersionFilterContext)
+supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.graph.version.SnapshotVersionFilter
+cons public init()
+intf org.eclipse.aether.collection.VersionFilter
+meth public boolean equals(java.lang.Object)
+meth public int hashCode()
+meth public org.eclipse.aether.collection.VersionFilter deriveChildFilter(org.eclipse.aether.collection.DependencyCollectionContext)
+meth public void filterVersions(org.eclipse.aether.collection.VersionFilter$VersionFilterContext)
+supr java.lang.Object
+
+CLSS abstract interface org.eclipse.aether.util.graph.version.package-info
+
+CLSS public org.eclipse.aether.util.graph.visitor.CloningDependencyVisitor
+cons public init()
+intf org.eclipse.aether.graph.DependencyVisitor
+meth protected org.eclipse.aether.graph.DependencyNode clone(org.eclipse.aether.graph.DependencyNode)
+meth public final boolean visitEnter(org.eclipse.aether.graph.DependencyNode)
+meth public final boolean visitLeave(org.eclipse.aether.graph.DependencyNode)
+meth public final org.eclipse.aether.graph.DependencyNode getRootNode()
+supr java.lang.Object
+hfds clones,parents,root
+
+CLSS public org.eclipse.aether.util.graph.visitor.DependencyGraphDumper
+cons public init(java.util.function.Consumer<java.lang.String>)
+intf org.eclipse.aether.graph.DependencyVisitor
+meth public boolean visitEnter(org.eclipse.aether.graph.DependencyNode)
+meth public boolean visitLeave(org.eclipse.aether.graph.DependencyNode)
+supr java.lang.Object
+hfds childInfos,consumer
+hcls ChildInfo
+
+CLSS public final org.eclipse.aether.util.graph.visitor.FilteringDependencyVisitor
+cons public init(org.eclipse.aether.graph.DependencyVisitor,org.eclipse.aether.graph.DependencyFilter)
+intf org.eclipse.aether.graph.DependencyVisitor
+meth public boolean visitEnter(org.eclipse.aether.graph.DependencyNode)
+meth public boolean visitLeave(org.eclipse.aether.graph.DependencyNode)
+meth public org.eclipse.aether.graph.DependencyFilter getFilter()
+meth public org.eclipse.aether.graph.DependencyVisitor getVisitor()
+supr java.lang.Object
+hfds accepts,filter,parents,visitor
+
+CLSS public final org.eclipse.aether.util.graph.visitor.PathRecordingDependencyVisitor
+cons public init(org.eclipse.aether.graph.DependencyFilter)
+cons public init(org.eclipse.aether.graph.DependencyFilter,boolean)
+intf org.eclipse.aether.graph.DependencyVisitor
+meth public boolean visitEnter(org.eclipse.aether.graph.DependencyNode)
+meth public boolean visitLeave(org.eclipse.aether.graph.DependencyNode)
+meth public java.util.List<java.util.List<org.eclipse.aether.graph.DependencyNode>> getPaths()
+meth public org.eclipse.aether.graph.DependencyFilter getFilter()
+supr java.lang.Object
+hfds excludeChildrenOfMatches,filter,parents,paths
+
+CLSS public final org.eclipse.aether.util.graph.visitor.PostorderNodeListGenerator
+cons public init()
+fld protected final java.util.List<org.eclipse.aether.graph.DependencyNode> nodes
+intf org.eclipse.aether.graph.DependencyVisitor
+meth protected boolean setVisited(org.eclipse.aether.graph.DependencyNode)
+meth public boolean visitEnter(org.eclipse.aether.graph.DependencyNode)
+meth public boolean visitLeave(org.eclipse.aether.graph.DependencyNode)
+meth public java.lang.String getClassPath()
+meth public java.util.List<java.io.File> getFiles()
+meth public java.util.List<org.eclipse.aether.artifact.Artifact> getArtifacts(boolean)
+meth public java.util.List<org.eclipse.aether.graph.Dependency> getDependencies(boolean)
+meth public java.util.List<org.eclipse.aether.graph.DependencyNode> getNodes()
+supr java.lang.Object
+hfds visits
+
+CLSS public final org.eclipse.aether.util.graph.visitor.PreorderNodeListGenerator
+cons public init()
+fld protected final java.util.List<org.eclipse.aether.graph.DependencyNode> nodes
+intf org.eclipse.aether.graph.DependencyVisitor
+meth protected boolean setVisited(org.eclipse.aether.graph.DependencyNode)
+meth public boolean visitEnter(org.eclipse.aether.graph.DependencyNode)
+meth public boolean visitLeave(org.eclipse.aether.graph.DependencyNode)
+meth public java.lang.String getClassPath()
+meth public java.util.List<java.io.File> getFiles()
+meth public java.util.List<org.eclipse.aether.artifact.Artifact> getArtifacts(boolean)
+meth public java.util.List<org.eclipse.aether.graph.Dependency> getDependencies(boolean)
+meth public java.util.List<org.eclipse.aether.graph.DependencyNode> getNodes()
+supr java.lang.Object
+
+CLSS public final org.eclipse.aether.util.graph.visitor.TreeDependencyVisitor
+cons public init(org.eclipse.aether.graph.DependencyVisitor)
+intf org.eclipse.aether.graph.DependencyVisitor
+meth public boolean visitEnter(org.eclipse.aether.graph.DependencyNode)
+meth public boolean visitLeave(org.eclipse.aether.graph.DependencyNode)
+supr java.lang.Object
+hfds visitedNodes,visitor,visits
+
+CLSS abstract interface org.eclipse.aether.util.graph.visitor.package-info
+
+CLSS public final org.eclipse.aether.util.listener.ChainedRepositoryListener
+cons public !varargs init(org.eclipse.aether.RepositoryListener[])
+cons public init(java.util.Collection<? extends org.eclipse.aether.RepositoryListener>)
+meth protected void handleError(org.eclipse.aether.RepositoryEvent,org.eclipse.aether.RepositoryListener,java.lang.RuntimeException)
+meth public static org.eclipse.aether.RepositoryListener newInstance(org.eclipse.aether.RepositoryListener,org.eclipse.aether.RepositoryListener)
+meth public void add(java.util.Collection<? extends org.eclipse.aether.RepositoryListener>)
+meth public void add(org.eclipse.aether.RepositoryListener)
+meth public void artifactDeployed(org.eclipse.aether.RepositoryEvent)
+meth public void artifactDeploying(org.eclipse.aether.RepositoryEvent)
+meth public void artifactDescriptorInvalid(org.eclipse.aether.RepositoryEvent)
+meth public void artifactDescriptorMissing(org.eclipse.aether.RepositoryEvent)
+meth public void artifactDownloaded(org.eclipse.aether.RepositoryEvent)
+meth public void artifactDownloading(org.eclipse.aether.RepositoryEvent)
+meth public void artifactInstalled(org.eclipse.aether.RepositoryEvent)
+meth public void artifactInstalling(org.eclipse.aether.RepositoryEvent)
+meth public void artifactResolved(org.eclipse.aether.RepositoryEvent)
+meth public void artifactResolving(org.eclipse.aether.RepositoryEvent)
+meth public void metadataDeployed(org.eclipse.aether.RepositoryEvent)
+meth public void metadataDeploying(org.eclipse.aether.RepositoryEvent)
+meth public void metadataDownloaded(org.eclipse.aether.RepositoryEvent)
+meth public void metadataDownloading(org.eclipse.aether.RepositoryEvent)
+meth public void metadataInstalled(org.eclipse.aether.RepositoryEvent)
+meth public void metadataInstalling(org.eclipse.aether.RepositoryEvent)
+meth public void metadataInvalid(org.eclipse.aether.RepositoryEvent)
+meth public void metadataResolved(org.eclipse.aether.RepositoryEvent)
+meth public void metadataResolving(org.eclipse.aether.RepositoryEvent)
+meth public void remove(org.eclipse.aether.RepositoryListener)
+supr org.eclipse.aether.AbstractRepositoryListener
+hfds listeners
+
+CLSS public final org.eclipse.aether.util.listener.ChainedTransferListener
+cons public !varargs init(org.eclipse.aether.transfer.TransferListener[])
+cons public init(java.util.Collection<? extends org.eclipse.aether.transfer.TransferListener>)
+meth protected void handleError(org.eclipse.aether.transfer.TransferEvent,org.eclipse.aether.transfer.TransferListener,java.lang.RuntimeException)
+meth public static org.eclipse.aether.transfer.TransferListener newInstance(org.eclipse.aether.transfer.TransferListener,org.eclipse.aether.transfer.TransferListener)
+meth public void add(java.util.Collection<? extends org.eclipse.aether.transfer.TransferListener>)
+meth public void add(org.eclipse.aether.transfer.TransferListener)
+meth public void remove(org.eclipse.aether.transfer.TransferListener)
+meth public void transferCorrupted(org.eclipse.aether.transfer.TransferEvent) throws org.eclipse.aether.transfer.TransferCancelledException
+meth public void transferFailed(org.eclipse.aether.transfer.TransferEvent)
+meth public void transferInitiated(org.eclipse.aether.transfer.TransferEvent) throws org.eclipse.aether.transfer.TransferCancelledException
+meth public void transferProgressed(org.eclipse.aether.transfer.TransferEvent) throws org.eclipse.aether.transfer.TransferCancelledException
+meth public void transferStarted(org.eclipse.aether.transfer.TransferEvent) throws org.eclipse.aether.transfer.TransferCancelledException
+meth public void transferSucceeded(org.eclipse.aether.transfer.TransferEvent)
+supr org.eclipse.aether.transfer.AbstractTransferListener
+hfds listeners
+
+CLSS abstract interface org.eclipse.aether.util.listener.package-info
 
 CLSS abstract interface org.eclipse.aether.util.package-info
 
@@ -11639,7 +13244,7 @@ intf org.eclipse.aether.repository.MirrorSelector
 meth public org.eclipse.aether.repository.RemoteRepository getMirror(org.eclipse.aether.repository.RemoteRepository)
 meth public org.eclipse.aether.util.repository.DefaultMirrorSelector add(java.lang.String,java.lang.String,java.lang.String,boolean,boolean,java.lang.String,java.lang.String)
 meth public org.eclipse.aether.util.repository.DefaultMirrorSelector add(java.lang.String,java.lang.String,java.lang.String,boolean,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds EXTERNAL_HTTP_WILDCARD,EXTERNAL_WILDCARD,WILDCARD,mirrors
 hcls MirrorDef
@@ -11764,9 +13369,9 @@ CLSS public org.jdom2.Attribute
 cons protected init()
 cons public init(java.lang.String,java.lang.String)
 cons public init(java.lang.String,java.lang.String,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.String,int,org.jdom2.Namespace)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.String,org.jdom2.AttributeType)
 cons public init(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)
 cons public init(java.lang.String,java.lang.String,org.jdom2.Namespace)
@@ -11809,7 +13414,7 @@ meth public long getLongValue() throws org.jdom2.DataConversionException
 meth public org.jdom2.Attribute clone()
 meth public org.jdom2.Attribute detach()
 meth public org.jdom2.Attribute setAttributeType(int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.jdom2.Attribute setAttributeType(org.jdom2.AttributeType)
 meth public org.jdom2.Attribute setName(java.lang.String)
 meth public org.jdom2.Attribute setNamespace(org.jdom2.Namespace)
@@ -11835,7 +13440,7 @@ fld public final static org.jdom2.AttributeType NMTOKENS
 fld public final static org.jdom2.AttributeType NOTATION
 fld public final static org.jdom2.AttributeType UNDECLARED
 meth public final static org.jdom2.AttributeType byIndex(int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final static org.jdom2.AttributeType getAttributeType(java.lang.String)
 meth public static org.jdom2.AttributeType valueOf(java.lang.String)
 meth public static org.jdom2.AttributeType[] values()
@@ -11931,9 +13536,9 @@ meth public final org.jdom2.ProcessingInstruction processingInstruction(java.lan
 meth public final org.jdom2.Text text(java.lang.String)
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String)
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int,org.jdom2.Namespace)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType)
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.Namespace)
@@ -12210,9 +13815,9 @@ hfds serialVersionUID
 CLSS public abstract interface org.jdom2.JDOMFactory
 meth public abstract org.jdom2.Attribute attribute(java.lang.String,java.lang.String)
 meth public abstract org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int,org.jdom2.Namespace)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType)
 meth public abstract org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)
 meth public abstract org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.Namespace)
@@ -12331,9 +13936,9 @@ cons public init()
 cons public init(boolean)
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String)
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int,org.jdom2.Namespace)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType)
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.Namespace)
@@ -12382,9 +13987,9 @@ CLSS public org.jdom2.UncheckedJDOMFactory
 cons public init()
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String)
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,int,org.jdom2.Namespace)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType)
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.AttributeType,org.jdom2.Namespace)
 meth public org.jdom2.Attribute attribute(java.lang.String,java.lang.String,org.jdom2.Namespace)
@@ -12584,11 +14189,11 @@ hfds partialDocument,serialVersionUID
 CLSS public org.jdom2.input.SAXBuilder
 cons public init()
 cons public init(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.jdom2.input.sax.XMLReaderJDOMFactory)
 cons public init(org.jdom2.input.sax.XMLReaderJDOMFactory,org.jdom2.input.sax.SAXHandlerFactory,org.jdom2.JDOMFactory)
 intf org.jdom2.input.sax.SAXEngine
@@ -12599,10 +14204,10 @@ meth public boolean getIgnoringBoundaryWhitespace()
 meth public boolean getIgnoringElementContentWhitespace()
 meth public boolean getReuseParser()
 meth public boolean getValidation()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isValidating()
 meth public java.lang.String getDriverClass()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.jdom2.Document build(java.io.File) throws java.io.IOException,org.jdom2.JDOMException
 meth public org.jdom2.Document build(java.io.InputStream) throws java.io.IOException,org.jdom2.JDOMException
 meth public org.jdom2.Document build(java.io.InputStream,java.lang.String) throws java.io.IOException,org.jdom2.JDOMException
@@ -12612,7 +14217,7 @@ meth public org.jdom2.Document build(java.lang.String) throws java.io.IOExceptio
 meth public org.jdom2.Document build(java.net.URL) throws java.io.IOException,org.jdom2.JDOMException
 meth public org.jdom2.Document build(org.xml.sax.InputSource) throws java.io.IOException,org.jdom2.JDOMException
 meth public org.jdom2.JDOMFactory getFactory()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.jdom2.JDOMFactory getJDOMFactory()
 meth public org.jdom2.input.sax.SAXEngine buildEngine() throws org.jdom2.JDOMException
 meth public org.jdom2.input.sax.SAXHandlerFactory getSAXHandlerFactory()
@@ -12626,9 +14231,9 @@ meth public void setEntityResolver(org.xml.sax.EntityResolver)
 meth public void setErrorHandler(org.xml.sax.ErrorHandler)
 meth public void setExpandEntities(boolean)
 meth public void setFactory(org.jdom2.JDOMFactory)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setFastReconfigure(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setFeature(java.lang.String,boolean)
 meth public void setIgnoringBoundaryWhitespace(boolean)
 meth public void setIgnoringElementContentWhitespace(boolean)
@@ -12637,7 +14242,7 @@ meth public void setProperty(java.lang.String,java.lang.Object)
 meth public void setReuseParser(boolean)
 meth public void setSAXHandlerFactory(org.jdom2.input.sax.SAXHandlerFactory)
 meth public void setValidation(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setXMLFilter(org.xml.sax.XMLFilter)
 meth public void setXMLReaderFactory(org.jdom2.input.sax.XMLReaderJDOMFactory)
 supr java.lang.Object
@@ -12882,12 +14487,12 @@ CLSS abstract interface org.jdom2.input.sax.package-info
 CLSS public org.jdom2.output.DOMOutputter
 cons public init()
 cons public init(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.jdom2.adapters.DOMAdapter)
 cons public init(org.jdom2.adapters.DOMAdapter,org.jdom2.output.Format,org.jdom2.output.support.DOMOutputProcessor)
 cons public init(org.jdom2.output.support.DOMOutputProcessor)
 meth public boolean getForceNamespaceAware()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.w3c.dom.Node> output(java.util.List<? extends org.jdom2.Content>) throws org.jdom2.JDOMException
 meth public java.util.List<org.w3c.dom.Node> output(org.w3c.dom.Document,java.util.List<? extends org.jdom2.Content>) throws org.jdom2.JDOMException
 meth public org.jdom2.adapters.DOMAdapter getDOMAdapter()
@@ -12912,7 +14517,7 @@ meth public org.w3c.dom.Text output(org.w3c.dom.Document,org.jdom2.Text) throws 
 meth public void setDOMAdapter(org.jdom2.adapters.DOMAdapter)
 meth public void setDOMOutputProcessor(org.jdom2.output.support.DOMOutputProcessor)
 meth public void setForceNamespaceAware(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setFormat(org.jdom2.output.Format)
 supr java.lang.Object
 hfds DEFAULT_ADAPTER,DEFAULT_PROCESSOR,adapter,format,processor
@@ -13000,7 +14605,7 @@ meth public boolean getReportNamespaceDeclarations()
 meth public java.lang.Object getProperty(java.lang.String) throws org.xml.sax.SAXNotRecognizedException,org.xml.sax.SAXNotSupportedException
 meth public org.jdom2.output.Format getFormat()
 meth public org.jdom2.output.JDOMLocator getLocator()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.jdom2.output.support.SAXOutputProcessor getSAXOutputProcessor()
 meth public org.xml.sax.ContentHandler getContentHandler()
 meth public org.xml.sax.DTDHandler getDTDHandler()
@@ -13186,13 +14791,19 @@ supr java.lang.Object
 hfds DEFAULTSEED,EMPTY,EMPTYITER,EMPTYLIST,NSCOMP,added,depth,scope
 hcls BackwardWalker,EmptyIterable,ForwardWalker,NamespaceIterable
 
+CLSS public abstract interface !annotation org.jspecify.annotations.NullMarked
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[MODULE, PACKAGE, TYPE, METHOD, CONSTRUCTOR])
+intf java.lang.annotation.Annotation
+
 CLSS public abstract interface org.netbeans.modules.maven.embedder.ArtifactFixer
 meth public abstract java.io.File resolve(org.eclipse.aether.artifact.Artifact)
 
 CLSS public org.netbeans.modules.maven.embedder.DependencyTreeFactory
 cons public init()
 meth public static org.apache.maven.shared.dependency.tree.DependencyNode createDependencyTree(org.apache.maven.project.MavenProject,org.netbeans.modules.maven.embedder.MavenEmbedder,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.apache.maven.shared.dependency.tree.DependencyNode createDependencyTree(org.apache.maven.project.MavenProject,org.netbeans.modules.maven.embedder.MavenEmbedder,java.util.Collection<java.lang.String>) throws org.apache.maven.MavenExecutionException
 supr java.lang.Object
 hfds LOG
@@ -13209,10 +14820,10 @@ meth public static java.io.File getEffectiveMavenHome(org.netbeans.api.project.u
 meth public static java.io.File getMavenHome()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static java.util.List<org.apache.maven.model.Model> createModelLineage(java.io.File,org.netbeans.modules.maven.embedder.MavenEmbedder) throws org.apache.maven.model.building.ModelBuildingException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.util.Properties fillEnvVars(java.util.Properties)
 meth public static org.apache.maven.artifact.repository.ArtifactRepository createRemoteRepository(org.netbeans.modules.maven.embedder.MavenEmbedder,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.modules.maven.embedder.MavenEmbedder createProjectLikeEmbedder() throws org.codehaus.plexus.PlexusContainerException
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.modules.maven.embedder.MavenEmbedder getOnlineEmbedder()
@@ -13256,7 +14867,7 @@ meth public org.apache.maven.artifact.repository.ArtifactRepository getLocalRepo
 meth public org.apache.maven.execution.MavenExecutionRequest createMavenExecutionRequest()
 meth public org.apache.maven.execution.MavenExecutionResult execute(org.apache.maven.execution.MavenExecutionRequest)
 meth public org.apache.maven.execution.MavenExecutionResult readProjectWithDependencies(org.apache.maven.execution.MavenExecutionRequest)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.apache.maven.execution.MavenExecutionResult readProjectWithDependencies(org.apache.maven.execution.MavenExecutionRequest,boolean)
 meth public org.apache.maven.model.building.ModelBuildingResult executeModelBuilder(java.io.File) throws org.apache.maven.model.building.ModelBuildingException
 meth public org.apache.maven.project.ProjectBuildingResult buildProject(org.apache.maven.artifact.Artifact,org.apache.maven.project.ProjectBuildingRequest) throws org.apache.maven.project.ProjectBuildingException
@@ -13267,11 +14878,11 @@ meth public static java.util.List<org.netbeans.modules.maven.embedder.MavenEmbed
 meth public static java.util.Set<java.lang.String> getAllProjectProfiles(org.apache.maven.project.MavenProject)
 meth public static void normalizePaths(org.apache.maven.project.MavenProject)
 meth public void resolve(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.repository.ArtifactRepository) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void resolveArtifact(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.repository.ArtifactRepository) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
 meth public void setUpLegacySupport()
 supr java.lang.Object
-hfds LOG,embedderConfiguration,lastLocalRepository,lastLocalRepositoryLock,maven,plexus,populator,projectBuilder,repositorySystem,settings,settingsBuilder,settingsDecrypter,settingsTimestamp,testSettings,thisRepositorySession
+hfds LOG,embedderConfiguration,lastLocalRepository,lastLocalRepositoryLock,maven,plexus,populator,projectBuilder,repositorySystem,settings,settingsBuilder,settingsDecrypter,settingsTimestamp,testSettings,thisRepositorySession,versionResolver
 
 CLSS public abstract interface static org.netbeans.modules.maven.embedder.MavenEmbedder$ModelDescription
  outer org.netbeans.modules.maven.embedder.MavenEmbedder
@@ -13285,9 +14896,9 @@ meth public abstract java.util.List<java.lang.String> getModules()
 meth public abstract java.util.List<java.lang.String> getProfiles()
 
 CLSS public org.netbeans.modules.maven.embedder.NBPluginParameterExpressionEvaluator
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.apache.maven.project.MavenProject,org.apache.maven.settings.Settings,java.util.Map<? extends java.lang.String,? extends java.lang.String>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.apache.maven.project.MavenProject,org.apache.maven.settings.Settings,java.util.Map<? extends java.lang.String,? extends java.lang.String>,java.util.Map<? extends java.lang.String,? extends java.lang.String>)
 intf org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator
 meth public java.io.File alignToBaseDirectory(java.io.File)
@@ -13310,293 +14921,6 @@ meth public void transferStarted(org.eclipse.aether.transfer.TransferEvent) thro
 meth public void transferSucceeded(org.eclipse.aether.transfer.TransferEvent)
 supr java.lang.Object
 hfds POM_MAX,activeListener,contrib,contribStack,handle,length,pomCount,pomcontrib
-
-CLSS public abstract interface org.slf4j.ILoggerFactory
-meth public abstract org.slf4j.Logger getLogger(java.lang.String)
-
-CLSS public abstract interface org.slf4j.IMarkerFactory
-meth public abstract boolean detachMarker(java.lang.String)
-meth public abstract boolean exists(java.lang.String)
-meth public abstract org.slf4j.Marker getDetachedMarker(java.lang.String)
-meth public abstract org.slf4j.Marker getMarker(java.lang.String)
-
-CLSS public abstract interface org.slf4j.Logger
-fld public final static java.lang.String ROOT_LOGGER_NAME = "ROOT"
-meth public abstract !varargs void debug(java.lang.String,java.lang.Object[])
-meth public abstract !varargs void debug(org.slf4j.Marker,java.lang.String,java.lang.Object[])
-meth public abstract !varargs void error(java.lang.String,java.lang.Object[])
-meth public abstract !varargs void error(org.slf4j.Marker,java.lang.String,java.lang.Object[])
-meth public abstract !varargs void info(java.lang.String,java.lang.Object[])
-meth public abstract !varargs void info(org.slf4j.Marker,java.lang.String,java.lang.Object[])
-meth public abstract !varargs void trace(java.lang.String,java.lang.Object[])
-meth public abstract !varargs void trace(org.slf4j.Marker,java.lang.String,java.lang.Object[])
-meth public abstract !varargs void warn(java.lang.String,java.lang.Object[])
-meth public abstract !varargs void warn(org.slf4j.Marker,java.lang.String,java.lang.Object[])
-meth public abstract boolean isDebugEnabled()
-meth public abstract boolean isDebugEnabled(org.slf4j.Marker)
-meth public abstract boolean isErrorEnabled()
-meth public abstract boolean isErrorEnabled(org.slf4j.Marker)
-meth public abstract boolean isInfoEnabled()
-meth public abstract boolean isInfoEnabled(org.slf4j.Marker)
-meth public abstract boolean isTraceEnabled()
-meth public abstract boolean isTraceEnabled(org.slf4j.Marker)
-meth public abstract boolean isWarnEnabled()
-meth public abstract boolean isWarnEnabled(org.slf4j.Marker)
-meth public abstract java.lang.String getName()
-meth public abstract void debug(java.lang.String)
-meth public abstract void debug(java.lang.String,java.lang.Object)
-meth public abstract void debug(java.lang.String,java.lang.Object,java.lang.Object)
-meth public abstract void debug(java.lang.String,java.lang.Throwable)
-meth public abstract void debug(org.slf4j.Marker,java.lang.String)
-meth public abstract void debug(org.slf4j.Marker,java.lang.String,java.lang.Object)
-meth public abstract void debug(org.slf4j.Marker,java.lang.String,java.lang.Object,java.lang.Object)
-meth public abstract void debug(org.slf4j.Marker,java.lang.String,java.lang.Throwable)
-meth public abstract void error(java.lang.String)
-meth public abstract void error(java.lang.String,java.lang.Object)
-meth public abstract void error(java.lang.String,java.lang.Object,java.lang.Object)
-meth public abstract void error(java.lang.String,java.lang.Throwable)
-meth public abstract void error(org.slf4j.Marker,java.lang.String)
-meth public abstract void error(org.slf4j.Marker,java.lang.String,java.lang.Object)
-meth public abstract void error(org.slf4j.Marker,java.lang.String,java.lang.Object,java.lang.Object)
-meth public abstract void error(org.slf4j.Marker,java.lang.String,java.lang.Throwable)
-meth public abstract void info(java.lang.String)
-meth public abstract void info(java.lang.String,java.lang.Object)
-meth public abstract void info(java.lang.String,java.lang.Object,java.lang.Object)
-meth public abstract void info(java.lang.String,java.lang.Throwable)
-meth public abstract void info(org.slf4j.Marker,java.lang.String)
-meth public abstract void info(org.slf4j.Marker,java.lang.String,java.lang.Object)
-meth public abstract void info(org.slf4j.Marker,java.lang.String,java.lang.Object,java.lang.Object)
-meth public abstract void info(org.slf4j.Marker,java.lang.String,java.lang.Throwable)
-meth public abstract void trace(java.lang.String)
-meth public abstract void trace(java.lang.String,java.lang.Object)
-meth public abstract void trace(java.lang.String,java.lang.Object,java.lang.Object)
-meth public abstract void trace(java.lang.String,java.lang.Throwable)
-meth public abstract void trace(org.slf4j.Marker,java.lang.String)
-meth public abstract void trace(org.slf4j.Marker,java.lang.String,java.lang.Object)
-meth public abstract void trace(org.slf4j.Marker,java.lang.String,java.lang.Object,java.lang.Object)
-meth public abstract void trace(org.slf4j.Marker,java.lang.String,java.lang.Throwable)
-meth public abstract void warn(java.lang.String)
-meth public abstract void warn(java.lang.String,java.lang.Object)
-meth public abstract void warn(java.lang.String,java.lang.Object,java.lang.Object)
-meth public abstract void warn(java.lang.String,java.lang.Throwable)
-meth public abstract void warn(org.slf4j.Marker,java.lang.String)
-meth public abstract void warn(org.slf4j.Marker,java.lang.String,java.lang.Object)
-meth public abstract void warn(org.slf4j.Marker,java.lang.String,java.lang.Object,java.lang.Object)
-meth public abstract void warn(org.slf4j.Marker,java.lang.String,java.lang.Throwable)
-
-CLSS public final org.slf4j.LoggerFactory
-meth public static org.slf4j.ILoggerFactory getILoggerFactory()
-meth public static org.slf4j.Logger getLogger(java.lang.Class<?>)
-meth public static org.slf4j.Logger getLogger(java.lang.String)
-supr java.lang.Object
-hfds API_COMPATIBILITY_LIST,CODES_PREFIX,DETECT_LOGGER_NAME_MISMATCH,DETECT_LOGGER_NAME_MISMATCH_PROPERTY,FAILED_INITIALIZATION,INITIALIZATION_STATE,JAVA_VENDOR_PROPERTY,LOGGER_NAME_MISMATCH_URL,MULTIPLE_BINDINGS_URL,NOP_FALLBACK_FACTORY,NOP_FALLBACK_INITIALIZATION,NO_STATICLOGGERBINDER_URL,NULL_LF_URL,ONGOING_INITIALIZATION,REPLAY_URL,STATIC_LOGGER_BINDER_PATH,SUBSTITUTE_LOGGER_URL,SUBST_FACTORY,SUCCESSFUL_INITIALIZATION,UNINITIALIZED,UNSUCCESSFUL_INIT_MSG,UNSUCCESSFUL_INIT_URL,VERSION_MISMATCH
-
-CLSS public org.slf4j.MDC
-innr public static MDCCloseable
-meth public static java.lang.String get(java.lang.String)
-meth public static java.util.Map<java.lang.String,java.lang.String> getCopyOfContextMap()
-meth public static org.slf4j.MDC$MDCCloseable putCloseable(java.lang.String,java.lang.String)
-meth public static org.slf4j.spi.MDCAdapter getMDCAdapter()
-meth public static void clear()
-meth public static void put(java.lang.String,java.lang.String)
-meth public static void remove(java.lang.String)
-meth public static void setContextMap(java.util.Map<java.lang.String,java.lang.String>)
-supr java.lang.Object
-hfds NO_STATIC_MDC_BINDER_URL,NULL_MDCA_URL,mdcAdapter
-
-CLSS public static org.slf4j.MDC$MDCCloseable
- outer org.slf4j.MDC
-intf java.io.Closeable
-meth public void close()
-supr java.lang.Object
-hfds key
-
-CLSS public abstract interface org.slf4j.Marker
-fld public final static java.lang.String ANY_MARKER = "*"
-fld public final static java.lang.String ANY_NON_NULL_MARKER = "+"
-intf java.io.Serializable
-meth public abstract boolean contains(java.lang.String)
-meth public abstract boolean contains(org.slf4j.Marker)
-meth public abstract boolean equals(java.lang.Object)
-meth public abstract boolean hasChildren()
-meth public abstract boolean hasReferences()
-meth public abstract boolean remove(org.slf4j.Marker)
-meth public abstract int hashCode()
-meth public abstract java.lang.String getName()
-meth public abstract java.util.Iterator<org.slf4j.Marker> iterator()
-meth public abstract void add(org.slf4j.Marker)
-
-CLSS public org.slf4j.MarkerFactory
-meth public static org.slf4j.IMarkerFactory getIMarkerFactory()
-meth public static org.slf4j.Marker getDetachedMarker(java.lang.String)
-meth public static org.slf4j.Marker getMarker(java.lang.String)
-supr java.lang.Object
-hfds MARKER_FACTORY
-
-CLSS public org.slf4j.MavenSlf4jFriend
-cons public init()
-meth public static void reset()
-supr java.lang.Object
-
-CLSS public abstract org.slf4j.helpers.MarkerIgnoringBase
-cons public init()
-fld protected java.lang.String name
-intf java.io.Serializable
-intf org.slf4j.Logger
-meth protected java.lang.Object readResolve() throws java.io.ObjectStreamException
-meth public !varargs void debug(org.slf4j.Marker,java.lang.String,java.lang.Object[])
-meth public !varargs void error(org.slf4j.Marker,java.lang.String,java.lang.Object[])
-meth public !varargs void info(org.slf4j.Marker,java.lang.String,java.lang.Object[])
-meth public !varargs void trace(org.slf4j.Marker,java.lang.String,java.lang.Object[])
-meth public !varargs void warn(org.slf4j.Marker,java.lang.String,java.lang.Object[])
-meth public boolean isDebugEnabled(org.slf4j.Marker)
-meth public boolean isErrorEnabled(org.slf4j.Marker)
-meth public boolean isInfoEnabled(org.slf4j.Marker)
-meth public boolean isTraceEnabled(org.slf4j.Marker)
-meth public boolean isWarnEnabled(org.slf4j.Marker)
-meth public java.lang.String getName()
-meth public java.lang.String toString()
-meth public void debug(org.slf4j.Marker,java.lang.String)
-meth public void debug(org.slf4j.Marker,java.lang.String,java.lang.Object)
-meth public void debug(org.slf4j.Marker,java.lang.String,java.lang.Object,java.lang.Object)
-meth public void debug(org.slf4j.Marker,java.lang.String,java.lang.Throwable)
-meth public void error(org.slf4j.Marker,java.lang.String)
-meth public void error(org.slf4j.Marker,java.lang.String,java.lang.Object)
-meth public void error(org.slf4j.Marker,java.lang.String,java.lang.Object,java.lang.Object)
-meth public void error(org.slf4j.Marker,java.lang.String,java.lang.Throwable)
-meth public void info(org.slf4j.Marker,java.lang.String)
-meth public void info(org.slf4j.Marker,java.lang.String,java.lang.Object)
-meth public void info(org.slf4j.Marker,java.lang.String,java.lang.Object,java.lang.Object)
-meth public void info(org.slf4j.Marker,java.lang.String,java.lang.Throwable)
-meth public void trace(org.slf4j.Marker,java.lang.String)
-meth public void trace(org.slf4j.Marker,java.lang.String,java.lang.Object)
-meth public void trace(org.slf4j.Marker,java.lang.String,java.lang.Object,java.lang.Object)
-meth public void trace(org.slf4j.Marker,java.lang.String,java.lang.Throwable)
-meth public void warn(org.slf4j.Marker,java.lang.String)
-meth public void warn(org.slf4j.Marker,java.lang.String,java.lang.Object)
-meth public void warn(org.slf4j.Marker,java.lang.String,java.lang.Object,java.lang.Object)
-meth public void warn(org.slf4j.Marker,java.lang.String,java.lang.Throwable)
-supr java.lang.Object
-hfds serialVersionUID
-
-CLSS public org.slf4j.impl.MavenSimpleLogger
-meth protected java.lang.String getLocation(java.lang.StackTraceElement)
-meth protected java.lang.String renderLevel(int)
-meth protected void writeThrowable(java.lang.Throwable,java.io.PrintStream)
-supr org.slf4j.impl.SimpleLogger
-
-CLSS public org.slf4j.impl.MavenSimpleLoggerFactory
-cons public init()
-meth public org.slf4j.Logger getLogger(java.lang.String)
-supr org.slf4j.impl.SimpleLoggerFactory
-
-CLSS public org.slf4j.impl.MavenSlf4jSimpleFriend
-cons public init()
-meth public static void init()
-supr java.lang.Object
-
-CLSS public org.slf4j.impl.SimpleLogger
-fld protected final static int LOG_LEVEL_DEBUG = 10
-fld protected final static int LOG_LEVEL_ERROR = 40
-fld protected final static int LOG_LEVEL_INFO = 20
-fld protected final static int LOG_LEVEL_OFF = 50
-fld protected final static int LOG_LEVEL_TRACE = 0
-fld protected final static int LOG_LEVEL_WARN = 30
-fld protected int currentLogLevel
-fld public final static java.lang.String CACHE_OUTPUT_STREAM_STRING_KEY = "org.slf4j.simpleLogger.cacheOutputStream"
-fld public final static java.lang.String DATE_TIME_FORMAT_KEY = "org.slf4j.simpleLogger.dateTimeFormat"
-fld public final static java.lang.String DEFAULT_LOG_LEVEL_KEY = "org.slf4j.simpleLogger.defaultLogLevel"
-fld public final static java.lang.String LEVEL_IN_BRACKETS_KEY = "org.slf4j.simpleLogger.levelInBrackets"
-fld public final static java.lang.String LOG_FILE_KEY = "org.slf4j.simpleLogger.logFile"
-fld public final static java.lang.String LOG_KEY_PREFIX = "org.slf4j.simpleLogger.log."
-fld public final static java.lang.String SHOW_DATE_TIME_KEY = "org.slf4j.simpleLogger.showDateTime"
-fld public final static java.lang.String SHOW_LOG_NAME_KEY = "org.slf4j.simpleLogger.showLogName"
-fld public final static java.lang.String SHOW_SHORT_LOG_NAME_KEY = "org.slf4j.simpleLogger.showShortLogName"
-fld public final static java.lang.String SHOW_THREAD_ID_KEY = "org.slf4j.simpleLogger.showThreadId"
-fld public final static java.lang.String SHOW_THREAD_NAME_KEY = "org.slf4j.simpleLogger.showThreadName"
-fld public final static java.lang.String SYSTEM_PREFIX = "org.slf4j.simpleLogger."
-fld public final static java.lang.String WARN_LEVEL_STRING_KEY = "org.slf4j.simpleLogger.warnLevelString"
-meth protected boolean isLevelEnabled(int)
-meth protected java.lang.String renderLevel(int)
-meth protected void writeThrowable(java.lang.Throwable,java.io.PrintStream)
-meth public !varargs void debug(java.lang.String,java.lang.Object[])
-meth public !varargs void error(java.lang.String,java.lang.Object[])
-meth public !varargs void info(java.lang.String,java.lang.Object[])
-meth public !varargs void trace(java.lang.String,java.lang.Object[])
-meth public !varargs void warn(java.lang.String,java.lang.Object[])
-meth public boolean isDebugEnabled()
-meth public boolean isErrorEnabled()
-meth public boolean isInfoEnabled()
-meth public boolean isTraceEnabled()
-meth public boolean isWarnEnabled()
-meth public void debug(java.lang.String)
-meth public void debug(java.lang.String,java.lang.Object)
-meth public void debug(java.lang.String,java.lang.Object,java.lang.Object)
-meth public void debug(java.lang.String,java.lang.Throwable)
-meth public void error(java.lang.String)
-meth public void error(java.lang.String,java.lang.Object)
-meth public void error(java.lang.String,java.lang.Object,java.lang.Object)
-meth public void error(java.lang.String,java.lang.Throwable)
-meth public void info(java.lang.String)
-meth public void info(java.lang.String,java.lang.Object)
-meth public void info(java.lang.String,java.lang.Object,java.lang.Object)
-meth public void info(java.lang.String,java.lang.Throwable)
-meth public void log(org.slf4j.event.LoggingEvent)
-meth public void trace(java.lang.String)
-meth public void trace(java.lang.String,java.lang.Object)
-meth public void trace(java.lang.String,java.lang.Object,java.lang.Object)
-meth public void trace(java.lang.String,java.lang.Throwable)
-meth public void warn(java.lang.String)
-meth public void warn(java.lang.String,java.lang.Object)
-meth public void warn(java.lang.String,java.lang.Object,java.lang.Object)
-meth public void warn(java.lang.String,java.lang.Throwable)
-supr org.slf4j.helpers.MarkerIgnoringBase
-hfds CONFIG_PARAMS,INITIALIZED,START_TIME,TID_PREFIX,serialVersionUID,shortLogName
-
-CLSS public org.slf4j.impl.SimpleLoggerConfiguration
-cons public init()
-supr java.lang.Object
-hfds CACHE_OUTPUT_STREAM_DEFAULT,CONFIGURATION_FILE,DATE_TIME_FORMAT_STR_DEFAULT,DEFAULT_LOG_LEVEL_DEFAULT,LEVEL_IN_BRACKETS_DEFAULT,LOG_FILE_DEFAULT,SHOW_DATE_TIME_DEFAULT,SHOW_LOG_NAME_DEFAULT,SHOW_SHORT_LOG_NAME_DEFAULT,SHOW_THREAD_ID_DEFAULT,SHOW_THREAD_NAME_DEFAULT,WARN_LEVELS_STRING_DEFAULT,cacheOutputStream,dateFormatter,dateTimeFormatStr,defaultLogLevel,levelInBrackets,logFile,outputChoice,properties,showDateTime,showLogName,showShortLogName,showThreadId,showThreadName,warnLevelString
-
-CLSS public org.slf4j.impl.SimpleLoggerFactory
-cons public init()
-intf org.slf4j.ILoggerFactory
-meth public org.slf4j.Logger getLogger(java.lang.String)
-supr java.lang.Object
-hfds loggerMap
-
-CLSS public final org.slf4j.impl.StaticLoggerBinder
-fld public static java.lang.String REQUESTED_API_VERSION
-intf org.slf4j.spi.LoggerFactoryBinder
-meth public java.lang.String getLoggerFactoryClassStr()
-meth public org.slf4j.ILoggerFactory getLoggerFactory()
-meth public static org.slf4j.impl.StaticLoggerBinder getSingleton()
-supr java.lang.Object
-hfds LOGGER_FACTORY_CLASS_STR,SINGLETON,loggerFactory
-
-CLSS public org.slf4j.impl.StaticMDCBinder
-fld public final static org.slf4j.impl.StaticMDCBinder SINGLETON
-meth public final static org.slf4j.impl.StaticMDCBinder getSingleton()
-meth public java.lang.String getMDCAdapterClassStr()
-meth public org.slf4j.spi.MDCAdapter getMDCA()
-supr java.lang.Object
-
-CLSS public org.slf4j.impl.StaticMarkerBinder
-fld public final static org.slf4j.impl.StaticMarkerBinder SINGLETON
-intf org.slf4j.spi.MarkerFactoryBinder
-meth public java.lang.String getMarkerFactoryClassStr()
-meth public org.slf4j.IMarkerFactory getMarkerFactory()
-meth public static org.slf4j.impl.StaticMarkerBinder getSingleton()
-supr java.lang.Object
-hfds markerFactory
-
-CLSS public abstract interface org.slf4j.spi.LoggerFactoryBinder
-meth public abstract java.lang.String getLoggerFactoryClassStr()
-meth public abstract org.slf4j.ILoggerFactory getLoggerFactory()
-
-CLSS public abstract interface org.slf4j.spi.MarkerFactoryBinder
-meth public abstract java.lang.String getMarkerFactoryClassStr()
-meth public abstract org.slf4j.IMarkerFactory getMarkerFactory()
 
 CLSS public org.sonatype.plexus.components.cipher.Base64
 cons public init()
@@ -13723,6 +15047,7 @@ meth public abstract void skippedEntity(java.lang.String) throws org.xml.sax.SAX
 meth public abstract void startDocument() throws org.xml.sax.SAXException
 meth public abstract void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
 meth public abstract void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void declaration(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 
 CLSS public abstract interface org.xml.sax.DTDHandler
 meth public abstract void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException

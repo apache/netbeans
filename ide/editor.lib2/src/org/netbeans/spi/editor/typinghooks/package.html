@@ -19,7 +19,7 @@
 
 -->
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 
 <html>
   <head>
@@ -44,7 +44,7 @@
   </p>
 
 
-  <h3>Keyboard input processing</h3>
+  <h2>Keyboard input processing</h2>
 
   <p>
   Netbeans editor panes are ordinary <code>JTextComponent</code>s and therefore
@@ -82,7 +82,7 @@
   </ul>
 
 
-  <h3>Registering interceptors</h3>
+  <h2>Registering interceptors</h2>
   
   <p>
   Interceptors are created by calling a factory implementation registered in
@@ -105,12 +105,12 @@
   <p>
   The <code>TTIFactory</code> class will simply return a new instance of
   the module's implementation of <code>TypedTextInterceptor</code> interface from its
-  <code><a href="@org-netbeans-modules-editor-lib2@/org/netbeans/spi/editor/typinghooks/TypedTextInterceptor.Factory.html#createTypedTextInterceptor-org.netbeans.api.editor.mimelookup.MimePath-">createTypedTextInterceptor</a></code>
+  {@link org.netbeans.spi.editor.typinghooks.TypedTextInterceptor.Factory#createTypedTextInterceptor(org.netbeans.api.editor.mimelookup.MimePath) createTypedTextInterceptor }
   method. 
   </p>
 
   
-  <h3>Interceptors lifecycle</h3>
+  <h2>Interceptors lifecycle</h2>
 
   <p>
   In general interceptors are created as they are needed. However, unlike in other editor SPIs where SPI
@@ -137,7 +137,7 @@
   </p>
 
 
-  <h3>Threading and synchronization</h3>
+  <h2>Threading and synchronization</h2>
 
   <p>
   As explained earlier Netbeans editors follow swing concepts for handling keyboard
@@ -163,9 +163,9 @@
   </p>
 
 
-  <h3><a name="usecases">Use cases</a></h3>
+  <h2 id="usecases">Use cases</h2>
   
-  <h4>Use case 1. - Automated indentation</h4>
+  <h3>Use case 1. - Automated indentation</h3>
 
   <p>
   Many languages need to automatically reindent lines as user types certain
@@ -196,13 +196,13 @@
   </p>
 
   <p>
-  Moreover, the <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation API</a>
+  Moreover, the <a href="@org-netbeans-modules-editor-indent@/index.html">Editor Indentation API</a>
   provides an implementation of <code>TypedTextInterceptor</code>, which reindents lines that
   match provided regular expressions. Please see <code><a href="@org-netbeans-modules-editor-indent-support@/org/netbeans/modules/editor/indent/spi/support/AutomatedIndenting.html">AutomatedIndenting</a></code>
   class for more details.
   </p>
 
-  <h4>Use case 2. - Pair characters completion</h4>
+  <h3>Use case 2. - Pair characters completion</h3>
   
   <p>
   It can safe a lot of typing if the editor correctly completes pair characters
@@ -223,7 +223,7 @@
 <!--
   
   
-  <h4>Other usecases</h4>
+  <h3>Other usecases</h3>
 -->
   
   </body>

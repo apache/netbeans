@@ -520,9 +520,9 @@ Nothing.
  <answer id="exec-property">
   <p>
    <api name="willOpenProjects" category="friend" group="property" type="export">
-   Since version 1.55 a special <a href="@JDK@/java/beans/PropertyChangeEvent.html">
+   Since version 1.55 a special <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/java/beans/PropertyChangeEvent.html">
    PropertyChangeEvent</a> is generated for benefit of <code>ide.ergonomics</code>
-   module by <a href="@TOP@/org/netbeans/api/project/ui/OpenProjects.html#getDefault--">
+   module by <a href="@TOP@/org/netbeans/api/project/ui/OpenProjects.html#getDefault()">
    OpenProjects.getDefault()</a>. The property name of the event is <code>"willOpenProjects"</code>
    and its new value contains an array of projects that will be opened (a type
    <code>Project[]</code>). Ergonomics module uses this information to enable

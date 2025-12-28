@@ -355,7 +355,7 @@ public final class NavigatorScanner {
         protected void appendUsedTraits(Collection<? extends TraitScope> usedTraits, HtmlFormatter formatter) {
             boolean first = true;
             List<TraitScope> traits = new ArrayList<>(usedTraits);
-            Collections.sort(traits, TRAIT_SCOPE_COMPARATOR);
+            traits.sort(TRAIT_SCOPE_COMPARATOR);
             for (TraitScope traitScope : traits) {
                 if (!first) {
                     formatter.appendText(", ");  //NOI18N

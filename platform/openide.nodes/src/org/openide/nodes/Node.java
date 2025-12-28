@@ -1285,7 +1285,7 @@ public abstract class Node extends FeatureDescriptor implements Lookup.Provider,
         final Set<Node> set = BLOCK_EVENTS.get();
         if (prev == null) {
             while (!set.isEmpty()) {
-                Node[] arr = set.toArray(new Node[set.size()]);
+                Node[] arr = set.toArray(new Node[0]);
                 for (Node n : arr) {
                     Lookup l = n.findDelegatingLookup();
                     if (l instanceof NodeLookup) {

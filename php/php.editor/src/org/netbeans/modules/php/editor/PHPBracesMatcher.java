@@ -109,7 +109,10 @@ public final class PHPBracesMatcher implements BracesMatcher, BracesMatcher.Cont
                     return new int [] {ts.offset(), ts.offset() + token.length()};
                 } else if (LexUtilities.textEquals(token.text(), ':')) {
                     do {
-                        ts.movePrevious();
+                        if (!ts.movePrevious()) {
+                            //issue 7803 prevent infinit loop for brace matcher in code using embedded language
+                            break;
+                        }
                         token = LexUtilities.findPreviousToken(ts,
                                 Arrays.asList(PHPTokenId.PHP_IF, PHPTokenId.PHP_ELSE, PHPTokenId.PHP_ELSEIF,
                                 PHPTokenId.PHP_FOR, PHPTokenId.PHP_FOREACH, PHPTokenId.PHP_WHILE, PHPTokenId.PHP_SWITCH,
@@ -309,6 +312,7 @@ public final class PHPBracesMatcher implements BracesMatcher, BracesMatcher.Cont
                 return null;
             }
             List<PHPTokenId> lookfor = Arrays.asList(
+                    PHPTokenId.PHP_CURLY_OPEN, // terminator e.g. ${a} GH-7124
                     PHPTokenId.PHP_CURLY_CLOSE, // terminator
                     PHPTokenId.PHP_CLASS, PHPTokenId.PHP_INTERFACE, PHPTokenId.PHP_TRAIT, PHPTokenId.PHP_FUNCTION,
                     PHPTokenId.PHP_FOR, PHPTokenId.PHP_FOREACH,
@@ -317,8 +321,14 @@ public final class PHPBracesMatcher implements BracesMatcher, BracesMatcher.Cont
                     PHPTokenId.PHP_IF, PHPTokenId.PHP_ELSE, PHPTokenId.PHP_ELSEIF,
                     PHPTokenId.PHP_SWITCH, PHPTokenId.PHP_USE, PHPTokenId.PHP_MATCH, PHPTokenId.PHP_ENUM
             );
+            if (!ts.movePrevious()) {
+                // consume the current token("{" or ":")
+                return null;
+            }
             Token<? extends PHPTokenId> previousToken = LexUtilities.findPreviousToken(ts, lookfor);
-            if (previousToken == null || previousToken.id() == PHPTokenId.PHP_CURLY_CLOSE) {
+            if (previousToken == null
+                    || previousToken.id() == PHPTokenId.PHP_CURLY_OPEN
+                    || previousToken.id() == PHPTokenId.PHP_CURLY_CLOSE) {
                 return null;
             }
 

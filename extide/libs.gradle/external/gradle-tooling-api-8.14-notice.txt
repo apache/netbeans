@@ -1,0 +1,8 @@
+Gradle Inc.'s Gradle Tooling API
+Copyright 2007-2024 Gradle Inc.
+
+This product includes software developed at
+Gradle Inc. (https://gradle.org/).
+
+This product includes/uses SLF4J (https://www.slf4j.org/)
+developed by QOS.ch, 2004-2024

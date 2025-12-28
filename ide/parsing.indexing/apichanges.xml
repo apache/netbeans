@@ -87,6 +87,34 @@ is the proper place.
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
   <changes>
+      <change id="ErrorsCache.getErrors">
+          <api name="IndexingAPI"/>
+          <summary>Added method to ErrorsCache to return all errors or warnings for the given file</summary>
+          <version major="9" minor="40"/>
+          <date day="6" month="9" year="2024"/>
+          <author login="dbalek"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
+          <description>
+              <p>
+                  Added the <a href="@TOP@/org/netbeans/modules/parsing/spi/indexing/ErrorsCache.html#getErrors(org.openide.filesystems.FileObject,org.netbeans.modules.parsing.spi.indexing.ErrorsCache.ReverseConvertor)">getErrors()</a> method to return errors or warnings for the given file.
+              </p>
+          </description>
+          <class package="org.netbeans.modules.parsing.spi.indexing" name="ErrorsCache"/>
+      </change>
+      <change id="ErrorsCache.getAllFilesWithRecord">
+          <api name="IndexingAPI"/>
+          <summary>Added method to ErrorsCache to return all files with error or warning</summary>
+          <version major="9" minor="36"/>
+          <date day="3" month="9" year="2024"/>
+          <author login="dbalek"/>
+          <compatibility source="compatible" binary="compatible" semantic="compatible" addition="yes"/>
+          <description>
+              <p>
+                  Added the <a href="@TOP@/org/netbeans/modules/parsing/spi/indexing/ErrorsCache.html#getAllFilesWithRecord(java.net.URL)">getAllFilesWithRecord()</a> method to return all files with error or warning.
+              </p>
+          </description>
+          <class package="org.netbeans.modules.parsing.spi.indexing" name="ErrorsCache"/>
+      </change>
       <change id="IndexabilityQuery">
           <api name="IndexingAPI"/>
           <summary>Allow plugins to exclude files from being indexed.</summary>
@@ -125,7 +153,7 @@ is the proper place.
           <description>
               <p>
                   <a href="@org-netbeans-modules-parsing-api@/org/netbeans/modules/parsing/spi/Parser.html">Parsers</a> may need to provide reduced data for indexing, or enriched data for source parsing. The
-                  added <a href="@TOP@/org/netbeans/modules/parsing/spi/indexing/support/IndexingSupport.html#isIndexingTask-org.netbeans.modules.parsing.api.Task-">isIndexingTask()</a> method identifies tasks applied by indexing infrastructure.
+                  added <a href="@TOP@/org/netbeans/modules/parsing/spi/indexing/support/IndexingSupport.html#isIndexingTask(org.netbeans.modules.parsing.api.Task)">isIndexingTask()</a> method identifies tasks applied by indexing infrastructure.
               </p>
           </description>
           <class package="org.netbeans.modules.parsing.spi.indexing.support" name="IndexingSupport"/>
@@ -182,7 +210,6 @@ is the proper place.
 -->
     <head>
         <title>Change History for the Indexing API</title>
-        <link rel="stylesheet" href="prose.css" type="text/css"/>
         <meta name="CATEGORY" content="OtherDevelopmentDoc"/>
         <meta name="DESCRIPTION" content="A cross-indexed list of all changes made to the Parsing &amp; Indexing API."/>
     </head>

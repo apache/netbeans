@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import org.eclipse.lsp4j.CodeAction;
@@ -73,6 +74,23 @@ public class CodeActionsProvider2LspApiBridge extends CodeActionsProvider {
     }
 
     @Override
+    public Set<String> getSupportedCodeActionKinds() {
+        Set<String> supportedCodeActionKinds = new HashSet<>();
+
+        for (CodeActionProvider caProvider : Lookup.getDefault().lookupAll(CodeActionProvider.class)) {
+            Set<String> providerSupportedCodeActionKinds = caProvider.getSupportedCodeActionKinds();
+
+            if (providerSupportedCodeActionKinds == null) {
+                return null;
+            }
+
+            supportedCodeActionKinds.addAll(providerSupportedCodeActionKinds);
+        }
+
+        return supportedCodeActionKinds;
+    }
+
+    @Override
     public List<CodeAction> getCodeActions(NbCodeLanguageClient client, ResultIterator resultIterator, CodeActionParams params) throws Exception {
         lastCodeActions = new ArrayList<>();
         List<CodeAction> allActions = new ArrayList<>();
@@ -84,7 +102,14 @@ public class CodeActionsProvider2LspApiBridge extends CodeActionsProvider {
             org.netbeans.api.lsp.Range r = new org.netbeans.api.lsp.Range(startOffset, endOffset);
             List<String> only = params.getContext().getOnly();
             Lookup l = only != null ? Lookups.fixed(client, resultIterator, only) : Lookups.fixed(client, resultIterator);
+            Predicate<String> codeActionKindPermitted = Utils.codeActionKindFilter(only);
             for (CodeActionProvider caProvider : Lookup.getDefault().lookupAll(CodeActionProvider.class)) {
+                Set<String> supportedCodeActionKinds = caProvider.getSupportedCodeActionKinds();
+                if (supportedCodeActionKinds != null &&
+                    supportedCodeActionKinds.stream()
+                                            .noneMatch(kind -> codeActionKindPermitted.test(kind))) {
+                    continue;
+                }
                 try {
                     for (org.netbeans.api.lsp.CodeAction ca : caProvider.getCodeActions(doc, r, l)) {
                         Object data = null;

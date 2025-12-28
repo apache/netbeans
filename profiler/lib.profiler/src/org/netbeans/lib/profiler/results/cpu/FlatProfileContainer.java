@@ -296,17 +296,17 @@ public abstract class FlatProfileContainer {
 //
 //        // Case insensitive comparison (except regexp):
 //        switch (type) {
-////            case CommonConstants.FILTER_STARTS_WITH:
-////                return value.regionMatches(true, 0, filter, 0, filter.length()); // case insensitive startsWith, optimized
+// //            case CommonConstants.FILTER_STARTS_WITH:
+// //                return value.regionMatches(true, 0, filter, 0, filter.length()); // case insensitive startsWith, optimized
 //            case CommonConstants.FILTER_CONTAINS:
 //                return value.toLowerCase().contains(filter); // case insensitive indexOf, NOT OPTIMIZED
 //            case CommonConstants.FILTER_NOT_CONTAINS:
 //                return !value.toLowerCase().contains(filter);
-////            case CommonConstants.FILTER_ENDS_WITH:
-////                // case insensitive endsWith, optimized
-////                return value.regionMatches(true, value.length() - filter.length(), filter, 0, filter.length());
-////            case CommonConstants.FILTER_EQUALS:
-////                return value.equalsIgnoreCase(filter); // case insensitive equals
+// //            case CommonConstants.FILTER_ENDS_WITH:
+// //                // case insensitive endsWith, optimized
+// //                return value.regionMatches(true, value.length() - filter.length(), filter, 0, filter.length());
+// //            case CommonConstants.FILTER_EQUALS:
+// //                return value.equalsIgnoreCase(filter); // case insensitive equals
 //            case CommonConstants.FILTER_REGEXP:
 //                try {
 //                    return value.matches(filter); //  case sensitive!

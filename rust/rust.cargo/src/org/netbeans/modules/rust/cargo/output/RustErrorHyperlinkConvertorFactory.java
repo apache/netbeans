@@ -72,16 +72,6 @@ public class RustErrorHyperlinkConvertorFactory implements OutputListener, LineC
 
     // OutputListener
     @Override
-    public void outputLineSelected(OutputEvent ev) {
-    }
-
-    // OutputListener
-    @Override
-    public void outputLineCleared(OutputEvent ev) {
-    }
-
-    // OutputListener
-    @Override
     public void outputLineAction(OutputEvent ev) {
         // Invoked to show a given position in the source code
         Matcher m = matchesSourcePosition(ev.getLine());

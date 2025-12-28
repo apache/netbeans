@@ -52,7 +52,7 @@
           layer, don't use the deprecated manifest style.
       </description>
       <class package="org.openide.actions" name="ToolsAction"/>
-      <issue number="180979 "/>
+      <issue number="180979"/>
 </change>
 <change>
       <api name="actions"/>
@@ -116,14 +116,14 @@
             <p>
             Introduction of new action system, which generally means
             move from usage of <code>SystemAction</code> to <code>Action</code> instances.
-            Look at <a href="https://netbeans.apache.org/projects/platform/openide/proposals/actions/index.html" shape="rect">
+            Look at <a href="https://netbeans.apache.org/projects/platform/openide/proposals/actions" shape="rect">
             general proposal</a>. That document also focuses on declarative actions
             usage which is not subject of current change, it will be part of later changes.
             </p>
 <p>
-            Current change is described by <a href="https://netbeans.apache.org/projects/platform/openide/proposals/actions/impl.html" shape="rect">
+            Current change is described by <a href="https://netbeans.apache.org/projects/platform/openide/proposals/actions" shape="rect">
             description of already implemented changes</a> which also summarizes
-            <a href="https://netbeans.apache.org/projects/platform/openide/proposals/actions/impl.html#summaryAPI" shape="rect">
+            <a href="https://netbeans.apache.org/projects/platform/openide/proposals/actions/impl#summaryAPI" shape="rect">
             these API changes</a>.
             </p>
         </description>
@@ -204,7 +204,6 @@
 <htmlcontents>
 <head>
 <title>Change History for the Actions API</title>
-<link rel="stylesheet" href="prose.css" type="text/css"/>
 </head>
 <body>
 <p class="overviewlink">

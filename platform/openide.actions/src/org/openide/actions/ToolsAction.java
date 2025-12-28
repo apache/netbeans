@@ -296,7 +296,7 @@ public class ToolsAction extends SystemAction implements ContextAwareAction, Pre
             // generate directly list of menu items
             List<JMenuItem> l = generate(toolsAction, true);
             timestamp = gl().getTimestamp();
-            return l.toArray(new JMenuItem[l.size()]);
+            return l.toArray(new JMenuItem[0]);
         }
         
         

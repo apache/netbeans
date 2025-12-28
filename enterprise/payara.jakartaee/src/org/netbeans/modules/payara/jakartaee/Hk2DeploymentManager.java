@@ -140,9 +140,11 @@ public class Hk2DeploymentManager implements DeploymentManager2 {
             (PayaraModule2)commonSupport : null);
         boolean restart = false;
         try {
-            restart = HttpMonitorHelper.synchronizeMonitor(commonSupport.getInstanceProperties().get(PayaraModule.DOMAINS_FOLDER_ATTR),
+            restart = HttpMonitorHelper.synchronizeMonitor(
+                    commonSupport.getInstanceProperties().get(PayaraModule.DOMAINS_FOLDER_ATTR),
                     commonSupport.getInstanceProperties().get(PayaraModule.DOMAIN_NAME_ATTR),
                     Boolean.parseBoolean(commonSupport.getInstanceProperties().get(PayaraModule.HTTP_MONITOR_FLAG)),
+                    commonSupport.getInstance().getPlatformVersion().getMajor() > 5,
                     "modules/org-netbeans-modules-schema2beans.jar");
         } catch (IOException | SAXException ex) {
             Logger.getLogger("payara-jakartaee").log(
@@ -213,6 +215,7 @@ public class Hk2DeploymentManager implements DeploymentManager2 {
                     commonSupport.getInstanceProperties().get(PayaraModule.DOMAINS_FOLDER_ATTR),
                     commonSupport.getInstanceProperties().get(PayaraModule.DOMAIN_NAME_ATTR),
                     Boolean.parseBoolean(commonSupport.getInstanceProperties().get(PayaraModule.HTTP_MONITOR_FLAG)),
+                    commonSupport.getInstance().getPlatformVersion().getMajor() > 5,
                     "modules/org-netbeans-modules-schema2beans.jar");
         } catch (IOException | SAXException ex) {
             Logger.getLogger("payara-jakartaee").log(
@@ -431,7 +434,7 @@ public class Hk2DeploymentManager implements DeploymentManager2 {
                 }
             }
         }
-        return moduleList.size() > 0 ? moduleList.toArray(new TargetModuleID[moduleList.size()]) :
+        return moduleList.size() > 0 ? moduleList.toArray(new TargetModuleID[0]) :
             new TargetModuleID[0];
     }
 
@@ -620,6 +623,11 @@ public class Hk2DeploymentManager implements DeploymentManager2 {
             result = false;
         }
         return result;
+    }
+    
+    public boolean isWSL() {
+        PayaraModule commonSupport = getCommonServerSupport();
+        return commonSupport != null && commonSupport.getInstance().isWSL();
     }
 
     public static String getTargetFromUri(String uri) {

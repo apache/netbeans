@@ -37,7 +37,6 @@ import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import org.netbeans.util.Util;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.EditableProperties;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -46,24 +45,23 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  *
  * @author Jiri Skrivanek
  */
-final class CopyFiles extends Object {
+final class CopyFiles {
 
     private File sourceRoot;
     private File targetRoot;
     private EditableProperties currentProperties;
-    private Set<String> includePatterns = new HashSet<String>();
-    private Set<String> excludePatterns = new HashSet<String>();
-    private HashMap<String, String> translatePatterns = new HashMap<String, String>(); // <originalPath, newPath>
+    private Set<String> includePatterns = new HashSet<>();
+    private Set<String> excludePatterns = new HashSet<>();
+    private HashMap<String, String> translatePatterns = new HashMap<>(); // <originalPath, newPath>
     private static final Logger LOGGER = Logger.getLogger(CopyFiles.class.getName());
 
     private CopyFiles(File source, File target, File patternsFile) {
         this.sourceRoot = source;
         this.targetRoot = target;
         try {
-            InputStream is = new FileInputStream(patternsFile);
-            Reader reader = new InputStreamReader(is, "utf-8"); // NOI18N
-            readPatterns(reader);
-            reader.close();
+            try (Reader reader = new InputStreamReader(new FileInputStream(patternsFile), UTF_8))  {// NOI18N
+                readPatterns(reader);
+            }
         } catch (IOException ex) {
             // set these to null to stop further copying (see copyDeep method)
             sourceRoot = null;
@@ -72,7 +70,6 @@ final class CopyFiles extends Object {
             // show error message and continue
             JDialog dialog = Util.createJOptionDialog(new JOptionPane(ex, JOptionPane.ERROR_MESSAGE), "Import settings will not proceed");
             dialog.setVisible(true);
-            return;
         }
     }
 
@@ -117,20 +114,7 @@ final class CopyFiles extends Object {
      */
     private static void copyFile(File sourceFile, File targetFile) throws IOException {
         ensureParent(targetFile);
-        InputStream ins = null;
-        OutputStream out = null;
-        try {
-            ins = new FileInputStream(sourceFile);
-            out = new FileOutputStream(targetFile);
-            FileUtil.copy(ins, out);
-        } finally {
-            if (ins != null) {
-                ins.close();
-            }
-            if (out != null) {
-                out.close();
-            }
-        }
+        Files.copy(sourceFile.toPath(), targetFile.toPath());
     }
 
     /** Copy given file to target root dir if matches include/exclude patterns.
@@ -150,8 +134,8 @@ final class CopyFiles extends Object {
         String relativePath = getRelativePath(sourceRoot, sourceFile);
         currentProperties = null;
         boolean includeFile = false;
-        Set<String> includeKeys = new HashSet<String>();
-        Set<String> excludeKeys = new HashSet<String>();
+        Set<String> includeKeys = new HashSet<>();
+        Set<String> excludeKeys = new HashSet<>();
         for (String pattern : includePatterns) {
             if (pattern.contains("#")) {  //NOI18N
                 includeKeys.addAll(matchingKeys(relativePath, pattern));
@@ -204,15 +188,9 @@ final class CopyFiles extends Object {
             currentProperties.keySet().removeAll(excludeKeys);
             // copy just selected keys
             LOGGER.log(Level.FINE, "  Only keys: {0}", currentProperties.keySet());
-            OutputStream out = null;
-            try {
-                ensureParent(targetFile);
-                out = new FileOutputStream(targetFile);
+            ensureParent(targetFile);
+            try (OutputStream out = new FileOutputStream(targetFile)) {
                 currentProperties.store(out);
-            } finally {
-                if (out != null) {
-                    out.close();
-                }
             }
         }
     }
@@ -224,7 +202,7 @@ final class CopyFiles extends Object {
      * @throws IOException if properties cannot be loaded
      */
     private Set<String> matchingKeys(String relativePath, String propertiesPattern) throws IOException {
-        Set<String> matchingKeys = new HashSet<String>();
+        Set<String> matchingKeys = new HashSet<>();
         String[] patterns = propertiesPattern.split("#", 2);
         String filePattern = patterns[0];
         String keyPattern = patterns[1];
@@ -248,14 +226,8 @@ final class CopyFiles extends Object {
      */
     private EditableProperties getProperties(String relativePath) throws IOException {
         EditableProperties properties = new EditableProperties(false);
-        InputStream in = null;
-        try {
-            in = new FileInputStream(new File(sourceRoot, relativePath));
+        try (InputStream in = new FileInputStream(new File(sourceRoot, relativePath))) {
             properties.load(in);
-        } finally {
-            if (in != null) {
-                in.close();
-            }
         }
         return properties;
     }
@@ -280,7 +252,7 @@ final class CopyFiles extends Object {
             if (line == null) {
                 break;
             }
-            line = line.trim();
+            line = line.strip();
             if (line.length() == 0 || line.startsWith("#")) {  //NOI18N
                 continue;
             }
@@ -329,7 +301,7 @@ final class CopyFiles extends Object {
      * @return set of single patterns containing just one # (e.g. [filePattern1#keyPattern1, filePattern2#keyPattern2, filePattern3])
      */
     private static Set<String> parsePattern(String pattern) {
-        Set<String> patterns = new HashSet<String>();
+        Set<String> patterns = new HashSet<>();
         if (pattern.contains("#")) {  //NOI18N
             StringBuilder partPattern = new StringBuilder();
             ParserState state = ParserState.START;

@@ -153,7 +153,7 @@ public class HintsTests extends WebServicesTestBase {
 
     public List<ErrorDescription> getProblems(FileObject fileToTest) {
         problems = AnnotationHolder.getInstance(fileToTest).getErrors();
-        Collections.sort(problems, new Comparator<ErrorDescription>() {
+        problems.sort(new Comparator<ErrorDescription>() {
 
             public int compare(ErrorDescription o1, ErrorDescription o2) {
                 return o1.toString().compareTo(o2.toString());
@@ -238,7 +238,7 @@ public class HintsTests extends WebServicesTestBase {
         for (ErrorDescription errorDescription : getProblems(fileToTest)) {
             fixes.addAll(errorDescription.getFixes().getFixes());
         }
-        Collections.sort(fixes, new Comparator<Fix>() {
+        fixes.sort(new Comparator<Fix>() {
 
             public int compare(Fix o1, Fix o2) {
                 return o1.getText().compareTo(o2.getText());

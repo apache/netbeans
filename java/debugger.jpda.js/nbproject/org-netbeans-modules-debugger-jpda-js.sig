@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.32
+#Version 1.40
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -9,6 +9,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -54,7 +55,7 @@ meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setSourceRoots(java.lang.String[])
 supr org.netbeans.spi.debugger.jpda.SourcePathProvider
-hfds NO_SOURCE_ROOTS,contextProvider,pathPrefix,rootDirs,rootDirsLock,sourcePath
+hfds NO_SOURCE_ROOTS,contextProvider,pathPrefixExt,pathPrefixJdk,rootDirs,rootDirsLock,sourcePath
 hcls SourcePathListener
 
 CLSS public org.netbeans.modules.debugger.jpda.js.JSUtils
@@ -62,6 +63,8 @@ cons public init()
 fld public final static java.lang.String JS_MIME_TYPE = "text/javascript"
 fld public final static java.lang.String JS_STRATUM = "JS"
 fld public final static java.lang.String NASHORN_SCRIPT = "jdk.nashorn.internal.scripts.Script$"
+fld public final static java.lang.String NASHORN_SCRIPT_EXT = "org.openjdk.nashorn.internal.scripts.Script$"
+fld public final static java.lang.String NASHORN_SCRIPT_JDK = "jdk.nashorn.internal.scripts.Script$"
 fld public final static java.lang.String VAR_CALLEE = ":callee"
 fld public final static java.lang.String VAR_SCOPE = ":scope"
 fld public final static java.lang.String VAR_THIS = ":this"
@@ -75,7 +78,7 @@ meth public java.lang.String[] getProperties()
 meth public void actionPerformed(java.lang.Object)
 meth public void propertyChange(java.beans.PropertyChangeEvent)
 supr org.netbeans.api.debugger.LazyActionsManagerListener
-hfds SCRIPT_ACCESS_CLASS,SCRIPT_ACCESS_METHODS,SCRIPT_NOTIFY_INVOKE_METHOD,SCRIPT_NOTIFY_INVOKE_METHOD_ARG,SCRIPT_NOTIFY_INVOKE_METHOD_SIG,debugger,isNotifyInvoke,logger,notifyInvokeBP,scriptAccessBPs
+hfds SCRIPT_ACCESS_CLASS_EXT,SCRIPT_ACCESS_CLASS_JDK,SCRIPT_ACCESS_METHODS,SCRIPT_NOTIFY_INVOKE_METHOD,SCRIPT_NOTIFY_INVOKE_METHOD_ARG,SCRIPT_NOTIFY_INVOKE_METHOD_SIG,debugger,isNotifyInvoke,logger,notifyInvokeBP,scriptAccessBPs
 hcls CurrentSFTracker,InScriptBPListener,ScriptBPListener,ScriptInvokeBPListener
 
 CLSS public org.netbeans.modules.debugger.jpda.js.StepThroughFiltersCheck
@@ -96,14 +99,18 @@ hfds csf,framesCache
 
 CLSS public final org.netbeans.modules.debugger.jpda.js.vars.DebuggerSupport
 fld public final static java.lang.String DEBUGGER_SUPPORT_CLASS = "jdk.nashorn.internal.runtime.DebuggerSupport"
+fld public final static java.lang.String DEBUGGER_SUPPORT_CLASS_EXT = "org.openjdk.nashorn.internal.runtime.DebuggerSupport"
+fld public final static java.lang.String DEBUGGER_SUPPORT_CLASS_JDK = "jdk.nashorn.internal.runtime.DebuggerSupport"
 meth public static boolean hasSourceInfo(org.netbeans.api.debugger.jpda.JPDADebugger)
+meth public static boolean isLegacyNashorn(org.netbeans.api.debugger.jpda.JPDAClassType)
 meth public static java.lang.String getVarValue(org.netbeans.api.debugger.jpda.JPDADebugger,org.netbeans.api.debugger.jpda.Variable)
+meth public static java.util.List<org.netbeans.api.debugger.jpda.JPDAClassType> getSupportDebuggerClasses(org.netbeans.api.debugger.jpda.JPDADebugger)
 meth public static org.netbeans.api.debugger.jpda.Variable evaluate(org.netbeans.api.debugger.jpda.JPDADebugger,org.netbeans.api.debugger.jpda.CallStackFrame,java.lang.String) throws org.netbeans.api.debugger.jpda.InvalidExpressionException
 meth public static org.netbeans.api.debugger.jpda.Variable evaluate(org.netbeans.api.debugger.jpda.JPDADebugger,org.netbeans.api.debugger.jpda.CallStackFrame,java.lang.String,org.netbeans.api.debugger.jpda.ObjectVariable) throws org.netbeans.api.debugger.jpda.InvalidExpressionException
 meth public static org.netbeans.api.debugger.jpda.Variable getSourceInfo(org.netbeans.api.debugger.jpda.JPDADebugger,org.netbeans.api.debugger.jpda.JPDAClassType)
 meth public static org.netbeans.api.debugger.jpda.Variable getVarStringValueAsVar(org.netbeans.api.debugger.jpda.JPDADebugger,org.netbeans.api.debugger.jpda.ObjectVariable)
 supr java.lang.Object
-hfds CONTEXT_CLASS,DEBUGGER_SUPPORT_VALUE_DESC_CLASS,FIELD_DESC_EXPANDABLE,FIELD_DESC_KEY,FIELD_DESC_VALUE_AS_OBJECT,FIELD_DESC_VALUE_AS_STRING,METHOD_CONTEXT_EVAL,METHOD_EVAL,METHOD_FROM_CLASS,METHOD_SOURCE_INFO,METHOD_VALUE_AS_STRING,METHOD_VALUE_INFO,METHOD_VALUE_INFOS,SIGNAT_CONTEXT_EVAL,SIGNAT_CONTEXT_EVAL_OLD,SIGNAT_EVAL,SIGNAT_FROM_CLASS,SIGNAT_SOURCE_INFO,SIGNAT_VALUE_AS_STRING,SIGNAT_VALUE_INFO,SIGNAT_VALUE_INFOS,hasOldEval
+hfds CONTEXT_CLASS_EXT,CONTEXT_CLASS_JDK,DEBUGGER_SUPPORT_VALUE_DESC_CLASS_EXT,DEBUGGER_SUPPORT_VALUE_DESC_CLASS_JDK,FIELD_DESC_EXPANDABLE,FIELD_DESC_KEY,FIELD_DESC_VALUE_AS_OBJECT,FIELD_DESC_VALUE_AS_STRING,METHOD_CONTEXT_EVAL,METHOD_EVAL,METHOD_FROM_CLASS,METHOD_SOURCE_INFO,METHOD_VALUE_AS_STRING,METHOD_VALUE_INFO,METHOD_VALUE_INFOS,SIGNAT_CONTEXT_EVAL_EXT,SIGNAT_CONTEXT_EVAL_JDK,SIGNAT_CONTEXT_EVAL_OLD_EXT,SIGNAT_CONTEXT_EVAL_OLD_JDK,SIGNAT_EVAL_EXT,SIGNAT_EVAL_JDK,SIGNAT_FROM_CLASS_EXT,SIGNAT_FROM_CLASS_JDK,SIGNAT_SOURCE_INFO_EXT,SIGNAT_SOURCE_INFO_JDK,SIGNAT_VALUE_AS_STRING,SIGNAT_VALUE_INFOS_EXT,SIGNAT_VALUE_INFOS_JDK,SIGNAT_VALUE_INFO_EXT,SIGNAT_VALUE_INFO_JDK,hasOldEval
 
 CLSS public org.netbeans.modules.debugger.jpda.js.vars.JSEvaluator
 cons public init(org.netbeans.spi.debugger.ContextProvider)

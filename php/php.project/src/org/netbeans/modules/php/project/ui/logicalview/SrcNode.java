@@ -176,7 +176,7 @@ public class SrcNode extends FilterNode {
         if (customizeAction != null) {
             actions.add(customizeAction);
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     static final Action[] COMMON_ACTIONS = new Action[]{
@@ -278,7 +278,7 @@ public class SrcNode extends FilterNode {
                     actions.add(commonActions[i]);
                 }
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         @Override
@@ -370,7 +370,7 @@ public class SrcNode extends FilterNode {
                     break;
                 }
             }
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         private Action[] getCommonActions() {
@@ -392,7 +392,7 @@ public class SrcNode extends FilterNode {
             }
             actions.add(null);
 
-            return actions.toArray(new Action[actions.size()]);
+            return actions.toArray(new Action[0]);
         }
 
         private FileObject getFileObject() {

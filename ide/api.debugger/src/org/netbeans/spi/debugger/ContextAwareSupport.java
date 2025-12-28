@@ -111,7 +111,7 @@ public final class ContextAwareSupport {
                 }
             }
             if (o == null)
-                o = cls.newInstance ();
+                o = cls.getDeclaredConstructor().newInstance();
             if (Logger.getLogger(ContextAwareSupport.class.getName()).isLoggable(Level.FINE)) {
                 Logger.getLogger(ContextAwareSupport.class.getName()).fine("instance "+o+" created.");
             }
@@ -121,7 +121,7 @@ public final class ContextAwareSupport {
                     Exceptions.attachMessage(
                         e,
                         "The service "+service+" not found."));
-        } catch (InstantiationException e) {
+        } catch (InstantiationException | NoSuchMethodException e) {
             Exceptions.printStackTrace(
                     Exceptions.attachMessage(
                     e,

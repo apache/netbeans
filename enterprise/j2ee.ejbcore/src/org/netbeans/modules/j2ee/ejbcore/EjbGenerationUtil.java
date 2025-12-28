@@ -62,7 +62,7 @@ public class EjbGenerationUtil {
         for (int i = 0; i < groups.length; i++) {
             findPackages(groups[i].getRootFolder(),"", pkgs);
         }
-        return pkgs.toArray(new String[pkgs.size()]);
+        return pkgs.toArray(new String[0]);
     }
     
     private static void findPackages (FileObject root, String curPkg, Set<String> pkgs) {

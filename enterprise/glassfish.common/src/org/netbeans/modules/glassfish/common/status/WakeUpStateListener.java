@@ -30,17 +30,11 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishStatusTask;
  */
 public abstract class WakeUpStateListener extends BasicStateListener {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Requested wake up of checking thread. */
     private volatile boolean wakeUp;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of state check results notification.
      */
@@ -49,10 +43,7 @@ public abstract class WakeUpStateListener extends BasicStateListener {
         wakeUp = false;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Wake up checking thread.
      */

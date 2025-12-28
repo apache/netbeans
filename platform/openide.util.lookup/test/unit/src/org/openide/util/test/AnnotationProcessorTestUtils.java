@@ -94,7 +94,6 @@ public class AnnotationProcessorTestUtils {
      */
     public static boolean runJavac(File src, String srcIncludes, File dest, File[] cp, OutputStream stderr, String source) {
         List<String> args = new ArrayList<String>();
-        args.add("-classpath");
         StringBuilder b = new StringBuilder(dest.getAbsolutePath());
         if (cp != null) {
             for (File entry : cp) {
@@ -104,7 +103,11 @@ public class AnnotationProcessorTestUtils {
         } else {
             b.append(File.pathSeparatorChar).append(System.getProperty("java.class.path"));
         }
-        args.add(b.toString());
+        String classpath = b.toString();
+        args.add("-classpath");
+        args.add(classpath);
+        args.add("-processorpath");
+        args.add(classpath);
         args.add("-d");
         args.add(dest.getAbsolutePath());
         args.add("-sourcepath");
@@ -118,6 +121,7 @@ public class AnnotationProcessorTestUtils {
         } else {
             args.add(source);
         }
+        args.add("-proc:full"); // https://inside.java/2024/06/18/quality-heads-up/
         args.add("-Xlint:-options");
         dest.mkdirs();
         destG.mkdirs();

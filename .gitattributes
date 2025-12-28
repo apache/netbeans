@@ -35,3 +35,7 @@
 
 # Define some file types explicitly as being binary.
 *.jar             binary
+
+# Define rules for files in specific paths, such as test data,
+# for line endings, binary types etc.
+java/java.hints/test/unit/data/goldenfiles/**           text eol=lf

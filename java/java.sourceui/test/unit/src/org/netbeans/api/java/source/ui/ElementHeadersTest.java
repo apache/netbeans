@@ -28,7 +28,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -40,6 +39,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 
 import javax.swing.text.Document;
@@ -67,6 +67,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
+import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -92,12 +93,11 @@ public class ElementHeadersTest extends NbTestCase {
         List<Object> extras = new ArrayList<>();
         extras.add(JavaDataLoader.class);
         extras.addAll(extraServicesInLookup);
-        SourceUtilsTestUtil.prepareTest(
-                new String[] { 
+        SourceUtilsTestUtil.prepareTest(new String[] { 
                     "org/netbeans/modules/java/platform/resources/layer.xml",
                     "org/netbeans/modules/java/j2seplatform/resources/layer.xml" 
                 }, 
-                extras.toArray(new Object[extras.size()])
+                extras.toArray(new Object[0])
         );
 
         clearWorkDir();
@@ -305,7 +305,7 @@ public class ElementHeadersTest extends NbTestCase {
     
     private List<StructureElement> sortChildren(StructureElement parent) {
         List<StructureElement> ch = new ArrayList<>(parent.getChildren());
-        Collections.sort(ch, new Comparator<StructureElement>() {
+        ch.sort(new Comparator<StructureElement>() {
             @Override
             public int compare(StructureElement o1, StructureElement o2) {
                 return o1.getSelectionStartOffset() - o2.getSelectionStartOffset();
@@ -381,6 +381,71 @@ public class ElementHeadersTest extends NbTestCase {
         assertNotNull(se);
     }
     
+    public void testAnonymousClass() throws Exception {
+        doStructureTest("""
+                        package test;
+                        public class Test {
+                            private Test test() {
+                                return new Test() {
+                                    private int anonymousClassField;
+                                };
+                            }
+                        }
+                        """,
+                        "(Class:Test:null:Test.java:14-151[27-31]:null (Method:test():: Test:Test.java:38-149[51-55]:null (Class:LBL_AnonymousClass: test.Test:null:Test.java:86-142[86-142]:null (Field:anonymousClassField:: int:Test.java:100-132[112-131]:null))))");
+    }
+
+    public void testAnonymousClassInFieldInit() throws Exception {
+        doStructureTest("""
+                        package test;
+                        public class Test {
+                            Test t = new Test() {
+                                private int anonymousClassField;
+                            };
+                    }
+                        """,
+                        "(Class:Test:null:Test.java:22-129[35-39]:null (Field:t:: Test:Test.java:50-127[55-56]:null (Class:LBL_AnonymousClass: test.Test:null:Test.java:70-126[70-126]:null (Field:anonymousClassField:: int:Test.java:84-116[96-115]:null))))");
+    }
+
+    private void doStructureTest(String code, String expected) throws Exception {
+        prepareTest("test/Test.java", code);
+        TypeElement topLevel = info.getTopLevelElements().get(0);
+        StructureElement structure = ElementHeaders.toStructureElement(info, topLevel, (el, type) -> true);
+        assertEquals(expected,
+                     structure2String(structure));
+    }
+
+    private String structure2String(StructureElement structure) {
+        StringBuilder result = new StringBuilder();
+        result.append("(")
+              .append(structure.getKind())
+              .append(":")
+              .append(structure.getName())
+              .append(":")
+              .append(structure.getDetail())
+              .append(":")
+              .append(structure.getFile() != null ? structure.getFile().getNameExt() : "null")
+              .append(":")
+              .append(structure.getExpandedStartOffset())
+              .append("-")
+              .append(structure.getExpandedEndOffset())
+              .append("[")
+              .append(structure.getSelectionStartOffset())
+              .append("-")
+              .append(structure.getSelectionEndOffset())
+              .append("]:")
+              .append(structure.getTags());
+
+        for (StructureElement child : structure.getChildren()) {
+            result.append(" ")
+                  .append(structure2String(child));
+        }
+
+        result.append(")");
+
+        return result.toString();
+    }
+
     FileObject openideBin;
     
     /**
@@ -458,5 +523,9 @@ public class ElementHeadersTest extends NbTestCase {
             return false;
         }
         
+    }
+
+    static {
+        NbBundle.setBranding("test");
     }
 }

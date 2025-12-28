@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.30
+#Version 2.38
 
 CLSS public abstract interface !annotation com.fasterxml.jackson.annotation.JacksonAnnotation
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
@@ -813,12 +813,6 @@ CLSS public abstract interface !annotation javax.annotation.Priority
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE, PARAMETER])
 intf java.lang.annotation.Annotation
 meth public abstract int value()
-
-CLSS public abstract interface !annotation javax.inject.Inject
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[METHOD, CONSTRUCTOR, FIELD])
-intf java.lang.annotation.Annotation
 
 CLSS public abstract interface !annotation javax.inject.Named
  anno 0 java.lang.annotation.Documented()

@@ -37,10 +37,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersion;
  */
 public class Hk2JpaSupportImpl implements JpaSupportImplementation {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Individual JPA specifications support.
      */
@@ -55,16 +52,18 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
          * @param jpa_2_2 JPA 2.2 supported.
          * @param jpa_3_0 JPA 3.0 supported.
          * @param jpa_3_1 JPA 3.1 supported.
+         * @param jpa_3_2 JPA 3.2 supported.
          */
         JpaSupportVector(boolean jpa_1_0, boolean jpa_2_0, 
                 boolean jpa_2_1, boolean jpa_2_2,
-                boolean jpa_3_0, boolean jpa_3_1) {
+                boolean jpa_3_0, boolean jpa_3_1, boolean jpa_3_2) {
             _1_0 = jpa_1_0;
             _2_0 = jpa_2_0;
             _2_1 = jpa_2_1;
             _2_2 = jpa_2_2;
             _3_0 = jpa_3_0;
             _3_1 = jpa_3_1;
+            _3_2 = jpa_3_2;
         }
 
         /** JPA 1.0 supported. */
@@ -84,12 +83,11 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
 
         /** JPA 3.1 supported. */
         boolean _3_1;
+        /** JPA 3.2 supported. */
+        boolean _3_2;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara server JPA provider class. */
     private static final String JPA_PROVIDER
             = "org.eclipse.persistence.jpa.PersistenceProvider";
@@ -105,16 +103,14 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
                     new JpaSupportVector(
                             true, true, 
                             version.isEE7Supported(), version.isEE8Supported(), 
-                            version.isEE9Supported(), version.isEE10Supported()
+                            version.isEE9Supported(), version.isEE10Supported(),
+                            false
                     )
             );
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara server instance. */
     private final PayaraServer instance;
 
@@ -124,10 +120,7 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
     /** {@see Set} of available provider instances. */
     private volatile Set<JpaProvider> providers = null;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Payara server JPA support.
      * <p/>
@@ -136,10 +129,7 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
         this.instance = instance;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // JpaSupportImplementation methods                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns Payara server JPA providers.
      * <p/>
@@ -181,7 +171,7 @@ public class Hk2JpaSupportImpl implements JpaSupportImplementation {
                     JPA_PROVIDER, true, instanceJpaSupport._1_0,
                     instanceJpaSupport._2_0, instanceJpaSupport._2_1,
                     instanceJpaSupport._2_2, instanceJpaSupport._3_0,
-                    instanceJpaSupport._3_1);
+                    instanceJpaSupport._3_1, instanceJpaSupport._3_2);
             }
         }
         return defaultProvider;

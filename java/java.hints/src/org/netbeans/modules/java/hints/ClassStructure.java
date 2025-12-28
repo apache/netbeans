@@ -292,7 +292,7 @@ public class ClassStructure {
                 gu.copyComments(mods, nmods, false);
                 mods = nmods;
             }
-            Tree nue = treeMaker.Interface(mods, cls.getSimpleName(), cls.getTypeParameters(), cls.getImplementsClause(), cls.getMembers());
+            Tree nue = treeMaker.Interface(mods, cls.getSimpleName(), cls.getTypeParameters(), cls.getImplementsClause(), cls.getPermitsClause(), cls.getMembers());
             gu.copyComments(cls, nue, true);
             gu.copyComments(cls, nue, false);
             wc.rewrite(path.getLeaf(), nue);

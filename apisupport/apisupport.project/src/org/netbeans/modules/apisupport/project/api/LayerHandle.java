@@ -263,7 +263,7 @@ public final class LayerHandle {
                     Logger.getLogger(DualLayers.class.getName()).log(Level.INFO, "could not load " + generated, x);
                 }
             }
-            setDelegates(layers.toArray(new FileSystem[layers.size()]));
+            setDelegates(layers.toArray(new FileSystem[0]));
         }
         public @Override void fileDataCreated(FileEvent fe) {
             configure();

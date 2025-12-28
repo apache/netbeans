@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.17
+#Version 2.25
 
 CLSS public abstract interface com.sun.jna.AltCallingConvention
 
@@ -81,7 +81,7 @@ fld public final static int ALT_CONVENTION = 63
 fld public final static int C_CONVENTION = 0
 fld public final static int MAX_NARGS = 256
 fld public final static int THROW_LAST_ERROR = 64
-fld public final static int USE_VARARGS = 384
+fld public final static int USE_VARARGS = 255
 innr public abstract interface static PostCallRead
 meth public boolean equals(java.lang.Object)
 meth public com.sun.jna.Pointer invokePointer(java.lang.Object[])
@@ -106,7 +106,7 @@ meth public static com.sun.jna.Function getFunction(java.lang.String,java.lang.S
 meth public void invoke(java.lang.Object[])
 meth public void invokeVoid(java.lang.Object[])
 supr com.sun.jna.Pointer
-hfds INTEGER_FALSE,INTEGER_TRUE,IS_VARARGS,MASK_CC,OPTION_INVOKING_METHOD,callFlags,encoding,functionName,library,options
+hfds INTEGER_FALSE,INTEGER_TRUE,IS_VARARGS,MASK_CC,OPTION_INVOKING_METHOD,USE_VARARGS_SHIFT,callFlags,encoding,functionName,library,options
 hcls NativeMappedArray,PointerArray
 
 CLSS public abstract interface static com.sun.jna.Function$PostCallRead
@@ -176,6 +176,7 @@ fld public final static java.lang.String OPTION_INVOCATION_MAPPER = "invocation-
 fld public final static java.lang.String OPTION_OPEN_FLAGS = "open-flags"
 fld public final static java.lang.String OPTION_STRING_ENCODING = "string-encoding"
 fld public final static java.lang.String OPTION_STRUCTURE_ALIGNMENT = "structure-alignment"
+fld public final static java.lang.String OPTION_SYMBOL_PROVIDER = "symbol-provider"
 fld public final static java.lang.String OPTION_TYPE_MAPPER = "type-mapper"
 innr public static Handler
 
@@ -273,8 +274,8 @@ fld public final static int POINTER_SIZE
 fld public final static int SIZE_T_SIZE
 fld public final static int WCHAR_SIZE
 fld public final static java.lang.String DEFAULT_ENCODING
-fld public final static java.lang.String VERSION = "5.12.1"
-fld public final static java.lang.String VERSION_NATIVE = "6.1.4"
+fld public final static java.lang.String VERSION = "5.17.0"
+fld public final static java.lang.String VERSION_NATIVE = "7.0.4"
 fld public final static java.nio.charset.Charset DEFAULT_CHARSET
 innr public abstract interface static ffi_callback
 meth public static <%0 extends com.sun.jna.Library> {%%0} load(java.lang.Class<{%%0}>)
@@ -298,6 +299,8 @@ meth public static byte[] toByteArray(java.lang.String,java.nio.charset.Charset)
 meth public static char[] toCharArray(java.lang.String)
 meth public static com.sun.jna.Callback$UncaughtExceptionHandler getCallbackExceptionHandler()
 meth public static com.sun.jna.Library synchronizedLibrary(com.sun.jna.Library)
+meth public static com.sun.jna.NativeLibrary getNativeLibrary(com.sun.jna.Library)
+meth public static com.sun.jna.NativeLibrary getNativeLibrary(java.lang.Class<?>)
 meth public static com.sun.jna.Pointer getComponentPointer(java.awt.Component)
 meth public static com.sun.jna.Pointer getDirectBufferPointer(java.nio.Buffer)
 meth public static com.sun.jna.Pointer getWindowPointer(java.awt.Window)
@@ -366,7 +369,7 @@ meth public void close()
 meth public void dispose()
  anno 0 java.lang.Deprecated()
 supr java.lang.Object
-hfds DEBUG_LOAD_LEVEL,DEFAULT_OPEN_OPTIONS,LOG,addSuppressedMethod,callFlags,cleanable,encoding,functions,handle,libraries,libraryName,libraryPath,librarySearchPath,options,searchPaths
+hfds DEBUG_LOAD_LEVEL,DEFAULT_OPEN_OPTIONS,LOG,NATIVE_SYMBOL_PROVIDER,addSuppressedMethod,callFlags,cleanable,encoding,functions,handle,libraries,libraryName,libraryPath,librarySearchPath,options,searchPaths,symbolProvider
 hcls NativeLibraryDisposer
 
 CLSS public com.sun.jna.NativeLong
@@ -401,6 +404,7 @@ fld public final static boolean HAS_JAWT
 fld public final static boolean RO_FIELDS
 fld public final static int AIX = 7
 fld public final static int ANDROID = 8
+fld public final static int DRAGONFLYBSD = 12
 fld public final static int FREEBSD = 4
 fld public final static int GNU = 9
 fld public final static int KFREEBSD = 10
@@ -421,6 +425,7 @@ meth public final static boolean is64Bit()
 meth public final static boolean isAIX()
 meth public final static boolean isARM()
 meth public final static boolean isAndroid()
+meth public final static boolean isDragonFlyBSD()
 meth public final static boolean isFreeBSD()
 meth public final static boolean isGNU()
 meth public final static boolean isIntel()
@@ -615,7 +620,7 @@ meth public void write()
 meth public void writeField(java.lang.String)
 meth public void writeField(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds LOG,PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,encoding,fieldOrder,layoutInfo,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper
+hfds LOG,PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,encoding,fieldList,fieldListLock,fieldOrder,fieldOrderLock,layoutInfo,layoutInfoLock,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper,validationLock,validationMap
 hcls AutoAllocated,FFIType,LayoutInfo,NativeStringTracking,StructureSet
 
 CLSS public abstract interface static com.sun.jna.Structure$ByReference
@@ -659,6 +664,9 @@ meth public com.sun.jna.Structure getStructure()
 meth public java.lang.reflect.Field getField()
 supr com.sun.jna.ToNativeContext
 hfds field,struct
+
+CLSS public abstract interface com.sun.jna.SymbolProvider
+meth public abstract long getSymbolAddress(long,java.lang.String,com.sun.jna.SymbolProvider)
 
 CLSS public com.sun.jna.ToNativeContext
 supr java.lang.Object

@@ -24,12 +24,11 @@ import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.languages.hcl.HCLSemanticAnalyzer;
 import org.netbeans.modules.languages.hcl.HCLParserResult;
 import org.netbeans.modules.languages.hcl.ast.HCLBlock;
-import org.netbeans.modules.languages.hcl.ast.HCLDocument;
-import org.netbeans.modules.languages.hcl.ast.HCLExpression;
 import org.netbeans.modules.languages.hcl.ast.HCLIdentifier;
 import org.netbeans.modules.languages.hcl.ast.HCLResolveOperation;
 import org.netbeans.modules.languages.hcl.ast.HCLVariable;
 import org.netbeans.modules.languages.hcl.SourceRef;
+import org.netbeans.modules.languages.hcl.ast.HCLTreeWalker;
 import org.netbeans.modules.languages.hcl.terraform.TerraformParserResult.BlockType;
 import static org.netbeans.modules.languages.hcl.terraform.TerraformParserResult.BlockType.CHECK;
 import static org.netbeans.modules.languages.hcl.terraform.TerraformParserResult.BlockType.DATA;
@@ -61,7 +60,6 @@ public final class TerraformSemanticAnalyzer extends HCLSemanticAnalyzer {
             "string"
     );
 
-    
     @Override
     protected Highlighter createHighlighter(HCLParserResult result) {
         return new TerraformHighlighter(result.getReferences());
@@ -75,23 +73,18 @@ public final class TerraformSemanticAnalyzer extends HCLSemanticAnalyzer {
         }
 
         @Override
-        protected boolean visitBlock(HCLBlock block) {
-            if (block.getParent() instanceof HCLDocument) {
-                List<HCLIdentifier> dcl = block.getDeclaration();
+        protected void highlight(HCLTreeWalker.Step step) {
+            super.highlight(step);
+
+            // TODO: Can use record patterns from Java 21
+            if (step.depth() == 1 && step.node() instanceof HCLBlock block) {
+                List<HCLIdentifier> dcl = block.declaration();
                 if (!dcl.isEmpty()) {
                     rootBlockType = TerraformParserResult.BlockType.get(dcl.get(0).id());
                 }
-            }
-            return super.visitBlock(block);
-        }
-        
-        
-        @Override
-        protected boolean visitExpression(HCLExpression expr) {
-            if (expr instanceof HCLResolveOperation.Attribute) {
-                HCLResolveOperation.Attribute attr = (HCLResolveOperation.Attribute) expr;
-                if ((rootBlockType != null) && (attr.base instanceof HCLVariable)) {
-                    String name = ((HCLVariable)attr.base).name.id;
+            } else if (step.node() instanceof HCLResolveOperation.Attribute attr) {
+                if ((rootBlockType != null) && (attr.base() instanceof HCLVariable var)) {
+                    String name = var.name().id();
                     switch (rootBlockType) {
                         case CHECK:
                         case DATA:
@@ -101,24 +94,18 @@ public final class TerraformSemanticAnalyzer extends HCLSemanticAnalyzer {
                         case PROVIDER:
                         case RESOURCE:
                             if (RESOLVE_BASES.contains(name)) {
-                                mark(attr.base, ColoringAttributes.FIELD_SET);
+                                mark(attr.base(), ColoringAttributes.FIELD_SET);
                             }
                             break;
                     }
-                    return false;
                 }
-            }
-
-            if (rootBlockType == BlockType.VARIABLE && (expr instanceof HCLVariable)) {
-                String name = ((HCLVariable) expr).name.id;
+            } else if (rootBlockType == BlockType.VARIABLE && (step.node() instanceof HCLVariable var)) {
+                String name = var.name().id();
                 if (LITERAL_TYPES.contains(name)) {
-                    mark(expr, ColoringAttributes.FIELD_SET);
+                    mark(var, ColoringAttributes.FIELD_SET);
                 }
-                return false;
             }
-            return super.visitExpression(expr);
         }
 
     }
-    
 }

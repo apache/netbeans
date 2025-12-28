@@ -441,7 +441,7 @@ public final class ModuleManager extends Modules {
         if (moduleFactory.removeBaseClassLoader()) {
             parents.remove(base);
         }
-        ClassLoader[] parentCLs = parents.toArray(new ClassLoader[parents.size()]);
+        ClassLoader[] parentCLs = parents.toArray(new ClassLoader[0]);
         SystemClassLoader nue;
         try {
             nue = new SystemClassLoader(classLoaderPatches, parentCLs, modules);
@@ -498,16 +498,6 @@ public final class ModuleManager extends Modules {
                 continue;
             }
         }
-    }
-
-    /** Only for use with Javeleon modules. */
-    public void replaceJaveleonModule(Module module, Module newModule) {
-        assert newModule instanceof JaveleonModule;
-        modules.remove(module);
-        modulesByName.remove(module.getCodeNameBase());
-        modules.add(newModule);
-        modulesByName.put(newModule.getCodeNameBase(), newModule);
-        invalidateClassLoader();
     }
 
     private static void checkMissingModules(
@@ -754,7 +744,7 @@ public final class ModuleManager extends Modules {
             ProxyClassLoader priviledged = null;
             NetigsoLoader osgi = null;
             if (!name.startsWith("java.")) { // NOI18N
-                Class<?>[] stack = TopSecurityManager.getStack();
+                List<Class<?>> stack = Util.getStack();
                 for (Class<?> c: stack) {
                     ClassLoader l = c.getClassLoader();
                     if (l == this) {
@@ -1488,7 +1478,7 @@ public final class ModuleManager extends Modules {
                         }
                     }
                 }
-                classLoader.append((nueclassloaders.toArray(new ClassLoader[nueclassloaders.size()])));
+                classLoader.append((nueclassloaders.toArray(new ClassLoader[0])));
                 classLoader.size += toEnable.size();
             } else {
                 Util.err.fine("enable: no class loader yet, not appending");
@@ -1976,44 +1966,6 @@ public final class ModuleManager extends Modules {
         return true;
     }
 
-    /** Only for use from Javeleon code. */
-    public List<Module> simulateJaveleonReload(Module moduleToReload) throws IllegalArgumentException {
-        Set<Module> transitiveDependents = new HashSet<Module>(20);
-        addToJaveleonDisableList(transitiveDependents, moduleToReload);
-        Map<Module,List<Module>> deps = Util.moduleDependencies(transitiveDependents, modulesByName, getProvidersOf());
-        try {
-            LinkedList<Module> orderedForEnabling = new LinkedList<Module>();
-            for (Module m : Utilities.topologicalSort(transitiveDependents, deps)) {
-                if (m != moduleToReload) {
-                    orderedForEnabling.addFirst(m);
-                }
-            }
-            return orderedForEnabling;
-        } catch (TopologicalSortException ex) {
-            return new ArrayList<Module>(transitiveDependents);
-        }
-    }
-    private void addToJaveleonDisableList(Set<Module> willDisable, Module m) {
-        if (willDisable.contains(m)) {
-            return;
-        }
-        willDisable.add(m);
-        for (Module other : modules) {
-            if (! other.isEnabled() || willDisable.contains(other)) {
-                continue;
-            }
-            Dependency[] depenencies = other.getDependenciesArray();
-            for (int i = 0; i < depenencies.length; i++) {
-                Dependency dep = depenencies[i];
-                if (dep.getType() == Dependency.TYPE_MODULE) {
-                    if (Util.parseCodeName(dep.getName())[0].equals(m.getCodeNameBase())) {
-                        addToJaveleonDisableList(willDisable, other);
-                        break;
-                    }
-                }
-            }
-        }
-    }
 
     /** Simulate what would happen if a set of modules were to be disabled.
      * None of the listed modules may be autoload modules, nor eager, nor currently disabled, nor fixed.
@@ -2455,7 +2407,7 @@ public final class ModuleManager extends Modules {
             Util.err.warning("Cyclic module dependencies, will not shut down cleanly: " + deps); // NOI18N
             return new TaskFuture(true, Task.EMPTY);
         }
-        if (!TopSecurityManager.officialExit && !installer.closing(sortedModules)) {
+        if (!NbExit.isExiting() && !installer.closing(sortedModules)) {
             return new TaskFuture(false, Task.EMPTY);
         }
         if (midHook != null) {

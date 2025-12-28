@@ -87,7 +87,7 @@ public class CheckoutTestHidden extends AbstractCommandTestCase {
             chFiles.add(chFile);
         }
 
-        assertNotifiedFiles(chFiles.toArray(new File[chFiles.size()]));
+        assertNotifiedFiles(chFiles.toArray(new File[0]));
     }
     
     public void testCheckoutFolder() throws Exception {

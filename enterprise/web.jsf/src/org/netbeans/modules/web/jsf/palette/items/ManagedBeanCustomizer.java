@@ -85,7 +85,6 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
 
     private Project project;
     private org.netbeans.modules.web.beans.MetaModelSupport metaModelSupport;
-    private org.netbeans.modules.jakarta.web.beans.MetaModelSupport jakartaMetaModelSupport;
     private boolean collection;
     private boolean dummyBean = false;
     private Dialog dialog;
@@ -114,12 +113,7 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
             }
         });
         this.project = project;
-        JsfVersion projectJsfVersion = JsfVersionUtils.forProject(project);
-        if(projectJsfVersion != null && projectJsfVersion.isAtLeast(JsfVersion.JSF_3_0)){
-            this.jakartaMetaModelSupport = new org.netbeans.modules.jakarta.web.beans.MetaModelSupport(project);
-        } else {
-            this.metaModelSupport = new org.netbeans.modules.web.beans.MetaModelSupport(project);
-        }
+        this.metaModelSupport = new org.netbeans.modules.web.beans.MetaModelSupport(project);
         
         this.collection = collection;
         readOnlyCheckBox.setVisible(enableReadOnly);
@@ -298,7 +292,7 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
                                 props.add(NbBundle.getMessage(ManagedBeanCustomizer.class, "ManagedBeanCustomizer.notManagedBeanFound")); // NOI18N
                                 dummyBean = true;
                             }
-                            managedBeanCombo.setModel(new DefaultComboBoxModel(props.toArray(new String[props.size()])));
+                            managedBeanCombo.setModel(new DefaultComboBoxModel(props.toArray(new String[0])));
                         }
                     });
                 }
@@ -374,10 +368,9 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
         }
         try {
             //check web beans
-            if(JsfVersionUtils.forProject(project).isAtLeast(JsfVersion.JSF_3_0)) {
-               jakartaMetaModelSupport.getMetaModel().runReadAction(new MetadataModelAction<org.netbeans.modules.jakarta.web.beans.api.model.WebBeansModel, Void>() {
+            metaModelSupport.getMetaModel().runReadAction(new MetadataModelAction<org.netbeans.modules.web.beans.api.model.WebBeansModel, Void>() {
                 @Override
-                public Void run(org.netbeans.modules.jakarta.web.beans.api.model.WebBeansModel metadata) throws Exception {
+                public Void run(org.netbeans.modules.web.beans.api.model.WebBeansModel metadata) throws Exception {
                     for (Element bean : metadata.getNamedElements()) {
                         if (bean == null) {
                             continue;
@@ -390,25 +383,7 @@ public class ManagedBeanCustomizer extends javax.swing.JPanel implements Cancell
                     }
                     return null;
                 }
-                }); 
-            } else {
-                metaModelSupport.getMetaModel().runReadAction(new MetadataModelAction<org.netbeans.modules.web.beans.api.model.WebBeansModel, Void>() {
-                    @Override
-                    public Void run(org.netbeans.modules.web.beans.api.model.WebBeansModel metadata) throws Exception {
-                        for (Element bean : metadata.getNamedElements()) {
-                            if (bean == null) {
-                                continue;
-                            }
-                            String beanName = metadata.getName(bean);
-                            String className = bean.asType().toString();
-                            if ((beanName != null)) {
-                                res.addAll(getManagedBeanPropertyNames(project, className, entityClass, beanName, collection));
-                            }
-                        }
-                        return null;
-                    }
-                });
-            }
+            });
         } catch (MetadataModelException ex) {
             Exceptions.printStackTrace(ex);
         } catch (IOException ex) {

@@ -413,8 +413,8 @@ public class FormRefactoringUpdate extends SimpleRefactoringElementImplementatio
             }
         }
         if (!oldList.isEmpty()) {
-            oldNames = oldList.toArray(new String[oldList.size()]);
-            newNames = newList.toArray(new String[newList.size()]);
+            oldNames = oldList.toArray(new String[0]);
+            newNames = newList.toArray(new String[0]);
             return replaceClassOrPkgName(oldNames, newNames, false);
         }
         return false;
@@ -473,8 +473,8 @@ public class FormRefactoringUpdate extends SimpleRefactoringElementImplementatio
                 }
             }
             if (!oldList.isEmpty()) {
-                String[] oldNames = oldList.toArray(new String[oldList.size()]);
-                String[] newNames = newList.toArray(new String[newList.size()]);
+                String[] oldNames = oldList.toArray(new String[0]);
+                String[] newNames = newList.toArray(new String[0]);
                 replaced |= replaceClassOrPkgName(oldNames, newNames, false);
                // also try to replace short class name
                 switch (refInfo.getChangeType()) {

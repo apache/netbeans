@@ -21,7 +21,7 @@ package org.netbeans.modules.languages.hcl.ast;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import static org.netbeans.modules.languages.hcl.ast.HCLExpression.parse;
+import static org.netbeans.modules.languages.hcl.ast.HCLExpressionTestSupport.*;
 
 /**
  *
@@ -44,7 +44,7 @@ public class HCLLiteralsTest {
         HCLExpression exp = parse("3.14");
         assertTrue(exp instanceof HCLLiteral.NumericLit);
         HCLLiteral.NumericLit num = (HCLLiteral.NumericLit) exp;
-        assertEquals("3.14", num.value);
+        assertEquals("3.14", num.value());
     }
 
     @Test
@@ -52,7 +52,7 @@ public class HCLLiteralsTest {
         HCLExpression exp = parse("\"Hello\"");
         assertTrue(exp instanceof HCLLiteral.StringLit);
         HCLLiteral.StringLit str = (HCLLiteral.StringLit) exp;
-        assertEquals("Hello", str.value);
+        assertEquals("Hello", str.value());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class HCLLiteralsTest {
         HCLExpression exp = parse("\"\"");
         assertTrue(exp instanceof HCLLiteral.StringLit);
         HCLLiteral.StringLit str = (HCLLiteral.StringLit) exp;
-        assertEquals("", str.value);
+        assertEquals("", str.value());
     }
 
     @Test
@@ -68,7 +68,7 @@ public class HCLLiteralsTest {
         HCLExpression exp = parse("<<EOT\nEOT");
         assertTrue(exp instanceof HCLTemplate.HereDoc);
         HCLTemplate.HereDoc heredoc = (HCLTemplate.HereDoc) exp;
-        assertTrue(heredoc.parts.isEmpty());
+        assertTrue(heredoc.parts().isEmpty());
     }
 
 }

@@ -168,7 +168,7 @@ public final class VersioningSupport {
             }
         }
         if (fileList.size() > 0) {
-            FileUtil.refreshFor(fileList.toArray(new File[fileList.size()])); 
+            FileUtil.refreshFor(fileList.toArray(new File[0])); 
         }
         for (Map.Entry<VCSFileProxyOperations, Set<VCSFileProxy>> e : proxyMap.entrySet()) {
             VCSFileProxyOperations fileProxyOperations = e.getKey();

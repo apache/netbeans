@@ -56,7 +56,7 @@ abstract class WebBeansComponentImpl extends
     }
     
     protected static Element createNewElement(String name, WebBeansModelImpl model){
-        String ns = WebBeansComponent.WEB_BEANS_NAMESPACE;
+        String ns = WebBeansComponent.WEB_BEANS_NAMESPACE_JAKARTA;
         if(model.getRootComponent() instanceof AbstractDocumentComponent) {
             ns = ((AbstractDocumentComponent)model.getRootComponent()).getQName().getNamespaceURI();
         }

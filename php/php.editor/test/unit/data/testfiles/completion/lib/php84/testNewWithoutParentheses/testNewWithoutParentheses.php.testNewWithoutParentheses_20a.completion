@@ -1,0 +1,8 @@
+Code completion result for source line:
+}::|PUBLIC_CONSTANT;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticMethod()            [STATIC]   {}
+VARIABLE   string $publicStaticField       [STATIC]   {}
+CONSTANT   IMPLICIT_PUBLIC_CONST "implici  [PUBLIC]   {}
+CONSTANT   PUBLIC_CONST "public const"     [PUBLIC]   {}
+CONSTANT   class \#anon#testNewWithoutPar  [PUBLIC]   Magic Constant

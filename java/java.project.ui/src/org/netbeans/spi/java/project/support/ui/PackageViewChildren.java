@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,7 +42,6 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.fileinfo.NonRecursiveFolder;
 import org.netbeans.api.java.queries.AccessibilityQuery;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.queries.VisibilityQuery;
@@ -1174,7 +1172,7 @@ final class PackageViewChildren extends Children.Keys<String> implements FileCha
                 }
                 result.add(set);
             }
-            return result.toArray(new Node.PropertySet[result.size()]);
+            return result.toArray(new Node.PropertySet[0]);
         }
         
         private DataFolder getDataFolder() {
@@ -1300,7 +1298,7 @@ final class PackageViewChildren extends Children.Keys<String> implements FileCha
         private PackageNode node;
 
         public PackageTransferable (PackageNode node, int operation) throws ClassNotFoundException {
-            super(new DataFlavor(PACKAGE_FLAVOR.format(new Object[] {new Integer(operation)}), null, PackageNode.class.getClassLoader()));
+            super(new DataFlavor(PACKAGE_FLAVOR.format(new Object[] {operation}), null, PackageNode.class.getClassLoader()));
             this.node = node;
         }
 
@@ -1333,7 +1331,7 @@ final class PackageViewChildren extends Children.Keys<String> implements FileCha
                 PackageRootNode.PKG_VIEW_RP.post(new java.lang.Runnable() {
                     @Override
                     public void run() {
-                        final ProgressHandle h = ProgressHandleFactory.createHandle(getName());
+                        final ProgressHandle h = ProgressHandle.createHandle(getName());
                         h.start();
                         h.switchToIndeterminate();
                         try {

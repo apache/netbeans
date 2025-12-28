@@ -25,10 +25,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,7 +71,6 @@ import org.openide.util.Mutex.Action;
 import org.openide.util.MutexException;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 import org.openide.xml.XMLUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -191,7 +192,7 @@ public final class AntProjectHelper {
     
     
     /** Atomic actions in use to save XML files. */
-    private final Set<AtomicAction> saveActions = new WeakSet<AtomicAction>();
+    private final Set<AtomicAction> saveActions = Collections.newSetFromMap(new WeakHashMap<>());
     
     /**
      * Hook waiting to be called. See issue #57794.
@@ -487,7 +488,7 @@ public final class AntProjectHelper {
             if (listeners.isEmpty()) {
                 return;
             }
-            _listeners = listeners.toArray(new AntProjectListener[listeners.size()]);
+            _listeners = listeners.toArray(new AntProjectListener[0]);
         }
         final AntProjectEvent ev = new AntProjectEvent(this, path, expected);
         final boolean xml = path.equals(PROJECT_XML_PATH) || path.equals(PRIVATE_XML_PATH);
@@ -1052,7 +1053,7 @@ public final class AntProjectHelper {
      * A file is considered out of date if there is no file represented by the
      * matching target pattern (which has the same format), or the target file is older
      * than the source file, or the source file is modified as per
-     * <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#isModified--" >DataObject#isModified()</a>.
+     * <a href="@org-openide-loaders@/org/openide/loaders/DataObject.html#isModified()" >DataObject#isModified()</a>.
      * An attempt is made to fire changes from the status object whenever the result
      * should change from one call to the next.
      * <p>

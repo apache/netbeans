@@ -74,6 +74,7 @@ import javax.accessibility.AccessibleContext;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
@@ -306,6 +307,10 @@ public abstract class TreeView extends JScrollPane {
         defaultActionListener = new PopupSupport();
         getInputMap( JTree.WHEN_FOCUSED ).put( 
                 KeyStroke.getKeyStroke( KeyEvent.VK_F10, KeyEvent.SHIFT_DOWN_MASK ), "org.openide.actions.PopupAction" );
+        if (Utilities.isMac()) {
+            // On Windows, this shortcut is already present in JTree's InputMap.
+            tree.getInputMap( JTree.WHEN_FOCUSED ).put(Utilities.stringToKey("F2"), "startEditing");
+        }
         getActionMap().put("org.openide.actions.PopupAction", defaultActionListener.popup);
         tree.addFocusListener(defaultActionListener);
         tree.addMouseListener(defaultActionListener);
@@ -1093,11 +1098,14 @@ public abstract class TreeView extends JScrollPane {
             return null;
         }
 
-        Point p = new Point(rect.x, rect.y);
+        Point p = new Point(
+            rect.x + Math.min(350, 10 + rect.width),
+            rect.y - 15);
 
         // bugfix #36984, convert point by TreeView.this
         p = SwingUtilities.convertPoint(tree, p, TreeView.this);
 
+        p.x = Math.min(p.x, TreeView.this.getWidth());
         return p;
     }
 
@@ -1136,7 +1144,7 @@ public abstract class TreeView extends JScrollPane {
             if (!toAdd.isEmpty()) {
                 contextLookup = new ProxyLookup(
                     contextLookup,
-                    Lookups.fixed((Object[])toAdd.toArray(new Node[toAdd.size()])));
+                    Lookups.fixed((Object[])toAdd.toArray(new Node[0])));
             }
             return contextLookup;
         }
@@ -1208,7 +1216,7 @@ public abstract class TreeView extends JScrollPane {
         removedNodeWasSelected = remSel != null;
         if (remSel != null) {
             try {
-                sm.removeSelectionPaths(remSel.toArray(new TreePath[remSel.size()]));
+                sm.removeSelectionPaths(remSel.toArray(new TreePath[0]));
             } catch (NullPointerException e) {
                 // if editing of label of removed node was in progress
                 // BasicTreeUI will try to cancel editing and repaint node 
@@ -1471,7 +1479,7 @@ public abstract class TreeView extends JScrollPane {
                     ll.add(n);
                 }
             }
-            callSelectionChanged(ll.toArray(new Node[ll.size()]));
+            callSelectionChanged(ll.toArray(new Node[0]));
         }
 
         /** Checks whether given Node is a subnode of rootContext.

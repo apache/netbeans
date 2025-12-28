@@ -20,6 +20,7 @@ package org.openide.text;
 
 import java.io.IOException;
 import javax.swing.text.StyledDocument;
+import org.netbeans.modules.openide.text.AskEditorQuestions;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.util.Exceptions;
@@ -45,6 +46,29 @@ class UserQuestionExceptionHandler implements Runnable {
     }
 
     void runInEDT() {
+        AskEditorQuestions.QuestionResult shouldAsk = AskEditorQuestions.askUserQuestion(uqe);
+        // attempt to handle automatic responses synchronously:
+        if (AskEditorQuestions.QuestionResult.NO == shouldAsk) {
+            openRefused();
+            return;
+        } else if (AskEditorQuestions.QuestionResult.YES == shouldAsk) {
+            try {
+                uqe.confirmed();
+                uqe = null;
+                doc = openDocument();
+                opened(doc);
+                return;
+            } catch (UserQuestionException ex) {
+                // bad luck, go for EDT access.
+                uqe = ex;
+            } catch (IOException ex1) {
+                handleIOException(ex1);
+                return;
+            } catch (RuntimeException ex) {
+                handleRuntimeException(ex);
+                return;
+            }
+        }
         Mutex.EVENT.readAccess(this);
     }
 
@@ -60,9 +84,18 @@ class UserQuestionExceptionHandler implements Runnable {
         handleStart();
         try {
             while (true) {
-                NotifyDescriptor nd = new NotifyDescriptor.Confirmation(uqe.getLocalizedMessage(), NotifyDescriptor.YES_NO_OPTION);
-                nd.setOptions(new Object[]{NotifyDescriptor.YES_OPTION, NotifyDescriptor.NO_OPTION});
-                Object res = DialogDisplayer.getDefault().notify(nd);
+                AskEditorQuestions.QuestionResult shouldAsk = AskEditorQuestions.askUserQuestion(uqe);
+                Object res;
+                if (AskEditorQuestions.QuestionResult.ASK_USER == shouldAsk) {
+                    NotifyDescriptor nd = new NotifyDescriptor.Confirmation(uqe.getLocalizedMessage(), NotifyDescriptor.YES_NO_OPTION);
+                    nd.setOptions(new Object[]{NotifyDescriptor.YES_OPTION, NotifyDescriptor.NO_OPTION});
+                    res = DialogDisplayer.getDefault().notify(nd);
+                } else if (AskEditorQuestions.QuestionResult.YES == shouldAsk) {
+                    res = NotifyDescriptor.OK_OPTION;
+                } else {
+                    res = NotifyDescriptor.NO_OPTION;
+                }
+                 
                 if (NotifyDescriptor.OK_OPTION.equals(res)) {
                     try {
                         uqe.confirmed();

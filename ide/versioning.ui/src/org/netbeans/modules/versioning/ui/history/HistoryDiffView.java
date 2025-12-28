@@ -57,7 +57,7 @@ import org.openide.util.lookup.Lookups;
 public class HistoryDiffView implements PropertyChangeListener {
            
     private final HistoryComponent tc;
-    private DiffPanel panel;
+    private final DiffPanel panel;
     private Component diffComponent;
     private DiffController diffView;                
     private DiffTask diffTask;
@@ -126,8 +126,8 @@ public class HistoryDiffView implements PropertyChangeListener {
                     file2 = file1 = getFile(newSelection[1], entry2);
                 }
                 
-                if(entry1 != null && entry2 != null && file1 != null && file2 != null) {
-                    if(entry1.getDateTime().getTime() > entry1.getDateTime().getTime()) {
+                if (entry1 != null && entry2 != null && file1 != null && file2 != null) {
+                    if (entry1.getDateTime().getTime() > entry2.getDateTime().getTime()) {
                         refreshRevisionDiffPanel(entry1, entry2, file1, file2);
                     } else {
                         refreshRevisionDiffPanel(entry2, entry1, file2, file1);
@@ -262,7 +262,7 @@ public class HistoryDiffView implements PropertyChangeListener {
         }
     }        
 
-    private Map<String, DiffController> views = new ConcurrentHashMap<String, DiffController>();
+    private final Map<String, DiffController> views = new ConcurrentHashMap<>();
     private DiffController getView(HistoryEntry entry, VCSFileProxy file) {
         assert entry != null;
         if(entry == null) {
@@ -471,7 +471,7 @@ public class HistoryDiffView implements PropertyChangeListener {
 
         final DiffController dv;
         try {   
-            dv = DiffController.createEnhanced(ss1, ss2);
+            dv = DiffController.createEnhanced(diffView, ss1, ss2);
         } catch (IOException ioe)  {
             History.LOG.log(Level.SEVERE, null, ioe);
             return null;
@@ -666,7 +666,7 @@ public class HistoryDiffView implements PropertyChangeListener {
         }
         
         private class PreparingDiffHandler extends JPanel implements ActionListener {
-            private JLabel label = new JLabel();
+            private final JLabel label = new JLabel();
             private Component progressComponent;
             private ProgressHandle handle;
             
@@ -690,7 +690,7 @@ public class HistoryDiffView implements PropertyChangeListener {
                     return;
                 }
                 synchronized(TIMER_LOCK) {
-                    handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(HistoryDiffView.class, "LBL_PreparingDiff")); // NOI18N
+                    handle = ProgressHandle.createHandle(NbBundle.getMessage(HistoryDiffView.class, "LBL_PreparingDiff")); // NOI18N
                     setProgressComponent(ProgressHandleFactory.createProgressComponent(handle));
                     handle.start();
                     handle.switchToIndeterminate();   

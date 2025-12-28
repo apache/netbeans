@@ -27,10 +27,7 @@ package org.netbeans.modules.payara.tooling.data;
  */
 public interface PayaraServer {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Interface Methods                                                      //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Payara server name.
      * <p/>
@@ -80,6 +77,14 @@ public interface PayaraServer {
      *         is docker instance or <code>false</code> otherwise.
      */
     public boolean isDocker();
+
+    /**
+     * Get information if this Payara server instance is running in WSL container.
+     * <p/>
+     * @return Value of <code>true</code> when this Payara server instance
+     *         is WSL instance or <code>false</code> otherwise.
+     */
+    public boolean isWSL();
 
     /**
      * Get the docker host path.

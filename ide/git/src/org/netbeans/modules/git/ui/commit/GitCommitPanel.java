@@ -82,12 +82,12 @@ public class GitCommitPanel extends VCSCommitPanel<GitLocalFileNode> {
 
     static final GitCommitFilter FILTER_HEAD_VS_WORKING = new GitCommitFilter(
                 "HEAD_VS_WORKING", 
-                org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/head_vs_working.png", false),
+                org.openide.util.ImageUtilities.loadIcon("org/netbeans/modules/git/resources/icons/head_vs_working.png"),
                 NbBundle.getMessage(GitCommitPanel.class, "ParametersPanel.tgbHeadVsWorking.toolTipText"),
                 true); 
     static final GitCommitFilter FILTER_HEAD_VS_INDEX = new GitCommitFilter(
                 "HEAD_VS_INDEX", 
-                org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/head_vs_index.png", false),
+                org.openide.util.ImageUtilities.loadIcon("org/netbeans/modules/git/resources/icons/head_vs_index.png"),
                 NbBundle.getMessage(GitCommitPanel.class, "ParametersPanel.tgbHeadVsIndex.toolTipText"),
                 false);
     
@@ -305,7 +305,7 @@ public class GitCommitPanel extends VCSCommitPanel<GitLocalFileNode> {
                 GitLocalFileNode node = new GitLocalFileNode(repository, file, getAcceptedMode(filter));
                 nodesList.add(node);
             }
-            final GitLocalFileNode[] nodes = nodesList.toArray(new GitLocalFileNode[nodesList.size()]);
+            final GitLocalFileNode[] nodes = nodesList.toArray(new GitLocalFileNode[0]);
             EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run() {
@@ -443,7 +443,7 @@ public class GitCommitPanel extends VCSCommitPanel<GitLocalFileNode> {
                     allCookies.add(cookies[0]);
                 }
             }
-            return allCookies.toArray(new EditorCookie[allCookies.size()]);
+            return allCookies.toArray(new EditorCookie[0]);
         }        
     }    
     

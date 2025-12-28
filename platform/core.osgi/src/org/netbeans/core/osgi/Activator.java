@@ -232,7 +232,7 @@ public class Activator implements BundleActivator, SynchronousBundleListener {
             // XXX set ${jdk.home}?
             List<String> bisp = new ArrayList<String>(Arrays.asList(Introspector.getBeanInfoSearchPath()));
             bisp.add("org.netbeans.beaninfo"); // NOI18N
-            Introspector.setBeanInfoSearchPath(bisp.toArray(new String[bisp.size()]));
+            Introspector.setBeanInfoSearchPath(bisp.toArray(new String[0]));
             CoreBridge.getDefault().registerPropertyEditors();
         }
         for (RunLevel rl : Lookup.getDefault().lookupAll(RunLevel.class)) {
@@ -315,7 +315,7 @@ public class Activator implements BundleActivator, SynchronousBundleListener {
                                     class Svc extends AbstractURLStreamHandlerService {
                                         public @Override URLConnection openConnection(final URL u) throws IOException {
                                             try {
-                                                URLStreamHandler handler = (URLStreamHandler) bundle.loadClass(fqn).newInstance();
+                                                URLStreamHandler handler = (URLStreamHandler) bundle.loadClass(fqn).getDeclaredConstructor().newInstance();
                                                 Method openConnection = URLStreamHandler.class.getDeclaredMethod("openConnection", URL.class);
                                                 openConnection.setAccessible(true);
                                                 return (URLConnection) openConnection.invoke(handler, u);

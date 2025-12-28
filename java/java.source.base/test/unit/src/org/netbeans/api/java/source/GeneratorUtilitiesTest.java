@@ -26,6 +26,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -33,6 +34,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
@@ -583,6 +585,18 @@ public class GeneratorUtilitiesTest extends NbTestCase {
         }, false);
     }
 
+    public void testAddImports14() throws Exception {
+        performTest("test/Process.java", "package test;\nimport java.util.Collections;\npublic class Process {\npublic static void main(String... args) {\n" +
+        "Collections.singleton(Process.class).forEach(System.out::println);\n}\n}", "1.5", new AddImportsTask("test.Process"), new Validator() {
+            public void validate(CompilationInfo info) {
+                assertEquals(0, info.getDiagnostics().size());
+                List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
+                assertEquals(1, imports.size());
+                assertEquals("java.util.Collections", imports.get(0).getQualifiedIdentifier().toString());
+            }
+        }, false);
+    }
+
     public void testAddImportsIncrementallyWithStatic_JIRA3019() throws Exception {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
         performTest("package test;\npublic class Test { public static final String CONST = null; }\n", "11", new AddImportsTask(true, "test.Test.CONST", "java.util.List"), new Validator() {
@@ -594,6 +608,159 @@ public class GeneratorUtilitiesTest extends NbTestCase {
                 assertEquals("test.Test.CONST", imports.get(1).getQualifiedIdentifier().toString());
             }
         }, false);
+    }
+
+    public void testAddImportsWithModule1() throws Exception {
+        performTest("test/Process.java",
+                """
+                package test;
+                import java.util.Collections;
+                public class Process {
+                    public static void main(String... args) {
+                        Collections.singleton(Process.class).forEach(System.out::println);
+                    }
+                }
+                """,
+                "25", new AddImportsTask(false, List.of("java.base"), "test.Process"),
+                (CompilationInfo info) -> {
+                    assertEquals(0, info.getDiagnostics().size());
+                    List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
+                    assertEquals(2, imports.size());
+                    assertEquals("java.util.Collections", imports.get(0).getQualifiedIdentifier().toString());
+                    assertTrue(imports.get(1).isModule());
+                    assertEquals("java.base", imports.get(1).getQualifiedIdentifier().toString());
+                }, false);
+    }
+
+    public void testAddImportsWithModule2() throws Exception {
+        performTest(
+                """
+                package test;
+                import java.util.List;
+                import javax.swing.JLabel;
+                public class Test { }
+                """,
+                "25", new AddImportsTask(false, List.of("java.base", "java.desktop"), "javax.swing.JTable", "java.util.ArrayList"),
+                (CompilationInfo info) -> {
+                    assertEquals(0, info.getDiagnostics().size());
+                    List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
+                    assertEquals(4, imports.size());
+                    assertEquals("java.util.List", imports.get(0).getQualifiedIdentifier().toString());
+                    assertEquals("javax.swing.JLabel", imports.get(1).getQualifiedIdentifier().toString());
+                    assertTrue(imports.get(2).isModule());
+                    assertEquals("java.base", imports.get(2).getQualifiedIdentifier().toString());
+                    assertTrue(imports.get(3).isModule());
+                    assertEquals("java.desktop", imports.get(3).getQualifiedIdentifier().toString());
+                }, false);
+    }
+
+    public void testAddImportsWithModule3() throws Exception {
+        performTest(
+                """
+                package test;
+                import javax.swing.JLabel;
+                import module java.base;
+                public class Test { }
+                """,
+                "25", new AddImportsTask(false, List.of("java.base", "java.desktop"), "java.util.List", "java.util.ArrayList"),
+                (CompilationInfo info) -> {
+                    assertEquals(0, info.getDiagnostics().size());
+                    List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
+                    assertEquals(4, imports.size());
+                    assertEquals("java.util.List", imports.get(0).getQualifiedIdentifier().toString());
+                    assertEquals("javax.swing.JLabel", imports.get(1).getQualifiedIdentifier().toString());
+                    assertTrue(imports.get(2).isModule());
+                    assertEquals("java.base", imports.get(2).getQualifiedIdentifier().toString());
+                    assertTrue(imports.get(3).isModule());
+                    assertEquals("java.desktop", imports.get(3).getQualifiedIdentifier().toString());
+                }, false);
+    }
+
+    public void testAddImportsWithModule4() throws Exception {
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.putBoolean("allowConvertToStarImport", true);
+        performTest(
+                """
+                package test;
+                import java.awt.*;
+                import java.util.List;
+                import module java.base;
+                public class Test {
+                    private void op(List list) {
+                        int size = list.size();
+                    }
+                }
+                """,
+                "25", new AddImportsTask("java.util.AbstractList", "java.util.ArrayList", "java.util.Collection", "java.util.Collections"),
+                (CompilationInfo info) -> {
+                    assertEquals(0, info.getDiagnostics().size());
+                    List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
+                    assertEquals(3, imports.size());
+                    assertEquals("java.awt.*", imports.get(0).getQualifiedIdentifier().toString());
+                    assertEquals("java.util.List", imports.get(1).getQualifiedIdentifier().toString());
+                    assertTrue(imports.get(2).isModule());
+                    assertEquals("java.base", imports.get(2).getQualifiedIdentifier().toString());
+                }, false);
+        preferences.putBoolean("allowConvertToStarImport", false);
+    }
+
+    public void testAddImportsWithModule5() throws Exception {
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.putBoolean("allowConvertToStarImport", true);
+        performTest(
+                """
+                package test;
+                import java.util.List;
+                public class Test {
+                    private List l = new ArrayList<>();
+                    private Button b;
+                    private void op(List list) {
+                        int size = list.size();
+                    }
+                }
+                """,
+                "25", new AddImportsTask(false, List.of("java.desktop", "java.base"), "java.awt.Button", "java.util.AbstractList", "java.util.ArrayList", "java.util.Collection", "java.util.Collections"),
+                (CompilationInfo info) -> {
+                    assertEquals(0, info.getDiagnostics().size());
+                    List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
+                    assertEquals(3, imports.size());
+                    assertEquals("java.util.List", imports.get(0).getQualifiedIdentifier().toString());
+                    assertTrue(imports.get(1).isModule());
+                    assertEquals("java.base", imports.get(1).getQualifiedIdentifier().toString());
+                    assertTrue(imports.get(2).isModule());
+                    assertEquals("java.desktop", imports.get(2).getQualifiedIdentifier().toString());
+                }, false);
+        preferences.putBoolean("allowConvertToStarImport", false);
+    }
+
+    public void testAddImportsWithModule6() throws Exception {
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.putBoolean("allowConvertToStarImport", true);
+        performTest(
+                """
+                package test;
+                import java.util.List;
+                public class Test {
+                    private List l = new ArrayList<>();
+                    private Button b;
+                    private void op(List list) {
+                        int size = list.size();
+                    }
+                }
+                """,
+                "25", new AddImportsTask(false, List.of("java.desktop", "java.sql"), "java.awt.Button", "java.util.AbstractList", "java.util.ArrayList", "java.util.Collection", "java.util.Collections", "javax.xml.XMLConstants", "java.sql.PreparedStatement", "java.awt.datatransfer.Clipboard"),
+                (CompilationInfo info) -> {
+                    assertEquals(0, info.getDiagnostics().size());
+                    List<? extends ImportTree> imports = info.getCompilationUnit().getImports();
+                    assertEquals(4, imports.size());
+                    assertEquals("java.util.*", imports.get(0).getQualifiedIdentifier().toString());
+                    assertEquals("java.util.List", imports.get(1).getQualifiedIdentifier().toString());
+                    assertTrue(imports.get(2).isModule());
+                    assertEquals("java.desktop", imports.get(2).getQualifiedIdentifier().toString());
+                    assertTrue(imports.get(3).isModule());
+                    assertEquals("java.sql", imports.get(3).getQualifiedIdentifier().toString());
+                }, false);
+        preferences.putBoolean("allowConvertToStarImport", false);
     }
 
     public void testGetterNamingConvention0() throws Exception {//#165241
@@ -1142,6 +1309,7 @@ public class GeneratorUtilitiesTest extends NbTestCase {
 
         private final boolean incremental;
         private String[] toImport;
+        private List<String> toImportModules;
         
         public AddImportsTask(String... toImport) {
             this(false, toImport);
@@ -1150,6 +1318,13 @@ public class GeneratorUtilitiesTest extends NbTestCase {
         public AddImportsTask(boolean incremental, String... toImport) {
             this.incremental = incremental;
             this.toImport = toImport;
+            this.toImportModules = List.of();
+        }
+
+        public AddImportsTask(boolean incremental, List<String> toImportModules, String... toImport) {
+            this.incremental = incremental;
+            this.toImport = toImport;
+            this.toImportModules = toImportModules == null ? List.of() : toImportModules;
         }
 
         public void cancel() {
@@ -1188,6 +1363,12 @@ public class GeneratorUtilitiesTest extends NbTestCase {
                 if (incremental) {
                     newCut = utilities.addImports(newCut, Collections.singleton(el));
                 } else {
+                    imports.add(el);
+                }
+            }
+            for (String imp : toImportModules) {
+                Element el = elements.getModuleElement(imp);
+                if (el != null) {
                     imports.add(el);
                 }
             }
@@ -1540,6 +1721,63 @@ public class GeneratorUtilitiesTest extends NbTestCase {
             
             parameter.rewrite(testTree, nueTestTree);
         }
+    }
+
+    public void testGenerateMethodInLambda() throws Exception {
+        performTest("test/Test.java",
+                    """
+                    package test;
+                    public class Test {
+                        private void test(Runnable r) {
+                            test(() -> {
+                                new Base<Void, Void>() {};
+                            });
+                        }
+                    }
+                    class Base<T1, T2> {
+                        public T1 test(T1 p) {}
+                    }
+                    """,
+                    "17",
+                    new Task<WorkingCopy>() {
+                        @Override
+                        public void run(WorkingCopy copy) throws java.lang.Exception {
+                            copy.toPhase(Phase.RESOLVED);
+                            new TreePathScanner<Void, Void>() {
+                                @Override
+                                public Void visitNewClass(NewClassTree node, Void p) {
+                                    if (node.getClassBody() != null) {
+                                        ClassTree clazz = node.getClassBody();
+                                        TypeElement anon = (TypeElement) copy.getTrees().getElement(new TreePath(getCurrentPath(), clazz));
+                                        TypeElement superClass = (TypeElement) ((DeclaredType) anon.getSuperclass()).asElement();
+                                        ExecutableElement method = (ExecutableElement) superClass.getEnclosedElements().stream().filter(el -> el.getSimpleName().contentEquals("test")).findAny().get();
+                                        copy.rewrite(clazz, copy.getTreeMaker().addClassMember(clazz, GeneratorUtilities.get(copy).createOverridingMethod(anon, method)));
+                                    }
+                                    return super.visitNewClass(node, p);
+                                }
+
+                            }.scan(copy.getCompilationUnit(), null);
+                        }
+                    },
+                    new ContentValidator("""
+                                         package test;
+                                         public class Test {
+                                             private void test(Runnable r) {
+                                                 test(() -> {
+                                                     new Base<Void, Void>() {
+                                                         @Override
+                                                         public Void test(Void p) {
+                                                             return super.test(p); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+                                                         }
+                                                     };
+                                                 });
+                                             }
+                                         }
+                                         class Base<T1, T2> {
+                                             public T1 test(T1 p) {}
+                                         }
+                                         """),
+                    false);
     }
     
     private static final class ContentValidator implements Validator {

@@ -99,7 +99,7 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.api.lsp.HyperlinkLocation;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.ext.ToolTipSupport;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkType;
 import org.netbeans.lib.editor.util.StringEscapeUtils;
@@ -218,7 +218,7 @@ public class GoToSupport {
 
     private static void performGoTo(final Document doc, final int offset, final boolean goToSource, final boolean javadoc) {
         final AtomicBoolean cancel = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
             @Override
             public void run() {
                 performGoToImpl(doc, offset, goToSource, javadoc, cancel);
@@ -408,7 +408,7 @@ public class GoToSupport {
         boolean insideImportStmt = false;
         TreePath path = controller.getTreeUtilities().pathFor(exactOffset);
 
-        if (token[0] != null && token[0].id() == JavaTokenId.JAVADOC_COMMENT) {
+        if (token[0] != null && (token[0].id() == JavaTokenId.JAVADOC_COMMENT || token[0].id() == JavaTokenId.JAVADOC_COMMENT_LINE_RUN)) {
             el = JavadocImports.findReferencedElement(controller, offset);
         } else {
             path = adjustPathForModuleName(path);
@@ -662,7 +662,7 @@ public class GoToSupport {
 
                 Token<JavaTokenId> t = ts.token();
 
-                if (JavaTokenId.JAVADOC_COMMENT == t.id()) {
+                if (JavaTokenId.JAVADOC_COMMENT == t.id() || JavaTokenId.JAVADOC_COMMENT_LINE_RUN == t.id()) {
                     // javadoc hyperlinking (references + param names)
                     TokenSequence<JavadocTokenId> jdts = ts.embedded(JavadocTokenId.language());
                     if (JavadocImports.isInsideReference(jdts, offset) || JavadocImports.isInsideParamName(jdts, offset)) {

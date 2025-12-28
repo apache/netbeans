@@ -538,10 +538,8 @@ public final class ProjectOperations {
             final String buildXmlName = CommonProjectUtils.getBuildXmlName(eval, buildScriptProperty);
             final FileObject buildXML = project.getProjectDirectory().getFileObject(buildXmlName);
             if (buildXML != null) {
-                ActionUtils.runTarget(
-                    buildXML,
-                    cleanTargets.toArray(new String[cleanTargets.size()]),
-                    p).waitFinished();
+                ActionUtils.runTarget(buildXML, cleanTargets.toArray(new String[0]), p)
+                           .waitFinished();
             } else {
                 LOG.log(
                     Level.INFO,

@@ -197,6 +197,12 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
                 selectProperties(cgsInfo.getPossibleMethods(), "myFoo"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
     }
 
+    public void testInstanceOverrideMethod_03() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Bar extends Foo {^", PhpVersion.PHP_83);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "__construct"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
+    }
+
     // #270237
     public void testInstanceOverrideMethodWithNullableType_01() throws Exception {
         CGSInfo cgsInfo = getCgsInfo("class Bar extends Foo {^", PhpVersion.PHP_71);
@@ -229,6 +235,18 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
     }
 
     public void testInstanceOverrideMethodWithGuessingArrayType_02() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Bar extends Foo {^", PhpVersion.PHP_56);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "myFoo"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
+    }
+
+    public void testInstanceOverrideMethodWithGuessingFloatType_01() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("class Bar extends Foo {^", PhpVersion.PHP_70);
+        checkResult(new SelectedPropertyMethodsCreator().create(
+                selectProperties(cgsInfo.getPossibleMethods(), "myFoo"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));
+    }
+
+    public void testInstanceOverrideMethodWithGuessingFloatType_02() throws Exception {
         CGSInfo cgsInfo = getCgsInfo("class Bar extends Foo {^", PhpVersion.PHP_56);
         checkResult(new SelectedPropertyMethodsCreator().create(
                 selectProperties(cgsInfo.getPossibleMethods(), "myFoo"), new SinglePropertyMethodCreator.InheritedMethodCreator(cgsInfo)));

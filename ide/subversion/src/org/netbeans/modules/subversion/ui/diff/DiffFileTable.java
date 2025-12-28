@@ -399,7 +399,7 @@ class DiffFileTable implements MouseListener, ListSelectionListener, AncestorLis
             }
             final TopComponent tc = (TopComponent) master.getClientProperty(TopComponent.class);
             if (tc == null) return; // table is no longer in component hierarchy
-            Node [] nodesToActivate = selectedNodes.toArray(new Node[selectedNodes.size()]);
+            Node [] nodesToActivate = selectedNodes.toArray(new Node[0]);
             tc.setActivatedNodes(nodesToActivate);
         }
     }

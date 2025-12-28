@@ -156,7 +156,7 @@ public class ServiceRefImpl implements ServiceRef {
                 }
             }
             if (sei != null) portComponents.add(new PortComponentRefImpl(sei));
-            portComponentRefs = portComponents.toArray(new PortComponentRef[portComponents.size()]);
+            portComponentRefs = portComponents.toArray(new PortComponentRef[0]);
         }
     }
 

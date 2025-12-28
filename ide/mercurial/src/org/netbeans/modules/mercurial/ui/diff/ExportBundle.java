@@ -29,6 +29,7 @@ import org.netbeans.modules.versioning.util.ExportDiffSupport;
 import org.openide.DialogDescriptor;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -132,7 +133,7 @@ class ExportBundle extends ExportDiffSupport implements ActionListener, Property
 
     @Override
     protected File createTempFile () throws IOException {
-        return File.createTempFile("hg-bundle", ".hg"); // NOI18N
+        return Files.createTempFile("hg-bundle", ".hg").toFile(); // NOI18N
     }
 
     @Override

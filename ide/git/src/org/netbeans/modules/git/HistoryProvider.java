@@ -110,12 +110,12 @@ public class HistoryProvider implements VCSHistoryProvider {
 
         for (GitRevisionInfo h : rev2LMMap.values()) {
             Set<File> s = rev2FileMap.get(h.getRevision());
-            File[] involvedFiles = s.toArray(new File[s.size()]);
+            File[] involvedFiles = s.toArray(new File[0]);
             
             HistoryEntry e = createHistoryEntry(h, involvedFiles, repositoryRoot);
             ret.add(e);
         }
-        return ret.toArray(new HistoryEntry[ret.size()]);
+        return ret.toArray(new HistoryEntry[0]);
     }
 
     private HistoryEntry createHistoryEntry (GitRevisionInfo h, File[] involvedFiles, File repositoryRoot) {
@@ -150,7 +150,7 @@ public class HistoryProvider implements VCSHistoryProvider {
     public void fireHistoryChange (final File[] files) {
         final HistoryChangeListener[] la;
         synchronized(listeners) {
-            la = listeners.toArray(new HistoryChangeListener[listeners.size()]);
+            la = listeners.toArray(new HistoryChangeListener[0]);
         }
         Git.getInstance().getRequestProcessor().post(new Runnable() {
             @Override
@@ -239,7 +239,7 @@ public class HistoryProvider implements VCSHistoryProvider {
                     }
                 });
             }
-            SearchHistoryAction.openSearch(repositories.iterator().next(), files, Utils.getContextDisplayName(VCSContext.forNodes(nodes.toArray(new Node[nodes.size()]))));
+            SearchHistoryAction.openSearch(repositories.iterator().next(), files, Utils.getContextDisplayName(VCSContext.forNodes(nodes.toArray(new Node[0]))));
         }
         
     }
@@ -267,7 +267,7 @@ public class HistoryProvider implements VCSHistoryProvider {
                     @Override
                     protected void perform(final HistoryEntry entry, final Set<File> files) {
                         File root = Git.getInstance().getRepositoryRoot(files.iterator().next());
-                        SystemAction.get(RevertChangesAction.class).revertFiles(root, files.toArray(new File[files.size()]),
+                        SystemAction.get(RevertChangesAction.class).revertFiles(root, files.toArray(new File[0]),
                                 getRevisionShort(), Bundle.HistoryProvider_action_RevertTo_progress());
                     }    
                     @Override

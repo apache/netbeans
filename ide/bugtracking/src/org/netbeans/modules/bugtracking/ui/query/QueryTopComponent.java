@@ -142,6 +142,7 @@ public final class QueryTopComponent extends TopComponent
                 getBundleText("QueryTopComponent.repositoryComboBox.AccessibleContext.accessibleDescription")); //NOI18N
         newButton.getAccessibleContext().setAccessibleDescription(
                 getBundleText("QueryTopComponent.newButton.AccessibleContext.accessibleDescription")); //NOI18N
+        newButton.setEnabled(BugtrackingManager.getInstance().hasRegisteredConnectors());
 
         /* background colors */
         Color editorBgColor = UIManager.getDefaults()
@@ -334,7 +335,7 @@ public final class QueryTopComponent extends TopComponent
     private static QueryTopComponent[] getOpenQueries() {
         QueryTopComponent[] tcs;
         synchronized(openQueries) {
-            tcs = openQueries.toArray(new QueryTopComponent[openQueries.size()]);
+            tcs = openQueries.toArray(new QueryTopComponent[0]);
         }
         return tcs;
     }

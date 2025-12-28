@@ -166,7 +166,7 @@ public class WorkingCopyInfo {
             }
         }
         if (changed) {
-            HgLogMessage[] newParents = parents.toArray(new HgLogMessage[parents.size()]);
+            HgLogMessage[] newParents = parents.toArray(new HgLogMessage[0]);
             this.parents = newParents;
             propertyChangeSupport.firePropertyChange(PROPERTY_WORKING_COPY_PARENT, oldParents, newParents);
         }

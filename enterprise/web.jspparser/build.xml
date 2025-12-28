@@ -27,11 +27,17 @@
         <condition property="web.jspparser.jarcreated" value="present">
             <and>
                 <available file="external/generated-glassfish-jspparser-5.1.0.jar" />
+                <available file="external/generated-glassfish-jspparser-7.0.25.jar" />
+            </and>
+        </condition>
+        <condition property="web.jspparser.tagsjarcreated" value="present">
+            <and>
+                <available file="test/unit/data/emptyWebProject/lib/tags.jar" />
             </and>
         </condition>
     </target>
-    
-    <target name="build-init" depends="-check-prepared-jar,projectized.build-init" unless="web.jspparser.jarcreated">
+
+    <target name="-prepareparser-parser" depends="-check-prepared-jar" unless="web.jspparser.jarcreated">
         <property name="jars_location" location="./external"/>
         <fail message="Set jars_location">
             <condition>
@@ -40,6 +46,7 @@
                 </not>
             </condition>
         </fail>
+
         <!-- glassfish-jspparser.jar -->
         <echo message="Creating glassfish-jspparser.jar"/>
         <mkdir dir="glassfishjspparser"/>
@@ -49,22 +56,75 @@
         <unzip src="${jars_location}/common-util-5.1.0.jar" dest="glassfishjspparser/"/>
         <delete file="./external/generated-glassfish-jspparser-5.1.0.jar" />
         <zip  basedir="glassfishjspparser"
-        includes="org/apache/jasper/**, com/sun/el/**, com/sun/appserv/server/util/PreprocessorUtil.class, org/glassfish/jsp/api/**"
-            zipfile="./external/generated-glassfish-jspparser-5.1.0.jar" />
+              includes="org/apache/jasper/**, com/sun/el/**, com/sun/appserv/server/util/PreprocessorUtil.class, org/glassfish/jsp/api/**"
+              zipfile="./external/generated-glassfish-jspparser-5.1.0.jar" />
+
+        <delete dir="glassfishjspparser" />
+
+        <!-- glassfish-jspparser.jar -->
+        <echo message="Creating glassfish-jspparser.jar"/>
+        <mkdir dir="glassfishjspparser"/>
+        <unzip src="${jars_location}/jakarta.servlet.jsp-3.0.0.jar" dest="glassfishjspparser/"/>
+        <unzip src="${jars_location}/jakarta.el-5.0.0-M1.jar" dest="glassfishjspparser/"/>
+        <unzip src="${jars_location}/glassfish-ee-api-7.0.25.jar" dest="glassfishjspparser/"/>
+        <unzip src="${jars_location}/common-util-7.0.25.jar" dest="glassfishjspparser/"/>
+        <delete file="./external/generated-glassfish-jspparser-7.0.25.jar" />
+        <zip  basedir="glassfishjspparser"
+              includes="org/apache/jasper/**, com/sun/el/**, com/sun/appserv/server/util/PreprocessorUtil.class, org/glassfish/jsp/api/**"
+              zipfile="./external/generated-glassfish-jspparser-7.0.25.jar" />
 
         <delete dir="glassfishjspparser" />
     </target>
 
+    <target name="-prepare-tags-jar" depends="-check-prepared-jar" unless="web.jspparser.tagsjarcreated">
+        <jar destfile="test/unit/data/emptyWebProject/lib/tags.jar">
+            <fileset dir="test/unit/data/emptyWebProject/lib/tags/" includes="**/*" excludes="**/.jar" />
+        </jar>
+    </target>
+
+    <target name="build-init" depends="-prepareparser-parser,-prepare-tags-jar,projectized.build-init">
+        <mkdir dir="test/unit/data/project2/lib" />
+        <copy file="test/unit/data/emptyWebProject/lib/tags.jar" tofile="test/unit/data/project2/lib/tags.jar"/>
+        <copy file="external/jakarta.servlet.jsp.jstl-1.2.6.jar" tofile="test/unit/data/project2/lib/standard.jar"/>
+        <copy file="external/jakarta.servlet.jsp.jstl-api-1.2.7.jar" tofile="test/unit/data/project2/lib/jstl.jar"/>
+        <copy file="external/commons-logging-1.3.1.jar" tofile="test/unit/data/project2/lib/commons-logging-api.jar"/>
+        <mkdir dir="test/unit/data/project2_jakarta/lib" />
+        <copy file="test/unit/data/emptyWebProject/lib/tags.jar" tofile="test/unit/data/project2_jakarta/lib/tags.jar"/>
+        <copy file="external/jakarta.servlet.jsp.jstl-3.0.1.jar" tofile="test/unit/data/project2_jakarta/lib/standard.jar"/>
+        <copy file="external/jakarta.servlet.jsp.jstl-api-3.0.2.jar" tofile="test/unit/data/project2_jakarta/lib/jstl.jar"/>
+        <copy file="external/commons-logging-1.3.1.jar" tofile="test/unit/data/project2_jakarta/lib/commons-logging-api.jar"/>
+    </target>
+
     <target name="ext-compile">
+
+        <delete dir="build/extsources-javax" />
+        <mkdir dir="build/extsources-javax" />
+        <copy todir="build/extsources-javax">
+            <fileset dir="extsrc"/>
+        </copy>
+        <replace dir="build/extsources-javax" value="" summary="true">
+            <include name="**/*.java"/>
+            <replacefilter token="import jakarta.servlet" value="import javax.servlet"/>
+            <replacefilter token="ParserServletContext" value="ParserServletContextJavax"/>
+        </replace>
         <mkdir dir="build/extclasses"/>
-        <javac srcdir="extsrc" destdir="build/extclasses" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="${javac.source}" release="8" target="1.8">
+        <javac srcdir="build/extsources-javax" destdir="build/extclasses" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="${javac.source}" release="17">
             <classpath>
                 <path path="${module.classpath}"/>
                 <path location="${cluster}/${module.jar}"/>
                 <path path="${extsrc.cp.extra}"/>
             </classpath>
         </javac>
-        <copy todir="build/extclasses">
+
+        <mkdir dir="build/extclasses-jakarta"/>
+        <javac srcdir="extsrc" destdir="build/extclasses-jakarta" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="${javac.source}" release="17">
+            <classpath>
+                <path path="${module.classpath}"/>
+                <path location="${cluster}/${module.jar}"/>
+                <path path="${extsrc.cp.extra.jakarta}"/>
+            </classpath>
+        </javac>
+        <copy todir="build/extclasses-jakarta">
           <fileset dir="extsrc" excludes="${jar-excludes}"/>
         </copy>
         <property name="jars_location" location="./external"/>
@@ -79,6 +139,9 @@
 
     <target name="ext-jar" depends="ext-compile">
         <mkdir dir="${cluster}/modules/ext"/>
+        <jar jarfile="${cluster}/modules/ext/jsp-parser-ext-jakarta.jar" compress="false">
+            <fileset dir="build/extclasses-jakarta"/>
+        </jar>
         <jar jarfile="${cluster}/modules/ext/jsp-parser-ext.jar" compress="false">
             <fileset dir="build/extclasses"/>
         </jar>

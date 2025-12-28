@@ -29,6 +29,7 @@ import org.netbeans.core.windows.*;
 import org.netbeans.core.windows.view.ui.slides.SlideController;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.Actions;
 import org.openide.awt.Mnemonics;
 import org.openide.cookies.SaveCookie;
 import org.openide.util.*;
@@ -50,6 +51,11 @@ public abstract class ActionUtils {
     private ActionUtils() {}
     
     public static Action[] createDefaultPopupActions(TopComponent tc) {
+        /* Make sure accelerators get initialized (to ensure that ActionUtils.putSharedAccelerator
+        is called). Only actions not loaded in the main menu need to be included here. */
+        Actions.forID("Window", "org.netbeans.core.windows.actions.MoveWindowLeftAction");
+        Actions.forID("Window", "org.netbeans.core.windows.actions.MoveWindowRightAction");
+
         ModeImpl mode = findMode(tc);
         int kind = mode != null ? mode.getKind() : Constants.MODE_KIND_EDITOR;
         TopComponentTracker tcTracker = TopComponentTracker.getDefault();
@@ -238,7 +244,7 @@ public abstract class ActionUtils {
             }
         }
         
-        Action[] res = actions.toArray(new Action[actions.size()]);
+        Action[] res = actions.toArray(new Action[0]);
         for( ActionsFactory factory : Lookup.getDefault().lookupAll( ActionsFactory.class ) ) {
             res = factory.createPopupActions( tc, res );
         }
@@ -347,7 +353,7 @@ public abstract class ActionUtils {
             }
         }
         
-        Action[] res = actions.toArray(new Action[actions.size()]);
+        Action[] res = actions.toArray(new Action[0]);
         for( ActionsFactory factory : Lookup.getDefault().lookupAll( ActionsFactory.class ) ) {
             res = factory.createPopupActions( mode, res );
         }

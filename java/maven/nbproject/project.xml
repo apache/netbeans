@@ -201,7 +201,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>2.32</specification-version>
+                        <specification-version>2.74</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -285,6 +285,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.project.dependency</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <implementation-version/>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.project.indexingbridge</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -316,7 +324,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.89</specification-version>
+                        <specification-version>1.99</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -517,14 +525,6 @@
                         <specification-version>6.64</specification-version>
                     </run-dependency>
                 </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.project.dependency</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <implementation-version/>
-                    </run-dependency>
-                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>
@@ -608,18 +608,21 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.api.maven</code-name-base>
                     </test-dependency>
+                    <test-dependency>
+                        <!-- Because otherwise data systems and their services will not materialize -->
+                        <code-name-base>org.netbeans.modules.settings</code-name-base>
+                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <friend-packages>
-                <friend>org.javeleon.netbeans</friend>
                 <!-- sven reimers -->
                 <friend>org.nbheaven.sqe.core.maven</friend>
                 <friend>org.nbheaven.sqe.core.maven3</friend>
                 <friend>org.netbeans.modules.apisupport.installer.maven</friend>
+                <friend>org.netbeans.modules.cloud.oracle</friend>
                 <friend>org.netbeans.modules.groovy.support</friend>
                 <friend>org.netbeans.modules.hudson.maven</friend>
                 <friend>org.netbeans.modules.jbi.fuji.support</friend>
-                <friend>org.netbeans.modules.kenai.maven</friend>
                 <friend>org.netbeans.api.maven</friend>
                 <friend>org.netbeans.modules.maven.apisupport</friend>
                 <friend>org.netbeans.modules.maven.checkstyle</friend>

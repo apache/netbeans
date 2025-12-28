@@ -619,8 +619,8 @@ public final class ProjectHooks {
                     toRemove.addAll(oldCps);
                     toRemove.removeAll(newCps);
                     cpCache.put(id, newCps);
-                    gpr.unregister(id, toRemove.toArray(new ClassPath[toRemove.size()]));
-                    gpr.register(id, toAdd.toArray(new ClassPath[toAdd.size()]));
+                    gpr.unregister(id, toRemove.toArray(new ClassPath[0]));
+                    gpr.register(id, toAdd.toArray(new ClassPath[0]));
                 }
             }
         }

@@ -127,7 +127,7 @@ public final class GraalJSTest2 extends NbTestCase {
         // the test code itself HAS to use the module system to load appropriate Engine.
         URL u = getClass().getProtectionDomain().getCodeSource().getLocation();
         ClassLoader ldr2 = new URLClassLoader(new URL[] { u }, ldr);
-        Callable c = (Callable)ldr2.loadClass(getClass().getName() + "$T").newInstance();
+        Callable c = (Callable)ldr2.loadClass(getClass().getName() + "$T").getDeclaredConstructor().newInstance();
         c.call();
     }
     

@@ -19,14 +19,13 @@
 
 package org.netbeans.modules.maven.execute;
 
-import java.awt.Color;
+import com.google.common.base.Predicates;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.modules.maven.api.execute.RunConfig;
 import org.netbeans.modules.maven.api.output.ContextOutputProcessorFactory;
@@ -35,10 +34,8 @@ import org.netbeans.modules.maven.api.output.OutputProcessor;
 import org.netbeans.modules.maven.api.output.OutputProcessorFactory;
 import org.netbeans.modules.maven.api.output.OutputVisitor;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.maven.ActionProviderImpl;
 import org.netbeans.modules.maven.api.execute.RunUtils;
 import org.netbeans.modules.project.indexingbridge.IndexingBridge;
-import org.netbeans.spi.project.ActionProvider;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
@@ -47,6 +44,8 @@ import org.openide.windows.IOColorPrint;
 import org.openide.windows.IOColors;
 import org.openide.windows.InputOutput;
 import org.openide.windows.OutputWriter;
+
+import static org.netbeans.modules.maven.ActionProviderImpl.*;
 
 /**
  *
@@ -60,6 +59,7 @@ public abstract class AbstractOutputHandler {
     protected static final String SESSION_EXECUTE = "session-execute"; //NOI18N
     
     protected HashMap<String, Set<OutputProcessor>> processors;
+    protected HashMap<String, AtomicInteger> id2count;
     protected Set<OutputProcessor> currentProcessors;
     protected Set<NotifyFinishOutputProcessor> toFinishProcessors;
     protected OutputVisitor visitor;
@@ -69,15 +69,14 @@ public abstract class AbstractOutputHandler {
     private static final int SLEEP_DELAY = Integer.getInteger(AbstractOutputHandler.class.getName() + ".SLEEP_DELAY", 15000); // #270005
 
     protected AbstractOutputHandler(Project proj, final ProgressHandle hand, RunConfig config, OutputVisitor visitor) {
-        processors = new HashMap<String, Set<OutputProcessor>>();
-        currentProcessors = new HashSet<OutputProcessor>();
+        processors = new HashMap<>();
+        id2count = new HashMap<>();
+        currentProcessors = new HashSet<>();
         this.visitor = visitor;
-        toFinishProcessors = new HashSet<NotifyFinishOutputProcessor>();
-        sleepTask = new RequestProcessor(AbstractOutputHandler.class).create(new Runnable() {
-            public @Override void run() {
-                hand.suspend("");
-                exitProtectedMode();
-            }
+        toFinishProcessors = new HashSet<>();
+        sleepTask = new RequestProcessor(AbstractOutputHandler.class).create(() -> {
+            hand.suspend("");
+            exitProtectedMode();
         });
         enterProtectedMode(isProtectedWait(proj, config));
     }
@@ -103,17 +102,15 @@ public abstract class AbstractOutputHandler {
         if(action == null || proj == null || !RunUtils.isCompileOnSaveEnabled(proj)) {
             return false;
         }
-        switch(action) {
-            case ActionProvider.COMMAND_RUN: 
-            case ActionProvider.COMMAND_RUN_SINGLE:
-            case ActionProvider.COMMAND_DEBUG:
-            case ActionProvider.COMMAND_DEBUG_SINGLE:
-            case ActionProviderImpl.COMMAND_DEBUG_MAIN:
-            case ActionProviderImpl.COMMAND_RUN_MAIN:
-                return true;
-            default:
-                return false;
-        }
+        return switch (action) {
+            case COMMAND_RUN,
+                COMMAND_RUN_SINGLE,
+                COMMAND_DEBUG,
+                COMMAND_DEBUG_SINGLE,
+                COMMAND_DEBUG_MAIN,
+                COMMAND_RUN_MAIN -> true;
+            default -> false;
+        };
     }
     
     protected abstract InputOutput getIO();
@@ -149,35 +146,28 @@ public abstract class AbstractOutputHandler {
     protected final void initProcessorList(Project proj, RunConfig config) {
         // get the registered processors.
         Lookup.Result<OutputProcessorFactory> result  = Lookup.getDefault().lookupResult(OutputProcessorFactory.class);
-        Iterator<? extends OutputProcessorFactory> it = result.allInstances().iterator();
-        while (it.hasNext()) {
-            OutputProcessorFactory factory = it.next();
-            Set<? extends OutputProcessor> procs = factory.createProcessorsSet(proj);
-            if (factory instanceof ContextOutputProcessorFactory) {
-                Set<OutputProcessor> _procs = new HashSet<OutputProcessor>(procs);
-                _procs.addAll(((ContextOutputProcessorFactory)factory).createProcessorsSet(proj, config));
-                procs = _procs;
+        result.allInstances().forEach(factory -> {
+            Set<OutputProcessor> procs = new HashSet<>(factory.createProcessorsSet(proj));
+            if (factory instanceof ContextOutputProcessorFactory cof) {
+                procs.addAll(cof.createProcessorsSet(proj, config));
             }
             for (OutputProcessor proc : procs) {
-                String[] regs = proc.getRegisteredOutputSequences();
-                for (int i = 0; i < regs.length; i++) {
-                    String str = regs[i];
-                    Set<OutputProcessor> set = processors.get(str);
-                    if (set == null) {
-                        set = new HashSet<OutputProcessor>();
-                        processors.put(str, set);
-                    }
-                    set.add(proc);
+                for (String reg : proc.getRegisteredOutputSequences()) {
+                    processors.computeIfAbsent(reg, k -> new HashSet<>())
+                              .add(proc);
                 }
             }
-        }
+        });
     }
     
     protected final void processStart(String id, OutputWriter writer) {
         checkSleepiness();
-        Set<OutputProcessor> set = processors.get(id);
-        if (set != null) {
-            currentProcessors.addAll(set);
+        AtomicInteger count = id2count.computeIfAbsent(id, s -> new AtomicInteger());
+        if (count.getAndIncrement() == 0) {
+            Set<OutputProcessor> set = processors.get(id);
+            if (set != null) {
+                currentProcessors.addAll(set);
+            }
         }
         visitor.resetVisitor();
         for (OutputProcessor proc : currentProcessors) {
@@ -207,12 +197,10 @@ public abstract class AbstractOutputHandler {
     protected final void processEnd(String id, OutputWriter writer) {
         checkSleepiness();
         visitor.resetVisitor();
-        Iterator<OutputProcessor> it = currentProcessors.iterator();
-        while (it.hasNext()) {
-            OutputProcessor proc = it.next();
+        for (OutputProcessor proc : currentProcessors) {
             proc.sequenceEnd(id, visitor);
-            if (proc instanceof NotifyFinishOutputProcessor) {
-                toFinishProcessors.add((NotifyFinishOutputProcessor)proc);
+            if (proc instanceof NotifyFinishOutputProcessor nfop) {
+                toFinishProcessors.add(nfop);
             }
         }
         if (visitor.getLine() != null) {
@@ -226,12 +214,16 @@ public abstract class AbstractOutputHandler {
                 writer.println(visitor.getLine());
             }
         }
-        Set set = processors.get(id);
-        if (set != null) {
-            //TODO a bulletproof way would be to keep a list of currently started
-            // sections and compare to the list of getRegisteredOutputSequences fo each of the
-            // processors in set..
-            currentProcessors.removeAll(set);
+        AtomicInteger count = id2count.getOrDefault(id, new AtomicInteger(1));
+        if (count.decrementAndGet() == 0) {
+            Set<OutputProcessor> set = processors.get(id);
+            if (set != null) {
+                //TODO a bulletproof way would be to keep a list of currently started
+                // sections and compare to the list of getRegisteredOutputSequences fo each of the
+                // processors in set..
+                currentProcessors.removeAll(set);
+            }
+            id2count.remove(id);
         }
     }
     
@@ -239,8 +231,8 @@ public abstract class AbstractOutputHandler {
         checkSleepiness();
         visitor.resetVisitor();
         for (OutputProcessor proc : currentProcessors) {
-            if (proc instanceof NotifyFinishOutputProcessor) {
-                toFinishProcessors.add((NotifyFinishOutputProcessor)proc);
+            if (proc instanceof NotifyFinishOutputProcessor nfop) {
+                toFinishProcessors.add(nfop);
             }
             proc.sequenceFail(id, visitor);
         }
@@ -257,11 +249,9 @@ public abstract class AbstractOutputHandler {
         }
         Set<OutputProcessor> set = processors.get(id);
         if (set != null) {
-            Set<OutputProcessor> retain = new HashSet<OutputProcessor>();
-            retain.addAll(set);
+            Set<OutputProcessor> retain = new HashSet<>(set);
             retain.retainAll(currentProcessors);
-            Set<OutputProcessor> remove = new HashSet<OutputProcessor>();
-            remove.addAll(set);
+            Set<OutputProcessor> remove = new HashSet<>(set);
             remove.removeAll(retain);
             currentProcessors.removeAll(remove);
         }
@@ -296,16 +286,9 @@ public abstract class AbstractOutputHandler {
             String line = visitor.getLine() == null ? input : visitor.getLine();
             if (visitor.getColor(getIO()) == null && visitor.getOutputListener() == null) {
                 switch (level) {
-                case DEBUG:
-                    visitor.setOutputType(IOColors.OutputType.LOG_DEBUG);
-                    break;
-                case WARNING:
-                    visitor.setOutputType(IOColors.OutputType.LOG_WARNING);
-                    break;
-                case ERROR:
-                case FATAL:
-                    visitor.setOutputType(IOColors.OutputType.LOG_FAILURE);
-                    break;
+                    case DEBUG -> visitor.setOutputType(IOColors.OutputType.LOG_DEBUG);
+                    case WARNING -> visitor.setOutputType(IOColors.OutputType.LOG_WARNING);
+                    case ERROR, FATAL -> visitor.setOutputType(IOColors.OutputType.LOG_FAILURE);
                 }
             }
             try {
@@ -333,13 +316,8 @@ public abstract class AbstractOutputHandler {
     
     //MEVENIDE-637   
     public static List<String> splitMultiLine(String input) {
-        List<String> list = new ArrayList<String>();
-        String[] strs = input.split("\\r|\\n"); //NOI18N
-        for (int i = 0; i < strs.length; i++) {
-            if(strs[i].length()>0){
-              list.add(strs[i]);
-            }
-        }
-        return list;
+        return input.lines()
+                    .filter(Predicates.not(String::isEmpty))
+                    .toList();
     }   
 }

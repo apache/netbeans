@@ -112,7 +112,7 @@ public class RenameRefactoringTest {
 
         String uri = Utils.toURI(file1);
 
-        LSPBindings bindings = LSPBindings.getBindings(file1);
+        List<LSPBindings> bindings = LSPBindings.getBindings(file1);
         RenameParams renameParams = new RenameParams(new TextDocumentIdentifier(uri), new Position(1, 8), "newName");
         List<Function<RenameParams, WorkspaceEdit>> renameFunctions = Arrays.asList(
             params -> {
@@ -151,7 +151,7 @@ public class RenameRefactoringTest {
         for (Function<RenameParams, WorkspaceEdit> renameFunc : renameFunctions) {
             renameFunction = renameFunc;
 
-            RenameRefactoring refactoring = new RenameRefactoring(Lookups.fixed(bindings, renameParams));
+            RenameRefactoring refactoring = new RenameRefactoring(Lookups.fixed(new LSPBindingsCollection(bindings), renameParams));
 
             RefactoringSession session = RefactoringSession.create("test rename");
             assertNull(refactoring.checkParameters());
@@ -226,7 +226,7 @@ public class RenameRefactoringTest {
 
         String uri = Utils.toURI(file1);
 
-        LSPBindings bindings = LSPBindings.getBindings(file1);
+        List<LSPBindings> bindings = LSPBindings.getBindings(file1);
         RenameParams renameParams = new RenameParams(new TextDocumentIdentifier(uri), new Position(1, 8), "newName");
         renameFunction = params -> {
             assertEquals(uri, params.getTextDocument().getUri());
@@ -256,7 +256,7 @@ public class RenameRefactoringTest {
             return result;
         };
 
-        RenameRefactoring refactoring = new RenameRefactoring(Lookups.fixed(bindings, renameParams));
+        RenameRefactoring refactoring = new RenameRefactoring(Lookups.fixed(new LSPBindingsCollection(bindings), renameParams));
 
         RefactoringSession session = RefactoringSession.create("test rename");
         assertNull(refactoring.checkParameters());

@@ -507,7 +507,7 @@ public class Tiny {
                         "case " + s + ": $stmt;"));
         }
         return ErrorDescriptionFactory.forName(ctx, lt, Bundle.TEXT_MissingSwitchCase(), 
-                fixes.toArray(new Fix[fixes.size()]));
+                fixes.toArray(new Fix[0]));
     }
     
     private static boolean tryResolveIdentifier(CompilationInfo info, TreePath place, 

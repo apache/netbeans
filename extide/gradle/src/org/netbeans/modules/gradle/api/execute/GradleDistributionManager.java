@@ -38,9 +38,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -84,9 +82,9 @@ public final class GradleDistributionManager {
 
     private static final String DOWNLOAD_URI = "https://services.gradle.org/distributions/gradle-%s-%s.zip"; //NOI18N
     private static final Pattern DIST_VERSION_PATTERN = Pattern.compile(".*(gradle-(\\d+\\.\\d+.*))-(bin|all)\\.zip"); //NOI18N
-    private static final Set<String> VERSION_BLACKLIST = new HashSet<>(Arrays.asList("2.3", "2.13")); //NOI18N
+    private static final Set<String> VERSION_BLACKLIST = Set.of("2.3", "2.13"); //NOI18N
     private static final Map<File, GradleDistributionManager> CACHE = new WeakHashMap<>();
-    private static final GradleVersion MINIMUM_SUPPORTED_VERSION = GradleVersion.version("2.0"); //NOI18N
+    private static final GradleVersion MINIMUM_SUPPORTED_VERSION = GradleVersion.version("3.0"); //NOI18N
     private static final GradleVersion[] JDK_COMPAT = new GradleVersion[]{
         GradleVersion.version("4.2.1"), // JDK-9
         GradleVersion.version("4.7"), // JDK-10
@@ -101,7 +99,15 @@ public final class GradleDistributionManager {
         GradleVersion.version("7.6"), // JDK-19
         GradleVersion.version("8.3"), // JDK-20
         GradleVersion.version("8.5"), // JDK-21
+        GradleVersion.version("8.8"), // JDK-22
+        GradleVersion.version("8.10"),// JDK-23
+        GradleVersion.version("8.14"),// JDK-24
+        GradleVersion.version("9.1.0"),// JDK-25
     };
+
+    private static final GradleVersion LAST_KNOWN_GRADLE = GradleVersion.version("9.1.0"); //NOI18N
+
+    private static final int LATEST_SUPPORTED_MAJOR = 9;
 
     final File gradleUserHome;
 
@@ -258,6 +264,64 @@ public final class GradleDistributionManager {
     }
 
     /**
+     * Create a {@link GradleDistribution} from the current (latest) Gradle
+     * release available from the Gradle site. This method uses the
+     * <a href="https://services.gradle.org/versions/current">https://services.gradle.org/versions/current</a>
+     * web service to query the latest available version.
+     *
+     * @return the current Gradle distribution
+     * @throws java.io.IOException if information on the current Gradle release
+     * cannot be accessed
+     */
+    public GradleDistribution currentDistribution() throws IOException {
+        JSONParser parser = new JSONParser();
+        URL versionsCurrent = URI.create("https://services.gradle.org/versions/current").toURL(); //NOI18N
+        try (InputStreamReader is = new InputStreamReader(versionsCurrent.openStream(), StandardCharsets.UTF_8)) {
+            JSONObject current = (JSONObject) parser.parse(is);
+            URI downloadURL = new URI((String) current.get("downloadUrl")); //NOI18N
+            String version = (String) current.get("version");
+            return new GradleDistribution(distributionBaseDir(downloadURL, version), downloadURL, version);
+        } catch (ParseException | URISyntaxException | ClassCastException ex) {
+            throw new IOException(ex);
+        }
+    }
+
+    /**
+     * Returns the latest {@link GradleDistribution} which is supported by this
+     * {@link GradleDistributionManager}. This method uses the
+     * <a href="https://services.gradle.org/versions">https://services.gradle.org/versions</a>
+     * web service to query the version.
+     *
+     * @return the latest Gradle distribution which can still be supported
+     * @throws java.io.IOException if information on the current Gradle release
+     * cannot be accessed
+     */
+    public GradleDistribution latestSupportedDistribution() throws IOException {
+        JSONParser parser = new JSONParser();
+        URL versionsCurrent = URI.create("https://services.gradle.org/versions/" + LATEST_SUPPORTED_MAJOR).toURL(); //NOI18N
+        try (InputStreamReader is = new InputStreamReader(versionsCurrent.openStream(), StandardCharsets.UTF_8)) {
+            JSONArray releases = (JSONArray) parser.parse(is);
+            for (Object obj : releases) {
+                JSONObject release = (JSONObject) obj;
+                if (release.get("snapshot") instanceof Boolean snapshot && !snapshot //NOI18N
+                        && release.get("nightly") instanceof Boolean nightly && !nightly //NOI18N
+                        && release.get("releaseNightly") instanceof Boolean releaseNightly && !releaseNightly //NOI18N
+                        && release.get("activeRc") instanceof Boolean activeRc && !activeRc //NOI18N
+                        && release.get("broken") instanceof Boolean broken && !broken //NOI18N
+                        && release.get("rcFor") instanceof String rcFor && rcFor.isBlank() //NOI18N
+                        && release.get("milestoneFor") instanceof String milestoneFor && milestoneFor.isBlank()) { //NOI18N
+                    URI downloadURL = new URI((String) release.get("downloadUrl")); //NOI18N
+                    String version = (String) release.get("version"); //NOI18N
+                    return new GradleDistribution(distributionBaseDir(downloadURL, version), downloadURL, version);
+                }
+            }
+            throw new IOException("no release found with major version " + LATEST_SUPPORTED_MAJOR);
+        } catch (ParseException | URISyntaxException | ClassCastException ex) {
+            throw new IOException(ex);
+        }
+    }
+
+    /**
      * Create a {@link GradleDistribution} from the Gradle version distributed
      * with the Gradle Tooling of the IDE. This should be the most IDE compatible
      * version, so it can be used as a fallback.
@@ -282,7 +346,7 @@ public final class GradleDistributionManager {
         List<GradleDistribution> ret = new ArrayList<>();
         JSONParser parser = new JSONParser();
         try {
-            URL allVersions = new URL("https://services.gradle.org/versions/all"); //NOI18N
+            URL allVersions = URI.create("https://services.gradle.org/versions/all").toURL(); //NOI18N
             try (InputStreamReader is = new InputStreamReader(allVersions.openStream(), StandardCharsets.UTF_8)) {
                 JSONArray versions = (JSONArray) parser.parse(is);
                 for (Object o : versions) {
@@ -496,10 +560,9 @@ public final class GradleDistributionManager {
          */
         public boolean isCompatibleWithJava(int jdkMajorVersion) {
             
-            GradleVersion lastKnown = JDK_COMPAT[JDK_COMPAT.length - 1];
             // Optimistic bias, if the GradleVersion is newer than the last NB
             // knows, we say it's compatible with any JDK
-            return lastKnown.compareTo(version.getBaseVersion()) < 0 
+            return LAST_KNOWN_GRADLE.compareTo(version.getBaseVersion()) < 0
                     || jdkMajorVersion <= lastSupportedJava();
         }
 

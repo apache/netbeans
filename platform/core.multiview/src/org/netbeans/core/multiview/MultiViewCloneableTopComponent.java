@@ -159,7 +159,7 @@ public final class MultiViewCloneableTopComponent extends CloneableTopComponent
         if( canSplit() ) {
             acts.add( new SplitAction(true) );
         }
-        return acts.toArray(new Action[acts.size()]);
+        return acts.toArray(new Action[0]);
     }
     
     @Override

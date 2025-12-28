@@ -46,9 +46,8 @@ public abstract class RuntimeAnnotationChecker extends TargetAnalyzer {
     public boolean check() {
         List<? extends AnnotationMirror> annotations = getElement()
                 .getAnnotationMirrors();
-        boolean hasAnnotation = getHelper().hasAnnotation(annotations,
-                getAnnotation());
-        
+        boolean hasAnnotation = getAnnotation().stream().anyMatch(s -> getHelper().hasAnnotation(annotations, s));
+
         if (!hasAnnotation) {
             // this is not subject annotation , just return false
             return false;
@@ -57,7 +56,7 @@ public abstract class RuntimeAnnotationChecker extends TargetAnalyzer {
         if ( !hasRuntimeRetention() ){
             getLogger().log(Level.WARNING, "Annotation "
                     + getElement().getQualifiedName()
-                    + " declared as " +getAnnotation()+" but has wrong retention policy."
+                    + " declared as one of " +getAnnotation()+" but has wrong retention policy."
                     + " Correct retention policy is "
                     + RetentionPolicy.RUNTIME.toString());// NOI18N
             return false;
@@ -73,7 +72,7 @@ public abstract class RuntimeAnnotationChecker extends TargetAnalyzer {
     protected void handleNoRetention() {
         getLogger().log(Level.WARNING, "Annotation "
                 + getElement().getQualifiedName()
-                + "declared as " +getAnnotation()+" but has no Retention");// NOI18N        
+                + "declared as one of " +getAnnotation()+" but has no Retention");// NOI18N
     }
     
     /* (non-Javadoc)
@@ -83,12 +82,12 @@ public abstract class RuntimeAnnotationChecker extends TargetAnalyzer {
     protected void handleNoTarget() {
         getLogger().log(Level.WARNING, "Annotation "
                 + getElement().getQualifiedName()
-                + "declared as " +getAnnotation()+" but has no Target");// NOI18N        
+                + "declared as one of " +getAnnotation()+" but has no Target");// NOI18N
     }
     
     protected abstract Logger getLogger();
     
-    protected abstract String getAnnotation();
+    protected abstract List<String> getAnnotation();
     
     @Override
     protected TypeElement getElement(){

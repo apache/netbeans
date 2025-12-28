@@ -26,6 +26,7 @@ import org.netbeans.modules.php.analysis.commands.CodeSniffer;
 import org.netbeans.modules.php.analysis.commands.CodingStandardsFixer;
 import org.netbeans.modules.php.analysis.commands.MessDetector;
 import org.netbeans.modules.php.analysis.commands.PHPStan;
+import org.netbeans.modules.php.analysis.commands.Psalm;
 import org.netbeans.modules.php.api.util.FileUtils;
 import org.netbeans.modules.php.api.util.StringUtils;
 import org.netbeans.modules.php.api.validation.ValidationResult;
@@ -36,6 +37,7 @@ import org.openide.util.NbBundle;
 public final class AnalysisOptionsValidator {
 
     private static final Pattern PHPSTAN_MEMORY_LIMIT_PATTERN = Pattern.compile("^\\-?\\d+[kmg]?$", Pattern.CASE_INSENSITIVE); // NOI18N
+    private static final Pattern PSALM_MEMORY_LIMIT_PATTERN = Pattern.compile("^\\-?\\d+[kmg]?$", Pattern.CASE_INSENSITIVE); // NOI18N
     private final ValidationResult result = new ValidationResult();
 
     public AnalysisOptionsValidator validateCodeSniffer(ValidatorCodeSnifferParameter param) {
@@ -66,6 +68,13 @@ public final class AnalysisOptionsValidator {
         validatePHPStanPath(param.getPHPStanPath());
         validatePHPStanConfiguration(param.getConfiguration());
         validatePHPStanMemoryLimit(param.getMemoryLimit());
+        return this;
+    }
+
+    public AnalysisOptionsValidator validatePsalm(ValidatorPsalmParameter param) {
+        validatePsalmPath(param.getPsalmPath());
+        validatePsalmConfiguration(param.getConfiguration());
+        validatePsalmMemoryLimit(param.getMemoryLimit());
         return this;
     }
 
@@ -137,6 +146,35 @@ public final class AnalysisOptionsValidator {
             Matcher matcher = PHPSTAN_MEMORY_LIMIT_PATTERN.matcher(memoryLimit);
             if (!matcher.matches()) {
                 result.addWarning(new ValidationResult.Message("phpStan.memory.limit", Bundle.AnalysisOptionsValidator_phpStan_memory_limit_invalid())); // NOI18N
+            }
+        }
+        return this;
+    }
+
+    private AnalysisOptionsValidator validatePsalmPath(String psalmPath) {
+        String warning = Psalm.validate(psalmPath);
+        if (warning != null) {
+            result.addWarning(new ValidationResult.Message("psalm.path", warning)); // NOI18N
+        }
+        return this;
+    }
+
+    private AnalysisOptionsValidator validatePsalmConfiguration(String configuration) {
+        if (!StringUtils.isEmpty(configuration)) {
+            String warning = FileUtils.validateFile("Configuration file", configuration, false); // NOI18N
+            if (warning != null) {
+                result.addWarning(new ValidationResult.Message("psalm.configuration", warning)); // NOI18N
+            }
+        }
+        return this;
+    }
+
+    @NbBundle.Messages("AnalysisOptionsValidator.psalm.memory.limit.invalid=Valid memory limit value must be set.")
+    private AnalysisOptionsValidator validatePsalmMemoryLimit(String memoryLimit) {
+        if (!StringUtils.isEmpty(memoryLimit)) {
+            Matcher matcher = PSALM_MEMORY_LIMIT_PATTERN.matcher(memoryLimit);
+            if (!matcher.matches()) {
+                result.addWarning(new ValidationResult.Message("psalm.memory.limit", Bundle.AnalysisOptionsValidator_psalm_memory_limit_invalid())); // NOI18N
             }
         }
         return this;

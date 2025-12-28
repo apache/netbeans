@@ -380,7 +380,7 @@ public class OperationDescriptionStep implements WizardDescriptor.Panel<WizardDe
                     }
                     names.add(updatename);
                 }
-                Collections.sort(names, new Comparator<String>() {
+                names.sort(new Comparator<String>() {
                     @Override
                     public int compare(String o1, String o2) {
                         return Collator.getInstance().compare(o1, o2);

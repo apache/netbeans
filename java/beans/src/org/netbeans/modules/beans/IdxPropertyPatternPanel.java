@@ -557,7 +557,7 @@ public final class IdxPropertyPatternPanel extends javax.swing.JPanel
     public void actionPerformed( java.awt.event.ActionEvent e ) {
 //        if ( dialog != null ) {
 //
-////            if ( e.getActionCommand().equals( "OK" ) ) { // NOI18N
+// //            if ( e.getActionCommand().equals( "OK" ) ) { // NOI18N
 //
 //            if ( e.getSource() == org.openide.DialogDescriptor.OK_OPTION ) {
 //
@@ -627,7 +627,7 @@ public final class IdxPropertyPatternPanel extends javax.swing.JPanel
                 String type = st.nextToken().trim();
                 l.add(type);
             }
-            TYPES = l.toArray(new String[l.size()]);
+            TYPES = l.toArray(new String[0]);
         }
         return TYPES;
     }

@@ -129,18 +129,17 @@ public class StatFiles extends SecurityManager {
     }
 
     private boolean canBeSkipped() {
-        boolean result = false;
         Throwable th = new Throwable();
         StackTraceElement[] elems = th.getStackTrace();
         for (StackTraceElement stackTraceElement : elems) {
             if (stackTraceElement.getClassName().endsWith("ClassLoader") &&
-                    (stackTraceElement.getMethodName().endsWith("loadClass") ||
-                    stackTraceElement.getMethodName().endsWith("getResource"))) {
-                result = true;
-                break;
+                      (stackTraceElement.getMethodName().endsWith("loadClass")
+                    || stackTraceElement.getMethodName().endsWith("getResource")
+                    || stackTraceElement.getMethodName().endsWith("loadLibrary"))) {
+                return true;
             }
         }
-        return result;
+        return false;
     }
 
     /** Add current stack trace to given map or increase count if the stack trace

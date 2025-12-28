@@ -79,6 +79,8 @@ CONSTRUCTO WeakMap                         [PUBLIC]   JS Platform
 CONSTRUCTO WeakRef                         [PUBLIC]   JS Platform
 CONSTRUCTO WeakSet                         [PUBLIC]   JS Platform
 CLASS      b                               [PUBLIC]   with1.js
+CLASS      import                          [PUBLIC]   <font color=#999999>metaproperties.js</font>
+CLASS      new                             [PUBLIC]   <font color=#999999>metaproperties.js</font>
 CLASS      prototype                       [PUBLIC]   JS Platform
 CLASS      z                               [PUBLIC]   with1.js
 METHOD     ImportAssertions                [PUBLIC]   JS Platform

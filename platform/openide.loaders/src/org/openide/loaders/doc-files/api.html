@@ -21,10 +21,9 @@
 
 <html><head>
 <title>Datasystems API</title>
-<link rel="stylesheet" href="../../../../prose.css" type="text/css">
 </head><body>
 
-<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="@TOP@/index.html">Overview</a></p>
 
 <h1>Javadoc</h1>
 
@@ -32,16 +31,15 @@ There are three packages in this API:
 
 <ul>
 
-<li><a href="../package-summary.html"><code>org.openide.loaders</code></a>
-
+<li>{@link org.openide.loaders org.openide.loaders}
 handles the association of files together into groups and assigning
 types to data.
 
-<li><a href="@org-openide-nodes@/org/openide/cookies/package-summary.html"><code>org.openide.cookies</code></a>
+<li>{@link org.openide.cookies org.openide.cookies }
 
 provides a design pattern for attachable behaviors for data objects and nodes.
 
-<li><a href="@org-openide-util-ui@/org/openide/util/datatransfer/package-summary.html"><code>org.openide.util.datatransfer</code></a>
+<li>{@link org.openide.util.datatransfer org.openide.util.datatransfer }
 
 implements some extensions to the clipboard.
 
@@ -90,34 +88,27 @@ implements some extensions to the clipboard.
 
 <h1>Datasystems API</h1>
 
-<h2><a name="loader-do">Loaders and Data Objects</a></h2>
+<h2 id="loader-do">Loaders and Data Objects</h2>
 
 <div class="nonnormative">
 
 There are a few related object types used in NetBeans to handle
 creation of structured, high-level data based on files found on a
 
-<a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.html">filesystem</a>.
+{@link org.openide.filesystems.FileSystem filesystem}.
 
-In summary, the system
-
-<a href="../DataLoaderPool.html">loader pool</a>
-
+In summary, the system {@link org.openide.loaders.DataLoaderPool loader pool}
 is responsible for scanning files in a directory on disk, weeding out
 irrelevant files of no interest, and grouping the rest into
 logical chunks, or just determining what type of data each represents.
 It does this scanning by asking each registered
-
-<a href="../DataLoader.html">data loader</a>
-
+{@link org.openide.loaders.DataLoader data loader}
 whether or not the given file(s) should be handled. The first loader
 to recognize a file takes ownership of it, and creates a matching
-
-<a href="../DataObject.html">data object</a>
-
+{@link org.openide.loaders.DataObject data object}
 to represent it to the rest of NetBeans.
 
-<h3><a name="intro-loader">What is a loader used for?</a></h3>
+<h3 id="intro-loader">What is a loader used for?</h3>
 
 There are a few reasons why loaders are used in NetBeans, rather than
 just accessing raw files (and perhaps typing them by extension or MIME
@@ -154,7 +145,7 @@ it is moved or renamed; etc.
 
 <li>Special pseudo-files, such as
 
-<a href="../DataShadow.html"><code>DataShadow</code></a>s,
+{@link org.openide.loaders.DataShadow DataShadow }s,
 
 are interpreted using Datasystems, not Filesystems.
 
@@ -162,23 +153,23 @@ are interpreted using Datasystems, not Filesystems.
 
 </div>
 
-<h3><a name="multi">Multiple-file loaders</a></h3>
+<h3 id="multi">Multiple-file loaders</h3>
 
 These typically subclass
 
-<a href="../MultiFileLoader.html"><code>MultiFileLoader</code></a>.
+{@link org.openide.loaders.MultiFileLoader MultiFileLoader }.
 
 Like the loader used by the Form Editor, they are able to recognize
 multiple files at once and create a data object from them. All data
 objects have a
 
-<a href="../DataObject.html#getPrimaryFile--">primary file</a>
+{@link org.openide.loaders.DataObject#getPrimaryFile() primary file }
 
 which is representative of the data object;
 e.g. <code>myform.java</code> in the previous example. As well, these
 multi loaders may have any number of
 
-<a href="../DataObject.html#files--">secondary files</a>.
+{@link org.openide.loaders.DataObject#files() secondary files }.
 
 <p>The basic mechanism a multi-file loader uses, is that the loader
 pool will pass it file objects to recognize in an arbitrary order; the
@@ -186,21 +177,21 @@ loader may get a primary or secondary file first. Either way, it must
 recognize that it belongs to a cluster; find the primary file if it
 got a secondary one; and create a new
 
-<a href="../MultiDataObject.html"><code>MultiDataObject</code></a>
+{@link org.openide.loaders.MultiDataObject MultiDataObject }
 
 containing the supplied file as an
 
-<a href="../MultiDataObject.Entry.html">entry</a>.
+{@link org.openide.loaders.MultiDataObject.Entry entry}.
 
 When other files in the cluster are passed to the loader, it must
 create new entries in the <em>same</em> multi data object, to indicate
 their association.
 
-<h3><a name="single">Single-file loaders</a></h3>
+<h3 id="single">Single-file loaders</h3>
 
 These typically subclass
 
-<a href="../UniFileLoader.html"><code>UniFileLoader</code></a>.
+{@link org.openide.loaders.UniFileLoader UniFileLoader }.
 
 A single-file loader is of course simpler, and is likely to be more
 commonly used (since the majority of file types make sense by
@@ -216,7 +207,7 @@ browser, and so on).
 special type of <code>MultiFileLoader</code> (only recognizing one
 file), so that it actually creates a
 
-<a href="../MultiDataObject.html"><code>MultiDataObject</code></a>
+{@link org.openide.loaders.MultiDataObject MultiDataObject }
 
 when it recognizes its file. Normally you will use a
 <code>UniFileLoader</code> for most purposes, so the behaviors in
@@ -225,21 +216,21 @@ you had some reason to avoid using this kind of data object, you could
 of course subclass <code>DataLoader</code> and <code>DataObject</code>
 directly.
 
-<h3><a name="entry">Entries</a></h3>
+<h3 id="entry">Entries</h3>
 
 Entries represent a single file in a <code>MultiDataObject</code>, and
 thus are commonly used in all loaders (even single-file
 loaders). Normally
 
-<a href="../MultiDataObject.Entry.html"><code>MultiDataObject.Entry</code></a>
+{@link org.openide.loaders.MultiDataObject.Entry MultiDataObject.Entry }
 
 will not be specially subclassed; most module authors will use
 
-<a href="../FileEntry.html"><code>FileEntry</code></a>
+{@link org.openide.loaders.FileEntry FileEntry }
 
 (a regular entry) and sometimes
 
-<a href="../FileEntry.Numb.html"><code>FileEntry.Numb</code></a>
+{@link org.openide.loaders.FileEntry.Numb FileEntry.Numb }
 
 (a discardable file which should not be slavishly moved about just
 because the primary file is).
@@ -251,9 +242,9 @@ example, a Java source entry might want to rename its package and
 class name when it was moved. (The easiest way to create "smart"
 templates such as this is to make the entry a
 
-<a href="../FileEntry.Format.html"><code>FileEntry.Format</code></a>.)
+{@link org.openide.loaders.FileEntry.Format FileEntry.Format }.)
 
-<h3><a name="do-get">Getting a data object</a></h3>
+<h3 id="do-get">Getting a data object</h3>
 
 Normally you do not need to explicitly retrieve a data object - the
 loader pool will create them on demand, present them to the user in
@@ -261,29 +252,29 @@ the Explorer as nodes, and user actions will trigger use of the data
 object. However, if you do need to retrieve the data object for a file
 object you may do so using
 
-<a href="../DataObject.html#find-org.openide.filesystems.FileObject-"><code>DataObject.find(...)</code></a>,
+{@link org.openide.loaders.DataObject#find(org.openide.filesystems.FileObject) DataObject.find(...) },
 
 which will create a new data object for the file if it needs to,
 otherwise will return the existing one. (Catch
 
-<a href="../DataObjectNotFoundException.html"><code>DataObjectNotFoundException</code></a>
+{@link org.openide.loaders.DataObjectNotFoundException DataObjectNotFoundException }
 
 in case the file is not recognizable to any loader.)
 
-<h3><a name="delegate">Node Delegates</a></h3>
+<h3 id="delegate">Node Delegates</h3>
 
 Data objects have separate, but associated,
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html"><code>Node</code></a>s
+¶@link org.openide.nodes.Node Node}s
 
 which represent them in the Explorer and present a meaningful
 interface to the user. You may use
 
-<a href="../DataObject.html#getNodeDelegate--"><code>DataObject.getNodeDelegate()</code></a>
+{@link org.openide.loaders.DataObject#getNodeDelegate() DataObject.getNodeDelegate() }
 
 to retrieve the node delegate for a data object, if necessary.
 
-<h3><a name="write-loader">Writing a loader and data object</a></h3>
+<h3 id="write-loader">Writing a loader and data object</h3>
 
 This section is the most important for most people: after a loader has
 been correctly written and installed, the system takes care of
@@ -291,20 +282,17 @@ providing files for it to recognize; constructing nodes for the files;
 etc.; and most further implementation of a module will be callbacks
 run in response to some aspect of the objects created here.
 
-<h4>Module installation</h4>
-<a name="register"></a>
+<h4 id="register">Module installation</h4>
 <p>First of all, you must be able to register your loader in the
 module so that NetBeans knows about it. The preferred way since version
 7.0 of <code>org.openide.loaders</code> module is to assign the loader
 to appropriate MIME type. If the 
-<a
-    href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html">FileObject</a>
+{@link org.openide.filesystems.FileObject FileObject}
 of your interest returns for example <code>text/xml+acme</code> from its
-<a
-    href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html#getMIMEType--">getMIMEType()</a>
+{@link org.openide.filesystems.FileObject#getMIMEType() getMIMEType() }
 method, then you shall register its 
-<a href="../DataLoader.html">DataLoader</a> or other configured 
-<a href="../DataObject.Factory.html">DataObject.Factory</a> into layer file
+{@link org.openide.loaders.DataLoader DataLoader } or other configured 
+{@link org.openide.loaders.DataObject.Factory DataObject.Factory } into layer file
 of your module:
 <pre>
 &lt;folder name="Loaders"&gt;
@@ -328,9 +316,9 @@ document on information how to register a MIME type declaratively.
 The recognition process for any file consults loaders registered in an 
 old, deprecated style first, then it checks folder
 <code>Loaders/mime/type/Factories</code> for all instances of 
-<a href="../DataObject.Factory.html">DataObject.Factory</a> which also includes
+{@link org.openide.loaders.DataObject.Factory DataObject.Factory } which also includes
 instances of 
-all <a href="../DataLoader.html">DataLoader</a>s. If no appropriate loader
+all {@link org.openide.loaders.DataLoader DataLoader}s. If no appropriate loader
 is found, the scan continues among loaders registered as
 <code>Loaders/content/unknown/Factories</code>. At the end the recognition
 checks standard system loaders. In case of registration of multiple loaders in
@@ -350,11 +338,11 @@ subclass. Though you could in principle subclass
 <code>DataLoader</code> directly, in practice it is easier and better
 to subclass either
 
-<a href="../MultiFileLoader.html"><code>MultiFileLoader</code></a>
+{@link org.openide.loaders.MultiFileLoader MultiFileLoader }
 
 or
 
-<a href="../UniFileLoader.html"><code>UniFileLoader</code></a>,
+{@link org.openide.loaders.UniFileLoader UniFileLoader },
 
 according to whether your loader needs to cluster files, or just needs
 to deal with a single primary file.
@@ -363,7 +351,7 @@ to deal with a single primary file.
 
 For a single-file loader, handling file recognition is quite straightforward from the point of view of the API: you just need to override
 
-<a href="../UniFileLoader.html#findPrimaryFile-org.openide.filesystems.FileObject-"><code>UniFileLoader.findPrimaryFile(...)</code></a>
+{@link org.openide.loaders.UniFileLoader#findPrimaryFile(org.openide.filesystems.FileObject) UniFileLoader.findPrimaryFile(...) }
 
 to return its argument if this file is of the type that should be
 handled by your loader, or <code>null</code> if it is not.
@@ -372,11 +360,11 @@ handled by your loader, or <code>null</code> if it is not.
 looks for a specific file extension, you do not even need to override
 this method at all; simply create an appropriate
 
-<a href="../ExtensionList.html"><code>ExtensionList</code></a>
+{@link org.openide.loaders.ExtensionList ExtensionList }
 
 and call
 
-<a href="../UniFileLoader.html#setExtensions-org.openide.loaders.ExtensionList-"><code>UniFileLoader.setExtensions(...)</code></a>
+{@link org.openide.loaders.UniFileLoader#setExtensions(org.openide.loaders.ExtensionList) UniFileLoader.setExtensions(...) }
 
 in your loader's constructor.
 
@@ -384,7 +372,7 @@ in your loader's constructor.
 but still NetBeans takes care of most of the work for you. You should
 implement
 
-<a href="../MultiFileLoader.html#findPrimaryFile-org.openide.filesystems.FileObject-"><code>MultiFileLoader.findPrimaryFile(...)</code></a>
+{@link org.openide.loaders.MultiFileLoader#findPrimaryFile(org.openide.filesystems.FileObject) MultiFileLoader.findPrimaryFile(...) }
 
 as follows:
 
@@ -398,8 +386,7 @@ secondary file in your loader, you should attempt to find the primary
 file which it should be associated with, and return that. For this
 purpose, you may find it useful to call
 
-<a
-href="@org-openide-filesystems@/org/openide/filesystems/FileUtil.html#findBrother-org.openide.filesystems.FileObject-java.lang.String-"><code>FileUtil.findBrother(...)</code></a>,
+{@link org.openide.filesystems.FileUtil#findBrother(org.openide.filesystems.FileObject,java.lang.String) FileUtil.findBrother(...) },
 
 or perform a similar lookup by hand.
 
@@ -417,21 +404,21 @@ file first - the implementation in NetBeans takes care of this for you.
 The most interesting part of the loader is that which actually creates
 the data object from the underlying file object. You must implement
 
-<a href="../MultiFileLoader.html#createMultiObject-org.openide.filesystems.FileObject-"><code>MultiFileLoader.createMultiObject(...)</code></a>
+{@link org.openide.loaders.MultiFileLoader#createMultiObject(org.openide.filesystems.FileObject) MultiFileLoader.createMultiObject(...) }
 
 in order to do this. The method will be passed the correct primary
 file object for you to work with.
 
 <p>To write the data object, subclass
 
-<a href="../MultiDataObject.html"><code>MultiDataObject</code></a>.
+{@link org.openide.loaders.MultiDataObject MultiDataObject }.
 
 Your constructor will call the superclass constructor (so the loader
 will pass in the desired primary object and a reference to
 itself). You do <em>not</em> need to worry about whether or not to
 throw
 
-<a href="../DataObjectExistsException.html"><code>DataObjectExistsException</code></a>
+{@link org.openide.loaders.DataObjectExistsException DataObjectExistsException }
 
 in the constructor; it will be thrown automatically by the superclass if necessary.
 
@@ -441,36 +428,33 @@ data object from being renamed or otherwise tampered with, if doing so
 would make it useless or corrupted in some way; just return
 <code>false</code> from e.g.
 
-<a href="../MultiDataObject.html#isRenameAllowed--"><code>MultiDataObject.isRenameAllowed()</code></a>.
+{@link org.openide.loaders.MultiDataObject#isRenameAllowed() MultiDataObject.isRenameAllowed() }.
 
 <p>Or, if e.g. moves are to be permitted but require special
 treatment, you may override e.g.
 
-<a href="../MultiDataObject.html#handleMove-org.openide.loaders.DataFolder-"><code>MultiDataObject.handleMove(...)</code></a>.
+{@link org.openide.loaders.MultiDataObject#handleMove(org.openide.loaders.DataFolder) MultiDataObject.handleMove(...) }.
 
 <h4>Choosing entry types</h4>
 
 For single-file loaders, the default implementation of
 
-<a
-href="../UniFileLoader.html#createPrimaryEntry-org.openide.loaders.MultiDataObject-org.openide.filesystems.FileObject-"><code>UniFileLoader.createPrimaryEntry(...)</code></a>
+{@link org.openide.loaders.UniFileLoader#createPrimaryEntry(org.openide.loaders.MultiDataObject,org.openide.filesystems.FileObject) UniFileLoader.createPrimaryEntry(...) }
 
 just produces a
 
-<a href="../FileEntry.html"><code>FileEntry</code></a>,
+{@link org.openide.loaders.FileEntry FileEntry },
 
 which is most likely what you want.
 
 <p>For multi-file loaders, you must explicitly select the entry types
 by implementing
 
-<a
-href="../MultiFileLoader.html#createPrimaryEntry-org.openide.loaders.MultiDataObject-org.openide.filesystems.FileObject-"><code>MultiFileLoader.createPrimaryEntry(...)</code></a>
+{@link org.openide.loaders.MultiFileLoader#createPrimaryEntry(org.openide.loaders.MultiDataObject,org.openide.filesystems.FileObject) MultiFileLoader.createPrimaryEntry(...) }
 
 and
 
-<a
-href="../MultiFileLoader.html#createSecondaryEntry-org.openide.loaders.MultiDataObject-org.openide.filesystems.FileObject-"><code>MultiFileLoader.createSecondaryEntry(...)</code></a>.
+{@link org.openide.loaders.MultiFileLoader#createSecondaryEntry(org.openide.loaders.MultiDataObject,org.openide.filesystems.FileObject) MultiFileLoader.createSecondaryEntry(...) }.
 
 <p>Typically, the primary entry will be a <code>FileEntry</code>, and
 will behave normally. The secondary entry might also be a
@@ -479,14 +463,14 @@ entries along with the primary (i.e., if they are valuable enough to
 do so, and will not be corrupted); in many cases you will want to use
 a
 
-<a href="../FileEntry.Numb.html"><code>FileEntry.Numb</code></a>,
+{@link org.openide.loaders.FileEntry.Numb FileEntry.Numb },
 
 which will not be moved along with the primary file, and may just
 be discarded (for example, this would be useful for compiled
 <code>*.class</code> files, cached indices, etc.). For such dummy
 files, you will generally also want to use
 
-<a href="@org-openide-filesystems@/org/openide/filesystems/FileObject.html#setImportant-boolean-"><code>FileObject.setImportant(...)</code></a>
+{@link org.openide.filesystems.FileObject#setImportant(boolean) FileObject.setImportant(...) }
 
 to prevent the file from being considered by a version control
 system, for example.
@@ -494,24 +478,23 @@ system, for example.
 <p>It is possible to specify custom copy/move/etc. behavior for
 individual files in your data object by subclassing
 
-<a href="../MultiDataObject.Entry.html"><code>MultiDataObject.Entry</code></a>
+{@link org.openide.loaders.MultiDataObject.Entry MultiDataObject.Entry }
 
 (or <code>FileEntry</code>)
 and providing a non-obvious implementation. If you need custom
 behavior for the whole data object at once, it is preferable to do so
 by overriding methods on the data object, as mentioned above.
 
-<p><a href="../FileEntry.Format.html"><code>FileEntry.Format</code></a>
+<p>{@link org.openide.loaders.FileEntry.Format FileEntry.Format }
 
 is a convenient entry type to use if you wish to perform substitution of some type
 of token when creating the file from template. Typically the method
 
-<a
-href="../FileEntry.Format.html#createFormat-org.openide.filesystems.FileObject-java.lang.String-java.lang.String-"><code>FileEntry.Format.createFormat(...)</code></a>
+{@link org.openide.loaders.FileEntry.Format#createFormat(org.openide.filesystems.FileObject,java.lang.String,java.lang.String) FileEntry.Format.createFormat(...) }
 
 will be implemented to return an instance of
 
-<a href="@org-openide-util@/org/openide/util/MapFormat.html"><code>MapFormat</code></a>
+{@link org.openide.util.MapFormat MapFormat }
 
 containing substitution keys and values according to the name and package of the file object;
 constants used by the module; values of associated system options; the current time and
@@ -524,7 +507,7 @@ system option, defaulted from the Java system property).
 
 Data loaders all implicitly extend
 
-<a href="@org-openide-util-ui@/org/openide/util/SharedClassObject.html"><code>SharedClassObject</code></a>,
+{@link org.openide.util.SharedClassObject SharedClassObject },
 
 which means that there is only intended to be a single instance of the loader
 per class, and all associated configuration and properties are stored in a shared
@@ -535,11 +518,11 @@ wish to associate any properties with a data loader, you should:
 
 <li> Implement getter and setter methods to call
 
-<a href="@org-openide-util-ui@/org/openide/util/SharedClassObject.html#getProperty-java.lang.Object-"><code>SharedClassObject.getProperty(key)</code></a>
+{@link org.openide.util.SharedClassObject#getProperty(java.lang.Object) SharedClassObject.getProperty(key) }
 
 and
 
-<a href="@org-openide-util-ui@/org/openide/util/SharedClassObject.html#putProperty-java.lang.String-java.lang.Object-boolean-"><code>SharedClassObject.putProperty(key, value, true)</code></a>
+{@link org.openide.util.SharedClassObject#putProperty(java.lang.String,java.lang.Object,boolean) SharedClassObject.putProperty(key, value, true) }
 
 (the latter will automatically fire property changes and synchronize for you).
 
@@ -550,17 +533,17 @@ your property values from the stream. Please always first call the super methods
 
 <p>You should use the method
 
-<a href="@org-openide-util-ui@/org/openide/util/SharedClassObject.html#initialize--"><code>SharedClassObject.initialize()</code></a>
+{@link org.openide.util.SharedClassObject#initialize() SharedClassObject.initialize() }
 
 to set up the shared instance, including both your own properties, and standard ones such as
 
-<a href="../DataLoader.html#setDisplayName-java.lang.String-"><code>DataLoader.setDisplayName(String)</code></a>,
+{@link org.openide.loaders.DataLoader#setDisplayName(java.lang.String) DataLoader.setDisplayName(String) },
 
-<a href="../DataLoader.html#setActions-org.openide.util.actions.SystemAction:A-"><code>DataLoader.setActions(SystemAction[])</code></a>,
+{@link org.openide.loaders.DataLoader#setActions(org.openide.util.actions.SystemAction[]) DataLoader.setActions(SystemAction[]) },
 
 and
 
-<a href="../UniFileLoader.html#setExtensions-org.openide.loaders.ExtensionList-"><code>UniFileLoader.setExtensions(ExtensionList)</code></a>.
+{@link org.openide.loaders.UniFileLoader#setExtensions(org.openide.loaders.ExtensionList) UniFileLoader.setExtensions(ExtensionList) }.
 
 <p>Finally, data loaders will be customized by the user as Beans (and persisted using
 externalization). For this reason, they should have an associated bean info class
@@ -595,12 +578,12 @@ and there is no way to alter the set of cookies provided in this way.
 
 <p>A better technique is to provide cookies explicitly from
 
-<a href="../DataObject.html#getCookie-java.lang.Class-"><code>DataObject.getCookie(...)</code></a>.
+{@link org.openide.loaders.DataObject#getCookie(java.lang.Class) DataObject.getCookie(...) }.
 
 Assuming that you are subclassing <code>MultiDataObject</code>, you
 need not override this method yourself, but rather should use
 
-<a href="../MultiDataObject.html#getCookieSet--"><code>MultiDataObject.getCookieSet()</code></a>
+{@link org.openide.loaders.MultiDataObject#getCookieSet() MultiDataObject.getCookieSet() }
 
 in the constructor and add the cookies you
 want to provide by default. Then it is possible to extend this set
@@ -608,16 +591,16 @@ later, and to more easily examine its contents.
 
 <p>You may attach some
 
-<a href="@org-openide-util-ui@/org/openide/util/actions/SystemAction.html">actions</a>
+{@link org.openide.util.actions.SystemAction actions}
 
 to the nodes <a href="#create-delegate">associated</a> with your data
 objects. The easiest way to do this is to call
 
-<a href="../DataLoader.html#setActions-org.openide.util.actions.SystemAction:A-"><code>DataLoader.setActions(...)</code></a>
+{@link org.openide.loaders.DataLoader#setActions(org.openide.util.actions.SystemAction[]) DataLoader.setActions(...) }
 
 in your loader's
 
-<a href="@org-openide-util-ui@/org/openide/util/SharedClassObject.html#initialize--"><code>SharedClassObject.initialize()</code></a>
+{@link org.openide.util.SharedClassObject#initialize() SharedClassObject.initialize() }
 
 method, which lets you provide a set of
 actions appropriate to all data objects created by this
@@ -629,7 +612,7 @@ their positioning.
 <p>Or, you may wish to selectively attach actions to certain data
 objects' nodes and not others. If you need to do this, please override
 
-<a href="../DataNode.html#getActions-boolean-"><code>DataNode.getActions(boolean)</code></a>
+{@link org.openide.loaders.DataNode#getActions(boolean) DataNode.getActions(boolean) }
 
 when creating your node delegate; you probably want to call the super
 method and append any additional actions this particular node should
@@ -641,7 +624,7 @@ double-click on the node; this should do something safe and obvious on
 the node, such as opening it for editing, running it if executable,
 etc. To do so, your node delegate should override
 
-<a href="../DataNode.html#getPreferredAction--"><code>DataNode.getPreferredAction()</code></a>.
+{@link org.openide.loaders.DataNode#getPreferredAction() DataNode.getPreferredAction() }.
 
 If unspecified, NetBeans may still provide a generic default action,
 such as displaying properties of the object.
@@ -651,29 +634,29 @@ templates, so you may override this. However, if there is a chance
 this data object might serve as a template, for UI consistency this
 default action should be preserved; you may check
 
-<a href="../DataObject.html#isTemplate--"><code>DataObject.isTemplate()</code></a>,
+{@link org.openide.loaders.DataObject#isTemplate() DataObject.isTemplate() },
 
 and if true, provide
 
-<a href="../../actions/InstantiateAction.html"><code>InstantiateAction</code></a>
+{@link org.openide.actions.InstantiateAction InstantiateAction}
 
 as the result.
 
-<h4><a name="create-delegate">Creating a node delegate</a></h4>
+<h4 id="create-delegate">Creating a node delegate</h4>
 
 You must create a
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html"><code>Node</code></a>
+{@link org.openide.nodes.Node Node }
 
 to represent your data object in the Explorer hierarchy, so that the
 user may interact with it visually. The method
 
-<a href="../DataObject.html#createNodeDelegate--"><code>DataObject.createNodeDelegate()</code></a>
+{@link org.openide.loaders.DataObject#createNodeDelegate() DataObject.createNodeDelegate() }
 
 controls what sort of node should be created. To control the icon, you
 should use
 
-<a href="@org-openide-nodes@/org/openide/nodes/AbstractNode.html#setIconBaseWithExtension-java.lang.String-"><code>AbstractNode.setIconBaseWithExtension(...)</code></a>
+{@link org.openide.nodes.AbstractNode#setIconBaseWithExtension(java.lang.String) AbstractNode.setIconBaseWithExtension(...) }
 
 on the newly created <code>DataNode</code>, either in its constructor
 (if subclassing) or in <code>DataObject.createNodeDelegate()</code>.
@@ -688,12 +671,12 @@ structure of the form (as displayed in the Component Inspector).
 special node subclass for the delegate, as you may provide an icon,
 cookies, and common actions without doing so.
 
-<h3><a name="sys-loaders">System loaders</a></h3>
+<h3 id="sys-loaders">System loaders</h3>
 
 NetBeans installs a few extra "hidden" loaders into the loader pool, as
 are returned by
 
-<a href="../DataLoaderPool.html#allLoaders--"><code>DataLoaderPool.allLoaders()</code></a>.
+{@link org.openide.loaders.DataLoaderPool#allLoaders() DataLoaderPool.allLoaders() }.
 
 Currently, these include among other things:
 
@@ -701,12 +684,12 @@ Currently, these include among other things:
 
 <li>A folder loader, which only recognizes file folders and creates a
 
-<a href="../DataFolder.html"><code>DataFolder</code></a>
+{@link org.openide.loaders.DataFolder DataFolder }
 
 for them. This folder will have a few standard system actions
 associated with its
 
-<a href="../DataFolder.FolderNode.html">node</a>,
+{@link org.openide.loaders.DataFolder.FolderNode node},
 
 can be sorted, etc.
 
@@ -714,13 +697,13 @@ can be sorted, etc.
 and treats them similarly to symbolic links. The created data object
 is a
 
-<a href="../DataShadow.html"><code>DataShadow</code></a>,
+{@link org.openide.loaders.DataShadow DataShadow },
 
 and generally behaves just like the object it points to.
 
 <li>Support for
 
-<a href="../XMLDataObject.html">XML files</a>.
+{@link org.openide.loaders.XMLDataObject XML files}.
 
 </ul>
 
@@ -753,7 +736,7 @@ cooperate with the loader in this regard).
 -->
 
 
-<h2><a name="cookie">Cookies</a></h2>
+<h2 id="cookie">Cookies</h2>
 
 <!-- XXX this ss should maybe be in Services/Lookup API -->
 
@@ -762,7 +745,7 @@ NetBeans in a flexible fashion what types of (usually user-initiated)
 operations they are capable of supporting, and even to dynamically add
 and remove these capabilities.
 
-<h3><a name="intro-cookie">What is a cookie?</a></h3>
+<h3 id="intro-cookie">What is a cookie?</h3>
 
 A <em>cookie</em> is a design pattern used to separate the
 presentation of implementation of some interface from the actual
@@ -770,7 +753,7 @@ object that implementation ought to be associated with. As such, it is
 a convenient way of removing the requirement that all interfaces
 presented by the cookie holder (either a data object or
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html">node</a>)
+{@link org.openide.nodes.Node node })
 
 be actually implemented by the primary Java class of the object. If
 desired, the primary Java class can in fact be the cookie implementor,
@@ -782,9 +765,9 @@ with a different meaning sometimes used in computer science, that of
 an opaque callback object.
 
 <p>Originally there used to be a marker interface
-<a href="@org-openide-nodes@/org/openide/nodes/Node.Cookie.html"><code>Node.Cookie</code></a>,
+{@link org.openide.nodes.Node.Cookie Node.Cookie },
 however it is no longer necessary to use it. Rather rely on
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getLookup--">getLookup</a>
+{@link org.openide.nodes.Node#getLookup() getLookup }
 method which can deal with plain Java objects.
 
 As such there are no requirements as to what makes a valid
@@ -794,22 +777,22 @@ such as "opening", "compiling", "searching", etc.
 <p>Uses of cookies on nodes are not much different from uses on data
 objects; the initial cookie detection is done by
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#getLookup--"><code>Node.getLookup().lookup(...)</code></a>;
+{@link org.openide.nodes.Node#getLookup() Node.getLookup().lookup(...) } ;
 
 however the default data node provides
 
-<a href="../DataNode.html"><code>DataNode.getLookup(...)</code></a>
+{@link org.openide.loaders.DataNode DataNode.getLookup(...) }
 
 that looks inside 
 
-<a href="../MultiDataObject.html#getCookieSet--"><code>MultiDataObject.getCookieSet()</code></a>.
+{@link org.openide.loaders.MultiDataObject#getCookieSet() MultiDataObject.getCookieSet() }.
 
-<h4><a name="attach-retrieve">Attaching and retrieving cookies</a></h4>
+<h4 id="attach-retrieve">Attaching and retrieving cookies</h4>
 
 <p>In short, there are a number of ways to attach cookies to either a
 node or data object (and you may listen for changes in the set of
 supported cookies, etc.). In all cases, the
-<a href="@org-openide-util-lookup@/org/openide/util/Lookup.html#lookup-java.lang.Class-">lookup(Class)</a>
+{@link org.openide.util.Lookup#lookup(java.lang.Class) lookup(Class) }
 method
 is used by the system to
 determine whether or not a given cookie is supported: thus, cookies
@@ -822,11 +805,11 @@ node or data object is holding it.
 
 <p>Using
 
-<a href="@org-openide-nodes@/org/openide/nodes/CookieSet.html">cookie sets</a>,
+{@link org.openide.nodes.CookieSet cookie sets },
 
 it is possible to dynamically add and remove cookies from a
 holder (possible
-using <a href="@org-openide-util-lookup@/org/openide/util/lookup/AbstractLookup.html">AbstractLookup</a>).
+using {@link org.openide.util.lookup.AbstractLookup AbstractLookup}).
 This is appropriate for cookie types whose applicability may
 vary over time. For example, some objects may be compilable at certain
 times, but if they have been compiled recently and are already
@@ -838,9 +821,9 @@ grayed out when necessary; and then reenabled when either the
 selection changes, or the object changes state so as to make the
 cookie appropriate once more, at which time the folder re-adds the
 cookie to its cookie set and
-<a href="@org-openide-util-lookup@/org/openide/util/LookupListener.html">LookupListener</a>
+{@link org.openide.util.LookupListener LookupListener }
 may observer the
-<a href="@org-openide-nodes@/org/openide/nodes/Node.html#fireCookieChange--">fired changes</a>
+{@link org.openide.nodes.Node#fireCookieChange() fired changes}
 to this effect.
 
 <h4>Cookie Usage Scenarios</h4>
@@ -854,19 +837,19 @@ which demonstrate their flexibility. In the examples that follow,
 this:</p>
 
 <pre>
-<font class="keyword">public</font> <font class="keyword">interface</font> C {
-    <font class="type">void</font> foo();
+<span class="keyword">public</span> <span class="keyword">interface</span> C {
+    <span class="type">void</span> foo();
 }
-<font class="keyword">public</font> <font class="keyword">class</font> S <font class="keyword">implements</font> C {
-    <font class="keyword">private</font> <font class="type">String</font> param;
-    <font class="keyword">public</font> S(<font class="type">String</font> param) {
-        <font class="keyword">this</font>.param = param;
+<span class="keyword">public</span> <span class="keyword">class</span> S <span class="keyword">implements</span> C {
+    <span class="keyword">private</span> <span class="type">String</span> param;
+    <span class="keyword">public</span> S(<span class="type">String</span> param) {
+        <span class="keyword">this</span>.param = param;
     }
-    <font class="keyword">public</font> <font class="type">void</font> foo() {
-        System.out.println(<font class="string">"foo: "</font> + param);
+    <span class="keyword">public</span> <span class="type">void</span> foo() {
+        System.out.println(<span class="string">"foo: "</span> + param);
     }
 }
-<font class="keyword">public</font> <font class="keyword">class</font> O <font class="keyword">extends</font> <font class="type">DataObject</font> {<font class="comment">/* ... */</font>}
+<span class="keyword">public</span> <span class="keyword">class</span> O <span class="keyword">extends</span> <span class="type">DataObject</span> {<span class="comment">/* ... */</span>}
 </pre>
 
 
@@ -877,21 +860,21 @@ this:</p>
 <dd><p>Using cookies in the common way is pretty easy.</p>
 
 <pre>
-<font class="keyword">public</font> <font class="keyword">class</font> O <font class="keyword">extends</font> <font class="type">DataObject</font> {
-    <font class="keyword">public</font> O(<font class="type">FileObject</font> fo) {
-        <font class="comment">// super...
-</font>        getCookieSet().assign(C1.class, <font class="keyword">new</font> S1(fo));
-        getCookieSet().assign(C2.class, <font class="keyword">new</font> S2(<font class="keyword">this</font>));
+<span class="keyword">public</span> <span class="keyword">class</span> O <span class="keyword">extends</span> <span class="type">DataObject</span> {
+    <span class="keyword">public</span> O(<span class="type">FileObject</span> fo) {
+        <span class="comment">// super...
+</span>        getCookieSet().assign(C1.class, <span class="keyword">new</span> S1(fo));
+        getCookieSet().assign(C2.class, <span class="keyword">new</span> S2(<span class="keyword">this</span>));
     }
 }
-<font class="keyword">public</font> <font class="keyword">class</font> S1 <font class="keyword">implements</font> C1 {<font class="comment">/* ... */</font>}
-<font class="keyword">public</font> <font class="keyword">class</font> S2 <font class="keyword">implements</font> C2 {<font class="comment">/* ... */</font>}
-<font class="comment">// ...
-</font><font class="type">DataObject</font> o = DataObject.find(someFileObject);
-<font class="comment">// o instanceof O, in fact
-</font>C1 c1 = o.getLookup().lookup(C1.<font class="keyword">class</font>);
-<font class="comment">// c1 instanceof S1
-</font><font class="keyword">if</font> (c1 != <font class="constant">null</font>) {
+<span class="keyword">public</span> <span class="keyword">class</span> S1 <span class="keyword">implements</span> C1 {<span class="comment">/* ... */</span>}
+<span class="keyword">public</span> <span class="keyword">class</span> S2 <span class="keyword">implements</span> C2 {<span class="comment">/* ... */</span>}
+<span class="comment">// ...
+</span><span class="type">DataObject</span> o = DataObject.find(someFileObject);
+<span class="comment">// o instanceof O, in fact
+</span>C1 c1 = o.getLookup().lookup(C1.<span class="keyword">class</span>);
+<span class="comment">// c1 instanceof S1
+</span><span class="keyword">if</span> (c1 != <span class="constant">null</span>) {
     c1.foo();
 }
 </pre>
@@ -904,61 +887,61 @@ this:</p>
 inheritance, you can use subclassing naturally on supports.</p>
 
 <pre>
-<font class="keyword">public</font> <font class="keyword">class</font> S1 <font class="keyword">implements</font> C1 {
-    <font class="keyword">private</font> <font class="type">String</font> param;
-    <font class="keyword">public</font> S1(<font class="type">String</font> param) {
-        <font class="keyword">this</font>.param = param;
+<span class="keyword">public</span> <span class="keyword">class</span> S1 <span class="keyword">implements</span> C1 {
+    <span class="keyword">private</span> <span class="type">String</span> param;
+    <span class="keyword">public</span> S1(<span class="type">String</span> param) {
+        <span class="keyword">this</span>.param = param;
     }
-    <font class="keyword">public</font> <font class="type">void</font> foo1() {
-        System.out.println(<font class="string">"foo: "</font> + transform(param));
+    <span class="keyword">public</span> <span class="type">void</span> foo1() {
+        System.out.println(<span class="string">"foo: "</span> + transform(param));
     }
-    <font class="comment">/** Subclasses may customize. */</font>
-    <font class="keyword">protected</font> <font class="type">String</font> transform(<font class="type">String</font> in) {
-        <font class="keyword">return</font> in;
-    }
-}
-<font class="keyword">public</font> <font class="keyword">abstract</font> <font class="keyword">class</font> S2 <font class="keyword">implements</font> C2 {
-    <font class="keyword">private</font> <font class="type">String</font> param;
-    <font class="keyword">public</font> S2(<font class="type">String</font> param) {
-        <font class="keyword">this</font>.param = param;
-    }
-    <font class="keyword">public</font> <font class="type">void</font> foo2() {
-        <font class="keyword">if</font> (active()) {
-            System.out.println(<font class="string">"foo: "</font> + param);
-        }
-    }
-    <font class="comment">/** Subclasses must implement. */</font>
-    <font class="keyword">protected</font> <font class="keyword">abstract</font> <font class="type">boolean</font> active();
-}
-<font class="keyword">public</font> <font class="keyword">class</font> O {
-    <font class="keyword">private</font> <font class="type">int</font> state;
-    <font class="keyword">public</font> O(<font class="type">String</font> p) {
-        state = INACTIVE; <font class="comment">// initially
-</font>        getCookieSet().assign(C1.class, <font class="keyword">new</font> <font class="type">MyS1</font>(p));
-        getCookieSet().assign(C2.class, <font class="keyword">new</font> <font class="type">MyS2</font>(p));
-    }
-    <font class="keyword">private</font> <font class="keyword">static</font> <font class="keyword">final</font> <font class="keyword">class</font> <font class="type">MyS1</font> <font class="keyword">extends</font> S1 {
-        <font class="keyword">public</font> <font class="type">MyS1</font>(<font class="type">String</font> p) {<font class="keyword">super</font>(p);}
-        <font class="keyword">protected</font> <font class="type">String</font> transform(<font class="type">String</font> in) {
-            <font class="keyword">return</font> in.toLowerCase();
-        }
-    }
-    <font class="keyword">private</font> <font class="keyword">final</font> <font class="keyword">class</font> <font class="type">MyS2</font> <font class="keyword">extends</font> S2 {
-        <font class="keyword">public</font> <font class="type">MyS2</font>(<font class="type">String</font> p) {<font class="keyword">super</font>(p);}
-        <font class="keyword">protected</font> <font class="type">boolean</font> active() {
-            <font class="keyword">return</font> O.<font class="keyword">this</font>.state == ACTIVE;
-        }
+    <span class="comment">/** Subclasses may customize. */</span>
+    <span class="keyword">protected</span> <span class="type">String</span> transform(<span class="type">String</span> in) {
+        <span class="keyword">return</span> in;
     }
 }
-<font class="comment">// ...
-</font>O o = <font class="keyword">new</font> O(<font class="string">"Hello"</font>);
-C1 c1 = o.getLookup().lookup(C1.<font class="keyword">class</font>);
-<font class="keyword">if</font> (c1 != <font class="constant">null</font>) c1.foo1();
-<font class="comment">// prints "foo: hello"
-</font>C2 c2 = o.getLookup().lookup(C2.<font class="keyword">class</font>);
-<font class="keyword">if</font> (c2 != <font class="constant">null</font>) c2.foo2();
-<font class="comment">// does nothing: o is not yet active
-</font></pre>
+<span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> S2 <span class="keyword">implements</span> C2 {
+    <span class="keyword">private</span> <span class="type">String</span> param;
+    <span class="keyword">public</span> S2(<span class="type">String</span> param) {
+        <span class="keyword">this</span>.param = param;
+    }
+    <span class="keyword">public</span> <span class="type">void</span> foo2() {
+        <span class="keyword">if</span> (active()) {
+            System.out.println(<span class="string">"foo: "</span> + param);
+        }
+    }
+    <span class="comment">/** Subclasses must implement. */</span>
+    <span class="keyword">protected</span> <span class="keyword">abstract</span> <span class="type">boolean</span> active();
+}
+<span class="keyword">public</span> <span class="keyword">class</span> O {
+    <span class="keyword">private</span> <span class="type">int</span> state;
+    <span class="keyword">public</span> O(<span class="type">String</span> p) {
+        state = INACTIVE; <span class="comment">// initially
+</span>        getCookieSet().assign(C1.class, <span class="keyword">new</span> <span class="type">MyS1</span>(p));
+        getCookieSet().assign(C2.class, <span class="keyword">new</span> <span class="type">MyS2</span>(p));
+    }
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="type">MyS1</span> <span class="keyword">extends</span> S1 {
+        <span class="keyword">public</span> <span class="type">MyS1</span>(<span class="type">String</span> p) {<span class="keyword">super</span>(p);}
+        <span class="keyword">protected</span> <span class="type">String</span> transform(<span class="type">String</span> in) {
+            <span class="keyword">return</span> in.toLowerCase();
+        }
+    }
+    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="type">MyS2</span> <span class="keyword">extends</span> S2 {
+        <span class="keyword">public</span> <span class="type">MyS2</span>(<span class="type">String</span> p) {<span class="keyword">super</span>(p);}
+        <span class="keyword">protected</span> <span class="type">boolean</span> active() {
+            <span class="keyword">return</span> O.<span class="keyword">this</span>.state == ACTIVE;
+        }
+    }
+}
+<span class="comment">// ...
+</span>O o = <span class="keyword">new</span> O(<span class="string">"Hello"</span>);
+C1 c1 = o.getLookup().lookup(C1.<span class="keyword">class</span>);
+<span class="keyword">if</span> (c1 != <span class="constant">null</span>) c1.foo1();
+<span class="comment">// prints "foo: hello"
+</span>C2 c2 = o.getLookup().lookup(C2.<span class="keyword">class</span>);
+<span class="keyword">if</span> (c2 != <span class="constant">null</span>) c2.foo2();
+<span class="comment">// does nothing: o is not yet active
+</span></pre>
 
 </dd>
 
@@ -968,30 +951,30 @@ C1 c1 = o.getLookup().lookup(C1.<font class="keyword">class</font>);
 after its creation.</p>
 
 <pre>
-<font class="keyword">public</font> <font class="keyword">class</font> <font class="type">O</font> {
-    <font class="keyword">private</font> <font class="type">boolean</font> <font class="variable-name">modified</font>;
-    <font class="keyword">public</font> <font class="function-name">O</font>(<font class="type">String</font> <font class="variable-name">param</font>) {
-        modified = <font class="constant">false</font>;
-        <font class="comment">// ...
-</font>    }
-    <font class="keyword">private</font> <font class="keyword">synchronized</font> <font class="type">void</font> <font class="function-name">markModified</font>() {
-        <font class="keyword">if</font> (!modified) {
-            <font class="comment">// Newly modified, make it possible to save.
-</font>            <font class="comment">// Note this will automatically fire a cookie change.
-</font>            getCookieSet().assign(SaveCookie.class, <font class="keyword">new</font> <font class="type">SaveCookie</font>() {
-                <font class="keyword">public</font> <font class="type">void</font> <font class="function-name">save</font>() {
+<span class="keyword">public</span> <span class="keyword">class</span> <span class="type">O</span> {
+    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable-name">modified</span>;
+    <span class="keyword">public</span> <span class="function-name">O</span>(<span class="type">String</span> <span class="variable-name">param</span>) {
+        modified = <span class="constant">false</span>;
+        <span class="comment">// ...
+</span>    }
+    <span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="type">void</span> <span class="function-name">markModified</span>() {
+        <span class="keyword">if</span> (!modified) {
+            <span class="comment">// Newly modified, make it possible to save.
+</span>            <span class="comment">// Note this will automatically fire a cookie change.
+</span>            getCookieSet().assign(SaveCookie.class, <span class="keyword">new</span> <span class="type">SaveCookie</span>() {
+                <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">save</span>() {
                     doSave();
                 }
             });
-            modified = <font class="constant">true</font>;
+            modified = <span class="constant">true</span>;
         }
     }
-    <font class="keyword">private</font> <font class="keyword">synchronized</font> <font class="type">void</font> <font class="function-name">doSave</font>() {
-        <font class="keyword">if</font> (modified) {
-            <font class="comment">// actually save...then:
-</font>            
+    <span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="type">void</span> <span class="function-name">doSave</span>() {
+        <span class="keyword">if</span> (modified) {
+            <span class="comment">// actually save...then:
+</span>            
             getCookieSet().assign(SaveCookie.class);
-            modified = <font class="constant">false</font>;
+            modified = <span class="constant">false</span>;
         }
     }
 }
@@ -1002,29 +985,28 @@ after its creation.</p>
 
 </dl>
 
-</div>
 
-<h3><a name="std-cookie">Standard cookies and supports</a></h3>
+<h3 id="std-cookie">Standard cookies and supports</h3>
 
 Most standard cookies you would want to use exist in the
 
-<a href="@org-openide-nodes@/org/openide/cookies/package-summary.html"><code>org.openide.cookies</code></a>
+{@link org.openide.cookies org.openide.cookies }
 
 package. Many of these have standard supports as well, frequently in
 
-<a href="../package-summary.html"><code>org.openide.loaders</code></a>.
+{@link org.openide.loaders org.openide.loaders }.
 
 Using the Javadoc, the surest way to find cookies and supports is to
 look at
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.Cookie.html"><code>Node.Cookie</code></a>
+{@link org.openide.nodes.Node.Cookie Node.Cookie}
 
 and browse the subinterfaces; for any cookie of interest, just look
 for implementing classes, which are usually supports. (A few cookie
 implementations are not of general utility, and so are not documented
 as being supports.) The standard supports generally take a
 
-<a href="../MultiDataObject.Entry.html">file entry</a>
+{@link org.openide.loaders.MultiDataObject.Entry file entry}
 
 in their constructor, as they are designed for use by loaders
 attaching them to data objects.
@@ -1033,26 +1015,26 @@ attaching them to data objects.
 may not implement any of them, leaving the choice of which to declare
 implementation of, to a subclass. This is the case with the abstract
 
-<a href="../OpenSupport.html"><code>OpenSupport</code></a>,
+{@link org.openide.loaders.OpenSupport OpenSupport},
 
 which actually may be used for any or all of
 
-<a href="@org-openide-nodes@/org/openide/cookies/OpenCookie.html"><code>OpenCookie</code></a>,
+{@link org.openide.cookies.OpenCookie OpenCookie},
 
-<a href="@org-openide-nodes@/org/openide/cookies/ViewCookie.html"><code>ViewCookie</code></a>,
+{@link org.openide.cookies.ViewCookie ViewCookie},
 
 or
 
-<a href="@org-openide-nodes@/org/openide/cookies/CloseCookie.html"><code>CloseCookie</code></a>,
+{@link org.openide.cookies.CloseCookie CloseCookie},
 
 according to the needs of its subclass and holders.
 
-<a href="../../text/EditorSupport.html"><code>EditorSupport</code></a>,
+{@link org.openide.text.EditorSupport EditorSupport},
 
 for instance, uses only <code>OpenCookie</code> and
 <code>CloseCookie</code>.
 
-<h3><a name="write-cookie">Writing a cookie</a></h3>
+<h3 id="write-cookie">Writing a cookie</h3>
 
 Writing a new cookie requires no special knowledge - just extend create
 an interface and add its methods according to whatever you need done.
@@ -1065,20 +1047,20 @@ the current selection provides the cookie.</p>
 
 <div class="nonnormative">
 
-<h3><a name="write-support">Writing a support for an existing cookie</a></h3>
+<h3 id="write-support">Writing a support for an existing cookie</h3>
 
 Writing a support also does not require anything non-apparent. It should
 be a concrete class, its name conventionally ending in
 <code>Support</code>, implementing the cookie interface. Normally it
 should have one constructor, taking a
 
-<a href="../MultiDataObject.Entry.html"><code>MultiDataObject.Entry</code></a>
+{@link org.openide.loaders.MultiDataObject.Entry MultiDataObject.Entry}
 
 as principal argument, so as to encourage its use in the context of a
 loader; the file entry of course gives easy access to the file object
 it represents, as well as the data object via
 
-<a href="../MultiDataObject.Entry.html#getDataObject--"><code>MultiDataObject.Entry.getDataObject()</code></a>.
+{@link org.openide.loaders.MultiDataObject.Entry#getDataObject() MultiDataObject.Entry.getDataObject() }.
 
 <p>If the support is designed to be usable from someone else's loader,
 and it is not obvious for which data objects using the support is
@@ -1091,30 +1073,30 @@ prerequisites.
 
 </div>
 
-<h3><a name="use-support">Using an existing support</a></h3>
+<h3 id="use-support">Using an existing support</h3>
 
 Using an existing support is generally straightforward - assuming your
 data object is a subclass of <code>MultiDataObject</code>, you may
 just add a new instance of the support using
 
-<a href="../MultiDataObject.html#setCookieSet-org.openide.nodes.CookieSet-"><code>MultiDataObject.setCookieSet(...)</code></a>
+{@link org.openide.loaders.MultiDataObject#setCookieSet(org.openide.nodes.CookieSet) MultiDataObject.setCookieSet(...) }
 
 in the constructor, passing in the primary entry (most likely) from
 
-<a href="../MultiDataObject.html#getPrimaryEntry--"><code>MultiDataObject.getPrimaryEntry()</code></a>.
+{@link org.openide.loaders.MultiDataObject#getPrimaryEntry() MultiDataObject.getPrimaryEntry() }.
 
 
 
-<h2><a name="clipboard">Extended Clipboard</a></h2>
+<h2 id="clipboard">Extended Clipboard</h2>
 
 NetBeans implements an extended clipboard, which enhances the functions
 provided in the
 
-<a href="@JDK@/java/awt/datatransfer/package-summary.html"><code>java.awt.datatransfer</code></a>
+{@link java.awt.datatransfer java.awt.datatransfer }
 
 package. This implementation is to be found in
 
-<a href="@org-openide-util-ui@/org/openide/util/datatransfer/package-summary.html"><code>org.openide.util.datatransfer</code></a>.
+{@link org.openide.util.datatransfer org.openide.util.datatransfer }.
 
 <p>Enabling complex customizations on both sides of a cut/copy-paste
 can be confusing; the
@@ -1124,11 +1106,11 @@ can be confusing; the
 contains a detailed description of these operations as they pertain to
 nodes, which may be helpful.
 
-<h3><a name="convertor">Convertors</a></h3>
+<h3 id="convertor">Convertors</h3>
 
 The extended clipboard,
 
-<a href="@org-openide-util-ui@/org/openide/util/datatransfer/ExClipboard.html"><code>ExClipboard</code></a>,
+{@link org.openide.util.datatransfer.ExClipboard ExClipboard },
 
 provides the ability for a prebuilt transferable to support additional
 data flavors that it was not originally designed for; then the
@@ -1136,7 +1118,7 @@ convertor supplies the implementation of these conversions.
 
 <p>To write a convertor, just implement
 
-<a href="@org-openide-util-ui@/org/openide/util/datatransfer/ExClipboard.Convertor.html"><code>ExClipboard.Convertor</code></a>.
+{@link org.openide.util.datatransfer.ExClipboard.Convertor ExClipboard.Convertor}.
 
 The Javadoc should provide sufficient information on its sole
 method. Installing the convertor is easy; you can just add an instance
@@ -1144,42 +1126,42 @@ of it to
 
 <a href="@org-openide-util-ui@/org/openide/util/doc-files/api.html#instance-folders">lookup</a>.
 
-<h3><a name="clipboard-ev">Event notification</a></h3>
+<h3 id="clipboard-ev">Event notification</h3>
 
 The extended clipboard supports Java Event-based notification of
 changes in the contents of the clipboard. Just register your listener
 with
 
-<a href="@org-openide-util-ui@/org/openide/util/datatransfer/ExClipboard.html#addClipboardListener-org.openide.util.datatransfer.ClipboardListener-"><code>ExClipboard.addClipboardListener(...)</code></a>.
+{@link org.openide.util.datatransfer.ExClipboard#addClipboardListener(org.openide.util.datatransfer.ClipboardListener) ExClipboard.addClipboardListener(...) }.
 
-<h3><a name="multi-transfer">Multi-transfers</a></h3>
+<h3 id="multi-transfer">Multi-transfers</h3>
 
-<a href="@org-openide-util-ui@/org/openide/util/datatransfer/ExTransferable.Multi.html"><code>ExTransferable.Multi</code></a>
+{@link org.openide.util.datatransfer.ExTransferable.Multi ExTransferable.Multi}
 
 is a special transferable type used to transfer multiple objects (not
 necessarily of the same type) at once. It only supports one, virtual
 data flavor,
 
-<a href="@org-openide-util-ui@/org/openide/util/datatransfer/ExTransferable.html#multiFlavor"><code>ExTransferable.multiFlavor</code></a>.
+{@link org.openide.util.datatransfer.ExTransferable#multiFlavor ExTransferable.multiFlavor }.
 
 <p>The data associated with <code>multiFlavor</code> in the
 <code>ExTransferable.Multi</code> will always be a special container
 object,
 
-<a href="@org-openide-util-ui@/org/openide/util/datatransfer/MultiTransferObject.html"><code>MultiTransferObject</code></a>.
+{@link org.openide.util.datatransfer.MultiTransferObject MultiTransferObject }.
 
 It is designed to permit access to its constituent real
 <code>Transferable</code>s.</p>
 
 <div class="nonnormative">
 
-<h2><a name="diagrams">UML Diagrams</a></h2>
+<h2 id="diagrams">UML Diagrams</h2>
 
-<h3><a name="diagram_data_objects">Data objects</a></h3>
+<h3 id="diagram_data_objects">Data objects</h3>
 
 <img src="data_objects.gif" alt="DataObject UML">
 
-<h3><a name="diagram_data_loaders">Data loaders</a></h3>
+<h3 id="diagram_data_loaders">Data loaders</h3>
 
 <img src="data_loaders.gif" alt="DataLoader UML">
 

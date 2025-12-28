@@ -20,6 +20,8 @@ package org.netbeans.modules.cloud.oracle;
 
 import com.oracle.bmc.Region;
 import com.oracle.bmc.auth.BasicAuthenticationDetailsProvider;
+import java.util.Optional;
+import org.netbeans.modules.cloud.oracle.items.TenancyItem;
 import org.openide.util.Lookup;
 
 /**
@@ -32,6 +34,6 @@ import org.openide.util.Lookup;
 public interface OCISessionInitiator extends Lookup.Provider {
     public BasicAuthenticationDetailsProvider getAuthenticationProvider();
     public <T> T newClient(Class<T> clientClass);
-    public String getTenantId();
+    public Optional<TenancyItem> getTenancy();
     public Region getRegion();
 }

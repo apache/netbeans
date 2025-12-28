@@ -56,8 +56,8 @@ public class TenancyInstance implements ServerInstanceImplementation, Lookup.Pro
     public String getDisplayName() {
         if (tenancy != null) {
             return Bundle.MSG_TenancyDesc(tenancy.getName(), profile.getId());
-        } else if (profile.getTenantId() != null) {
-            return Bundle.MSG_BrokenTenancy(profile.getTenantId(), profile.getId());
+        } else if (profile.getTenancy().isPresent()) {
+            return Bundle.MSG_BrokenTenancy(profile.getTenancy().get().getKey().getValue(), profile.getId());
         } else {
             return Bundle.MSG_BrokenProfile(profile.getId());
         }
@@ -70,7 +70,8 @@ public class TenancyInstance implements ServerInstanceImplementation, Lookup.Pro
 
     @Override
     public String getServerDisplayName() {
-        return profile.getTenantId() != null ? profile.getTenantId() : Bundle.MSG_BrokenProfile(profile);
+        return profile.getTenancy().isPresent() ? profile.getTenancy().get().getKey().getValue() 
+                : Bundle.MSG_BrokenProfile(profile);
     }
     
     public OCIProfile getProfile() {

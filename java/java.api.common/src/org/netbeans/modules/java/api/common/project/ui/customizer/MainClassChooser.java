@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -174,7 +173,7 @@ public class MainClassChooser extends JPanel {
             } else {
                 final List<ElementHandle<TypeElement>> sortedMainClasses = new ArrayList<ElementHandle<TypeElement>>(possibleMainClasses);
                 // #46861, sort name of classes
-                Collections.sort(sortedMainClasses, new MainClassComparator());
+                sortedMainClasses.sort(new MainClassComparator());
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
@@ -230,7 +229,7 @@ public class MainClassChooser extends JPanel {
     
     private void initClassesModel (final Collection<ElementHandle<TypeElement>> mainClasses) {
         final List<ElementHandle<TypeElement>> sortedMainClasses = new ArrayList<ElementHandle<TypeElement>>(mainClasses);
-        Collections.sort(sortedMainClasses, new MainClassComparator());
+        sortedMainClasses.sort(new MainClassComparator());
         possibleMainClasses = mainClasses;
         jMainClassList.setListData(sortedMainClasses.toArray());
         jMainClassList.setSelectedIndex (0);

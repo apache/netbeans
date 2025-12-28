@@ -56,7 +56,7 @@ implements ContextAwareAction, Presenter.Menu, Presenter.Popup {
         } else {
             c = Collections.emptyList();
         }
-        return c.toArray(new Node[c.size()]);
+        return c.toArray(new Node[0]);
     }
 
     /** Creates menu for currently selected nodes.
@@ -140,7 +140,7 @@ implements ContextAwareAction, Presenter.Menu, Presenter.Popup {
     }
 
     private static ProxyLookup createProxyLookup(final Lookup lookup, final Set<FileObject> backSet) {
-        return new ProxyLookup(lookup, Lookups.fixed((Object[])backSet.toArray(new FileObject [backSet.size()])));
+        return new ProxyLookup(lookup, Lookups.fixed((Object[])backSet.toArray(new FileObject [0])));
     }
 
     /** Creates list of menu items that should be used for given

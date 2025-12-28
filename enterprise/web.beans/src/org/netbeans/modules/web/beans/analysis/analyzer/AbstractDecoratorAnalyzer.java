@@ -133,8 +133,10 @@ public abstract class AbstractDecoratorAnalyzer<T> {
     protected boolean checkBuiltInBeans( VariableElement element,
             TypeMirror elementType, WebBeansModel model, AtomicBoolean cancel )
     {
-        TypeElement context = model.getCompilationController().getElements().
-            getTypeElement(AnnotationUtil.CONTEXT);
+        TypeElement context = model.getCompilationController().getElements().getTypeElement(AnnotationUtil.CONTEXT_JAKARTA);
+        if(context == null) {
+            context = model.getCompilationController().getElements().getTypeElement(AnnotationUtil.CONTEXT);
+        }
         if ( context != null && context.equals(model.getCompilationController().
                 getTypes().asElement(elementType)))
         {
@@ -150,8 +152,8 @@ public abstract class AbstractDecoratorAnalyzer<T> {
         Element varElement = model.getCompilationController().getTypes().
             asElement(elementType);
         if ( varElement instanceof TypeElement ){
-            if ( !((TypeElement)varElement).getQualifiedName().contentEquals(
-                    AnnotationUtil.CONVERSATION))
+            if (!(((TypeElement) varElement).getQualifiedName().contentEquals(AnnotationUtil.CONVERSATION)
+                    || ((TypeElement) varElement).getQualifiedName().contentEquals(AnnotationUtil.CONVERSATION_JAKARTA)))
             {
                 return false;
             }
@@ -168,10 +170,12 @@ public abstract class AbstractDecoratorAnalyzer<T> {
         Map<String, ? extends AnnotationMirror> qualifiersFqns = helper.
             getAnnotationsByType(qualifiers);
         boolean hasOnlyDefault = false;
-        if ( qualifiersFqns.containsKey(AnnotationUtil.DEFAULT_FQN)){
+        if (qualifiersFqns.containsKey(AnnotationUtil.DEFAULT_FQN) || qualifiersFqns.containsKey(AnnotationUtil.DEFAULT_FQN_JAKARTA)) {
             HashSet<String> fqns = new HashSet<String>(qualifiersFqns.keySet());
             fqns.remove( AnnotationUtil.NAMED );
+            fqns.remove( AnnotationUtil.NAMED_JAKARTA );
             fqns.remove( AnnotationUtil.ANY );
+            fqns.remove( AnnotationUtil.ANY_JAKARTA );
             hasOnlyDefault = fqns.size() == 1;
         }
         return hasOnlyDefault;

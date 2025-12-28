@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.gradle.loaders;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,6 +30,7 @@ import org.netbeans.modules.gradle.NbGradleProjectImpl;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
 import org.netbeans.modules.gradle.api.GradleReport;
 import org.netbeans.modules.gradle.api.NbGradleProject;
+import org.netbeans.modules.gradle.api.NbGradleProject.LoadOptions;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.EVALUATED;
 import static org.netbeans.modules.gradle.api.NbGradleProject.Quality.FALLBACK;
 import org.netbeans.modules.gradle.tooling.internal.NbProjectInfo.Report;
@@ -62,19 +64,20 @@ public abstract class AbstractProjectLoader {
     }
     
     static final class ReloadContext {
-
+        final LoadOptions options;
         final NbGradleProjectImpl project;
         final GradleProject previous;
-        final NbGradleProject.Quality aim;
         final GradleCommandLine cmd;
-        final String description;
 
-        public ReloadContext(NbGradleProjectImpl project, NbGradleProject.Quality aim, GradleCommandLine cmd, String description) {
+        public ReloadContext(NbGradleProjectImpl project, LoadOptions options, GradleCommandLine cmd) {
             this.project = project;
             this.previous = project.isGradleProjectLoaded() ? project.projectWithQuality(null, FALLBACK, false, false) : FallbackProjectLoader.createFallbackProject(project.getGradleFiles());
-            this.aim = aim;
+            this.options = options;
             this.cmd = cmd;
-            this.description = description;
+        }
+        
+        public String getDescription() {
+            return options.getDescription();
         }
 
         public GradleProject getPrevious() {
@@ -82,7 +85,11 @@ public abstract class AbstractProjectLoader {
         }
 
         public NbGradleProject.Quality getAim() {
-            return aim;
+            return options.getAim();
+        }
+
+        public LoadOptions getOptions() {
+            return options;
         }
     }
 
@@ -118,7 +125,11 @@ public abstract class AbstractProjectLoader {
             }
         }
         for (String s : problems) {
-            reps.add(GradleProject.createGradleReport(gf.getBuildScript().toPath(), s));
+            File p = gf.getBuildScript();
+            if (p == null) {
+                p = gf.getSettingsScript();
+            }
+            reps.add(GradleProject.createGradleReport(p == null ? null : p.toPath(), s));
         }
         return new GradleProject(info.getQuality(), reps, results.values());
 

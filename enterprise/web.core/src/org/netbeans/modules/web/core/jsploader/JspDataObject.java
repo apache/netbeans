@@ -425,7 +425,7 @@ public class JspDataObject extends MultiDataObject implements QueryStringCookie 
     }
     
     
-    /////// -------- FIELDS AND METHODS FOR MANIPULATING THE PARSED INFORMATION -------- ////////
+    // -------- FIELDS AND METHODS FOR MANIPULATING THE PARSED INFORMATION --------
     
     public void setQueryString(String params) throws java.io.IOException {
         WebExecSupport.setQueryString(getPrimaryEntry().getFile(), params);
@@ -459,7 +459,7 @@ public class JspDataObject extends MultiDataObject implements QueryStringCookie 
         return retValue;
     }
     
-    ////// -------- INNER CLASSES ---------
+    // -------- INNER CLASSES ---------
     
     private class Listener extends FileChangeAdapter implements PropertyChangeListener/*, ServerRegistryImpl.ServerRegistryListener */{
         WeakReference<FileChangeListener> weakListener;

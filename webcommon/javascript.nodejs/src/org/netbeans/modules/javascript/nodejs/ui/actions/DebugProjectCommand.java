@@ -48,13 +48,12 @@ final class DebugProjectCommand extends ProjectCommand {
     ValidationResult validateRunInfo(RunInfo runInfo) {
         return new NodeJsPreferencesValidator()
                 .validateRun(runInfo.getStartFile(), runInfo.getStartArgs())
-                .validateDebugPort(runInfo.getDebugPort())
                 .getResult();
     }
 
     @Override
     protected NodeProcesses.RunInfo runNodeInternal(NodeExecutable node, RunInfo runInfo) {
-        return NodeProcesses.RunInfo.debug(node.debug(runInfo.getDebugPort(), new File(runInfo.getStartFile()), runInfo.getStartArgs()));
+        return NodeProcesses.RunInfo.debug(node.debug(new File(runInfo.getStartFile()), runInfo.getStartArgs()));
     }
 
 }

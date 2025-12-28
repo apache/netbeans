@@ -63,7 +63,7 @@ class FormOthersNode extends FormNode {
             for (Action a : super.getActions(context)) {
                 l.add(a);
             }
-            actions = l.toArray(new Action[l.size()]);
+            actions = l.toArray(new Action[0]);
         }
 
         return actions;

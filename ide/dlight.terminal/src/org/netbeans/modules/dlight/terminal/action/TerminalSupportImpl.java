@@ -22,6 +22,7 @@ import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.text.ParseException;
 import java.util.concurrent.ExecutionException;
@@ -52,16 +53,17 @@ import org.netbeans.modules.nativeexecution.api.util.ConnectionManager.Cancellat
 import org.netbeans.modules.nativeexecution.api.util.HostInfoUtils;
 import org.netbeans.modules.nativeexecution.api.util.PathUtils;
 import org.netbeans.modules.terminal.api.IONotifier;
+import org.netbeans.modules.terminal.api.ui.IOTerm;
 import org.netbeans.modules.terminal.api.ui.IOVisibility;
 import org.netbeans.modules.terminal.support.TerminalPinSupport;
 import org.netbeans.modules.terminal.support.TerminalPinSupport.TerminalCreationDetails;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakListeners;
 import org.openide.windows.IOContainer;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
@@ -70,7 +72,7 @@ import org.openide.windows.OutputListener;
 import org.openide.windows.OutputWriter;
 
 import static org.netbeans.lib.terminalemulator.Term.ExternalCommandsConstants.*;
-import org.netbeans.modules.terminal.api.ui.IOTerm;
+import org.netbeans.modules.nativeexecution.api.util.MacroMap;
 
 /**
  *
@@ -122,7 +124,7 @@ public final class TerminalSupportImpl {
             final long termId) {
         final IOProvider ioProvider = IOProvider.get("Terminal"); // NOI18N
         if (ioProvider != null) {
-            final AtomicReference<InputOutput> ioRef = new AtomicReference<InputOutput>();
+            final AtomicReference<InputOutput> ioRef = new AtomicReference<>();
             // Create a tab in EDT right after we call the method, don't let this 
             // work to be done in RP in asynchronous manner. We need this to
             // save tab order 
@@ -131,20 +133,18 @@ public final class TerminalSupportImpl {
             final AtomicBoolean destroyed = new AtomicBoolean(false);
             
             final Runnable runnable = new Runnable() {
-                private final Runnable delegate = new Runnable() {
-                    @Override
-                    public void run() {
-                        if (SwingUtilities.isEventDispatchThread()) {
-                            ioContainer.requestActive();
-                        } else {
-                            doWork();
-                        }
+                private final Runnable delegate = () -> {
+                    if (SwingUtilities.isEventDispatchThread()) {
+                        ioContainer.requestActive();
+                    } else {
+                        doWork();
                     }
                 };
 
+                @SuppressWarnings("PackageVisibleField")
                 RequestProcessor.Task task = RP.create(delegate);
 
-                private final HyperlinkAdapter retryLink = new HyperlinkAdapter() {
+                private final OutputListener retryLink = new OutputListener() {
                     @Override
                     public void outputLineAction(OutputEvent ev) {
                         task.schedule(0);
@@ -177,7 +177,8 @@ public final class TerminalSupportImpl {
                                     } catch (IOException ignored) {
                                     }
                                 }
-                                String error = ex.getCause() == null ? ex.getMessage() : ex.getCause().getMessage();
+                                Throwable cause = ex.getCause();
+                                String error = cause == null ? ex.getMessage() : cause.getMessage();
                                 String msg = NbBundle.getMessage(TerminalSupportImpl.class, "TerminalAction.FailedToStart.text", error); // NOI18N
                                 DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(msg, NotifyDescriptor.ERROR_MESSAGE));
                             }
@@ -201,6 +202,9 @@ public final class TerminalSupportImpl {
                         // (exception supressed in FetchHostInfoTask.compute)
                         if (!ConnectionManager.getInstance().isConnectedTo(env)) {
                             return;
+                        }  else {
+                            // because we can reuse an existing connection we need to try update a recent connection list
+                            ConnectionManager.getInstance().addConnectionToRecentConnections(env);
                         }
 
                         try {
@@ -217,9 +221,7 @@ public final class TerminalSupportImpl {
                                     return;
                                 }
                             }
-                        } catch (ConnectException ex) {
-                            Exceptions.printStackTrace(ex);
-                        } catch (InterruptedException ex) {
+                        } catch (ConnectException | InterruptedException ex) {
                             Exceptions.printStackTrace(ex);
                         }
 
@@ -240,10 +242,7 @@ public final class TerminalSupportImpl {
                             }
                             return;
                         }
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                        return;
-                    } catch (CancellationException ex) {
+                    } catch (IOException | CancellationException ex) {
                         Exceptions.printStackTrace(ex);
                         return;
                     }
@@ -272,14 +271,14 @@ public final class TerminalSupportImpl {
                         term.setEmulation("xterm"); // NOI18N
 
                         NativeProcessBuilder npb = NativeProcessBuilder.newProcessBuilder(env);
+                        final MacroMap envVars = npb.getEnvironment();
                         // clear env modified by NB. Let it be initialized by started shell process
-                        npb.getEnvironment().put("LD_LIBRARY_PATH", "");// NOI18N
-                        npb.getEnvironment().put("DYLD_LIBRARY_PATH", "");// NOI18N
-
+                        envVars.put("LD_LIBRARY_PATH", "");// NOI18N
+                        envVars.put("DYLD_LIBRARY_PATH", "");// NOI18N
                         if (hostInfo.getOSFamily() == HostInfo.OSFamily.WINDOWS) {
                             // /etc/profile changes directory to ${HOME} if this
                             // variable is not set.
-                            npb.getEnvironment().put("CHERE_INVOKING", "1");// NOI18N
+                            envVars.put("CHERE_INVOKING", "1");// NOI18N
                         }
 
                         final TerminalPinSupport support = TerminalPinSupport.getDefault();
@@ -310,8 +309,8 @@ public final class TerminalSupportImpl {
                             final String promptCommand = "printf \"\033]3;${PWD}\007\"; " // NOI18N
                                     + IDE_OPEN + "() { printf \"\033]10;" + COMMAND_PREFIX + IDE_OPEN + " $*;\007\"; printf \"Opening $# file(s) ...\n\";}";   // NOI18N
                             final String commandName = "PROMPT_COMMAND";                                    // NOI18N
-                            String usrPrompt = npb.getEnvironment().get(commandName);
-                            npb.getEnvironment().put(commandName,
+                            String usrPrompt = envVars.get(commandName);
+                            envVars.put(commandName,
                                     (usrPrompt == null)
                                             ? promptCommand
                                             : promptCommand + ';' + usrPrompt
@@ -331,13 +330,9 @@ public final class TerminalSupportImpl {
                         
                         NativeExecutionDescriptor descr;
                         descr = new NativeExecutionDescriptor().controllable(true).frontWindow(true).inputVisible(true).inputOutput(ioRef.get());
-                        descr.postExecution(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                ioRef.get().closeInputOutput();
-                                support.close(term);
-                            }
+                        descr.postExecution(() -> {
+                            ioRef.get().closeInputOutput();
+                            support.close(term);
                         });
                         NativeExecutionService es = NativeExecutionService.newService(npb, descr, "Terminal Emulator"); // NOI18N
                         Future<Integer> result = es.run();
@@ -362,7 +357,8 @@ public final class TerminalSupportImpl {
                             Exceptions.printStackTrace(ex);
                         } catch (ExecutionException ex) {
                             if (!destroyed.get()) {
-                                String error = ex.getCause() == null ? ex.getMessage() : ex.getCause().getMessage();
+                                Throwable cause = ex.getCause();
+                                String error = cause == null ? ex.getMessage() : cause.getMessage();
                                 String msg = NbBundle.getMessage(TerminalSupportImpl.class, "TerminalAction.FailedToStart.text", error); // NOI18N
                                 DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(msg, NotifyDescriptor.ERROR_MESSAGE));
                             }
@@ -391,8 +387,8 @@ public final class TerminalSupportImpl {
         public NativeProcessListener(InputOutput io, AtomicBoolean destroyed) {
             assert destroyed != null;
             this.destroyed = destroyed;
-            this.processRef = new AtomicReference<NativeProcess>();
-            IONotifier.addPropertyChangeListener(io, WeakListeners.propertyChange(NativeProcessListener.this, io));
+            this.processRef = new AtomicReference<>();
+            IONotifier.addPropertyChangeListener(io, new WeakPropertyChangeListener(NativeProcessListener.this, io));
         }
 
         @Override
@@ -410,14 +406,10 @@ public final class TerminalSupportImpl {
                     // term is closing => destroy process
                     final NativeProcess proc = processRef.get();
                     if (proc != null) {
-                        RP.submit(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                try {
-                                    proc.destroy();
-                                } catch (Throwable th) {
-                                }
+                        RP.submit(() -> {
+                            try {
+                                proc.destroy();
+                            } catch (Throwable th) {
                             }
                         });
                     }
@@ -425,19 +417,38 @@ public final class TerminalSupportImpl {
             }
         }
     }
-    
-    private static class HyperlinkAdapter implements OutputListener{
 
-        @Override
-        public void outputLineSelected(OutputEvent ev) {
+    private static class WeakPropertyChangeListener extends WeakReference<PropertyChangeListener> implements PropertyChangeListener, Runnable {
+
+        private final WeakReference<InputOutput> ioRef;
+
+        @SuppressWarnings("LeakingThisInConstructor")
+        public WeakPropertyChangeListener(PropertyChangeListener delegate, InputOutput io) {
+            super(delegate, BaseUtilities.activeReferenceQueue());
+            this.ioRef = new WeakReference<>(io);
         }
 
         @Override
-        public void outputLineAction(OutputEvent ev) {
+        public void propertyChange(PropertyChangeEvent pce) {
+            PropertyChangeListener target = get();
+            if(target != null) {
+                target.propertyChange(pce);
+            } else {
+                unregisterPropertyChangeListener();
+            }
         }
 
         @Override
-        public void outputLineCleared(OutputEvent ev) {
+        public void run() {
+            unregisterPropertyChangeListener();
+        }
+
+        private void unregisterPropertyChangeListener() {
+            InputOutput io = ioRef.get();
+            if(io != null) {
+                IONotifier.removePropertyChangeListener(io, this);
+            }
         }
     }
+
 }

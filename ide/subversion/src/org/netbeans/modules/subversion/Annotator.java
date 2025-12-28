@@ -443,7 +443,7 @@ public class Annotator {
                 actions.add(SystemAction.get(VersioningInfoAction.class));
                 actions.add(SystemAction.get(SvnPropertiesAction.class));
             }
-            Utils.setAcceleratorBindings(ACTIONS_PATH_PREFIX, actions.toArray(new Action[actions.size()]));
+            Utils.setAcceleratorBindings(ACTIONS_PATH_PREFIX, actions.toArray(new Action[0]));
         } else {
             ResourceBundle loc = NbBundle.getBundle(Annotator.class);
             Lookup context = ctx.getElements();
@@ -492,7 +492,7 @@ public class Annotator {
                                 loc.getString("CTL_PopupMenuItem_Properties"), context));
             }
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     private static boolean isNothingVersioned(File[] files) {
@@ -595,9 +595,6 @@ public class Annotator {
             FileInformation info = cache.getCachedStatus(file);
             if (info == null) {
                 filesToRefresh.add(file);
-            }
-            if (file.isDirectory()) {
-                Utils.addFolderToLog(file);
             }
         }
         cache.refreshAsync(filesToRefresh);

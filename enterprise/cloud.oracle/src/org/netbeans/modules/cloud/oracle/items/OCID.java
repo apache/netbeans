@@ -25,9 +25,11 @@ import java.util.Objects;
  * @author Jan Horvath
  */
 public final class OCID  {
+    private static final String NO_OCID = "NO_OCID";
+
     private final String value;
     private final String path;
-
+    
     private OCID(String value, String path) {
         this.value = value;
         this.path = path;
@@ -39,7 +41,11 @@ public final class OCID  {
     
     public final String getPath() {
         return path;
-    }   
+    }
+    
+    public static final OCID of(String path) {
+        return new OCID(NO_OCID, path);
+    }
 
     public static final OCID of(String value, String path) {
         return new OCID(value, path);

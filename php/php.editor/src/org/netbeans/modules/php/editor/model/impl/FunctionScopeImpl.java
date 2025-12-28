@@ -283,7 +283,8 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
                 && inScope instanceof TypeScope) {
             TypeScope typeScope = (TypeScope) inScope;
             for (TypeScope callerType : callerTypes) {
-                if (callerType.isSubTypeOf(typeScope)) {
+                if (callerType.isSubTypeOf(typeScope)
+                        || (typeScope.isTrait() && callerType != typeScope)) { // GH-7192
                     cTypes.add(callerType);
                 } else {
                     cTypes.add(typeScope);
@@ -410,7 +411,7 @@ class FunctionScopeImpl extends ScopeImpl implements FunctionScope, VariableName
         int result = getOffset();
         List<? extends ModelElement> elements = ModelUtils.getElements(this, true);
         if (elements != null && !elements.isEmpty()) {
-            Collections.sort(elements, new ModelElementsPositionComparator());
+            elements.sort(new ModelElementsPositionComparator());
             result = elements.get(0).getNameRange().getEnd();
         }
         return result;

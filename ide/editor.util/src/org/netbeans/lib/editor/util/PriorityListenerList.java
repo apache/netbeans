@@ -225,7 +225,7 @@ public class PriorityListenerList<T extends EventListener> implements Serializab
                 lList.add(l);
             }
             @SuppressWarnings("unchecked")
-            T[] lArr = (T[])lList.toArray(new EventListener[lList.size()]);
+            T[] lArr = (T[])lList.toArray(new EventListener[0]);
             listenersArray[priority] = lArr;
         }
     }

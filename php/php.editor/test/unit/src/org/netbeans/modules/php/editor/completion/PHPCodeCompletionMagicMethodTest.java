@@ -94,6 +94,11 @@ public class PHPCodeCompletionMagicMethodTest extends PHPCodeCompletionTestBase 
                 new DefaultFilter(PhpVersion.PHP_83, "__toString"), true);
     }
 
+    public void testMagicMethodOverride_01_PHP83() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("Override"), "    __^",
+                new DefaultFilter(PhpVersion.PHP_83, "__"), true);
+    }
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
         return Collections.singletonMap(
@@ -102,15 +107,6 @@ public class PHPCodeCompletionMagicMethodTest extends PHPCodeCompletionTestBase 
                 FileUtil.toFileObject(new File(getDataDir(), "/testfiles/completion/lib/magicMethods/" + getTestDirName()))
             })
         );
-    }
-
-    private String getTestDirName() {
-        String name = getName();
-        int indexOf = name.indexOf("_");
-        if (indexOf != -1) {
-            name = name.substring(0, indexOf);
-        }
-        return name;
     }
 
     private String getTestPath(String fileName) {

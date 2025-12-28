@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.groovy.editor.api.parser;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -34,6 +35,7 @@ import org.netbeans.modules.groovy.editor.api.ASTUtils;
 import org.netbeans.modules.groovy.editor.api.ASTUtils.FakeASTNode;
 import org.netbeans.modules.groovy.editor.occurrences.VariableScopeVisitor;
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
+import org.netbeans.modules.groovy.editor.options.MarkOccurencesSettings;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.openide.filesystems.FileObject;
@@ -41,7 +43,7 @@ import org.openide.filesystems.FileObject;
 /**
  * The (call-)proctocol for OccurrencesFinder is always:
  * 
- * 1.) setCaretPosition() = <number>
+ * 1.) setCaretPosition() = NUMBER
  * 2.) run()
  * 3.) getOccurrences()
  * 
@@ -52,7 +54,7 @@ public class GroovyOccurrencesFinder extends OccurrencesFinder<GroovyParserResul
 
     private boolean cancelled;
     private int caretPosition;
-    private Map<OffsetRange, ColoringAttributes> occurrences;
+    private Map<OffsetRange, ColoringAttributes> occurrences = Map.of();
     private FileObject file;
     private static final Logger LOG = Logger.getLogger(GroovyOccurrencesFinder.class.getName());
 
@@ -61,6 +63,7 @@ public class GroovyOccurrencesFinder extends OccurrencesFinder<GroovyParserResul
     }
 
     @Override
+    @SuppressWarnings("ReturnOfCollectionOrArrayField") // immutable collection
     public Map<OffsetRange, ColoringAttributes> getOccurrences() {
         LOG.log(Level.FINEST, "getOccurrences()\n"); //NOI18N
         return occurrences;
@@ -102,7 +105,7 @@ public class GroovyOccurrencesFinder extends OccurrencesFinder<GroovyParserResul
         // FIXME parsing API - null file
         if (currentFile != file) {
             // Ensure that we don't reuse results from a different file
-            occurrences = null;
+            occurrences = Map.of();
             file = currentFile;
         }
 
@@ -130,15 +133,15 @@ public class GroovyOccurrencesFinder extends OccurrencesFinder<GroovyParserResul
             return;
         }
 
-        Map<OffsetRange, ColoringAttributes> highlights = new HashMap<OffsetRange, ColoringAttributes>(100);
+        Map<OffsetRange, ColoringAttributes> highlights = new HashMap<>(100);
         highlight(path, highlights, document, caretPosition);
 
         if (isCancelled()) {
             return;
         }
 
-        if (highlights.size() > 0) {
-            Map<OffsetRange, ColoringAttributes> translated = new HashMap<OffsetRange, ColoringAttributes>(2 * highlights.size());
+        if (!highlights.isEmpty()) {
+            Map<OffsetRange, ColoringAttributes> translated = new HashMap<>(2 * highlights.size());
             for (Map.Entry<OffsetRange, ColoringAttributes> entry : highlights.entrySet()) {
                 OffsetRange range = LexUtilities.getLexerOffsets(result, entry.getKey());
                 if (range != OffsetRange.NONE) {
@@ -146,9 +149,9 @@ public class GroovyOccurrencesFinder extends OccurrencesFinder<GroovyParserResul
                 }
             }
             highlights = translated;
-            this.occurrences = highlights;
+            this.occurrences = Collections.unmodifiableMap(highlights);
         } else {
-            this.occurrences = null;
+            this.occurrences = Map.of();
         }
 
     }
@@ -163,6 +166,20 @@ public class GroovyOccurrencesFinder extends OccurrencesFinder<GroovyParserResul
         LOG.log(Level.FINEST, "\n\nsetCaretPosition() = {0}\n", position); //NOI18N
     }
 
+    @Override
+    public boolean isKeepMarks() {
+        return MarkOccurencesSettings
+                .getCurrentNode()
+                .getBoolean(MarkOccurencesSettings.KEEP_MARKS, true);
+    }
+
+    @Override
+    public boolean isMarkOccurrencesEnabled() {
+        return MarkOccurencesSettings
+                .getCurrentNode()
+                .getBoolean(MarkOccurencesSettings.ON_OFF, true);
+    }
+
     private static void highlight(AstPath path, Map<OffsetRange, ColoringAttributes> highlights, BaseDocument document, int cursorOffset) {
         ASTNode root = path.root();
         assert root instanceof ModuleNode;
@@ -171,9 +188,9 @@ public class GroovyOccurrencesFinder extends OccurrencesFinder<GroovyParserResul
         scopeVisitor.collect();
         for (ASTNode astNode : scopeVisitor.getOccurrences()) {
             OffsetRange range;
-            if (astNode instanceof FakeASTNode) {
+            if (astNode instanceof FakeASTNode fakeASTNode) {
                 String text = astNode.getText();
-                ASTNode orig = ((FakeASTNode) astNode).getOriginalNode();
+                ASTNode orig = fakeASTNode.getOriginalNode();
                 int line = orig.getLineNumber();
                 int column = orig.getColumnNumber();
                 if (line > 0 && column > 0) {

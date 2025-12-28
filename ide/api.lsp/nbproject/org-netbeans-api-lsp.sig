@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.20
+#Version 1.36
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -18,14 +20,24 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+
+CLSS public java.lang.Exception
+cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr java.lang.Throwable
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -35,6 +47,28 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public java.lang.Throwable
+cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+intf java.io.Serializable
+meth public final java.lang.Throwable[] getSuppressed()
+meth public final void addSuppressed(java.lang.Throwable)
+meth public java.lang.StackTraceElement[] getStackTrace()
+meth public java.lang.String getLocalizedMessage()
+meth public java.lang.String getMessage()
+meth public java.lang.String toString()
+meth public java.lang.Throwable fillInStackTrace()
+meth public java.lang.Throwable getCause()
+meth public java.lang.Throwable initCause(java.lang.Throwable)
+meth public void printStackTrace()
+meth public void printStackTrace(java.io.PrintStream)
+meth public void printStackTrace(java.io.PrintWriter)
+meth public void setStackTrace(java.lang.StackTraceElement[])
+supr java.lang.Object
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -62,6 +96,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public final org.netbeans.api.lsp.CallHierarchyEntry
 cons public init(org.netbeans.api.lsp.StructureElement,java.lang.String)
 innr public final static Call
@@ -83,14 +120,16 @@ supr java.lang.Object
 hfds item,ranges
 
 CLSS public org.netbeans.api.lsp.CodeAction
+cons public init(java.lang.String,java.lang.String,org.netbeans.api.lsp.Command,org.netbeans.api.lsp.WorkspaceEdit)
 cons public init(java.lang.String,org.netbeans.api.lsp.Command)
 cons public init(java.lang.String,org.netbeans.api.lsp.Command,org.netbeans.api.lsp.WorkspaceEdit)
 cons public init(java.lang.String,org.netbeans.api.lsp.WorkspaceEdit)
+meth public java.lang.String getKind()
 meth public java.lang.String getTitle()
 meth public org.netbeans.api.lsp.Command getCommand()
 meth public org.netbeans.api.lsp.WorkspaceEdit getEdit()
 supr java.lang.Object
-hfds command,edit,title
+hfds command,edit,kind,title
 
 CLSS public org.netbeans.api.lsp.CodeLens
 cons public init(org.netbeans.api.lsp.Range,org.netbeans.api.lsp.Command,java.lang.Object)
@@ -122,6 +161,10 @@ meth public java.lang.String getInsertText()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public java.lang.String getLabel()
  anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public java.lang.String getLabelDescription()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public java.lang.String getLabelDetail()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public java.lang.String getSortText()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public java.util.List<java.lang.Character> getCommitCharacters()
@@ -147,7 +190,7 @@ meth public static boolean collect(javax.swing.text.Document,int,org.netbeans.ap
  anno 3 org.netbeans.api.annotations.common.NullAllowed()
  anno 4 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds additionalTextEdits,command,commitCharacters,detail,documentation,filterText,insertText,insertTextFormat,kind,label,preselect,sortText,tags,textEdit
+hfds additionalTextEdits,command,commitCharacters,detail,documentation,filterText,insertText,insertTextFormat,kind,label,labelDescription,labelDetail,preselect,sortText,tags,textEdit
 
 CLSS public final static org.netbeans.api.lsp.Completion$Context
  outer org.netbeans.api.lsp.Completion
@@ -287,7 +330,22 @@ meth public static java.util.concurrent.CompletableFuture<java.util.List<org.net
 supr java.lang.Object
 hfds endOffset,fileObject,startOffset
 
+CLSS public org.netbeans.api.lsp.InlayHint
+cons public init(org.netbeans.api.lsp.Position,java.lang.String)
+meth public java.lang.String getText()
+meth public org.netbeans.api.lsp.Position getPosition()
+supr java.lang.Object
+hfds position,text
+
+CLSS public final org.netbeans.api.lsp.InlineValue
+meth public java.lang.String getExpression()
+meth public org.netbeans.api.lsp.Range getRange()
+meth public static org.netbeans.api.lsp.InlineValue createInlineVariable(org.netbeans.api.lsp.Range,java.lang.String)
+supr java.lang.Object
+hfds expression,range
+
 CLSS public final org.netbeans.api.lsp.LazyCodeAction
+cons public init(java.lang.String,java.lang.String,org.netbeans.api.lsp.Command,java.util.function.Supplier<org.netbeans.api.lsp.WorkspaceEdit>)
 cons public init(java.lang.String,java.util.function.Supplier<org.netbeans.api.lsp.WorkspaceEdit>)
 cons public init(java.lang.String,org.netbeans.api.lsp.Command,java.util.function.Supplier<org.netbeans.api.lsp.WorkspaceEdit>)
 meth public java.util.function.Supplier<org.netbeans.api.lsp.WorkspaceEdit> getLazyEdit()
@@ -304,6 +362,24 @@ meth public int getEndOffset()
 meth public int getStartOffset()
 supr java.lang.Object
 hfds endOffset,startOffset
+
+CLSS public final org.netbeans.api.lsp.ResourceModificationException
+cons public init(java.util.List<org.netbeans.api.lsp.WorkspaceEdit>,java.util.List<java.lang.String>,java.lang.String)
+cons public init(java.util.List<org.netbeans.api.lsp.WorkspaceEdit>,org.netbeans.api.lsp.WorkspaceEdit,int,int,java.util.Collection<java.lang.String>,java.lang.String,java.lang.Throwable)
+fld public final static int BEFORE_FIRST_EDIT = -1
+fld public final static int UNSPECIFIED_EDIT = -2
+fld public final static int UNSPECIFIED_OPERATIION = -2
+meth public boolean isUnspecifiedEdit()
+meth public int getFailedEditIndex()
+meth public int getFailedOperationIndex()
+meth public java.util.List<java.lang.String> getSavedResources()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.List<org.netbeans.api.lsp.WorkspaceEdit> getAppliedEdits()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.lsp.WorkspaceEdit getFailedEdit()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+supr java.lang.Exception
+hfds appliedEdits,failedEdit,failedEditIndex,failedOperationIndex,savedResources
 
 CLSS public org.netbeans.api.lsp.ResourceOperation
 cons public init()
@@ -445,8 +521,14 @@ hfds end,newText,start
 CLSS public org.netbeans.api.lsp.WorkspaceEdit
 cons public init(java.util.List<org.openide.util.Union2<org.netbeans.api.lsp.TextDocumentEdit,org.netbeans.api.lsp.ResourceOperation>>)
 meth public java.util.List<org.openide.util.Union2<org.netbeans.api.lsp.TextDocumentEdit,org.netbeans.api.lsp.ResourceOperation>> getDocumentChanges()
+meth public static java.util.concurrent.CompletableFuture<java.util.List<java.lang.String>> applyEdits(java.util.List<org.netbeans.api.lsp.WorkspaceEdit>,boolean)
 supr java.lang.Object
 hfds documentChanges
+
+CLSS public abstract interface !annotation org.netbeans.api.lsp.bridge.RegisterLSPServices
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[PACKAGE])
+intf java.lang.annotation.Annotation
+meth public abstract java.lang.String[] mimeTypes()
 
 CLSS public abstract interface !annotation org.netbeans.spi.editor.mimelookup.MimeLocation
  anno 0 java.lang.annotation.Documented()
@@ -455,6 +537,9 @@ CLSS public abstract interface !annotation org.netbeans.spi.editor.mimelookup.Mi
 intf java.lang.annotation.Annotation
 meth public abstract !hasdefault java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass()
 meth public abstract java.lang.String subfolderName()
+
+CLSS public abstract interface org.netbeans.spi.lsp.ApplyEditsImplementation
+meth public abstract java.util.concurrent.CompletableFuture<java.util.List<java.lang.String>> applyChanges(java.util.List<org.netbeans.api.lsp.WorkspaceEdit>,boolean)
 
 CLSS public abstract interface org.netbeans.spi.lsp.CallHierarchyProvider
 meth public abstract java.util.concurrent.CompletableFuture<java.util.List<org.netbeans.api.lsp.CallHierarchyEntry$Call>> findIncomingCalls(org.netbeans.api.lsp.CallHierarchyEntry)
@@ -467,10 +552,22 @@ meth public abstract java.util.concurrent.CompletableFuture<java.util.List<org.n
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 
+CLSS public abstract interface org.netbeans.spi.lsp.CodeActionProvider
+meth public abstract java.util.List<org.netbeans.api.lsp.CodeAction> getCodeActions(javax.swing.text.Document,org.netbeans.api.lsp.Range,org.openide.util.Lookup)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.Set<java.lang.String> getSupportedCodeActionKinds()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+
 CLSS public abstract interface org.netbeans.spi.lsp.CodeLensProvider
  anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="CodeLensProvider")
 meth public abstract java.util.concurrent.CompletableFuture<java.util.List<? extends org.netbeans.api.lsp.CodeLens>> codeLens(javax.swing.text.Document)
  anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract interface org.netbeans.spi.lsp.CommandProvider
+meth public abstract java.util.Set<java.lang.String> getCommands()
+meth public abstract java.util.concurrent.CompletableFuture<java.lang.Object> runCommand(java.lang.String,java.util.List<java.lang.Object>)
 
 CLSS public abstract interface org.netbeans.spi.lsp.CompletionCollector
  anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="CompletionCollectors")
@@ -527,6 +624,12 @@ meth public org.netbeans.spi.lsp.CompletionCollector$Builder kind(org.netbeans.a
 meth public org.netbeans.spi.lsp.CompletionCollector$Builder label(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.CompletionCollector$Builder labelDescription(java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.spi.lsp.CompletionCollector$Builder labelDetail(java.lang.String)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public org.netbeans.spi.lsp.CompletionCollector$Builder preselect(boolean)
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public org.netbeans.spi.lsp.CompletionCollector$Builder sortText(java.lang.String)
@@ -536,7 +639,7 @@ meth public org.netbeans.spi.lsp.CompletionCollector$Builder textEdit(org.netbea
  anno 0 org.netbeans.api.annotations.common.NonNull()
  anno 1 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds additionalTextEdits,command,commitCharacters,detail,documentation,filterText,insertText,insertTextFormat,kind,label,preselect,sortText,tags,textEdit
+hfds additionalTextEdits,command,commitCharacters,detail,documentation,filterText,insertText,insertTextFormat,kind,label,labelDescription,labelDetail,preselect,sortText,tags,textEdit
 hcls LazyCompletableFuture
 
 CLSS public abstract interface org.netbeans.spi.lsp.DiagnosticReporter
@@ -553,15 +656,17 @@ meth public abstract java.util.List<? extends org.netbeans.api.lsp.Diagnostic> c
 CLSS public final static org.netbeans.spi.lsp.ErrorProvider$Context
  outer org.netbeans.spi.lsp.ErrorProvider
 cons public init(org.openide.filesystems.FileObject,int,org.netbeans.spi.lsp.ErrorProvider$Kind)
+cons public init(org.openide.filesystems.FileObject,int,org.netbeans.spi.lsp.ErrorProvider$Kind,org.openide.filesystems.FileObject)
 cons public init(org.openide.filesystems.FileObject,org.netbeans.spi.lsp.ErrorProvider$Kind)
 meth public boolean isCancelled()
 meth public int getOffset()
 meth public org.netbeans.spi.lsp.ErrorProvider$Kind errorKind()
 meth public org.openide.filesystems.FileObject file()
+meth public org.openide.filesystems.FileObject getHintsConfigFile()
 meth public void cancel()
 meth public void registerCancelCallback(java.lang.Runnable)
 supr java.lang.Object
-hfds cancel,cancelCallbacks,errorKind,file,offset
+hfds cancel,cancelCallbacks,errorKind,file,hintsConfigFile,offset
 
 CLSS public final static !enum org.netbeans.spi.lsp.ErrorProvider$Kind
  outer org.netbeans.spi.lsp.ErrorProvider
@@ -587,6 +692,32 @@ meth public static org.netbeans.api.lsp.HyperlinkLocation createHyperlinkLocatio
 CLSS public abstract interface org.netbeans.spi.lsp.HyperlinkTypeDefLocationProvider
  anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="HyperlinkTypeDefLocationProviders")
 meth public abstract java.util.concurrent.CompletableFuture<org.netbeans.api.lsp.HyperlinkLocation> getHyperlinkTypeDefLocation(javax.swing.text.Document,int)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public abstract interface org.netbeans.spi.lsp.InlayHintsProvider
+ anno 0 org.netbeans.spi.editor.mimelookup.MimeLocation(java.lang.Class<? extends org.netbeans.spi.editor.mimelookup.InstanceProvider> instanceProviderClass=class org.netbeans.spi.editor.mimelookup.InstanceProvider, java.lang.String subfolderName="CodeLensProvider")
+innr public final static Context
+meth public abstract java.util.Set<java.lang.String> supportedHintTypes()
+meth public abstract java.util.concurrent.CompletableFuture<java.util.List<? extends org.netbeans.api.lsp.InlayHint>> inlayHints(org.netbeans.spi.lsp.InlayHintsProvider$Context)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+
+CLSS public final static org.netbeans.spi.lsp.InlayHintsProvider$Context
+ outer org.netbeans.spi.lsp.InlayHintsProvider
+cons public init(org.openide.filesystems.FileObject,org.netbeans.api.lsp.Range,java.util.Set<java.lang.String>)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
+ anno 3 org.netbeans.api.annotations.common.NonNull()
+meth public java.util.Set<java.lang.String> getRequestedHintTypes()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public org.netbeans.api.lsp.Range getRange()
+ anno 0 org.netbeans.api.annotations.common.CheckForNull()
+meth public org.openide.filesystems.FileObject getFile()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+supr java.lang.Object
+hfds file,range,requestedHintTypes
+
+CLSS public abstract interface org.netbeans.spi.lsp.InlineValuesProvider
+meth public abstract java.util.concurrent.CompletableFuture<java.util.List<? extends org.netbeans.api.lsp.InlineValue>> inlineValues(org.openide.filesystems.FileObject,int)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract interface org.netbeans.spi.lsp.SignatureInformationCollector

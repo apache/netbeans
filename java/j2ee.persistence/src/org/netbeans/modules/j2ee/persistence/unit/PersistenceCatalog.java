@@ -60,6 +60,7 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         schemas.add(new SchemaInfo("persistence_2_1.xsd", RESOURCE_PATH, PERSISTENCE_NS));
         schemas.add(new SchemaInfo("persistence_2_2.xsd", RESOURCE_PATH, PERSISTENCE_NS));
         schemas.add(new SchemaInfo("persistence_3_0.xsd", RESOURCE_PATH, PERSISTENCE_JAKARTA_NS));
+        schemas.add(new SchemaInfo("persistence_3_2.xsd", RESOURCE_PATH, PERSISTENCE_JAKARTA_NS));
         // orm
         schemas.add(new SchemaInfo("orm_1_0.xsd", RESOURCE_PATH, ORM_OLD_NS));
         schemas.add(new SchemaInfo("orm_2_0.xsd", RESOURCE_PATH, ORM_OLD_NS));
@@ -67,6 +68,7 @@ public class PersistenceCatalog implements CatalogReader, CatalogDescriptor2, or
         schemas.add(new SchemaInfo("orm_2_2.xsd", RESOURCE_PATH, ORM_NS));
         schemas.add(new SchemaInfo("orm_3_0.xsd", RESOURCE_PATH, ORM_JAKARTA_NS));
         schemas.add(new SchemaInfo("orm_3_1.xsd", RESOURCE_PATH, ORM_JAKARTA_NS));
+        schemas.add(new SchemaInfo("orm_3_2.xsd", RESOURCE_PATH, ORM_JAKARTA_NS));
     }
     
     @Override

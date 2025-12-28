@@ -43,12 +43,13 @@ public class MicronautStructureProvider implements StructureProvider {
         JavaSource js = JavaSource.forDocument(doc);
         if (js != null) {
             ClassPath cp = js.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
-            if (cp.findResource("io/micronaut/http/annotation/HttpMethodMapping.class") != null) {
+            if (cp.findResource("io/micronaut/http/annotation/HttpMethodMapping.class") != null
+                    || cp.findResource("io/micronaut/management/endpoint/annotation/Endpoint.class") != null) {
                 try {
                     List<StructureElement> elements = new ArrayList<>();
                     js.runUserActionTask(cc -> {
                         cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
-                        for (MicronautSymbolFinder.SymbolLocation symbolLocation : MicronautSymbolFinder.scan(cc)) {
+                        for (MicronautSymbolFinder.SymbolLocation symbolLocation : MicronautSymbolFinder.scan(cc, false)) {
                             elements.add(StructureProvider.newBuilder(symbolLocation.getName(), StructureElement.Kind.Interface)
                                     .file(cc.getFileObject())
                                     .expandedStartOffset(symbolLocation.getStart())

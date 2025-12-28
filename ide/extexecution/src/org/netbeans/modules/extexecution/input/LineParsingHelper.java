@@ -81,7 +81,7 @@ public final class LineParsingHelper {
             //to the LineProcessor implementation
             trailingLine = null;
         }
-        return ret.toArray(new String[ret.size()]);
+        return ret.toArray(new String[0]);
     }
 
     public String getTrailingLine(boolean flush) {

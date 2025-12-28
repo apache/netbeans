@@ -86,10 +86,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI;
 public class CommonServerSupport
         implements PayaraModule3, RefreshModulesCookie {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Task state listener watching __locations command execution.
      */
@@ -238,10 +235,7 @@ public class CommonServerSupport
         }
     };
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(CommonServerSupport.class);
@@ -252,10 +246,7 @@ public class CommonServerSupport
     /** String to return for failed {@see getHttpHostFromServer()} search. */
     private static final String FAILED_HTTP_HOST = LOCALHOST + "FAIL";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Display pop up window with given message.
      * <p/>
@@ -274,10 +265,7 @@ public class CommonServerSupport
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Managed Payara instance. */
     private final PayaraInstance instance;
 
@@ -302,10 +290,7 @@ public class CommonServerSupport
     /** Last executed start task. */
     private volatile FutureTask<TaskState> startTask;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     CommonServerSupport(PayaraInstance instance) {
         this.instance = instance;
         this.isRemote = instance.isRemote();
@@ -1156,6 +1141,10 @@ public class CommonServerSupport
                             && !getInstance().getContainerPath().isEmpty()) {
                         Path relativePath = Paths.get(getInstance().getContainerPath()).relativize(Paths.get(path));
                         path = Paths.get(getInstance().getHostPath(), relativePath.toString()).toString();
+                    } else if (getInstance().isWSL()) {
+                        path = path.substring(5);  // Remove the "/mnt/" part
+                        path = path.substring(0, 1).toUpperCase() + ":" + path.substring(1);  // Capitalize the first letter (drive letter)
+                        path = path.replace("/", "\\");
                     } else {
                         path = (new File(path)).getAbsolutePath();
                     }

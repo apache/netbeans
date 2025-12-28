@@ -100,7 +100,7 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
         ret.add(tabContext.stop);
         tabContext.options = new OptionsAction();
         ret.add(tabContext.options);
-        return ret.toArray(new Action[ret.size()]);
+        return ret.toArray(new Action[0]);
     }
 
     @Override
@@ -284,7 +284,9 @@ public abstract class AbstractGradleExecutor extends OutputTabMaintainer<Abstrac
 
         @Override
         public void repeatExecution() {
-            //TODO: Implement
+            if (config.getExecFlags().contains(RunConfig.ExecFlag.REPEATABLE)) {
+                RunUtils.executeGradle(config, null);
+            }
         }
 
         @Override

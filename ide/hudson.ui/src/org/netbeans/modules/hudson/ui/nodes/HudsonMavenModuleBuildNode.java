@@ -67,7 +67,7 @@ class HudsonMavenModuleBuildNode extends AbstractNode {
         if (module instanceof OpenableInBrowser) {
             actions.add(OpenUrlAction.forOpenable((OpenableInBrowser) module));
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     private static Children makeChildren(final HudsonMavenModuleBuild module) {

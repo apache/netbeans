@@ -33,6 +33,7 @@ import javax.swing.text.*;
 
 import org.netbeans.api.editor.EditorActionNames;
 import org.netbeans.api.editor.EditorActionRegistration;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.editor.fold.FoldUtilities;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
@@ -226,9 +227,9 @@ public class JavaKit extends NbEditorKit {
 //        for (BaseAction a : createActionsForLayer()) {
 //            name2Action.put((String) a.getValue(Action.NAME), a);
 //
-////            System.err.println("<file name=\"" + (String) a.getValue(Action.NAME) + ".instance\">");
-////            System.err.println("    <attr name=\"instanceCreate\" methodvalue=\"org.netbeans.modules.editor.java.JavaKit.create\" />");
-////            System.err.println("</file>");
+// //            System.err.println("<file name=\"" + (String) a.getValue(Action.NAME) + ".instance\">");
+// //            System.err.println("    <attr name=\"instanceCreate\" methodvalue=\"org.netbeans.modules.editor.java.JavaKit.create\" />");
+// //            System.err.println("</file>");
 //        }
 //    }
 
@@ -270,7 +271,7 @@ public class JavaKit extends NbEditorKit {
                 value.add(action);
             }
         }
-        return value.toArray(new Action[value.size()]);
+        return value.toArray(new Action[0]);
     }
 
     @Override
@@ -397,7 +398,7 @@ public class JavaKit extends NbEditorKit {
                     sb.append(':');
                 }
                 try {
-                    sb.append(Utilities.getLineOffset(doc, target.getCaret().getDot()) + 1);
+                    sb.append(LineDocumentUtils.getLineIndex(doc, target.getCaret().getDot()) + 1);
                 } catch (BadLocationException e) {
                 }
                 sb.append(' ');
@@ -458,6 +459,7 @@ public class JavaKit extends NbEditorKit {
                 if (isJavadocTouched) {
                     blockCommentComplete(doc, dotPos, context);
                 }
+                TypingCompletion.javadocLineRunCompletion(context);
             }
         }
 

@@ -1,0 +1,28 @@
+    readonly function readonlyClassMethod(): void {} // method error class
+                      -------------------
+HINT:Method "readonlyClassMethod" cannot be declared readonly
+FIX:Remove modifier: readonly
+    public(set) function publicSetClassMethod(): void {} // method error class
+                         --------------------
+HINT:Method "publicSetClassMethod" cannot be declared public(set)
+FIX:Remove modifier: public(set)
+    private(set) function privateSetClassMethod(): void {} // method error class
+                          ---------------------
+HINT:Method "privateSetClassMethod" cannot be declared private(set)
+FIX:Remove modifier: private(set)
+    protected(set) function protectedSetClassMethod(): void {} // method error class
+                            -----------------------
+HINT:Method "protectedSetClassMethod" cannot be declared protected(set)
+FIX:Remove modifier: protected(set)
+    public public(set) function publicPublicSetClassMethod(): void {} // method error class
+                                --------------------------
+HINT:Method "publicPublicSetClassMethod" cannot be declared public(set)
+FIX:Remove modifier: public(set)
+    public private(set) function publicPrivateSetClassMethod(): void {} // method error class
+                                 ---------------------------
+HINT:Method "publicPrivateSetClassMethod" cannot be declared private(set)
+FIX:Remove modifier: private(set)
+    public protected(set) function publicProtectedSetClassMethod(): void {} // method error class
+                                   -----------------------------
+HINT:Method "publicProtectedSetClassMethod" cannot be declared protected(set)
+FIX:Remove modifier: protected(set)

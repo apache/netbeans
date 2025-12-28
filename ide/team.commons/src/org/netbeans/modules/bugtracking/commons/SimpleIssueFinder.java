@@ -137,12 +137,10 @@ public class SimpleIssueFinder {
                  * - all bugwords the bug number prefix are lowercase:
                  */
                 for (int i = 0; i < BUGWORDS.length; i++) {
-                    assert BUGWORDS[i].equals(
-                                BUGWORDS[i].toLowerCase());
+                    assert BUGWORDS[i].equalsIgnoreCase(BUGWORDS[i]);
                 }
                 for (int i = 0; i < BUGNUM_PREFIX_PARTS.length; i++) {
-                    assert BUGNUM_PREFIX_PARTS[i].equals(
-                                BUGNUM_PREFIX_PARTS[i].toLowerCase());
+                    assert BUGNUM_PREFIX_PARTS[i].equalsIgnoreCase(BUGNUM_PREFIX_PARTS[i]);
                 }
 
                 /*

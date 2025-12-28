@@ -68,7 +68,7 @@ public final class ConfigManager {
 
         List<String> tmp = new ArrayList<>(Arrays.asList(configProvider.getConfigProperties()));
         tmp.add(PROP_DISPLAY_NAME);
-        propertyNames = tmp.toArray(new String[tmp.size()]);
+        propertyNames = tmp.toArray(new String[0]);
     }
 
     /**

@@ -22,6 +22,7 @@ package com.oracle.js.parser;
 import com.oracle.js.parser.ErrorManager.PrintWriterErrorManager;
 import com.oracle.js.parser.ir.FunctionNode;
 import com.oracle.js.parser.ir.LexicalContext;
+import java.io.PrintWriter;
 
 public class ManualTest {
 
@@ -38,13 +39,15 @@ public class ManualTest {
 //        Source source = Source.sourceFor("dummy.js", "var a = import('test');");
 //        Source source = Source.sourceFor("dummy.js", "try {} catch (e) {}");
 //        Source source = Source.sourceFor("dummy.js", "function a() {}; async function b() {}; class x { y(){} async z(){} }");
-        Source source = Source.sourceFor("dummy.js", "const a = <table>{/* Test */ /* Test */ /* Test */}{ a = 3 }</table>");
+//        Source source = Source.sourceFor("dummy.js", "const a = <table>{/* Test */ /* Test */ /* Test */}{ a = 3 }</table>");
+//        Source source = Source.sourceFor("dummy.js", "function dummy() {console.log(new.target);}");
+        Source source = Source.sourceFor("dummy.js", "function demo() {console.log(import\n\n.meta.url)}");
         ScriptEnvironment.Builder builder = ScriptEnvironment.builder();
         Parser parser = new Parser(
-                builder.emptyStatements(true).ecmacriptEdition(13).jsx(true).build(),
+                builder.emptyStatements(true).ecmacriptEdition(13).jsx(true).dumpOnError(new PrintWriter(System.err)).build(),
                 source,
                 new PrintWriterErrorManager());
-        FunctionNode fn = parser.parse();
+        FunctionNode fn = parser.parseModule("x");
         DumpingVisitor dv = new DumpingVisitor(new LexicalContext());
         fn.accept(dv);
     }

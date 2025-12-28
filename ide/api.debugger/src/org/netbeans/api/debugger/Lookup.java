@@ -40,6 +40,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -57,7 +58,6 @@ import org.openide.util.Lookup.Item;
 import org.openide.util.LookupEvent;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.openide.util.Lookup.Result;
 import org.openide.util.lookup.AbstractLookup;
 
@@ -346,7 +346,7 @@ abstract class Lookup implements ContextProvider {
                 = new HashMap<ClassLoader, ModuleChangeListener>();
         private final Map<ModuleInfo, ModuleChangeListener> disabledModuleChangeListeners
                 = new HashMap<ModuleInfo, ModuleChangeListener>();
-        private final Set<MetaInfLookupList> lookupLists = new WeakSet<MetaInfLookupList>();
+        private final Set<MetaInfLookupList> lookupLists = Collections.newSetFromMap(new WeakHashMap<>());
         private RequestProcessor.Task refreshListEnabled;
         private RequestProcessor.Task refreshListDisabled;
         private final RequestProcessor.Task listenOnDisabledModulesTask;
@@ -577,7 +577,7 @@ abstract class Lookup implements ContextProvider {
                 //System.err.println("  unsorted: "+lookupLists+"\n");
                 ll.addAll(lookupLists);
             }
-            Collections.sort(ll, getMetaInfLookupListComparator(load));
+            ll.sort(getMetaInfLookupListComparator(load));
             //System.err.println("    sorted: "+ll+"\n");
             for (MetaInfLookupList mll : ll) {
                 mll.refreshContent();

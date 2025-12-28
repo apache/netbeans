@@ -170,7 +170,7 @@ class GoToPatch {
                     }
                 }
             }
-            panel.lstPatches.setListData(toAdd.toArray(new Object[toAdd.size()]));
+            panel.lstPatches.setListData(toAdd.toArray(new Object[0]));
             panel.lstPatches.setEnabled(true);
             if (onTopPatch == null) {
                 panel.lstPatches.setSelectedIndex(1);

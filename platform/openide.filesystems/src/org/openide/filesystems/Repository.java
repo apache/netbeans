@@ -213,7 +213,7 @@ public class Repository implements Serializable {
             List<URL> layerUrls = new ArrayList<URL>();
             try {
                 provideLayers(Thread.currentThread().getContextClassLoader(), layerUrls);
-                layers.setXmlUrls(layerUrls.toArray(new URL[layerUrls.size()]));
+                layers.setXmlUrls(layerUrls.toArray(new URL[0]));
                 LOG.log(Level.FINE, "Loading classpath layers: {0}", layerUrls);
             } catch (Exception x) {
                 LOG.log(Level.WARNING, "Setting layer URLs: " + layerUrls, x);
@@ -339,8 +339,7 @@ public class Repository implements Serializable {
      * query, and will return the same instance as a system-wide Repository instance.
      * Instances provided by <code>Lookup.getDefault().lookup(Repository.class)</code> may vary
      * depending on the Lookup's implementation and context - be aware that multiple Repository
-     * instances may exist, possibly one for each contextual Lookup craeted.
-     * <p>
+     * instances may exist, possibly one for each contextual Lookup created.
      * 
      * @return default repository for the system
      * @since 9.5 support for multiple contexts

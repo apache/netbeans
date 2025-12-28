@@ -18,12 +18,16 @@
  */
 package org.netbeans.modules.lsp.client.bindings;
 
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
@@ -44,14 +48,19 @@ import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.LSPBindings.BackgroundTask;
 import org.netbeans.modules.lsp.client.Utils;
+import org.netbeans.modules.lsp.client.options.MarkOccurencesSettings;
 import org.netbeans.spi.editor.highlighting.HighlightsLayer;
 import org.netbeans.spi.editor.highlighting.HighlightsLayerFactory;
+import org.netbeans.spi.editor.highlighting.HighlightsSequence;
 import org.netbeans.spi.editor.highlighting.ZOrder;
 import org.netbeans.spi.editor.highlighting.support.OffsetsBag;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
-import org.openide.util.RequestProcessor;
+import org.openide.util.NbBundle;
+
+import static org.netbeans.modules.lsp.client.options.MarkOccurencesSettingsNames.ON_OFF;
+import static org.netbeans.modules.lsp.client.options.MarkOccurencesSettingsNames.KEEP_MARKS;
 
 /**
  *
@@ -59,7 +68,8 @@ import org.openide.util.RequestProcessor;
  */
 public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyChangeListener {
 
-    private static final RequestProcessor WORKER = new RequestProcessor(MarkOccurrences.class.getName(), 1, false, false);
+    public static final Color ES_COLOR = new Color(175, 172, 102);
+
     private final JTextComponent component;
     private Document doc;
     private int caretPos;
@@ -75,48 +85,65 @@ public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyC
     }
 
     @Override
-    public void run(LSPBindings bindings, FileObject file) {
+    @NbBundle.Messages(
+            "LBL_ES_TOOLTIP=Mark Occurrences"
+    )
+    public void run(List<LSPBindings> servers, FileObject file) {
         Document localDoc;
         int localCaretPos;
+
         synchronized (this) {
             localDoc = this.doc;
             localCaretPos = this.caretPos;
         }
-        getHighlightsBag(localDoc).setHighlights(computeHighlights(localDoc, localCaretPos));
+
+        if (!MarkOccurencesSettings.getCurrentNode().getBoolean(ON_OFF, true)) {
+            getHighlightsBag(doc).setHighlights(HighlightsSequence.EMPTY);
+            OccurrencesMarkProvider.get(doc).setOccurrences(doc, null, ES_COLOR, Bundle.LBL_ES_TOOLTIP());
+            return;
+        }
+
+        List<int[]> highlights = computeHighlights(servers, localDoc, localCaretPos);
+
+        if (highlights != null && !highlights.isEmpty()) {
+            AttributeSet attr = getColoring(localDoc);
+            OffsetsBag occurrenesBag = new OffsetsBag(localDoc);
+            highlights.forEach(h -> {
+                occurrenesBag.addHighlight(
+                        h[0],
+                        h[1],
+                        attr
+                );
+            });
+            getHighlightsBag(localDoc).setHighlights(occurrenesBag);
+            OccurrencesMarkProvider.get(localDoc).setOccurrences(localDoc, highlights, ES_COLOR, Bundle.LBL_ES_TOOLTIP());
+        } else if (!MarkOccurencesSettings.getCurrentNode().getBoolean(KEEP_MARKS, true)) {
+            getHighlightsBag(doc).setHighlights(HighlightsSequence.EMPTY);
+            OccurrencesMarkProvider.get(doc).setOccurrences(doc, null, ES_COLOR, Bundle.LBL_ES_TOOLTIP());
+        }
     }
 
-    private OffsetsBag computeHighlights(Document doc, int caretPos) {
-        AttributeSet attr = getColoring(doc);
-        OffsetsBag result = new OffsetsBag(doc);
+    private List<int[]> computeHighlights(List<LSPBindings> servers, Document doc, int caretPos) {
         if(caretPos < 0) {
-            return result;
+            return null;
         }
         FileObject file = NbEditorUtilities.getFileObject(doc);
         if (file == null) {
-            return result;
+            return null;
         }
-        LSPBindings server = LSPBindings.getBindings(file);
-        if (server == null) {
-            return result;
-        }
-        if (!Utils.isEnabled(server.getInitResult().getCapabilities().getDocumentHighlightProvider())) {
-            return result;
-        }
-        String uri = Utils.toURI(file);
-        try {
-            List<? extends DocumentHighlight> highlights
-                    = server.getTextDocumentService().documentHighlight(new DocumentHighlightParams(new TextDocumentIdentifier(uri), Utils.createPosition(doc, caretPos))).get();
-            if (highlights == null) {
-                return result;
-            }
-            for (DocumentHighlight h : highlights) {
-                result.addHighlight(Utils.getOffset(doc, h.getRange().getStart()), Utils.getOffset(doc, h.getRange().getEnd()), attr);
-            }
-            return result;
-        } catch (BadLocationException | InterruptedException | ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
-            return result;
-        }
+        List<int[]> output = new ArrayList<>();
+
+        Utils.handleBindings(servers,
+                             capa -> Utils.isEnabled(capa.getDocumentHighlightProvider()),
+                             () -> new DocumentHighlightParams(new TextDocumentIdentifier(Utils.toURI(file)), Utils.createPosition(doc, caretPos)),
+                             (server, param) -> server.getTextDocumentService().documentHighlight(param),
+                             (server, result) -> Optional.ofNullable(result)
+                                                         .stream()
+                                                         .flatMap(res -> res.stream())
+                                                         .map(h -> new int[]{Utils.getOffset(doc, h.getRange().getStart()), Utils.getOffset(doc, h.getRange().getEnd())})
+                                                         .forEach(output::add));
+
+        return output;
     }
 
     private AttributeSet getColoring(Document doc) {
@@ -139,13 +166,11 @@ public class MarkOccurrences implements BackgroundTask, CaretListener, PropertyC
         } else {
             caretPos = -1;
         }
-        WORKER.post(() -> {
-            FileObject file = NbEditorUtilities.getFileObject(doc);
+        FileObject file = NbEditorUtilities.getFileObject(doc);
 
-            if (file != null) {
-                LSPBindings.rescheduleBackgroundTask(file, this);
-            }
-        });
+        if (file != null) {
+            LSPBindings.rescheduleBackgroundTask(file, this);
+        }
     }
 
     @Override

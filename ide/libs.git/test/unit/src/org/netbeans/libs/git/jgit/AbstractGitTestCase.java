@@ -219,8 +219,8 @@ public class AbstractGitTestCase extends NbTestCase {
             DirCacheEntry e = cache.getEntry(relativePath);
             assertNotNull(e);
             assertEquals(relativePath, e.getPathString());
-            if (f.lastModified() != e.getLastModified()) {
-                assertEquals((f.lastModified() / 1000) * 1000, (e.getLastModified() / 1000) * 1000);
+            if (f.lastModified() != e.getLastModifiedInstant().toEpochMilli()) {
+                assertEquals((f.lastModified() / 1000) * 1000, (e.getLastModifiedInstant().toEpochMilli() / 1000) * 1000);
             }
             try (InputStream in = new FileInputStream(f)) {
                 assertEquals(e.getObjectId(), repository.newObjectInserter().idFor(Constants.OBJ_BLOB, f.length(), in));

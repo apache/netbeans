@@ -34,10 +34,7 @@ public enum GlassFishStatusCheckResult {
     /** Server status check failed with <code>FAILED</code> result. */
     FAILED;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Full <code>AND</code> operator state space. */
     private static final GlassFishStatusCheckResult[][] and = {
       // SUCCESS  FAILED
@@ -52,10 +49,7 @@ public enum GlassFishStatusCheckResult {
         {SUCCESS,  FAILED}  // FAILED
     };
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Compute logical <code>AND</code> of two status values.
      * <p/>
@@ -108,10 +102,7 @@ public enum GlassFishStatusCheckResult {
         return or[s1.ordinal()][or[s2.ordinal()][s3.ordinal()].ordinal()];
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>GlassFishStatusCheckResult</code> value
      * to <code>String</code>.

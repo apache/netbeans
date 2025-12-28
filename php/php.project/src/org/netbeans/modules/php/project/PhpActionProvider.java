@@ -96,7 +96,7 @@ public class PhpActionProvider implements ActionProvider {
     @Override
     public String[] getSupportedActions() {
         Set<String> commandIds = commands.keySet();
-        return commandIds.toArray(new String[commandIds.size()]);
+        return commandIds.toArray(new String[0]);
     }
 
     @Override

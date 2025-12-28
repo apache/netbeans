@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.64
+#Version 1.72
 
 CLSS public java.lang.Object
 cons public init()
@@ -79,6 +79,9 @@ fld protected final static java.lang.String VIEW_TAB_TABS_BORDER = "TabbedContai
 fld protected final static java.lang.String WARNING_FOREGROUND = "nb.warningForeground"
 fld protected final static java.lang.String WORKPLACE_FILL = "nb_workplace_fill"
 fld public final static java.lang.String CONTROLFONT = "controlFont"
+fld public final static java.lang.String FILECHOOSER_FAVORITES_ENABLED = "FileChooser.favorites.enabled"
+fld public final static java.lang.String FILECHOOSER_SHORTCUTS_FILESFUNCTION = "FileChooser.shortcuts.filesFunction"
+fld public final static java.lang.String FILECHOOSER_SHORTCUTS_PANEL_FACTORY = "FileChooser.shortcuts.panel.factory"
 fld public final static java.lang.String LISTFONT = "List.font"
 fld public final static java.lang.String MENUFONT = "menuFont"
 fld public final static java.lang.String OPTIONS_CATEGORIES_BUTTON_USE_NIMBUS = "nb.options.categories.button.useNimbusCategoryButton"

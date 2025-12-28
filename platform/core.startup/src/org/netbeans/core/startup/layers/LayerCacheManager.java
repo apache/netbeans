@@ -152,7 +152,7 @@ public abstract class LayerCacheManager implements LayerFactory {
                         err.log(Level.WARNING, null, ioe);
                         XMLFileSystem fallback = new XMLFileSystem();
                         try {
-                            fallback.setXmlUrls(urls.toArray(new URL[urls.size()]));
+                            fallback.setXmlUrls(urls.toArray(new URL[0]));
                         } catch (PropertyVetoException ex) {
                             err.log(Level.WARNING, null, ex);
                         }
@@ -233,7 +233,7 @@ public abstract class LayerCacheManager implements LayerFactory {
             }
             try {
                 XMLFileSystem fs = (XMLFileSystem)previous;
-                fs.setXmlUrls(urls.toArray(new URL[urls.size()]));
+                fs.setXmlUrls(urls.toArray(new URL[0]));
                 return fs;
             } catch (PropertyVetoException pve) {
                 throw (IOException) new IOException(pve.toString()).initCause(pve);

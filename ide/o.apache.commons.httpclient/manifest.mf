@@ -1,2 +1,0 @@
-OpenIDE-Module: org.apache.commons.httpclient
-OpenIDE-Module-Specification-Version: 3.29

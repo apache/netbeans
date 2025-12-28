@@ -26,6 +26,7 @@ import javax.lang.model.SourceVersion;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -266,7 +267,7 @@ class TypingCompletion {
                 || id == JavaTokenId.CHAR_LITERAL
                 || id == JavaTokenId.MULTILINE_STRING_LITERAL);
 
-        int lastNonWhite = org.netbeans.editor.Utilities.getRowLastNonWhite((BaseDocument) context.getDocument(), context.getOffset());
+        int lastNonWhite = LineDocumentUtils.getLineLastNonWhitespace((BaseDocument) context.getDocument(), context.getOffset());
         // eol - true if the caret is at the end of line (ignoring whitespaces)
         boolean eol = lastNonWhite < context.getOffset();
         if (insideString) {
@@ -385,7 +386,7 @@ class TypingCompletion {
         if (tokenBalance(doc, JavaTokenId.LBRACE) <= 0) {
             return false;
         }
-        int caretRowStartOffset = org.netbeans.editor.Utilities.getRowStart(doc, caretOffset);
+        int caretRowStartOffset = LineDocumentUtils.getLineStartOffset(doc, caretOffset);
         TokenSequence<JavaTokenId> ts = javaTokenSequence(doc, caretOffset, true);
         if (ts == null) {
             return false;
@@ -420,7 +421,7 @@ class TypingCompletion {
      * character on the caret row is returned.
      */
     static int getRowOrBlockEnd(BaseDocument doc, int caretOffset, boolean[] insert) throws BadLocationException {
-        int rowEnd = org.netbeans.editor.Utilities.getRowLastNonWhite(doc, caretOffset);
+        int rowEnd = LineDocumentUtils.getLineLastNonWhitespace(doc, caretOffset);
         if (rowEnd == -1 || caretOffset >= rowEnd) {
             return caretOffset;
         }
@@ -559,6 +560,21 @@ class TypingCompletion {
                 quotation = ++quotation % 2;
             }
         }
+
+        return false;
+    }
+
+    static boolean javadocLineRunCompletion(TypedBreakInterceptor.MutableContext context) {
+        TokenSequence<JavaTokenId> ts = javaTokenSequence(context, false);
+        if (ts == null) {
+            return false;
+        }
+        int dotPosition = context.getCaretOffset();
+        ts.move(dotPosition);
+        if (!((ts.moveNext() || ts.movePrevious()) && ts.token().id() == JavaTokenId.JAVADOC_COMMENT_LINE_RUN)) {
+            return false;
+        }
+        context.setText("\n///", -1, 4, 0, 4);
 
         return false;
     }

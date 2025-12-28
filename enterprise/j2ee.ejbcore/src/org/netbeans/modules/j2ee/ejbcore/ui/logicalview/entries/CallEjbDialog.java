@@ -78,7 +78,7 @@ public class CallEjbDialog {
         }
         
         Children.Array children = new Children.Array();
-        children.add(ejbProjectNodes.toArray(new Node[ejbProjectNodes.size()]));
+        children.add(ejbProjectNodes.toArray(new Node[0]));
         Node root = new AbstractNode(children);
         root.setDisplayName(NbBundle.getMessage(CallEjbDialog.class, "LBL_EJBModules"));
         EnterpriseReferenceContainer erc = enterpriseProject.getLookup().lookup(EnterpriseReferenceContainer.class);

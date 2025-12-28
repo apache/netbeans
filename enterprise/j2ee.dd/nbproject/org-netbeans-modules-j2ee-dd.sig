@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.62.0
+#Version 1.70.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -89,6 +89,7 @@ fld public final static java.lang.String PROPERTY_STATUS = "dd_status"
 fld public final static java.lang.String PROPERTY_VERSION = "dd_version"
 fld public final static java.lang.String SECURITY_ROLE = "SecurityRole"
 fld public final static java.lang.String VERSION_10 = "10"
+fld public final static java.lang.String VERSION_11 = "11"
 fld public final static java.lang.String VERSION_1_4 = "1.4"
 fld public final static java.lang.String VERSION_5 = "5"
 fld public final static java.lang.String VERSION_6 = "6"
@@ -177,6 +178,7 @@ fld public final static int STATE_VALID = 0
 fld public final static java.lang.String PROPERTY_STATUS = "dd_status"
 fld public final static java.lang.String PROPERTY_VERSION = "dd_version"
 fld public final static java.lang.String VERSION_10_0 = "10"
+fld public final static java.lang.String VERSION_11_0 = "11"
 fld public final static java.lang.String VERSION_1_4 = "1.4"
 fld public final static java.lang.String VERSION_5_0 = "5"
 fld public final static java.lang.String VERSION_6_0 = "6"
@@ -1952,6 +1954,7 @@ fld public final static java.lang.String VERSION_3_1 = "3.1"
 fld public final static java.lang.String VERSION_4_0 = "4.0"
 fld public final static java.lang.String VERSION_5_0 = "5.0"
 fld public final static java.lang.String VERSION_6_0 = "6.0"
+fld public final static java.lang.String VERSION_6_1 = "6.1"
 intf org.netbeans.modules.j2ee.dd.api.common.RootInterface
 meth public abstract boolean isDistributable()
 meth public abstract boolean isMetadataComplete() throws org.netbeans.modules.j2ee.dd.api.common.VersionNotSupportedException

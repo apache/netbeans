@@ -73,9 +73,14 @@ public final class MavenProjectCache {
     private static final String CONTEXT_EXECUTION_RESULT = "NB_Execution_Result";
     
     /**
-     * The value contains the set of artifacts, that have been faked during the reading operation.
+     * The value contains the set of placeholder artifacts, that have been injected during the reading operation.
      */
-    private static final String CONTEXT_FAKED_ARTIFACTS = "NB_FakedArtifacts";
+    private static final String CONTEXT_PLACEHOLDER_ARTIFACTS = "NB_PlaceholderArtifacts";
+    
+    /**
+     * Timestamp of the project model load.
+     */
+    private static final String CONTEXT_LOAD_TIMESTAMP = "org.netbeans.modules.maven.loadTimestamp"; // NOI18N
     
     /**
      * Marks a project that observed unknown build participants.
@@ -172,6 +177,31 @@ public final class MavenProjectCache {
     }
     
     /**
+     * Extracts a timestamp from the MavenProject. Timestamps are placed
+     * as context values in {@link #loadOriginalMavenProjectInternal}.
+     * @param p project
+     * @return timestamp, -1 if p is null, -2 if unknown
+     */
+    public static long getLoadTimestamp(MavenProject p) {
+        if (p == null) {
+            return -1;
+        }
+        Object o = p.getContextValue(CONTEXT_LOAD_TIMESTAMP);
+        return o instanceof Long l ? l : -2;
+    }
+    
+    /**
+     * Extracts the set of artifacts not present in the local repository and 'injected' during the
+     * project load by NbArtifactFixer.
+     * @param p project
+     * @return set of placeholder artifacts.
+     */
+    public static Collection<Artifact> getPlaceholderArtifacts(MavenProject p) {
+        Object o = p.getContextValue(CONTEXT_PLACEHOLDER_ARTIFACTS);
+        return o instanceof Collection ? (Collection)o : Collections.emptySet();
+    }
+    
+    /**
      * list of class names of build participants in the project, null when none are present.
      * @param project
      * @return 
@@ -201,14 +231,14 @@ public final class MavenProjectCache {
         File pomFile = req.getPom();
         
         MavenExecutionResult res = null;
-        Set<Artifact> fakes = new HashSet<>();
+        Set<Artifact> placeholders = new HashSet<>();
         long startLoading = System.currentTimeMillis();
         
         try {
-            res = NbArtifactFixer.collectFallbackArtifacts(() -> projectEmbedder.readProjectWithDependencies(req, true), (c) -> 
+            res = NbArtifactFixer.collectPlaceholderArtifacts(() -> projectEmbedder.readProjectWithDependencies(req, true), (c) -> 
                 c.forEach(a -> {
-                    // artifact fixer only fakes POMs.
-                    fakes.add(projectEmbedder.createArtifactWithClassifier(a.getGroupId(), a.getArtifactId(), a.getVersion(), "pom", a.getClassifier())); // NOI18N
+                    // artifact fixer only injects POMs.
+                    placeholders.add(projectEmbedder.createArtifactWithClassifier(a.getGroupId(), a.getArtifactId(), a.getVersion(), a.getExtension(), a.getClassifier())); // NOI18N
                 }
             ));
             newproject = res.getProject();
@@ -287,12 +317,16 @@ public final class MavenProjectCache {
                     LOG.log(Level.FINE, "Maven reported:", t);
                 }
             }
-            if (!fakes.isEmpty() && !isIncompleteProject(newproject)) {
-                LOG.log(Level.FINE, "Incomplete artifact encountered during loading the project: {0}", fakes);
-                newproject.setContextValue(CONTEXT_PARTIAL_PROJECT, Boolean.TRUE);
-                newproject.setContextValue(CONTEXT_FAKED_ARTIFACTS, fakes);
+            LOG.log(Level.FINE, "Loaded project flags - incomplete {0}, placeholder count {1}", new Object[] { isIncompleteProject(newproject), placeholders.size() });
+            if (!placeholders.isEmpty()) {
+                LOG.log(Level.FINE, "Incomplete artifact encountered during loading the project: {0}", placeholders);
+                if (!isIncompleteProject(newproject)) {
+                    newproject.setContextValue(CONTEXT_PARTIAL_PROJECT, Boolean.TRUE);
+                }
+                newproject.setContextValue(CONTEXT_PLACEHOLDER_ARTIFACTS, placeholders);
             }
         }
+        newproject.setContextValue(CONTEXT_LOAD_TIMESTAMP, startLoading);
         return newproject;
     }
     

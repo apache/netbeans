@@ -27,8 +27,12 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.netbeans.core.ProxySettings;
+import static org.netbeans.core.ProxySettings.PAC_SCRIPT_TIMEOUT;
 import org.netbeans.core.network.proxy.pac.impl.NbPacScriptEvaluatorFactory;
+import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -56,6 +60,14 @@ public class PacEngineTest extends NbTestCase {
     }
 
    
+    public static final junit.framework.Test suite() {
+        NbModuleSuite.Configuration cfg = NbModuleSuite.emptyConfiguration().
+                honorAutoloadEager(true).
+                enableClasspathModules(false).
+                gui(false);
+        
+        return cfg.clusters("platform|webcommon|ide").addTest(PacEngineTest.class).suite();
+    }
    
 
     /**
@@ -64,6 +76,9 @@ public class PacEngineTest extends NbTestCase {
     @Test
     public void testEngine() throws PacParsingException, IOException, URISyntaxException, PacValidationException {
         System.out.println("toSemiColonListStr");
+        
+        NbPreferences.forModule(ProxySettings.class)
+                .putInt(PAC_SCRIPT_TIMEOUT, 2000);
 
         PacScriptEvaluatorFactory factory = new NbPacScriptEvaluatorFactory();
         
@@ -72,6 +87,7 @@ public class PacEngineTest extends NbTestCase {
         testPacFile("pac-test3.js", factory, 1, false);
         testPacFileMalicious("pac-test-sandbox-breakout.js", factory);
         testPacFileMalicious("pac-test-getclass.js", factory);
+        testPacFileMalicious("pac-test-timeout.js", factory);
 
         testPacFile2("pac-test4.js", factory);
     }

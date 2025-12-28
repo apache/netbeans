@@ -58,15 +58,6 @@ public class IntroduceSuggestionTest extends PHPHintsTestBase {
         return getTestName() + ".php";
     }
 
-    private String getTestName() {
-        String name = getName();
-        int indexOf = name.indexOf("_");
-        if (indexOf != -1) {
-            name = name.substring(0, indexOf);
-        }
-        return name;
-    }
-
     public void testIntroduceSuggestion_01() throws Exception {
         // Needs to replace directory separators in expected result.
         fixContent(new File(getDataDir(), getTestDirectory() + "testIntroduceSuggestion.php.testIntroduceSuggestion_01.hints"));

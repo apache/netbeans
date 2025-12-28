@@ -1,0 +1,151 @@
+--------- JspParserAPI.parseResult(), success: false
+ ---- PAGEINFO
+----- PageInfo -----
+      imports:
+        jakarta.servlet.*
+        jakarta.servlet.http.*
+        jakarta.servlet.jsp.*
+      dependants:
+        /WEB-INF/META-INF/c.tld
+      taglibsMap:
+        tag library: /WEB-INF/META-INF/c.tld
+            tlibversion : 1.0
+            jspversion  : 1.2
+            shortname   : c
+            urn         : http://java.sun.com/jstl/core
+            info        : JSTL 1.0 core library
+            uri         : /WEB-INF/META-INF/c.tld
+              tag name     : catch
+                  class    : org.apache.taglibs.standard.tag.common.core.CatchTag
+                  attribs  : [var]
+              tag name     : choose
+                  class    : org.apache.taglibs.standard.tag.common.core.ChooseTag
+                  attribs  : []
+              tag name     : out
+                  class    : org.apache.taglibs.standard.tag.el.core.OutTag
+                  attribs  : [value, default, escapeXml]
+              tag name     : if
+                  class    : org.apache.taglibs.standard.tag.el.core.IfTag
+                  attribs  : [test, var, scope]
+              tag name     : import
+                  class    : org.apache.taglibs.standard.tag.el.core.ImportTag
+                  attribs  : [url, var, scope, varReader, context, charEncoding]
+              tag name     : forEach
+                  class    : org.apache.taglibs.standard.tag.el.core.ForEachTag
+                  attribs  : [items, begin, end, step, var, varStatus]
+              tag name     : forTokens
+                  class    : org.apache.taglibs.standard.tag.el.core.ForTokensTag
+                  attribs  : [items, delims, begin, end, step, var, varStatus]
+              tag name     : otherwise
+                  class    : org.apache.taglibs.standard.tag.common.core.OtherwiseTag
+                  attribs  : []
+              tag name     : param
+                  class    : org.apache.taglibs.standard.tag.el.core.ParamTag
+                  attribs  : [name, value]
+              tag name     : redirect
+                  class    : org.apache.taglibs.standard.tag.el.core.RedirectTag
+                  attribs  : [var, scope, url, context]
+              tag name     : remove
+                  class    : org.apache.taglibs.standard.tag.common.core.RemoveTag
+                  attribs  : [var, scope]
+              tag name     : set
+                  class    : org.apache.taglibs.standard.tag.el.core.SetTag
+                  attribs  : [var, value, target, property, scope]
+              tag name     : url
+                  class    : org.apache.taglibs.standard.tag.el.core.UrlTag
+                  attribs  : [var, scope, value, context]
+              tag name     : when
+                  class    : org.apache.taglibs.standard.tag.el.core.WhenTag
+                  attribs  : [test]
+        tag library: http://java.sun.com/jsp/jstl/fmt
+            tlibversion : 1.1
+            jspversion  : 2.0
+            shortname   : fmt
+            urn         : http://java.sun.com/jsp/jstl/fmt
+            info        : JSTL 1.1 i18n-capable formatting library
+            uri         : http://java.sun.com/jsp/jstl/fmt
+              tag name     : requestEncoding
+                  class    : org.apache.taglibs.standard.tag.rt.fmt.RequestEncodingTag
+                  attribs  : [value]
+              tag name     : setLocale
+                  class    : org.apache.taglibs.standard.tag.rt.fmt.SetLocaleTag
+                  attribs  : [value, variant, scope]
+              tag name     : timeZone
+                  class    : org.apache.taglibs.standard.tag.rt.fmt.TimeZoneTag
+                  attribs  : [value]
+              tag name     : setTimeZone
+                  class    : org.apache.taglibs.standard.tag.rt.fmt.SetTimeZoneTag
+                  attribs  : [value, var, scope]
+              tag name     : bundle
+                  class    : org.apache.taglibs.standard.tag.rt.fmt.BundleTag
+                  attribs  : [basename, prefix]
+              tag name     : setBundle
+                  class    : org.apache.taglibs.standard.tag.rt.fmt.SetBundleTag
+                  attribs  : [basename, var, scope]
+              tag name     : message
+                  class    : org.apache.taglibs.standard.tag.rt.fmt.MessageTag
+                  attribs  : [key, bundle, var, scope]
+              tag name     : param
+                  class    : org.apache.taglibs.standard.tag.rt.fmt.ParamTag
+                  attribs  : [value]
+              tag name     : formatNumber
+                  class    : org.apache.taglibs.standard.tag.rt.fmt.FormatNumberTag
+                  attribs  : [value, type, pattern, currencyCode, currencySymbol, groupingUsed, maxIntegerDigits, minIntegerDigits, maxFractionDigits, minFractionDigits, var, scope]
+              tag name     : parseNumber
+                  class    : org.apache.taglibs.standard.tag.rt.fmt.ParseNumberTag
+                  attribs  : [value, type, pattern, parseLocale, integerOnly, var, scope]
+              tag name     : formatDate
+                  class    : org.apache.taglibs.standard.tag.rt.fmt.FormatDateTag
+                  attribs  : [value, type, dateStyle, timeStyle, pattern, timeZone, var, scope]
+              tag name     : parseDate
+                  class    : org.apache.taglibs.standard.tag.rt.fmt.ParseDateTag
+                  attribs  : [value, type, dateStyle, timeStyle, pattern, timeZone, parseLocale, var, scope]
+        tag library: urn:jsptagdir:/WEB-INF/tags/
+            tlibversion : 1.0
+            jspversion  : 2.0
+            shortname   : tags
+            urn         : null
+            info        : null
+            uri         : null
+              tagfile path : /WEB-INF/tags/linklist.tag
+              tag name     : linklist
+                  class    : org.apache.jsp.tag.web.linklist_tag
+                  attribs  : [separator]
+              tagfile path : /WEB-INF/tags/othertag.tag
+              tag name     : othertag
+                  class    : org.apache.jsp.tag.web.othertag_tag
+                  attribs  : [separator]
+      prefixMapper:
+        c -> /WEB-INF/META-INF/c.tld
+        fmt -> http://java.sun.com/jsp/jstl/fmt
+        tf -> urn:jsptagdir:/WEB-INF/tags/
+      approxXmlPrefixMapper :
+      language            : java
+      xtends              : org.apache.jasper.runtime.HttpJspBase
+      contentType         : null
+      session             : true
+      buffer              : 8192
+      autoFlush           : true
+      threadSafe          : true
+      isErrorPage         : false
+      errorPage           : null
+      scriptless          : false
+      scriptingInvalid    : false
+      elIgnored           : false
+      omitXmlDecl         : null
+      isJspPrefixHijacked : false
+      doctypeName         : null
+      doctypeSystem       : null
+      doctypePublic       : null
+      hasJspRoot          : false
+      prefixes:
+      includePrelude:
+      includeCoda:
+      pluginDcls:
+      beans:
+ ------- XML View (constructed from the original data structure) -----
+no XML view
+
+ ---- ERRORS
+ERROR in /faulty.jsp at [10, 0] No tag "setLocaale" defined in tag library imported with prefix "fmt"
+

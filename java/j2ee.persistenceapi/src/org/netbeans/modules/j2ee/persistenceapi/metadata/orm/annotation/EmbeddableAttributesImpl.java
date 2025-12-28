@@ -86,7 +86,7 @@ public class EmbeddableAttributesImpl implements EmbeddableAttributes, PropertyH
     }
 
     public Basic[] getBasic() {
-        return basicList.toArray(new Basic[basicList.size()]);
+        return basicList.toArray(new Basic[0]);
     }
 
     public int addBasic(Basic value) {

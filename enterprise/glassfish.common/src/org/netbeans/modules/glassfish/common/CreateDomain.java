@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +33,6 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.glassfish.spi.ExecSupport;
 import org.netbeans.modules.glassfish.spi.GlassfishModule;
 import org.netbeans.modules.glassfish.spi.ServerUtilities;
@@ -157,7 +157,7 @@ public class CreateDomain extends Thread {
                 ExecSupport ee = new ExecSupport();
                 process = Runtime.getRuntime().exec(arrnd, null, irf);
                 pdcan = new PDCancel(process, domainDir + File.separator + domain);
-                ph = ProgressHandleFactory.createHandle(
+                ph = ProgressHandle.createHandle(
                         NbBundle.getMessage(this.getClass(), "LBL_Creating_personal_domain"), // NOI18N
                         pdcan);
                 ph.start();
@@ -272,7 +272,7 @@ public class CreateDomain extends Thread {
         PrintWriter p = null;
         File retVal = null;
         try {
-            retVal = File.createTempFile("admin", null);//NOI18N
+            retVal = Files.createTempFile("admin", null).toFile();//NOI18N
 
             retVal.deleteOnExit();
             output = new FileOutputStream(retVal);

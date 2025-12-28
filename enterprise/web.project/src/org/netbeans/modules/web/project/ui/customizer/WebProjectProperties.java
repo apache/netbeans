@@ -70,7 +70,7 @@ import org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.InstanceRemovedException;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.api.j2ee.core.Profile;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.javaee.project.api.ant.ui.customizer.LicensePanelSupport;
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
 import org.netbeans.modules.java.api.common.SourceRoots;
@@ -364,27 +364,43 @@ public final class WebProjectProperties {
         EditableProperties projectProperties = updateHelper.getProperties( AntProjectHelper.PROJECT_PROPERTIES_PATH );
         EditableProperties privateProperties = updateHelper.getProperties( AntProjectHelper.PRIVATE_PROPERTIES_PATH );
 
-        JAVAC_CLASSPATH_MODEL = ClassPathTableModel.createTableModel( cs.itemsIterator( (String)projectProperties.get( ProjectProperties.JAVAC_CLASSPATH ), ClassPathSupportCallbackImpl.TAG_WEB_MODULE_LIBRARIES) );
+        JAVAC_CLASSPATH_MODEL = ClassPathTableModel.createTableModel( cs.itemsIterator(projectProperties.get( ProjectProperties.JAVAC_CLASSPATH ), ClassPathSupportCallbackImpl.TAG_WEB_MODULE_LIBRARIES) );
         String processorPath = projectProperties.get(ProjectProperties.JAVAC_PROCESSORPATH);
         processorPath = processorPath == null ? "${javac.classpath}" : processorPath;
         JAVAC_PROCESSORPATH_MODEL = ClassPathUiSupport.createListModel(cs.itemsIterator(processorPath));
-        JAVAC_TEST_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator( (String)projectProperties.get( ProjectProperties.JAVAC_TEST_CLASSPATH ), null ) );
-        RUN_TEST_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator( (String)projectProperties.get( ProjectProperties.RUN_TEST_CLASSPATH ), null ) );
-        ENDORSED_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator( (String)projectProperties.get( ProjectProperties.ENDORSED_CLASSPATH ), null ) );
+        JAVAC_TEST_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator(projectProperties.get( ProjectProperties.JAVAC_TEST_CLASSPATH ), null ) );
+        RUN_TEST_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator(projectProperties.get( ProjectProperties.RUN_TEST_CLASSPATH ), null ) );
+        ENDORSED_CLASSPATH_MODEL = ClassPathUiSupport.createListModel( cs.itemsIterator(projectProperties.get( ProjectProperties.ENDORSED_CLASSPATH ), null ) );
         PLATFORM_MODEL = PlatformUiSupport.createPlatformComboBoxModel (evaluator.getProperty(JAVA_PLATFORM));
         PLATFORM_LIST_RENDERER = PlatformUiSupport.createPlatformListCellRenderer();
         SpecificationVersion minimalSourceLevel = null;
         Profile profile = Profile.fromPropertiesString(evaluator.getProperty(J2EE_PLATFORM));
-        if (Profile.JAKARTA_EE_9_1_FULL.equals(profile) || Profile.JAKARTA_EE_10_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("11");
-        } else if (Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_9_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.8");
-        } else if (Profile.JAVA_EE_7_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.7");
-        } else if (Profile.JAVA_EE_6_FULL.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.6");
-        } else if (Profile.JAVA_EE_5.equals(profile)) {
-            minimalSourceLevel = new SpecificationVersion("1.5");
+        if (profile != null) {
+            switch (profile) {
+                case JAKARTA_EE_11_FULL:
+                    minimalSourceLevel = new SpecificationVersion("17");
+                    break;
+                case JAKARTA_EE_10_FULL:
+                case JAKARTA_EE_9_1_FULL:
+                    minimalSourceLevel = new SpecificationVersion("11");
+                    break;
+                case JAKARTA_EE_9_FULL:
+                case JAKARTA_EE_8_FULL:
+                case JAVA_EE_8_FULL:
+                    minimalSourceLevel = new SpecificationVersion("1.8");
+                    break;
+                case JAVA_EE_7_FULL:
+                    minimalSourceLevel = new SpecificationVersion("1.7");
+                    break;
+                case JAVA_EE_6_FULL:
+                    minimalSourceLevel = new SpecificationVersion("1.6");
+                    break;
+                case JAVA_EE_5:
+                    minimalSourceLevel = new SpecificationVersion("1.5");
+                    break;
+                default:
+                    break;
+            }
         }
         JAVAC_SOURCE_MODEL = PlatformUiSupport.createSourceLevelComboBoxModel (PLATFORM_MODEL, evaluator.getProperty(JAVAC_SOURCE), evaluator.getProperty(JAVAC_TARGET), minimalSourceLevel);
         JAVAC_SOURCE_RENDERER = PlatformUiSupport.createSourceLevelListCellRenderer ();
@@ -413,7 +429,7 @@ public final class WebProjectProperties {
         WAR_NAME_MODEL = projectGroup.createStringDocument( evaluator, WAR_NAME );
         BUILD_CLASSES_EXCLUDES_MODEL = projectGroup.createStringDocument( evaluator, BUILD_CLASSES_EXCLUDES );
         WAR_COMPRESS_MODEL = projectGroup.createToggleButtonModel( evaluator, WAR_COMPRESS );
-        WAR_CONTENT_ADDITIONAL_MODEL = WarIncludesTableModel.createTableModel( cs.itemsIterator( (String)projectProperties.get( WAR_CONTENT_ADDITIONAL ), ClassPathSupportCallbackImpl.TAG_WEB_MODULE__ADDITIONAL_LIBRARIES));
+        WAR_CONTENT_ADDITIONAL_MODEL = WarIncludesTableModel.createTableModel( cs.itemsIterator(projectProperties.get( WAR_CONTENT_ADDITIONAL ), ClassPathSupportCallbackImpl.TAG_WEB_MODULE__ADDITIONAL_LIBRARIES));
 
         // CustomizerJavadoc
         JAVADOC_PRIVATE_MODEL = projectGroup.createToggleButtonModel( evaluator, JAVADOC_PRIVATE );
@@ -469,7 +485,7 @@ public final class WebProjectProperties {
         try {
             CONTEXT_PATH_MODEL = new PlainDocument();
             CONTEXT_PATH_MODEL.remove(0, CONTEXT_PATH_MODEL.getLength());
-            ProjectWebModule wm = (ProjectWebModule) project.getLookup().lookup(ProjectWebModule.class);
+            ProjectWebModule wm = project.getLookup().lookup(ProjectWebModule.class);
             String contextPath = wm.getContextPath();
             if (contextPath != null) {
                 CONTEXT_PATH_MODEL.insertString(0, contextPath, null);
@@ -1010,7 +1026,7 @@ public final class WebProjectProperties {
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }
-        v.setRoots(roots.toArray(new File[roots.size()]));
+        v.setRoots(roots.toArray(new File[0]));
         v.setIncludePattern(includes);
         v.setExcludePattern(excludes);
     }
@@ -1046,7 +1062,7 @@ public final class WebProjectProperties {
                 @Override
                 public void run() {
                     // it mostly results into lenghty opperation, show progress dialog
-                    ProgressUtils.showProgressDialogAndRun(new Runnable() {
+                    BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
                         @Override
                         public void run() {
                             // include newly added extenders into webmodule
@@ -1091,7 +1107,7 @@ public final class WebProjectProperties {
                         Exceptions.printStackTrace(ex);
                     } catch (TimeoutException ex) {
                         // End of the 300ms period, continue in processing but display progress dialog
-                        ProgressUtils.showProgressDialogAndRun(new Runnable() {
+                        BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
                             @Override
                             public void run() {
                                 try {

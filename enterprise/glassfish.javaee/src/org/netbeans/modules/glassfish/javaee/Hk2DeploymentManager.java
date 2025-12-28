@@ -135,9 +135,11 @@ public class Hk2DeploymentManager implements DeploymentManager2 {
             (GlassfishModule2)commonSupport : null);
         boolean restart = false;
         try {
-            restart = HttpMonitorHelper.synchronizeMonitor(commonSupport.getInstanceProperties().get(GlassfishModule.DOMAINS_FOLDER_ATTR),
+            restart = HttpMonitorHelper.synchronizeMonitor(
+                    commonSupport.getInstanceProperties().get(GlassfishModule.DOMAINS_FOLDER_ATTR),
                     commonSupport.getInstanceProperties().get(GlassfishModule.DOMAIN_NAME_ATTR),
                     Boolean.parseBoolean(commonSupport.getInstanceProperties().get(GlassfishModule.HTTP_MONITOR_FLAG)),
+                    commonSupport.getInstance().getVersion().getMajor() > 5,
                     "modules/org-netbeans-modules-schema2beans.jar");
         } catch (IOException | SAXException ex) {
             Logger.getLogger("glassfish-javaee").log(
@@ -208,6 +210,7 @@ public class Hk2DeploymentManager implements DeploymentManager2 {
                     commonSupport.getInstanceProperties().get(GlassfishModule.DOMAINS_FOLDER_ATTR),
                     commonSupport.getInstanceProperties().get(GlassfishModule.DOMAIN_NAME_ATTR),
                     Boolean.parseBoolean(commonSupport.getInstanceProperties().get(GlassfishModule.HTTP_MONITOR_FLAG)),
+                    commonSupport.getInstance().getVersion().getMajor() > 5,
                     "modules/org-netbeans-modules-schema2beans.jar");
         } catch (IOException | SAXException ex) {
             Logger.getLogger("glassfish-javaee").log(
@@ -426,7 +429,7 @@ public class Hk2DeploymentManager implements DeploymentManager2 {
                 }
             }
         }
-        return moduleList.size() > 0 ? moduleList.toArray(new TargetModuleID[moduleList.size()]) :
+        return moduleList.size() > 0 ? moduleList.toArray(TargetModuleID[]::new) :
             new TargetModuleID[0];
     }
 

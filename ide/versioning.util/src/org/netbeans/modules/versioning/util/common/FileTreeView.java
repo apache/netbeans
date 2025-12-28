@@ -50,7 +50,6 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -578,7 +577,7 @@ public abstract class FileTreeView<T extends VCSStatusNode> implements FileViewC
                 break;
             }
         }
-        return children.toArray(new Node[children.size()]);
+        return children.toArray(new Node[0]);
     }
 
     private static int findRowIndexInOutline(Node node, Outline outline,
@@ -680,7 +679,7 @@ public abstract class FileTreeView<T extends VCSStatusNode> implements FileViewC
         @Override
         public Icon getIcon (Object o) {
             Node n = Visualizer.findNode(o);
-            return new ImageIcon(n.getIcon(java.beans.BeanInfo.ICON_COLOR_16x16));
+            return ImageUtilities.image2Icon(n.getIcon(java.beans.BeanInfo.ICON_COLOR_16x16));
         }
 
         private boolean isModified (T node) {
@@ -738,7 +737,7 @@ public abstract class FileTreeView<T extends VCSStatusNode> implements FileViewC
                 ((TreeViewChildren) root.getChildren()).buildSubNodes(type);
                 nodes.add(root);
             }
-            return nodes.toArray(new Node[nodes.size()]);
+            return nodes.toArray(new Node[0]);
         }
     }
     
@@ -866,7 +865,7 @@ public abstract class FileTreeView<T extends VCSStatusNode> implements FileViewC
                 }
                 toCreate.add(node);
             }
-            return toCreate.toArray(new Node[toCreate.size()]);
+            return toCreate.toArray(new Node[0]);
         }
 
         private Image getFolderIcon (File file) {

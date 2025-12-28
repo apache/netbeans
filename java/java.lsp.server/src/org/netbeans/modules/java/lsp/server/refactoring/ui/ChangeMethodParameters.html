@@ -26,7 +26,6 @@
     <meta http-equiv="Content-Security-Policy" content="default-src http: 'unsafe-inline' 'unsafe-eval'">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="refactoring.css">
-    <link rel="stylesheet" href="codicon.css">
     <title>Refactor: Change Method Parameters...</title>
 </head>
 
@@ -57,13 +56,16 @@
         <div class="flex row">
             <input type="text" data-bind="textInput: type" class="flex-grow">
             <input type="text" data-bind="textInput: name" class="flex-grow">
-            <button class="action-button codicon codicon-arrow-up" data-bind="click: $root.moveUpParameter"></button>
-            <button class="action-button codicon codicon-arrow-down" data-bind="click: $root.moveDownParameter"></button>
-            <button class="action-button codicon codicon-trash" data-bind="click: $root.removeParameter"></button>
+            <button class="action-button" title="Move up" data-bind="click: $root.moveUpParameter">&#9650;</button>
+            <button class="action-button" title="Move down" data-bind="click: $root.moveDownParameter">&#9660;</button>
+            <button class="action-button" title="Remove parameter" data-bind="click: $root.removeParameter">&#10006;</button>
         </div>
     </div>
+
     <div class="add-param flex">
-        <button id="addParam" class="silent-button codicon codicon-add full-width flex-grow" data-bind="click: addParameter"><span class="button-text vscode-font">Add Parameter</span></button>
+        <button id="addParam" class="silent-button flex-grow" data-bind="click: addParameter">
+            &#10010; <span class="button-text vscode-font">Add Parameter</span>
+        </button>
     </div>
     <div class="section">
         <label>Signature preview:</label>

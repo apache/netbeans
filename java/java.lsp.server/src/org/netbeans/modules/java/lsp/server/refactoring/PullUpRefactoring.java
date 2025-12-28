@@ -40,7 +40,6 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
-import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -244,9 +243,9 @@ public final class PullUpRefactoring extends CodeRefactoring {
             }, true);
             org.netbeans.modules.refactoring.java.api.PullUpRefactoring refactoring = new org.netbeans.modules.refactoring.java.api.PullUpRefactoring(TreePathHandle.from(sourceHandle, info));
             refactoring.setTargetType(targetHandle);
-            refactoring.setMembers(memberHandles.toArray(new MemberInfo[memberHandles.size()]));
+            refactoring.setMembers(memberHandles.toArray(new MemberInfo[0]));
             refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
-            client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "PullUp")));
+            sendRefactoringChanges(client, refactoring, "PullUp");
         } catch (Exception ex) {
             client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }

@@ -320,7 +320,7 @@ public class ModelIndexTest extends ModelTestBase {
                 if (name.equals(iName)) {
                     List<String> names = methods.get(iName);
 
-                    assertExactDeclaredMethods(typeScope, names.toArray(new String[names.size()]));
+                    assertExactDeclaredMethods(typeScope, names.toArray(new String[0]));
                 }
             }
         }
@@ -333,7 +333,7 @@ public class ModelIndexTest extends ModelTestBase {
                 String iName = typeNames[i];
                 if (name.equals(iName)) {
                     List<String> names = methods.get(iName);
-                    assertExactInheritedMethods(typeScope, names.toArray(new String[names.size()]));
+                    assertExactInheritedMethods(typeScope, names.toArray(new String[0]));
                 }
             }
         }
@@ -346,17 +346,17 @@ public class ModelIndexTest extends ModelTestBase {
                 String iName = typeNames[i];
                 if (name.equals(iName)) {
                     List<String> names = methods.get(iName);
-                    assertExactMethods(typeScope, names.toArray(new String[names.size()]));
+                    assertExactMethods(typeScope, names.toArray(new String[0]));
                 }
             }
         }
 
         private String[] getClsNames() {
-            return clsNames.toArray(new String[clsNames.size()]);
+            return clsNames.toArray(new String[0]);
         }
 
         private String[] getIfaceNames() {
-            return ifaceNames.toArray(new String[ifaceNames.size()]);
+            return ifaceNames.toArray(new String[0]);
         }
     }
 }

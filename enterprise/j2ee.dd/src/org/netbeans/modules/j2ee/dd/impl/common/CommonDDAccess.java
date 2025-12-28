@@ -90,7 +90,7 @@ public class CommonDDAccess {
 				pkgName
                                 + DOT
 				+ beanName);
-	    return (BaseBean) beanClass.newInstance();
+	    return (BaseBean) beanClass.getDeclaredConstructor().newInstance();
 
 	} catch (Exception e) {
             if (e instanceof ClassNotFoundException) 

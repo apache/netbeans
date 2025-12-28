@@ -45,13 +45,13 @@ public class TFVarsParserResult extends HCLParserResult {
         "DUPLICATE_VARIABLE=Variable {0} is already defined."
     })
     protected void processDocument(HCLDocument doc, SourceRef references) {
-        for (HCLBlock block : doc.getBlocks()) {
+        for (HCLBlock block : doc.blocks()) {
             addError(block, Bundle.INVALID_BLOCK());
         }
         Set<String> usedAttributes = new HashSet<>();
-        for (HCLAttribute attr : doc.getAttributes()) {
+        for (HCLAttribute attr : doc.attributes()) {
             if (!usedAttributes.add(attr.id())) {
-                addError(attr.getName(), Bundle.DUPLICATE_VARIABLE(attr.id()));
+                addError(attr.name(), Bundle.DUPLICATE_VARIABLE(attr.id()));
             }
         }
     }

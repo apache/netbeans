@@ -22,7 +22,6 @@ package org.netbeans.modules.maven.newproject;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -99,7 +98,7 @@ public class ChooseArchetypePanel extends JPanel {
                     for (ArchetypeProvider provider : Lookup.getDefault().lookupAll(ArchetypeProvider.class)) {
                         final List<Archetype> added = provider.getArchetypes();
                         LOG.log(Level.FINE, "{0} -> {1}", new Object[] {provider, added});
-                        Collections.sort(added, new Comparator<Archetype>() {
+                        added.sort(new Comparator<Archetype>() {
                             @Override
                             public int compare(Archetype o1, Archetype o2) {
                                 int c = o1.getArtifactId().compareTo(o2.getArtifactId());                
@@ -153,7 +152,7 @@ public class ChooseArchetypePanel extends JPanel {
             }
             filtered.add(a);
         }
-        Collections.sort(filtered, new Comparator<Archetype>() {
+        filtered.sort(new Comparator<Archetype>() {
         
             @Override
             public int compare(Archetype o1, Archetype o2) {

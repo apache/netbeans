@@ -266,7 +266,7 @@ public class GradleJarArtifacts implements ProjectArtifactsImplementation<Gradle
                 if (specs.equals(oldCopy)) {
                     return;
                 } else {
-                    ll = listeners.toArray(new ChangeListener[listeners.size()]);
+                    ll = listeners.toArray(new ChangeListener[0]);
                 }
             }
             ChangeEvent e = new ChangeEvent(this);
@@ -423,7 +423,7 @@ public class GradleJarArtifacts implements ProjectArtifactsImplementation<Gradle
                 wasInitialized = artifacts != null;
                 List<ArtifactSpec> copy = this.artifacts;
                 artifacts = PENDING;
-                if (listeners == null && listeners.isEmpty()) {
+                if (listeners == null || listeners.isEmpty()) {
                     return;
                 }
                 if (refreshTask != null) {
@@ -433,7 +433,7 @@ public class GradleJarArtifacts implements ProjectArtifactsImplementation<Gradle
                     refreshTask = GRADLE_ARTIFACTS_RP.post(() -> update(copy));
                     return;
                 }
-                ll = listeners.toArray(new ChangeListener[listeners.size()]);
+                ll = listeners.toArray(new ChangeListener[0]);
             }
             ChangeEvent e = new ChangeEvent(this);
             for (ChangeListener l : ll) {

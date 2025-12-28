@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.55.0
+#Version 1.63.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -56,6 +56,7 @@ fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFI
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_5_1
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_6
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_7
+fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion GLASSFISH_8
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion SUN_APPSERVER_10_0
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion SUN_APPSERVER_10_1
 fld public final static org.netbeans.modules.j2ee.sun.dd.api.ASDDVersion SUN_APPSERVER_7_0

@@ -22,7 +22,6 @@ import org.netbeans.modules.team.commons.ColorManager;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.MissingResourceException;
@@ -268,8 +267,8 @@ public abstract class AsynchronousNode<T> extends TreeListNode {
             lblLoading.setForeground(ColorManager.getDefault().getDisabledColor());
             lblError = new TreeLabel(NbBundle.getMessage(AsynchronousNode.class, "LBL_NotResponding")); //NOI18N
             lblError.setForeground(ColorManager.getDefault().getErrorColor());
-            Image img = ImageUtilities.loadImage("org/netbeans/modules/team/commons/resources/error.png"); //NOI18N
-            lblError.setIcon(new ImageIcon(img));
+            Icon icon = ImageUtilities.loadIcon("org/netbeans/modules/team/commons/resources/error.png"); //NOI18N
+            lblError.setIcon(icon);
             lblFill = new JLabel();
             btnRetry = new LinkButton(NbBundle.getMessage(AsynchronousNode.class, "LBL_Retry"), new AbstractAction() { //NOI18N
                 @Override

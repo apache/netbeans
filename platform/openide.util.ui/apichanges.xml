@@ -27,6 +27,20 @@
     <apidef name="actions">Actions API</apidef>
 </apidefs>
 <changes>
+    <change id="moreImageUtilsForHiDPI">
+      <api name="util"/>
+      <summary>Added methods to ImageUtilities, to aid migration from other icon loading methods.</summary>
+      <version major="9" minor="36"/>
+      <date day="5" month="1" year="2025"/>
+      <author login="ebakke"/>
+      <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="yes"/>
+      <description>
+            <p>Added new utility methods to ImageUtilities to ease migration from other image loading methods used throughout the NetBeans codebase.
+            Loading icons via ImageUtilities is preferred as it permits alternative SVG versions to be loaded automatically when available.</p>
+       </description>
+       <class package="org.openide.util" name="ImageUtilities"/>
+    </change>
+
     <change id="mouseKeyCodes">
       <api name="util"/>
       <summary>Added methods to query mouse event pseudo-keycodes</summary>
@@ -67,9 +81,9 @@
          <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
          <description>
              <p>
-                 Added a variant <a href="@TOP@/org/openide/util/Utilities.html#actionsForPath-java.lang.String-org.openide.util.Lookup-">actionsToPath</a> that instantiates context-bound actions if the registered action(s) implements 
+                 Added a variant <a href="@TOP@/org/openide/util/Utilities.html#actionsForPath(java.lang.String,org.openide.util.Lookup)">actionsToPath</a> that instantiates context-bound actions if the registered action(s) implements 
                  <a href="@TOP@/org/openide/util/ContextAwareAction.html">ContextAwareAction</a>.
-                 Improves consistency with <a href="@TOP@/org/openide/util/Utilities.html#actionsToPopup-javax.swing.Action:A-org.openide.util.Lookup-">actionsToPopup</a> that supports contextual actions. 
+                 Improves consistency with <a href="@TOP@/org/openide/util/Utilities.html#actionsToPopup(javax.swing.Action%5B%5D,org.openide.util.Lookup)">actionsToPopup</a> that supports contextual actions. 
              </p>
          </description>
          <class package="org.openide.util" name="Utilities"/>
@@ -100,7 +114,7 @@
       <description>
           The property <code>url</code> is documented in Javadoc <b>since 8.12</b> but the key string was not
           added to the API. <a href="@TOP@/org/openide/util/ImageUtilities.html#PROPERTY_URL">It is now</a>, along with a 
-          <a href="@TOP@/org/openide/util/ImageUtilities.html#findImageBaseURL-java.awt.Image-">convenience method</a>, which should be used in preference.
+          <a href="@TOP@/org/openide/util/ImageUtilities.html#findImageBaseURL(java.awt.Image)">convenience method</a>, which should be used in preference.
       </description>
       <class package="org.openide.util" name="ImageUtilities"/>
     </change>
@@ -208,7 +222,7 @@
         <description>
             <p>
                 The following classes were spinned of into 
-                <a href="@org-openide-util@/overview-summary.html">org.openide.util.base module</a>:
+                <a href="@org-openide-util@/index.html">org.openide.util.base module</a>:
             </p>
             <ul>
                 <li><a href="@org-openide-util@/org/openide/util/Cancellable.html">Cancellable</a></li>
@@ -467,9 +481,9 @@
         <compatibility addition="yes"/>
         <description>
             <p>
-                Some plugins needs a way to suppress <a href="@JDK@/java/net/Authenticator.html"><code>java.net.Authenticator</code></a> without asking
+                Some plugins needs a way to suppress <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/net/Authenticator.html"><code>java.net.Authenticator</code></a> without asking
                 user a question about the credentials. 
-                Invoke <a href="@TOP@/org/openide/util/NetworkSettings.html#suppressAuthenticationDialog-java.util.concurrent.Callable-">
+                Invoke <a href="@TOP@/org/openide/util/NetworkSettings.html#suppressAuthenticationDialog(java.util.concurrent.Callable)">
                 suppressAuthenticationDialog</a> with a block of code where authentication dialog will be suppressed.                
                 See <a href="https://netbeans.apache.org/wiki/Authenticator">https://netbeans.apache.org/wiki/Authenticator</a>
             </p>
@@ -501,7 +515,7 @@
         <compatibility addition="yes"/>
         <description>
             <p>
-            Images loaded by <a href="@TOP@/org/openide/util/ImageUtilities.html#loadImage-java.lang.String-boolean-">
+            Images loaded by <a href="@TOP@/org/openide/util/ImageUtilities.html#loadImage(java.lang.String,boolean)">
             ImageUtilities.loadImage</a> now
             respond to <code>getProperty("url", null)</code> calls.
             </p>
@@ -834,7 +848,7 @@
             <p>
                 In order to align <code>RequestProcessor</code> closer to standard 
                 Java 5 concurrency utilities, the class now implements
-                <a href="@JDK@/java/util/concurrent/Executor.html">Executor</a>
+                <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/concurrent/Executor.html">Executor</a>
                 interfaces and its <code>execute(Runnable)</code> method.
             </p>
         </description> 
@@ -1044,7 +1058,7 @@
         <description>
             <p>
                 <code>ErrorManager</code> is now deprecated and its replacement
-                is either <a href="@JDK@/java/util/logging/Logger.html">Logger</a> 
+                is either <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">Logger</a> 
                 or <code>Exceptions</code>.
             </p>
         </description>
@@ -1080,16 +1094,16 @@
           <a href="@TOP@/org/openide/ErrorManager.html">ErrorManager</a>
           is no longer the recommended way to do logging in NetBeans based
           application. Instead NetBeans now fully support logging two JDK's
-          standard <a href="@JDK@/java/util/logging/Logger.html">Logger</a>.
+          standard <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">Logger</a>.
           See the
-          <a href="@org-openide-util@//org/openide/util/doc-files/logging.html">NetBeans logging guide</a>
+          <a href="@org-openide-util@/org/openide/util/doc-files/logging.html">NetBeans logging guide</a>
           to learn the best practises for logging in NetBeans.
           <br/>
           <a href="@TOP@/org/openide/ErrorManager.html">ErrorManager</a>
           is still kept around for annotating exceptions with localized
           messages and advanced manipulation and its behaviour is fully
           backward compatible. However modules are adviced to migrate to
-          <a href="@JDK@/java/util/logging/Logger.html">logging</a> whereever
+          <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">logging</a> whereever
           possible.
           <br/>
           To migrate your modules you can install Jackpot modules from
@@ -1100,19 +1114,19 @@
           The way to <em>enable logging</em> for certain components when
           running inside the whole NetBeans container has changed:
           If there is 
-          <a href="@JDK@/java/util/logging/Logger.html">Logger</a> or
+          <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">Logger</a> or
           <a href="@TOP@/org/openide/ErrorManager.html">ErrorManager</a>
           named <q>org.mymodule.MyComponent</q> then the correct way
           to turn the logging is now to invoke NetBeans with
           <code>-J-Dorg.mymodule.MyComponent<b>.level</b>=100</code>
           (where the possible constants are taken form
-          a JDK's definition of <a href="@JDK@/java/util/logging/Level.html">level</a>).
+          a JDK's definition of <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Level.html">level</a>).
           There is however a certain benefit in this change, the value
           of the property (like <q>org.mymodule.MyComponent.level</q>)
           can be changed during runtime and thus the logging can be
           enabled or disabled dynamically (after changing the value, it is
           necessary to call
-          <a href="@JDK@/java/util/logging/LogManager.html">LogManager.readConfiguration()</a>).
+          <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/LogManager.html">LogManager.readConfiguration()</a>).
       </description>
       <class package="org.openide" name="ErrorManager"/>
       <issue number="56311"/>
@@ -1166,7 +1180,7 @@
       <description>
           When one calls <a href="@org-openide-util@/org/openide/util/RequestProcessor.Task.html">RequestProcessor.Task</a>.cancel(), 
           the running thread gets interrupted if the 
-          <a href="@org-openide-util@/org/openide/util/RequestProcessor.html#RequestProcessor-java.lang.String-int-boolean-">
+          <a href="@org-openide-util@/org/openide/util/RequestProcessor.html#%3Cinit%3E(java.lang.String,int,boolean)">
           RequestProcessor(string, int, boolean) 
           </a> 
           constructor is used.
@@ -2016,7 +2030,6 @@ public void run () {
 <htmlcontents>
 <head>
 <title>Change History for the Utilities API</title>
-<link rel="stylesheet" href="prose.css" type="text/css"/>
 </head>
 <body>
 <p class="overviewlink">

@@ -124,7 +124,7 @@ public final class RunUtils {
         if (files.isEmpty()) {
             files.addAll(lookup.lookupAll(FileObject.class));
         }
-        return files.toArray(new FileObject[files.size()]);
+        return files.toArray(new FileObject[0]);
     }
     
     /**
@@ -430,6 +430,14 @@ public final class RunUtils {
      */
     private static final String BRANDING_API_PREFIX = "org.netbeans.modules.gradle.api.execute.TrustProjectOption."; // NOI18N
 
+    /**
+     * Asks the user to trust the project, returns tri-state answer.
+     * <ul>
+     * <li>Boolean.TRUE to permanently trust the project.
+     * <li>Boolean.FALSE to not run the project
+     * <li>{@code null} to trust the project, but not mark it as trusted.
+     * </ul>
+     */
     @Messages({
         "ProjectTrustDlg.TITLE=Not a Trusted Project",
         "# {0} = Project name",
@@ -444,14 +452,6 @@ public final class RunUtils {
         "TrustProjectPanel.PermanentTrust=Trust &Permanently",
         "TrustProjectPanel.RunAlways=Trust &All Projects",
     })
-    /**
-     * Asks the user to trust the project, returns tri-state answer.
-     * <ul>
-     * <li>Boolean.TRUE to permanently trust the project.
-     * <li>Boolean.FALSE to not run the project
-     * <li>{@code null} to trust the project, but not mark it as trusted.
-     * </ul>
-     */
     private static Boolean askToTrustProject(Project project) {
         ProjectInformation info = project != null ? project.getLookup().lookup(ProjectInformation.class) : null;
         String msg;
@@ -533,9 +533,9 @@ public final class RunUtils {
             );
         }
         List<Object> ordered = new ArrayList<>(options.keySet());
-        Collections.sort(ordered, (a, b) -> options.get(a) - options.get(b));
+        ordered.sort((a, b) -> options.get(a) - options.get(b));
         ordered.add(DialogDescriptor.CANCEL_OPTION);
-        return Pair.of(ordered.toArray(new Object[ordered.size()]), def);
+        return Pair.of(ordered.toArray(new Object[0]), def);
     };
     
     private static final List<String> TRUST_DIALOG_OPTION_IDS = Arrays.asList(

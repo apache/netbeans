@@ -28,10 +28,7 @@ import java.util.Map;
  */
 public enum JavaSEPlatform {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** JavaSE 1.1. */
     v1_1,
     /** JavaSE 1.2. */
@@ -73,12 +70,15 @@ public enum JavaSEPlatform {
     /** JavaSE 22. */
     v22,
     /** JavaSE 23. */
-    v23;
+    v23,
+    /** JavaSE 24. */
+    v24,
+    /** JavaSE 25. */
+    v25,
+    /** JavaSE 26. */
+    v26;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish JavaEE platform enumeration length. */
     public static final int length = JavaSEPlatform.values().length;
 
@@ -99,10 +99,7 @@ public enum JavaSEPlatform {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns a <code>JavaSEPlatform</code> with a value represented by the
      * specified <code>String</code>. The <code>JavaSEPlatform</code> returned
@@ -124,10 +121,7 @@ public enum JavaSEPlatform {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert JavaEE platform version value to <code>String</code>.
      * <p/>

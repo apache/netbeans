@@ -317,7 +317,6 @@ public final class DocumentViewOp
     boolean asTextField;
     
     private boolean guideLinesEnable;
-    private boolean inlineHintsEnable;
     
     private int indentLevelSize;
     
@@ -924,13 +923,10 @@ public final class DocumentViewOp
         // Line height correction
         float lineHeightCorrectionOrig = rowHeightCorrection;
         rowHeightCorrection = prefs.getFloat(SimpleValueNames.LINE_HEIGHT_CORRECTION, 1.0f);
-        boolean inlineHintsEnableOrig = inlineHintsEnable;
-        inlineHintsEnable = prefs.getBoolean("enable.inline.hints", false); // NOI18N
         boolean updateMetrics = (rowHeightCorrection != lineHeightCorrectionOrig);
         boolean releaseChildren = nonInitialUpdate && 
                 ((nonPrintableCharactersVisible != nonPrintableCharactersVisibleOrig) ||
-                 (rowHeightCorrection != lineHeightCorrectionOrig) ||
-                 (inlineHintsEnable != inlineHintsEnableOrig));
+                 (rowHeightCorrection != lineHeightCorrectionOrig));
         indentLevelSize = getIndentSize();
         tabSize = prefs.getInt(SimpleValueNames.TAB_SIZE, EditorPreferencesDefaults.defaultTabSize);
         if (updateMetrics) {
@@ -1170,10 +1166,6 @@ public final class DocumentViewOp
     
     public boolean isGuideLinesEnable() {
         return guideLinesEnable && !asTextField;
-    }
-
-    public boolean isInlineHintsEnable() {
-        return inlineHintsEnable;
     }
 
     public int getIndentLevelSize() {
@@ -1510,6 +1502,11 @@ public final class DocumentViewOp
         }
        
         JTextComponent textComponent = docView.getTextComponent();
+        if (textComponent == null) {
+            /* May occur in some cases where the editor was closed while scroll events are still
+            coming in from trackpad "momentum" on MacOS. */
+            return;
+        }
         Keymap keymap = textComponent.getKeymap();
         double wheelRotation = evt.getPreciseWheelRotation();
         if (wheelRotation < 0) {

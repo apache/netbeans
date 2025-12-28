@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.47
+#Version 1.55
 
 CLSS public abstract interface java.io.Serializable
 
@@ -169,6 +169,7 @@ meth public boolean isJpa22Supported()
 meth public boolean isJpa2Supported()
 meth public boolean isJpa30Supported()
 meth public boolean isJpa31Supported()
+meth public boolean isJpa32Supported()
 meth public java.lang.String getClassName()
 supr java.lang.Object
 hfds impl
@@ -221,7 +222,7 @@ meth public abstract java.lang.String activationConfigProperty()
 CLSS public final org.netbeans.modules.javaee.specs.support.spi.JpaProviderFactory
 cons public init()
 innr public abstract static Accessor
-meth public static org.netbeans.modules.javaee.specs.support.api.JpaProvider createJpaProvider(java.lang.String,boolean,boolean,boolean,boolean,boolean,boolean,boolean)
+meth public static org.netbeans.modules.javaee.specs.support.api.JpaProvider createJpaProvider(java.lang.String,boolean,boolean,boolean,boolean,boolean,boolean,boolean,boolean)
 meth public static org.netbeans.modules.javaee.specs.support.api.JpaProvider createJpaProvider(org.netbeans.modules.javaee.specs.support.spi.JpaProviderImplementation)
 supr java.lang.Object
 
@@ -242,6 +243,7 @@ meth public abstract boolean isJpa22Supported()
 meth public abstract boolean isJpa2Supported()
 meth public abstract boolean isJpa30Supported()
 meth public abstract boolean isJpa31Supported()
+meth public abstract boolean isJpa32Supported()
 meth public abstract java.lang.String getClassName()
 
 CLSS public abstract interface org.netbeans.modules.javaee.specs.support.spi.JpaSupportImplementation

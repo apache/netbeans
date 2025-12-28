@@ -402,7 +402,7 @@ public class IndexBuilder implements Runnable, ChangeListener {
                     case (char) -1:  // EOF
                         return;
                     case '>': // </title>
-                        if ("</title".equals(new String(buf, offset - 7, 7).toLowerCase())) {
+                        if ("</title".equalsIgnoreCase(new String(buf, offset - 7, 7))) {
                             // title is ready
                             // XXX maybe we should also resolve entities like &gt;
                             state = State.EXIT;

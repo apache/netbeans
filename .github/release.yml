@@ -100,11 +100,7 @@ changelog:
       labels:
         - 'LSP'
 
-    - title: 'VSCode Extension'
-      labels:
-        - 'VSCode Extension'
-
-    - title: 'Maintanance'
+    - title: 'Maintenance'
       labels:
         - 'Code cleanup'
         - 'Upgrade Library'

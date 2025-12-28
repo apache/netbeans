@@ -496,8 +496,7 @@ public final class PhpProjectProperties implements ConfigManager.ConfigProvider 
                     assert false : String.valueOf(properties);
                 }
             }
-            testDirectoriesListModel = PathUiSupport.createListModel(testDirectoriesPathSupport.itemsIterator(
-                    values.toArray(new String[values.size()])));
+            testDirectoriesListModel = PathUiSupport.createListModel(testDirectoriesPathSupport.itemsIterator(values.toArray(new String[0])));
         }
         return testDirectoriesListModel;
     }
@@ -524,8 +523,7 @@ public final class PhpProjectProperties implements ConfigManager.ConfigProvider 
                     assert false : String.valueOf(properties);
                 }
             }
-            seleniumTestDirectoriesListModel = PathUiSupport.createListModel(seleniumTestDirectoriesPathSupport.itemsIterator(
-                    values.toArray(new String[values.size()])));
+            seleniumTestDirectoriesListModel = PathUiSupport.createListModel(seleniumTestDirectoriesPathSupport.itemsIterator(values.toArray(new String[0])));
         }
         return seleniumTestDirectoriesListModel;
     }

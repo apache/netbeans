@@ -24,12 +24,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
@@ -174,14 +172,14 @@ final class FoldOptionsPanel extends javax.swing.JPanel implements ActionListene
                 foldedSummary.setEnabled(enabled);
                 useDefaults.setEnabled(enabled);
             } 
-            if (k == null || FoldUtilitiesImpl.PREF_CONTENT_PREVIEW.equals(FoldUtilitiesImpl.PREF_CONTENT_PREVIEW)) {
+            if (k == null || k.equals(FoldUtilitiesImpl.PREF_CONTENT_PREVIEW)) {
                 contentPreview.setSelected(currentPreferences.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_PREVIEW, true));
             }
-            if (k == null || FoldUtilitiesImpl.PREF_CONTENT_SUMMARY.equals(FoldUtilitiesImpl.PREF_CONTENT_SUMMARY)) {
+            if (k == null || k.equals(FoldUtilitiesImpl.PREF_CONTENT_SUMMARY)) {
                 foldedSummary.setSelected(currentPreferences.getBoolean(FoldUtilitiesImpl.PREF_CONTENT_SUMMARY, true));
             } 
             // must not replicate defaults over current settings if unspecified key arrives.
-            if (k != null && FoldUtilitiesImpl.PREF_OVERRIDE_DEFAULTS.equals(k)) {
+            if (FoldUtilitiesImpl.PREF_OVERRIDE_DEFAULTS.equals(k)) {
                 boolean b = parentPrefs == null || !currentPreferences.getBoolean(FoldUtilitiesImpl.PREF_OVERRIDE_DEFAULTS, true);
                 if (parentPrefs != null) {
                     if (b) {
@@ -244,10 +242,10 @@ final class FoldOptionsPanel extends javax.swing.JPanel implements ActionListene
                 s, EditorSettings.getDefault().getLanguageName(s)
             });
         }
-        Collections.sort(langMimes, LANG_COMPARATOR);
+        langMimes.sort(LANG_COMPARATOR);
         languageMimeTypes = langMimes;
         int idx = langSelect.getSelectedIndex();
-        langSelect.setModel(new DefaultComboBoxModel(languageMimeTypes.toArray(new Object[languageMimeTypes.size()])));
+        langSelect.setModel(new DefaultComboBoxModel(languageMimeTypes.toArray(new Object[0])));
         langSelect.setSelectedIndex(idx >= 0 && idx < langSelect.getItemCount() ? idx : 0);
     }
     

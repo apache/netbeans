@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.29
+#Version 2.37
 
 CLSS public abstract interface !annotation com.sun.javafx.beans.IDProperty
  anno 0 java.lang.annotation.Documented()

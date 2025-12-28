@@ -48,7 +48,6 @@ import org.netbeans.modules.web.jsf.editor.actions.ImportData.VariantItem;
 import org.netbeans.modules.web.jsf.editor.facelets.JsfNamespaceComparator;
 import org.netbeans.modules.web.jsf.editor.hints.LibraryDeclarationChecker;
 import org.netbeans.modules.web.jsfapi.api.JsfSupport;
-import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
 
@@ -126,7 +125,7 @@ class NamespaceProcessor {
 
         // Add all other variants
         List<String> sortedList = new ArrayList<>(supportedLibraries.keySet());
-        Collections.sort(sortedList, JsfNamespaceComparator.getInstance());
+        sortedList.sort(JsfNamespaceComparator.getInstance());
 
         sortedList.stream()
                 .filter(not(namespacesForPrefix::contains))

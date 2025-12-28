@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.web.el;
 
-import java.net.URL;
 import java.util.Collections;
 import java.util.StringTokenizer;
 import javax.swing.Icon;
@@ -68,11 +67,11 @@ import org.netbeans.modules.csl.api.CodeCompletionResult;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
-import static org.netbeans.modules.csl.api.test.CslTestBase.getCaretOffset;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.j2ee.dd.api.web.WebAppMetadata;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
+import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.jsf.api.facesmodel.ManagedBean.Scope;
@@ -89,6 +88,8 @@ import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
+
+import static org.netbeans.modules.csl.api.test.CslTestBase.getCaretOffset;
 
 /**
  * @author Marek Fukala
@@ -328,7 +329,7 @@ public class ELTestBase extends CslTestBase {
         sb.append("\n");
 
         // Sort to make test more stable
-        Collections.sort(proposals, new Comparator<CompletionProposal>() {
+        proposals.sort(new Comparator<CompletionProposal>() {
 
             public int compare(CompletionProposal p1, CompletionProposal p2) {
                 // Smart items first
@@ -536,29 +537,10 @@ public class ELTestBase extends CslTestBase {
     }
 
     /**
-     * Creates boot {@link ClassPath} for platform the test is running on,
-     * it uses the sun.boot.class.path property to find out the boot path roots.
-     * @return ClassPath
-     * @throws java.io.IOException when boot path property contains non valid path
+     * Creates boot {@link ClassPath} for platform the test is running on.
      */
-    public static ClassPath createBootClassPath() throws IOException {
-        String bootPath = System.getProperty("sun.boot.class.path");
-        String[] paths = bootPath.split(File.pathSeparator);
-        List<URL> roots = new ArrayList<URL>(paths.length);
-        for (String path : paths) {
-            File f = new File(path);
-            if (!f.exists()) {
-                continue;
-            }
-            URL url = f.toURI().toURL();
-            if (FileUtil.isArchiveFile(url)) {
-                url = FileUtil.getArchiveRoot(url);
-            }
-            roots.add(url);
-//            System.out.println(url);
-        }
-//        System.out.println("-----------");
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[roots.size()]));
+    public static ClassPath createBootClassPath() {
+        return TestUtil.getBootClassPath();
     }
 
     public final ClassPath createServletAPIClassPath() throws MalformedURLException, IOException {
@@ -574,7 +556,7 @@ public class ELTestBase extends CslTestBase {
             FileObject fo = FileUtil.toFileObject(f);
             fos.add(FileUtil.getArchiveRoot(fo));
         }
-        return ClassPathSupport.createClassPath(fos.toArray(new FileObject[fos.size()]));
+        return ClassPathSupport.createClassPath(fos.toArray(new FileObject[0]));
     }
 
     protected static class FakeWebModuleProvider implements WebModuleProvider {

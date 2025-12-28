@@ -126,6 +126,7 @@ public class SpringWebModuleExtender extends WebModuleExtender implements Change
         return includeJstl;
     }
 
+    @Override
     public synchronized SpringConfigPanelVisual getComponent() {
         if (component == null) {
             component = new SpringConfigPanelVisual(this);
@@ -134,6 +135,7 @@ public class SpringWebModuleExtender extends WebModuleExtender implements Change
         return component;
     }
 
+    @Override
     public boolean isValid() {
         if (dispatcherName == null || dispatcherName.trim().length() == 0){
             controller.setErrorMessage(NbBundle.getMessage(SpringConfigPanelVisual.class, "MSG_DispatcherNameIsEmpty")); // NOI18N
@@ -166,18 +168,22 @@ public class SpringWebModuleExtender extends WebModuleExtender implements Change
         return true;
     }
 
+    @Override
     public HelpCtx getHelp() {
         return new HelpCtx(SpringWebModuleExtender.class);
     }
 
+    @Override
     public final void addChangeListener(ChangeListener l) {
         changeSupport.addChangeListener(l);
     }
 
+    @Override
     public final void removeChangeListener(ChangeListener l) {
         changeSupport.removeChangeListener(l);
     }
 
+    @Override
     public void stateChanged(ChangeEvent e) {
         dispatcherName = getComponent().getDispatcherName();
         dispatcherMapping = getComponent().getDispatcherMapping();
@@ -238,7 +244,7 @@ public class SpringWebModuleExtender extends WebModuleExtender implements Change
         public static final String DISPATCHER_SERVLET = "org.springframework.web.servlet.DispatcherServlet"; // NOI18N
         public static final String ENCODING = "UTF-8"; // NOI18N
         
-        private final Set<FileObject> filesToOpen = new LinkedHashSet<FileObject>();
+        private final Set<FileObject> filesToOpen = new LinkedHashSet<>();
         private final WebModule webModule;
 
         public CreateSpringConfig(WebModule webModule) {
@@ -248,6 +254,7 @@ public class SpringWebModuleExtender extends WebModuleExtender implements Change
         @NbBundle.Messages({
             "CreateSpringConfig.msg.invalid.dd=Deployment descriptor cointains errors, Spring framework has to be manually configured there!"
         })
+        @Override
         public void run() throws IOException {
             // MODIFY WEB.XML
             FileObject dd = webModule.getDeploymentDescriptor();
@@ -282,7 +289,7 @@ public class SpringWebModuleExtender extends WebModuleExtender implements Change
             }
             
             // ADD JSTL LIBRARY IF ENABLED AND SPRING LIBRARY
-            List<Library> libraries = new ArrayList<Library>(3);
+            List<Library> libraries = new ArrayList<>(3);
             Library springLibrary = component.getSpringLibrary();
             String version = component.getSpringLibraryVersion();
             Library webMVCLibrary = null;
@@ -375,18 +382,16 @@ public class SpringWebModuleExtender extends WebModuleExtender implements Change
             if (scope != null) {
                 final ConfigFileManager manager = scope.getConfigFileManager();
                 try {
-                    manager.mutex().writeAccess(new ExceptionAction<Void>() {
-                        public Void run() throws IOException {
-                            List<File> files = manager.getConfigFiles();
-                            files.addAll(newConfigFiles);
-                            List<ConfigFileGroup> groups = manager.getConfigFileGroups();
-                            String groupName = NbBundle.getMessage(SpringWebModuleExtender.class, "LBL_DefaultGroup");
-                            ConfigFileGroup newGroup = ConfigFileGroup.create(groupName, newConfigFiles);
-                            groups.add(newGroup);
-                            manager.putConfigFilesAndGroups(files, groups);
-                            manager.save();
-                            return null;
-                        }
+                    manager.mutex().writeAccess((ExceptionAction<Void>) () -> {
+                        List<File> files = manager.getConfigFiles();
+                        files.addAll(newConfigFiles);
+                        List<ConfigFileGroup> groups = manager.getConfigFileGroups();
+                        String groupName = NbBundle.getMessage(SpringWebModuleExtender.class, "LBL_DefaultGroup");
+                        ConfigFileGroup newGroup = ConfigFileGroup.create(groupName, newConfigFiles);
+                        groups.add(newGroup);
+                        manager.putConfigFilesAndGroups(files, groups);
+                        manager.save();
+                        return null;
                     });
                 } catch (MutexException e) {
                     throw (IOException)e.getException();
@@ -428,7 +433,7 @@ public class SpringWebModuleExtender extends WebModuleExtender implements Change
                 if (groups.length == 0) {
                     return false;
                 }
-                addLibraryResult = ProjectClassPathModifier.addLibraries(libraries.toArray(new Library[libraries.size()]), groups[0].getRootFolder(), ClassPath.COMPILE);
+                addLibraryResult = ProjectClassPathModifier.addLibraries(libraries.toArray(new Library[0]), groups[0].getRootFolder(), ClassPath.COMPILE);
             } catch (IOException e) {
                 LOGGER.log(Level.WARNING, "Libraries required for the Spring MVC project not added", e); // NOI18N
             } catch (UnsupportedOperationException uoe) {

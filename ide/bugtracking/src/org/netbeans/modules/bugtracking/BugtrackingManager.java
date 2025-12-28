@@ -92,7 +92,7 @@ public final class BugtrackingManager implements LookupListener {
             if(connectorsLookup == null) {
                 refreshConnectors();
             }
-            return connectors.toArray(new DelegatingConnector[connectors.size()]);
+            return connectors.toArray(new DelegatingConnector[0]);
         }
     }
 
@@ -198,6 +198,10 @@ public final class BugtrackingManager implements LookupListener {
 
     public static boolean isLocalConnectorID (String connectorID) {
         return LOCAL_CONNECTOR_ID.equals(connectorID);
+    }
+
+    public boolean hasRegisteredConnectors() {
+        return getConnectors().length > 0;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {

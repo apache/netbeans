@@ -156,7 +156,7 @@ public class ClassesListController extends AbstractController {
             if (diff) { 
                 minDiff = Math.min(minDiff, instancesCount);
                 maxDiff = Math.max(maxDiff, instancesCount);
-                data[i][1] = new Long(instancesCount);
+                data[i][1] = Long.valueOf(instancesCount);
                 data[i][2] = (instancesCount > 0 ? "+" : "") + numberFormat.format(instancesCount); // NOI18N
                 data[i][3] = (allInstancesSize > 0 ? "+" : "") + numberFormat.format(allInstancesSize); // NOI18N
                 if (retained) {
@@ -560,7 +560,7 @@ public class ClassesListController extends AbstractController {
 
     // --- Private implementation ------------------------------------------------
     private static List getSortedClasses(List filteredClasses, int sortingColumn, boolean sortingOrder) {
-        Collections.sort(filteredClasses, new ClassesComparator(sortingColumn, sortingOrder));
+        filteredClasses.sort(new ClassesComparator(sortingColumn, sortingOrder));
 
         return filteredClasses;
     }

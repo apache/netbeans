@@ -121,7 +121,7 @@ public abstract class MessageDestinationUiSupport {
         comboBox.setRenderer(new MessageDestinationListCellRenderer());
         
         List<MessageDestination> sortedDestinations = new ArrayList<MessageDestination>(destinations);
-        Collections.sort(sortedDestinations, new MessageDestinationComparator());
+        sortedDestinations.sort(new MessageDestinationComparator());
         
         comboBox.removeAllItems();
         for (MessageDestination d : sortedDestinations) {

@@ -84,7 +84,7 @@
    which is similar to localization but also supports changes of resorces 
    for application build on top of NetBeans. This is handled by our
    class <a href="@org-openide-util@/org/openide/util/NbBundle.html">NbBundle</a> which 
-   reimplements the JDK's standard <a href="@JDK@/java/util/ResourceBundle.html">ResourceBundle</a>
+   reimplements the JDK's standard <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/ResourceBundle.html">ResourceBundle</a>
    to to take branding into the consideration.
    </api>. 
   </p>
@@ -120,8 +120,8 @@
    indirectly communicates with <a href="@org-openide-awt@/overview-summary.html">UI Utilities</a>
    module using <api name="DefaultAWTBridge" category="private" group="java" type="export" 
    url="https://github.com/apache/netbeans/tree/master/platform/openide.awt/src/org/netbeans/modules/openide/awt/DefaultAWTBridge.java">
-   a class that is looked up in <a href="@org-openide-util-lookup@/org/openide/util/Lookup.html#getDefault--">Lookup.getDefault()</a>
-   and if registered can provide better UI elements for <a href="@JDK@/javax/swing/Action.html">Action</a>s.
+   a class that is looked up in <a href="@org-openide-util-lookup@/org/openide/util/Lookup.html#getDefault()">Lookup.getDefault()</a>
+   and if registered can provide better UI elements for <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/Action.html">Action</a>s.
    </api>
   </p>
 
@@ -218,7 +218,7 @@
  <answer id="exec-component">
   <ul>
     <li><api name="HelpID" category="standard" group="property" type="export" url="@TOP@/org/openide/util/HelpCtx.html">
-        read from <a href="@JDK@/javax/swing/JComponent.html">JComponent</a>.getClientProperty
+        read from <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JComponent.html">JComponent</a>.getClientProperty
         to simulate the standard javahelp behaviour and extract the help id for given component.
         </api>
     </li>
@@ -300,7 +300,7 @@
  <answer id="exec-property">
      <ul>
          <li>
-             <api type="export" group="property" name="url" category="private">Images loaded by <a href="@TOP@/org/openide/util/ImageUtilities.html#loadImage-java.lang.String-">ImageUtilities.loadImage</a>
+             <api type="export" group="property" name="url" category="private">Images loaded by <a href="@TOP@/org/openide/util/ImageUtilities.html#loadImage(java.lang.String)">ImageUtilities.loadImage</a>
              defines <code>"url"</code> image property for the loaded image.
              </api>
          </li>
@@ -383,9 +383,9 @@
  <answer id="format-clipboard">
   <p>
     <a href="@TOP@/org/openide/util/datatransfer/MultiTransferObject.html">MultiTransferObject</a> can be 
-    used in <a href="@JDK@/java/awt/datatransfer/Transferable.html">Transferable</a> to represent content
+    used in <a href="@JDK@@JDKMODULE_JAVA_DATATRANSFER@/java/awt/datatransfer/Transferable.html">Transferable</a> to represent content
     composed of multiple independent 
-    <a href="@JDK@/java/awt/datatransfer/Transferable.html">Transferable</a>s.
+    <a href="@JDK@@JDKMODULE_JAVA_DATATRANSFER@/java/awt/datatransfer/Transferable.html">Transferable</a>s.
   </p>
  </answer>
 
@@ -418,10 +418,10 @@
     </api>.</li>
 
     <li><api name="LookupContextGlobalProvider" category="stable" group="lookup" type="export">
-    <a href="@TOP@/org/openide/util/Utilities.html#actionsGlobalContext--">actionsGlobalContext</a>
+    <a href="@TOP@/org/openide/util/Utilities.html#actionsGlobalContext()">actionsGlobalContext</a>
     searches for <a href="@TOP@/org/openide/util/ContextGlobalProvider.html">ContextGlobalProvider</a> in 
-    <a href="@org-openide-util-lookup@/org/openide/util/Lookup.html#getDefault--">Lookup.getDefault()</a>.
-    The provider is usually provided by <a href="@org-openide-windows@/overview-summary.html">window 
+    <a href="@org-openide-util-lookup@/org/openide/util/Lookup.html#getDefault()">Lookup.getDefault()</a>.
+    The provider is usually provided by <a href="@org-openide-windows@/index.html">window 
     system implementation</a>.
     </api>.</li>
 
@@ -439,7 +439,7 @@
             
 <!--    <li><api name="LookupClassLoader" category="devel" group="lookup" type="export">
     Nearly all resource looking functions and reflective code
-    uses <a href="@JDK@/java/lang/ClassLoader.html">ClassLoader</a>
+    uses <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/ClassLoader.html">ClassLoader</a>
     obtained from <a href="@org-openide-util-lookup@/org/openide/util/Lookup.html#getDefault()">Lookup.getDefault()</a>
     for loading system wide resources.
     </api>.</li>-->
@@ -577,7 +577,7 @@
 -->
  <answer id="perf-progress">
   <p>
-   Actions declared as <a href="@TOP@/org/openide/util/actions/CallableSystemAction.html#asynchronous--">CallableSystemAction.asynchronous()</a> 
+   Actions declared as <a href="@TOP@/org/openide/util/actions/CallableSystemAction.html#asynchronous()">CallableSystemAction.asynchronous()</a> 
    are executed outside of AWT thread on a dedicated request processor one.
   </p>
  </answer>

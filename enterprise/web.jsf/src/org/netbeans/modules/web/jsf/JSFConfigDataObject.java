@@ -70,7 +70,6 @@ public class JSFConfigDataObject extends MultiDataObject implements org.openide.
     public static final String PROP_DOC_VALID = "documentValid"; // NOI18N
 
 
-    /** Creates a new instance of StrutsConfigDataObject */
     public JSFConfigDataObject(FileObject pf, JSFConfigLoader loader) throws DataObjectExistsException {
         super(pf, loader);
         init();

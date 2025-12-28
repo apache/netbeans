@@ -318,7 +318,7 @@ public class FixUsesPerformer {
     }
 
     private void sort(List<UsePart> useParts, final Map<UsePart.Type, Integer> typePriorities) {
-        Collections.sort(useParts, (u1, u2) -> {
+        useParts.sort((u1, u2) -> {
             int result = 0;
             Integer p1 = typePriorities.get(u1.getType());
             Integer p2 = typePriorities.get(u2.getType());
@@ -575,17 +575,17 @@ public class FixUsesPerformer {
             if (lastSingleUse != null
                     && lastGroupUse != null) {
                 if (lastSingleUse.getOffset() > lastGroupUse.getOffset()) {
-                    return LineDocumentUtils.getLineEnd(baseDocument, lastSingleUse.getOffset());
+                    return LineDocumentUtils.getLineEndOffset(baseDocument, lastSingleUse.getOffset());
                 }
                 // XXX is this correct?
-                return LineDocumentUtils.getLineEnd(baseDocument, lastGroupUse.getNameRange().getEnd());
+                return LineDocumentUtils.getLineEndOffset(baseDocument, lastGroupUse.getNameRange().getEnd());
             }
             if (lastSingleUse != null) {
-                return LineDocumentUtils.getLineEnd(baseDocument, lastSingleUse.getOffset());
+                return LineDocumentUtils.getLineEndOffset(baseDocument, lastSingleUse.getOffset());
             }
             if (lastGroupUse != null) {
                 // XXX is this correct?
-                return LineDocumentUtils.getLineEnd(baseDocument, lastGroupUse.getNameRange().getEnd());
+                return LineDocumentUtils.getLineEndOffset(baseDocument, lastGroupUse.getNameRange().getEnd());
             }
             // NETBEANS-4978 check whether declare statemens exist
             // e.g. in the following case, insert the code(use statements) after the declare statement
@@ -597,7 +597,7 @@ public class FixUsesPerformer {
             //         $test = new Foo();
             //     }
             // }
-            int offset = LineDocumentUtils.getLineEnd(baseDocument, namespaceScope.getOffset());
+            int offset = LineDocumentUtils.getLineEndOffset(baseDocument, namespaceScope.getOffset());
             if (namespaceScope.isDefaultNamespace()) {
                 // GH-5578: e.g. namespaceScope offset is 0 when phptag is in HTML
                 // <html>

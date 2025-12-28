@@ -18,92 +18,73 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
  * @author lkishalmi
  */
-public abstract class HCLResolveOperation extends HCLExpression {
+public sealed interface HCLResolveOperation extends HCLExpression {
 
-    public final HCLExpression base;
+    HCLExpression base();
 
-    public HCLResolveOperation(HCLExpression base) {
-        this.base = base;
+    default List<? extends HCLExpression> elements() {
+            return List.of(base());
     }
 
-    @Override
-    public List<? extends HCLExpression> getChildren() {
-        return Collections.singletonList(base);
-    }
+    public record Attribute(HCLExpression base, HCLIdentifier attr) implements HCLResolveOperation {
 
-    public final static class Attribute extends HCLResolveOperation {
-        public final HCLIdentifier attr;
-
-        public Attribute(HCLExpression base, HCLIdentifier attr) {
-            super(base);
-            this.attr = attr;
-        }
-
-        @Override
-        public String toString() {
-            return getClass().getSimpleName() + ": ." + attr;
-        }
-
-        
-        @Override
-        public String asString() {
-            return base.asString() + "." + attr;
-        }
-        
-    }
-
-    public final static class Index extends HCLResolveOperation {
-        public final HCLExpression index;
-        public final boolean legacy;
-
-        public Index(HCLExpression base, HCLExpression index, boolean legacy) {
-            super(base);
-            this.index = index;
-            this.legacy = legacy;
+        public Attribute {
+            Objects.requireNonNull(base, "base cannot be null");
         }
 
         @Override
         public String asString() {
-            return base.asString() + (legacy ? "." + index : "[" + index + "]");
+            return base.asString() + "." + HCLExpression.asString(attr);
+        }
+
+    }
+
+    public record Index(HCLExpression base, HCLExpression index, boolean legacy) implements HCLResolveOperation {
+
+        public Index {
+            Objects.requireNonNull(base, "base cannot be null");
+            Objects.requireNonNull(index, "index cannot be null");
         }
 
         @Override
-        public List<? extends HCLExpression> getChildren() {
-            return Arrays.asList(base, index);
+        public String asString() {
+            return base.asString() + (legacy ? "." + index.asString() : "[" + index.asString() + "]");
+        }
+
+        @Override
+        public List<? extends HCLExpression> elements() {
+            return List.of(base, index);
         }
     }
     
-    public final static class AttrSplat extends HCLResolveOperation {
+    public record AttrSplat(HCLExpression base) implements HCLResolveOperation {
 
-        public AttrSplat(HCLExpression base) {
-            super(base);
+        public AttrSplat {
+            Objects.requireNonNull(base, "base cannot be null");
         }
 
         @Override
         public String asString() {
             return base.asString() + ".*";
         }
-        
     }
 
-    public final static class FullSplat extends HCLResolveOperation {
+    public record FullSplat(HCLExpression base) implements HCLResolveOperation {
 
-        public FullSplat(HCLExpression base) {
-            super(base);
+        public FullSplat {
+            Objects.requireNonNull(base, "base cannot be null");
         }
 
         @Override
         public String asString() {
             return base.asString() + "[*]";
         }
-        
     }
 }

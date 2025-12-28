@@ -166,17 +166,6 @@ public class LibrariesTest extends JellyTestCase {
         set.add("jar:nbinst://org.netbeans.modules.swingapp/modules/ext/swing-worker.jar!/");
         librariesUrls.put("swing-app-framework", set);
         set = new TreeSet<String>();
-        set.add("jar:nbinst:///docs/struts-1.2.9-javadoc.zip!/");
-        set.add("jar:nbinst://org.netbeans.modules.web.struts/modules/ext/struts/antlr.jar!/");
-        set.add("jar:nbinst://org.netbeans.modules.web.struts/modules/ext/struts/commons-beanutils.jar!/");
-        set.add("jar:nbinst://org.netbeans.modules.web.struts/modules/ext/struts/commons-digester.jar!/");
-        set.add("jar:nbinst://org.netbeans.modules.web.struts/modules/ext/struts/commons-fileupload.jar!/");
-        set.add("jar:nbinst://org.netbeans.modules.web.struts/modules/ext/struts/commons-logging.jar!/");
-        set.add("jar:nbinst://org.netbeans.modules.web.struts/modules/ext/struts/commons-validator.jar!/");
-        set.add("jar:nbinst://org.netbeans.modules.web.struts/modules/ext/struts/jakarta-oro.jar!/");
-        set.add("jar:nbinst://org.netbeans.modules.web.struts/modules/ext/struts/struts.jar!/");
-        librariesUrls.put("struts", set);
-        set = new TreeSet<String>();
         set.add("jar:nbinst://org.netbeans.modules.junit/docs/junit-4.13.2-javadoc.jar!/");
         set.add("jar:nbinst://org.netbeans.modules.junit/modules/ext/junit-4.13.2.jar!/");
         librariesUrls.put("junit", set);

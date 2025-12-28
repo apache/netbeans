@@ -98,7 +98,7 @@ public class RequireJSCodeCompletionTest extends JsCodeCompletionBase {
         cpRoots.add(FileUtil.toFileObject(new File(getDataDir(), "/TestProject1")));
         return Collections.singletonMap(
                 JS_SOURCE_ID,
-                ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[cpRoots.size()]))
+                ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

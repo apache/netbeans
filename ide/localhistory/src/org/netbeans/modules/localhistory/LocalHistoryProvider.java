@@ -103,7 +103,7 @@ public class LocalHistoryProvider implements VCSHistoryProvider, VersioningListe
     public void fireHistoryChange(VCSFileProxy proxy) {
         HistoryChangeListener[] la;
         synchronized(listeners) {
-            la = listeners.toArray(new HistoryChangeListener[listeners.size()]);
+            la = listeners.toArray(new HistoryChangeListener[0]);
         }
         for (HistoryChangeListener l : la) {
             l.fireHistoryChanged(new HistoryEvent(this, new VCSFileProxy[] {proxy}));

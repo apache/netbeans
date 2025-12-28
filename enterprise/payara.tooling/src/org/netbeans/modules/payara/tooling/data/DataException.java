@@ -30,10 +30,7 @@ import org.netbeans.modules.payara.tooling.PayaraIdeException;
  */
 public class DataException extends PayaraIdeException {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Exception message for invalid Payara administration interface
      *  type. */
     static final String INVALID_ADMIN_INTERFACE =
@@ -72,10 +69,7 @@ public class DataException extends PayaraIdeException {
     /**  Exception for Payara URL null value. */
     static final String SERVER_URL_NULL = "Payara URL is null";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>DataException</code> without
      * detail message.

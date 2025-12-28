@@ -45,7 +45,6 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
 import org.netbeans.api.editor.EditorRegistry;
-import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.project.JavaProjectConstants;
@@ -71,7 +70,6 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser.Result;
-import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil;
 import org.netbeans.modules.web.beans.api.model.BeansModel;
 import org.netbeans.modules.web.beans.api.model.InterceptorsResult;
@@ -104,22 +102,23 @@ import com.sun.source.util.TreePath;
  * @author ads
  *
  */
-// @todo: Support JakartaEE
 public class WebBeansActionHelper {
     
     private static final String WAIT_NODE = "LBL_WaitNode";     // NOI18N
 
     static final String DELEGATE = "javax.decorator.Delegate";  // NOI18N
+    static final String DELEGATE_JAKARTA = "jakarta.decorator.Delegate";  // NOI18N
 
     static final String DECORATOR = "javax.decorator.Decorator";// NOI18N
+    static final String DECORATOR_JAKARTA = "jakarta.decorator.Decorator";// NOI18N
+    
+    static final String EVENT_INTERFACE =  "javax.enterprise.event.Event"; // NOI18N
+    static final String EVENT_INTERFACE_JAKARTA =  "jakarta.enterprise.event.Event"; // NOI18N
+    
+    static final String OBSERVES_ANNOTATION =  "javax.enterprise.event.Observes"; // NOI18N
+    static final String OBSERVES_ANNOTATION_JAKARTA =  "jakarta.enterprise.event.Observes"; // NOI18N
 
     static final String FIRE = "fire";                          // NOI18N
-    
-    static final String EVENT_INTERFACE = 
-        "javax.enterprise.event.Event";                         // NOI18N
-    
-    static final String OBSERVES_ANNOTATION = 
-        "javax.enterprise.event.Observes";                      // NOI18N
     
     private static final Set<JavaTokenId> USABLE_TOKEN_IDS = 
         EnumSet.of(JavaTokenId.IDENTIFIER, JavaTokenId.THIS, JavaTokenId.SUPER);
@@ -182,15 +181,19 @@ public class WebBeansActionHelper {
         boolean hasInject = false;
         boolean hasQualifier = false;
         for (SourceGroup sourceGroup : sourceGroups) {
-            boolean injectFound = hasResource(sourceGroup, ClassPath.COMPILE, 
-                    AnnotationUtil.INJECT_FQN) ||
-                hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.INJECT_FQN);
+            boolean injectFound =
+                hasResource(sourceGroup, ClassPath.COMPILE, AnnotationUtil.INJECT_FQN) ||
+                hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.INJECT_FQN) ||
+                hasResource(sourceGroup, ClassPath.COMPILE, AnnotationUtil.INJECT_FQN_JAKARTA) ||
+                hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.INJECT_FQN_JAKARTA);
             if ( injectFound ){
                 hasInject = true;
             }
-            boolean qualifierFound = hasResource(sourceGroup, ClassPath.COMPILE, 
-                    AnnotationUtil.QUALIFIER_FQN) ||
-                hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.QUALIFIER_FQN);
+            boolean qualifierFound
+                    = hasResource(sourceGroup, ClassPath.COMPILE, AnnotationUtil.QUALIFIER_FQN)
+                    || hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.QUALIFIER_FQN)
+                    || hasResource(sourceGroup, ClassPath.COMPILE, AnnotationUtil.QUALIFIER_FQN_JAKARTA)
+                    || hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.QUALIFIER_FQN_JAKARTA);
             if ( qualifierFound ){
                 hasQualifier = true;
             }
@@ -209,21 +212,27 @@ public class WebBeansActionHelper {
         boolean hasProduces = false;
         boolean hasDependent = false;
         for (SourceGroup sourceGroup : sourceGroups) {
-            boolean defaultFound = hasResource(sourceGroup, ClassPath.COMPILE, 
-                    AnnotationUtil.DEFAULT_FQN) ||
-                hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.DEFAULT_FQN);
+            boolean defaultFound
+                    = hasResource(sourceGroup, ClassPath.COMPILE, AnnotationUtil.DEFAULT_FQN)
+                    || hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.DEFAULT_FQN)
+                    || hasResource(sourceGroup, ClassPath.COMPILE, AnnotationUtil.DEFAULT_FQN_JAKARTA)
+                    || hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.DEFAULT_FQN_JAKARTA);
             if ( defaultFound ){
                 hasDefault = true;
             }
-            boolean producesFound = hasResource(sourceGroup, ClassPath.COMPILE, 
-                    AnnotationUtil.PRODUCES_FQN) ||
-                hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.PRODUCES_FQN);
+            boolean producesFound
+                    = hasResource(sourceGroup, ClassPath.COMPILE, AnnotationUtil.PRODUCES_FQN)
+                    || hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.PRODUCES_FQN)
+                    || hasResource(sourceGroup, ClassPath.COMPILE, AnnotationUtil.PRODUCES_FQN_JAKARTA)
+                    || hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.PRODUCES_FQN_JAKARTA);
             if ( producesFound ){
                 hasProduces = true;
             }
-            boolean dependentFound = hasResource(sourceGroup, ClassPath.COMPILE, 
-                    AnnotationUtil.DEPENDENT) ||
-                hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.DEPENDENT);
+            boolean dependentFound
+                    = hasResource(sourceGroup, ClassPath.COMPILE, AnnotationUtil.DEPENDENT)
+                    || hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.DEPENDENT)
+                    || hasResource(sourceGroup, ClassPath.COMPILE, AnnotationUtil.DEPENDENT_JAKARTA)
+                    || hasResource(sourceGroup, ClassPath.SOURCE, AnnotationUtil.DEPENDENT_JAKARTA);
             if ( dependentFound ){
                 hasDependent = true;
             }
@@ -344,11 +353,11 @@ public class WebBeansActionHelper {
             CompilationController controller )
     {
         if ( element instanceof TypeElement ){
-            if ( hasAnnotation(element, DECORATOR) ){
+            if ( hasAnnotation(element, DECORATOR) || hasAnnotation(element, DECORATOR_JAKARTA) ){
                 List<VariableElement> fieldsIn = ElementFilter.fieldsIn( 
                         controller.getElements().getAllMembers((TypeElement)element));
                 for (VariableElement variableElement : fieldsIn) {
-                    if ( hasAnnotation(variableElement, DELEGATE)){
+                    if ( hasAnnotation(variableElement, DELEGATE) || hasAnnotation(element, DELEGATE_JAKARTA)){
                         return variableElement;
                     }
                 }
@@ -459,7 +468,7 @@ public class WebBeansActionHelper {
                     else if ( element instanceof VariableElement ){
                         Element enclosingElement = element.getEnclosingElement();
                         if ( enclosingElement instanceof ExecutableElement && 
-                                hasAnnotation(element, OBSERVES_ANNOTATION))
+                                (hasAnnotation(element, OBSERVES_ANNOTATION) || hasAnnotation(element, OBSERVES_ANNOTATION_JAKARTA)))
                         {
                             subject[0] = ElementHandle.create(enclosingElement);
                             subject[1] = enclosingElement.getSimpleName();
@@ -542,7 +551,7 @@ public class WebBeansActionHelper {
                                         enclosingTypeElement( method);
                                     String fqnMethodClass = enclosingTypeElement.
                                         getQualifiedName().toString();
-                                    if( EVENT_INTERFACE.equals(fqnMethodClass)){
+                                    if( EVENT_INTERFACE.equals(fqnMethodClass) || EVENT_INTERFACE_JAKARTA.equals(fqnMethodClass)){
                                         List<VariableElement> fields = 
                                             ElementFilter.fieldsIn
                                             ( controller.getElements().getAllMembers(

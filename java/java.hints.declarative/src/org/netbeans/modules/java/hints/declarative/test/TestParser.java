@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.lang.model.SourceVersion;
@@ -42,6 +43,7 @@ import org.netbeans.modules.parsing.spi.SourceModificationEvent;
  */
 public class TestParser extends Parser {
 
+    private static final Logger LOG = Logger.getLogger(TestParser.class.getName());
     private TestResult result;
     
     @Override
@@ -125,16 +127,22 @@ public class TestParser extends Parser {
             }
         }
 
-        return result.toArray(new TestCase[result.size()]);
+        return result.toArray(new TestCase[0]);
     }
 
-    private static @CheckForNull TestCase handleTestCase(int testCaseIndex, String testName, String options, int codeIndex, String testCase) {
+    @CheckForNull@SuppressWarnings({"AssignmentToMethodParameter", "AssignmentToForLoopParameter"})
+    private static TestCase handleTestCase(int testCaseIndex, String testName, String options, int codeIndex, String testCase) {
+        
+        int endmarker = testCase.indexOf(END_MARKER);
+        if (endmarker != -1) {
+            testCase = testCase.substring(0, endmarker);
+        }
+
         Matcher m = LEADS_TO_HEADER.matcher(testCase);
         String code = null;
         List<String> results = new LinkedList<>();
         List<Integer> startIndices = new LinkedList<>();
         List<Integer> endIndices = new LinkedList<>();
-        int lastStartIndex = -1;
         int lastIndex = -1;
 
         while (m.find()) {
@@ -148,7 +156,6 @@ public class TestParser extends Parser {
                 startIndices.add(lastIndex);
             }
 
-            lastStartIndex = m.start();
             lastIndex = m.end();
         }
 
@@ -180,37 +187,42 @@ public class TestParser extends Parser {
             endIndicesArr[c++] = codeIndex + i;
         }
         
-        SourceVersion sourceLevel = DEFAULT_SOURCE_LEVEL;
+        SourceVersion sourceLevel = null;
         
         for (String option : options.split("[ \t]+")) {
             option = option.trim();
             
             if (option.startsWith(SOURCE_LEVEL)) {
                 option = option.substring(SOURCE_LEVEL.length());
-                
-                //XXX: log if not found!
-                
+                if (option.startsWith("1.")) {
+                    option = option.substring(2);
+                }
                 for (SourceVersion v : SourceVersion.values()) {
-                    if (option.equals("1." + v.name().substring("RELEASE_".length()))) {
+                    if (option.equals(v.name().substring("RELEASE_".length()))) {
                         sourceLevel = v;
                         break;
                     }
                 }
-            }
-
-            if (DISABLED.equals(option)) {
+                if (sourceLevel == null) {
+                    LOG.warning("unsupported source version: " + option);
+                }
+            } else if (DISABLED.equals(option)) {
                 return null;
             }
         }
-        
+
+        if (sourceLevel == null) {
+            sourceLevel = SourceVersion.RELEASE_8;
+        }
+
         return new TestCase(testName, sourceLevel, code, results.toArray(new String[0]), testCaseIndex, codeIndex, startIndicesArr, endIndicesArr);
     }
 
     private static final Pattern TEST_CASE_HEADER = Pattern.compile("%%TestCase[ \t]+([^ \t\n]*)(([ \t]+[^ \t\n]*)*)\n");
     private static final Pattern LEADS_TO_HEADER = Pattern.compile("%%=>\n");
+    private static final String END_MARKER = "%%\n";
     private static final String SOURCE_LEVEL = "source-level=";
     private static final String DISABLED = "DISABLED";
-    private static final SourceVersion DEFAULT_SOURCE_LEVEL = SourceVersion.RELEASE_5;
 
     public static final class TestCase {
         private final String name;

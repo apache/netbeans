@@ -123,7 +123,6 @@
             <folder name="xml">
                 <folder name="Toolbars">
                     <folder name="Default">
-<!--                        <attr name="xml-uncomment/XMLSeparator1.instance" boolvalue="true"/>-->
                         <file name="XMLSeparator1.instance">
                             <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                             <attr name="position" intvalue="19100"/>
@@ -135,6 +134,17 @@
                         <file name="org-netbeans-modules-xml-tools-actions-ValidateAction.shadow">
                             <attr name="originalFile" stringvalue="Actions/XML/org-netbeans-modules-xml-tools-actions-ValidateAction.instance"/>
                             <attr name="position" intvalue="19300"/>
+                        </file>
+                        <!-- Comment-Entries added based on LanguageRegistrationProcessor#registerCommentUncommentToolbarButtons -->
+                        <file name="Separator-before-comment.instance">
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr intvalue="30000" name="position"/>
+                        </file>
+                        <file name="comment">
+                            <attr intvalue="30100" name="position"/>
+                        </file>
+                        <file name="uncomment">
+                            <attr intvalue="30200" name="position"/>
                         </file>
                     </folder> <!-- Default -->
                 </folder> <!-- Toolbars -->

@@ -20,17 +20,22 @@ package org.netbeans.modules.java.file.launcher.actions;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
+import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.BaseUtilities;
+import org.openide.util.NbPreferences;
+import org.openide.util.Utilities;
 
 final class LaunchProcess implements Callable<Process> {
 
@@ -57,8 +62,10 @@ final class LaunchProcess implements Callable<Process> {
         try {
             boolean compile = SingleSourceFileUtil.findJavaVersion() < 11 || SingleSourceFileUtil.hasClassSibling(fileObject);
 
+            JavaPlatform jdk = readRunJdkFromAttribute(fileObject);
+
             if (compile) {
-                Process p = SingleSourceFileUtil.compileJavaSource(fileObject);
+                Process p = SingleSourceFileUtil.compileJavaSource(fileObject, jdk);
                 if (p.waitFor() != 0) {
                     return p;
                 }
@@ -66,15 +73,19 @@ final class LaunchProcess implements Callable<Process> {
 
             List<String> commandsList = new ArrayList<>();
 
-            FileObject java = JavaPlatformManager.getDefault().getDefaultPlatform().findTool("java"); //NOI18N
+            FileObject java = jdk.findTool("java"); //NOI18N
             File javaFile = FileUtil.toFile(java);
             String javaPath = javaFile.getAbsolutePath();
+            URI cwd = SingleSourceFileUtil.getOptionsFor(fileObject).getWorkDirectory();
+            File workDir = Utilities.toFile(cwd);
 
             ExplicitProcessParameters paramsFromAttributes =
                     ExplicitProcessParameters.builder()
                                              .args(readArgumentsFromAttribute(fileObject, SingleSourceFileUtil.FILE_ARGUMENTS))
                                              .launcherArgs(readArgumentsFromAttribute(fileObject, SingleSourceFileUtil.FILE_VM_OPTIONS))
-                                             .workingDirectory(FileUtil.toFile(fileObject.getParent()))
+                                             .launcherArgs(Arrays.asList(BaseUtilities.parseParameters(
+                                                    NbPreferences.forModule(JavaPlatformManager.class).get(SingleSourceFileUtil.GLOBAL_VM_OPTIONS, "").trim()))) //NOI18N
+                                             .workingDirectory(workDir)
                                              .build();
 
             ExplicitProcessParameters realParameters =
@@ -97,7 +108,7 @@ final class LaunchProcess implements Callable<Process> {
                 commandsList.add(FileUtil.toFile(fileObject.getParent()).toString());
                 commandsList.add(fileObject.getName());
             } else {
-                commandsList.add(fileObject.getNameExt());
+                commandsList.add(FileUtil.toFile(fileObject).getAbsolutePath());
             }
 
             if (realParameters.getArguments() != null) {
@@ -117,6 +128,19 @@ final class LaunchProcess implements Callable<Process> {
                     "Could not get InputStream of Run Process"); //NOI18N
         }
         return null;
+    }
+
+    private static JavaPlatform readRunJdkFromAttribute(FileObject fo) {
+        String runJDKAttribute = fo.getAttribute(SingleSourceFileUtil.FILE_JDK) instanceof String str ? str : null;
+        if (runJDKAttribute != null && !runJDKAttribute.isBlank()) {
+            for (JavaPlatform jdk : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
+                if (runJDKAttribute.equals(jdk.getDisplayName())) {
+                    return jdk;
+                }
+            }
+            Logger.getLogger(LaunchProcess.class.getName()).log(Level.WARNING, "Unknown JDK: [{0}]", runJDKAttribute);
+        }
+        return JavaPlatformManager.getDefault().getDefaultPlatform();
     }
 
     private static List<String> readArgumentsFromAttribute(FileObject fileObject, String attributeName) {

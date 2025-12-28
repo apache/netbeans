@@ -40,6 +40,8 @@
     </target>
 
     <target name="netbeans-extra" depends="nblib"/>
+
+    <target name="init" depends="projectized.init"/>
     
     <!-- Generate suite 3 platform -->
     <target name="test-preinit">

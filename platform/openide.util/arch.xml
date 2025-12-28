@@ -69,14 +69,12 @@
   </p>
  </answer>
  <answer id="arch-usecases">
-  <p>
    Use-cases can be found in <a href="@org-openide-util-ui@/architecture-summary.html">org.openide.util.ui module</a> arch summary.
    <usecase id="CharSequences" name="Efficient char sequences">
        Efficiently store character sequences in memory with the
        help of <a href="@TOP@/org/openide/util/CharSequences.html">CharSequences</a>
        utility class.
    </usecase>
-  </p>
  </answer>
  <answer id="arch-what">
   <p>
@@ -242,8 +240,8 @@
   <p>
     The <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Provider%20Configuration%20File">META-INF/services/...</a> files.
     <api name="TranslateNames" category="official" type="export" group="java.io.File" 
-    url="@TOP@/org/openide/util/BaseUtilities.html#translate-java.lang.String-">
-    <a href="@TOP@/org/openide/util/BaseUtilities.html#translate-java.lang.String-">Utilities.translate</a> 
+    url="@TOP@/org/openide/util/BaseUtilities.html#translate(java.lang.String)">
+    <a href="@TOP@/org/openide/util/BaseUtilities.html#translate(java.lang.String)">Utilities.translate</a> 
     reads <code>META-INF/netbeans/translate.names</code> files from JARs</api>.
   </p>
  </answer>

@@ -97,7 +97,7 @@ abstract class AbstractMavenForBinaryQueryImpl implements SourceForBinaryQueryIm
                 }
             }
         }
-        return toReturn.toArray(new FileObject[toReturn.size()]);
+        return toReturn.toArray(new FileObject[0]);
     }
     
     static @NonNull FileObject[] getProjectTestSrcRoots(Project p) {
@@ -139,7 +139,7 @@ abstract class AbstractMavenForBinaryQueryImpl implements SourceForBinaryQueryIm
                 }
             }
         }
-        return toReturn.toArray(new FileObject[toReturn.size()]);
+        return toReturn.toArray(new FileObject[0]);
     }
     
 }

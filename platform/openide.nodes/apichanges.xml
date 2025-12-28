@@ -278,7 +278,7 @@
             Added the class 
             <a href="@TOP@/org/openide/nodes/ChildFactory.html">ChildFactory</a>
             and the method 
-            <a href="@TOP@/org/openide/nodes/Children.html#create-org.openide.nodes.ChildFactory-boolean-">Children.create(ChildFactory factory, boolean asynchronous)</a>
+            <a href="@TOP@/org/openide/nodes/Children.html#create(org.openide.nodes.ChildFactory,boolean)">Children.create(ChildFactory factory, boolean asynchronous)</a>
             to the API.  This simplifies creation of Node children which need
             to be computed on a background thread for performance reasons.
             Anyone wishing to do this can simply extend ChildFactory and
@@ -305,7 +305,7 @@
         <author login="jtulach"/>
         <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
         <description>
-            New method <a href="@TOP@/org/openide/nodes/CookieSet.html#createGeneric-org.openide.nodes.CookieSet.Before-">
+            New method <a href="@TOP@/org/openide/nodes/CookieSet.html#createGeneric(org.openide.nodes.CookieSet.Before)">
             CookieSet.createGeneric</a> has been added. It allows to create 
             an instance of <a href="@TOP@/org/openide/nodes/CookieSet.html">
             CookieSet</a> that can contain any object, not just 
@@ -316,7 +316,7 @@
             Lookup.Provider</a> and thus has a method <code>getLookup</code> to 
             allow queries for of its content.
             Also there is a new method 
-            <a href="@TOP@/org/openide/nodes/CookieSet.html#assign-java.lang.Class-T...-">
+            <a href="@TOP@/org/openide/nodes/CookieSet.html#assign(java.lang.Class,T...)">
             assign(clazz, instances)</a> that allows to add/remove 
             plain old java objects to the <code>CookieSet</code>.
         </description>
@@ -1033,7 +1033,6 @@ OpenIDE-Module-Requires: org.openide.compiler.CompilationEngine,
 <htmlcontents>
 <head>
 <title>Change History for the Nodes API</title>
-<link rel="stylesheet" href="prose.css" type="text/css"/>
 </head>
 <body>
 <p class="overviewlink">

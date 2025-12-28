@@ -27,10 +27,13 @@
    to decide whether such change shall be commited to the repository
    or not
 -->
+<!-- links within Apache NetBeans project -->
+<link href="http://bits.netbeans.org/html+java/1.7.1" offline="true" packagelistloc="./html+java"/>
+<link href="https://www.graalvm.org/truffle/javadoc/" offline="true" packagelistloc="./truffle"/>
+<!-- links within Apache NetBeans modules -->
 <link href="${javadoc.docs.org-openide-util}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-util"/>
 <link href="${javadoc.docs.org-netbeans-modules-nbjunit}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-nbjunit"/>
 <link href="${javadoc.docs.org-openide-actions}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-actions"/>
-<link href="${javadoc.docs.org-openide-options}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-options"/>
 <link href="${javadoc.docs.org-openide-compat}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-compat"/>
 <link href="${javadoc.docs.org-openide-awt}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-awt"/>
 <link href="${javadoc.docs.org-openide-dialogs}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-openide-dialogs"/>
@@ -114,9 +117,6 @@
 <link href="${javadoc.docs.org-netbeans-modules-indexedannotations}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-indexedannotations"/>
 <link href="${javadoc.docs.org-netbeans-modules-junit}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-junit"/>
 <link href="${javadoc.docs.org-netbeans-api-actions-support}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-actions-support"/>
-<link href="http://download.oracle.com/javase/6/docs/jdk/api/javac/tree" offline="true" packagelistloc="./tree-api"/>
-<link href="http://download.oracle.com/javase/6/docs/api" offline="true" packagelistloc="./javac-api"/>
-<link href="http://bits.netbeans.org/html+java/1.7.1" offline="true" packagelistloc="./html+java"/>
 <link href="${javadoc.docs.org-netbeans-modules-uihandler}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-uihandler"/>
 <link href="${javadoc.docs.org-netbeans-lib-uihandler}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-lib-uihandler"/>
 <link href="${javadoc.docs.org-netbeans-modules-j2ee-metadata}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-j2ee-metadata"/>
@@ -234,7 +234,6 @@
 <link href="${javadoc.docs.org-netbeans-modules-gradle}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-gradle"/>
 <link href="${javadoc.docs.org-netbeans-modules-gradle-java}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-gradle-java"/>
 <link href="${javadoc.docs.org-netbeans-modules-textmate-lexer}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-textmate-lexer"/>
-<link href="https://www.graalvm.org/truffle/javadoc/" offline="true" packagelistloc="./truffle"/>
 <link href="${javadoc.docs.org-netbeans-modules-jumpto}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-jumpto"/>
 <link href="${javadoc.docs.org-netbeans-modules-java-editor-lib}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-editor-lib"/>
 <link href="${javadoc.docs.org-netbeans-modules-web-common}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-web-common"/>
@@ -243,3 +242,6 @@
 <link href="${javadoc.docs.org-netbeans-api-lsp}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-lsp"/>
 <link href="${javadoc.docs.org-netbeans-modules-java-j2seplatform}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-java-j2seplatform"/>
 <link href="${javadoc.docs.org-netbeans-modules-xml-wsdl-model}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-xml-wsdl-model"/>
+<link href="${javadoc.docs.org-netbeans-api-dashboard}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-api-dashboard"/>
+<link href="${javadoc.docs.org-netbeans-modules-project-dependency}" offline="true" packagelistloc="${netbeans.javadoc.dir}/org-netbeans-modules-project-dependency"/>
+

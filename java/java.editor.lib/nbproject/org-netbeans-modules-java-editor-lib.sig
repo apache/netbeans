@@ -1,16 +1,19 @@
 #Signature file v4.1
-#Version 1.52.0
+#Version 1.60.0
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -48,7 +51,7 @@ intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public org.netbeans.editor.Formatter
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.Class)
 meth public boolean expandTabs()
 meth public int getShiftWidth()
@@ -62,11 +65,11 @@ meth public java.lang.Class getKitClass()
 meth public java.lang.String getIndentString(int)
 meth public java.lang.String getIndentString(org.netbeans.editor.BaseDocument,int)
 meth public static org.netbeans.editor.Formatter getFormatter(java.lang.Class)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.editor.Formatter getFormatter(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void setFormatter(java.lang.Class,org.netbeans.editor.Formatter)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void changeBlockIndent(org.netbeans.editor.BaseDocument,int,int,int) throws javax.swing.text.BadLocationException
 meth public void changeRowIndent(org.netbeans.editor.BaseDocument,int,int) throws javax.swing.text.BadLocationException
 meth public void indentLock()
@@ -167,7 +170,7 @@ meth public org.netbeans.editor.ext.FormatTokenPosition removeLineEndWhitespace(
 supr org.netbeans.editor.ext.FormatSupport
 
 CLSS public org.netbeans.editor.ext.ExtFormatter
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.Class)
 innr public static Simple
 intf org.netbeans.editor.ext.FormatLayer
@@ -297,7 +300,7 @@ supr org.netbeans.editor.ext.MultiSyntax
 hfds HTML_ON,ISI_ERROR
 
 CLSS public abstract org.netbeans.editor.ext.java.JavaFoldManager
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 fld public final static org.netbeans.api.editor.fold.FoldType CODE_BLOCK_FOLD_TYPE
 fld public final static org.netbeans.api.editor.fold.FoldType IMPORTS_FOLD_TYPE
@@ -306,17 +309,17 @@ fld public final static org.netbeans.api.editor.fold.FoldType INNERCLASS_TYPE
 fld public final static org.netbeans.api.editor.fold.FoldType JAVADOC_FOLD_TYPE
 fld public final static org.netbeans.api.editor.fold.FoldType METHOD_BLOCK_FOLD_TYPE
 fld public final static org.netbeans.editor.ext.java.JavaFoldManager$FoldTemplate CODE_BLOCK_FOLD_TEMPLATE
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.netbeans.editor.ext.java.JavaFoldManager$FoldTemplate IMPORTS_FOLD_TEMPLATE
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.netbeans.editor.ext.java.JavaFoldManager$FoldTemplate INITIAL_COMMENT_FOLD_TEMPLATE
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.netbeans.editor.ext.java.JavaFoldManager$FoldTemplate INNER_CLASS_FOLD_TEMPLATE
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.netbeans.editor.ext.java.JavaFoldManager$FoldTemplate JAVADOC_FOLD_TEMPLATE
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.netbeans.editor.ext.java.JavaFoldManager$FoldTemplate METHOD_BLOCK_FOLD_TEMPLATE
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr protected final static FoldTemplate
 intf org.netbeans.spi.editor.fold.FoldManager
 supr java.lang.Object

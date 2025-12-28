@@ -747,7 +747,7 @@ public final class IndexSearch
     DefaultListModel generateModel( java.util.Comparator<DocIndexItem> comp ) {
         DefaultListModel model = new DefaultListModel();
 
-        java.util.Collections.sort( results, comp );
+        results.sort(comp);
 
         String pckg = null;
 

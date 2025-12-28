@@ -79,6 +79,8 @@ CONSTRUCTO Uint8ClampedArray               [PUBLIC]   JS Platform
 CONSTRUCTO WeakMap                         [PUBLIC]   JS Platform
 CONSTRUCTO WeakRef                         [PUBLIC]   JS Platform
 CONSTRUCTO WeakSet                         [PUBLIC]   JS Platform
+CLASS      import                          [PUBLIC]   <font color=#999999>metaproperties.js</font>
+CLASS      new                             [PUBLIC]   <font color=#999999>metaproperties.js</font>
 METHOD     ImportAssertions                [PUBLIC]   JS Platform
 METHOD     Intl(): undefined               [PUBLIC]   JS Platform
 METHOD     Math                            [PUBLIC]   JS Platform

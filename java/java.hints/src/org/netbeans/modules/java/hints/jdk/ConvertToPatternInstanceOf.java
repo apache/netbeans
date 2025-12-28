@@ -23,7 +23,6 @@ import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
@@ -42,6 +41,7 @@ import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.modules.java.hints.Feature;
 import org.netbeans.modules.java.hints.errors.Utilities;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.editor.hints.Fix;
@@ -59,10 +59,10 @@ import org.openide.util.NbBundle;
  * @author sdedic
  */
 @NbBundle.Messages({
-    "DN_ConvertToPatternInstanceOf=Convert to instanceof <pattern>",
-    "DESC_ConvertToPatternInstanceOf=Convert to instanceof <pattern>",
-    "ERR_ConvertToPatternInstanceOf=instanceof <pattern> can be used here",
-    "FIX_ConvertToPatternInstanceOf=Use instanceof <pattern>"
+    "DN_ConvertToPatternInstanceOf=Convert to instanceof pattern",
+    "DESC_ConvertToPatternInstanceOf=Convert to instanceof pattern",
+    "ERR_ConvertToPatternInstanceOf=instanceof pattern can be used here",
+    "FIX_ConvertToPatternInstanceOf=Use instanceof pattern"
 })
 @Hint(displayName="#DN_ConvertToPatternInstanceOf", description="#DESC_ConvertToPatternInstanceOf", category="rules15",
         minSourceVersion = "14")
@@ -72,6 +72,9 @@ public class ConvertToPatternInstanceOf {
         @TriggerPattern(value="if ($expr instanceof $typeI) { $statements$;} else $else$;"),
     })
     public static ErrorDescription trivial(HintContext ctx) {
+        if (!Feature.INSTANCEOF_PATTERN.isEnabled(ctx.getInfo())) {
+            return null;
+        }
         //XXX: sideeffects in $expr
         if (!MatcherUtilities.matches(ctx, ctx.getPath(), "if ($expr instanceof $typeI) { $typeV $var = ($typeC) $expr; $other$;} else $else$;", true)) {
             Set<TreePath> convertPath = new HashSet<>();
@@ -124,7 +127,6 @@ public class ConvertToPatternInstanceOf {
             this.removeFirst = removeFirst;
             this.replaceOccurrences = replaceOccurrences.stream().map(tp -> TreePathHandle.create(tp, info)).collect(Collectors.toSet());
         }
-
 
         @Override
         protected String getText() {

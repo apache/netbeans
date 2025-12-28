@@ -51,6 +51,23 @@
 <!-- ACTUAL CHANGES BEGIN HERE: -->
 
 <changes>
+    <change id="inline-values-setting-keys">
+        <api name="DebuggerCoreSPI"/>
+        <summary><code>Constants</code> class enhanced with constants for inline values.</summary>
+        <version major="2" minor="88"/>
+        <date day="8" month="4" year="2025"/>
+        <author login="jlahoda"/>
+        <compatibility binary="compatible" source="compatible" modification="yes" semantic="compatible"/>
+        <description>
+            <p>
+                Two new constants are added to <code>Constants</code>:
+                <span><b>KEY_INLINE_VALUES</b>: the <code>Preferences</code> key for the inline value setting.</span>
+                <span><b>DEF_INLINE_VALUES</b>: the default value of the inline value setting.</span>
+            </p>
+        </description>
+        <class package="org.netbeans.spi.debugger.ui" name="Constants"/>
+    </change>
+
     <change id="annotation-to-breakpoint">
         <api name="DebuggerCoreSPI"/>
         <summary><code>BreakpointAnnotation</code> class added.</summary>
@@ -209,7 +226,7 @@
         <api name="DebuggerCoreSPI"/>
         <summary>A method for retrieving a set of language MIME types on a line in a document is added.</summary>
         <version major="2" minor="50"/>
-        <date day="20" month="04" year="2015"/>
+        <date day="20" month="4" year="2015"/>
         <author login="mentlicher"/>
         <compatibility binary="compatible" source="compatible" addition="yes" semantic="compatible"/>
         <description>
@@ -248,7 +265,7 @@
         <api name="DebuggerCoreSPI"/>
         <summary>Frames added into DebuggingView.</summary>
         <version major="2" minor="65"/>
-        <date day="09" month="10" year="2020"/>
+        <date day="9" month="10" year="2020"/>
         <author login="mentlicher"/>
         <compatibility binary="compatible" source="compatible" addition="yes" semantic="compatible"/>
         <description>
@@ -280,7 +297,7 @@
         <api name="DebuggerCoreSPI"/>
         <summary>Add a way not to persist breakpoints and watches.</summary>
         <version major="2" minor="72"/>
-        <date day="04" month="10" year="2021"/>
+        <date day="4" month="10" year="2021"/>
         <author login="entlicher"/>
         <compatibility binary="compatible" source="compatible" addition="yes" semantic="compatible"/>
 	<description>
@@ -311,7 +328,6 @@
 -->
     <head>
       <title>Debugger Core UI SPI changes by date</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>
 

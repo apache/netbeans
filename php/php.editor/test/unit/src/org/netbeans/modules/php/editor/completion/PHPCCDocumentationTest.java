@@ -559,7 +559,7 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
     }
 
     public void testDNFTypesMethodTag() throws Exception {
-        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "$this->methodT^ag($param1, $param2);", false, "");
+        checkCompletionDocumentation("testfiles/completion/documentation/php82/dnfTypes.php", "$this->methodTa^g($param1, $param2);", false, "");
     }
 
     public void testDNFTypesStaticMethodTag() throws Exception {
@@ -640,6 +640,26 @@ public class PHPCCDocumentationTest extends PHPCodeCompletionTestBase {
 
     public void testBackedEnumCaseInt_03() throws Exception {
         checkCompletionDocumentation("testfiles/completion/documentation/php81/enumCases.php", "BackeEnumCaseInt::CASE_C^;", false, "");
+    }
+
+    public void testPhpDocAndMethodInDifferentBlocks() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/phpDocAndFunctionInDifferentBlocks.php", "$instance->method2^(1)", false, "");
+    }
+
+    public void testPhpDocAndFunctionInDifferentBlocks_01() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/phpDocAndFunctionInDifferentBlocks.php", "func1^(1)", false, "");
+    }
+
+    public void testPhpDocAndFunctionInDifferentBlocks_02() throws Exception {
+        checkCompletionDocumentation("testfiles/completion/documentation/phpDocAndFunctionInDifferentBlocks.php", "func2^(1)", false, "");
+    }
+
+    public void testFunctionGuessingFloatReturnType_01() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/functionGuessingFloatReturnType.php", "testFloatReturn^Type_01();");
+    }
+
+    public void testFunctionGuessingFloatReturnType_02() throws Exception {
+        checkCompletionOnlyDocumentation("testfiles/completion/documentation/functionGuessingFloatReturnType.php", "testFloatReturnTypeWithUnion^Type_01();");
     }
 
     @Override

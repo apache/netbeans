@@ -199,7 +199,7 @@ public class GradleSourceForBinary implements SourceForBinaryQueryImplementation
                     }
                 }
             }
-            return roots.toArray(new FileObject[roots.size()]);
+            return roots.toArray(new FileObject[0]);
         }
 
         @Override

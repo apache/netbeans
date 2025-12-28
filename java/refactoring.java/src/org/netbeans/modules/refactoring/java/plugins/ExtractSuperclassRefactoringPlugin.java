@@ -256,7 +256,7 @@ public final class ExtractSuperclassRefactoringPlugin extends JavaRefactoringPlu
     
     private ClasspathInfo getClasspathInfo(Set<FileObject> a) {
         ClasspathInfo cpInfo;
-        cpInfo = JavaRefactoringUtils.getClasspathInfoFor(a.toArray(new FileObject[a.size()]));
+        cpInfo = JavaRefactoringUtils.getClasspathInfoFor(a.toArray(new FileObject[0]));
         return cpInfo;
     }
     
@@ -337,6 +337,7 @@ public final class ExtractSuperclassRefactoringPlugin extends JavaRefactoringPlu
                         newTypeParams,
                         superClass,
                         implementsList,
+                        Collections.emptyList(),
                         Collections.<Tree>emptyList());
                 newClassTree = GeneratorUtilities.get(workingCopy).insertClassMembers(newClassTree, members);
 
@@ -382,6 +383,7 @@ public final class ExtractSuperclassRefactoringPlugin extends JavaRefactoringPlu
                         classTree.getTypeParameters(),
                         superClassTree,
                         newImpls,
+                        classTree.getPermitsClause(),
                         newMembers);
 
                 rewrite(classTree, nc);

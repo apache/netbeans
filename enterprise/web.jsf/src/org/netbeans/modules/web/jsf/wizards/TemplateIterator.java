@@ -350,6 +350,18 @@ public class TemplateIterator implements TemplateWizard.Iterator {
             args.put("LAYOUT_CSS_PATH", layoutPath);    //NOI18N
             args.put("DEFAULT_CSS_PATH", defaultPath);  //NOI18N
             args.put("NS_LOCATION", namespaceLocation); //NOI18N
+
+            if (jsfVersion != null && jsfVersion.isAtLeast(JsfVersion.JSF_4_0)) {
+                args.put("NS_LOCATION", NamespaceUtils.JAKARTA_ORG_LOCATION);
+                args.put("NS_JSF_PREFIX", NamespaceUtils.JAKARTA_ORG_LOCATION + ".");
+            } else if (jsfVersion != null && jsfVersion.isAtLeast(JsfVersion.JSF_2_2)) {
+                args.put("NS_LOCATION", NamespaceUtils.JCP_ORG_LOCATION);
+                args.put("NS_JSF_PREFIX", NamespaceUtils.JCP_ORG_LOCATION + "/jsf/");
+            } else {
+                args.put("NS_LOCATION", NamespaceUtils.SUN_COM_LOCATION);
+                args.put("NS_JSF_PREFIX", NamespaceUtils.SUN_COM_LOCATION + "/jsf/");
+            }
+
             MapFormat formater = new MapFormat(args);
             formater.setLeftBrace("__");    //NOI18N
             formater.setRightBrace("__");   //NOI18N

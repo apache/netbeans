@@ -22,7 +22,6 @@ import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
@@ -91,7 +90,7 @@ public class JsfTemplateUtils {
                 result.add(new Template(folder.getName(), getLocalizedName(folder), (Integer) position));
             }
         }
-        Collections.sort(result, TEMPLATE_COMPARATOR);
+        result.sort(TEMPLATE_COMPARATOR);
         return result;
     }
 

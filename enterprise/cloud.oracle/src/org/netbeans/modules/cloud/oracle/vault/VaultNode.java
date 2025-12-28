@@ -18,7 +18,10 @@
  */
 package org.netbeans.modules.cloud.oracle.vault;
 
+import com.oracle.bmc.identity.Identity;
+import com.oracle.bmc.identity.IdentityClient;
 import com.oracle.bmc.keymanagement.KmsVaultClient;
+import com.oracle.bmc.keymanagement.model.VaultSummary;
 import com.oracle.bmc.keymanagement.requests.ListVaultsRequest;
 import java.util.stream.Collectors;
 import org.netbeans.modules.cloud.oracle.ChildrenProvider;
@@ -34,6 +37,7 @@ import org.openide.util.NbBundle;
  * @author Jan Horvath
  */
 @NbBundle.Messages({
+    "OCIVault=OCI Vault: {0}"
 })
 public class VaultNode extends OCINode {
     private static final String VAULT_ICON = "org/netbeans/modules/cloud/oracle/resources/vault.svg"; // NOI18N
@@ -43,7 +47,7 @@ public class VaultNode extends OCINode {
         setName(vault.getName());
         setDisplayName(vault.getName());
         setIconBaseWithExtension(VAULT_ICON);
-        setShortDescription(vault.getDescription());
+        setShortDescription(Bundle.OCIVault(vault.getName()));
     }
 
     public static NodeProvider<VaultItem> createNode() {
@@ -55,23 +59,29 @@ public class VaultNode extends OCINode {
      *
      * @return Returns {@code ChildrenProvider} which fetches List of {@code VaultItem} for given {@code CompartmentItem}
      */
-    public static ChildrenProvider<CompartmentItem, VaultItem> getVaults() {
-        return compartmentId -> {
-            KmsVaultClient client = KmsVaultClient.builder().build(OCIManager.getDefault().getActiveProfile().getConfigProvider());
+    public static ChildrenProvider.SessionAware<CompartmentItem, VaultItem> getVaults() {
+        return (compartmentId, session) -> {
+            KmsVaultClient client = session.newClient(KmsVaultClient.class);
             
             ListVaultsRequest listVaultsRequest = ListVaultsRequest.builder()
                     .compartmentId(compartmentId.getKey().getValue())
                     .limit(88)
                     .build();
-                    
+
+            String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+            String regionCode = session.getRegion().getRegionCode();
+
             return client.listVaults(listVaultsRequest)
                     .getItems()
                     .stream()
+                    .filter(v -> v.getLifecycleState().equals(VaultSummary.LifecycleState.Active))
                     .map(d -> new VaultItem(
-                                OCID.of(d.getId(), "Vault"), //NOI18N
-                                d.getDisplayName(),
-                                d.getCompartmentId(),
-                                d.getManagementEndpoint())
+                            OCID.of(d.getId(), "Vault"), //NOI18N
+                            d.getCompartmentId(), //NOI18N
+                            d.getDisplayName(),
+                            d.getManagementEndpoint(),
+                            tenancyId,
+                            regionCode)
                     )
                     .collect(Collectors.toList());
         };

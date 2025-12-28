@@ -23,6 +23,7 @@ import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.text.DateFormat;
 import javax.swing.JFileChooser;
@@ -288,7 +289,7 @@ public class PatchAction extends NodeAction {
             if (binaries.contains(file)) continue;
             if (backup == null) {
                 try {
-                    backup = FileUtil.toFileObject(FileUtil.normalizeFile(File.createTempFile("diff-empty-backup", "")));
+                    backup = FileUtil.toFileObject(FileUtil.normalizeFile(Files.createTempFile("diff-empty-backup", "").toFile()));
                 } catch (IOException e) {
                     // ignore
                 }

@@ -379,7 +379,7 @@ public class I18nServiceImpl implements I18nService {
         } catch (IOException ex) {
             ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, ex);
         }
-        Collections.sort(list, new Comparator() {
+        list.sort(new Comparator() {
             @Override
             public int compare(Object o1, Object o2) {
                 MultiDataObject.Entry e1 = (MultiDataObject.Entry) o1;
@@ -402,7 +402,7 @@ public class I18nServiceImpl implements I18nService {
      * Provides a visual component (modal dialog) usable as a property
      * customizer that allows create a new locale file for given bundle (default
      * bundle name provided). The created locale should be written as a string
-     * (locale suffix) to the given propery editor.
+     * (locale suffix) to the given property editor.
      */
     @Override
     public Component getCreateLocaleComponent(final PropertyEditor prEd, FileObject srcFile, String bundleName) {

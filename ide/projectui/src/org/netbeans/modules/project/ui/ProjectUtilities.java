@@ -25,12 +25,13 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.io.CharConversionException;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,8 @@ import org.w3c.dom.NodeList;
  */
 public class ProjectUtilities {
     
+    private static final Logger LOG = Logger.getLogger(ProjectUtilities.class.getName());
+    
     static final String OPEN_FILES_NS = "http://www.netbeans.org/ns/projectui-open-files/1"; // NOI18N
     static final String OPEN_FILES_NS2 = "http://www.netbeans.org/ns/projectui-open-files/2"; // NOI18N
     static final String OPEN_FILES_ELEMENT = "open-files"; // NOI18N
@@ -102,31 +105,24 @@ public class ProjectUtilities {
             } else if (o != null) {
                 o.open();
             } else {
-                ERR.log(Level.INFO, "No EditCookie nor OpenCookie nor Openable for {0}", dobj);
+                LOG.log(Level.INFO, "No EditCookie nor OpenCookie nor Openable for {0}", dobj);
                 return false;
             }
             return true;
         }
          
         @Override
-        public Map<Project,Set<String>> close(final Project[] projects,
-                                                    final boolean notifyUI) {
-            final Wrapper wr = new Wrapper();
-            wr.urls4project = new HashMap<Project,Set<String>>();
-            doClose(projects, notifyUI, wr);
-            return wr.urls4project;
-        }
-
-        private void doClose(Project[] projects, boolean notifyUI, Wrapper wr) {
+        public Map<Project, Set<String>> close(Project[] projects, boolean notifyUI) {
+            Map<Project, Set<String>> project2FilesMap = new LinkedHashMap<>();
             List<Project> listOfProjects = Arrays.asList(projects);
             for (Project p : listOfProjects) { //#232668 all projects need an entry in the map - to handle projects without files correctly
-                wr.urls4project.put(p, new LinkedHashSet<String>());
+                project2FilesMap.put(p, new LinkedHashSet<>());
             }
-            Set<DataObject> openFiles = new HashSet<DataObject>();
-            final Set<TopComponent> tc2close = new HashSet<TopComponent>();
-            
-            ERR.finer("Closing TCs");
-            final Set<TopComponent> openedTC = getOpenedTCs();
+            Set<DataObject> openFiles = new LinkedHashSet<>();
+            List<TopComponent> tc2close = new ArrayList<>();
+
+            LOG.finer("Closing TCs");
+            List<TopComponent> openedTC = getOpenedTCs();
             
             for (TopComponent tc : openedTC) {
                 DataObject dobj = tc.getLookup().lookup(DataObject.class);
@@ -134,9 +130,10 @@ public class ProjectUtilities {
                 if (dobj != null) {
                     FileObject fobj = dobj.getPrimaryFile();
                     Project owner = ProjectConvertors.getNonConvertorOwner(fobj);
-                    ERR.log(Level.FINER, "Found {0} owned by {1} in {2} of {3}", new Object[] {fobj, owner, tc.getName(), tc.getClass()});
+                    LOG.log(Level.FINER, "Found {0} owned by {1} in {2} of {3}", new Object[] {fobj, owner, tc.getName(), tc.getClass()});
 
-                    if (listOfProjects.contains(owner)) {
+                    Set<String> files = project2FilesMap.get(owner);
+                    if (files != null) {
                         if (notifyUI) {
                             openFiles.add(dobj);
                             tc2close.add(tc);
@@ -144,18 +141,12 @@ public class ProjectUtilities {
                             // when not called from UI, only include TCs that arenot modified
                             tc2close.add(tc);
                         }
-                        //#235897 split a single line to detect NPE better
-                        final Set<String> pwnr = wr.urls4project.get(owner);
-                        assert pwnr != null : "Owner project for file:" + fobj + " prj:" + owner;
-                        final FileObject pf = fobj;
-                        assert pf != null;
-                        URL u = pf.toURL();
-                        assert u != null;
-                        String uex = u.toExternalForm();                        
-                        pwnr.add(uex);
+                        files.add(fobj.toURL().toExternalForm());
+                    } else if (owner != null) {
+                        LOG.log(Level.WARNING, "project association lost, project ({0}) might lose an opened file ({1}) on reopen", new Object[] {owner, fobj});
                     }
                 } else {
-                    ERR.log(Level.FINE, "#194243: no DataObject in lookup of {0} of {1}", new Object[] {tc.getName(), tc.getClass()});
+                    LOG.log(Level.FINE, "#194243: no DataObject in lookup of {0} of {1}", new Object[] {tc.getName(), tc.getClass()});
                 }
             }
             if (notifyUI) {
@@ -188,33 +179,31 @@ public class ProjectUtilities {
             } else {
                 // signal that close was vetoed
                 if (!openFiles.isEmpty()) {
-                    wr.urls4project = null;
+                    return null;
                 }
             }
+            return project2FilesMap;
         }
 
-        private Set<TopComponent> getOpenedTCs() {
-            final Set<TopComponent> openedTC = new HashSet<TopComponent>();
-            Runnable r = new Runnable() {
-                public void run() {
-                    WindowManager wm = WindowManager.getDefault();
-                    for (Mode mode : wm.getModes()) {
-                        //#84546 - this condituon should allow us to close just editor related TCs that are in any imaginable mode.
-                        if (!wm.isEditorMode(mode)) {
-                            continue;
-                        }
-                        ERR.log(Level.FINER, "Closing TCs in mode {0}", mode.getName());
-                        openedTC.addAll(Arrays.asList(wm.getOpenedTopComponents(mode)));
+        private List<TopComponent> getOpenedTCs() {
+            List<TopComponent> openedTC = new ArrayList<>();
+            Runnable onEDT = () -> {
+                WindowManager wm = WindowManager.getDefault();
+                for (Mode mode : wm.getModes()) {
+                    //#84546 - this condituon should allow us to close just editor related TCs that are in any imaginable mode.
+                    if (!wm.isEditorMode(mode)) {
+                        continue;
                     }
+                    LOG.log(Level.FINER, "Closing TCs in mode {0}", mode.getName());
+                    openedTC.addAll(Arrays.asList(wm.getOpenedTopComponents(mode)));
                 }
             };
             if (SwingUtilities.isEventDispatchThread()) {
-                r.run();
+                onEDT.run();
             } else {
                 try {
-                    SwingUtilities.invokeAndWait(r);
-                }
-                catch (Exception ex) {
+                    SwingUtilities.invokeAndWait(onEDT);
+                } catch (InterruptedException | InvocationTargetException ex) {
                     Exceptions.printStackTrace(ex);
                 }
             }
@@ -222,12 +211,6 @@ public class ProjectUtilities {
         }
     };
 
-    private static class Wrapper {
-        Map<Project,Set<String>> urls4project;
-    }
-    
-    private static final Logger ERR = Logger.getLogger(ProjectUtilities.class.getName());
-    
     private ProjectUtilities() {}
     
     public static void selectAndExpandProject( final Project p ) {
@@ -483,35 +466,22 @@ public class ProjectUtilities {
             // store project's documents
             // loop all project being closed
             for (Map.Entry<Project,Set<String>> entry : urls4project.entrySet()) {
-                storeProjectOpenFiles(entry.getKey(), entry.getValue(), groupName);
+                storeProjectOpenFiles(entry.getKey(), new ArrayList<>(entry.getValue()), groupName);
             }
         }
         
         return urls4project != null;
     }
     
-    public static void storeProjectOpenFiles(Project p, Set<String> urls, String groupName) {
-        AuxiliaryConfiguration aux = ProjectUtils.getAuxiliaryConfiguration(p);
-        
-        Set<String> openFileUrls = getOpenFilesUrls(p, groupName);
-        if(urls.isEmpty() && openFileUrls.isEmpty()) {
-            // was empty, stays empty, leave
-            return;                
-        }        
-        if(urls.size() == openFileUrls.size()) {
-            boolean same = true;
-            for (String url : openFileUrls) {
-                if(!urls.contains(url)) {
-                    same = false;
-                    break;
-                }
-            }
-            if(same) {
-                // nothing changed, leave
-                return;
-            }
+    public static void storeProjectOpenFiles(Project p, List<String> urls, String groupName) {
+
+        List<String> openFileUrls = getOpenFilesUrls(p, groupName);
+        // check if file list changed, order matters
+        if (urls.equals(openFileUrls)) {
+            return;
         }
-        
+
+        AuxiliaryConfiguration aux = ProjectUtils.getAuxiliaryConfiguration(p);
         aux.removeConfigurationFragment (OPEN_FILES_ELEMENT, OPEN_FILES_NS, false);
 
         Element openFiles = aux.getConfigurationFragment(OPEN_FILES_ELEMENT, OPEN_FILES_NS2, false);
@@ -556,12 +526,12 @@ public class ProjectUtilities {
     
     public static Set<FileObject> openProjectFiles (Project p, Group grp) {
         String groupName = grp == null ? null : grp.getName();
-        ERR.log(Level.FINE, "Trying to open files from {0}...", p);
+        LOG.log(Level.FINE, "Trying to open files from {0}...", p);
         
-        Set<String> urls = getOpenFilesUrls(p, groupName);
-        Set<FileObject> toRet = new HashSet<FileObject>();
+        List<String> urls = getOpenFilesUrls(p, groupName);
+        Set<FileObject> toRet = new LinkedHashSet<>();
         for (String url : urls) {
-            ERR.log(Level.FINE, "Will try to open {0}", url);
+            LOG.log(Level.FINE, "Will try to open {0}", url);
             FileObject fo;
             try {
                 fo = URLMapper.findFileObject (new URL (url));
@@ -570,13 +540,13 @@ public class ProjectUtilities {
                 continue;
             }
             if (fo == null || !fo.isValid()) { //check for validity because of issue #238488
-                ERR.log(Level.FINE, "Could not find {0}", url);
+                LOG.log(Level.FINE, "Could not find {0}", url);
                 continue;
             }
             
             //#109676
             if (ProjectConvertors.getNonConvertorOwner(fo) != p) {
-                ERR.log(Level.FINE, "File {0} doesn''t belong to project at {1}", new Object[] {url, p.getProjectDirectory().getPath()});
+                LOG.log(Level.FINE, "File {0} doesn''t belong to project at {1}", new Object[] {url, p.getProjectDirectory().getPath()});
                 continue;
             }
             
@@ -598,12 +568,13 @@ public class ProjectUtilities {
         return toRet;
     }
     
-    private static Set<String> getOpenFilesUrls(Project p, String groupName) {
+    // Returns an deduplicated list of opened file URLs in encounter order for this project and group.
+    private static List<String> getOpenFilesUrls(Project p, String groupName) {
         AuxiliaryConfiguration aux = ProjectUtils.getAuxiliaryConfiguration(p);
         
         Element openFiles = aux.getConfigurationFragment (OPEN_FILES_ELEMENT, OPEN_FILES_NS2, false);
         if (openFiles == null) {
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
 
         Element groupEl = null;
@@ -619,16 +590,16 @@ public class ProjectUtilities {
         }
         
         if (groupEl == null) {
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
         
         NodeList list = groupEl.getElementsByTagNameNS(OPEN_FILES_NS2, FILE_ELEMENT);
-        Set<String> toRet = new HashSet<String>();
+        Set<String> set = new LinkedHashSet<>();
         for (int i = 0; i < list.getLength (); i++) {
-            String url = list.item (i).getChildNodes ().item (0).getNodeValue ();
-            toRet.add(url);
+            String url = list.item(i).getChildNodes().item(0).getNodeValue();
+            set.add(url);
         }    
-        return toRet;
+        return new ArrayList<>(set);
     }
 
     // interface for handling project's documents stored in project private.xml

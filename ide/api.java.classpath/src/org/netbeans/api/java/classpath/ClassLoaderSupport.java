@@ -71,8 +71,6 @@ final class ClassLoaderSupport extends URLClassLoader implements FileChangeListe
     private final Map<FileObject,Boolean> emittedFileObjects = new HashMap<>();
     private boolean detachedFromCp;
 
-    /** contains AllPermission */
-
     /** Constructor that attaches itself to the filesystem pool.
     */
     @SuppressWarnings("LeakingThisInConstructor")
@@ -280,6 +278,6 @@ final class ClassLoaderSupport extends URLClassLoader implements FileChangeListe
         for (ClassPath.Entry e : entries) {
             res.offer(e.getURL());
         }
-        return res.toArray(new URL[res.size()]);
+        return res.toArray(new URL[0]);
     }
 }

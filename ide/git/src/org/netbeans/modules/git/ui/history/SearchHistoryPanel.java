@@ -20,7 +20,6 @@
 package org.netbeans.modules.git.ui.history;
 
 import java.awt.Color;
-import java.awt.Component;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.util.NbBundle;
@@ -46,21 +45,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.WeakHashMap;
+import java.util.stream.Collectors;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.BoxLayout;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import org.netbeans.libs.git.GitBranch;
 import org.netbeans.libs.git.GitException;
+import org.netbeans.libs.git.GitRevisionInfo;
 import org.netbeans.libs.git.GitTag;
 import org.netbeans.modules.git.Git;
 import org.netbeans.modules.git.GitModuleConfig;
@@ -70,17 +69,17 @@ import org.netbeans.modules.git.ui.history.SearchHistoryTopComponent.DiffResults
 import org.netbeans.modules.git.ui.history.SummaryView.GitLogEntry;
 import org.netbeans.modules.git.ui.repository.RepositoryInfo;
 import org.netbeans.modules.versioning.history.AbstractSummaryView.SummaryViewMaster.SearchHighlight;
-import org.netbeans.modules.versioning.util.VCSKenaiAccessor;
+import org.openide.awt.Actions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.WeakListeners;
+
+import static java.util.Locale.ROOT;
 
 /**
  * Contains all components of the Search History panel.
  *
  * @author Maros Sandor
  */
-@NbBundle.Messages({
-    "SearchHistoryPanel.filter.allbranches=All Branches"
-})
 class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.Provider, PropertyChangeListener, DocumentListener, ActionListener {
 
     private final File[]                roots;
@@ -95,33 +94,33 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
     private List<RepositoryRevision> results;
     private SummaryView             summaryView;    
     private DiffResultsView         diffView;
-    private AbstractAction nextAction;
-    private AbstractAction prevAction;
+    private Action nextAction;
+    private Action prevAction;
     private final File repository;
+    private final ExplorerManager explorerManager;
     
     private static final Icon ICON_COLLAPSED = UIManager.getIcon("Tree.collapsedIcon"); //NOI18N
     private static final Icon ICON_EXPANDED = UIManager.getIcon("Tree.expandedIcon"); //NOI18N
     
     private int showingResults;
-    private Map<String, VCSKenaiAccessor.KenaiUser> kenaiUserMap;
     private List<GitLogEntry> logEntries;
     private boolean selectFirstRevision;
     private DiffResultsViewFactory diffViewFactory;
     private boolean searchStarted;
     private String currentBranch;
-    private Object currentBranchFilter = ALL_BRANCHES_FILTER;
     private final RepositoryInfo info;
-    private static final String ALL_BRANCHES_FILTER = Bundle.SearchHistoryPanel_filter_allbranches();
     private final PropertyChangeListener list;
 
     enum FilterKind {
+
         ALL(null, NbBundle.getMessage(SearchHistoryPanel.class, "Filter.All")), //NOI18N
         MESSAGE(SearchHighlight.Kind.MESSAGE, NbBundle.getMessage(SearchHistoryPanel.class, "Filter.Message")), //NOI18N
         USER(SearchHighlight.Kind.AUTHOR, NbBundle.getMessage(SearchHistoryPanel.class, "Filter.User")), //NOI18N
         ID(SearchHighlight.Kind.REVISION, NbBundle.getMessage(SearchHistoryPanel.class, "Filter.Commit")), //NOI18N
         FILE(SearchHighlight.Kind.FILE, NbBundle.getMessage(SearchHistoryPanel.class, "Filter.File")); //NOI18N
-        private String label;
-        private SearchHighlight.Kind kind;
+
+        private final String label;
+        private final SearchHighlight.Kind kind;
         
         FilterKind (SearchHighlight.Kind kind, String label) {
             this.kind = kind;
@@ -213,52 +212,38 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
         if (d1.width > d2.width) {
             tbDiff.setPreferredSize(d1);
         }
-        
-        nextAction = new AbstractAction(null, org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/diff-next.png", false)) { // NOI18N
-            {
-                putValue(Action.SHORT_DESCRIPTION, NbBundle.getMessage(SearchHistoryPanel.class, "CTL_DiffPanel_Next_Tooltip")); // NOI18N
-            }
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                diffView.onNextButton();
-            }
-        };
-        prevAction = new AbstractAction(null, org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/diff-prev.png", false)) { // NOI18N
-            {
-                putValue(Action.SHORT_DESCRIPTION, NbBundle.getMessage(SearchHistoryPanel.class, "CTL_DiffPanel_Prev_Tooltip")); // NOI18N
-            }
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                diffView.onPrevButton();
-            }
-        };
-        bNext.setAction(nextAction);
-        bPrev.setAction(prevAction);
+
+        nextAction = createJumpAction("Next", bNext, () -> diffView.onNextButton()); // NOI18N
+        prevAction = createJumpAction("Prev", bPrev, () -> diffView.onPrevButton()); // NOI18N
 
         criteria.tfFrom.getDocument().addDocumentListener(this);
         criteria.tfTo.getDocument().addDocumentListener(this);
         
-        getActionMap().put("jumpNext", nextAction); // NOI18N
-        getActionMap().put("jumpPrev", prevAction); // NOI18N
-        
         fileInfoCheckBox.setSelected(GitModuleConfig.getDefault().getShowFileInfo());
         
         criteria.btnSelectBranch.addActionListener(this);
-        cmbBranch.setRenderer(new DefaultListCellRenderer() {
-
-            @Override
-            public Component getListCellRendererComponent (JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                if (value instanceof GitBranch) {
-                    value = ((GitBranch) value).getName();
-                }
-                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            }
-            
-        });
-        refreshBranchFilterModel();
     }
 
-    private ExplorerManager             explorerManager;
+    private Action createJumpAction(String prevOrNext, JButton button, Runnable onActionPerformed) {
+        Action mainAction = Actions.forID("System", "org.netbeans.core.actions.Jump"+prevOrNext+"Action"); // NOI18N
+        String hotkey = ""; // NOI18N
+        if (mainAction != null) {
+            KeyStroke ks = (KeyStroke) mainAction.getValue(Action.ACCELERATOR_KEY);
+            if (ks != null) {
+                hotkey = Actions.keyStrokeToString(ks);
+            }
+        }
+        ImageIcon icon = ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/diff-"+prevOrNext.toLowerCase(ROOT)+".png", false); // NOI18N
+        Action callbackAction = new AbstractAction(null, icon) {
+            @Override public void actionPerformed(ActionEvent e) {
+                onActionPerformed.run();
+            }
+        };
+        callbackAction.putValue(Action.SHORT_DESCRIPTION, NbBundle.getMessage(SearchHistoryPanel.class, "CTL_DiffPanel_"+prevOrNext+"_Tooltip", hotkey)); // NOI18N
+        button.setAction(callbackAction);
+        getActionMap().put("jump"+prevOrNext, callbackAction); // NOI18N
+        return callbackAction;
+    }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -266,8 +251,6 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
             TopComponent tc = (TopComponent) SwingUtilities.getAncestorOfClass(TopComponent.class, this);
             if (tc == null) return;
             tc.setActivatedNodes((Node[]) evt.getNewValue());
-        } else if (RepositoryInfo.PROPERTY_BRANCHES.equals(evt.getPropertyName())) {
-            refreshBranchFilterModel();
         }
     }
 
@@ -306,7 +289,7 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
             } else {
                 if (tbSummary.isSelected()) {
                     if (summaryView == null) {
-                        summaryView = new SummaryView(this, logEntries = createLogEntries(results), kenaiUserMap);
+                        summaryView = new SummaryView(this, logEntries = createLogEntries(results));
                     }
                     resultsPanel.add(summaryView.getComponent());
                     summaryView.requestFocusInWindow();
@@ -324,7 +307,11 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
             resultsPanel.repaint();
         }
         updateActions();
-        fileInfoCheckBox.setEnabled(tbSummary.isSelected());
+        fileInfoCheckBox.setVisible(tbSummary.isSelected());
+        layoutButton.setVisible(!tbSummary.isSelected());
+        bPrev.setVisible(!tbSummary.isSelected());
+        bNext.setVisible(!tbSummary.isSelected());
+        jSeparator3.setVisible(!tbSummary.isSelected());
 
         searchCriteriaPanel.setVisible(criteriaVisible);
         bSearch.setVisible(criteriaVisible);
@@ -348,13 +335,12 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
         prevAction.setEnabled(!tbSummary.isSelected() && diffView != null && diffView.isPrevEnabled());
     }
 
-    void setResults (List<RepositoryRevision> newResults, Map<String, VCSKenaiAccessor.KenaiUser> kenaiUserMap, int limit) {
-        setResults(newResults, kenaiUserMap, false, limit);
+    void setResults(List<RepositoryRevision> newResults, int limit) {
+        setResults(newResults, false, limit);
     }
 
-    private void setResults (List<RepositoryRevision> newResults, Map<String, VCSKenaiAccessor.KenaiUser> kenaiUserMap, boolean searching, int limit) {
+    private void setResults(List<RepositoryRevision> newResults, boolean searching, int limit) {
         this.results = newResults;
-        this.kenaiUserMap = kenaiUserMap;
         this.searchInProgress = searching;
         showingResults = limit;
         if (newResults != null && newResults.size() < limit) {
@@ -377,14 +363,13 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
     void executeSearch() {
         searchStarted = true;
         cancelBackgroundTasks();
-        setResults(null, null, true, -1);
+        setResults(null, true, -1);
         GitModuleConfig.getDefault().setShowHistoryMerges(criteria.isIncludeMerges());
         if (currentBranch != null) {
             // search history opened with request to work only on current branch
             // did user change this setting and cleared the branch field?
             GitModuleConfig.getDefault().setSearchOnlyCurrentBranchEnabled(criteria.getBranch() != null);
         }
-        updateBranchFilter(criteria.getBranch());
         try {
             currentSearch = new SearchExecutor(this);
             currentSearch.start(Git.getInstance().getRequestProcessor(repository), repository, NbBundle.getMessage(SearchExecutor.class, "MSG_Search_Progress", repository)); //NOI18N
@@ -446,10 +431,8 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
         tbDiff = new javax.swing.JToggleButton();
         jSeparator2 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JToolBar.Separator();
-        jSeparator4 = new javax.swing.JToolBar.Separator();
-        lblBranch = new javax.swing.JLabel();
-        cmbBranch = new javax.swing.JComboBox();
-        jSeparator1 = new javax.swing.JToolBar.Separator();
+        layoutButton = new javax.swing.JToggleButton();
+        fillerX = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         lblFilter = new javax.swing.JLabel();
         cmbFilterKind = new javax.swing.JComboBox();
         lblFilterContains = new javax.swing.JLabel();
@@ -464,107 +447,79 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
 
         searchCriteriaPanel.setLayout(new java.awt.BorderLayout());
 
-        jToolBar1.setLayout(new BoxLayout(jToolBar1, BoxLayout.X_AXIS));
-        jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
         buttonGroup1.add(tbSummary);
         tbSummary.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(tbSummary, bundle.getString("CTL_ShowSummary")); // NOI18N
         tbSummary.setToolTipText(bundle.getString("TT_Summary")); // NOI18N
-        tbSummary.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                onViewToggle(evt);
-            }
-        });
+        tbSummary.addActionListener(this::onViewToggle);
         jToolBar1.add(tbSummary);
 
         buttonGroup1.add(tbDiff);
         org.openide.awt.Mnemonics.setLocalizedText(tbDiff, bundle.getString("CTL_ShowDiff")); // NOI18N
         tbDiff.setToolTipText(bundle.getString("TT_ShowDiff")); // NOI18N
-        tbDiff.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                onViewToggle(evt);
-            }
-        });
+        tbDiff.addActionListener(this::onViewToggle);
         jToolBar1.add(tbDiff);
 
         jSeparator2.setOrientation(javax.swing.SwingConstants.VERTICAL);
         jSeparator2.setMaximumSize(new java.awt.Dimension(2, 32767));
         jToolBar1.add(jSeparator2);
 
-        bNext.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/diff-next.png", false)); // NOI18N
+        bNext.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/diff-next.png", false));
         jToolBar1.add(bNext);
         bNext.getAccessibleContext().setAccessibleName(bundle.getString("ACSN_NextDifference")); // NOI18N
         bNext.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(SearchHistoryPanel.class, "ACSD_NextDifference")); // NOI18N
 
-        bPrev.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/diff-prev.png", false)); // NOI18N
+        bPrev.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/diff-prev.png", false));
         jToolBar1.add(bPrev);
         bPrev.getAccessibleContext().setAccessibleName(bundle.getString("ACSN_PrevDifference")); // NOI18N
         bPrev.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(SearchHistoryPanel.class, "ACSD_PrevDifference")); // NOI18N
 
         jToolBar1.add(jSeparator3);
 
+        layoutButton.setIcon(org.openide.util.ImageUtilities.loadImageIcon("/org/netbeans/modules/git/resources/icons/switch_layout.png", false));
+        layoutButton.setToolTipText(org.openide.util.NbBundle.getMessage(SearchHistoryPanel.class, "TT_SwitchLayout")); // NOI18N
+        layoutButton.setFocusable(false);
+        layoutButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        layoutButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        layoutButton.addActionListener(this::layoutButtonActionPerformed);
+        jToolBar1.add(layoutButton);
+
         org.openide.awt.Mnemonics.setLocalizedText(fileInfoCheckBox, org.openide.util.NbBundle.getMessage(SearchHistoryPanel.class, "LBL_SearchHistoryPanel_AllInfo")); // NOI18N
         fileInfoCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(SearchHistoryPanel.class, "LBL_TT_SearchHistoryPanel_AllInfo")); // NOI18N
         fileInfoCheckBox.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        fileInfoCheckBox.setOpaque(false);
-        fileInfoCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fileInfoCheckBoxActionPerformed(evt);
-            }
-        });
+        fileInfoCheckBox.addActionListener(this::fileInfoCheckBoxActionPerformed);
         jToolBar1.add(fileInfoCheckBox);
-        jToolBar1.add(jSeparator4);
-
-        lblBranch.setLabelFor(cmbBranch);
-        org.openide.awt.Mnemonics.setLocalizedText(lblBranch, org.openide.util.NbBundle.getMessage(SearchHistoryPanel.class, "branchLabel.text")); // NOI18N
-        lblBranch.setToolTipText(org.openide.util.NbBundle.getMessage(SearchHistoryPanel.class, "branchLabel.TTtext")); // NOI18N
-        lblBranch.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
-        jToolBar1.add(lblBranch);
-
-        cmbBranch.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbBranchActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(cmbBranch);
-        jToolBar1.add(jSeparator1);
+        jToolBar1.add(fillerX);
 
         org.openide.awt.Mnemonics.setLocalizedText(lblFilter, org.openide.util.NbBundle.getMessage(SearchHistoryPanel.class, "filterLabel.text")); // NOI18N
         lblFilter.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
         jToolBar1.add(lblFilter);
 
-        cmbFilterKind.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbFilterKindActionPerformed(evt);
-            }
-        });
+        cmbFilterKind.setMaximumSize(new java.awt.Dimension(300, 32767));
+        cmbFilterKind.addActionListener(this::cmbFilterKindActionPerformed);
         jToolBar1.add(cmbFilterKind);
 
         org.openide.awt.Mnemonics.setLocalizedText(lblFilterContains, org.openide.util.NbBundle.getMessage(SearchHistoryPanel.class, "containsLabel")); // NOI18N
         lblFilterContains.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
         jToolBar1.add(lblFilterContains);
 
-        txtFilter.setMinimumSize(new java.awt.Dimension(30, 18));
-        txtFilter.setPreferredSize(new java.awt.Dimension(50, 18));
+        txtFilter.setMaximumSize(new java.awt.Dimension(350, 100));
+        txtFilter.setPreferredSize(new java.awt.Dimension(350, 23));
         jToolBar1.add(txtFilter);
 
         resultsPanel.setLayout(new java.awt.BorderLayout());
 
         org.openide.awt.Mnemonics.setLocalizedText(expandCriteriaButton, org.openide.util.NbBundle.getMessage(SearchHistoryPanel.class, "CTL_expandCriteriaButton.text")); // NOI18N
-        expandCriteriaButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                expandCriteriaButtonActionPerformed(evt);
-            }
-        });
+        expandCriteriaButton.addActionListener(this::expandCriteriaButtonActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(searchCriteriaPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 691, Short.MAX_VALUE)
+            .addComponent(jToolBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
             .addComponent(resultsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(expandCriteriaButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -593,12 +548,12 @@ class SearchHistoryPanel extends javax.swing.JPanel implements ExplorerManager.P
         refreshComponents(true);
     }//GEN-LAST:event_onViewToggle
 
-private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileInfoCheckBoxActionPerformed
+    private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileInfoCheckBoxActionPerformed
         GitModuleConfig.getDefault().setShowFileInfo(fileInfoCheckBox.isSelected());
         if (summaryView != null) {
             summaryView.refreshView();
         }
-}//GEN-LAST:event_fileInfoCheckBoxActionPerformed
+    }//GEN-LAST:event_fileInfoCheckBoxActionPerformed
 
     private void expandCriteriaButtonActionPerformed (java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expandCriteriaButtonActionPerformed
         criteriaVisible = !searchCriteriaPanel.isVisible();
@@ -608,48 +563,19 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
     }//GEN-LAST:event_expandCriteriaButtonActionPerformed
 
     private void cmbFilterKindActionPerformed (java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbFilterKindActionPerformed
-        boolean filterCritVisible = cmbFilterKind.getSelectedItem() != FilterKind.ALL;
-        lblFilterContains.setVisible(filterCritVisible);
-        txtFilter.setVisible(filterCritVisible);
-        if (filterCritVisible) {
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run () {
-                    if (!cmbFilterKind.isPopupVisible()) {
-                        txtFilter.requestFocusInWindow();
-                    }
-                }
-            });
-        }
-        if (filterTimer != null && !txtFilter.getText().trim().isEmpty()) {
+        EventQueue.invokeLater(() -> {
+            if (!cmbFilterKind.isPopupVisible()) {
+                txtFilter.requestFocusInWindow();
+            }
+        });
+        if (filterTimer != null && !txtFilter.getText().isBlank()) {
             filterTimer.restart();
         }
     }//GEN-LAST:event_cmbFilterKindActionPerformed
 
-    @NbBundle.Messages({
-        "LBL_SearchHistoryPanel.searchAllBranches.title=Search Restart Required",
-        "# {0} - branch name", "MSG_SearchHistoryPanel.searchAllBranches.text=Changing the branch filter to this value will have no effect \n"
-                + "because you are currently searching the branch \"{0}\" only.\n\n"
-                + "Do you want to restart the search to view all branches?"
-    })
-    private void cmbBranchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBranchActionPerformed
-        Object filter = cmbBranch.getSelectedItem();
-        boolean refresh = filter != currentBranchFilter;
-        if (refresh) {
-            currentBranchFilter = filter;
-            if (currentBranchFilter == ALL_BRANCHES_FILTER && criteria.getBranch() != null && criteria.tfBranch.isEnabled()) {
-                if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(this,
-                        Bundle.MSG_SearchHistoryPanel_searchAllBranches_text(criteria.getBranch()),
-                        Bundle.LBL_SearchHistoryPanel_searchAllBranches_title(),
-                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE)) {
-                    criteria.setBranch("");
-                    executeSearch();
-                    return;
-                }
-            }
-            filterTimer.restart();
-        }
-    }//GEN-LAST:event_cmbBranchActionPerformed
+    private void layoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_layoutButtonActionPerformed
+        diffView.switchLayout();
+    }//GEN-LAST:event_layoutButtonActionPerformed
 
     @Override
     public void insertUpdate(DocumentEvent e) {
@@ -704,16 +630,14 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
     final javax.swing.JButton bPrev = new javax.swing.JButton();
     private javax.swing.JButton bSearch;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JComboBox cmbBranch;
     private javax.swing.JComboBox cmbFilterKind;
     private org.netbeans.modules.versioning.history.LinkButton expandCriteriaButton;
     final javax.swing.JCheckBox fileInfoCheckBox = new javax.swing.JCheckBox();
-    private javax.swing.JToolBar.Separator jSeparator1;
+    private javax.swing.Box.Filler fillerX;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
-    private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JLabel lblBranch;
+    private javax.swing.JToggleButton layoutButton;
     private javax.swing.JLabel lblFilter;
     private javax.swing.JLabel lblFilterContains;
     private javax.swing.JPanel resultsPanel;
@@ -747,11 +671,6 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
         return showingResults > -1;
     }
     
-    static Map<String, VCSKenaiAccessor.KenaiUser> createKenaiUsersMap (List<RepositoryRevision> results) {
-        // TODO implement kenai support for git
-        return Collections.<String, VCSKenaiAccessor.KenaiUser>emptyMap();
-    }
-    
     void getMoreRevisions (PropertyChangeListener callback, int count) {
         if (currentSearch == null) {
             throw new IllegalStateException("No search task active"); //NOI18N
@@ -769,13 +688,18 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
                 NbBundle.getMessage(SearchHistoryPanel.class, "MSG_SearchHistoryPanel.GettingMoreRevisions")); //NOI18N
     }
 
-    Collection<SearchHighlight> getSearchHighlights () {
-        String filterText = txtFilter.getText().trim();
+    Collection<SearchHighlight> getSearchHighlights() {
+        String filterText = txtFilter.getText().strip();
         Object selectedFilterKind = cmbFilterKind.getSelectedItem();
-        if (selectedFilterKind == FilterKind.ALL || filterText.isEmpty() || !(selectedFilterKind instanceof FilterKind)) {
-            return Collections.<SearchHighlight>emptyList();
+        if (filterText.isEmpty() || !(selectedFilterKind instanceof FilterKind)) {
+            return Collections.emptyList();
+        } else if (selectedFilterKind == FilterKind.ALL) {
+            return List.of(new SearchHighlight(SearchHighlight.Kind.AUTHOR, filterText),
+                           new SearchHighlight(SearchHighlight.Kind.MESSAGE, filterText),
+                           new SearchHighlight(SearchHighlight.Kind.REVISION, filterText),
+                           new SearchHighlight(SearchHighlight.Kind.FILE, filterText));
         } else {
-            return Collections.singleton(new SearchHighlight(((FilterKind) selectedFilterKind).kind, filterText));
+            return List.of(new SearchHighlight(((FilterKind) selectedFilterKind).kind, filterText));
         }
     }
 
@@ -785,47 +709,75 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
         filterModel.addElement(FilterKind.ID);
         filterModel.addElement(FilterKind.MESSAGE);
         filterModel.addElement(FilterKind.USER);
-//        filterModel.addElement(FilterKind.FILE);
+        filterModel.addElement(FilterKind.FILE);
         cmbFilterKind.setModel(filterModel);
         cmbFilterKind.setSelectedItem(FilterKind.ALL);
         txtFilter.getDocument().addDocumentListener(this);
     }
 
-    private List<RepositoryRevision> filter (List<RepositoryRevision> results) {
-        List<RepositoryRevision> newResults = new ArrayList<RepositoryRevision>(results.size());
-        for (RepositoryRevision rev : results) {
-            if (applyFilter(rev)) {
-                newResults.add(rev);
-            }
-        }
-        return newResults;
+    private List<RepositoryRevision> filter(List<RepositoryRevision> results) {
+        FilterKind kind = (FilterKind)cmbFilterKind.getSelectedItem();
+        String filter = txtFilter.getText().strip().toLowerCase(ROOT);
+        return results.stream()
+                      .filter(rev -> applyFilter(rev, kind, filter))
+                      .collect(Collectors.toList());
     }
 
-    boolean applyFilter (RepositoryRevision rev) {
-        boolean visible = true;
-        String filterText = txtFilter.getText().trim().toLowerCase();
-        Object selectedFilterKind = cmbFilterKind.getSelectedItem();
-        if (selectedFilterKind != FilterKind.ALL && !filterText.isEmpty()) {
-            if (selectedFilterKind == FilterKind.MESSAGE) {
-                visible = rev.getLog().getFullMessage().toLowerCase().contains(filterText);
-            } else if (selectedFilterKind == FilterKind.USER) {
-                visible = rev.getLog().getAuthor().toString().toLowerCase().contains(filterText);
-            } else if (selectedFilterKind == FilterKind.ID) {
-                visible = rev.getLog().getRevision().contains(filterText)
-                        || contains(rev.getBranches(), filterText)
-                        || contains(rev.getTags(), filterText);
-            }
+    // TODO record
+    private final class CachedFilterResult {
+        private final FilterKind kind;
+        private final String text;
+        private final boolean matches;
+        private CachedFilterResult(FilterKind kind, String text, boolean matches) {
+            this.kind = kind;
+            this.text = text;
+            this.matches = matches;
         }
-        Object selectedBranchFilter = currentBranchFilter;
-        if (visible && selectedBranchFilter instanceof GitBranch) {
-            visible = rev.getLog().getBranches().containsKey(((GitBranch) currentBranchFilter).getName());
+        private boolean isValidFor(FilterKind kind, String text) {
+            return this.kind == kind && this.text.equals(text);
         }
-        return visible;
     }
-    
+
+    private final Map<RepositoryRevision, CachedFilterResult> filterResultCache = new WeakHashMap<>();
+
+    boolean applyFilter(RepositoryRevision rev) {
+        return applyFilter(rev, (FilterKind)cmbFilterKind.getSelectedItem(), txtFilter.getText().strip().toLowerCase(ROOT));
+    }
+
+    private boolean applyFilter(RepositoryRevision rev, FilterKind kind, String text) {
+        CachedFilterResult result = filterResultCache.get(rev);
+        if (result == null || !result.isValidFor(kind, text)) {
+            result = new CachedFilterResult(kind, text, applyFilterImpl(rev, kind, text));
+            filterResultCache.put(rev, result);
+        }
+        return result.matches;
+    }
+
+    private boolean applyFilterImpl(RepositoryRevision rev, FilterKind kind, String text) {
+        GitRevisionInfo log = rev.getLog();
+        return text.isEmpty()
+            || (allOrEquals(kind, FilterKind.MESSAGE) && log.getFullMessage().toLowerCase(ROOT).contains(text))
+            || (allOrEquals(kind, FilterKind.USER) && log.getAuthor().toString().toLowerCase(ROOT).contains(text))
+            || (allOrEquals(kind, FilterKind.ID) && (log.getRevision().contains(text) || contains(rev.getBranches(), text) || contains(rev.getTags(), text)))
+            || (allOrEquals(kind, FilterKind.FILE) && containsFiles(log, text));
+    }
+
+    private static boolean allOrEquals(FilterKind toCheck, FilterKind required) {
+        return toCheck == FilterKind.ALL || toCheck == required;
+    }
+
+    private boolean containsFiles(GitRevisionInfo log, String text) {
+        try {
+            return log.getModifiedFiles().values().stream()
+                            .anyMatch(f -> f.getRelativePath().toLowerCase(ROOT).contains(text));
+        } catch (GitException ex) {
+            return false;
+        }
+    }
+
     private static boolean contains (GitBranch[] items, String needle) {
         for (GitBranch item : items) {
-            if (item.getName() != GitBranch.NO_BRANCH && item.getName().toLowerCase().contains(needle)) {
+            if (item.getName() != GitBranch.NO_BRANCH && item.getName().toLowerCase(ROOT).contains(needle)) {
                 return true;
             }
         }
@@ -834,7 +786,7 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
     
     private static boolean contains (GitTag[] items, String needle) {
         for (GitTag item : items) {
-            if (item.getTagName().toLowerCase().contains(needle)) {
+            if (item.getTagName().toLowerCase(ROOT).contains(needle)) {
                 return true;
             }
         }
@@ -859,40 +811,35 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
                 GitClientExceptionHandler.notifyException(ex, true);
                 return;
             }
-            final Map<String, VCSKenaiAccessor.KenaiUser> additionalUsersMap = createKenaiUsersMap(newResults);
             if (!isCanceled()) {
-                EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run () {
-                        if (!isCanceled()) {
-                            Set<String> visibleRevisions = new HashSet<String>(results.size());
-                            for (RepositoryRevision rev : results) {
-                                visibleRevisions.add(rev.getLog().getRevision());
+                EventQueue.invokeLater(() -> {
+                    if (!isCanceled()) {
+                        Set<String> visibleRevisions = new HashSet<>(results.size());
+                        for (RepositoryRevision rev : results) {
+                            visibleRevisions.add(rev.getLog().getRevision());
+                        }
+                        
+                        List<RepositoryRevision> toAdd = new ArrayList<>(newResults.size());
+                        for (RepositoryRevision rev : newResults) {
+                            if (!visibleRevisions.contains(rev.getLog().getRevision())) {
+                                toAdd.add(rev);
                             }
-                            
-                            List<RepositoryRevision> toAdd = new ArrayList<RepositoryRevision>(newResults.size());
-                            for (RepositoryRevision rev : newResults) {
-                                if (!visibleRevisions.contains(rev.getLog().getRevision())) {
-                                    toAdd.add(rev);
-                                }
-                            }
-                            results.addAll(toAdd);
-                            if (count == -1) {
-                                showingResults = -1;
-                            } else {
-                                showingResults = count;
-                            }
-                            if (showingResults > newResults.size()) {
-                                showingResults = -1;
-                            }
-                            logEntries = createLogEntries(results);
-                            kenaiUserMap.putAll(additionalUsersMap);
-                            if (diffView != null) {
-                                diffView.refreshResults(results);
-                            }
-                            if (summaryView != null) {
-                                summaryView.entriesChanged(logEntries);
-                            }
+                        }
+                        results.addAll(toAdd);
+                        if (count == -1) {
+                            showingResults = -1;
+                        } else {
+                            showingResults = count;
+                        }
+                        if (showingResults > newResults.size()) {
+                            showingResults = -1;
+                        }
+                        logEntries = createLogEntries(results);
+                        if (diffView != null) {
+                            diffView.refreshResults(results);
+                        }
+                        if (summaryView != null) {
+                            summaryView.entriesChanged(logEntries);
                         }
                     }
                 });
@@ -901,7 +848,7 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
     }
 
     List<GitLogEntry> createLogEntries(List<RepositoryRevision> results) {
-        List<GitLogEntry> ret = new LinkedList<GitLogEntry>();
+        List<GitLogEntry> ret = new LinkedList<>();
         for (RepositoryRevision repositoryRevision : results) {
             ret.add(new SummaryView.GitLogEntry(repositoryRevision, this));
         }
@@ -924,34 +871,4 @@ private void fileInfoCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//
         }
     }
 
-    private void refreshBranchFilterModel () {
-        DefaultComboBoxModel model = new DefaultComboBoxModel();
-        model.addElement(ALL_BRANCHES_FILTER);
-        for (Map.Entry<String, GitBranch> e : info.getBranches().entrySet()) {
-            GitBranch b = e.getValue();
-            if (b.getName() != GitBranch.NO_BRANCH) {
-                model.addElement(b);
-                if (currentBranchFilter instanceof GitBranch && b.getName().equals(((GitBranch) currentBranchFilter).getName())) {
-                    currentBranchFilter = b;
-                }
-            }
-        }
-        cmbBranch.setModel(model);
-        cmbBranch.setSelectedItem(currentBranchFilter);
-    }
-
-    private void updateBranchFilter (String branch) {
-        currentBranchFilter = ALL_BRANCHES_FILTER;
-        if (branch != null && criteria.getMode() != SearchExecutor.Mode.REMOTE_IN) {
-            ComboBoxModel model = cmbBranch.getModel();
-            for (int i = 0; i < model.getSize(); ++i) {
-                Object filter = model.getElementAt(i);
-                if (filter instanceof GitBranch && branch.equals(((GitBranch) filter).getName())) {
-                    currentBranchFilter = filter;
-                    break;
-                }
-            }
-        }
-        cmbBranch.setSelectedItem(currentBranchFilter);
-    }
 }

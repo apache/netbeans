@@ -44,14 +44,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.api.progress.nb</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>1.40</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.modules.diff</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -373,7 +365,6 @@
                 <friend>org.netbeans.modules.subversion.remote</friend>
                 <friend>org.netbeans.modules.team.ide</friend>
                 <friend>org.netbeans.modules.versioning.indexingbridge</friend>
-                <friend>org.netbeans.modules.versioning.kenai</friend>
                 <friend>org.netbeans.modules.versioning.system.cvss</friend>
                 <friend>org.netbeans.modules.versioning.ui</friend>
                 <package>org.netbeans.modules.proxy</package>

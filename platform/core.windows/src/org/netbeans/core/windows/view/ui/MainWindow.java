@@ -32,7 +32,6 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.JPanel;
 import javax.swing.border.*;
-import javax.swing.event.*;
 import org.netbeans.core.windows.*;
 import org.netbeans.core.windows.view.ui.toolbars.ToolbarConfiguration;
 import org.openide.LifecycleManager;
@@ -117,35 +116,19 @@ public final class MainWindow {
        if (mainMenuBar == null) {
            mainMenuBar = createMenuBar();
            ToolbarPool.getDefault().waitFinished();
+
            Toolkit toolkit = Toolkit.getDefaultToolkit();
            Class<?> xtoolkit = toolkit.getClass();
-           //#183739 - provide proper app name on Linux
            if (xtoolkit.getName().equals("sun.awt.X11.XToolkit")) { //NOI18N
+               // TODO those add --add-opens=java.desktop/sun.awt.X11=ALL-UNNAMED
+
+               //#183739 / JDK-6528430 - provide proper app name on Linux
                try {
                     final Field awtAppClassName = xtoolkit.getDeclaredField("awtAppClassName"); //NOI18N
                     awtAppClassName.setAccessible(true);
-                    awtAppClassName.set(null, NbBundle.getMessage(MainWindow.class, "CTL_MainWindow_Title_No_Project", "").trim()); //NOI18N
+                    awtAppClassName.set(null, NbBundle.getMessage(MainWindow.class, "CTL_MainWindow_Title_No_Project", "").strip()); //NOI18N
                } catch (Exception x) {
-                   LOGGER.log(Level.FINE, null, x);
-               }
-           }
-           //#198639 - workaround for main menu & mouse issues in Gnome 3
-           String session = System.getenv("DESKTOP_SESSION"); //NOI18N
-           if ("gnome-shell".equals(session) || "gnome".equals(session) || "mate".equals(session)) { //NOI18N
-               try {
-                   Class<?> xwm = Class.forName("sun.awt.X11.XWM"); //NOI18N
-                   Field awt_wmgr = xwm.getDeclaredField("awt_wmgr"); //NOI18N
-                   awt_wmgr.setAccessible(true);
-                   Field other_wm = xwm.getDeclaredField("OTHER_WM"); //NOI18N
-                   other_wm.setAccessible(true);
-                   if (awt_wmgr.get(null).equals(other_wm.get(null))) {
-                       Field metacity_wm = xwm.getDeclaredField("METACITY_WM"); //NOI18N
-                       metacity_wm.setAccessible(true);
-                       awt_wmgr.set(null, metacity_wm.get(null));
-                       LOGGER.info("installed #198639 workaround"); //NOI18N
-                   }
-               } catch (Exception x) {
-                   LOGGER.log(Level.FINE, null, x);
+                   LOGGER.log(Level.FINE, "can't change X11 application name", x);
                }
            }
        }
@@ -186,8 +169,7 @@ public final class MainWindow {
 
        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
-       frame.getAccessibleContext().setAccessibleDescription(
-               NbBundle.getBundle(MainWindow.class).getString("ACSD_MainWindow"));
+       frame.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(MainWindow.class, "ACSD_MainWindow"));
 
        frame.setJMenuBar(mainMenuBar);
 
@@ -240,11 +222,8 @@ public final class MainWindow {
                     statusLinePanel.add(status, BorderLayout.CENTER);
                }
 
-               WindowManager.getDefault().invokeWhenUIReady( new Runnable() {
-                   @Override
-                   public void run() {
-                        decoratePanel (statusLinePanel, false);
-                   }
+               WindowManager.getDefault().invokeWhenUIReady(() -> {
+                   decoratePanel(statusLinePanel, false);
                });
                statusLinePanel.setName("statusLine"); //NOI18N
                statusBar = statusLinePanel;
@@ -266,15 +245,12 @@ public final class MainWindow {
 
        //#38810 start - focusing the main window in case it's not active and the menu is
        // selected..
-       MenuSelectionManager.defaultManager().addChangeListener(new ChangeListener(){
-           @Override
-           public void stateChanged(ChangeEvent e) {
-               MenuElement[] elems = MenuSelectionManager.defaultManager().getSelectedPath();
-               if (elems != null && elems.length > 0) {
-                   if (elems[0] == frame.getJMenuBar()) {
-                       if (!frame.isActive()) {
-                           frame.toFront();
-                       }
+       MenuSelectionManager.defaultManager().addChangeListener(e -> {
+           MenuElement[] elems = MenuSelectionManager.defaultManager().getSelectedPath();
+           if (elems != null && elems.length > 0) {
+               if (elems[0] == frame.getJMenuBar()) {
+                   if (!frame.isActive()) {
+                       frame.toFront();
                    }
                }
            }
@@ -296,24 +272,19 @@ public final class MainWindow {
                    private final Object lock = new Object();
                    private LookupEvent lastEvent = null;
 
-                   private final RequestProcessor.Task updateTask = RP.create(
-                           new Runnable() {
-
-                       @Override
-                       public void run() {
-                           LookupEvent ev;
-                           synchronized (lock) {
-                               ev = lastEvent;
-                           }
-                           if (ev != null) {
-                               updateMacDocumentProperties(ev);
-                           }
-                           synchronized (lock) {
-                               if (lastEvent == ev) {
-                                   lastEvent = null;
-                               }
-                           }
-                       }
+                   private final RequestProcessor.Task updateTask = RP.create(() -> {
+                        LookupEvent ev;
+                        synchronized (lock) {
+                            ev = lastEvent;
+                        }
+                        if (ev != null) {
+                            updateMacDocumentProperties(ev);
+                        }
+                        synchronized (lock) {
+                            if (lastEvent == ev) {
+                                lastEvent = null;
+                            }
+                        }
                    });
 
                    @Override
@@ -334,13 +305,9 @@ public final class MainWindow {
 
    private void updateMacDocumentProperties( LookupEvent ev ) {
         if (ev.getSource() == saveResult) {
-            final boolean modified = saveResult.allItems().size() > 0;
-            SwingUtilities.invokeLater( new Runnable() {
-                @Override
-                public void run() {
-                    frame.getRootPane().putClientProperty ("Window.documentModified", //NOI18N
-                            modified ? Boolean.TRUE : Boolean.FALSE);
-                }
+            boolean modified = !saveResult.allItems().isEmpty();
+            SwingUtilities.invokeLater(() -> {
+                frame.getRootPane().putClientProperty("Window.documentModified", modified); //NOI18N
             });
         } else if (ev.getSource() == dobResult) {
             final File[] documentFile = new File[1];
@@ -352,11 +319,8 @@ public final class MainWindow {
                     documentFile[0] = FileUtil.toFile( file );
                 }
             }
-            SwingUtilities.invokeLater( new Runnable() {
-                @Override
-                public void run() {
-                    frame.getRootPane().putClientProperty("Window.documentFile", documentFile[0]); //NOI18N
-                }
+            SwingUtilities.invokeLater(() -> {
+                frame.getRootPane().putClientProperty("Window.documentFile", documentFile[0]); //NOI18N
             });
         }
    }
@@ -380,33 +344,27 @@ public final class MainWindow {
    static JPanel getStatusLineElements (JPanel panel) {
        // bugfix #56375, don't duplicate the listeners
        if (result == null) {
-           result = Lookup.getDefault ().lookup (
-                   new Lookup.Template<StatusLineElementProvider> (StatusLineElementProvider.class));
+           result = Lookup.getDefault().lookupResult(StatusLineElementProvider.class);
            result.addLookupListener (new StatusLineElementsListener (panel));
        }
        Collection<? extends StatusLineElementProvider> c = result.allInstances ();
        if (c == null || c.isEmpty ()) {
            return null;
        }
-       final Iterator<? extends StatusLineElementProvider> it = c.iterator ();
        final JPanel icons = new JPanel (new FlowLayout (FlowLayout.RIGHT, 0, 0));
        if( isShowCustomBackground() )
            icons.setOpaque( false );
        icons.setBorder (BorderFactory.createEmptyBorder (1, 0, 0, 2));
        final boolean[] some = new boolean[1];
        some[0] = false;
-       Runnable r = new Runnable() {
-            @Override
-            public void run() {
-               while (it.hasNext ()) {
-                   StatusLineElementProvider o = it.next ();
-                   Component comp = o.getStatusLineElement ();
-                   if (comp != null) {
-                       some[0] = true;
-                       icons.add (comp);
-                   }
+       Runnable r = () -> {
+           for (StatusLineElementProvider slep : c) {
+               Component comp = slep.getStatusLineElement();
+               if (comp != null) {
+                   some[0] = true;
+                   icons.add (comp);
                }
-            }
+           }
        };
        if( !SwingUtilities.isEventDispatchThread() ) {
            SwingUtilities.invokeLater( r );
@@ -477,17 +435,14 @@ public final class MainWindow {
     }
 
    private static class StatusLineElementsListener implements LookupListener {
-       private JPanel decoratingPanel;
+       private final JPanel decoratingPanel;
        StatusLineElementsListener (JPanel decoratingPanel) {
            this.decoratingPanel = decoratingPanel;
        }
        @Override
        public void resultChanged (LookupEvent ev) {
-           SwingUtilities.invokeLater (new Runnable () {
-               @Override
-               public void run () {
-                   decoratePanel (decoratingPanel, false);
-               }
+           SwingUtilities.invokeLater(() -> {
+               decoratePanel(decoratingPanel, false);
            });
        }
    }
@@ -496,11 +451,7 @@ public final class MainWindow {
     * with currently active LF */
    private static Border getDesktopBorder () {
        Border b = (Border) UIManager.get ("nb.desktop.splitpane.border");
-       if (b != null) {
-           return b;
-       } else {
-           return new EmptyBorder(1, 1, 1, 1);
-       }
+       return b != null ? b : new EmptyBorder(1, 1, 1, 1);
    }
 
    private static final String ICON_16 = "org/netbeans/core/startup/frame.gif"; // NOI18N
@@ -511,15 +462,16 @@ public final class MainWindow {
    private static final String ICON_1024 = "org/netbeans/core/startup/frame1024.png"; // NOI18N
    static void initFrameIcons(Frame f) {
        List<Image> currentIcons = f.getIconImages();
-       if( !currentIcons.isEmpty() )
-           return; //do not override icons if they have been already provided elsewhere (JDev)
-       f.setIconImages(Arrays.asList(
+       if( !currentIcons.isEmpty() || Utilities.isMac())
+           return; //do not override icons if they have been already provided elsewhere (JDev / macOS uses Dock icon)
+       f.setIconImages(List.of(
                ImageUtilities.loadImage(ICON_16, true),
                ImageUtilities.loadImage(ICON_32, true),
                ImageUtilities.loadImage(ICON_48, true),
                ImageUtilities.loadImage(ICON_256, true),
                ImageUtilities.loadImage(ICON_512, true),
-               ImageUtilities.loadImage(ICON_1024, true)));
+               ImageUtilities.loadImage(ICON_1024, true))
+       );
    }
 
    private void initListeners() {
@@ -544,8 +496,8 @@ public final class MainWindow {
             menu = new MenuBar (null);
        }
        menu.setBorderPainted(false);
-       if (menu instanceof MenuBar) {
-           ((MenuBar)menu).waitFinished();
+       if (menu instanceof MenuBar menuBar) {
+           menuBar.waitFinished();
        }
 
        if(Constants.SWITCH_STATUSLINE_IN_MENUBAR) {
@@ -587,7 +539,7 @@ public final class MainWindow {
             FileObject fo = FileUtil.getConfigFile(fileName);
             if (fo != null) {
                 DataObject dobj = DataObject.find(fo);
-                InstanceCookie ic = (InstanceCookie)dobj.getCookie(InstanceCookie.class);
+                InstanceCookie ic = dobj.getLookup().lookup(InstanceCookie.class);
                 if (ic != null) {
                     return (JMenuBar)ic.instanceCreate();
                 }
@@ -612,7 +564,7 @@ public final class MainWindow {
             FileObject fo = FileUtil.getConfigFile(fileName);
             if (fo != null) {
                 DataObject dobj = DataObject.find(fo);
-                InstanceCookie ic = (InstanceCookie)dobj.getCookie(InstanceCookie.class);
+                InstanceCookie ic = dobj.getLookup().lookup(InstanceCookie.class);
                 if (ic != null) {
                     return (JComponent)ic.instanceCreate();
                 }
@@ -805,47 +757,35 @@ public final class MainWindow {
 
        if( Utilities.isWindows() ) {
            frame.setVisible( true );
-           SwingUtilities.invokeLater( new Runnable() {
-               @Override
-               public void run() {
-                   frame.invalidate();
-                   frame.validate();
-                   frame.repaint();
-                   if( updateBounds ) {
-                       frame.setPreferredSize( restoreBounds.getSize() );
-                       frame.setBounds( restoreBounds );
-                   }
-                   ToolbarPool.getDefault().setConfiguration( toolbarConfigName );
-                   isSwitchingFullScreenMode = false;
-                   SwingUtilities.invokeLater(new Runnable() {
-                       @Override
-                       public void run() {
-                            if( null != activeTc ) {
-                                activeTc.requestFocusInWindow();
-                            }
-                       }
-                   });
+           SwingUtilities.invokeLater(() -> {
+               frame.invalidate();
+               frame.validate();
+               frame.repaint();
+               if( updateBounds ) {
+                   frame.setPreferredSize( restoreBounds.getSize() );
+                   frame.setBounds( restoreBounds );
                }
+               ToolbarPool.getDefault().setConfiguration( toolbarConfigName );
+               isSwitchingFullScreenMode = false;
+               SwingUtilities.invokeLater(() -> {
+                   if(null != activeTc) {
+                       activeTc.requestFocusInWindow();
+                   }
+               });
            });
        } else {
            WindowManagerImpl.getInstance().setVisible(true);
-           SwingUtilities.invokeLater( new Runnable() {
-               @Override
-               public void run() {
-                   frame.invalidate();
-                   frame.validate();
-                   frame.repaint();
-                   ToolbarPool.getDefault().setConfiguration( toolbarConfigName );
-                   isSwitchingFullScreenMode = false;
-                   SwingUtilities.invokeLater(new Runnable() {
-                       @Override
-                       public void run() {
-                            if( null != activeTc ) {
-                                activeTc.requestFocusInWindow();
-                            }
-                       }
-                   });
-                }
+           SwingUtilities.invokeLater(() -> {
+               frame.invalidate();
+               frame.validate();
+               frame.repaint();
+               ToolbarPool.getDefault().setConfiguration( toolbarConfigName );
+               isSwitchingFullScreenMode = false;
+               SwingUtilities.invokeLater(() -> {
+                   if(null != activeTc) {
+                       activeTc.requestFocusInWindow();
+                   }
+               });
            });
        }
    }

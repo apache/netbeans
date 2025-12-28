@@ -27,8 +27,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -44,7 +46,6 @@ import javax.swing.text.TextAction;
 import org.netbeans.api.editor.EditorRegistry;
 import org.netbeans.api.editor.EditorUtilities;
 import org.openide.awt.Actions;
-import org.openide.util.WeakSet;
 import org.openide.util.actions.Presenter;
 
 /**
@@ -73,7 +74,7 @@ public final class PresenterEditorAction extends TextAction
 
     private static boolean activeKitLastFocused;
 
-    private static final Set<PresenterEditorAction> presenterActions = new WeakSet<PresenterEditorAction>();
+    private static final Set<PresenterEditorAction> presenterActions = Collections.newSetFromMap(new WeakHashMap<>());
 
     private static final ChangeListener actionsChangeListener = new ChangeListener() {
         public void stateChanged(ChangeEvent e) {

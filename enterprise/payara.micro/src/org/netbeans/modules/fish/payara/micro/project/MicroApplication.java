@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.project.Project;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PAYARA_MICRO_MAVEN_PLUGIN;
@@ -104,7 +105,6 @@ public class MicroApplication {
     }
 
     private int calcRunningInstanceCount() {
-        System.out.println("calcRunningInstanceCount");
         List<String> processIds = new ArrayList<>();
         String executorFilter = "gav=" + mavenProject.getGroupId() + ":" + mavenProject.getArtifactId() + ":" + mavenProject.getVersion();
         final Runtime re = Runtime.getRuntime();
@@ -172,4 +172,30 @@ public class MicroApplication {
                 .get(PAYARA_MICRO_MAVEN_PLUGIN) != null;
     }
     
+    public static Artifact getPayaraMicroProject(Project project) {
+        NbMavenProject nbMavenProject = project.getLookup().lookup(NbMavenProject.class);
+        MavenProject mavenProject = nbMavenProject.getMavenProject();
+        return mavenProject.getPluginArtifactMap()
+                .get(PAYARA_MICRO_MAVEN_PLUGIN);
+    }
+    
+    public static boolean isDevModeAvailable(Project project) {
+        if (isPayaraMicroProject(project)) {
+            String versionString = getPayaraMicroProject(project).getVersion();
+            if (versionString != null) {
+                try {
+                    double version = Double.parseDouble(versionString);
+                    if (version > 2.1) {
+                        return true;
+                    }
+                } catch (NumberFormatException e) {
+                     if ("RELEASE".equals(versionString)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 }

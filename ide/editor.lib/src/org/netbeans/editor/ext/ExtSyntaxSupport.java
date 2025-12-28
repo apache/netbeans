@@ -25,6 +25,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.SyntaxSupport;
 import org.netbeans.editor.Utilities;
@@ -95,12 +96,12 @@ public class ExtSyntaxSupport extends SyntaxSupport {
     * as they occur in the text and therefore the first token
     * can start at the slightly lower position than the requested one.
     * The chain itself can be extended automatically when
-    * reaching the first chain item and calling <tt>getPrevious()</tt>
+    * reaching the first chain item and calling <code>getPrevious()</code>
     * on it. Another chunk of the tokens will be parsed and
     * the head of the chain will be extended. However this happens
     * only in case there was no modification performed to the document
     * between the creation of the chain and this moment. Otherwise
-    * this call throws <tt>IllegalStateException</tt>.
+    * this call throws <code>IllegalStateException</code>.
     * 
     * @param startOffset starting position of the block
     * @param endOffset ending position of the block
@@ -233,7 +234,7 @@ public class ExtSyntaxSupport extends SyntaxSupport {
     /** Gets the token-id of the token at the given position.
     * @param offset position at which the token should be returned
     * @return token-id of the token at the requested position. If there's no more
-    *   tokens in the text, the <tt>Syntax.INVALID</tt> is returned.
+    *   tokens in the text, the <code>Syntax.INVALID</code> is returned.
     */
     public TokenID getTokenID(int offset) throws BadLocationException {
         FirstTokenTP fttp = new FirstTokenTP();
@@ -251,7 +252,7 @@ public class ExtSyntaxSupport extends SyntaxSupport {
     */
     public int[] getFunctionBlock(int[] identifierBlock) throws BadLocationException {
         if (identifierBlock != null) {
-            int nwPos = Utilities.getFirstNonWhiteFwd(getDocument(), identifierBlock[1]);
+            int nwPos = LineDocumentUtils.getNextNonWhitespace(getDocument(), identifierBlock[1]);
             if ((nwPos >= 0) && (getDocument().getChars(nwPos, 1)[0] == '(')) {
                 return new int[] { identifierBlock[0], nwPos + 1 };
             }
@@ -279,7 +280,7 @@ public class ExtSyntaxSupport extends SyntaxSupport {
     */
     public int getRowLastValidChar(int offset)
     throws BadLocationException {
-        return Utilities.getRowLastNonWhite(getDocument(), offset);
+        return LineDocumentUtils.getLineLastNonWhitespace(getDocument(), offset);
     }
 
     /** Does the line contain some valid code besides of possible white space
@@ -287,7 +288,7 @@ public class ExtSyntaxSupport extends SyntaxSupport {
     */
     public boolean isRowValid(int offset)
     throws BadLocationException {
-        return Utilities.isRowWhite(getDocument(), offset);
+        return LineDocumentUtils.isLineWhitespace(getDocument(), offset);
     }
 
     /** Get the array of token IDs that denote the comments.

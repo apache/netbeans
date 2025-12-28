@@ -233,7 +233,7 @@ public class ListView extends JScrollPane implements Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeObject(popupAllowed ? Boolean.TRUE : Boolean.FALSE);
         out.writeObject(traversalAllowed ? Boolean.TRUE : Boolean.FALSE);
-        out.writeObject(new Integer(getSelectionMode()));
+        out.writeObject(getSelectionMode());
     }
 
     /*
@@ -1072,8 +1072,8 @@ public class ListView extends JScrollPane implements Externalizable {
                 startIndex = startIndex % size;
                 startIndex = getNextMatch(prefix, startIndex, Position.Bias.Forward);
 
-                if ((startIndex != -1) && !results.contains(new Integer(startIndex))) {
-                    results.add(Integer.valueOf(startIndex));
+                if ((startIndex != -1) && !results.contains(startIndex)) {
+                    results.add(startIndex);
 
                     String elementName = getModel().getElementAt(startIndex).toString();
 
@@ -1431,7 +1431,7 @@ public class ListView extends JScrollPane implements Externalizable {
                 }
             }
 
-            Node[] nodes = ll.toArray(new Node[ll.size()]);
+            Node[] nodes = ll.toArray(new Node[0]);
 
             // forwarding TO E.M., so we won't listen to its cries for a while
             manager.removePropertyChangeListener(wlpc);

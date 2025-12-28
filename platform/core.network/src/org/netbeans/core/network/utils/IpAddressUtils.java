@@ -24,7 +24,6 @@ import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -184,7 +183,7 @@ public class IpAddressUtils {
             if (resultList.isEmpty()) {
                 throw new UnknownHostException("A positive result was returned from name lookup for \"" + host + "\" but none that matched a filter of " + ipTypePref);
             }
-            return resultList.toArray(new InetAddress[resultList.size()]);
+            return resultList.toArray(new InetAddress[0]);
 
         } catch (ExecutionException ex) {
             Throwable cause = ex.getCause();
@@ -469,7 +468,7 @@ public class IpAddressUtils {
     
     private static void sortIpAddresses0(List<InetAddress> addresses, boolean ip4BeforeIp6, boolean shallow) {
         if (addresses != null && (addresses.size() > 1)) {
-            Collections.sort(addresses, new InetAddressComparator(ip4BeforeIp6, shallow));
+            addresses.sort(new InetAddressComparator(ip4BeforeIp6, shallow));
         }
     }
 

@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -66,7 +67,6 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbCollections;
 import org.openide.util.Parameters;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 import org.openide.windows.InputOutput;
 import org.openide.windows.OutputListener;
 import org.openide.windows.OutputWriter;
@@ -116,9 +116,9 @@ final class NbBuildLogger implements BuildListener, LoggerTrampoline.AntSessionI
     private Map<String/*|null*/,Collection<AntLogger>> interestedLoggersByTask = new HashMap<String,Collection<AntLogger>>();
     private Map<Integer,Collection<AntLogger>> interestedLoggersByLevel = new HashMap<Integer,Collection<AntLogger>>();
     
-    private final Set<Project> projectsWithProperties = Collections.synchronizedSet(new WeakSet<Project>());
+    private final Set<Project> projectsWithProperties = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     
-    private final Set<Throwable> consumedExceptions = new WeakSet<Throwable>();
+    private final Set<Throwable> consumedExceptions = Collections.newSetFromMap(new WeakHashMap<>());
     
     /** whether this process should be halted at the next safe point */
     private boolean stop = false;
@@ -1388,7 +1388,7 @@ final class NbBuildLogger implements BuildListener, LoggerTrampoline.AntSessionI
             for (RuntimeConfigurable subrc : NbCollections.iterable(getChildrenOfRuntimeConfigurable(rc))) {
                 structures.add(LoggerTrampoline.TASK_STRUCTURE_CREATOR.makeTaskStructure(new TaskStructureImpl(subrc)));
             }
-            return structures.toArray(new TaskStructure[structures.size()]);
+            return structures.toArray(new TaskStructure[0]);
         }
         
     }

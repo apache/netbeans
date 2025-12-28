@@ -35,7 +35,6 @@ import org.netbeans.modules.gradle.api.execute.ActionMapping;
 import org.netbeans.modules.gradle.api.execute.GradleExecConfiguration;
 import org.netbeans.modules.gradle.customizer.CustomActionMapping;
 import org.netbeans.modules.gradle.execute.ConfigurableActionProvider;
-import org.netbeans.spi.project.ProjectConfigurationProvider;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.awt.NotificationDisplayer.Priority;
 import org.openide.util.NbBundle;
@@ -207,7 +206,7 @@ public class CustomActionRegistrationSupport {
                         String s = entry.getKey();
                         ActionsHolder h = entry.getValue();
                         List<ActionMapping> actions = new ArrayList<>(h.customActions.values());
-                        Collections.sort(actions, ActionMapping::compareTo);
+                        actions.sort(ActionMapping::compareTo);
                         try {
                             ActionPersistenceUtils.writeActions(project.getProjectDirectory(), s, actions);
                         } catch (IOException ex) {

@@ -33,9 +33,10 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Stack;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
 //import org.openide.modules.SpecificationVersion;
@@ -73,12 +74,12 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
     //private static final String VERSION = "1.0"; // NOI18N
     
     private boolean header;
-    private Stack<String> stack;
+    private Deque<String> stack;
     
     private String version;
     private String instanceClass;
     private String instanceMethod;
-    private Set<String> instanceOf = new HashSet<String>();
+    private Set<String> instanceOf = new HashSet<>();
     
     private byte[] serialdata;
     private CharArrayWriter chaos = null;
@@ -149,6 +150,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
         return new ByteArrayInputStream(serialdata);
     }
     
+    @Override
     public org.xml.sax.InputSource resolveEntity(String publicId, String systemId)
     throws SAXException {
         if (INSTANCE_DTD_ID.equals(publicId)) {
@@ -158,6 +160,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
         }
     }
     
+    @Override
     public void characters(char[] values, int start, int length) throws SAXException {
         if (header) return;
         String element = stack.peek();
@@ -168,6 +171,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
         }
     }
     
+    @Override
     public void startElement(String uri, String localName, String qName, Attributes attribs) throws SAXException {
         stack.push(qName);
         if (ELM_SETTING.equals(qName)) {
@@ -224,6 +228,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
         }
     }
     
+    @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         //if (header) return;
         String element = stack.pop();
@@ -256,12 +261,9 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
     private Object readSerial(InputStream is) throws IOException, ClassNotFoundException {
         if (is == null) return null;
         try {
-            ObjectInput oi = new ObjectInputStream(is);
-            try {
+            try (ObjectInput oi = new ObjectInputStream(is)) {
                 Object o = oi.readObject();
                 return o;
-            } finally {
-                oi.close();
             }
         } catch (IOException ex) {
             ErrorManager emgr = ErrorManager.getDefault();
@@ -311,7 +313,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
                     }
                 } else {
                     try {
-                        inst = clazz.newInstance();
+                        inst = clazz.getDeclaredConstructor().newInstance();
                     } catch (Exception ex) {
                         IOException ioe = new IOException();
                         ErrorManager emgr = ErrorManager.getDefault();
@@ -335,7 +337,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
             InputStreamReader isr = new InputStreamReader(fo.getInputStream());
             char[] cbuf = new char[1024];
             int length;
-            StringBuffer sbuf = new StringBuffer(1024);
+            StringBuilder sbuf = new StringBuilder(1024);
             while (true) {
                 length = isr.read(cbuf);
                 if (length > 0) {
@@ -465,15 +467,14 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
                 if (err.isLoggable(err.INFORMATIONAL) && source.getSize() < 12000) {
                     // log the content of the stream
                     byte[] arr = new byte[(int)source.getSize()];
-                    InputStream temp = source.getInputStream();
-                    int len = temp.read(arr);
-                    if (len != arr.length) {
-                        throw new IOException("Could not read " + arr.length + " bytes from " + source + " just " + len); // NOI18N
+                    try (InputStream temp = source.getInputStream()) {
+                        int len = temp.read(arr);
+                        if (len != arr.length) {
+                            throw new IOException("Could not read " + arr.length + " bytes from " + source + " just " + len); // NOI18N
+                        }
+                        
+                        err.log("Parsing:" + new String(arr));
                     }
-                    
-                    err.log("Parsing:" + new String(arr));
-                    
-                    temp.close();
                     
                     in = new ByteArrayInputStream(arr);
                 } else {
@@ -490,7 +491,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
         } finally {
             if (in != null) in.close();
         }
-        stack = new Stack<String>();
+        stack = new ArrayDeque<>();
         try {
             in = source.getInputStream();
             XMLReader reader = org.openide.xml.XMLUtil.createXMLReader();
@@ -524,7 +525,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
     
     /** Parse setting from source. */
     public void parse(Reader source) throws IOException {
-        stack = new Stack<String>();
+        stack = new ArrayDeque<>();
         
         try {
             XMLReader reader = org.openide.xml.XMLUtil.createXMLReader();
@@ -568,7 +569,7 @@ public class SettingsRecognizer  extends org.xml.sax.helpers.DefaultHandler {
      * @see "#36718"
      */
     private Set<String> quickParse(InputStream is) throws IOException {
-        Set<String> iofs = new HashSet<String>();   // <String>
+        Set<String> iofs = new HashSet<>();
         
         if (!expect(is, MODULE_SETTINGS_INTRO)) {
             err.log("Could not read intro "+source); // NOI18N

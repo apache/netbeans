@@ -20,6 +20,7 @@ package org.netbeans.modules.java.openjdk.jtreg;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Arrays;
@@ -121,15 +122,93 @@ public class ClassPathProviderImplTest extends NbTestCase {
                             new HashSet<>(Arrays.asList(sourceCP.getRoots())));
     }
 
+    public void testInPackage() throws Exception {
+        File workDir = getWorkDir();
+
+        FileUtil.createFolder(new File(workDir, "src/share/classes"));
+        FileObject testRoot = createData("test/TEST.ROOT", "");
+        FileObject testFile = FileUtil.createData(new File(workDir, "test/feature/pack/Test.java"));
+        writeContent(testFile,
+                     """
+                     /* package wrong.package.clause; */
+                     @Ann("package another.wrong.package.clause")
+                     package /**/ //
+                     feature.
+                     pack;
+                     """);
+        ClassPath sourceCP = new ClassPathProviderImpl().findClassPath(testFile, ClassPath.SOURCE);
+
+        Assert.assertArrayEquals(new FileObject[] {testFile.getParent().getParent().getParent()},
+                                 sourceCP.getRoots());
+    }
+
+    public void testInFolder() throws Exception {
+        File workDir = getWorkDir();
+
+        FileUtil.createFolder(new File(workDir, "src/share/classes"));
+        FileObject testRoot = createData("test/jdk/TEST.ROOT", "");
+        FileObject testFile = FileUtil.createData(new File(workDir, "test/lib/feature/pack/Test.java"));
+        writeContent(testFile,
+                     """
+                     /* package wrong.package.clause; */
+                     @Ann("package another.wrong.package.clause")
+                     package /**/ //
+                     feature.
+                     pack;
+                     """);
+        ClassPath sourceCP = new ClassPathProviderImpl().findClassPath(testFile, ClassPath.SOURCE);
+
+        Assert.assertArrayEquals(new FileObject[] {testFile.getParent().getParent().getParent()},
+                                 sourceCP.getRoots());
+    }
+
+    public void testWrongPackageClause() throws Exception {
+        File workDir = getWorkDir();
+
+        FileUtil.createFolder(new File(workDir, "src/share/classes"));
+        FileObject testRoot = createData("test/jdk/TEST.ROOT", "");
+        FileObject testFile = createData("test/jdk/testpkg/nested/Test.java",
+                                         """
+                                         package other.nested;
+                                         /** @test */
+                                         public class Test {}
+                                         """);
+        ClassPath sourceCP = new ClassPathProviderImpl().findClassPath(testFile, ClassPath.SOURCE);
+
+        Assert.assertArrayEquals(new FileObject[] {testFile.getParent()},
+                                 sourceCP.getRoots());
+    }
+
+    public void testPackageClausePointsOutOfRoot() throws Exception {
+        File workDir = getWorkDir();
+
+        FileUtil.createFolder(new File(workDir, "src/share/classes"));
+        FileObject testRoot = createData("test/jdk/TEST.ROOT", "");
+        FileObject testFile = createData("test/jdk/testpkg/nested/Test.java",
+                                         """
+                                         package test.jdk.testpkg.nested;
+                                         /** @test */
+                                         public class Test {}
+                                         """);
+        ClassPath sourceCP = new ClassPathProviderImpl().findClassPath(testFile, ClassPath.SOURCE);
+
+        Assert.assertArrayEquals(new FileObject[] {testFile.getParent()},
+                                 sourceCP.getRoots());
+    }
+
     private FileObject createData(String relPath, String content) throws IOException {
         File workDir = getWorkDir();
         FileObject file = FileUtil.createData(new File(workDir, relPath));
 
+        writeContent(file, content);
+
+        return file;
+    }
+
+    private void writeContent(FileObject file, String content) throws IOException {
         try (Writer w = new OutputStreamWriter(file.getOutputStream())) {
             w.write(content);
         }
-
-        return file;
     }
 
 }

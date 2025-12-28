@@ -78,7 +78,7 @@ public class DBSchemaTablesPanel extends JPanel implements ListDataListener {
         views = new LinkedList<String>();
         cp = null;
 
-        putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, new Integer(2)); //NOI18N
+        putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, 2); //NOI18N
         setName(bundle.getString("TablesChooser")); //NOI18N
 
         initComponents();
@@ -307,7 +307,7 @@ public class DBSchemaTablesPanel extends JPanel implements ListDataListener {
     private void invokeHandlers(final List<Handler> handlers, final Parameters params) {
         final ProgressPanel progressPanel = new ProgressPanel();
         
-        ProgressHandle progressHandle = ProgressHandleFactory.createHandle(null);
+        ProgressHandle progressHandle = ProgressHandle.createHandle(null);
         JComponent progressComponent = ProgressHandleFactory.createProgressComponent(progressHandle);
         
         progressHandle.start();
@@ -344,7 +344,7 @@ public class DBSchemaTablesPanel extends JPanel implements ListDataListener {
         int i;
         
         for (i = start; i < handlers.size(); i++) {
-            Handler h = (Handler)handlers.get(i);
+            Handler h = handlers.get(i);
             if (!h.isRunnable()) {
                 if (LOG) {
                     LOGGER.log(Level.FINE, "Skipping " + h);

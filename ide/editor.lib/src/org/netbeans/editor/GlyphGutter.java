@@ -25,6 +25,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -54,6 +55,7 @@ import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.accessibility.*;
+import javax.swing.Icon;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.text.AbstractDocument;
@@ -62,6 +64,7 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.View;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.EditorStyleConstants;
 import org.netbeans.api.editor.settings.FontColorNames;
@@ -98,7 +101,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
     private Annotations annos;
     
     /** Cycling button image */
-    private Image gutterButton;
+    private Icon gutterButton;
     
     /** Background color of the gutter */
     private Color backgroundColor;
@@ -251,7 +254,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
         if (editorUI == null)
             return ;
 
-        gutterButton = ImageUtilities.icon2Image(ImageUtilities.loadImageIcon("org/netbeans/editor/resources/glyphbutton.gif", false));
+        gutterButton = ImageUtilities.loadIcon("org/netbeans/editor/resources/glyphbutton.gif", false);
 
         setToolTipText ("");
         getAccessibleContext().setAccessibleName(NbBundle.getBundle(BaseKit.class).getString("ACSN_Glyph_Gutter")); // NOI18N
@@ -383,7 +386,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
             if (document != null) {
                 document.readLock();
                 try {
-                    lineCnt = Utilities.getLineOffset(document, document.getLength()) + 1;
+                    lineCnt = LineDocumentUtils.getLineIndex(document, document.getLength()) + 1;
                 } finally {
                     document.readUnlock();
                 }
@@ -600,22 +603,18 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                                     // draw the glyph only when the annotation type has its own icon (no the default one)
                                     // or in case there is more than one annotations on the line
                                     if (!(annoCount == 1 && annoDesc.isDefaultGlyph())) {
-                                        g.drawImage(
-                                                annoGlyph,
+                                        // Draw as Icon to get full resolution for SVG icons.
+                                        Icon annoGlyphIcon = ImageUtilities.image2Icon(annoGlyph);
+                                        annoGlyphIcon.paintIcon(null, g,
                                                 xPos,
-                                                (int) Math.round(pViewRect.y + (rowHeight - glyphHeight) / 2 + 1),
-                                                null
-                                        );
+                                                (int) Math.round(pViewRect.y + (rowHeight - glyphHeight) / 2 + 1));
                                     }
 
                                     // draw cycling button if there is more than one annotations on the line
                                     if (annoCount > 1) {
-                                        g.drawImage(
-                                                gutterButton,
+                                        gutterButton.paintIcon(null, g,
                                                 xPos + glyphWidth - 1,
-                                                (int) Math.round(pViewRect.y + (rowHeight - glyphHeight) / 2),
-                                                null
-                                        );
+                                                (int) Math.round(pViewRect.y + (rowHeight - glyphHeight) / 2));
                                     }
                                 }
                                 lineWithAnno = -1;
@@ -767,7 +766,8 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
         if (isMouseOverCycleButton(e) && annos.getNumberOfAnnotations(line) > 1) {
             return java.text.MessageFormat.format (
                 NbBundle.getBundle(BaseKit.class).getString ("cycling-glyph_tooltip"), //NOI18N
-                new Object[] { new Integer (annos.getNumberOfAnnotations(line)) });
+                annos.getNumberOfAnnotations(line)
+            );
         }
         else if (isMouseOverGlyph(e)) {
             AnnotationDesc activeAnnotation = annos.getActiveAnnotation(line);
@@ -843,7 +843,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                 BaseDocument document = eui.getDocument();
                 BaseTextUI textUI = (BaseTextUI)component.getUI();
                 int clickOffset = textUI.viewToModel(component, new Point(0, e.getY()));
-                line = Utilities.getLineOffset(document, clickOffset);
+                line = LineDocumentUtils.getLineIndex(document, clickOffset);
             }catch (BadLocationException ble) {
                 LOG.log(Level.WARNING, null, ble);
             }
@@ -858,11 +858,26 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
         /** end line of the dragging. */
         private int dragEndOffset;
 
-        public @Override void mouseClicked(MouseEvent e) {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            EditorUI eui = editorUI;
+            if (eui == null) {
+                return;
+            }
+            JTextComponent cmp = eui.getComponent();
+            if (cmp.hasFocus()) {
+                handleMouseClicked(e);
+            } else {
+                cmp.requestFocusInWindow();
+                // allow focus events to propagate
+                EventQueue.invokeLater(() -> handleMouseClicked(e));
+            }
+        }
+
+        private void handleMouseClicked(MouseEvent e) {
             EditorUI eui = editorUI;
             if (eui==null)
                 return;
-            eui.getComponent().requestFocus();
             // cycling button was clicked by left mouse button
             if (e.getModifiers() == InputEvent.BUTTON1_MASK) {
                 if (isMouseOverCycleButton(e)) {
@@ -924,12 +939,12 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                     if (toInvoke != null && toInvoke.isEnabled()){
                         BaseDocument document = eui.getDocument();
                         try {
-                            currentLine = Utilities.getLineOffset(document, eui.getComponent().getCaret().getDot());
+                            currentLine = LineDocumentUtils.getLineIndex(document, eui.getComponent().getCaret().getDot());
                         } catch (BadLocationException ex) {
                             return;
                         }
                         if (line != currentLine) {
-                            int offset = Utilities.getRowStartFromLineOffset(document, line);
+                            int offset = LineDocumentUtils.getLineStartFromIndex(document, line);
                             JumpList.checkAddEntry();
                             eui.getComponent().getCaret().setDot(offset);
                         }
@@ -976,7 +991,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                     offset = annos.getActiveAnnotation(line).getOffset();
                 } else {
                     BaseDocument document = eui.getDocument();
-                    offset = Utilities.getRowStartFromLineOffset(document, line);
+                    offset = LineDocumentUtils.getLineStartFromIndex(document, line);
                 }
                 if (eui.getComponent().getCaret().getDot() != offset)
                     JumpList.checkAddEntry();
@@ -1046,11 +1061,11 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                         }
                         // Check if the sele
                         // Extend to next line's begining
-                        dragEndOffset = Math.min(Utilities.getRowEnd((BaseDocument) aDoc, lineStartOffset) + 1, aDoc.getLength());
+                        dragEndOffset = Math.min(LineDocumentUtils.getLineEndOffset((BaseDocument) aDoc, lineStartOffset) + 1, aDoc.getLength());
                     } else { // Backward selection
                         // Check if the selection is already reverted i.e. it starts at dragStartOffset's line end
                         if (caret.getMark() == dragStartOffset) {
-                            caret.setDot(Utilities.getRowEnd((BaseDocument)aDoc, dragStartOffset) + 1);
+                            caret.setDot(LineDocumentUtils.getLineEndOffset((BaseDocument)aDoc, dragStartOffset) + 1);
                         }
                         dragEndOffset = lineStartOffset;
                     }

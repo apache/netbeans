@@ -59,7 +59,7 @@ class GestureSubmitter {
         record.setResourceBundleName(GestureSubmitter.class.getPackage().getName() + ".Bundle"); // NOI18N
         record.setLoggerName(USG_LOGGER.getName());
 
-        record.setParameters(params.toArray(new Object[params.size()]));
+        record.setParameters(params.toArray(new Object[0]));
 
         USG_LOGGER.log(record);
     }

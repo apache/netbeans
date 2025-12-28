@@ -52,6 +52,7 @@ public class CheckLinks extends MatchingTask {
     private boolean checkexternal = true;
     private boolean checkspaces = true;
     private boolean checkforbidden = true;
+    private boolean failbroken = false;
     private List<Mapper> mappers = new LinkedList<>();
     private List<Filter> filters = new ArrayList<>();
     private File report;
@@ -76,7 +77,16 @@ public class CheckLinks extends MatchingTask {
     public void setCheckforbidden(boolean s) {
         checkforbidden = s;
     }
-    
+
+    /**
+     * Allows to fail build on broken links. Default to false.
+     *
+     * @param fail fail build on broken links
+     */
+    public void setFailbroken(boolean fail) {
+        failbroken = fail;
+    }
+
     /** Set the base directory from which to scan files.
      */
     public void setBasedir (File basedir) {
@@ -142,9 +152,12 @@ public class CheckLinks extends MatchingTask {
             testMessage = b.toString();
         }
         JUnitReportWriter.writeReport(this, null, report, Collections.singletonMap("testBrokenLinks", testMessage));
+        if (!errors.isEmpty() && failbroken) {
+            throw new BuildException("Broken links found in Javadoc");
+        }
     }
     
-    private static Pattern hrefOrAnchor = Pattern.compile("<(a|img|link|h3|span)(\\s+shape=\"rect\")?(?:\\s+rel=\"stylesheet\")?\\s+(href|name|id|src)=\"([^\"#]*)(#[^\"$]+)?\"(\\s+shape=\"rect\")?(?:\\s+type=\"text/css\")?\\s*/?>", Pattern.CASE_INSENSITIVE);
+    private static Pattern hrefOrAnchor = Pattern.compile("<(a|code|div|img|link|h1|h2|h3|h4|h5|li|section|span)(\\s+class=\"[\\w\\-]*\")?(\\s+shape=\"rect\")?(?:\\s+rel=\"stylesheet\")?\\s+(href|name|id|src)=\"([^\"#]*)(#[^\"$]+)?\"(\\s+shape=\"rect\")?(?:\\s+type=\"text/css\")?(\\s+class=\"[\\w\\-]*\")?\\s*/?>", Pattern.CASE_INSENSITIVE);
     private static Pattern lineBreak = Pattern.compile("^", Pattern.MULTILINE);
     
     /**
@@ -470,15 +483,15 @@ public class CheckLinks extends MatchingTask {
             Set<String> names = new HashSet<>(100); // Set<String>
             while (m.find()) {
                 // Get the stuff involved:
-                String type = m.group(3);
-                if (type.equalsIgnoreCase("name") || (type.equalsIgnoreCase("id") && !unescape(m.group(4)).startsWith("#"))) {
+                String type = m.group(4);
+                if (type.equalsIgnoreCase("name") || (type.equalsIgnoreCase("id") && !unescape(m.group(5)).startsWith("#"))) {
                     // We have an anchor, therefore refs to it are valid.
-                    String name = unescape(m.group(4));
+                    String name = unescape(m.group(5));
                     if (names.add(name)) {
                         try {
                             //URI does not handle jar:file: protocol
                             //okurls.add(new URI(base.getScheme(), base.getUserInfo(), base.getHost(), base.getPort(), base.getPath(), base.getQuery(), /*fragment*/name));
-                            okurls.add(new URI(base + "#" + name.replaceAll(" ", "%20")));
+                            okurls.add(new URI(base + "#" + name.replace(" ", "%20").replace("<", "%3C").replace(">", "%3E").replace("[", "%5B").replace("]", "%5D")));
                         } catch (URISyntaxException e) {
                             errors.add(normalize(basepath, mappers) + findLocation(content, m.start(4)) + ": bad anchor name: " + e.getMessage());
                         }
@@ -498,10 +511,10 @@ public class CheckLinks extends MatchingTask {
                     }
 
                     if (others != null && !commentedOut) {
-                        String otherbase = unescape(m.group(4));
-                        String otheranchor = unescape(m.group(5));
+                        String otherbase = unescape(m.group(5));
+                        String otheranchor = unescape(m.group(6));
                         String uri = (otheranchor == null) ? otherbase : otherbase + otheranchor;
-                        String location = findLocation(content, m.start(4));
+                        String location = findLocation(content, m.start(5));
                         String fixedUri;
                         if (uri.indexOf(' ') != -1) {
                             fixedUri = uri.replaceAll(" ", "%20");

@@ -41,10 +41,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
 public class RunnerHttpDeploy extends RunnerHttp {
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(RunnerHttpDeploy.class);
 
@@ -75,10 +72,7 @@ public class RunnerHttpDeploy extends RunnerHttp {
     /** Deploy command <code>force</code> parameter value. */
     private static final boolean FORCE_VALUE = true;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Builds deploy query string for given command.
      * <p/>
@@ -116,13 +110,24 @@ public class RunnerHttpDeploy extends RunnerHttp {
                     && !server.getHostPath().isEmpty()
                     && server.getContainerPath() != null
                     && !server.getContainerPath().isEmpty()) {
-                Path relativePath = Paths.get(server.getHostPath()).relativize(deploy.path.toPath());
-                path = Paths.get(server.getContainerPath(), relativePath.toString()).toString();
-                if (server.getContainerPath().startsWith("/")) {
-                    path = path.replace("\\", "/");
+                try {
+                    Path relativePath = Paths.get(server.getHostPath()).relativize(deploy.path.toPath());
+                    path = Paths.get(server.getContainerPath(), relativePath.toString()).toString();
+                    if (server.getContainerPath().startsWith("/")) {
+                        path = path.replace("\\", "/");
+                    }
+                } catch (IllegalArgumentException ex) {
+                    throw new CommandException(
+                            CommandException.DOCKER_HOST_APPLICATION_PATH);
                 }
             }
-            target =deploy.target;
+            if (server.isWSL()) {
+                // Replace backslashes with forward slashes
+                path = path.replace("\\", "/");
+                // Add "mnt" prefix and drive letter
+                path = "/mnt/" + path.substring(0, 1).toLowerCase() + path.substring(2);
+            }
+            target = deploy.target;
             ctxRoot = deploy.contextRoot;
             hotDeploy = Boolean.toString(deploy.hotDeploy);
         }
@@ -178,18 +183,12 @@ public class RunnerHttpDeploy extends RunnerHttp {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Holding data for command execution. */
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     final CommandDeploy command;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.
@@ -203,10 +202,7 @@ public class RunnerHttpDeploy extends RunnerHttp {
         this.command = (CommandDeploy)command;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Send deployed file to the server via HTTP POST when it's not
      * a directory deployment.
@@ -279,10 +275,7 @@ public class RunnerHttpDeploy extends RunnerHttp {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Fake Getters                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Set the content-type of information sent to the server.
      * Returns <code>application/zip</code> for file deployment

@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.db.sql.editor;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
@@ -32,25 +31,29 @@ import org.openide.util.WeakListeners;
  */
 public final class OptionsUtils {
     // package visible to allow access from unit tests
-    static final String PAIR_CHARACTERS_COMPLETION = "pair-characters-completion";
-    private static final AtomicBoolean INITED = new AtomicBoolean(false);
+    public static final String PAIR_CHARACTERS_COMPLETION = "pair-characters-completion"; //NOI18N
+    public static final String SQL_AUTO_COMPLETION_SUBWORDS = "sql-completion-subwords"; //NOI18N
+    public static final boolean SQL_AUTO_COMPLETION_SUBWORDS_DEFAULT = false;
 
     private static final PreferenceChangeListener PREFERENCES_TRACKER = new PreferenceChangeListener() {
         @Override
         public void preferenceChange(PreferenceChangeEvent evt) {
             String settingName = evt == null ? null : evt.getKey();
 
-            if (settingName == null
-                    || PAIR_CHARACTERS_COMPLETION.equals(settingName)) {
-                pairCharactersCompletion = preferences.getBoolean(
-                        PAIR_CHARACTERS_COMPLETION, true);
+            if (settingName == null || PAIR_CHARACTERS_COMPLETION.equals(settingName)) {
+                pairCharactersCompletion = preferences.getBoolean(PAIR_CHARACTERS_COMPLETION, true);
             }
+
+            if (settingName == null || SQL_AUTO_COMPLETION_SUBWORDS.equals(settingName)) {
+                sqlCompletionSubwords = preferences.getBoolean(SQL_AUTO_COMPLETION_SUBWORDS, SQL_AUTO_COMPLETION_SUBWORDS_DEFAULT);
             }
+        }
     };
 
     private static Preferences preferences;
 
-    private static boolean pairCharactersCompletion = true;
+    private static volatile boolean pairCharactersCompletion = true;
+    private static volatile boolean sqlCompletionSubwords = SQL_AUTO_COMPLETION_SUBWORDS_DEFAULT;
 
     private OptionsUtils() {
     }
@@ -65,8 +68,18 @@ public final class OptionsUtils {
         return pairCharactersCompletion;
     }
 
-    private static void lazyInit() {
-        if (INITED.compareAndSet(false, true)) {
+    /**
+     * Option: "Subword Completion"
+     *
+     * @return true if code completion should be subword based
+     */
+    public static boolean isSqlCompletionSubwords() {
+        lazyInit();
+        return sqlCompletionSubwords;
+    }
+
+    private synchronized static void lazyInit() {
+        if (preferences == null) {
             preferences = MimeLookup.getLookup(SQLLanguageConfig.mimeType).lookup(Preferences.class);
             preferences.addPreferenceChangeListener(WeakListeners.create(PreferenceChangeListener.class, PREFERENCES_TRACKER, preferences));
             PREFERENCES_TRACKER.preferenceChange(null);

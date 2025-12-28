@@ -176,6 +176,7 @@ abstract class BaseTask extends UserTask {
                 case LINE_COMMENT:
                 case BLOCK_COMMENT:
                 case JAVADOC_COMMENT:
+                case JAVADOC_COMMENT_LINE_RUN:
                     break;
                 default:
                     return ts;
@@ -206,6 +207,7 @@ abstract class BaseTask extends UserTask {
                 case LINE_COMMENT:
                 case BLOCK_COMMENT:
                 case JAVADOC_COMMENT:
+                case JAVADOC_COMMENT_LINE_RUN:
                     break;
                 default:
                     return ts;
@@ -260,6 +262,8 @@ abstract class BaseTask extends UserTask {
                         && (ts.token().id() == JavaTokenId.IDENTIFIER
                         || ts.token().id().primaryCategory().startsWith("keyword") || //NOI18N
                         ts.token().id().primaryCategory().startsWith("string") || //NOI18N
+                        ts.token().id().primaryCategory().equals("number") || //NOI18N
+                        ts.token().id().primaryCategory().equals("character") || //NOI18N
                         ts.token().id().primaryCategory().equals("literal"))) { //NOI18N
                     offset++;
                 }
@@ -279,6 +283,10 @@ abstract class BaseTask extends UserTask {
                 treePath = treePath.getParentPath();
             }
         } else {
+            TreePath newClassPath = findNewClassForConstructorName(path);
+            if (newClassPath != null) {
+                path = newClassPath;
+            }
             if (JavaSource.Phase.RESOLVED.compareTo(controller.getPhase()) > 0) {
                 LinkedList<TreePath> reversePath = new LinkedList<>();
                 TreePath treePath = path;
@@ -297,6 +305,34 @@ abstract class BaseTask extends UserTask {
             }
         }
         return new Env(offset, prefix, controller, path, controller.getTrees().getSourcePositions(), null);
+    }
+
+    private TreePath findNewClassForConstructorName(TreePath tp) {
+        if (tp == null) {
+            return null;
+        }
+
+        TreePath parentPath = tp.getParentPath();
+
+        while (parentPath != null) {
+            boolean goUp = false;
+            goUp = goUp || (parentPath.getLeaf().getKind() == Kind.PARAMETERIZED_TYPE &&
+                            ((ParameterizedTypeTree) parentPath.getLeaf()).getType() == tp.getLeaf());
+            goUp = goUp || (parentPath.getLeaf().getKind() == Kind.ANNOTATED_TYPE &&
+                            ((AnnotatedTypeTree) parentPath.getLeaf()).getUnderlyingType() == tp.getLeaf());
+            if (goUp) {
+                tp = parentPath;
+                parentPath = parentPath.getParentPath();
+            } else {
+                break;
+            }
+        }
+
+        if (parentPath != null && parentPath.getLeaf().getKind() == Kind.NEW_CLASS && ((NewClassTree) parentPath.getLeaf()).getIdentifier() == tp.getLeaf()) {
+            return parentPath;
+        }
+
+        return null;
     }
 
     private Env getEnvImpl(CompilationController controller, TreePath orig, TreePath path, TreePath pPath, TreePath gpPath, int offset, String prefix, boolean upToOffset) throws IOException {
@@ -427,6 +463,7 @@ abstract class BaseTask extends UserTask {
                                     case LINE_COMMENT:
                                     case BLOCK_COMMENT:
                                     case JAVADOC_COMMENT:
+                                    case JAVADOC_COMMENT_LINE_RUN:
                                         break;
                                     case ARROW:
                                         scope = controller.getTrees().getScope(blockPath);
@@ -456,6 +493,7 @@ abstract class BaseTask extends UserTask {
                             case LINE_COMMENT:
                             case BLOCK_COMMENT:
                             case JAVADOC_COMMENT:
+                            case JAVADOC_COMMENT_LINE_RUN:
                                 break;
                             case ARROW:
                                 return new Env(offset, prefix, controller, path, sourcePositions, scope);

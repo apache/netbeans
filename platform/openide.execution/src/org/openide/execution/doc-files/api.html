@@ -22,17 +22,16 @@
 <html>
 <head>
 <title>Execution API</title>
-<link rel="Stylesheet" href="../../../../prose.css" type="text/css">
 </head>
 <body>
 
-<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="@TOP@/index.html">Overview</a></p>
 
 <h1>Javadoc</h1>
 
 See the
 
-<a href="../package-summary.html"><code>org.openide.execution</code></a>
+{@link org.openide.execution org.openide.execution }
 
 package.
 
@@ -40,8 +39,6 @@ package.
 
 <ul>
 <li><a href="#io">Managing I/O</a>
-</ul>
-
 </ul>
 
 <h1>Execution API</h1>
@@ -64,20 +61,20 @@ an external process whose output you wish to capture should
 generally have its streams redirected to the Output Window, e.g. by
 using
 
-<a href="@JDK@/java/lang/Process.html#getInputStream--"><code>Process.getInputStream()</code></a>.
+{@link java.lang.Process#getInputStream() Process.getInputStream() }.
 
 The streams on the Output Window may be obtained from the execution
 engine (see below), using
 
-<a href="../ExecutorTask.html#getInputOutput--"><code>ExecutorTask.getInputOutput()</code></a>
+{@link org.openide.execution.ExecutorTask#getInputOutput()  ExecutorTask.getInputOutput() }
 
 on the task returned from
 
-<a href="../ExecutionEngine.html#execute-java.lang.String-java.lang.Runnable-org.openide.windows.InputOutput-"><code>ExecutionEngine.execute(...)</code></a>,
+{@link org.openide.execution.ExecutionEngine#execute(java.lang.String,java.lang.Runnable,org.openide.windows.InputOutput) ExecutionEngine.execute(...) },
 
 and then
 
-<a href="@org-openide-io@/org/openide/windows/InputOutput.html#getOut--"><code>InputOutput.getOut()</code></a>
+{@link org.openide.windows.InputOutput#getOut() InputOutput.getOut() }
 
 and so on. Now you can just copy characters from one stream to the
 other.
@@ -93,7 +90,7 @@ just means printing the stack trace to the Output Window via an
 </p>
 
 <p>
-<a href="../NbProcessDescriptor.html"><code>NbProcessDescriptor</code></a>
+{@link org.openide.execution.NbProcessDescriptor NbProcessDescriptor }
 
 is an object representing the abstract command template. This class
 has a standard custom property editor which should be familiar to
@@ -110,12 +107,12 @@ codes mean.
 about <em>how</em> to substitute these codes, if there are
 any. Rather, it presents ways to create a running process from itself:
 
-<a href="../NbProcessDescriptor.html#exec--"><code>NbProcessDescriptor.exec()</code></a>
+{@link org.openide.execution.NbProcessDescriptor#exec() NbProcessDescriptor.exec() }
 
 simply runs the literally supplied string, assuming it does not need
 any substitutions; but
 
-<a href="../NbProcessDescriptor.html#exec-java.text.Format-"><code>NbProcessDescriptor.exec(Format)</code></a>
+{@link org.openide.execution.NbProcessDescriptor#exec(java.text.Format) NbProcessDescriptor.exec(Format) }
 
 applies a (textual) format to the command name and arguments list
 before invoking <code>Runtime.exec</code>. The format can in principle
@@ -123,7 +120,7 @@ be any format you like.
 </p>
 
 <p>
-<a href="../NbClassPath.html"><code>NbClassPath</code></a>
+{@link org.openide.execution.NbClassPath NbClassPath }
 
 is an object used to represent a classpath, which is of course
 frequently used in Java-related applications, though implementors of
@@ -133,7 +130,7 @@ it convenient to use as a Bean property on service types such as
 executors.
 </p>
 
-<h3><a name="io">Managing I/O</a></h3>
+<h2 id="io">Managing I/O</h2>
 
 Typically, implementors of executors (or other external services such
 as compilation) will wish for any I/O via standard system streams
@@ -154,7 +151,7 @@ coverage of executed code.
 
 <p>First it is necessary to describe the
 
-<a href="@org-openide-io@/org/openide/windows/InputOutput.html"><code>InputOutput</code></a>
+{@link org.openide.windows.InputOutput InputOutput }
 
 interface which is common to both forms of support. This interface is
 essentially an abstract description of the public capabilities of an
@@ -170,14 +167,14 @@ implementation:
 
 <li>You may use
 
-<a href="@org-openide-io@/org/openide/windows/IOProvider.html#getIO-java.lang.String-boolean-"><code>IOProvider.getIO(String,boolean)</code></a>
+{@link org.openide.windows.IOProvider#getIO(java.lang.String,boolean) IOProvider.getIO(String,boolean)} 
 
 to create an Output Window tab with a specified name and return its
 <code>InputOutput</code> representative. Or, try to reuse an existing tab of the same name, if there is one.
 
 <li>If
 
-<a href="../ExecutionEngine.html#execute-java.lang.String-java.lang.Runnable-org.openide.windows.InputOutput-"><code>ExecutionEngine.execute(...,InputOutput)</code></a>
+{@link org.openide.execution.ExecutionEngine#execute(java.lang.String,java.lang.Runnable,org.openide.windows.InputOutput) ExecutionEngine.execute(...,InputOutput) }
 
 is called and its third argument is <code>null</code>, this signifies
 that the engine itself should choose an appropriate Output Window tab,
@@ -185,11 +182,11 @@ probably named after the supplied task name. The returned
 <code>ExecutorTask</code> will then already be using the proper
 <code>InputOutput</code>, and this may be retrieved if needed using
 
-<a href="../ExecutorTask.html#getInputOutput--"><code>ExecutorTask.getInputOutput()</code></a>.
+{@link org.openide.execution.ExecutorTask#getInputOutput() ExecutorTask.getInputOutput() }.
 
 <li>You may use the constant
 
-<a href="@org-openide-io@/org/openide/windows/InputOutput.html#NULL"><code>InputOutput.NULL</code></a>
+{@link org.openide.windows.InputOutput#NULL InputOutput.NULL }
 
 to indicate that no I/O at all is desired for a task - that is, its I/O
 streams will be trapped, but writes will be discarded and reads will
@@ -213,13 +210,13 @@ be trapped.
 
 <ol>
 
-<li><a href="../ExecutionEngine.html#execute-java.lang.String-java.lang.Runnable-org.openide.windows.InputOutput-"><code>ExecutionEngine.execute(...)</code></a>
+<li>{@link org.openide.execution.ExecutionEngine#execute(java.lang.String,java.lang.Runnable,org.openide.windows.InputOutput) ExecutionEngine.execute(...) }
 
 is the primitive means for providing I/O services to a block of code
 using dynamic scope.
 (You may obtain the <code>ExecutionEngine</code> via
 
-<code>ExecutionEngine.<a href="../ExecutionEngine.html#getDefault--">getDefault</a>()</code>.)
+{@link org.openide.execution.ExecutionEngine#getDefault() ExecutionEngine.getDefault() }.)
 
 The supplied <code>Runnable</code> is run
 asynchronously in its own thread and thread group, i.e. well-isolated
@@ -232,7 +229,7 @@ supplied runnable; it will all be handled. Runnable-spawned code which
 is destined for other thread groups will not be handled, however; for
 example,
 
-<a href="@org-openide-util@/org/openide/util/RequestProcessor.html#post-java.lang.Runnable-"><code>RequestProcessor.post(Runnable)</code></a>
+{@link org.openide.util.RequestProcessor#post(java.lang.Runnable) RequestProcessor.post(Runnable) }
 
 will execute code in NetBeans' main thread group, not the one created
 by the execution engine.
@@ -266,22 +263,20 @@ exit status (since the execution engine is not aware of such codes).
 <p>The dynamic scope of <code>execute(...)</code> also covers
 attempted uses of
 
-<a href="@JDK@/java/lang/System.html#exit-int-"><code>System.exit(int)</code></a>
-
+{@link java.lang.System#exit(int) System.exit(int) }
 (or
-
-<a href="@JDK@/java/lang/Runtime.html#exit-int-"><code>Runtime.exit(int)</code></a>).
+{@link java.lang.Runtime#exit(int) Runtime.exit(int) } ).
 
 If an exit is attempted within the task's dynamic scope (i.e. thread
 group), this is caught by the NetBeans security manager implementation,
 and the task is instead stopped (as if by
 
-<a href="../ExecutorTask.html#stop--"><code>ExecutorTask.stop()</code></a>).
+{@link org.openide.execution.ExecutorTask#stop() ExecutorTask.stop() } ).
 
 In practice this means that all living threads in the thread group
 will receive
 
-<a href="@JDK@/java/lang/ThreadDeath.html"><code>ThreadDeath</code></a>
+{@link java.lang.ThreadDeath ThreadDeath }
 
 to stop them. So executor implementations should be prepared to have
 thread death thrown on them, and anyone catching
@@ -293,7 +288,7 @@ or because of an explicit use of <code>ExecutorTask.stop()</code>.
 (Note that there is no way to recover the exit status which the
 attempted exit call used.)
 
-<li><a href="../NbClassLoader.html#NbClassLoader-org.openide.windows.InputOutput-"><code>new NbClassLoader(InputOutput)</code></a>
+<li>{@link org.openide.execution.NbClassLoader#NbClassLoader(org.openide.windows.InputOutput) new NbClassLoader(InputOutput) }
 
 creates a special classloader that is aware of an
 <code>InputOutput</code> obtained as above. Normally
@@ -333,8 +328,7 @@ is subject to the security manager. Such "untrusted" code is probably
 restricted from security-sensitive calls (but do not count on it).
 Such code can still call
 
-<a href="@org-openide-util-ui@/org/openide/LifecycleManager.html#exit--"><code>LifecycleManager.exit()</code></a>
-
+{@link org.openide.LifecycleManager#exit() LifecycleManager.exit() }
 to explicitly exit NetBeans.
 
 </ol>

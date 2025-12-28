@@ -71,16 +71,16 @@ package org.antlr.parser.antlr4;
 </property>
         <property name="antlr4.outdir" location="${src.dir}/org/antlr/parser/antlr4"/>
         <property name="antlr3.outdir" location="${src.dir}/org/antlr/parser/antlr3"/>
-        <mkdir dir="${antlr3.outdir}"/>
-        <mkdir dir="${antlr4.outdir}"/>
+        <mkdir dir="${antlr3.outdir}/g4"/>
+        <mkdir dir="${antlr4.outdir}/g4"/>
 
-        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr3/ANTLRv3Lexer.g4" dest="${antlr3.outdir}"/>
-        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr3/ANTLRv3Parser.g4" dest="${antlr3.outdir}"/>
+        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr3/ANTLRv3Lexer.g4" dest="${antlr3.outdir}/g4"/>
+        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr3/ANTLRv3Parser.g4" dest="${antlr3.outdir}/g4"/>
         <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr3/Java/LexerAdaptor.java" dest="${antlr3.outdir}"/>
 
-        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr4/ANTLRv4Lexer.g4" dest="${antlr4.outdir}"/>
-        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr4/ANTLRv4Parser.g4" dest="${antlr4.outdir}"/>
-        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr4/LexBasic.g4" dest="${antlr4.outdir}"/>
+        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr4/ANTLRv4Lexer.g4" dest="${antlr4.outdir}/g4"/>
+        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr4/ANTLRv4Parser.g4" dest="${antlr4.outdir}/g4"/>
+        <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr4/LexBasic.g4" dest="${antlr4.outdir}/g4"/>
         <get src="https://raw.githubusercontent.com/antlr/grammars-v4/${antlr4.grammar.version}/antlr/antlr4/Java/LexerAdaptor.java" dest="${antlr4.outdir}"/>
 
         <replace file="${antlr3.outdir}/LexerAdaptor.java">
@@ -107,7 +107,7 @@ import org.antlr.v4.runtime.CharStream;]]></replacevalue>
         </replaceregexp>
     </target>
 
-    <target name="generate-antlr-parser" description="Regenerate the ANTLRv4 parser" depends="init">
+    <target name="generate-antlr-parser" description="Regenerate the ANTLRv4 parser" depends="init" extensionOf="-pre-compile">
         <property name="antlr3.outdir" location="${src.dir}/org/antlr/parser/antlr3"/>
         <property name="antlr4.outdir" location="${src.dir}/org/antlr/parser/antlr4"/>
         <path id="antlr4.tool">
@@ -115,7 +115,7 @@ import org.antlr.v4.runtime.CharStream;]]></replacevalue>
             <fileset dir="../../ide/libs.antlr3.runtime/external" includes="antlr-runtime-*.jar"/>
         </path>
 
-        <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="${antlr3.outdir}">
+        <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="${antlr3.outdir}/g4">
             <arg value="-o"/>
             <arg value="${antlr3.outdir}"/>
             <!--arg value="-package"/>
@@ -124,7 +124,7 @@ import org.antlr.v4.runtime.CharStream;]]></replacevalue>
             <arg value="ANTLRv3Parser.g4"/>
         </java>
 
-        <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="${antlr4.outdir}">
+        <java classname="org.antlr.v4.Tool" classpathref="antlr4.tool" fork="true" dir="${antlr4.outdir}/g4">
             <arg value="-o"/>
             <arg value="${antlr4.outdir}"/>
             <!--arg value="-package"/>
@@ -140,4 +140,5 @@ import org.antlr.v4.runtime.CharStream;]]></replacevalue>
         <!--delete dir="${antlr.outdir}" includes="*.g4"/-->
 
     </target>
+
 </project>

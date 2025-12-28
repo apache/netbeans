@@ -39,7 +39,8 @@ import org.openide.util.NbBundle;
 @NbBundle.Messages({
     "LBL_WorkloadType=Workload Type: {0}\n",
     "LBL_DatabaseVersion=Database version: {0}\n",
-    "LBL_Storage=Storage: {0}TB"
+    "LBL_Storage=Storage: {0}TB",
+    "LBL_ADB=Oracle Autonomous Database: {0}"
 })
 public class DatabaseNode extends OCINode {
 
@@ -51,7 +52,7 @@ public class DatabaseNode extends OCINode {
         setName(dbSummary.getName());
         setDisplayName(dbSummary.getName());
         setIconBaseWithExtension(DB_ICON);
-        setShortDescription(dbSummary.getDescription());
+        setShortDescription(Bundle.LBL_ADB(dbSummary.getDescription()));
     }
 
     public static NodeProvider<DatabaseItem> createNode() {
@@ -65,25 +66,30 @@ public class DatabaseNode extends OCINode {
      * @return List of {@code OCIItem} describing databases in a given
      * Compartment
      */
-    public static ChildrenProvider<CompartmentItem, DatabaseItem> getDatabases() {
-        return compartmentId -> {
+    public static ChildrenProvider.SessionAware<CompartmentItem, DatabaseItem> getDatabases() {
+        return (compartmentId, session) -> {
             DatabaseClient client = new DatabaseClient(getDefault().getConfigProvider());
             ListAutonomousDatabasesRequest listAutonomousDatabasesRequest = ListAutonomousDatabasesRequest.builder()
                     .compartmentId(compartmentId.getKey().getValue())
                     .limit(88)
                     .build();
-            
-            
+
+            String tenancyId = session.getTenancy().isPresent() ? session.getTenancy().get().getKey().getValue() : null;
+            String regionCode = session.getRegion().getRegionCode();
+
             return client.listAutonomousDatabases(listAutonomousDatabasesRequest)
                     .getItems()
                     .stream()
                     .map(d -> {
                         List<DatabaseConnectionStringProfile> profiles = d.getConnectionStrings().getProfiles();
                         DatabaseItem item = new DatabaseItem(
-                                OCID.of(d.getId(), "Databases"), //NOI18N
+                                OCID.of(d.getId(), "Database"), //NOI18N
+                                compartmentId.getKey().getValue(),
                                 d.getDbName(),
-                                d.getConnectionUrls().getOrdsUrl()+SERVICE_CONSOLE_SUFFIX,
-                                getConnectionName(profiles));
+                                d.getConnectionUrls().getOrdsUrl() + SERVICE_CONSOLE_SUFFIX,
+                                getConnectionName(profiles),
+                                tenancyId,
+                                regionCode);
                         StringBuilder sb = new StringBuilder();
                         sb.append(Bundle.LBL_WorkloadType(d.getDbWorkload().getValue()));
                         sb.append(Bundle.LBL_DatabaseVersion(d.getDbVersion()));

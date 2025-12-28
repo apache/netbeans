@@ -176,7 +176,7 @@ public final class DDUtils {
                 maps.add(fm);
             }
         }
-        return (FilterMapping[]) maps.toArray(new FilterMapping[maps.size()]);
+        return (FilterMapping[]) maps.toArray(new FilterMapping[0]);
     }
     
     private static List<ServletMapping> getServletMappingList(WebApp webApp, Servlet servlet) {

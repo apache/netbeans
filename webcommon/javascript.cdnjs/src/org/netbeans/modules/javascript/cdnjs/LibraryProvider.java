@@ -27,11 +27,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
-import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
@@ -239,16 +240,10 @@ public final class LibraryProvider {
         String[] fileNames = version.getFiles();
         String fileName = fileNames[fileIndex];
         String url = MessageFormat.format(LIBRARY_FILE_URL_PATTERN, libraryName, versionName, fileName);
-        URL urlObject = new URL(url);
+        URL urlObject = URI.create(url).toURL();
         URLConnection urlConnection = urlObject.openConnection();
         try (InputStream input = urlConnection.getInputStream()) {
-            int index = fileName.lastIndexOf('.');
-            String prefix = (index == -1) ? fileName : fileName.substring(0,index);
-            if (prefix.length() < 3) {
-                prefix = "tmp" + prefix; // NOI18N
-            }
-            String suffix = (index == -1) ? "" : fileName.substring(index);
-            File file = File.createTempFile(prefix, suffix);
+            File file = Files.createTempFile("cdjns-download-", "tmp").toFile();
             try (OutputStream output = new FileOutputStream(file)) {
                 FileUtil.copy(input, output);
                 return file;
@@ -268,12 +263,10 @@ public final class LibraryProvider {
     /**
      * Comparator that helps to sort library versions.
      */
-    static final Comparator<Pair<Library.Version, Version>> VERSION_COMPARATOR = new Comparator<Pair<Library.Version, Version>>() {
-        @Override
-        public int compare(Pair<Library.Version, Version> pair1, Pair<Library.Version, Version> pair2) {
-            return Version.Comparator.getInstance(false).compare(pair1.second(), pair2.second());
-        }
-    };
+    static final Comparator<Pair<Library.Version, Version>> VERSION_COMPARATOR = 
+            (Pair<Library.Version, Version> pair1, Pair<Library.Version, Version> pair2) -> {
+                return Version.Comparator.getInstance(false).compare(pair1.second(), pair2.second());
+            };
 
     private static void extractVersionInformation(JSONObject data, Library library) {
         JSONArray versionsData = (JSONArray) data.get(PROPERTY_VERSIONS);
@@ -296,6 +289,7 @@ public final class LibraryProvider {
      * @param versions versions to sort.
      */
     private static void sort(Library.Version[] versions) {
+        @SuppressWarnings({"unchecked", "rawtypes"})
         Pair<Library.Version, Version>[] pairs = new Pair[versions.length];
         for (int i = 0; i < versions.length; i++) {
             Library.Version libraryVersion = versions[i];
@@ -326,14 +320,12 @@ public final class LibraryProvider {
         String[] files = new String[filesData.size()];
         for (int i = 0; i < files.length; i++) {
             Object fileInfo = filesData.get(i);
-            String fileName;
             if (fileInfo instanceof JSONObject) {
                 JSONObject fileData = (JSONObject) fileInfo;
-                fileName = (String) fileData.get(PROPERTY_FILE_NAME);
-            } else {
-                fileName = fileInfo.toString();
+                files[i] = (String) fileData.get(PROPERTY_FILE_NAME);
+            } else if (fileInfo != null) {
+                files[i] = fileInfo.toString();
             }
-            files[i] = fileName;
         }
         version.setFileInfo(files, null);
 
@@ -347,10 +339,11 @@ public final class LibraryProvider {
      *
      * @return content of the given URL.
      */
+    @SuppressWarnings("NestedAssignment")
     static String readUrl(String url) {
         String urlContent = null;
         try {
-            URL urlObject = new URL(url);
+            URL urlObject = URI.create(url).toURL();
             URLConnection urlConnection = urlObject.openConnection();
             StringBuilder content = new StringBuilder();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -361,10 +354,8 @@ public final class LibraryProvider {
                 }
             }
             urlContent = content.toString();
-        } catch (MalformedURLException muex) {
+        } catch (IOException muex) {
             Logger.getLogger(LibraryProvider.class.getName()).log(Level.INFO, null, muex);
-        } catch (IOException ioex) {
-            Logger.getLogger(LibraryProvider.class.getName()).log(Level.INFO, null, ioex);
         }
         return urlContent;
     }

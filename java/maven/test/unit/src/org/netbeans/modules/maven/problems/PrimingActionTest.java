@@ -249,7 +249,8 @@ public class PrimingActionTest extends NbTestCase {
         setupBrokenProject();
         Project p = ProjectManager.getDefault().findProject(FileUtil.toFileObject(getWorkDir()));
         Collection<? extends ProjectProblemsProvider.ProjectProblem> probs = collectProblems(p);
-        assertEquals(1, probs.size());
+        // #1 - parent POM is missing, #2 - dependencies are missing.
+        assertEquals(2, probs.size());
         ActionProvider ap = p.getLookup().lookup(ActionProvider.class);
         boolean enabled = ap.isActionEnabled(ActionProvider.COMMAND_PRIME, Lookups.fixed(r));
         assertTrue(enabled);

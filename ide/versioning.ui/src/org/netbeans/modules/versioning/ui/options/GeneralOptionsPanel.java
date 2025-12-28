@@ -267,7 +267,7 @@ final class GeneralOptionsPanel extends javax.swing.JPanel implements ActionList
         for (VersioningSystem system : Lookup.getDefault().lookupAll(VersioningSystem.class)) {
             systems.add(system);
         }
-        cmbVersioningSystems.setModel(new DefaultComboBoxModel(systems.toArray(new VersioningSystem[systems.size()])));
+        cmbVersioningSystems.setModel(new DefaultComboBoxModel(systems.toArray(new VersioningSystem[0])));
     }
 
     @Override

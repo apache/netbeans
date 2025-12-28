@@ -1005,7 +1005,7 @@ public final class PlatformUiSupport {
                         sLevels.add(new SourceLevelKey(originalSourceLevel, true));
                     }
                 }
-                sourceLevelCache = sLevels.toArray(new SourceLevelKey[sLevels.size()]);
+                sourceLevelCache = sLevels.toArray(new SourceLevelKey[0]);
                 if (!selSourceLevelValid) {
                     selectedSourceLevel = sourceLevelCache.length == 0
                             ? null : sourceLevelCache[sourceLevelCache.length - 1].getSourceLevel();

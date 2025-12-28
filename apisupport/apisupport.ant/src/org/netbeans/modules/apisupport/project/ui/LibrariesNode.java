@@ -40,7 +40,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -270,7 +270,7 @@ final class LibrariesNode extends AbstractNode {
                     nodes.add(createLibraryPackageViewNode(jar));
                 }
             }
-            return nodes.toArray(new Node[nodes.size()]);
+            return nodes.toArray(new Node[0]);
         }
 
         private Node createLibraryPackageViewNode(FileObject jfo) {
@@ -557,7 +557,7 @@ final class LibrariesNode extends AbstractNode {
             }
             if(dependencies.size() > 0)
             {
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     public @Override void run() {
                         ProjectXMLManager pxm = new ProjectXMLManager(project);
                         try {
@@ -613,7 +613,7 @@ final class LibrariesNode extends AbstractNode {
                 if (descriptor.getValue().equals(DialogDescriptor.OK_OPTION)) {
                     final ModuleDependency editedDep = editPanel.getEditedDependency();
                     final AtomicBoolean cancel = new AtomicBoolean();
-                    ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                    BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                         public @Override void run() {
                             try {
                                 SortedSet<ModuleDependency> deps = new TreeSet<ModuleDependency>(pxm.getDirectDependencies());

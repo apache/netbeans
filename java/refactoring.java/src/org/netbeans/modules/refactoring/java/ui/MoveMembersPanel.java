@@ -331,7 +331,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
                         } catch (IOException ex) {
                             Exceptions.printStackTrace(ex);
                         }
-                        Collections.sort(items, new Comparator() {
+                        items.sort(new Comparator() {
                             private Comparator COLLATOR = Collator.getInstance();
 
                             @Override
@@ -350,7 +350,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
                                 return COLLATOR.compare(p1.getDisplayName(), p2.getDisplayName());
                             }
                         });
-                        model = new DefaultComboBoxModel(items.toArray(new ClassItem[items.size()]));
+                        model = new DefaultComboBoxModel(items.toArray(new ClassItem[0]));
                     } else {
                         model = new DefaultComboBoxModel();
                     }
@@ -415,7 +415,7 @@ public class MoveMembersPanel extends javax.swing.JPanel implements CustomRefact
             }
             result.add(description);
         }
-        Collections.sort(result, isNaturalSort() ? Description.POSITION_COMPARATOR : Description.ALPHA_COMPARATOR);
+        result.sort(isNaturalSort() ? Description.POSITION_COMPARATOR : Description.ALPHA_COMPARATOR);
         if(warn) {
             if(this.label == null && outlineView1.isValid()) {
                 final JLayeredPane layeredPaneAbove = JLayeredPane.getLayeredPaneAbove(outlineView1);

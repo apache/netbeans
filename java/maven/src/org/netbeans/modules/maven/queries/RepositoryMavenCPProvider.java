@@ -19,9 +19,11 @@
 package org.netbeans.modules.maven.queries;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.ref.SoftReference;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -49,6 +51,7 @@ import org.netbeans.spi.java.classpath.PathResourceImplementation;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -111,11 +114,16 @@ public class RepositoryMavenCPProvider implements ClassPathProvider {
                                         return JavaPlatform.getDefault().getBootstrapLibraries();
                                     }
                                     if (ClassPath.COMPILE.equals(type)) {
-                                        MavenProject mp = getMavenProject(archive, pom, groupId, artifact, version);
-                                        return ClassPathFactory.createClassPath(createCompileCPI(mp, bin));
+                                        // Gradle generated POM files does not contain `compileOnly(...)` dependencies supported by gradle
+                                        // and therefore cannot be used to provide complete compile classpath for the given file.
+                                        // Better to fallback to DefaultClassPathProvider in such case.
+                                        if (!fromGradleMetadata(pom)) {
+                                            MavenProject mp = getMavenProject(archive, pom, groupId, artifact, version);
+                                            return ClassPathFactory.createClassPath(createCompileCPI(mp, bin));
+                                        }
                                     }
                                     if (ClassPath.EXECUTE.equals(type)) {
-                                        MavenProject mp = getMavenProject(archive, pom, groupId, artifact, version);                                        
+                                        MavenProject mp = getMavenProject(archive, pom, groupId, artifact, version);
                                         return ClassPathFactory.createClassPath(createExecuteCPI(mp, bin));
                                     }
                                 } else {
@@ -131,6 +139,16 @@ public class RepositoryMavenCPProvider implements ClassPathProvider {
             
         }
         return null;
+    }
+
+    private boolean fromGradleMetadata(File pom) {
+        try {
+            String content = Files.readString(pom.toPath());
+            return content.contains("<!-- do_not_remove: published-with-gradle-metadata -->"); //NOI18N
+        } catch (IOException ex) {
+            LOG.log(Level.FINER, "Failed to read POM file {0}", new Object[] {pom});
+        }
+        return false;
     }
 
     private MavenProject getMavenProject(FileObject archive, File pom, String groupId, String artifact, String version) {

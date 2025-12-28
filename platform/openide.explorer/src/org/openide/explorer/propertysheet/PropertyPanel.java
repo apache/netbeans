@@ -161,8 +161,6 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
     Object[] beans = null;
     private ReusablePropertyEnv reusableEnv = new ReusablePropertyEnv();
     private ReusablePropertyModel reusableModel = new ReusablePropertyModel(reusableEnv);
-    private final boolean isGtk = "GTK".equals(UIManager.getLookAndFeel().getID()) || //NOI18N
-        (UIManager.getLookAndFeel().getClass().getSuperclass().getName().indexOf("Synth") != -1); //NOI18N
     private boolean ignoreCommit;
 
     /** Creates new PropertyPanel backed by a dummy property  */
@@ -951,7 +949,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
      * not valid states just if it implements the {@link ExPropertyEditor}
      * and changes state by the <code>setState</code> method of the {@link PropertyEnv}
      * environment.
-     * <P>
+     *
      * @return <code>PropertyEnv.STATE_VALID</code> if the editor is not the <code>ExPropertyEditor</code>
      *    one or other constant from <code>PropertyEnv.STATE_*</code> that was assigned to <code>PropertyEnv</code>
      * @since 2.20
@@ -1151,13 +1149,12 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
     }
 
     /*
-     * Overridden to fill in the background color, since Synth/GTKLookAndFeel ignores
-     * setOpaque(true).
-     * @see https://bz.apache.org/netbeans/show_bug.cgi?id=43024
+     * This method is overridden to customize the painting behavior.
+     * It ensures that the background color is filled when setOpaque is true.
      */
     @Override
     public void paint(Graphics g) {
-        if (isGtk) {
+        if (isOpaque()) {
             //Presumably we can get this fixed for JDK 1.5.1
             Color c = getBackground();
 
@@ -1178,7 +1175,7 @@ public class PropertyPanel extends JComponent implements javax.accessibility.Acc
         super.paint(g);
     }
 
-    ////////////////// Accessibility support ///////////////////////////////////
+    // Accessibility support
     @Override
     public javax.accessibility.AccessibleContext getAccessibleContext() {
         if (accessibleContext == null) {

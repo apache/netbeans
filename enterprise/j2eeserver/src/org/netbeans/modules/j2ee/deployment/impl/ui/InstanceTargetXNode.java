@@ -90,7 +90,7 @@ public class InstanceTargetXNode extends FilterXNode implements ServerInstance.S
             actions.addAll(Arrays.asList(getDelegateTargetNode().getActions(context)));
         }
         
-        return (javax.swing.Action[]) actions.toArray(new javax.swing.Action[actions.size()]);
+        return (javax.swing.Action[]) actions.toArray(new javax.swing.Action[0]);
     }
     
     public PropertySet[] getPropertySets() {

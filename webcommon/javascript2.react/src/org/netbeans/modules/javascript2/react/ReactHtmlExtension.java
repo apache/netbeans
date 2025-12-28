@@ -41,7 +41,7 @@ public class ReactHtmlExtension extends HtmlExtension {
     private static String REACT_MIMETYPE = JsTokenId.JAVASCRIPT_MIME_TYPE + "/text/html"; //NOI18N
     @Override
     public boolean isCustomAttribute(Attribute attribute, HtmlSource source) {
-        if (CLASSNAME.equals(attribute.name().toString().toLowerCase())) {
+        if (CLASSNAME.equalsIgnoreCase(attribute.name().toString())) {
             return true;
         }
         return false;

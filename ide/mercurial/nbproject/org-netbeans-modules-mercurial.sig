@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.64.0
+#Version 2.6.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -22,11 +22,7 @@ meth public static boolean isClientAvailable(boolean)
 meth public static boolean isRepository(java.lang.String)
 meth public static java.io.File openCloneWizard(java.lang.String,boolean) throws java.net.MalformedURLException
 meth public static void addRecentUrl(java.lang.String) throws java.net.MalformedURLException
-meth public static void cloneRepository(java.lang.String,java.io.File,java.lang.String,java.lang.String,java.lang.String) throws java.net.MalformedURLException
- anno 0 java.lang.Deprecated()
 meth public static void cloneRepository(java.lang.String,java.io.File,java.lang.String,java.lang.String,java.lang.String,boolean) throws java.net.MalformedURLException
-meth public static void cloneRepository(java.lang.String,java.io.File,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws java.net.MalformedURLException
- anno 0 java.lang.Deprecated()
 meth public static void cloneRepository(java.lang.String,java.io.File,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean) throws java.net.MalformedURLException
 meth public static void commit(java.io.File[],java.lang.String)
 meth public static void openCloneWizard(java.lang.String) throws java.net.MalformedURLException

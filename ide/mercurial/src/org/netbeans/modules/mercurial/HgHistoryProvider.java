@@ -118,10 +118,10 @@ public class HgHistoryProvider implements VCSHistoryProvider {
 
             for(HgLogMessage h : rev2LMMap.values()) {
                 Set<File> s = rev2FileMap.get(h.getHgRevision().getRevisionNumber());
-                File[] involvedFiles = s.toArray(new File[s.size()]);
+                File[] involvedFiles = s.toArray(new File[0]);
                 ret.add(createHistoryEntry(h, repositoryRoot, involvedFiles));
             }
-            return ret.toArray(new HistoryEntry[ret.size()]);
+            return ret.toArray(new HistoryEntry[0]);
         } finally {
             LOG.log(Level.FINE, "retrieving history took {0}", (System.currentTimeMillis() - t));
         }
@@ -135,7 +135,7 @@ public class HgHistoryProvider implements VCSHistoryProvider {
     public void fireHistoryChange(final File[] files) {
         final HistoryChangeListener[] la;
         synchronized(listeners) {
-            la = listeners.toArray(new HistoryChangeListener[listeners.size()]);
+            la = listeners.toArray(new HistoryChangeListener[0]);
         }
         Mercurial.getInstance().getRequestProcessor().post(new Runnable() {
             @Override

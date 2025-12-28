@@ -59,7 +59,7 @@ public class ArrayCreation extends Expression {
     }
 
     public ArrayCreation(int start, int end, List<ArrayElement> elements, Type type) {
-        this(start, end, elements == null ? null : elements.toArray(new ArrayElement[elements.size()]), type);
+        this(start, end, elements == null ? null : elements.toArray(new ArrayElement[0]), type);
     }
 
     /**

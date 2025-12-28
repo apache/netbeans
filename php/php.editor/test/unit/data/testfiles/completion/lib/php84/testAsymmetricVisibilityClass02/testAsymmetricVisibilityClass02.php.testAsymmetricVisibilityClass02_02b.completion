@@ -1,0 +1,5 @@
+Code completion result for source line:
+$parent->finalPublicPrivateSetR|eadonly; // test: only public methods (parent class)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   Bar|(ParentClass&Foo) finalPub  [PUBLIC]   ParentClass
+VARIABLE   Bar|(ParentClass&Foo) finalPub  [PUBLIC]   TestTrait

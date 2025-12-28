@@ -55,7 +55,7 @@ public final class TestTrampoline implements OpenProjectsTrampoline {
     public Project[] getOpenProjectsAPI() {
         rwLock.readLock().lock();
         try {
-            return opened.toArray(new Project[opened.size()]);
+            return opened.toArray(new Project[0]);
         } finally {
             rwLock.readLock().unlock();
         }

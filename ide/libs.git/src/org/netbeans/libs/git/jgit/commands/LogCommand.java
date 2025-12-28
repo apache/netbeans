@@ -165,7 +165,7 @@ public class LogCommand extends GitCommand {
                         fullWalk.parseCommit(commit), branches, repository)
                     );
                     if (commit.getParentCount() == 0) {
-                        Ref replace = repository.getAllRefs().get("refs/replace/" + commit.getId().getName());
+                        Ref replace = repository.exactRef("refs/replace/" + commit.getId().getName());
                         if (replace != null) {
                             final RevCommit newCommit = Utils.findCommit(repository, replace.getTarget().getName());
                             if (newCommit != null) {
@@ -310,11 +310,11 @@ public class LogCommand extends GitCommand {
         Date from  = criteria.getFrom();
         Date to  = criteria.getTo();
         if (from != null && to != null) {
-            filter = AndRevFilter.create(filter, CommitTimeRevFilter.between(from, to));
+            filter = AndRevFilter.create(filter, CommitTimeRevFilter.between(from.toInstant(), to.toInstant()));
         } else if (from != null) {
-            filter = AndRevFilter.create(filter, CommitTimeRevFilter.after(from));
+            filter = AndRevFilter.create(filter, CommitTimeRevFilter.after(from.toInstant()));
         } else if (to != null) {
-            filter = AndRevFilter.create(filter, CommitTimeRevFilter.before(to));
+            filter = AndRevFilter.create(filter, CommitTimeRevFilter.before(to.toInstant()));
         }
         // this must be at the end, limit filter must apply as the last
         if (criteria.getLimit() != -1) {

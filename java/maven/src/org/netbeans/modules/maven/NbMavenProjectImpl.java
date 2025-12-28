@@ -57,6 +57,7 @@ import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.cli.MavenCli;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.model.Resource;
 import org.apache.maven.model.building.ModelBuildingException;
 import org.apache.maven.model.building.ModelBuildingResult;
@@ -140,7 +141,7 @@ public final class NbMavenProjectImpl implements Project {
                     x = project == null ? null : project.get();
                 }
                 LOG.log(Level.FINE, "Project {0} starting reload. Currentproject is: {1}", 
-                        new Object[] { System.identityHashCode(x == null ? this : x ), x });
+                        new Object[] { Integer.toHexString(System.identityHashCode(x)), x });
             }
             problemReporter.clearReports(); //#167741 -this will trigger node refresh?
             MavenProject prj = loadOriginalMavenProject(true);
@@ -148,7 +149,7 @@ public final class NbMavenProjectImpl implements Project {
             synchronized (NbMavenProjectImpl.this) {
                 old = project == null ? null : project.get();
                 LOG.log(Level.FINE, "Project {0} reloaded. Old project is: {1}, new project {2}", 
-                        new Object[] { prj, System.identityHashCode(old == null ? this : old), System.identityHashCode(prj) });
+                        new Object[] { prj, Integer.toHexString(System.identityHashCode(old)), Integer.toHexString(System.identityHashCode(prj)) });
                 if (old != null && MavenProjectCache.isFallbackproject(prj)) {
                     prj.setPackaging(old.getPackaging()); //#229366 preserve packaging for broken projects to avoid changing lookup.
                 }
@@ -294,6 +295,10 @@ public final class NbMavenProjectImpl implements Project {
         return problemReporter;
     }
 
+    public long getLoadTimestamp() {
+        return MavenProjectCache.getLoadTimestamp(this.project.get());
+    }
+    
     public String getHintJavaPlatform() {
         String hint = getAuxProps().get(Constants.HINT_JDK_PLATFORM, true);
         if (hint == null) {
@@ -313,10 +318,11 @@ public final class NbMavenProjectImpl implements Project {
     public @NonNull MavenProject loadMavenProject(MavenEmbedder embedder, List<String> activeProfiles, Properties properties) {
         ProjectActionContext.Builder b = ProjectActionContext.newBuilder(this).
                 withProfiles(activeProfiles);
-        for (String pn : properties.stringPropertyNames()) {
-            b.withProperty(pn, properties.getProperty(pn));
+        if (properties != null) {
+            for (String pn : properties.stringPropertyNames()) {
+                b.withProperty(pn, properties.getProperty(pn));
+            }
         }
-        
         return MavenProjectCache.loadMavenProject(projectFile, 
                 b.context(), null);
         /*
@@ -480,6 +486,7 @@ public final class NbMavenProjectImpl implements Project {
             LOG.log(Level.FINE, "Asked for project {0} being updated, waiting for the refresh to complete.", projectFile);
             CompletableFuture<MavenProject> f = new CompletableFuture<>();
             reloadTask.addTaskListener((e) -> {
+                 // TODO: must remove the listener, it is one shot !
                 LOG.log(Level.FINE, "Project {0} update done.", projectFile);
                 f.complete(getOriginalMavenProject());
             });
@@ -603,6 +610,9 @@ public final class NbMavenProjectImpl implements Project {
      */
     // @GuardedBy(this)
     private RequestProcessor.Task reloadCompletionTask;
+    
+    // @GuardedBy(this)
+    private RequestProcessor.Task operationCompletionTask;
         
     // tests only !
     synchronized Pair<List<RequestProcessor.Task>, RequestProcessor.Task> reloadBlockingState() {
@@ -614,6 +624,10 @@ public final class NbMavenProjectImpl implements Project {
         return reloadTask;
     }
     
+    public RequestProcessor.Task scheduleProjectOperation(RequestProcessor rp, Runnable r,  int delay) {
+        return scheduleProjectOperation(rp, r, delay, false);
+    }
+    
     /**
      * Schedules project operation that delays potential reloads. If a reload is posted, it will be performed only after
      * this operation compeltes (successfully, or erroneously). Multiple project operations can be scheduled, an eventual project reload
@@ -621,43 +635,58 @@ public final class NbMavenProjectImpl implements Project {
      * operation schedules.
      * <p>
      * To avoid race condition on task startup, this method actually creates and schedules the task so it blocks reloads from its inception.
-     * It returns the value of the worker task as the result value. 
-     * wrapper.
+     * Since the project might be reloaded and full effects of the reload will be visible only after broadcasting and completing PROP_PROJECT
+     * event, the caller might ask to return a Task that will complete after all that is complete. If no project reload happens the task
+     * completes as soon as the Runnable finishes.
+     *
      * @param rp request processor that should schedule the task
      * @param delay optional delay, use 0 for immediate run
      * @param r operation to run
+     * @param afterChangesFired if true, the returned Task will complete only after the post-operation project reload fires its events.
      * @return the scheduled task
      */
-    public RequestProcessor.Task scheduleProjectOperation(RequestProcessor rp, Runnable r,  int delay) {
+    public RequestProcessor.Task scheduleProjectOperation(RequestProcessor rp, Runnable r,  int delay, boolean afterChangesFired) {
         RequestProcessor.Task t = rp.create(r);
         if (Boolean.getBoolean("test.reload.sync")) {
             LOG.log(Level.FINE, "Running the blocking task synchronously (test.reload.sync set)");
             t.run();
             return t;
         } else {
+            RequestProcessor.Task t2;
             synchronized (this) {
+                if (operationCompletionTask == null) {
+                    operationCompletionTask = RELOAD_RP.create(() -> {});
+                }
+                t2 = operationCompletionTask;
                 blockingList.add(t);
                 if (LOG.isLoggable(Level.FINER)) {
                     LOG.log(Level.FINER, "Blocking project reload on task {0}, blocking queue: {1}", new Object[] { t, blockingList });
                 }
                 t.addTaskListener((e) -> {
+                    boolean runImmediately;
                     synchronized (this) {
                         blockingList.remove(t);
                         if (!blockingList.isEmpty()) {
                             LOG.log(Level.FINER, "Project {0} task {1} finished, still blocked", new Object[] { this, t });
                             return;
                         }
-                        if (reloadCompletionTask == null) {
-                            LOG.log(Level.FINER, "Project {0} task {1} finished, no reload requested", new Object[] { this, t });
-                            return;
-                        }
+                        // the value is still cached in t2
+                        operationCompletionTask = null;
+                        runImmediately = reloadCompletionTask == null;
+                    }
+                    if (runImmediately) {
+                        LOG.log(Level.FINER, "Project {0} task {1} finished, no reload requested", new Object[] { this, t });
+                        t2.run();
+                        return;
                     }
                     LOG.log(Level.FINER, "Project {0} task {1} finished, project reload released", new Object[] { this, t });
-                    fireProjectReload(true);
+                    fireProjectReload(true).addTaskListener((e2) -> {
+                        t2.run();
+                    });
                 });
             }
             t.schedule(delay);
-            return t;
+            return afterChangesFired ? t2 : t;
         }
     }
     
@@ -762,7 +791,7 @@ public final class NbMavenProjectImpl implements Project {
                 } else {
                     LOG.log(Level.INFO, "Recovering module {0}, pomfile {1}", new Object[] { modName, modPom });
                     NbMavenProjectImpl childImpl = c.getLookup().lookup(NbMavenProjectImpl.class);
-                    childImpl.fireProjectReload(true);
+                    childImpl.fireProjectReload(true).waitFinished();
                 }
             } catch (IOException ex) {
                 LOG.log(Level.FINE, "Error getting module project {0} is not a project", modName);
@@ -872,7 +901,7 @@ public final class NbMavenProjectImpl implements Project {
                 uris.add(root.toURI());
             }
         }
-        return uris.toArray(new URI[uris.size()]);
+        return uris.toArray(new URI[0]);
     }
 
     public URI[] getGeneratedSourceRoots(boolean test) {
@@ -946,7 +975,7 @@ public final class NbMavenProjectImpl implements Project {
             uris.addAll(BHTestUris);
         }
 
-        return uris.toArray(new URI[uris.size()]);
+        return uris.toArray(new URI[0]);
     }
 
     public URI getWebAppDirectory() {
@@ -1018,7 +1047,7 @@ public final class NbMavenProjectImpl implements Project {
             toRet.add(uri);
 //            }
         }
-        return toRet.toArray(new URI[toRet.size()]);
+        return toRet.toArray(new URI[0]);
     }
 
     public File[] getOtherRoots(boolean test) {
@@ -1147,7 +1176,6 @@ public final class NbMavenProjectImpl implements Project {
         private final WeakReference<NbMavenProject> watcherRef;
         private String packaging;
         private final Lookup general;
-        
         private volatile List<String> currentIds = new ArrayList<>();
 
         @SuppressWarnings("LeakingThisInConstructor")
@@ -1172,8 +1200,19 @@ public final class NbMavenProjectImpl implements Project {
          * @return 
          */
         private List<String> partialComponentsOrder(Collection<String> componentSet) {
+            return partialComponentsOrder(componentSet, null); // NOI18N
+        }
+        
+        private List<String> partialComponentsOrder(Collection<String> componentSet, String subdir) {
             List<FileObject> fos = new ArrayList<>();
-            FileObject root = FileUtil.getConfigFile("Projects/org-netbeans-modules-maven");
+            String r = "Projects/org-netbeans-modules-maven";
+            if (subdir != null) {
+                r = r + "/" + subdir;
+            }
+            FileObject root = FileUtil.getConfigFile(r);
+            if (root == null) {
+                return Collections.emptyList();
+            }
             for (String s : componentSet) {
                 FileObject f = root.getFileObject(s);
                 if (f != null) {
@@ -1184,6 +1223,11 @@ public final class NbMavenProjectImpl implements Project {
             List<String> origList = new ArrayList<>(componentSet);
             origList.removeAll(orderedNames);
             orderedNames.addAll(origList);
+            if (subdir != null) {
+                for (int i = 0; i < orderedNames.size(); i++) {
+                    orderedNames.set(i, subdir + "/" + orderedNames.get(i));
+                }
+            }
             return orderedNames;
         }
 
@@ -1202,16 +1246,29 @@ public final class NbMavenProjectImpl implements Project {
                 if (newPackaging == null) {
                     newPackaging = NbMavenProject.TYPE_JAR;
                 }
-                Set<Artifact> arts = watcher.getMavenProject().getPluginArtifacts();
+                MavenProject mprj = watcher.getMavenProject();
+                Set<Artifact> arts = mprj.getPluginArtifacts();
                 List<String> compNames = new ArrayList<>();
                 if (arts != null) {
                     for (Artifact a : arts) {
                         compNames.add(pluginDirectory(a));
                     }
                 }
+                List<String> configuredCompNames = new ArrayList<>();
+                if (mprj.getPluginManagement() != null) {
+                    for (Plugin p : mprj.getPluginManagement().getPlugins()) {
+                        String groupId = p.getGroupId();
+                        String artId = p.getArtifactId();
+
+                        String pn = groupId + ":" + artId;
+                        configuredCompNames.add(pn);
+                    }
+                }
+                
                 compNames.add(newPackaging);
                 
                 newComponents = partialComponentsOrder(compNames);
+                newComponents.addAll(partialComponentsOrder(configuredCompNames, "configuredPlugins")); // NOI18N
             } else {
                 newComponents.add(newPackaging);
             }
@@ -1232,7 +1289,7 @@ public final class NbMavenProjectImpl implements Project {
                 }
                 LOG.log(Level.FINE, "Composing lookups for {0}, packaging: {1}, lookups: {2}: ", 
                         new Object[] { watcher.getMavenProject().getFile(), newPackaging, newComponents });
-                setLookups(lookups.toArray(new Lookup[lookups.size()]));
+                setLookups(lookups.toArray(new Lookup[0]));
             }
         }
         

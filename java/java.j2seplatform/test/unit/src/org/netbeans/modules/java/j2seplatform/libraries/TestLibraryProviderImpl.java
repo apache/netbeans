@@ -57,7 +57,7 @@ public class TestLibraryProviderImpl implements org.netbeans.spi.project.librari
     }
     
     public LibraryImplementation[] getLibraries() {
-        return libs.toArray(new LibraryImplementation[libs.size()]);
+        return libs.toArray(new LibraryImplementation[0]);
     }
     
     public void init() throws IOException {

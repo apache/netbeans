@@ -102,7 +102,7 @@ final class TypesPanel extends JPanel {
             }
 
             public void contentsChanged(ListDataEvent arg0) {
-                putClientProperty( FilterCondition.PROP_VALUE_VALID, new Boolean( isValueValid() ) );
+                putClientProperty(FilterCondition.PROP_VALUE_VALID, isValueValid());
             }
         });
         

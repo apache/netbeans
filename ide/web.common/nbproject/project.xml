@@ -143,6 +143,7 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.editor.lib</code-name-base>
+                        <compile-dependency/>
                         <test/>
                     </test-dependency>
                     <test-dependency>
@@ -221,6 +222,8 @@
                 <friend>org.netbeans.modules.javaee.project</friend>
                 <friend>org.netbeans.modules.javascript.bower</friend>
                 <friend>org.netbeans.modules.javascript.cdnjs</friend>
+                <friend>org.netbeans.modules.javascript.cdtdebug</friend>
+                <friend>org.netbeans.modules.javascript.cdtdebug.ui</friend>
                 <friend>org.netbeans.modules.javascript.grunt</friend>
                 <friend>org.netbeans.modules.javascript.gulp</friend>
                 <friend>org.netbeans.modules.javascript.jstestdriver</friend>

@@ -1279,7 +1279,7 @@ public class LspBrokenReferencesImplTest extends NbTestCase {
             if (services == null) {
                 return Lookup.EMPTY;
             } else {
-                return Lookups.fixed(services.toArray(new Object[services.size()]));
+                return Lookups.fixed(services.toArray(new Object[0]));
             }
         }
     }

@@ -255,6 +255,8 @@ public enum CssTokenId implements TokenId {
     LAYER_SYM(Css3Lexer.LAYER_SYM, AT_RULE_SYMBOL),
 
     CONTAINER_SYM(Css3Lexer.CONTAINER_SYM, AT_RULE_SYMBOL),
+
+    KEYFRAMES_SYM(Css3Lexer.KEYFRAMES_SYM, AT_RULE_SYMBOL),
     ;
 
     private static final Map<Integer, CssTokenId> codesMap = new HashMap<>();

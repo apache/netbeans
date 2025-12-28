@@ -95,7 +95,7 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
         readFiles(explorerRoot.getFileObject(treeId), lines);
         readFiles(explorerRoot.getFileObject("_all"), lines);
 
-        NodeLookupContextValues p = nodeLookup(lines.toArray(new String[lines.size()]));
+        NodeLookupContextValues p = nodeLookup(lines.toArray(new String[0]));
         return new ProviderImpl(p);
     }
     
@@ -216,7 +216,7 @@ public class DefaultDecorationsImpl implements TreeDataProvider.Factory {
                 d.addContextValues(CTXVALUE_CAP_RENAME);
                 set = true;
             }
-
+            
             return set ? d : null;
         }
 

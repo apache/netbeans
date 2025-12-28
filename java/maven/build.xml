@@ -43,28 +43,27 @@
             </classpath>
             <classpath refid="cp"/>
         </javac>
-        <copy overwrite="true" tofile="build/mavenclasses/META-INF/plexus/components.xml" file="mavensrc/org/netbeans/modules/maven/workspace/reader/components.xml">
-        </copy>
+        <copy overwrite="true" tofile="build/mavenclasses/META-INF/sisu/javax.inject.Named" file="mavensrc/org/netbeans/modules/maven/workspace/reader/javax.inject.Named"/>
         <mkdir dir="${cluster}/maven-nblib"/>
         <jar jarfile="${cluster}/maven-nblib/netbeans-cos.jar" compress="false">
             <fileset dir="build/mavenclasses" >
                 <include name="org/netbeans/modules/maven/workspace/reader/**"/>
-                <include name="META-INF/plexus/**"/>
+                <include name="META-INF/sisu/**"/>
             </fileset>
         </jar>
-        <copy overwrite="true" tofile="build/mavenclasses/META-INF/plexus/components.xml" file="mavensrc/org/netbeans/modules/maven/event/components.xml"/>
+        <copy overwrite="true" tofile="build/mavenclasses/META-INF/sisu/javax.inject.Named" file="mavensrc/org/netbeans/modules/maven/event/javax.inject.Named"/>
         <!-- we use jarjar to repackage simple json, to avoid clashes with 3rd party maven plugins possibly including it in their dependencies -->
         <taskdef name="jarjar" classname="org.pantsbuild.jarjar.JarJarTask" loaderref="lib.path.loader">
             <classpath>
-                <pathelement location="${libs.asm.dir}/core/asm-9.6.jar"/>
-                <pathelement location="${libs.asm.dir}/core/asm-commons-9.6.jar"/>
+                <pathelement location="${libs.asm.dir}/core/asm-9.9.jar"/>
+                <pathelement location="${libs.asm.dir}/core/asm-commons-9.9.jar"/>
                 <pathelement location="./external/jarjar-1.7.2.jar"/>
             </classpath>
         </taskdef>
         <jarjar jarfile="${cluster}/maven-nblib/netbeans-eventspy.jar" compress="false">
             <fileset dir="build/mavenclasses" >
                 <include name="org/netbeans/modules/maven/event/**"/>
-                <include name="META-INF/plexus/**"/>
+                <include name="META-INF/sisu/**"/>
             </fileset>
             <zipfileset src="../../ide/libs.json_simple/external/json-simple-1.1.1.jar"/>
             <rule pattern="org.json.**" result="org.netbeans.shaded.json.@1"/>

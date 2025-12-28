@@ -729,6 +729,9 @@ final class DocumentOpenClose {
                                 loadDoc.remove(0, loadDoc.getLength());
                             }
                         } catch (BadLocationException ex) {
+                            if (ex.getCause() instanceof IOException) {
+                                throw (IOException)ex.getCause();
+                            }
                             LOG.log(Level.INFO, null, ex);
                         }
                     }
@@ -1026,7 +1029,7 @@ final class DocumentOpenClose {
         
     }
     
-    private final class DocumentRef extends WeakReference<StyledDocument> implements Runnable {
+    final class DocumentRef extends WeakReference<StyledDocument> implements Runnable {
 
         public DocumentRef(StyledDocument doc) {
             super(doc, org.openide.util.Utilities.activeReferenceQueue());

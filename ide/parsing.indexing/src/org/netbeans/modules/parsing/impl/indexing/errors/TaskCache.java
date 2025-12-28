@@ -45,6 +45,8 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -53,8 +55,10 @@ import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.impl.indexing.PathRegistry;
 import org.netbeans.modules.parsing.impl.indexing.URLCache;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
+import org.netbeans.modules.parsing.spi.indexing.ErrorsCache;
 import org.netbeans.modules.parsing.spi.indexing.ErrorsCache.Convertor;
 import org.netbeans.modules.parsing.spi.indexing.ErrorsCache.ErrorKind;
+import org.netbeans.modules.parsing.spi.indexing.ErrorsCache.ReverseConvertor;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.spi.tasklist.Task;
 import org.openide.filesystems.FileObject;
@@ -77,6 +81,10 @@ public class TaskCache {
     
     private static final Logger LOG = Logger.getLogger(TaskCache.class.getName());
     
+    // Matches the diagnostic range with both the start and the end positions specified (e.g. 1,2-1,7)
+    // or with only the start position specified (e.g. 1,2) where positions are written in a form line,column
+    private static final Pattern PATTERN = Pattern.compile("(\\d*),(\\d*)(?:-(\\d*),(\\d*))?");
+
     static {
 //        LOG.setLevel(Level.FINEST);
     }
@@ -103,17 +111,31 @@ public class TaskCache {
         }
         return null;
     }
-    
+
+    private ReverseConvertor<Task> getTaskConvertor(FileObject file) {
+        return (kind, range, message) -> {
+            String severity = getTaskType(kind);
+            if (null != severity) {
+                return Task.create(file, severity, message, range.start().line());
+            }
+            return null;
+        };
+    }
+
     public List<Task> getErrors(FileObject file) {
-        List<Task> result = new LinkedList<Task>();
+        return getErrors(file, getTaskConvertor(file));
+    }
+
+    public <T> List<T> getErrors(FileObject file, ReverseConvertor<T> convertor) {
+        List<T> result = new LinkedList<>();
         
-        result.addAll(getErrors(file, ERR_EXT));
-        result.addAll(getErrors(file, WARN_EXT));
+        result.addAll(getErrors(file, convertor, ERR_EXT));
+        result.addAll(getErrors(file, convertor, WARN_EXT));
 
         return result;
     }
     
-    private List<Task> getErrors(FileObject file, String ext) {
+    private <T> List<T> getErrors(FileObject file, ReverseConvertor<T> convertor, String ext) {
         LOG.log(Level.FINE, "getErrors, file={0}, ext={1}", new Object[] {FileUtil.getFileDisplayName(file), ext}); //NOI18N
         
         try {
@@ -122,16 +144,16 @@ public class TaskCache {
             LOG.log(Level.FINE, "getErrors, error file={0}", input == null ? "null" : input.getAbsolutePath()); //NOI18N
             
             if (input == null || !input.canRead())
-                return Collections.<Task>emptyList();
+                return Collections.emptyList();
             
             input.getParentFile().mkdirs();
             
-            return loadErrors(input, file);
+            return loadErrors(input, convertor);
         } catch (IOException e) {
             LOG.log(Level.FINE, null, e);
         }
         
-        return Collections.<Task>emptyList();
+        return Collections.emptyList();
     }
     
     private <T> boolean dumpErrors(File output, Iterable<? extends T> errors, Convertor<T> convertor, boolean interestedInReturnValue) throws IOException {
@@ -139,12 +161,19 @@ public class TaskCache {
             boolean existed = interestedInReturnValue && output.exists();
             output.getParentFile().mkdirs();
             try {
-                final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), StandardCharsets.UTF_8));
-                try {
+                try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), StandardCharsets.UTF_8))) {
                     for (T err : errors) {
                         pw.print(convertor.getKind(err).name());
                         pw.print(':'); //NOI18N
-                        pw.print(convertor.getLineNumber(err));
+                        ErrorsCache.Range range = convertor.getRange(err);
+                        if (range != null) {
+                            pw.print(String.format("%d,%d", range.start().line(), range.start().column()));
+                            if (range.end() != null) {
+                                pw.print(String.format("-%d,%d", range.end().line(), range.end().column()));
+                            }
+                        } else {
+                            pw.print(convertor.getLineNumber(err));
+                        }
                         pw.print(':'); //NOI18N
 
                         String description = convertor.getMessage(err);
@@ -155,8 +184,6 @@ public class TaskCache {
                             pw.println(description);
                         }
                     }
-                } finally {
-                    pw.close();
                 }
             } catch (FileNotFoundException  fnf) {
                 if (!output.getParentFile().canWrite()) {
@@ -200,6 +227,7 @@ public class TaskCache {
                 }
             });
         } catch (IOException ex) {
+            Exceptions.attachMessage(ex, "can't dump errors for: " + String.valueOf(i));
             Exceptions.printStackTrace(ex);
         }
     }
@@ -255,44 +283,60 @@ public class TaskCache {
         c.rootsToRefresh.add(root);
     }
 
-    private List<Task> loadErrors(File input, FileObject file) throws IOException {
-        List<Task> result = new LinkedList<Task>();
-        BufferedReader pw = new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8));
-        String line;
+    private <T> List<T> loadErrors(File input, ReverseConvertor<T> convertor) throws IOException {
+        List<T> result = new LinkedList<>();
+        try (BufferedReader pw = new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8))) {
+            String line;
 
-        while ((line = pw.readLine()) != null) {
-            String[] parts = line.split(":"); //NOI18N
-            if (parts.length != 3) {
-                continue;
-            }
+            while ((line = pw.readLine()) != null) {
+                String[] parts = line.split(":"); //NOI18N
+                if (parts.length != 3) {
+                    continue;
+                }
 
-            ErrorKind kind = null;
-            try {
-                kind = ErrorKind.valueOf(parts[0]);
-            } catch (IllegalArgumentException iae) {
-                LOG.log(Level.FINE, "Invalid ErrorKind: {0}", line);    //NOI18N
-            }
-            
-            if (kind == null) {
-                continue;
-            }
+                ErrorKind kind = null;
+                try {
+                    kind = ErrorKind.valueOf(parts[0]);
+                } catch (IllegalArgumentException iae) {
+                    LOG.log(Level.FINE, "Invalid ErrorKind: {0}", line);    //NOI18N
+                }
 
-            int lineNumber = Integer.parseInt(parts[1]);
-            String message = parts[2];
+                if (kind == null) {
+                    continue;
+                }
 
-            message = message.replaceAll("\\\\d", ":"); //NOI18N
-            message = message.replaceAll("\\\\n", " "); //NOI18N
-            message = message.replaceAll("\\\\\\\\", "\\\\"); //NOI18N
+                ErrorsCache.Range range;
+                Matcher matcher = PATTERN.matcher(parts[1]);
+                try {
+                    if ("-1,-1".equals(parts[1])) { //NOI18N
+                        range = new ErrorsCache.Range(new ErrorsCache.Position(-1, -1), null);
+                    } else if (matcher.matches()) {
+                        ErrorsCache.Position start = new ErrorsCache.Position(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+                        ErrorsCache.Position end = matcher.group(3) != null && matcher.group(4) != null
+                                ? new ErrorsCache.Position(Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(4)))
+                                : null;
+                        range = new ErrorsCache.Range(start, end);
+                    } else {
+                        int lineNumber = Integer.parseInt(parts[1]);
+                        range = new ErrorsCache.Range(new ErrorsCache.Position(lineNumber, 1), null);
+                    }
+                } catch (NumberFormatException ex) {
+                    LOG.log(Level.FINE, "Can't parse error line: " + line, ex);    //NOI18N
+                    continue;
+                }
 
-            String severity = getTaskType(kind);
+                String message = parts[2];
 
-            if (null != severity) {
-                Task err = Task.create(file, severity, message, lineNumber);
-                result.add(err);
+                message = message.replace("\\d", ":") //NOI18N
+                                 .replace("\\n", "\n") //NOI18N
+                                 .replace("\\\\", "\\"); //NOI18N
+
+                T item = convertor.get(kind, range, message);
+                if (item != null) {
+                    result.add(item);
+                }
             }
         }
-
-        pw.close();
         
         return result;
     }
@@ -351,12 +395,12 @@ public class TaskCache {
     public List<URL> getAllFilesInError(URL root) throws IOException {
         return getAllFilesWithRecord(root, true);
     }
-    
+
     public boolean isInError(FileObject file, boolean recursive) {
         LOG.log(Level.FINE, "file={0}, recursive={1}", new Object[] {file, Boolean.valueOf(recursive)}); //NOI18N
         
         if (file.isData()) {
-            return !getErrors(file, ERR_EXT).isEmpty();
+            return !getErrors(file, getTaskConvertor(file), ERR_EXT).isEmpty();
         } else {
             try {
                 ClassPath cp = Utilities.getSourceClassPathFor (file);
@@ -482,13 +526,8 @@ public class TaskCache {
         final Properties result = new Properties();
         final  File relocationFile = new File (cacheRoot, RELOCATION_FILE);
         if (relocationFile.canRead()) {
-            try {
-                final FileInputStream in = new FileInputStream(relocationFile);
-                try {
-                    result.load(in);
-               } finally {
-                    in.close();
-               }
+            try (FileInputStream in = new FileInputStream(relocationFile)) {
+                result.load(in);
             } catch (IOException ioe) {
                 Exceptions.printStackTrace(ioe);
             }
@@ -500,13 +539,8 @@ public class TaskCache {
             @NonNull final File cacheRoot,
             @NonNull final Properties relocation) {
         final File relocationFile = new File (cacheRoot, RELOCATION_FILE);
-        try {
-            final OutputStream out = new FileOutputStream(relocationFile);
-            try {
-                relocation.store(out, null);
-            } finally {
-                out.close();
-            }
+        try (OutputStream out = new FileOutputStream(relocationFile)) {
+            relocation.store(out, null);
         } catch (IOException ioe) {
             Exceptions.printStackTrace(ioe);
         }

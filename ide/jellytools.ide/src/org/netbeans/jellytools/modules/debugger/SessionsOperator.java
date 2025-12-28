@@ -71,9 +71,6 @@ public class SessionsOperator extends TopComponentOperator {
     }
 
     /**
-     * ******************************** Actions ***************************
-     */
-    /**
      * Performs Finish All action on Sessions view.
      */
     public void finishAll() {

@@ -26,9 +26,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import javax.swing.BorderFactory;
-import javax.swing.GrayFilter;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
@@ -43,6 +41,7 @@ import org.netbeans.lib.profiler.ui.swing.ProfilerTableContainer;
 import org.netbeans.lib.profiler.ui.swing.renderer.CheckBoxRenderer;
 import org.netbeans.lib.profiler.ui.swing.renderer.LabelRenderer;
 import org.netbeans.modules.profiler.api.ProjectUtilities;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
@@ -216,15 +215,10 @@ public abstract class ProjectsSelector {
                 Lookup.Provider project = (Lookup.Provider)value;
                 setText(ProjectUtilities.getDisplayName(project));
                 Icon icon = ProjectUtilities.getIcon(project);
-                setIcon(isEnabled() ? icon : disabledIcon(icon));
+                setIcon(isEnabled() ? icon : ImageUtilities.createDisabledIcon(icon));
                 setFont(Objects.equals(main, value) ? font.deriveFont(Font.BOLD) : font);
             }
         }
-        
-        private static Icon disabledIcon(Icon icon) {
-            return new ImageIcon(GrayFilter.createDisabledImage(((ImageIcon)icon).getImage()));
-        }
-        
     }
     
 }

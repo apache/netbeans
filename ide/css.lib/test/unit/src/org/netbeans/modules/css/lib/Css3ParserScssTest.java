@@ -208,7 +208,7 @@ public class Css3ParserScssTest extends CssTestBase {
 //
 //        CssParserResult result = TestUtil.parse(source);
 //
-////        NodeUtil.dumpTree(result.getParseTree());
+// //        NodeUtil.dumpTree(result.getParseTree());
 //        assertResultOK(result);
 //    }
 //
@@ -221,7 +221,7 @@ public class Css3ParserScssTest extends CssTestBase {
 //
 //        CssParserResult result = TestUtil.parse(source);
 //
-////        NodeUtil.dumpTree(result.getParseTree());
+// //        NodeUtil.dumpTree(result.getParseTree());
 //        assertResultOK(result);
 //    }
 //
@@ -243,7 +243,7 @@ public class Css3ParserScssTest extends CssTestBase {
 //
 //        CssParserResult result = TestUtil.parse(source);
 //
-////        NodeUtil.dumpTree(result.getParseTree());
+// //        NodeUtil.dumpTree(result.getParseTree());
 //        assertResultOK(result);
 //    }
 //
@@ -941,7 +941,7 @@ public class Css3ParserScssTest extends CssTestBase {
     //
 //    public void testMergedScssTests() throws ParseException, BadLocationException, IOException {
 //        CssParserResult result = TestUtil.parse(getTestFile("testfiles/scss/scss-tests-merged.scss"));
-////        TestUtil.dumpResult(result);
+// //        TestUtil.dumpResult(result);
 //        assertResult(result, 0);
 //    }
     public void testLocalVariableDeclaration() {
@@ -2050,5 +2050,11 @@ public class Css3ParserScssTest extends CssTestBase {
                 + "@import url(theme.css) layer(theme);\n"
                 + "@layer components;\n"
                 + "@layer default {}");
+    }
+
+    public void testMediaQueryRangeContext() throws Exception {
+        assertParses("@media (width <= $widthValue) {}");
+        assertParses("@media (width <= 1200px) {}");
+        assertParses("@media (30em <= width <= #{$widthValue}) {}");
     }
 }

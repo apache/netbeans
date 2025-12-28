@@ -25,12 +25,12 @@
 
     <property name="test-unit-sys-prop.test.data.dir" location="test/data"/>
     <property name="tooling" value="netbeans-gradle-tooling"/>
-    <property name="gradle.version" value="7.4" />
+    <property name="gradle.version" value="8.11.1" />
 
     <target name="-process.release.files" depends="projectized.-process.release.files">
         <unzip src="external/gradle-${gradle.version}-bin.zip" dest="external">
             <patternset>
-                <include name="gradle-${gradle.version}/lib/gradle-wrapper-${gradle.version}.jar"/>
+                <include name="gradle-${gradle.version}/lib/plugins/gradle-wrapper-main-${gradle.version}.jar"/>
             </patternset>
             <globmapper from="*" to="gradle-wrapper-${gradle.version}-wrapper.jar"/>
         </unzip>

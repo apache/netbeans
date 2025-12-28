@@ -286,7 +286,7 @@ out:                for (int tmp = 0; tmp == 0; tmp++) {
         if ( projectXMLElement != null ) {
             callback.storeAdditionalProperties(classpath, projectXMLElement );
         }
-        String arr[] = items.toArray(new String[items.size()]);
+        String arr[] = items.toArray(new String[0]);
         // remove ":" from last item:
         if (arr.length != 0) {
             arr[arr.length-1] = arr[arr.length-1].substring(0, arr[arr.length-1].length()-1);

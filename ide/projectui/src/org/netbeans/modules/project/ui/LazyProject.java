@@ -23,7 +23,6 @@ import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import javax.swing.Action;
 import javax.swing.Icon;
 import org.netbeans.api.project.Project;
@@ -34,7 +33,6 @@ import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
-import org.openide.loaders.DataObject;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -55,6 +53,7 @@ Project, ProjectInformation, LogicalViewProvider, RecommendedTemplates {
     URL url;
     String displayName;
     ExtIcon icon;
+    private FileObject fo;
 
     public LazyProject(URL url, String displayName, ExtIcon icon) {
         super();
@@ -65,7 +64,10 @@ Project, ProjectInformation, LogicalViewProvider, RecommendedTemplates {
 
     @Override
     public FileObject getProjectDirectory() {
-        FileObject fo = URLMapper.findFileObject(url);
+        if (fo != null) {
+            return fo;
+        }
+        fo = URLMapper.findFileObject(url);
         if (fo == null) {
             OpenProjectList.LOGGER.warning("Project dir with " + url + " not found!");
             fo = FileUtil.createMemoryFileSystem().getRoot();

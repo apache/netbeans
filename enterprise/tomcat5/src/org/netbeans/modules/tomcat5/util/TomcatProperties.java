@@ -737,6 +737,8 @@ public class TomcatProperties {
                     String eeDocs;
                     switch (tm.getTomcatVersion()) {
                         case TOMCAT_110:
+                           eeDocs = "docs/jakartaee11-doc-api.jar";
+                           break;
                         case TOMCAT_101:
                            eeDocs = "docs/jakartaee10-doc-api.jar";
                            break;
@@ -850,7 +852,28 @@ public class TomcatProperties {
         }
         return null;
     }
-    
+
+    /**
+     * Return context.xml file from the catalina base folder if the base folder
+     * is used or from the catalina home folder otherwise.
+     * <p>
+     * <b>BEWARE</b>: If the catalina base folder is used but has not bee
+     * generated yet, the context.xml file from the catalina home folder will be
+     * returned.
+     * </p>
+     */
+    public File getContextXml() {
+        String confContextXml = "conf/context.xml"; // NIO18N
+        File contextXml = null;
+        if (baseDir != null) {
+            contextXml = new File(baseDir, confContextXml);
+        }
+        if (contextXml == null || !contextXml.exists()) {
+            contextXml = new File(getCatalinaHome(), confContextXml);
+        }
+        return contextXml;
+    }
+
     public String getHost () {
         String val = ip.getProperty(PROP_HOST);
         return val != null ? val : DEF_VALUE_HOST;

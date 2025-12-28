@@ -101,7 +101,7 @@ public class Util  {
 	// MULTIBYTE - I think this isn't working... 
 	Hashtable ht = null;
 	try {
-	    ht = javax.servlet.http.HttpUtils.parseQueryString(queryString);
+	    ht = HttpUtils.parseQueryString(queryString);
 	}
 	catch(IllegalArgumentException iae) {
 	    // do nothing, that's OK
@@ -112,7 +112,7 @@ public class Util  {
 	Enumeration<String> e = ht.keys();
 
 	while(e.hasMoreElements()) {
-	    String name = (String)e.nextElement();
+	    String name = e.nextElement();
 	    try {
 		String[] value = (String[])(ht.get(name));
 		for(int i=0; i<value.length; ++i) {
@@ -134,14 +134,14 @@ public class Util  {
 	Hashtable ht = null;
 	String queryString = rd.getAttributeValue("queryString");  //NOI18N
 	try {
-	    ht = javax.servlet.http.HttpUtils.parseQueryString(queryString);
+	    ht = HttpUtils.parseQueryString(queryString);
 	}
 	catch(Exception ex) { }
 			    
 	if(ht != null && ht.size() > 0) {
 	    Enumeration<String> e = ht.keys();
 	    while(e.hasMoreElements()) {
-		String name = (String)e.nextElement();
+		String name = e.nextElement();
 		String[] value = (String[])(ht.get(name));
 		for(int i=0; i<value.length; ++i) {
 		    if(debug) 

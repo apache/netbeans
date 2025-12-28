@@ -44,7 +44,7 @@
               into
               <a href="@org-netbeans-api-scripting@/org/netbeans/api/scripting/Scripting.html">Scripting.createManager()</a>
               to obtain enhanced version of
-              <a href="@JDK@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>.
+              <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>.
           </description>
       </change>
   </changes>
@@ -65,7 +65,6 @@
 -->
     <head>
       <title>Change History for the Progress API</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>
 

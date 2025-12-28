@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.58
+#Version 1.66
 
 CLSS public abstract interface java.io.Serializable
 
@@ -138,49 +138,73 @@ meth public abstract java.util.List<org.netbeans.modules.websvc.rest.model.api.R
 CLSS public org.netbeans.modules.websvc.rest.model.api.RestConstants
 cons public init()
 fld public final static java.lang.String APPLICATION_PATH = "javax.ws.rs.ApplicationPath"
+fld public final static java.lang.String APPLICATION_PATH_JAKARTA = "jakarta.ws.rs.ApplicationPath"
 fld public final static java.lang.String CONSUME_MIME = "javax.ws.rs.Consumes"
 fld public final static java.lang.String CONSUME_MIME_ANNOTATION = "Consumes"
+fld public final static java.lang.String CONSUME_MIME_JAKARTA = "jakarta.ws.rs.Consumes"
 fld public final static java.lang.String CONTEXT = "javax.ws.rs.core.Context"
 fld public final static java.lang.String CONTEXT_ANNOTATION = "Context"
+fld public final static java.lang.String CONTEXT_JAKARTA = "jakarta.ws.rs.core.Context"
 fld public final static java.lang.String DEFAULT_VALUE = "javax.ws.rs.DefaultValue"
 fld public final static java.lang.String DEFAULT_VALUE_ANNOTATION = "DefaultValue"
+fld public final static java.lang.String DEFAULT_VALUE_JAKARTA = "jakarta.ws.rs.DefaultValue"
 fld public final static java.lang.String DELETE = "javax.ws.rs.DELETE"
 fld public final static java.lang.String DELETE_ANNOTATION = "DELETE"
+fld public final static java.lang.String DELETE_JAKARTA = "jakarta.ws.rs.DELETE"
 fld public final static java.lang.String EJB = "javax.ejb.EJB"
+fld public final static java.lang.String EJB_JAKARTA = "jakarta.ejb.EJB"
 fld public final static java.lang.String ENTITY_TYPE = "javax.ws.rs.Entity"
+fld public final static java.lang.String ENTITY_TYPE_JAKARTA = "jakarta.ws.rs.Entity"
 fld public final static java.lang.String GET = "javax.ws.rs.GET"
 fld public final static java.lang.String GET_ANNOTATION = "GET"
 fld public final static java.lang.String GET_CLASSES = "getClasses"
+fld public final static java.lang.String GET_JAKARTA = "jakarta.ws.rs.GET"
 fld public final static java.lang.String GET_REST_RESOURCE_CLASSES2 = "addRestResourceClasses"
 fld public final static java.lang.String HTTP_RESPONSE = "javax.ws.rs.core.Response"
+fld public final static java.lang.String HTTP_RESPONSE_JAKARTA = "jakarta.ws.rs.core.Response"
 fld public final static java.lang.String JERSEY_API_PACKAGE = "com.sun.jersey.api."
 fld public final static java.lang.String JERSEY_PACKAGE = "com.sun.jersey."
 fld public final static java.lang.String JERSEY_SPI_PACKAGE = "com.sun.jersey.spi."
 fld public final static java.lang.String JavaEE5_EJB_PACKAGE = "javax.ejb."
+fld public final static java.lang.String JavaEE5_EJB_PACKAGE_JAKARTA = "jakarta.ejb."
 fld public final static java.lang.String PATH = "javax.ws.rs.Path"
 fld public final static java.lang.String PATH_ANNOTATION = "Path"
+fld public final static java.lang.String PATH_JAKARTA = "jakarta.ws.rs.Path"
 fld public final static java.lang.String PATH_PARAM = "javax.ws.rs.PathParam"
 fld public final static java.lang.String PATH_PARAM_ANNOTATION = "PathParam"
+fld public final static java.lang.String PATH_PARAM_JAKARTA = "jakarta.ws.rs.PathParam"
 fld public final static java.lang.String POST = "javax.ws.rs.POST"
 fld public final static java.lang.String POST_ANNOTATION = "POST"
+fld public final static java.lang.String POST_JAKARTA = "jakarta.ws.rs.POST"
 fld public final static java.lang.String PRODUCE_MIME = "javax.ws.rs.Produces"
 fld public final static java.lang.String PRODUCE_MIME_ANNOTATION = "Produces"
+fld public final static java.lang.String PRODUCE_MIME_JAKARTA = "jakarta.ws.rs.Produces"
 fld public final static java.lang.String PROVIDER_ANNOTATION = "javax.ws.rs.ext.Provider"
+fld public final static java.lang.String PROVIDER_ANNOTATION_JAKARTA = "jakarta.ws.rs.ext.Provider"
 fld public final static java.lang.String PUT = "javax.ws.rs.PUT"
 fld public final static java.lang.String PUT_ANNOTATION = "PUT"
+fld public final static java.lang.String PUT_JAKARTA = "jakarta.ws.rs.PUT"
 fld public final static java.lang.String QUERY_PARAM = "javax.ws.rs.QueryParam"
 fld public final static java.lang.String QUERY_PARAM_ANNOTATION = "QueryParam"
+fld public final static java.lang.String QUERY_PARAM_JAKARTA = "jakarta.ws.rs.QueryParam"
 fld public final static java.lang.String RESOURCE_CONTEXT = "com.sun.jersey.api.core.ResourceContext"
 fld public final static java.lang.String RESPONSE_BUILDER = "javax.ws.rs.core.Response.Builder"
+fld public final static java.lang.String RESPONSE_BUILDER_JAKARTA = "jakarta.ws.rs.core.Response.Builder"
 fld public final static java.lang.String REST_API_CORE_PACKAGE = "javax.ws.rs.core."
+fld public final static java.lang.String REST_API_CORE_PACKAGE_JAKARTA = "jakarta.ws.rs.core."
 fld public final static java.lang.String REST_API_PACKAGE = "javax.ws.rs."
+fld public final static java.lang.String REST_API_PACKAGE_JAKARTA = "jakarta.ws.rs."
 fld public final static java.lang.String SINGLETON = "com.sun.jersey.spi.resource.Singleton"
 fld public final static java.lang.String SINGLETON_ANNOTATION = "Singleton"
 fld public final static java.lang.String STATELESS = "javax.ejb.Stateless"
 fld public final static java.lang.String STATELESS_ANNOTATION = "Stateless"
+fld public final static java.lang.String STATELESS_JAKARTA = "jakarta.ejb.Stateless"
 fld public final static java.lang.String URI_BUILDER = "javax.ws.rs.core.UriBuilder"
+fld public final static java.lang.String URI_BUILDER_JAKARTA = "jakarta.ws.rs.core.UriBuilder"
 fld public final static java.lang.String URI_INFO = "javax.ws.rs.core.UriInfo"
+fld public final static java.lang.String URI_INFO_JAKARTA = "jakarta.ws.rs.core.UriInfo"
 fld public final static java.lang.String WEB_APPLICATION_EXCEPTION = "javax.ws.rs.WebApplicationException"
+fld public final static java.lang.String WEB_APPLICATION_EXCEPTION_JAKARTA = "jakarta.ws.rs.WebApplicationException"
 supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.modules.websvc.rest.model.api.RestMethodDescription
@@ -329,6 +353,7 @@ meth public boolean isEE7()
 meth public boolean isEE8()
 meth public boolean isEESpecWithJaxRS()
 meth public boolean isJakartaEE10()
+meth public boolean isJakartaEE11()
 meth public boolean isJakartaEE8()
 meth public boolean isJakartaEE9()
 meth public boolean isJakartaEE91()

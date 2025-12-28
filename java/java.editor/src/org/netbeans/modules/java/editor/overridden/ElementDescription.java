@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.java.editor.overridden;
 
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.Collection;
 import javax.lang.model.element.Element;
@@ -48,12 +47,12 @@ public class ElementDescription {
     private static final String PKG_COLOR = Utilities.getHTMLColor(192, 192, 192);
     private final ElementKind imageKind;
 
-    private ClasspathInfo originalCPInfo;
+    private final ClasspathInfo originalCPInfo;
     
-    private ElementHandle<Element> handle;
-    private ElementHandle<TypeElement> outtermostElement;
-    private Collection<Modifier> modifiers;
-    private String displayName;
+    private final ElementHandle<Element> handle;
+    private final ElementHandle<TypeElement> outtermostElement;
+    private final Collection<Modifier> modifiers;
+    private final String displayName;
     private final boolean overriddenFlag;
 
     public ElementDescription(CompilationInfo info, Element element, boolean overriddenFlag) {
@@ -169,17 +168,17 @@ public class ElementDescription {
     }
 
     public Icon getIcon() {
-        Image badge;
+        Icon badge;
 
         if (overriddenFlag) {
-            badge = ImageUtilities.loadImage("org/netbeans/modules/java/editor/resources/is-overridden-badge.png");
+            badge = ImageUtilities.loadIcon("org/netbeans/modules/java/editor/resources/is-overridden-badge.png");
         } else {
-            badge = ImageUtilities.loadImage("org/netbeans/modules/java/editor/resources/overrides-badge.png");
+            badge = ImageUtilities.loadIcon("org/netbeans/modules/java/editor/resources/overrides-badge.png");
         }
 
-        Image icon = ImageUtilities.icon2Image(ElementIcons.getElementIcon(imageKind, modifiers));
+        Icon icon = ElementIcons.getElementIcon(imageKind, modifiers);
 
-        return ImageUtilities.image2Icon(ImageUtilities.mergeImages(icon, badge, 16, 0));
+        return ImageUtilities.mergeIcons(icon, badge, 16, 0);
     }
 
     public boolean isOverridden() {

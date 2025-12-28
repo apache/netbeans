@@ -257,7 +257,7 @@ public final class ClientSideProjectUtilities {
         res.addAll(Arrays.asList(sources.getSourceGroups(WebClientProjectConstants.SOURCES_TYPE_HTML5_SITE_ROOT)));
         res.addAll(Arrays.asList(sources.getSourceGroups(WebClientProjectConstants.SOURCES_TYPE_HTML5_TEST)));
         res.addAll(Arrays.asList(sources.getSourceGroups(WebClientProjectConstants.SOURCES_TYPE_HTML5_TEST_SELENIUM)));
-        return res.toArray(new SourceGroup[res.size()]);
+        return res.toArray(new SourceGroup[0]);
     }
 
     public static SourceGroup[] getSourceGroups(Project project, String type) {

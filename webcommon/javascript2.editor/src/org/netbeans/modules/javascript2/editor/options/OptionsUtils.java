@@ -21,7 +21,6 @@ package org.netbeans.modules.javascript2.editor.options;
 
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
@@ -54,11 +53,17 @@ public final class OptionsUtils {
     public static final boolean AUTO_COMPLETION_AFTER_DOT_DEFAULT = true;
     public static final int COMPETION_ITEM_SIGNATURE_WIDTH_DEFAULT = 40;
 
-    private final AtomicBoolean inited = new AtomicBoolean(false);
+    private boolean testDisableUpdater = false;
 
-    private final PreferenceChangeListener preferencesTracker = new PreferenceChangeListener() {
+    // updates the cached values some time after a change was made
+    private final PreferenceChangeListener asyncPreferencesUpdater = new PreferenceChangeListener() {
         @Override
         public void preferenceChange(PreferenceChangeEvent evt) {
+
+            if (testDisableUpdater && evt != null) {
+                return;
+            }
+
             String settingName = evt == null ? null : evt.getKey();
 
             if (settingName == null || AUTO_COMPLETION_TYPE_RESOLUTION.equals(settingName)) {
@@ -101,24 +106,20 @@ public final class OptionsUtils {
 
     private Preferences preferences;
 
-    private Boolean autoCompletionTypeResolution = null;
-    private Boolean autoCompletionSmartQuotes = null;
-    private Boolean autoStringConcatination = null;
-    private Boolean autoCompletionFull = null;
-    private Boolean autoCompletionAfterDot = null;
-    private Integer codeCompletionItemSignatureWidth = null;
+    // updated outside of EDT
+    private volatile Boolean autoCompletionTypeResolution = null;
+    private volatile Boolean autoCompletionSmartQuotes = null;
+    private volatile Boolean autoStringConcatination = null;
+    private volatile Boolean autoCompletionFull = null;
+    private volatile Boolean autoCompletionAfterDot = null;
+    private volatile Integer codeCompletionItemSignatureWidth = null;
 
     private OptionsUtils(Language<JsTokenId> language) {
         this.mimeType = language.mimeType();
     }
 
     public static synchronized OptionsUtils forLanguage(Language<JsTokenId> language) {
-        OptionsUtils instance = INSTANCES.get(language);
-        if (instance == null) {
-            instance = new OptionsUtils(language);
-            INSTANCES.put(language, instance);
-        }
-        return instance;
+        return INSTANCES.computeIfAbsent(language, OptionsUtils::new);
     }
 
     /**
@@ -173,24 +174,27 @@ public final class OptionsUtils {
         return autoCompletionAfterDot;
     }
 
-    private void lazyInit() {
-        if (inited.compareAndSet(false, true)) {
+    private synchronized void lazyInit() {
+        if (preferences == null) {
             preferences = MimeLookup.getLookup(mimeType).lookup(Preferences.class);
             preferences.addPreferenceChangeListener(WeakListeners.create(
-                    PreferenceChangeListener.class, preferencesTracker, preferences));
-            preferencesTracker.preferenceChange(null);
+                    PreferenceChangeListener.class, asyncPreferencesUpdater, preferences));
+            asyncPreferencesUpdater.preferenceChange(null);
         }
     }
 
-    public void setTestTypeResolution(boolean value) {
-        autoCompletionTypeResolution = value;
+    // for tests
+
+    public void setTestTypeResolution(boolean overwrite) {
+        autoCompletionTypeResolution = overwrite;
     }
 
-    /**
-     *
-     * @param width number of chars of max width of signature
-     */
-    public void setCodeCompletionItemSignatureWidth(int width) {
-        codeCompletionItemSignatureWidth = width;
+    public void setTestCompletionSmartQuotes(boolean overwrite) {
+        autoCompletionSmartQuotes = overwrite;
     }
+
+    public void setTestDisablePreferencesTracking() {
+        testDisableUpdater = true;
+    }
+
 }

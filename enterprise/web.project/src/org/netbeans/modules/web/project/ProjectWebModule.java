@@ -558,25 +558,37 @@ public final class ProjectWebModule extends J2eeModuleProvider
     public String getModuleVersion () {
         // return a version based on the Java EE version
         Profile platformVersion = getJ2eeProfile();
-        if (Profile.JAKARTA_EE_10_FULL.equals(platformVersion) || Profile.JAKARTA_EE_10_WEB.equals(platformVersion)) {
-            return WebApp.VERSION_6_0;
-        } else if (Profile.JAKARTA_EE_9_1_FULL.equals(platformVersion) || Profile.JAKARTA_EE_9_1_WEB.equals(platformVersion)
-                || Profile.JAKARTA_EE_9_FULL.equals(platformVersion) || Profile.JAKARTA_EE_9_WEB.equals(platformVersion)) {
-            return WebApp.VERSION_5_0;
-        } else if (Profile.JAKARTA_EE_8_FULL.equals(platformVersion) || Profile.JAKARTA_EE_8_WEB.equals(platformVersion) 
-                || Profile.JAVA_EE_8_FULL.equals(platformVersion) || Profile.JAVA_EE_8_WEB.equals(platformVersion)) {
-            return WebApp.VERSION_4_0;
-        } else if (Profile.JAVA_EE_7_FULL.equals(platformVersion) || Profile.JAVA_EE_7_WEB.equals(platformVersion)) {
+        if (null == platformVersion) {
             return WebApp.VERSION_3_1;
-        } else if (Profile.JAVA_EE_6_FULL.equals(platformVersion) || Profile.JAVA_EE_6_WEB.equals(platformVersion)) {
-            return WebApp.VERSION_3_0;
-        } else if (Profile.JAVA_EE_5.equals(platformVersion)) {
-            return WebApp.VERSION_2_5;
-        } else if (Profile.J2EE_14.equals(platformVersion)) {
-            return WebApp.VERSION_2_4;
-        } else {
-            // return 3.1 as default value
-            return WebApp.VERSION_3_1;
+        } else switch (platformVersion) {
+            case JAKARTA_EE_11_FULL:
+            case JAKARTA_EE_11_WEB:
+                return WebApp.VERSION_6_1;
+            case JAKARTA_EE_10_FULL:
+            case JAKARTA_EE_10_WEB:
+                return WebApp.VERSION_6_0;
+            case JAKARTA_EE_9_1_FULL:
+            case JAKARTA_EE_9_1_WEB:
+            case JAKARTA_EE_9_FULL:
+            case JAKARTA_EE_9_WEB:
+                return WebApp.VERSION_5_0;
+            case JAKARTA_EE_8_FULL:
+            case JAKARTA_EE_8_WEB:
+            case JAVA_EE_8_FULL:
+            case JAVA_EE_8_WEB:
+                return WebApp.VERSION_4_0;
+            case JAVA_EE_7_FULL:
+            case JAVA_EE_7_WEB:
+                return WebApp.VERSION_3_1;
+            case JAVA_EE_6_FULL:
+            case JAVA_EE_6_WEB:
+                return WebApp.VERSION_3_0;
+            case JAVA_EE_5:
+                return WebApp.VERSION_2_5;
+            case J2EE_14:
+                return WebApp.VERSION_2_4;
+            default:
+                return WebApp.VERSION_3_1;
         }
     }
 

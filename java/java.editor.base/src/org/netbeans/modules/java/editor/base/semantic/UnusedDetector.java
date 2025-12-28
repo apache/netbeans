@@ -36,6 +36,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -80,22 +81,13 @@ import org.openide.util.Lookup;
  *
  * @author lahvac
  */
+@SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
 public class UnusedDetector {
 
-    public static class UnusedDescription {
-        public final Element unusedElement;
-        public final TreePath unusedElementPath;
-        public final boolean packagePrivate;
-        public final UnusedReason reason;
-
-        public UnusedDescription(Element unusedElement, TreePath unusedElementPath, boolean packagePrivate, UnusedReason reason) {
-            this.unusedElement = unusedElement;
-            this.unusedElementPath = unusedElementPath;
-            this.packagePrivate = packagePrivate;
-            this.reason = reason;
-        }
-
-    }
+    public record UnusedDescription(Element unusedElement, TreePath unusedElementPath, boolean packagePrivate, UnusedReason reason) {}
+    
+    private static final Object RESULTS_KEY = new Object();
+    private static final Object CLASS_INDEX_KEY = new Object();
 
     public enum UnusedReason {
         NOT_WRITTEN_READ("neither read or written to"),
@@ -111,7 +103,8 @@ public class UnusedDetector {
     }
 
     public static List<UnusedDescription> findUnused(CompilationInfo info, Callable<Boolean> cancel) {
-        List<UnusedDescription> cached = (List<UnusedDescription>) info.getCachedValue(UnusedDetector.class);
+        @SuppressWarnings("unchecked")
+        List<UnusedDescription> cached = (List<UnusedDescription>) info.getCachedValue(RESULTS_KEY);
         if (cached != null) {
             return cached;
         }
@@ -181,7 +174,7 @@ public class UnusedDetector {
             }
         }
 
-        info.putCachedValue(UnusedDetector.class, result, CompilationInfo.CacheClearPolicy.ON_CHANGE);
+        info.putCachedValue(RESULTS_KEY, result, CompilationInfo.CacheClearPolicy.ON_CHANGE);
 
         return result;
     }
@@ -337,52 +330,45 @@ public class UnusedDetector {
             }
         });
         switch (el.getKind()) {
-            case FIELD:
+            case FIELD -> {
                 typeElement = info.getElementUtilities().enclosingTypeElement(el);
                 searchKinds = EnumSet.of(ClassIndex.SearchKind.FIELD_REFERENCES);
-                break;
-            case METHOD:
-            case CONSTRUCTOR:
+            }
+            case METHOD, CONSTRUCTOR -> {
                 typeElement = info.getElementUtilities().enclosingTypeElement(el);
                 searchKinds = EnumSet.of(ClassIndex.SearchKind.METHOD_REFERENCES);
-                break;
-            case ANNOTATION_TYPE:
-            case CLASS:
-            case ENUM:
-            case INTERFACE:
+            }
+            case ANNOTATION_TYPE, CLASS, ENUM, RECORD, INTERFACE -> {
                 List<? extends TypeElement> topLevelElements = info.getTopLevelElements();
                 if (topLevelElements.size() == 1 && topLevelElements.get(0) == el) {
                     return false;
                 }
                 typeElement = (TypeElement) el;
                 searchKinds = EnumSet.of(ClassIndex.SearchKind.TYPE_REFERENCES);
-                break;
-
-            default:
-                return true;
-        }
-        ElementHandle eh = ElementHandle.create(el);
-        Project prj = FileOwnerQuery.getOwner(info.getFileObject());
-        ClasspathInfo cpInfo;
-        if (prj != null) {
-            SourceGroup[] sourceGroups = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-            FileObject[] roots = new FileObject[sourceGroups.length];
-            for (int i = 0; i < sourceGroups.length; i++) {
-                SourceGroup sourceGroup = sourceGroups[i];
-                roots[i] = sourceGroup.getRootFolder();
             }
-            cpInfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(roots));
-        } else {
-            cpInfo = info.getClasspathInfo();
+            default -> {
+                return true;
+            }
         }
-        Set<FileObject> res = cpInfo.getClassIndex().getResources(ElementHandle.create(typeElement), searchKinds, scope);
+
+        // check if previous runs already found a usage in package-local files
+        FileObject fileObject = info.getFileObject();
+        ElementHandle<Element> eh = ElementHandle.create(el);
+        if (PkgScanResultCache.getCachedUsedInPkg(fileObject, eh)) {
+            return false;
+        }
+
+        // scan package for usage
+        ClassIndex classIndex = getCachedClassIndex(fileObject, info);
+        Set<FileObject> res = classIndex.getResources(ElementHandle.create(typeElement), searchKinds, scope);
+
         if (res != null) {
             for (FileObject fo : res) {
                 try {
                     if (Boolean.TRUE.equals(cancel.call())) {
                         return false;
                     }
-                    if (fo != info.getFileObject()) {
+                    if (fo != fileObject) {
                         JavaSource js = JavaSource.forFileObject(fo);
                         if (js == null) {
                             return false;
@@ -397,6 +383,7 @@ public class UnusedDetector {
                                         Element element = cc.getTrees().getElement(new TreePath(getCurrentPath(), tree));
                                         if (element != null && eh.signatureEquals(element)) {
                                             found.set(true);
+                                            return null;
                                         }
                                         super.scan(tree, p);
                                     }
@@ -405,6 +392,7 @@ public class UnusedDetector {
                             }.scan(new TreePath(cc.getCompilationUnit()), el);
                         }, true);
                         if (found.get()) {
+                            PkgScanResultCache.markFoundInFile(fileObject, fo, ElementHandle.create(el));
                             return false;
                         }
                     }
@@ -417,6 +405,73 @@ public class UnusedDetector {
         return false;
     }
 
+    // obtaining the ClassIndex can be expensive, this is usually called multiple times per search
+    private static ClassIndex getCachedClassIndex(FileObject fileObject, CompilationInfo info) {
+        ClassIndex classIndex = (ClassIndex) info.getCachedValue(CLASS_INDEX_KEY);
+        if (classIndex == null) {
+            ClasspathInfo cpInfo;
+            Project prj = FileOwnerQuery.getOwner(fileObject);
+            if (prj != null) {
+                SourceGroup[] sourceGroups = ProjectUtils.getSources(prj).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+                FileObject[] roots = new FileObject[sourceGroups.length];
+                for (int i = 0; i < sourceGroups.length; i++) {
+                    SourceGroup sourceGroup = sourceGroups[i];
+                    roots[i] = sourceGroup.getRootFolder();
+                }
+                cpInfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPathSupport.createClassPath(roots));
+            } else {
+                cpInfo = info.getClasspathInfo();
+            }
+            classIndex = cpInfo.getClassIndex();
+            info.putCachedValue(CLASS_INDEX_KEY, classIndex, CompilationInfo.CacheClearPolicy.ON_CHANGE);
+        }
+        return classIndex;
+    }
+
+    /*
+     * Remembers if an Element is used in a package-local source file to avoid having to
+     * repeat the search.
+     *
+     * Invalidates the whole cache if the source file of the current CompilationInfo becomes a different file.
+     * Invalidates a single cached value if the file was (externally) modified in the meantime.
+     * The not-used case is not stored to keep the logic simple.
+     */
+    private static class PkgScanResultCache {
+        
+        private static FileObject lastSource;
+        private static Map<ElementHandle<Element>, Usage> cache = new HashMap<>();
+        
+        private record Usage(FileObject inFile, Instant markedTime) {}
+
+        private static void markFoundInFile(FileObject source, FileObject pkgLocalFile, ElementHandle<Element> signature) {
+            if (source == pkgLocalFile) {
+                throw new IllegalArgumentException();
+            }
+            lastSource = source;
+            cache.put(signature, new Usage(pkgLocalFile, Instant.now()));
+        }
+
+        private static boolean getCachedUsedInPkg(FileObject root, ElementHandle<Element> signature) {
+            if (lastSource == null) {
+                return false;
+            }
+            if (lastSource != root) {
+                lastSource = null;
+                cache = new HashMap<>();
+                return false;
+            }
+            Usage usage = cache.get(signature);
+            if (usage == null) {
+                return false;
+            }
+            if (usage.inFile().lastModified().toInstant().isAfter(usage.markedTime())) {
+                cache.remove(signature);
+                return false;
+            }
+            return true;
+        }
+    }
+    
     private static List<UsedDetector> collectUsedDetectors(CompilationInfo info) {
         List<UsedDetector> detectors = new ArrayList<>();
         for (UsedDetector.Factory factory : Lookup.getDefault().lookupAll(UsedDetector.Factory.class)) {
@@ -653,7 +708,7 @@ public class UnusedDetector {
         @Override
         public Void visitLiteral(LiteralTree node, Void p) {
             if (node.getKind() == Kind.STRING_LITERAL) {
-                allStringLiterals.add((String) ((LiteralTree) node).getValue());
+                allStringLiterals.add((String)node.getValue());
             }
             return super.visitLiteral(node, p);
         }
@@ -661,7 +716,7 @@ public class UnusedDetector {
         @Override
         public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
             Element invoked = info.getTrees().getElement(new TreePath(getCurrentPath(), node.getMethodSelect()));
-            if (invoked != null && invoked.getEnclosingElement() == methodHandlesLookup && node.getArguments().size() > 0) {
+            if (invoked != null && invoked.getEnclosingElement() == methodHandlesLookup && !node.getArguments().isEmpty()) {
                 ExpressionTree clazz = node.getArguments().get(0);
                 Element lookupType = null;
                 if (clazz.getKind() == Kind.MEMBER_SELECT) {
@@ -678,16 +733,12 @@ public class UnusedDetector {
                     }
                 }
                 switch (invoked.getSimpleName().toString()) {
-                    case "findStatic": case "findVirtual": case "findSpecial":
+                    case "findStatic", "findVirtual", "findSpecial" ->
                         type2LookedUpMethods.computeIfAbsent(lookupType, t -> new HashSet<>()).add(lookupName);
-                        break;
-                    case "findConstructor":
+                    case "findConstructor" ->
                         type2LookedUpMethods.computeIfAbsent(lookupType, t -> new HashSet<>()).add("<init>");
-                        break;
-                    case "findGetter": case "findSetter": case "findStaticGetter":
-                    case "findStaticSetter": case "findStaticVarHandle": case "findVarHandle":
+                    case "findGetter", "findSetter", "findStaticGetter", "findStaticSetter", "findStaticVarHandle", "findVarHandle" ->
                         type2LookedUpFields.computeIfAbsent(lookupType, t -> new HashSet<>()).add(lookupName);
-                        break;
                 }
             }
             return super.visitMethodInvocation(node, p);

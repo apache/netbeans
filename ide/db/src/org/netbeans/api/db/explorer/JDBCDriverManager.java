@@ -91,7 +91,7 @@ public final class JDBCDriverManager {
      */
     public JDBCDriver[] getDrivers() {
         Collection<? extends JDBCDriver> drivers = result.allInstances();
-        return drivers.toArray (new JDBCDriver[drivers.size ()]);
+        return drivers.toArray (new JDBCDriver[0]);
     }
     
     /**
@@ -114,7 +114,7 @@ public final class JDBCDriverManager {
                 res.add(drvs[i]);
             }
         }
-        return res.toArray (new JDBCDriver[res.size ()]);
+        return res.toArray (new JDBCDriver[0]);
     }
 
     /**

@@ -83,7 +83,9 @@ public abstract class Provider {
         boolean ret = cp.findResource(classRelativePath) != null;
         if(ret && version != null)
         {
-            if(Persistence.VERSION_3_1.equals(version)){
+            if(Persistence.VERSION_3_2.equals(version)) {
+                ret &= cp.findResource("jakarta/persistence/criteria/CriteriaSelect.class") != null;
+            } else if(Persistence.VERSION_3_1.equals(version)){
                 ret &= cp.findResource("jakarta/persistence/spi/TransformerException.class") != null;
             } else if(Persistence.VERSION_3_0.equals(version)){
                 ret &= cp.findResource("jakarta/persistence/Entity.class") != null;
@@ -110,7 +112,7 @@ public abstract class Provider {
     }
     
     private Set initPropertyNames(){
-        Set result = new HashSet();
+        Set<String> result = new HashSet<>();
         result.add(getJdbcDriver());
         result.add(getJdbcUsername());
         result.add(getJdbcUrl());
@@ -140,7 +142,9 @@ public abstract class Provider {
             return null;
         }
         Property result;
-        if (Persistence.VERSION_3_1.equals(version)) {
+        if (Persistence.VERSION_3_2.equals(version)) {
+            result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.Property();
+        } else if (Persistence.VERSION_3_1.equals(version)) {
             result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.Property();
         } else if (Persistence.VERSION_3_0.equals(version)) {
             result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.Property();

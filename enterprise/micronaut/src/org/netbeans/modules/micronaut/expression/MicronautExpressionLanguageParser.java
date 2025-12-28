@@ -182,9 +182,9 @@ public class MicronautExpressionLanguageParser {
 
     /**
      * AdditiveExpression
-     *  : PowExpression
-     *  | AdditiveExpression '+' PowExpression
-     *  | AdditiveExpression '-' PowExpression
+     *  : MultiplicativeExpression
+     *  | AdditiveExpression '+' MultiplicativeExpression
+     *  | AdditiveExpression '-' MultiplicativeExpression
      *  ;
      */
     private ExpressionTree additiveExpression() {

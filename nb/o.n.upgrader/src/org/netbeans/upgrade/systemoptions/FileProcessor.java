@@ -19,8 +19,6 @@
 
 package org.netbeans.upgrade.systemoptions;
 
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author Radek Matous
@@ -30,11 +28,10 @@ class FileProcessor extends PropertyProcessor {
         super("java.io.File");//NOI18N
     }
 
+    @Override
     void processPropertyImpl(String propertyName, Object value) {
         if ("antHome".equals(propertyName) || "projectsFolder".equals(propertyName)) {//NOI18N
-            List l = ((SerParser.ObjectWrapper)value).data;
-            for (Iterator it = l.iterator(); it.hasNext();) {
-                Object elem = (Object) it.next();
+            for (Object elem : ((SerParser.ObjectWrapper)value).data) {
                 if (elem instanceof SerParser.NameValue) {
                     SerParser.NameValue nv = (SerParser.NameValue)elem;
                     if (nv.value != null && nv.name != null) {

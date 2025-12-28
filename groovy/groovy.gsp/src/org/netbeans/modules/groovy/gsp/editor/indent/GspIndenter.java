@@ -21,8 +21,8 @@ package org.netbeans.modules.groovy.gsp.editor.indent;
 
 import java.util.Set;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.groovy.gsp.lexer.GspLexerLanguage;
 import org.netbeans.modules.groovy.gsp.lexer.GspTokenId;
@@ -134,7 +134,7 @@ public class GspIndenter extends MarkupAbstractIndenter<GspTokenId> {
         } while (ts.movePrevious());
         int indent = 0;
         if (found) {
-            int lineStart = Utilities.getRowStart(getDocument(), ts.offset());
+            int lineStart = LineDocumentUtils.getLineStartOffset(getDocument(), ts.offset());
             int column = ts.offset();
             indent = column - lineStart;
         }

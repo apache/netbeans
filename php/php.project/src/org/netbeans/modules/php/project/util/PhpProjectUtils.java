@@ -263,7 +263,7 @@ public final class PhpProjectUtils {
         logRecord.setResourceBundle(NbBundle.getBundle(srcClass));
         logRecord.setResourceBundleName(srcClass.getPackage().getName() + ".Bundle"); // NOI18N
         if (params != null) {
-            logRecord.setParameters(params.toArray(new Object[params.size()]));
+            logRecord.setParameters(params.toArray(new Object[0]));
         }
         USG_LOGGER.log(logRecord);
     }

@@ -19,7 +19,6 @@
 
 package org.openide.util;
 
-import java.lang.reflect.Method;
 import java.security.PrivilegedAction;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -59,12 +58,12 @@ import org.openide.util.lookup.Lookups;
 
 /** Request processor is {@link Executor} (since version 7.16) capable to
  * perform asynchronous requests in a dedicated thread pool.
- * <A name="use_cases">There are several use cases for RequestProcessor</A>,
+ * <a id="use_cases">There are several use cases for RequestProcessor</a>,
  * most of them start with creating own <code>RequestProcessor</code>
  * instance (which by itself is quite lightweight).
  * <p>
  * <strong>Do something later</strong>
- * <p>
+ * </p>
  * In case you want something to be done later in some background thread,
  * create an instance of <code>RequestProcessor</code> and post tasks to it.
  * <pre>
@@ -1030,7 +1029,7 @@ outer:  do {
 
         TaskFutureWrapper wrap = fixedDelay ? 
             new FixedDelayTask(command, initialDelayMillis, periodMillis) :
-            new FixedRateTask(command, initialDelay, periodMillis);
+            new FixedRateTask(command, initialDelayMillis, periodMillis);
         Task t = create(wrap);
         wrap.t = t;
         t.cancelled = wrap.cancelled;
@@ -1051,26 +1050,10 @@ outer:  do {
     private static final TopLevelThreadGroup TOP_GROUP = new TopLevelThreadGroup();
     private static final class TopLevelThreadGroup implements PrivilegedAction<ThreadGroup> {
         public ThreadGroup getTopLevelThreadGroup() {
-            ThreadGroup orig = java.security.AccessController.doPrivileged(this);
-            ThreadGroup nuova = null;
-
-            try {
-                Class<?> appContext = Class.forName("sun.awt.AppContext");
-                Method instance = appContext.getMethod("getAppContext");
-                Method getTG = appContext.getMethod("getThreadGroup");
-                nuova = (ThreadGroup) getTG.invoke(instance.invoke(null));
-            } catch (Exception exception) {
-                logger().log(Level.FINE, "Cannot access sun.awt.AppContext", exception);
-                return orig;
-            }
-
-            assert nuova != null;
-
-            if (nuova != orig) {
-                logger().log(Level.WARNING, "AppContext group {0} differs from originally used {1}", new Object[]{nuova, orig});
-            }
-            return nuova;
-            
+            /* There used to be a workaround for
+            https://bz.apache.org/netbeans/show_bug.cgi?id=184494 here, relating to Applet and JNLP
+            environments. It was removed, since these environments are never used anymore. */
+            return java.security.AccessController.doPrivileged(this);
         }
         @Override
         public ThreadGroup run() {
@@ -1909,19 +1892,13 @@ outer:  do {
                             return proc;
                         }
                     } else {
-                        assert checkAccess(TOP_GROUP.getTopLevelThreadGroup());
                         Processor proc = POOL.pop();
                         proc.idle = false;
-
                         return proc;
                     }
                 }
                 newP = new Processor();
             }
-        }
-        private static boolean checkAccess(ThreadGroup g) throws SecurityException {
-            g.checkAccess();
-            return true;
         }
 
         /** A way of returning a Processor to the inactive pool.

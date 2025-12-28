@@ -19,13 +19,16 @@
 
 package org.netbeans.libs.git.jgit.commands;
 
+import java.io.IOException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefComparator;
+import org.eclipse.jgit.lib.RefDatabase;
 import org.eclipse.jgit.lib.Repository;
 import org.netbeans.libs.git.GitBranch;
 import org.netbeans.libs.git.GitException;
@@ -41,61 +44,57 @@ public class ListBranchCommand extends GitCommand {
     private final boolean all;
     private Map<String, GitBranch> branches;
 
-    public ListBranchCommand (Repository repository, GitClassFactory gitFactory, boolean all, ProgressMonitor monitor) {
+    public ListBranchCommand(Repository repository, GitClassFactory gitFactory, boolean all, ProgressMonitor monitor) {
         super(repository, gitFactory, monitor);
         this.all = all;
     }
 
     @Override
-    protected void run () throws GitException {
+    protected void run() throws GitException {
         Repository repository = getRepository();
-        Map<String, Ref> refs;
+        branches = new LinkedHashMap<>();
         try {
-            refs = repository.getAllRefs();
-        } catch (IllegalArgumentException ex) {
-            throw new GitException("Corrupted repository metadata at " + repository.getWorkTree().getAbsolutePath(), ex); //NOI18N
-        }
-        Ref head = refs.get(Constants.HEAD);
-        branches = new LinkedHashMap<String, GitBranch>();
-        Config cfg = repository.getConfig();
-        if (head != null) {
-            String current = head.getLeaf().getName();
-            if (current.equals(Constants.HEAD)) {
-                String name = GitBranch.NO_BRANCH;
-                branches.put(name, getClassFactory().createBranch(name, false, true, head.getLeaf().getObjectId()));
+            RefDatabase db = repository.getRefDatabase();
+            Ref head = db.exactRef(Constants.HEAD);
+            if (head != null) {
+                String current = head.getLeaf().getName();
+                if (current.equals(Constants.HEAD)) {
+                    String name = GitBranch.NO_BRANCH;
+                    branches.put(name, getClassFactory().createBranch(name, false, true, head.getLeaf().getObjectId()));
+                }
+                branches.putAll(getRefs(db.getRefsByPrefix(Constants.R_HEADS), false, current));
             }
-            branches.putAll(getRefs(refs.values(), Constants.R_HEADS, false, current, cfg));
-        }
-        Map<String, GitBranch> allBranches = getRefs(refs.values(), Constants.R_REMOTES, true, null, cfg);
-        allBranches.putAll(branches);
-        setupTracking(branches, allBranches, repository.getConfig());
-        if (all) {
-            branches.putAll(allBranches);
+            Map<String, GitBranch> allBranches = getRefs(db.getRefsByPrefix(Constants.R_REMOTES), true, null);
+            allBranches.putAll(branches);
+            setupTracking(branches, allBranches, repository.getConfig());
+            if (all) {
+                branches.putAll(allBranches);
+            }
+        } catch (IOException | IllegalArgumentException ex) {
+            throw new GitException("Corrupted repository metadata at " + repository.getWorkTree().getAbsolutePath(), ex); //NOI18N
         }
     }
 
-    private Map<String, GitBranch> getRefs (Collection<Ref> allRefs, String prefix, boolean isRemote, String activeBranch, Config config) {
-        Map<String, GitBranch> branches = new LinkedHashMap<String, GitBranch>();
-        for (final Ref ref : RefComparator.sort(allRefs)) {
+    private Map<String, GitBranch> getRefs(Collection<Ref> allRefs, boolean isRemote, String activeBranch) {
+        Map<String, GitBranch> branchMap = new LinkedHashMap<>();
+        for (Ref ref : RefComparator.sort(allRefs)) {
             String refName = ref.getLeaf().getName();
-            if (refName.startsWith(prefix)) {
-                String name = refName.substring(refName.indexOf('/', 5) + 1);
-                branches.put(name, getClassFactory().createBranch(name, isRemote, refName.equals(activeBranch), ref.getLeaf().getObjectId()));
-            }
+            String name = refName.substring(refName.indexOf('/', 5) + 1);
+            branchMap.put(name, getClassFactory().createBranch(name, isRemote, refName.equals(activeBranch), ref.getLeaf().getObjectId()));
         }
-        return branches;
+        return branchMap;
     }
 
     @Override
-    protected String getCommandDescription () {
+    protected String getCommandDescription() {
         return "git branch"; //NOI18N
     }
 
-    public Map<String, GitBranch> getBranches () {
+    public Map<String, GitBranch> getBranches() {
         return branches;
     }
 
-    private void setupTracking (Map<String, GitBranch> branches, Map<String, GitBranch> allBranches, Config cfg) {
+    private void setupTracking(Map<String, GitBranch> branches, Map<String, GitBranch> allBranches, Config cfg) {
         for (GitBranch b : branches.values()) {
             getClassFactory().setBranchTracking(b, Utils.getTrackedBranch(cfg, b.getName(), allBranches));
         }

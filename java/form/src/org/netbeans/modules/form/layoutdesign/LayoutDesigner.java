@@ -1038,8 +1038,8 @@ public final class LayoutDesigner implements LayoutConstants {
                         // to copy them.
                         temp.add(subCopy);
                         temp.add(copy);
-                        temp.add(new Integer(subCopy.getRawAlignment()));
-                        temp.add(new Integer(copy.getSubIntervalCount() + compCount));
+                        temp.add(subCopy.getRawAlignment());
+                        temp.add(copy.getSubIntervalCount() + compCount);
                         compCount++;
                     } else {
                         layoutModel.addInterval(subCopy, copy, -1);
@@ -1634,8 +1634,8 @@ public final class LayoutDesigner implements LayoutConstants {
                     }
                 }
                 eg.canHaveDefaultValue = true;
-                eg.possiblePaddingTypes = padList.toArray(new PaddingType[padList.size()]);
-                eg.paddingDisplayNames = nameList.toArray(new String[nameList.size()]);
+                eg.possiblePaddingTypes = padList.toArray(new PaddingType[0]);
+                eg.paddingDisplayNames = nameList.toArray(new String[0]);
             }
         }
     }
@@ -2754,7 +2754,7 @@ public final class LayoutDesigner implements LayoutConstants {
             LayoutComponent comp = interval.getComponent();
             dimension = (interval == comp.getLayoutInterval(HORIZONTAL)) ? HORIZONTAL : VERTICAL;
             if (comp.isLinkSized(dimension)) {
-                Collection linked = (Collection)layoutModel.getLinkSizeGroups(dimension).get(new Integer(comp.getLinkSizeId(dimension)));
+                Collection linked = (Collection)layoutModel.getLinkSizeGroups(dimension).get(comp.getLinkSizeId(dimension));
                 Iterator iter = linked.iterator();
                 int prefSize = 0;
                 while (iter.hasNext()) {
@@ -2821,7 +2821,7 @@ public final class LayoutDesigner implements LayoutConstants {
         
         // Unset the same-size if we are making the component resizable
         if (resizing && comp.isLinkSized(dimension)) {
-            Collection linked = (Collection)layoutModel.getLinkSizeGroups(dimension).get(new Integer(comp.getLinkSizeId(dimension)));
+            Collection linked = (Collection)layoutModel.getLinkSizeGroups(dimension).get(comp.getLinkSizeId(dimension));
             Collection toChange;
             if (linked.size() == 2) { // The second component will be unlinked, too.
                 toChange = linked;

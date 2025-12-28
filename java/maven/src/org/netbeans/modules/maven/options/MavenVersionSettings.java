@@ -43,22 +43,24 @@ public final class MavenVersionSettings {
     private static final Map<String, String> fallback;
 
     static {
-        // TODO update periodically - modifications might require unit test adjustments
-        String nb_version = "RELEASE200";
-        String nb_utilities_version = "14.0";
+        // TODO update periodically - modifications might require unit test adjustments (e.g NBMNativeMWITest)
+        // (e.g NBMNativeMWITest checks the compiler plugin version)
+        String nb_version = "RELEASE280";
+        String nb_utilities_version = "14.4";
         fallback = Map.ofEntries(
             entry(key("org.netbeans.api", "org-netbeans-modules-editor"), nb_version), // represents all other nb artifacts
-            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER), "3.11.0"),
+            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER), "3.14.1"),
+            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_JAR), "3.4.2"),
             entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_RESOURCES), "3.3.1"),
-            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_FAILSAFE), "3.2.2"),
-            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE), "3.2.2"),
+            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_FAILSAFE), "3.5.4"),
+            entry(key(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_SUREFIRE), "3.5.4"),
             entry(key("org.apache.netbeans.utilities", "utilities-parent"), nb_utilities_version),
             entry(key("org.apache.netbeans.utilities", "nbm-maven-harness"), nb_utilities_version),
             entry(key("org.apache.netbeans.utilities", "nbm-shared"), nb_utilities_version),
             entry(key("org.apache.netbeans.utilities", "nbm-repository-plugin"), nb_utilities_version),
             entry(key("org.apache.netbeans.utilities", "nbm-maven-plugin"), nb_utilities_version),
-            entry(key("org.apache.netbeans.archetypes", "nbm-archetype"), "1.18"),
-            entry(key("org.apache.netbeans.archetypes", "netbeans-platform-app-archetype"), "1.23")
+            entry(key("org.apache.netbeans.archetypes", "nbm-archetype"), "1.19"),
+            entry(key("org.apache.netbeans.archetypes", "netbeans-platform-app-archetype"), "1.24")
         );
     }
 
@@ -87,10 +89,13 @@ public final class MavenVersionSettings {
     // non blocking query, might not succeed if index not available
     private static String queryLatestKnownArtifactVersion(String gid, String aid, String min) {
         RepositoryQueries.Result<NBVersionInfo> query = RepositoryQueries.getVersionsResult(gid, aid, null);
+        // TODO don't upgrade to maven 4 plugins for now - we should take the active mvn version into account for a proper fix
+        boolean onlyMaven3 = Constants.GROUP_APACHE_PLUGINS.equals(gid);
         // Versions are sorted in descending order
         return query.getResults().stream()
                     .map(NBVersionInfo::getVersion)
                     .filter(v -> !v.endsWith("-SNAPSHOT"))
+                    .filter(v -> !onlyMaven3 || (onlyMaven3 && v.startsWith("3.")))
                     .findFirst()
                     .filter(v -> min == null || new ComparableVersion(v).compareTo(new ComparableVersion(min)) > 0) // don't downgrade
                     .orElse(min);

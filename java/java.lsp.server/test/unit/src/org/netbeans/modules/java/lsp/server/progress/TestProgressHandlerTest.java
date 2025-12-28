@@ -32,12 +32,14 @@ import org.eclipse.lsp4j.debug.services.IDebugProtocolClient;
 import org.junit.Test;
 import org.netbeans.api.extexecution.print.LineConvertors;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.gsf.testrunner.api.Report;
 import org.netbeans.modules.gsf.testrunner.api.Status;
 import org.netbeans.modules.gsf.testrunner.api.TestSession;
 import org.netbeans.modules.gsf.testrunner.api.Testcase;
 import org.netbeans.modules.gsf.testrunner.api.Trouble;
+import static org.netbeans.modules.java.lsp.server.LspTestUtils.tripleSlashUri;
 import org.netbeans.modules.java.lsp.server.TestCodeLanguageClient;
 import org.netbeans.modules.java.lsp.server.protocol.DecorationRenderOptions;
 import org.netbeans.modules.java.lsp.server.protocol.NbCodeClientCapabilities;
@@ -78,8 +80,6 @@ public class TestProgressHandlerTest extends NbTestCase {
         assertNotNull(fo);
         List<TestProgressParams> msgs = new ArrayList<>();
         MockLanguageClient mlc = new MockLanguageClient(msgs);
-        TestProgressHandler progressHandler = new TestProgressHandler(mlc, new IDebugProtocolClient() {}, fo.toURI().toString());
-        progressHandler.displaySuiteRunning(progressHandler, "TestSuiteName");
         FileObject projectDir = fo;
         Project project = new Project() {
             @Override
@@ -97,6 +97,10 @@ public class TestProgressHandlerTest extends NbTestCase {
                 });
             }
         };
+        TestProgressHandler progressHandler = new TestProgressHandler(mlc, new IDebugProtocolClient() {}, fo.toURI().toString());
+        String moduleName = ProjectUtils.getInformation(project).getDisplayName();
+        final ModuleInfo moduleInfo = new ModuleInfo(moduleName, List.of(project.getProjectDirectory().getPath()));
+        progressHandler.displaySuiteRunning(moduleInfo, "TestSuiteName");
         Report report = new Report("TestSuiteName", project);
         TestSession session = new TestSession("TestSession", project, TestSession.SessionType.TEST);
         Testcase[] tests = new Testcase[] {
@@ -116,7 +120,7 @@ public class TestProgressHandlerTest extends NbTestCase {
         report.setTotalTests(2);
         report.setPassed(1);
         report.setFailures(1);
-        progressHandler.displayReport(progressHandler, report);
+        progressHandler.displayReport(moduleInfo, report);
         assertEquals("Two messages", 2, msgs.size());
         assertEquals(fo.toURI().toString(), msgs.get(0).getUri());
         TestSuiteInfo suite = msgs.get(0).getSuite();
@@ -130,13 +134,13 @@ public class TestProgressHandlerTest extends NbTestCase {
         TestSuiteInfo.TestCaseInfo testCase = suite.getTests().get(0);
         assertEquals("TestSuiteName:TestSuiteName.test1", testCase.getId());
         assertEquals("TestSuiteName.test1", testCase.getName());
-        assertEquals(fo.toURI().toString(), testCase.getFile());
+        assertEquals(tripleSlashUri(fo.toURI().toString()), testCase.getFile());
         assertEquals(TestSuiteInfo.State.Passed, testCase.getState());
         assertNull(testCase.getStackTrace());
         testCase = suite.getTests().get(1);
         assertEquals("TestSuiteName:TestSuiteName.test2", testCase.getId());
         assertEquals("TestSuiteName.test2", testCase.getName());
-        assertEquals(fo.toURI().toString(), testCase.getFile());
+        assertEquals(tripleSlashUri(fo.toURI().toString()), testCase.getFile());
         assertEquals(TestSuiteInfo.State.Failed, testCase.getState());
         assertNotNull(testCase.getStackTrace());
     }

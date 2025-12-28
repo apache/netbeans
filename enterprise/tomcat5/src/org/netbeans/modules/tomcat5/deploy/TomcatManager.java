@@ -92,7 +92,7 @@ public class TomcatManager implements DeploymentManager {
 
     public enum TomEEVersion {
         TOMEE_15(15), TOMEE_16(16), TOMEE_17(17), TOMEE_70(70), 
-        TOMEE_71(71), TOMEE_80(80), TOMEE_90(90);
+        TOMEE_71(71), TOMEE_80(80), TOMEE_90(90), TOMEE_100(100);
         
         TomEEVersion(int version) { this.version = version; }
         private final int version;
@@ -249,7 +249,7 @@ public class TomcatManager implements DeploymentManager {
             }
         }
         if (checkResponse) {
-            return Utils.pingTomcat(getServerPort(), timeout, getServerHeader(), getPlainUri()); // is tomcat responding?
+            return Utils.pingTomcat(getServerPort(), timeout, getServerHeader(), getPlainUri(), tp.getUsername(), tp.getPassword()); // is tomcat responding?
         } else {
             return false; // cannot resolve the state
         }
@@ -499,6 +499,10 @@ public class TomcatManager implements DeploymentManager {
         }
     }
     
+    public boolean isTomEE10() {
+        return tomEEVersion == TomEEVersion.TOMEE_100;
+    }
+    
     public boolean isTomEE9() {
         return tomEEVersion == TomEEVersion.TOMEE_90;
     }
@@ -516,6 +520,10 @@ public class TomcatManager implements DeploymentManager {
     }
 
     public boolean isJpa31() {
+        return isTomEE10();
+    }
+    
+    public boolean isJpa32() {
         return false;
     }
 

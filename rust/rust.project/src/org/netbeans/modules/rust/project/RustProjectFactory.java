@@ -70,7 +70,7 @@ public final class RustProjectFactory implements ProjectFactory2 {
         if (src == null || !src.isFolder()) {
             return null;
         }
-        return new ProjectManager.Result(new ImageIcon(ImageUtilities.loadImage(RustProjectAPI.ICON)));
+        return new ProjectManager.Result(ImageUtilities.loadIcon(RustProjectAPI.ICON));
     }
 
     @Override

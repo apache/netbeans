@@ -120,7 +120,7 @@ public class HistoryRootNode extends AbstractNode {
         if(loadNextNode != null) {
             loadNextNode.refreshMessage();
         }
-        getChildren().add(nodes.toArray(new Node[nodes.size()]));
+        getChildren().add(nodes.toArray(new Node[0]));
     }
 
     private void removeOldEntries (HistoryEntry[] entries, boolean isLocal, long removeThreshold) {
@@ -146,7 +146,7 @@ public class HistoryRootNode extends AbstractNode {
                 }
             }
         }
-        getChildren().remove(toRemove.toArray(new Node[toRemove.size()]));
+        getChildren().remove(toRemove.toArray(new Node[0]));
     }
 
     public synchronized void addWaitNode() {

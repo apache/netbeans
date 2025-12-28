@@ -30,6 +30,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,10 +50,7 @@ import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
  */
 public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparable<PayaraPlatformVersionAPI> {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     private static final Logger LOGGER = Logger.getLogger(PayaraPlatformVersion.class.getName());
 
     /**
@@ -68,7 +66,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
 
     private static final String CDDL_LICENSE = "https://raw.githubusercontent.com/payara/Payara/master/LICENSE.txt"; // NOI18N
 
-    public static final PayaraPlatformVersionAPI EMPTY = new PayaraPlatformVersion((short) 0, (short) 0, (short) 0, (short) 0, "", "", "");
+    public static final PayaraPlatformVersionAPI EMPTY = new PayaraPlatformVersion((short) 0, (short) 0, (short) 0, "", "", "", "");
 
     private static PayaraPlatformVersionAPI latestVersion;
 
@@ -139,13 +137,17 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
             MetadataXpp3Reader reader = new MetadataXpp3Reader();
             Metadata data = reader.read(new InputStreamReader(input));
             versions.clear();
+            String latest = data.getVersioning().getLatest();
             for (String version : data.getVersioning().getVersions()) {
-                if (version.contains("Alpha") || version.contains("Beta") || version.contains("SNAPSHOT")) { // NOI18N
+                
+                // Skip versions containing "Alpha" or "Beta" unless it is the latest version
+                if ((version.contains("Alpha") || version.contains("Beta") || version.contains("SNAPSHOT")) // NOI18N
+                        && !version.equals(latest)) {
                     continue;
                 }
                 PayaraPlatformVersionAPI payaraVersion = PayaraPlatformVersion.toValue(repository, version);
                 versions.put(version, payaraVersion);
-                if (version.equals(data.getVersioning().getLatest())) {
+                if (version.equals(latest)) {
                     latestVersion = payaraVersion;
                 }
             }
@@ -192,14 +194,15 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
         if (version == null) {
             String[] versionComps = versionStr.split(SEPARATOR_PATTERN);
 
-            short major = Short.valueOf(versionComps[0]);
-            short minor = Short.valueOf(versionComps[1]);
-            short update = 0, build = 0;
+            short major = Short.parseShort(versionComps[0]);
+            short minor = Short.parseShort(versionComps[1]);
+            short update = 0;
+            String build = "";
             if (versionComps.length > 2) {
-                update = Short.valueOf(versionComps[2]);
+                update = Short.parseShort(versionComps[2]);
             }
             if (versionComps.length > 3) {
-                build = Short.valueOf(versionComps[3]);
+                build = versionComps[3];
             }
             version = new PayaraPlatformVersion(
                     major, minor, update, build,
@@ -209,9 +212,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
         }
         return version;
     }
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * Major version number.
      */
@@ -230,7 +231,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
     /**
      * Build version number.
      */
-    private final short build;
+    private final String build;
 
     private final String uriFragment;
 
@@ -240,9 +241,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
 
     private final String value;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * Constructs an instance of Payara server version.
      * <p/>
@@ -252,7 +251,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
      * @param build Build version number.
      */
     private PayaraPlatformVersion(final short major, final short minor,
-            final short update, final short build, String uriFragment,
+            final short update, final String build, String uriFragment,
             final String repository, final String value) {
         this.major = major;
         this.minor = minor;
@@ -264,9 +263,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
         this.directUrl = repository + String.format(DOWNLOAD_URL, value, value);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters                                                                //
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * Get major version number.
      *
@@ -303,7 +300,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
      * @return Build version number.
      */
     @Override
-    public short getBuild() {
+    public String getBuild() {
         return build;
     }
 
@@ -352,9 +349,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
         return major >= 6;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * Compare major and minor parts of version number <code>String</code>s.
      * <p/>
@@ -387,7 +382,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
             return this.major == version.getMajor()
                     && this.minor == version.getMinor()
                     && this.update == version.getUpdate()
-                    && this.build == version.getBuild();
+                    && Objects.equals(this.build, version.getBuild());
         }
     }
 
@@ -416,7 +411,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
         sb.append(SEPARATOR);
         sb.append(Integer.toString(update));
         sb.append(SEPARATOR);
-        sb.append(Integer.toString(build));
+        sb.append(build);
         return sb.toString();
     }
 
@@ -425,7 +420,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
         return Comparator.comparing(PayaraPlatformVersionAPI::getMajor)
                 .thenComparing(PayaraPlatformVersionAPI::getMinor)
                 .thenComparingInt(PayaraPlatformVersionAPI::getUpdate)
-                .thenComparingInt(PayaraPlatformVersionAPI::getBuild)
+                .thenComparing(PayaraPlatformVersionAPI::getBuild)
                 .compare(this, o);
     }
 

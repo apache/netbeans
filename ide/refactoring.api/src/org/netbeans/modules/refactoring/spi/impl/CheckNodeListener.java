@@ -77,10 +77,10 @@ class CheckNodeListener implements MouseListener, KeyListener {
             if (isQuery) {
                 if (e.getClickCount() == 2) {
                     Object o = node.getUserObject();
-                    if (o instanceof Openable) {
-                        ((Openable) o).open();
-                    } else if (o instanceof TreeElement) {
-                        o = ((TreeElement) o).getUserObject();
+                    if (o instanceof Openable openable) {
+                        openable.open();
+                    } else if (o instanceof TreeElement treeElement) {
+                        o = treeElement.getUserObject();
                         if (o instanceof RefactoringElement || o instanceof FileObject || o instanceof Openable) {
                             if(!findInSource(node)) {
                                 if (tree.isCollapsed(row)) {
@@ -105,13 +105,13 @@ class CheckNodeListener implements MouseListener, KeyListener {
                     }
                 } else if (e.getClickCount() == 1) {
                     Object o = node.getUserObject();
-                    if (o instanceof TreeElement) {
-                        o = ((TreeElement) o).getUserObject();
+                    if (o instanceof TreeElement treeElement) {
+                        o = treeElement.getUserObject();
                         if (o instanceof RefactoringElement) {
                                 openDiff(node);
-                            }
                         }
                     }
+                }
             } else {
                 Rectangle chRect = CheckRenderer.getCheckBoxRectangle();
                 Rectangle rowRect = tree.getPathBounds(path);
@@ -120,8 +120,8 @@ class CheckNodeListener implements MouseListener, KeyListener {
                     boolean isSelected = !(node.isSelected());
                     node.setSelected(isSelected);
                     Object o = node.getUserObject();
-                    if (o instanceof TreeElement) {
-                        o = ((TreeElement) o).getUserObject();
+                    if (o instanceof TreeElement treeElement) {
+                        o = treeElement.getUserObject();
                         if (o instanceof RefactoringElement) {
                                 openDiff(node);
                             }
@@ -134,13 +134,13 @@ class CheckNodeListener implements MouseListener, KeyListener {
                 } // double click, open the document
                 else if (e.getClickCount() == 2 && chRect.contains(p) == false) {
                     Object o = node.getUserObject();
-                    if (o instanceof TreeElement) {
-                        o = ((TreeElement) o).getUserObject();
+                    if (o instanceof TreeElement treeElement) {
+                        o = treeElement.getUserObject();
                         if (o instanceof RefactoringElement || o instanceof FileObject) {
                             findInSource(node);
                         } 
-                    } else if (o instanceof Openable) {
-                        ((Openable) o).open();
+                    } else if (o instanceof Openable openable) {
+                        openable.open();
                     } else {
                         if (tree.isCollapsed(row)) {
                             tree.expandRow(row);
@@ -150,22 +150,11 @@ class CheckNodeListener implements MouseListener, KeyListener {
                     }
                 } else if (e.getClickCount() == 1 && chRect.contains(p) == false) {
                     Object o = node.getUserObject();
-                    if (o instanceof TreeElement) {
-                        o = ((TreeElement) o).getUserObject();
+                    if (o instanceof TreeElement treeElement) {
+                        o = treeElement.getUserObject();
                         if (o instanceof RefactoringElement) {
                             openDiff(node);
                         }
-//                        else if (o instanceof FileObject) {
-//                            tree.expandPath(path);
-//                            TreePath pathForRow = tree.getPathForRow(row+1);
-//                            CheckNode lastPathComponent = (CheckNode) pathForRow.getLastPathComponent();
-//                            Object userObject = lastPathComponent.getUserObject();
-//                            if (userObject instanceof TreeElement) {
-//                                Object refElement = ((TreeElement) userObject).getUserObject();
-//                                if (refElement instanceof RefactoringElement)
-//                                    openDiff(lastPathComponent);
-//                            }
-//                        }
                     }
                 }
             }
@@ -181,29 +170,16 @@ class CheckNodeListener implements MouseListener, KeyListener {
         int keyCode = e.getKeyCode();
         if (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_DOWN) {
             JTree tree = (JTree) e.getSource();
-            int row = tree.getSelectionRows()[0];
             TreePath path = tree.getSelectionPath();
             if (path != null) {
                 CheckNode node = (CheckNode) path.getLastPathComponent();
 
                 Object o = node.getUserObject();
-                if (o instanceof TreeElement) {
-                    o = ((TreeElement) o).getUserObject();
+                if (o instanceof TreeElement treeElement) {
+                    o = treeElement.getUserObject();
                     if (o instanceof RefactoringElement) {
                         openDiff(node);
                     }
-//                    else if (o instanceof FileObject) {
-//                        tree.expandPath(path);
-//                        TreePath pathForRow = tree.getPathForRow(row + 1);
-//                        CheckNode lastPathComponent = (CheckNode) pathForRow.getLastPathComponent();
-//                        Object userObject = lastPathComponent.getUserObject();
-//                        if (userObject instanceof TreeElement) {
-//                            Object refElement = ((TreeElement) userObject).getUserObject();
-//                            if (refElement instanceof RefactoringElement) {
-//                                openDiff(lastPathComponent);
-//                            }
-//                        }
-//                    }
                 }
             }
         }
@@ -247,8 +223,8 @@ class CheckNodeListener implements MouseListener, KeyListener {
         }
         o = ((TreeElement) o).getUserObject();
 
-        if (o instanceof RefactoringElement) {
-            showPopup(((RefactoringElement) o).getLookup().lookupAll(Action.class), tree, x, y);
+        if (o instanceof RefactoringElement refactoringElement) {
+            showPopup(refactoringElement.getLookup().lookupAll(Action.class), tree, x, y);
         }
     }
 
@@ -292,21 +268,21 @@ class CheckNodeListener implements MouseListener, KeyListener {
 
     static boolean findInSource(CheckNode node) {
         Object o = node.getUserObject();
-        if (o instanceof TreeElement) {
-            if (o instanceof Openable) {
-                ((Openable) o).open();
+        if (o instanceof TreeElement treeElement) {
+            if (o instanceof Openable openable) {
+                openable.open();
                 return true;
             } else {
-            o = ((TreeElement) o).getUserObject();
-            if (o instanceof RefactoringElement) {
-                APIAccessor.DEFAULT.getRefactoringElementImplementation((RefactoringElement) o).openInEditor();
+            o = treeElement.getUserObject();
+            if (o instanceof RefactoringElement refactoringElement) {
+                APIAccessor.DEFAULT.getRefactoringElementImplementation(refactoringElement).openInEditor();
                 return true;
-            } else if (o instanceof Openable) {
-                ((Openable) o).open();
+            } else if (o instanceof Openable openable) {
+                    openable.open();
                 return true;
-            } else if (o instanceof FileObject) {
+            } else if (o instanceof FileObject fileObject) {
                 try {
-                    OpenCookie oc = DataObject.find((FileObject) o).getCookie(OpenCookie.class);
+                    OpenCookie oc = DataObject.find(fileObject).getCookie(OpenCookie.class);
                     if (oc != null) {
                         oc.open();
                         return true;
@@ -322,15 +298,15 @@ class CheckNodeListener implements MouseListener, KeyListener {
 
     static void openDiff(CheckNode node) {
         Object o = node.getUserObject();
-        if (o instanceof TreeElement) {
-            o = ((TreeElement) o).getUserObject();
-            if (o instanceof RefactoringElement) {
-                APIAccessor.DEFAULT.getRefactoringElementImplementation((RefactoringElement) o).showPreview();
+        if (o instanceof TreeElement treeElement) {
+            o = treeElement.getUserObject();
+            if (o instanceof RefactoringElement refactoringElement) {
+                APIAccessor.DEFAULT.getRefactoringElementImplementation(refactoringElement).showPreview();
             }
         }
     }
 
-    static void selectNextPrev(final boolean next, boolean isQuery, JTree tree) {
+    static void selectNextPrev(final boolean next, boolean jumpSource, JTree tree) {
         int[] rows = tree.getSelectionRows();
         int newRow = rows == null || rows.length == 0 ? 0 : rows[0];
         int maxcount = tree.getRowCount();
@@ -355,11 +331,24 @@ class CheckNodeListener implements MouseListener, KeyListener {
             }
         } while (!node.isLeaf());
         tree.setSelectionRow(newRow);
-        tree.scrollRowToVisible(newRow);
-        if (isQuery) {
+        verticalScrollRowToVisible(tree, newRow);
+        CheckNodeListener.openDiff(node);
+        if (jumpSource) {
             CheckNodeListener.findInSource(node);
-        } else {
-            CheckNodeListener.openDiff(node);
         }
     }
+
+    /**
+     * Analog to {@link javax.swing.JTree#scrollRowToVisible(int)} but scrolls only vertically.
+     */
+    private static void verticalScrollRowToVisible(JTree tree, int row) {
+        TreePath path = tree.getPathForRow(row);
+        if (path != null) {
+            tree.makeVisible(path);
+            Rectangle bounds = tree.getPathBounds(path);
+            bounds.setLocation(0, (int) bounds.getY());
+            tree.scrollRectToVisible(bounds);
+        }
+    }
+
 } // end CheckNodeListener

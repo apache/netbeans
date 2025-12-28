@@ -18,11 +18,12 @@
  */
 package org.netbeans.modules.masterfs.filebasedfs;
 
-import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectStreamException;
+import java.io.Serial;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,7 +32,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import org.netbeans.modules.masterfs.ProvidedExtensionsProxy;
 import org.netbeans.modules.masterfs.filebasedfs.fileobjects.BaseFileObj;
 import org.netbeans.modules.masterfs.filebasedfs.fileobjects.FileObjectFactory;
@@ -53,24 +53,23 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Radek Matous
  */
 public class FileBasedFileSystem extends FileSystem {
-    private static final Logger LOG = Logger.getLogger(FileBasedFileSystem.class.getName());
     private static volatile FileBasedFileSystem INSTANCE;
-    private transient RootObj<? extends FileObject> root;
+    private final transient RootObj<? extends FileObject> root;
     private final transient StatusImpl status = new StatusImpl();
-    private static transient  int modificationInProgress;
+    private static transient int modificationInProgress;
 
     public FileBasedFileSystem() {
         if (BaseUtilities.isWindows()) {
             RootObjWindows realRoot = new RootObjWindows();
-            root = new RootObj<RootObjWindows>(realRoot);
+            root = new RootObj<>(realRoot);
         } else {
             FileObjectFactory factory = FileObjectFactory.getInstance(new File("/"));//NOI18N
-            root = new RootObj<BaseFileObj>(factory.getRoot());
+            root = new RootObj<>(factory.getRoot());
         }
     }
    
     public static synchronized boolean isModificationInProgress() {
-        return modificationInProgress == 0 ? false : true;
+        return modificationInProgress != 0;
     }
 
     private static synchronized void setModificationInProgress(boolean started) {
@@ -144,18 +143,12 @@ public class FileBasedFileSystem extends FileSystem {
 
     @Override
     public void refresh(final boolean expected) {                        
-        final Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                refreshImpl(expected);
-            }            
+        final Runnable r = () -> {
+            refreshImpl(expected);            
         };
         try {
-            FileBasedFileSystem.getInstance().runAtomicAction(new FileSystem.AtomicAction() {
-                @Override
-                public void run() throws IOException {
-                    FileBasedFileSystem.runAsInconsistent(r);
-                }
+            FileBasedFileSystem.getInstance().runAtomicAction(() -> {
+                FileBasedFileSystem.runAsInconsistent(r);
             });
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -164,8 +157,8 @@ public class FileBasedFileSystem extends FileSystem {
     
     public void refreshImpl(boolean expected) {                        
         FileObject fo = root.getRealRoot();
-        if (fo instanceof BaseFileObj) {
-            ((BaseFileObj)fo).getFactory().refresh(expected);
+        if (fo instanceof BaseFileObj baseFileObj) {
+            baseFileObj.getFactory().refresh(expected);
         } else if (fo instanceof RootObjWindows) {
             Collection<? extends FileObjectFactory> fcs =  factories().values();
             for (FileObjectFactory fileObjectFactory : fcs) {
@@ -217,7 +210,7 @@ public class FileBasedFileSystem extends FileSystem {
     @Override
     public FileObject createTempFile(FileObject parent, String prefix, String suffix, boolean deleteOnExit) throws IOException {
         if (parent.isFolder() && parent.isValid()) {
-            File tmpFile = File.createTempFile(prefix, suffix, FileUtil.toFile(parent));
+            File tmpFile = Files.createTempFile(FileUtil.toFile(parent).toPath(), prefix, suffix).toFile();
             if (deleteOnExit) {
                 tmpFile.deleteOnExit();
             }
@@ -245,7 +238,7 @@ public class FileBasedFileSystem extends FileSystem {
             org.openide.util.LookupListener, org.openide.filesystems.FileStatusListener {
 
         /** result with providers */
-        protected org.openide.util.Lookup.Result<BaseAnnotationProvider> annotationProviders;
+        protected final org.openide.util.Lookup.Result<BaseAnnotationProvider> annotationProviders;
         private Collection<? extends BaseAnnotationProvider> previousProviders;
 
         {
@@ -259,17 +252,17 @@ public class FileBasedFileSystem extends FileSystem {
             } catch (ClassNotFoundException e) {
                 //pass - no masterfs.ui module no @ServiceProvider(service=AnnotationProvider.class) hack needed.
             }
-            annotationProviders = Lookup.getDefault().lookup(new Lookup.Template<BaseAnnotationProvider>(BaseAnnotationProvider.class));
+            annotationProviders = Lookup.getDefault().lookup(new Lookup.Template<>(BaseAnnotationProvider.class));
             annotationProviders.addLookupListener(this);
             resultChanged(null);
         }
 
         public ProvidedExtensions getExtensions() {
-            Collection<? extends BaseAnnotationProvider> c;
+            Collection<BaseAnnotationProvider> c;
             if (previousProviders != null) {
                 c = Collections.unmodifiableCollection(previousProviders);
             } else {
-                c = Collections.emptyList();
+                c = List.of();
             }
             return new ProvidedExtensionsProxy(c);
         }
@@ -283,17 +276,14 @@ public class FileBasedFileSystem extends FileSystem {
                 add = new HashSet<BaseAnnotationProvider>(now);
                 add.removeAll(previousProviders);
 
-                HashSet<BaseAnnotationProvider> toRemove = new HashSet<BaseAnnotationProvider>(previousProviders);
+                HashSet<BaseAnnotationProvider> toRemove = new HashSet<>(previousProviders);
                 toRemove.removeAll(now);
                 for (BaseAnnotationProvider ap : toRemove) {
                     ap.removeFileStatusListener(this);
                 }
-
             } else {
                 add = now;
             }
-
-
 
             for (BaseAnnotationProvider ap : add) {
                 try {
@@ -307,14 +297,14 @@ public class FileBasedFileSystem extends FileSystem {
         }
 
         public Lookup findExtrasFor(Set<FileObject> foSet) {
-            List<Lookup> arr = new ArrayList<Lookup>();
+            List<Lookup> arr = new ArrayList<>();
             for (BaseAnnotationProvider ap : annotationProviders.allInstances()) {
                 final Lookup lkp = ap.findExtrasFor(foSet);
                 if (lkp != null) {
                     arr.add(lkp);
                 }
             }
-            return new ProxyLookup(arr.toArray(new Lookup[arr.size()]));
+            return new ProxyLookup(arr.toArray(Lookup[]::new));
         }
 
         @Override
@@ -349,13 +339,15 @@ public class FileBasedFileSystem extends FileSystem {
         }
     }
 
+    @Serial
     public Object writeReplace() throws ObjectStreamException {
         return new SerReplace();
     }
 
     private static class SerReplace implements Serializable {
-        /** serial version UID */
+        @Serial
         static final long serialVersionUID = -3714631266626840241L;
+        @Serial
         public Object readResolve() throws ObjectStreamException {
             return FileBasedFileSystem.getInstance();
         }

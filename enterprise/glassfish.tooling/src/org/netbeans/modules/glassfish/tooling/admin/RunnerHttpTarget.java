@@ -35,17 +35,11 @@ import org.netbeans.modules.glassfish.tooling.utils.Utils;
  */
 public class RunnerHttpTarget extends RunnerHttp {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Start/Stop command <code>DEFAULT</code> parameter's name. */
     private static final String DEFAULT_PARAM = "DEFAULT";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Builds enable/disable query string for given command.
      * <p/>
@@ -76,10 +70,7 @@ public class RunnerHttpTarget extends RunnerHttp {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.

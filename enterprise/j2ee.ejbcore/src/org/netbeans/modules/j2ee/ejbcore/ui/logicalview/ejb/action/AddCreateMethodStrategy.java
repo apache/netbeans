@@ -64,13 +64,13 @@ public class AddCreateMethodStrategy extends AbstractAddMethodStrategy {
         super(NbBundle.getMessage(AddCreateMethodStrategy.class, "LBL_AddCreateMethodAction"));
     }
 
-    protected MethodModel getPrototypeMethod() {
+    protected MethodModel getPrototypeMethod(boolean jakartaVariant) {
         return MethodModel.create(
                 "create",
                 "void",
                 "",
                 Collections.<MethodModel.Variable>emptyList(),
-                Collections.singletonList("javax.ejb.CreateException"),
+                Collections.singletonList(jakartaVariant ? "jakarta.ejb.CreateException" : "javax.ejb.CreateException"),
                 Collections.<Modifier>emptySet()
                 );
     }

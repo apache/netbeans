@@ -18,33 +18,26 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  *
  * @author lkishalmi
  */
-public final class HCLConditionalOperation extends HCLExpression {
-
-    final HCLExpression condition;
-    final HCLExpression trueValue;
-    final HCLExpression falseValue;
-
-    public HCLConditionalOperation(HCLExpression condition, HCLExpression trueValue, HCLExpression falseValue) {
-        this.condition = condition;
-        this.trueValue = trueValue;
-        this.falseValue = falseValue;
-    }
+public record HCLConditionalOperation(HCLExpression condition, HCLExpression trueValue, HCLExpression falseValue) implements HCLExpression {
 
     @Override
     public String asString() {
-        return condition.toString() + "?" + trueValue.toString() + ":" + falseValue.toString();
+        return HCLExpression.asString(condition) + "?" + HCLExpression.asString(trueValue) + ":" + HCLExpression.asString(falseValue);
     }
 
     @Override
-    public List<? extends HCLExpression> getChildren() {
-        return Arrays.asList(condition, trueValue, falseValue);
+    public List<? extends HCLExpression> elements() {
+        return Stream.of(condition, trueValue, falseValue)
+                .filter(Objects::nonNull)
+                .toList();
     }
         
     

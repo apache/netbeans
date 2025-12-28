@@ -25,12 +25,12 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
@@ -105,10 +105,7 @@ abstract class AbstractGradleClassPathImpl implements FlaggedClassPathImplementa
     @Override
     public final synchronized List<? extends PathResourceImplementation> getResources() {
         if (resources == null) {
-            resources = new ArrayList<>();
-            for (URL url : createPath()) {
-                resources.add(ClassPathSupport.createResource(url));
-            }
+            resources = createPath().stream().map(ClassPathSupport::createResource).toList();
         }
         return resources;
     }

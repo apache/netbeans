@@ -28,26 +28,17 @@ package org.netbeans.modules.glassfish.tooling.admin;
 @RunnerRestClass(runner=RunnerAsadminChangeAdminPassword.class)
 public class CommandChangeAdminPassword extends CommandJava {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for change administrator's password command. */
     private static final String COMMAND = "change-admin-password";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish administrator's new password to be set.
      *  Value of <code>null</code> or empty <code>String</code> means
      *  no password. */
     final String password;
     
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server administration command entity
      * with specified server command, Java SE home and class path.

@@ -111,7 +111,7 @@ public final class MockMimeLookup implements MimeDataProvider {
                 lookups.add(lookup);
             }
             
-            return new ProxyLookup(lookups.toArray(new Lookup [lookups.size()]));
+            return new ProxyLookup(lookups.toArray(new Lookup [0]));
         }
     }
     

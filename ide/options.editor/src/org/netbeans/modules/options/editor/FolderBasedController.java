@@ -102,7 +102,7 @@ public final class FolderBasedController extends OptionsPanelController implemen
         location=OptionsDisplayer.EDITOR,
         keywords="#KW_InlineHints",
         keywordsCategory="Editor/InlineHints",
-        position=500
+        position=600
 //        toolTip="#CTL_MarkOccurences_ToolTip"
     )
     public static OptionsPanelController inlineHints() {

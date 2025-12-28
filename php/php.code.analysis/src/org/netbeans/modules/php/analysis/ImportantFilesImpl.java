@@ -24,6 +24,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.php.analysis.commands.CodeSniffer;
 import org.netbeans.modules.php.analysis.commands.CodingStandardsFixer;
 import org.netbeans.modules.php.analysis.commands.PHPStan;
+import org.netbeans.modules.php.analysis.commands.Psalm;
 import org.netbeans.modules.php.spi.phpmodule.ImportantFilesImplementation;
 import org.netbeans.modules.php.spi.phpmodule.ImportantFilesSupport;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -42,7 +43,9 @@ public final class ImportantFilesImpl implements ImportantFilesImplementation {
             CodingStandardsFixer.DIST_CONFIG_FILE_NAME_V3,
             PHPStan.CONFIG_FILE_NAME,
             PHPStan.DIST_CONFIG_FILE_NAME,
-            PHPStan.ALTERNATIVE_DIST_CONFIG_FILE_NAME};
+            PHPStan.ALTERNATIVE_DIST_CONFIG_FILE_NAME,
+            Psalm.CONFIG_FILE_NAME,
+            Psalm.DIST_CONFIG_FILE_NAME};
 
     private final ImportantFilesSupport support;
 

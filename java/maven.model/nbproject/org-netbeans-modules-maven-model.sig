@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.66
+#Version 1.74
 
 CLSS public abstract interface java.io.Serializable
 
@@ -9,13 +9,17 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -24,6 +28,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -32,6 +37,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -68,6 +74,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public abstract interface java.util.EventListener
 
 CLSS public abstract interface javax.swing.event.UndoableEditListener
@@ -79,6 +88,7 @@ meth public abstract void performOperation({org.netbeans.modules.maven.model.Mod
 
 CLSS public org.netbeans.modules.maven.model.Utilities
 meth public static org.netbeans.modules.xml.xam.ModelSource createModelSource(org.openide.filesystems.FileObject)
+meth public static org.netbeans.modules.xml.xam.ModelSource createModelSource(org.openide.filesystems.FileObject,javax.swing.text.Document)
 meth public static org.netbeans.modules.xml.xam.ModelSource createModelSource(org.openide.filesystems.FileObject,org.openide.loaders.DataObject,org.netbeans.editor.BaseDocument)
 meth public static org.netbeans.modules.xml.xam.ModelSource createModelSourceForMissingFile(java.io.File,boolean,java.lang.String,java.lang.String)
 meth public static void openAtPosition(org.netbeans.modules.maven.model.pom.POMModel,int)
@@ -1012,7 +1022,7 @@ meth public abstract void setOffline(java.lang.Boolean)
 meth public abstract void setUsePluginRegistry(java.lang.Boolean)
 
 CLSS public final !enum org.netbeans.modules.maven.model.settings.SettingsAttribute
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.netbeans.modules.maven.model.settings.SettingsAttribute NS
 intf org.netbeans.modules.xml.xam.dom.Attribute
 meth public java.lang.Class getMemberType()
@@ -1127,7 +1137,7 @@ innr public final static !enum Version
 meth public java.lang.String getName()
 meth public javax.xml.namespace.QName getQName()
 meth public static javax.xml.namespace.QName createQName(java.lang.String,boolean,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static javax.xml.namespace.QName createQName(java.lang.String,org.netbeans.modules.maven.model.settings.SettingsQName$Version)
  anno 2 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
@@ -1148,7 +1158,7 @@ hfds namespace
 
 CLSS public final org.netbeans.modules.maven.model.settings.SettingsQNames
 cons public init(boolean,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.netbeans.modules.maven.model.settings.SettingsQName$Version)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 fld public final org.netbeans.modules.maven.model.settings.SettingsQName ACTIVATION
@@ -1202,7 +1212,7 @@ fld public final org.netbeans.modules.maven.model.settings.SettingsQName USERNAM
 fld public final org.netbeans.modules.maven.model.settings.SettingsQName VALUE
 meth public boolean isNSAware()
 meth public boolean isOldNS()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Set<javax.xml.namespace.QName> getElementQNames()
 meth public org.netbeans.modules.maven.model.settings.SettingsQName$Version getNamespaceVersion()
 supr java.lang.Object
@@ -1338,7 +1348,7 @@ meth public javax.swing.text.Document getBaseDocument()
 meth public org.netbeans.modules.xml.xam.dom.AbstractDocumentComponent findComponent(org.netbeans.modules.xml.xam.dom.AbstractDocumentComponent,java.util.List<org.w3c.dom.Element>,int)
 meth public org.netbeans.modules.xml.xam.dom.ChangeInfo prepareChangeInfo(java.util.List<? extends org.w3c.dom.Node>,java.util.List<? extends org.w3c.dom.Node>)
 meth public org.netbeans.modules.xml.xam.dom.ChangeInfo prepareChangeInfo(java.util.List<org.w3c.dom.Node>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(int)
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(java.util.List<org.w3c.dom.Element>)
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(org.w3c.dom.Element)

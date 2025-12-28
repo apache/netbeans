@@ -89,6 +89,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.*;
 import org.netbeans.swing.outline.DefaultOutlineModel;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Utilities;
 
 /**
  * Extended JTable (ETable) adds these features to JTable:
@@ -906,7 +907,12 @@ public class ETable extends JTable {
 
         InputMap imp = getInputMap(WHEN_FOCUSED);
         ActionMap am = getActionMap();
-        
+
+        if (Utilities.isMac()) {
+            // On Windows, this shortcut is already present in JTable's InputMap.
+            imp.put(Utilities.stringToKey("F2"), "startEditing");
+        }
+
         //Issue 37919, reinstate support for up/down cycle focus transfer.
         //being focus cycle root mangles this in some dialogs
         imp.put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
@@ -1847,7 +1853,7 @@ public class ETable extends JTable {
                         rows.add(new RowMapping(i, model, this));
                     }
                 }
-                Collections.sort(rows, c);
+                rows.sort(c);
                 int [] res = new int[rows.size()];
                 int [] invRes = new int[noRows]; // carefull - this one is bigger!
                 for (int i = 0; i < res.length; i++) {
@@ -1867,7 +1873,7 @@ public class ETable extends JTable {
         }
     }
     
-    /**
+    /*
      * Adjusts selected rows when sorting changes.
      *
     protected final void adjustSelectedRows(int[] oldSortingPermutation, int[] oldInverseSortingPermutation,
@@ -2073,7 +2079,7 @@ public class ETable extends JTable {
                 s = convertValueToString(val);
             }   
             if ((s != null) && (s.toUpperCase().indexOf(prefix.toUpperCase()))!= -1   ) {
-                results.add(new Integer(startIndex));
+                results.add(startIndex);
             
                 // initialize prefix
                 if (maxPrefix == null) {

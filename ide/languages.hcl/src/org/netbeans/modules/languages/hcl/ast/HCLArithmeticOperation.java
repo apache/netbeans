@@ -18,15 +18,17 @@
  */
 package org.netbeans.modules.languages.hcl.ast;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  *
  * @author lkishalmi
  */
-public abstract class HCLArithmeticOperation extends HCLExpression {
+public sealed interface HCLArithmeticOperation extends HCLExpression {
+
+    Operator op();
 
     public enum Operator {
         NOT("!"),
@@ -61,51 +63,29 @@ public abstract class HCLArithmeticOperation extends HCLExpression {
         }
     }
 
-    public final Operator op;
-
-    public HCLArithmeticOperation(Operator op) {
-        this.op = op;
-    }
-
-    public final static class Binary extends HCLArithmeticOperation {
-        public final HCLExpression left;
-        public final HCLExpression right;
-
-        public Binary(Operator op, HCLExpression left, HCLExpression right) {
-            super(op);
-            this.left = left;
-            this.right = right;
-        }
-
+    public record Binary(Operator op, HCLExpression left, HCLExpression right) implements HCLArithmeticOperation {
         @Override
         public String asString() {
-            return left.toString() + op.toString() + right.toString();
+            return HCLExpression.asString(left) + op.toString() + HCLExpression.asString(right);
         }
 
         @Override
-        public List<? extends HCLExpression> getChildren() {
-            return Arrays.asList(left, right);
+        public List<? extends HCLExpression> elements() {
+            return Stream.of(left, right)
+                    .filter(Objects::nonNull)
+                    .toList();
         }
-                
     } 
 
-    public final static class Unary extends HCLArithmeticOperation {
-        public final HCLExpression operand;
-
-        public Unary(Operator op, HCLExpression operand) {
-            super(op);
-            this.operand = operand;
-        }
-        
+    public record Unary(Operator op, HCLExpression operand) implements HCLArithmeticOperation {
         @Override
         public String asString() {
-            return op.toString() + operand.toString();
+            return op.toString() + HCLExpression.asString(operand);
         }
 
         @Override
-        public List<? extends HCLExpression> getChildren() {
-            return Collections.singletonList(operand);
+        public List<? extends HCLExpression> elements() {
+            return operand != null ? List.of(operand) : List.of();
         }
-        
     } 
 }

@@ -396,7 +396,7 @@ public class InstallManager extends InstalledFileLocator{
     private static Set<File> locateExactPath(String prefix, String name) {
         Set<File> files = new HashSet<File>();
         synchronized(InstallManager.class) {
-            File[] dirs = clusters.toArray(new File[clusters.size()]);
+            File[] dirs = clusters.toArray(new File[0]);
             for (File dir : dirs) {
                 File f = makeFile(dir, prefix, name);
                 if (f.exists()) {                    

@@ -226,7 +226,7 @@ final class RootNodeChildren extends ChildFactory<TestsuiteNode> {
                     }
                 }
                 if (!toAdd.isEmpty()) {
-                    nodesToAdd = toAdd.toArray(new Node[toAdd.size()]);
+                    nodesToAdd = toAdd.toArray(new Node[0]);
                 }
             }
         }

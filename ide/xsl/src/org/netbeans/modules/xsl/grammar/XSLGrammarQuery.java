@@ -125,7 +125,6 @@ public final class XSLGrammarQuery implements GrammarQuery{
         this.dataObject = dataObject;
     }
 
-    //////////////////////////////////////////7
     // Getters for the static members
 
     private static Map getElementDecls() {
@@ -138,7 +137,6 @@ public final class XSLGrammarQuery implements GrammarQuery{
             Set<String> tmpSet;
             String spaceAtt = "xml:space";  // NOI18N
 
-            ////////////////////////////////////////////////
             // Initialize common sets
 
             Set<String> charInstructions = new TreeSet<>(Arrays.asList(new String[]{"apply-templates", // NOI18N
@@ -165,7 +163,6 @@ public final class XSLGrammarQuery implements GrammarQuery{
             resultElementAttr = new TreeSet<>(Arrays.asList(new String[]{"extension-element-prefixes", // NOI18N
             "exclude-result-prefixes","use-attribute-sets","version"})); // NOI18N
 
-            ////////////////////////////////////////////////
             // Add items to elementDecls and attrDecls maps
 
             // xsl:stylesheet
@@ -408,7 +405,6 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
 
 
-    ////////////////////////////////////////////////////////////////////////////////
     // GrammarQuery interface fulfillment
 
     /**
@@ -450,7 +446,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
             // Finally we add xsl namespace elements with other prefixes than the first one
             for (int prefixInd = 1; prefixInd < prefixList.size(); prefixInd++) {
-                String curPrefix = (String)prefixList.get(prefixInd) + ":"; // NOI18N
+                String curPrefix = prefixList.get(prefixInd) + ":"; // NOI18N
                 Node curNode = el;
                 String curName = null;
                 while(curNode != null && null != (curName = curNode.getNodeName()) && !curName.startsWith(curPrefix)) {
@@ -496,8 +492,8 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
         String curXslPrefix = null;
         for (int ind = 0; ind < prefixList.size(); ind++) {
-            if (elTagName.startsWith((String)prefixList.get(ind) + ":")){ // NOI18N
-                curXslPrefix = (String)prefixList.get(ind) + ":"; // NOI18N
+            if (elTagName.startsWith(prefixList.get(ind) + ":")){ // NOI18N
+                curXslPrefix = prefixList.get(ind) + ":"; // NOI18N
                 break;
             }
         }
@@ -512,7 +508,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
             if (prefixList.size() > 0) {
                 Iterator it = getResultElementAttr().iterator();
                 while ( it.hasNext()) {
-                    possibleAttributes.add((String)prefixList.get(0) + ":" + (String) it.next()); // NOI18N
+                    possibleAttributes.add(prefixList.get(0) + ":" + (String) it.next()); // NOI18N
                 }
             }
         }
@@ -790,7 +786,6 @@ public final class XSLGrammarQuery implements GrammarQuery{
         return new org.openide.nodes.Node.Property[]{attrNameProp, attrValueProp};
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
     // Private helper methods
 
     /**
@@ -874,7 +869,7 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
         boolean outputFound = false;
         if (prefixList.size() > 0) {
-            String outputElName = (String)prefixList.get(0) + ":output"; // NOI18N
+            String outputElName = prefixList.get(0) + ":output"; // NOI18N
             Node childOfRoot = rootNode.getFirstChild();
             while (childOfRoot != null) {
                 String childNodeName = childOfRoot.getNodeName();
@@ -959,7 +954,6 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
     // Private helper classes
 
     private class ResultHintContext extends ResultNode implements HintContext {

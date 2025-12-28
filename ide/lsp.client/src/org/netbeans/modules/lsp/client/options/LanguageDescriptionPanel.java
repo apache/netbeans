@@ -21,9 +21,18 @@ package org.netbeans.modules.lsp.client.options;
 import java.io.File;
 import java.util.Locale;
 import java.util.Set;
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.modules.lsp.client.options.LanguageStorage.LanguageDescription;
+import org.openide.awt.Mnemonics;
+import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 
 @Messages("BTN_Select=Select")
@@ -53,11 +62,12 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
             this.server.setText(desc.languageServer);
             this.name.setText(desc.name);
             this.icon.setText(desc.icon);
+            this.debugger.setSelected(desc.debugger);
         }
     }
 
     public LanguageDescription getDescription() {
-        return new LanguageDescription(id, this.extensions.getText(), this.syntax.getText(), this.server.getText(), this.name.getText(), this.icon.getText());
+        return new LanguageDescription(id, this.extensions.getText(), this.syntax.getText(), this.server.getText(), this.name.getText(), this.icon.getText(), this.debugger.isSelected());
     }
 
     /**
@@ -68,188 +78,136 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        name = new javax.swing.JTextField();
-        extensions = new javax.swing.JTextField();
-        syntax = new javax.swing.JTextField();
-        server = new javax.swing.JTextField();
-        browseGrammar = new javax.swing.JButton();
-        browseServer = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        icon = new javax.swing.JTextField();
-        browseIcon = new javax.swing.JButton();
+        JLabel nameLabel = new JLabel();
+        JLabel extensionsLabel = new JLabel();
+        JLabel grammarLabel = new JLabel();
+        JLabel serverLabel = new JLabel();
+        name = new JTextField();
+        extensions = new JTextField();
+        syntax = new JTextField();
+        server = new JTextField();
+        JButton browseGrammar = new JButton();
+        JButton browseServer = new JButton();
+        JSeparator extraOptionsSeparator = new JSeparator();
+        JLabel optionalParams = new JLabel();
+        JLabel iconLabel = new JLabel();
+        icon = new JTextField();
+        JButton browseIcon = new JButton();
+        debugger = new JCheckBox();
 
-        setLayout(new java.awt.GridBagLayout());
+        nameLabel.setLabelFor(name);
+        Mnemonics.setLocalizedText(nameLabel, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.nameLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.jLabel1.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.ipadx = 81;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(14, 12, 0, 0);
-        add(jLabel1, gridBagConstraints);
+        extensionsLabel.setLabelFor(extensions);
+        Mnemonics.setLocalizedText(extensionsLabel, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.extensionsLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.jLabel2.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.ipadx = 50;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(14, 12, 0, 0);
-        add(jLabel2, gridBagConstraints);
+        grammarLabel.setLabelFor(syntax);
+        Mnemonics.setLocalizedText(grammarLabel, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.grammarLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.jLabel3.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.ipadx = 11;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(17, 12, 0, 0);
-        add(jLabel3, gridBagConstraints);
+        serverLabel.setLabelFor(server);
+        Mnemonics.setLocalizedText(serverLabel, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.serverLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.jLabel4.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 3;
-        gridBagConstraints.ipadx = 6;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(17, 12, 0, 0);
-        add(jLabel4, gridBagConstraints);
+        name.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.name.text")); // NOI18N
 
-        name.setText(org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.name.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.ipadx = 166;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 12, 0, 0);
-        add(name, gridBagConstraints);
+        extensions.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.extensions.text")); // NOI18N
 
-        extensions.setText(org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.extensions.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.ipadx = 172;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 12, 0, 0);
-        add(extensions, gridBagConstraints);
+        syntax.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.syntax.text")); // NOI18N
 
-        syntax.setText(org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.syntax.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.ipadx = 172;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(15, 12, 0, 0);
-        add(syntax, gridBagConstraints);
+        server.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.server.text")); // NOI18N
 
-        server.setText(org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.server.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.ipadx = 172;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(15, 12, 0, 0);
-        add(server, gridBagConstraints);
+        Mnemonics.setLocalizedText(browseGrammar, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.browseGrammar.text")); // NOI18N
+        browseGrammar.addActionListener(this::browseGrammarActionPerformed);
 
-        org.openide.awt.Mnemonics.setLocalizedText(browseGrammar, org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.browseGrammar.text")); // NOI18N
-        browseGrammar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browseGrammarActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridheight = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 12, 0, 12);
-        add(browseGrammar, gridBagConstraints);
+        Mnemonics.setLocalizedText(browseServer, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.browseServer.text")); // NOI18N
+        browseServer.addActionListener(this::browseServerActionPerformed);
 
-        org.openide.awt.Mnemonics.setLocalizedText(browseServer, org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.browseServer.text")); // NOI18N
-        browseServer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browseServerActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridheight = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 12, 0, 12);
-        add(browseServer, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.ipadx = 308;
-        gridBagConstraints.ipady = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(25, 12, 0, 12);
-        add(jSeparator1, gridBagConstraints);
+        Mnemonics.setLocalizedText(optionalParams, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.optionalParams.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.jLabel5.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(18, 12, 0, 0);
-        add(jLabel5, gridBagConstraints);
+        iconLabel.setLabelFor(icon);
+        Mnemonics.setLocalizedText(iconLabel, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.iconLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.jLabel6.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.ipadx = 92;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(17, 12, 0, 0);
-        add(jLabel6, gridBagConstraints);
+        icon.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.icon.text")); // NOI18N
 
-        icon.setText(org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.icon.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.gridheight = 2;
-        gridBagConstraints.ipadx = 166;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(15, 12, 0, 0);
-        add(icon, gridBagConstraints);
+        Mnemonics.setLocalizedText(browseIcon, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.browseIcon.text")); // NOI18N
+        browseIcon.addActionListener(this::browseIconActionPerformed);
 
-        org.openide.awt.Mnemonics.setLocalizedText(browseIcon, org.openide.util.NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.browseIcon.text")); // NOI18N
-        browseIcon.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                browseIconActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 5;
-        gridBagConstraints.gridy = 12;
-        gridBagConstraints.gridheight = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(12, 12, 94, 12);
-        add(browseIcon, gridBagConstraints);
+        Mnemonics.setLocalizedText(debugger, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.debugger.text")); // NOI18N
+
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(optionalParams)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(extraOptionsSeparator))
+                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(nameLabel)
+                            .addComponent(iconLabel))
+                        .addGap(68, 68, 68)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                            .addComponent(icon, GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
+                            .addComponent(name))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(browseIcon))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(grammarLabel)
+                            .addComponent(serverLabel)
+                            .addComponent(extensionsLabel, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(extensions)
+                            .addComponent(server)
+                            .addComponent(syntax))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(browseGrammar, GroupLayout.Alignment.TRAILING)
+                            .addComponent(browseServer, GroupLayout.Alignment.TRAILING)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(debugger)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(extensionsLabel)
+                    .addComponent(extensions, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(grammarLabel)
+                    .addComponent(syntax, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(browseGrammar))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(server, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(serverLabel)
+                    .addComponent(browseServer))
+                .addGap(18, 18, 18)
+                .addComponent(debugger)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(optionalParams)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(extraOptionsSeparator, GroupLayout.PREFERRED_SIZE, 11, GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(nameLabel)
+                    .addComponent(name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(icon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(iconLabel)
+                    .addComponent(browseIcon))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     @Messages("DESC_JSONFilter=Grammars (.json, .xml, .tmLanguage)")
@@ -311,20 +269,11 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton browseGrammar;
-    private javax.swing.JButton browseIcon;
-    private javax.swing.JButton browseServer;
-    private javax.swing.JTextField extensions;
-    private javax.swing.JTextField icon;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField name;
-    private javax.swing.JTextField server;
-    private javax.swing.JTextField syntax;
+    private JCheckBox debugger;
+    private JTextField extensions;
+    private JTextField icon;
+    private JTextField name;
+    private JTextField server;
+    private JTextField syntax;
     // End of variables declaration//GEN-END:variables
 }

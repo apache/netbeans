@@ -50,6 +50,8 @@ private:
     static const char *REG_DEFAULT_USERDIR_ROOT;
     static const char *REG_DEFAULT_CACHEDIR_ROOT;
     static const char* staticOptions[];
+    static const char *BASEDIR_TOKEN;
+    static const char *USERDIR_TOKEN;
 
     typedef int (*StartPlatform)(int argc, char *argv[]);
 
@@ -64,6 +66,7 @@ protected:
     virtual bool initBaseNames();
     virtual void addSpecificOptions(CmdArgs &args);
     virtual bool findUserDir(const char *str);
+    virtual const char* findUserDirViaEnvVar();
     virtual bool findCacheDir(const char *str);
     virtual const char * getAppName();
     virtual const char * getDefUserDirOptName();
@@ -78,12 +81,15 @@ private:
     NbLauncher(const NbLauncher& orig);
     bool readClusterFile();
     bool parseArgs(int argc, char *argv[]);
-    bool parseConfigFile(const char* path);    
+    bool parseConfigFile(const char* path, const bool searchUserDir);
     bool getOption(char *&str, const char *opt);
     void addCluster(const char *cl);
     void addExtraClusters();
-    std::string getDefaultUserDirRoot();
-    std::string getDefaultCacheDirRoot();
+    void getDefaultUserDirRoot();
+    void getDefaultCacheDirRoot();
+    void getUserHome();
+    void replaceToken(std::string& str);
+    void replaceString(std::string& str, const std::string& from, const std::string& to);
 
 protected:
     std::string baseDir;

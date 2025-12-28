@@ -830,7 +830,7 @@ public abstract class BaseActionProvider implements ActionProvider {
                     }
                     return targetNames.isEmpty() ?
                             null :  //throw exc?
-                            targetNames.toArray(new String[targetNames.size()]);
+                            targetNames.toArray(new String[0]);
                 }
             }
             return null;

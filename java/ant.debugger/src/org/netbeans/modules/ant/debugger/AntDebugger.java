@@ -52,7 +52,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.text.Annotatable;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.TaskListener;
@@ -307,7 +306,7 @@ public class AntDebugger extends ActionsProviderSupport {
         currentFile = event.getScriptLocation();
         // update variable values
         Set<String> properties = event.getPropertyNames();
-        variables = properties.toArray(new String[properties.size()]);
+        variables = properties.toArray(new String[0]);
         fireVariables ();
         fireWatches ();
         fireBreakpoints ();
@@ -599,7 +598,7 @@ public class AntDebugger extends ActionsProviderSupport {
         for (j = 0; j < jj; j++) {
             Object value = getVariableValue (ws [j].getExpression ());
             if (value == null) {
-                value = new Integer (0);
+                value = 0;
             }
             if ( watches.containsKey (ws [j].getExpression ()) &&
                  !watches.get (ws [j].getExpression ()).equals (value)

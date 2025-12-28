@@ -570,7 +570,6 @@ public class GraphManager extends Object {
         }
     }
 
-    //////////////////////
     //
     //	Event misc. methods, base on the name of the PropertyChanged event
     //
@@ -871,8 +870,6 @@ public class GraphManager extends Object {
     //
     //	Events misc. methods
     //
-    /////////////////////////////
-    
     public static void debug(boolean d) {
 	DDLogFlags.debug = d;
     }
@@ -890,13 +887,13 @@ public class GraphManager extends Object {
 	    case Common.TYPE_BYTE:
 		return (byte)0;
 	    case Common.TYPE_CHAR:
-		return new Character('\0');
+		return '\0';
 	    case Common.TYPE_SHORT:
 		return (short)0;
 	    case Common.TYPE_INT:
-		return Integer.valueOf(0);
+		return 0;
 	    case Common.TYPE_LONG:
-		return new Long(0);
+		return 0L;
 	    case Common.TYPE_FLOAT:
 		return 0.0F;
 	    case Common.TYPE_DOUBLE:

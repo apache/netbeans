@@ -125,7 +125,7 @@ public class TargetServer {
                         it.remove();
                     }
                 }
-                targets = tempTargets.toArray(new Target[tempTargets.size()]);
+                targets = tempTargets.toArray(new Target[0]);
             }
         }
 
@@ -310,7 +310,7 @@ public class TargetServer {
             }
         }
 
-        return (TargetModule[]) toRedeploy.toArray(new TargetModule[toRedeploy.size()]);
+        return (TargetModule[]) toRedeploy.toArray(new TargetModule[0]);
     }
 
     // return list of target modules to redeploy
@@ -324,12 +324,12 @@ public class TargetServer {
     private TargetModule[] checkUndeployForSharedReferences(Set toRedeploy, Set toDistribute, Map queryInfo) {
         // we don't want to undeploy anything when both distribute list and redeploy list are empty
         if (contextRoot == null || (toRedeploy.isEmpty() && toDistribute.isEmpty())) {
-            return (TargetModule[]) toRedeploy.toArray(new TargetModule[toRedeploy.size()]);
+            return (TargetModule[]) toRedeploy.toArray(new TargetModule[0]);
         }
 
-        Set allTargets = new HashSet(Arrays.asList(TargetModule.toTarget((TargetModule[]) toRedeploy.toArray(new TargetModule[toRedeploy.size()]))));
+        Set allTargets = new HashSet(Arrays.asList(TargetModule.toTarget((TargetModule[]) toRedeploy.toArray(new TargetModule[0]))));
         allTargets.addAll(toDistribute);
-        Target[] targs = (Target[]) allTargets.toArray(new Target[allTargets.size()]);
+        Target[] targs = (Target[]) allTargets.toArray(new Target[0]);
 
         boolean shared = false;
         List addToDistributeWhenSharedDetected = new ArrayList();
@@ -402,7 +402,7 @@ public class TargetServer {
             distributeTargets.addAll(addToDistributeWhenSharedDetected);
         }
 
-        return (TargetModule[]) toRedeploy.toArray(new TargetModule[toRedeploy.size()]);
+        return (TargetModule[]) toRedeploy.toArray(new TargetModule[0]);
     }
 
     private Map<String, TargetModuleID> getAvailableTMIDsMap() {
@@ -595,7 +595,7 @@ public class TargetServer {
                 originals.add(modules[i]);
             }
         }
-        return (TargetModuleID[]) originals.toArray(new TargetModuleID[originals.size()]);
+        return (TargetModuleID[]) originals.toArray(new TargetModuleID[0]);
     }
 
     public TargetModule[] deploy(ProgressUI ui, boolean forceRedeploy) throws IOException, ServerException {
@@ -644,7 +644,7 @@ public class TargetServer {
 
         // undeploy if necessary
         if (undeployTMIDs.size() > 0) {
-            TargetModuleID[] tmIDs = (TargetModuleID[]) undeployTMIDs.toArray(new TargetModuleID[undeployTMIDs.size()]);
+            TargetModuleID[] tmIDs = (TargetModuleID[]) undeployTMIDs.toArray(new TargetModuleID[0]);
             ui.progress(NbBundle.getMessage(TargetServer.class, "MSG_Undeploying"));
             ProgressObject undeployPO = instance.getDeploymentManager().undeploy(tmIDs);
             try {
@@ -657,7 +657,7 @@ public class TargetServer {
         // handle initial file deployment or distribute
         if (distributeTargets.size() > 0) {
             hasActivities = true;
-            Target[] targetz = (Target[]) distributeTargets.toArray(new Target[distributeTargets.size()]);
+            Target[] targetz = (Target[]) distributeTargets.toArray(new Target[0]);
             IncrementalDeployment lincremental = IncrementalDeployment.getIncrementalDeploymentForModule(incremental, deployable);
             if (lincremental != null && hasDirectory && canFileDeploy(targetz, deployable)) {
                 ModuleConfiguration cfg = dtarget.getModuleConfigurationProvider().getModuleConfiguration();
@@ -730,7 +730,7 @@ public class TargetServer {
         }
 
         if (hasActivities) {
-            return (TargetModule[]) deployedRootTMIDs.toArray(new TargetModule[deployedRootTMIDs.size()]);
+            return (TargetModule[]) deployedRootTMIDs.toArray(new TargetModule[0]);
         } else {
             return dtarget.getTargetModules();
         }
@@ -756,7 +756,7 @@ public class TargetServer {
             module.remove();
         }
 
-        TargetModuleID[] tmIDs = (TargetModuleID[]) toUndeploy.toArray(new TargetModuleID[toUndeploy.size()]);
+        TargetModuleID[] tmIDs = (TargetModuleID[]) toUndeploy.toArray(new TargetModuleID[0]);
         ui.progress(NbBundle.getMessage(TargetServer.class, "MSG_Undeploying"));
         ProgressObject undeployPO = instance.getDeploymentManager().undeploy(tmIDs);
         try {
@@ -954,7 +954,7 @@ public class TargetServer {
                 ret.add(module);
             }
         }
-        return ret.toArray(new TargetModule[ret.size()]);
+        return ret.toArray(new TargetModule[0]);
     }
 
     /**

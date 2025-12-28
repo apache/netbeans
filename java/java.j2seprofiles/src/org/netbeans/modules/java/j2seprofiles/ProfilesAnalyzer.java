@@ -523,7 +523,7 @@ nextCpE:for (ClassPath.Entry e : cp.entries()) {
                 }
             }
         }
-        return fos.toArray(new FileObject[fos.size()]);
+        return fos.toArray(new FileObject[0]);
     }
 
     private static boolean shouldProcessViolationsInSource(

@@ -416,6 +416,32 @@ public final class ASDDVersion {
         601,
         "GlassFish Server 7" // NOI18N
     );
+    /** Represents GF Server 8
+     */
+    public static final ASDDVersion GLASSFISH_8 = new ASDDVersion(
+        "8.0", 100,	// NOI18N
+        DTDRegistry.GLASSFISH_WEBAPP_301_DTD_PUBLIC_ID,
+        DTDRegistry.GLASSFISH_WEBAPP_301_DTD_SYSTEM_ID,
+        SunWebApp.VERSION_3_0_1,
+        301,
+        DTDRegistry.GLASSFISH_EJBJAR_311_DTD_PUBLIC_ID,
+        DTDRegistry.GLASSFISH_EJBJAR_311_DTD_SYSTEM_ID,
+        SunEjbJar.VERSION_3_1_1,
+        311,
+        DTDRegistry.SUN_CMP_MAPPING_810_DTD_PUBLIC_ID,
+        DTDRegistry.SUN_CMP_MAPPING_810_DTD_SYSTEM_ID,
+        "1.2",
+        120,
+        DTDRegistry.GLASSFISH_APPLICATION_601_DTD_PUBLIC_ID,
+        DTDRegistry.GLASSFISH_APPLICATION_601_DTD_SYSTEM_ID,
+        SunApplication.VERSION_6_0_1,
+        601,
+        DTDRegistry.GLASSFISH_APPCLIENT_601_DTD_PUBLIC_ID,
+        DTDRegistry.GLASSFISH_APPCLIENT_601_DTD_SYSTEM_ID,
+        SunApplicationClient.VERSION_6_0_1,
+        601,
+        "GlassFish Server 8" // NOI18N
+    );
     /** Represents Sun Java System Web Server 7.0
      */
     public static final ASDDVersion SUN_WEBSERVER_7_0 = new ASDDVersion(

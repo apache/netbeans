@@ -53,7 +53,7 @@ public final class ParserManager {
     private ParserManager () {}
 
     /**
-     * Priority request for parsing of list of {@link Source}s. Implementator 
+     * Priority request for parsing of list of {@link Source}s. Implementer
      * of this task have full control over the process of parsing of embedded 
      * languages. You can scan tree of embedded sources and start parsing for
      * all of them, or for some of them only.
@@ -87,6 +87,41 @@ public final class ParserManager {
     }
 
     /**
+     * Priority request for parsing of list of {@link Source}s. Implementer
+     * of this task have full control over the process of parsing of embedded
+     * languages. You can scan tree of embedded sources and start parsing for
+     * all of them, or for some of them only.
+     * This method is blocking. It means that only one parsing request per time
+     * is allowed. But you can call another parsing request
+     * from your Task. This secondary parsing request is called
+     * immediately in the same thread (current thread).
+     * <p>
+     * This method is typically called as a response on some user request -
+     * during code completion for example.
+     *
+     * @param sources A list of sources that should be parsed.
+     * @param processor The parse result processor function to invoke when parsing is done.
+     * @since 9.31
+     * @throws ParseException encapsulating the user exception.
+     */
+    public static void parse (
+        @NonNull final Collection<Source>
+                            sources,
+        @NonNull final ResultProcessor
+                            processor
+    ) throws ParseException {
+        Parameters.notNull("sources", sources);     //NOI18N
+        Parameters.notNull("processor", processor);   //NOI18N
+        UserTask userTask = new UserTask() {
+            @Override
+            public void run(ResultIterator resultIterator) throws Exception {
+                processor.run(resultIterator);
+            }
+        };
+        parse(sources, userTask);
+    }
+
+    /**
      * Performs the given task when the scan finished. When the background scan is active
      * the task is enqueued and the method returns, the task is performed when the
      * background scan completes by the thread doing the background scan. When no background
@@ -111,6 +146,35 @@ public final class ParserManager {
             return RunWhenScanFinishedSupport.runWhenScanFinished (new MultiUserTaskAction (sources, userTask), sources);
     }
 
+    /**
+     * Performs the given task when the scan finished. When the background scan is active
+     * the task is queued and the method returns, the task is performed when the
+     * background scan completes by the thread doing the background scan. When no background
+     * scan is running the method behaves exactly like the {#link ParserManager#parse},
+     * it performs the given task synchronously (in caller thread). If there is an another {@link UserTask}
+     * running this method waits until it's completed.
+     * @param sources A list of sources that should be parsed.
+     * @param processor The parse result processor function to invoke when parsing is done.
+     * @since 9.31
+     * @return {@link Future} which can be used to find out the state of the task {@link Future#isDone} or {@link Future#isCancelled}.
+     * The caller may cancel the task using {@link Future#cancel} or wait until the task is performed {@link Future#get}.
+     * @throws ParseException encapsulating the user exception.
+     */
+    @NonNull
+    public static Future<Void> parseWhenScanFinished (
+            @NonNull final Collection<Source>  sources,
+            @NonNull final ResultProcessor processor) throws ParseException {
+        Parameters.notNull("sources", sources);     //NOI18N
+        Parameters.notNull("processor", processor);   //NOI18N
+        UserTask userTask = new UserTask() {
+            @Override
+            public void run(ResultIterator resultIterator) throws Exception {
+                processor.run(resultIterator);
+            }
+        };
+        return parseWhenScanFinished(sources, userTask);
+    }
+
     //where
 
     private static class UserTaskAction implements Mutex.ExceptionAction<Void> {
@@ -125,6 +189,7 @@ public final class ParserManager {
             this.source = source;
         }
 
+        @Override
         public Void run () throws Exception {
             SourceCache sourceCache = SourceAccessor.getINSTANCE ().getCache (source);
             final ResultIterator resultIterator = new ResultIterator (sourceCache, userTask);
@@ -149,6 +214,7 @@ public final class ParserManager {
             this.sources = new ArrayList<>(sources);
         }
 
+        @Override
         public Void run () throws Exception {
             final LowMemoryWatcher lMListener = LowMemoryWatcher.getInstance();
             Parser parser = null;
@@ -192,14 +258,17 @@ public final class ParserManager {
             this.sources  = sources;
         }
 
+        @Override
         public int size() {
             return this.sources.size();
         }
 
+        @Override
         public boolean isEmpty() {
             return this.sources.isEmpty();
         }
 
+        @Override
         public boolean contains(final Object o) {
             if (!(o instanceof Snapshot)) {
                 return false;
@@ -208,6 +277,7 @@ public final class ParserManager {
             return this.sources.contains(snap.getSource());
         }
 
+        @Override
         public Iterator<Snapshot> iterator() {
             return new LazySnapshotsIt (this.sources.iterator());
         }
@@ -218,6 +288,7 @@ public final class ParserManager {
             return result;
         }
 
+        @Override
         public <T> T[] toArray(T[] a) {
             Class<?> arrayElementClass = a.getClass().getComponentType();
             if (!arrayElementClass.isAssignableFrom(Snapshot.class)) {
@@ -243,14 +314,17 @@ public final class ParserManager {
             }
         }
 
+        @Override
         public boolean add(Snapshot o) {
             throw new UnsupportedOperationException("Read only collection."); //NOI18N
         }
 
+        @Override
         public boolean remove(Object o) {
             throw new UnsupportedOperationException("Read only collection."); //NOI18N
         }
 
+        @Override
         public boolean containsAll(final Collection<?> c) {
             for (Object e : c) {
                 if (!contains(e)) {
@@ -260,18 +334,22 @@ public final class ParserManager {
             return true;
         }
 
+        @Override
         public boolean addAll(Collection<? extends Snapshot> c) {
             throw new UnsupportedOperationException("Read only collection."); //NOI18N
         }
 
+        @Override
         public boolean removeAll(Collection<?> c) {
             throw new UnsupportedOperationException("Read only collection."); //NOI18N
         }
 
+        @Override
         public boolean retainAll(Collection<?> c) {
             throw new UnsupportedOperationException("Read only collection."); //NOI18N
         }
 
+        @Override
         public void clear() {
             throw new UnsupportedOperationException("Read only collection."); //NOI18N
         }
@@ -285,15 +363,18 @@ public final class ParserManager {
                 this.sourcesIt = sourcesIt;
             }
 
+            @Override
             public boolean hasNext() {
                 return sourcesIt.hasNext();
             }
 
+            @Override
             public Snapshot next() {
                 final SourceCache cache = SourceAccessor.getINSTANCE().getCache(sourcesIt.next());
                 return cache.getSnapshot();
             }
 
+            @Override
             public void remove() {
                 throw new UnsupportedOperationException("Read only collection."); //NOI18N
             }
@@ -438,9 +519,6 @@ public final class ParserManager {
 
         return true;
     }
-    
-    //where
-    private static Map<String,Reference<Parser>> cachedParsers = new HashMap<String,Reference<Parser>>();    
 }
 
 

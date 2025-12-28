@@ -87,7 +87,7 @@ class StandardModule extends Module {
     
     /** Use ModuleManager.create as a factory. */
     public StandardModule(ModuleManager mgr, Events ev, File jar, Object history, boolean reloadable, boolean autoload, boolean eager) throws IOException {
-        super(mgr, ev, history, JaveleonModule.isJaveleonPresent || reloadable, autoload, eager);
+        super(mgr, ev, history, reloadable, autoload, eager);
         this.jar = jar;
         moduleJARs.add(jar);
     }
@@ -542,7 +542,7 @@ class StandardModule extends Module {
      * class loaders.
      */
     protected ClassLoader createNewClassLoader(List<File> classp, List<ClassLoader> parents) {
-        return new OneModuleClassLoader(classp, parents.toArray(new ClassLoader[parents.size()]));
+        return new OneModuleClassLoader(classp, parents.toArray(new ClassLoader[0]));
     }
 
     /** Get the class loader of a particular parent module. */
@@ -607,7 +607,6 @@ class StandardModule extends Module {
          */
         public OneModuleClassLoader(List<File> classp, ClassLoader[] parents) throws IllegalArgumentException {
             super(classp, parents, false, StandardModule.this);
-            JaveleonModule.registerClassLoader(this, getCodeNameBase());
         }
         
         public Module getModule() {

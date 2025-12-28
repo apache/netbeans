@@ -31,17 +31,11 @@ import org.netbeans.modules.payara.tooling.logging.Logger;
  */
 public class CyclicStringBuffer {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(CyclicStringBuffer.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Buffer size. */
     private int size;
 
@@ -54,10 +48,7 @@ public class CyclicStringBuffer {
     /** Current beginning of valid characters storage. */
     private int beg;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of cyclic <code>String</code> buffer.
      * <p/>
@@ -70,10 +61,7 @@ public class CyclicStringBuffer {
         beg = 0;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Resize cyclic <code>String</code> buffer.
      * <p/>

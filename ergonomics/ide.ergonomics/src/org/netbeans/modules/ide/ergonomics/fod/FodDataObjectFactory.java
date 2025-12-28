@@ -21,8 +21,10 @@ package org.netbeans.modules.ide.ergonomics.fod;
 
 import java.beans.PropertyVetoException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -46,7 +48,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 import org.openide.util.Lookup;
-import org.openide.util.WeakSet;
 
 /** Support for special dataobjects that can dynamically FoD objects.
  *
@@ -54,7 +55,7 @@ import org.openide.util.WeakSet;
  */
 public class FodDataObjectFactory implements DataObject.Factory {
     private static MultiFileLoader delegate;
-    private static final Set<FileObject> ignore = new WeakSet<FileObject>();
+    private static final Set<FileObject> ignore = Collections.newSetFromMap(new WeakHashMap<>());
 
     private final FileObject definition;
     private final FeatureInfo info;

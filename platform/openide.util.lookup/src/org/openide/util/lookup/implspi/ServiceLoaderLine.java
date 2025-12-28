@@ -96,7 +96,7 @@ final class ServiceLoaderLine implements Comparable<ServiceLoaderLine> {
     }
     private static void finalize(Set<ServiceLoaderLine> lines, String impl, int position, List<String> supersedes) {
         if (impl != null) {
-            lines.add(new ServiceLoaderLine(impl, position, supersedes.toArray(new String[supersedes.size()])));
+            lines.add(new ServiceLoaderLine(impl, position, supersedes.toArray(new String[0])));
         }
     }
 

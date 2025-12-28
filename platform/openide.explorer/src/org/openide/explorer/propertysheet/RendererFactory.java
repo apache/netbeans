@@ -50,7 +50,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -66,7 +65,6 @@ import org.openide.awt.GraphicsUtils;
 import org.openide.awt.HtmlRenderer;
 import org.openide.nodes.Node.Property;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 
 /** 
@@ -283,7 +281,7 @@ final class RendererFactory {
 
                 if (c != null) {
                     try {
-                        result = (PropertyEditor) c.newInstance();
+                        result = (PropertyEditor) c.getDeclaredConstructor().newInstance();
 
                         //Check the values first
                         Object mdlValue = pm.getValue();
@@ -972,7 +970,7 @@ final class RendererFactory {
             }
 
             if (i != null) {
-                setIcon(new ImageIcon(i));
+                setIcon(ImageUtilities.image2Icon(i));
             }
         }
 

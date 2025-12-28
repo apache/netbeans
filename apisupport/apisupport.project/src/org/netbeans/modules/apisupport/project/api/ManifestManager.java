@@ -191,7 +191,7 @@ public final class ManifestManager {
                                 ManifestManager mm2 = getInstanceFromJAR(ext);
                                 List<String> toks = new ArrayList<String>(Arrays.asList(mm.provTokens));
                                 toks.addAll(Arrays.asList(mm2.provTokens));
-                                mm.provTokens = toks.toArray(new String[toks.size()]);
+                                mm.provTokens = toks.toArray(new String[0]);
                             }
                         }
                     }
@@ -553,7 +553,7 @@ public final class ManifestManager {
             if (exports.isEmpty()) {
                 throw new IllegalArgumentException("Illegal OpenIDE-Module-Public-Packages: " + exportsS); // NOI18N
             }
-            exportedPackages = exports.toArray(new PackageExport[exports.size()]);
+            exportedPackages = exports.toArray(new PackageExport[0]);
         }
         return exportedPackages;
     }
@@ -574,7 +574,7 @@ public final class ManifestManager {
         if (set.isEmpty()) {
             throw new IllegalArgumentException("Empty OpenIDE-Module-Friends: " + friends); // NOI18N
         }
-        return set.toArray(new String[set.size()]);
+        return set.toArray(new String[0]);
     }
     
     public String getCodeNameBase() {
@@ -605,7 +605,7 @@ public final class ManifestManager {
         } else {
             List<String> ret = new ArrayList<String>(arr);
             ret.add(implied);
-            return ret.toArray(new String[ret.size()]);
+            return ret.toArray(new String[0]);
         }
     }
     

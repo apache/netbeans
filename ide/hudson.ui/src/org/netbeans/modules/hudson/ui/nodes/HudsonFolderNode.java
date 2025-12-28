@@ -68,7 +68,7 @@ class HudsonFolderNode extends AbstractNode {
         if (folder instanceof OpenableInBrowser) {
             actions.add(OpenUrlAction.forOpenable((OpenableInBrowser) folder));
         }
-        return actions.toArray(new Action[actions.size()]);
+        return actions.toArray(new Action[0]);
     }
 
     private static final class HudsonFolderChildren extends ChildFactory.Detachable<Union2<HudsonJob,HudsonFolder>> implements ChangeListener {

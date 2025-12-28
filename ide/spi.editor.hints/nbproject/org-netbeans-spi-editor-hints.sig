@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.64.0
+#Version 1.72.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -222,6 +222,7 @@ supr java.lang.Object
 CLSS public abstract interface org.netbeans.spi.editor.hints.Fix
 meth public abstract java.lang.String getText()
 meth public abstract org.netbeans.spi.editor.hints.ChangeInfo implement() throws java.lang.Exception
+meth public java.lang.Iterable<? extends org.netbeans.spi.editor.hints.Fix> getSubfixes()
 
 CLSS public final org.netbeans.spi.editor.hints.HintsController
 meth public static void setErrors(javax.swing.text.Document,java.lang.String,java.util.Collection<? extends org.netbeans.spi.editor.hints.ErrorDescription>)

@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.dircache.Checkout;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheCheckout;
 import org.eclipse.jgit.dircache.DirCacheEntry;
@@ -357,7 +358,9 @@ public class CheckoutTest extends AbstractGitTestCase {
         WindowCacheConfig cfg = new WindowCacheConfig();
         cfg.setStreamFileThreshold((int) large.length() - 1);
         cfg.install();
-        DirCacheCheckout.checkoutEntry(repository, e, repository.newObjectReader());
+        new Checkout(repository)
+                .setRecursiveDeletion(false)
+                .checkout(e, null, repository.newObjectReader(), null);
     }
     
     public void testCheckoutBranch () throws Exception {
@@ -677,7 +680,7 @@ public class CheckoutTest extends AbstractGitTestCase {
                 dco.checkout();
             } catch (CheckoutConflictException ex) {
                 List<String> conflicts = dco.getConflicts();
-                throw new GitException.CheckoutConflictException(conflicts.toArray(new String[conflicts.size()]));
+                throw new GitException.CheckoutConflictException(conflicts.toArray(new String[0]));
             } finally {
                 cache.unlock();
             }

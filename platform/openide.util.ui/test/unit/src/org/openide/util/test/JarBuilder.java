@@ -22,6 +22,7 @@ package org.openide.util.test;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +44,7 @@ public final class JarBuilder {
      * @param workdir as in {@link NbTestCase#getWorkDir}
      */
     public JarBuilder(File workdir) throws Exception {
-        jar = File.createTempFile("test", ".jar", workdir);
+        jar = Files.createTempFile(workdir.toPath(), "test", ".jar").toFile();
         String n = jar.getName().replaceAll("^test|[.]jar$", "");
         src = new File(workdir, "src" + n);
         dest = new File(workdir, "classes" + n);

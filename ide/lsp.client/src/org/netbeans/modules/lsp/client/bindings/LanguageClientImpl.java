@@ -305,6 +305,12 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
         LOG.log(Level.WARNING, "Received unhandled notification: {0}: {1}", new Object[] {method, parameter});
     }
 
+    @Override
+    public CompletableFuture<Void> refreshDiagnostics() {
+        bindings.getOpenedFiles().forEach(LSPBindings::scheduleBackgroundTasks);
+        return CompletableFuture.completedFuture(null);
+    }
+
     private final class DiagnosticFixList implements LazyFixList {
 
         private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);

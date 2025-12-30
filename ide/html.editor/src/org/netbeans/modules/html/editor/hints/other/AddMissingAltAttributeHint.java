@@ -18,21 +18,18 @@
  */
 package org.netbeans.modules.html.editor.hints.other;
 
-import java.awt.EventQueue;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.html.editor.hints.HtmlRuleContext;
 import org.netbeans.modules.html.editor.utils.HtmlTagContextUtils;
-import org.netbeans.modules.parsing.api.Source;
 
 /**
  *
@@ -53,8 +50,8 @@ public class AddMissingAltAttributeHint extends Hint {
 
         private static final Logger LOGGER = Logger.getLogger(AddMissingAltAttributeHintFix.class.getSimpleName());
 
-        HtmlRuleContext context;
-        OffsetRange range;
+        private final HtmlRuleContext context;
+        private final OffsetRange range;
 
         public AddMissingAltAttributeHintFix(HtmlRuleContext context, OffsetRange range) {
             this.context = context;

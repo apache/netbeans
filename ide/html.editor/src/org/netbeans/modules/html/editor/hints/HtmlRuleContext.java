@@ -21,6 +21,7 @@ package org.netbeans.modules.html.editor.hints;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.csl.api.Error;
 import org.netbeans.modules.csl.api.HintFix;
+import org.netbeans.modules.csl.api.RuleContext;
 import org.netbeans.modules.csl.api.Severity;
 import org.netbeans.modules.css.indexing.api.CssIndex;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
@@ -43,44 +45,56 @@ import org.openide.util.Exceptions;
  *
  * @author marekfukala
  */
-public class HtmlRuleContext {
+public class HtmlRuleContext extends RuleContext {
 
-    private final SyntaxAnalyzerResult syntaxAnalyzerResult;
-    private final HtmlParserResult parserResult;
-    private final List<HintFix> defaultFixes;
-    private final List<? extends Error> leftDiagnostics;
+    private SyntaxAnalyzerResult syntaxAnalyzerResult;
+    private List<HintFix> defaultFixes;
+    private List<? extends Error> leftDiagnostics;
     private CssIndex cssIndex;
     private DependenciesGraph cssDependencies;
-    private final Lines lines;
-    private final Collection<Integer> linesWithHints;
+    private Lines lines;
+    private Collection<Integer> linesWithHints;
 
-    public HtmlRuleContext(HtmlParserResult parserResult, SyntaxAnalyzerResult syntaxAnalyzerResult, List<HintFix> defaultFixes) {
-        this.parserResult = parserResult;
+    public void initialize(SyntaxAnalyzerResult syntaxAnalyzerResult, List<HintFix> defaultFixes) {
         this.syntaxAnalyzerResult = syntaxAnalyzerResult;
         this.defaultFixes = defaultFixes;
-        this.leftDiagnostics = new ArrayList<>(parserResult.getDiagnostics(EnumSet.allOf(Severity.class)));
-        this.lines = new Lines(parserResult.getSnapshot().getText());
+
+        HtmlParserResult htmlResult = getHtmlParserResult();
+        if (htmlResult != null) {
+            this.leftDiagnostics = new ArrayList<>(htmlResult.getDiagnostics(EnumSet.allOf(Severity.class)));
+            this.lines = new Lines(htmlResult.getSnapshot().getText());
+        } else {
+            this.leftDiagnostics = Collections.emptyList();
+            this.lines = null;
+        }
+
         this.linesWithHints = new HashSet<>();
     }
 
     public boolean isFirstHintForPosition(int offset) {
+        if (lines == null) {
+            return true;
+        }
+
         try {
             int lineIndex = lines.getLineIndex(offset);
-            if(linesWithHints.contains(lineIndex)) {
+            if (linesWithHints.contains(lineIndex)) {
                 return false;
             } else {
                 linesWithHints.add(lineIndex);
                 return true;
             }
-            
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
         }
         return true;
     }
-    
+
     public HtmlParserResult getHtmlParserResult() {
-        return parserResult;
+        if (parserResult instanceof HtmlParserResult) {
+            return (HtmlParserResult) parserResult;
+        }
+        return null;
     }
 
     public SyntaxAnalyzerResult getSyntaxAnalyzerResult() {
@@ -112,15 +126,15 @@ public class HtmlRuleContext {
         }
         return cssIndex;
     }
-    
+
     public synchronized DependenciesGraph getCssDependenciesGraph() throws IOException {
-        if(cssDependencies == null) {
+        if (cssDependencies == null) {
             CssIndex index = getCssIndex();
-            if(index != null) {
+            if (index != null) {
                 cssDependencies = index.getDependencies(getFile());
             }
         }
         return cssDependencies;
     }
-    
+
 }

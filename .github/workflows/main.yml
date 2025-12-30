@@ -674,6 +674,9 @@ jobs:
       - name: ide/jumpto
         run: ant $OPTS -f ide/jumpto test
 
+      - name: ide/languages.env
+        run: ant $OPTS -f ide/languages.env test
+
       - name: ide/languages.hcl
         run: ant $OPTS -f ide/languages.hcl test
 

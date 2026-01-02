@@ -33,15 +33,8 @@
             release="8"
             includeantruntime="false">
             <classpath>
-                <fileset dir="${maven.embedder.dir}/maven/lib">
-                    <include name="*.jar"/>
-                </fileset>
-                <fileset dir="${maven.embedder.dir}/maven/boot">
-                    <include name="*.jar"/>
-                </fileset>
-                <pathelement location="./external/aether-api-1.13.1.jar"/>
+                <pathelement path="${mavensrc.cp}"/>
             </classpath>
-            <classpath refid="cp"/>
         </javac>
         <copy overwrite="true" tofile="build/mavenclasses/META-INF/sisu/javax.inject.Named" file="mavensrc/org/netbeans/modules/maven/workspace/reader/javax.inject.Named"/>
         <mkdir dir="${cluster}/maven-nblib"/>

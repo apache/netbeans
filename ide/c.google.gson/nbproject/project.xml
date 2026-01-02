@@ -28,7 +28,7 @@
            <public-packages/>
            <class-path-extension>
                <runtime-relative-path>com-google-gson.jar</runtime-relative-path>
-               <binary-origin>external/gson-2.12.1.jar</binary-origin>
+               <binary-origin>external/gson-2.13.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

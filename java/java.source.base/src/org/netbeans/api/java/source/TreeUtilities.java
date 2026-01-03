@@ -1029,6 +1029,7 @@ public final class TreeUtilities {
             Env<AttrContext> result = attr.attributeAndCapture((JCTree) tree, env, (JCTree) to);
             try {
                 Constructor<JavacScope> c = JavacScope.class.getDeclaredConstructor(Env.class);
+                // TODO this adds --add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
                 c.setAccessible(true);
                 return c.newInstance(result);
             } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {

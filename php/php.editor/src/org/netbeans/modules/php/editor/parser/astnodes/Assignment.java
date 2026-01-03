@@ -39,6 +39,7 @@ public class Assignment extends Expression {
         MOD_EQUAL("%="), //NOI18N
         AND_EQUAL("&="), //NOI18N
         OR_EQUAL("|="), //NOI18N
+        PIPE("|>"), //NOI18N
         XOR_EQUAL("^="), //NOI18N
         SL_EQUAL("<<="), //NOI18N
         SR_EQUAL(">>="), //NOI18N

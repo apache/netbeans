@@ -430,6 +430,7 @@
                     <file name="org-netbeans-modules-php-editor-verification-IncorrectFirstClassCallableSyntaxHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-IncorrectDeprecatedAttributeHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-IncorrectEnumHintError.instance"/>
+                    <file name="org-netbeans-modules-php-editor-verification-IncorrectFunctionCompositionHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-IncorrectListUnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-IncorrectMixedGroupUseHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-IncorrectNamedArgumentsHintError.instance"/>
@@ -452,6 +453,7 @@
                     <file name="org-netbeans-modules-php-editor-verification-PHP82UnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-PHP83UnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-PHP84UnhandledError.instance"/>
+                    <file name="org-netbeans-modules-php-editor-verification-PHP85UnhandledError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-ReturnTypeHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-TypeRedeclarationHintError.instance"/>
                     <file name="org-netbeans-modules-php-editor-verification-UnusableTypesHintError.instance"/>

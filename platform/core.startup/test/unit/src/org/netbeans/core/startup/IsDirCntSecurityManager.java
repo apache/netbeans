@@ -32,9 +32,7 @@ public class IsDirCntSecurityManager extends SecurityManager {
     private static StringBuffer sb;
 
     public static void initialize() {
-        if (!(System.getSecurityManager() instanceof IsDirCntSecurityManager)) {
-            System.setSecurityManager(new IsDirCntSecurityManager());
-        }
+        System.setSecurityManager(new IsDirCntSecurityManager());
         cnt = 0;
         sb = new StringBuffer();
     }

@@ -35,7 +35,6 @@ import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.embedder.MavenEmbedder;
 import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.spi.JsfReferenceImplementationProvider;
-import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -56,8 +55,8 @@ public class MavenJsfReferenceImplementationProvider implements JsfReferenceImpl
         map.put(JsfVersion.JSF_2_2, "com.sun.faces:jsf-impl:2.2.20");
         map.put(JsfVersion.JSF_2_3, "org.glassfish:jakarta.faces:2.3.21");
         map.put(JsfVersion.JSF_3_0, "org.glassfish:jakarta.faces:3.0.5");
-        map.put(JsfVersion.JSF_4_0, "org.glassfish:jakarta.faces:4.0.5");
-        map.put(JsfVersion.JSF_4_1, "org.glassfish:jakarta.faces:4.1.0-M1");
+        map.put(JsfVersion.JSF_4_0, "org.glassfish:jakarta.faces:4.0.13");
+        map.put(JsfVersion.JSF_4_1, "org.glassfish:jakarta.faces:4.1.5");
         JSF_VERSION_MAVEN_COORDINATES_MAPPING = Collections.unmodifiableMap(map);
     }
 

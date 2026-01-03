@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.LibraryComponent;
 import org.netbeans.modules.web.jsfapi.api.LibraryInfo;
@@ -49,6 +50,19 @@ import org.openide.modules.InstalledFileLocator;
 public class DefaultFaceletLibraries {
 
     private static DefaultFaceletLibraries INSTANCE;
+
+    private static String getJarPath(JsfVersion version) {
+        if (version == null) {
+            version = JsfVersion.JSF_2_3;
+        }
+        return switch (version) {
+            case JSF_4_1 -> "modules/ext/jsf-4_1/jakarta.faces.jar";
+            case JSF_4_0 -> "modules/ext/jsf-4_0/jakarta.faces.jar";
+            case JSF_3_0 -> "modules/ext/jsf-3_0/jakarta.faces.jar";
+            default -> "modules/ext/jsf-2_3/javax.faces.jar";
+        };
+    }
+
     private File jsfImplJar;
     private Collection<FileObject> libraryDescriptorsFiles;
     private Map<String, FaceletsLibraryDescriptor> librariesDescriptors;
@@ -56,7 +70,7 @@ public class DefaultFaceletLibraries {
 
     public static synchronized DefaultFaceletLibraries getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new DefaultFaceletLibraries();
+            INSTANCE = new DefaultFaceletLibraries(JsfVersion.JSF_2_3);
         }
         return INSTANCE;
     }
@@ -67,9 +81,9 @@ public class DefaultFaceletLibraries {
         init(jsfImplJar);
     }
 
-    public DefaultFaceletLibraries() {
+    public DefaultFaceletLibraries(JsfVersion version) {
         this(InstalledFileLocator.getDefault().locate(
-                "modules/ext/jsf-2_2/javax.faces.jar", //NOI18N
+                getJarPath(version),
                 "org.netbeans.modules.web.jsf20", false) //NOI18N
         );
     }
@@ -105,8 +119,8 @@ public class DefaultFaceletLibraries {
                 descritor = FaceletsLibraryDescriptor.create(lfo);
                 librariesDescriptors.put(descritor.getNamespace(), descritor);
             } catch (LibraryDescriptorException ex) {
-                Logger.global.log(Level.WARNING, "Error parsing facelets library " +
-                        FileUtil.getFileDisplayName(lfo) + " in javax.faces.jar from bundled web.jsf20 library", ex);
+                Logger.getGlobal().log(Level.WARNING, "Error parsing facelets library " +
+                        FileUtil.getFileDisplayName(lfo) + " from file " + jsfImplJar, ex);
             }
         }
 

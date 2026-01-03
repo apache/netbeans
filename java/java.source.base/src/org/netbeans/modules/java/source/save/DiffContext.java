@@ -42,6 +42,7 @@ import org.netbeans.api.java.source.PositionConverter;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
+import org.netbeans.modules.parsing.api.Snapshot;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -72,14 +73,13 @@ public class DiffContext {
      * Special flag; when creating new CUs from template, always include their initial comments
      */
     public final boolean forceInitialComment;
+
+    public final Snapshot embeddedSnapshot;
+    public final Snapshot topLevelSnapshot;
     
     public Map<Integer, Comment> usedComments = new HashMap<>();
 
-    public DiffContext(CompilationInfo copy) {
-        this(copy, new HashSet<Tree>());
-    }
-
-    public DiffContext(CompilationInfo copy, Set<Tree> syntheticTrees) {
+    public DiffContext(CompilationInfo copy, Set<Tree> syntheticTrees, Snapshot embeddedSnapshot, Snapshot topLevelSnapshot) {
         this.tokenSequence = copy.getTokenHierarchy().tokenSequence(JavaTokenId.language());
         this.mainCode = this.origText = copy.getText();
         this.style = getCodeStyle(copy);
@@ -95,6 +95,8 @@ public class DiffContext {
         this.blockSequences = new BlockSequences(this.tokenSequence, doc, textLength);
         
         this.forceInitialComment = false;
+        this.embeddedSnapshot = embeddedSnapshot;
+        this.topLevelSnapshot = topLevelSnapshot;
     }
 
     /**
@@ -117,6 +119,8 @@ public class DiffContext {
         this.textLength = copy.getSnapshot() == null ? Integer.MAX_VALUE : copy.getSnapshot().getOriginalOffset(copy.getSnapshot().getText().length());
         this.blockSequences = new BlockSequences(this.tokenSequence, doc, textLength);
         this.forceInitialComment = true;
+        this.embeddedSnapshot = null;
+        this.topLevelSnapshot = null;
     }
 
     public static final CodeStyle getCodeStyle(CompilationInfo info) {

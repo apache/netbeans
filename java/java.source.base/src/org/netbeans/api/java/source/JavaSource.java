@@ -669,7 +669,7 @@ public final class JavaSource {
                     copy.toPhase(Phase.PARSED);
                 }
                 task.run(copy);
-                final List<ModificationResult.Difference> diffs = copy.getChanges(result.tag2Span);
+                final List<ModificationResult.Difference> diffs = copy.getChanges(result.tag2Span, copy.getSnapshot()); //TODO: we probably can't support embedding here, right?
                 if (diffs != null && diffs.size() > 0) {
                     final FileObject file = copy.getFileObject();
                     result.diffs.put(file != null ? file : FileUtil.createMemoryFileSystem().getRoot().createData("temp", "java"), diffs);

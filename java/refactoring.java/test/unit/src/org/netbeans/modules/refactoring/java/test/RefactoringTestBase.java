@@ -21,6 +21,7 @@ package org.netbeans.modules.refactoring.java.test;
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,14 +31,18 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
+import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.project.Project;
@@ -61,12 +66,14 @@ import org.netbeans.spi.gototest.TestLocator.LocationListener;
 import org.netbeans.spi.gototest.TestLocator.LocationResult;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.java.queries.SourceForBinaryQueryImplementation;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.support.GenericSources;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.Lookups;
@@ -194,7 +201,9 @@ public class RefactoringTestBase extends NbTestCase {
     protected FileObject src;
     protected FileObject test;
     protected Project prj;
-    private ClassPath sourcePath;
+    private Map<ProjectDesc, ProjectImpl> projectDesc2Impl = new HashMap<>();
+    private Map<ProjectImpl, ProjectDesc> projectImpl2Desc = new HashMap<>();
+    private ClassPath[] sourcePath;
     private final String sourcelevel;
 
     @Override
@@ -209,18 +218,20 @@ public class RefactoringTestBase extends NbTestCase {
                     new ClassPathProvider() {
                         @Override
                         public ClassPath findClassPath(FileObject file, String type) {
-                    if (sourcePath != null && sourcePath.contains(file)){
-                                if (ClassPath.BOOT.equals(type)) {
-                                    return TestUtil.getBootClassPath();
-                                }
-                                if (JavaClassPathConstants.MODULE_BOOT_PATH.equals(type)) {
-                                    return BootClassPathUtil.getModuleBootPath();
-                                }
-                                if (ClassPath.COMPILE.equals(type)) {
-                                    return ClassPathSupport.createClassPath(new FileObject[0]);
-                                }
-                                if (ClassPath.SOURCE.equals(type)) {
-                                    return sourcePath;
+                            for (ProjectImpl impl : projectImpl2Desc.keySet()) {
+                                if (impl.sourcePath().contains(file)){
+                                    if (ClassPath.BOOT.equals(type)) {
+                                        return TestUtil.getBootClassPath();
+                                    }
+                                    if (JavaClassPathConstants.MODULE_BOOT_PATH.equals(type)) {
+                                        return BootClassPathUtil.getModuleBootPath();
+                                    }
+                                    if (ClassPath.COMPILE.equals(type)) {
+                                        return impl.compilePath();
+                                    }
+                                    if (ClassPath.SOURCE.equals(type)) {
+                                        return impl.sourcePath();
+                                    }
                                 }
                             }
 
@@ -228,15 +239,24 @@ public class RefactoringTestBase extends NbTestCase {
                         }
                     },
                     new ProjectFactory() {
+                        private ProjectImpl projectImplFor(FileObject projectDirectory) {
+                            for (ProjectImpl impl : projectImpl2Desc.keySet()) {
+                                if (impl.prjDir() == projectDirectory) {
+                                    return impl;
+                                }
+                            }
+                            return null;
+                        }
                         @Override
                         public boolean isProject(FileObject projectDirectory) {
-                            return src != null && src.getParent() == projectDirectory;
+                            return projectImplFor(projectDirectory) != null;
                         }
                         @Override
                         public Project loadProject(final FileObject projectDirectory, ProjectState state) throws IOException {
-                if (!isProject(projectDirectory)) {
-                    return null;
-                }
+                            ProjectImpl impl = projectImplFor(projectDirectory);
+                            if (impl == null) {
+                                return null;
+                            }
                             return new Project() {
                                 @Override
                                 public FileObject getProjectDirectory() {
@@ -249,8 +269,9 @@ public class RefactoringTestBase extends NbTestCase {
 
                                         @Override
                                         public SourceGroup[] getSourceGroups(String type) {
-                                return new SourceGroup[] {GenericSources.group(p, src.getParent(), "source", "Java Sources", null, null),
-                                                        GenericSources.group(p, test, "testsources", "Test Sources", null, null)};
+                                            //XXX: the source groups are weird - why .getParent() for sources?
+                                            return new SourceGroup[] {GenericSources.group(p, impl.src().getParent(), "source", "Java Sources", null, null),
+                                                                      GenericSources.group(p, impl.test(), "testsources", "Test Sources", null, null)};
                                         }
 
                                         @Override
@@ -265,7 +286,7 @@ public class RefactoringTestBase extends NbTestCase {
                             };
                         }
                         @Override
-            public void saveProject(Project project) throws IOException, ClassCastException {}
+                        public void saveProject(Project project) throws IOException, ClassCastException {}
                     },
                     new TestLocator() {
 
@@ -287,11 +308,12 @@ public class RefactoringTestBase extends NbTestCase {
                                 return new LocationResult("File not found"); //NOI18N
                             }
 
+                            ProjectImpl impl = projectImpl2Desc.keySet().stream().filter(i -> i.sourcePath == srcCp).findAny().orElseThrow();
                             String baseResName = srcCp.getResourceName(fo, '/', false);
                             String testResName = getTestResName(baseResName, fo.getExt());
                             assert testResName != null;
-                            FileObject fileObject = test.getFileObject(testResName);
-                if(fileObject != null) {
+                            FileObject fileObject = impl.test.getFileObject(testResName);
+                            if(fileObject != null) {
                                 return new LocationResult(fileObject, -1);
                             }
 
@@ -305,17 +327,19 @@ public class RefactoringTestBase extends NbTestCase {
 
                         @Override
                         public FileType getFileType(FileObject fo) {
-                if(FileUtil.isParentOf(test, fo)) {
-                                return FileType.TEST;
-                } else if(FileUtil.isParentOf(src, fo)) {
-                                return FileType.TESTED;
+                            for (ProjectImpl impl : projectImpl2Desc.keySet()) {
+                                if(FileUtil.isParentOf(impl.test(), fo)) {
+                                    return FileType.TEST;
+                                } else if(FileUtil.isParentOf(impl.src(), fo)) {
+                                    return FileType.TESTED;
+                                }
                             }
                             return FileType.NEITHER;
                         }
 
                         private String getTestResName(String baseResName, String ext) {
-                StringBuilder buf
-                        = new StringBuilder(baseResName.length() + ext.length() + 10);
+                            StringBuilder buf
+                                = new StringBuilder(baseResName.length() + ext.length() + 10);
                             buf.append(baseResName).append("Test");                         //NOI18N
                             if (ext.length() != 0) {
                                 buf.append('.').append(ext);
@@ -329,17 +353,78 @@ public class RefactoringTestBase extends NbTestCase {
                         public String getSourceLevel(FileObject javaFile) {
                             return sourcelevel;
                         }
+                    },
+                    new SourceForBinaryQueryImplementation() {
+                        @Override
+                        public SourceForBinaryQuery.Result findSourceRoots(URL binaryRoot) {
+                            FileObject binary = URLMapper.findFileObject(binaryRoot);
+                            for (ProjectImpl impl : projectImpl2Desc.keySet()) {
+                                if (impl.output().equals(binary)) {
+                                    return new SourceForBinaryQuery.Result() {
+                                        @Override
+                                        public FileObject[] getRoots() {
+                                            return new FileObject[] {impl.src, impl.test};
+                                        }
+                                        @Override
+                                        public void addChangeListener(ChangeListener l) {}
+                                        @Override
+                                        public void removeChangeListener(ChangeListener l) {}
+                                    };
+                                }
+                            }
+                            return null;
+                        }
                     }});
         Main.initializeURLFactory();
         org.netbeans.api.project.ui.OpenProjects.getDefault().getOpenProjects();
         
 //        org.netbeans.modules.java.source.TreeLoader.DISABLE_CONFINEMENT_TEST = true;
         
-        prepareTest();
-        org.netbeans.api.project.ui.OpenProjects.getDefault().open(new Project[] {prj = ProjectManager.getDefault().findProject(src.getParent())}, false);
+        FileObject workdir = SourceUtilsTestUtil.makeScratchDir(this);
+        Map<ProjectDesc, ProjectImpl> tempProjectDesc2Impl = new HashMap<>();
+        Map<ProjectImpl, ProjectDesc> tempProjectImpl2Desc = new HashMap<>();
+        List<ProjectDesc> projects = projects();
+
+        for (ProjectDesc desc : projects) {
+            FileObject projectFolder = FileUtil.createFolder(workdir, desc.name());
+            FileObject src = FileUtil.createFolder(projectFolder, "src");
+            FileObject test = FileUtil.createFolder(projectFolder, "test");
+            FileObject output = FileUtil.createFolder(projectFolder, "output");
+            ProjectImpl impl = new ProjectImpl(projectFolder, src, test, output, ClassPathSupport.createClassPath(src, test), ClassPath.EMPTY);
+            tempProjectDesc2Impl.put(desc, impl);
+            tempProjectImpl2Desc.put(impl, desc);
+        }
+
+        //correct the compile classpath:
+        for (Entry<ProjectImpl, ProjectDesc> e : tempProjectImpl2Desc.entrySet()) {
+            ClassPath compileCP = ClassPathSupport.createClassPath(Arrays.stream(e.getValue().dependencies).map(desc -> tempProjectDesc2Impl.get(desc).output()).toArray(FileObject[]::new));
+            ProjectImpl newProjectImpl = new ProjectImpl(e.getKey().prjDir(), e.getKey().src(), e.getKey().test(), e.getKey().output(), e.getKey().sourcePath(), compileCP);
+            projectImpl2Desc.put(newProjectImpl, e.getValue());
+            projectDesc2Impl.put(e.getValue(), newProjectImpl);
+        }
+
+        //load projects:
+        Function<FileObject, Project> loadProject = dir -> {
+            try {
+                return ProjectManager.getDefault().findProject(dir);
+            } catch (IOException | IllegalArgumentException ex) {
+                throw new AssertionError(ex);
+            }
+        };
+        Map<ProjectDesc, Project> tempDesc2Project = tempProjectDesc2Impl.entrySet().stream().collect(Collectors.toMap(e -> e.getKey(), e -> loadProject.apply(e.getValue().prjDir())));
+
+        FileObject cache = FileUtil.createFolder(workdir, "cache");
+
+        CacheFolder.setCacheFolder(cache);
+
+        org.netbeans.api.project.ui.OpenProjects.getDefault().open(tempDesc2Project.values().toArray(Project[]::new), false);
         MimeTypes.setAllMimeTypes(Collections.singleton("text/x-java"));
-        sourcePath = ClassPathSupport.createClassPath(src, test);
-        GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, new ClassPath[] {sourcePath});
+        ProjectImpl primaryImpl = tempProjectDesc2Impl.get(projects.get(0));
+        src = primaryImpl.src();
+        test = primaryImpl.test();
+        prj = tempDesc2Project.get(projects.get(0));
+        sourcePath = projectImpl2Desc.keySet().stream().map(impl -> impl.sourcePath).toArray(ClassPath[]::new);
+        GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, sourcePath);
         RepositoryUpdater.getDefault().start(true);
         super.setUp();
         FileUtil.createData(FileUtil.getConfigRoot(), "Templates/Classes/Empty.java");
@@ -349,7 +434,7 @@ public class RefactoringTestBase extends NbTestCase {
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, new ClassPath[] {sourcePath});
+        GlobalPathRegistry.getDefault().unregister(ClassPath.SOURCE, sourcePath);
         org.netbeans.api.project.ui.OpenProjects.getDefault().close(new Project[] {prj});
         CountDownLatch cdl = new CountDownLatch(1);
         RepositoryUpdater.getDefault().stop(() -> {
@@ -357,19 +442,12 @@ public class RefactoringTestBase extends NbTestCase {
         });
         cdl.await();
         prj = null;
+        projectImpl2Desc.clear();
     }
 
-    private void prepareTest() throws Exception {
-        FileObject workdir = SourceUtilsTestUtil.makeScratchDir(this);
-
-        FileObject projectFolder = FileUtil.createFolder(workdir, "testProject");
-        src = FileUtil.createFolder(projectFolder, "src");
-        test = FileUtil.createFolder(projectFolder, "test");
-
-            FileObject cache = FileUtil.createFolder(workdir, "cache");
-
-            CacheFolder.setCacheFolder(cache);
-        }
+    public FileObject getSource(ProjectDesc desc) {
+        return projectDesc2Impl.get(desc).src();
+    }
 
     @ServiceProvider(service=MimeDataProvider.class)
     public static final class MimeDataProviderImpl implements MimeDataProvider {
@@ -417,4 +495,10 @@ public class RefactoringTestBase extends NbTestCase {
         throw exc;
     }
 
+    protected List<ProjectDesc> projects() {
+        return List.of(new ProjectDesc("testProject"));
+    }
+
+    protected record ProjectDesc(String name, ProjectDesc... dependencies) {}
+    private record ProjectImpl(FileObject prjDir, FileObject src, FileObject test, FileObject output, ClassPath sourcePath, ClassPath compilePath) {}
 }

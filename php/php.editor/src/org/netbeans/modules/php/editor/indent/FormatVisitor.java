@@ -1098,6 +1098,7 @@ public class FormatVisitor extends DefaultVisitor {
 
         formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_KEY_VALUE_OP, ts.offset() + ts.token().length()));
         formatTokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+        //todo implement a minimum space arround pipe operator (|>trim())
         scan(node.getRight());
     }
     

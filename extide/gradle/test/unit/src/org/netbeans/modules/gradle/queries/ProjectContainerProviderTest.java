@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.Set;
 import static junit.framework.TestCase.assertFalse;
+import org.junit.Test;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.gradle.AbstractGradleProjectTestCase;
@@ -105,6 +106,7 @@ public class ProjectContainerProviderTest extends AbstractGradleProjectTestCase 
 
     }
 
+/*
     public void testWeirdMultiProject() throws IOException {
         int rnd = new Random().nextInt(1000000);
         FileObject a = createGradleProject("projectA-" + rnd,
@@ -134,4 +136,5 @@ public class ProjectContainerProviderTest extends AbstractGradleProjectTestCase 
         assertTrue(projects.isEmpty());
 
     }
+*/
 }

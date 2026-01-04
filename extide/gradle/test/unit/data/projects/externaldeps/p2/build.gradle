@@ -17,10 +17,13 @@
  * under the License.
  */
 
-apply plugin: 'java'
-apply plugin: 'application'
+plugins {
+    id 'application'
+}
 
-mainClassName = 'test.App2'
+application {
+    mainClass = 'test.App2'
+}
 
 jar.dependsOn(':p1:jar')
 

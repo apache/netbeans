@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.netbeans.modules.gradle.api.BuildPropertiesSupport;
@@ -98,10 +99,10 @@ public class ExtensionPropertiesExtractor implements ProjectInfoExtractor {
 
         public PropertyEvaluator(Map<String, String> propertyMap, Map<String, String> propertyTypes,
                         Map<String, String> taskPropertyMap, Map<String, String> taskPropertyTypes) {
-            this.propertyMap = propertyMap;
-            this.propertyTypes = propertyTypes;
-            this.taskPropertyMap = taskPropertyMap;
-            this.taskPropertyTypes = taskPropertyTypes;
+            this.propertyMap = new TreeMap<>(propertyMap);
+            this.propertyTypes = new TreeMap<>(propertyTypes);
+            this.taskPropertyMap = new TreeMap<>(taskPropertyMap);
+            this.taskPropertyTypes = new TreeMap<>(taskPropertyTypes);
         }
 
         @Override

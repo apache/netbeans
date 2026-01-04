@@ -110,7 +110,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.40</specification-version>
+                        <specification-version>2.49</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -372,6 +372,11 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.java.j2seplatform</code-name-base>
                         <recursive/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.gradle</code-name-base>
+                        <recursive/>
+                        <test/>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.project.dependency</code-name-base>

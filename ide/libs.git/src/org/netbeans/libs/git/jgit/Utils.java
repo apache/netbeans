@@ -287,7 +287,7 @@ public final class Utils {
         } catch (RevisionSyntaxException ex) {
             throw new GitException.MissingObjectException(objectId, GitObjectType.COMMIT, ex);
         } catch (AmbiguousObjectException ex) {
-            throw new GitException(MessageFormat.format(Utils.getBundle(Utils.class).getString("MSG_Exception_IdNotACommit"), objectId), ex); //NOI18N
+            throw new GitException(MessageFormat.format(Utils.getBundle(Utils.class).getString("MSG_Exception_IdAmbiguous"), objectId), ex); //NOI18N
         } catch (IOException ex) {
             throw new GitException(ex);
         }

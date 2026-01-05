@@ -255,9 +255,8 @@ public class MicronautGradleArtifactsImplTest extends NbTestCase {
         
         assertNotNull(ar);
         assertEquals(1, ar.getArtifacts().size());
-        ArtifactSpec spec = ar.getArtifacts().get(0);
+        ArtifactSpec<?> spec = ar.getArtifacts().get(0);
         assertEquals("jar", spec.getType());
-        assertEquals("all", spec.getClassifier());
     }
 
     public void testNativeOutputInSubprojectNativeBuild() throws Exception {

@@ -153,14 +153,14 @@ public class DependencyModifierImplTest extends NbTestCase {
     }
     
     public void testDependencyConflict() throws Exception {
-        Project p = makeProject("projects/micronaut");
-        assertDependencyAddFails("Versionless artifacts should cause conflict", ArtifactSpec.make("io.micronaut", "micronaut-http-client"));
-        assertDependencyAddFails("Versioned artifact added on top of versionless should cause conflict", ArtifactSpec.make("io.micronaut", "micronaut-http-client", "1.0"));
+        makeProject("projects/micronaut");
+        assertDependencyAddFails("Versionless artifacts should cause conflict", ArtifactSpec.make("io.micronaut", "micronaut-http-client-jdk"));
+        assertDependencyAddFails("Versioned artifact added on top of versionless should cause conflict", ArtifactSpec.make("io.micronaut", "micronaut-http-client-jdk", "1.0"));
         assertDependencyAddFails("Versionless artifact added on top of versioned should conflict", ArtifactSpec.make("org.apache.logging.log4j", "log4j-core"));
         assertDependencyAddFails("Different versions should conflict", ArtifactSpec.make("org.apache.logging.log4j", "log4j-core", "2.17.1"));
     }
     
-    private void assertNoChange(String reason, ArtifactSpec spec) throws Exception {
+    private void assertNoChange(String reason, ArtifactSpec<?> spec) throws Exception {
         Dependency toAdd = Dependency.make(spec, Scopes.COMPILE);
         DependencyChange change = DependencyChange.builder(DependencyChange.Kind.ADD).
                 dependency(toAdd).
@@ -173,7 +173,7 @@ public class DependencyModifierImplTest extends NbTestCase {
     
     public void testMatchingDependencySkips() throws Exception {
         makeProject("projects/micronaut");
-        assertNoChange("Exactly matching artifact should be no-op", ArtifactSpec.make("io.micronaut", "micronaut-http-client"));
+        assertNoChange("Exactly matching artifact should be no-op", ArtifactSpec.make("io.micronaut", "micronaut-http-client-jdk"));
     }
     
     public void testAddUnknownScopeFails() throws Exception {
@@ -223,7 +223,7 @@ public class DependencyModifierImplTest extends NbTestCase {
     
     public void testAddGenericCompilation() throws Exception {
         Project p = makeProject("projects/micronaut");
-        ArtifactSpec art = ArtifactSpec.make("io.micronaut", "micronaut-http-client2");
+        ArtifactSpec<?> art = ArtifactSpec.make("io.micronaut", "micronaut-http-client2");
         Dependency toAdd = Dependency.make(art, Scopes.COMPILE);
         DependencyChange change = DependencyChange.builder(DependencyChange.Kind.ADD).
                 dependency(toAdd).
@@ -288,7 +288,7 @@ public class DependencyModifierImplTest extends NbTestCase {
         assertTrue("Should successfuly load the project", gp.getQuality().atLeast(NbGradleProject.Quality.FULL));
     }
     
-    private void assertContainsArtifacts(boolean shouldContainDirect, String configuration, ArtifactSpec... artifacts) throws Exception {
+    private void assertContainsArtifacts(boolean shouldContainDirect, String configuration, ArtifactSpec<?>... artifacts) throws Exception {
         Project p = this.project;
         List<String> artifactIds = Arrays.asList(artifacts).stream().map(a -> a.getGroupId() + ":" + a.getArtifactId()).collect(Collectors.toList());
         List<String> matches = new ArrayList<>(artifactIds);
@@ -324,7 +324,7 @@ public class DependencyModifierImplTest extends NbTestCase {
         }
     }
     
-    private void assertContainsDependency(boolean containsInScope, Scope scope, ArtifactSpec... artifacts) throws Exception {
+    private void assertContainsDependency(boolean containsInScope, Scope scope, ArtifactSpec<?>... artifacts) throws Exception {
         Project p = this.project;
         List<String> artifactIds = Arrays.asList(artifacts).stream().map(a -> a.getGroupId() + ":" + a.getArtifactId()).collect(Collectors.toList());
         List<String> matches = new ArrayList<>(artifactIds);
@@ -355,7 +355,7 @@ public class DependencyModifierImplTest extends NbTestCase {
     }
     
     void assertAddRouterValid() throws Exception {
-        ArtifactSpec art = ArtifactSpec.make("io.micronaut", "micronaut-tracing");
+        ArtifactSpec<?> art = ArtifactSpec.make("io.micronaut.tracing", "micronaut-tracing-opentelemetry");
         Dependency toAdd = Dependency.make(art, Scopes.COMPILE);
         DependencyChange change = DependencyChange.builder(DependencyChange.Kind.ADD).
                 dependency(toAdd).
@@ -380,8 +380,8 @@ public class DependencyModifierImplTest extends NbTestCase {
     
     public void testInsertMultipleDependencies() throws Exception {
         makeProject("projects/micronaut", "build2.gradle");
-        ArtifactSpec art = ArtifactSpec.make("io.micronaut", "micronaut-messaging");
-        ArtifactSpec art2 = ArtifactSpec.make("io.micronaut", "micronaut-tracing");
+        ArtifactSpec<?> art = ArtifactSpec.make("io.micronaut", "micronaut-messaging");
+        ArtifactSpec<?> art2 = ArtifactSpec.make("io.micronaut.tracing", "micronaut-tracing-opentelemetry");
         Dependency toAdd = Dependency.make(art, Scopes.RUNTIME);
         Dependency toAdd2 = Dependency.make(art2, Scopes.RUNTIME);
         
@@ -400,7 +400,7 @@ public class DependencyModifierImplTest extends NbTestCase {
     
     public void testAddAnnotationProcessor() throws Exception {
         makeProject("projects/micronaut", "build2.gradle");
-        ArtifactSpec art = ArtifactSpec.make("io.micronaut.data", "micronaut-data-processor");
+        ArtifactSpec<?> art = ArtifactSpec.make("io.micronaut.data", "micronaut-data-processor");
         Dependency toAdd = Dependency.make(art, Scopes.PROCESS);
         DependencyChange change = DependencyChange.builder(DependencyChange.Kind.ADD).
                 dependency(toAdd).

@@ -102,12 +102,21 @@ public final class RemoteServices {
 
         try {
             if (classOption != null) {
-                //target has support for defineHiddenClass:
-                ReferenceType lookup = vm.classesByName("java.lang.invoke.MethodHandles$Lookup").get(0);
+                //target has support for MethodHandles.Lookup.defineHiddenClass:
+                ClassType lookup = getClass(vm, "java.lang.invoke.MethodHandles$Lookup");
                 ObjectReference nestmate = (ObjectReference) classOption.reflectedType().getValue(classOption.reflectedType().fieldByName("NESTMATE"));
-                Field allMightyLookup = lookup.fieldByName("IMPL_LOOKUP");
-                Method inMethod = lookup.methodsByName("in", "(Ljava/lang/Class;)Ljava/lang/invoke/MethodHandles$Lookup;").get(0);
-                ObjectReference allPowerContextLookup = ((ObjectReference) ((ObjectReference) lookup.getValue(allMightyLookup)).invokeMethod(tr, inMethod, List.of(context), ObjectReference.INVOKE_SINGLE_THREADED));
+                //need to get all powers lookup for the context class:
+                ObjectReference allPowerContextLookup;
+                if (false) {
+                    //use Lookup.IMPL_LOOKUP:
+                    Field allMightyLookup = lookup.fieldByName("IMPL_LOOKUP");
+                    Method inMethod = lookup.methodsByName("in", "(Ljava/lang/Class;)Ljava/lang/invoke/MethodHandles$Lookup;").get(0);
+                    allPowerContextLookup = ((ObjectReference) ((ObjectReference) lookup.getValue(allMightyLookup)).invokeMethod(tr, inMethod, List.of(context), ObjectReference.INVOKE_SINGLE_THREADED));
+                } else {
+                    //use Lookup(Class):
+                    Method lookupConstructor = lookup.methodsByName("<init>", "(Ljava/lang/Class;)V").get(0);
+                    allPowerContextLookup = (ObjectReference) lookup.newInstance(tr, lookupConstructor, List.of(context), ObjectReference.INVOKE_SINGLE_THREADED);
+                }
                 Method defineHiddenClass = lookup.methodsByName("defineHiddenClass", "([BZ[Ljava/lang/invoke/MethodHandles$Lookup$ClassOption;)Ljava/lang/invoke/MethodHandles$Lookup;").get(0);
                 ArrayReference byteArray = createTargetBytes(vm, rc.bytes, new ByteValue[256], reenableCollection);
                 ArrayType classOptionsArrayClass = getArrayClass(vm, "java.lang.invoke.MethodHandles$Lookup$ClassOption[]");

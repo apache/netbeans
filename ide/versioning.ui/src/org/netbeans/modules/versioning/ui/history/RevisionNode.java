@@ -154,7 +154,12 @@ class RevisionNode extends AbstractNode implements Comparable {
             return -1;
         }
         RevisionNode node = (RevisionNode) obj;
-        return entry.getDateTime().compareTo(node.entry.getDateTime());
+
+        if (entry.isLocalHistory() || node.entry.isLocalHistory()) {
+            return entry.getDateTime().compareTo(node.entry.getDateTime());
+        } else {
+            return Integer.compare(entry.getPos(), node.entry.getPos());
+        }
     }
     
     class MessageProperty extends PropertySupport.ReadOnly<TableEntry> {

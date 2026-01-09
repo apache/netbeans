@@ -655,7 +655,7 @@ public class HistoryDiffView implements PropertyChangeListener {
 
         synchronized void schedule() {          
             task = History.getInstance().getRequestProcessor().create(this);
-            task.schedule(500);        
+            task.schedule(200);        
         }
         
         protected synchronized boolean isCancelled() {

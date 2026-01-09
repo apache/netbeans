@@ -241,11 +241,13 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
                     if(vcsHistory == null || vcsHistory.length == 0) {
                         return;
                     }                
-                    List<HistoryEntry> entries = new ArrayList<HistoryEntry>(vcsHistory.length);
+                    List<HistoryEntry> entries = new ArrayList<>(vcsHistory.length);
+                    
+                    int pos = vcsHistory.length - 1;
                     for (VCSHistoryProvider.HistoryEntry he : vcsHistory) {
-                        entries.add(new HistoryEntry(he, false));
+                        entries.add(HistoryEntry.createVCSEntry(he, pos--));
                     }
-                    rootNode.addVCSEntries(entries.toArray(new HistoryEntry[0]), 0);
+                    rootNode.addVCSEntries(entries.toArray(HistoryEntry[]::new), 0);
                 } finally {
                     rootNode.loadingVCSFinished(currentDateFrom);
                     EventQueue.invokeLater(new Runnable() {
@@ -579,7 +581,7 @@ class HistoryFileView implements PreferenceChangeListener, VCSHistoryProvider.Hi
         VCSHistoryProvider.HistoryEntry[] vcsHistory = hp.getHistory(files, null);
         HistoryEntry[] history = new HistoryEntry[vcsHistory.length];
         for (int i = 0; i < vcsHistory.length; i++) {
-            history[i] = new HistoryEntry(vcsHistory[i], true);
+            history[i] = HistoryEntry.createLocalEntry(vcsHistory[i]);
         }
         return history;
     }

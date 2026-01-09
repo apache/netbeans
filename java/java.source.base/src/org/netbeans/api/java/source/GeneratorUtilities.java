@@ -1547,6 +1547,7 @@ public final class GeneratorUtilities {
             TokenSequence<JavaTokenId> seq = tokens.tokenSequence(JavaTokenId.language());
             TreePath tp = TreePath.getPath(cut, original);
             Tree toMap = original;
+            TreePath toMapPath = tp;
             Tree mapTarget = null;
             
             if (tp != null && original.getKind() != Kind.COMPILATION_UNIT) {
@@ -1579,17 +1580,33 @@ public final class GeneratorUtilities {
                 }
                 if (p2 != null) {
                     toMap = p2.getLeaf();
+                    toMapPath = p2;
                 }
                 if (toMap == tp.getLeaf()) {
                     // go at least one level up in a hope it's sufficient.
                     toMap = tp.getParentPath().getLeaf();
+                    toMapPath = tp.getParentPath();
                 }
             }
             if (mapTarget == null) {
                 mapTarget = original;
             }
+
             AssignComments translator = new AssignComments(info, mapTarget, seq, unit);
-            
+
+            if (toMapPath != null &&
+                toMapPath.getParentPath() != null &&
+                TreeUtilities.CLASS_TREE_KINDS.contains(toMapPath.getParentPath().getLeaf().getKind())) {
+                //run the mapping the preceding member, so that its trailing comments are properly consumed:
+                ClassTree enclClass = (ClassTree) toMapPath.getParentPath().getLeaf();
+                List<? extends Tree> members = enclClass.getMembers();
+                int currentIndex = members.indexOf(toMap);
+
+                if (currentIndex > 0) {
+                    translator.scan(members.get(currentIndex - 1), null);
+                }
+            }
+
             translator.scan(toMap, null);
 
             return original;

@@ -68,7 +68,7 @@ public class HistoryProvider implements VCSHistoryProvider {
 
             List<HistoryEntry> ret = new LinkedList<HistoryEntry>();
             Map<String, Set<File>> rev2FileMap = new HashMap<String, Set<File>>();
-            Map<String, ISVNLogMessage> rev2LMMap = new HashMap<String, ISVNLogMessage>();
+            Map<String, ISVNLogMessage> rev2LMMap = new LinkedHashMap<>();
             Map<File, SVNUrl> file2Copy = new HashMap<File, SVNUrl>();
             SVNUrl repoUrl = null;
             for (File file : files) {
@@ -136,7 +136,7 @@ public class HistoryProvider implements VCSHistoryProvider {
                 ret.add(e);
                 
             }
-
+            Collections.reverse(ret);
             return ret.toArray(new HistoryEntry[0]);
         } catch (SVNClientException e) {
             if (SvnClientExceptionHandler.isCancelledAction(e.getMessage())) {

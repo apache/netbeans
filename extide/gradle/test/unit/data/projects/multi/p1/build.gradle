@@ -16,11 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+plugins {
+    id 'application'
+}
 
-apply plugin: 'java'
-apply plugin: 'application'
-
-mainClassName = 'test.App'
+application {
+    mainClass = 'test.App'
+}
 
 group = 'nbtest'
 version = '0.1'

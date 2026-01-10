@@ -187,6 +187,9 @@ public class LanguageStorage {
                         if (description.name != null) {
                             langServer.setAttribute("name", description.name);
                         }
+                        if (description.languageId != null && !description.languageId.isBlank()) {
+                            langServer.setAttribute("languageId", description.languageId);
+                        }
                     }
 
                     deleteConfigFileIfExists("Editors/" + description.mimeType + "/generic-breakpoints.instance");
@@ -282,6 +285,7 @@ public class LanguageStorage {
         public String icon;
         public String mimeType;
         public boolean debugger;
+        public String languageId;
 
         public LanguageDescription() {
             this.id = null;
@@ -292,9 +296,10 @@ public class LanguageStorage {
             this.icon = null;
             this.debugger = false;
             this.mimeType = null;
+            this.languageId = null;
         }
 
-        public LanguageDescription(String id, String extensions, String syntaxGrammar, String languageServer, String name, String icon, boolean debugger) {
+        public LanguageDescription(String id, String extensions, String syntaxGrammar, String languageServer, String name, String icon, boolean debugger, String languageId) {
             this.id = id;
             this.extensions = extensions;
             this.syntaxGrammar = syntaxGrammar;
@@ -303,6 +308,7 @@ public class LanguageStorage {
             this.icon = icon;
             this.debugger = debugger;
             this.mimeType = "text/x-ext-" + id;
+            this.languageId = languageId;
         }
 
     }

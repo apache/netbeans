@@ -25,6 +25,7 @@ import java.io.Reader;
 import org.netbeans.api.io.InputOutput;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.lsp.client.spi.LanguageIdResolver;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
@@ -35,6 +36,7 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -57,6 +59,7 @@ public class GenericLanguageServer implements LanguageServerProvider {
         FileObject server = FileUtil.getConfigFile("Editors/" + mti.mimeType + "/org-netbeans-modules-lsp-client-options-GenericLanguageServer.instance");
         String[] command = (String[]) server.getAttribute("command");
         String name = (String) server.getAttribute("name");
+        String languageId = (String) server.getAttribute("languageId");
 
         if (name == null) {
             name = command[0];
@@ -130,7 +133,16 @@ public class GenericLanguageServer implements LanguageServerProvider {
                     io.show();
                 }
             });
-            return LanguageServerDescription.create(process.getInputStream(), process.getOutputStream(), process);
+            Lookup serverLookup = null;
+            if(languageId != null && ! languageId.isBlank()) {
+                serverLookup = Lookups.fixed(new LanguageIdResolver() {
+                    @Override
+                    public String resolveLanguageId(FileObject fileObject) {
+                        return languageId;
+                    }
+                });
+            }
+            return LanguageServerDescription.create(process.getInputStream(), process.getOutputStream(), process, serverLookup);
         } catch (Throwable t) {
             t.printStackTrace(); //TODO
             return null;

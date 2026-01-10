@@ -315,14 +315,13 @@ public class TextDocumentSyncServerCapabilityHandler {
                 }
             });
 
-            // @todo: the mimetype is not the language ID
-            TextDocumentItem textDocumentItem = new TextDocumentItem(uri,
-                                                                     FileUtil.getMIMEType(file),
-                                                                     0,
-                                                                     text[0]);
 
             for (LSPBindings server : servers) {
                 if (server.getOpenedFiles().add(file)) {
+                    TextDocumentItem textDocumentItem = new TextDocumentItem(uri,
+                                                                             server.resolveLanguageId(file),
+                                                                             0,
+                                                                             text[0]);
                     server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(textDocumentItem));
                 }
             }

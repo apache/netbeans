@@ -18,17 +18,20 @@
  */
 package org.netbeans.modules.lsp.client.options;
 
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.io.File;
 import java.util.Locale;
 import java.util.Set;
-import javax.swing.GroupLayout;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
 import javax.swing.filechooser.FileFilter;
 import org.netbeans.modules.lsp.client.options.LanguageStorage.LanguageDescription;
 import org.openide.awt.Mnemonics;
@@ -63,11 +66,21 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
             this.name.setText(desc.name);
             this.icon.setText(desc.icon);
             this.debugger.setSelected(desc.debugger);
+            this.languageId.setText(desc.languageId);
         }
     }
 
     public LanguageDescription getDescription() {
-        return new LanguageDescription(id, this.extensions.getText(), this.syntax.getText(), this.server.getText(), this.name.getText(), this.icon.getText(), this.debugger.isSelected());
+        return new LanguageDescription(
+                id,
+                this.extensions.getText(),
+                this.syntax.getText(),
+                this.server.getText(),
+                this.name.getText(),
+                this.icon.getText(),
+                this.debugger.isSelected(),
+                this.languageId.getText()
+        );
     }
 
     /**
@@ -78,6 +91,7 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        GridBagConstraints gridBagConstraints;
 
         JLabel nameLabel = new JLabel();
         JLabel extensionsLabel = new JLabel();
@@ -95,119 +109,188 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
         icon = new JTextField();
         JButton browseIcon = new JButton();
         debugger = new JCheckBox();
+        languageIdLabel = new JLabel();
+        languageId = new JTextField();
+        filler1 = new Box.Filler(new Dimension(0, 0), new Dimension(0, 0), new Dimension(0, 32767));
+
+        setLayout(new GridBagLayout());
 
         nameLabel.setLabelFor(name);
         Mnemonics.setLocalizedText(nameLabel, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.nameLabel.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(nameLabel, gridBagConstraints);
 
         extensionsLabel.setLabelFor(extensions);
         Mnemonics.setLocalizedText(extensionsLabel, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.extensionsLabel.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 32;
+        gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(extensionsLabel, gridBagConstraints);
 
         grammarLabel.setLabelFor(syntax);
         Mnemonics.setLocalizedText(grammarLabel, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.grammarLabel.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(grammarLabel, gridBagConstraints);
 
         serverLabel.setLabelFor(server);
         Mnemonics.setLocalizedText(serverLabel, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.serverLabel.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(serverLabel, gridBagConstraints);
 
+        name.setColumns(40);
         name.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.name.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(name, gridBagConstraints);
 
+        extensions.setColumns(40);
         extensions.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.extensions.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(extensions, gridBagConstraints);
 
+        syntax.setColumns(40);
         syntax.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.syntax.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(syntax, gridBagConstraints);
 
+        server.setColumns(40);
         server.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.server.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(server, gridBagConstraints);
 
         Mnemonics.setLocalizedText(browseGrammar, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.browseGrammar.text")); // NOI18N
         browseGrammar.addActionListener(this::browseGrammarActionPerformed);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(browseGrammar, gridBagConstraints);
 
         Mnemonics.setLocalizedText(browseServer, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.browseServer.text")); // NOI18N
         browseServer.addActionListener(this::browseServerActionPerformed);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(browseServer, gridBagConstraints);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(extraOptionsSeparator, gridBagConstraints);
 
         Mnemonics.setLocalizedText(optionalParams, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.optionalParams.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(optionalParams, gridBagConstraints);
 
         iconLabel.setLabelFor(icon);
         Mnemonics.setLocalizedText(iconLabel, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.iconLabel.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(iconLabel, gridBagConstraints);
 
+        icon.setColumns(40);
         icon.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.icon.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(icon, gridBagConstraints);
 
         Mnemonics.setLocalizedText(browseIcon, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.browseIcon.text")); // NOI18N
         browseIcon.addActionListener(this::browseIconActionPerformed);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(browseIcon, gridBagConstraints);
 
         Mnemonics.setLocalizedText(debugger, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.debugger.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(debugger, gridBagConstraints);
 
-        GroupLayout layout = new GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(optionalParams)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(extraOptionsSeparator))
-                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(nameLabel)
-                            .addComponent(iconLabel))
-                        .addGap(68, 68, 68)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                            .addComponent(icon, GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE)
-                            .addComponent(name))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(browseIcon))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(grammarLabel)
-                            .addComponent(serverLabel)
-                            .addComponent(extensionsLabel, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(extensions)
-                            .addComponent(server)
-                            .addComponent(syntax))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(browseGrammar, GroupLayout.Alignment.TRAILING)
-                            .addComponent(browseServer, GroupLayout.Alignment.TRAILING)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(debugger)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(extensionsLabel)
-                    .addComponent(extensions, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(grammarLabel)
-                    .addComponent(syntax, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(browseGrammar))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(server, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(serverLabel)
-                    .addComponent(browseServer))
-                .addGap(18, 18, 18)
-                .addComponent(debugger)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(optionalParams)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addComponent(extraOptionsSeparator, GroupLayout.PREFERRED_SIZE, 11, GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameLabel)
-                    .addComponent(name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(icon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(iconLabel)
-                    .addComponent(browseIcon))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        Mnemonics.setLocalizedText(languageIdLabel, NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.languageIdLabel.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(languageIdLabel, gridBagConstraints);
+
+        languageId.setColumns(40);
+        languageId.setText(NbBundle.getMessage(LanguageDescriptionPanel.class, "LanguageDescriptionPanel.languageId.text")); // NOI18N
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new Insets(5, 5, 5, 5);
+        add(languageId, gridBagConstraints);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 8;
+        gridBagConstraints.weighty = 1.0;
+        add(filler1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     @Messages("DESC_JSONFilter=Grammars (.json, .xml, .tmLanguage)")
@@ -271,7 +354,10 @@ public class LanguageDescriptionPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JCheckBox debugger;
     private JTextField extensions;
+    private Box.Filler filler1;
     private JTextField icon;
+    private JTextField languageId;
+    private JLabel languageIdLabel;
     private JTextField name;
     private JTextField server;
     private JTextField syntax;

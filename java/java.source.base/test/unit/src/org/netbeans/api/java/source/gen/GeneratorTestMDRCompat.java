@@ -43,6 +43,7 @@ import org.netbeans.modules.java.source.ClassIndexTestCase;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.save.Reindenter;
 import org.netbeans.modules.java.source.usages.IndexUtil;
+import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.java.queries.SourceLevelQueryImplementation;
@@ -85,7 +86,7 @@ public abstract class GeneratorTestMDRCompat extends ClassIndexTestCase {
                 return GeneratorTestMDRCompat.this.getSourceLevel();
             }
         };
-        SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/source/resources/layer.xml"}, new Object[] {loader, cpp, slq});
+        SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/source/resources/layer.xml", "META-INF/generated-layer.xml", "org/netbeans/lib/java/lexer/layer.xml"}, new Object[] {loader, cpp, slq});
         MockMimeLookup.setInstances(MimePath.get("text/x-java"), new Reindenter.Factory());
         
         TestUtil.setupEditorMockServices();
@@ -163,9 +164,17 @@ public abstract class GeneratorTestMDRCompat extends ClassIndexTestCase {
     }
     
     static JavaSource getJavaSource(File aFile) throws IOException {
+        return JavaSource.forFileObject(toFileObject(aFile));
+    }
+
+    static Source getSource(File aFile) throws IOException {
+        return Source.create(toFileObject(aFile));
+    }
+
+    private static FileObject toFileObject(File aFile) {
         FileObject testSourceFO = FileUtil.toFileObject(aFile);
         assertNotNull(testSourceFO);
-        return JavaSource.forFileObject(testSourceFO);
+        return testSourceFO;
     }
 
     File getTestFile() {

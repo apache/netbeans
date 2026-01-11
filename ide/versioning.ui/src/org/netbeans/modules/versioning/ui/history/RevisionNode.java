@@ -41,15 +41,16 @@ import org.openide.util.lookup.Lookups;
  * @author Tomas Stupka
  *
  */
+@SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
 class RevisionNode extends AbstractNode implements Comparable {
     
     static final String PROPERTY_NAME_LABEL = "label";                          // NOI18N        
     static final String PROPERTY_NAME_USER = "user";                            // NOI18N        
     static final String PROPERTY_NAME_VERSION = "version";                      // NOI18N                       
 
-    private HistoryEntry entry; 
-    private static DateFormat dateFormat = DateFormat.getDateTimeInstance();                      
-    private static DateFormat timeFormat = DateFormat.getTimeInstance();
+    private final HistoryEntry entry; 
+    private static final DateFormat dateFormat = DateFormat.getDateTimeInstance();                      
+    private static final DateFormat timeFormat = DateFormat.getTimeInstance();
 
     private RevisionNode(HistoryEntry entry, Lookup l) {                
         super(createChildren(entry), l);                        
@@ -58,7 +59,7 @@ class RevisionNode extends AbstractNode implements Comparable {
     }        
          
     static RevisionNode create(HistoryEntry entry) {
-        List<Object> lookup = new LinkedList<Object>();
+        List<Object> lookup = new LinkedList<>();
         VCSFileProxy[] proxies = entry.getFiles();
         for (VCSFileProxy proxy : proxies) {
             lookup.add(proxy);
@@ -69,7 +70,7 @@ class RevisionNode extends AbstractNode implements Comparable {
         }
         lookup.addAll(Arrays.asList(entry.getLookupObjects()));
         lookup.add(entry);
-        return new RevisionNode(entry, Lookups.fixed(lookup.toArray(new Object[0])));
+        return new RevisionNode(entry, Lookups.fixed(lookup.toArray(Object[]::new)));
     }
     
     private static Children createChildren(HistoryEntry entry) {
@@ -116,11 +117,11 @@ class RevisionNode extends AbstractNode implements Comparable {
     
     static String getFormatedDate(HistoryEntry se)  {
         int day = getDay(se.getDateTime().getTime());
-        switch(day) {
-            case 0:  return NbBundle.getMessage(RevisionNode.class, "LBL_Today", new Object[] {timeFormat.format(se.getDateTime())});   
-            case 1:  return NbBundle.getMessage(RevisionNode.class, "LBL_Yesterday", new Object[] {timeFormat.format(se.getDateTime())});
-            default: return dateFormat.format(se.getDateTime());
-        }
+        return switch (day) {
+            case 0 -> NbBundle.getMessage(RevisionNode.class, "LBL_Today", new Object[] {timeFormat.format(se.getDateTime())});
+            case 1 -> NbBundle.getMessage(RevisionNode.class, "LBL_Yesterday", new Object[] {timeFormat.format(se.getDateTime())});
+            default -> dateFormat.format(se.getDateTime());
+        };
     }
     
     private static int getDay(long ts) {
@@ -163,7 +164,7 @@ class RevisionNode extends AbstractNode implements Comparable {
     }
     
     class MessageProperty extends PropertySupport.ReadOnly<TableEntry> {
-        private TableEntry te;
+        private final TableEntry te;
         public MessageProperty() {
             super(PROPERTY_NAME_LABEL, TableEntry.class, NbBundle.getMessage(RevisionNode.class, "LBL_LabelProperty_Name"), NbBundle.getMessage(RevisionNode.class, "LBL_LabelProperty_Desc"));
             te = new TableEntry() {
@@ -242,7 +243,7 @@ class RevisionNode extends AbstractNode implements Comparable {
             @Override
             public String getTooltip() {
                 String tooltip = entry.getMessage();
-                if(tooltip == null || "".equals(tooltip.trim())) {                       // NOI18N
+                if(tooltip == null || tooltip.isBlank()) {
                     tooltip = NbBundle.getMessage(RevisionNode.class, "LBL_SetTooltip"); // NOI18N
                 }
                 return tooltip;
@@ -280,7 +281,7 @@ class RevisionNode extends AbstractNode implements Comparable {
     }                      
     
     class UserProperty extends PropertySupport.ReadOnly<TableEntry> {
-        private TableEntry te;
+        private final TableEntry te;
         public UserProperty() {
             super(PROPERTY_NAME_USER, TableEntry.class, NbBundle.getMessage(RevisionNode.class, "LBL_UserProperty_Name"), NbBundle.getMessage(RevisionNode.class, "LBL_UserProperty_Desc"));
             te = new UserEntry(entry);            
@@ -374,8 +375,8 @@ class RevisionNode extends AbstractNode implements Comparable {
                 Integer i1;
                 Integer i2;
                 try {
-                    i1 = Integer.parseInt(getDisplayValue());
-                    i2 = Integer.parseInt(e.getDisplayValue());
+                    i1 = Integer.valueOf(getDisplayValue());
+                    i2 = Integer.valueOf(e.getDisplayValue());
                     return i1.compareTo(i2);
                 } catch (NumberFormatException ex) {}
                 return super.compareTo(e);
@@ -418,7 +419,7 @@ class RevisionNode extends AbstractNode implements Comparable {
         }
     
         private static Lookup createLookup(VCSFileProxy proxy, HistoryEntry entry) {
-            List<Object> lookup = new LinkedList<Object>();
+            List<Object> lookup = new LinkedList<>();
             lookup.add(proxy);
             File f = proxy.toFile();
             if(f != null) {
@@ -426,7 +427,7 @@ class RevisionNode extends AbstractNode implements Comparable {
             }
             lookup.add(entry);
             lookup.addAll(Arrays.asList(entry.getLookupObjects()));
-            return Lookups.fixed(lookup.toArray(new Object[0]));
+            return Lookups.fixed(lookup.toArray(Object[]::new));
         }        
     
         @Override

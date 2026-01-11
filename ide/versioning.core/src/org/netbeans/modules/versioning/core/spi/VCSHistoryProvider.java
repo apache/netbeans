@@ -83,17 +83,18 @@ public interface VCSHistoryProvider {
      * </table>
      */
     public static final class HistoryEntry {
-        private Date dateTime;
+
+        private final Date dateTime;
         private String message;
-        private VCSFileProxy[] files;
-        private String usernameShort;
-        private String username;
-        private String revisionShort;
-        private String revision;
-        private Action[] actions;
-        private RevisionProvider revisionProvider;
-        private MessageEditProvider mep;
-        private ParentProvider parentProvider;        
+        private final VCSFileProxy[] files;
+        private final String usernameShort;
+        private final String username;
+        private final String revisionShort;
+        private final String revision;
+        private final Action[] actions;
+        private final RevisionProvider revisionProvider;
+        private final MessageEditProvider mep;
+        private final ParentProvider parentProvider;        
         
         /**
          * Creates a new HistoryEntry instance.
@@ -107,8 +108,9 @@ public interface VCSHistoryProvider {
          * @param revisionShort short description of the versioning revision
          * @param actions actions which might be called in regard with this revision
          * @param revisionProvider a RevisionProvider to get access to a files contents in this revision
-         *
-         * @since 1.26
+         * @param messageEditProvider a MessageEditProvider to change a revisions message
+         * @param parentProvider a ParentProvider to provide this entries parent entry. Not necessary for VCS
+         * where a revisions parent always is the time nearest previous revision.
          */
         public HistoryEntry(
                 VCSFileProxy[] files, 
@@ -119,7 +121,9 @@ public interface VCSHistoryProvider {
                 String revision, 
                 String revisionShort, 
                 Action[] actions, 
-                RevisionProvider revisionProvider) 
+                RevisionProvider revisionProvider,
+                MessageEditProvider messageEditProvider,
+                ParentProvider parentProvider) 
         {
             assert files != null && files.length > 0 : "a history entry must have at least one file"; // NOI18N
             assert revision != null && revision != null : "a history entry must have a revision";     // NOI18N
@@ -135,6 +139,8 @@ public interface VCSHistoryProvider {
             this.revisionShort = revisionShort;
             this.actions = actions;
             this.revisionProvider = revisionProvider;
+            this.mep = messageEditProvider;
+            this.parentProvider = parentProvider;
         }
         
         /**
@@ -163,8 +169,7 @@ public interface VCSHistoryProvider {
                 RevisionProvider revisionProvider,
                 MessageEditProvider messageEditProvider) 
         {
-            this(files, dateTime, message, username, usernameShort, revision, revisionShort, actions, revisionProvider);
-            this.mep = messageEditProvider;
+            this(files, dateTime, message, username, usernameShort, revision, revisionShort, actions, revisionProvider, messageEditProvider, null);
         }        
         
        /**
@@ -179,10 +184,8 @@ public interface VCSHistoryProvider {
          * @param revisionShort short description of the versioning revision
          * @param actions actions which might be called in regard with this revision
          * @param revisionProvider a RevisionProvider to get access to a files contents in this revision
-         * @param messageEditProvider a MessageEditProvider to change a revisions message
-         * @param parentProvider a ParentProvider to provide this entries parent entry. Not necessary for VCS
-         * where a revisions parent always is the time nearest previous revision.
-         * 
+         *
+         * @since 1.26
          */
         public HistoryEntry(
                 VCSFileProxy[] files, 
@@ -193,12 +196,9 @@ public interface VCSHistoryProvider {
                 String revision, 
                 String revisionShort, 
                 Action[] actions, 
-                RevisionProvider revisionProvider,
-                MessageEditProvider messageEditProvider,
-                ParentProvider parentProvider) 
+                RevisionProvider revisionProvider) 
         {
-            this(files, dateTime, message, username, usernameShort, revision, revisionShort, actions, revisionProvider, messageEditProvider);
-            this.parentProvider = parentProvider;
+            this(files, dateTime, message, username, usernameShort, revision, revisionShort, actions, revisionProvider, null, null);
         }
         
        /**

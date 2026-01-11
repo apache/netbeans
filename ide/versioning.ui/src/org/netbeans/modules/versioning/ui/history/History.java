@@ -64,15 +64,13 @@ public class History {
      */
     public List<VCSHyperlinkProvider> getHyperlinkProviders() {
         if (hpResult == null) {
-            hpResult = (Lookup.Result<? extends VCSHyperlinkProvider>) Lookup.getDefault().lookupResult(VCSHyperlinkProvider.class);
+            hpResult = Lookup.getDefault().lookupResult(VCSHyperlinkProvider.class);
         }
         if (hpResult == null) {
             return Collections.emptyList();
         }
         Collection<? extends VCSHyperlinkProvider> providersCol = hpResult.allInstances();
-        List<VCSHyperlinkProvider> providersList = new ArrayList<VCSHyperlinkProvider>(providersCol.size());
-        providersList.addAll(providersCol);
-        return Collections.unmodifiableList(providersList);
+        return Collections.unmodifiableList(new ArrayList<>(providersCol));
     }
     
     VersioningSystem getLocalHistory(FileObject fo) {
@@ -94,14 +92,14 @@ public class History {
         if(files == null) {
             return new VCSFileProxy[0];
         }
-        List<VCSFileProxy> l = new ArrayList<VCSFileProxy>(files.length);
+        List<VCSFileProxy> l = new ArrayList<>(files.length);
         for (FileObject f : files) {
             VCSFileProxy proxy = VCSFileProxy.createFileProxy(f);
             if(proxy != null) {
                 l.add(proxy);
             }
         }
-        return l.toArray(new VCSFileProxy[0]);
+        return l.toArray(VCSFileProxy[]::new);
     }
 
 }

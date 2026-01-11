@@ -53,7 +53,7 @@ import org.openide.util.lookup.Lookups;
  */
 public class HistoryProvider implements VCSHistoryProvider {
     
-    private final List<VCSHistoryProvider.HistoryChangeListener> listeners = new LinkedList<VCSHistoryProvider.HistoryChangeListener>();
+    private final List<VCSHistoryProvider.HistoryChangeListener> listeners = new LinkedList<>();
     private static final Logger LOG = Logger.getLogger(HistoryProvider.class.getName());
     private Action[] actions;
 
@@ -80,9 +80,9 @@ public class HistoryProvider implements VCSHistoryProvider {
             return null;
         }
         
-        List<HistoryEntry> ret = new LinkedList<HistoryEntry>();
-        Map<String, Set<File>> rev2FileMap = new HashMap<String, Set<File>>();
-        Map<String, GitRevisionInfo> rev2LMMap = new LinkedHashMap<String, GitRevisionInfo>();
+        List<HistoryEntry> ret = new LinkedList<>();
+        Map<String, Set<File>> rev2FileMap = new HashMap<>();
+        Map<String, GitRevisionInfo> rev2LMMap = new LinkedHashMap<>();
             
         File repositoryRoot = repositories.iterator().next();
         for (File file : files) {
@@ -96,12 +96,8 @@ public class HistoryProvider implements VCSHistoryProvider {
                 for (GitRevisionInfo h : history) {
                     String r = h.getRevision();
                     rev2LMMap.put(r, h);
-                    Set<File> s = rev2FileMap.get(r);
-                    if(s == null) {
-                        s = new HashSet<File>();
-                        rev2FileMap.put(r, s);
-                    }
-                    s.add(file);
+                    rev2FileMap.computeIfAbsent(r, k -> new HashSet<File>())
+                               .add(file);
                 }
             } catch (GitException ex) {
                 LOG.log(Level.INFO, null, ex);
@@ -110,12 +106,12 @@ public class HistoryProvider implements VCSHistoryProvider {
 
         for (GitRevisionInfo h : rev2LMMap.values()) {
             Set<File> s = rev2FileMap.get(h.getRevision());
-            File[] involvedFiles = s.toArray(new File[0]);
+            File[] involvedFiles = s.toArray(File[]::new);
             
             HistoryEntry e = createHistoryEntry(h, involvedFiles, repositoryRoot);
             ret.add(e);
         }
-        return ret.toArray(new HistoryEntry[0]);
+        return ret.toArray(HistoryEntry[]::new);
     }
 
     private HistoryEntry createHistoryEntry (GitRevisionInfo h, File[] involvedFiles, File repositoryRoot) {
@@ -150,20 +146,17 @@ public class HistoryProvider implements VCSHistoryProvider {
     public void fireHistoryChange (final File[] files) {
         final HistoryChangeListener[] la;
         synchronized(listeners) {
-            la = listeners.toArray(new HistoryChangeListener[0]);
+            la = listeners.toArray(HistoryChangeListener[]::new);
         }
-        Git.getInstance().getRequestProcessor().post(new Runnable() {
-            @Override
-            public void run() {
-                for (HistoryChangeListener l : la) {
-                    l.fireHistoryChanged(new HistoryEvent(HistoryProvider.this, files));
-                }
+        Git.getInstance().getRequestProcessor().post(() -> {
+            for (HistoryChangeListener l : la) {
+                l.fireHistoryChanged(new HistoryEvent(HistoryProvider.this, files));
             }
         });
     }
 
     private class RevisionProviderImpl implements RevisionProvider {
-        private String revision;
+        private final String revision;
 
         public RevisionProviderImpl(String revision) {
             this.revision = revision;
@@ -230,7 +223,7 @@ public class HistoryProvider implements VCSHistoryProvider {
             if(repositories == null || repositories.isEmpty()) {
                 return;
             }
-            List<Node> nodes = new ArrayList<Node>(files.length);
+            List<Node> nodes = new ArrayList<>(files.length);
             for (File f : files) {
                 nodes.add(new AbstractNode(Children.LEAF, Lookups.fixed(f)) {
                     @Override
@@ -239,7 +232,7 @@ public class HistoryProvider implements VCSHistoryProvider {
                     }
                 });
             }
-            SearchHistoryAction.openSearch(repositories.iterator().next(), files, Utils.getContextDisplayName(VCSContext.forNodes(nodes.toArray(new Node[0]))));
+            SearchHistoryAction.openSearch(repositories.iterator().next(), files, Utils.getContextDisplayName(VCSContext.forNodes(nodes.toArray(Node[]::new))));
         }
         
     }
@@ -267,8 +260,9 @@ public class HistoryProvider implements VCSHistoryProvider {
                     @Override
                     protected void perform(final HistoryEntry entry, final Set<File> files) {
                         File root = Git.getInstance().getRepositoryRoot(files.iterator().next());
-                        SystemAction.get(RevertChangesAction.class).revertFiles(root, files.toArray(new File[0]),
-                                getRevisionShort(), Bundle.HistoryProvider_action_RevertTo_progress());
+                        SystemAction.get(RevertChangesAction.class).revertFiles(
+                                root, files.toArray(File[]::new), getRevisionShort(), Bundle.HistoryProvider_action_RevertTo_progress()
+                        );
                     }    
                     @Override
                     protected boolean isMultipleHistory() {
@@ -315,7 +309,7 @@ public class HistoryProvider implements VCSHistoryProvider {
     }
     
     private static Set<File> getRepositoryRoots(File... files) {
-        Set<File> repositories = GitUtils.getRepositoryRoots(new HashSet<File>(Arrays.asList(files)));
+        Set<File> repositories = GitUtils.getRepositoryRoots(new HashSet<>(Arrays.asList(files)));
         if (repositories.size() != 1) {
             LOG.log(Level.WARNING, "History requested for {0} repositories", repositories.size()); // NOI18N
             return null;
@@ -324,16 +318,16 @@ public class HistoryProvider implements VCSHistoryProvider {
     }
     
     private class ParentProviderImpl implements ParentProvider {
-        private GitRevisionInfo info;
-        private File[] files;
-        private File repository;
-        private Map<File, HistoryEntry> commonAncestors;
+        private final GitRevisionInfo info;
+        private final File[] files;
+        private final File repository;
+        private final Map<File, HistoryEntry> commonAncestors;
 
         public ParentProviderImpl (GitRevisionInfo info, File[] files, File repository) {
             this.info = info;
             this.files = files;
             this.repository = repository;
-            this.commonAncestors = new HashMap<File, HistoryEntry>(files.length);
+            this.commonAncestors = new HashMap<>((int) Math.ceil(files.length / 0.75));
         }
 
         @Override

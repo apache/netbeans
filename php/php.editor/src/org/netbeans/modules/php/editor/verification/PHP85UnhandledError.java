@@ -92,6 +92,7 @@ public final class PHP85UnhandledError extends UnhandledErrorRule {
                 return;
             }
 
+            //composition expression are available since PHP 8.5
             createError(node);
         }
 

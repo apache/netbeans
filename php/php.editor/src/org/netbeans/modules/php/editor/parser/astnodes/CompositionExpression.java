@@ -18,10 +18,21 @@
  */
 package org.netbeans.modules.php.editor.parser.astnodes;
 
-
+/**
+ * Represents a function composition expression
+ * chaining multiple callables from left to right
+ * It's marked by the pipe operator "|>"
+ * @see https://wiki.php.net/rfc/pipe-operator-v3
+ * <pre>
+ * $a |> strtoupper(...)
+ * $a |> trim(...)
+ * </pre>
+ * 
+ */
 public class CompositionExpression extends Expression {
 
     /**
+     * Operator type used for the composition expression
      * possible rfc with using "+" for composition
      * https://wiki.php.net/rfc/function-composition
      */

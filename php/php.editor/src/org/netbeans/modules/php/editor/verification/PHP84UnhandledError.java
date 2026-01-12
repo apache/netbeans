@@ -31,7 +31,6 @@ import org.netbeans.modules.php.editor.parser.PHPParseResult;
 import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.BodyDeclaration.Modifier;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable;
-import org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.FieldsDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.FormalParameter;
 import org.netbeans.modules.php.editor.parser.astnodes.FunctionDeclaration;
@@ -144,14 +143,6 @@ public final class PHP84UnhandledError extends UnhandledErrorRule {
             // __construct(public private(set) int $int) {}
             checkSetVisibility(node);
             super.visit(node);
-        }
-
-        @Override
-        public void visit(CompositionExpression node) {
-            if (CancelSupport.getDefault().isCancelled()) {
-                return;
-            }
-            createError(node);
         }
 
         private void checkSetVisibility(MethodDeclaration node) {

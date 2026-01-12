@@ -624,7 +624,7 @@ public final class LexUtilities {
                     break;
                 }
             } else if (token.id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals(token.text(), "|>")) { // NOI18N
-                //pipe operator
+                //PHP 8.5 pipe operator
                 start = ts.offset();
                 break;
             } else if (balance == 1 && token.id() == PHPTokenId.PHP_STRING) {

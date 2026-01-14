@@ -241,7 +241,7 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
                 exitEvent.resume();
             }
         });
-        DebuggerManager.getDebuggerManager().addBreakpoint(builderExitBreakpoint);
+        // DebuggerManager.getDebuggerManager().addBreakpoint(builderExitBreakpoint);
     }
 
     private void submitExistingEnginesProbe(final JPDADebugger debugger, List<JPDAClassType> enginePe) {

@@ -45,14 +45,6 @@ import org.openide.windows.IOProvider;
  */
 public class MicronautGradleArtifactsImplTest extends NbTestCase {
 
-    static {
-        // TODO remove ASAP from MicronautGradleArtifactsImplTest and ProjectViewTest
-        // investigate "javax.net.ssl.SSLHandshakeException: Received fatal alert: handshake_failure"
-        // during gradle download "at org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitStep.execute(TemplateOperation.java:317)"
-        // this looks like a misconfigured webserver to me
-        System.setProperty("https.protocols", "TLSv1.2");
-    }
-
     public MicronautGradleArtifactsImplTest(String name) {
         super(name);
     }

@@ -118,7 +118,7 @@ public final class ModificationResult {
                     } finally {
                         WorkingCopy.instance = null;
                     }
-                    final List<ModificationResult.Difference> diffs = copy.getChanges(result.tag2Span);
+                    final List<ModificationResult.Difference> diffs = copy.getChanges(result.tag2Span, resultIterator.getSnapshot());
                     if (diffs != null && diffs.size() > 0)
                         result.diffs.put(copy.getFileObject(), diffs);
                 }
@@ -143,6 +143,40 @@ public final class ModificationResult {
         return result;
     }
     
+    /**TODO: better than just a position?
+     * Runs a task over given sources, the task has an access to the {@link WorkingCopy}
+     * using the {@link WorkingCopy#get(org.netbeans.modules.parsing.spi.Parser.Result)} method.
+     * @param path to the given Java snippet
+     * @param task to be performed
+     * @return the {@link ModificationResult}
+     * @throws org.netbeans.modules.parsing.spi.ParseException
+     * @since 9.99
+     */
+    public static @NonNull ModificationResult runModificationTask(final @NonNull JavaSourcePath path, final @NonNull Task<WorkingCopy> task) throws ParseException {
+        List<Source> sources = List.of(Source.create(path.getFileObject()));
+        final ModificationResult result = new ModificationResult();
+        final ElementOverlay overlay = ElementOverlay.getOrCreateOverlay();
+
+        ParserManager.parse(sources, new UserTask() {
+            @Override
+            public void run(ResultIterator resultIterator) throws Exception {
+                Parser.Result parserResult = path.getPos() != (-1) ? resultIterator.getParserResult(path.getPos())
+                                                                   : resultIterator.getParserResult();
+                CompilationController cc = CompilationController.get(parserResult);
+                if (cc == null) {
+                    return ;
+                }
+                final WorkingCopy copy = new WorkingCopy (cc.impl, overlay);
+                task.run(copy);
+                final List<ModificationResult.Difference> diffs = copy.getChanges(result.tag2Span, resultIterator.getSnapshot());
+                //TODO: adjust the indent iff embedding
+                if (diffs != null && diffs.size() > 0)
+                    result.diffs.put(copy.getFileObject(), diffs);
+            }
+        });
+        return result;
+    }
+
     public @NonNull Set<? extends FileObject> getModifiedFileObjects() {
         return diffs.keySet();
     }

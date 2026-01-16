@@ -140,15 +140,15 @@ public class JavaCompletionTaskBasicTest extends CompletionTestBase {
     }
     
     public void testEmptyFileBeforeTypingImportedPackage() throws Exception {
-        performTest("Empty", 808, "import ", "staticKeywordAndAllPackages.pass");
+        performTest("Empty", 808, "import ", "staticKeywordAndAllPackages.pass", "24"); //24 - without "import module"
     }
     
     public void testBeforeTypingImportedPackage() throws Exception {
-        performTest("Simple", 823, "import ", "staticKeywordAndAllPackages.pass");
+        performTest("Simple", 823, "import ", "staticKeywordAndAllPackages.pass", "24"); //24 - without "import module"
     }
     
     public void testBeforeImportedPackage() throws Exception {
-        performTest("Import", 831, null, "staticKeywordAndAllPackages.pass");
+        performTest("Import", 831, null, "staticKeywordAndAllPackages.pass", "24"); //24 - without "import module"
     }
     
     public void testEmptyFileTypingImportedPackage() throws Exception {
@@ -264,7 +264,7 @@ public class JavaCompletionTaskBasicTest extends CompletionTestBase {
     }
     
     public void testTypingStaticImportAfterErrorInPackageDeclaration() throws Exception {
-        performTest("SimpleNoPackage", 808, "package \nimport ", "staticKeywordAndAllPackages.pass");
+        performTest("SimpleNoPackage", 808, "package \nimport ", "staticKeywordAndAllPackages.pass", "24"); //24 - without "import module"
     }
 
     public void TODO_testTypingStaticImportAfterErrorInPreviousImportDeclaration() throws Exception {

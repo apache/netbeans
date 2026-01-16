@@ -38,6 +38,14 @@
       <attr name="currentFontColorProfile" stringvalue="FlatLaf Light" />
     </folder>
 
+    <folder name="Favorites">
+        <file name="NetBeansProjects.shadow">
+            <attr name="originalFile" methodvalue="org.netbeans.modules.project.ui.ProjectUtilities.getProjectsFolder"/>
+            <attr name="originalFileSystem" stringvalue="org.netbeans.modules.masterfs.MasterFileSystem"/>
+            <attr name="position" intvalue="110"/>
+        </file>
+    </folder>
+
     <folder name="Windows2">
       <folder name="Background">
         <attr name="backgroundImage" stringvalue="org/netbeans/modules/ide/branding/apache-netbeans.png" />

@@ -84,6 +84,8 @@ public interface Visitor {
     public void visit(Comment comment);
 
     public void visit(ConstantVariable constantVariable);
+    
+    public void visit(CompositionExpression conditionalExpression);
 
     //public void endVisit(Comment comment);
     public void visit(ConditionalExpression conditionalExpression);

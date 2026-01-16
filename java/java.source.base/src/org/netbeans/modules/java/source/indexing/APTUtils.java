@@ -34,7 +34,6 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -385,8 +384,6 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
                 if (instance instanceof Processor) {
                     result.add(new ErrorToleratingProcessor((Processor) instance));
                 }
-            } catch (ThreadDeath td) {
-                throw td;
             } catch (Throwable t) {
                 LOG.log(Level.FINE, null, t);
             }
@@ -732,9 +729,19 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
         return SourceForBinaryQuery.findSourceRoots2(root).preferSources();
     }
 
-    //keep synchronized with libs.javacapi/manifest.mf and libs.javacimpl/manifest.mf
+    //keep synchronized with java/libs.nbjavacapi/manifest.mf (OpenIDE-Module-Hide-Classpath-Packages attribute)
     //when adding new packages, double-check the quick path in loadClass below:
-    private static final Iterable<? extends String> javacPackages = Arrays.asList("com.sun.javadoc.", "com.sun.source.", "javax.annotation.processing.", "javax.lang.model.", "javax.tools.", "com.sun.tools.javac.", "com.sun.tools.javadoc.", "com.sun.tools.classfile.", "com.sun.tools.hc.");
+    private static final List<String> javacPackages = List.of(
+            "javax.annotation.processing.",
+            "javax.lang.model.",
+            "javax.tools.",
+            "com.sun.source.",
+            "com.sun.tools.classfile.",
+            "com.sun.tools.javac.",
+            "com.sun.tools.doclint.",
+            "com.sun.tools.javap."
+    );
+
     private static final class BypassOpenIDEUtilClassLoader extends ClassLoader {
         private final ClassLoader contextCL;
         public BypassOpenIDEUtilClassLoader(ClassLoader contextCL) {
@@ -993,7 +1000,7 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
         public void init(ProcessingEnvironment processingEnv) {
             try {
                 delegate.init(processingEnv);
-            } catch (ClientCodeException | ThreadDeath | Abort err) {
+            } catch (ClientCodeException | Abort err) {
                 initFailed = true;
                 throw err;
             } catch (Throwable t) {
@@ -1016,7 +1023,7 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
             }
             try {
                 return delegate.process(annotations, roundEnv);
-            } catch (ClientCodeException | ThreadDeath | Abort err) {
+            } catch (ClientCodeException | Abort err) {
                 processFailed = true;
                 throw err;
             } catch (Throwable t) {

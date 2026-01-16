@@ -59,43 +59,50 @@ import org.netbeans.spi.debugger.DebuggerServiceRegistration;
  */
 @DebuggerServiceRegistration(types=LazyDebuggerManagerListener.class)
 public class TruffleDebugManager extends DebuggerManagerAdapter {
-    
+
     private static final Logger LOG = Logger.getLogger(TruffleDebugManager.class.getName());
-    
+
     private static final String ENGINE_CLASS = "org.graalvm.polyglot.Engine";   // NOI18N
     private static final String ENGINE_BUILDER_CLASS = "org.graalvm.polyglot.Engine$Builder";   // NOI18N
+    private static final String POLY_IMPL_CLASS = "com.oracle.truffle.polyglot.PolyglotImpl";   // NOI18N
+    private static final String POLY_IMPL_BUILD_METHOD = "buildEngine";   // NOI18N
     private static final String REMOTE_SERVICES_TRIGGER_CLASS = "com.oracle.truffle.api.Truffle";   // NOI18N
     private static final String REMOTE_SERVICES_TRIGGER_METHOD = "getRuntime";                      // NOI18N
     // Breakpoint on this class triggers search of existing engines
     private static final String EXISTING_ENGINES_TRIGGER = "com.oracle.truffle.api.frame.Frame";    // NOI18N
-    
-    private JPDABreakpoint debugManagerLoadBP;
+
+    private MethodBreakpoint debugManagerLoadBP;
     private Map<JPDADebugger, JPDABreakpoint> initServiceBPs = new HashMap<>();
     private static final Map<JPDADebugger, Boolean> haveExistingEnginesTrigger = new WeakHashMap<>();
     private static final Map<JPDADebugger, DebugManagerHandler> dmHandlers = new HashMap<>();
     private static final Map<JPDADebugger, JPDABreakpointListener> debugBPListeners = new HashMap<>();
-    
+
     public TruffleDebugManager() {
     }
-    
+
     @Override
     public Breakpoint[] initBreakpoints() {
         initLoadBP();
         return new Breakpoint[] { debugManagerLoadBP };
     }
-    
+
     private synchronized void initLoadBP() {
         if (debugManagerLoadBP != null) {
             return ;
         }
-        /* Must NOT use a method exit breakpoint! It caused a massive degradation of application performance.
-        debugManagerLoadBP = MethodBreakpoint.create(SESSION_CREATION_BP_CLASS, SESSION_CREATION_BP_METHOD);
-        ((MethodBreakpoint) debugManagerLoadBP).setBreakpointType(MethodBreakpoint.TYPE_METHOD_EXIT);
+        /*
+          - Must NOT use a method exit breakpoint!
+          - It caused a massive degradation of application performance.
+          - we will attach an exit breakpoint, but the later the better
+          - we need a method that's called the "latest" before returning
+          - from `Engine.Builder.build()`
+          - as of GraalVM 25.0.1 it is:
+          - [this one](https://github.com/oracle/graal/blob/05ec02567a77a30cc41b8ad9174de0dc5737ceaf/sdk/src/org.graalvm.polyglot/src/org/graalvm/polyglot/Engine.java#L843)
         */
-        debugManagerLoadBP = MethodBreakpoint.create(ENGINE_BUILDER_CLASS, "build");
-        ((MethodBreakpoint) debugManagerLoadBP).setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
+        debugManagerLoadBP = MethodBreakpoint.create(POLY_IMPL_CLASS, POLY_IMPL_BUILD_METHOD);
+        debugManagerLoadBP.setBreakpointType(MethodBreakpoint.TYPE_METHOD_ENTRY);
         debugManagerLoadBP.setHidden(true);
-        
+
         LOG.log(Level.FINE, "TruffleDebugManager.initBreakpoints(): submitted BP {0}", debugManagerLoadBP);
         TruffleAccess.init();
     }
@@ -182,7 +189,8 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
             public void breakpointReached(JPDABreakpointEvent event) {
                 try {
                     if (event.getDebugger() == debugger) {
-                        handleEngineBuilder(debugger, event);
+                        LOG.log(Level.FINE, "Building of an Engine is in progress");
+                        handleJustBuiltEngine(debugger, event.getThread());
                     }
                 } finally {
                     event.resume();
@@ -225,10 +233,10 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
      * We need to submit a temporary method-exit breakpoint on the build method.
      * We must not keep the method exit breakpoint active as it causes a significant performance degradation.
      */
-    private void handleEngineBuilder(final JPDADebugger debugger, JPDABreakpointEvent entryEvent) {
+    private void handleJustBuiltEngine(final JPDADebugger debugger, JPDAThread onThread) {
         MethodBreakpoint builderExitBreakpoint = MethodBreakpoint.create(ENGINE_BUILDER_CLASS, "build");
         builderExitBreakpoint.setBreakpointType(MethodBreakpoint.TYPE_METHOD_EXIT);
-        builderExitBreakpoint.setThreadFilters(debugger, new JPDAThread[]{entryEvent.getThread()});
+        builderExitBreakpoint.setThreadFilters(debugger, new JPDAThread[]{onThread});
         builderExitBreakpoint.setSuspend(JPDABreakpoint.SUSPEND_EVENT_THREAD);
         builderExitBreakpoint.setSession(debugger);
         builderExitBreakpoint.setHidden(true);
@@ -236,12 +244,14 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
             try {
                 builderExitBreakpoint.disable();
                 DebuggerManager.getDebuggerManager().removeBreakpoint(builderExitBreakpoint);
-                haveNewPE(debugger, (JPDAThreadImpl) exitEvent.getThread(), (ObjectReference) ((JDIVariable) exitEvent.getVariable()).getJDIValue());
+                final ObjectReference ref = (ObjectReference) ((JDIVariable) exitEvent.getVariable()).getJDIValue();
+                LOG.log(Level.FINE, "New Engine has just been built: {0}", ref);
+                haveNewPE(debugger, (JPDAThreadImpl) exitEvent.getThread(), ref);
             } finally {
                 exitEvent.resume();
             }
         });
-        // DebuggerManager.getDebuggerManager().addBreakpoint(builderExitBreakpoint);
+        DebuggerManager.getDebuggerManager().addBreakpoint(builderExitBreakpoint);
     }
 
     private void submitExistingEnginesProbe(final JPDADebugger debugger, List<JPDAClassType> enginePe) {
@@ -326,7 +336,7 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
             }
         }
     }
-    
+
     public static ClassType getDebugAccessorClass(JPDADebugger debugger) {
         synchronized (dmHandlers) {
             DebugManagerHandler dmh = dmHandlers.get(debugger);
@@ -337,7 +347,7 @@ public class TruffleDebugManager extends DebuggerManagerAdapter {
             }
         }
     }
-    
+
     public static JPDAClassType getDebugAccessorJPDAClass(JPDADebugger debugger) {
         synchronized (dmHandlers) {
             DebugManagerHandler dmh = dmHandlers.get(debugger);

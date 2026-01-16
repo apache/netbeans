@@ -32,12 +32,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import org.netbeans.api.extexecution.input.LineProcessor;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.extexecution.input.LineProcessor;
 import org.netbeans.modules.nativeexecution.NbRemoteNativeProcess;
 import org.netbeans.modules.nativeexecution.RemoteNativeProcess;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
@@ -52,21 +51,21 @@ import org.openide.util.RequestProcessor;
 public final class ProcessUtils {
 
     private static final RequestProcessor RP = new RequestProcessor("ProcessUtils", 1); // NOI18N
+    private static final String REMOTE_CHAR_SET = System.getProperty("cnd.remote.charset", "UTF-8"); // NOI18N
 
     private ProcessUtils() {
     }
-    private static final String remoteCharSet = System.getProperty("cnd.remote.charset", "UTF-8"); // NOI18N
 
     public static String getRemoteCharSet() {
-        return remoteCharSet;
+        return REMOTE_CHAR_SET;
     }
 
     public static boolean isAlive(Process p) {
-        if (p instanceof RemoteNativeProcess) {
-            RemoteNativeProcess rnp = (RemoteNativeProcess) p;
+        if (p == null) {
+            return false;
+        } else if (p instanceof RemoteNativeProcess rnp) {
             return rnp.isAlive();
-        } else if (p instanceof NbRemoteNativeProcess) {
-            NbRemoteNativeProcess rnp = (NbRemoteNativeProcess) p;
+        } else if (p instanceof NbRemoteNativeProcess rnp) {
             return rnp.isAlive();
         } else {
             try {
@@ -137,8 +136,8 @@ public final class ProcessUtils {
     }
 
     private static boolean isRemote(Process process) {
-        if (process instanceof NativeProcess) {
-            return ((NativeProcess) process).getExecutionEnvironment().isRemote();
+        if (process instanceof NativeProcess nativeProcess) {
+            return nativeProcess.getExecutionEnvironment().isRemote();
         }
         return false;
     }
@@ -166,48 +165,41 @@ public final class ProcessUtils {
     /**
      * Reads process stream asynchronously. As soon as all stream is read (i. e. process is finished),
      * all lines are added to listToAdd.
+     *
+     * @param process
+     * @param lineProcessor
      */
+    @SuppressWarnings("deprecation") // org.netbeans.api.extexecution.input.LineProcessor is API
     public static void readProcessOutputAsync(final Process process, final LineProcessor lineProcessor) {
-        NativeTaskExecutorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    readProcessStreamImpl(process.getInputStream(), isRemote(process), lineProcessor);
-                } catch (IOException ex) {
-                    // nothing
-                }
+        NativeTaskExecutorService.submit(() -> {
+            try {
+                readProcessStreamImpl(process.getInputStream(), isRemote(process), lineProcessor);
+            } catch (IOException ex) {
+                // nothing
             }
         }, "reading process output"); // NOI18N
     }
 
     public static Future<List<String>> readProcessOutputAsync(final Process process) {
-        return NativeTaskExecutorService.submit(new Callable<List<String>>() {
-            @Override
-            public List<String> call() throws Exception {
-                return readProcessStreamImpl(process.getInputStream(), isRemote(process));
-            }
+        return NativeTaskExecutorService.submit(() -> {
+            return readProcessStreamImpl(process.getInputStream(), isRemote(process));
         }, "reading process output"); // NOI18N
     }
 
+    @SuppressWarnings("deprecation") // org.netbeans.api.extexecution.input.LineProcessor is API
     public static void readProcessErrorAsync(final Process process,  final LineProcessor lineProcessor) {
-        NativeTaskExecutorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    readProcessStreamImpl(process.getErrorStream(), isRemote(process), lineProcessor);
-                } catch (IOException ex) {
-                    // nothing
-                }
+        NativeTaskExecutorService.submit(() -> {
+            try {
+                readProcessStreamImpl(process.getErrorStream(), isRemote(process), lineProcessor);
+            } catch (IOException ex) {
+                // nothing
             }
         }, "reading process error"); // NOI18N
     }
 
     public static Future<List<String>> readProcessErrorAsync(final Process process) {
-        return NativeTaskExecutorService.submit(new Callable<List<String>>() {
-            @Override
-            public List<String> call() throws Exception {
-                return readProcessStreamImpl(process.getErrorStream(), isRemote(process));
-            }
+        return NativeTaskExecutorService.submit(() -> {
+            return readProcessStreamImpl(process.getErrorStream(), isRemote(process));
         }, "reading process error"); // NOI18N
     }
 
@@ -236,8 +228,7 @@ public final class ProcessUtils {
         final BufferedReader br = getReader(stream, remoteStream);
 
         try {
-            String line;
-            while ((line = br.readLine()) != null) {
+            for(String line = br.readLine(); line != null; line = br.readLine()) {
                 result.add(line);
             }
         } finally {
@@ -249,28 +240,24 @@ public final class ProcessUtils {
         return result;
     }
 
-    private static void readProcessStreamImpl(final InputStream stream, boolean remoteStream,  final LineProcessor lineProcessor) throws IOException {
+    private static void readProcessStreamImpl(final InputStream stream, boolean remoteStream,  @SuppressWarnings("deprecation") final LineProcessor lineProcessor) throws IOException {
         if (stream == null) {
-            lineProcessor.reset();
-            lineProcessor.close();
+            try (lineProcessor) {
+                lineProcessor.reset();
+            }
         } else {
             lineProcessor.reset();
-            final BufferedReader br = getReader(stream, remoteStream);
-            try {
-                String line;
-                while ((line = br.readLine()) != null) {
+            try (lineProcessor;
+                    BufferedReader br = getReader(stream, remoteStream)) {
+                for(String line = br.readLine(); line != null; line = br.readLine()) {
                     lineProcessor.processLine(line);
-                }
-            } finally {
-                lineProcessor.close();
-                if (br != null) {
-                    br.close();
                 }
             }
         }
     }
 
 
+    @SuppressWarnings("NestedAssignment")
     private static String readProcessStreamLine(final InputStream stream, boolean remoteStream) throws IOException {
         if (stream == null) {
             return ""; // NOI18N
@@ -280,10 +267,9 @@ public final class ProcessUtils {
         final BufferedReader br = getReader(stream, remoteStream);
 
         try {
-            String line;
             boolean first = true;
 
-            while ((line = br.readLine()) != null) {
+            for(String line = br.readLine(); line != null; line = br.readLine()) {
                 if (!first) {
                     result.append('\n');
                 }
@@ -303,7 +289,9 @@ public final class ProcessUtils {
      * Just a conveniency shortcut for calling both methods
      * ignoreProcessOutput()
      * ignoreProcessError()
+     * @param <T>
      * @param p
+     * @return
      */
     public static <T extends Process> T  ignoreProcessOutputAndError(final T p) {
         ignoreProcessOutput(p);
@@ -315,17 +303,16 @@ public final class ProcessUtils {
      * Even if you ignore process error stream, it should be read,
      * otherwise other processes can hang - this is a jsch related issue.
      * This method reads and ignores process error stream
+     * @param <T>
      * @param p process
+     * @return
      */
     public static <T extends Process> T ignoreProcessError(final T p) {
         if (p != null) {
-            NativeTaskExecutorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        readAndIgnoreProcessStream(p.getErrorStream());
-                    } catch (IOException ex) {
-                    }
+            NativeTaskExecutorService.submit(() -> {
+                try {
+                    readAndIgnoreProcessStream(p.getErrorStream());
+                } catch (IOException ex) {
                 }
             }, "Reading process error " + p); // NOI18N
         }
@@ -336,23 +323,23 @@ public final class ProcessUtils {
      * Even if you ignore process output stream, it should be read,
      * otherwise other processes can hang - this is a jsch related issue.
      * This method reads and ignores process output stream
+     * @param <T>
      * @param p process
+     * @return
      */
     public static <T extends Process> T ignoreProcessOutput(final T p) {
         if (p != null) {
-            NativeTaskExecutorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        readAndIgnoreProcessStream(p.getInputStream());
-                    } catch (IOException ex) {
-                    }
+            NativeTaskExecutorService.submit(() -> {
+                try {
+                    readAndIgnoreProcessStream(p.getInputStream());
+                } catch (IOException ex) {
                 }
             }, "Reading process output " + p); // NOI18N
         }
         return p;
     }
 
+    @SuppressWarnings("deprecation") // org.netbeans.api.extexecution.input.LineProcessor is API
     public static void writeError(final Writer error, Process p) throws IOException {
         class MyLineProcessor implements LineProcessor {
             private IOException writeEx = null;
@@ -372,7 +359,7 @@ public final class ProcessUtils {
 
             @Override
             public void close() {}
-        };
+        }
         MyLineProcessor myLProcessor = new MyLineProcessor();
         readProcessStreamImpl(p.getErrorStream(), isRemote(p), myLProcessor);
         if (myLProcessor.writeEx != null) {
@@ -405,8 +392,8 @@ public final class ProcessUtils {
 
         ExecutionEnvironment execEnv;
 
-        if (process instanceof NativeProcess) {
-            execEnv = ((NativeProcess) process).getExecutionEnvironment();
+        if (process instanceof NativeProcess nativeProcess) {
+            execEnv = nativeProcess.getExecutionEnvironment();
         } else {
             execEnv = ExecutionEnvironmentFactory.getLocal();
         }
@@ -416,8 +403,7 @@ public final class ProcessUtils {
         if (pid > 0) {
             try {
                 CommonTasksSupport.sendSignal(execEnv, pid, Signal.SIGKILL, null).get();
-            } catch (InterruptedException ex) {
-            } catch (ExecutionException ex) {
+            } catch (InterruptedException | ExecutionException ex) {
             }
         }
     }
@@ -426,9 +412,9 @@ public final class ProcessUtils {
         int pid = -1;
 
         try {
-            if (process instanceof NativeProcess) {
-                pid = ((NativeProcess) process).getPID();
-            } else {
+            if (process instanceof NativeProcess nativeProcess) {
+                pid = nativeProcess.getPID();
+            } else if (process != null) {
                 String className = process.getClass().getName();
                 // TODO: windows?...
                 if ("java.lang.UNIXProcess".equals(className)) { // NOI18N
@@ -445,13 +431,13 @@ public final class ProcessUtils {
     }
 
     /**
-     * Starts executable and returns immediately. 
+     * Starts executable and returns immediately.
      * @param execEnv - target execution environment
-     * @param rp - RequestProcessor that is used for running the task. 
+     * @param rp - RequestProcessor that is used for running the task.
      * Could be NULL. In this case default (private) processor is used.
      * Note that default (private) processor has throughput == 1
-     * @param postExecutor - once process is done, passed postExecutor will be 
-     * notified. Call of postExecutor's method is performed in the same thread 
+     * @param postExecutor - once process is done, passed postExecutor will be
+     * notified. Call of postExecutor's method is performed in the same thread
      * as invocation of the executable (i.e. in rp (see above)).
      * @param executable - full path to executable to run.
      * @param args - list of arguments to pass to executable
@@ -459,26 +445,21 @@ public final class ProcessUtils {
      */
     public static Future<ExitStatus> execute(final ExecutionEnvironment execEnv, final RequestProcessor rp, final PostExecutor postExecutor, final String executable, final String... args) {
         final RequestProcessor processor = (rp == null) ? RP : rp;
-        return processor.submit(new Callable<ExitStatus>() {
+        return processor.submit(() -> {
+            ExitStatus status = null;
+            String error = null;
 
-            @Override
-            public ExitStatus call() throws Exception {
-
-                ExitStatus status = null;
-                String error = null;
-
-                try {
-                    status = execute(execEnv, executable, args);
-                } catch (Throwable t) {
-                    error = t.getMessage();
-                } finally {
-                    if (postExecutor != null) {
-                        postExecutor.processFinished(error == null ? status : new ExitStatus(1, null, Arrays.asList(error.split("\n")))); // NOI18N
-                    }
+            try {
+                status = execute(execEnv, executable, args);
+            } catch (Throwable t) {
+                error = t.getMessage();
+            } finally {
+                if (postExecutor != null) {
+                    postExecutor.processFinished(error == null ? status : new ExitStatus(1, null, Arrays.asList(error.split("\n")))); // NOI18N
                 }
-
-                return status;
             }
+
+            return status;
         });
     }
 
@@ -506,7 +487,7 @@ public final class ProcessUtils {
      *        ExitStatus status = ProcessUtils.execute(
      *            NativeProcessBuilder.newProcessBuilder(execEnv).
      *            setExecutable("/bin/ls").setArguments("/home"));
-     * 
+     *
      *        if (status.isOK()) {
      *            do something...
      *        } else {
@@ -518,7 +499,7 @@ public final class ProcessUtils {
      *   - initial suspend will be switched off
      *   - unbuffering will be switched off
      *   - usage of external terminal will be switched off
-     * 
+     *
      * @param processBuilder
      * @since 1.13.0
      * @return
@@ -546,20 +527,12 @@ public final class ProcessUtils {
             if (processBuilder.redirectErrorStream()) {
                 error = null;
             } else {
-                error = NativeTaskExecutorService.submit(new Callable<List<String>>() {
-
-                    @Override
-                    public List<String> call() throws Exception {
-                        return readProcessError(process);
-                    }
+                error = NativeTaskExecutorService.submit(() -> {
+                    return readProcessError(process);
                 }, "e"); // NOI18N
             }
-            output = NativeTaskExecutorService.submit(new Callable<List<String>>() {
-
-                @Override
-                public List<String> call() throws Exception {
-                    return readProcessOutput(process);
-                }
+            output = NativeTaskExecutorService.submit(() -> {
+                return readProcessOutput(process);
             }, "o"); // NOI18N
             if (input != null && input.length > 0) {
                 process.getOutputStream().write(input);
@@ -583,7 +556,7 @@ public final class ProcessUtils {
      * Usage pattern:
      *        ExitStatus status = ProcessUtils.execute(
      *            new ProcessBuilder("/bin/ls"));
-     * 
+     *
      *        if (status.isOK()) {
      *            do something...
      *        } else {
@@ -612,20 +585,12 @@ public final class ProcessUtils {
             if (processBuilder.redirectErrorStream() || processBuilder.redirectError() != ProcessBuilder.Redirect.PIPE) {
                 error = null;
             } else {
-                error = NativeTaskExecutorService.submit(new Callable<List<String>>() {
-
-                    @Override
-                    public List<String> call() throws Exception {
-                        return readProcessError(process);
-                    }
+                error = NativeTaskExecutorService.submit(() -> {
+                    return readProcessError(process);
                 }, "e"); // NOI18N
             }
-            output = NativeTaskExecutorService.submit(new Callable<List<String>>() {
-
-                @Override
-                public List<String> call() throws Exception {
-                    return readProcessOutput(process);
-                }
+            output = NativeTaskExecutorService.submit(() -> {
+                return readProcessOutput(process);
             }, "o"); // NOI18N
             if (input != null && input.length > 0) {
                 process.getOutputStream().write(input);
@@ -641,7 +606,7 @@ public final class ProcessUtils {
 
         return result;
     }
-    
+
     public static final class ExitStatus {
 
         public final int exitCode;
@@ -687,7 +652,11 @@ public final class ProcessUtils {
             return "ExitStatus " + "exitCode=" + exitCode + "\nerror=" + getErrorString() + "\noutput=" + getOutputString(); // NOI18N
         }
 
-        /** This method may be ineffective. Consider using getOutputLines() */
+        /**
+         * This method may be ineffective. Consider using getOutputLines()
+         *
+         * @return
+         */
         public String getOutputString() {
             return output;
         }
@@ -696,7 +665,11 @@ public final class ProcessUtils {
             return outputLines;
         }
 
-        /** This method may be ineffective. Consider using getErrorLines() */
+        /**
+         * This method may be ineffective. Consider using getErrorLines()
+         *
+         * @return
+         */
         public String getErrorString() {
             return error;
         }

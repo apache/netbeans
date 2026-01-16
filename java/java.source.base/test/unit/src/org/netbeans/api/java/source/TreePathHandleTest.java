@@ -184,13 +184,12 @@ public class TreePathHandleTest extends NbTestCase {
                 
                 TypeElement string = parameter.getElements().getTypeElement("test.test2");
                 
-                SecurityManager old = System.getSecurityManager();
-                
                 System.setSecurityManager(new SecMan());
                 
                 TreePathHandle.create(string, parameter);
-                
-                System.setSecurityManager(old);
+
+                // FIXME - throws UnsupportedOperationException unconditionally, regardless of arg.
+		System.setSecurityManager(null);
             }
         }, true);
     }

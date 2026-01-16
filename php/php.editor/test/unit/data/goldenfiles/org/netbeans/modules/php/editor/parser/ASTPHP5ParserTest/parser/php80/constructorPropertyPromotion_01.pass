@@ -1559,6 +1559,8 @@
                                     </DefaultValue>
                                 </FormalParameter>
                             </FormalParameters>
+                            <Block start='2365' end='2366' isCurly='flase'>
+                            </Block>
                         </FunctionDeclaration>
                     </MethodDeclaration>
                 </Block>

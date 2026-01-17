@@ -65,6 +65,7 @@ import org.eclipse.lsp4j.WorkDoneProgressReport;
 import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.LanguageClient;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.progress.*;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
@@ -97,6 +98,11 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
 
     private static final Logger LOG = Logger.getLogger(LanguageClientImpl.class.getName());
     private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
+
+    @StaticResource
+    private static final String ERROR_ICON = "org/netbeans/modules/lsp/client/resources/error_16.png";
+    @StaticResource
+    private static final String WARNING_ICON = "org/netbeans/modules/lsp/client/resources/warning_16.png";
 
     private LSPBindings bindings;
     private boolean allowCodeActions;
@@ -211,11 +217,11 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
                 StatusDisplayer.getDefault().setStatusText(params.getMessage());
                 return ;
             case Warning:
-                icon = ImageUtilities.loadImageIcon("org/netbeans/modules/lsp/client/resources/warning.png", false);
+                icon = ImageUtilities.loadImageIcon(WARNING_ICON, false);
                 category = Category.WARNING;
                 break;
             case Error:
-                icon = ImageUtilities.loadImageIcon("org/netbeans/modules/lsp/client/resources/error_16.png", false);
+                icon = ImageUtilities.loadImageIcon(ERROR_ICON, false);
                 category = Category.ERROR;
                 break;
         }

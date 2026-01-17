@@ -22,10 +22,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.text.JTextComponent;
+import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionContext;
 import org.eclipse.lsp4j.CodeActionParams;
+import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
+import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.lsp.client.LSPBindings;
@@ -63,17 +66,23 @@ public class CodeActions implements CodeGenerator.Factory {
                                                 Utils.createPosition(component.getDocument(), component.getSelectionEnd())),
                                         new CodeActionContext(Collections.emptyList())),
                              (server, params) -> server.getTextDocumentService().codeAction(params),
-                             (server, result) -> result.forEach(cmd -> output.add(new CodeGenerator() {
-                                @Override
-                                public String getDisplayName() {
-                                    return cmd.isLeft() ? cmd.getLeft().getTitle() : cmd.getRight().getTitle();
-                                }
+                             (server, result) -> {
+                                 if (result != null) {
+                                     for (Either<Command, CodeAction> cmd : result) {
+                                         output.add(new CodeGenerator() {
+                                             @Override
+                                             public String getDisplayName() {
+                                                 return cmd.isLeft() ? cmd.getLeft().getTitle() : cmd.getRight().getTitle();
+                                             }
 
-                                @Override
-                                public void invoke() {
-                                    Utils.applyCodeAction(server, cmd);
-                                }
-                            })));
+                                             @Override
+                                             public void invoke() {
+                                                 Utils.applyCodeAction(server, cmd);
+                                             }
+                                         });
+                                     }
+                                 }
+                             });
 
         return output;
     }

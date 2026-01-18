@@ -255,7 +255,7 @@ public final class BuildPropertiesSupport {
     /**
      * Describes a property and its value.
      */
-    public static final record Property(Object id, String scope, String name, PropertyKind kind, String type, String value) {
+    public record Property(Object id, String scope, String name, PropertyKind kind, String type, String value) {
         
         /**
          * Returns the property id. The ID is a token that could be used to identify

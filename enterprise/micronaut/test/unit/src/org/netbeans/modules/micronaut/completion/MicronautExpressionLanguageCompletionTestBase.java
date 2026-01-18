@@ -66,7 +66,7 @@ public class MicronautExpressionLanguageCompletionTestBase extends NbSuiteTestBa
         assertNotNull(testSourceFO);
         DataObject testSourceDO = DataObject.find(testSourceFO);
         assertNotNull(testSourceDO);
-        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        EditorCookie ec = testSourceDO.getCookie(EditorCookie.class);
         assertNotNull(ec);
         final Document doc = ec.openDocument();
         assertNotNull(doc);

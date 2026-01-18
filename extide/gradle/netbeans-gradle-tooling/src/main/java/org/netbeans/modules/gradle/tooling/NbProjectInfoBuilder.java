@@ -1375,7 +1375,12 @@ class NbProjectInfoBuilder {
         }
         if (project.getPlugins().hasPlugin("war")) {
             model.getInfo().put("main_war", getProperty(project, "war", "archivePath"));
-            model.getInfo().put("webapp_dir", getProperty(project, "webAppDir"));
+            DirectoryProperty webAppDir = (DirectoryProperty)getProperty(project, "war", "webAppDirectory");
+            if (webAppDir != null) {
+                model.getInfo().put("webapp_dir", webAppDir.getAsFile().get());
+            } else {
+                model.getInfo().put("webapp_dir", getProperty(project, "webAppDir"));
+            }
             model.getInfo().put("webxml", getProperty(project, "war", "webXml"));
             try {
                 model.getInfo().put("exploded_war_dir", getProperty(project, "explodedWar", "destinationDir"));

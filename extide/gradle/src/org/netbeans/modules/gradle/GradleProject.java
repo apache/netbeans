@@ -105,6 +105,12 @@ public final class GradleProject implements Serializable, Lookup.Provider {
         return "GradleProject{" + "quality=" + quality + ", baseProject=" + baseProject + '}';
     }
     
+    public boolean betterThan(GradleProject prj) {
+        return prj == null
+                || quality.betterThan(prj.quality)
+                || ((quality == prj.quality) && getProblems().size() > prj.getProblems().size());
+                
+    }
     /**
      * 
      * @since 2.23

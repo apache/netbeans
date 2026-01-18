@@ -26,10 +26,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
+import java.util.logging.Logger;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
+import static junit.framework.TestCase.fail;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
-import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.spi.project.ActionProgress;
 import org.netbeans.spi.project.ActionProvider;
@@ -41,18 +43,13 @@ import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
-public class VerifyGradleProjectTemplatesTest extends NbTestCase {
-
-    public VerifyGradleProjectTemplatesTest(String name) {
+/**
+ *
+ * @author lkishalmi
+ */
+public class AbstractGradleProjectTemplateTestCase extends NbTestCase{
+    public AbstractGradleProjectTemplateTestCase(String name) {
         super(name);
-    }
-
-    public static junit.framework.Test suite() {
-        return NbModuleSuite.createConfiguration(VerifyGradleProjectTemplatesTest.class).
-            gui(false).
-            enableModules(".*").
-            honorAutoloadEager(true).
-            suite();
     }
 
     @Override
@@ -60,7 +57,11 @@ public class VerifyGradleProjectTemplatesTest extends NbTestCase {
         clearWorkDir();
     }
 
-    public void testGradleProjectTemplates() throws Exception {
+    protected void assertGradleProjectTemplates() throws Exception {
+        assertGradleProjectTemplates(getClass().getPackageName().replace('.', '-'));
+    }
+
+    protected void assertGradleProjectTemplates(String forTemplatePath) throws Exception {
         FileObject root = FileUtil.getConfigFile("Templates/Project/Gradle");
         assertNotNull("Gradle project folder found", root);
         Enumeration<? extends FileObject> projectTemplates = root.getChildren(true);
@@ -72,6 +73,9 @@ public class VerifyGradleProjectTemplatesTest extends NbTestCase {
         while (projectTemplates.hasMoreElements()) {
             FileObject fo = projectTemplates.nextElement();
 
+            if (!fo.getPath().contains(forTemplatePath)) {
+                continue;
+            }
             DataObject template = DataObject.find(fo);
             if (!template.isTemplate()) {
                 continue;
@@ -83,13 +87,13 @@ public class VerifyGradleProjectTemplatesTest extends NbTestCase {
                 pw.append("Exception instantiating ").append(fo.getPath()).append("\n");
                 ex.printStackTrace(pw);
                 err++;
-                
+
                 try {
-                    LogManager.getLogManager().getLogger("org.netbeans.modules.gradle.loaders.LegacyProjectLoader").setLevel(Level.FINER);
+                    Logger.getLogger("org.netbeans.modules.gradle.loaders.LegacyProjectLoader").setLevel(Level.FINER);
                     pw.append("Running again with increased loglevel:").append(fo.getPath()).append("\n");
                     verifySingleTemplate(cnt + 1000, template);
                 } finally {
-                    LogManager.getLogManager().getLogger("org.netbeans.modules.gradle.loaders.LegacyProjectLoader").setLevel(Level.INFO);
+                    Logger.getLogger("org.netbeans.modules.gradle.loaders.LegacyProjectLoader").setLevel(Level.INFO);
                 }
             }
         }
@@ -97,6 +101,7 @@ public class VerifyGradleProjectTemplatesTest extends NbTestCase {
         if (err > 0) {
             throw new IOException("Some projects failed (" + err + "/" + cnt + "):\n" + w.toString());
         }
+        assertTrue("No template was tested", cnt > 0);
     }
 
     private void verifySingleTemplate(int cnt, DataObject template) throws IllegalArgumentException, IOException, InterruptedException {
@@ -182,4 +187,5 @@ public class VerifyGradleProjectTemplatesTest extends NbTestCase {
         }
         return sb.toString();
     }
+
 }

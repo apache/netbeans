@@ -28,7 +28,6 @@ import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -51,9 +50,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.swing.SwingUtilities;
-import org.gradle.tooling.BuildAction;
 import org.gradle.tooling.BuildActionExecuter;
-import org.gradle.tooling.BuildController;
 import org.gradle.tooling.CancellationToken;
 import org.gradle.tooling.CancellationTokenSource;
 import org.gradle.tooling.GradleConnectionException;
@@ -187,8 +184,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                 for (String s : keys) {
                     Object o = info.getInfo().get(s);
                     // format just the 1st level:
-                    if (o instanceof Collection) {
-                        Collection c = (Collection)o;
+                    if (o instanceof Collection c) {
                         if (!c.isEmpty()) {
                             LOG.finer(String.format("    %-20s: [", s));
                             for (Object x: c) {
@@ -200,8 +196,7 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                             LOG.finer("    ]");
                             continue;
                         }
-                    } else if (o instanceof Map) {
-                        Map m = (Map)o;
+                    } else if (o instanceof Map m) {
                         if (!m.isEmpty()) {
                             LOG.finer(String.format("    %-20s: {", s));
                             List<String> mkeys = new ArrayList<>(m.keySet());
@@ -273,15 +268,13 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                     for (Report r : info.getReports()) {
                         reps.add(copyReport(r));
                     }
-                    Object o = new ArrayList<String>(reps.stream().
+                    var o = reps.stream().
                             map((r) -> r.formatReportForHintOrProblem(
                                 true, 
                                 FileUtil.toFileObject(
                                     ctx.project.getGradleFiles().getBuildScript()
                                 )
-                            )).
-                            collect(Collectors.toList())
-                    );
+                            )).toList();
                     LOG.log(Level.FINE, "Project {0} loaded with exception, and with problems: {1}", 
                             new Object[] {
                                 ctx.project, 
@@ -293,22 +286,20 @@ public class LegacyProjectLoader extends AbstractProjectLoader {
                     for (String s : info.getProblems()) {
                         reps.add(GradleProject.createGradleReport(f == null ? null : f.toPath(), s));
                     }
-                    return ctx.previous.invalidate(reps.toArray(new GradleReport[0]));
+                    return ctx.previous.invalidate(reps.toArray(GradleReport[]::new));
                 }
             }
         } catch (GradleConnectionException | IllegalStateException ex) {
             LOG.log(FINE, "Failed to retrieve project information for: " + base.getProjectDir(), ex);
             List<GradleReport> problems = exceptionsToProblems(ctx.project.getGradleFiles().getBuildScript(), ex);
             errors.openNotification(TIT_LOAD_FAILED(base.getProjectDir()), ex.getMessage(), GradleProjectErrorNotifications.bulletedList(problems));
-            return ctx.previous.invalidate(problems.toArray(new GradleReport[0]));
-        } catch (ThreadDeath td) {
-            throw td;
+            return ctx.previous.invalidate(problems.toArray(GradleReport[]::new));
         } catch (Throwable t) {
             // catch any possible other errors, report project loading failure - but complete the loading operation.
             LOG.log(Level.SEVERE, "Internal error during loading: " + base.getProjectDir(), t);
             List<GradleReport> problems = exceptionsToProblems(ctx.project.getGradleFiles().getBuildScript(), t);
             errors.openNotification(TIT_LOAD_FAILED(base.getProjectDir()), t.getMessage(), GradleProjectErrorNotifications.bulletedList(problems));
-            return ctx.previous.invalidate(problems.toArray(new GradleReport[0]));
+            return ctx.previous.invalidate(problems.toArray(GradleReport[]::new));
         } finally {
             loadedProjects.incrementAndGet();
         }

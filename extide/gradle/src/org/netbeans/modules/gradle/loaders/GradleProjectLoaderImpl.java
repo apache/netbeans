@@ -90,7 +90,7 @@ public class GradleProjectLoaderImpl implements GradleProjectLoader {
                     LOGGER.log(Level.FINER, "Loaded with loader {0} -> {1}", new Object[] { loader, ret });
                 }
                 if (ret != null) {
-                    if (best == null || best.getQuality().notBetterThan(ret.getQuality())) {
+                    if (ret.betterThan(best)) {
                         best = ret;
                     }
                     if (ret.getQuality().atLeast(options.getAim())) {

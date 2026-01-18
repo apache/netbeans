@@ -16,21 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.modules.gradle.java.newproject;
 
-plugins {
-    id("io.micronaut.application") version "4.6.1"
-    id('java')
-    id('application')
-}
+import org.netbeans.junit.NbModuleSuite;
+import org.netbeans.modules.gradle.AbstractGradleProjectTemplateTestCase;
 
-repositories {
-    mavenCentral()
-}
+public class VerifyGradleProjectTemplatesTest extends AbstractGradleProjectTemplateTestCase {
 
-dependencies {
-    implementation("io.micronaut:micronaut-http-clientx")
-}
+    public VerifyGradleProjectTemplatesTest(String name) {
+        super(name);
+    }
 
-application {
-    mainClass = 'test.App'
+    public static junit.framework.Test suite() {
+        return NbModuleSuite.createConfiguration(VerifyGradleProjectTemplatesTest.class).
+            gui(false).
+            enableModules(".*").
+            honorAutoloadEager(true).
+            suite();
+    }
+
+    public void testProjectTemplates() throws Exception {
+        assertGradleProjectTemplates();
+    }
 }

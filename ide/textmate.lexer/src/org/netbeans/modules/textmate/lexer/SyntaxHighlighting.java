@@ -22,10 +22,8 @@ package org.netbeans.modules.textmate.lexer;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
@@ -35,7 +33,6 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
-import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.editor.settings.EditorStyleConstants;
@@ -136,7 +133,8 @@ implements TokenHierarchyListener, ChangeListener {
     //  TokenHierarchyListener implementation
     // ----------------------------------------------------------------------
 
-    public @Override void tokenHierarchyChanged(TokenHierarchyEvent evt) {
+    @Override
+    public void tokenHierarchyChanged(TokenHierarchyEvent evt) {
         if (evt.type() == TokenHierarchyEventType.LANGUAGE_PATHS) {
             // ignore
             return;
@@ -321,7 +319,7 @@ implements TokenHierarchyListener, ChangeListener {
      * @param t token to check
      * @return true, if token is normal text; false if block.
      */
-    private static boolean noBlock(Token t) {
+    private static boolean noBlock(Token<?> t) {
         return t.getProperty("highlight.block") != Boolean.TRUE; // NOI18N
     }
     
@@ -356,7 +354,7 @@ implements TokenHierarchyListener, ChangeListener {
             this.scanner = scanner;
             startOffset = Math.max(startOffset, 0); // Tests may request Integer.MIN_VALUE for startOffset
             this.startOffset = startOffset;
-            this.sequences = new ArrayList<TSInfo<?>>(4);
+            this.sequences = new ArrayList<>(4);
             this.hiStartOffset = startOffset;
             this.hiEndOffset = startOffset;
             Document doc = scanner.inputSource();
@@ -672,13 +670,16 @@ implements TokenHierarchyListener, ChangeListener {
          * @param token non-null token.
          * @return attributes for tokenId or null if none found.
          */
-        synchronized AttributeSet findAttrs(Token token) {
+        synchronized AttributeSet findAttrs(Token<?> token) {
             if (token.id() != TextmateTokenId.TEXTMATE) {
                 return null;
             }
             
             List<AttributeSet> attrs = new ArrayList<>();
-            List<String> categories = (List<String>) token.getProperty("categories");
+            
+            // Warning removal requires Token class changes
+            @SuppressWarnings("unchecked")
+            List<String> categories  = (List<String>)token.getProperty("categories");
             
             for (String category : categories) {
                 if (category.startsWith("meta.embedded")) {

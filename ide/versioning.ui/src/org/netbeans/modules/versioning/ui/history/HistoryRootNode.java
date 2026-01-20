@@ -45,7 +45,7 @@ public class HistoryRootNode extends AbstractNode {
     
     private static DateFormat dateFormat = DateFormat.getDateInstance();
     
-    private Map<Long, HistoryEntry> revisionEntries = new HashMap<Long, HistoryEntry>();
+    private Map<String, HistoryEntry> revisionEntries = new HashMap<>();
     
     private LoadNextNode loadNextNode;
     private WaitNode waitNode;
@@ -106,29 +106,37 @@ public class HistoryRootNode extends AbstractNode {
     
     private void addEntries (HistoryEntry[] entries, boolean vcs, long removeThreshold) {
         // add new
-        List<Node> nodes = new LinkedList<Node>();
+        List<Node> nodes = new LinkedList<>();
         removeOldEntries(entries, !vcs, removeThreshold);
         for (HistoryEntry e : entries) {
-            if(!revisionEntries.containsKey(e.getDateTime().getTime())) {
-                revisionEntries.put(e.getDateTime().getTime(), e);
+            String key = key(e);
+            if (!revisionEntries.containsKey(key)) {
+                revisionEntries.put(key, e);
                 if(vcs) {
                     vcsCount++;
                 }
                 nodes.add(RevisionNode.create(e));
-            } 
+            } else {
+                revisionEntries.get(key).setPos(e.getPos());
+            }
         }
         if(loadNextNode != null) {
             loadNextNode.refreshMessage();
         }
-        getChildren().add(nodes.toArray(new Node[0]));
+        getChildren().add(nodes.toArray(Node[]::new));
+    }
+
+    // note: uses rev+time since local history entries return "Local" as revision
+    private String key(HistoryEntry entry) {
+        return entry.getRevision() + "-" + entry.getDateTime().getTime();
     }
 
     private void removeOldEntries (HistoryEntry[] entries, boolean isLocal, long removeThreshold) {
-        Set<Long> timestamps = new HashSet<Long>(entries.length);
+        Set<Long> timestamps = new HashSet<>(entries.length);
         for (HistoryEntry e : entries) {
             timestamps.add(e.getDateTime().getTime());
         }
-        List<Node> toRemove = new ArrayList<Node>();
+        List<Node> toRemove = new ArrayList<>();
         for (Node n : getChildren().getNodes()) {
             HistoryEntry e = n.getLookup().lookup(HistoryEntry.class);
             if (e != null && isLocal == e.isLocalHistory()) {
@@ -139,14 +147,14 @@ public class HistoryRootNode extends AbstractNode {
                     History.LOG.log(Level.FINE, "Removing obsolete history entry: {0} {1}", //NOI18N
                             new Object[] { e.getRevisionShort(), e.getMessage() });
                     toRemove.add(n);
-                    revisionEntries.remove(time);
+                    revisionEntries.remove(key(e));
                     if (!isLocal) {
                         vcsCount--;
                     }
                 }
             }
         }
-        getChildren().remove(toRemove.toArray(new Node[0]));
+        getChildren().remove(toRemove.toArray(Node[]::new));
     }
 
     public synchronized void addWaitNode() {

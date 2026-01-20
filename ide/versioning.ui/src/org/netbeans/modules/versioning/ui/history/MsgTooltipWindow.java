@@ -77,7 +77,7 @@ class MsgTooltipWindow implements AWTEventListener, MouseMotionListener, MouseLi
      */
     private int messageOffset;
 
-    private VCSHyperlinkSupport linkerSupport = new VCSHyperlinkSupport();
+    private final VCSHyperlinkSupport linkerSupport = new VCSHyperlinkSupport();
 
     /**
      * Currently showing popup
@@ -137,11 +137,8 @@ class MsgTooltipWindow implements AWTEventListener, MouseMotionListener, MouseLi
         contentWindow.setLocation(location.x, location.y + 1);  // slight visual adjustment
         
         contentWindow.setVisible(true);
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                cp.scrollRectToVisible(new Rectangle(1, 1));
-            }
+        SwingUtilities.invokeLater(() -> {
+            cp.scrollRectToVisible(new Rectangle(1, 1));
         });
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.KEY_EVENT_MASK);
         w.addWindowFocusListener(this);

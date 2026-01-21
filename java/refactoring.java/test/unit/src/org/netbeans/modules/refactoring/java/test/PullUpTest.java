@@ -34,6 +34,8 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreePathHandle;
+import org.netbeans.junit.AssertLinesEqualHelpers;
+import static org.netbeans.junit.AssertLinesEqualHelpers.*;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
@@ -52,11 +54,11 @@ public class PullUpTest extends RefactoringTestBase {
     public PullUpTest(String name) {
         super(name, "1.8");
     }
-    
+
     static {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }
-    
+
     public void test241514a() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java", "package pullup; public interface A { void x(); }"),
@@ -66,7 +68,7 @@ public class PullUpTest extends RefactoringTestBase {
                 new File("pullup/A.java", "package pullup; public interface A { void x(); void y(); }"),
                 new File("pullup/B.java", "package pullup; public interface B extends A { default void y() { } }"));
     }
-    
+
     public void test241514b() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java", "package pullup; public interface A { void x(); }"),
@@ -76,7 +78,7 @@ public class PullUpTest extends RefactoringTestBase {
                 new File("pullup/A.java", "package pullup; public interface A { void x(); default void y() { } }"),
                 new File("pullup/B.java", "package pullup; public interface B extends A {}"));
     }
-    
+
     public void testPullUpOverridingMethod() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java", "package pullup; public class A extends B implements C { @Override public void i() { } }"),
@@ -87,7 +89,7 @@ public class PullUpTest extends RefactoringTestBase {
                 new File("pullup/A.java", "package pullup; public class A extends B implements C {}"),
                 new File("pullup/B.java", "package pullup; public class B { public void i() { } }"),
                 new File("pullup/C.java", "package pullup; public interface C { void i(); }"));
-        
+
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java", "package pullup; public class A extends B  { @Override public void i() { } }"),
                 new File("pullup/B.java", "package pullup; public class B extends C { }"),
@@ -98,7 +100,7 @@ public class PullUpTest extends RefactoringTestBase {
                 new File("pullup/B.java", "package pullup; public class B extends C { @Override public void i() { } }"),
                 new File("pullup/C.java", "package pullup; public class C { public void i() { } }"));
     }
-    
+
     public void test230719() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java", "package pullup; public interface A {\n"
@@ -127,14 +129,14 @@ public class PullUpTest extends RefactoringTestBase {
                 + "    }\n"
                 + "}"));
     }
-    
+
     public void test230930() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java", "package pullup; public interface A { }"),
                 new File("pullup/B.java", "package pullup; public class B implements A { static void y(); }"));
         performPullUpIface(src.getFileObject("pullup/B.java"), 0, 0, true);
     }
-    
+
     public void test229061() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java", "package pullup; public interface A { void x(); }"),
@@ -154,7 +156,7 @@ public class PullUpTest extends RefactoringTestBase {
                 new File("pullup/A.java", "package pullup; public class A { void x() { } void y() { x(); } }"),
                 new File("pullup/B.java", "package pullup; public class B extends A {}"));
     }
-    
+
     public void test212934() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java", "package pullup; public class A { }"),
@@ -181,7 +183,7 @@ public class PullUpTest extends RefactoringTestBase {
                 new File("pullup/A.java", "package pullup; public class A extends B {}"),
                 new File("pullup/B.java", "package pullup; public class B { public int i; }"));
     }
-    
+
     public void testPullUpGenMethoda() throws Exception { // #147508 - [Pull Up][Push down] Remap generic names
         writeFilesAndWaitForScan(src,
                 new File("pullup/PullUpBaseClass.java", "package pullup;\n"
@@ -303,7 +305,7 @@ public class PullUpTest extends RefactoringTestBase {
                 new File("pullup/B.java", "package pullup; public class B<T, Z> extends C<T> { }"),
                 new File("pullup/C.java", "package pullup; public class C<Y> { void method(String x) { } }"));
     }
-    
+
     public void testPullUpGenMethodc() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java", "package pullup; public class A<X extends String> extends B<String, X> { X method() { } }"),
@@ -325,7 +327,7 @@ public class PullUpTest extends RefactoringTestBase {
                 new File("pullup/B.java", "package pullup; public class B<T, Z> extends C<T> { }"),
                 new File("pullup/C.java", "package pullup; public class C<Y> { void method(String x) { } }"));
     }
-    
+
     public void testPullUpGenField() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java", "package pullup; public class A<X extends String> extends B<String, X> { X x; }"),
@@ -447,7 +449,7 @@ public class PullUpTest extends RefactoringTestBase {
                 + "\n"
                 + "}"));
     }
-    
+
     public void testPullUpMethodUndo() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("pullup/PullUpBaseClass.java", "package pullup;\n"
@@ -1166,7 +1168,7 @@ public class PullUpTest extends RefactoringTestBase {
                 new File("pullup/A.java", "package pullup; public class A extends B { public void run() { } }"),
                 new File("pullup/B.java", "package pullup; public class B implements Runnable { }"));
     }
-    
+
     public void testPullUpInterface2() throws Exception {
         writeFilesAndWaitForScan(src,
                 new File("pullup/A.java", "package pullup; public class A implements B { }"),
@@ -1204,6 +1206,247 @@ public class PullUpTest extends RefactoringTestBase {
         verifyContent(src,
                 new File("pullup/A.java", "package pullup; public class A extends B {private void method() { foo() } }"),
                 new File("pullup/B.java", "package pullup; public class B { protected void foo() { } }"));
+    }
+
+    public void testPullUpInnerTypeEnum() throws Exception {
+
+        writeFilesAndWaitForScan(src,
+                new File("pullup/A.java",
+                """
+                package pullup;
+                public class A extends B {
+                    private void foo() {
+                    }
+                    enum Suite implements I{ Heart, Diamond, Club, Spade; }
+                    private void method(Suite s) {
+                        foo();
+                    }
+                }"""
+                ),
+                new File("pullup/B.java",
+                """
+                package pullup;
+                public class B { }
+                """
+                ),
+                new File("pullup/I.java",
+                """
+                package pullup;
+                public interface I{ }
+                """
+                )
+        );
+        performPullUp(src.getFileObject("pullup/A.java"), 2, Boolean.FALSE);
+        verifyContent(src,
+                        new File("pullup/A.java",
+                """
+                package pullup;
+                public class A extends B {
+                    private void foo() {
+                    }
+                    private void method(Suite s) {
+                        foo();
+                    }
+                 }"""
+                ),
+                new File("pullup/B.java",
+                """
+                package pullup;
+                public class B {
+
+                    enum Suite implements I {
+                        Heart, Diamond, Club, Spade
+                    }
+                 }
+                """
+                ) ,
+                new File("pullup/I.java",
+                """
+                package pullup;
+                public interface I{ }
+                """
+                )
+
+        );
+    }
+
+    public void testPullUpInnerSimpleRecord() throws Exception {
+       sideBySideCompare=true;
+       showOutputOnPass=true;
+        setStringCompareMode(StringsCompareMode.IGNORE_INDENTATION);
+        writeFilesAndWaitForScan(src,
+                new File("pullup/A.java",
+                """
+                package pullup;
+                public class A extends B {
+                    record R( int i, String name ) {}
+                    private void foo() {
+                    }
+                    private void method(R r) {
+                        foo();
+                    }
+                }"""
+                ),
+                new File("pullup/B.java",
+                """
+                package pullup;
+                public class B { }
+                """
+                ),
+                new File("pullup/I.java",
+                """
+                package pullup;
+                public interface I{ }
+                """
+                )
+        );
+        performPullUp(src.getFileObject("pullup/A.java"), 1, Boolean.FALSE);
+        verifyContent(src,
+                        new File("pullup/A.java",
+                """
+                package pullup;
+                public class A extends B {
+                    private void foo() {
+                    }
+                    private void method(R r) {
+                        foo();
+                    }
+                }"""
+                ),
+                new File("pullup/B.java",
+                """
+                package pullup;
+                public class B {
+
+                    record R(int i, String name) {
+                    }
+                }
+                """
+                ) ,
+                new File("pullup/I.java",
+                """
+                package pullup;
+                public interface I{ }
+                """
+                )
+
+        );
+    }
+
+    public void testPullUpVarargRecord() throws Exception {
+        sideBySideCompare = true;
+        showOutputOnPass = true;
+        setStringCompareMode(StringsCompareMode.IGNORE_INDENTATION);
+
+        writeFilesAndWaitForScan(src,
+                new File("pullup/A.java",
+                """
+                package pullup;
+                public class A extends B {
+                    record R( int i, String... name ) {}
+                    private void foo() {
+                    }
+                    private void method(R r) {
+                        foo();
+                    }
+                 }"""
+                ),
+                new File("pullup/B.java",
+                """
+                package pullup;
+                public class B { }
+                """
+                ),
+                new File("pullup/I.java",
+                """
+                package pullup;
+                public interface I{ }
+                """
+                )
+        );
+        performPullUp(src.getFileObject("pullup/A.java"), 1, Boolean.FALSE);
+        verifyContent(src,
+                        new File("pullup/A.java",
+                """
+                package pullup;
+                public class A extends B {
+                    private void foo() {
+                    }
+                    private void method(R r) {
+                        foo();
+                    }
+                 }"""
+                ),
+                new File("pullup/B.java",
+                """
+                package pullup;
+                public class B {
+
+                    record R(int i, String... name) {
+                    }
+                }
+                """
+                ) ,
+                new File("pullup/I.java",
+                """
+                package pullup;
+                public interface I{ }
+                """
+                )
+
+        );
+    }
+
+    // disable because implements part is broken
+    public void testPullUpInnerRecord() throws Exception {
+        sideBySideCompare=true;
+        writeFilesAndWaitForScan(src,
+                new File("pullup/A.java",
+                """
+                package pullup;
+                public class A extends B {
+                    record R( int age, String name ) {}
+                    private void foo() {
+                    }
+                    private void method(R r) {
+                        foo();
+                    }
+                }
+                """
+                ),
+                new File("pullup/B.java",
+                """
+                package pullup;
+                public class B {}
+                """
+                )
+        );
+        String asText = src.getFileObject("pullup/A.java").asText();
+//        System.out.println("asText = " + asText);
+        performPullUp(src.getFileObject("pullup/A.java"), 1, Boolean.FALSE);
+        verifyContent(src,
+                new File("pullup/A.java",
+                """
+                package pullup;
+                public class A extends B {
+                    private void foo() {
+                    }
+                    private void method(R r) {
+                        foo();
+                    }
+                }"""
+                ),
+                new File("pullup/B.java",
+                """
+                package pullup;
+                public class B {
+
+                    record R(int age, String name) {
+                    }
+                }
+                """
+                )
+        );
     }
 
     private void performPullUpImplements(FileObject source, final int position, final int supertype, Problem... expectedProblems) throws IOException, IllegalArgumentException, InterruptedException {

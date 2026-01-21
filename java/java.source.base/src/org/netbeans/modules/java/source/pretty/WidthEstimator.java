@@ -85,7 +85,6 @@ public class WidthEstimator extends JCTree.Visitor {
 	}
     }
     public void visitTree(JCTree tree) {
-System.err.println("Need width calc for "+tree);
 	width = maxwidth;
     }
     public void visitParens(JCParens tree) {

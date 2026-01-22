@@ -73,7 +73,7 @@ public final class ResourceBundleKeys extends ELRule {
             }
             for (Pair<AstIdentifier, Node> pair : resourceBundles.collectKeys(each.getNode(), info.context())) {
                 String clearedKey = pair.second().getImage().replace("'", "").replace("\"", "");
-                if (!resourceBundles.isValidKey(pair.first().getImage(), clearedKey)) {
+                if (!resourceBundles.isValidKey(info.context(), pair.first().getImage(), clearedKey)) {
                     Hint hint = new Hint(this,
                             NbBundle.getMessage(ResourceBundleKeys.class, "ResourceBundleKeys_Unknown", clearedKey),
                             elResult.getFileObject(),

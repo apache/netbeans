@@ -26,10 +26,11 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import java.io.File;
 import java.io.OutputStream;
-import java.security.Permission;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import jdk.jfr.consumer.RecordingStream;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
@@ -51,6 +52,7 @@ public class TreePathHandleTest extends NbTestCase {
     
     private FileObject sourceRoot;
     
+    @Override
     protected void setUp() throws Exception {
         clearWorkDir();
         
@@ -170,29 +172,40 @@ public class TreePathHandleTest extends NbTestCase {
     
     public void testTreePathIsNotParsing() throws Exception {
         FileObject file = FileUtil.createData(sourceRoot, "test/test.java");
-        
         writeIntoFile(file, "package test; public class test {}");
-        writeIntoFile(FileUtil.createData(sourceRoot, "test/test2.java"), "package test; public class test2 {}");
+
+        FileObject file2 = FileUtil.createData(sourceRoot, "test/test2.java");
+        writeIntoFile(file2, "package test; public class test2 {}");
         
         JavaSource js = JavaSource.forFileObject(file);
         
         SourceUtilsTestUtil.compileRecursively(sourceRoot);
         
-        js.runUserActionTask(new  Task<CompilationController>() {
-            public void run(CompilationController parameter) throws Exception {
-                parameter.toPhase(Phase.RESOLVED);
-                
-                TypeElement string = parameter.getElements().getTypeElement("test.test2");
-                
-                SecurityManager old = System.getSecurityManager();
-                
-                System.setSecurityManager(new SecMan());
-                
-                TreePathHandle.create(string, parameter);
-                
-                System.setSecurityManager(old);
+        AtomicBoolean wasRead = new AtomicBoolean();
+        
+        js.runUserActionTask(controller -> {
+            controller.toPhase(Phase.RESOLVED);
+            
+            TypeElement string = controller.getElements().getTypeElement("test.test2");
+            
+            try (RecordingStream rs = new RecordingStream()) {
+                rs.setMaxSize(Long.MAX_VALUE);
+                rs.enable("jdk.FileRead").withoutThreshold().withStackTrace();
+                rs.onEvent("jdk.FileRead", e -> {
+                    if (e.getString("path").endsWith("test2.java")) {
+                        wasRead.set(true);
+                        System.err.println(e);
+                    }
+                });
+                rs.startAsync();
+//                file2.getInputStream().read();  // check: commenting this in should fail the test
+                TreePathHandle.create(string, controller);
+                // TODO call directly post JDK 21 bump
+                RecordingStream.class.getMethod("stop").invoke(rs); // flushes stream
             }
         }, true);
+        
+        assertFalse("file was read", wasRead.get());
     }
     
     public void testEquals() throws Exception {
@@ -453,27 +466,5 @@ public class TreePathHandleTest extends NbTestCase {
         handle = TreePathHandle.create(tp, info);
         assertNotNull(handle.getElementHandle());
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = false;
-    }
-
-    private static final class SecMan extends SecurityManager {
-
-        @Override
-        public void checkRead(String file) {
-            assertFalse(file.endsWith("test2.java"));
-        }
-
-        @Override
-        public void checkRead(String file, Object context) {
-            assertFalse(file.endsWith("test2.java"));
-        }
-        
-        @Override
-        public void checkPermission(Permission perm) {
-        }
-
-        @Override
-        public void checkPermission(Permission perm, Object context) {
-        }
-
     }
 }

@@ -164,7 +164,7 @@ public class JavaFixUtilities {
                 }
             }
             params.put(e.getKey(), TreePathHandle.create(e.getValue(), info));
-            if (e.getValue() instanceof Callable callable) {
+            if (e.getValue() instanceof Callable<?> callable) {
                 try {
                     extraParamsData.put(e.getKey(), callable.call());
                 } catch (Exception ex) {
@@ -252,9 +252,9 @@ public class JavaFixUtilities {
      * @since 1.48
      */
     public static Fix safelyRemoveFromParent(HintContext ctx, String displayName, TreePath what) {
-        return RemoveFromParent.canSafelyRemove(ctx.getInfo(), what) ? new RemoveFromParent(displayName, ctx.getInfo(), what, true).toEditorFix() : null;
+        return new RemoveFromParent(displayName, ctx.getInfo(), what, true).toEditorFix();
     }
-
+    
     @SuppressWarnings("AssignmentToMethodParameter")
     private static String defaultFixDisplayName(Map<String, TreePath> variables, Map<String, Collection<? extends TreePath>> parametersMulti, String replaceTarget) {
         Map<String, String> stringsForVariables = new LinkedHashMap<>();
@@ -1259,7 +1259,7 @@ public class JavaFixUtilities {
                     Set<Modifier> actualFlags = EnumSet.noneOf(Modifier.class);
                     boolean[] actualAnnotationsMask = new boolean[0];
                     
-                    if (actualContent instanceof Object[] objects && objects[0] instanceof Set set) {
+                    if (actualContent instanceof Object[] objects && objects[0] instanceof Set<?> set) {
                         actualFlags.addAll(NbCollections.checkedSetByFilter(set, Modifier.class, false));
                     }
                     
@@ -1558,6 +1558,7 @@ public class JavaFixUtilities {
      * @return true if and only if inner needs to be wrapped using {@link TreeMaker#Parenthesized(com.sun.source.tree.ExpressionTree) }
      *              to keep the original meaning.
      */
+    @SuppressWarnings("element-type-mismatch")
     public static boolean requiresParenthesis(Tree inner, Tree original, Tree outter) {
         if (!ExpressionTree.class.isAssignableFrom(inner.getKind().asInterface()) || outter == null) return false;
         if (!ExpressionTree.class.isAssignableFrom(outter.getKind().asInterface())) {
@@ -1650,7 +1651,9 @@ public class JavaFixUtilities {
         protected void performRewrite(TransformationContext ctx) {
             WorkingCopy wc = ctx.getWorkingCopy();
             TreePath tp = ctx.getPath();
-            
+            if (safely && !canSafelyRemove(wc, tp)) { // TODO is this needed? UnusedDetector seems to cover this already.
+                return;
+            }
             doRemoveFromParent(wc, tp);
             if (safely) {
                 Element el = wc.getTrees().getElement(tp);
@@ -1672,6 +1675,7 @@ public class JavaFixUtilities {
             }
         }
         
+        @SuppressWarnings("element-type-mismatch")
         private void doRemoveFromParent(WorkingCopy wc, TreePath what) {
             TreeMaker make = wc.getTreeMaker();
             Tree leaf = what.getLeaf();
@@ -1834,7 +1838,7 @@ public class JavaFixUtilities {
             }
         }
 
-        private static boolean canSafelyRemove(CompilationInfo info, TreePath tp) {
+        private static boolean canSafelyRemove(WorkingCopy info, TreePath tp) {
             AtomicBoolean ret = new AtomicBoolean(true);
             Element el = info.getTrees().getElement(tp);
             if (el != null) {

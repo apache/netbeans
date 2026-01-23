@@ -2008,6 +2008,7 @@ public class TreeFactory {
                 paramTypesParam = lbl.toList();
             }
             Constructor<DCReference> c = DCReference.class.getDeclaredConstructor(String.class, JCExpression.class, JCTree.class, javax.lang.model.element.Name.class, List.class);
+            // TODO this adds --add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED
             c.setAccessible(true);
             DCReference result = c.newInstance("", (JCTree.JCExpression) qualExpr, qualExpr == null ? null : ((JCTree.JCExpression) qualExpr).getTree(), member != null ? (com.sun.tools.javac.util.Name) names.fromString(member.toString()) : null, paramTypesParam);
             result.pos = NOPOS;

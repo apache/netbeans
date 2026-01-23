@@ -1,0 +1,281 @@
+<testresult testFile='pipeOperator_03.php'>
+    <scanner>
+        <token id='T_ECHO' start='857' end='861'>
+            <text>echo</text>
+        </token>
+        <token id='T_LNUMBER' start='862' end='863'>
+            <text>8</text>
+        </token>
+        <token id='T_PLUS' start='864' end='865'>
+            <text>+</text>
+        </token>
+        <token id='T_LNUMBER' start='866' end='867'>
+            <text>5</text>
+        </token>
+        <token id='T_PIPE' start='868' end='870'>
+            <text>|&gt;</text>
+        </token>
+        <token id='T_STRING' start='871' end='877'>
+            <text>dechex</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='877' end='878'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='878' end='881'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='881' end='882'>
+            <text>)</text>
+        </token>
+        <token id='T_PIPE' start='883' end='885'>
+            <text>|&gt;</text>
+        </token>
+        <token id='T_STRING' start='886' end='892'>
+            <text>hexdec</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='892' end='893'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='893' end='896'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='896' end='897'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='897' end='898'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='900' end='904'>
+            <text>echo</text>
+        </token>
+        <token id='T_LNUMBER' start='905' end='906'>
+            <text>8</text>
+        </token>
+        <token id='T_PLUS' start='907' end='908'>
+            <text>+</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='909' end='910'>
+            <text>(</text>
+        </token>
+        <token id='T_LNUMBER' start='910' end='911'>
+            <text>5</text>
+        </token>
+        <token id='T_PIPE' start='912' end='914'>
+            <text>|&gt;</text>
+        </token>
+        <token id='T_STRING' start='915' end='921'>
+            <text>dechex</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='921' end='922'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='922' end='925'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='925' end='926'>
+            <text>)</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='926' end='927'>
+            <text>)</text>
+        </token>
+        <token id='T_PIPE' start='928' end='930'>
+            <text>|&gt;</text>
+        </token>
+        <token id='T_STRING' start='931' end='937'>
+            <text>hexdec</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='937' end='938'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='938' end='941'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='941' end='942'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='942' end='943'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='945' end='949'>
+            <text>echo</text>
+        </token>
+        <token id='T_LNUMBER' start='950' end='951'>
+            <text>8</text>
+        </token>
+        <token id='T_PLUS' start='952' end='953'>
+            <text>+</text>
+        </token>
+        <token id='T_LNUMBER' start='954' end='955'>
+            <text>5</text>
+        </token>
+        <token id='T_PIPE' start='956' end='958'>
+            <text>|&gt;</text>
+        </token>
+        <token id='T_STRING' start='959' end='965'>
+            <text>dechex</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='965' end='966'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='966' end='969'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='969' end='970'>
+            <text>)</text>
+        </token>
+        <token id='T_PIPE' start='971' end='973'>
+            <text>|&gt;</text>
+        </token>
+        <token id='T_STRING' start='974' end='980'>
+            <text>hexdec</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='980' end='981'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='981' end='984'>
+            <text>...</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='984' end='985'>
+            <text>)</text>
+        </token>
+        <token id='T_IS_IDENTICAL' start='986' end='989'>
+            <text>===</text>
+        </token>
+        <token id='T_LNUMBER' start='990' end='992'>
+            <text>14</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='994' end='995'>
+            <text>?</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='996' end='1003'>
+            <text>&apos;is 14&apos;</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1005' end='1006'>
+            <text>:</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1007' end='1015'>
+            <text>&apos;not 14&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='1015' end='1016'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='1017' end='1017'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='1016'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='815' end='857' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='815' end='857' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <EchoStatement start='857' end='898'>
+                <CompositionExpression start='862' end='897' operator='PIPE'>
+                    <CompositionExpression start='862' end='882' operator='PIPE'>
+                        <InfixExpression start='862' end='867' operator='PLUS'>
+                            <Scalar start='862' end='863' type='INT' value='8'/>
+                            <Scalar start='866' end='867' type='INT' value='5'/>
+                        </InfixExpression>
+                        <FunctionInvocation start='871' end='882'>
+                            <FucntionName start='871' end='877'>
+                                <NamespaceName start='871' end='877' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='871' end='877' name='dechex'/>
+                                </NamespaceName>
+                            </FucntionName>
+                            <Parameters>
+                                <FirstClassCallableArg start='878' end='881'/>
+                            </Parameters>
+                        </FunctionInvocation>
+                    </CompositionExpression>
+                    <FunctionInvocation start='886' end='897'>
+                        <FucntionName start='886' end='892'>
+                            <NamespaceName start='886' end='892' isCurrent='false' isGlobal='false'>
+                                <Identifier start='886' end='892' name='hexdec'/>
+                            </NamespaceName>
+                        </FucntionName>
+                        <Parameters>
+                            <FirstClassCallableArg start='893' end='896'/>
+                        </Parameters>
+                    </FunctionInvocation>
+                </CompositionExpression>
+            </EchoStatement>
+            <EchoStatement start='900' end='943'>
+                <CompositionExpression start='905' end='942' operator='PIPE'>
+                    <InfixExpression start='905' end='927' operator='PLUS'>
+                        <Scalar start='905' end='906' type='INT' value='8'/>
+                        <ParenthesisExpression start='909' end='927'>
+                            <CompositionExpression start='910' end='926' operator='PIPE'>
+                                <Scalar start='910' end='911' type='INT' value='5'/>
+                                <FunctionInvocation start='915' end='926'>
+                                    <FucntionName start='915' end='921'>
+                                        <NamespaceName start='915' end='921' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='915' end='921' name='dechex'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                        <FirstClassCallableArg start='922' end='925'/>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </CompositionExpression>
+                        </ParenthesisExpression>
+                    </InfixExpression>
+                    <FunctionInvocation start='931' end='942'>
+                        <FucntionName start='931' end='937'>
+                            <NamespaceName start='931' end='937' isCurrent='false' isGlobal='false'>
+                                <Identifier start='931' end='937' name='hexdec'/>
+                            </NamespaceName>
+                        </FucntionName>
+                        <Parameters>
+                            <FirstClassCallableArg start='938' end='941'/>
+                        </Parameters>
+                    </FunctionInvocation>
+                </CompositionExpression>
+            </EchoStatement>
+            <EchoStatement start='945' end='1016'>
+                <ConditionalExpression start='950' end='1015'>
+                    <Condition>
+                        <CompositionExpression start='950' end='992' operator='PIPE'>
+                            <CompositionExpression start='950' end='970' operator='PIPE'>
+                                <InfixExpression start='950' end='955' operator='PLUS'>
+                                    <Scalar start='950' end='951' type='INT' value='8'/>
+                                    <Scalar start='954' end='955' type='INT' value='5'/>
+                                </InfixExpression>
+                                <FunctionInvocation start='959' end='970'>
+                                    <FucntionName start='959' end='965'>
+                                        <NamespaceName start='959' end='965' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='959' end='965' name='dechex'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                        <FirstClassCallableArg start='966' end='969'/>
+                                    </Parameters>
+                                </FunctionInvocation>
+                            </CompositionExpression>
+                            <InfixExpression start='974' end='992' operator='IS_IDENTICAL'>
+                                <FunctionInvocation start='974' end='985'>
+                                    <FucntionName start='974' end='980'>
+                                        <NamespaceName start='974' end='980' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='974' end='980' name='hexdec'/>
+                                        </NamespaceName>
+                                    </FucntionName>
+                                    <Parameters>
+                                        <FirstClassCallableArg start='981' end='984'/>
+                                    </Parameters>
+                                </FunctionInvocation>
+                                <Scalar start='990' end='992' type='INT' value='14'/>
+                            </InfixExpression>
+                        </CompositionExpression>
+                    </Condition>
+                    <Then>
+                        <Scalar start='996' end='1003' type='STRING' value='&apos;is 14&apos;'/>
+                    </Then>
+                    <Else>
+                        <Scalar start='1007' end='1015' type='STRING' value='&apos;not 14&apos;'/>
+                    </Else>
+                </ConditionalExpression>
+            </EchoStatement>
+        </Statements>
+    </Program>
+</testresult>

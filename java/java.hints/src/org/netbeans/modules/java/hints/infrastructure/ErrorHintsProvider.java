@@ -166,7 +166,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
             }
         }
         if (messageRuleCount < allRules.size()) {
-            ehm = new CreatorBasedLazyFixList(info.getFileObject(), code, desc, pos, allRules, data);
+            ehm = new CreatorBasedLazyFixList(info.getSnapshot(), code, desc, pos, allRules, data);
         } else if (processDefault) {
             ehm = ErrorDescriptionFactory.lazyListForFixes(Collections.<Fix>emptyList());
         } else {
@@ -284,7 +284,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
         }
 
         if (isJava) {
-            LazyHintComputationFactory.getAndClearToCompute(info.getFileObject());
+            LazyHintComputationFactory.getAndClearToCompute(info.getSnapshot());
         } else {
             for (ErrorDescription d : result) {
                 d.getFixes().getFixes();

@@ -29,6 +29,9 @@ import java.awt.GridBagConstraints;
 import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -41,6 +44,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
@@ -51,6 +55,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -94,7 +99,7 @@ import org.openide.windows.TopComponent;
  * component showing graph of dependencies for project.
  * @author Milos Kleint 
  */
-public class DependencyGraphTopComponent extends TopComponent implements LookupListener, MultiViewElement {
+public class DependencyGraphTopComponent extends TopComponent implements LookupListener, MultiViewElement, MouseWheelListener {
 
     private static final @StaticResource String ZOOM_IN_ICON = "org/netbeans/modules/maven/graph/zoomin.gif";
     private static final @StaticResource String ZOOM_OUT_ICON = "org/netbeans/modules/maven/graph/zoomout.gif";
@@ -326,6 +331,93 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
         }
     }
 
+    /**
+     * Adds key bindings to move the graph with the cursor-keys around.
+     * Zoom-in/-out with CTRL + + and CTRL + - or the mouse wheel.
+     */
+    public void addKeyboardBindings() {
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, KeyEvent.CTRL_DOWN_MASK), "zoomIn");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, KeyEvent.CTRL_DOWN_MASK), "zoomIn");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.CTRL_DOWN_MASK), "zoomOut");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, KeyEvent.CTRL_DOWN_MASK), "zoomOut");
+
+        getActionMap().put("left", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pane.getHorizontalScrollBar().setValue(pane.getHorizontalScrollBar().getValue() - 10);
+            }
+        });
+
+        getActionMap().put("right", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pane.getHorizontalScrollBar().setValue(pane.getHorizontalScrollBar().getValue() + 10);
+            }
+        });
+
+        getActionMap().put("up", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pane.getVerticalScrollBar().setValue(pane.getVerticalScrollBar().getValue() - 10);
+            }
+        });
+
+        getActionMap().put("down", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pane.getVerticalScrollBar().setValue(pane.getVerticalScrollBar().getValue() + 10);
+            }
+        });
+
+        getActionMap().put("zoomIn", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnBiggerActionPerformed(e);
+            }
+        });
+
+        getActionMap().put("zoomOut", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnSmallerActionPerformed(e);                
+            }
+        });
+    
+        if (scene != null) {
+            pane.setWheelScrollingEnabled(false);
+            JComponent sceneView = scene.getView();
+            if (sceneView == null) {
+                sceneView = scene.createView();
+            }
+            pane.setViewportView(sceneView);
+            sceneView.addMouseWheelListener(this);
+
+            sceneView.setFocusable(true);
+            sceneView.requestFocusInWindow();
+
+            sceneView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_DOWN_MASK), "left");
+            sceneView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_DOWN_MASK), "right");
+            sceneView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "up");
+            sceneView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "down");
+
+        }
+    }
+
+    
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent evt) {
+        
+        final int notches = evt.getWheelRotation();
+        if (notches < 0) {
+            // mouse wheel moved up, zoom in
+            btnBiggerActionPerformed(null);
+        } else {
+            // mouse wheel moved down, zoom out
+            btnSmallerActionPerformed(null);
+        }
+    }
+    
     @Override
     public void componentClosed() {
         super.componentClosed();
@@ -371,7 +463,6 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
 
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
         org.openide.awt.Mnemonics.setLocalizedText(btnGraph, org.openide.util.NbBundle.getMessage(DependencyGraphTopComponent.class, "DependencyGraphTopComponent.btnGraph.text")); // NOI18N
@@ -386,6 +477,7 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
         jToolBar1.add(btnGraph);
 
         btnBigger.setIcon(ImageUtilities.loadImageIcon(ZOOM_IN_ICON, true));
+        btnBigger.setToolTipText(org.openide.util.NbBundle.getMessage(DependencyGraphTopComponent.class, "DependencyGraphTopComponent.btnBigger.toolTipText")); // NOI18N
         btnBigger.setFocusable(false);
         btnBigger.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnBigger.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -397,6 +489,7 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
         jToolBar1.add(btnBigger);
 
         btnSmaller.setIcon(ImageUtilities.loadImageIcon(ZOOM_OUT_ICON, true));
+        btnSmaller.setToolTipText(org.openide.util.NbBundle.getMessage(DependencyGraphTopComponent.class, "DependencyGraphTopComponent.btnSmaller.toolTipText")); // NOI18N
         btnSmaller.setFocusable(false);
         btnSmaller.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnSmaller.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -621,6 +714,7 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
                                 sceneView = scene.createView();
                                 // vlv: print
                                 sceneView.putClientProperty("print.printable", true); // NOI18N
+                                addKeyboardBindings();
                             }
                             pane.setViewportView(sceneView);
                             scene.setSurroundingScrollPane(pane);

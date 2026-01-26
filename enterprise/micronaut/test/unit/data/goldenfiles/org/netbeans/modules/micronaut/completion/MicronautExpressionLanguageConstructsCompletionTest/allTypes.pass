@@ -20,7 +20,6 @@ ClassValue
 CloneNotSupportedException
 Cloneable
 Comparable
-Compiler
 Deprecated
 Double
 Enum
@@ -49,6 +48,7 @@ Iterable
 LayerInstantiationException
 LinkageError
 Long
+MatchException
 Math
 Module
 ModuleLayer
@@ -76,6 +76,7 @@ Runtime
 RuntimeException
 RuntimePermission
 SafeVarargs
+ScopedValue
 SecurityException
 SecurityManager
 Short
@@ -87,6 +88,7 @@ String
 StringBuffer
 StringBuilder
 StringIndexOutOfBoundsException
+StringTemplate
 SuppressWarnings
 System
 Thread
@@ -102,6 +104,7 @@ UnsupportedOperationException
 VerifyError
 VirtualMachineError
 Void
+WrongThreadException
 com
 io
 jakarta

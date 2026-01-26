@@ -233,7 +233,7 @@ public class BuildZipDistributionTest extends TestBase {
         assertTrue("file found: " + testf, testf.exists());
         
         LinkedList<String> allArgs = new LinkedList<String>(Arrays.asList(args));
-        allArgs.addFirst("-J-Dbootstrap.disableJDKCheck=true");
+        allArgs.addFirst("-J-Dbootstrap.disableJDKCheck=true");   // TODO remove once tests can run on JDK 21
         allArgs.addFirst("-J-Dnetbeans.mainclass=" + MainCallback.class.getName());
         allArgs.addFirst(getWorkDirPath());
         allArgs.addFirst("--userdir");

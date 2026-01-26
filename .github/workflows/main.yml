@@ -420,8 +420,9 @@ jobs:
       - name: ergonomics/ide.ergonomics
         run: ant $OPTS -f ergonomics/ide.ergonomics test -Dtest.config=commit
 
-      - name: nb/deadlock.detector
-        run: ant $OPTS -f nb/deadlock.detector test
+      # TODO not JDK 21 compatible
+#      - name: nb/deadlock.detector
+#        run: ant $OPTS -f nb/deadlock.detector test
 
       - name: nb/ide.branding
         run: ant $OPTS -f nb/ide.branding test

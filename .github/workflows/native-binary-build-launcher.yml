@@ -86,7 +86,7 @@ jobs:
           ls -l -R ${SOURCES}
 
       - name: Upload native sources
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: launcher-external-sources
           path: nbbuild/build/native/launcher/sources/
@@ -105,7 +105,7 @@ jobs:
         run: sudo apt install mingw-w64 mingw-w64-tools
 
       - name: Download sources
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: launcher-external-sources
 
@@ -119,7 +119,7 @@ jobs:
         working-directory: platform/o.n.bootstrap/launcher/windows/
 
       - name: Upload bootstrap artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: launcher-bootstrap-bin
           path: platform/o.n.bootstrap/launcher/windows/build/
@@ -135,7 +135,7 @@ jobs:
         working-directory: harness/apisupport.harness/windows-launcher-src
 
       - name: Upload harness artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: launcher-harness-bin
           path: harness/apisupport.harness/windows-launcher-src/build/
@@ -151,7 +151,7 @@ jobs:
         working-directory: nb/ide.launcher/windows
 
       - name: Upload IDE artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: launcher-ide-bin
           path: nb/ide.launcher/windows/build/
@@ -171,7 +171,7 @@ jobs:
       run: mkdir -p myfiles/
 
     - name: Download artifacts from predecessor jobs
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
       with:
         path: myfiles/
 
@@ -203,7 +203,7 @@ jobs:
          echo ""                                                               >> "$BUILDINFO"
 
     - name: Upload bundle
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: launcher-external-binaries
         path: myfiles/

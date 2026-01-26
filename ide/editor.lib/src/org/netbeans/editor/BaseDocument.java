@@ -64,6 +64,7 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 import org.netbeans.api.editor.document.CustomUndoDocument;
 import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.SimpleValueNames;
@@ -888,8 +889,8 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     public void checkTrailingSpaces(int offset) {
         try {
-            int lineNum = Utilities.getLineOffset(this, offset);
-            int lastEditedLine = lastPositionEditedByTyping != null ? Utilities.getLineOffset(this, lastPositionEditedByTyping.getOffset()) : -1;
+            int lineNum = LineDocumentUtils.getLineIndex(this, offset);
+            int lastEditedLine = lastPositionEditedByTyping != null ? LineDocumentUtils.getLineIndex(this, lastPositionEditedByTyping.getOffset()) : -1;
             if (lastEditedLine != -1 && lastEditedLine != lineNum) {
                 // clear trailing spaces in the last edited line
                 Element root = getDefaultRootElement();

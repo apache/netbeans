@@ -1,0 +1,4 @@
+public abstract T get(int arg0) - implement
+public default T getFirst() - override
+public default T getLast() - override
+public int getModCount() - generate

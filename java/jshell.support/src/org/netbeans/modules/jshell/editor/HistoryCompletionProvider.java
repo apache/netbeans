@@ -117,7 +117,7 @@ public class HistoryCompletionProvider implements CompletionProvider {
         int caret = component.getCaretPosition();
         int lineStart = is.getPartBegin();
         try {
-            int lineEnd = LineDocumentUtils.getLineEnd(ld, caret);
+            int lineEnd = LineDocumentUtils.getLineEndOffset(ld, caret);
             if (caret < lineStart || caret > lineEnd) {
                 return null;
             }

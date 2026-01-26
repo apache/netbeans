@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.text.JTextComponent;
 import org.codehaus.groovy.ast.ASTNode;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.EditList;
@@ -161,7 +162,7 @@ public class SurroundWithHint extends GroovySelectionRule {
 
                     edits.replace(end, 0, END_INSERT, false, 0);
 
-                    int startOfRow = Utilities.getRowStart(baseDoc, start);
+                    int startOfRow = LineDocumentUtils.getLineStartOffset(baseDoc, start);
 
                     edits.replace(startOfRow, 0, START_INSERT, false, 1);
                     edits.setFormatAll(true);

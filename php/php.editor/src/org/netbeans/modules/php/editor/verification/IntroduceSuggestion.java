@@ -528,8 +528,8 @@ public class IntroduceSuggestion extends SuggestionRule {
             EditList edits = new EditList(doc);
             edits.replace(templateOffset, 0, "\n" + item.getCustomInsertTemplate(), true, 0); //NOI18N
             edits.apply();
-            templateOffset = LineDocumentUtils.getLineEnd(doc, templateOffset + 1);
-            UiUtils.open(type.getFileObject(), LineDocumentUtils.getLineEnd(doc, templateOffset + 1) - 1);
+            templateOffset = LineDocumentUtils.getLineEndOffset(doc, templateOffset + 1);
+            UiUtils.open(type.getFileObject(), LineDocumentUtils.getLineEndOffset(doc, templateOffset + 1) - 1);
         }
 
         @Override
@@ -569,8 +569,8 @@ public class IntroduceSuggestion extends SuggestionRule {
             EditList edits = new EditList(doc);
             edits.replace(templateOffset, 0, "\n" + item.getCustomInsertTemplate(), true, 0); //NOI18N
             edits.apply();
-            templateOffset = LineDocumentUtils.getLineEnd(doc, templateOffset + 1);
-            UiUtils.open(type.getFileObject(), LineDocumentUtils.getLineEnd(doc, templateOffset + 1) - 1);
+            templateOffset = LineDocumentUtils.getLineEndOffset(doc, templateOffset + 1);
+            UiUtils.open(type.getFileObject(), LineDocumentUtils.getLineEndOffset(doc, templateOffset + 1) - 1);
         }
 
         @Override
@@ -613,7 +613,7 @@ public class IntroduceSuggestion extends SuggestionRule {
             EditList edits = new EditList(doc);
             edits.replace(templateOffset, 0, "\n" + templ, true, 0); //NOI18N
             edits.apply();
-            templateOffset = LineDocumentUtils.getLineEnd(doc, templateOffset + 1) - 2;
+            templateOffset = LineDocumentUtils.getLineEndOffset(doc, templateOffset + 1) - 2;
             UiUtils.open(type.getFileObject(), templateOffset);
         }
 
@@ -674,7 +674,7 @@ public class IntroduceSuggestion extends SuggestionRule {
             EditList edits = new EditList(doc);
             edits.replace(templateOffset, 0, "\n" + templ, true, 0); //NOI18N
             edits.apply();
-            templateOffset = LineDocumentUtils.getLineEnd(doc, templateOffset + 1) - 2;
+            templateOffset = LineDocumentUtils.getLineEndOffset(doc, templateOffset + 1) - 2;
             UiUtils.open(type.getFileObject(), templateOffset);
         }
 
@@ -726,7 +726,7 @@ public class IntroduceSuggestion extends SuggestionRule {
             EditList edits = new EditList(doc);
             edits.replace(templateOffset, 0, "\n" + templ, true, 0); //NOI18N
             edits.apply();
-            templateOffset = LineDocumentUtils.getLineEnd(doc, templateOffset + 1) - 2;
+            templateOffset = LineDocumentUtils.getLineEndOffset(doc, templateOffset + 1) - 2;
             UiUtils.open(type.getFileObject(), templateOffset);
         }
 
@@ -799,7 +799,7 @@ public class IntroduceSuggestion extends SuggestionRule {
             edits.replace(templateOffset, 0, "\n" + template, true, 0); // NOI18N
             edits.apply();
             int caretPositionFromEndOftemplate = Type.STRING.equalsIgnoreCase(backingType) ? 2 : 1;
-            templateOffset = LineDocumentUtils.getLineEnd(doc, templateOffset + 1) - caretPositionFromEndOftemplate;
+            templateOffset = LineDocumentUtils.getLineEndOffset(doc, templateOffset + 1) - caretPositionFromEndOftemplate;
             UiUtils.open(type.getFileObject(), templateOffset);
         }
 

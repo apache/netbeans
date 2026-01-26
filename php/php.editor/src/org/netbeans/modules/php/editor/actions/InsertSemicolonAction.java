@@ -74,7 +74,7 @@ public abstract class InsertSemicolonAction extends BaseAction {
                     try {
                         Caret caret = target.getCaret();
                         int caretPosition = caret.getDot();
-                        int eolOffset = LineDocumentUtils.getLineEnd(doc, caretPosition);
+                        int eolOffset = LineDocumentUtils.getLineEndOffset(doc, caretPosition);
                         doc.insertString(eolOffset, SEMICOLON, null);
                         newLineProcessor.processNewLine(eolOffset, caret, indenter);
                     } catch (BadLocationException ex) {

@@ -1,0 +1,395 @@
+public static int staticField
+public native int hashCode()
+public static final int Byte.BYTES
+public static final int Character.BYTES
+public static final int Double.BYTES
+public static final int Float.BYTES
+public static final int Integer.BYTES
+public static final int Long.BYTES
+public static final int Short.BYTES
+public static final byte Character.COMBINING_SPACING_MARK
+public static final byte Character.CONNECTOR_PUNCTUATION
+public static final byte Character.CONTROL
+public static final byte Character.CURRENCY_SYMBOL
+public static final byte Character.DASH_PUNCTUATION
+public static final byte Character.DECIMAL_DIGIT_NUMBER
+public static final byte Character.DIRECTIONALITY_ARABIC_NUMBER
+public static final byte Character.DIRECTIONALITY_BOUNDARY_NEUTRAL
+public static final byte Character.DIRECTIONALITY_COMMON_NUMBER_SEPARATOR
+public static final byte Character.DIRECTIONALITY_EUROPEAN_NUMBER
+public static final byte Character.DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR
+public static final byte Character.DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR
+public static final byte Character.DIRECTIONALITY_FIRST_STRONG_ISOLATE
+public static final byte Character.DIRECTIONALITY_LEFT_TO_RIGHT
+public static final byte Character.DIRECTIONALITY_LEFT_TO_RIGHT_EMBEDDING
+public static final byte Character.DIRECTIONALITY_LEFT_TO_RIGHT_ISOLATE
+public static final byte Character.DIRECTIONALITY_LEFT_TO_RIGHT_OVERRIDE
+public static final byte Character.DIRECTIONALITY_NONSPACING_MARK
+public static final byte Character.DIRECTIONALITY_OTHER_NEUTRALS
+public static final byte Character.DIRECTIONALITY_PARAGRAPH_SEPARATOR
+public static final byte Character.DIRECTIONALITY_POP_DIRECTIONAL_FORMAT
+public static final byte Character.DIRECTIONALITY_POP_DIRECTIONAL_ISOLATE
+public static final byte Character.DIRECTIONALITY_RIGHT_TO_LEFT
+public static final byte Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC
+public static final byte Character.DIRECTIONALITY_RIGHT_TO_LEFT_EMBEDDING
+public static final byte Character.DIRECTIONALITY_RIGHT_TO_LEFT_ISOLATE
+public static final byte Character.DIRECTIONALITY_RIGHT_TO_LEFT_OVERRIDE
+public static final byte Character.DIRECTIONALITY_SEGMENT_SEPARATOR
+public static final byte Character.DIRECTIONALITY_UNDEFINED
+public static final byte Character.DIRECTIONALITY_WHITESPACE
+public static final byte Character.ENCLOSING_MARK
+public static final byte Character.END_PUNCTUATION
+public static final byte Character.FINAL_QUOTE_PUNCTUATION
+public static final byte Character.FORMAT
+public static final byte Character.INITIAL_QUOTE_PUNCTUATION
+public static final byte Character.LETTER_NUMBER
+public static final byte Character.LINE_SEPARATOR
+public static final byte Character.LOWERCASE_LETTER
+public static final byte Character.MATH_SYMBOL
+public static final int Character.MAX_CODE_POINT
+public static final int Double.MAX_EXPONENT
+public static final int Float.MAX_EXPONENT
+public static final char Character.MAX_HIGH_SURROGATE
+public static final char Character.MAX_LOW_SURROGATE
+public static final int Character.MAX_RADIX
+public static final char Character.MAX_SURROGATE
+public static final byte Byte.MAX_VALUE
+public static final char Character.MAX_VALUE
+public static final double Double.MAX_VALUE
+public static final float Float.MAX_VALUE
+public static final int Integer.MAX_VALUE
+public static final long Long.MAX_VALUE
+public static final short Short.MAX_VALUE
+public static final int Character.MIN_CODE_POINT
+public static final int Double.MIN_EXPONENT
+public static final int Float.MIN_EXPONENT
+public static final char Character.MIN_HIGH_SURROGATE
+public static final char Character.MIN_LOW_SURROGATE
+public static final double Double.MIN_NORMAL
+public static final float Float.MIN_NORMAL
+public static final int Character.MIN_RADIX
+public static final int Character.MIN_SUPPLEMENTARY_CODE_POINT
+public static final char Character.MIN_SURROGATE
+public static final byte Byte.MIN_VALUE
+public static final char Character.MIN_VALUE
+public static final double Double.MIN_VALUE
+public static final float Float.MIN_VALUE
+public static final int Integer.MIN_VALUE
+public static final long Long.MIN_VALUE
+public static final short Short.MIN_VALUE
+public static final byte Character.MODIFIER_LETTER
+public static final byte Character.MODIFIER_SYMBOL
+public static final double Double.NEGATIVE_INFINITY
+public static final float Float.NEGATIVE_INFINITY
+public static final byte Character.NON_SPACING_MARK
+public static final double Double.NaN
+public static final float Float.NaN
+public static final byte Character.OTHER_LETTER
+public static final byte Character.OTHER_NUMBER
+public static final byte Character.OTHER_PUNCTUATION
+public static final byte Character.OTHER_SYMBOL
+public static final byte Character.PARAGRAPH_SEPARATOR
+public static final double Double.POSITIVE_INFINITY
+public static final float Float.POSITIVE_INFINITY
+public static final int Double.PRECISION
+public static final int Float.PRECISION
+public static final byte Character.PRIVATE_USE
+public static final int Byte.SIZE
+public static final int Character.SIZE
+public static final int Double.SIZE
+public static final int Float.SIZE
+public static final int Integer.SIZE
+public static final int Long.SIZE
+public static final int Short.SIZE
+public static final byte Character.SPACE_SEPARATOR
+public static final byte Character.START_PUNCTUATION
+public static final byte Character.SURROGATE
+public static final byte Character.TITLECASE_LETTER
+public static final byte Character.UNASSIGNED
+public static final byte Character.UPPERCASE_LETTER
+public static int Integer.bitCount(int arg0)
+public static int Long.bitCount(long arg0)
+public static int Character.charCount(int arg0)
+public static int Character.codePointAt(CharSequence arg0, int arg1)
+public static int Character.codePointAt(char[] arg0, int arg1)
+public static int Character.codePointAt(char[] arg0, int arg1, int arg2)
+public static int Character.codePointBefore(CharSequence arg0, int arg1)
+public static int Character.codePointBefore(char[] arg0, int arg1)
+public static int Character.codePointBefore(char[] arg0, int arg1, int arg2)
+public static int Character.codePointCount(CharSequence arg0, int arg1, int arg2)
+public static int Character.codePointCount(char[] arg0, int arg1, int arg2)
+public static int Character.codePointOf(String arg0)
+public static int Byte.compare(byte arg0, byte arg1)
+public static int Character.compare(char arg0, char arg1)
+public static int Double.compare(double arg0, double arg1)
+public static int Float.compare(float arg0, float arg1)
+public static int Integer.compare(int arg0, int arg1)
+public static int Long.compare(long arg0, long arg1)
+public static int Short.compare(short arg0, short arg1)
+public static int Byte.compareUnsigned(byte arg0, byte arg1)
+public static int Integer.compareUnsigned(int arg0, int arg1)
+public static int Long.compareUnsigned(long arg0, long arg1)
+public static int Short.compareUnsigned(short arg0, short arg1)
+public static int Integer.compress(int arg0, int arg1)
+public static long Long.compress(long arg0, long arg1)
+public static Byte Byte.decode(String arg0)
+public static Integer Integer.decode(String arg0)
+public static Long Long.decode(String arg0)
+public static Short Short.decode(String arg0)
+public static int Character.digit(char arg0, int arg1)
+public static int Character.digit(int arg0, int arg1)
+public static int Integer.divideUnsigned(int arg0, int arg1)
+public static long Long.divideUnsigned(long arg0, long arg1)
+public static long Double.doubleToLongBits(double arg0)
+public static native long Double.doubleToRawLongBits(double arg0)
+public static int Integer.expand(int arg0, int arg1)
+public static long Long.expand(long arg0, long arg1)
+public static float Float.float16ToFloat(short arg0)
+public static short Float.floatToFloat16(float arg0)
+public static int Float.floatToIntBits(float arg0)
+public static native int Float.floatToRawIntBits(float arg0)
+public static char Character.forDigit(int arg0, int arg1)
+public static byte Character.getDirectionality(char arg0)
+public static byte Character.getDirectionality(int arg0)
+public static Integer Integer.getInteger(String arg0)
+public static Integer Integer.getInteger(String arg0, Integer arg1)
+public static Integer Integer.getInteger(String arg0, int arg1)
+public static Long Long.getLong(String arg0)
+public static Long Long.getLong(String arg0, Long arg1)
+public static Long Long.getLong(String arg0, long arg1)
+public static int Character.getNumericValue(char arg0)
+public static int Character.getNumericValue(int arg0)
+public static int Character.getType(char arg0)
+public static int Character.getType(int arg0)
+public static int Byte.hashCode(byte arg0)
+public static int Character.hashCode(char arg0)
+public static int Double.hashCode(double arg0)
+public static int Float.hashCode(float arg0)
+public static int Integer.hashCode(int arg0)
+public static int Long.hashCode(long arg0)
+public static int Short.hashCode(short arg0)
+public static char Character.highSurrogate(int arg0)
+public static int Integer.highestOneBit(int arg0)
+public static long Long.highestOneBit(long arg0)
+public static native float Float.intBitsToFloat(int arg0)
+public static native double Double.longBitsToDouble(long arg0)
+public static char Character.lowSurrogate(int arg0)
+public static int Integer.lowestOneBit(int arg0)
+public static long Long.lowestOneBit(long arg0)
+public static double Double.max(double arg0, double arg1)
+public static float Float.max(float arg0, float arg1)
+public static int Integer.max(int arg0, int arg1)
+public static long Long.max(long arg0, long arg1)
+public static double Double.min(double arg0, double arg1)
+public static float Float.min(float arg0, float arg1)
+public static int Integer.min(int arg0, int arg1)
+public static long Long.min(long arg0, long arg1)
+public static int Integer.numberOfLeadingZeros(int arg0)
+public static int Long.numberOfLeadingZeros(long arg0)
+public static int Integer.numberOfTrailingZeros(int arg0)
+public static int Long.numberOfTrailingZeros(long arg0)
+public static int Character.offsetByCodePoints(CharSequence arg0, int arg1, int arg2)
+public static int Character.offsetByCodePoints(char[] arg0, int arg1, int arg2, int arg3, int arg4)
+public static byte Byte.parseByte(String arg0)
+public static byte Byte.parseByte(String arg0, int arg1)
+public static double Double.parseDouble(String arg0)
+public static float Float.parseFloat(String arg0)
+public static int Integer.parseInt(String arg0)
+public static int Integer.parseInt(String arg0, int arg1)
+public static int Integer.parseInt(CharSequence arg0, int arg1, int arg2, int arg3)
+public static long Long.parseLong(String arg0)
+public static long Long.parseLong(String arg0, int arg1)
+public static long Long.parseLong(CharSequence arg0, int arg1, int arg2, int arg3)
+public static short Short.parseShort(String arg0)
+public static short Short.parseShort(String arg0, int arg1)
+public static int Integer.parseUnsignedInt(String arg0)
+public static int Integer.parseUnsignedInt(String arg0, int arg1)
+public static int Integer.parseUnsignedInt(CharSequence arg0, int arg1, int arg2, int arg3)
+public static long Long.parseUnsignedLong(String arg0)
+public static long Long.parseUnsignedLong(String arg0, int arg1)
+public static long Long.parseUnsignedLong(CharSequence arg0, int arg1, int arg2, int arg3)
+public static int Integer.remainderUnsigned(int arg0, int arg1)
+public static long Long.remainderUnsigned(long arg0, long arg1)
+public static int Integer.reverse(int arg0)
+public static long Long.reverse(long arg0)
+public static char Character.reverseBytes(char arg0)
+public static int Integer.reverseBytes(int arg0)
+public static long Long.reverseBytes(long arg0)
+public static short Short.reverseBytes(short arg0)
+public static int Integer.rotateLeft(int arg0, int arg1)
+public static long Long.rotateLeft(long arg0, int arg1)
+public static int Integer.rotateRight(int arg0, int arg1)
+public static long Long.rotateRight(long arg0, int arg1)
+public static int Integer.signum(int arg0)
+public static int Long.signum(long arg0)
+public static double Double.sum(double arg0, double arg1)
+public static float Float.sum(float arg0, float arg1)
+public static int Integer.sum(int arg0, int arg1)
+public static long Long.sum(long arg0, long arg1)
+public static int Character.toChars(int arg0, char[] arg1, int arg2)
+public static int Character.toCodePoint(char arg0, char arg1)
+public static char Character.toLowerCase(char arg0)
+public static int Character.toLowerCase(int arg0)
+public static char Character.toTitleCase(char arg0)
+public static int Character.toTitleCase(int arg0)
+public static int Byte.toUnsignedInt(byte arg0)
+public static int Short.toUnsignedInt(short arg0)
+public static long Byte.toUnsignedLong(byte arg0)
+public static long Integer.toUnsignedLong(int arg0)
+public static long Short.toUnsignedLong(short arg0)
+public static char Character.toUpperCase(char arg0)
+public static int Character.toUpperCase(int arg0)
+public static Byte Byte.valueOf(String arg0)
+public static Double Double.valueOf(String arg0)
+public static Float Float.valueOf(String arg0)
+public static Integer Integer.valueOf(String arg0)
+public static Long Long.valueOf(String arg0)
+public static Short Short.valueOf(String arg0)
+public static Byte Byte.valueOf(byte arg0)
+public static Character Character.valueOf(char arg0)
+public static Double Double.valueOf(double arg0)
+public static Float Float.valueOf(float arg0)
+public static Integer Integer.valueOf(int arg0)
+public static Long Long.valueOf(long arg0)
+public static Short Short.valueOf(short arg0)
+public static Byte Byte.valueOf(String arg0, int arg1)
+public static Integer Integer.valueOf(String arg0, int arg1)
+public static Long Long.valueOf(String arg0, int arg1)
+public static Short Short.valueOf(String arg0, int arg1)
+protected native Object clone()
+public boolean equals(Object arg0)
+protected void finalize()
+public final native Class<?> getClass()
+public final native void notify()
+public final native void notifyAll()
+public String toString()
+public final void wait()
+public final void wait(long arg0)
+public final void wait(long arg0, int arg1)
+boolean
+byte
+char
+double
+false
+float
+int
+long
+new
+null
+short
+super
+this
+true
+AbstractMethodError
+Appendable
+ArithmeticException
+ArrayIndexOutOfBoundsException
+ArrayStoreException
+AssertionError
+AutoCloseable
+Boolean
+BootstrapMethodError
+Byte
+CharSequence
+Character
+Class
+ClassCastException
+ClassCircularityError
+ClassFormatError
+ClassLoader
+ClassNotFoundException
+ClassValue
+CloneNotSupportedException
+Cloneable
+Comparable
+Deprecated
+Double
+Enum
+EnumConstantNotPresentException
+Error
+Exception
+ExceptionInInitializerError
+Float
+FunctionalInterface
+IllegalAccessError
+IllegalAccessException
+IllegalArgumentException
+IllegalCallerException
+IllegalMonitorStateException
+IllegalStateException
+IllegalThreadStateException
+IncompatibleClassChangeError
+IndexOutOfBoundsException
+InheritableThreadLocal
+InstantiationError
+InstantiationException
+Integer
+InternalError
+InterruptedException
+Iterable
+LayerInstantiationException
+LinkageError
+Long
+MatchException
+Math
+Module
+ModuleLayer
+NegativeArraySizeException
+NoClassDefFoundError
+NoSuchFieldError
+NoSuchFieldException
+NoSuchMethodError
+NoSuchMethodException
+NullPointerException
+Number
+NumberFormatException
+Object
+OutOfMemoryError
+Override
+Package
+Process
+ProcessBuilder
+ProcessHandle
+Readable
+Record
+ReflectiveOperationException
+Runnable
+Runtime
+RuntimeException
+RuntimePermission
+SafeVarargs
+ScopedValue
+SecurityException
+SecurityManager
+Short
+StackOverflowError
+StackTraceElement
+StackWalker
+StrictMath
+String
+StringBuffer
+StringBuilder
+StringIndexOutOfBoundsException
+StringTemplate
+SuppressWarnings
+System
+Test
+Thread
+ThreadDeath
+ThreadGroup
+ThreadLocal
+Throwable
+TypeNotPresentException
+UnknownError
+UnsatisfiedLinkError
+UnsupportedClassVersionError
+UnsupportedOperationException
+VerifyError
+VirtualMachineError
+Void
+WrongThreadException
+com
+java
+javax
+org
+sun

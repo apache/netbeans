@@ -133,8 +133,8 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
                 caret.setDot(send + 2);
                 return true;
             }
-            int lineStart = LineDocumentUtils.getLineStart(doc, dotPos);
-            int lineEnd = LineDocumentUtils.getLineEnd(doc, dotPos);
+            int lineStart = LineDocumentUtils.getLineStartOffset(doc, dotPos);
+            int lineEnd = LineDocumentUtils.getLineEndOffset(doc, dotPos);
             char[] line = doc.getChars(lineStart, lineEnd - lineStart);
 
             int quotes = 0;
@@ -171,7 +171,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
                     Token<?> token = ts.token();
                     if (token.id() == YamlTokenId.TEXT && doc.getText(dotPos - 1, 1).charAt(0) == '<') {
                         // See if there's anything ahead
-                        int first = LineDocumentUtils.getNextNonWhitespace(doc, dotPos, LineDocumentUtils.getLineEnd(doc, dotPos));
+                        int first = LineDocumentUtils.getNextNonWhitespace(doc, dotPos, LineDocumentUtils.getLineEndOffset(doc, dotPos));
                         if (first == -1) {
                             doc.insertString(dotPos, "%%>", null); // NOI18N
                             caret.setDot(dotPos + 1);
@@ -189,7 +189,7 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
                             }
                         } else if (tokenText.endsWith("<")) {
                             // See if there's anything ahead
-                            int first = LineDocumentUtils.getNextNonWhitespace(doc, dotPos, LineDocumentUtils.getLineEnd(doc, dotPos));
+                            int first = LineDocumentUtils.getNextNonWhitespace(doc, dotPos, LineDocumentUtils.getLineEndOffset(doc, dotPos));
                             if (first == -1) {
                                 doc.insertString(dotPos, "%%>", null); // NOI18N
                                 caret.setDot(dotPos + 1);
@@ -279,8 +279,8 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
         // Basically, use the same indent as the current line, unless the caret is immediately preceeded by a ":" (possibly with whitespace
         // in between)
 
-        int lineBegin = LineDocumentUtils.getLineStart(doc, offset);
-        int lineEnd = LineDocumentUtils.getLineEnd(doc, offset);
+        int lineBegin = LineDocumentUtils.getLineStartOffset(doc, offset);
+        int lineEnd = LineDocumentUtils.getLineEndOffset(doc, offset);
 
         if (lineBegin == offset && lineEnd == offset) {
             // Pressed return on a blank newline - do nothing
@@ -368,11 +368,11 @@ public class YamlKeystrokeHandler implements KeystrokeHandler {
 
     public static int getLineIndent(BaseDocument doc, int offset) {
         try {
-            int start = LineDocumentUtils.getLineStart(doc, offset);
+            int start = LineDocumentUtils.getLineStartOffset(doc, offset);
             int end;
 
             if (LineDocumentUtils.isLineWhitespace(doc, start)) {
-                end = LineDocumentUtils.getLineEnd(doc, offset);
+                end = LineDocumentUtils.getLineEndOffset(doc, offset);
             } else {
                 end = LineDocumentUtils.getLineFirstNonWhitespace(doc, start);
             }

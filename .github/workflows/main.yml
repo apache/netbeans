@@ -157,7 +157,7 @@ jobs:
           show-progress: false
 
       - name: Caching dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
@@ -172,7 +172,7 @@ jobs:
 
       - name: Upload Workspace
         if: ${{ (matrix.java == '17') && success() }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: build
           path: /tmp/build.tar.zst
@@ -186,7 +186,7 @@ jobs:
 
       - name: Upload Dev Build
         if: ${{ matrix.java == '17' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: dev-build_${{github.event.pull_request.number || github.run_id}}
           path: nbbuild/NetBeans-*.zip
@@ -214,7 +214,7 @@ jobs:
             distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
             java-version: 17
       - name: Caching dependencies
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
@@ -259,7 +259,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -351,7 +351,7 @@ jobs:
 
       - name: Download Build
         if: ${{ needs.base-build.result == 'success' && !cancelled() }}
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -395,7 +395,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -485,7 +485,7 @@ jobs:
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -493,7 +493,7 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: Restoring Cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: ~/.hgexternalcache
           key: ${{ runner.os }}-${{ hashFiles('*/external/binaries-list', '*/*/external/binaries-list') }}
@@ -535,7 +535,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -673,6 +673,9 @@ jobs:
 
       - name: ide/jumpto
         run: ant $OPTS -f ide/jumpto test
+
+      - name: ide/languages.env
+        run: ant $OPTS -f ide/languages.env test
 
       - name: ide/languages.hcl
         run: ant $OPTS -f ide/languages.hcl test
@@ -846,7 +849,7 @@ jobs:
     timeout-minutes: 50
     strategy:
       matrix:
-        java: [ '17', '21', '26-ea' ]
+        java: [ '17', '21', '25', '26-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
@@ -864,7 +867,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -931,22 +934,22 @@ jobs:
       - name: java/gradle.test
         run: ant $OPTS -f java/gradle.test test
 
+      - name: java/gradle.java
+        if: ${{ matrix.java == '17' || matrix.java == '21' || matrix.java == '25' }}
+        run: .github/retry.sh ant $OPTS -f java/gradle.java test
+
+      - name: extide/gradle
+        if: ${{ matrix.java == '17' || matrix.java == '21' || matrix.java == '25' }}
+        run: ant $OPTS -f extide/gradle test
+
+      - name: java/gradle.dependencies
+        if: ${{ matrix.java == '17' || matrix.java == '21' || matrix.java == '25' }}
+        run: ant $OPTS -f java/gradle.dependencies test
+
       # TODO next are JDK 21 or 25 incompatibe steps
       - name: java/java.mx.project
         if: ${{ matrix.java == '17' || matrix.java == '21' }}
         run: .github/retry.sh ant $OPTS -f java/java.mx.project test
-
-      - name: java/gradle.java
-        if: ${{ matrix.java == '17' || matrix.java == '21' }}
-        run: .github/retry.sh ant $OPTS -f java/gradle.java test
-
-      - name: extide/gradle
-        if: ${{ matrix.java == '17' || matrix.java == '21' }}
-        run: ant $OPTS -f extide/gradle test
-
-      - name: java/gradle.dependencies
-        if: ${{ matrix.java == '17' }}
-        run: ant $OPTS -f java/gradle.dependencies test
 
       - name: extide/o.apache.tools.ant.module
         if: ${{ matrix.java == '17' }}
@@ -988,7 +991,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1151,7 +1154,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1286,7 +1289,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1456,10 +1459,10 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '25' ]
+        java: [ '17', '26-ea' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '26-ea' }}
       fail-fast: false
     steps:
 
@@ -1475,7 +1478,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1531,7 +1534,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1591,7 +1594,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1636,7 +1639,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1814,7 +1817,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1864,7 +1867,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1915,7 +1918,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -1963,7 +1966,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -2208,7 +2211,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -2301,7 +2304,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -2380,7 +2383,7 @@ jobs:
       # - - -
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -2509,7 +2512,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 
@@ -2550,7 +2553,7 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: build
 

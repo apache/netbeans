@@ -50,6 +50,7 @@ import javax.swing.UIManager;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.EditorStyleConstants;
 import org.netbeans.api.editor.settings.FontColorNames;
@@ -388,7 +389,7 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
                 if(rootView == null) { // this might happen
                     return;
                 }
-                int lineNumber = Utilities.getLineOffset((BaseDocument) master.getEditorPane().getDocument(), master.getEditorPane().viewToModel(new Point(clip.x, clip.y)));
+                int lineNumber = LineDocumentUtils.getLineIndex((BaseDocument) master.getEditorPane().getDocument(), master.getEditorPane().viewToModel(new Point(clip.x, clip.y)));
                 if (lineNumber > 0) {
                     --lineNumber;
                 }
@@ -403,7 +404,7 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
                 int yOffset;
                 int localLineHeight = rec.height;
                 int linesDrawn = clip.height / localLineHeight + 4;  // draw past clipping rectangle to avoid partially drawn numbers
-                int docLines = Utilities.getRowCount((BaseDocument) master.getEditorPane().getDocument());
+                int docLines = LineDocumentUtils.getLineCount((BaseDocument) master.getEditorPane().getDocument());
                 if (lineNumber + linesDrawn > docLines) {
                     linesDrawn = docLines - lineNumber;
                 }

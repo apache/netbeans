@@ -62,7 +62,6 @@ public class TemplateTest extends ExtJellyTestCase {
         return NbModuleSuite.create(
                 NbModuleSuite.createConfiguration(TemplateTest.class).addTest(
                 //SWING
-                "testApplet",
                 "testDialog",
                 "testFrame",
                 "testPanel",
@@ -73,7 +72,6 @@ public class TemplateTest extends ExtJellyTestCase {
                 "testAppl",
                 "testOkCancel",
                 //AWT
-                "testAWTApplet",
                 "testAWTDialog",
                 "testAWTFrame",
                 "testAWTPanel"
@@ -199,17 +197,6 @@ public class TemplateTest extends ExtJellyTestCase {
 
     }
 
-    /** Test case 1.
-     *Create new JApplet template in default package
-     */
-    public void testApplet() throws InterruptedException, IOException, Exception {
-
-
-        begin();
-        testTemplateMethod("JApplet Form", "Swing GUI Forms", "NewJApplet");
-
-    }
-
     /** Test case 2.
      * Create new JDialog template in default package
      */
@@ -278,15 +265,6 @@ public class TemplateTest extends ExtJellyTestCase {
     public void testAWTPanel() throws InterruptedException, IOException {
 
         testTemplateMethod("Panel Form", "AWT GUI Forms", "NewPanel");
-
-    }
-
-    /**AWT Test case 2.
-     * Create new Dialog template in default package
-     */
-    public void testAWTApplet() throws InterruptedException, IOException, Exception {
-
-        testTemplateMethod("Applet Form", "AWT GUI Forms", "NewApplet");
 
     }
 

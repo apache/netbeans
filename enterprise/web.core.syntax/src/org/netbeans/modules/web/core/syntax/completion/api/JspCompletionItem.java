@@ -52,6 +52,7 @@ import org.netbeans.modules.web.jsps.parserapi.Node;
 import org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo;
 import org.netbeans.modules.web.jsps.parserapi.TagInfo;
 import org.netbeans.modules.web.jsps.parserapi.TagVariableInfo;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
 import org.netbeans.swing.plaf.LFCustoms;
@@ -249,8 +250,8 @@ public class JspCompletionItem implements CompletionItem {
 
                 public void run() {
                     try {
-                        int startOffset = Utilities.getRowStart(doc, dotPos);
-                        int endOffset = Utilities.getRowEnd(doc, dotPos);
+                        int startOffset = LineDocumentUtils.getLineStartOffset(doc, dotPos);
+                        int endOffset = LineDocumentUtils.getLineEndOffset(doc, dotPos);
                         indent.reindent(startOffset, endOffset);
                     } catch (BadLocationException ex) {
                         //ignore

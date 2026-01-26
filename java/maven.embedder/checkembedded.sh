@@ -18,6 +18,7 @@
 # under the License.
 
 EXTERNALFILE=external/binariesembedded-list
+REPO=https://repo.maven.apache.org/maven2
 
 while read -r LINE ; do
    if [[ $LINE =~ ^# ]]; then continue; fi
@@ -27,5 +28,5 @@ while read -r LINE ; do
      groupId=`echo ${artifact} | cut  -d ":" -f 1`
      artifactId=`echo ${artifact} | cut -d ":" -f 2`
      version=`echo ${artifact} | cut -d ":" -f 3`
-     mvn dependency:get -DgroupId=${groupId} -DartifactId=${artifactId} -Dversion=${version} | grep 'BUILD FAILURE'
+     mvn dependency:get -DremoteRepositories=$REPO -DgroupId=${groupId} -DartifactId=${artifactId} -Dversion=${version} | grep 'BUILD FAILURE'
 done <  "$EXTERNALFILE"

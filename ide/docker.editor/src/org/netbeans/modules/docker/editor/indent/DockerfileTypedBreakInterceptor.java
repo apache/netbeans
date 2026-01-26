@@ -51,8 +51,8 @@ public final class DockerfileTypedBreakInterceptor implements TypedBreakIntercep
     public void insert(MutableContext context) throws BadLocationException {
         final BaseDocument doc = (BaseDocument) context.getDocument();
         final int offset = context.getCaretOffset();
-        final int lineStart = LineDocumentUtils.getLineStart(doc, offset);
-        final int lineEnd = LineDocumentUtils.getLineEnd(doc, offset);
+        final int lineStart = LineDocumentUtils.getLineStartOffset(doc, offset);
+        final int lineEnd = LineDocumentUtils.getLineEndOffset(doc, offset);
         if (lineStart == lineEnd) {
             //Empty line
             return;

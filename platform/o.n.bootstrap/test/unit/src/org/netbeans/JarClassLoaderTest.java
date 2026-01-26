@@ -437,14 +437,14 @@ public class JarClassLoaderTest extends NbTestCase {
         File classes = new File(getWorkDir(), "classes");
         classes.mkdirs();
         ToolProvider.getSystemJavaCompiler()
-                    .getTask(null, null, d -> { throw new IllegalStateException(d.toString()); }, Arrays.asList("-d", classes.getAbsolutePath()), null,
+                    .getTask(null, null, d -> { throw new IllegalStateException(d.toString()); }, Arrays.asList("-d", classes.getAbsolutePath(), "-proc:none"), null,
                              Arrays.asList(new SourceFileObject("test/Impl.java", "package test; public class Impl { public static String get() { return \"base\"; } }"),
                                            new SourceFileObject("api/API.java", "package api; public class API { public static String run() { return test.Impl.get(); } }")))
                     .call();
         File classes9 = new File(new File(new File(classes, "META-INF"), "versions"), "9");
         classes9.mkdirs();
         ToolProvider.getSystemJavaCompiler()
-                    .getTask(null, null, d -> { throw new IllegalStateException(d.toString()); }, Arrays.asList("-d", classes9.getAbsolutePath(), "-classpath", classes.getAbsolutePath()), null,
+                    .getTask(null, null, d -> { throw new IllegalStateException(d.toString()); }, Arrays.asList("-d", classes9.getAbsolutePath(), "-classpath", classes.getAbsolutePath(), "-proc:none"), null,
                              Arrays.asList(new SourceFileObject("test/Impl.java", "package test; public class Impl { public static String get() { return \"9\"; } }")))
                     .call();
         Map<String, byte[]> jarContent = new LinkedHashMap<>();

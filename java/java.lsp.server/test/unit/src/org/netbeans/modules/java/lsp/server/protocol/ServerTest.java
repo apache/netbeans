@@ -3782,6 +3782,82 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(1).getRange());
         assertEquals("List", fileChanges.get(1).getNewText());
     }
+    
+    public void testSourceActionFixImports() throws Exception {
+        File src = new File(getWorkDir(), "a/Test.java");
+        src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile().getParentFile(), ".test-project"))) {
+        }
+        String code = """
+                      package a;
+                      public class Test {
+                        private final List<String> names = new ArrayList<>();
+                      }
+                      """;
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        CountDownLatch indexingComplete = new CountDownLatch(1);
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
+            @Override
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
+            }
+            @Override
+            public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
+                FixImportsUI ui = MockHtmlViewer.assertDialogShown(params.getId(), FixImportsUI.class);
+                ui.completeSelectedCandidates();
+                return CompletableFuture.completedFuture(null);
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setWorkspaceFolders(List.of(new WorkspaceFolder(getWorkDir().toURI().toString(),getWorkDir().getName())));
+        server.initialize(initParams).get();
+        indexingComplete.await();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+
+        CodeActionParams codeActionParams = new CodeActionParams(
+                id,
+                new Range(new Position(0, 0),
+                        new Position(0, 0)),
+                new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source))
+        );
+
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService()
+                                                              .codeAction(codeActionParams)
+                                                              .get();
+        Optional<CodeAction> fixImports
+                = codeActions.stream()
+                        .filter(Either::isRight)
+                        .map(Either::getRight)
+                        .filter(a -> Bundle.DN_FixImports().equals(a.getTitle()))
+                        .findAny();
+        assertTrue(fixImports.isPresent());
+        CodeAction resolvedCodeAction = server.getTextDocumentService()
+                                              .resolveCodeAction(fixImports.get())
+                                              .get();
+
+        assertNotNull(resolvedCodeAction);
+        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        assertNotNull(edit);
+        assertEquals(1, edit.getChanges().size());
+        List<TextEdit> fileChanges = edit.getChanges().get(tripleSlashUri(uri));
+        assertNotNull(fileChanges);
+        assertEquals(1, fileChanges.size());
+        assertEquals(new Range(new Position(1, 0),
+                               new Position(1, 0)),
+                     fileChanges.get(0).getRange());
+        assertEquals("\nimport java.util.ArrayList;\nimport java.util.List;\n\n", fileChanges.get(0).getNewText());
+    }
 
     public void testRenameDocumentChangesCapabilitiesRenameOp() throws Exception {
         doTestRename(init -> {

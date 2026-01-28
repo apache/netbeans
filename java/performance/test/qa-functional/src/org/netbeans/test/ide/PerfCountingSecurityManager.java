@@ -91,11 +91,7 @@ final class PerfCountingSecurityManager extends SecurityManager implements Calla
     public static void initialize(String prefix, PerfCountingSecurityManager.Mode mode, Set<String> allowedFiles) {
         System.setProperty("counting.security.disabled", "true");
 
-        if (System.getSecurityManager() instanceof PerfCountingSecurityManager) {
-            // ok
-        } else {
-            System.setSecurityManager(new PerfCountingSecurityManager());
-        }
+        System.setSecurityManager(new PerfCountingSecurityManager());
         setCnt(0);
         msgs = new StringWriter();
         pw = new PrintWriter(msgs);
@@ -113,7 +109,6 @@ final class PerfCountingSecurityManager extends SecurityManager implements Calla
 
     static void assertReflection(int maxCount, String whitelist) {
         System.setProperty("counting.reflection.whitelist", whitelist);
-        System.getSecurityManager().checkPermission( SecurityConstants.CHECK_MEMBER_ACCESS_PERMISSION); 
         System.getProperties().remove("counting.reflection.whitelist");
     }
 
@@ -127,7 +122,7 @@ final class PerfCountingSecurityManager extends SecurityManager implements Calla
     }
 
     public static boolean isEnabled() {
-        return System.getSecurityManager() instanceof Callable<?>;
+        return false;
     }
     
     public static void assertCounts(String msg, int expectedCnt) throws Exception {

@@ -36,11 +36,7 @@ final class CountingSecurityManager extends SecurityManager {
     private static String prefix;
     
     public static void initialize(String prefix) {
-        if (System.getSecurityManager() instanceof CountingSecurityManager) {
-            // ok
-        } else {
-            System.setSecurityManager(new CountingSecurityManager());
-        }
+        System.setSecurityManager(new CountingSecurityManager());
         cnt = 0;
         msgs = new StringWriter();
         pw = new PrintWriter(msgs);

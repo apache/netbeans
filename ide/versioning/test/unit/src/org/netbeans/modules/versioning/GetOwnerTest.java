@@ -37,7 +37,6 @@ public class GetOwnerTest extends NbTestCase {
     
     protected File dataRootDir;
     private StatFiles accessMonitor;
-    private SecurityManager defaultSecurityManager;
     protected File versionedFolder;
     protected File unversionedFolder;
 
@@ -69,9 +68,6 @@ public class GetOwnerTest extends NbTestCase {
         userdir.mkdirs();
         System.setProperty("netbeans.user", userdir.getAbsolutePath());
         if(accessMonitor != null) {
-            if(defaultSecurityManager == null) {
-                defaultSecurityManager = System.getSecurityManager();
-            }
             System.setSecurityManager(accessMonitor);
         }
     }
@@ -80,7 +76,8 @@ public class GetOwnerTest extends NbTestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         if(accessMonitor != null) {
-            System.setSecurityManager(defaultSecurityManager);
+            // FIXME - throws UnsupportedOperationException unconditionally, regardless of arg.
+            System.setSecurityManager(null);
         }
     }
      

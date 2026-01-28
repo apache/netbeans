@@ -76,9 +76,6 @@ public abstract class TestBaseHid extends MultiThreadedTestCaseHid {
         if (allTestedFS != null) testedFS = allTestedFS[0];
         // If not null, file accesses are counted through custom SecurityManager.
         if(accessMonitor != null) {
-            if(defaultSecurityManager == null) {
-                defaultSecurityManager = System.getSecurityManager();
-            }
             System.setSecurityManager(accessMonitor);
         }
     }

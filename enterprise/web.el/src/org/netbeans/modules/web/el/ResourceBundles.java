@@ -248,7 +248,7 @@ public final class ResourceBundles {
                             try {
                                 StyledDocument document = ec.getDocument();
                                 int offset = document.getText(0, document.getLength()).indexOf(line.getText());
-                                locations.add(new Location(offset, location.getFile()));
+                                locations.add(new Location(offset, location.getFile(), line.getLineNumber()));
                                 break;
                             } catch (BadLocationException ex) {
                                 Exceptions.printStackTrace(ex);
@@ -642,14 +642,20 @@ public final class ResourceBundles {
 
         private final int offset;
         private final FileObject file;
+        private final int lineNumber;
 
         public Location(FileObject file) {
             this(0, file);
         }
 
         public Location(int offset, FileObject file) {
+            this(offset, file, -1);
+        }
+
+        public Location(int offset, FileObject file, int lineNumber) {
             this.offset = offset;
             this.file = file;
+            this.lineNumber = lineNumber;
         }
 
         public int getOffset() {
@@ -658,6 +664,10 @@ public final class ResourceBundles {
 
         public FileObject getFile() {
             return file;
+        }
+
+        public int getLineNumber() {
+            return lineNumber;
         }
     }
 }

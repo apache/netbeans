@@ -101,7 +101,7 @@ public class ELDeclarationFinder implements DeclarationFinder {
                             refs.offset = bundleLocations.get(0).offset;
                             refs.elementHandle = bundleLocations.get(0).elementHandle;
                             for (RefsHolder location : bundleLocations) {
-                                alternatives.add(new ResourceBundleAlternative(location.fo, location.offset));
+                                alternatives.add(new ResourceBundleAlternative(location.fo, location.offset, location.lineNumber));
                             }
                         }
                     }
@@ -176,7 +176,7 @@ public class ELDeclarationFinder implements DeclarationFinder {
                         value = null;
                     }
                     return locations.stream().map(location -> new RefsHolder(location.getFile(), location.getOffset(),
-                            ELCompletionUtil.getResourceBundleElementHandle(key, value, nodeElem.second(), location.getFile()))).toList();
+                            ELCompletionUtil.getResourceBundleElementHandle(key, value, nodeElem.second(), location.getFile()), location.getLineNumber())).toList();
                 }
             }
         }
@@ -187,10 +187,12 @@ public class ELDeclarationFinder implements DeclarationFinder {
 
         private final FileObject file;
         private final int offset;
+        private final int lineNumber;
 
-        public ResourceBundleAlternative(FileObject file, int offset) {
+        public ResourceBundleAlternative(FileObject file, int offset, int lineNumber) {
             this.offset = offset;
             this.file = file;
+            this.lineNumber = lineNumber;
         }
 
         @Override
@@ -200,13 +202,10 @@ public class ELDeclarationFinder implements DeclarationFinder {
 
         @Override
         public String getDisplayHtml(HtmlFormatter formatter) {
-            StringBuilder b = new StringBuilder();
-
-            b.append("<font color=007c00>");//NOI18N
-            b.append("<b>"); //NOI18N
-            b.append(file.getName());
-            b.append("</b>"); //NOI18N
-            b.append("</font> in "); //NOI18N
+            formatter.emphasis(true);
+            formatter.appendText(file.getName());
+            formatter.emphasis(false);
+            formatter.appendText(" in ");
 
             //add a link to the file relative to the web root
             FileObject pathRoot = ProjectWebRootQuery.getWebRoot(file);
@@ -226,14 +225,14 @@ public class ELDeclarationFinder implements DeclarationFinder {
                 path = file.getPath();
             }
 
-            b.append("<i>"); //NOI18N
-            b.append(path);
-            b.append("</i>"); //NOI18N
-            if (offset > 0) {
-                b.append(":"); //NOI18N
-                b.append(offset + 1); //line offsets are counted from zero, but in editor lines starts with one.
+            formatter.appendHtml("<i>");
+            formatter.appendText(path);
+            formatter.appendHtml("</i>");
+            if (lineNumber > -1) {
+                formatter.appendText(":"); //NOI18N
+                formatter.appendText(String.valueOf(lineNumber + 1)); //line numbers are counted from zero, but in editor lines starts with one.
             }
-            return b.toString();
+            return formatter.getText();
         }
 
         @Override
@@ -288,6 +287,7 @@ public class ELDeclarationFinder implements DeclarationFinder {
         ElementHandle<Element> handle;
         FileObject fo;
         int offset = -1;
+        int lineNumber = -1;
         org.netbeans.modules.csl.api.ElementHandle elementHandle;
 
         RefsHolder() {
@@ -298,10 +298,11 @@ public class ELDeclarationFinder implements DeclarationFinder {
             this.offset = offset;
         }
 
-        public RefsHolder(FileObject fo, int offset, org.netbeans.modules.csl.api.ElementHandle elementHandle) {
+        public RefsHolder(FileObject fo, int offset, org.netbeans.modules.csl.api.ElementHandle elementHandle, int lineNumber) {
             this.fo = fo;
             this.offset = offset;
             this.elementHandle = elementHandle;
+            this.lineNumber = lineNumber;
         }
 
     }

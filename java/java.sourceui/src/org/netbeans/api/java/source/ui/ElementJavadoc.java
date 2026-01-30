@@ -856,7 +856,7 @@ public class ElementJavadoc {
                         });
                         sb.append("<p>"); //NOI18N
                         if (doc.containsKey(DocTree.Kind.DEPRECATED)) {
-                            sb.append("<b>").append(NbBundle.getMessage(ElementJavadoc.class, "JCD-deprecated")).append("</b> <i>").append(doc.get(DocTree.Kind.DEPRECATED)).append("</i><p>"); //NOI18N
+                            sb.append("<b>").append(NbBundle.getMessage(ElementJavadoc.class, "JCD-deprecated")).append("</b> <div style=\"font-style: italic\">").append(doc.get(DocTree.Kind.DEPRECATED)).append("</div><p>"); //NOI18N
                         }
                         if (doc.containsKey(null)) {
                             sb.append(doc.get(null));

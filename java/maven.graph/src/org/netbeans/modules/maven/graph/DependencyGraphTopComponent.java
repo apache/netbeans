@@ -30,8 +30,6 @@ import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -99,7 +97,7 @@ import org.openide.windows.TopComponent;
  * component showing graph of dependencies for project.
  * @author Milos Kleint 
  */
-public class DependencyGraphTopComponent extends TopComponent implements LookupListener, MultiViewElement, MouseWheelListener {
+public class DependencyGraphTopComponent extends TopComponent implements LookupListener, MultiViewElement {
 
     private static final @StaticResource String ZOOM_IN_ICON = "org/netbeans/modules/maven/graph/zoomin.gif";
     private static final @StaticResource String ZOOM_OUT_ICON = "org/netbeans/modules/maven/graph/zoomout.gif";
@@ -333,42 +331,14 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
 
     /**
      * Adds key bindings to move the graph with the cursor-keys around.
-     * Zoom-in/-out with CTRL + + and CTRL + - or the mouse wheel.
+     * Zoom-in/-out with Alt++ and Alt+-
      */
     public void addKeyboardBindings() {
 
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, KeyEvent.CTRL_DOWN_MASK), "zoomIn");
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, KeyEvent.CTRL_DOWN_MASK), "zoomIn");
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.CTRL_DOWN_MASK), "zoomOut");
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, KeyEvent.CTRL_DOWN_MASK), "zoomOut");
-
-        getActionMap().put("left", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                pane.getHorizontalScrollBar().setValue(pane.getHorizontalScrollBar().getValue() - 10);
-            }
-        });
-
-        getActionMap().put("right", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                pane.getHorizontalScrollBar().setValue(pane.getHorizontalScrollBar().getValue() + 10);
-            }
-        });
-
-        getActionMap().put("up", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                pane.getVerticalScrollBar().setValue(pane.getVerticalScrollBar().getValue() - 10);
-            }
-        });
-
-        getActionMap().put("down", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                pane.getVerticalScrollBar().setValue(pane.getVerticalScrollBar().getValue() + 10);
-            }
-        });
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, KeyEvent.ALT_DOWN_MASK), "zoomIn");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ADD, KeyEvent.ALT_DOWN_MASK), "zoomIn");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.ALT_DOWN_MASK), "zoomOut");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, KeyEvent.ALT_DOWN_MASK), "zoomOut");
 
         getActionMap().put("zoomIn", new AbstractAction() {
             @Override
@@ -385,39 +355,15 @@ public class DependencyGraphTopComponent extends TopComponent implements LookupL
         });
     
         if (scene != null) {
-            pane.setWheelScrollingEnabled(false);
             JComponent sceneView = scene.getView();
             if (sceneView == null) {
                 sceneView = scene.createView();
             }
             pane.setViewportView(sceneView);
-            sceneView.addMouseWheelListener(this);
-
-            sceneView.setFocusable(true);
             sceneView.requestFocusInWindow();
-
-            sceneView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_DOWN_MASK), "left");
-            sceneView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_DOWN_MASK), "right");
-            sceneView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "up");
-            sceneView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "down");
-
         }
     }
-
-    
-    @Override
-    public void mouseWheelMoved(MouseWheelEvent evt) {
-        
-        final int notches = evt.getWheelRotation();
-        if (notches < 0) {
-            // mouse wheel moved up, zoom in
-            btnBiggerActionPerformed(null);
-        } else {
-            // mouse wheel moved down, zoom out
-            btnSmallerActionPerformed(null);
-        }
-    }
-    
+  
     @Override
     public void componentClosed() {
         super.componentClosed();

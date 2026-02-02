@@ -26,9 +26,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.apache.lucene.analysis.KeywordAnalyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
+import org.apache.lucene.index.IndexOptions;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
@@ -143,7 +145,7 @@ public class IndexTransactionTest extends NbTestCase {
         final SimpleDocumentIndexCache cache = new SimpleDocumentIndexCache();
         DocumentIndex docIndex = IndexManager.createDocumentIndex(index, cache);
         IndexDocument doc = IndexManager.createDocument("manicka");
-        doc.addPair("name", "manicka", true, false);
+        doc.addPair("name", "manicka", true, true);
         doc.addPair("age", "10", true, true);
         
         Collection<? extends IndexDocument> results = 
@@ -183,7 +185,7 @@ public class IndexTransactionTest extends NbTestCase {
         final SimpleDocumentIndexCache cache = new SimpleDocumentIndexCache();
         DocumentIndex docIndex = IndexManager.createDocumentIndex(index, cache);
         IndexDocument doc = IndexManager.createDocument("manicka");
-        doc.addPair("name", "manicka", true, false);
+        doc.addPair("name", "manicka", true, true);
         doc.addPair("age", "10", true, true);
         
         Collection<? extends IndexDocument> results;
@@ -253,7 +255,11 @@ public class IndexTransactionTest extends NbTestCase {
         @Override
         public Document convert(final String p) {
             final Document doc = new Document();
-            doc.add(new Field(name, p, Field.Store.YES, Field.Index.ANALYZED));
+            FieldType ft = new FieldType();
+            ft.setStored(true);
+            ft.setTokenized(true);
+            ft.setIndexOptions(IndexOptions.DOCS_AND_FREQS);
+            doc.add(new Field(name, p, ft));
             return doc;
         }        
     }

@@ -18,17 +18,19 @@
  */
 package org.netbeans.modules.parsing.lucene;
 
+import java.io.IOException;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.index.TermEnum;
+import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.util.BytesRef;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.parsing.lucene.support.Convertor;
 import org.netbeans.modules.parsing.lucene.support.Index;
 import org.netbeans.modules.parsing.lucene.support.IndexDocument;
 import org.netbeans.modules.parsing.lucene.support.IndexReaderInjection;
 import org.netbeans.modules.parsing.lucene.support.StoppableConvertor;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -52,11 +54,11 @@ class Convertors {
         return new RemoveConvertor();
     }
 
-    static <T> StoppableConvertor<TermEnum, T> newTermEnumToTermConvertor(@NonNull StoppableConvertor<Term, T> delegate) {
+    static <T> StoppableConvertor<TermsEnum, T> newTermEnumToTermConvertor(@NonNull StoppableConvertor<BytesRef, T> delegate) {
         return new TermEnumToTerm<>(delegate);
     }
 
-    static <T> StoppableConvertor<TermEnum, T> newTermEnumToFreqConvertor(@NonNull StoppableConvertor<Index.WithTermFrequencies.TermFreq, T> delegate) {
+    static <T> StoppableConvertor<TermsEnum, T> newTermEnumToFreqConvertor(@NonNull StoppableConvertor<Index.WithTermFrequencies.TermFreq, T> delegate) {
         return new TermEnumToFreq<>(delegate);
     }
 
@@ -82,21 +84,26 @@ class Convertors {
         }
     }
 
-    private static class TermEnumToTerm<T> implements StoppableConvertor<TermEnum,T>, IndexReaderInjection {
+    private static class TermEnumToTerm<T> implements StoppableConvertor<TermsEnum,T>, IndexReaderInjection {
 
-        private final StoppableConvertor<Term,T> delegate;
+        private final StoppableConvertor<BytesRef,T> delegate;
 
-        TermEnumToTerm(@NonNull final StoppableConvertor<Term,T> convertor) {
+        TermEnumToTerm(@NonNull final StoppableConvertor<BytesRef,T> convertor) {
             this.delegate = convertor;
         }
 
         @Override
-        public T convert(@NonNull final TermEnum terms) throws StoppableConvertor.Stop {
-            final Term currentTerm = terms.term();
-            if (currentTerm == null) {
+        public T convert(@NonNull final TermsEnum terms) throws StoppableConvertor.Stop {
+            try {
+                final BytesRef currentTerm = terms.term();
+                if (currentTerm == null) {
+                    return null;
+                }
+                return delegate.convert(currentTerm);
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
                 return null;
             }
-            return delegate.convert(currentTerm);
         }
 
         @Override
@@ -107,7 +114,7 @@ class Convertors {
         }
     }
 
-    private static class TermEnumToFreq<T> implements StoppableConvertor<TermEnum, T>, IndexReaderInjection {
+    private static class TermEnumToFreq<T> implements StoppableConvertor<TermsEnum, T>, IndexReaderInjection {
 
         private final SupportAccessor accessor = SupportAccessor.getInstance();
         private final Index.WithTermFrequencies.TermFreq tf = accessor.newTermFreq();
@@ -118,16 +125,21 @@ class Convertors {
         }
 
         @Override
-        public T convert(TermEnum terms) throws StoppableConvertor.Stop {
-            final Term currentTerm = terms.term();
-            if (currentTerm == null) {
+        public T convert(TermsEnum terms) throws StoppableConvertor.Stop {
+            try {
+                final BytesRef currentTerm = terms.term();
+                if (currentTerm == null) {
+                    return null;
+                }
+                final int freq = terms.docFreq();
+                return delegate.convert(accessor.setTermFreq(tf, currentTerm, freq));
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
                 return null;
             }
-            final int freq = terms.docFreq();
-            return delegate.convert(accessor.setTermFreq(tf, currentTerm, freq));
         }
 
-        @Override
+       @Override
         public void setIndexReader(@NonNull IndexReader indexReader) {
             if (delegate instanceof IndexReaderInjection iri) {
                 iri.setIndexReader(indexReader);

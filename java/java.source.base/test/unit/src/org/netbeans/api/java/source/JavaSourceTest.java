@@ -49,9 +49,8 @@ import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import junit.framework.*;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.util.BytesRef;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -64,7 +63,6 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
-import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.classpath.CacheClassPath;
 import org.netbeans.modules.java.source.parsing.CompilationInfoImpl;
 import org.netbeans.modules.java.source.parsing.DocPositionRegion;
@@ -2381,32 +2379,31 @@ public class JavaSourceTest extends NbTestCase {
         public <T> void query(
                 Collection<? super T> result,
                 Convertor<? super org.apache.lucene.document.Document, T> convertor,
-                FieldSelector selector,
-                AtomicBoolean cancel,
-                Query... queries) throws IOException, InterruptedException {
-            await(cancel);
-        }
-        
-        @Override
-        public <T> void queryTerms(
-                Collection<? super T> result,
-                Term start,
-                StoppableConvertor<Term, T> filter,
-                AtomicBoolean cancel) throws IOException, InterruptedException {
-            await (cancel);
-        }
-        
-        @Override
-        public <S, T> void queryDocTerms(
-                Map<? super T, Set<S>> result,
-                Convertor<? super org.apache.lucene.document.Document, T> convertor,
-                Convertor<? super Term, S> termConvertor,
-                FieldSelector selector,
+                Set<String> selector,
                 AtomicBoolean cancel,
                 Query... queries) throws IOException, InterruptedException {
             await(cancel);
         }
 
+        @Override
+        public <T> void queryTerms(
+                Collection<? super T> result,
+                String field, String start,
+                StoppableConvertor<BytesRef, T> filter,
+                AtomicBoolean cancel) throws IOException, InterruptedException {
+            await (cancel);
+        }
+
+        @Override
+        public <S, T> void queryDocTerms(
+                Map<? super T, Set<S>> result,
+                Convertor<? super org.apache.lucene.document.Document, T> convertor,
+                Convertor<? super BytesRef, S> termConvertor, Set<String> selector,
+                AtomicBoolean cancel,
+                Query... queries) throws IOException, InterruptedException {
+            await(cancel);
+        }
+        
         @Override
         public <S, T> void store(Collection<T> toAdd, Collection<S> toDelete, Convertor<? super T, ? extends org.apache.lucene.document.Document> docConvertor, Convertor<? super S, ? extends Query> queryConvertor, boolean optimize) throws IOException {
         }

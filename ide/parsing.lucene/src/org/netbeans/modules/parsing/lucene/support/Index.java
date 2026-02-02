@@ -25,9 +25,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.util.BytesRef;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 
@@ -93,7 +93,7 @@ public interface Index {
      * @throws IOException in case of IO problem
      * @throws InterruptedException when query was canceled
      */
-    <T> void query (Collection<? super T> result, @NonNull Convertor<? super Document, T> convertor, @NullAllowed FieldSelector selector, @NullAllowed AtomicBoolean cancel, @NonNull Query... queries) throws IOException, InterruptedException;
+    <T> void query (Collection<? super T> result, @NonNull Convertor<? super Document, T> convertor, @NullAllowed Set<String> selector, @NullAllowed AtomicBoolean cancel, @NonNull Query... queries) throws IOException, InterruptedException;
     
     /**
      * Queries the {@link Index} by given queries. In addition to documents it also collects the terms which matched the queries.
@@ -107,11 +107,18 @@ public interface Index {
      * @throws IOException in case of IO problem
      * @throws InterruptedException when query was canceled
      */
-    <S, T> void queryDocTerms(Map<? super T, Set<S>> result, @NonNull Convertor<? super Document, T> convertor, @NonNull Convertor<? super Term, S> termConvertor,@NullAllowed FieldSelector selector, @NullAllowed AtomicBoolean cancel, @NonNull Query... queries) throws IOException, InterruptedException;
+    <S, T> void queryDocTerms(
+            Map<? super T, Set<S>> result,
+            @NonNull Convertor<? super Document, T> convertor,
+            @NonNull Convertor<? super BytesRef, S> termConvertor,
+            @NullAllowed Set<String> selector,
+            @NullAllowed AtomicBoolean cancel,
+            @NonNull Query... queries) throws IOException, InterruptedException;
     
     /**
      * Queries the {@link Index}'s b-tree for terms starting by the start term and accepted by the filter.
      * @param result the {@link Collection} to store results into
+     * @param field the field to analyze
      * @param start the first term to start the b-tree iteration with, if null the iteration start on the first term.
      * @param filter converting the terms into the user objects which are added into the result or null to skeep them.
      * The filter can stop the iteration by throwing the {@link StoppableConvertor.Stop}.
@@ -120,7 +127,7 @@ public interface Index {
      * @throws IOException in case of IO problem
      * @throws InterruptedException when query was canceled
      */
-    <T> void queryTerms(@NonNull Collection<? super T> result, @NullAllowed Term start, @NonNull StoppableConvertor<Term,T> filter, @NullAllowed AtomicBoolean cancel) throws  IOException, InterruptedException;
+    <T> void queryTerms(@NonNull Collection<? super T> result, @NonNull String field, @NullAllowed String start, @NonNull StoppableConvertor<BytesRef,T> filter, @NullAllowed AtomicBoolean cancel) throws  IOException, InterruptedException;
     
     /**
      * Updates the {@link Index} by adding the toAdd objects and deleting toDelete objects.
@@ -199,11 +206,11 @@ public interface Index {
          */
         public final class TermFreq {
             private int freq;
-            private Term term;
+            private BytesRef term;
             
             TermFreq() {}
                         
-            void setTerm(@NonNull final Term term) {
+            void setTerm(@NonNull final BytesRef term) {
                 this.term = term;
             }
             
@@ -216,7 +223,7 @@ public interface Index {
              * @return the term.
              */
             @NonNull
-            public Term getTerm() {
+            public BytesRef getTerm() {
                 return term;
             }
             
@@ -233,6 +240,7 @@ public interface Index {
         /**
          * Queries the {@link Index}'s b-tree for terms and frequencies estimate starting by the start term and accepted by the filter.
          * @param result the {@link Collection} to store results into
+         * @param field the field to analyze
          * @param start the first term to start the b-tree iteration with, if null the iteration start on the first term.
          * @param filter converting the terms into the user objects which are added into the result or null to skeep them.
          * The filter can stop the iteration by throwing the {@link StoppableConvertor.Stop}.
@@ -243,7 +251,8 @@ public interface Index {
          */
         <T> void queryTermFrequencies(
                 @NonNull Collection<? super T> result,
-                @NullAllowed Term start,
+                @NonNull String field,
+                @NullAllowed String start,
                 @NonNull StoppableConvertor<TermFreq,T> filter,
                 @NullAllowed AtomicBoolean cancel) throws  IOException, InterruptedException;
     }

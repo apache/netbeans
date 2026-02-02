@@ -40,6 +40,7 @@ import java.util.TreeSet;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.util.BytesRef;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.parsing.lucene.support.Index;
@@ -91,8 +92,8 @@ public class LucenePerformanceTest extends NbTestCase {
         
         Set<String> result = new HashSet<String>();
         startTime = System.currentTimeMillis();
-        final Pair<StoppableConvertor<Term,String>,Term> filter = QueryUtil.createPackageFilter("", true);
-        index.queryTerms(result, filter.second(), filter.first(), null);
+        final Pair<StoppableConvertor<BytesRef,String>,String> filter = QueryUtil.createPackageFilter("", true);
+        index.queryTerms(result, DocumentUtil.FIELD_PACKAGE_NAME, filter.second(), filter.first(), null);
         endTime = System.currentTimeMillis();
         delta = (endTime-startTime);
         System.out.println("Packages: " + delta);

@@ -98,8 +98,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>3</release-version>
-                        <specification-version>3.0</specification-version>
+                        <release-version>10</release-version>
+                        <specification-version>10.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -221,8 +221,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>2.33</specification-version>
+                        <release-version>3</release-version>
+                        <specification-version>3.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

@@ -27,9 +27,10 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import org.apache.lucene.analysis.KeywordAnalyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
 import org.apache.lucene.search.Query;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.junit.NbTestCase;
@@ -61,6 +62,9 @@ public class NativeFSLockFactoryTest extends NbTestCase {
         final LuceneIndex index = LuceneIndex.create(indexFolder, new KeywordAnalyzer());
         final Collection<? extends Integer> dataSet = generateDataSet(1000);
         final Logger log = Logger.getLogger(LuceneIndex.class.getName());
+        final FieldType ft = new FieldType();
+        ft.setStored(true);
+        ft.setTokenized(true);
         final TestHandler handler = new TestHandler(
             new Runnable() {
                 @Override
@@ -88,12 +92,11 @@ public class NativeFSLockFactoryTest extends NbTestCase {
                             doc.add(new Field(
                                     "val",                  //NOI18N
                                     Integer.toString(p),
-                                    Field.Store.YES,
-                                    Field.Index.ANALYZED_NO_NORMS));
+                                    ft));
                             return doc;
                         }
                     },
-                    new Convertor<String, Query>() {
+                    new Convertor<>() {
                         @Override
                         public Query convert(String p) {
                             throw new UnsupportedOperationException();
@@ -119,8 +122,7 @@ public class NativeFSLockFactoryTest extends NbTestCase {
                         doc.add(new Field(
                                 "val",                  //NOI18N
                                 Integer.toString(p),
-                                Field.Store.YES,
-                                Field.Index.ANALYZED_NO_NORMS));
+                                ft));
                         return doc;
                     }
                 },

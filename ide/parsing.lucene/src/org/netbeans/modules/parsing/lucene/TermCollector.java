@@ -25,10 +25,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.LeafReaderContext;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.Collector;
-import org.apache.lucene.search.Scorer;
+import org.apache.lucene.search.Scorable;
+import org.apache.lucene.search.ScoreMode;
+import org.apache.lucene.search.SimpleCollector;
 import org.netbeans.api.annotations.common.NonNull;
 
 /**
@@ -39,43 +40,35 @@ import org.netbeans.api.annotations.common.NonNull;
  *
  * @author Tomas Zezula
  */
-public final class TermCollector extends Collector {
-    private final Collector delegate;
+public final class TermCollector extends SimpleCollector {
+    private final SimpleCollector delegate;
     private final Map<Integer, Set<Term>> doc2Terms;
-    private int indexOffset;
-    
-    TermCollector(Collector collector) {
+
+    TermCollector(SimpleCollector collector) {
         this.delegate = collector;
         doc2Terms = new HashMap<>();
     }
-    
+
     public void add (final int docId, final @NonNull Term term) {
-        final int realId = docId + indexOffset;
-        doc2Terms.computeIfAbsent(realId, k -> new HashSet<>())
+        doc2Terms.computeIfAbsent(docId, k -> new HashSet<>())
                  .add(term);
     }
-    
+
     Set<Term> get(final int docId) {
         return doc2Terms.get(docId);
     }
-    
+
     Set<? extends Integer> docs() {
         return Collections.unmodifiableSet(doc2Terms.keySet());
-    }    
-    
+    }
+
+    @Override
+    public ScoreMode scoreMode() {
+        return ScoreMode.COMPLETE_NO_SCORES;
+    }
+
     public static interface TermCollecting {
         void attach (TermCollector collector);
-    }
-
-    @Override
-    public void setScorer(Scorer scorer) throws IOException {
-        delegate.setScorer(scorer);
-    }
-
-    @Override
-    public void setNextReader(IndexReader reader, int i) throws IOException {
-        delegate.setNextReader(reader, i);
-        indexOffset = i;
     }
 
     @Override
@@ -84,8 +77,13 @@ public final class TermCollector extends Collector {
     }
 
     @Override
-    public boolean acceptsDocsOutOfOrder() {
-        return delegate.acceptsDocsOutOfOrder();
+    public void setScorer(Scorable scorer) throws IOException {
+        super.setScorer(scorer);
+    }
+
+    @Override
+    protected void doSetNextReader(LeafReaderContext context) throws IOException {
+        super.doSetNextReader(context);
     }
 
 }

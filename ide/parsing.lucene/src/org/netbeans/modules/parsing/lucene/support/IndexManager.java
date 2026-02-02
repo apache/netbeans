@@ -30,8 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.KeywordAnalyzer;
-import org.apache.lucene.index.Term;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
+import org.apache.lucene.util.BytesRef;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.masterfs.providers.ProvidedExtensions;
 import org.netbeans.modules.parsing.lucene.DocumentIndexImpl;
@@ -489,7 +489,7 @@ public final class IndexManager {
         }
 
         @Override
-        public Index.WithTermFrequencies.TermFreq setTermFreq(@NonNull TermFreq into, @NonNull Term term, int freq) {
+        public Index.WithTermFrequencies.TermFreq setTermFreq(@NonNull TermFreq into, @NonNull BytesRef term, int freq) {
             into.setTerm(term);
             into.setFreq(freq);
             return into;

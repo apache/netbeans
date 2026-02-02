@@ -25,21 +25,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.CharTokenizer;
-import org.apache.lucene.analysis.KeywordAnalyzer;
-import org.apache.lucene.analysis.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.LowerCaseFilter;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
+import org.apache.lucene.analysis.core.WhitespaceAnalyzer;
+import org.apache.lucene.analysis.core.WhitespaceTokenizer;
+import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.util.CharTokenizer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.document.FieldType;
+import org.apache.lucene.index.DocValuesType;
+import org.apache.lucene.index.IndexOptions;
+import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.index.IndexableFieldType;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanClause.Occur;
@@ -75,7 +82,7 @@ public class DocumentUtil {
     static final String FIELD_CASE_INSENSITIVE_FEATURE_IDENTS = "cifids"; //NOI18N
     private static final String FIELD_BINARY_NAME = "binaryName";         //NOI18N
     private static final String FIELD_SOURCE = "source";                //NOI18N
-    private static final String FIELD_REFERENCES = "references";        //NOI18N
+    public static final String FIELD_REFERENCES = "references";        //NOI18N
 
     private static final char NO = '-';                                 //NOI18N
     private static final char YES = '+';                                //NOI18N
@@ -95,14 +102,37 @@ public class DocumentUtil {
     private static final char EK_MODULE = 'M';                          //NOI18N
     private static final int SIZE = ClassIndexImpl.UsageType.values().length;
 
+    private static final IndexableFieldType NOT_ANALYZED_STORED;
+    private static final IndexableFieldType NOT_ANALYZED_NOT_STORED;
+    private static final IndexableFieldType ANALYZED_NOT_STORED;
+    
+    static {
+        NOT_ANALYZED_STORED = new FieldType();
+        ((FieldType) NOT_ANALYZED_STORED).setTokenized(false);
+        ((FieldType) NOT_ANALYZED_STORED).setIndexOptions(IndexOptions.DOCS_AND_FREQS);
+        ((FieldType) NOT_ANALYZED_STORED).setStored(true);
+        ((FieldType) NOT_ANALYZED_STORED).freeze();
+        NOT_ANALYZED_NOT_STORED = new FieldType();
+        ((FieldType) NOT_ANALYZED_NOT_STORED).setTokenized(false);
+        ((FieldType) NOT_ANALYZED_NOT_STORED).setIndexOptions(IndexOptions.DOCS_AND_FREQS);
+        ((FieldType) NOT_ANALYZED_NOT_STORED).setStored(false);
+        ((FieldType) NOT_ANALYZED_NOT_STORED).freeze();
+        ANALYZED_NOT_STORED = new FieldType();
+        ((FieldType) ANALYZED_NOT_STORED).setTokenized(true);
+        ((FieldType) ANALYZED_NOT_STORED).setIndexOptions(IndexOptions.DOCS_AND_FREQS);
+        ((FieldType) ANALYZED_NOT_STORED).setStored(true);
+        ((FieldType) ANALYZED_NOT_STORED).freeze();
+    }
+
     private DocumentUtil () {
     }
 
     public static Analyzer createAnalyzer() {
-        final PerFieldAnalyzerWrapper analyzer = new PerFieldAnalyzerWrapper(new KeywordAnalyzer());
-        analyzer.addAnalyzer(DocumentUtil.FIELD_IDENTS, new WhitespaceAnalyzer());
-        analyzer.addAnalyzer(DocumentUtil.FIELD_FEATURE_IDENTS, new WhitespaceAnalyzer());
-        analyzer.addAnalyzer(DocumentUtil.FIELD_CASE_INSENSITIVE_FEATURE_IDENTS, new DocumentUtil.LCWhitespaceAnalyzer());
+        final PerFieldAnalyzerWrapper analyzer = new PerFieldAnalyzerWrapper(new KeywordAnalyzer(), Map.of(
+                DocumentUtil.FIELD_IDENTS, new WhitespaceAnalyzer(),
+                DocumentUtil.FIELD_FEATURE_IDENTS, new WhitespaceAnalyzer(),
+                DocumentUtil.FIELD_CASE_INSENSITIVE_FEATURE_IDENTS, new DocumentUtil.LCWhitespaceAnalyzer()
+        ));
         return analyzer;
     }
 
@@ -158,8 +188,8 @@ public class DocumentUtil {
 
     static String getBinaryName (final Document doc, final ElementKind[] kind) {
         assert doc != null;
-        final Field pkgField = doc.getField(FIELD_PACKAGE_NAME);
-        final Field snField = doc.getField (FIELD_BINARY_NAME);
+        final IndexableField pkgField = doc.getField(FIELD_PACKAGE_NAME);
+        final IndexableField snField = doc.getField (FIELD_BINARY_NAME);
         if (snField == null) {
             return null;
         }
@@ -184,7 +214,7 @@ public class DocumentUtil {
 
     public static String getSimpleBinaryName (final Document doc) {
         assert doc != null;
-        Fieldable field = doc.getFieldable(FIELD_BINARY_NAME);
+        IndexableField field = doc.getField(FIELD_BINARY_NAME);
         if (field == null) {
             return null;
         } else {
@@ -194,14 +224,14 @@ public class DocumentUtil {
     }
     
     public static String getSimpleName(final Document doc) {
-        final Fieldable field = doc.getFieldable(FIELD_SIMPLE_NAME);
+        final IndexableField field = doc.getField(FIELD_SIMPLE_NAME);
         return field == null ?
                 null :
                 field.stringValue();
     }
 
     public static boolean isLocal(@NonNull final Document doc) {
-        Fieldable fld = doc.getFieldable(FIELD_BINARY_NAME);
+        IndexableField fld = doc.getField(FIELD_BINARY_NAME);
         if (fld == null) {
             return false;
         } else {
@@ -220,14 +250,14 @@ public class DocumentUtil {
 
     static String getPackageName (final Document doc) {
         assert doc != null;
-        Field field = doc.getField(FIELD_PACKAGE_NAME);
+        IndexableField field = doc.getField(FIELD_PACKAGE_NAME);
         return field == null ? null : field.stringValue();
     }
 
 
     //Term and query factories
-    static Query binaryNameQuery (final String resourceName) {
-        final BooleanQuery query = new BooleanQuery ();
+    static BooleanQuery.Builder binaryNameQuery (final String resourceName) {
+        final BooleanQuery.Builder query = new BooleanQuery.Builder();
         int index = resourceName.lastIndexOf(BinaryName.PKG_SEPARATOR);  // NOI18N
         String pkgName, sName;
         if (index < 0) {
@@ -280,31 +310,31 @@ public class DocumentUtil {
                                        ", FileName with type char: " + fileName;
         String  simpleName = name.getSimpleName();
         final String caseInsensitiveName = simpleName.toLowerCase();         //XXX: I18N, Locale
-        Document doc = new Document ();
-        Field field = new Field (FIELD_BINARY_NAME,fileName,Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS);
-        doc.add (field);
-        field = new Field (FIELD_PACKAGE_NAME,pkgName,Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS);
-        doc.add (field);
-        field = new Field (FIELD_SIMPLE_NAME,simpleName, Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS);
-        doc.add (field);
-        field = new Field (FIELD_CASE_INSENSITIVE_NAME, caseInsensitiveName, Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS);
-        doc.add (field);
+        Document doc = new Document();
+        Field field = new Field(FIELD_BINARY_NAME, fileName, NOT_ANALYZED_STORED);
+        doc.add(field);
+        field = new Field(FIELD_PACKAGE_NAME, pkgName, NOT_ANALYZED_STORED);
+        doc.add(field);
+        field = new Field(FIELD_SIMPLE_NAME, simpleName, NOT_ANALYZED_STORED);
+        doc.add(field);
+        field = new Field(FIELD_CASE_INSENSITIVE_NAME, caseInsensitiveName, NOT_ANALYZED_STORED);
+        doc.add(field);
         for (String reference : references) {
-            field = new Field (FIELD_REFERENCES,reference,Field.Store.NO,Field.Index.NOT_ANALYZED_NO_NORMS);
+            field = new Field(FIELD_REFERENCES, reference, NOT_ANALYZED_NOT_STORED);
             doc.add(field);
         }
         if (featureIdents != null) {
-            field = new Field(FIELD_FEATURE_IDENTS, featureIdents, Field.Store.NO, Field.Index.ANALYZED_NO_NORMS);
+            field = new Field(FIELD_FEATURE_IDENTS, featureIdents, ANALYZED_NOT_STORED);
             doc.add(field);
-            field = new Field(FIELD_CASE_INSENSITIVE_FEATURE_IDENTS, featureIdents, Field.Store.NO, Field.Index.ANALYZED_NO_NORMS);
+            field = new Field(FIELD_CASE_INSENSITIVE_FEATURE_IDENTS, featureIdents, ANALYZED_NOT_STORED);
             doc.add(field);
         }
         if (idents != null) {
-            field = new Field(FIELD_IDENTS, idents, Field.Store.NO, Field.Index.ANALYZED_NO_NORMS);
+            field = new Field(FIELD_IDENTS, idents, ANALYZED_NOT_STORED);
             doc.add(field);
         }
         if (source != null) {
-            field = new Field (FIELD_SOURCE,source,Field.Store.YES,Field.Index.NOT_ANALYZED_NO_NORMS);
+            field = new Field(FIELD_SOURCE, source, NOT_ANALYZED_STORED);
             doc.add(field);
         }
         return doc;
@@ -404,7 +434,7 @@ public class DocumentUtil {
     }
 
 
-    public static FieldSelector declaredTypesFieldSelector (
+    public static Set<String> declaredTypesFieldSelector (
             final boolean includeSource,
             final boolean includeSimpleName) {
         return includeSource ?
@@ -416,7 +446,7 @@ public class DocumentUtil {
                 Queries.createFieldSelector(FIELD_PACKAGE_NAME, FIELD_BINARY_NAME);
     }
 
-    static FieldSelector sourceNameFieldSelector () {
+    static Set<String> sourceNameFieldSelector () {
         return Queries.createFieldSelector(FIELD_SOURCE);
     }
 
@@ -435,24 +465,13 @@ public class DocumentUtil {
 
     //<editor-fold defaultstate="collapsed" desc="Analyzers Implementation">
     // in Lucene 3.5, WhitespaceTokenizer became final class; isTokenChar was copied.
-    private static class LCWhitespaceTokenizer extends CharTokenizer {
-        LCWhitespaceTokenizer (final Reader r) {
-            super (r);
-        }
-
-        @Override
-        protected boolean isTokenChar(int c) {
-            return !Character.isWhitespace(c);
-        }
-
-        protected char normalize(char c) {
-            return Character.toLowerCase(c);
-        }
-    }
 
     static final class LCWhitespaceAnalyzer extends Analyzer {
-        public TokenStream tokenStream(String fieldName, Reader reader) {
-            return new LCWhitespaceTokenizer(reader);
+        @Override
+        public TokenStreamComponents createComponents(String fieldName) {
+            Tokenizer source = new WhitespaceTokenizer(WhitespaceTokenizer.DEFAULT_MAX_WORD_LEN);
+            TokenStream filter = new LowerCaseFilter(source);
+            return new TokenStreamComponents(source, filter);
         }
     }
 
@@ -620,7 +639,7 @@ public class DocumentUtil {
 
         @Override
         public String convert(Document doc) {
-            Field field = doc.getField(FIELD_SOURCE);
+            IndexableField field = doc.getField(FIELD_SOURCE);
             return field == null ? null : field.stringValue();
         }
     }
@@ -651,31 +670,36 @@ public class DocumentUtil {
         public Query convert(Pair<String, String> p) {
             final String resourceName = p.first();
             final String sourceName = p.second();
-            return fileBased ? createClassesInFileQuery(resourceName,sourceName) : createClassWithEnclosedQuery(resourceName, sourceName);
-        }
-
-        private static Query createClassWithEnclosedQuery (final String resourceName, final String sourceName) {
-            final BooleanQuery query = createFQNQuery(resourceName);
-            if (sourceName != null) {
-                query.add (new TermQuery(new Term (DocumentUtil.FIELD_SOURCE,sourceName)), Occur.MUST);
+            if(fileBased) {
+                return createClassesInFileQuery(resourceName,sourceName);
+            } else {
+                return createClassWithEnclosedQuery(resourceName, sourceName);
             }
-            return query;
         }
 
-        private static Query createClassesInFileQuery (final String resourceName, final String sourceName) {
+        private static BooleanQuery createClassWithEnclosedQuery (final String resourceName, final String sourceName) {
+            final BooleanQuery.Builder result = new BooleanQuery.Builder();
+            result.add(createFQNQuery(resourceName), Occur.MUST);
             if (sourceName != null) {
-                final BooleanQuery result = new BooleanQuery();
+                result.add (new TermQuery(new Term (DocumentUtil.FIELD_SOURCE,sourceName)), Occur.MUST);
+            }
+            return result.build();
+        }
+
+        private static BooleanQuery createClassesInFileQuery (final String resourceName, final String sourceName) {
+            if (sourceName != null) {
+                final BooleanQuery.Builder result = new BooleanQuery.Builder();
                 result.add(createFQNQuery(FileObjects.convertFolder2Package(FileObjects.stripExtension(sourceName))), Occur.SHOULD);
                 result.add(new TermQuery(new Term (DocumentUtil.FIELD_SOURCE,sourceName)),Occur.SHOULD);
-                return result;
+                return result.build();
             } else {
-                final BooleanQuery result = new BooleanQuery();
+                final BooleanQuery.Builder result = new BooleanQuery.Builder();
                 result.add(createFQNQuery(resourceName), Occur.SHOULD);
                 result.add(new TermQuery(new Term (
                         DocumentUtil.FIELD_SOURCE,
                         new StringBuilder(FileObjects.convertPackage2Folder(resourceName)).append('.').append(FileObjects.JAVA).toString())),
                         Occur.SHOULD);
-                return result;
+                return result.build();
             }
         }
 
@@ -690,16 +714,16 @@ public class DocumentUtil {
                 pkgName = resourceName.substring(0, index);
                 sName = resourceName.substring(index+1);
             }
-            final BooleanQuery snQuery = new BooleanQuery();
+            final BooleanQuery.Builder snQuery = new BooleanQuery.Builder();
             snQuery.add (new WildcardQuery (new Term (DocumentUtil.FIELD_BINARY_NAME, sName + DocumentUtil.WILDCARD_QUERY_WILDCARD)),Occur.SHOULD);
             snQuery.add (new PrefixQuery (new Term (DocumentUtil.FIELD_BINARY_NAME, sName + '$')),Occur.SHOULD);   //NOI18N
             if (pkgName.length() == 0) {
-                return snQuery;
+                return snQuery.build();
             }
-            final BooleanQuery fqnQuery = new BooleanQuery();
+            final BooleanQuery.Builder fqnQuery = new BooleanQuery.Builder();
             fqnQuery.add(new TermQuery(new Term(DocumentUtil.FIELD_PACKAGE_NAME,pkgName)), Occur.MUST);
-            fqnQuery.add(snQuery, Occur.MUST);
-            return fqnQuery;
+            fqnQuery.add(snQuery.build(), Occur.MUST);
+            return fqnQuery.build();
         }
 
     }
@@ -715,21 +739,19 @@ public class DocumentUtil {
             final String binaryName = binaryNameSourceNamePair.first();
             final String sourceName = binaryNameSourceNamePair.second();
             assert binaryName != null || sourceName != null;
-            Query query = null;
+            BooleanQuery.Builder query = null;
             if (binaryName != null) {
                 query = binaryNameQuery(binaryName);
             }
             if (sourceName != null) {
                 if (query == null) {
-                   query = new TermQuery(new Term (FIELD_SOURCE,sourceName));
+                   return new TermQuery(new Term (FIELD_SOURCE,sourceName));
                 } else {
-                    assert query instanceof BooleanQuery : "The DocumentUtil.binaryNameQuery was incompatibly changed!";        //NOI18N
-                    final BooleanQuery bq = (BooleanQuery) query;
-                    bq.add(new TermQuery(new Term (FIELD_SOURCE,sourceName)), BooleanClause.Occur.MUST);
+                    query.add(new TermQuery(new Term (FIELD_SOURCE,sourceName)), BooleanClause.Occur.MUST);
                 }
             }
             assert query != null;
-            return query;
+            return query.build();
         }
     }
 

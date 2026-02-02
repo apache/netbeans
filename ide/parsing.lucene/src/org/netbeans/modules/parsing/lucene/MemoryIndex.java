@@ -18,33 +18,39 @@
  */
 package org.netbeans.modules.parsing.lucene;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.LimitTokenCountAnalyzer;
+import org.apache.lucene.analysis.miscellaneous.LimitTokenCountAnalyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldSelector;
+import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.index.TermEnum;
+import org.apache.lucene.index.LeafReader;
+import org.apache.lucene.index.LeafReaderContext;
+import org.apache.lucene.index.PostingsEnum;
+import org.apache.lucene.index.Terms;
+import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.Collector;
+import org.apache.lucene.search.DocIdSetIterator;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.Version;
+import org.apache.lucene.util.BytesRef;
+import org.apache.lucene.util.automaton.CompiledAutomaton;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.parsing.lucene.support.Convertor;
 import org.netbeans.modules.parsing.lucene.support.Index;
-import org.netbeans.modules.parsing.lucene.support.StoppableConvertor;
 import org.openide.util.Parameters;
+
 
 /**
  *
@@ -55,7 +61,7 @@ public class MemoryIndex implements Index {
     private final Analyzer analyzer;
     private final ReentrantReadWriteLock lock;
     //@GuardedBy("this")
-    private RAMDirectory dir;
+    private ByteBuffersDirectory dir;
     //@GuardedBy("this")
     private IndexReader cachedReader;
     
@@ -81,38 +87,33 @@ public class MemoryIndex implements Index {
     public <T> void query(
             @NonNull Collection<? super T> result,
             @NonNull Convertor<? super Document, T> convertor,
-            @NullAllowed FieldSelector selector,
+            @NullAllowed Set<String> selector,
             @NullAllowed AtomicBoolean cancel,
             @NonNull Query... queries) throws IOException, InterruptedException {
         Parameters.notNull("queries", queries);   //NOI18N
         Parameters.notNull("convertor", convertor); //NOI18N
         Parameters.notNull("result", result);       //NOI18N   
-        
-        if (selector == null) {
-            selector = AllFieldsSelector.INSTANCE;
-        }
-        
+
         lock.readLock().lock();
         try {
             IndexReader in = getReader();
             if (in == null) {
                 return;
             }
+            IndexSearcher searcher = new IndexSearcher(in);
             BitSet bs = new BitSet(in.maxDoc());
             Collector c = new BitSetCollector(bs);
-            try (IndexSearcher searcher = new IndexSearcher(in)) {
-                for (Query q : queries) {
-                    if (cancel != null && cancel.get()) {
-                        throw new InterruptedException ();
-                    }
-                    searcher.search(q, c);
+            for (Query q : queries) {
+                if (cancel != null && cancel.get()) {
+                    throw new InterruptedException();
                 }
-            }        
+                searcher.search(q, c);
+            }
             for (int docNum = bs.nextSetBit(0); docNum >= 0; docNum = bs.nextSetBit(docNum+1)) {
                 if (cancel != null && cancel.get()) {
                     throw new InterruptedException ();
                 }
-                Document doc = in.document(docNum, selector);
+                Document doc = in.storedFields().document(docNum, selector);
                 T value = convertor.convert(doc);
                 if (value != null) {
                     result.add (value);
@@ -127,54 +128,90 @@ public class MemoryIndex implements Index {
     public <S, T> void queryDocTerms(
             @NonNull Map<? super T, Set<S>> result,
             @NonNull Convertor<? super Document, T> convertor,
-            @NonNull Convertor<? super Term, S> termConvertor,
-            @NullAllowed FieldSelector selector,
+            @NonNull Convertor<? super BytesRef, S> termConvertor,
+            @NullAllowed Set<String> selector,
             @NullAllowed AtomicBoolean cancel,
             @NonNull Query... queries) throws IOException, InterruptedException {
         Parameters.notNull("result", result);   //NOI18N
         Parameters.notNull("convertor", convertor);   //NOI18N
         Parameters.notNull("termConvertor", termConvertor); //NOI18N
         Parameters.notNull("queries", queries);   //NOI18N
-        
-        
-        if (selector == null) {
-            selector = AllFieldsSelector.INSTANCE;
-        }
 
         lock.readLock().lock();
-        try {
-            IndexReader in = getReader();
+        try (IndexReader in = getReader()) {
             if (in == null) {
                 return;
             }
-            BitSet bs = new BitSet(in.maxDoc());
-            Collector c = new BitSetCollector(bs);
-            TermCollector termCollector = new TermCollector(c);
-            try (IndexSearcher searcher = new IndexSearcher(in)) {
+            for (LeafReaderContext lrc : in.leaves()) {
+                LeafReader lr = lrc.reader();
+                Map<Integer,Set<BytesRef>> docTermMap = new HashMap<>();
                 for (Query q : queries) {
                     if (cancel != null && cancel.get()) {
-                        throw new InterruptedException ();
+                        throw new InterruptedException();
                     }
-                    if (q instanceof TermCollector.TermCollecting termCollecting) {
-                        termCollecting.attach(termCollector);
+                    if (q instanceof TermQuery) {
+                        Terms terms = lr.terms(((TermQuery) q).getTerm().field());
+                        if (terms != null) {
+                            TermsEnum te = terms.iterator();
+                            if (te.seekExact(((TermQuery) q).getTerm().bytes())) {
+                                PostingsEnum pe = te.postings(null);
+                                for (int doc = pe.nextDoc(); doc != DocIdSetIterator.NO_MORE_DOCS; doc = pe.nextDoc()) {
+                                    docTermMap.computeIfAbsent(doc, s -> new HashSet<>())
+                                            .add(((TermQuery) q).getTerm().bytes());
+                                }
+                            }
+                        }
+                    } else if (q instanceof PrefixQuery) {
+                        Terms terms = lr.terms(((PrefixQuery) q).getField());
+                        if (terms != null) {
+                            TermsEnum te = new CompiledAutomaton(((PrefixQuery) q).getAutomaton()).getTermsEnum(terms);
+                            for (BytesRef termValue = te.next(); termValue != null; termValue = te.next()) {
+                                PostingsEnum pe = te.postings(null);
+                                BytesRef localRef = null;
+                                for (int doc = pe.nextDoc(); doc != DocIdSetIterator.NO_MORE_DOCS; doc = pe.nextDoc()) {
+                                    // Defensive copy as TermEnumeration might reuse the returned BytesRef
+                                    if(localRef == null) {
+                                        localRef = BytesRef.deepCopyOf(termValue);
+                                    }
+                                    docTermMap.computeIfAbsent(doc, s -> new HashSet<>())
+                                            .add(localRef);
+                                }
+                            }
+                        }
+                    } else if (q instanceof RegexpFilter) {
+                        Terms terms = lr.terms(((RegexpFilter) q).getField());
+                        if (terms != null) {
+                            TermsEnum te = ((RegexpFilter) q).getTermsEnum(terms);
+                            for (BytesRef termValue = te.next(); termValue != null; termValue = te.next()) {
+                                PostingsEnum pe = te.postings(null);
+                                BytesRef localRef = null;
+                                for (int doc = pe.nextDoc(); doc != DocIdSetIterator.NO_MORE_DOCS; doc = pe.nextDoc()) {
+                                    // Defensive copy as TermEnumeration might reuse the returned BytesRef
+                                    if(localRef == null) {
+                                        localRef = BytesRef.deepCopyOf(termValue);
+                                    }
+                                    docTermMap.computeIfAbsent(doc, s -> new HashSet<>())
+                                            .add(localRef);
+                                }
+                            }
+                        }
                     } else {
-                        throw new IllegalArgumentException (
+                        throw new IllegalArgumentException(
                                 "Query: %s does not implement TermCollecting".formatted(q.getClass().getName())); //NOI18N
                     }
-                    searcher.search(q, termCollector);
                 }
-            }
 
-            for (int docNum = bs.nextSetBit(0); docNum >= 0; docNum = bs.nextSetBit(docNum+1)) {
-                if (cancel != null && cancel.get()) {
-                    throw new InterruptedException ();
-                }
-                Document doc = in.document(docNum, selector);
-                T value = convertor.convert(doc);
-                if (value != null) {
-                    final Set<Term> terms = termCollector.get(docNum);
-                    if (terms != null) {
-                        result.put (value, convertTerms(termConvertor, terms));
+                for (Map.Entry<Integer,Set<BytesRef>> docNum: docTermMap.entrySet()) {
+                    if (cancel != null && cancel.get()) {
+                        throw new InterruptedException();
+                    }
+                    Document doc = lr.storedFields().document(docNum.getKey(), selector);
+                    T value = convertor.convert(doc);
+                    if (value != null) {
+                        final Set<BytesRef> terms = docNum.getValue();
+                        if (terms != null) {
+                            result.put(value, convertTerms(termConvertor, terms));
+                        }
                     }
                 }
             }
@@ -186,33 +223,40 @@ public class MemoryIndex implements Index {
     @Override
     public <T> void queryTerms(
             @NonNull Collection<? super T> result,
-            @NullAllowed Term start,
-            @NonNull StoppableConvertor<Term, T> filter,
+            @NonNull String field,
+            @NullAllowed String startValue,
+            @NonNull Convertor<BytesRef, T> filter,
             @NullAllowed AtomicBoolean cancel) throws IOException, InterruptedException {
         Parameters.notNull("result", result);   //NOI18N
         Parameters.notNull("filter", filter); //NOI18N
-        
+
+        BytesRef startBytesRef;
+
+        if (startValue == null) {
+            startBytesRef = new BytesRef("");
+        } else {
+            startBytesRef = new BytesRef(startValue);
+        }
+
         lock.readLock().lock();
         try {
             IndexReader in = getReader();
             if (in == null) {
                 return;
             }
-            try (TermEnum terms = start == null ? in.terms() : in.terms(start)) {
-                do {
-                    if (cancel != null && cancel.get()) {
-                        throw new InterruptedException ();
-                    }
-                    Term currentTerm = terms.term();
-                    if (currentTerm != null) {                    
-                        T vote = filter.convert(currentTerm);
+            for(LeafReaderContext lrc: in.leaves()) {
+                TermsEnum te = lrc.reader().terms(field).iterator();
+                if (te.seekCeil(startBytesRef) != TermsEnum.SeekStatus.END) {
+                    do {
+                        if (cancel != null && cancel.get()) {
+                            throw new InterruptedException();
+                        }
+                        T vote = filter.convert(te.term());
                         if (vote != null) {
                             result.add(vote);
                         }
-                    }
-                } while (terms.next());
-            } catch (StoppableConvertor.Stop stop) {
-                //Stop iteration of TermEnum
+                    } while (te.next() != null);
+                }
             }
         } finally {
             lock.readLock().unlock();
@@ -278,11 +322,7 @@ public class MemoryIndex implements Index {
     @CheckForNull
     private synchronized IndexReader getReader() throws IOException {
         if (cachedReader == null) {
-            try {
-                cachedReader = IndexReader.open(getDirectory());
-            } catch (FileNotFoundException fnf) {
-                //pass - returns null
-            }
+            cachedReader = DirectoryReader.open(getDirectory());
         }
         return cachedReader;
     }
@@ -290,7 +330,7 @@ public class MemoryIndex implements Index {
     private synchronized void refreshReader() throws IOException {
         assert lock.isWriteLockedByCurrentThread();
         if (cachedReader != null) {
-            IndexReader newReader = IndexReader.openIfChanged(cachedReader);
+            IndexReader newReader = DirectoryReader.openIfChanged((DirectoryReader) cachedReader);
             if (newReader != null) {
                 cachedReader.close();
                 cachedReader = newReader;
@@ -299,23 +339,20 @@ public class MemoryIndex implements Index {
     }
 
     private synchronized IndexWriter getWriter() throws IOException {
-        IndexWriterConfig conf = new IndexWriterConfig(
-                Version.LUCENE_36,
-                new LimitTokenCountAnalyzer(analyzer, IndexWriter.DEFAULT_MAX_FIELD_LENGTH)
-        );
+        IndexWriterConfig conf = new IndexWriterConfig(new LimitTokenCountAnalyzer(analyzer, 10_000));
         return new IndexWriter (getDirectory(), conf);
     }
     
     private synchronized Directory getDirectory() {
         if (dir == null) {
-            dir = new RAMDirectory();
+            dir = new ByteBuffersDirectory();
         }
         return dir;
     }
     
-    private static <T> Set<T> convertTerms(final Convertor<? super Term, T> convertor, final Set<? extends Term> terms) {
+    private static <T> Set<T> convertTerms(final Convertor<? super BytesRef, T> convertor, final Set<? extends BytesRef> terms) {
         Set<T> result = new HashSet<>(terms.size());
-        for (Term term : terms) {
+        for (BytesRef term : terms) {
             result.add(convertor.convert(term));
         }
         return result;

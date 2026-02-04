@@ -33,6 +33,7 @@ import org.netbeans.swing.plaf.LFCustoms;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.windows.OnShowing;
 import org.openide.windows.TopComponent;
@@ -40,16 +41,25 @@ import org.openide.windows.WindowManager;
 
 /**
  * For lifecycle tasks.
+ *
  * @author mbien
  */
 public final class Module {
 
     private static final String INITIAL_OPEN_DONE_KEY = "initial-open-done"; //NOI18N
+    private static final String INITIAL_OPEN_BRANDING_KEY = "Favorites.openOnFirstFile"; //NOI18N
 
     private Module() {}
 
     @OnShowing
     public final static class EDTInit implements Runnable {
+
+        private final boolean openOnFirstFile;
+
+        public EDTInit() {
+            openOnFirstFile = Boolean.parseBoolean(
+                    NbBundle.getMessage(Module.class, INITIAL_OPEN_BRANDING_KEY));
+        }
 
         @Override
         public void run() {
@@ -76,6 +86,9 @@ public final class Module {
 
         // very first file editor opened will also open the Favorites tab
         private void attachFirstEditorOpenListener() {
+            if (!openOnFirstFile) {
+                return;
+            }
             Preferences prefs = NbPreferences.forModule(Module.class);
             if (prefs.getBoolean(INITIAL_OPEN_DONE_KEY, false)) {
                 return;

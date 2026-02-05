@@ -5996,7 +5996,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         path = new TreePath(path, mid);
                         TypeMirror typeMirror = controller.getTrees().getTypeMirror(path);
                         final ExecutableType midTM = typeMirror != null && typeMirror.getKind() == TypeKind.EXECUTABLE ? (ExecutableType) typeMirror : null;
-                        final ExecutableElement midEl = midTM == null ? null : (ExecutableElement) controller.getTrees().getElement(path);
+                        final ExecutableElement midEl = midTM != null && controller.getTrees().getElement(path) instanceof ExecutableElement ee ? ee : null;
                         switch (mid.getKind()) {
                             case MEMBER_SELECT: {
                                 String name = ((MemberSelectTree) mid).getIdentifier().toString();

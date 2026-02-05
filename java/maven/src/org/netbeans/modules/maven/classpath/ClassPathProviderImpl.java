@@ -514,8 +514,7 @@ public final class ClassPathProviderImpl implements ClassPathProvider, ActiveJ2S
                     if(moduleInfoFile.exists()) {
                         FileObject moduleInfo = FileUtil.toFileObject(moduleInfoFile);
                         String sourceLevel = SourceLevelQuery.getSourceLevel2(moduleInfo).getSourceLevel();
-                        String ide_jdkvers = System.getProperty("java.version"); //NOI18N
-                        if(!sourceLevel.startsWith("1.") && !ide_jdkvers.startsWith("1.")) { //NOI18N
+                        if (sourceLevel != null && !sourceLevel.startsWith("1.")) { //NOI18N
                             // both sourceLevel and ideJDK are 9+
                             ret = hasModuleInfoCP.get();  
                         }

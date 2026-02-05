@@ -1,9 +1,8 @@
 Name: Jakarta Faces
-Version: 4.0.13
+Version: 4.1.6
 License: EPL-v20
-Description: Jakarta Faces 4.0.13
-Origin: Eclipse Foundation (https://repo1.maven.org/maven2/org/glassfish/jakarta.faces/4.0.13/)
-Files: jakarta.faces-4.0.13.jar
+Description: Jakarta Faces 4.1.6
+Origin: Eclipse Foundation (https://repo1.maven.org/maven2/org/glassfish/jakarta.faces/4.1.6/)
 
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.

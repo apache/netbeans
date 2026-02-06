@@ -778,4 +778,64 @@ public class CommentCollectorTest extends NbTestCase {
         }
     }
 
+    public void testImproperlyMappedCommentsMembersStartFromModifiers() throws Exception {
+        File testFile = new File(work, "Test.java");
+        final String origin =
+                """
+                public class Test {
+                    static final int I = 1; //trailing
+
+                    //preceding
+                    @Deprecated
+                    void test() {
+                    }
+
+                    Test() {}
+                }
+                """;
+        TestUtilities.copyStringToFile(testFile, origin);
+        JavaSource src = getJavaSource(testFile);
+
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+            public void run(final WorkingCopy workingCopy) throws Exception {
+                workingCopy.toPhase(JavaSource.Phase.PARSED);
+                final CommentHandlerService service = CommentHandlerService.instance(workingCopy.impl.getJavacTask().getContext());
+
+                ErrorAwareTreeScanner<Void, Void> w = new ErrorAwareTreeScanner<Void, Void>() {
+                    @Override
+                    public Void visitClass(ClassTree node, Void p) {
+                        super.visitClass(node, p);
+
+                        //verify the comments for the field I are not mapped:
+                        Tree fieldMember = node.getMembers().get(0);
+
+                        assertEquals(Tree.Kind.VARIABLE, fieldMember.getKind());
+                        assertEquals("I", ((VariableTree) fieldMember).getName().toString());
+
+                        CommentSetImpl fieldCommentSet = service.getComments(fieldMember);
+
+                        assertFalse(fieldCommentSet.areCommentsMapped());
+                        verify(fieldMember, CommentSet.RelativePosition.PRECEDING, service);
+                        verify(fieldMember, CommentSet.RelativePosition.INLINE, service);
+                        verify(fieldMember, CommentSet.RelativePosition.TRAILING, service);
+                        return null;
+                    }
+
+                    @Override
+                    public Void visitMethod(MethodTree node, Void p) {
+                        if (node.getName().contentEquals("test")) {
+                            workingCopy.getTreeUtilities().getComments(node.getModifiers(), true);
+                            verify(node, CommentSet.RelativePosition.PRECEDING, service, "//preceding");
+                            verify(node, CommentSet.RelativePosition.INLINE, service);
+                            verify(node, CommentSet.RelativePosition.TRAILING, service);
+                        }
+                        return super.visitMethod(node, p);
+                    }
+                };
+                w.scan(workingCopy.getCompilationUnit(), null);
+            }
+        };
+
+        src.runModificationTask(task);
+    }
 }

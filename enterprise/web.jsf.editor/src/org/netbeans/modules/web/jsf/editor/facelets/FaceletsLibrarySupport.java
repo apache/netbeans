@@ -61,6 +61,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -285,7 +286,7 @@ public class FaceletsLibrarySupport {
                 //exclude the jsf jars from the classpath, if jsf20 library is available,
                 //we'll use the jars from the netbeans library instead
                 String fsName = cpRoot.getFileSystem().getDisplayName(); //any better way?
-                if(!fsName.endsWith("javax.faces.jar")) { //NOI18N
+                if(!fsName.endsWith("javax.faces.jar") && !fsName.endsWith("jakarta.faces.jar")) { //NOI18N
                     urlsToLoad.add(URLMapper.findURL(cpRoot, URLMapper.INTERNAL));
                     LOGGER.log(Level.FINE, "+++{0}", cpRoot); //NOI18N
                 } else {
@@ -297,7 +298,7 @@ public class FaceletsLibrarySupport {
             }
         }
         
-        ClassLoader proxyLoader = new URLClassLoader(urlsToLoad.toArray(new URL[]{}), originalLoader) {
+        ClassLoader proxyLoader = new URLClassLoader(urlsToLoad.toArray(URL[]::new), originalLoader) {
 
 	    //prevent services loading from mojarra's sources
 	    @Override
@@ -370,7 +371,7 @@ public class FaceletsLibrarySupport {
                     //happen that there is no javax-faces.jar with the .taglib.xml files
                     //on the compile classpath and we still want the features like code
                     //completion work. This happens for example in Maven web projects.
-                    DefaultFaceletLibraries defaultFaceletLibraries = DefaultFaceletLibraries.getInstance();
+                    DefaultFaceletLibraries defaultFaceletLibraries = new DefaultFaceletLibraries(jsfVersion);
                     Collection<FileObject> libraryDescriptorFiles = defaultFaceletLibraries.getLibrariesDescriptorsFiles();
                     final Collection<URI> libraryURIs = new ArrayList<>();
                     for (FileObject fo : libraryDescriptorFiles) {
@@ -382,13 +383,13 @@ public class FaceletsLibrarySupport {
                     }
                     faceletTaglibProviders.add(sc -> libraryURIs);
 
-                    jsfRIJars.add(defaultFaceletLibraries.getJsfImplJar().toURI().toURL());
+                    jsfRIJars.add(Utilities.toURI(defaultFaceletLibraries.getJsfImplJar()).toURL());
                 }
             } catch (MalformedURLException ex) {
                 Exceptions.printStackTrace(ex);
             }
 
-            URLClassLoader jsfRIClassLoader = new URLClassLoader(jsfRIJars.toArray(new URL[]{}));
+            URLClassLoader jsfRIClassLoader = new URLClassLoader(jsfRIJars.toArray(URL[]::new));
 
             //parse the libraries
             ServletContext sc = new EmptyServletContext();

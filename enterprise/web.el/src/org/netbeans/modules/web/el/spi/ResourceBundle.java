@@ -25,23 +25,23 @@ import org.openide.filesystems.FileObject;
  * @author marekfukala
  */
 public final class ResourceBundle {
-    
+
     private final String baseName, var;
     private final List<FileObject> files;
-    
+
     public ResourceBundle(String baseName, String var, List<FileObject> files) {
         this.baseName = baseName;
         this.var = var;
         this.files = files;
     }
-    
+
     /**
      * @return fully qualified name of the properties file representing the resource bundle.
      */
     public String getBaseName() {
         return baseName;
     }
-    
+
     /**
      * @return variable representing the resource bundle
      */
@@ -54,6 +54,11 @@ public final class ResourceBundle {
      */
     public List<FileObject> getFiles() {
         return files;
+    }
+
+    @Override
+    public String toString() {
+        return "ResourceBundle{" + "baseName=" + baseName + ", var=" + var + '}';
     }
 
 }

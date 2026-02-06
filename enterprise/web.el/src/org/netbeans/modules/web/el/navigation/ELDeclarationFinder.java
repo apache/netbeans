@@ -41,7 +41,6 @@ import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.csl.api.DataLoadersBridge;
 import org.netbeans.modules.csl.api.DeclarationFinder;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
@@ -54,6 +53,7 @@ import org.netbeans.modules.web.el.CompilationContext;
 import org.netbeans.modules.web.el.ELElement;
 import org.netbeans.modules.web.el.ELTypeUtilities;
 import org.netbeans.modules.web.el.ResourceBundles;
+import org.netbeans.modules.web.el.completion.ELCompletionUtil;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -95,12 +95,13 @@ public class ELDeclarationFinder implements DeclarationFinder {
                     // resolve resource bundles
                     ResourceBundles resourceBundles = ResourceBundles.get(file);
                     if (resourceBundles.canHaveBundles()) {
-                        List<ResourceBundles.Location> bundleLocations = getBundleLocations(resourceBundles, nodeElem);
+                        List<RefsHolder> bundleLocations = getBundleLocations(context, resourceBundles, nodeElem);
                         if (!bundleLocations.isEmpty()) {
-                            refs.fo = bundleLocations.get(0).getFile();
-                            refs.offset = bundleLocations.get(0).getOffset();
-                            for (ResourceBundles.Location location : bundleLocations) {
-                                alternatives.add(new ResourceBundleAlternative(location));
+                            refs.fo = bundleLocations.get(0).fo;
+                            refs.offset = bundleLocations.get(0).offset;
+                            refs.elementHandle = bundleLocations.get(0).elementHandle;
+                            for (RefsHolder location : bundleLocations) {
+                                alternatives.add(new ResourceBundleAlternative(location.fo, location.offset, location.lineNumber));
                             }
                         }
                     }
@@ -128,7 +129,7 @@ public class ELDeclarationFinder implements DeclarationFinder {
         }
 
         if (refs.fo != null && refs.offset != -1) {
-            DeclarationLocation declarationLocation = new DeclarationLocation(refs.fo, refs.offset);
+            DeclarationLocation declarationLocation = new DeclarationLocation(refs.fo, refs.offset, refs.elementHandle);
             for (AlternativeLocation alternativeLocation : alternatives) {
                 declarationLocation.addAlternative(alternativeLocation);
             }
@@ -152,9 +153,10 @@ public class ELDeclarationFinder implements DeclarationFinder {
         return ret.get();
     }
 
-    private static List<ResourceBundles.Location> getBundleLocations(ResourceBundles resourceBundles, Pair<Node, ELElement> nodeElem) {
+    private static List<RefsHolder> getBundleLocations(CompilationContext ccontext, ResourceBundles resourceBundles, Pair<Node, ELElement> nodeElem) {
         if (nodeElem.first() instanceof AstIdentifier) {
-            return resourceBundles.getLocationsForBundleIdent(nodeElem.first().getImage());
+            List<ResourceBundles.Location> locations = resourceBundles.getLocationsForBundleIdent(ccontext.context(), nodeElem.first().getImage());
+            return locations.stream().map(location -> new RefsHolder(location.getFile(), location.getOffset())).toList();
         } else {
             AstPath astPath = new AstPath(nodeElem.second().getNode());
             for (Node node : astPath.rootToLeaf()) {
@@ -165,21 +167,32 @@ public class ELDeclarationFinder implements DeclarationFinder {
                         // bundle['key']
                         image = image.substring(1, image.length() - 1);
                     }
-                    return resourceBundles.getLocationsForBundleKey(node.getImage(), image);
+                    final String key = image;
+                    List<ResourceBundles.Location> locations = resourceBundles.getLocationsForBundleKey(ccontext.context(), node.getImage(), key);
+                    final String value;
+                    if (!locations.isEmpty()) {
+                        value = resourceBundles.getValueWithVarName(ccontext.context(), node.getImage(), key);
+                    } else {
+                        value = null;
+                    }
+                    return locations.stream().map(location -> new RefsHolder(location.getFile(), location.getOffset(),
+                            ELCompletionUtil.getResourceBundleElementHandle(key, value, nodeElem.second(), location.getFile()), location.getLineNumber())).toList();
                 }
             }
         }
-        return Collections.<ResourceBundles.Location>emptyList();
+        return Collections.emptyList();
     }
 
     private static class ResourceBundleAlternative implements AlternativeLocation {
 
         private final FileObject file;
         private final int offset;
+        private final int lineNumber;
 
-        public ResourceBundleAlternative(ResourceBundles.Location location) {
-            this.offset = location.getOffset();
-            this.file = location.getFile();
+        public ResourceBundleAlternative(FileObject file, int offset, int lineNumber) {
+            this.offset = offset;
+            this.file = file;
+            this.lineNumber = lineNumber;
         }
 
         @Override
@@ -189,13 +202,10 @@ public class ELDeclarationFinder implements DeclarationFinder {
 
         @Override
         public String getDisplayHtml(HtmlFormatter formatter) {
-            StringBuilder b = new StringBuilder();
-
-            b.append("<font color=007c00>");//NOI18N
-            b.append("<b>"); //NOI18N
-            b.append(file.getName());
-            b.append("</b>"); //NOI18N
-            b.append("</font> in "); //NOI18N
+            formatter.emphasis(true);
+            formatter.appendText(file.getName());
+            formatter.emphasis(false);
+            formatter.appendText(" in ");
 
             //add a link to the file relative to the web root
             FileObject pathRoot = ProjectWebRootQuery.getWebRoot(file);
@@ -215,14 +225,14 @@ public class ELDeclarationFinder implements DeclarationFinder {
                 path = file.getPath();
             }
 
-            b.append("<i>"); //NOI18N
-            b.append(path);
-            b.append("</i>"); //NOI18N
-            if (offset > 0) {
-                b.append(":"); //NOI18N
-                b.append(offset + 1); //line offsets are counted from zero, but in editor lines starts with one.
+            formatter.appendHtml("<i>");
+            formatter.appendText(path);
+            formatter.appendHtml("</i>");
+            if (lineNumber > -1) {
+                formatter.appendText(":"); //NOI18N
+                formatter.appendText(String.valueOf(lineNumber + 1)); //line numbers are counted from zero, but in editor lines starts with one.
             }
-            return b.toString();
+            return formatter.getText();
         }
 
         @Override
@@ -274,9 +284,27 @@ public class ELDeclarationFinder implements DeclarationFinder {
 
     private static class RefsHolder {
 
-        private ElementHandle<Element> handle;
-        private FileObject fo;
-        private int offset = -1;
+        ElementHandle<Element> handle;
+        FileObject fo;
+        int offset = -1;
+        int lineNumber = -1;
+        org.netbeans.modules.csl.api.ElementHandle elementHandle;
+
+        RefsHolder() {
+        }
+
+        RefsHolder(FileObject fo, int offset) {
+            this.fo = fo;
+            this.offset = offset;
+        }
+
+        public RefsHolder(FileObject fo, int offset, org.netbeans.modules.csl.api.ElementHandle elementHandle, int lineNumber) {
+            this.fo = fo;
+            this.offset = offset;
+            this.elementHandle = elementHandle;
+            this.lineNumber = lineNumber;
+        }
+
     }
 
     private static class ResourceBundleElementHandle implements org.netbeans.modules.csl.api.ElementHandle {

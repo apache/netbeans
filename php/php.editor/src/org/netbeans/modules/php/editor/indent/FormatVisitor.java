@@ -59,6 +59,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.CatchClause;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVariable;
+import org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.DeclareStatement;
@@ -1085,6 +1086,22 @@ public class FormatVisitor extends DefaultVisitor {
         }
     }
 
+    //PHP 8.5 pipe operator composition expression
+    @Override
+    public void visit(CompositionExpression node) {
+        scan(node.getLeft());
+        while (ts.moveNext()
+                && !(ts.token().id() == PHPTokenId.PHP_OPERATOR && TokenUtilities.textEquals("|>", ts.token().text())) // NOI18N
+                && lastIndex < ts.index()) {
+            addFormatToken(formatTokens);
+        }
+
+        formatTokens.add(new FormatToken(FormatToken.Kind.WHITESPACE_AROUND_KEY_VALUE_OP, ts.offset() + ts.token().length()));
+        formatTokens.add(new FormatToken(FormatToken.Kind.TEXT, ts.offset(), ts.token().text().toString()));
+        //todo implement a minimum space arround pipe operator (|>trim())
+        scan(node.getRight());
+    }
+    
     @Override
     public void visit(ConstantDeclaration node) {
         if (path.size() > 1 && path.get(1) instanceof Block) {

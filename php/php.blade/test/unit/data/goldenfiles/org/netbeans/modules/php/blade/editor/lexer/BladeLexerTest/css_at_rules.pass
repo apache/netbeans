@@ -1,0 +1,5 @@
+Token #0 HTML [<style>\n    @charset "UTF-8";\n    @layer module, state;\n    @import "custom.css";\n    @layer {\n        .alert {\n          background-color: brown;\n        }\n    }\n    @supports (transform-origin: 5% 5%) {\n    }\n    @container (width > 400px) {\n        h2 {\n          font-size: 1.5em;\n        }\n      }\n    @page {\n        size: 8.5in 9in;\n        margin-top: 4in;\n    }\n    \n    @keyframes slidein {\n        from {\n          transform: translateX(0%);\n        }\n\n        to {\n          transform: translateX(100%);\n        }\n    }\n    \n    ]
+Token #1 BLADE_DIRECTIVE_UNKNOWN [@notDirective\n]
+Token #2 HTML [    ]
+Token #3 BLADE_DIRECTIVE [@csrf]
+Token #4 HTML [\n</style>\n]

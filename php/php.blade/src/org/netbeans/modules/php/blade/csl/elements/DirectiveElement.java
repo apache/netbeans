@@ -21,10 +21,6 @@ package org.netbeans.modules.php.blade.csl.elements;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.openide.filesystems.FileObject;
 
-/**
- *
- * @author bhaidu
- */
 public class DirectiveElement extends NamedElement {
 
     public DirectiveElement(String name, FileObject file) {

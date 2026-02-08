@@ -23,10 +23,6 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.openide.filesystems.FileObject;
 
-/**
- *
- * @author bhaidu
- */
 public class ClassElement extends NamedElement {
 
     @NullAllowed

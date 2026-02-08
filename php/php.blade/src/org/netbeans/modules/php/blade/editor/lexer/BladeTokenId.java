@@ -20,7 +20,6 @@ package org.netbeans.modules.php.blade.editor.lexer;
 
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.WeakHashMap;
 import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.api.lexer.Language;
@@ -29,9 +28,7 @@ import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.spi.lexer.LanguageEmbedding;
 import org.netbeans.spi.lexer.LanguageHierarchy;
-import org.netbeans.spi.lexer.LanguageProvider;
 import org.netbeans.modules.php.editor.lexer.PHPTokenId;
-import org.openide.util.Lookup;
 
 /**
  *
@@ -76,36 +73,21 @@ public enum BladeTokenId implements TokenId {
         @Override
         protected LanguageEmbedding<? extends TokenId> embedding(Token<BladeTokenId> token,
                 LanguagePath languagePath, InputAttributes inputAttributes) {
+            
+            if (token.text() == null) {
+                return null;
+            }
 
             switch (token.id()) {
+                case PHP_BLADE_EXPRESSION:
                 case PHP_BLADE_INLINE_CODE:
-                case PHP_BLADE_EXPRESSION: {
-                    Language<? extends TokenId> phpLanguage = PHPTokenId.languageInPHP();
-                    if (phpLanguage == null || token.text() == null) {
-                        return null;
-                    }
-
-                    //php brace matcher freeze issue patch
-                    String tokenText = token.text().toString();
-
-                    //php brace matcher freeze issue patch
-                    OffsetPair offsetPair = computeEmebeddingOffsets(tokenText);
-                    
-                    return LanguageEmbedding.create(phpLanguage, offsetPair.start, offsetPair.end, false);
-                }
                 case PHP_BLADE_ECHO_EXPR: {
-                    Language<? extends TokenId> phpLanguage = PHPTokenId.languageInPHP();
-                    if (phpLanguage == null || token.text() == null) {
-                        return null;
-                    }
-                    String tokenText = token.text().toString();
-                      
-                    //php brace matcher freeze issue patch
-                    OffsetPair offsetPair = computeEmebeddingOffsets(tokenText);
-                    
-                    return LanguageEmbedding.create(phpLanguage, offsetPair.start, offsetPair.end, false);
+                    //php code without <?php ... ?> wrapping tags
+                    Language<? extends TokenId> langInPhp = PHPTokenId.languageInPHP();
+                    return langInPhp != null ? LanguageEmbedding.create(langInPhp, 0, 0, false) : null;
                 }
                 case PHP_INLINE: {
+                    //generic inline ?php ... ?>  wrapping tags
                     Language<? extends TokenId> phpLanguageCode = PHPTokenId.language();
                     return phpLanguageCode != null ? LanguageEmbedding.create(phpLanguageCode, 0, 0, false) : null;
                 }
@@ -117,60 +99,5 @@ public enum BladeTokenId implements TokenId {
                 }
             }
         }
-    }
-
-    private static class OffsetPair {
-
-        public final int start;
-        public final int end;
-
-        public OffsetPair(int start, int end) {
-            this.start = start;
-            this.end = end;
-        }
-    }
-
-    /**
-     * patch for avoiding php brace matcher freeze issue
-     * https://github.com/apache/netbeans/issues/7803
-     * 
-     * create a offset for the php embedding content to exclude wrapping brackets and parenthesis
-     * 
-     * @param tokenText
-     * @return 
-     */
-    private static OffsetPair computeEmebeddingOffsets(String tokenText) {
-        int startOffset = 0;
-        int endOffset = 0;
-        
-        if (!tokenText.startsWith("(") && !tokenText.startsWith("[")) { //NOI18N
-            return new OffsetPair(startOffset, endOffset);
-        }
-
-        if (tokenText.startsWith("((") && tokenText.endsWith("))")) { //NOI18N
-            startOffset = 2;
-            endOffset = 2;
-        } else if (tokenText.startsWith("[[") && tokenText.endsWith("]]")) { //NOI18N
-            startOffset = 2;
-            endOffset = 2;
-        } else if (tokenText.startsWith("([") && tokenText.endsWith("])")) { //NOI18N
-            startOffset = 2;
-            endOffset = 2;
-        } else if (tokenText.startsWith("[(") && tokenText.endsWith(")]")) { //NOI18N
-            startOffset = 2;
-            endOffset = 2;
-        } else if (tokenText.startsWith("([") || tokenText.startsWith("[(")) { //NOI18N
-            startOffset = 2;
-        } else if (tokenText.startsWith("(") && tokenText.endsWith(")")) { //NOI18N
-            startOffset = 1;
-            endOffset = 1;
-        } else if (tokenText.startsWith("[") && tokenText.endsWith("]")) { //NOI18N
-            startOffset = 1;
-            endOffset = 1;
-        } else if (tokenText.startsWith("(") || tokenText.startsWith("[")) { //NOI18N
-            startOffset = 1;
-        }
-
-        return new OffsetPair(startOffset, endOffset);
     }
 }

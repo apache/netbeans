@@ -244,7 +244,8 @@ public final class ResourceBundles {
                             continue;
                         }
                         text = text.trim();
-                        if (text.startsWith(key + "=") || text.startsWith(key + " =")) { //NOI18N
+                        if (text.startsWith(key + "=") || text.startsWith(key + " =")
+                                || text.startsWith(key + ":") || text.startsWith(key + " :")) {
                             try {
                                 StyledDocument document = ec.getDocument();
                                 int offset = document.getText(0, document.getLength()).indexOf(line.getText());

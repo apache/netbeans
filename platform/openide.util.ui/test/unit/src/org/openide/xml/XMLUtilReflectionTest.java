@@ -97,11 +97,7 @@ public class XMLUtilReflectionTest extends org.netbeans.junit.NbTestCase {
     
     static final class CountingSecurityManager extends SecurityManager {
         public static void initialize() {
-            if (System.getSecurityManager() instanceof CountingSecurityManager) {
-                // ok
-            } else {
-                System.setSecurityManager(new CountingSecurityManager());
-            }
+            System.setSecurityManager(new CountingSecurityManager());
             members.clear();
         }
 

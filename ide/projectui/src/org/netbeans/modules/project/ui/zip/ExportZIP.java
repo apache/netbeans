@@ -477,7 +477,11 @@ public class ExportZIP extends JPanel {
     private void zipButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_zipButtonActionPerformed
         JFileChooser fc = new JFileChooser();
         if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            zipField.setText(fc.getSelectedFile().getAbsolutePath());
+            String sf = fc.getSelectedFile().getAbsolutePath();
+            if (!"zip".equalsIgnoreCase(FileUtil.getExtension(sf))) {
+                sf += ".zip";
+            }
+            zipField.setText(sf);
         }
     }//GEN-LAST:event_zipButtonActionPerformed
 

@@ -19,7 +19,7 @@
 package org.netbeans.modules.php.blade.editor.completion;
 
 import org.netbeans.modules.csl.api.Documentation;
-import org.netbeans.modules.php.blade.csl.elements.NamedElement;
+import org.netbeans.modules.php.blade.csl.elements.BladeElement;
 import org.netbeans.modules.php.blade.csl.elements.PhpFunctionElement;
 import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
 
@@ -30,7 +30,7 @@ import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
  */
 public class TooltipDoc {
 
-    public static Documentation generateDoc(NamedElement elementHandle) {
+    public static Documentation generateDoc(BladeElement elementHandle) {
         Documentation result = null;
         switch (elementHandle.getType()) {
             case PATH -> {

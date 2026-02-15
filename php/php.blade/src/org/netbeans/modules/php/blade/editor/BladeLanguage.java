@@ -206,7 +206,7 @@ public class BladeLanguage extends DefaultLanguageConfig {
 
             }.language();
 
-    @NbBundle.Messages("Source=&Source Blade")
+    @NbBundle.Messages("Source=&Source")
     @MultiViewElement.Registration(
             displayName = "#Source",
             persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,

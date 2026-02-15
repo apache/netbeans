@@ -47,7 +47,7 @@ import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.php.blade.csl.elements.DirectiveElement;
 import org.netbeans.modules.php.blade.csl.elements.ElementType;
-import org.netbeans.modules.php.blade.csl.elements.NamedElement;
+import org.netbeans.modules.php.blade.csl.elements.BladeElement;
 import org.netbeans.modules.php.blade.csl.elements.PathElement;
 import org.netbeans.modules.php.blade.csl.elements.PhpFunctionElement;
 import org.netbeans.modules.php.blade.editor.BladeLanguage;
@@ -61,7 +61,7 @@ import org.netbeans.modules.php.blade.editor.parser.BladeParserResult;
 import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
 import org.netbeans.modules.php.blade.project.AssetsBundlerSupport;
 import org.netbeans.modules.php.blade.project.ProjectUtils;
-import org.netbeans.modules.php.blade.syntax.DirectivesList;
+import org.netbeans.modules.php.blade.editor.directives.DirectivesList;
 import org.netbeans.modules.php.blade.syntax.StringUtils;
 import org.netbeans.modules.php.blade.syntax.ViewPathUtils;
 import org.netbeans.modules.php.blade.syntax.annotation.Directive;
@@ -142,13 +142,13 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
                     int anchorOffset = computeAnchorOffset(contextPrefix, offset);
                     for (String variableName : scope.getScopeVariables()) {
                         if (variableName.startsWith(contextPrefix)) {
-                            NamedElement variableElement = new NamedElement(variableName, fo, ElementType.VARIABLE);
+                            BladeElement variableElement = new BladeElement(variableName, fo, ElementType.VARIABLE);
                             completionProposals.add(new BladeCompletionProposal.VariableItem(variableElement, anchorOffset, variableName));
                         }
                     }
 
                     if (scope.getScopeType() == D_FOREACH && BLADE_LOOP_VAR.startsWith(contextPrefix)) {  //NOI18N
-                        NamedElement variableElement = new NamedElement(BLADE_LOOP_VAR, fo, ElementType.VARIABLE);
+                        BladeElement variableElement = new BladeElement(BLADE_LOOP_VAR, fo, ElementType.VARIABLE);
                         completionProposals.add(new BladeCompletionProposal.VariableItem(variableElement, anchorOffset, BLADE_LOOP_VAR));
                     }
                 }
@@ -220,7 +220,7 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
             bladeIndex = BladeIndex.get(project);
             List<BladeIndex.IndexedReferenceId> indexedReferences = bladeIndex.queryYieldIds(prefixIdentifier);
             for (BladeIndex.IndexedReferenceId indexReference : indexedReferences) {
-                NamedElement yieldIdEl = new NamedElement(indexReference.getIdenfiier(), fo, ElementType.YIELD_ID);
+                BladeElement yieldIdEl = new BladeElement(indexReference.getIdenfiier(), fo, ElementType.YIELD_ID);
                 completionProposals.add(new BladeCompletionProposal.LayoutIdentifierProposal(yieldIdEl, anchorOffset, indexReference.getIdenfiier()));
             }
         } catch (IOException ex) {
@@ -238,7 +238,7 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
             bladeIndex = BladeIndex.get(project);
             List<BladeIndex.IndexedReferenceId> indexedReferences = bladeIndex.queryStacksIndexedReferences(prefixIdentifier);
             for (BladeIndex.IndexedReferenceId indexReference : indexedReferences) {
-                NamedElement yieldIdEl = new NamedElement(indexReference.getIdenfiier(), fo, ElementType.STACK_ID);
+                BladeElement yieldIdEl = new BladeElement(indexReference.getIdenfiier(), fo, ElementType.STACK_ID);
                 completionProposals.add(new BladeCompletionProposal.LayoutIdentifierProposal(yieldIdEl, anchorOffset, indexReference.getIdenfiier()));
             }
         } catch (IOException ex) {
@@ -429,8 +429,8 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
             return TooltipDoc.generateFunctionDoc((PhpFunctionElement) elementHandle);
         } else if (elementHandle instanceof DirectiveElement) {
             return result;
-        } else if (elementHandle instanceof NamedElement) {
-            return TooltipDoc.generateDoc((NamedElement) elementHandle);
+        } else if (elementHandle instanceof BladeElement) {
+            return TooltipDoc.generateDoc((BladeElement) elementHandle);
         }
         return result;
     }

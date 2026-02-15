@@ -24,7 +24,7 @@ import org.netbeans.modules.csl.api.DeclarationFinder.DeclarationLocation;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.php.blade.csl.elements.ElementType;
-import org.netbeans.modules.php.blade.csl.elements.NamedElement;
+import org.netbeans.modules.php.blade.csl.elements.BladeElement;
 import org.netbeans.modules.php.blade.csl.elements.PhpFunctionElement;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexFunctionResult;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexResult;
@@ -68,7 +68,7 @@ public class PhpElementsDeclarationService {
     public DeclarationLocation buildDeclLocation(String referenceIdentifier, ElementType type, Collection<PhpIndexResult> indexedResults) {
         DeclarationLocation location = DeclarationLocation.NONE;
         for (PhpIndexResult indexResult : indexedResults) {
-            NamedElement resultHandle = new NamedElement(referenceIdentifier, indexResult.declarationFile, type);
+            BladeElement resultHandle = new BladeElement(referenceIdentifier, indexResult.declarationFile, type);
             DeclarationLocation classLocation = new DeclarationFinder.DeclarationLocation(indexResult.declarationFile, indexResult.getStartOffset(), resultHandle);
             if (location.equals(DeclarationLocation.NONE)) {
                 location = classLocation;

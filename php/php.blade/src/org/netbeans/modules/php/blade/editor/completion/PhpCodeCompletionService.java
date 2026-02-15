@@ -33,7 +33,7 @@ import org.netbeans.modules.csl.api.HtmlFormatter;
 import org.netbeans.modules.csl.api.Modifier;
 import org.netbeans.modules.php.blade.csl.elements.ClassElement;
 import org.netbeans.modules.php.blade.csl.elements.ElementType;
-import org.netbeans.modules.php.blade.csl.elements.NamedElement;
+import org.netbeans.modules.php.blade.csl.elements.BladeElement;
 import org.netbeans.modules.php.blade.csl.elements.PhpKeywordElement;
 import org.netbeans.modules.php.blade.editor.EditorStringUtils;
 import org.netbeans.modules.php.blade.editor.indexing.PhpIndexFunctionResult;
@@ -269,25 +269,25 @@ public class PhpCodeCompletionService {
                 indexResult.declarationFile);
     }
 
-    private static NamedElement namespaceElement(PhpIndexResult indexResult) {
+    private static BladeElement namespaceElement(PhpIndexResult indexResult) {
         return namedElement(indexResult, ElementType.PHP_NAMESPACE);
     }
 
-    private static NamedElement functionElement(PhpIndexResult indexResult) {
+    private static BladeElement functionElement(PhpIndexResult indexResult) {
         String inputString = indexResult.name + "()"; // NOI18N
         return namedElement(inputString, indexResult, ElementType.PHP_FUNCTION);
     }
 
-    private static NamedElement constantElement(PhpIndexResult indexResult) {
+    private static BladeElement constantElement(PhpIndexResult indexResult) {
         return namedElement(indexResult, ElementType.PHP_CONSTANT);
     }
 
-    private static NamedElement namedElement(PhpIndexResult indexResult, ElementType type) {
-        return new NamedElement(indexResult.name, indexResult.declarationFile, type);
+    private static BladeElement namedElement(PhpIndexResult indexResult, ElementType type) {
+        return new BladeElement(indexResult.name, indexResult.declarationFile, type);
     }
 
-    private static NamedElement namedElement(String preview, PhpIndexResult indexResult, ElementType type) {
-        return new NamedElement(preview, indexResult.declarationFile, type);
+    private static BladeElement namedElement(String preview, PhpIndexResult indexResult, ElementType type) {
+        return new BladeElement(preview, indexResult.declarationFile, type);
     }
 
     public static int computeAnchorOffset(@NonNull String prefix, int offset) {

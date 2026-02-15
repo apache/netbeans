@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.blade.syntax;
+package org.netbeans.modules.php.blade.editor.directives;
 
 import org.netbeans.modules.php.blade.syntax.annotation.Directive;
 import org.netbeans.modules.php.blade.syntax.annotation.DirectiveRegister;

@@ -34,19 +34,19 @@ import org.openide.filesystems.FileObject;
  *
  * @author bhaidu
  */
-public class NamedElement implements ElementHandle {
+public class BladeElement implements ElementHandle {
 
     private final String name;
     private final FileObject file;
     private final ElementType type;
 
-    public NamedElement(String name, FileObject file) {
+    public BladeElement(String name, FileObject file) {
         this.name = name;
         this.file = file;
         this.type = ElementType.NA;
     }
 
-    public NamedElement(String name, FileObject file, ElementType type) {
+    public BladeElement(String name, FileObject file, ElementType type) {
         this.name = name;
         this.file = file;
         this.type = type;

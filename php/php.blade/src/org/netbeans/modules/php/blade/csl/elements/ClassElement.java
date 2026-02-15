@@ -23,7 +23,11 @@ import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.openide.filesystems.FileObject;
 
-public class ClassElement extends NamedElement {
+/**
+ *
+ * Used for php class element completion
+ */
+public class ClassElement extends BladeElement {
 
     @NullAllowed
     private final String namespace;

@@ -25,7 +25,7 @@ import org.openide.filesystems.FileObject;
  *
  * @author bhaidu
  */
-public class PathElement extends NamedElement {
+public class PathElement extends BladeElement {
 
     public PathElement(String name, FileObject file) {
         super(name, file, ElementType.PATH);

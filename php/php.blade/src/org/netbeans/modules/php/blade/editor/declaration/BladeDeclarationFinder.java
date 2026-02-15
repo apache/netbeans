@@ -34,7 +34,7 @@ import org.netbeans.modules.csl.spi.ParserResult;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.HtmlFormatter;
 import org.netbeans.modules.php.blade.csl.elements.ElementType;
-import org.netbeans.modules.php.blade.csl.elements.NamedElement;
+import org.netbeans.modules.php.blade.csl.elements.BladeElement;
 import org.netbeans.modules.php.blade.csl.elements.PathElement;
 import org.netbeans.modules.php.blade.csl.elements.PhpFunctionElement;
 import org.netbeans.modules.php.blade.editor.components.ComponentsQueryService;
@@ -314,7 +314,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
 
                     for (BladeIndex.IndexedReference stackReference : stacks) {
                         String stackReferenceId = stackReference.getReference().identifier;
-                        NamedElement yieldIdHandle = new NamedElement(stackReferenceId, stackReference.getOriginFile(), ElementType.STACK_ID);
+                        BladeElement yieldIdHandle = new BladeElement(stackReferenceId, stackReference.getOriginFile(), ElementType.STACK_ID);
                         int startOccurence = stackReference.getReference().defOffset.getStart();
                         DeclarationLocation dlstack = new DeclarationFinder.DeclarationLocation(stackReference.getOriginFile(), startOccurence, yieldIdHandle);
                         if (location.equals(DeclarationLocation.NONE)) {
@@ -336,7 +336,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
                     FileObject assetFile = projectOwner.getProjectDirectory().getFileObject(vitePath);
 
                     if (assetFile != null) {
-                        NamedElement resultHandle = new NamedElement(referenceIdentifier, assetFile, ElementType.ASSET_FILE);
+                        BladeElement resultHandle = new BladeElement(referenceIdentifier, assetFile, ElementType.ASSET_FILE);
                         DeclarationLocation constantLocation = new DeclarationFinder.DeclarationLocation(assetFile, 0, resultHandle);
                         if (location.equals(DeclarationLocation.NONE)) {
                             location = constantLocation;
@@ -436,7 +436,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
             @Override
             public void filterDirectiveName(CustomDirective directive, FileObject file) {
                 if (directive.getName().equals(customDirectiveOccurence.directiveName)) {
-                    NamedElement customDirectiveHandle = new NamedElement(customDirectiveOccurence.directiveName, file, ElementType.CUSTOM_DIRECTIVE);
+                    BladeElement customDirectiveHandle = new BladeElement(customDirectiveOccurence.directiveName, file, ElementType.CUSTOM_DIRECTIVE);
                     DeclarationFinder.DeclarationLocation newLoc = new DeclarationFinder.DeclarationLocation(file, directive.getOffset(), customDirectiveHandle);
                     this.getLocation().addAlternative(new AlternativeLocationImpl(newLoc));
                 }
@@ -482,7 +482,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
             }
 
             for (PhpIndexResult indexReference : indexedReferences) {
-                NamedElement resultHandle = new NamedElement(className, indexReference.declarationFile, ElementType.LARAVEL_COMPONENT);
+                BladeElement resultHandle = new BladeElement(className, indexReference.declarationFile, ElementType.LARAVEL_COMPONENT);
                 DeclarationLocation constantLocation = new DeclarationFinder.DeclarationLocation(indexReference.declarationFile, indexReference.getStartOffset(), resultHandle);
                 if (location.equals(DeclarationLocation.NONE)) {
                     location = constantLocation;
@@ -565,7 +565,7 @@ public class BladeDeclarationFinder implements DeclarationFinder {
         Reference reference = indexedReference.getReference();
         String referenceId = reference.identifier;
         FileObject originFile = indexedReference.getOriginFile();
-        NamedElement referenceHandle = new NamedElement(referenceId, originFile, type);
+        BladeElement referenceHandle = new BladeElement(referenceId, originFile, type);
         int startOccurence = reference.defOffset.getStart();
         DeclarationLocation declItem = new DeclarationFinder.DeclarationLocation(originFile, startOccurence, referenceHandle);
 

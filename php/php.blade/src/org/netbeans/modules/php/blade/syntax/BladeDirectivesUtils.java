@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.php.blade.syntax;
 
+import org.netbeans.modules.php.blade.editor.directives.DirectivesList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;

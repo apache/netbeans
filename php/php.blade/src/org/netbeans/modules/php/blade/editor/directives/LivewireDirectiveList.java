@@ -16,23 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.php.blade.csl.elements;
+package org.netbeans.modules.php.blade.editor.directives;
 
-import org.netbeans.modules.csl.api.ElementKind;
-import org.openide.filesystems.FileObject;
+import org.netbeans.modules.php.blade.syntax.annotation.Directive;
+import org.netbeans.modules.php.blade.syntax.annotation.DirectiveRegister;
 
 /**
- *
- * used for blade directive completion
+ * 
+ * TODO update PluginDirectives
  */
-public class DirectiveElement extends BladeElement {
-
-    public DirectiveElement(String name, FileObject file) {
-        super(name, file, ElementType.DIRECTIVE);
-    }
-
-    @Override
-    public ElementKind getKind() {
-        return ElementKind.METHOD;
+@DirectiveRegister({
+    @Directive(name = "@island",  description="livewire", endtag = "@endisland"), 
+    @Directive(name = "@placeholder",  description="livewire", endtag = "@endplaceholder"),
+}
+)
+public class LivewireDirectiveList {
+        public Directive[] getDirectives() {
+        DirectiveRegister directiveRegister = this.getClass().getAnnotation(DirectiveRegister.class);
+        return directiveRegister.value();
     }
 }

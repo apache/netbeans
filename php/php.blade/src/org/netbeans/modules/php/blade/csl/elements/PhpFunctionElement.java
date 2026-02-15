@@ -28,7 +28,7 @@ import org.openide.filesystems.FileObject;
  *
  * @author bhaidu
  */
-public class PhpFunctionElement extends NamedElement {
+public class PhpFunctionElement extends BladeElement {
 
     @NullAllowed
     private final String namespace;

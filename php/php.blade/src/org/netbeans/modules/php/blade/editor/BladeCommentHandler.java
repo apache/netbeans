@@ -28,6 +28,7 @@ import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.spi.CommentHandler;
 import org.netbeans.modules.php.blade.editor.lexer.BladeTokenId;
+import static org.netbeans.modules.php.blade.editor.lexer.BladeTokenId.BLADE_ECHO_DELIMITOR;
 
 /**
  * known issues 
@@ -82,7 +83,7 @@ public class BladeCommentHandler extends CommentHandler.DefaultCommentHandler {
                                 }
                             }
                         }
-                        case BLADE_DIRECTIVE -> {
+                        case BLADE_DIRECTIVE, BLADE_ECHO_DELIMITOR -> {
                             bounds[0] = ts.offset();
 
                             //looking for directive arguments bounds

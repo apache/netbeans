@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.34
+#Version 1.35
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -72,6 +72,7 @@ meth public void putValue(java.lang.String,java.lang.Object)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 supr java.lang.Object
+hfds RECONFIGURE_ON_NULL,arrayTable
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 5.33
+#Version 5.34
 
 CLSS public abstract interface java.io.Serializable
 
@@ -10,11 +10,15 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public java.lang.IndexOutOfBoundsException
 cons public init()
+cons public init(int)
 cons public init(java.lang.String)
+cons public init(long)
 supr java.lang.RuntimeException
+hfds serialVersionUID
 
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
@@ -25,6 +29,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -42,6 +47,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -64,6 +70,8 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract org.objectweb.asm.AnnotationVisitor
 cons protected init(int)
@@ -84,7 +92,7 @@ fld public final java.lang.String type
 meth protected org.objectweb.asm.Attribute read(org.objectweb.asm.ClassReader,int,int,char[],int,org.objectweb.asm.Label[])
 meth protected org.objectweb.asm.ByteVector write(org.objectweb.asm.ClassWriter,byte[],int,int,int)
 meth protected org.objectweb.asm.Label[] getLabels()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isCodeAttribute()
 meth public boolean isUnknown()
 meth public static byte[] write(org.objectweb.asm.Attribute,org.objectweb.asm.ClassWriter,byte[],int,int,int)
@@ -113,7 +121,7 @@ cons public init(byte[],int,int)
 cons public init(java.io.InputStream) throws java.io.IOException
 cons public init(java.lang.String) throws java.io.IOException
 fld public final byte[] b
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final int header
 fld public final static int EXPAND_FRAMES = 8
 fld public final static int SKIP_CODE = 1
@@ -205,7 +213,7 @@ meth public int newClass(java.lang.String)
 meth public int newConst(java.lang.Object)
 meth public int newField(java.lang.String,java.lang.String,java.lang.String)
 meth public int newHandle(int,java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public int newHandle(int,java.lang.String,java.lang.String,java.lang.String,boolean)
 meth public int newMethod(java.lang.String,java.lang.String,java.lang.String,boolean)
 meth public int newMethodType(java.lang.String)
@@ -244,7 +252,7 @@ supr java.lang.Object
 
 CLSS public final org.objectweb.asm.Handle
 cons public init(int,java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(int,java.lang.String,java.lang.String,java.lang.String,boolean)
 meth public boolean equals(java.lang.Object)
 meth public boolean isInterface()
@@ -306,7 +314,7 @@ meth public void visitLocalVariable(java.lang.String,java.lang.String,java.lang.
 meth public void visitLookupSwitchInsn(org.objectweb.asm.Label,int[],org.objectweb.asm.Label[])
 meth public void visitMaxs(int,int)
 meth public void visitMethodInsn(int,java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void visitMethodInsn(int,java.lang.String,java.lang.String,java.lang.String,boolean)
 meth public void visitMultiANewArrayInsn(java.lang.String,int)
 meth public void visitParameter(java.lang.String,int)
@@ -366,7 +374,7 @@ fld public final static int ANEWARRAY = 189
 fld public final static int ARETURN = 176
 fld public final static int ARRAYLENGTH = 190
 fld public final static int ASM10_EXPERIMENTAL = 17432576
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int ASM4 = 262144
 fld public final static int ASM5 = 327680
 fld public final static int ASM6 = 393216
@@ -764,15 +772,15 @@ hfds labels,maxLocals,maxStack,owner
 CLSS public org.objectweb.asm.commons.AnnotationRemapper
 cons protected init(int,java.lang.String,org.objectweb.asm.AnnotationVisitor,org.objectweb.asm.commons.Remapper)
 cons protected init(int,org.objectweb.asm.AnnotationVisitor,org.objectweb.asm.commons.Remapper)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,org.objectweb.asm.AnnotationVisitor,org.objectweb.asm.commons.Remapper)
 cons public init(org.objectweb.asm.AnnotationVisitor,org.objectweb.asm.commons.Remapper)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld protected final java.lang.String descriptor
 fld protected final org.objectweb.asm.commons.Remapper remapper
 meth protected org.objectweb.asm.AnnotationVisitor createAnnotationRemapper(java.lang.String,org.objectweb.asm.AnnotationVisitor)
 meth protected org.objectweb.asm.AnnotationVisitor createAnnotationRemapper(org.objectweb.asm.AnnotationVisitor)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.objectweb.asm.AnnotationVisitor visitAnnotation(java.lang.String,java.lang.String)
 meth public org.objectweb.asm.AnnotationVisitor visitArray(java.lang.String)
 meth public void visit(java.lang.String,java.lang.Object)
@@ -786,7 +794,7 @@ fld protected final org.objectweb.asm.commons.Remapper remapper
 fld protected java.lang.String className
 meth protected org.objectweb.asm.AnnotationVisitor createAnnotationRemapper(java.lang.String,org.objectweb.asm.AnnotationVisitor)
 meth protected org.objectweb.asm.AnnotationVisitor createAnnotationRemapper(org.objectweb.asm.AnnotationVisitor)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected org.objectweb.asm.FieldVisitor createFieldRemapper(org.objectweb.asm.FieldVisitor)
 meth protected org.objectweb.asm.MethodVisitor createMethodRemapper(org.objectweb.asm.MethodVisitor)
 meth protected org.objectweb.asm.ModuleVisitor createModuleRemapper(org.objectweb.asm.ModuleVisitor)
@@ -834,7 +842,7 @@ cons public init(org.objectweb.asm.FieldVisitor,org.objectweb.asm.commons.Remapp
 fld protected final org.objectweb.asm.commons.Remapper remapper
 meth protected org.objectweb.asm.AnnotationVisitor createAnnotationRemapper(java.lang.String,org.objectweb.asm.AnnotationVisitor)
 meth protected org.objectweb.asm.AnnotationVisitor createAnnotationRemapper(org.objectweb.asm.AnnotationVisitor)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.objectweb.asm.AnnotationVisitor visitAnnotation(java.lang.String,boolean)
 meth public org.objectweb.asm.AnnotationVisitor visitTypeAnnotation(int,org.objectweb.asm.TypePath,java.lang.String,boolean)
 supr org.objectweb.asm.FieldVisitor
@@ -998,13 +1006,13 @@ meth public void instanceOf(org.objectweb.asm.Type)
 meth public void invokedynamic(java.lang.String,java.lang.String,org.objectweb.asm.Handle,java.lang.Object[])
 meth public void invokeinterface(java.lang.String,java.lang.String,java.lang.String)
 meth public void invokespecial(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void invokespecial(java.lang.String,java.lang.String,java.lang.String,boolean)
 meth public void invokestatic(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void invokestatic(java.lang.String,java.lang.String,java.lang.String,boolean)
 meth public void invokevirtual(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void invokevirtual(java.lang.String,java.lang.String,java.lang.String,boolean)
 meth public void jsr(org.objectweb.asm.Label)
 meth public void lcmp()
@@ -1099,7 +1107,7 @@ cons public init(org.objectweb.asm.MethodVisitor,org.objectweb.asm.commons.Remap
 fld protected final org.objectweb.asm.commons.Remapper remapper
 meth protected org.objectweb.asm.AnnotationVisitor createAnnotationRemapper(java.lang.String,org.objectweb.asm.AnnotationVisitor)
 meth protected org.objectweb.asm.AnnotationVisitor createAnnotationRemapper(org.objectweb.asm.AnnotationVisitor)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public !varargs void visitInvokeDynamicInsn(java.lang.String,java.lang.String,org.objectweb.asm.Handle,java.lang.Object[])
 meth public org.objectweb.asm.AnnotationVisitor visitAnnotation(java.lang.String,boolean)
 meth public org.objectweb.asm.AnnotationVisitor visitAnnotationDefault()
@@ -1167,17 +1175,17 @@ cons public init(org.objectweb.asm.RecordComponentVisitor,org.objectweb.asm.comm
 fld protected final org.objectweb.asm.commons.Remapper remapper
 meth protected org.objectweb.asm.AnnotationVisitor createAnnotationRemapper(java.lang.String,org.objectweb.asm.AnnotationVisitor)
 meth protected org.objectweb.asm.AnnotationVisitor createAnnotationRemapper(org.objectweb.asm.AnnotationVisitor)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.objectweb.asm.AnnotationVisitor visitAnnotation(java.lang.String,boolean)
 meth public org.objectweb.asm.AnnotationVisitor visitTypeAnnotation(int,org.objectweb.asm.TypePath,java.lang.String,boolean)
 supr org.objectweb.asm.RecordComponentVisitor
 
 CLSS public abstract org.objectweb.asm.commons.Remapper
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(int)
 meth protected org.objectweb.asm.signature.SignatureVisitor createRemappingSignatureAdapter(org.objectweb.asm.signature.SignatureVisitor)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected org.objectweb.asm.signature.SignatureVisitor createSignatureRemapper(org.objectweb.asm.signature.SignatureVisitor)
 meth public !varargs java.lang.String mapInvokeDynamicMethodName(java.lang.String,java.lang.String,org.objectweb.asm.Handle,java.lang.Object[])
 meth public java.lang.Object mapValue(java.lang.Object)
@@ -1187,7 +1195,7 @@ meth public java.lang.String mapDesc(java.lang.String)
 meth public java.lang.String mapFieldName(java.lang.String,java.lang.String,java.lang.String)
 meth public java.lang.String mapInnerClassName(java.lang.String,java.lang.String,java.lang.String)
 meth public java.lang.String mapInvokeDynamicMethodName(java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String mapMethodDesc(java.lang.String)
 meth public java.lang.String mapMethodName(java.lang.String,java.lang.String,java.lang.String)
 meth public java.lang.String mapModuleName(java.lang.String)
@@ -1241,9 +1249,9 @@ CLSS public org.objectweb.asm.commons.SimpleRemapper
 cons public init(int,java.lang.String,java.lang.String)
 cons public init(int,java.util.Map<java.lang.String,java.lang.String>)
 cons public init(java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.util.Map<java.lang.String,java.lang.String>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public !varargs java.lang.String mapInvokeDynamicMethodName(java.lang.String,java.lang.String,org.objectweb.asm.Handle,java.lang.Object[])
 meth public java.lang.String map(java.lang.String)
 meth public java.lang.String mapAnnotationAttributeName(java.lang.String,java.lang.String)

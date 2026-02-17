@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.78
+#Version 1.79
 
 CLSS public abstract interface java.lang.AutoCloseable
 meth public abstract void close() throws java.lang.Exception
@@ -14,6 +14,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -101,19 +102,19 @@ meth public static javax.swing.JComponent createProgressComponent(org.netbeans.a
 meth public static javax.swing.JLabel createDetailLabelComponent(org.netbeans.api.progress.ProgressHandle)
 meth public static javax.swing.JLabel createMainLabelComponent(org.netbeans.api.progress.ProgressHandle)
 meth public static org.netbeans.api.progress.ProgressHandle createHandle(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.progress.ProgressHandle createHandle(java.lang.String,javax.swing.Action)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.progress.ProgressHandle createHandle(java.lang.String,org.openide.util.Cancellable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.progress.ProgressHandle createHandle(java.lang.String,org.openide.util.Cancellable,javax.swing.Action)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.progress.ProgressHandle createSystemHandle(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.progress.ProgressHandle createSystemHandle(java.lang.String,org.openide.util.Cancellable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.progress.ProgressHandle createSystemHandle(java.lang.String,org.openide.util.Cancellable,javax.swing.Action)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.progress.ProgressHandle createSystemUIHandle(java.lang.String,org.openide.util.Cancellable,javax.swing.Action)
 meth public static org.netbeans.api.progress.ProgressHandle createUIHandle(java.lang.String,org.openide.util.Cancellable,javax.swing.Action)
 supr java.lang.Object
@@ -125,21 +126,21 @@ meth public abstract {org.netbeans.api.progress.ProgressRunnable%0} run(org.netb
 
 CLSS public final org.netbeans.api.progress.ProgressUtils
 meth public static <%0 extends java.lang.Object> java.util.concurrent.Future<{%%0}> showProgressDialogAndRunLater(org.netbeans.api.progress.ProgressRunnable<{%%0}>,org.netbeans.api.progress.ProgressHandle,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends java.lang.Object> {%%0} showProgressDialogAndRun(org.netbeans.api.progress.ProgressRunnable<{%%0}>,java.lang.String,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void runOffEventDispatchThread(java.lang.Runnable,java.lang.String,java.util.concurrent.atomic.AtomicBoolean,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void runOffEventDispatchThread(java.lang.Runnable,java.lang.String,java.util.concurrent.atomic.AtomicBoolean,boolean,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void runOffEventThreadWithCustomDialogContent(java.lang.Runnable,java.lang.String,javax.swing.JPanel,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void runOffEventThreadWithProgressDialog(java.lang.Runnable,java.lang.String,org.netbeans.api.progress.ProgressHandle,boolean,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void showProgressDialogAndRun(java.lang.Runnable,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void showProgressDialogAndRun(java.lang.Runnable,org.netbeans.api.progress.ProgressHandle,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds DISPLAY_DIALOG_MS,DISPLAY_WAIT_CURSOR_MS,PROVIDER
 hcls Trivial
@@ -149,9 +150,9 @@ meth public static javax.swing.JComponent createProgressComponent(org.netbeans.a
 meth public static javax.swing.JLabel createDetailLabelComponent(org.netbeans.api.progress.aggregate.AggregateProgressHandle)
 meth public static javax.swing.JLabel createMainLabelComponent(org.netbeans.api.progress.aggregate.AggregateProgressHandle)
 meth public static org.netbeans.api.progress.aggregate.AggregateProgressHandle createHandle(java.lang.String,org.netbeans.api.progress.aggregate.ProgressContributor[],org.openide.util.Cancellable,javax.swing.Action)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.progress.aggregate.AggregateProgressHandle createSystemHandle(java.lang.String,org.netbeans.api.progress.aggregate.ProgressContributor[],org.openide.util.Cancellable,javax.swing.Action)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory
 
 CLSS public final org.netbeans.api.progress.aggregate.AggregateProgressHandle
@@ -313,7 +314,7 @@ CLSS public abstract interface static org.netbeans.modules.progress.spi.RunOffED
  outer org.netbeans.modules.progress.spi.RunOffEDTProvider
 intf org.netbeans.modules.progress.spi.RunOffEDTProvider$Progress
 meth public abstract void runOffEventThreadWithCustomDialogContent(java.lang.Runnable,java.lang.String,javax.swing.JPanel,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void runOffEventThreadWithProgressDialog(java.lang.Runnable,java.lang.String,org.netbeans.api.progress.ProgressHandle,boolean,int,int)
 
 CLSS public org.netbeans.modules.progress.spi.SwingController

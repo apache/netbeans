@@ -1,16 +1,19 @@
 #Signature file v4.1
-#Version 1.70
+#Version 1.71
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -49,13 +52,13 @@ meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public final org.netbeans.api.editor.mimelookup.MimeLookup
 meth public <%0 extends java.lang.Object> org.openide.util.Lookup$Result<{%%0}> lookup(org.openide.util.Lookup$Template<{%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public <%0 extends java.lang.Object> {%%0} lookup(java.lang.Class<{%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.api.editor.mimelookup.MimeLookup childLookup(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.editor.mimelookup.MimeLookup getMimeLookup(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openide.util.Lookup getLookup(java.lang.String)
 meth public static org.openide.util.Lookup getLookup(org.netbeans.api.editor.mimelookup.MimePath)
 supr org.openide.util.Lookup
@@ -94,7 +97,7 @@ intf java.lang.annotation.Annotation
 meth public abstract org.netbeans.api.editor.mimelookup.MimeRegistration[] value()
 
 CLSS public abstract interface org.netbeans.spi.editor.mimelookup.Class2LayerFolder<%0 extends java.lang.Object>
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.lang.Class<{org.netbeans.spi.editor.mimelookup.Class2LayerFolder%0}> getClazz()
 meth public abstract java.lang.String getLayerFolderName()
 meth public abstract org.netbeans.spi.editor.mimelookup.InstanceProvider<{org.netbeans.spi.editor.mimelookup.Class2LayerFolder%0}> getInstanceProvider()
@@ -114,7 +117,7 @@ meth public abstract !hasdefault java.lang.Class<? extends org.netbeans.spi.edit
 meth public abstract java.lang.String subfolderName()
 
 CLSS public abstract interface org.netbeans.spi.editor.mimelookup.MimeLookupInitializer
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.openide.util.Lookup lookup()
 meth public abstract org.openide.util.Lookup$Result<org.netbeans.spi.editor.mimelookup.MimeLookupInitializer> child(java.lang.String)
 

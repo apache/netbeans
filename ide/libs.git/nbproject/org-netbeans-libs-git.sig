@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.65
+#Version 1.66
 
 CLSS public abstract interface java.io.Serializable
 
@@ -27,6 +27,7 @@ meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -35,6 +36,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -72,6 +74,8 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.constant.Constable
 meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
@@ -498,7 +502,7 @@ meth public long getCommitTime()
 meth public org.netbeans.libs.git.GitUser getAuthor()
 meth public org.netbeans.libs.git.GitUser getCommitter()
 supr java.lang.Object
-hfds LOG,branches,modifiedFiles,repository,revCommit,shortMessage
+hfds branches,modifiedFiles,repository,revCommit,shortMessage
 
 CLSS public final static org.netbeans.libs.git.GitRevisionInfo$GitFileInfo
  outer org.netbeans.libs.git.GitRevisionInfo

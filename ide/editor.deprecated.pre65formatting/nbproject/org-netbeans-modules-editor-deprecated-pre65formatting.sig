@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.61.0
+#Version 1.62.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -5025,6 +5025,7 @@ meth public static int getRowEnd(javax.swing.text.JTextComponent,int) throws jav
 meth public static int getRowEnd(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
  anno 0 java.lang.Deprecated()
 meth public static int getRowFirstNonWhite(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated()
 meth public static int getRowIndent(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException
 meth public static int getRowIndent(org.netbeans.editor.BaseDocument,int,boolean) throws javax.swing.text.BadLocationException
 meth public static int getRowLastNonWhite(org.netbeans.editor.BaseDocument,int) throws javax.swing.text.BadLocationException

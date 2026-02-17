@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.33
+#Version 1.34
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -11,12 +11,15 @@ meth public abstract void flush() throws java.io.IOException
 CLSS public java.io.PrintWriter
 cons public init(java.io.File) throws java.io.FileNotFoundException
 cons public init(java.io.File,java.lang.String) throws java.io.FileNotFoundException,java.io.UnsupportedEncodingException
+cons public init(java.io.File,java.nio.charset.Charset) throws java.io.IOException
 cons public init(java.io.OutputStream)
 cons public init(java.io.OutputStream,boolean)
+cons public init(java.io.OutputStream,boolean,java.nio.charset.Charset)
 cons public init(java.io.Writer)
 cons public init(java.io.Writer,boolean)
 cons public init(java.lang.String) throws java.io.FileNotFoundException
 cons public init(java.lang.String,java.lang.String) throws java.io.FileNotFoundException,java.io.UnsupportedEncodingException
+cons public init(java.lang.String,java.nio.charset.Charset) throws java.io.IOException
 fld protected java.io.Writer out
 meth protected void clearError()
 meth protected void setError()
@@ -55,6 +58,7 @@ meth public void write(int)
 meth public void write(java.lang.String)
 meth public void write(java.lang.String,int,int)
 supr java.io.Writer
+hfds autoFlush,formatter,psOut,trouble
 
 CLSS public abstract interface java.io.Serializable
 
@@ -71,11 +75,13 @@ meth public abstract void write(char[],int,int) throws java.io.IOException
 meth public java.io.Writer append(char) throws java.io.IOException
 meth public java.io.Writer append(java.lang.CharSequence) throws java.io.IOException
 meth public java.io.Writer append(java.lang.CharSequence,int,int) throws java.io.IOException
+meth public static java.io.Writer nullWriter()
 meth public void write(char[]) throws java.io.IOException
 meth public void write(int) throws java.io.IOException
 meth public void write(java.lang.String) throws java.io.IOException
 meth public void write(java.lang.String,int,int) throws java.io.IOException
 supr java.lang.Object
+hfds WRITE_BUFFER_SIZE,writeBuffer
 
 CLSS public abstract interface java.lang.Appendable
 meth public abstract java.lang.Appendable append(char) throws java.io.IOException
@@ -90,8 +96,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -100,14 +108,17 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -117,6 +128,9 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract org.netbeans.api.io.Fold
 meth public abstract void setExpanded(boolean)

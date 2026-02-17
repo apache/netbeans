@@ -2218,6 +2218,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case GTGTGT:
                     controller = env.getController();
                     TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(path, nc.getIdentifier()));
+                    if (tm.getKind() == TypeKind.ERROR) {
+                        tm = env.getController().getTrees().getOriginalType((ErrorType) tm);
+                    }
                     addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, false, false, false, true, addSwitchItemDefault);
                     break;
             }

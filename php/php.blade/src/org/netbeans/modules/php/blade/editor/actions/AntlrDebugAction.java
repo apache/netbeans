@@ -42,7 +42,7 @@ import org.openide.util.actions.Presenter;
 
 /**
  *
- * @author bhaidu
+ * TODO make it configurable in options
  */
 @ActionID(id = "org.netbeans.modules.php.blade.editor.actions.AntlrDebug", category = "System")
 @ActionRegistration(displayName = "Antlr Debug", lazy=false)

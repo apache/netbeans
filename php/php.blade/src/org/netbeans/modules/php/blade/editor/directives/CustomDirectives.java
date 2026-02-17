@@ -37,7 +37,6 @@ import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.php.blade.project.BladeProjectProperties;
-import static org.netbeans.modules.php.blade.project.BladeProjectSupport.APP_PROVIDER_RELATIVE_PATH;
 import static org.netbeans.modules.php.blade.syntax.BladeDirectivesUtils.DIRECTIVE_ELSE;
 import static org.netbeans.modules.php.blade.syntax.BladeDirectivesUtils.END_DIRECTIVE_PREFIX;
 import org.netbeans.modules.php.editor.parser.PHPParseResult;
@@ -58,6 +57,7 @@ import org.openide.util.Exceptions;
 public final class CustomDirectives {
 
     private final Project project;
+    public static final String  APP_PROVIDER_RELATIVE_PATH = "app/Providers/AppServiceProvider.php"; // NOI18N
     private static final Map<Project, CustomDirectives> INSTANCES = new WeakHashMap<>();
     private final Map<FileObject, List<CustomDirective>> customDirectives = new LinkedHashMap<>();
 

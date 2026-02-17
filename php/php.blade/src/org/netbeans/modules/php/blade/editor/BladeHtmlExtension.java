@@ -40,15 +40,12 @@ public class BladeHtmlExtension extends HtmlExtension {
     @Override
     public boolean isCustomAttribute(Attribute attribute, HtmlSource source) {
         String attributeName = attribute.unqualifiedName().toString();
-        return false;
+        return attributeName.startsWith(":");
     }
 
     @Override
     public boolean isCustomTag(Named element, HtmlSource source) {
         String elementName = element.name().toString();
-        if (elementName.startsWith(COMPONENT_TAG_NAME_PREFIX)) {
-            return true;
-        }
-        return false;
+        return elementName.startsWith(COMPONENT_TAG_NAME_PREFIX);
     }
 }

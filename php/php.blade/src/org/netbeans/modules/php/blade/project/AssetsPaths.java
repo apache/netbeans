@@ -18,11 +18,7 @@
  */
 package org.netbeans.modules.php.blade.project;
 
-/**
- *
- * @author bogdan
- */
-public class AssetsBundlerSupport {
+public class AssetsPaths {
 
     public static final String RESOURCE_ROOT = "resources"; // NOI18N
     public static final String JS_ASSET_FOLDER = RESOURCE_ROOT + "/js"; // NOI18N

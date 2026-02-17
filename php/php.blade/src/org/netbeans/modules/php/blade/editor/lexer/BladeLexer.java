@@ -44,7 +44,6 @@ public class BladeLexer extends AbstractAntlrLexerBridge<BladeAntlrColoringLexer
 
         return switch (antlrToken.getType()) {
             case BladeAntlrColoringLexer.HTML_TAG, BladeAntlrColoringLexer.HTML -> groupToken(HTML, BladeAntlrColoringLexer.HTML);
-            case BladeAntlrColoringLexer.COMPONENT_ATTR -> groupToken(BLADE_COMPONENT_ATTRIBUTE, BladeAntlrColoringLexer.COMPONENT_ATTR);
             case BladeAntlrColoringLexer.DIRECTIVE, BladeAntlrColoringLexer.D_PHP, BladeAntlrColoringLexer.D_ENDPHP -> token(BLADE_DIRECTIVE);
             case BladeAntlrColoringLexer.D_CUSTOM -> token(BLADE_CUSTOM_DIRECTIVE);
             case BladeAntlrColoringLexer.RAW_TAG, BladeAntlrColoringLexer.CONTENT_TAG -> token(BLADE_ECHO_DELIMITOR);

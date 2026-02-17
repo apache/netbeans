@@ -51,6 +51,8 @@ import org.openide.windows.TopComponent;
 @org.openide.util.lookup.ServiceProvider(service = org.netbeans.modules.refactoring.spi.ui.ActionsImplementationProvider.class, position = 300)
 public class RefactoringActionsProvider extends ActionsImplementationProvider {
 
+    public final int MAX_FILES_LIST_LIMIT = 50;//max files to display in the usage
+    
     @Override
     @Messages("NM_Unknown=Unknown")
     public void doFindUsages(Lookup lookup) {
@@ -114,7 +116,7 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider {
             String name = file.getNameExt();
             String existingFileName = file.getNameExt();
             int counter = 1;
-            while(counter < 50 && dirTarget.getFileObject(existingFileName)!= null){
+            while(counter < MAX_FILES_LIST_LIMIT && dirTarget.getFileObject(existingFileName)!= null){
                 //shouldn't be the case
                 existingFileName = name.substring(0, name.length() - bladeExtension.length()) + "_" + counter + bladeExtension; //NOI18N
                 counter++;

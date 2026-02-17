@@ -45,7 +45,7 @@ import org.openide.util.RequestProcessor;
 
 /**
  *
- * Laravel Project support for blade components
+ * Support for blade components
  *
  * At the first action request for a blade component tag completion or decl
  * finder the scan for blade components configuration will be triggered.

@@ -59,7 +59,7 @@ import static org.netbeans.modules.php.blade.editor.lexer.BladeTokenId.BLADE_DIR
 import org.netbeans.modules.php.blade.editor.parser.BladeDirectiveScope;
 import org.netbeans.modules.php.blade.editor.parser.BladeParserResult;
 import org.netbeans.modules.php.blade.editor.path.BladePathUtils;
-import org.netbeans.modules.php.blade.project.AssetsBundlerSupport;
+import org.netbeans.modules.php.blade.project.AssetsPaths;
 import org.netbeans.modules.php.blade.project.ProjectUtils;
 import org.netbeans.modules.php.blade.editor.directives.DirectivesList;
 import org.netbeans.modules.php.blade.syntax.StringUtils;
@@ -255,7 +255,7 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
             return;
         }
 
-        FileObject resourceDir = projectDir.getFileObject(AssetsBundlerSupport.RESOURCE_ROOT);
+        FileObject resourceDir = projectDir.getFileObject(AssetsPaths.RESOURCE_ROOT);
 
         if (resourceDir == null) {
             return;
@@ -264,7 +264,7 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
         int firstSlash = pathPrefix.indexOf(StringUtils.FORWARD_SLASH);
         int lastSlash = pathPrefix.lastIndexOf(StringUtils.FORWARD_SLASH);
 
-        if (firstSlash == -1 && AssetsBundlerSupport.RESOURCE_ROOT.startsWith(pathPrefix)) {
+        if (firstSlash == -1 && AssetsPaths.RESOURCE_ROOT.startsWith(pathPrefix)) {
 
             int anchorOffset = computeAnchorOffset(pathPrefix, offset);
             for (FileObject file : resourceDir.getChildren()) {
@@ -272,7 +272,7 @@ public class BladeCompletionHandler implements CodeCompletionHandler2 {
                     continue;
                 }
 
-                String proposedFolder = AssetsBundlerSupport.RESOURCE_ROOT + StringUtils.FORWARD_SLASH + file.getName();
+                String proposedFolder = AssetsPaths.RESOURCE_ROOT + StringUtils.FORWARD_SLASH + file.getName();
                 PathElement pathEl = new PathElement(proposedFolder, file);
                 completionProposals.add(new BladeCompletionProposal.FilePathProposal(pathEl, anchorOffset, proposedFolder, true));
             }

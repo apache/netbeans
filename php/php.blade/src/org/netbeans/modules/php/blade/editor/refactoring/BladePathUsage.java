@@ -30,7 +30,6 @@ import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.modules.php.blade.editor.BladeLanguage;
 import org.netbeans.modules.php.blade.editor.indexing.BladeIndex.IndexedOffsetReference;
 import org.netbeans.modules.php.blade.editor.indexing.QueryUtils;
-
 import org.netbeans.modules.refactoring.api.AbstractRefactoring;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.WhereUsedQuery;

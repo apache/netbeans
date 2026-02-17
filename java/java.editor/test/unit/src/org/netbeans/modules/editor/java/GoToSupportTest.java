@@ -72,6 +72,7 @@ import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 import static java.nio.file.StandardCopyOption.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  *
@@ -1618,6 +1619,35 @@ public class GoToSupportTest extends NbTestCase {
         }, false, true);
 
         assertTrue(wasCalled[0]);
+    }
+
+    public void testNoExceptionOnInvalidMethodReference() throws Exception {
+        this.sourceLevel = getLatestSourceVersion();
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        final String code = """
+                            package test;
+                            public class Test {
+                                private static void method() {
+                                    javax.swing.event.ChangeListener l = Test::in|valid;
+                                }
+                            }
+                            """;
+        AtomicBoolean called = new AtomicBoolean();
+        performTest(code, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                return false;
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el, String fileName) {
+                return false;
+            }
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                fail("Should not be called.");
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                called.set(true);
+            }
+        }, false, false);
+        assertTrue(called.get());
     }
 
     private static boolean hasPatterns() {

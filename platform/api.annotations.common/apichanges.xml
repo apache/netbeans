@@ -81,6 +81,22 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="language-annotation">
+            <api name="common_annotations_api"/>
+            <summary>Adding a new Language annotation</summary>
+            <version major="1" minor="50"/>
+            <date day="31" month="12" year="2022"/>
+            <author login="jlahoda"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    A new annotation, Language, is added so that variables can
+                    be marked with the programming language that is expected
+                    for their content.
+                </p>
+            </description>
+            <class package="org.netbeans.api.annotations.common" name="Language"/>
+        </change>
         <change id="transitive-closure">
             <api name="common_annotations_api"/>
             <summary>Exposing necessary javax.annotation elements</summary>

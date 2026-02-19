@@ -20,18 +20,29 @@ package org.netbeans.modules.java.editor.base.semantic;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import javax.lang.model.SourceVersion;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.test.support.MemoryValidator;
+import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.java.editor.base.semantic.ColoringAttributes.Coloring;
 import org.netbeans.modules.java.editor.options.MarkOccurencesSettings;
 import org.netbeans.modules.java.editor.base.semantic.TestBase.Performer;
+import org.netbeans.modules.parsing.api.ParserManager;
+import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.spi.ParseException;
+import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.openide.text.NbDocument;
 import org.openide.util.Pair;
@@ -397,6 +408,33 @@ public class MarkOccDetTest extends TestBase {
         performTest("ExoticIdentifier", 4, 28);
     }
 
+    public void testEmbedding() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_15"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_15, skip tests
+            return ;
+        }
+        performTest("Embedding.java",
+                    "package test;\n" +
+                    "public class Embedding {\n" +
+                    "    @Language(\"java\")\n" +
+                    "    private static final String I = \n" +
+                    "        \"\"\"\n" +
+                    "        public class Embedded {\n" + //6
+                    "            String field = String.valueOf(1);\n" +       //7
+                    "        }\n" +                       //8
+                    "        \"\"\";\n" +
+                    "    @interface Language {\n" +
+                    "         public String value();\n" +
+                    "    }\n" +
+                    "}\n",
+                   6,
+                   15,
+                   "[MARK_OCCURRENCES], 6:12-6:18",
+                   "[MARK_OCCURRENCES], 6:27-6:33");
+    }
+
     private void performTest(String name, final int line, final int column) throws Exception {
         performTest(name, line, column, false);
     }
@@ -429,13 +467,45 @@ public class MarkOccDetTest extends TestBase {
         performTest(fileName, code, new Performer() {
             public void compute(CompilationController info, Document doc, SemanticHighlighterBase.ErrorDescriptionSetter setter) {
                 int offset = NbDocument.findLineOffset((StyledDocument) doc, line) + column;
+                AtomicBoolean called = new AtomicBoolean();
+
+                try {
+                    ParserManager.parse(Collections.singletonList(info.getSnapshot().getSource()),
+                            new UserTask() {
+                                @Override
+                                public void run(ResultIterator resultIterator) throws Exception {
+                                    Result res = resultIterator.getParserResult(offset);
+                                    CompilationController cc = CompilationController.get(res);
+                                    cc.toPhase(Phase.RESOLVED);
+                                    TokenSequence<JavaTokenId> ts = SourceUtils.getJavaTokenSequence(TokenHierarchy.get(doc), offset);
+
+                                    if (ts.languagePath().size() > 1) {
+                                        doCompute(cc, doc, offset, setter);
+                                        called.set(true);
+                                    }
+                                }
+                            });
+                } catch (ParseException ex) {
+                    throw new IllegalStateException(ex);
+                }
+                if (!called.get()) {
+                    doCompute(info, doc, offset, setter);
+                }
+            }
+            private void doCompute(CompilationController info, Document doc, int offset, SemanticHighlighterBase.ErrorDescriptionSetter setter) {
                 List<int[]> spans = new MarkOccurrencesHighlighterBase() {
                     @Override
                     protected void process(CompilationInfo info, Document doc, SchedulerEvent event) {
                         throw new UnsupportedOperationException("Not supported yet.");
                     }
                 }.processImpl(info, MarkOccurencesSettings.getCurrentNode(), doc, offset);
-                
+
+                //convert nested offsets to outer offset - normally done in MarkOccurrencesHighligher:
+                for (int[] span : spans) {
+                    span[0] = info.getSnapshot().getOriginalOffset(span[0]);
+                    span[1] = info.getSnapshot().getOriginalOffset(span[1]);
+                }
+
                 if (spans != null) {
                     setter.setHighlights(doc, spans.stream()
                                                    .map(span -> Pair.of(span, MARK_OCCURRENCES))

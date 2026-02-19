@@ -22,6 +22,7 @@ package org.netbeans.modules.parsing.spi;
 import java.beans.PropertyChangeListener;
 import java.util.logging.Logger;
 import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.modules.parsing.api.Embedding;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.impl.SchedulerAccessor;
 import org.netbeans.modules.parsing.impl.SourceAccessor;
@@ -161,6 +162,16 @@ public abstract class Scheduler {
                 //S ystem.out.println ("\nSchedule tasks (" + Scheduler.this + "):");
                 LOG.fine("Scheduling tasks for :" + source + " and scheduler " + this);
                 cache.scheduleTasks (Scheduler.this.getClass ());
+                if (event instanceof CursorMovedSchedulerEvent) {
+                    int offset = ((CursorMovedSchedulerEvent) event).getCaretOffset();
+                    for (Embedding e : cache.getExistingEmbeddings()) {
+                        if (e.containsOriginalOffset(offset)) {
+                            SourceCache embeddedCache = cache.getCache(e);
+                            embeddedCache.scheduleTasks(Scheduler.this.getClass ());
+                            //TODO: recursive?
+                        }
+                    }
+                }
             }
         });
         task.schedule (reparseDelay);

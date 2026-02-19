@@ -81,6 +81,7 @@ public class LexerBasedHighlightLayer extends AbstractHighlightsContainer {
                         }
                     }
                 }
+                System.err.println("colorings: " + colorings.size());
             }
         });
     }
@@ -100,11 +101,11 @@ public class LexerBasedHighlightLayer extends AbstractHighlightsContainer {
             return HighlightsSequence.EMPTY;
         }
         
-        if (seq.language() == JavaTokenId.language()) {
-            return new LexerBasedHighlightSequence(this, seq.subSequence(startOffset, endOffset), colorings);
-        } else {
+//        if (seq.language() == JavaTokenId.language()) {
+//            return new LexerBasedHighlightSequence(this, seq.subSequence(startOffset, endOffset), colorings);
+//        } else {
             return new EmbeddedLexerBasedHighlightSequence(this, seq.subSequence(startOffset, endOffset), colorings);
-        }
+//        }
     }
 
     public synchronized void clearColoringCache() {

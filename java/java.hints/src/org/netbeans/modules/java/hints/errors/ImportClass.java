@@ -61,6 +61,8 @@ import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
+import org.netbeans.api.java.source.JavaSourcePath;
+import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreeMaker;
@@ -79,6 +81,7 @@ import org.netbeans.modules.java.hints.infrastructure.CreatorBasedLazyFixList;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsProvider;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.modules.java.preprocessorbridge.spi.ImportProcessor;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.spi.editor.hints.ChangeInfo;
 import org.netbeans.spi.editor.hints.EnhancedFix;
 import org.netbeans.spi.editor.hints.Fix;
@@ -285,7 +288,7 @@ public final class ImportClass implements ErrorRule<Void>{
                     fixes.add(new UseFQN(info, file, fqn, eh, "Z#" + fqn, treePath, prefered, false));
                     fixes.add(UseFQN.createShared(info, file, fqn, eh, fqn, treePath, prefered));
                 } else {
-                    fixes.add(new FixImport(file, fqn, eh, sort.toString(), 
+                    fixes.add(new FixImport(file, info.getJavaSourcePath(), fqn, eh, sort.toString(),
                             prefered, info, changePath, replaceSuffix, doOrganize));
                 }
             }
@@ -363,13 +366,15 @@ public final class ImportClass implements ErrorRule<Void>{
         protected final ElementHandle<Element> toImport;
         protected final boolean isValid;
         private final FileObject file;
+        private final JavaSourcePath path;
         private final String sortText;
 
         protected WorkingCopy copy;
         
-        private FixBase(FileObject file, String fqn, ElementHandle<Element> toImport, String sortText, boolean isValid) {
+        private FixBase(FileObject file, JavaSourcePath path, String fqn, ElementHandle<Element> toImport, String sortText, boolean isValid) {
             this.isValid = isValid;
             this.file = file;
+            this.path = path;
             this.fqn = fqn;
             this.toImport = toImport;
             this.sortText = sortText;
@@ -380,9 +385,7 @@ public final class ImportClass implements ErrorRule<Void>{
         
         private boolean needsChange;
         
-        public ChangeInfo implement() throws IOException {
-            JavaSource js = JavaSource.forFileObject(file);            
-            
+        public ChangeInfo implement() throws IOException, ParseException {
             Task task = new Task<WorkingCopy>() {
                 public void run(WorkingCopy copy) throws Exception {
                     if (copy.toPhase(Phase.RESOLVED).compareTo(Phase.RESOLVED) < 0) {
@@ -397,9 +400,9 @@ public final class ImportClass implements ErrorRule<Void>{
                     }
                 }
             };
-            if (js != null) {
+            if (path != null) {
                 do {
-                    js.runModificationTask(task).commit();
+                    ModificationResult.runModificationTask(path, task).commit();
                 } while (needsChange);
             } else {
                 DataObject od;
@@ -468,7 +471,7 @@ public final class ImportClass implements ErrorRule<Void>{
         
         public UseFQN(CompilationInfo info, FileObject file, String fqn, ElementHandle<Element> toImport, String sortText, TreePath replacePath, boolean isValid, 
                 boolean all) {
-            super(file, fqn, toImport, sortText, isValid);
+            super(file, info.getJavaSourcePath(), fqn, toImport, sortText, isValid);
             this.sn = replacePath.getLeaf().toString();
             this.replacePathHandle = TreePathHandle.create(replacePath, info);
             this.all = all;
@@ -541,9 +544,9 @@ public final class ImportClass implements ErrorRule<Void>{
         boolean moduleAdded;
         int round;
         
-        public FixImport(FileObject file, String fqn, ElementHandle<Element> toImport, String sortText, boolean isValid, CompilationInfo info, @NullAllowed TreePath replacePath, @NullAllowed String replaceSuffix, 
+        public FixImport(FileObject file, JavaSourcePath path, String fqn, ElementHandle<Element> toImport, String sortText, boolean isValid, CompilationInfo info, @NullAllowed TreePath replacePath, @NullAllowed String replaceSuffix,
                 boolean doOrganize) {
-            super(file, fqn, toImport, sortText, isValid);
+            super(file, path, fqn, toImport, sortText, isValid);
             if (replacePath != null) {
                 this.replacePathHandle = TreePathHandle.create(replacePath, info);
                 this.suffix = replaceSuffix;

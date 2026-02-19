@@ -566,6 +566,25 @@ public class TaskProcessor {
             return cancelTime == 0 ? 0 : now - cancelTime;
     }
 
+    /*test*/ static <T extends Parser.Result> List<Embedding> callParserBaseEmbeddingProvider (
+            final @NonNull ParserBasedEmbeddingProvider<T> task,
+            final @NullAllowed T result,
+            final @NullAllowed SchedulerEvent event) {
+            assert task != null;
+            assert !Thread.holdsLock(INTERNAL_LOCK);
+            assert parserLock.isHeldByCurrentThread();
+            sampler.enableSampling();
+            final long now;
+            final long cancelTime;
+            try {
+                return task.getEmbeddings(result);
+            } finally {
+                now = System.currentTimeMillis();
+                cancelTime = sampler.disableSampling();
+            }
+//            return cancelTime == 0 ? 0 : now - cancelTime;
+    }
+
     static List<Embedding> callEmbeddingProvider(
             final @NonNull EmbeddingProvider embeddingProvider,
             final @NonNull Snapshot snapshot) {
@@ -784,6 +803,11 @@ public class TaskProcessor {
                                                                     ParserResultTask parserResultTask = (ParserResultTask) r.task;
                                                                     SchedulerEvent schedulerEvent = SourceAccessor.getINSTANCE().getSchedulerEvent(source, parserResultTask.getSchedulerClass());
                                                                     cancelTime = callParserResultTask(parserResultTask, currentResult, schedulerEvent);
+                                                                } else if (r.task instanceof ParserBasedEmbeddingProvider) {
+                                                                    LOGGER.log(Level.FINE, "Running Embedding Task: {0}", r);
+                                                                    ParserBasedEmbeddingProvider parserBasedEmbeddingProvider = (ParserBasedEmbeddingProvider) r.task;
+                                                                    SchedulerEvent schedulerEvent = SourceAccessor.getINSTANCE().getSchedulerEvent(source, parserBasedEmbeddingProvider.getSchedulerClass());
+                                                                    sourceCache.refresh(callParserBaseEmbeddingProvider(parserBasedEmbeddingProvider, currentResult, schedulerEvent), parserBasedEmbeddingProvider, r.schedulerType);
                                                                 } else {
                                                                     assert false :
                                                                         String.format (

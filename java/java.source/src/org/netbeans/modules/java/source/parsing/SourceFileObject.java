@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
+import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -57,13 +58,15 @@ public class SourceFileObject extends AbstractSourceFileObject implements Docume
     @CheckForNull
     public static SourceFileObject create (
             @NonNull final FileObject file,
-            @NonNull final FileObject root) {
+            @NonNull final FileObject root,
+            final boolean embedded) {
         try {
             return new SourceFileObject (
                 new Handle(file, root),
                 null,
                 null,
-                false);
+                false,
+                embedded);
         } catch (IOException ioe) {
             if (LOG.isLoggable(Level.SEVERE))
                 LOG.log(Level.SEVERE, ioe.getMessage(), ioe);
@@ -75,8 +78,9 @@ public class SourceFileObject extends AbstractSourceFileObject implements Docume
         @NonNull final Handle handle,
         @NullAllowed final JavaFileFilterImplementation filter,
         @NullAllowed final CharSequence content,
-        final boolean renderNow) throws IOException {
-        super(handle, filter, content != null);
+        final boolean renderNow,
+        final boolean embedded) throws IOException {
+        super(handle, filter, content != null, embedded);
         this.hasFilter = filter != null;
         if (content != null || renderNow) {
             update(content);

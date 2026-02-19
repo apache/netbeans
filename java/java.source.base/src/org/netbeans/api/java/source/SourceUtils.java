@@ -140,12 +140,13 @@ public class SourceUtils {
      * @since 0.21
      */
     public static TokenSequence<JavaTokenId> getJavaTokenSequence(final TokenHierarchy hierarchy, final int offset) {
+        TokenSequence<JavaTokenId> found = null;
         if (hierarchy != null) {
             TokenSequence<?> ts = hierarchy.tokenSequence();
             while(ts != null && (offset == 0 || ts.moveNext())) {
                 ts.move(offset);
                 if (ts.language() == JavaTokenId.language()) {
-                    return (TokenSequence<JavaTokenId>)ts;
+                    found = (TokenSequence<JavaTokenId>)ts;
                 }
                 if (!ts.moveNext() && !ts.movePrevious()) {
                     return null;
@@ -153,7 +154,11 @@ public class SourceUtils {
                 ts = ts.embedded();
             }
         }
-        return null;
+        if (found != null) {
+            //reset the token position, so that caller can call moveNext()/movePrevious()
+            found.move(offset);
+        }
+        return found;
     }
 
     /**

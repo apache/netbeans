@@ -306,7 +306,7 @@ public class HintTest {
      * @param code the content of the newly created test file
      * @return itself
      */
-    public HintTest input(String code) throws Exception {
+    public HintTest input(@org.netbeans.api.annotations.common.Language("java") String code) throws Exception {
         return input("test/Test.java", code, true);
     }
 
@@ -317,7 +317,7 @@ public class HintTest {
      *                   compilation errors before the hint is run on it
      * @return itself
      */
-    public HintTest input(String code, boolean compilable) throws Exception {
+    public HintTest input(@org.netbeans.api.annotations.common.Language("java") String code, boolean compilable) throws Exception {
         return input("test/Test.java", code, compilable);
     }
 
@@ -327,7 +327,7 @@ public class HintTest {
      * @param code the content of the newly created test file
      * @return itself
      */
-    public HintTest input(String fileName, String code) throws Exception {
+    public HintTest input(String fileName, @org.netbeans.api.annotations.common.Language("java") String code) throws Exception {
         return input(fileName, code, true);
     }
     
@@ -340,7 +340,7 @@ public class HintTest {
      *                   compilation errors before the hint is run on it
      * @return itself
      */
-    public HintTest input(String fileName, String code, boolean compilable) throws Exception {
+    public HintTest input(String fileName, @org.netbeans.api.annotations.common.Language("java") String code, boolean compilable) throws Exception {
         int caret = -1;
 
         if (caretMarker != null && testFile == null) {
@@ -1102,7 +1102,7 @@ public class HintTest {
          * @return the wrapper itself
          * @throws AssertionError if the file does not have the correct content
          */
-        public AppliedFix assertOutput(String code) throws Exception {
+        public AppliedFix assertOutput(@org.netbeans.api.annotations.common.Language("java") String code) throws Exception {
             return assertOutput("test/Test.java", code);
         }
         /**Verify the content of the given resulting file.
@@ -1116,7 +1116,7 @@ public class HintTest {
          * @return the wrapper itself
          * @throws AssertionError if the file does not have the correct content
          */
-        public AppliedFix assertOutput(String fileName, String code) throws Exception {
+        public AppliedFix assertOutput(String fileName, @org.netbeans.api.annotations.common.Language("java") String code) throws Exception {
             FileObject toCheck = sourceRoot.getFileObject(fileName);
 
             assertNotNull("Required file: " + fileName + " not found", toCheck);
@@ -1228,7 +1228,7 @@ public class HintTest {
          * @return the wrapper itself
          * @throws AssertionError if the result is not compilable
          */
-        public AppliedFix assertVerbatimOutput(String code) throws Exception {
+        public AppliedFix assertVerbatimOutput(@org.netbeans.api.annotations.common.Language("java") String code) throws Exception {
             return assertVerbatimOutput("test/Test.java", code);
         }
         /**Verify the content of the given resulting file.
@@ -1241,7 +1241,7 @@ public class HintTest {
          * @return the wrapper itself
          * @throws AssertionError if the result is not compilable
          */
-        public AppliedFix assertVerbatimOutput(String fileName, String code) throws Exception {
+        public AppliedFix assertVerbatimOutput(String fileName, @org.netbeans.api.annotations.common.Language("java") String code) throws Exception {
             FileObject toCheck = sourceRoot.getFileObject(fileName);
 
             assertNotNull(toCheck);

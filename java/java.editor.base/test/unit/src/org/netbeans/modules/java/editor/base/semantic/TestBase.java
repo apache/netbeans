@@ -45,6 +45,7 @@ import javax.lang.model.SourceVersion;
 import javax.swing.event.ChangeListener;
 import java.util.stream.Collectors;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.CompilationController;
@@ -56,15 +57,19 @@ import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.editor.base.embedding.EmbeddingProviderImpl.FactoryImpl;
 import org.netbeans.spi.editor.hints.ErrorDescription;
+import org.netbeans.spi.editor.mimelookup.MimeDataProvider;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObject;
+import org.openide.util.Lookup;
 import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -169,7 +174,8 @@ public abstract class TestBase extends NbTestCase {
     protected void performTest(Input input, final Performer performer, boolean doCompileRecursively, Validator validator) throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[] {
             new MIMEResolverImpl(),
-            new CompilerOptionsQueryImplementationImpl()
+            new CompilerOptionsQueryImplementationImpl(),
+            new MimeDataProviderImpl()
         });
         
 	FileObject scratch = SourceUtilsTestUtil.makeScratchDir(this);
@@ -248,7 +254,8 @@ public abstract class TestBase extends NbTestCase {
     protected void performTest(String fileName, String code, Performer performer, boolean doCompileRecursively, String... expected) throws Exception {
         SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[] {
             new MIMEResolverImpl(),
-            new CompilerOptionsQueryImplementationImpl()
+            new CompilerOptionsQueryImplementationImpl(),
+            new MimeDataProviderImpl()
         });
 
 	FileObject scratch = SourceUtilsTestUtil.makeScratchDir(this);
@@ -444,5 +451,22 @@ public abstract class TestBase extends NbTestCase {
             }
             return null;
         }
+    }
+
+    private static final class MimeDataProviderImpl implements MimeDataProvider {
+
+        private Lookup JAVA;
+
+        @Override
+        public Lookup getLookup(MimePath mimePath) {
+            if ("text/x-java".equals(mimePath.getPath())) {
+                if (JAVA == null) {
+                    JAVA = Lookups.fixed(new FactoryImpl(), JavaTokenId.language());
+                }
+                return JAVA;
+            }
+            return null;
+        }
+
     }
 }

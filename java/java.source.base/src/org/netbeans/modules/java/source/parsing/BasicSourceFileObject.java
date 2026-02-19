@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyledDocument;
+import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -61,6 +62,7 @@ public class BasicSourceFileObject extends AbstractSourceFileObject implements D
                 new Handle(file, root),
                 null,
                 null,
+                false,
                 false);
         } catch (IOException ioe) {
             if (LOG.isLoggable(Level.SEVERE))
@@ -73,8 +75,9 @@ public class BasicSourceFileObject extends AbstractSourceFileObject implements D
         @NonNull final Handle handle,
         @NullAllowed final JavaFileFilterImplementation filter,
         @NullAllowed final CharSequence content,
-        final boolean renderNow) throws IOException {
-        super(handle, filter, content != null);
+        final boolean renderNow,
+        final boolean embedded) throws IOException {
+        super(handle, filter, content != null, embedded);
         this.hasFilter = filter != null;
         if (content != null || renderNow) {
             update(content);

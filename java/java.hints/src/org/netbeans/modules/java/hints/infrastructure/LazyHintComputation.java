@@ -68,7 +68,8 @@ public class LazyHintComputation implements CancellableTask<CompilationInfo> {
         List<CreatorBasedLazyFixList> toCompute = new LinkedList<CreatorBasedLazyFixList>();
         
         try {
-            toCompute.addAll(LazyHintComputationFactory.getAndClearToCompute(file));
+            //TODO: no need for the get-set pair, as the key is a snapshot now:
+            toCompute.addAll(LazyHintComputationFactory.getAndClearToCompute(info.getSnapshot()));
             
             if (isCancelled()) {
                 cancelled = true;
@@ -96,7 +97,7 @@ public class LazyHintComputation implements CancellableTask<CompilationInfo> {
         } finally {
             if (cancelled && !toCompute.isEmpty()) {
                 for (CreatorBasedLazyFixList l : toCompute) {
-                    LazyHintComputationFactory.addToCompute(file, l);
+                    LazyHintComputationFactory.addToCompute(info.getSnapshot(), l);
                 }
             }
         }

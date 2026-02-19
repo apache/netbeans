@@ -130,6 +130,10 @@
     <fontcolor name="javadoc-identifier" default="comment" foreColor="000000" >
     </fontcolor>
 
+    <!-- JavaMultiLineStringTokenId categories -->
+    <fontcolor name="text-block-whitespace" default="string" />
+    <fontcolor name="text-block-text" default="string" />
+
 <!-- XXX: should java module really define these colorings ??
 
     <fontcolor name="html-argument" foreColor="ff007c00" default="identifier"/>

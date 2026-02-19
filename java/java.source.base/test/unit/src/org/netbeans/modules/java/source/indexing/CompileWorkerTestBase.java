@@ -211,7 +211,7 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
     
     protected CompileTuple virtualCompileTuple(String relativePath, String content) throws Exception {
         FileObject file = createSrcFile(relativePath, "");
-        return new CompileTuple(FileObjects.sourceFileObject(file, src, null, content), SPIAccessor.getInstance().create(new FileObjectIndexable(src, relativePath)), true, true);
+        return new CompileTuple(FileObjects.sourceFileObject(file, src, null, content, false), SPIAccessor.getInstance().create(new FileObjectIndexable(src, relativePath)), true, true);
     }
     
     protected CompileTuple compileTuple(String relativePath, String content) throws Exception {

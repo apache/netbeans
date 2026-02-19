@@ -46,6 +46,11 @@ import javax.lang.model.type.TypeMirror;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import org.netbeans.api.editor.mimelookup.MimePath;
+import org.netbeans.api.java.lexer.JavaMultiLineStringTokenId;
+
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
@@ -60,7 +65,9 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.junit.NbTestCase;
 import static org.netbeans.junit.NbTestCase.assertFile;
 import org.netbeans.modules.editor.java.GoToSupport.UiUtilsCaller;
+import org.netbeans.modules.java.editor.base.embedding.EmbeddingProviderImpl.FactoryImpl;
 import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.netbeans.spi.editor.mimelookup.MimeDataProvider;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
 import org.openide.LifecycleManager;
 import org.openide.cookies.EditorCookie;
@@ -70,6 +77,8 @@ import org.openide.filesystems.LocalFileSystem;
 import org.openide.filesystems.Repository;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ServiceProvider;
 import static java.nio.file.StandardCopyOption.*;
 
@@ -86,7 +95,7 @@ public class GoToSupportTest extends NbTestCase {
 
     @Override
     protected void setUp() throws Exception {
-        SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[0]);
+        SourceUtilsTestUtil.prepareTest(new String[] {"org/netbeans/modules/java/editor/resources/layer.xml"}, new MimeDataProviderImpl());
         org.netbeans.api.project.ui.OpenProjects.getDefault().getOpenProjects();
         SourceUtilsTestUtil2.disableArtificalParameterNames();
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = false;
@@ -1620,6 +1629,48 @@ public class GoToSupportTest extends NbTestCase {
         assertTrue(wasCalled[0]);
     }
 
+    public void testEmbedding() throws Exception {
+        final boolean[] wasCalled = new boolean[1];
+        this.sourceLevel = "15";
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        final String code = "package test;\n" +
+                      "public class Test {\n" +
+                      "    private static void method() {\n" +
+                      "        @Language(\"java\")\n" +
+                      "        String code = \"\"\"\n" +
+                      "                      public class Test {\n" +
+                      "                          Te|st t;\n" +
+                      "                      }\n" +
+                      "                      \"\"\";\n" +
+                      "    }\n" +
+                      "    @interface Language {\n" +
+                      "        public String value();\n" +
+                      "    }\n" +
+                      "}\n";
+
+        performTest(code, -1, new UiUtilsCaller() {
+            @Override public boolean open(FileObject fo, int pos) {
+                assertTrue(source == fo);
+                assertEquals(code.indexOf("public class ", code.indexOf("public class ") + 1), pos);
+                wasCalled[0] = true;
+                return true;
+            }
+
+            @Override public void beep(boolean goToSource, boolean goToJavadoc) {
+                fail("Should not be called.");
+            }
+            @Override public boolean open(ClasspathInfo info, ElementHandle<?> el) {
+                fail("Should not be called.");
+                return true;
+            }
+            @Override public void warnCannotOpen(String displayName) {
+                fail("Should not be called.");
+            }
+        }, false, true);
+
+        assertTrue(wasCalled[0]);
+    }
+
     private static boolean hasPatterns() {
         try {
             SourceVersion.valueOf("RELEASE_14"); //NOI18N
@@ -2043,5 +2094,22 @@ public class GoToSupportTest extends NbTestCase {
     }
     private static String getLatestSourceVersion() {
         return SourceVersion.latest().name().split("_")[1];
+    }
+
+    private static final class MimeDataProviderImpl implements MimeDataProvider {
+
+        private Lookup JAVA;
+
+        @Override
+        public Lookup getLookup(MimePath mimePath) {
+            if ("text/x-java".equals(mimePath.getPath())) {
+                if (JAVA == null) {
+                    JAVA = Lookups.fixed(new FactoryImpl(), JavaTokenId.language(), JavaMultiLineStringTokenId.language());
+                }
+                return JAVA;
+            }
+            return null;
+        }
+
     }
 }

@@ -136,6 +136,7 @@ public class NBJavacTrees extends JavacTrees {
         Method dupMethodTemp;
 
         try {
+            // TODO this adds --add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED
             basicHandlerFieldTemp = Check.class.getDeclaredField("basicHandler");
             basicHandlerFieldTemp.setAccessible(true);
             returnResultFieldTemp = AttrContext.class.getDeclaredField("returnResult");

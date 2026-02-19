@@ -301,15 +301,14 @@ final class VanillaCompileWorker extends CompileWorker {
                 List<Element> activeTypes = new ArrayList<>();
                 if (unit.getValue().jfo.isNameCompatible("package-info", JavaFileObject.Kind.SOURCE)) {
                     final PackageTree pt = unit.getKey().getPackage();
-                    if (pt instanceof JCPackageDecl) {                        
-                        final Element sym = ((JCPackageDecl)pt).packge;
+                    if (pt instanceof JCPackageDecl decl) {                        
+                        final Element sym = decl.packge;
                         if (sym != null)
                             activeTypes.add(sym);
                     }
                 } else {
                     for (Tree tree : unit.getKey().getTypeDecls()) {
-                        if (tree instanceof JCTree) {
-                            final JCTree jct = (JCTree)tree;
+                        if (tree instanceof JCTree jct) {
                             if (jct.getTag() == JCTree.Tag.CLASSDEF) {
                                 final Element sym = ((JCClassDecl)tree).sym;
                                 if (sym != null)
@@ -480,7 +479,8 @@ final class VanillaCompileWorker extends CompileWorker {
         } catch (IOException | InterruptedException | ExecutionException ex) {
             Exceptions.printStackTrace(ex);
         }
-        }
+    }
+
     private static void copyRecursively(FileObject source, File targetRoot, File target, Set<String> filter, FileManagerTransaction fmtx, List<File> copied) throws IOException {
         if (source.isFolder()) {
             if (target.exists() && !target.isDirectory()) {
@@ -1114,6 +1114,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 for (String boundName : boundNames) {
                     try {
                         Field bound = tv.getClass().getDeclaredField(boundName);
+                        // TODO this adds --add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED
                         bound.setAccessible(true);
                         bound.set(tv, error2Object((Type) bound.get(tv)));
                     } catch (IllegalAccessException | NoSuchFieldException | SecurityException ex) {

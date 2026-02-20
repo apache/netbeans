@@ -89,21 +89,20 @@ public final class CompletionUtilities {
      *  rendering area. It may be null which means no right text will be displayed.
      * @return &gt;=0 preferred rendering width of the item.
      */
-    public static int getPreferredWidth(String leftHtmlText, String rightHtmlText,
-    Graphics g, Font defaultFont) {
-        int width = BEFORE_ICON_GAP + ICON_WIDTH + AFTER_ICON_GAP + AFTER_RIGHT_TEXT_GAP;
-        if (leftHtmlText != null && leftHtmlText.length() > 0) {
-            width += (int)PatchedHtmlRenderer.renderHTML(leftHtmlText, g, 0, 0, Integer.MAX_VALUE, 0,
+    public static int getPreferredWidth(String leftHtmlText, String rightHtmlText, Graphics g, Font defaultFont) {
+        double width = BEFORE_ICON_GAP + ICON_WIDTH + AFTER_ICON_GAP + AFTER_RIGHT_TEXT_GAP;
+        if (leftHtmlText != null && !leftHtmlText.isEmpty()) {
+            width += PatchedHtmlRenderer.renderHTML(leftHtmlText, g, 0, 0, Integer.MAX_VALUE, 0,
                     defaultFont, Color.black, PatchedHtmlRenderer.STYLE_CLIP, false, true);
         }
-        if (rightHtmlText != null && rightHtmlText.length() > 0) {
+        if (rightHtmlText != null && !rightHtmlText.isEmpty()) {
             if (leftHtmlText != null) {
                 width += BEFORE_RIGHT_TEXT_GAP;
             }
-            width += (int)PatchedHtmlRenderer.renderHTML(rightHtmlText, g, 0, 0, Integer.MAX_VALUE, 0,
+            width += PatchedHtmlRenderer.renderHTML(rightHtmlText, g, 0, 0, Integer.MAX_VALUE, 0,
                     defaultFont, Color.black, PatchedHtmlRenderer.STYLE_CLIP, false, true);
         }
-        return width;
+        return (int) Math.ceil(width);
     }
     
     /**

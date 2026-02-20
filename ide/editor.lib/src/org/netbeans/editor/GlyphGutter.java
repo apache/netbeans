@@ -64,6 +64,7 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.View;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.EditorStyleConstants;
 import org.netbeans.api.editor.settings.FontColorNames;
@@ -385,7 +386,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
             if (document != null) {
                 document.readLock();
                 try {
-                    lineCnt = Utilities.getLineOffset(document, document.getLength()) + 1;
+                    lineCnt = LineDocumentUtils.getLineIndex(document, document.getLength()) + 1;
                 } finally {
                     document.readUnlock();
                 }
@@ -842,7 +843,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                 BaseDocument document = eui.getDocument();
                 BaseTextUI textUI = (BaseTextUI)component.getUI();
                 int clickOffset = textUI.viewToModel(component, new Point(0, e.getY()));
-                line = Utilities.getLineOffset(document, clickOffset);
+                line = LineDocumentUtils.getLineIndex(document, clickOffset);
             }catch (BadLocationException ble) {
                 LOG.log(Level.WARNING, null, ble);
             }
@@ -938,12 +939,12 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                     if (toInvoke != null && toInvoke.isEnabled()){
                         BaseDocument document = eui.getDocument();
                         try {
-                            currentLine = Utilities.getLineOffset(document, eui.getComponent().getCaret().getDot());
+                            currentLine = LineDocumentUtils.getLineIndex(document, eui.getComponent().getCaret().getDot());
                         } catch (BadLocationException ex) {
                             return;
                         }
                         if (line != currentLine) {
-                            int offset = Utilities.getRowStartFromLineOffset(document, line);
+                            int offset = LineDocumentUtils.getLineStartFromIndex(document, line);
                             JumpList.checkAddEntry();
                             eui.getComponent().getCaret().setDot(offset);
                         }
@@ -990,7 +991,7 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                     offset = annos.getActiveAnnotation(line).getOffset();
                 } else {
                     BaseDocument document = eui.getDocument();
-                    offset = Utilities.getRowStartFromLineOffset(document, line);
+                    offset = LineDocumentUtils.getLineStartFromIndex(document, line);
                 }
                 if (eui.getComponent().getCaret().getDot() != offset)
                     JumpList.checkAddEntry();
@@ -1060,11 +1061,11 @@ public class GlyphGutter extends JComponent implements Annotations.AnnotationsLi
                         }
                         // Check if the sele
                         // Extend to next line's begining
-                        dragEndOffset = Math.min(Utilities.getRowEnd((BaseDocument) aDoc, lineStartOffset) + 1, aDoc.getLength());
+                        dragEndOffset = Math.min(LineDocumentUtils.getLineEndOffset((BaseDocument) aDoc, lineStartOffset) + 1, aDoc.getLength());
                     } else { // Backward selection
                         // Check if the selection is already reverted i.e. it starts at dragStartOffset's line end
                         if (caret.getMark() == dragStartOffset) {
-                            caret.setDot(Utilities.getRowEnd((BaseDocument)aDoc, dragStartOffset) + 1);
+                            caret.setDot(LineDocumentUtils.getLineEndOffset((BaseDocument)aDoc, dragStartOffset) + 1);
                         }
                         dragEndOffset = lineStartOffset;
                     }

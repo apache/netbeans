@@ -34,7 +34,7 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.spi.keyring.KeyringProvider;
 import org.openide.util.Cancellable;
 import org.openide.util.Lookup;
@@ -113,7 +113,7 @@ public class Keyring {
                         return result.get(SAFE_DELAY, TimeUnit.MILLISECONDS);
                     } catch (TimeoutException ex) {
                         // show progress dialog
-                        return ProgressUtils.showProgressDialogAndRun(
+                        return BaseProgressUtils.showProgressDialogAndRun(
                                 new ProgressRunnable<char[]>(result), Bundle.MSG_KeyringAccess(), false);
                     }
                 }

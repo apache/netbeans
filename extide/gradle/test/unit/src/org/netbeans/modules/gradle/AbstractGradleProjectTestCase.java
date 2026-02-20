@@ -39,7 +39,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
 import org.openide.modules.DummyInstalledFileLocator;
-import org.openide.util.Exceptions;
 
 /**
  *

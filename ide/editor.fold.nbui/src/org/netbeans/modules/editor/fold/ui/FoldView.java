@@ -42,6 +42,7 @@ import javax.swing.text.Position;
 import javax.swing.text.Position.Bias;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.fold.Fold;
 import org.netbeans.api.editor.fold.FoldTemplate;
 import org.netbeans.api.editor.settings.FontColorNames;
@@ -54,6 +55,7 @@ import org.netbeans.modules.editor.lib2.view.ViewUtils;
 import org.openide.util.NbBundle;
 
 import static org.netbeans.modules.editor.fold.ui.Bundle.*;
+
 import org.netbeans.modules.editor.lib2.caret.CaretFoldExpander;
 
 
@@ -215,8 +217,8 @@ final class FoldView extends EditorView {
             if ((options & 2) > 0) {
                 int start = fold.getStartOffset();
                 int end = fold.getEndOffset();
-                int startLine = Utilities.getLineOffset(bd, start);
-                int endLine = Utilities.getLineOffset(bd, end) + 1;
+                int startLine = LineDocumentUtils.getLineIndex(bd, start);
+                int endLine = LineDocumentUtils.getLineIndex(bd, end) + 1;
                 
                 if (endLine <= startLine + 1) {
                     mask &= ~2;

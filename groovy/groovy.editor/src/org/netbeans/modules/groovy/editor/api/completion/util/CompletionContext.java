@@ -37,6 +37,7 @@ import org.codehaus.groovy.ast.expr.NamedArgumentListExpression;
 import org.codehaus.groovy.ast.expr.RangeExpression;
 import org.codehaus.groovy.ast.expr.VariableExpression;
 import org.codehaus.groovy.ast.stmt.BlockStatement;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
@@ -47,8 +48,10 @@ import org.netbeans.modules.groovy.editor.api.AstPath;
 import org.netbeans.modules.groovy.editor.api.completion.CaretLocation;
 import org.netbeans.modules.groovy.editor.completion.inference.GroovyTypeAnalyzer;
 import org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId;
+
 import static org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId.LITERAL_new;
 import static org.netbeans.modules.groovy.editor.api.lexer.GroovyTokenId.LPAREN;
+
 import org.netbeans.modules.groovy.editor.api.lexer.LexUtilities;
 import org.netbeans.modules.groovy.editor.completion.AccessLevel;
 import org.openide.filesystems.FileObject;
@@ -905,8 +908,8 @@ public final class CompletionContext {
         int nonWhite = 0;
 
         try {
-            rowStart = Utilities.getRowStart(doc, lexOffset);
-            nonWhite = Utilities.getFirstNonWhiteFwd(doc, rowStart);
+            rowStart = LineDocumentUtils.getLineStartOffset(doc, lexOffset);
+            nonWhite = LineDocumentUtils.getNextNonWhitespace(doc, rowStart);
 
         } catch (BadLocationException ex) {
         }

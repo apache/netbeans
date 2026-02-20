@@ -21,16 +21,11 @@ package org.netbeans.modules.gradle.java.queries;
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.netbeans.api.editor.document.LineDocument;
 import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.project.Project;
-import org.netbeans.api.project.ProjectManager;
-import org.netbeans.api.project.ui.OpenProjects;
-import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.gradle.ProjectTrust;
+import org.netbeans.modules.gradle.AbstractGradleProjectTestCase;
 import org.netbeans.modules.gradle.api.GradleBaseProject;
-import org.netbeans.modules.gradle.api.NbGradleProject;
 import org.netbeans.modules.gradle.options.GradleExperimentalSettings;
 import org.netbeans.modules.project.dependency.ArtifactSpec;
 import org.netbeans.modules.project.dependency.Dependency;
@@ -48,7 +43,7 @@ import org.openide.windows.IOProvider;
  *
  * @author sdedic
  */
-public class GradleDependenciesImplementationTest extends NbTestCase {
+public class GradleDependenciesImplementationTest extends AbstractGradleProjectTestCase {
     FileObject projectDir;
     File destDirF;
     
@@ -92,16 +87,7 @@ public class GradleDependenciesImplementationTest extends NbTestCase {
     private Project makeProject(String subdir) throws Exception {
         FileObject src = FileUtil.toFileObject(getDataDir()).getFileObject(subdir);
         projectDir = FileUtil.copyFile(src, FileUtil.toFileObject(getWorkDir()), src.getNameExt());
-        
-        Project p = ProjectManager.getDefault().findProject(projectDir);
-        assertNotNull(p);
-        ProjectTrust.getDefault().trustProject(p);
-        
-        OpenProjects.getDefault().open(new Project[] { p }, true);
-        OpenProjects.getDefault().openProjects().get();
-        
-        NbGradleProject.get(p).toQuality("Load data", NbGradleProject.Quality.FULL, false).toCompletableFuture().get();
-        return p;
+        return openProject(projectDir);
     }
     
     public void testSimpleProject() throws Exception {
@@ -167,7 +153,7 @@ public class GradleDependenciesImplementationTest extends NbTestCase {
         
         int start = loc.getStartOffset();
         int depStart = LineDocumentUtils.getLineFirstNonWhitespace(doc, start);
-        int depEnd = LineDocumentUtils.getLineEnd(doc, start);
+        int depEnd = LineDocumentUtils.getLineEndOffset(doc, start);
         
         String s = doc.getText(depStart, depEnd - depStart);
         assertEquals("dependencies {", s);
@@ -184,9 +170,9 @@ public class GradleDependenciesImplementationTest extends NbTestCase {
         );
         assertNotNull("Dependency service is supported", r);
         
-        Dependency pin1 = r.getRoot().getChildren().stream().filter(d -> d.toString().contains("io.micronaut:micronaut-validation")).findAny().get();
+        Dependency pin1 = r.getRoot().getChildren().stream().filter(d -> d.toString().contains("io.micronaut.validation:micronaut-validation")).findAny().get();
         Dependency pin2 = r.getRoot().getChildren().stream().filter(d -> d.toString().contains("ch.qos.logback:logback-classic")).findAny().get();
-        Dependency pin3 = r.getRoot().getChildren().stream().filter(d -> d.toString().contains("io.micronaut:micronaut-jackson-databind")).findAny().get();
+        Dependency pin3 = r.getRoot().getChildren().stream().filter(d -> d.toString().contains("io.micronaut.serde:micronaut-serde-jackson")).findAny().get();
         
         SourceLocation loc = r.getDeclarationRange(pin2, DependencyResult.PART_CONTAINER);
         assertNull(loc);
@@ -203,7 +189,7 @@ public class GradleDependenciesImplementationTest extends NbTestCase {
         
         int start = loc.getStartOffset();
         int depStart = LineDocumentUtils.getLineFirstNonWhitespace(doc, start);
-        int depEnd = LineDocumentUtils.getLineEnd(doc, start);
+        int depEnd = LineDocumentUtils.getLineEndOffset(doc, start);
         
         String s = doc.getText(depStart, depEnd - depStart);
         assertEquals("implementation(", s);
@@ -221,45 +207,26 @@ public class GradleDependenciesImplementationTest extends NbTestCase {
         assertNotNull("Dependency service is supported", r);
         
         assertEquals(9, r.getRoot().getChildren().size());
-        Optional<Dependency> dep = r.getRoot().getChildren().stream().filter(d -> d.getArtifact().toString().equals("io.micronaut:micronaut-bom:3.6.0")).findFirst();
+        Optional<Dependency> dep = r.getRoot().getChildren().stream().filter(d -> d.getArtifact().toString().equals("io.micronaut.platform:micronaut-platform:4.9.4")).findFirst();
         assertTrue("Plugin - injected dependency should be present", dep.isPresent());
         
         SourceLocation srcLoc = r.getDeclarationRange(dep.get(), null);
         
         assertNull("Implied dependencies do not have source location(s) - yet!", srcLoc);
 
-        dep = r.getRoot().getChildren().stream().filter(d -> d.getArtifact().toString().equals("org.apache.logging.log4j:log4j-core:2.17.0")).findFirst();
+        dep = r.getRoot().getChildren().stream().filter(d -> d.getArtifact().toString().equals("org.apache.logging.log4j:log4j-core:2.24.3")).findFirst();
         assertTrue("Explicit dependency is present", dep.isPresent());
         
         srcLoc = r.getDeclarationRange(dep.get(), null);
         
-        assertNotNull("Explicit dependency should have a location");
+        assertNotNull("Explicit dependency should have a location", srcLoc);
         assertNull("Explicit dependencies are not implied", srcLoc.getImpliedBy());
-        
-        // there are more paths to io.micronaut:micronaut-websocket:3.6.0; some of them are through an explicit dependency,
-        // some through an injected one, micronaut-bom, which does not have any SourceLocation atm.
-        List<Dependency> deps = r.getRoot().getChildren().stream().flatMap(d -> d.getChildren().stream()).filter(d -> 
-                d.getArtifact().toString().equals("io.micronaut:micronaut-websocket:3.6.0")).collect(Collectors.toList());
-        assertFalse("Implied dependency is present", deps.isEmpty());
-        
-        Dependency rd = null;
-        for (Dependency d : deps) {
-            srcLoc = r.getDeclarationRange(d, null);
-            if (srcLoc != null) {
-                assertNotNull("4th party artifact should not have null location", srcLoc);
-                assertNotNull("4th party artifacts should report 'implied'", srcLoc.getImpliedBy());
-                for (rd = d.getParent(); rd.getParent() != r.getRoot(); rd = rd.getParent() ) ;
-                break;
-            }
-        }
-        assertNotNull("Implied dependency should have a root dep", rd);
-        assertSame(rd, srcLoc.getImpliedBy());
     }
     
     private void assertContainsDependency(List<Dependency> deps, String groupAndArtifact) {
         assertFalse("dependency list was empty", deps.isEmpty());
         for (Dependency d : deps) {
-            ArtifactSpec a = d.getArtifact();
+            ArtifactSpec<?> a = d.getArtifact();
             if (a != null) {
                 String ga = a.getGroupId() + ":" + a.getArtifactId();
                 if (groupAndArtifact.equals(ga)) {
@@ -270,16 +237,6 @@ public class GradleDependenciesImplementationTest extends NbTestCase {
         fail("Artifact not found: " +  groupAndArtifact);
     }
     
-    private static final List<String> ALL_DEPS = List.of(
-            "io.micronaut:micronaut-http-validation",
-            "io.micronaut:micronaut-http-client",
-            "io.micronaut:micronaut-jackson-databind",
-            "jakarta.annotation:jakarta.annotation-api",
-            "ch.qos.logback:logback-classic",
-            "io.micronaut:micronaut-validation",
-            "org.apache.logging.log4j:log4j-core"
-    );
-    
     public void testMicronautProjectDeclaredDependencies() throws Exception {
         Project p = makeProject("dependencies/micronaut");
  
@@ -289,10 +246,16 @@ public class GradleDependenciesImplementationTest extends NbTestCase {
         assertNotNull("Dependency service is supported", r);
         
         List<Dependency> deps = r.getRoot().getChildren();
-        for (String d : ALL_DEPS) {
-            assertContainsDependency(deps, d);
-        }
+        List.of(
+            "io.micronaut:micronaut-http-validation",
+            "io.micronaut:micronaut-http-client-jdk",
+            "io.micronaut.serde:micronaut-serde-jackson",
+            "jakarta.annotation:jakarta.annotation-api",
+            "ch.qos.logback:logback-classic",
+            "io.micronaut.validation:micronaut-validation",
+            "org.apache.logging.log4j:log4j-core"
+        ).forEach(dep -> assertContainsDependency(deps, dep));
         
-        assertTrue("Contains versioned log4j dependency", deps.stream().filter(d -> d.getArtifact().toString().contains(".log4j:log4j-core:2.17.0")).findAny().isPresent());
+        assertTrue("Contains versioned log4j dependency", deps.stream().filter(d -> d.getArtifact().toString().contains(".log4j:log4j-core:2")).findAny().isPresent());
     }
 }

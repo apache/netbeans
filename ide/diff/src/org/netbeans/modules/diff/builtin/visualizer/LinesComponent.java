@@ -39,13 +39,13 @@ import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.editor.settings.FontColorNames;
 import org.netbeans.api.editor.settings.FontColorSettings;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 import org.netbeans.editor.Coloring;
 import org.netbeans.editor.EditorUI;
 import org.netbeans.editor.FontMetricsCache;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.openide.awt.GraphicsUtils;
 import org.openide.util.WeakListeners;
 
 /** GlyphGutter is component for displaying line numbers and annotation
@@ -60,51 +60,52 @@ import org.openide.util.WeakListeners;
 
 public class LinesComponent extends JComponent implements javax.accessibility.Accessible, PropertyChangeListener {
 
-    
-    /** Document to which this gutter is attached*/
-    private JEditorPane editorPane;
 
-    private EditorUI editorUI;
-    
+    /** Document to which this gutter is attached*/
+    private final JEditorPane editorPane;
+
+    private final EditorUI editorUI;
+
     /** Backroung color of the gutter */
     private Color backgroundColor;
-    
+
     /** Foreground color of the gutter. Used for drawing line numbers. */
     private Color foreColor;
-    
+
     /** Font used for drawing line numbers */
     private Font font;
-    
+
     /** Flag whther the gutter was initialized or not. The painting is disabled till the
      * gutter is not initialized */
     private boolean init;
-    
+
     /** Width of the column used for drawing line numbers. The value contains
      * also line number margins. */
     private int numberWidth;
 
     /** Whether the line numbers are shown or not */
     private boolean showLineNumbers = true;
-    
+
     /** The gutter height is enlarged by number of lines which specifies this constant */
     private static final int ENLARGE_GUTTER_HEIGHT = 300;
-    
+
     /** The hightest line number. This value is used for calculating width of the gutter */
     private int highestLineNumber = 0;
 
     /** Holds value of property lineNumberMargin. */
     private Insets lineNumberMargin;
-    
+
     /** Holds value of property lineNumberDigitWidth. */
     private int lineNumberDigitWidth;
-    
+
     private LinkedList<String> linesList;
-    
+
     /** Holds value of property activeLine. */
     private int activeLine = -1;
 
     private static final long serialVersionUID = -4861542695772182147L;
-    
+
+    @SuppressWarnings({"LeakingThisInConstructor", "OverridableMethodCallInConstructor"})
     public LinesComponent(JEditorPane pane) {
         super();
         init = false;
@@ -139,18 +140,18 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
         getAccessibleContext().setAccessibleName(NbBundle.getMessage(LinesComponent.class, "ACSN_Lines_Component")); // NOI18N
         getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(LinesComponent.class, "ACSD_Lines_Component")); // NOI18N
     }
-    
+
     private void createLines() {
-        linesList = new LinkedList<String>();
+        linesList = new LinkedList<>();
         int lineCnt;
         StyledDocument doc = (StyledDocument)editorPane.getDocument();
         int lastOffset = doc.getEndPosition().getOffset();
-        lineCnt = org.openide.text.NbDocument.findLineNumber(doc, lastOffset);            
+        lineCnt = org.openide.text.NbDocument.findLineNumber(doc, lastOffset);
         for (int i = 0; i < lineCnt; i++) {
             linesList.add(Integer.toString(i + 1));
         }
     }
-    
+
     public void addEmptyLines(int line, int count) {
         boolean appending = line > linesList.size();
         for (int i = 0; i < count; i++) {
@@ -161,11 +162,12 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
             }
         }
     }
-    
+
     /**
      * Insert line numbers. If at the end, then line numbers are added to the end of the component.
      * If in the middle, subsequent lines are overwritten.
      */
+    @SuppressWarnings("AssignmentToMethodParameter")
     public void insertNumbers(int line, int startNum, int count) {
         boolean appending = line >= linesList.size();
         if (appending) {
@@ -183,7 +185,7 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
             }
         }
     }
-    
+
     /*
      * Test method.
      *
@@ -196,12 +198,13 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
         System.out.println("");
     }
      */
-    
+
     /**
      * Remove line numbers and leave the corresponding part of the lines component empty.
      * If at the end, then an empty space is added to the end of the component.
      * If in the middle, subsequent lines are overwritten by an empty space.
      */
+    @SuppressWarnings("AssignmentToMethodParameter")
     public void removeNumbers(int line, int count) {
         boolean appending = line >= linesList.size();
         if (appending) {
@@ -219,7 +222,7 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
             }
         }
     }
-    
+
     /**
      * Shrink the component, so that it will have <code>numLines</code> number of lines.
      * @param numLines The new number of lines
@@ -229,7 +232,7 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
             linesList.remove(numLines);
         }
     }
-    
+
     /** Update colors, fonts, sizes and invalidate itself. This method is
      * called from EditorUI.update() */
     private void updateState(Graphics g) {
@@ -239,11 +242,11 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
         Coloring col = Coloring.fromAttributeSet(AttributesUtilities.createComposite(
                 fcs.getFontColors(FontColorNames.LINE_NUMBER_COLORING),
                 fcs.getFontColors(FontColorNames.DEFAULT_COLORING)));
-        
+
         foreColor = col.getForeColor();
         backgroundColor = col.getBackColor();
         //System.out.println("  => foreground = "+foreColor+", background = "+backgroundColor);
-        
+
         font = col.getFont();
         FontMetrics fm = g.getFontMetrics(font);
         /*
@@ -288,19 +291,19 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
         setLineNumberDigitWidth(maxWidth);
 //        System.out.println("maxwidth=" + maxWidth);
 //        System.out.println("numner of lines=" + highestLineNumber);
-        
+
         resize();
     }
-    
+
     protected void resize() {
         Dimension dim = new Dimension();
 //        System.out.println("resizing...................");
         dim.width = getWidthDimension();
         dim.height = getHeightDimension();
-        // enlarge the gutter so that inserting new lines into 
+        // enlarge the gutter so that inserting new lines into
         // document does not cause resizing too often
         dim.height += ENLARGE_GUTTER_HEIGHT * editorUI.getLineHeight();
-        
+
         numberWidth = getLineNumberWidth();
         setPreferredSize(dim);
 
@@ -330,14 +333,14 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
 
     protected int getWidthDimension() {
         int newWidth = 0;
-        
+
         if (showLineNumbers) {
             newWidth += getLineNumberWidth();
         }
 
         return newWidth;
     }
-    
+
     protected int getHeightDimension() {
         /*TEMP+ (int)editorPane.getSize().getHeight() */
         View rootView = org.netbeans.editor.Utilities.getDocumentView(editorPane);
@@ -355,7 +358,7 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
         }
         return height;
     }
-    
+
     /** Paint the gutter itself */
     public @Override void paintComponent(Graphics g) {
 
@@ -363,15 +366,16 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
         if (!init) {
             updateState(g);
         }
-        //    return;
-        
+
+        GraphicsUtils.configureDefaultRenderingHints(g);
+
         Rectangle drawHere = g.getClipBounds();
 
         // Fill clipping area with dirty brown/orange.
         g.setColor(backgroundColor);
         g.fillRect(drawHere.x, drawHere.y, drawHere.width, drawHere.height);
 
-        g.setFont(font); 
+        g.setFont(font);
         g.setColor(foreColor);
 
         FontMetrics fm = FontMetricsCache.getFontMetrics(font, this);
@@ -418,10 +422,10 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
                     String activeSymbol = "*"; //NOI18N
                     int lineNumberWidth = fm.stringWidth(lineStr);
                     if (line == activeLine - 1) {
-                        lineStr = lineStr + activeSymbol;
+                        lineStr += activeSymbol;
                     }
                     int activeSymbolWidth = fm.stringWidth(activeSymbol);
-                    lineNumberWidth = lineNumberWidth + activeSymbolWidth;
+                    lineNumberWidth += activeSymbolWidth;
                     g.drawString(lineStr, numberWidth - lineNumberWidth - rightMargin, y + lineAscent);
                 }
 
@@ -429,7 +433,6 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
                 line++;
             }
         } catch (BadLocationException ex) {
-            return;
         }
     }
 
@@ -462,42 +465,42 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
                 resize();
         }
     }
-    
+
     /** Getter for property lineNumberMargin.
      * @return Value of property lineNumberMargin.
      */
     public Insets getLineNumberMargin() {
         return this.lineNumberMargin;
     }
-    
+
     /** Setter for property lineNumberMargin.
      * @param lineNumberMargin New value of property lineNumberMargin.
      */
     public void setLineNumberMargin(Insets lineNumberMargin) {
         this.lineNumberMargin = lineNumberMargin;
     }
-    
+
     /** Getter for property lineNumberDigitWidth.
      * @return Value of property lineNumberDigitWidth.
      */
     public int getLineNumberDigitWidth() {
         return this.lineNumberDigitWidth;
     }
-    
+
     /** Setter for property lineNumberDigitWidth.
      * @param lineNumberDigitWidth New value of property lineNumberDigitWidth.
      */
     public void setLineNumberDigitWidth(int lineNumberDigitWidth) {
         this.lineNumberDigitWidth = lineNumberDigitWidth;
     }
-    
+
     /** Getter for property activeLine.
      * @return Value of property activeLine.
      */
     public int getActiveLine() {
         return this.activeLine;
     }
-    
+
     /** Setter for property activeLine.
      * @param activeLine New value of property activeLine.
      */
@@ -505,6 +508,7 @@ public class LinesComponent extends JComponent implements javax.accessibility.Ac
         this.activeLine = activeLine;
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         init = false;
         repaint();

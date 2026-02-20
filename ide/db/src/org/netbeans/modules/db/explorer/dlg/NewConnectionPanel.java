@@ -55,7 +55,6 @@ import org.netbeans.modules.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.JDBCDriver;
 import org.netbeans.api.db.explorer.JDBCDriverManager;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.db.util.DatabaseExplorerInternalUIs;
 import org.netbeans.modules.db.util.JdbcUrl;
 import org.netbeans.modules.db.util.PropertyEditorPanel;
@@ -883,7 +882,7 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
 
             @Override
             public void run() {
-                progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(NewConnectionPanel.class, "ConnectionProgress_Connecting"));
+                progressHandle = ProgressHandle.createHandle(NbBundle.getMessage(NewConnectionPanel.class, "ConnectionProgress_Connecting"));
                 progressHandle.start();
                 enableInput(false);
             }

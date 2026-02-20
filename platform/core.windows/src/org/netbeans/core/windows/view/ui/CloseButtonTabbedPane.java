@@ -30,7 +30,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import javax.swing.*;
 import javax.swing.plaf.UIResource;
 import org.netbeans.core.windows.actions.MaximizeWindowAction;
@@ -239,33 +238,12 @@ final class CloseButtonTabbedPane extends JTabbedPane implements PropertyChangeL
         super.removeTabAt(index);
     }
 
-    private static final boolean HTML_TABS_BROKEN = htmlTabsBroken();
-    private static boolean htmlTabsBroken() {
-        String version = System.getProperty("java.version");
-        for (int i = 14; i < 18; i++) {
-            if (version.startsWith("1.6.0_" + i)) {
-                return true;
-            }
-        }
-        if( version.startsWith("1.6.0") && IS_AQUA_LAF )
-            return true;
-        return false;
-    }
-    private final Pattern removeHtmlTags = HTML_TABS_BROKEN ? Pattern.compile("\\<.*?\\>") : null;
-
     @Override
     public void setTitleAt(int idx, String title) {
         if (title == null) {
             super.setTitleAt(idx, null);
             return;
         }
-        // workaround for JDK bug (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6670274)
-        // NB issue #113388
-        if (removeHtmlTags != null && title.startsWith("<html>")) {
-            title = removeHtmlTags.matcher(title).replaceAll("");
-            title = title.replace("&nbsp;", "");
-        }
-
         super.setTitleAt(idx, title);
         // Force update of the special "CloseButton" UI. It was observed, that
         // after a change to an empty title changing to a title with content

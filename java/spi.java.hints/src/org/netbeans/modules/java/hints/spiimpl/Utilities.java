@@ -579,7 +579,7 @@ public class Utilities {
         JavaFileObject prev = compiler.log.useSource(new DummyJFO());
         Log.DiagnosticHandler discardHandler = compiler.log.new DiscardDiagnosticHandler() {
             @Override
-            public void report(JCDiagnostic diag) {
+            public void reportReady(JCDiagnostic diag) {
                 errors.add(diag);
             }            
         };
@@ -606,7 +606,7 @@ public class Utilities {
         JavaFileObject prev = compiler.log.useSource(new DummyJFO());
         Log.DiagnosticHandler discardHandler = compiler.log.new DiscardDiagnosticHandler() {
             @Override
-            public void report(JCDiagnostic diag) {
+            public void reportReady(JCDiagnostic diag) {
                 errors.add(diag);
             }            
         };
@@ -637,7 +637,7 @@ public class Utilities {
         JavaFileObject prev = log.useSource(new DummyJFO());
         Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
             @Override
-            public void report(JCDiagnostic diag) {
+            public void reportReady(JCDiagnostic diag) {
                 errors.add(diag);
             }            
         };
@@ -1569,12 +1569,17 @@ public class Utilities {
 
         @Override
         public long getEndPosition() {
-            if (delegate instanceof JCDiagnostic dImpl) {
-                return dImpl.getDiagnosticPosition().getEndPosition(new EndPosTable() {
+            if (delegate instanceof JCDiagnostic jcDiag) {
+                return jcDiag.getDiagnosticPosition().getEndPosition(new EndPosTable() {
                     @Override public int getEndPos(JCTree tree) {
                         return (int) sp.getEndPosition(null, tree);
                     }
-                    @Override public void storeEnd(JCTree tree, int endpos) {
+                    @Override
+                    public <T extends JCTree> T storeEnd(T tree, int endpos) {
+                        throw new UnsupportedOperationException("Not supported yet.");
+                    }
+                    @Override
+                    public void setErrorEndPos(int errpos) {
                         throw new UnsupportedOperationException("Not supported yet.");
                     }
                     @Override public int replaceTree(JCTree oldtree, JCTree newtree) {

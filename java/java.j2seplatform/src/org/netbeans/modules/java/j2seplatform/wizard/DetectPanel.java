@@ -476,7 +476,7 @@ public class DetectPanel extends javax.swing.JPanel {
             this.component.progressPanel.setVisible (true);
             this.component.progressLabel.setVisible (true);
             
-            this.progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(DetectPanel.class,"TXT_PlatfromDetectProgress"));
+            this.progressHandle = ProgressHandle.createHandle(NbBundle.getMessage(DetectPanel.class,"TXT_PlatfromDetectProgress"));
             this.component.progressPanel.removeAll();
             this.component.progressPanel.setLayout (new GridBagLayout ());
             GridBagConstraints c = new GridBagConstraints ();

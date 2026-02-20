@@ -54,18 +54,18 @@
     </target>
 
     <target name="netbeans-extra" depends="jar-bridge">
-        <unzip src="external/apache-ant-1.10.14-bin.zip" dest="build"/>
+        <unzip src="external/apache-ant-1.10.15-bin.zip" dest="build"/>
         <mkdir dir="${cluster}/ant/lib"/>
         <copy todir="${cluster}/ant/lib">
-            <fileset dir="build/apache-ant-1.10.14/lib" includes="*.jar"/>
+            <fileset dir="build/apache-ant-1.10.15/lib" includes="*.jar"/>
         </copy>
         <mkdir dir="${cluster}/ant/bin"/>
         <copy todir="${cluster}/ant/bin">
-            <fileset dir="build/apache-ant-1.10.14/bin"/>
+            <fileset dir="build/apache-ant-1.10.15/bin"/>
         </copy>
         <mkdir dir="${cluster}/ant/etc"/>
         <copy todir="${cluster}/ant/etc">
-            <fileset dir="build/apache-ant-1.10.14/etc"/>
+            <fileset dir="build/apache-ant-1.10.15/etc"/>
         </copy>
     </target>
 
@@ -84,7 +84,7 @@
             <fileset dir="${cluster}">
                 <include name="ant/lib/*.jar"/>
             </fileset>
-            <mapper type="glob" from="ant${file.separator}lib${file.separator}*.jar" to="apache-*-1.10.14.jar"/>
+            <mapper type="glob" from="ant${file.separator}lib${file.separator}*.jar" to="apache-*-1.10.15.jar"/>
         </copy>
         <copy file="${cluster}/ant/nblib/bridge.jar" tofile="${dir}/org-apache-tools-ant-module-bridge.jar"/>
         <!-- XXX ought to only do this in case jnlp.sign.jars=true -->

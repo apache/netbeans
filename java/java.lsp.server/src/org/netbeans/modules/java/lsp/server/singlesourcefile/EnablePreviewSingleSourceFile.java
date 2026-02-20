@@ -19,8 +19,6 @@
 package org.netbeans.modules.java.lsp.server.singlesourcefile;
 
 import com.google.gson.JsonPrimitive;
-import java.util.Collections;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.NonNull;
@@ -85,12 +83,7 @@ public class EnablePreviewSingleSourceFile implements PreviewEnabler {
     }
 
     private static String getJdkRunVersion() {
-        String javaVersion = System.getProperty("java.specification.version"); //NOI18N 
-        if (javaVersion.startsWith("1.")) { //NOI18N
-            javaVersion = javaVersion.substring(2);
-        }
-
-        return javaVersion;
+        return Integer.toString(Runtime.version().feature());
     }
 
     @ServiceProvider(service=Factory.class, position=10_000_000)

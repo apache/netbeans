@@ -30,7 +30,6 @@ import java.io.OutputStream;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.MalformedURLException;
@@ -90,18 +89,7 @@ public class JarClassLoader extends ProxyClassLoader {
     private static final String META_INF = "META-INF/";
     private static final Name MULTI_RELEASE = new Name("Multi-Release");
     private static final int BASE_VERSION = 8;
-    private static final int RUNTIME_VERSION;
-
-    static {
-        int version;
-        try {
-            Object runtimeVersion = Runtime.class.getMethod("version").invoke(null);
-            version = (int) runtimeVersion.getClass().getMethod("major").invoke(runtimeVersion);
-        } catch (ReflectiveOperationException ex) {
-            version = BASE_VERSION;
-        }
-        RUNTIME_VERSION = version;
-    }
+    private static final int RUNTIME_VERSION = Runtime.version().feature();
     
     static Archive archive = new Archive(); 
 
@@ -173,7 +161,7 @@ public class JarClassLoader extends ProxyClassLoader {
         } catch (IOException exc) {
             throw new IllegalArgumentException(exc.getMessage());
         }
-        sources = l.toArray(new Source[0]);
+        sources = l.toArray(Source[]::new);
         // overlaps with old packages doesn't matter,PCL uses sets.
         addCoveredPackages(getCoveredPackages(module, sources));
     }
@@ -186,7 +174,7 @@ public class JarClassLoader extends ProxyClassLoader {
         arr.add(new JarSource(f));
 
         synchronized (sources) {
-            sources = arr.toArray(new Source[0]);
+            sources = arr.toArray(Source[]::new);
         }
 
         // overlaps with old packages doesn't matter,PCL uses sets.
@@ -352,8 +340,8 @@ public class JarClassLoader extends ProxyClassLoader {
      * Used from JarClassLoaderTest to force close before reopening. */
     void releaseJars() throws IOException {
         for (Source src : sources) {
-            if (src instanceof JarSource) {
-                ((JarSource)src).doCloseJar();
+            if (src instanceof JarSource jarSource) {
+                jarSource.doCloseJar();
             }
         }
     }
@@ -793,20 +781,8 @@ public class JarClassLoader extends ProxyClassLoader {
             File temp = Files.createTempFile(prefix, suffix).toFile();
             temp.deleteOnExit();
 
-            InputStream is = new FileInputStream(orig);
-            try {
-                OutputStream os = new FileOutputStream(temp);
-                try {
-                    byte[] buf = new byte[4096];
-                    int j;
-                    while ((j = is.read(buf)) != -1) {
-                        os.write(buf, 0, j);
-                    }
-                } finally {
-                    os.close();
-                }
-            } finally {
-                is.close();
+            try (InputStream is = new FileInputStream(orig); OutputStream os = new FileOutputStream(temp)) {
+                is.transferTo(os);
             }
  
             doCloseJar();
@@ -828,12 +804,10 @@ public class JarClassLoader extends ProxyClassLoader {
                     interrupted = true;
                 } catch (ExecutionException ex) {
                     Throwable cause = ex.getCause();
-                    if (cause instanceof IOException) {
+                    if (cause instanceof IOException ioe) {
                         // This is important for telling general IOException from ZipException
                         // down the stack.
-                        throw (IOException)cause;
-                    } else if (cause instanceof ThreadDeath) {
-                        throw (ThreadDeath) cause; // #201098
+                        throw ioe;
                     } else {
                         throw new IOException(cause);
                     }
@@ -966,33 +940,28 @@ public class JarClassLoader extends ProxyClassLoader {
             return manifest = mf;
         }
         
+        @Override
         public String getPath() {
             return dir.getPath();
         }
 
+        @Override
         protected URL doGetResource(String name) throws MalformedURLException {
             File resFile = new File(dir, name);
             return resFile.exists() ? BaseUtilities.toURI(resFile).toURL() : null;
         }
         
+        @Override
         protected byte[] readClass(String path) throws IOException {
             File clsFile = new File(dir, path.replace('/', File.separatorChar));
             if (!clsFile.exists()) return null;
             
-            int len = (int)clsFile.length();
-            byte[] data = new byte[len];
-            InputStream is = new FileInputStream(clsFile);
-            try {
-                int count = 0;
-                while (count < len) {
-                    count += is.read(data, count, len - count);
-                }
-                return data;
-            } finally {
-                is.close();
+            try (InputStream is = new FileInputStream(clsFile)) {
+                return is.readAllBytes();
             }
         }
         
+        @Override
         protected void listCoveredPackages(Set<String> known, StringBuffer save) {
             appendAllChildren(known, save, dir, "");
         }
@@ -1178,6 +1147,7 @@ public class JarClassLoader extends ProxyClassLoader {
             return name.length() == 0 || name.endsWith("/");
         }
 
+        @Override
         public void connect() throws IOException {
             if (isFolder()) {
                 return; // #139087: odd but harmless

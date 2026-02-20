@@ -26,11 +26,6 @@ import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagAttributeInfo;
-import javax.servlet.jsp.tagext.TagData;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.VariableInfo;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -44,9 +39,11 @@ import org.netbeans.modules.web.jsps.parserapi.Node.IncludeDirective;
 import org.netbeans.modules.web.jsps.parserapi.PageInfo;
 import org.openide.filesystems.FileObject;
 import org.netbeans.modules.web.jsps.parserapi.Node.Visitor;
+import org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo;
+import org.netbeans.modules.web.jsps.parserapi.TagInfo;
+import org.netbeans.modules.web.jsps.parserapi.VariableInfo;
 import org.openide.cookies.EditorCookie;
 import org.openide.loaders.DataObject;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -137,7 +134,6 @@ public abstract class JSPProcessor {
 
         if (coloringData != null && coloringData.getPrefixMapper() != null) {
             Collection<String> prefixes = coloringData.getPrefixMapper().keySet();
-            TagData fooArg = new TagData((Object[][]) null);
 
             for (String prefix : prefixes) {
                 List<TagInfo> tags = syntaxSupport.getAllTags(prefix, false); //do not require fresh data - #146762
@@ -147,15 +143,12 @@ public abstract class JSPProcessor {
                     if (tag == null) {
                         continue;
                     }
-                    VariableInfo vars[] = tag.getVariableInfo(fooArg);
 
-                    if (vars != null) {
-                        for (VariableInfo var : vars) {
-                            // Create Variable Definitions
-                            if (var != null && var.getVarName() != null && var.getClassName() != null && var.getDeclare()) {
-                                String varDeclaration = var.getClassName() + " " + var.getVarName() + ";\n";
-                                beanDeclarationsBuff.append(varDeclaration);
-                            }
+                    for (VariableInfo var : tag.getRuntimeVariables()) {
+                        // Create Variable Definitions
+                        if (var != null && var.getVarName() != null && var.getClassName() != null && var.isDeclare()) {
+                            String varDeclaration = var.getClassName() + " " + var.getVarName() + ";\n";
+                            beanDeclarationsBuff.append(varDeclaration);
                         }
                     }
                 }
@@ -213,7 +206,7 @@ public abstract class JSPProcessor {
             Visitor visitor = new Visitor() {
 
                 @Override
-                public void visit(IncludeDirective includeDirective) throws JspException {
+                public void visit(IncludeDirective includeDirective) {
                     String fileName = includeDirective.getAttributeValue("file");
                     if (path == null || path.equals(fileName)) {
                         processIncludedFile(fileName, processedFiles);
@@ -221,14 +214,10 @@ public abstract class JSPProcessor {
                 }
             };
 
-            try {
-                JspParserAPI.ParseResult parseResult = getParserData().getParserResult();
+            JspParserAPI.ParseResult parseResult = getParserData().getParserResult();
 
-                if (parseResult != null && parseResult.getNodes() != null) {
-                    parseResult.getNodes().visit(visitor);
-                }
-            } catch (JspException ex) {
-                Exceptions.printStackTrace(ex);
+            if (parseResult != null && parseResult.getNodes() != null) {
+                parseResult.getNodes().visit(visitor);
             }
         }
     }

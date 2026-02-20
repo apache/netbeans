@@ -27,6 +27,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.StyleConstants;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.editor.settings.FontColorSettings;
@@ -36,7 +37,6 @@ import org.netbeans.api.lexer.TokenHierarchyEvent;
 import org.netbeans.api.lexer.TokenHierarchyListener;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.spi.editor.highlighting.HighlightsLayer;
 import org.netbeans.spi.editor.highlighting.HighlightsLayerFactory;
@@ -185,13 +185,13 @@ public class EmbeddedSectionsHighlighting extends AbstractHighlightsContainer im
 
                             try {
                                 int docLen = document.getLength();
-                                int startLine = Utilities.getLineOffset((BaseDocument) document, Math.min(sectionStart, docLen));
-                                int endLine = Utilities.getLineOffset((BaseDocument) document, Math.min(sectionEnd, docLen));
+                                int startLine = LineDocumentUtils.getLineIndex((BaseDocument) document, Math.min(sectionStart, docLen));
+                                int endLine = LineDocumentUtils.getLineIndex((BaseDocument) document, Math.min(sectionEnd, docLen));
 
                                 if (startLine != endLine) {
                                     // multiline scriplet section
                                     // adjust the sections start to the beginning of the firts line
-                                    int firstLineStartOffset = Utilities.getRowStartFromLineOffset((BaseDocument) document, startLine);
+                                    int firstLineStartOffset = LineDocumentUtils.getLineStartFromIndex((BaseDocument) document, startLine);
                                     if (firstLineStartOffset < sectionStart - 2 &&
                                         isWhitespace(document, firstLineStartOffset, sectionStart - 2)) // always preceeded by '<%' hence -2
                                     {
@@ -199,10 +199,10 @@ public class EmbeddedSectionsHighlighting extends AbstractHighlightsContainer im
                                     }
 
                                     // adjust the sections end to the end of the last line
-                                    int lines = Utilities.getRowCount((BaseDocument) document);
+                                    int lines = LineDocumentUtils.getLineCount((BaseDocument) document);
                                     int lastLineEndOffset;
                                     if (endLine + 1 < lines) {
-                                        lastLineEndOffset = Utilities.getRowStartFromLineOffset((BaseDocument) document, endLine + 1);
+                                        lastLineEndOffset = LineDocumentUtils.getLineStartFromIndex((BaseDocument) document, endLine + 1);
                                     } else {
                                         lastLineEndOffset = document.getLength();
                                     }

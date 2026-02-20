@@ -1,0 +1,4 @@
+                return new class() {
+                           -----
+HINT:Anonymous class is not abstract and does not override abstract method  doSomething() in \MyTrait
+FIX:Implement All Abstract Methods

@@ -40,7 +40,7 @@ public class DefaultJavaRuntimeManager implements JavaRuntimeManager {
     })
     public DefaultJavaRuntimeManager() {
         File javaHome = new File(System.getProperty("java.home")); //NOI18N
-        String javaVersion = System.getProperty("java.specification.version"); //NOI18N
+        int javaVersion = Runtime.version().feature();
         JavaRuntime defaultRuntime = JavaRuntimeManager.createJavaRuntime(DEFAULT_RUNTIME_ID, Bundle.DEFAULT_JAVA_RUNTIME_NAME(javaVersion), javaHome);
         
         defaultRuntimes = Collections.singletonMap(DEFAULT_RUNTIME_ID, defaultRuntime);

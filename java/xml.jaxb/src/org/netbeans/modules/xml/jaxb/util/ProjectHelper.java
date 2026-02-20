@@ -33,7 +33,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.ErrorManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.transform.OutputKeys;
@@ -48,7 +47,6 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.project.classpath.ProjectClassPathModifier;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
@@ -945,7 +943,7 @@ public class ProjectHelper {
             final boolean addLibs,
             final String antTarget, TaskListener listener )
     {
-        final ProgressHandle progressHandle = ProgressHandleFactory
+        final ProgressHandle progressHandle = ProgressHandle
                 .createHandle(NbBundle.getMessage(ProjectHelper.class, 
                 "MSG_JAXB_PROGRESS")); //NOI18N;
         progressHandle.start();

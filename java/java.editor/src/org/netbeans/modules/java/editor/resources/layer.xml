@@ -411,9 +411,9 @@
                         <folder name="BracesMatchers">
                             <file name="org-netbeans-modules-editor-java-JavaBracesMatcher.shadow">
                                 <attr name="originalFile" stringvalue="Editors/text/x-java/BracesMatchers/org-netbeans-modules-editor-java-JavaBracesMatcher.instance"/>
+                                <attr name="position" intvalue="300"/>
                             </file>
-                        </folder>                
-
+                        </folder>
                     </folder>
                 </folder>
             </folder>
@@ -448,6 +448,7 @@
                 </folder>
             </folder>
             <folder name="InlineHints">
+                <attr name="position" intvalue="0"/>
                 <folder name="text">
                     <folder name="x-java">
                         <file name="JavaInlineHints.instance">

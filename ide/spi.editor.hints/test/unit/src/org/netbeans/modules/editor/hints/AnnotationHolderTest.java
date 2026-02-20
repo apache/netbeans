@@ -28,6 +28,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.GuardedDocument;
@@ -51,7 +52,9 @@ import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
 import static org.netbeans.modules.editor.hints.AnnotationHolder.*;
+
 import org.netbeans.spi.editor.hints.Fix;
+
 import static org.netbeans.spi.editor.hints.Severity.*;
 
 /**
@@ -209,17 +212,17 @@ public class AnnotationHolderTest extends NbTestCase {
         BaseDocument bdoc = (BaseDocument) doc;
         
         bag = new OffsetsBag(doc);
-        AnnotationHolder.updateHighlightsOnLine(bag, bdoc, bdoc.createPosition(Utilities.getRowStartFromLineOffset(bdoc, 0)), errors);
+        AnnotationHolder.updateHighlightsOnLine(bag, bdoc, bdoc.createPosition(LineDocumentUtils.getLineStartFromIndex(bdoc, 0)), errors);
         
         assertHighlights("", bag, new int[] {47 - 30, 50 - 30}, new AttributeSet[] {AnnotationHolder.getColoring(ERROR, doc)});
         
         bag = new OffsetsBag(doc);
-        AnnotationHolder.updateHighlightsOnLine(bag, bdoc, bdoc.createPosition(Utilities.getRowStartFromLineOffset(bdoc, 1)), errors);
+        AnnotationHolder.updateHighlightsOnLine(bag, bdoc, bdoc.createPosition(LineDocumentUtils.getLineStartFromIndex(bdoc, 1)), errors);
         
         assertHighlights("", bag, new int[] {53 - 30, 60 - 30}, new AttributeSet[] {AnnotationHolder.getColoring(ERROR, doc)});
         
         bag = new OffsetsBag(doc);
-        AnnotationHolder.updateHighlightsOnLine(bag, bdoc, bdoc.createPosition(Utilities.getRowStartFromLineOffset(bdoc, 2)), errors);
+        AnnotationHolder.updateHighlightsOnLine(bag, bdoc, bdoc.createPosition(LineDocumentUtils.getLineStartFromIndex(bdoc, 2)), errors);
         
         assertHighlights("", bag, new int[] {65 - 30, 72 - 30}, new AttributeSet[] {AnnotationHolder.getColoring(ERROR, doc)});
     }

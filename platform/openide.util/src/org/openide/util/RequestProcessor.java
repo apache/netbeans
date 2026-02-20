@@ -1892,19 +1892,13 @@ outer:  do {
                             return proc;
                         }
                     } else {
-                        assert checkAccess(TOP_GROUP.getTopLevelThreadGroup());
                         Processor proc = POOL.pop();
                         proc.idle = false;
-
                         return proc;
                     }
                 }
                 newP = new Processor();
             }
-        }
-        private static boolean checkAccess(ThreadGroup g) throws SecurityException {
-            g.checkAccess();
-            return true;
         }
 
         /** A way of returning a Processor to the inactive pool.

@@ -39,7 +39,7 @@ import org.netbeans.api.extexecution.ExternalProcessBuilder;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressRunnable;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.java.j2seembedded.platform.ConnectionMethod;
 import org.netbeans.modules.java.j2seembedded.platform.RemotePlatformProbe;
 import org.netbeans.modules.java.j2seembedded.platform.RemotePlatformProvider;
@@ -464,7 +464,7 @@ public class SetUpRemotePlatform extends javax.swing.JPanel {
                         new File(keyFilePath.getText()),
                         String.valueOf(passphrase.getPassword()));
             }
-            ProgressUtils.showProgressDialogAndRun(
+            BaseProgressUtils.showProgressDialogAndRun(
                     new ProgressRunnable<Void>() {
                 @Override
                 public Void run(ProgressHandle handle) {

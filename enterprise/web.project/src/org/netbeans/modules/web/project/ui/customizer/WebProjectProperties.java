@@ -70,7 +70,7 @@ import org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.InstanceRemovedException;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eeModule;
 import org.netbeans.api.j2ee.core.Profile;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.javaee.project.api.ant.ui.customizer.LicensePanelSupport;
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
 import org.netbeans.modules.java.api.common.SourceRoots;
@@ -1062,7 +1062,7 @@ public final class WebProjectProperties {
                 @Override
                 public void run() {
                     // it mostly results into lenghty opperation, show progress dialog
-                    ProgressUtils.showProgressDialogAndRun(new Runnable() {
+                    BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
                         @Override
                         public void run() {
                             // include newly added extenders into webmodule
@@ -1107,7 +1107,7 @@ public final class WebProjectProperties {
                         Exceptions.printStackTrace(ex);
                     } catch (TimeoutException ex) {
                         // End of the 300ms period, continue in processing but display progress dialog
-                        ProgressUtils.showProgressDialogAndRun(new Runnable() {
+                        BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
                             @Override
                             public void run() {
                                 try {

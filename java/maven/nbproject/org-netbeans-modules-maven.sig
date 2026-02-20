@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.169.0
+#Version 2.170.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -2140,7 +2140,7 @@ meth public boolean cancel()
 meth public static org.openide.execution.ExecutorTask executeMaven(org.netbeans.modules.maven.api.execute.RunConfig,org.openide.windows.InputOutput,org.netbeans.modules.maven.execute.AbstractMavenExecutor$TabContext)
 meth public void run()
 supr org.netbeans.modules.maven.execute.AbstractMavenExecutor
-hfds ENV_JAVAHOME,ENV_PREFIX,ICON_MAVEN_PROJECT,INTERNAL_PREFIX,KEY_UUID,LOGGER,NETBEANS_MAVEN_COMMAND_LINE,RP,UPDATE_INDEX_RP,VER18,preProcess,preProcessUUID,process,processUUID
+hfds ENV_JAVAHOME,ENV_PREFIX,ICON_MAVEN_PROJECT,INTERNAL_PREFIX,KEY_UUID,LOGGER,NETBEANS_MAVEN_COMMAND_LINE,RP,UPDATE_INDEX_RP,VER18,preProcess,preProcessUUID,process,processUUID,trace
 hcls WrapperShellConstructor
 
 CLSS public static org.netbeans.modules.maven.execute.MavenCommandLineExecutor$ExecuteMaven
@@ -2284,7 +2284,9 @@ hfds actions,modelEncoding,packaging,profiles
 CLSS public org.netbeans.modules.maven.execute.model.NetbeansActionMapping
 cons public init()
 intf java.io.Serializable
+meth public boolean equals(java.lang.Object)
 meth public boolean isRecursive()
+meth public int hashCode()
 meth public java.lang.String getActionName()
 meth public java.lang.String getBasedir()
 meth public java.lang.String getDisplayName()

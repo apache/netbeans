@@ -31,6 +31,7 @@ import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.ModuleTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.OpensTree;
@@ -219,7 +220,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
                 List<Token> tl = v.tree2Tokens.get(u.tree.getLeaf());
                 
                 if (tl != null) {
-                    for (Token t : tl) {
+                    for (Token<?> t : tl) {
                         newColoring.put(t, c);
                     }
                 }
@@ -227,7 +228,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
         }
         
         Coloring kwc = collection2Coloring(EnumSet.of(ColoringAttributes.KEYWORD));
-        for (Token kw : v.contextKeywords) {
+        for (Token<?> kw : v.contextKeywords) {
             newColoring.put(kw, kwc);
         }
         
@@ -309,9 +310,9 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
             tl.firstIdentifier(path, name, tree2Tokens);
         }
         
-        private Token firstIdentifierToken(String... names) {
+        private Token<?> firstIdentifierToken(String... names) {
             for (String name : names) {
-                Token t = tl.firstIdentifier(getCurrentPath(), name);
+                Token<?> t = tl.firstIdentifier(getCurrentPath(), name);
                 if (t != null) {
                     return t;
                 }
@@ -437,6 +438,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
             handlePossibleIdentifier(expr, declaration, null);
         }
         
+        @SuppressWarnings("AssignmentToMethodParameter")
         private void handlePossibleIdentifier(TreePath expr, boolean declaration, Element decl) {
             if (Utilities.isKeyword(expr.getLeaf())) {
                 //ignore keywords:
@@ -464,15 +466,15 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
             //for new <type>(), highlight <type> as a constructor:
             if (isDeclType &&
                 parent.getLeaf().getKind() == Kind.NEW_CLASS) {
-		decl = info.getTrees().getElement(parent);
-	    }
+                decl = info.getTrees().getElement(parent);
+            }
 
             if (isDeclType &&
                 (parent.getLeaf().getKind() == Kind.PARAMETERIZED_TYPE &&
                   ((ParameterizedTypeTree) parent.getLeaf()).getType() == currentPath.getLeaf() &&
                   parent.getParentPath().getLeaf().getKind() == Kind.NEW_CLASS)) {
-		decl = info.getTrees().getElement(parent.getParentPath());
-	    }
+                decl = info.getTrees().getElement(parent.getParentPath());
+            }
 
             if (decl == null) {
                 return ;
@@ -531,15 +533,15 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
 
         @Override
         public Void visitCompilationUnit(CompilationUnitTree tree, Void p) {
-	    //ignore package X.Y.Z;:
-	    //scan(tree.getPackageDecl(), p);
+            //ignore package X.Y.Z;:
+            //scan(tree.getPackageDecl(), p);
             tl.moveBefore(tree.getImports());
-	    scan(tree.getImports(), p);
+            scan(tree.getImports(), p);
             tl.moveBefore(tree.getPackageAnnotations());
-	    scan(tree.getPackageAnnotations(), p);
+            scan(tree.getPackageAnnotations(), p);
             tl.moveToEnd(tree.getImports());
-	    scan(tree.getTypeDecls(), p);
-	    return null;
+            scan(tree.getTypeDecls(), p);
+            return null;
         }
 
         @Override
@@ -548,13 +550,13 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
             scan(tree.getAnnotations(), p);
             tl.moveToEnd(tree.getAnnotations());
             if (tree.getModuleType() == ModuleTree.ModuleKind.OPEN) {
-                Token t = firstIdentifierToken("open"); //NOI18N
+                Token<?> t = firstIdentifierToken("open"); //NOI18N
                 if (t != null) {
                     contextKeywords.add(t);
                 }
                 tl.moveNext();
             }
-            Token t = firstIdentifierToken("module"); //NOI18N
+            Token<?> t = firstIdentifierToken("module"); //NOI18N
             if (t != null) {
                 contextKeywords.add(t);
             }
@@ -570,7 +572,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
         @Override
         public Void visitExports(ExportsTree tree, Void p) {
             tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
-            Token t = firstIdentifierToken("exports"); //NOI18N
+            Token<?> t = firstIdentifierToken("exports"); //NOI18N
             if (t != null) {
                 contextKeywords.add(t);
             }
@@ -586,7 +588,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
         @Override
         public Void visitOpens(OpensTree tree, Void p) {
             tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
-            Token t = firstIdentifierToken("opens"); //NOI18N
+            Token<?> t = firstIdentifierToken("opens"); //NOI18N
             if (t != null) {
                 contextKeywords.add(t);
             }
@@ -602,7 +604,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
         @Override
         public Void visitProvides(ProvidesTree tree, Void p) {
             tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
-            Token t = firstIdentifierToken("provides"); //NOI18N
+            Token<?> t = firstIdentifierToken("provides"); //NOI18N
             if (t != null) {
                 contextKeywords.add(t);
             }
@@ -618,7 +620,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
         @Override
         public Void visitRequires(RequiresTree tree, Void p) {
             tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
-            Token t = firstIdentifierToken("requires"); //NOI18N
+            Token<?> t = firstIdentifierToken("requires"); //NOI18N
             if (t != null) {
                 contextKeywords.add(t);
                 tl.moveNext();
@@ -669,7 +671,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
         @Override
         public Void visitUses(UsesTree tree, Void p) {
             tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
-            Token t = firstIdentifierToken("uses"); //NOI18N
+            Token<?> t = firstIdentifierToken("uses"); //NOI18N
             if (t != null) {
                 contextKeywords.add(t);
             }
@@ -696,14 +698,12 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
             long afterTypeArguments = ta.isEmpty() ? -1 : info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), ta.get(ta.size() - 1));
             
             switch (tree.getMethodSelect().getKind()) {
-                case IDENTIFIER:
-                case MEMBER_SELECT:
+                case IDENTIFIER, MEMBER_SELECT -> {
                     memberSelectBypass = afterTypeArguments;
                     scan(tree.getMethodSelect(), p);
                     memberSelectBypass = -1;
-                    break;
-                default:
-                    //todo: log
+                }
+                default -> //todo: log
                     scan(tree.getMethodSelect(), p);
             }
 
@@ -732,6 +732,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
             return null;
         }
 
+        @SuppressWarnings({"AssignmentToMethodParameter", "NestedAssignment"})
         private void addChainedTypes(TreePath current) {
             if (!settings.javaInlineHintChainedTypes) {
                 return;
@@ -740,15 +741,17 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
             OUTER: while (true) {
                 chain.add(current);
                 switch (current.getLeaf().getKind()) {
-                    case METHOD_INVOCATION:
+                    case METHOD_INVOCATION -> {
                         MethodInvocationTree mit = (MethodInvocationTree) current.getLeaf();
                         if (mit.getMethodSelect().getKind() == Kind.MEMBER_SELECT) {
                             current = new TreePath(new TreePath(current, mit.getMethodSelect()), ((MemberSelectTree) mit.getMethodSelect()).getExpression());
                             break;
                         }
                         break OUTER;
-                    default:
+                    }
+                    default -> {
                         break OUTER;
+                    }
                 }
             }
             Collections.reverse(chain);
@@ -757,7 +760,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
             for (TreePath tp : chain) {
                 long end = info.getTrees().getSourcePositions().getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
                 tl.moveToOffset(end);
-                Token t = tl.currentToken();
+                Token<?> t = tl.currentToken();
                 if (t != null && (t.id() == JavaTokenId.COMMA || t.id() == JavaTokenId.SEMICOLON)) {
                     tl.moveNext();
                     t = tl.currentToken();
@@ -957,11 +960,16 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
             
             tl.moveToEnd(tree.getModifiers());
             boolean record = false;
-            Token recordToken = tl.firstIdentifier(getCurrentPath(), "record");
+            Token<?> recordToken = tl.firstIdentifier(getCurrentPath(), "record");
             if (recordToken != null) {
                 contextKeywords.add(recordToken);
                 tl.moveNext();
                 record = true;
+            }
+            Token<?> valueToken = tl.firstIdentifier(getCurrentPath(), "value");
+            if (valueToken != null) {
+                contextKeywords.add(valueToken);
+                tl.moveNext();
             }
             firstIdentifier(tree.getSimpleName().toString());
 
@@ -976,8 +984,8 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
                 List<? extends Tree> permitList = tree.getPermitsClause();
                 if (permitList != null && !permitList.isEmpty()) {
                     tl.moveNext();
-                    Token t = firstIdentifierToken("permits");// NOI18N
-                    if (tl != null) {
+                    Token<?> t = firstIdentifierToken("permits");// NOI18N
+                    if (t != null) {
                         contextKeywords.add(t);
                         scan(permitList, null);
                     }
@@ -1025,7 +1033,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
         public Void visitLiteral(LiteralTree node, Void p) {
             int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), node);
             tl.moveToOffset(startPos);
-            Token t = tl.currentToken();
+            Token<?> t = tl.currentToken();
             if (t != null && t.id() == JavaTokenId.MULTILINE_STRING_LITERAL && t.partType() == PartType.COMPLETE) {
                 String tokenText = t.text().toString();
                 String[] lines = tokenText.split("\n");
@@ -1060,7 +1068,7 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
                         (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), node);
 
                 tl.moveToOffset(startPos);
-                Token t = firstIdentifierToken("module");// NOI18N
+                Token<?> t = firstIdentifierToken("module");// NOI18N
                 if (tl != null) {
                     contextKeywords.add(t);
                 }
@@ -1072,33 +1080,51 @@ public abstract class SemanticHighlighterBase extends JavaParserResultTask<Resul
         public Void scan(Tree tree, Void p) {
             if (tree != null && tree.getKind() == Kind.YIELD) {
                 tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
-                Token t = firstIdentifierToken("yield"); //NOI18N
+                Token<?> t = firstIdentifierToken("yield"); //NOI18N
                 if (t != null) {
                     contextKeywords.add(t);
                 }
             } else if (tree != null && tree.getKind() == Kind.MODIFIERS) {
-               visitModifier(tree);
+                visitModifier(tree);
             }
             return super.scan(tree, p);
         }
 
+        private static final Modifier MODIFIER_VALUE; // TODO remove after valhalla javac
+        static {
+            Modifier mod;
+            try {
+                mod = Modifier.valueOf("VALUE"); // NOI18N
+            } catch (IllegalArgumentException ex) {
+                mod = null;
+            }
+            MODIFIER_VALUE = mod;
+        }
+
         private void visitModifier(Tree tree) {
             tl.moveToOffset(sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
-            Token t = null;
-            if (tree.toString().contains("non-sealed")) {// NOI18N
-                Token firstIdentifier = tl.firstIdentifier(getCurrentPath(), "non");// NOI18N
-                if (firstIdentifier != null) {
-                    contextKeywords.add(firstIdentifier);
-                }
-                tl.moveNext();
-                tl.moveNext();
-                if (TokenUtilities.textEquals(tl.currentToken().text(), "sealed")) {// NOI18N
-                    contextKeywords.add(tl.currentToken());
-                }
-            } else if (tree.toString().contains("sealed")) {// NOI18N
-                t = firstIdentifierToken("sealed"); //NOI18N
-                if (t != null) {
-                    contextKeywords.add(t);
+            
+            if (tree.getKind() == Kind.MODIFIERS && tree instanceof ModifiersTree modTree) {
+                if (modTree.getFlags().contains(Modifier.NON_SEALED)) {// NOI18N
+                    Token<?> firstIdentifier = tl.firstIdentifier(getCurrentPath(), "non");// NOI18N
+                    if (firstIdentifier != null) {
+                        contextKeywords.add(firstIdentifier);
+                    }
+                    tl.moveNext();
+                    tl.moveNext();
+                    if (TokenUtilities.textEquals(tl.currentToken().text(), "sealed")) {// NOI18N
+                        contextKeywords.add(tl.currentToken());
+                    }
+                } else if (modTree.getFlags().contains(Modifier.SEALED)) {// NOI18N
+                    Token<?> t = firstIdentifierToken("sealed"); //NOI18N
+                    if (t != null) {
+                        contextKeywords.add(t);
+                    }
+                } else if (MODIFIER_VALUE != null && modTree.getFlags().contains(MODIFIER_VALUE)) {// NOI18N
+                    Token<?> t = firstIdentifierToken("value"); //NOI18N
+                    if (t != null) {
+                        contextKeywords.add(t);
+                    }
                 }
             }
         }

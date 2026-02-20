@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.97
+#Version 7.98
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -547,8 +547,6 @@ meth public final void setName(java.lang.String)
 meth public final void setPriority(int)
 meth public final void stop()
  anno 0 java.lang.Deprecated()
-meth public final void stop(java.lang.Throwable)
- anno 0 java.lang.Deprecated()
 meth public final void suspend()
  anno 0 java.lang.Deprecated()
 meth public int countStackFrames()
@@ -571,8 +569,6 @@ meth public static void setDefaultUncaughtExceptionHandler(java.lang.Thread$Unca
 meth public static void sleep(long) throws java.lang.InterruptedException
 meth public static void sleep(long,int) throws java.lang.InterruptedException
 meth public static void yield()
-meth public void destroy()
- anno 0 java.lang.Deprecated()
 meth public void interrupt()
 meth public void run()
 meth public void setContextClassLoader(java.lang.ClassLoader)

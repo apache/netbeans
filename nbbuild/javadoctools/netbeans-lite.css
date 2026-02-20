@@ -124,6 +124,7 @@ table.tableapigroup {
    border-spacing: 4px;
    border-collapse: collapse;
    border: 4px solid var(--selected-background-color);
+   overflow-wrap: break-word;
 }
 
 table.tableapigroup caption {

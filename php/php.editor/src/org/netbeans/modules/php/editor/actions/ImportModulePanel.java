@@ -269,7 +269,7 @@ public class ImportModulePanel extends javax.swing.JPanel {
         if (basePosition != -1) {
             EditList edits = new EditList(document);
             try {
-                int rowEnd = importInPreviousLine ? LineDocumentUtils.getLineStart(document, position) : LineDocumentUtils.getLineEnd(document, basePosition);
+                int rowEnd = importInPreviousLine ? LineDocumentUtils.getLineStartOffset(document, position) : LineDocumentUtils.getLineEndOffset(document, basePosition);
                 if (importInPreviousLine) {
                     importCode += "\n"; //NOI18N
                 } else {

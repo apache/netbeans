@@ -84,7 +84,7 @@ public class HgHistoryProvider implements VCSHistoryProvider {
 
             List<HistoryEntry> ret = new LinkedList<HistoryEntry>();
             Map<String, Set<File>> rev2FileMap = new HashMap<String, Set<File>>();
-            Map<String, HgLogMessage> rev2LMMap = new HashMap<String, HgLogMessage>();
+            Map<String, HgLogMessage> rev2LMMap = new LinkedHashMap<>();
 
             String fromRevision;
             String toRevision;

@@ -763,7 +763,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         String headerText = controller.getText().substring(startPos, offset);
         int idx = headerText.indexOf('{'); //NOI18N
         //see JDK-8364015, unclear how reliable this will be:
-        boolean isImplicitlyDeclaredClass = sourcePositions.getEndPosition(root, cls) == (-1);
+        boolean isImplicitlyDeclaredClass = env.getController().getTreeUtilities().isImplicitlyDeclaredClass(cls);
         if (idx >= 0 || isImplicitlyDeclaredClass) {
             addKeywordsForClassBody(env);
             addClassTypes(env, null);
@@ -2218,6 +2218,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case GTGTGT:
                     controller = env.getController();
                     TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(path, nc.getIdentifier()));
+                    if (tm.getKind() == TypeKind.ERROR) {
+                        tm = env.getController().getTrees().getOriginalType((ErrorType) tm);
+                    }
                     addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, false, false, false, true, addSwitchItemDefault);
                     break;
             }
@@ -5996,7 +5999,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         path = new TreePath(path, mid);
                         TypeMirror typeMirror = controller.getTrees().getTypeMirror(path);
                         final ExecutableType midTM = typeMirror != null && typeMirror.getKind() == TypeKind.EXECUTABLE ? (ExecutableType) typeMirror : null;
-                        final ExecutableElement midEl = midTM == null ? null : (ExecutableElement) controller.getTrees().getElement(path);
+                        final ExecutableElement midEl = midTM != null && controller.getTrees().getElement(path) instanceof ExecutableElement ee ? ee : null;
                         switch (mid.getKind()) {
                             case MEMBER_SELECT: {
                                 String name = ((MemberSelectTree) mid).getIdentifier().toString();

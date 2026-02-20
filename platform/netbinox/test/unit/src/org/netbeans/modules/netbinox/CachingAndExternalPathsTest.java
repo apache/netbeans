@@ -81,7 +81,10 @@ public class CachingAndExternalPathsTest extends NbTestCase {
         NbTestSuite suite = new NbTestSuite();
         Compile compile = new Compile("testCompile", setter);
         suite.addTest(compile);
-        NbModuleSuite.Configuration common = NbModuleSuite.emptyConfiguration().clusters(".*").enableClasspathModules(false)
+        // JDK 21+: enabling all clusters causes:
+        // Will not load class org.osgi.framework.launch.Framework arbitrarily from one of
+        // ModuleCL@1070d437[org.netbeans.libs.osgi] and ModuleCL@2bbc301d[org.netbeans.modules.websvc.restlib]
+        NbModuleSuite.Configuration common = NbModuleSuite.emptyConfiguration().clusters("platform|ide").enableClasspathModules(false)
                 .gui(false).honorAutoloadEager(true);
         {
             NbModuleSuite.Configuration conf = common.reuseUserDir(false).addTest(CachingAndExternalPathsTest.class, "testInitUserDir");

@@ -36,7 +36,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Types;
-import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -189,7 +188,7 @@ public final class PushDownRefactoring extends CodeRefactoring {
             org.netbeans.modules.refactoring.java.api.PushDownRefactoring refactoring = new org.netbeans.modules.refactoring.java.api.PushDownRefactoring(TreePathHandle.from(sourceHandle, info));
             refactoring.setMembers(memberHandles.toArray(new MemberInfo[0]));
             refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
-            client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "PushDown")));
+            sendRefactoringChanges(client, refactoring, "PushDown");
         } catch (Exception ex) {
             client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }

@@ -40,7 +40,7 @@ import javax.swing.text.JTextComponent;
 import com.sun.source.util.TreePath;
 
 import org.netbeans.api.java.source.*;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.java.editor.codegen.ui.ElementNode;
 import org.netbeans.modules.java.editor.codegen.ui.GetterSetterPanel;
@@ -262,7 +262,7 @@ public class GetterSetterGenerator implements CodeGenerator {
                 }
             }, true);
             
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                 @Override
                 public void run() {

@@ -127,7 +127,9 @@ public final class TestClassInfoTask implements Task<CompilationController> {
         Trees trees = info.getTrees();
         Elements elements = info.getElements();
         TreeUtilities treeUtilities = info.getTreeUtilities();
-        int clazzPreferred = treeUtilities.findNameSpan((ClassTree) clazz.getLeaf())[0];
+        int[] classNameSpan = treeUtilities.findNameSpan((ClassTree) clazz.getLeaf());
+        int clazzPreferred = classNameSpan != null ? classNameSpan[0]
+                                                   : (int) trees.getSourcePositions().getStartPosition(clazz.getCompilationUnit(), clazz.getLeaf());
         TypeElement typeElement = (TypeElement) trees.getElement(clazz);
         TypeElement testcase = elements.getTypeElement(TESTCASE);
         NestedClass nc = getNestedClass(info, typeElement);

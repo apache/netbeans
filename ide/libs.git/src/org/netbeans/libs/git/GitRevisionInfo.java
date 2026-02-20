@@ -25,10 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
@@ -53,7 +51,6 @@ public final class GitRevisionInfo {
     private final Repository repository;
     private final Map<String, GitBranch> branches;
     private GitFileInfo[] modifiedFiles;
-    private static final Logger LOG = Logger.getLogger(GitRevisionInfo.class.getName());
     private String shortMessage;
 
     GitRevisionInfo (RevCommit commit, Repository repository) {
@@ -146,7 +143,7 @@ public final class GitRevisionInfo {
                 listFiles();
             }
         }
-        Map<File, GitFileInfo> files = new HashMap<>(modifiedFiles.length);
+        Map<File, GitFileInfo> files = new HashMap<>((int) Math.ceil(modifiedFiles.length / 0.75));
         for (GitFileInfo info : modifiedFiles) {
             files.put(info.getFile(), info);
         }
@@ -202,16 +199,10 @@ public final class GitRevisionInfo {
                     result.add(new GitFileInfo(new File(repository.getWorkTree(), walk.getPathString()), walk.getPathString(), GitFileInfo.Status.ADDED, null, null));
                 }
             }
-            this.modifiedFiles = result.toArray(new GitFileInfo[0]);
+            this.modifiedFiles = result.toArray(GitFileInfo[]::new);
         } catch (IOException ex) {
             throw new GitException(ex);
         }
-    }
-
-    private static Map<String, GitBranch> buildBranches (RevCommit commit, Map<String, GitBranch> branches) {
-        Map<String, GitBranch> retval = new LinkedHashMap<>(branches.size());
-        
-        return retval;
     }
     
     /**

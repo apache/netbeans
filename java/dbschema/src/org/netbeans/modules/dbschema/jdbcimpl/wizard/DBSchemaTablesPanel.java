@@ -307,7 +307,7 @@ public class DBSchemaTablesPanel extends JPanel implements ListDataListener {
     private void invokeHandlers(final List<Handler> handlers, final Parameters params) {
         final ProgressPanel progressPanel = new ProgressPanel();
         
-        ProgressHandle progressHandle = ProgressHandleFactory.createHandle(null);
+        ProgressHandle progressHandle = ProgressHandle.createHandle(null);
         JComponent progressComponent = ProgressHandleFactory.createProgressComponent(progressHandle);
         
         progressHandle.start();

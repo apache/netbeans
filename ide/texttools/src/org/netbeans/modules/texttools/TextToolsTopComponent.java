@@ -70,7 +70,7 @@ import org.openide.windows.WindowManager;
     iconBase="org/netbeans/modules/texttools/accessories-text-editor.png",
     persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED
 )
-@TopComponent.Registration(mode = "output", openAtStartup = false)
+@TopComponent.Registration(mode = "output", openAtStartup = false, position = 3400)
 @Messages({
     "CTL_TextToolsAction=Text Tools",
     "CTL_TextToolsTopComponent=Text Tools Window",

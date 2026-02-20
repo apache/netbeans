@@ -29,7 +29,6 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.Action;
-import jdk.internal.net.http.common.Log;
 import org.netbeans.api.extexecution.print.LineConvertors.FileLocator;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
@@ -39,7 +38,6 @@ import org.netbeans.modules.gsf.testrunner.api.TestSuite;
 import org.netbeans.modules.gsf.testrunner.api.CommonUtils;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodNode;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestsuiteNode;
-import org.netbeans.modules.java.testrunner.JavaRegexpPatterns;
 import org.netbeans.modules.java.testrunner.JavaRegexpUtils;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
@@ -48,7 +46,6 @@ import org.netbeans.modules.junit.ui.api.JUnitTestMethodNode;
 import org.netbeans.modules.java.testrunner.ui.api.NodeOpener;
 import org.netbeans.modules.java.testrunner.ui.api.UIJavaUtils;
 import org.netbeans.modules.junit.ui.api.JUnitCallstackFrameNode;
-import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node;
 
 /**

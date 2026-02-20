@@ -39,8 +39,10 @@ import org.netbeans.modules.gsf.testrunner.ui.api.TestsuiteNode;
 import org.netbeans.modules.junit.ui.api.JUnitTestMethodNode;
 import org.netbeans.modules.java.testrunner.ui.api.NodeOpener;
 import org.netbeans.modules.java.testrunner.ui.api.UIJavaUtils;
+import org.netbeans.modules.java.testrunner.JavaRegexpUtils;
 import org.netbeans.modules.junit.api.JUnitTestcase;
 import org.netbeans.modules.junit.ui.api.JUnitCallstackFrameNode;
+
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.Children;
@@ -146,7 +148,7 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
 
     @Override
     public void openCallstackFrame(Node node, @NonNull String frameInfo) {
-        if(frameInfo.isEmpty()) { // user probably clicked on a failed test method node, find failing line within the testMethod using the stacktrace
+        if (frameInfo.isEmpty()) { // user probably clicked on a failed test method node, find failing line within the testMethod using the stacktrace
             if (!(node instanceof JUnitTestMethodNode)) {
                 return;
             }
@@ -186,18 +188,18 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
         FileObject file = UIJavaUtils.getFile(frameInfo, lineNumStorage, locator);
         //lineNumStorage -1 means no regexp for stacktrace was matched.
         if (testfo != null && file == null && methodNode.getTestcase().getTrouble() != null && lineNumStorage[0] == -1) {
-                //213935 we could not recognize the stack trace line and map it to known file
+            //213935 we could not recognize the stack trace line and map it to known file
             //if it's a failure text, grab the testcase's own line from the stack.
-                // 213935 we need to find the testcase linenumber to jump to.
-                // and ignore the infrastructure stack lines in the process
-                for(int index = 0; !testfo.equals(file) && index < st.length; index++) {
-                    if (st[index].contains(fqMethodName)) {
-                        file = UIJavaUtils.getFile(st[index], lineNumStorage, locator);
-                        break;
-                    }
-                }
+            String[] st = methodNode.getTestcase().getTrouble().getStackTrace();
+            for (int index = 0; !testfo.equals(file) && index < st.length; index++) {
+                String trimmed = JavaRegexpUtils.specialTrim(st[index]);
+                if (trimmed.startsWith(JavaRegexpUtils.CALLSTACK_LINE_PREFIX_CATCH)
+                        || trimmed.startsWith(JavaRegexpUtils.CALLSTACK_LINE_PREFIX)) {
+                    file = UIJavaUtils.getFile(st[index], lineNumStorage, locator);
+                    break;
                 }
             }
+
         }
         // Is this a @Test(expected = *Exception.class) test method that failed?
         if (file == null && lineNumStorage[0] == -1 && node instanceof MavenJUnitTestMethodNode) {

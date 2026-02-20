@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import org.eclipse.osgi.launch.EquinoxFactory;
 import org.netbeans.core.netigso.spi.NetigsoArchive;
 import org.openide.util.Utilities;
@@ -50,7 +49,7 @@ public class NetbinoxFactory implements FrameworkFactory {
     @Override
     @SuppressWarnings("unchecked")
     public Framework newFramework(Map map) {
-        Map<String,Object> configMap = new HashMap<String,Object>();
+        Map<String, Object> configMap = new HashMap<>(32);
         configMap.putAll(map);
 //        configMap.put("osgi.hook.configurators.exclude", // NOI18N
 //            "org.eclipse.core.runtime.internal.adaptor.EclipseLogHook" // NOI18N
@@ -80,20 +79,9 @@ public class NetbinoxFactory implements FrameworkFactory {
         // Ensure that the org.osgi.framework.executionenvironment holds all
         // JavaSE entries that match till the current JDK. The dynamic approach
         // will work also for newly released JDKs.
-        Integer javaSpecificationMajorVersion = null;
-        try {
-            // java >= 9
-            Object runtimeVersion = Runtime.class.getMethod("version").invoke(null);
-            javaSpecificationMajorVersion = (int) runtimeVersion.getClass().getMethod("major").invoke(runtimeVersion);
-        } catch (ReflectiveOperationException ignore) {
-            // java < 9
-            LOG.log(
-                    Level.FINE,
-                    "Failed to invoke Runtime#version or Runtime.Version#major to determine JavaSE major version",
-                    ignore
-            );
-        }
-        if(javaSpecificationMajorVersion != null && javaSpecificationMajorVersion > 8) {
+        int javaSpecificationMajorVersion = Runtime.version().feature();
+
+        if (javaSpecificationMajorVersion > 8) {
             List<String> values = new ArrayList<>();
             values.add("OSGi/Minimum-1.0");
             values.add("OSGi/Minimum-1.1");
@@ -112,10 +100,7 @@ public class NetbinoxFactory implements FrameworkFactory {
             for (int i = 9; i <= javaSpecificationMajorVersion; i++) {
                 values.add("JavaSE-" + i);
             }
-            configMap.put(
-                    "org.osgi.framework.executionenvironment",
-                    values.stream().collect(Collectors.joining(", "))
-            );
+            configMap.put("org.osgi.framework.executionenvironment", String.join(", ", values));
         }
 
         Object rawBundleMap = configMap.get("felix.bootdelegation.classloaders"); // NOI18N

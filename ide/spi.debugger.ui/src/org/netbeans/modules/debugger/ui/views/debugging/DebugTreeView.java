@@ -113,13 +113,8 @@ public class DebugTreeView extends BeanTreeView {
         tree.setCellRenderer(rend);
 
         setBackground(tree.getBackground());
-        if (System.getProperty("java.version").startsWith("1.6") &&
-            "GTK".equals(UIManager.getLookAndFeel().getID())) {
-            // leave the tree as opaque to paint the whole area
-        } else {
-            tree.setOpaque(false);
-            ((JComponent)tree.getParent()).setOpaque(false);
-        }
+        tree.setOpaque(false);
+        ((JComponent)tree.getParent()).setOpaque(false);
         ((JComponent)tree.getParent()).setBackground(tree.getBackground());
         setWheelScrollingEnabled(false);
     }

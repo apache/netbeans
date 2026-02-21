@@ -19,7 +19,6 @@
 package org.netbeans.modules.maven.classpath;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,7 +35,6 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
  * @author Tomas Stupka
  */
 public class PlatformModulesPathImpl extends AbstractBootPathImpl {
-    private static final String PROTOCOL_NBJRT = "nbjrt";   //NOI18N
     private static final Logger LOGGER = Logger.getLogger(PlatformModulesPathImpl.class.getName());
     
     public PlatformModulesPathImpl(NbMavenProjectImpl project) {
@@ -47,11 +45,9 @@ public class PlatformModulesPathImpl extends AbstractBootPathImpl {
     protected List<PathResourceImplementation> createResources() {
         final List<PathResourceImplementation> res = new ArrayList<>();
         JavaPlatform pf = findActivePlatform();
-        Arrays.stream(new JavaPlatform[] {findActivePlatform()})
-            .flatMap((plat)->plat.getBootstrapLibraries().entries().stream())
-            .map((entry) -> entry.getURL())
-            .filter((root) -> (PROTOCOL_NBJRT.equals(root.getProtocol())))
-            .forEach((root)->{res.add(ClassPathSupport.createResource(root));});
+        pf.getBootstrapLibraries()
+                .entries()
+                .forEach(entry -> res.add(ClassPathSupport.createResource(entry.getURL())));
         if(LOGGER.isLoggable(Level.FINE)) {
             LOGGER.log(Level.FINE, "PlatformModulesPath for project {0} and platform {1}", new Object[] {project.getProjectDirectory().getPath(), pf.getDisplayName()});
         }

@@ -61,6 +61,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.java.testrunner</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.17</specification-version>
+                    </run-dependency>
+                </dependency>
+
+                <dependency>
                     <code-name-base>org.netbeans.modules.gsf.testrunner.ui</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>

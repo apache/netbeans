@@ -45,6 +45,8 @@ import org.netbeans.modules.editor.lib2.highlighting.CompoundAttributes;
 public final class ViewUtils {
 
     public static final String KEY_VIRTUAL_TEXT_PREPEND = "virtual-text-prepend"; //NOI18N
+    public static final String KEY_SHADOW_TEXT_PREPEND = "shadow-text-prepend"; //NOI18N
+    public static final String KEY_VERTICAL_SHADOW_TEXT_PREPEND = "vertical-shadow-text-prepend"; //NOI18N
 
     private ViewUtils() { // No instances
     }

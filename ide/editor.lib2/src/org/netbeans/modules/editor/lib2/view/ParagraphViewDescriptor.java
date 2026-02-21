@@ -90,5 +90,9 @@ public final class ParagraphViewDescriptor {
         return docView.op.getDefaultAscent(); // Currently the ascent is global
     }
 
+    public float getShadowHeight() {
+        ParagraphViewChildren pViewChildren = docView.getParagraphView(pViewIndex).children;
+        return pViewChildren != null ? pViewChildren.shadowHeight : 0;
+    }
 
 }

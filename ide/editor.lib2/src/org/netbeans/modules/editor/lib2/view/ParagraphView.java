@@ -21,11 +21,15 @@ package org.netbeans.modules.editor.lib2.view;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Stroke;
+import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.SwingConstants;
@@ -112,6 +116,8 @@ public final class ParagraphView extends EditorView implements EditorView.Parent
     ParagraphViewChildren children; // 40 + 4 = 44 bytes
     
     private int statusBits; // 44 + 4 = 48 bytes
+
+    private List<TextLayout> shadowText; // 44 + 4 = 52 bytes
 
     public ParagraphView(Position startPos) {
         super(null);
@@ -225,6 +231,39 @@ public final class ParagraphView extends EditorView implements EditorView.Parent
             assert (removeLength == 0) : "Attempt to remove from null children length=" + removeLength; // NOI18N
             children = new ParagraphViewChildren(addViews.length);
         }
+        if (index == 0 && addViews != null) {
+            if (shadowText != null && !shadowText.isEmpty()) {
+                shadowText.clear();
+            }
+
+            AttributeSet attrs = addViews[0].getAttributes();
+            Object shadowTextDataAttr = attrs != null ? attrs.getAttribute(ViewUtils.KEY_VERTICAL_SHADOW_TEXT_PREPEND) : null;
+            DocumentView docView = getDocumentView();
+            DocumentViewOp op = docView.op;
+            float shadowTextHeight = 0;
+            float shadowTextWidth = 0;
+
+            if (shadowTextDataAttr instanceof String shadowTextData) {
+                if (shadowText == null) {
+                    shadowText = new ArrayList<>();
+                }
+                Font shadowTextFont = ViewUtils.getFont(getAttributes(), op.getDefaultFont());
+                for (String line : shadowTextData.split("\n")) { //XXX: performance!
+                    //duplicated code:
+                    if (line.isEmpty()) {
+                        line = " ";
+                    }
+                    final TextLayout l = op.createTextLayout(line, shadowTextFont);
+                    shadowText.add(l);
+                    shadowTextHeight += height(l); //???
+                    shadowTextWidth = Math.max(shadowTextWidth, l.getAdvance()); //???
+                }
+            }
+
+            children.shadowHeight = shadowTextHeight;
+            children.shadowWidth = shadowTextWidth;
+        }
+
         children.replace(this, index, removeLength, addViews);
     }
     
@@ -356,7 +395,18 @@ public final class ParagraphView extends EditorView implements EditorView.Parent
     @Override
     public Shape modelToViewChecked(int offset, Shape alloc, Bias bias) {
         checkChildrenNotNull();
-        return children.modelToViewChecked(this, offset, alloc, bias);
+        Shape ret = children.modelToViewChecked(this, offset, alloc, bias);
+        if (shadowText != null) {
+            //XXX: cached shadowText height
+            Rectangle2D bounds = ret.getBounds2D();
+            float shadowHeight = 0;
+            for (TextLayout l : shadowText) {
+                shadowHeight += height(l);
+            }
+            bounds.setRect(bounds.getX(), bounds.getY() + shadowHeight, bounds.getWidth(), bounds.getHeight());
+            ret = bounds;
+        }
+        return ret;
     }
     
     @Override
@@ -369,6 +419,24 @@ public final class ParagraphView extends EditorView implements EditorView.Parent
     public void paint(Graphics2D g, Shape alloc, Rectangle clipBounds) {
         // The background is already cleared by BasicTextUI.paintBackground() which uses component.getBackground()
         checkChildrenNotNull();
+        if (shadowText != null && !shadowText.isEmpty()) {
+            Rectangle2D.Double bounds = ViewUtils.shape2Bounds(alloc);
+            Rectangle2D.Double span = new Rectangle2D.Double(0, 0, 0, 0);
+            double y = bounds.y;
+            for (TextLayout l : shadowText) {
+                g.setColor(Color.gray);
+                float h = height(l);
+                span.setRect(bounds.x, y, l.getAdvance(), h);
+                HighlightsViewUtils.paintTextLayout(g, span, l, getDocumentView());
+                y += h;
+            }
+
+            bounds.height -= y - bounds.y;
+            bounds.y = y;
+
+            alloc = bounds;
+        }
+
         children.paint(this, g, alloc, clipBounds);
         
         if (getDocumentView().op.isGuideLinesEnable()) {
@@ -507,6 +575,12 @@ public final class ParagraphView extends EditorView implements EditorView.Parent
                     retOffset = children.getNextVisualPositionY(this, offset, bias, alloc,
                             direction == SwingConstants.SOUTH, biasRet,
                             HighlightsViewUtils.getMagicX(docView, this, offset, bias, alloc));
+                    if (shadowText != null && direction == SwingConstants.SOUTH) {
+                        //TODO: reuse computed height
+                        for (TextLayout l : shadowText) {
+                            retOffset += height(l);
+                        }
+                    }
                 } else {
                     retOffset = offset;
                 }
@@ -516,7 +590,19 @@ public final class ParagraphView extends EditorView implements EditorView.Parent
         }
         return retOffset;
     }
-    
+
+    //TODO: investigate:
+    int getNextVisualPositionY(ParagraphView pView,
+            int offset, Bias bias, Shape pAlloc, boolean southDirection, Bias[] biasRet, double x) {
+        int retOffset = children.getNextVisualPositionY(pView, offset, bias, pAlloc, southDirection, biasRet, x);
+//        if (shadowText != null && southDirection) {
+//            for (TextLayout l : shadowText) {
+//                retOffset += l.getAscent() + l.getDescent();
+//            }
+//        }
+        return retOffset;
+    }
+
     void releaseTextLayouts() {
         children = null;
         markChildrenInvalid();
@@ -629,4 +715,7 @@ public final class ParagraphView extends EditorView implements EditorView.Parent
         return "PV";
     }
 
+    private float height(TextLayout l) {
+        return (float) Math.ceil(l.getAscent() + l.getDescent());
+    }
 }

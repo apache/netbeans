@@ -75,17 +75,21 @@ final class ParagraphViewChildren extends ViewChildren<EditorView> {
     boolean isWrapped() {
         return (wrapInfo != null);
     }
-    
+
+    //TODO: move to ParagraphView:
+    float shadowHeight;
+    float shadowWidth;
+
     /**
      * Height of 
      * @return 
      */
     float height() {
-        return (wrapInfo == null) ? childrenHeight : wrapInfo.height(this);
+        return ((wrapInfo == null) ? childrenHeight : wrapInfo.height(this)) + shadowHeight;
     }
     
     float width() {
-        return (wrapInfo == null) ? (float) childrenWidth() : wrapInfo.width();
+        return Math.max((wrapInfo == null) ? (float) childrenWidth() : wrapInfo.width(), shadowWidth);
     }
 
     double childrenWidth() {

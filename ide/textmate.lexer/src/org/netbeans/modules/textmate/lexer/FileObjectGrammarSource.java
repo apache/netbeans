@@ -21,6 +21,7 @@ package org.netbeans.modules.textmate.lexer;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import org.eclipse.tm4e.core.registry.IGrammarSource;
 import org.openide.filesystems.FileObject;
@@ -34,8 +35,12 @@ public class FileObjectGrammarSource implements IGrammarSource {
     }
 
     @Override
-    public String getFilePath() {
-        return fileObject.getPath();
+    public long getLastModified() {
+        if (fileObject == null) {
+            return 0;
+        } else {
+            return fileObject.lastModified().getTime();
+        }
     }
 
     @Override
@@ -43,4 +48,11 @@ public class FileObjectGrammarSource implements IGrammarSource {
         return new InputStreamReader(fileObject.getInputStream(), StandardCharsets.UTF_8);
     }
 
+    @Override
+    public URI getURI() {
+        if (fileObject.isValid())
+            return fileObject.toURI();
+        else
+            return null;
+    }
 }

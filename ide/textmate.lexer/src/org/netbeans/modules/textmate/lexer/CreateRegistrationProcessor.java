@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashSet;
@@ -145,16 +146,21 @@ public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
             javax.tools.FileObject file = layer.validateResource(grammar, toRegister, null, null, false);
             try (InputStream in = file.openInputStream();
                     InputStreamReader isr = new InputStreamReader(in, StandardCharsets.UTF_8)) {
-                String finalGrammar = grammar;
                 IGrammarSource referencedGrammar = new IGrammarSource() {
+
                     @Override
-                    public String getFilePath() {
-                        return finalGrammar;
+                    public long getLastModified() {
+                        return file.getLastModified();
                     }
 
                     @Override
                     public Reader getReader() throws IOException {
                         return isr;
+                    }
+
+                    @Override
+                    public URI getURI() {
+                        return file.toUri();
                     }
                 };
                 String scopeName = RawGrammarReader.readGrammar(referencedGrammar).getScopeName();
@@ -178,6 +184,8 @@ public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
                 continue;
             }
             if (simpleName.contentEquals("injectTo")) {
+                // Warning removal requires class changes
+                @SuppressWarnings("unchecked")
                 List<? extends AnnotationValue> values = (List<? extends AnnotationValue>) e.getValue().getValue();
                 for (AnnotationValue value : values) {
                     if (injectTo == null) {
@@ -194,18 +202,24 @@ public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
             javax.tools.FileObject file = layer.validateResource(grammar, toRegister, null, null, false);
             try (InputStream in = file.openInputStream();
                     InputStreamReader isr = new InputStreamReader(in, StandardCharsets.UTF_8)) {
-                String finalGrammar = grammar;
                 IGrammarSource referencedGrammar = new IGrammarSource() {
+
                     @Override
-                    public String getFilePath() {
-                        return finalGrammar;
+                    public long getLastModified() {
+                        return file.getLastModified();
                     }
 
                     @Override
                     public Reader getReader() throws IOException {
                         return isr;
                     }
+
+                    @Override
+                    public URI getURI() {
+                        return file.toUri();
+                    }
                 };
+
                 String scopeName = RawGrammarReader.readGrammar(referencedGrammar).getScopeName();
                 String simpleName = grammar.lastIndexOf('/') != (-1) ? grammar.substring(grammar.lastIndexOf('/') + 1) : grammar;
                 layer.file("Editors" + "/" + simpleName)
@@ -249,7 +263,7 @@ public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
             userText = userText.substring(1);
         }
 
-        Set<Completion> res = new HashSet<Completion>();
+        Set<Completion> res = new HashSet<>();
         if (COMPLETIONS == null) {
             String pathCompletions = System.getProperty("org.openide.awt.ActionReference.completion");
             if (pathCompletions != null) {
@@ -315,10 +329,12 @@ public class CreateRegistrationProcessor extends LayerGeneratingProcessor {
             this.type = type;
         }
 
+        @Override
         public String getValue() {
             return type;
         }
 
+        @Override
         public String getMessage() {
             return null;
         }

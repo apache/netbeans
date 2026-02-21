@@ -144,6 +144,9 @@ public final class CssPreprocessorUtils {
     public static FileObject getWebRoot(Project project, FileObject fileObject) {
         ProjectWebRootProvider projectWebRootProvider = getProjectWebRootProvider(project);
         if (projectWebRootProvider == null) {
+            if (projectWebRootProvider == null) {
+                return project.getProjectDirectory();
+            }
             return null;
         }
         return projectWebRootProvider.getWebRoot(fileObject);
@@ -153,7 +156,7 @@ public final class CssPreprocessorUtils {
     public static FileObject getWebRoot(Project project) {
         ProjectWebRootProvider projectWebRootProvider = getProjectWebRootProvider(project);
         if (projectWebRootProvider == null) {
-            return null;
+            return project.getProjectDirectory();
         }
         Collection<FileObject> webRoots = projectWebRootProvider.getWebRoots();
         if (webRoots.isEmpty()) {

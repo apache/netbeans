@@ -47,6 +47,13 @@ public interface Constants {
 
     String VERSION = "version";
     String HOT_DEPLOY = "hotDeploy";
+    String DEV_MODE = "devMode";
+    String DEPLOY_WAR = "deployWar";
+    String EXPLODED = "exploded";
+    String TRIM_LOG = "trimLog";
+    String AUTO_DEPLOY = "autoDeploy";
+    String KEEP_STATE = "keepState";
+    String LIVE_RELOAD = "liveReload";
 
     String WAR_PACKAGING = "war";
 

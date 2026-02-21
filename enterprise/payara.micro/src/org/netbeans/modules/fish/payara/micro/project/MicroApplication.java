@@ -184,12 +184,37 @@ public class MicroApplication {
             String versionString = getPayaraMicroProject(project).getVersion();
             if (versionString != null) {
                 try {
-                    double version = Double.parseDouble(versionString);
-                    if (version > 2.1) {
-                        return true;
+                    String[] parts = versionString.split("\\.");
+                    if (parts.length >= 2) {
+                        double version = Double.parseDouble(parts[0] + "." + parts[1]);
+                        if (version >= 2.1) {
+                            return true;
+                        }
                     }
+                
                 } catch (NumberFormatException e) {
                      if ("RELEASE".equals(versionString)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    public static boolean isPluginVersionAtLeast(Project project, double minVersion) {
+        if (isPayaraMicroProject(project)) {
+            String versionString = getPayaraMicroProject(project).getVersion();
+            if (versionString != null) {
+                try {
+                    String[] parts = versionString.split("\\.");
+                    if (parts.length >= 2) {
+                        double version = Double.parseDouble(parts[0] + "." + parts[1]);
+                        return version >= minVersion;
+                    }
+                } catch (NumberFormatException e) {
+                    // For snapshot or release tags like "RELEASE", "SNAPSHOT", etc.
+                    if ("RELEASE".equalsIgnoreCase(versionString)) {
                         return true;
                     }
                 }

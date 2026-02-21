@@ -1620,6 +1620,19 @@ public class ASTPHP5ParserTest extends ParserTestBase {
         performTest("parser/php84/finalFieldsAnonClass");
     }
 
+    // PHP 8.5
+    public void testPipeOperator_01() throws Exception {
+        performTest("parser/php85/pipeOperator_01");
+    }
+
+    public void testPipeOperator_02() throws Exception {
+        performTest("parser/php85/pipeOperator_02");
+    }
+    
+    public void testPipeOperator_03() throws Exception {
+        performTest("parser/php85/pipeOperator_03");
+    }
+    
     @Override
     protected String getTestResult(String filename) throws Exception {
         // the same <Comment /> is shown twice becase the scanner is used twice

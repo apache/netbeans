@@ -880,6 +880,7 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
     return createSymbol(ASTPHP5Symbols.T_SR_EQUAL);
 }
 
+
 <ST_IN_SCRIPTING>"&=" {
     return createSymbol(ASTPHP5Symbols.T_AND_EQUAL);
 }
@@ -938,6 +939,12 @@ NOWDOC_CHARS=({NEWLINE}*(([^a-zA-Z_\x7f-\xff\n\r][^\n\r]*)|({LABEL}[^a-zA-Z0-9_\
 
 <ST_IN_SCRIPTING>"??=" {
     return createSymbol(ASTPHP5Symbols.T_COALESCE_EQUAL);
+}
+
+// NETBEANS-4443 PHP 8.5: Pipe operator
+// https://wiki.php.net/rfc/pipe-operator-v3
+<ST_IN_SCRIPTING>"|>" {
+    return createSymbol(ASTPHP5Symbols.T_PIPE);
 }
 
 <ST_IN_SCRIPTING>"&"{TABS_AND_SPACES}("$"|"...") {

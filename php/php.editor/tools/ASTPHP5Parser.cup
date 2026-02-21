@@ -400,6 +400,7 @@ terminal T_PLUS_EQUAL,T_MINUS_EQUAL,T_MUL_EQUAL,T_DIV_EQUAL,T_CONCAT_EQUAL,T_MOD
 terminal T_QUESTION_MARK;
 terminal T_SEMICOLON;
 terminal T_BOOLEAN_OR, T_BOOLEAN_AND;
+terminal T_PIPE;
 terminal T_OR;
 terminal T_KOVA;
 terminal T_REFERENCE;
@@ -697,6 +698,7 @@ precedence right T_POW;
 precedence left T_QUESTION_MARK,T_SEMICOLON;
 precedence left T_BOOLEAN_OR;
 precedence left T_BOOLEAN_AND;
+precedence left T_PIPE;
 precedence left T_OR;
 precedence left T_KOVA;
 precedence left T_REFERENCE;
@@ -3708,7 +3710,6 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close 
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.STRING_XOR, expr2);
 :}
-
 | expr:expr1 T_OR expr:expr2
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.OR, expr2);
@@ -3813,12 +3814,15 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close 
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.IS_NOT_EQUAL, expr2);
 :}
-
+// PHP 8.5 Function composition expression using |> "pipe"
+| expr:expr1 T_PIPE expr:expr2
+{:
+    RESULT = new CompositionExpression(expr1left, expr2right, expr1 , CompositionExpression.OperatorType.PIPE, expr2);
+:}
 | expr:expr1 T_RGREATER expr:expr2
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.RGREATER, expr2);
 :}
-
 | expr:expr1 T_IS_SMALLER_OR_EQUAL expr:expr2
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.IS_SMALLER_OR_EQUAL, expr2);
@@ -3828,7 +3832,6 @@ T_LIST:start T_OPEN_PARENTHESE array_pair_list:varList T_CLOSE_PARENTHESE:close 
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.LGREATER, expr2);
 :}
-
 | expr:expr1 T_IS_GREATER_OR_EQUAL expr:expr2
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.IS_GREATER_OR_EQUAL, expr2);
@@ -4718,17 +4721,19 @@ static_array_creation:arrayCreation
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.IS_NOT_EQUAL, expr2);
 :}
-
+// PHP 8.5 Function composition expression using |> "pipe"
+| static_scalar_value:expr1 T_PIPE static_scalar_value:expr2
+{:
+    RESULT = new CompositionExpression(expr1left, expr2right, expr1 , CompositionExpression.OperatorType.PIPE, expr2);
+:}
 | static_scalar_value:expr1 T_RGREATER static_scalar_value:expr2
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.RGREATER, expr2);
 :}
-
 | static_scalar_value:expr1 T_LGREATER static_scalar_value:expr2
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.LGREATER, expr2);
 :}
-
 | static_scalar_value:expr1 T_IS_SMALLER_OR_EQUAL static_scalar_value:expr2
 {:
     RESULT = new InfixExpression(expr1left, expr2right, expr1 , InfixExpression.OperatorType.IS_SMALLER_OR_EQUAL, expr2);
@@ -4758,7 +4763,6 @@ static_array_creation:arrayCreation
 {:
     RESULT = new ConditionalExpression(condleft, ifFalseright, cond, ConditionalExpression.OperatorType.COALESCE, null, ifFalse);
 :}
-
 | T_PLUS:start static_scalar_value:expr
 {:
     UnaryOperation op = new UnaryOperation(startleft, exprright, expr, UnaryOperation.Operator.PLUS);

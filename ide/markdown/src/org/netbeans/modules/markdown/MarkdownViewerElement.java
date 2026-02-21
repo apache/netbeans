@@ -71,7 +71,7 @@ import org.openide.windows.TopComponent;
 @MultiViewElement.Registration(
         displayName = "#LBL_MarkdownViewer",
         iconBase = "org/netbeans/modules/markdown/markdown.png",
-        mimeType = "text/x-markdown",
+        mimeType = MarkdownDataObject.MIME_TYPE,
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "MarkdownViewer",
         position = 2000
@@ -82,6 +82,8 @@ public class MarkdownViewerElement implements MultiViewElement {
     private static final Logger LOG = Logger.getLogger(MarkdownViewerElement.class.getName());
     private static final RequestProcessor RP = new RequestProcessor(MarkdownViewerElement.class);
     private static final int UPDATE_DELAY = 500;
+    //TODO: Might need to register this editor kit Globally
+    private static final MarkdownEditorKit EDITOR_KIT = new MarkdownEditorKit();
 
     private final MarkdownDataObject dataObject;
     private transient JToolBar toolbar;
@@ -144,7 +146,7 @@ public class MarkdownViewerElement implements MultiViewElement {
     public JComponent getVisualRepresentation() {
         if (component == null) {
             viewer = new JEditorPane();
-            viewer.setEditorKit(new MarkdownEditorKit());
+            viewer.setEditorKit(EDITOR_KIT);
             viewer.setEditable(false);
             viewer.addHyperlinkListener(this::linkHandler);
 
@@ -244,6 +246,7 @@ public class MarkdownViewerElement implements MultiViewElement {
 
                 HTMLDocument doc = (HTMLDocument) viewer.getDocument();
 
+                
                 // Would be better to create some diff and update the changed elemets
                 doc.remove(0, doc.getLength());
                 kit.read(htmlReader, doc, 0);

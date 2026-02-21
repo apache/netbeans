@@ -549,6 +549,7 @@ public class JavaCompletionCollector implements CompletionCollector {
         @Override
         public Completion createOverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement) {
             Completion item = createExecutableItem(info, elem, type, substitutionOffset, null, false, false, false, false, false, -1, false);
+            ElementHandle<ExecutableElement> elemHandle = ElementHandle.create(elem);
             CompletionCollector.Builder builder = CompletionCollector.newBuilder(item.getLabel())
                     .kind(elementKind2CompletionItemKind(elem.getKind()))
                     .labelDetail(String.format("%s - %s", item.getLabelDetail(), implement ? "implement" : "override"))
@@ -558,16 +559,21 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
                     .additionalTextEdits(() -> modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
                             wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                            ExecutableElement currentElem = elemHandle.resolve(wc);
+                            if (currentElem == null) {
+                                //cannot resolve?
+                                return ;
+                            }
                             TreePath tp = wc.getTreeUtilities().pathFor(substitutionOffset);
                             if (implement) {
-                                GeneratorUtils.generateAbstractMethodImplementation(wc, tp, elem, substitutionOffset);
+                                GeneratorUtils.generateAbstractMethodImplementation(wc, tp, currentElem, substitutionOffset);
                             } else {
-                                GeneratorUtils.generateMethodOverride(wc, tp, elem, substitutionOffset);
+                                GeneratorUtils.generateMethodOverride(wc, tp, currentElem, substitutionOffset);
                             }
                         }));
-            ElementHandle<ExecutableElement> handle = SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name()) ? ElementHandle.create(elem) : null;
-            if (handle != null) {
-                builder.documentation(getDocumentation(doc, offset, handle));
+            
+            if (SUPPORTED_ELEMENT_KINDS.contains(elem.getKind().name())) {
+                builder.documentation(getDocumentation(doc, offset, elemHandle));
             }
             return builder.build();
         }
@@ -593,6 +599,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                 sortParams.append(typeName);
             }
             labelDetail.append(") - generate");
+            ElementHandle<VariableElement> elemHandle = ElementHandle.create(elem);
             Builder builder = CompletionCollector.newBuilder(name)
                     .kind(Completion.Kind.Method)
                     .labelDetail(labelDetail.toString())
@@ -601,6 +608,10 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
                     .additionalTextEdits(() -> modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
                         wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                        VariableElement currentElem = elemHandle.resolve(wc);
+                        if (currentElem == null) {
+                            return;
+                        }
                         TreePath tp = wc.getTreeUtilities().pathFor(substitutionOffset);
                         if (TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
                             if (Utilities.inAnonymousOrLocalClass(tp)) {
@@ -609,7 +620,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                             TypeElement te = (TypeElement)wc.getTrees().getElement(tp);
                             if (te != null) {
                                 GeneratorUtilities gu = GeneratorUtilities.get(wc);
-                                MethodTree method = setter ? gu.createSetter(te, elem) : gu.createGetter(te, elem);
+                                MethodTree method = setter ? gu.createSetter(te, currentElem) : gu.createGetter(te, currentElem);
                                 ClassTree decl = GeneratorUtils.insertClassMember(wc, (ClassTree)tp.getLeaf(), method, substitutionOffset);
                                 wc.rewrite(tp.getLeaf(), decl);
                             }
@@ -870,7 +881,13 @@ public class JavaCompletionCollector implements CompletionCollector {
             }
             labelDetail.append(") - generate");
             sortParams.append(')');
-            ElementHandle<?> parentPath = ElementHandle.create(parent);
+            ElementHandle<TypeElement> parentHandle = ElementHandle.create(parent);
+            ElementHandle<ExecutableElement> superConstructorHandle = superConstructor != null ? ElementHandle.create(superConstructor) : null;
+            List<ElementHandle<VariableElement>> fieldHandles = new ArrayList<>();
+            for (VariableElement ve : fields) {
+                fieldHandles.add(ElementHandle.create(ve));
+            }
+
             return CompletionCollector.newBuilder(simpleName)
                     .kind(Completion.Kind.Constructor)
                     .labelDetail(labelDetail.toString())
@@ -879,23 +896,30 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .textEdit(new TextEdit(substitutionOffset, substitutionOffset, EMPTY))
                     .additionalTextEdits(() -> modify2TextEdits(JavaSource.forFileObject(info.getFileObject()), wc -> {
                         wc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                        TypeElement currentParent = parentHandle.resolve(wc);
+                        if (currentParent == null) {
+                            return;
+                        }
+                        ExecutableElement currentSuperConstructor = superConstructorHandle != null ? superConstructorHandle.resolve(wc) : null;
+
                         TreePath tp = wc.getTreeUtilities().pathFor(substitutionOffset);
                         if (TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
                             Element currentType = wc.getTrees().getElement(tp);
                             ElementHandle<?> currentTypePath =
                                     currentType != null ? ElementHandle.create(currentType)
                                                         : null;
-                            if (Objects.equals(parentPath, currentTypePath)) {
+                            if (Objects.equals(parentHandle, currentTypePath)) {
                                 ArrayList<VariableElement> fieldElements = new ArrayList<>();
-                                for (VariableElement fieldElement : fields) {
+                                for (ElementHandle<VariableElement> fieldHandle : fieldHandles) {
+                                    VariableElement fieldElement = fieldHandle.resolve(wc);
                                     if (fieldElement != null && fieldElement.getKind().isField()) {
                                         fieldElements.add((VariableElement)fieldElement);
                                     }
                                 }
                                 ClassTree clazz = (ClassTree) tp.getLeaf();
                                 GeneratorUtilities gu = GeneratorUtilities.get(wc);
-                                MethodTree ctor = isDefault ? gu.createDefaultConstructor(parent, fieldElements, superConstructor)
-                                        : gu.createConstructor(parent, fieldElements, superConstructor);
+                                MethodTree ctor = isDefault ? gu.createDefaultConstructor(currentParent, fieldElements, currentSuperConstructor)
+                                        : gu.createConstructor(currentParent, fieldElements, currentSuperConstructor);
                                 ClassTree decl = GeneratorUtils.insertClassMember(wc, clazz, ctor, substitutionOffset);
                                 wc.rewrite(clazz, decl);
                             }

@@ -28,6 +28,10 @@ public class EncodedActionTable21 {
     }
     protected EncodedActionTable21() {
         sb = new StringBuilder();
+        sb.append("\103");
+        sb.append("\144");
+        sb.append("\104");
+        sb.append("\117");
         sb.append("\105");
         sb.append("\141");
         sb.append("\115");

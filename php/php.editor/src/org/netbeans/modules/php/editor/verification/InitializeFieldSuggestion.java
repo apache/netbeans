@@ -176,7 +176,7 @@ public class InitializeFieldSuggestion extends SuggestionRule {
                 processConstructorPropertyPromotion(node);
             }
             FunctionDeclaration function = node.getFunction();
-            if (CodeUtils.isConstructor(node) && function.getBody() != null) {
+            if (CodeUtils.isConstructor(node) && function.getBody() != null && function.getBody().isCurly()) {
                 formalParameters = new ArrayList<>(function.getFormalParameters());
                 isInConstructor = true;
                 constructorBodyEndOffset = function.getBody().getEndOffset() - 1;

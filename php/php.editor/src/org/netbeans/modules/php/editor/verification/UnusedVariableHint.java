@@ -410,7 +410,7 @@ public class UnusedVariableHint extends HintRule implements CustomisableRule {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }
-            if (node.getBody() != null) {
+            if (node.getBody() != null && node.getBody().isCurly()) {
                 parentNodes.push(node);
                 super.visit(node);
                 parentNodes.pop();

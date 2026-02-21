@@ -1819,7 +1819,7 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                         } else if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
                             preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_3_0_NAME);
                         } else if (getProfile() != null && getProfile().isAtLeast(Profile.JAVA_EE_5)) {
-                            preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_2_0_NAME);
+                            preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_2_3_NAME);
                         } else {
                             preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_1_2_NAME);
                         }
@@ -1859,6 +1859,10 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
 
     private class RegisteredLibraryFinder implements Runnable {
 
+        private boolean isValidLibraryItem(LibraryItem li) {
+            return getProfile().isAtLeast(Profile.JAKARTA_EE_9_WEB) ^ li.getVersion().isAtMost(JsfVersion.JSF_2_3);
+        }
+
         @Override
         public void run() {
             synchronized (JSFConfigurationPanelVisual.this) {
@@ -1867,15 +1871,11 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                     List<URL> content = library.getContent("classpath"); //NOI18N
                     JsfVersion jsfVersion = JsfVersionUtils.forClasspath(content);
                     LibraryItem item = jsfVersion != null ? new LibraryItem(library, jsfVersion) : new LibraryItem(library, JsfVersion.JSF_1_1);
-                    jsfLibraries.add(item);
-                    jsfLibraries.sort(new Comparator<LibraryItem>() {
-                        @Override
-                        public int compare(LibraryItem li1, LibraryItem li2) {
-                            return li1.getLibrary().getDisplayName().compareTo(li2.getLibrary().getDisplayName());
-                        }
-                    });
-                    Collections.reverse(jsfLibraries);
+                    if (isValidLibraryItem(item)) {
+                        jsfLibraries.add(item);
+                    }
                 }
+                jsfLibraries.sort(Comparator.comparing(LibraryItem::getVersion).reversed());
 
                 // if maven, exclude user defined libraries
                 if (panel.isMaven()) {
@@ -1885,11 +1885,10 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        List<String> registeredItems = new ArrayList<>();
-                        for (LibraryItem libraryItem : jsfLibraries) {
-                            registeredItems.add(libraryItem.getLibrary().getDisplayName());
-                        }
-                        setRegisteredLibraryModel(registeredItems.toArray(new String[0]));
+                        String[] registeredItems = jsfLibraries.stream()
+                                .map(lib -> lib.getLibrary().getDisplayName())
+                                .toArray(String[]::new);
+                        setRegisteredLibraryModel(registeredItems);
                         updatePreferredLanguages();
                         updateJsfComponents();
                     }

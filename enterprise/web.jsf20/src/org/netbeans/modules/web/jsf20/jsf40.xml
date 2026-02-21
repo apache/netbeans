@@ -21,21 +21,21 @@
 
 -->
 <library version="3.0" xmlns="http://www.netbeans.org/ns/library-declaration/3">
-    <name>jsf20</name>
+    <name>jsf40</name>
     <type>j2se</type>
     <localizing-bundle>org/netbeans/modules/web/jsf20/Bundle</localizing-bundle>
     <volume>
         <type>classpath</type>
-	<resource>jar:nbinst://org.netbeans.modules.web.jsf20/modules/ext/jsf-2_3/javax.faces.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.web.jsf20/modules/ext/jsf-4_0/jakarta.faces.jar!/</resource>
     </volume>
     <volume>
         <type>javadoc</type>
-        <resource>jar:nbinst://org.netbeans.modules.j2ee.platform/docs/javaee-doc-api.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.modules.jakartaee.platform/docs/jakartaee10-doc-api.jar!/</resource>
     </volume>
     <properties>
         <property>
             <name>maven-dependencies</name>
-            <value>org.glassfish:javax.faces:2.3.9:jar</value>
+            <value>org.glassfish:jakarta.faces:4.0.13:jar</value>
         </property>
     </properties>
 </library>

@@ -55,9 +55,19 @@
             <public-packages>
                 <subpackages>javax.faces</subpackages>
                 <subpackages>com.sun.faces</subpackages>
+                <subpackages>jakarta.faces</subpackages>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/jsf-2_2/javax.faces.jar</runtime-relative-path>
+                <runtime-relative-path>ext/jsf-2_3/javax.faces.jar</runtime-relative-path>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jsf-3_0/jakarta.faces.jar</runtime-relative-path>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jsf-4_0/jakarta.faces.jar</runtime-relative-path>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jsf-4_1/jakarta.faces.jar</runtime-relative-path>
             </class-path-extension>
         </data>
     </configuration>

@@ -22,9 +22,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
@@ -77,7 +82,57 @@ public class NbExecPassesCorrectlyQuotedArgsTest extends NbTestCase {
             fail(str + " should be there: " + a);
         }
     }
-    
+   
+    public void testJdkHomePassed() throws Exception {
+        File wd = new File(getWorkDir(), "jdk dir");
+        wd.mkdirs();
+        String origJdkHome = System.getProperty("java.home");
+        Path origJdk = new File(origJdkHome).toPath();
+        String[] linkNames = {
+            "openjdk's jdkhome",
+            "jdk \"latest\"",
+            "current$JAVA_HOME",
+            "link\"'d jdk"
+        };
+        Path[] links = new Path[linkNames.length];
+        for (int i = 0; i < linkNames.length; i++) {
+            links[i] = new File(wd, linkNames[i]).toPath();
+        }
+        
+        String[] args = {
+            "1 * * * *",
+            "a b",
+            "c d",
+            "$1",
+            "$2",
+            "$3\"`$2`'$1"
+        };
+        
+        for (Path link : links) {
+            try {
+                Path l = Files.createSymbolicLink(link, origJdk);
+                if (link.compareTo(l) != 0) {
+                    fail("link creation mismatch: expected<" + link + "> != actual<" + l + ">");
+                }
+                System.setProperty("java.home", link.toString());
+                String[] nbArgs = {
+                    "--jdkhome",
+                    link.toString()
+                };
+                run(wd, Stream.concat(Arrays.stream(nbArgs), Arrays.stream(args)).collect(Collectors.toList()).toArray(new String[]{}));
+
+                String[] gotArgs = MainCallback.getArgs(getWorkDir());
+                assertNotNull("args passed in", gotArgs);
+                for (int in = args.length, jn = gotArgs.length, i = 0, j = Math.max(0, jn - in); i < in ; i++, j++) {
+                    if (j >= jn || !Objects.equals(args[i], gotArgs[j]))
+                        fail("args do not match: expected<" + Arrays.toString(args) + "> != actual<" + Arrays.toString(gotArgs) + ">");
+                }
+            } finally {
+                System.setProperty("java.home", origJdkHome);
+                Files.delete(link);
+            }
+        }
+    }
     
     private void run(File workDir, String... args) throws Exception {
         URL u = Lookup.class.getProtectionDomain().getCodeSource().getLocation();

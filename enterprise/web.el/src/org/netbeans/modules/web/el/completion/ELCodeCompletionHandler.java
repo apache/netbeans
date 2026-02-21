@@ -76,6 +76,7 @@ import org.netbeans.modules.web.el.refactoring.RefactoringUtil;
 import org.netbeans.modules.web.el.spi.ELPlugin;
 import org.netbeans.modules.web.el.spi.ELVariableResolver.VariableInfo;
 import org.netbeans.modules.web.el.spi.Function;
+import org.netbeans.modules.web.el.spi.ResolverContext;
 import org.netbeans.modules.web.el.spi.ResourceBundle;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -176,7 +177,7 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
                         // seems to be something like "sessionScope.^", so complete beans from the scope
                         proposeBeansFromScope(ccontext, context, prefixMatcher, element, node, proposals);
                     } else if (ELTypeUtilities.isResourceBundleVar(ccontext, node)) {
-                        proposeBundleKeysInDotNotation(context, prefixMatcher, element, node, proposals);
+                        proposeBundleKeysInDotNotation(ccontext, context, prefixMatcher, element, node, proposals);
                     } else if (resolved == null) {
                         if (target instanceof AstDotSuffix == false && node instanceof AstFunction == false) {
                             proposeFunctions(ccontext, context, prefixMatcher, element, proposals);
@@ -603,12 +604,13 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
         if (!resourceBundles.canHaveBundles()) {
             return;
         }
+        ResolverContext resolverContext = new ResolverContext();
         FileObject bundleFile = null;
-        List<Location> bundleLocations = resourceBundles.getLocationsForBundleIdent(bundleKey);
+        List<Location> bundleLocations = resourceBundles.getLocationsForBundleIdent(resolverContext, bundleKey);
         if (!bundleLocations.isEmpty()) {
             bundleFile = bundleLocations.get(0).getFile();
         }
-        for (Map.Entry<String, String> entry : resourceBundles.getEntries(bundleKey).entrySet()) {
+        for (Map.Entry<String, String> entry : resourceBundles.getEntries(resolverContext, bundleKey).entrySet()) {
             if (!prefix.matches(entry.getKey())) {
                 continue;
             }
@@ -620,7 +622,8 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
     }
     
     // "msg.key" notation
-    private void proposeBundleKeysInDotNotation(CodeCompletionContext context,
+    private void proposeBundleKeysInDotNotation(CompilationContext ccontext,
+            CodeCompletionContext context,
             PrefixMatcher prefix, 
             ELElement elElement, 
             Node baseObjectNode,
@@ -632,11 +635,11 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
             return;
         }
         FileObject bundleFile = null;
-        List<Location> bundleLocations = resourceBundles.getLocationsForBundleIdent(bundleKey);
+        List<Location> bundleLocations = resourceBundles.getLocationsForBundleIdent(ccontext.context(), bundleKey);
         if (!bundleLocations.isEmpty()) {
             bundleFile = bundleLocations.get(0).getFile();
         }
-        for (Map.Entry<String, String> entry : resourceBundles.getEntries(bundleKey).entrySet()) {
+        for (Map.Entry<String, String> entry : resourceBundles.getEntries(ccontext.context(), bundleKey).entrySet()) {
             if (!prefix.matches(entry.getKey())) {
                 continue;
             }

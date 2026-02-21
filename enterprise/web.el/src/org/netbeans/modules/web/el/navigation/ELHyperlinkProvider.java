@@ -84,7 +84,7 @@ import org.openide.util.Pair;
 public final class ELHyperlinkProvider implements HyperlinkProviderExt {
 
     @Override
-    public boolean isHyperlinkPoint(final Document doc, final int offset, HyperlinkType type) {
+    public boolean isHyperlinkPoint(final Document doc, final int offset, HyperlinkType type) {        
         final AtomicBoolean ret = new AtomicBoolean(false);
         doc.render(new Runnable() {
 
@@ -130,12 +130,14 @@ public final class ELHyperlinkProvider implements HyperlinkProviderExt {
     public String getTooltipText(Document doc, int offset, HyperlinkType type) {
         Pair<Node, ELElement> nodeAndElement = resolveNodeAndElement(doc, offset, new AtomicBoolean());
         if (nodeAndElement != null) {
-            if (nodeAndElement.first() instanceof AstString) {
+            if (nodeAndElement.first() instanceof AstString || nodeAndElement.first() instanceof AstDotSuffix) {
                 // could be a resource bundle key
-                return getTooltipTextForBundleKey(nodeAndElement);
-            } else {
-                return getTooltipTextForElement(nodeAndElement);
+                String tooltip = getTooltipTextForBundleKey(nodeAndElement);
+                if (tooltip != null) {
+                    return tooltip;
+                }
             }
+            return getTooltipTextForElement(nodeAndElement);
         }
         return null;
     }

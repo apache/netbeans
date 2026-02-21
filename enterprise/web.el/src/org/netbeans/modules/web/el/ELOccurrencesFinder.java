@@ -133,19 +133,19 @@ final class ELOccurrencesFinder extends OccurrencesFinder<ELParserResult> {
         try {
             jsource.runUserActionTask((CompilationController info) -> {
                 info.toPhase(JavaSource.Phase.RESOLVED);
-                occurrences.putAll(findMatchingTypes(CompilationContext.create(file, info), target, matching));
+                CompilationContext ccontext = CompilationContext.create(file, info);
+                occurrences.putAll(findMatchingTypes(ccontext, target, matching));
+                if (this.occurrences.isEmpty()) {
+                    // perhaps the caret is on a resource bundle key node
+                    occurrences.putAll(findMatchingResourceBundleKeys(ccontext, target, parserResult));
+                }
             }, true);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
-
-        if (this.occurrences.isEmpty()) {
-            // perhaps the caret is on a resource bundle key node
-            occurrences.putAll(findMatchingResourceBundleKeys(target, parserResult));
-        }
     }
 
-    private Map<OffsetRange, ColoringAttributes> findMatchingResourceBundleKeys(Pair<ELElement, Node> target, ELParserResult parserResult) {
+    private Map<OffsetRange, ColoringAttributes> findMatchingResourceBundleKeys(CompilationContext info, Pair<ELElement, Node> target, ELParserResult parserResult) {
         ResourceBundles resourceBundles = ResourceBundles.get(parserResult.getFileObject());
         if (!resourceBundles.canHaveBundles()) {
             return Collections.emptyMap();
@@ -154,7 +154,7 @@ final class ELOccurrencesFinder extends OccurrencesFinder<ELParserResult> {
         // the logic here is a bit strange, maybe should add new methods to ResourceBundles
         // for a more straightforward computation.
         // first, check whether the current EL elements has keys
-        keys.addAll(resourceBundles.collectKeys(target.first().getNode()));
+        keys.addAll(resourceBundles.collectKeys(target.first().getNode(), info.context()));
         if (keys.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -176,7 +176,7 @@ final class ELOccurrencesFinder extends OccurrencesFinder<ELParserResult> {
             if (!each.isValid()) {
                 continue;
             }
-            for (Pair<AstIdentifier, Node> candidate : resourceBundles.collectKeys(each.getNode())) {
+            for (Pair<AstIdentifier, Node> candidate : resourceBundles.collectKeys(each.getNode(), info.context())) {
                 if (candidate.second().equals(target.second())) {
                     OffsetRange range = each.getOriginalOffset(candidate.second());
                     result.put(range, ColoringAttributes.MARK_OCCURRENCES);

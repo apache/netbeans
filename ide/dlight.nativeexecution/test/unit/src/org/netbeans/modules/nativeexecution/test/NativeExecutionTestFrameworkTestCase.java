@@ -101,9 +101,9 @@ public class NativeExecutionTestFrameworkTestCase extends NativeExecutionBaseTes
     }
 
     public static junit.framework.Test suite() {
-        Class testClass = NativeExecutionTestFrameworkTestCase.class;
+        Class<NativeExecutionTestFrameworkTestCase> testClass = NativeExecutionTestFrameworkTestCase.class;
         return new NativeExecutionBaseTestSuite(
                 testClass.getSimpleName(),
                 "test.framework.test.default.platforms", testClass);
-    }    
+    }
 }

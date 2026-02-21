@@ -137,7 +137,7 @@ public final class NativeExecutionService {
                 // Allows user to use his favorite one.
                 processBuilder.getEnvironment().put("TERM", termType); // NOI18N
             } else {
-                processBuilder.getEnvironment().put("TERM", "xterm" /*IOEmulation.getEmulation(descriptor.inputOutput)*/); // NOI18N
+                processBuilder.getEnvironment().put("TERM", "xterm-256color" /*IOEmulation.getEmulation(descriptor.inputOutput)*/); // NOI18N
             }
         } else {
             processBuilder.getEnvironment().put("TERM", "dumb"); // NOI18N

@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.nativeexecution.sps.impl;
 
-import java.security.acl.NotOwnerException;
 import java.util.Collection;
 import java.util.List;
 import org.netbeans.modules.nativeexecution.api.util.ConnectionManager.CancellationException;
@@ -33,9 +32,9 @@ import org.netbeans.modules.nativeexecution.sps.impl.RequestPrivilegesTask.Reque
 import org.netbeans.modules.nativeexecution.support.ObservableActionListener;
 import org.netbeans.modules.nativeexecution.support.TasksCachedProcessor;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 
+@SuppressWarnings("removal")
 public abstract class SPSCommonImpl implements SolarisPrivilegesSupport {
 
     private static final TasksCachedProcessor<ExecutionEnvironment, List<String>> cachedPrivilegesFetcher =
@@ -98,7 +97,7 @@ public abstract class SPSCommonImpl implements SolarisPrivilegesSupport {
 
         try {
             if (cachedPrivilegesRequestor.compute(
-                    new RequestPrivilegesTaskParams(this, requestedPrivileges, askForPassword)).booleanValue() == true) {
+                    new RequestPrivilegesTaskParams(this, requestedPrivileges, askForPassword))== true) {
                 invalidateCache();
             } else {
                 throw new NotOwnerException();
@@ -172,7 +171,7 @@ public abstract class SPSCommonImpl implements SolarisPrivilegesSupport {
 
                 @Override
                 public void actionCompleted(Action source, Boolean result) {
-                    if (result != null && result.booleanValue() == true) {
+                    if (result != null && result == true) {
                         onPrivilegesGranted.run();
                     }
                 }
@@ -191,7 +190,4 @@ public abstract class SPSCommonImpl implements SolarisPrivilegesSupport {
         invalidateCache();
     }
 
-    private static String loc(String key, String... params) {
-        return NbBundle.getMessage(SPSCommonImpl.class, key, params);
-    }
 }

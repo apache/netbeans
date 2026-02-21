@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.nativeexecution.ConcurrentTasksSupport;
 import org.netbeans.modules.nativeexecution.ConcurrentTasksSupport.Counters;
@@ -52,7 +53,7 @@ public class ConnectionManagerTest extends NativeExecutionBaseTestCase {
     public static junit.framework.Test suite() {
         return new NativeExecutionBaseTestSuite(ConnectionManagerTest.class);
     }
-    
+
     @Test
     public void testDeleteConnection() throws Exception {
         ExecutionEnvironment env = ExecutionEnvironmentFactory.createNew("test","127.0.0.1");
@@ -65,6 +66,7 @@ public class ConnectionManagerTest extends NativeExecutionBaseTestCase {
     }
 
     @Test
+    @Ignore("requires remote system")
     public void testGetRecentConnections() throws Exception {
         String section = "remote.platforms";
         ExecutionEnvironment[] envs = NativeExecutionTestSupport.getTestExecutionEnvironmentsFromSection(section);
@@ -119,6 +121,7 @@ public class ConnectionManagerTest extends NativeExecutionBaseTestCase {
     }
 
     @Test
+    @Ignore("requires remote system")
     public void testGetConnectToAction() throws Exception {
         final int threadsNum = 10;
         RcFile rcFile = NativeExecutionTestSupport.getRcFile();

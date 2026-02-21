@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.44
+#Version 1.45
 
 CLSS public abstract interface java.io.Serializable
 
@@ -11,13 +11,17 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -26,9 +30,11 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -37,6 +43,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -48,6 +55,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -69,6 +77,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -91,6 +100,8 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -117,6 +128,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public org.testng.Assert
 cons protected init()
@@ -396,7 +410,7 @@ meth public abstract void setAttribute(java.lang.String,java.lang.Object)
 
 CLSS public abstract interface org.testng.IClass
 meth public abstract int getInstanceCount()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.lang.Class<?> getRealClass()
 meth public abstract java.lang.Object[] getInstances(boolean)
 meth public abstract java.lang.String getName()
@@ -451,7 +465,7 @@ meth public abstract boolean isThrowableMatching(java.lang.Throwable)
 meth public abstract java.lang.String getWrongExceptionMessage(java.lang.Throwable)
 
 CLSS public abstract interface org.testng.IExtraOutput
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.List<java.lang.String> getParameterOutput()
 
 CLSS public abstract interface org.testng.IHookCallBack
@@ -486,7 +500,7 @@ meth public abstract void beforeInvocation(org.testng.IInvokedMethod,org.testng.
 CLSS public abstract interface org.testng.IMethodInstance
 meth public abstract java.lang.Object getInstance()
 meth public abstract java.lang.Object[] getInstances()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.testng.ITestNGMethod getMethod()
 
 CLSS public abstract interface org.testng.IMethodInterceptor
@@ -541,7 +555,7 @@ meth public abstract java.lang.String getParameter(java.lang.String)
 meth public abstract java.lang.String getParentModule()
 meth public abstract java.util.Collection<org.testng.ITestNGMethod> getExcludedMethods()
 meth public abstract java.util.Collection<org.testng.ITestNGMethod> getInvokedMethods()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.List<org.testng.IInvokedMethod> getAllInvokedMethods()
 meth public abstract java.util.List<org.testng.ITestNGMethod> getAllMethods()
 meth public abstract java.util.Map<java.lang.String,java.util.Collection<org.testng.ITestNGMethod>> getMethodsByGroups()
@@ -664,11 +678,11 @@ meth public abstract int getPriority()
 meth public abstract int getSuccessPercentage()
 meth public abstract int getThreadPoolSize()
 meth public abstract int getTotalInvocationCount()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.lang.Class getRealClass()
 meth public abstract java.lang.Object getInstance()
 meth public abstract java.lang.Object[] getInstances()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.lang.String getDescription()
 meth public abstract java.lang.String getId()
 meth public abstract java.lang.String getMethodName()
@@ -680,7 +694,7 @@ meth public abstract java.lang.String[] getGroups()
 meth public abstract java.lang.String[] getGroupsDependedUpon()
 meth public abstract java.lang.String[] getMethodsDependedUpon()
 meth public abstract java.lang.reflect.Method getMethod()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.List<java.lang.Integer> getFailedInvocationNumbers()
 meth public abstract java.util.List<java.lang.Integer> getInvocationNumbers()
 meth public abstract java.util.Map<java.lang.String,java.lang.String> findMethodParameters(org.testng.xml.XmlTest)
@@ -803,19 +817,19 @@ hfds m_hasFailures
 
 CLSS public org.testng.SuiteRunner
 cons protected init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,boolean,java.util.List<org.testng.IMethodInterceptor>,java.util.Collection<org.testng.IInvokedMethodListener>,java.util.Collection<org.testng.ITestListener>,java.util.Collection<org.testng.IClassListener>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons protected init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,boolean,java.util.List<org.testng.IMethodInterceptor>,java.util.Collection<org.testng.IInvokedMethodListener>,java.util.Collection<org.testng.ITestListener>,java.util.Collection<org.testng.IClassListener>,java.util.Comparator<org.testng.ITestNGMethod>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons protected init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,boolean,java.util.List<org.testng.IMethodInterceptor>,java.util.Collection<org.testng.IInvokedMethodListener>,java.util.Collection<org.testng.ITestListener>,java.util.Collection<org.testng.IClassListener>,java.util.Map<java.lang.Class<? extends org.testng.IDataProviderListener>,org.testng.IDataProviderListener>,java.util.Comparator<org.testng.ITestNGMethod>)
 cons protected init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,boolean,java.util.List<org.testng.IMethodInterceptor>,java.util.List<org.testng.IInvokedMethodListener>,java.util.List<org.testng.ITestListener>,java.util.List<org.testng.IClassListener>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,java.util.Comparator<org.testng.ITestNGMethod>)
 cons public init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,boolean,java.util.Comparator<org.testng.ITestNGMethod>)
 cons public init(org.testng.internal.IConfiguration,org.testng.xml.XmlSuite,java.lang.String,org.testng.ITestRunnerFactory,java.util.Comparator<org.testng.ITestNGMethod>)
 intf org.testng.IInvokedMethodListener
@@ -946,45 +960,45 @@ meth public java.util.Set<org.testng.IReporter> getReporters()
 meth public org.testng.IAnnotationTransformer getAnnotationTransformer()
 meth public org.testng.xml.XmlSuite$FailurePolicy getConfigFailurePolicy()
 meth public static boolean isJdk14()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.testng.TestNG getDefault()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.testng.TestNG privateMain(java.lang.String[],org.testng.ITestListener)
 meth public static void main(java.lang.String[])
 meth public static void setTestNGVersion()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addAlterSuiteListener(org.testng.IAlterSuiteListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addClassLoader(java.lang.ClassLoader)
 meth public void addExecutionListener(org.testng.IExecutionListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addInvokedMethodListener(org.testng.IInvokedMethodListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addListener(java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addListener(org.testng.IClassListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addListener(org.testng.IInvokedMethodListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addListener(org.testng.IReporter)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addListener(org.testng.ISuiteListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addListener(org.testng.ITestListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addListener(org.testng.ITestNGListener)
 meth public void addMethodSelector(java.lang.String,int)
 meth public void addMethodSelector(org.testng.xml.XmlMethodSelector)
 meth public void configure(java.util.Map)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void initializeEverything()
 meth public void initializeSuitesAndJarFile()
 meth public void run()
 meth public void setAnnotationTransformer(org.testng.IAnnotationTransformer)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setCommandLineSuite(org.testng.xml.XmlSuite)
 meth public void setConfigFailurePolicy(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setConfigFailurePolicy(org.testng.xml.XmlSuite$FailurePolicy)
 meth public void setDataProviderThreadCount(int)
 meth public void setDefaultSuiteName(java.lang.String)
@@ -1000,7 +1014,7 @@ meth public void setObjectFactory(java.lang.Class)
 meth public void setObjectFactory(org.testng.ITestObjectFactory)
 meth public void setOutputDirectory(java.lang.String)
 meth public void setParallel(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setParallel(org.testng.xml.XmlSuite$ParallelMode)
 meth public void setPreserveOrder(boolean)
 meth public void setRandomizeSuites(boolean)
@@ -1022,7 +1036,7 @@ hfds LOGGER,exitCode,exitCodeListener,isSuiteInitialized,m_alterSuiteListeners,m
 
 CLSS public static org.testng.TestNG$ExitCodeListener
  outer org.testng.TestNG
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 cons public init(org.testng.TestNG)
 intf org.testng.internal.IResultListener2
@@ -1323,7 +1337,7 @@ meth public abstract !hasdefault int[] indices()
 meth public abstract !hasdefault java.lang.Class<?> dataProviderClass()
 meth public abstract !hasdefault java.lang.String dataProvider()
 meth public abstract !hasdefault java.lang.String[] parameters()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public abstract interface !annotation org.testng.annotations.Guice
  anno 0 java.lang.annotation.Documented()
@@ -1378,7 +1392,7 @@ CLSS public abstract interface org.testng.annotations.IParameterizable
 intf org.testng.annotations.IAnnotation
 meth public abstract boolean getEnabled()
 meth public abstract java.lang.String[] getParameters()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void setEnabled(boolean)
 
 CLSS public abstract interface org.testng.annotations.IParametersAnnotation
@@ -1496,7 +1510,7 @@ meth public abstract !hasdefault java.lang.String[] dependsOnGroups()
 meth public abstract !hasdefault java.lang.String[] dependsOnMethods()
 meth public abstract !hasdefault java.lang.String[] groups()
 meth public abstract !hasdefault java.lang.String[] parameters()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract !hasdefault long invocationTimeOut()
 meth public abstract !hasdefault long timeOut()
 
@@ -1743,7 +1757,7 @@ supr java.lang.Object
 hfds ATTR_ESCAPES,ENTITY,GREATER,LESS,QUOTE,SINGLE_QUOTE,m_allTests,m_configIssues,m_fileNameIncrementer,m_fileNameMap,m_numFailed
 
 CLSS public org.testng.reporters.JqReporter
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 intf org.testng.IReporter
 meth protected java.lang.String generateOutputDirectoryName(java.lang.String)
@@ -1786,7 +1800,7 @@ hfds m_testName,m_verbose
 
 CLSS public org.testng.reporters.VerboseReporter
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 fld public final static java.lang.String LISTENER_PREFIX = "[VerboseTestNG] "
 meth protected void log(java.lang.String)
@@ -1836,44 +1850,44 @@ cons public init()
 fld public final static java.lang.String FILE_NAME = "testng-results.xml"
 intf org.testng.IReporter
 meth public boolean isGenerateDependsOnGroups()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isGenerateDependsOnMethods()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isGenerateGroupsAttribute()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isGenerateTestResultAttributes()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isSplitClassAndPackageNames()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public int getFileFragmentationLevel()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public int getStackTraceOutputMethod()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getOutputDirectory()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getTimestampFormat()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.testng.reporters.XMLReporterConfig getConfig()
 meth public static void addDurationAttributes(org.testng.reporters.XMLReporterConfig,java.util.Properties,java.util.Date,java.util.Date)
 meth public void generateReport(java.util.List<org.testng.xml.XmlSuite>,java.util.List<org.testng.ISuite>,java.lang.String)
 meth public void setFileFragmentationLevel(int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setGenerateDependsOnGroups(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setGenerateDependsOnMethods(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setGenerateGroupsAttribute(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setGenerateTestResultAttributes(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setOutputDirectory(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setSplitClassAndPackageNames(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setStackTraceOutputMethod(int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setTimestampFormat(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds JVM_ARG,config,rootBuffer
 
@@ -1930,7 +1944,7 @@ meth public boolean isGenerateTestResultAttributes()
 meth public boolean isSplitClassAndPackageNames()
 meth public int getFileFragmentationLevel()
 meth public int getStackTraceOutputMethod()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getOutputDirectory()
 meth public java.lang.String getTimestampFormat()
 meth public org.testng.reporters.XMLReporterConfig$StackTraceLevels getStackTraceOutput()
@@ -1945,7 +1959,7 @@ meth public void setOutputDirectory(java.lang.String)
 meth public void setSplitClassAndPackageNames(boolean)
 meth public void setStackTraceOutput(org.testng.reporters.XMLReporterConfig$StackTraceLevels)
 meth public void setStackTraceOutputMethod(int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setTimestampFormat(java.lang.String)
 supr java.lang.Object
 hfds FMT_DEFAULT,STATUSES,fileFragmentationLevel,generateDependsOnGroups,generateDependsOnMethods,generateGroupsAttribute,generateTestResultAttributes,outputDirectory,splitClassAndPackageNames,stackTraceOutputLevel,stackTraceOutputMethod,timestampFormat
@@ -2117,7 +2131,7 @@ hfds DEFAULT_FILE_PARSER,PARSERS,m_fileName,m_inputStream,m_loadClasses,m_postPr
 CLSS public org.testng.xml.SuiteGenerator
 cons public init()
 meth public static org.testng.xml.LaunchSuite createCustomizedSuite(java.lang.String,java.util.Collection<java.lang.String>,java.util.Collection<java.lang.String>,java.util.Collection<java.lang.String>,java.util.Collection<java.lang.String>,java.util.Map<java.lang.String,java.lang.String>,java.lang.String,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.testng.xml.LaunchSuite createProxiedXmlSuite(java.io.File)
 meth public static org.testng.xml.LaunchSuite createSuite(java.lang.String,java.util.Collection<java.lang.String>,java.util.Map<java.lang.String,java.util.Collection<java.lang.String>>,java.util.Collection<java.lang.String>,java.util.Map<java.lang.String,java.lang.String>,java.lang.String,int)
 supr java.lang.Object
@@ -2182,7 +2196,7 @@ meth public java.util.List<org.testng.xml.XmlInclude> getIncludedMethods()
 meth public java.util.Map<java.lang.String,java.lang.String> getAllParameters()
 meth public java.util.Map<java.lang.String,java.lang.String> getLocalParameters()
 meth public java.util.Map<java.lang.String,java.lang.String> getParameters()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String listToString(java.util.List<java.lang.Integer>)
 meth public void setClass(java.lang.Class)
 meth public void setExcludedMethods(java.util.List<java.lang.String>)
@@ -2241,7 +2255,7 @@ meth public java.util.List<java.lang.Integer> getInvocationNumbers()
 meth public java.util.Map<java.lang.String,java.lang.String> getAllParameters()
 meth public java.util.Map<java.lang.String,java.lang.String> getLocalParameters()
 meth public java.util.Map<java.lang.String,java.lang.String> getParameters()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addParameter(java.lang.String,java.lang.String)
 meth public void setDescription(java.lang.String)
 meth public void setParameters(java.util.Map<java.lang.String,java.lang.String>)
@@ -2396,7 +2410,7 @@ meth public void setName(java.lang.String)
 meth public void setObjectFactory(org.testng.ITestObjectFactory)
 meth public void setPackages(java.util.List<org.testng.xml.XmlPackage>)
 meth public void setParallel(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setParallel(org.testng.xml.XmlSuite$ParallelMode)
 meth public void setParameters(java.util.Map<java.lang.String,java.lang.String>)
 meth public void setParentModule(java.lang.String)
@@ -2404,7 +2418,7 @@ meth public void setParentSuite(org.testng.xml.XmlSuite)
 meth public void setParsed(boolean)
 meth public void setPreserveOrder(java.lang.Boolean)
 meth public void setPreserveOrder(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setSkipFailedInvocationCounts(boolean)
 meth public void setSuiteFiles(java.util.List<java.lang.String>)
 meth public void setTests(java.util.List<org.testng.xml.XmlTest>)
@@ -2431,13 +2445,13 @@ CLSS public final static !enum org.testng.xml.XmlSuite$ParallelMode
  outer org.testng.xml.XmlSuite
 fld public final static org.testng.xml.XmlSuite$ParallelMode CLASSES
 fld public final static org.testng.xml.XmlSuite$ParallelMode FALSE
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.testng.xml.XmlSuite$ParallelMode INSTANCES
 fld public final static org.testng.xml.XmlSuite$ParallelMode METHODS
 fld public final static org.testng.xml.XmlSuite$ParallelMode NONE
 fld public final static org.testng.xml.XmlSuite$ParallelMode TESTS
 fld public final static org.testng.xml.XmlSuite$ParallelMode TRUE
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isParallel()
 meth public java.lang.String toString()
 meth public static org.testng.xml.XmlSuite$ParallelMode getValidParallel(java.lang.String)
@@ -2482,9 +2496,9 @@ meth public java.util.List<org.testng.xml.XmlPackage> getXmlPackages()
 meth public java.util.Map<java.lang.String,java.lang.String> getAllParameters()
 meth public java.util.Map<java.lang.String,java.lang.String> getLocalParameters()
 meth public java.util.Map<java.lang.String,java.lang.String> getParameters()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Map<java.lang.String,java.lang.String> getTestParameters()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Map<java.lang.String,java.lang.String> getXmlDependencyGroups()
 meth public java.util.Map<java.lang.String,java.util.List<java.lang.String>> getMetaGroups()
 meth public long getTimeOut(long)
@@ -2499,7 +2513,7 @@ meth public void addXmlDependencyGroup(java.lang.String,java.lang.String)
 meth public void setAllowReturnValues(java.lang.Boolean)
 meth public void setBeanShellExpression(java.lang.String)
 meth public void setClassNames(java.util.List<org.testng.xml.XmlClass>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setClasses(java.util.List<org.testng.xml.XmlClass>)
 meth public void setExcludedGroups(java.util.List<java.lang.String>)
 meth public void setExpression(java.lang.String)
@@ -2516,7 +2530,7 @@ meth public void setParallel(org.testng.xml.XmlSuite$ParallelMode)
 meth public void setParameters(java.util.Map<java.lang.String,java.lang.String>)
 meth public void setPreserveOrder(java.lang.Boolean)
 meth public void setPreserveOrder(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setSkipFailedInvocationCounts(boolean)
 meth public void setSuite(org.testng.xml.XmlSuite)
 meth public void setThreadCount(int)
@@ -2546,6 +2560,7 @@ meth public abstract void skippedEntity(java.lang.String) throws org.xml.sax.SAX
 meth public abstract void startDocument() throws org.xml.sax.SAXException
 meth public abstract void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
 meth public abstract void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void declaration(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 
 CLSS public abstract interface org.xml.sax.DTDHandler
 meth public abstract void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException

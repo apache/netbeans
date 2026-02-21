@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.100
+#Version 7.101
 
 CLSS public java.awt.Canvas
 cons public init()
@@ -14,6 +14,7 @@ meth public void createBufferStrategy(int,java.awt.BufferCapabilities) throws ja
 meth public void paint(java.awt.Graphics)
 meth public void update(java.awt.Graphics)
 supr java.awt.Component
+hfds base,nameCounter,serialVersionUID
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -31,6 +32,7 @@ intf java.awt.MenuContainer
 intf java.awt.image.ImageObserver
 intf java.io.Serializable
 meth protected boolean requestFocus(boolean)
+meth protected boolean requestFocus(boolean,java.awt.event.FocusEvent$Cause)
 meth protected boolean requestFocusInWindow(boolean)
 meth protected final void disableEvents(long)
 meth protected final void enableEvents(long)
@@ -51,20 +53,20 @@ meth protected void processMouseMotionEvent(java.awt.event.MouseEvent)
 meth protected void processMouseWheelEvent(java.awt.event.MouseWheelEvent)
 meth public <%0 extends java.util.EventListener> {%%0}[] getListeners(java.lang.Class<{%%0}>)
 meth public boolean action(java.awt.Event,java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean areFocusTraversalKeysSet(int)
 meth public boolean contains(int,int)
 meth public boolean contains(java.awt.Point)
 meth public boolean getFocusTraversalKeysEnabled()
 meth public boolean getIgnoreRepaint()
 meth public boolean gotFocus(java.awt.Event,java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean handleEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean hasFocus()
 meth public boolean imageUpdate(java.awt.Image,int,int,int,int,int)
 meth public boolean inside(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isBackgroundSet()
 meth public boolean isCursorSet()
 meth public boolean isDisplayable()
@@ -73,7 +75,7 @@ meth public boolean isEnabled()
 meth public boolean isFocusCycleRoot(java.awt.Container)
 meth public boolean isFocusOwner()
 meth public boolean isFocusTraversable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isFocusable()
 meth public boolean isFontSet()
 meth public boolean isForegroundSet()
@@ -86,28 +88,29 @@ meth public boolean isShowing()
 meth public boolean isValid()
 meth public boolean isVisible()
 meth public boolean keyDown(java.awt.Event,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean keyUp(java.awt.Event,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean lostFocus(java.awt.Event,java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseDown(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseDrag(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseEnter(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseExit(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseMove(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean mouseUp(java.awt.Event,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean postEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean prepareImage(java.awt.Image,int,int,java.awt.image.ImageObserver)
 meth public boolean prepareImage(java.awt.Image,java.awt.image.ImageObserver)
 meth public boolean requestFocusInWindow()
+meth public boolean requestFocusInWindow(java.awt.event.FocusEvent$Cause)
 meth public final java.lang.Object getTreeLock()
 meth public final void dispatchEvent(java.awt.AWTEvent)
 meth public float getAlignmentX()
@@ -124,7 +127,7 @@ meth public java.awt.Color getForeground()
 meth public java.awt.Component getComponentAt(int,int)
 meth public java.awt.Component getComponentAt(java.awt.Point)
 meth public java.awt.Component locate(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Component$BaselineResizeBehavior getBaselineResizeBehavior()
 meth public java.awt.ComponentOrientation getComponentOrientation()
 meth public java.awt.Container getFocusCycleRootAncestor()
@@ -136,11 +139,11 @@ meth public java.awt.Dimension getPreferredSize()
 meth public java.awt.Dimension getSize()
 meth public java.awt.Dimension getSize(java.awt.Dimension)
 meth public java.awt.Dimension minimumSize()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Dimension preferredSize()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Dimension size()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Font getFont()
 meth public java.awt.FontMetrics getFontMetrics(java.awt.Font)
 meth public java.awt.Graphics getGraphics()
@@ -152,9 +155,9 @@ meth public java.awt.Point getLocation(java.awt.Point)
 meth public java.awt.Point getLocationOnScreen()
 meth public java.awt.Point getMousePosition()
 meth public java.awt.Point location()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Rectangle bounds()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Rectangle getBounds()
 meth public java.awt.Rectangle getBounds(java.awt.Rectangle)
 meth public java.awt.Toolkit getToolkit()
@@ -195,14 +198,14 @@ meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void addPropertyChangeListener(java.lang.String,java.beans.PropertyChangeListener)
 meth public void applyComponentOrientation(java.awt.ComponentOrientation)
 meth public void deliverEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void disable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void doLayout()
 meth public void enable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void enable(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void enableInputMethods(boolean)
 meth public void firePropertyChange(java.lang.String,byte,byte)
 meth public void firePropertyChange(java.lang.String,char,char)
@@ -211,19 +214,19 @@ meth public void firePropertyChange(java.lang.String,float,float)
 meth public void firePropertyChange(java.lang.String,long,long)
 meth public void firePropertyChange(java.lang.String,short,short)
 meth public void hide()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void invalidate()
 meth public void layout()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void list()
 meth public void list(java.io.PrintStream)
 meth public void list(java.io.PrintStream,int)
 meth public void list(java.io.PrintWriter)
 meth public void list(java.io.PrintWriter,int)
 meth public void move(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void nextFocus()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void paint(java.awt.Graphics)
 meth public void paintAll(java.awt.Graphics)
 meth public void print(java.awt.Graphics)
@@ -246,12 +249,13 @@ meth public void repaint(int,int,int,int)
 meth public void repaint(long)
 meth public void repaint(long,int,int,int,int)
 meth public void requestFocus()
+meth public void requestFocus(java.awt.event.FocusEvent$Cause)
 meth public void reshape(int,int,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void resize(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void resize(java.awt.Dimension)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void revalidate()
 meth public void setBackground(java.awt.Color)
 meth public void setBounds(int,int,int,int)
@@ -271,21 +275,24 @@ meth public void setLocation(int,int)
 meth public void setLocation(java.awt.Point)
 meth public void setMaximumSize(java.awt.Dimension)
 meth public void setMinimumSize(java.awt.Dimension)
+meth public void setMixingCutoutShape(java.awt.Shape)
 meth public void setName(java.lang.String)
 meth public void setPreferredSize(java.awt.Dimension)
 meth public void setSize(int,int)
 meth public void setSize(java.awt.Dimension)
 meth public void setVisible(boolean)
 meth public void show()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void show(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void transferFocus()
 meth public void transferFocusBackward()
 meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
+hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
+hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS public java.awt.Container
 cons public init()
@@ -307,7 +314,7 @@ meth public final void setFocusTraversalPolicyProvider(boolean)
 meth public float getAlignmentX()
 meth public float getAlignmentY()
 meth public int countComponents()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public int getComponentCount()
 meth public int getComponentZOrder(java.awt.Component)
 meth public java.awt.Component add(java.awt.Component)
@@ -319,19 +326,19 @@ meth public java.awt.Component getComponent(int)
 meth public java.awt.Component getComponentAt(int,int)
 meth public java.awt.Component getComponentAt(java.awt.Point)
 meth public java.awt.Component locate(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Component[] getComponents()
 meth public java.awt.Dimension getMaximumSize()
 meth public java.awt.Dimension getMinimumSize()
 meth public java.awt.Dimension getPreferredSize()
 meth public java.awt.Dimension minimumSize()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Dimension preferredSize()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.FocusTraversalPolicy getFocusTraversalPolicy()
 meth public java.awt.Insets getInsets()
 meth public java.awt.Insets insets()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.LayoutManager getLayout()
 meth public java.awt.Point getMousePosition(boolean)
 meth public java.awt.event.ContainerListener[] getContainerListeners()
@@ -344,11 +351,11 @@ meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void addPropertyChangeListener(java.lang.String,java.beans.PropertyChangeListener)
 meth public void applyComponentOrientation(java.awt.ComponentOrientation)
 meth public void deliverEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void doLayout()
 meth public void invalidate()
 meth public void layout()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void list(java.io.PrintStream,int)
 meth public void list(java.io.PrintWriter,int)
 meth public void paint(java.awt.Graphics)
@@ -370,6 +377,8 @@ meth public void transferFocusDownCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.awt.Component
+hfds EMPTY_ARRAY,INCLUDE_SELF,SEARCH_HEAVYWEIGHTS,component,containerListener,containerSerializedDataVersion,descendUnconditionallyWhenValidating,descendantsCount,dispatcher,eventLog,focusCycleRoot,focusTraversalPolicy,focusTraversalPolicyProvider,isJavaAwtSmartInvalidate,layoutMgr,listeningBoundsChildren,listeningChildren,log,mixingLog,modalAppContext,modalComp,numOfHWComponents,numOfLWComponents,preserveBackgroundColor,printing,printingThreads,serialPersistentFields,serialVersionUID
+hcls DropTargetEventTargetFilter,EventTargetFilter,MouseEventTargetFilter,WakingRunnable
 
 CLSS public java.awt.FlowLayout
 cons public init()
@@ -397,6 +406,7 @@ meth public void setAlignment(int)
 meth public void setHgap(int)
 meth public void setVgap(int)
 supr java.lang.Object
+hfds align,alignOnBaseline,currentSerialVersion,hgap,newAlign,serialVersionOnStream,serialVersionUID,vgap
 
 CLSS public abstract interface java.awt.ItemSelectable
 meth public abstract java.lang.Object[] getSelectedObjects()
@@ -412,7 +422,7 @@ meth public abstract void removeLayoutComponent(java.awt.Component)
 
 CLSS public abstract interface java.awt.MenuContainer
 meth public abstract boolean postEvent(java.awt.Event)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.awt.Font getFont()
 meth public abstract void remove(java.awt.MenuComponent)
 
@@ -421,7 +431,7 @@ intf java.util.EventListener
 meth public abstract void actionPerformed(java.awt.event.ActionEvent)
 
 CLSS public abstract java.awt.event.MouseAdapter
-cons public init()
+cons protected init()
 intf java.awt.event.MouseListener
 intf java.awt.event.MouseMotionListener
 intf java.awt.event.MouseWheelListener
@@ -482,6 +492,16 @@ meth public void setPreferred(boolean)
 meth public void setShortDescription(java.lang.String)
 meth public void setValue(java.lang.String,java.lang.Object)
 supr java.lang.Object
+hfds TRANSIENT,classRef,displayName,expert,hidden,name,preferred,shortDescription,table
+
+CLSS public abstract interface !annotation java.beans.JavaBean
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault java.lang.String defaultEventSet()
+meth public abstract !hasdefault java.lang.String defaultProperty()
+meth public abstract !hasdefault java.lang.String description()
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -502,6 +522,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public abstract interface java.io.Serializable
 
@@ -513,13 +534,17 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -528,9 +553,11 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -539,6 +566,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -550,6 +578,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -572,6 +601,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.ThreadGroup,java.lang.Runnable)
 cons public init(java.lang.ThreadGroup,java.lang.Runnable,java.lang.String)
 cons public init(java.lang.ThreadGroup,java.lang.Runnable,java.lang.String,long)
+cons public init(java.lang.ThreadGroup,java.lang.Runnable,java.lang.String,long,boolean)
 cons public init(java.lang.ThreadGroup,java.lang.String)
 fld public final static int MAX_PRIORITY = 10
 fld public final static int MIN_PRIORITY = 1
@@ -587,20 +617,21 @@ meth public final int getPriority()
 meth public final java.lang.String getName()
 meth public final java.lang.ThreadGroup getThreadGroup()
 meth public final void checkAccess()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="17")
 meth public final void join() throws java.lang.InterruptedException
 meth public final void join(long) throws java.lang.InterruptedException
 meth public final void join(long,int) throws java.lang.InterruptedException
 meth public final void resume()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="1.2")
 meth public final void setDaemon(boolean)
 meth public final void setName(java.lang.String)
 meth public final void setPriority(int)
 meth public final void stop()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="1.2")
 meth public final void suspend()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="1.2")
 meth public int countStackFrames()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="1.2")
 meth public java.lang.ClassLoader getContextClassLoader()
 meth public java.lang.StackTraceElement[] getStackTrace()
 meth public java.lang.String toString()
@@ -615,6 +646,7 @@ meth public static java.lang.Thread currentThread()
 meth public static java.lang.Thread$UncaughtExceptionHandler getDefaultUncaughtExceptionHandler()
 meth public static java.util.Map<java.lang.Thread,java.lang.StackTraceElement[]> getAllStackTraces()
 meth public static void dumpStack()
+meth public static void onSpinWait()
 meth public static void setDefaultUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler)
 meth public static void sleep(long) throws java.lang.InterruptedException
 meth public static void sleep(long,int) throws java.lang.InterruptedException
@@ -625,6 +657,8 @@ meth public void setContextClassLoader(java.lang.ClassLoader)
 meth public void setUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler)
 meth public void start()
 supr java.lang.Object
+hfds EMPTY_STACK_TRACE,blocker,blockerLock,contextClassLoader,daemon,defaultUncaughtExceptionHandler,eetop,group,inheritableThreadLocals,inheritedAccessControlContext,interrupted,name,parkBlocker,priority,stackSize,stillborn,target,threadInitNumber,threadLocalRandomProbe,threadLocalRandomSecondarySeed,threadLocalRandomSeed,threadLocals,threadSeqNumber,threadStatus,tid,uncaughtExceptionHandler
+hcls Caches,WeakClassKey
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -647,6 +681,8 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -673,6 +709,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface java.text.AttributedCharacterIterator
 innr public static Attribute
@@ -731,12 +770,14 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
+hfds serialVersionUID
 
 CLSS public abstract interface javax.accessibility.Accessible
 meth public abstract javax.accessibility.AccessibleContext getAccessibleContext()
 
 CLSS public abstract javax.swing.AbstractButton
-cons public init()
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="")
+cons protected init()
 fld protected java.awt.event.ActionListener actionListener
 fld protected java.awt.event.ItemListener itemListener
 fld protected javax.swing.ButtonModel model
@@ -796,11 +837,14 @@ meth public int getVerticalAlignment()
 meth public int getVerticalTextPosition()
 meth public java.awt.Insets getMargin()
 meth public java.awt.event.ActionListener[] getActionListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.event.ItemListener[] getItemListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.lang.Object[] getSelectedObjects()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.lang.String getActionCommand()
 meth public java.lang.String getLabel()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getText()
 meth public javax.swing.Action getAction()
 meth public javax.swing.ButtonModel getModel()
@@ -812,6 +856,7 @@ meth public javax.swing.Icon getRolloverIcon()
 meth public javax.swing.Icon getRolloverSelectedIcon()
 meth public javax.swing.Icon getSelectedIcon()
 meth public javax.swing.event.ChangeListener[] getChangeListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.plaf.ButtonUI getUI()
 meth public long getMultiClickThreshhold()
 meth public void addActionListener(java.awt.event.ActionListener)
@@ -824,39 +869,67 @@ meth public void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void removeItemListener(java.awt.event.ItemListener)
 meth public void removeNotify()
 meth public void setAction(javax.swing.Action)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="the Action instance connected with this ActionEvent source", java.lang.String[] enumerationValues=[])
 meth public void setActionCommand(java.lang.String)
 meth public void setBorderPainted(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="Whether the border should be painted.", java.lang.String[] enumerationValues=[])
 meth public void setContentAreaFilled(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="Whether the button should paint the content area or leave it transparent.", java.lang.String[] enumerationValues=[])
 meth public void setDisabledIcon(javax.swing.Icon)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The disabled icon for the button.", java.lang.String[] enumerationValues=[])
 meth public void setDisabledSelectedIcon(javax.swing.Icon)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The disabled selection icon for the button.", java.lang.String[] enumerationValues=[])
 meth public void setDisplayedMnemonicIndex(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="the index into the String to draw the keyboard character mnemonic at", java.lang.String[] enumerationValues=[])
 meth public void setEnabled(boolean)
 meth public void setFocusPainted(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="Whether focus should be painted", java.lang.String[] enumerationValues=[])
 meth public void setHideActionText(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Whether the text of the button should come from the <code>Action</code>.", java.lang.String[] enumerationValues=[])
 meth public void setHorizontalAlignment(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The horizontal alignment of the icon and text.", java.lang.String[] enumerationValues=["SwingConstants.LEFT", "SwingConstants.CENTER", "SwingConstants.RIGHT", "SwingConstants.LEADING", "SwingConstants.TRAILING"])
 meth public void setHorizontalTextPosition(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The horizontal position of the text relative to the icon.", java.lang.String[] enumerationValues=["SwingConstants.LEFT", "SwingConstants.CENTER", "SwingConstants.RIGHT", "SwingConstants.LEADING", "SwingConstants.TRAILING"])
 meth public void setIcon(javax.swing.Icon)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The button's default icon", java.lang.String[] enumerationValues=[])
 meth public void setIconTextGap(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="If both the icon and text properties are set, this property defines the space between them.", java.lang.String[] enumerationValues=[])
 meth public void setLabel(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Replace by setText(text)", java.lang.String[] enumerationValues=[])
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setLayout(java.awt.LayoutManager)
 meth public void setMargin(java.awt.Insets)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The space between the button's border and the label.", java.lang.String[] enumerationValues=[])
 meth public void setMnemonic(char)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="the keyboard character mnemonic", java.lang.String[] enumerationValues=[])
 meth public void setMnemonic(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="the keyboard character mnemonic", java.lang.String[] enumerationValues=[])
 meth public void setModel(javax.swing.ButtonModel)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Model that the Button uses.", java.lang.String[] enumerationValues=[])
 meth public void setMultiClickThreshhold(long)
 meth public void setPressedIcon(javax.swing.Icon)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The pressed icon for the button.", java.lang.String[] enumerationValues=[])
 meth public void setRolloverEnabled(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="Whether rollover effects should be enabled.", java.lang.String[] enumerationValues=[])
 meth public void setRolloverIcon(javax.swing.Icon)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The rollover icon for the button.", java.lang.String[] enumerationValues=[])
 meth public void setRolloverSelectedIcon(javax.swing.Icon)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The rollover selected icon for the button.", java.lang.String[] enumerationValues=[])
 meth public void setSelected(boolean)
 meth public void setSelectedIcon(javax.swing.Icon)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The selected icon for the button.", java.lang.String[] enumerationValues=[])
 meth public void setText(java.lang.String)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The button's text.", java.lang.String[] enumerationValues=[])
 meth public void setUI(javax.swing.plaf.ButtonUI)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the LookAndFeel.", java.lang.String[] enumerationValues=[])
 meth public void setVerticalAlignment(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The vertical alignment of the icon and text.", java.lang.String[] enumerationValues=["SwingConstants.TOP", "SwingConstants.CENTER", "SwingConstants.BOTTOM"])
 meth public void setVerticalTextPosition(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The vertical position of the text relative to the icon.", java.lang.String[] enumerationValues=["SwingConstants.TOP", "SwingConstants.CENTER", "SwingConstants.BOTTOM"])
 meth public void updateUI()
 supr javax.swing.JComponent
+hfds action,actionPropertyChangeListener,borderPaintedSet,contentAreaFilled,contentAreaFilledSet,defaultCapable,defaultIcon,defaultMargin,disabledIcon,disabledSelectedIcon,handler,hideActionText,horizontalAlignment,horizontalTextPosition,iconTextGap,iconTextGapSet,margin,mnemonic,mnemonicIndex,multiClickThreshhold,paintBorder,paintFocus,pressedIcon,rolloverEnabled,rolloverEnabledSet,rolloverIcon,rolloverSelectedIcon,selectedIcon,setLayout,text,verticalAlignment,verticalTextPosition
+hcls ButtonActionPropertyChangeListener,Handler
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"
@@ -877,8 +950,10 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void putValue(java.lang.String,java.lang.Object)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void setEnabled(boolean)
+meth public boolean accept(java.lang.Object)
 
 CLSS public javax.swing.JButton
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UIClassID", java.lang.String description="An implementation of a \u0022push\u0022 button.")
 cons public init()
 cons public init(java.lang.String)
  anno 0 java.beans.ConstructorProperties(java.lang.String[] value=["text"])
@@ -889,15 +964,21 @@ innr protected AccessibleJButton
 intf javax.accessibility.Accessible
 meth protected java.lang.String paramString()
 meth public boolean isDefaultButton()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Whether or not this button is the default button", java.lang.String[] enumerationValues=[])
 meth public boolean isDefaultCapable()
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="A string that specifies the name of the L&F class.", java.lang.String[] enumerationValues=[])
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The AccessibleContext associated with this Button.", java.lang.String[] enumerationValues=[])
 meth public void removeNotify()
 meth public void setDefaultCapable(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="Whether or not this button can be the default button", java.lang.String[] enumerationValues=[])
 meth public void updateUI()
 supr javax.swing.AbstractButton
+hfds uiClassID
 
 CLSS public javax.swing.JCheckBoxMenuItem
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="", java.lang.String description="A menu item which can be selected or deselected.")
 cons public init()
 cons public init(java.lang.String)
 cons public init(java.lang.String,boolean)
@@ -911,12 +992,18 @@ intf javax.swing.SwingConstants
 meth protected java.lang.String paramString()
 meth public boolean getState()
 meth public java.lang.Object[] getSelectedObjects()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public void setState(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The selection state of the check box menu item", java.lang.String[] enumerationValues=[])
 supr javax.swing.JMenuItem
+hfds uiClassID
 
 CLSS public javax.swing.JComboBox<%0 extends java.lang.Object>
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="A combination of a text field and a drop-down list.")
 cons public init()
 cons public init(java.util.Vector<{javax.swing.JComboBox%0}>)
 cons public init(javax.swing.ComboBoxModel<{javax.swing.JComboBox%0}>)
@@ -951,21 +1038,28 @@ meth public boolean isLightWeightPopupEnabled()
 meth public boolean isPopupVisible()
 meth public boolean selectWithKeyChar(char)
 meth public int getItemCount()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getMaximumRowCount()
 meth public int getSelectedIndex()
 meth public java.awt.event.ActionListener[] getActionListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.event.ItemListener[] getItemListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.lang.Object getSelectedItem()
 meth public java.lang.Object[] getSelectedObjects()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.lang.String getActionCommand()
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.Action getAction()
 meth public javax.swing.ComboBoxEditor getEditor()
 meth public javax.swing.ComboBoxModel<{javax.swing.JComboBox%0}> getModel()
 meth public javax.swing.JComboBox$KeySelectionManager getKeySelectionManager()
 meth public javax.swing.ListCellRenderer<? super {javax.swing.JComboBox%0}> getRenderer()
 meth public javax.swing.event.PopupMenuListener[] getPopupMenuListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.plaf.ComboBoxUI getUI()
 meth public void actionPerformed(java.awt.event.ActionEvent)
 meth public void addActionListener(java.awt.event.ActionListener)
@@ -989,27 +1083,43 @@ meth public void removeItemAt(int)
 meth public void removeItemListener(java.awt.event.ItemListener)
 meth public void removePopupMenuListener(javax.swing.event.PopupMenuListener)
 meth public void setAction(javax.swing.Action)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="the Action instance connected with this ActionEvent source", java.lang.String[] enumerationValues=[])
 meth public void setActionCommand(java.lang.String)
 meth public void setEditable(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="If true, the user can type a new value in the combo box.", java.lang.String[] enumerationValues=[])
 meth public void setEditor(javax.swing.ComboBoxEditor)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The editor that combo box uses to edit the current value", java.lang.String[] enumerationValues=[])
 meth public void setEnabled(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="The enabled state of the component.", java.lang.String[] enumerationValues=[])
 meth public void setKeySelectionManager(javax.swing.JComboBox$KeySelectionManager)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The objects that changes the selection when a key is pressed.", java.lang.String[] enumerationValues=[])
 meth public void setLightWeightPopupEnabled(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Set to <code>false</code> to require heavyweight popups.", java.lang.String[] enumerationValues=[])
 meth public void setMaximumRowCount(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="The maximum number of rows the popup should have", java.lang.String[] enumerationValues=[])
 meth public void setModel(javax.swing.ComboBoxModel<{javax.swing.JComboBox%0}>)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Model that the combo box uses to get data to display.", java.lang.String[] enumerationValues=[])
 meth public void setPopupVisible(boolean)
 meth public void setPrototypeDisplayValue({javax.swing.JComboBox%0})
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The display prototype value, used to compute display width and height.", java.lang.String[] enumerationValues=[])
 meth public void setRenderer(javax.swing.ListCellRenderer<? super {javax.swing.JComboBox%0}>)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The renderer that paints the item selected in the list.", java.lang.String[] enumerationValues=[])
 meth public void setSelectedIndex(int)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="The item at index is selected.", java.lang.String[] enumerationValues=[])
 meth public void setSelectedItem(java.lang.Object)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="Sets the selected item in the JComboBox.", java.lang.String[] enumerationValues=[])
 meth public void setUI(javax.swing.plaf.ComboBoxUI)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the Component's LookAndFeel.", java.lang.String[] enumerationValues=[])
 meth public void showPopup()
 meth public void updateUI()
 meth public {javax.swing.JComboBox%0} getItemAt(int)
 meth public {javax.swing.JComboBox%0} getPrototypeDisplayValue()
 supr javax.swing.JComponent
+hfds action,actionPropertyChangeListener,firingActionEvent,prototypeDisplayValue,selectingItem,uiClassID,updateInProgress
+hcls ComboBoxActionPropertyChangeListener,DefaultKeySelectionManager
 
 CLSS public abstract javax.swing.JComponent
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UIClassID", java.lang.String description="")
 cons public init()
 fld protected javax.swing.event.EventListenerList listenerList
 fld protected javax.swing.plaf.ComponentUI ui
@@ -1037,6 +1147,7 @@ meth protected void processKeyEvent(java.awt.event.KeyEvent)
 meth protected void processMouseEvent(java.awt.event.MouseEvent)
 meth protected void processMouseMotionEvent(java.awt.event.MouseEvent)
 meth protected void setUI(javax.swing.plaf.ComponentUI)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The component's look and feel delegate.", java.lang.String[] enumerationValues=[])
 meth public <%0 extends java.util.EventListener> {%%0}[] getListeners(java.lang.Class<{%%0}>)
 meth public boolean contains(int,int)
 meth public boolean getAutoscrolls()
@@ -1044,17 +1155,21 @@ meth public boolean getInheritsPopupMenu()
 meth public boolean getVerifyInputWhenFocusTarget()
 meth public boolean isDoubleBuffered()
 meth public boolean isManagingFocus()
- anno 0 java.lang.Deprecated()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isOpaque()
 meth public boolean isOptimizedDrawingEnabled()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public boolean isPaintingTile()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public boolean isRequestFocusEnabled()
 meth public boolean isValidateRoot()
 meth public boolean requestDefaultFocus()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean requestFocus(boolean)
 meth public boolean requestFocusInWindow()
 meth public final boolean isPaintingForPrint()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public final java.lang.Object getClientProperty(java.lang.Object)
 meth public final javax.swing.ActionMap getActionMap()
 meth public final javax.swing.InputMap getInputMap()
@@ -1068,39 +1183,54 @@ meth public int getBaseline(int,int)
 meth public int getConditionForKeyStroke(javax.swing.KeyStroke)
 meth public int getDebugGraphicsOptions()
 meth public int getHeight()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getWidth()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getX()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getY()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Component getNextFocusableComponent()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Component$BaselineResizeBehavior getBaselineResizeBehavior()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Container getTopLevelAncestor()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Dimension getMaximumSize()
 meth public java.awt.Dimension getMinimumSize()
 meth public java.awt.Dimension getPreferredSize()
 meth public java.awt.Dimension getSize(java.awt.Dimension)
 meth public java.awt.FontMetrics getFontMetrics(java.awt.Font)
 meth public java.awt.Graphics getGraphics()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Insets getInsets()
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Insets getInsets(java.awt.Insets)
 meth public java.awt.Point getLocation(java.awt.Point)
 meth public java.awt.Point getPopupLocation(java.awt.event.MouseEvent)
 meth public java.awt.Point getToolTipLocation(java.awt.event.MouseEvent)
 meth public java.awt.Rectangle getBounds(java.awt.Rectangle)
 meth public java.awt.Rectangle getVisibleRect()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.event.ActionListener getActionForKeyStroke(javax.swing.KeyStroke)
 meth public java.beans.VetoableChangeListener[] getVetoableChangeListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.lang.String getToolTipText()
 meth public java.lang.String getToolTipText(java.awt.event.MouseEvent)
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="UIClassID", java.lang.String[] enumerationValues=[])
 meth public javax.swing.InputVerifier getInputVerifier()
 meth public javax.swing.JPopupMenu getComponentPopupMenu()
 meth public javax.swing.JRootPane getRootPane()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.JToolTip createToolTip()
 meth public javax.swing.KeyStroke[] getRegisteredKeyStrokes()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.TransferHandler getTransferHandler()
 meth public javax.swing.border.Border getBorder()
 meth public javax.swing.event.AncestorListener[] getAncestorListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
+meth public javax.swing.plaf.ComponentUI getUI()
 meth public static boolean isLightweightComponent(java.awt.Component)
 meth public static java.util.Locale getDefaultLocale()
 meth public static void setDefaultLocale(java.util.Locale)
@@ -1109,15 +1239,15 @@ meth public void addNotify()
 meth public void addVetoableChangeListener(java.beans.VetoableChangeListener)
 meth public void computeVisibleRect(java.awt.Rectangle)
 meth public void disable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void enable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void firePropertyChange(java.lang.String,boolean,boolean)
 meth public void firePropertyChange(java.lang.String,char,char)
 meth public void firePropertyChange(java.lang.String,int,int)
 meth public void grabFocus()
 meth public void hide()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void paint(java.awt.Graphics)
 meth public void paintImmediately(int,int,int,int)
 meth public void paintImmediately(java.awt.Rectangle)
@@ -1133,40 +1263,63 @@ meth public void repaint(long,int,int,int,int)
 meth public void requestFocus()
 meth public void resetKeyboardActions()
 meth public void reshape(int,int,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void revalidate()
 meth public void scrollRectToVisible(java.awt.Rectangle)
 meth public void setAlignmentX(float)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The preferred horizontal alignment of the component.", java.lang.String[] enumerationValues=[])
 meth public void setAlignmentY(float)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The preferred vertical alignment of the component.", java.lang.String[] enumerationValues=[])
 meth public void setAutoscrolls(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Determines if this component automatically scrolls its contents when dragged.", java.lang.String[] enumerationValues=[])
 meth public void setBackground(java.awt.Color)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The background color of the component.", java.lang.String[] enumerationValues=[])
 meth public void setBorder(javax.swing.border.Border)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The component's border.", java.lang.String[] enumerationValues=[])
 meth public void setComponentPopupMenu(javax.swing.JPopupMenu)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="Popup to show", java.lang.String[] enumerationValues=[])
 meth public void setDebugGraphicsOptions(int)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="Diagnostic options for graphics operations.", java.lang.String[] enumerationValues=["DebugGraphics.NONE_OPTION", "DebugGraphics.LOG_OPTION", "DebugGraphics.FLASH_OPTION", "DebugGraphics.BUFFERED_OPTION"])
 meth public void setDoubleBuffered(boolean)
 meth public void setEnabled(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The enabled state of the component.", java.lang.String[] enumerationValues=[])
 meth public void setFocusTraversalKeys(int,java.util.Set<? extends java.awt.AWTKeyStroke>)
 meth public void setFont(java.awt.Font)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The font for the component.", java.lang.String[] enumerationValues=[])
 meth public void setForeground(java.awt.Color)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="The foreground color of the component.", java.lang.String[] enumerationValues=[])
 meth public void setInheritsPopupMenu(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Whether or not the JPopupMenu is inherited", java.lang.String[] enumerationValues=[])
 meth public void setInputVerifier(javax.swing.InputVerifier)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The component's input verifier.", java.lang.String[] enumerationValues=[])
 meth public void setMaximumSize(java.awt.Dimension)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The maximum size of the component.", java.lang.String[] enumerationValues=[])
 meth public void setMinimumSize(java.awt.Dimension)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The minimum size of the component.", java.lang.String[] enumerationValues=[])
 meth public void setNextFocusableComponent(java.awt.Component)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setOpaque(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The component's opacity", java.lang.String[] enumerationValues=[])
 meth public void setPreferredSize(java.awt.Dimension)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="The preferred size of the component.", java.lang.String[] enumerationValues=[])
 meth public void setRequestFocusEnabled(boolean)
 meth public void setToolTipText(java.lang.String)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="The text to display in a tool tip.", java.lang.String[] enumerationValues=[])
 meth public void setTransferHandler(javax.swing.TransferHandler)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Mechanism for transfer of data to and from the component", java.lang.String[] enumerationValues=[])
 meth public void setVerifyInputWhenFocusTarget(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Whether the Component verifies input before accepting focus.", java.lang.String[] enumerationValues=[])
 meth public void setVisible(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
+hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaHint,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,lcdRenderingHint,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
+hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public javax.swing.JList<%0 extends java.lang.Object>
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="A component which allows for the selection of one or more objects from a list.")
 cons public init()
 cons public init(java.util.Vector<? extends {javax.swing.JList%0}>)
 cons public init(javax.swing.ListModel<{javax.swing.JList%0}>)
@@ -1183,22 +1336,32 @@ meth protected javax.swing.ListSelectionModel createSelectionModel()
 meth protected void fireSelectionValueChanged(int,int,boolean)
 meth public boolean getDragEnabled()
 meth public boolean getScrollableTracksViewportHeight()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public boolean getScrollableTracksViewportWidth()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public boolean getValueIsAdjusting()
 meth public boolean isSelectedIndex(int)
 meth public boolean isSelectionEmpty()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public final javax.swing.DropMode getDropMode()
 meth public final javax.swing.JList$DropLocation getDropLocation()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public final void setDropMode(javax.swing.DropMode)
 meth public int getAnchorSelectionIndex()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getFirstVisibleIndex()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getFixedCellHeight()
 meth public int getFixedCellWidth()
 meth public int getLastVisibleIndex()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getLayoutOrientation()
 meth public int getLeadSelectionIndex()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The lead selection index.", java.lang.String[] enumerationValues=[])
 meth public int getMaxSelectionIndex()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getMinSelectionIndex()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getNextMatch(java.lang.String,int,javax.swing.text.Position$Bias)
 meth public int getScrollableBlockIncrement(java.awt.Rectangle,int,int)
 meth public int getScrollableUnitIncrement(java.awt.Rectangle,int,int)
@@ -1210,18 +1373,24 @@ meth public int[] getSelectedIndices()
 meth public java.awt.Color getSelectionBackground()
 meth public java.awt.Color getSelectionForeground()
 meth public java.awt.Dimension getPreferredScrollableViewportSize()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Point indexToLocation(int)
 meth public java.awt.Rectangle getCellBounds(int,int)
 meth public java.lang.Object[] getSelectedValues()
- anno 0 java.lang.Deprecated()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getToolTipText(java.awt.event.MouseEvent)
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.util.List<{javax.swing.JList%0}> getSelectedValuesList()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.ListCellRenderer<? super {javax.swing.JList%0}> getCellRenderer()
 meth public javax.swing.ListModel<{javax.swing.JList%0}> getModel()
 meth public javax.swing.ListSelectionModel getSelectionModel()
 meth public javax.swing.event.ListSelectionListener[] getListSelectionListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.plaf.ListUI getUI()
 meth public void addListSelectionListener(javax.swing.event.ListSelectionListener)
 meth public void addSelectionInterval(int,int)
@@ -1230,31 +1399,49 @@ meth public void ensureIndexIsVisible(int)
 meth public void removeListSelectionListener(javax.swing.event.ListSelectionListener)
 meth public void removeSelectionInterval(int,int)
 meth public void setCellRenderer(javax.swing.ListCellRenderer<? super {javax.swing.JList%0}>)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The component used to draw the cells.", java.lang.String[] enumerationValues=[])
 meth public void setDragEnabled(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="determines whether automatic drag handling is enabled", java.lang.String[] enumerationValues=[])
 meth public void setFixedCellHeight(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="Defines a fixed cell height when greater than zero.", java.lang.String[] enumerationValues=[])
 meth public void setFixedCellWidth(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="Defines a fixed cell width when greater than zero.", java.lang.String[] enumerationValues=[])
 meth public void setLayoutOrientation(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="Defines the way list cells are layed out.", java.lang.String[] enumerationValues=["JList.VERTICAL", "JList.HORIZONTAL_WRAP", "JList.VERTICAL_WRAP"])
 meth public void setListData(java.util.Vector<? extends {javax.swing.JList%0}>)
 meth public void setListData({javax.swing.JList%0}[])
 meth public void setModel(javax.swing.ListModel<{javax.swing.JList%0}>)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The object that contains the data to be drawn by this JList.", java.lang.String[] enumerationValues=[])
 meth public void setPrototypeCellValue({javax.swing.JList%0})
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The cell prototype value, used to compute cell width and height.", java.lang.String[] enumerationValues=[])
 meth public void setSelectedIndex(int)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The index of the selected cell.", java.lang.String[] enumerationValues=[])
 meth public void setSelectedIndices(int[])
 meth public void setSelectedValue(java.lang.Object,boolean)
 meth public void setSelectionBackground(java.awt.Color)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The background color of selected cells.", java.lang.String[] enumerationValues=[])
 meth public void setSelectionForeground(java.awt.Color)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The foreground color of selected cells.", java.lang.String[] enumerationValues=[])
 meth public void setSelectionInterval(int,int)
 meth public void setSelectionMode(int)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The selection mode.", java.lang.String[] enumerationValues=["ListSelectionModel.SINGLE_SELECTION", "ListSelectionModel.SINGLE_INTERVAL_SELECTION", "ListSelectionModel.MULTIPLE_INTERVAL_SELECTION"])
 meth public void setSelectionModel(javax.swing.ListSelectionModel)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The selection model, recording which cells are selected.", java.lang.String[] enumerationValues=[])
 meth public void setUI(javax.swing.plaf.ListUI)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the Component's LookAndFeel.", java.lang.String[] enumerationValues=[])
 meth public void setValueIsAdjusting(boolean)
 meth public void setVisibleRowCount(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The preferred number of rows to display without requiring scrolling", java.lang.String[] enumerationValues=[])
 meth public void updateUI()
 meth public {javax.swing.JList%0} getPrototypeCellValue()
 meth public {javax.swing.JList%0} getSelectedValue()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 supr javax.swing.JComponent
+hfds cellRenderer,dataModel,dragEnabled,dropLocation,dropMode,fixedCellHeight,fixedCellWidth,horizontalScrollIncrement,layoutOrientation,prototypeCellValue,selectionBackground,selectionForeground,selectionListener,selectionModel,uiClassID,updateInProgress,visibleRowCount
+hcls ListSelectionHandler
 
 CLSS public javax.swing.JMenu
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="", java.lang.String description="A popup window containing menu items displayed in a menu bar.")
 cons public init()
 cons public init(java.lang.String)
 cons public init(java.lang.String,boolean)
@@ -1277,17 +1464,24 @@ meth public boolean isMenuComponent(java.awt.Component)
 meth public boolean isPopupMenuVisible()
 meth public boolean isSelected()
 meth public boolean isTearOff()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public boolean isTopLevelMenu()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getDelay()
 meth public int getItemCount()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getMenuComponentCount()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Component add(java.awt.Component)
 meth public java.awt.Component add(java.awt.Component,int)
 meth public java.awt.Component getComponent()
 meth public java.awt.Component getMenuComponent(int)
 meth public java.awt.Component[] getMenuComponents()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.JMenuItem add(java.lang.String)
 meth public javax.swing.JMenuItem add(javax.swing.Action)
 meth public javax.swing.JMenuItem add(javax.swing.JMenuItem)
@@ -1295,8 +1489,11 @@ meth public javax.swing.JMenuItem getItem(int)
 meth public javax.swing.JMenuItem insert(javax.swing.Action,int)
 meth public javax.swing.JMenuItem insert(javax.swing.JMenuItem,int)
 meth public javax.swing.JPopupMenu getPopupMenu()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.MenuElement[] getSubElements()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.event.MenuListener[] getMenuListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public void addMenuListener(javax.swing.event.MenuListener)
 meth public void addSeparator()
 meth public void applyComponentOrientation(java.awt.ComponentOrientation)
@@ -1312,14 +1509,20 @@ meth public void removeMenuListener(javax.swing.event.MenuListener)
 meth public void setAccelerator(javax.swing.KeyStroke)
 meth public void setComponentOrientation(java.awt.ComponentOrientation)
 meth public void setDelay(int)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The delay between menu selection and making the popup menu visible", java.lang.String[] enumerationValues=[])
 meth public void setMenuLocation(int,int)
 meth public void setModel(javax.swing.ButtonModel)
 meth public void setPopupMenuVisible(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The popup menu's visibility", java.lang.String[] enumerationValues=[])
 meth public void setSelected(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="When the menu is selected, its popup child is shown.", java.lang.String[] enumerationValues=[])
 meth public void updateUI()
 supr javax.swing.JMenuItem
+hfds DEBUG,TRACE,VERBOSE,customMenuLocation,delay,menuChangeListener,menuEvent,popupMenu,uiClassID
+hcls MenuChangeListener
 
 CLSS public javax.swing.JMenuBar
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="A container for holding and displaying menus.")
 cons public init()
 innr protected AccessibleJMenuBar
 intf javax.accessibility.Accessible
@@ -1329,18 +1532,23 @@ meth protected java.lang.String paramString()
 meth protected void paintBorder(java.awt.Graphics)
 meth public boolean isBorderPainted()
 meth public boolean isSelected()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public int getComponentIndex(java.awt.Component)
 meth public int getMenuCount()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.awt.Component getComponent()
 meth public java.awt.Component getComponentAtIndex(int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Insets getMargin()
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.JMenu add(javax.swing.JMenu)
 meth public javax.swing.JMenu getHelpMenu()
 meth public javax.swing.JMenu getMenu(int)
 meth public javax.swing.MenuElement[] getSubElements()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.SingleSelectionModel getSelectionModel()
 meth public javax.swing.plaf.MenuBarUI getUI()
 meth public void addNotify()
@@ -1349,15 +1557,21 @@ meth public void processKeyEvent(java.awt.event.KeyEvent,javax.swing.MenuElement
 meth public void processMouseEvent(java.awt.event.MouseEvent,javax.swing.MenuElement[],javax.swing.MenuSelectionManager)
 meth public void removeNotify()
 meth public void setBorderPainted(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="Whether the border should be painted.", java.lang.String[] enumerationValues=[])
 meth public void setHelpMenu(javax.swing.JMenu)
 meth public void setMargin(java.awt.Insets)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The space between the menubar's border and its contents", java.lang.String[] enumerationValues=[])
 meth public void setSelected(java.awt.Component)
 meth public void setSelectionModel(javax.swing.SingleSelectionModel)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The selection model, recording which child is selected.", java.lang.String[] enumerationValues=[])
 meth public void setUI(javax.swing.plaf.MenuBarUI)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the Component's LookAndFeel.", java.lang.String[] enumerationValues=[])
 meth public void updateUI()
 supr javax.swing.JComponent
+hfds DEBUG,TRACE,VERBOSE,margin,paintBorder,selectionModel,uiClassID
 
 CLSS public javax.swing.JMenuItem
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UIClassID", java.lang.String description="An item which can be selected in a menu.")
 cons public init()
 cons public init(java.lang.String)
 cons public init(java.lang.String,int)
@@ -1381,11 +1595,16 @@ meth protected void init(java.lang.String,javax.swing.Icon)
 meth public boolean isArmed()
 meth public java.awt.Component getComponent()
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.KeyStroke getAccelerator()
 meth public javax.swing.MenuElement[] getSubElements()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.event.MenuDragMouseListener[] getMenuDragMouseListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.event.MenuKeyListener[] getMenuKeyListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public void addMenuDragMouseListener(javax.swing.event.MenuDragMouseListener)
 meth public void addMenuKeyListener(javax.swing.event.MenuKeyListener)
 meth public void menuSelectionChanged(boolean)
@@ -1396,14 +1615,21 @@ meth public void processMouseEvent(java.awt.event.MouseEvent,javax.swing.MenuEle
 meth public void removeMenuDragMouseListener(javax.swing.event.MenuDragMouseListener)
 meth public void removeMenuKeyListener(javax.swing.event.MenuKeyListener)
 meth public void setAccelerator(javax.swing.KeyStroke)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="The keystroke combination which will invoke the JMenuItem's actionlisteners without navigating the menu hierarchy", java.lang.String[] enumerationValues=[])
 meth public void setArmed(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Mouse release will fire an action event", java.lang.String[] enumerationValues=[])
 meth public void setEnabled(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="The enabled state of the component.", java.lang.String[] enumerationValues=[])
 meth public void setModel(javax.swing.ButtonModel)
 meth public void setUI(javax.swing.plaf.MenuItemUI)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the LookAndFeel.", java.lang.String[] enumerationValues=[])
 meth public void updateUI()
 supr javax.swing.AbstractButton
+hfds DEBUG,TRACE,VERBOSE,accelerator,isMouseDragged,uiClassID
+hcls MenuItemFocusListener
 
 CLSS public javax.swing.JPanel
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="A generic lightweight container.")
 cons public init()
 cons public init(boolean)
 cons public init(java.awt.LayoutManager)
@@ -1412,13 +1638,18 @@ innr protected AccessibleJPanel
 intf javax.accessibility.Accessible
 meth protected java.lang.String paramString()
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="A string that specifies the name of the L&F class.", java.lang.String[] enumerationValues=[])
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.plaf.PanelUI getUI()
 meth public void setUI(javax.swing.plaf.PanelUI)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the Component's LookAndFeel.", java.lang.String[] enumerationValues=[])
 meth public void updateUI()
 supr javax.swing.JComponent
+hfds uiClassID
 
 CLSS public javax.swing.JPopupMenu
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="A small window that pops up and displays a series of choices.")
 cons public init()
 cons public init(java.lang.String)
 innr protected AccessibleJPopupMenu
@@ -1441,19 +1672,25 @@ meth public boolean isVisible()
 meth public int getComponentIndex(java.awt.Component)
 meth public java.awt.Component getComponent()
 meth public java.awt.Component getComponentAtIndex(int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.awt.Component getInvoker()
 meth public java.awt.Insets getMargin()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public java.lang.String getLabel()
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.JMenuItem add(java.lang.String)
 meth public javax.swing.JMenuItem add(javax.swing.Action)
 meth public javax.swing.JMenuItem add(javax.swing.JMenuItem)
 meth public javax.swing.MenuElement[] getSubElements()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.SingleSelectionModel getSelectionModel()
 meth public javax.swing.event.MenuKeyListener[] getMenuKeyListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.event.PopupMenuListener[] getPopupMenuListeners()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.plaf.PopupMenuUI getUI()
 meth public static boolean getDefaultLightWeightPopupEnabled()
 meth public static void setDefaultLightWeightPopupEnabled(boolean)
@@ -1470,21 +1707,34 @@ meth public void remove(int)
 meth public void removeMenuKeyListener(javax.swing.event.MenuKeyListener)
 meth public void removePopupMenuListener(javax.swing.event.PopupMenuListener)
 meth public void setBorderPainted(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Is the border of the popup menu painted", java.lang.String[] enumerationValues=[])
 meth public void setInvoker(java.awt.Component)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The invoking component for the popup menu", java.lang.String[] enumerationValues=[])
 meth public void setLabel(java.lang.String)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The label for the popup menu.", java.lang.String[] enumerationValues=[])
 meth public void setLightWeightPopupEnabled(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Determines whether lightweight popups are used when possible", java.lang.String[] enumerationValues=[])
 meth public void setLocation(int,int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The location of the popup menu.", java.lang.String[] enumerationValues=[])
 meth public void setPopupSize(int,int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The size of the popup menu", java.lang.String[] enumerationValues=[])
 meth public void setPopupSize(java.awt.Dimension)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The size of the popup menu", java.lang.String[] enumerationValues=[])
 meth public void setSelected(java.awt.Component)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The selected component on the popup menu", java.lang.String[] enumerationValues=[])
 meth public void setSelectionModel(javax.swing.SingleSelectionModel)
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The selection model for the popup menu", java.lang.String[] enumerationValues=[])
 meth public void setUI(javax.swing.plaf.PopupMenuUI)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the Component's LookAndFeel.", java.lang.String[] enumerationValues=[])
 meth public void setVisible(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Makes the popup visible", java.lang.String[] enumerationValues=[])
 meth public void show(java.awt.Component,int,int)
 meth public void updateUI()
 supr javax.swing.JComponent
+hfds DEBUG,TRACE,VERBOSE,classLock,defaultLWPopupEnabledKey,desiredLocationX,desiredLocationY,frame,invoker,label,lightWeightPopup,margin,paintBorder,popup,popupPostionFixDisabled,selectionModel,uiClassID
 
 CLSS public javax.swing.JToggleButton
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UIClassID", java.lang.String description="An implementation of a two-state button.")
 cons public init()
 cons public init(java.lang.String)
 cons public init(java.lang.String,boolean)
@@ -1497,12 +1747,18 @@ innr protected AccessibleJToggleButton
 innr public static ToggleButtonModel
 intf javax.accessibility.Accessible
 meth protected java.lang.String paramString()
+meth public boolean requestFocusInWindow(java.awt.event.FocusEvent$Cause)
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="A string that specifies the name of the L&F class", java.lang.String[] enumerationValues=[])
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The AccessibleContext associated with this ToggleButton.", java.lang.String[] enumerationValues=[])
+meth public void requestFocus(java.awt.event.FocusEvent$Cause)
 meth public void updateUI()
 supr javax.swing.AbstractButton
+hfds uiClassID
 
 CLSS public javax.swing.JToolBar
+ anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="A component which displays commonly used controls or Actions.")
 cons public init()
 cons public init(int)
 cons public init(java.lang.String)
@@ -1524,20 +1780,30 @@ meth public int getOrientation()
 meth public java.awt.Component getComponentAtIndex(int)
 meth public java.awt.Insets getMargin()
 meth public java.lang.String getUIClassID()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
+ anno 0 java.beans.BeanProperty(boolean bound=false, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="", java.lang.String[] enumerationValues=[])
 meth public javax.swing.JButton add(javax.swing.Action)
 meth public javax.swing.plaf.ToolBarUI getUI()
 meth public void addSeparator()
 meth public void addSeparator(java.awt.Dimension)
 meth public void setBorderPainted(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Does the tool bar paint its borders?", java.lang.String[] enumerationValues=[])
 meth public void setFloatable(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="Can the tool bar be made to float by the user?", java.lang.String[] enumerationValues=[])
 meth public void setLayout(java.awt.LayoutManager)
 meth public void setMargin(java.awt.Insets)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="The margin between the tool bar's border and contents", java.lang.String[] enumerationValues=[])
 meth public void setOrientation(int)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=false, java.lang.String description="The current orientation of the tool bar", java.lang.String[] enumerationValues=["SwingConstants.HORIZONTAL", "SwingConstants.VERTICAL"])
 meth public void setRollover(boolean)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=true, boolean required=false, boolean visualUpdate=true, java.lang.String description="Will draw rollover button borders in the toolbar.", java.lang.String[] enumerationValues=[])
 meth public void setUI(javax.swing.plaf.ToolBarUI)
+ anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the Component's LookAndFeel.", java.lang.String[] enumerationValues=[])
 meth public void updateUI()
 supr javax.swing.JComponent
+hfds floatable,margin,orientation,paintBorder,uiClassID
+hcls DefaultToolBarLayout
 
 CLSS public abstract interface javax.swing.ListCellRenderer<%0 extends java.lang.Object>
 meth public abstract java.awt.Component getListCellRendererComponent(javax.swing.JList<? extends {javax.swing.ListCellRenderer%0}>,{javax.swing.ListCellRenderer%0},int,boolean,boolean)
@@ -1576,6 +1842,13 @@ fld public final static int TOP = 1
 fld public final static int TRAILING = 11
 fld public final static int VERTICAL = 1
 fld public final static int WEST = 7
+
+CLSS public abstract interface !annotation javax.swing.SwingContainer
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean value()
+meth public abstract !hasdefault java.lang.String delegate()
 
 CLSS public abstract interface javax.swing.event.ListDataListener
 intf java.util.EventListener
@@ -1652,6 +1925,7 @@ meth public void die()
 meth public void redo()
 meth public void undo()
 supr java.lang.Object
+hfds alive,hasBeenDone
 
 CLSS public javax.swing.undo.CompoundEdit
 cons public init()
@@ -1671,6 +1945,7 @@ meth public void end()
 meth public void redo()
 meth public void undo()
 supr javax.swing.undo.AbstractUndoableEdit
+hfds inProgress
 
 CLSS public javax.swing.undo.UndoManager
 cons public init()
@@ -1698,6 +1973,8 @@ meth public void undo()
 meth public void undoOrRedo()
 meth public void undoableEditHappened(javax.swing.event.UndoableEditEvent)
 supr javax.swing.undo.CompoundEdit
+hfds indexOfNextAdd,limit
+hcls Action
 
 CLSS public abstract interface javax.swing.undo.UndoableEdit
 meth public abstract boolean addEdit(javax.swing.undo.UndoableEdit)
@@ -1828,7 +2105,7 @@ supr java.lang.Object
 hfds MAXIMUM_TEXT_WIDTH,SIZE_PREFERRED_HEIGHT,SIZE_PREFERRED_WIDTH,adOptions,changeSupport,defaultValue,errMsg,infoMsg,message,messageType,noDefaultClose,notificationLineSupport,optionType,options,title,valid,value,warnMsg
 
 CLSS public abstract org.openide.ServiceType
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 fld public final static java.lang.String PROP_NAME = "name"
 innr public abstract static Registry
@@ -1837,11 +2114,11 @@ intf java.io.Serializable
 intf org.openide.util.HelpCtx$Provider
 meth protected final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected java.lang.String displayName()
 meth public abstract org.openide.util.HelpCtx getHelpCtx()
 meth public final org.openide.ServiceType createClone()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public java.lang.String getName()
@@ -1893,7 +2170,7 @@ meth public final void doFinishClick()
 meth public final void doNextClick()
 meth public final void doPreviousClick()
 meth public final void setPanels(org.openide.WizardDescriptor$Iterator)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.Object getProperty(java.lang.String)
 meth public java.lang.Object getValue()
 meth public java.text.MessageFormat getTitleFormat()
@@ -1930,7 +2207,7 @@ meth public final void addPropertyChangeListener(java.beans.PropertyChangeListen
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public static org.openide.actions.ActionManager getDefault()
 meth public void invokeAction(javax.swing.Action,java.awt.event.ActionEvent)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds supp
 hcls Trivial
@@ -2054,7 +2331,7 @@ meth public org.openide.util.HelpCtx getHelpCtx()
 supr org.openide.util.actions.CallbackSystemAction
 
 CLSS public org.openide.actions.InstantiateAction
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 meth protected boolean enable(org.openide.nodes.Node[])
 meth protected void performAction(org.openide.nodes.Node[])
@@ -2175,7 +2452,7 @@ meth public org.openide.util.HelpCtx getHelpCtx()
 meth public org.openide.util.datatransfer.PasteType[] getPasteTypes()
 meth public void actionPerformed(java.awt.event.ActionEvent)
 meth public void setPasteTypes(org.openide.util.datatransfer.PasteType[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.openide.util.actions.CallbackSystemAction
 hfds globalModel,types
 hcls ActSubMenuModel,ActionPT,DelegateAction,NodeSelector
@@ -2296,7 +2573,7 @@ meth protected boolean surviveFocusChange()
 meth protected void performAction(org.openide.nodes.Node[])
 meth public java.lang.String getName()
 meth public java.lang.String iconResource()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.HelpCtx getHelpCtx()
 supr org.openide.util.actions.NodeAction
 hfds SCRIPT_ENGINE_ATTR
@@ -2315,7 +2592,7 @@ meth public javax.swing.JMenuItem getMenuPresenter()
 meth public javax.swing.JMenuItem getPopupPresenter()
 meth public org.openide.util.HelpCtx getHelpCtx()
 meth public static void setModel(org.openide.actions.ToolsAction$Model)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void actionPerformed(java.awt.event.ActionEvent)
 supr org.openide.util.actions.SystemAction
 hfds serialVersionUID,taskGl
@@ -2323,7 +2600,7 @@ hcls DelegateAction,G,Inline,Popup
 
 CLSS public abstract interface static org.openide.actions.ToolsAction$Model
  outer org.openide.actions.ToolsAction
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.openide.util.actions.SystemAction[] getActions()
 meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
 meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
@@ -2343,7 +2620,7 @@ hfds SWING_DEFAULT_LABEL,last,listener,redoAction,undoAction
 hcls Listener
 
 CLSS public org.openide.actions.UndockAction
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 meth protected boolean asynchronous()
 meth protected java.lang.String iconResource()
@@ -2363,7 +2640,7 @@ meth public org.openide.util.HelpCtx getHelpCtx()
 supr org.openide.util.actions.CookieAction
 
 CLSS public org.openide.actions.WorkspaceSwitchAction
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 meth public java.lang.String getName()
 meth public javax.swing.JMenuItem getMenuPresenter()
@@ -2434,7 +2711,7 @@ meth public abstract !hasdefault java.lang.String property()
 
 CLSS public org.openide.awt.Actions
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String ACTION_VALUE_TOGGLE = "openide.awt.actionToggle"
 fld public final static java.lang.String ACTION_VALUE_VISIBLE = "openide.awt.actionVisible"
 innr public abstract interface static ButtonActionConnector
@@ -2455,15 +2732,15 @@ meth public static org.openide.util.ContextAwareAction context(java.lang.Class<?
 meth public static void connect(javax.swing.AbstractButton,javax.swing.Action)
 meth public static void connect(javax.swing.AbstractButton,org.openide.util.actions.BooleanStateAction)
 meth public static void connect(javax.swing.AbstractButton,org.openide.util.actions.SystemAction)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void connect(javax.swing.JCheckBoxMenuItem,javax.swing.Action,boolean)
 meth public static void connect(javax.swing.JCheckBoxMenuItem,org.openide.util.actions.BooleanStateAction,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void connect(javax.swing.JMenuItem,javax.swing.Action,boolean)
 meth public static void connect(javax.swing.JMenuItem,org.openide.util.actions.SystemAction,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void setMenuText(javax.swing.AbstractButton,java.lang.String,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds FQN,GET,IDENTIFIER
 hcls BooleanButtonBridge,Bridge,ButtonActionConnectorGetter,ButtonBridge,CheckMenuBridge,ISubActionListener,MenuBridge,SubMenuBridge
@@ -2477,7 +2754,7 @@ CLSS public static org.openide.awt.Actions$CheckboxMenuItem
  outer org.openide.awt.Actions
 cons public init(javax.swing.Action,boolean)
 cons public init(org.openide.util.actions.BooleanStateAction,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr javax.swing.JCheckBoxMenuItem
 hfds serialVersionUID
 
@@ -2493,7 +2770,7 @@ hfds bridge,serialVersionUID
 
 CLSS public static org.openide.awt.Actions$SubMenu
  outer org.openide.awt.Actions
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(javax.swing.Action,org.openide.awt.Actions$SubMenuModel,boolean)
 cons public init(org.openide.util.actions.SystemAction,org.openide.awt.Actions$SubMenuModel)
 cons public init(org.openide.util.actions.SystemAction,org.openide.awt.Actions$SubMenuModel,boolean)
@@ -2505,7 +2782,7 @@ hfds bridge,serialVersionUID
 
 CLSS public abstract interface static org.openide.awt.Actions$SubMenuModel
  outer org.openide.awt.Actions
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract int getCount()
 meth public abstract java.lang.String getLabel(int)
 meth public abstract org.openide.util.HelpCtx getHelpCtx(int)
@@ -2515,7 +2792,7 @@ meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
 
 CLSS public static org.openide.awt.Actions$ToolbarButton
  outer org.openide.awt.Actions
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(javax.swing.Action)
 cons public init(org.openide.util.actions.SystemAction)
 meth public java.awt.Dimension getMaximumSize()
@@ -2525,7 +2802,7 @@ hfds serialVersionUID
 
 CLSS public static org.openide.awt.Actions$ToolbarToggleButton
  outer org.openide.awt.Actions
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.openide.util.actions.BooleanStateAction)
 meth public java.awt.Dimension getMaximumSize()
 meth public java.awt.Dimension getMinimumSize()
@@ -2565,7 +2842,7 @@ meth public abstract javax.swing.JComponent[] getMenuPresenters()
 meth public abstract javax.swing.JComponent[] synchMenuPresenters(javax.swing.JComponent[])
 
 CLSS public org.openide.awt.EqualFlowLayout
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 cons public init(int)
 cons public init(int,int,int)
@@ -2602,7 +2879,7 @@ meth public java.awt.Dimension getPreferredSize()
 meth public javax.accessibility.AccessibleContext getAccessibleContext()
 meth public static java.lang.String getHomePage()
 meth public static void setFactory(org.openide.awt.HtmlBrowser$Factory)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void setHomePage(java.lang.String)
 meth public void requestFocus()
 meth public void setStatusLineVisible(boolean)
@@ -2686,7 +2963,7 @@ meth public abstract void setRenderStyle(int)
 meth public abstract void setText(java.lang.String)
 
 CLSS public org.openide.awt.JInlineMenu
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 intf org.openide.awt.DynamicMenuContent
 meth public java.awt.Insets getInsets()
@@ -2697,14 +2974,14 @@ supr javax.swing.JMenuItem
 hfds BLANK_ICON,addedItems,items,serialVersionUID,upToDate
 
 CLSS public org.openide.awt.JMenuPlus
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 cons public init(java.lang.String)
 supr javax.swing.JMenu
 hfds serialVersionUID
 
 CLSS public org.openide.awt.JPopupMenuPlus
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 supr javax.swing.JPopupMenu
 
@@ -2718,7 +2995,7 @@ supr java.lang.Object
 hfds problem,problemTested,reqProc,task
 
 CLSS public org.openide.awt.ListPane
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 cons public init(java.lang.Object[])
 cons public init(java.util.Vector)
@@ -2773,9 +3050,9 @@ cons public init()
 innr public abstract static PopupMouseAdapter
 meth public static boolean isDoubleClick(java.awt.event.MouseEvent)
 meth public static boolean isLeftMouseButton(java.awt.event.MouseEvent)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean isRightMouseButton(java.awt.event.MouseEvent)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds DOUBLE_CLICK_DELTA,tempe,temph,tempm,tempx,tempy
 
@@ -2783,9 +3060,9 @@ CLSS public abstract static org.openide.awt.MouseUtils$PopupMouseAdapter
  outer org.openide.awt.MouseUtils
 cons public init()
 cons public init(int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int DEFAULT_THRESHOLD = 5
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected abstract void showPopup(java.awt.event.MouseEvent)
 meth public void mousePressed(java.awt.event.MouseEvent)
 meth public void mouseReleased(java.awt.event.MouseEvent)
@@ -2864,7 +3141,7 @@ meth public abstract void quickSearchUpdate(java.lang.String)
 meth public abstract void showNextSelection(boolean)
 
 CLSS public org.openide.awt.SpinButton
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 fld protected boolean arrowsOrientation
 fld protected boolean boundsIgnored
@@ -2924,13 +3201,13 @@ hfds SPIN_DOWN,SPIN_UP,serialVersionUID,spinButtonListeners,valueSupport
 
 CLSS protected final org.openide.awt.SpinButton$RepeatThread
  outer org.openide.awt.SpinButton
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void run()
 supr java.lang.Thread
 hfds finish
 
 CLSS public org.openide.awt.SpinButtonAdapter
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 intf org.openide.awt.SpinButtonListener
 meth public void changeValue()
@@ -2939,13 +3216,13 @@ meth public void moveUp()
 supr java.lang.Object
 
 CLSS public abstract interface org.openide.awt.SpinButtonListener
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void changeValue()
 meth public abstract void moveDown()
 meth public abstract void moveUp()
 
 CLSS public org.openide.awt.SplittedPanel
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 fld public final static int DEFAULT_SPLITTER = 0
 fld public final static int EMPTY_SPLITTER = 1
@@ -3005,7 +3282,7 @@ hcls DefaultSplitter,MouseListenerAdapter,SplitLayout
 
 CLSS public static org.openide.awt.SplittedPanel$EmptySplitter
  outer org.openide.awt.SplittedPanel
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 cons public init(int)
 intf javax.accessibility.Accessible
@@ -3016,7 +3293,7 @@ hfds accessibleContext,serialVersionUID,width
 
 CLSS public static org.openide.awt.SplittedPanel$SplitChangeEvent
  outer org.openide.awt.SplittedPanel
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.openide.awt.SplittedPanel,int,int)
 meth public int getNewValue()
 meth public int getOldValue()
@@ -3067,26 +3344,26 @@ cons public init(java.lang.String,boolean)
 cons public init(java.lang.String,java.lang.String)
 cons public init(java.lang.String,java.lang.String,boolean)
 fld public final static int BASIC_HEIGHT = 34
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr public abstract interface static DnDListener
 innr public static DnDEvent
 meth protected void addImpl(java.awt.Component,java.lang.Object,int)
 meth protected void fireDragToolbar(int,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void fireDropToolbar(int,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isOpaque()
 meth public java.awt.Component[] getComponents()
 meth public java.lang.String getDisplayName()
 meth public java.lang.String getUIClassID()
 meth public static int getBasicHeight()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static int rowCount(int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addNotify()
 meth public void setDisplayName(java.lang.String)
 meth public void setDnDListener(org.openide.awt.Toolbar$DnDListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setUI(javax.swing.plaf.ToolBarUI)
 meth public void setVisible(boolean)
 supr org.openide.awt.ToolbarWithOverflow
@@ -3095,7 +3372,7 @@ hcls DefaultIconButton,DefaultIconToggleButton,Folder
 
 CLSS public static org.openide.awt.Toolbar$DnDEvent
  outer org.openide.awt.Toolbar
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.openide.awt.Toolbar,java.lang.String,int,int,int)
 fld public final static int DND_END = 2
 fld public final static int DND_LINE = 3
@@ -3109,13 +3386,13 @@ hfds dx,dy,name,serialVersionUID,type
 
 CLSS public abstract interface static org.openide.awt.Toolbar$DnDListener
  outer org.openide.awt.Toolbar
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf java.util.EventListener
 meth public abstract void dragToolbar(org.openide.awt.Toolbar$DnDEvent)
 meth public abstract void dropToolbar(org.openide.awt.Toolbar$DnDEvent)
 
 CLSS public org.openide.awt.ToolbarButton
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 cons public init(javax.swing.Icon)
 meth public void processMouseEvent(java.awt.event.MouseEvent)
@@ -3140,7 +3417,7 @@ meth public javax.accessibility.AccessibleContext getAccessibleContext()
 meth public static org.openide.awt.ToolbarPool getDefault()
 meth public void setPreferredIconSize(int)
 meth public void setToolbarsListener(org.openide.awt.Toolbar$DnDListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr javax.swing.JComponent
 hfds DONT_WAIT,center,defaultPool,folder,instance,listener,name,preferredIconSize,serialVersionUID,taskListener,toolbarAccessibleContext,toolbarConfigs,toolbarNames,toolbars
 hcls ComponentConfiguration,Folder,PopupListener,TPTaskListener
@@ -3152,7 +3429,7 @@ meth public abstract java.lang.String getName()
 meth public abstract javax.swing.JPopupMenu getContextMenu()
 
 CLSS public org.openide.awt.ToolbarToggleButton
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 cons public init(javax.swing.Icon)
 cons public init(javax.swing.Icon,boolean)
@@ -3194,7 +3471,7 @@ meth public abstract void undo()
 
 CLSS public final static org.openide.awt.UndoRedo$Empty
  outer org.openide.awt.UndoRedo
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 intf org.openide.awt.UndoRedo
 meth public boolean canRedo()
@@ -3253,7 +3530,7 @@ intf org.netbeans.api.actions.Closable
 intf org.openide.nodes.Node$Cookie
 
 CLSS public abstract interface org.openide.cookies.ConnectionCookie
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr public abstract interface static Listener
 innr public abstract interface static Type
 innr public static Event
@@ -3314,7 +3591,7 @@ meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
 meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
 
 CLSS public org.openide.loaders.ConnectionSupport
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.openide.loaders.MultiDataObject$Entry,org.openide.cookies.ConnectionCookie$Type[])
 intf org.openide.cookies.ConnectionCookie
 meth public java.util.List<org.openide.cookies.ConnectionCookie$Type> getRegisteredTypes()
@@ -3328,11 +3605,11 @@ hfds EA_LISTENERS,entry,listeners,types,typesSet
 hcls Pair
 
 CLSS public abstract interface org.openide.loaders.CreateFromTemplateAttributesProvider
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.Map<java.lang.String,?> attributesFor(org.openide.loaders.DataObject,org.openide.loaders.DataFolder,java.lang.String)
 
 CLSS public abstract org.openide.loaders.CreateFromTemplateHandler
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 fld public final static java.lang.String FREE_FILE_EXTENSION = "freeFileExtension"
 meth protected abstract boolean accept(org.openide.filesystems.FileObject)
@@ -3343,7 +3620,7 @@ supr org.netbeans.api.templates.CreateFromTemplateHandler
 
 CLSS public abstract interface org.openide.loaders.DataFilter
 fld public final static long serialVersionUID = 0
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.loaders.DataFilter ALL
 innr public abstract interface static FileBased
 intf java.io.Serializable
@@ -3356,10 +3633,10 @@ meth public abstract boolean acceptFileObject(org.openide.filesystems.FileObject
 
 CLSS public org.openide.loaders.DataFolder
 cons protected init(org.openide.filesystems.FileObject,org.openide.loaders.DataLoader) throws org.openide.loaders.DataObjectExistsException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons protected init(org.openide.filesystems.FileObject,org.openide.loaders.MultiFileLoader) throws org.openide.loaders.DataObjectExistsException
 cons public init(org.openide.filesystems.FileObject) throws org.openide.loaders.DataObjectExistsException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String PROP_CHILDREN = "children"
 fld public final static java.lang.String PROP_ORDER = "order"
 fld public final static java.lang.String PROP_SORT_MODE = "sortMode"
@@ -3413,7 +3690,7 @@ supr org.openide.loaders.DataNode
 CLSS public static org.openide.loaders.DataFolder$Index
  outer org.openide.loaders.DataFolder
 cons public init(org.openide.loaders.DataFolder)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.openide.loaders.DataFolder,org.openide.nodes.Node)
 meth public int getNodesCount()
 meth public org.openide.nodes.Node[] getNodes()
@@ -3439,7 +3716,7 @@ supr java.lang.Object
 
 CLSS public abstract org.openide.loaders.DataLoader
 cons protected init(java.lang.Class<? extends org.openide.loaders.DataObject>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons protected init(java.lang.String)
 fld public final static java.lang.String PROP_ACTIONS = "actions"
 fld public final static java.lang.String PROP_DISPLAY_NAME = "displayName"
@@ -3451,7 +3728,7 @@ meth protected final void setDisplayName(java.lang.String)
 meth protected java.lang.String actionsContext()
 meth protected java.lang.String defaultDisplayName()
 meth protected org.openide.util.actions.SystemAction[] defaultActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final java.lang.Class<? extends org.openide.loaders.DataObject> getRepresentationClass()
 meth public final java.lang.String getDisplayName()
 meth public final java.lang.String getRepresentationClassName()
@@ -3500,7 +3777,7 @@ cons public init(org.openide.loaders.DataObject,org.openide.nodes.Children)
 cons public init(org.openide.loaders.DataObject,org.openide.nodes.Children,org.openide.util.Lookup)
 meth protected org.openide.nodes.Sheet createSheet()
 meth protected org.openide.util.actions.SystemAction[] createActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void createPasteTypes(java.awt.datatransfer.Transferable,java.util.List<org.openide.util.datatransfer.PasteType>)
 meth public <%0 extends org.openide.nodes.Node$Cookie> {%%0} getCookie(java.lang.Class<{%%0}>)
 meth public boolean canCopy()
@@ -3520,7 +3797,7 @@ meth public org.openide.loaders.DataObject getDataObject()
 meth public org.openide.nodes.Node$Handle getHandle()
 meth public org.openide.util.HelpCtx getHelpCtx()
 meth public org.openide.util.actions.SystemAction[] getActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean getShowFileExtensions()
 meth public static void setShowFileExtensions(boolean)
 meth public void destroy() throws java.io.IOException
@@ -3655,7 +3932,7 @@ hfds obj,serialVersionUID
 
 CLSS public org.openide.loaders.DataShadow
 cons protected init(org.openide.filesystems.FileObject,org.openide.loaders.DataObject,org.openide.loaders.DataLoader) throws org.openide.loaders.DataObjectExistsException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons protected init(org.openide.filesystems.FileObject,org.openide.loaders.DataObject,org.openide.loaders.MultiFileLoader) throws org.openide.loaders.DataObjectExistsException
 innr protected static ShadowNode
 intf org.openide.loaders.DataObject$Container
@@ -3713,7 +3990,7 @@ hcls Name,PropL
 CLSS public final org.openide.loaders.Environment
 innr public abstract interface static Provider
 meth public static javax.naming.Context findSettingsContext(org.openide.loaders.DataObject)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openide.util.Lookup find(org.openide.loaders.DataObject)
 supr java.lang.Object
 hfds result
@@ -3810,7 +4087,7 @@ hfds CURRENT,LAST_CURRENT,PROCESSOR,container,creationSequence,creationTask,err,
 hcls HoldInstance,Listener
 
 CLSS public org.openide.loaders.FolderLookup
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.openide.loaders.DataObject$Container)
 cons public init(org.openide.loaders.DataObject$Container,java.lang.String)
 meth protected final java.lang.Object createInstance(org.openide.cookies.InstanceCookie[]) throws java.io.IOException,java.lang.ClassNotFoundException
@@ -3864,22 +4141,22 @@ intf org.openide.cookies.InstanceCookie$Of
 meth protected java.lang.ClassLoader createClassLoader()
 meth public boolean instanceOf(java.lang.Class<?>)
 meth public boolean isApplet()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isExecutable()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isInterface()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isJavaBean()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.Class<?> instanceClass() throws java.io.IOException,java.lang.ClassNotFoundException
 meth public java.lang.Object instanceCreate() throws java.io.IOException,java.lang.ClassNotFoundException
 meth public java.lang.String instanceName()
 meth public java.lang.String toString()
 meth public org.openide.filesystems.FileObject instanceOrigin()
 meth public static org.openide.util.HelpCtx findHelp(org.openide.cookies.InstanceCookie)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
-hfds applet,bean,clazz,clazzException,entry,writeRepl
+hfds bean,clazz,clazzException,entry,writeRepl
 hcls ClassEx
 
 CLSS public static org.openide.loaders.InstanceSupport$Instance
@@ -3919,7 +4196,7 @@ meth protected final void addSecondaryEntry(org.openide.loaders.MultiDataObject$
 meth protected final void registerEditor(java.lang.String,boolean)
 meth protected final void removeSecondaryEntry(org.openide.loaders.MultiDataObject$Entry)
 meth protected final void setCookieSet(org.openide.nodes.CookieSet)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected int associateLookup()
 meth protected org.openide.filesystems.FileLock takePrimaryFileLock() throws java.io.IOException
 meth protected org.openide.filesystems.FileObject handleMove(org.openide.loaders.DataFolder) throws java.io.IOException
@@ -3968,7 +4245,7 @@ hfds file,lock,serialVersionUID
 
 CLSS public abstract org.openide.loaders.MultiFileLoader
 cons protected init(java.lang.Class<? extends org.openide.loaders.DataObject>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons protected init(java.lang.String)
 meth protected abstract org.openide.filesystems.FileObject findPrimaryFile(org.openide.filesystems.FileObject)
 meth protected abstract org.openide.loaders.MultiDataObject createMultiObject(org.openide.filesystems.FileObject) throws java.io.IOException
@@ -4063,7 +4340,7 @@ meth public abstract void operationPostCreate(org.openide.loaders.OperationEvent
 meth public abstract void operationRename(org.openide.loaders.OperationEvent$Rename)
 
 CLSS public abstract org.openide.loaders.RepositoryNodeFactory
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons protected init()
 meth public abstract org.openide.nodes.Node repository(org.openide.loaders.DataFilter)
 meth public static org.openide.loaders.RepositoryNodeFactory getDefault()
@@ -4094,14 +4371,14 @@ meth public org.openide.loaders.DataFolder getTargetFolder() throws java.io.IOEx
 meth public org.openide.loaders.DataFolder getTemplatesFolder()
 meth public org.openide.loaders.DataObject getTemplate()
 meth public static java.lang.String getDescriptionAsResource(org.openide.loaders.DataObject)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.net.URL getDescription(org.openide.loaders.DataObject)
 meth public static org.openide.loaders.TemplateWizard$Iterator getIterator(org.openide.loaders.DataObject)
 meth public static void setDescription(org.openide.loaders.DataObject,java.net.URL) throws java.io.IOException
 meth public static void setDescriptionAsResource(org.openide.loaders.DataObject,java.lang.String) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void setIterator(org.openide.loaders.DataObject,org.openide.loaders.TemplateWizard$Iterator) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setTargetFolder(org.openide.loaders.DataFolder)
 meth public void setTargetFolderLazy(java.util.function.Supplier<org.openide.loaders.DataFolder>)
 meth public void setTargetName(java.lang.String)
@@ -4123,7 +4400,7 @@ meth public abstract void uninitialize(org.openide.loaders.TemplateWizard)
 
 CLSS public abstract org.openide.loaders.UniFileLoader
 cons protected init(java.lang.Class<? extends org.openide.loaders.DataObject>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons protected init(java.lang.String)
 fld public final static java.lang.String PROP_EXTENSIONS = "extensions"
 meth protected abstract org.openide.loaders.MultiDataObject createMultiObject(org.openide.filesystems.FileObject) throws java.io.IOException
@@ -4147,67 +4424,67 @@ fld public final static int STATUS_WARNING = 2
 fld public final static java.lang.String MIME = "text/xml"
 fld public final static java.lang.String PROP_DOCUMENT = "document"
 fld public final static java.lang.String PROP_INFO = "info"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String XMLINFO_DTD_PUBLIC_ID = "-//NetBeans IDE//DTD xmlinfo//EN"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String XMLINFO_DTD_PUBLIC_ID_FORTE = "-//Forte for Java//DTD xmlinfo//EN"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr public abstract interface static Processor
 innr public final static Info
 meth protected org.openide.cookies.EditorCookie createEditorCookie()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected org.openide.nodes.Node createNodeDelegate()
 meth protected void handleDelete() throws java.io.IOException
 meth protected void updateIconBase(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public <%0 extends org.openide.nodes.Node$Cookie> {%%0} getCookie(java.lang.Class<{%%0}>)
 meth public final int getStatus()
 meth public final org.openide.loaders.XMLDataObject$Info getInfo()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.w3c.dom.Document getDocument() throws java.io.IOException,org.xml.sax.SAXException
 meth public final void setInfo(org.openide.loaders.XMLDataObject$Info) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.HelpCtx getHelpCtx()
 meth public org.openide.util.Lookup getLookup()
 meth public static boolean addEntityResolver(org.xml.sax.EntityResolver)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openide.loaders.XMLDataObject$Info getRegisteredInfo(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.w3c.dom.Document createDocument()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.w3c.dom.Document parse(java.net.URL) throws java.io.IOException,org.xml.sax.SAXException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.w3c.dom.Document parse(java.net.URL,boolean) throws java.io.IOException,org.xml.sax.SAXException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.w3c.dom.Document parse(java.net.URL,org.xml.sax.ErrorHandler) throws java.io.IOException,org.xml.sax.SAXException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.w3c.dom.Document parse(java.net.URL,org.xml.sax.ErrorHandler,boolean) throws java.io.IOException,org.xml.sax.SAXException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.xml.sax.EntityResolver removeEntityResolver(org.xml.sax.EntityResolver)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.xml.sax.InputSource createInputSource(java.net.URL) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.xml.sax.Parser createParser()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.xml.sax.Parser createParser(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void registerCatalogEntry(java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void registerCatalogEntry(java.lang.String,java.lang.String,java.lang.ClassLoader)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void registerInfo(java.lang.String,org.openide.loaders.XMLDataObject$Info)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void write(org.w3c.dom.Document,java.io.OutputStream,java.lang.String) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void write(org.w3c.dom.Document,java.io.Writer) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.openide.loaders.MultiDataObject
 hfds ERR,chainingEntityResolver,cnstr,doc,editor,emgrLock,errorHandler,infoParser,infos,serialVersionUID,status
 hcls DelDoc,ErrorPrinter,ICDel,InfoLkp,Loader,NullHandler,PlainDataNode,XMLEditorSupport,XMLNode
 
 CLSS public final static org.openide.loaders.XMLDataObject$Info
  outer org.openide.loaders.XMLDataObject
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 intf java.lang.Cloneable
 meth public boolean equals(java.lang.Object)
@@ -4223,7 +4500,7 @@ hfds iconBase,processors
 
 CLSS public abstract interface static org.openide.loaders.XMLDataObject$Processor
  outer org.openide.loaders.XMLDataObject
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf org.openide.nodes.Node$Cookie
 meth public abstract void attachTo(org.openide.loaders.XMLDataObject)
 
@@ -4232,15 +4509,15 @@ cons public init(org.openide.nodes.Children)
 cons public init(org.openide.nodes.Children,org.openide.util.Lookup)
 fld protected java.text.MessageFormat displayFormat
 fld protected org.openide.util.actions.SystemAction[] systemActions
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected final org.openide.nodes.CookieSet getCookieSet()
 meth protected final org.openide.nodes.Sheet getSheet()
 meth protected final void setCookieSet(org.openide.nodes.CookieSet)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected final void setSheet(org.openide.nodes.Sheet)
 meth protected org.openide.nodes.Sheet createSheet()
 meth protected org.openide.util.actions.SystemAction[] createActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void createPasteTypes(java.awt.datatransfer.Transferable,java.util.List<org.openide.util.datatransfer.PasteType>)
 meth public <%0 extends org.openide.nodes.Node$Cookie> {%%0} getCookie(java.lang.Class<{%%0}>)
 meth public boolean canCopy()
@@ -4262,15 +4539,15 @@ meth public org.openide.nodes.Node$Handle getHandle()
 meth public org.openide.nodes.Node$PropertySet[] getPropertySets()
 meth public org.openide.util.HelpCtx getHelpCtx()
 meth public org.openide.util.actions.SystemAction getDefaultAction()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.datatransfer.NewType[] getNewTypes()
 meth public org.openide.util.datatransfer.PasteType getDropType(java.awt.datatransfer.Transferable,int,int)
 meth public void setDefaultAction(org.openide.util.actions.SystemAction)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setIconBase(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setName(java.lang.String)
 supr org.openide.nodes.Node
 hfds DEFAULT_ICON,DEFAULT_ICON_BASE,DEFAULT_ICON_EXTENSION,ICON_BASE,NO_NEW_TYPES,NO_PASTE_TYPES,OPENED_ICON_BASE,iconBase,iconExtension,icons,lookup,overridesGetDefaultAction,preferredAction,sheet,sheetCookieL
@@ -4326,11 +4603,11 @@ meth public org.openide.nodes.Node$Handle getHandle()
 meth public org.openide.nodes.Node$PropertySet[] getPropertySets()
 meth public org.openide.util.HelpCtx getHelpCtx()
 meth public org.openide.util.actions.SystemAction getDefaultAction()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getContextActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.datatransfer.NewType[] getNewTypes()
 meth public org.openide.util.datatransfer.PasteType getDropType(java.awt.datatransfer.Transferable,int,int)
 meth public org.openide.util.datatransfer.PasteType[] getPasteTypes(java.awt.datatransfer.Transferable)
@@ -4447,15 +4724,15 @@ meth public java.lang.String toString()
 meth public javax.swing.Action getPreferredAction()
 meth public javax.swing.Action[] getActions(boolean)
 meth public org.openide.util.actions.SystemAction getDefaultAction()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getContextActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void destroy() throws java.io.IOException
 meth public void setDisplayName(java.lang.String)
 meth public void setHidden(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setName(java.lang.String)
 meth public void setShortDescription(java.lang.String)
 supr java.beans.FeatureDescriptor
@@ -4573,9 +4850,9 @@ meth protected void componentOpened()
 meth protected void componentShowing()
 meth public boolean canClose()
 meth public boolean requestDefaultFocus()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean requestFocusInWindow()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public int getPersistenceType()
 meth public java.awt.Dimension getPreferredSize()
 meth public javax.swing.Action[] getActions()
@@ -4587,7 +4864,7 @@ meth public void ensureVisible()
 meth public void open()
 meth public void readExternal(java.io.ObjectInput) throws java.io.IOException,java.lang.ClassNotFoundException
 meth public void requestFocus()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void updateName()
 meth public void writeExternal(java.io.ObjectOutput) throws java.io.IOException
 supr org.openide.windows.CloneableTopComponent
@@ -4644,11 +4921,11 @@ meth public org.openide.text.Line$Set getLineSet()
 meth public org.openide.util.Task prepareDocument()
 meth public static javax.swing.text.EditorKit getEditorKit(java.lang.String)
 meth public void addChangeListener(javax.swing.event.ChangeListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void open()
 meth public void print()
 meth public void removeChangeListener(javax.swing.event.ChangeListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void saveDocument() throws java.io.IOException
 meth public void setMIMEType(java.lang.String)
 supr org.openide.windows.CloneableOpenSupport
@@ -4734,23 +5011,23 @@ innr public abstract static Set
 meth protected void addAnnotation(org.openide.text.Annotation)
 meth protected void removeAnnotation(org.openide.text.Annotation)
 meth public abstract void show(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean equals(java.lang.Object)
 meth public boolean isBreakpoint()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public int getLineNumber()
 meth public int hashCode()
 meth public java.lang.String getText()
 meth public void markCurrentLine()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void markError()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setBreakpoint(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void unmarkCurrentLine()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void unmarkError()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.openide.text.Line
 hfds assigned,breakpoint,current,dlEqualsCounter,docL,error,lineParts,listener,serialVersionUID
 hcls FindAnnotationPosition,LR,Part
@@ -4768,12 +5045,12 @@ hfds list,listener
 hcls OffsetLineCreator
 
 CLSS public org.openide.text.EditorSupport
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.openide.loaders.MultiDataObject$Entry)
 fld protected java.lang.String modifiedAppendix
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String EDITOR_MODE = "editor"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr public static Editor
 intf org.openide.cookies.CloseCookie
 intf org.openide.cookies.EditorCookie$Observable
@@ -4816,7 +5093,7 @@ meth public void print()
 meth public void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void saveDocument() throws java.io.IOException
 meth public void setActions(org.openide.util.actions.SystemAction[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setMIMEType(java.lang.String)
 meth public void setModificationListening(boolean)
 supr org.openide.loaders.OpenSupport
@@ -4886,7 +5163,7 @@ meth public void setParagraphAttributes(int,int,javax.swing.text.AttributeSet,bo
 supr org.openide.text.FilterDocument
 
 CLSS public abstract org.openide.text.IndentEngine
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 meth protected boolean acceptMimeType(java.lang.String)
 meth public abstract int indentLine(javax.swing.text.Document,int)
@@ -4898,7 +5175,7 @@ meth public static org.openide.text.IndentEngine find(java.lang.String)
 meth public static org.openide.text.IndentEngine find(javax.swing.text.Document)
 meth public static org.openide.text.IndentEngine getDefault()
 meth public static void register(java.lang.String,org.openide.text.IndentEngine)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.openide.ServiceType
 hfds INSTANCE,map,serialVersionUID
 hcls Default
@@ -4907,17 +5184,17 @@ CLSS public abstract org.openide.text.Line
 cons public init(java.lang.Object)
 cons public init(org.openide.util.Lookup)
 fld public final static int SHOW_GOTO = 2
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int SHOW_REUSE = 4
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int SHOW_REUSE_NEW = 5
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int SHOW_SHOW = 1
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int SHOW_TOFRONT = 3
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int SHOW_TRY_SHOW = 0
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String PROP_LINE_NUMBER = "lineNumber"
 innr public abstract static Part
 innr public abstract static Set
@@ -4925,28 +5202,28 @@ innr public final static !enum ShowOpenType
 innr public final static !enum ShowVisibilityType
 intf java.io.Serializable
 meth public abstract boolean isBreakpoint()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract int getLineNumber()
 meth public abstract void markCurrentLine()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void markError()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void setBreakpoint(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void show(int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void unmarkCurrentLine()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void unmarkError()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean canBeMarkedCurrent(int,org.openide.text.Line)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.openide.util.Lookup getLookup()
 meth public java.lang.String getDisplayName()
 meth public java.lang.String getText()
 meth public org.openide.text.Line$Part createPart(int,int)
 meth public void show(int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void show(org.openide.text.Line$ShowOpenType,org.openide.text.Line$ShowVisibilityType)
 meth public void show(org.openide.text.Line$ShowOpenType,org.openide.text.Line$ShowVisibilityType,int)
 supr org.openide.text.Annotatable
@@ -4997,13 +5274,13 @@ supr java.lang.Enum<org.openide.text.Line$ShowVisibilityType>
 CLSS public final org.openide.text.NbDocument
 fld public final static java.lang.Object GUARDED
 fld public final static java.lang.String BREAKPOINT_STYLE_NAME = "NbBreakpointStyle"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String CURRENT_STYLE_NAME = "NbCurrentStyle"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String ERROR_STYLE_NAME = "NbErrorStyle"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String NORMAL_STYLE_NAME = "NbNormalStyle"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr public abstract interface static Annotatable
 innr public abstract interface static CustomEditor
 innr public abstract interface static CustomToolbar
@@ -5025,14 +5302,14 @@ meth public static javax.swing.text.StyledDocument getDocument(org.openide.util.
 meth public static void addAnnotation(javax.swing.text.StyledDocument,javax.swing.text.Position,int,org.openide.text.Annotation)
 meth public static void insertGuarded(javax.swing.text.StyledDocument,int,java.lang.String) throws javax.swing.text.BadLocationException
 meth public static void markBreakpoint(javax.swing.text.StyledDocument,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void markCurrent(javax.swing.text.StyledDocument,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void markError(javax.swing.text.StyledDocument,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void markGuarded(javax.swing.text.StyledDocument,int,int)
 meth public static void markNormal(javax.swing.text.StyledDocument,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void removeAnnotation(javax.swing.text.StyledDocument,org.openide.text.Annotation)
 meth public static void runAtomic(javax.swing.text.StyledDocument,java.lang.Runnable)
 meth public static void runAtomicAsUser(javax.swing.text.StyledDocument,java.lang.Runnable) throws javax.swing.text.BadLocationException
@@ -5159,10 +5436,10 @@ meth public abstract javax.swing.Action createContextAwareInstance(org.openide.u
 
 CLSS public final org.openide.util.HelpCtx
 cons public init(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 cons public init(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.util.HelpCtx DEFAULT_HELP
 innr public abstract interface static Displayer
 innr public abstract interface static Provider
@@ -5269,12 +5546,12 @@ meth public boolean getSurviveFocusChange()
 meth public java.lang.Object getActionMapKey()
 meth public javax.swing.Action createContextAwareInstance(org.openide.util.Lookup)
 meth public org.openide.util.actions.ActionPerformer getActionPerformer()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void actionPerformed(java.awt.event.ActionEvent)
 meth public void performAction()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setActionPerformer(org.openide.util.actions.ActionPerformer)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setSurviveFocusChange(boolean)
 supr org.openide.util.actions.CallableSystemAction
 hfds LISTENER,PROP_ACTION_PERFORMER,err,notSurviving,serialVersionUID,surviving
@@ -5308,9 +5585,9 @@ meth public boolean isEnabled()
 meth public final org.openide.nodes.Node[] getActivatedNodes()
 meth public javax.swing.Action createContextAwareInstance(org.openide.util.Lookup)
 meth public void actionPerformed(java.awt.event.ActionEvent)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void performAction()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setEnabled(boolean)
 supr org.openide.util.actions.CallableSystemAction
 hfds PROP_HAS_LISTENERS,PROP_LAST_ENABLED,PROP_LAST_NODES,l,listeningActions,serialVersionUID
@@ -5356,7 +5633,7 @@ meth public final void putValue(java.lang.String,java.lang.Object)
 meth public final void setIcon(javax.swing.Icon)
 meth public static <%0 extends org.openide.util.actions.SystemAction> {%%0} get(java.lang.Class<{%%0}>)
 meth public static javax.swing.JPopupMenu createPopupMenu(org.openide.util.actions.SystemAction[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static javax.swing.JToolBar createToolbarPresenter(org.openide.util.actions.SystemAction[])
 meth public static org.openide.util.actions.SystemAction[] linkActions(org.openide.util.actions.SystemAction[],org.openide.util.actions.SystemAction[])
 meth public void setEnabled(boolean)
@@ -5425,9 +5702,9 @@ CLSS public org.openide.windows.TopComponent
 cons public init()
 cons public init(org.openide.util.Lookup)
 fld public final static int CLOSE_EACH = 0
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int CLOSE_LAST = 1
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int PERSISTENCE_ALWAYS = 0
 fld public final static int PERSISTENCE_NEVER = 2
 fld public final static int PERSISTENCE_ONLY_OPENED = 1
@@ -5454,7 +5731,7 @@ meth protected final void associateLookup(org.openide.util.Lookup)
 meth protected java.lang.Object writeReplace() throws java.io.ObjectStreamException
 meth protected java.lang.String preferredID()
 meth protected void closeNotify()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void componentActivated()
 meth protected void componentClosed()
 meth protected void componentDeactivated()
@@ -5462,19 +5739,19 @@ meth protected void componentHidden()
 meth protected void componentOpened()
 meth protected void componentShowing()
 meth protected void openNotify()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean canClose()
 meth public boolean canClose(org.openide.windows.Workspace,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean requestFocusInWindow()
 meth public final boolean close()
 meth public final boolean close(org.openide.windows.Workspace)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final boolean isOpened()
 meth public final boolean isOpened(org.openide.windows.Workspace)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final int getCloseOperation()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final int getTabPosition()
 meth public final org.openide.nodes.Node[] getActivatedNodes()
 meth public final static org.openide.windows.TopComponent$Registry getRegistry()
@@ -5485,7 +5762,7 @@ meth public final void requestAttention(boolean)
 meth public final void setActivatedNodes(org.openide.nodes.Node[])
 meth public final void setAttentionHighlight(boolean)
 meth public final void setCloseOperation(int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public int getPersistenceType()
 meth public java.awt.Image getIcon()
 meth public java.lang.String getDisplayName()
@@ -5498,13 +5775,13 @@ meth public org.openide.awt.UndoRedo getUndoRedo()
 meth public org.openide.util.HelpCtx getHelpCtx()
 meth public org.openide.util.Lookup getLookup()
 meth public org.openide.util.actions.SystemAction[] getSystemActions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.windows.TopComponent$SubComponent[] getSubComponents()
 meth public static javax.swing.Action openAction(org.openide.windows.TopComponent,java.lang.String,java.lang.String,boolean)
 meth public void addNotify()
 meth public void open()
 meth public void open(org.openide.windows.Workspace)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void readExternal(java.io.ObjectInput) throws java.io.IOException,java.lang.ClassNotFoundException
 meth public void requestActive()
 meth public void requestFocus()

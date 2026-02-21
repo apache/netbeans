@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.75
+#Version 1.76
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -57,7 +58,7 @@ hfds INSTANCE,categoryModel,currentCategoryID,impl,log,operationCancelled
 
 CLSS public abstract org.netbeans.spi.options.AdvancedOption
 cons protected init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.lang.String getDisplayName()
 meth public abstract java.lang.String getTooltip()
 meth public abstract org.netbeans.spi.options.OptionsPanelController create()
@@ -70,7 +71,7 @@ meth public abstract java.lang.String getCategoryName()
 meth public abstract java.lang.String getTitle()
 meth public abstract org.netbeans.spi.options.OptionsPanelController create()
 meth public java.lang.String getIconBase()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public javax.swing.Icon getIcon()
 supr java.lang.Object
 hfds ADVANCED_OPTIONS_FOLDER,CATEGORY_NAME,CONTROLLER,ICON,KEYWORDS,KEYWORDS_CATEGORY,TITLE
@@ -96,7 +97,7 @@ meth public abstract void cancel()
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void update()
 meth public final static org.netbeans.spi.options.OptionsPanelController createAdvanced(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void setSubcategory(java.lang.String)
 meth public org.openide.util.Lookup getLookup()
 meth public void handleSuccessfulSearch(java.lang.String,java.util.List<java.lang.String>)

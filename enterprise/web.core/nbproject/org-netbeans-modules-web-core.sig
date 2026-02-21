@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.62.0
+#Version 2.63.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -686,8 +686,8 @@ meth public boolean isInitialized()
 meth public boolean isTagLibRegistered(java.lang.String)
 meth public boolean isXMLSyntax()
 meth public java.lang.String toString()
-meth public java.util.Map getPrefixMapper()
-meth public void applyParsedData(java.util.Map<java.lang.String,javax.servlet.jsp.tagext.TagLibraryInfo>,java.util.Map<java.lang.String,java.lang.String>,boolean,boolean,boolean)
+meth public java.util.Map<java.lang.String,java.lang.String> getPrefixMapper()
+meth public void applyParsedData(java.util.Map<java.lang.String,org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo>,java.util.Map<java.lang.String,java.lang.String>,boolean,boolean,boolean)
 meth public void parsingStarted()
 supr java.beans.PropertyChangeSupport
 hfds elIgnored,initialized,prefixMapper,taglibs,xmlSyntax

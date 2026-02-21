@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.16.0
+#Version 2.17.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -24,6 +24,7 @@ meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+hfds name,ordinal
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.39
+#Version 9.40
 
 CLSS public java.io.IOException
 cons public init()
@@ -7,6 +7,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public abstract interface java.io.Serializable
 
@@ -16,8 +17,10 @@ meth public abstract void close() throws java.lang.Exception
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -26,11 +29,13 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -62,6 +67,8 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -98,6 +105,7 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
+hfds serialVersionUID
 
 CLSS public abstract org.openide.filesystems.AbstractFileSystem
 cons public init()
@@ -133,7 +141,7 @@ hfds lastEnum,refresher,root,serialVersionUID
 CLSS public abstract interface static org.openide.filesystems.AbstractFileSystem$Attr
  outer org.openide.filesystems.AbstractFileSystem
 fld public final static long serialVersionUID = 5978845941846736946
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf java.io.Serializable
 meth public abstract java.lang.Object readAttribute(java.lang.String,java.lang.String)
 meth public abstract java.util.Enumeration<java.lang.String> attributes(java.lang.String)
@@ -144,7 +152,7 @@ meth public abstract void writeAttribute(java.lang.String,java.lang.String,java.
 CLSS public abstract interface static org.openide.filesystems.AbstractFileSystem$Change
  outer org.openide.filesystems.AbstractFileSystem
 fld public final static long serialVersionUID = -5841597109944924596
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf java.io.Serializable
 meth public abstract void createData(java.lang.String) throws java.io.IOException
 meth public abstract void createFolder(java.lang.String) throws java.io.IOException
@@ -154,7 +162,7 @@ meth public abstract void rename(java.lang.String,java.lang.String) throws java.
 CLSS public abstract interface static org.openide.filesystems.AbstractFileSystem$Info
  outer org.openide.filesystems.AbstractFileSystem
 fld public final static long serialVersionUID = -2438286177948307985
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf java.io.Serializable
 meth public abstract boolean folder(java.lang.String)
 meth public abstract boolean readOnly(java.lang.String)
@@ -170,7 +178,7 @@ meth public abstract void unlock(java.lang.String)
 CLSS public abstract interface static org.openide.filesystems.AbstractFileSystem$List
  outer org.openide.filesystems.AbstractFileSystem
 fld public final static long serialVersionUID = -6242105832891012528
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf java.io.Serializable
 meth public abstract java.lang.String[] children(java.lang.String)
 
@@ -184,7 +192,7 @@ meth public abstract java.lang.String readSymbolicLink(java.lang.String) throws 
 CLSS public abstract interface static org.openide.filesystems.AbstractFileSystem$Transfer
  outer org.openide.filesystems.AbstractFileSystem
 fld public final static long serialVersionUID = -8945397853892302838
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf java.io.Serializable
 meth public abstract boolean copy(java.lang.String,org.openide.filesystems.AbstractFileSystem$Transfer,java.lang.String) throws java.io.IOException
 meth public abstract boolean move(java.lang.String,org.openide.filesystems.AbstractFileSystem$Transfer,java.lang.String) throws java.io.IOException
@@ -192,7 +200,7 @@ meth public abstract boolean move(java.lang.String,org.openide.filesystems.Abstr
 CLSS public abstract org.openide.filesystems.AbstractFileSystemCompat
 cons public init()
 meth public org.openide.filesystems.FileObject find(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.util.actions.SystemAction[] getActions()
 supr org.openide.filesystems.FileSystem
 hfds NO_SYSTEM_ACTIONS,SYSTEM_ACTIONS
@@ -208,11 +216,11 @@ CLSS public org.openide.filesystems.DefaultAttributes
 cons protected init(org.openide.filesystems.AbstractFileSystem$Info,org.openide.filesystems.AbstractFileSystem$Change,org.openide.filesystems.AbstractFileSystem$List,java.lang.String)
 cons public init(org.openide.filesystems.AbstractFileSystem$Info,org.openide.filesystems.AbstractFileSystem$Change,org.openide.filesystems.AbstractFileSystem$List)
 fld public final static java.lang.String ATTR_EXT = "attributes"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String ATTR_NAME = "filesystem"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String ATTR_NAME_EXT = "filesystem.attributes"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf org.openide.filesystems.AbstractFileSystem$Attr
 intf org.openide.filesystems.AbstractFileSystem$List
 meth public java.lang.Object readAttribute(java.lang.String,java.lang.String)
@@ -226,7 +234,7 @@ hfds ATTR_NAME_EXT_XML,DTD_PATH,PUBLIC_ID,READONLY_ATTRIBUTES,cache,change,fileN
 hcls ElementHandler,InnerParser,Table
 
 CLSS public org.openide.filesystems.EnvironmentNotSupportedException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.openide.filesystems.FileSystem)
 cons public init(org.openide.filesystems.FileSystem,java.lang.String)
 meth public org.openide.filesystems.FileSystem getFileSystem()
@@ -311,7 +319,7 @@ meth public !varargs java.lang.String getMIMEType(java.lang.String[])
 meth public abstract boolean isData()
 meth public abstract boolean isFolder()
 meth public abstract boolean isReadOnly()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract boolean isRoot()
 meth public abstract boolean isValid()
 meth public abstract java.io.InputStream getInputStream() throws java.io.FileNotFoundException
@@ -335,7 +343,7 @@ meth public abstract void removeFileChangeListener(org.openide.filesystems.FileC
 meth public abstract void rename(org.openide.filesystems.FileLock,java.lang.String,java.lang.String) throws java.io.IOException
 meth public abstract void setAttribute(java.lang.String,java.lang.Object) throws java.io.IOException
 meth public abstract void setImportant(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean canRead()
 meth public boolean canWrite()
 meth public boolean existsExt(java.lang.String)
@@ -348,7 +356,7 @@ meth public final boolean hasExt(java.lang.String)
 meth public final java.io.OutputStream getOutputStream() throws java.io.IOException
 meth public final java.net.URI toURI()
 meth public final java.net.URL getURL() throws org.openide.filesystems.FileStateInvalidException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final java.net.URL toURL()
 meth public final void delete() throws java.io.IOException
 meth public final void revert() throws java.io.IOException
@@ -358,9 +366,9 @@ meth public java.lang.String asText(java.lang.String) throws java.io.IOException
 meth public java.lang.String getMIMEType()
 meth public java.lang.String getNameExt()
 meth public java.lang.String getPackageName(char)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getPackageNameExt(char,char)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getPath()
 meth public java.lang.String readSymbolicLinkPath() throws java.io.IOException
 meth public java.lang.String toString()
@@ -420,11 +428,11 @@ CLSS public abstract org.openide.filesystems.FileSystem
 cons public init()
 fld public final static java.lang.String PROP_DISPLAY_NAME = "displayName"
 fld public final static java.lang.String PROP_HIDDEN = "hidden"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String PROP_READ_ONLY = "readOnly"
 fld public final static java.lang.String PROP_ROOT = "root"
 fld public final static java.lang.String PROP_SYSTEM_NAME = "systemName"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String PROP_VALID = "valid"
 innr public abstract interface static AtomicAction
 intf java.io.Serializable
@@ -432,7 +440,7 @@ meth protected final void fireFileStatusChanged(org.openide.filesystems.FileStat
 meth protected final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth protected final void fireVetoableChange(java.lang.String,java.lang.Object,java.lang.Object) throws java.beans.PropertyVetoException
 meth protected final void setSystemName(java.lang.String) throws java.beans.PropertyVetoException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract boolean isReadOnly()
 meth public abstract java.lang.String getDisplayName()
 meth public abstract org.openide.filesystems.FileObject findResource(java.lang.String)
@@ -440,7 +448,7 @@ meth public abstract org.openide.filesystems.FileObject getRoot()
 meth public final boolean isDefault()
 meth public final boolean isValid()
 meth public final java.lang.String getSystemName()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void addFileChangeListener(org.openide.filesystems.FileChangeListener)
 meth public final void addFileStatusListener(org.openide.filesystems.FileStatusListener)
 meth public final void addPropertyChangeListener(java.beans.PropertyChangeListener)
@@ -453,7 +461,7 @@ meth public final void runAtomicAction(org.openide.filesystems.FileSystem$Atomic
 meth public java.lang.String toString()
 meth public org.openide.filesystems.FileObject createTempFile(org.openide.filesystems.FileObject,java.lang.String,java.lang.String,boolean) throws java.io.IOException
 meth public org.openide.filesystems.FileObject find(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.filesystems.FileObject getTempFolder() throws java.io.IOException
 meth public org.openide.filesystems.StatusDecorator getDecorator()
 meth public org.openide.util.Lookup findExtrasFor(java.util.Set<org.openide.filesystems.FileObject>)
@@ -469,10 +477,10 @@ CLSS public abstract interface static org.openide.filesystems.FileSystem$AtomicA
 meth public abstract void run() throws java.io.IOException
 
 CLSS public abstract org.openide.filesystems.FileSystem$Environment
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 meth public void addClassPath(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 
 CLSS public abstract interface org.openide.filesystems.FileSystem$HtmlStatus
@@ -484,78 +492,78 @@ meth public abstract java.awt.Image annotateIcon(java.awt.Image,int,java.util.Se
 meth public abstract java.lang.String annotateName(java.lang.String,java.util.Set<? extends org.openide.filesystems.FileObject>)
 
 CLSS public org.openide.filesystems.FileSystemCapability
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 fld public final static org.openide.filesystems.FileSystemCapability ALL
 fld public final static org.openide.filesystems.FileSystemCapability COMPILE
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.filesystems.FileSystemCapability DEBUG
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.filesystems.FileSystemCapability DOC
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.filesystems.FileSystemCapability EXECUTE
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr public static Bean
 meth public boolean capableOf(org.openide.filesystems.FileSystemCapability)
 meth public final java.util.Enumeration<? extends org.openide.filesystems.FileObject> findAll(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.openide.filesystems.FileObject find(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Enumeration<? extends org.openide.filesystems.FileObject> findAllResources(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Enumeration<? extends org.openide.filesystems.FileSystem> fileSystems()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.filesystems.FileObject findResource(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 supr java.lang.Object
 
 CLSS public static org.openide.filesystems.FileSystemCapability$Bean
  outer org.openide.filesystems.FileSystemCapability
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 intf java.io.Serializable
 meth public boolean capableOf(org.openide.filesystems.FileSystemCapability)
 meth public boolean getCompile()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean getDebug()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean getDoc()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean getExecute()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setCompile(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setDebug(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setDoc(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setExecute(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.openide.filesystems.FileSystemCapability
 hfds compilation,debug,doc,execution,serialVersionUID,supp
 
 CLSS public abstract org.openide.filesystems.FileSystemCompat
 cons public init()
 meth protected boolean isPersistent()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected final void setCapability(org.openide.filesystems.FileSystemCapability)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final boolean isHidden()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.openide.filesystems.FileSystemCapability getCapability()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void setHidden(boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.filesystems.FileSystem$Status getStatus()
 meth public org.openide.util.actions.SystemAction[] getActions()
 meth public org.openide.util.actions.SystemAction[] getActions(java.util.Set<org.openide.filesystems.FileObject>)
 meth public static org.openide.filesystems.FileSystemCompat compat(org.openide.filesystems.FileSystem)
 meth public void prepareEnvironment(org.openide.filesystems.FileSystem$Environment) throws org.openide.filesystems.EnvironmentNotSupportedException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds NO_SYSTEM_ACTIONS,PROP_CAPABILITIES,capability,capabilityListener,hidden,status
 hcls StatusImpl,SystemStatus
@@ -583,7 +591,7 @@ meth public static java.lang.String findFreeFolderName(org.openide.filesystems.F
 meth public static java.lang.String getExtension(java.lang.String)
 meth public static java.lang.String getFileDisplayName(org.openide.filesystems.FileObject)
 meth public static java.lang.String getMIMEType(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String getMIMEType(org.openide.filesystems.FileObject)
 meth public static java.lang.String getRelativePath(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject)
 meth public static java.lang.String normalizePath(java.lang.String)
@@ -591,7 +599,7 @@ meth public static java.net.URL getArchiveFile(java.net.URL)
 meth public static java.net.URL getArchiveRoot(java.net.URL)
 meth public static java.net.URL urlForArchiveOrDir(java.io.File)
 meth public static java.net.URLStreamHandler nbfsURLStreamHandler()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.nio.file.Path toPath(org.openide.filesystems.FileObject)
 meth public static java.util.List<java.lang.String> getMIMETypeExtensions(java.lang.String)
 meth public static java.util.List<org.openide.filesystems.FileObject> getOrder(java.util.Collection<org.openide.filesystems.FileObject>,boolean)
@@ -614,7 +622,7 @@ meth public static org.openide.filesystems.FileObject moveFile(org.openide.files
 meth public static org.openide.filesystems.FileObject toFileObject(java.io.File)
 meth public static org.openide.filesystems.FileObject toFileObject(java.nio.file.Path)
 meth public static org.openide.filesystems.FileObject[] fromFile(java.io.File)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openide.filesystems.FileStatusListener weakFileStatusListener(org.openide.filesystems.FileStatusListener,java.lang.Object)
 meth public static org.openide.filesystems.FileSystem createMemoryFileSystem()
 meth public static void addFileChangeListener(org.openide.filesystems.FileChangeListener)
@@ -626,9 +634,9 @@ meth public static void copy(java.io.InputStream,java.io.OutputStream) throws ja
 meth public static void copyAttributes(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject) throws java.io.IOException
 meth public static void copyAttributes(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject,java.util.function.BiFunction<java.lang.String,java.lang.Object,java.lang.Object>) throws java.io.IOException
 meth public static void extractJar(org.openide.filesystems.FileObject,java.io.InputStream) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void preventFileChooserSymlinkTraversal(javax.swing.JFileChooser,java.io.File)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void refreshAll()
 meth public static void removeFileChangeListener(org.openide.filesystems.FileChangeListener)
 meth public static void removeFileChangeListener(org.openide.filesystems.FileChangeListener,java.io.File)
@@ -710,7 +718,7 @@ cons public init()
 meth public abstract java.io.File getJarFile()
 meth public static void createJarFileSystemCompat(org.openide.filesystems.JarFileSystemCompat,org.openide.filesystems.FileSystemCapability) throws java.io.IOException
 meth public void prepareEnvironment(org.openide.filesystems.FileSystem$Environment)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.openide.filesystems.AbstractFileSystem
 
 CLSS public org.openide.filesystems.LocalFileSystem
@@ -774,13 +782,13 @@ cons public init()
 meth public abstract java.io.File getRootDirectory()
 meth public static void createLocalFileSystemCompat(org.openide.filesystems.LocalFileSystemCompat,org.openide.filesystems.FileSystemCapability)
 meth public void prepareEnvironment(org.openide.filesystems.FileSystem$Environment)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.openide.filesystems.AbstractFileSystem
 
 CLSS public abstract org.openide.filesystems.MIMEResolver
 cons public !varargs init(java.lang.String[])
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr public abstract UIHelpers
 innr public abstract interface static !annotation ExtensionRegistration
 innr public abstract interface static !annotation NamespaceRegistration
@@ -849,7 +857,7 @@ meth public boolean isReadOnly()
 meth public final boolean getPropagateMasks()
 meth public java.lang.String getDisplayName()
 meth public org.openide.filesystems.FileObject find(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.filesystems.FileObject findResource(java.lang.String)
 meth public org.openide.filesystems.FileObject getRoot()
 meth public void addNotify()
@@ -864,7 +872,7 @@ meth protected abstract org.openide.filesystems.FileSystem[] getDelegates()
 meth public org.openide.util.actions.SystemAction[] getActions()
 meth public org.openide.util.actions.SystemAction[] getActions(java.util.Set<org.openide.filesystems.FileObject>)
 meth public void prepareEnvironment(org.openide.filesystems.FileSystem$Environment) throws org.openide.filesystems.EnvironmentNotSupportedException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.openide.filesystems.FileSystem
 
 CLSS public org.openide.filesystems.Repository
@@ -876,41 +884,41 @@ meth protected final java.util.List<? extends java.net.URL> findLayers(org.openi
 meth protected final static void provideLayers(java.lang.ClassLoader,java.util.List<java.net.URL>) throws java.io.IOException
 meth protected void refreshAdditionalLayers()
 meth public final java.util.Enumeration<? extends org.openide.filesystems.FileObject> findAll(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final java.util.Enumeration<? extends org.openide.filesystems.FileObject> findAllResources(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final java.util.Enumeration<? extends org.openide.filesystems.FileSystem> fileSystems()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final java.util.Enumeration<? extends org.openide.filesystems.FileSystem> getFileSystems()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.openide.filesystems.FileObject find(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.openide.filesystems.FileObject findResource(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.openide.filesystems.FileSystem findFileSystem(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.openide.filesystems.FileSystem getDefaultFileSystem()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final org.openide.filesystems.FileSystem[] toArray()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void addFileChangeListener(org.openide.filesystems.FileChangeListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void addFileSystem(org.openide.filesystems.FileSystem)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void addRepositoryListener(org.openide.filesystems.RepositoryListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void readExternal(java.io.ObjectInput) throws java.io.IOException,java.lang.ClassNotFoundException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void removeFileChangeListener(org.openide.filesystems.FileChangeListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void removeFileSystem(org.openide.filesystems.FileSystem)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void removeRepositoryListener(org.openide.filesystems.RepositoryListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void reorder(int[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void writeExternal(java.io.ObjectOutput) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openide.filesystems.Repository getDefault()
 supr java.lang.Object
 hfds ADD_FS,NO_PROVIDER,fclSupport,fileSystems,fileSystemsClone,lastDefLookup,lastLocalProvider,listeners,names,propListener,repository,serialVersionUID,system,vetoListener
@@ -973,7 +981,7 @@ meth public abstract org.openide.filesystems.FileObject[] getFileObjects(java.ne
 meth public static java.net.URL findURL(org.openide.filesystems.FileObject,int)
 meth public static org.openide.filesystems.FileObject findFileObject(java.net.URL)
 meth public static org.openide.filesystems.FileObject[] findFileObjects(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds CACHE_JUST_COMPUTING,cache,result,threadCache
 hcls DefaultURLMapper
@@ -1032,7 +1040,7 @@ cons public init()
 meth public abstract java.io.File getRootDirectory()
 meth public static void createLocalFileSystemCompat(org.openide.filesystems.XMLFileSystemCompat,org.openide.filesystems.FileSystemCapability)
 meth public void prepareEnvironment(org.openide.filesystems.FileSystem$Environment)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.openide.filesystems.AbstractFileSystem
 
 CLSS public abstract interface !annotation org.openide.modules.PatchFor

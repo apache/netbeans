@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 7.78
+#Version 7.79
 
 CLSS public abstract interface java.io.Externalizable
 intf java.io.Serializable
@@ -15,6 +15,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -62,7 +63,7 @@ fld public final static int COMPARE_ANY = 3
 fld public final static int COMPARE_IMPL = 2
 fld public final static int COMPARE_SPEC = 1
 fld public final static int TYPE_IDE = 4
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int TYPE_JAVA = 3
 fld public final static int TYPE_MODULE = 1
 fld public final static int TYPE_NEEDS = 6
@@ -70,15 +71,15 @@ fld public final static int TYPE_PACKAGE = 2
 fld public final static int TYPE_RECOMMENDS = 7
 fld public final static int TYPE_REQUIRES = 5
 fld public final static java.lang.String IDE_IMPL
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String IDE_NAME
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String JAVA_IMPL
 fld public final static java.lang.String JAVA_NAME = "Java"
 fld public final static java.lang.String VM_IMPL
 fld public final static java.lang.String VM_NAME = "VM"
 fld public final static org.openide.modules.SpecificationVersion IDE_SPEC
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.modules.SpecificationVersion JAVA_SPEC
 fld public final static org.openide.modules.SpecificationVersion VM_SPEC
 intf java.io.Serializable
@@ -131,11 +132,11 @@ meth protected boolean clearSharedData()
 meth public boolean closing()
 meth public void close()
 meth public void installed()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void restored()
 meth public void uninstalled()
 meth public void updated(int,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void validate()
 supr org.openide.util.SharedClassObject
 hfds serialVersionUID

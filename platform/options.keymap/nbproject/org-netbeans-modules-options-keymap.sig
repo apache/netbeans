@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.67
+#Version 1.68
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -49,10 +50,10 @@ meth public abstract org.netbeans.core.options.keymap.api.ShortcutAction findAct
 meth public abstract org.netbeans.core.options.keymap.api.ShortcutAction findActionForShortcut(java.lang.String)
 meth public abstract org.netbeans.core.options.keymap.api.ShortcutsFinder$Writer localCopy()
 meth public abstract void apply()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void refreshActions()
 meth public abstract void setShortcuts(org.netbeans.core.options.keymap.api.ShortcutAction,java.util.Set<java.lang.String>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public abstract interface static org.netbeans.core.options.keymap.api.ShortcutsFinder$Writer
  outer org.netbeans.core.options.keymap.api.ShortcutsFinder

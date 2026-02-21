@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.77
+#Version 1.78
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -167,7 +168,7 @@ CLSS public abstract interface static org.netbeans.modules.progress.spi.RunOffED
  outer org.netbeans.modules.progress.spi.RunOffEDTProvider
 intf org.netbeans.modules.progress.spi.RunOffEDTProvider$Progress
 meth public abstract void runOffEventThreadWithCustomDialogContent(java.lang.Runnable,java.lang.String,javax.swing.JPanel,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void runOffEventThreadWithProgressDialog(java.lang.Runnable,java.lang.String,org.netbeans.api.progress.ProgressHandle,boolean,int,int)
 
 CLSS public final org.netbeans.modules.progress.spi.TaskModel

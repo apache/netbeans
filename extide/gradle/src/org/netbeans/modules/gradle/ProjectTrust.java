@@ -48,6 +48,7 @@ import org.openide.util.NbPreferences;
 public class ProjectTrust {
     private static final Logger LOG = Logger.getLogger(ProjectTrust.class.getName());
     
+    private static final int KEY_LENGTH = 64;
     private static final String KEY_SALT     = "secret";     //NOI18N
     private static final String NODE_PROJECT = "projects"; //NOI18N
     private static final String NODE_TRUST   = "trust";    //NOI18N
@@ -68,7 +69,7 @@ public class ProjectTrust {
     ProjectTrust(Preferences prefs) {
         byte[] buf = prefs.getByteArray(KEY_SALT, null);
         if (buf == null) {
-            buf = new byte[16];
+            buf = new byte[KEY_LENGTH];
             new SecureRandom().nextBytes(buf);
             prefs.putByteArray(KEY_SALT, buf);
         }

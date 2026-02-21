@@ -24,9 +24,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
-import org.apache.lucene.analysis.KeywordAnalyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
+import org.apache.lucene.index.IndexOptions;
+import org.apache.lucene.index.IndexableFieldType;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
@@ -127,13 +130,36 @@ public class RawIndexPerfTest extends NbTestCase {
         }
     }
 
+    private static final IndexableFieldType STORED_NOT_ANALYZED_NO_NORMS;
+    private static final IndexableFieldType NOT_STORED_NOT_ANALYZED_NO_NORMS;
+    private static final IndexableFieldType STORED_NOT_ANALYZED;
+    static {
+        STORED_NOT_ANALYZED_NO_NORMS = new FieldType();
+        ((FieldType) STORED_NOT_ANALYZED_NO_NORMS).setStored(true);
+        ((FieldType) STORED_NOT_ANALYZED_NO_NORMS).setIndexOptions(IndexOptions.DOCS_AND_FREQS);
+        ((FieldType) STORED_NOT_ANALYZED_NO_NORMS).setTokenized(false);
+        ((FieldType) STORED_NOT_ANALYZED_NO_NORMS).setOmitNorms(true);
+        ((FieldType) STORED_NOT_ANALYZED_NO_NORMS).freeze();
+        NOT_STORED_NOT_ANALYZED_NO_NORMS = new FieldType();
+        ((FieldType) NOT_STORED_NOT_ANALYZED_NO_NORMS).setStored(false);
+        ((FieldType) NOT_STORED_NOT_ANALYZED_NO_NORMS).setIndexOptions(IndexOptions.DOCS_AND_FREQS);
+        ((FieldType) NOT_STORED_NOT_ANALYZED_NO_NORMS).setTokenized(false);
+        ((FieldType) NOT_STORED_NOT_ANALYZED_NO_NORMS).setOmitNorms(true);
+        ((FieldType) NOT_STORED_NOT_ANALYZED_NO_NORMS).freeze();
+        STORED_NOT_ANALYZED = new FieldType();
+        ((FieldType) STORED_NOT_ANALYZED).setStored(true);
+        ((FieldType) STORED_NOT_ANALYZED).setIndexOptions(IndexOptions.NONE);
+        ((FieldType) STORED_NOT_ANALYZED).setTokenized(false);
+        ((FieldType) STORED_NOT_ANALYZED).freeze();
+    }
+
     private static final class LongToDoc implements Convertor<Long, Document> {
         @Override
         public Document convert(Long p) {
             Document doc = new Document();
-            doc.add(new Field("dec", Long.toString(p), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
-            doc.add(new Field("hex", Long.toHexString(p), Field.Store.NO, Field.Index.NOT_ANALYZED_NO_NORMS));
-            doc.add(new Field("bin", Long.toBinaryString(p), Field.Store.YES, Field.Index.NO));
+            doc.add(new Field("dec", Long.toString(p), STORED_NOT_ANALYZED_NO_NORMS));
+            doc.add(new Field("hex", Long.toHexString(p), NOT_STORED_NOT_ANALYZED_NO_NORMS));
+            doc.add(new Field("bin", Long.toBinaryString(p), STORED_NOT_ANALYZED));
             return doc;
         }
     }
@@ -148,7 +174,7 @@ public class RawIndexPerfTest extends NbTestCase {
     private static final class DocToLong implements Convertor<Document,Long> {
         @Override
         public Long convert(Document p) {
-            return Long.valueOf(p.getFieldable("dec").stringValue());
+            return Long.valueOf(p.get("dec"));
         }
     }
 }

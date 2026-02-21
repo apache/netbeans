@@ -41,7 +41,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.document.FieldType;
+import org.apache.lucene.index.IndexOptions;
+import org.apache.lucene.index.IndexableFieldType;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.parsing.impl.indexing.lucene.DocumentBasedIndexManager;
@@ -64,7 +66,34 @@ public final class ClusteredIndexables {
     public static final String FIELD_PRIMARY_KEY = "_sn";  //NOI18N
     public static final String DELETE = "ci-delete-set";    //NOI18N
     public static final String INDEX = "ci-index-set";      //NOI18N    
-    
+
+    private static final IndexableFieldType STORED_SEARCHABLE;
+    private static final IndexableFieldType NON_STORED_SEARCHABLE;
+    private static final IndexableFieldType STORED_NON_SEARCHABLE;
+    private static final IndexableFieldType NON_STORED_NON_SEARCHABLE;
+    static {
+        STORED_SEARCHABLE = new FieldType();
+        ((FieldType) STORED_SEARCHABLE).setStored(true);
+        ((FieldType) STORED_SEARCHABLE).setTokenized(true);
+        ((FieldType) STORED_SEARCHABLE).setIndexOptions(IndexOptions.DOCS_AND_FREQS);
+        ((FieldType) STORED_SEARCHABLE).freeze();
+        NON_STORED_SEARCHABLE = new FieldType();
+        ((FieldType) NON_STORED_SEARCHABLE).setStored(false);
+        ((FieldType) NON_STORED_SEARCHABLE).setTokenized(true);
+        ((FieldType) NON_STORED_SEARCHABLE).setIndexOptions(IndexOptions.DOCS_AND_FREQS);
+        ((FieldType) NON_STORED_SEARCHABLE).freeze();
+        STORED_NON_SEARCHABLE = new FieldType();
+        ((FieldType) STORED_NON_SEARCHABLE).setStored(true);
+        ((FieldType) STORED_NON_SEARCHABLE).setTokenized(false);
+        ((FieldType) STORED_NON_SEARCHABLE).setIndexOptions(IndexOptions.NONE);
+        ((FieldType) STORED_NON_SEARCHABLE).freeze();
+        NON_STORED_NON_SEARCHABLE = new FieldType();
+        ((FieldType) NON_STORED_NON_SEARCHABLE).setStored(false);
+        ((FieldType) NON_STORED_NON_SEARCHABLE).setTokenized(false);
+        ((FieldType) NON_STORED_NON_SEARCHABLE).setIndexOptions(IndexOptions.NONE);
+        ((FieldType) NON_STORED_NON_SEARCHABLE).freeze();
+    }
+
     // -----------------------------------------------------------------------
     // Public implementation
     // -----------------------------------------------------------------------
@@ -120,6 +149,21 @@ public final class ClusteredIndexables {
     public static interface AttachableDocumentIndexCache extends DocumentIndexCache.WithCustomIndexDocument {
         void attach(@NonNull final String mode, @NonNull final ClusteredIndexables ci);
         void detach();
+    }
+
+    private static Field createField(String key, String value, boolean searchable, boolean stored) {
+        IndexableFieldType ift = null;
+        if(stored && searchable) {
+            ift = STORED_SEARCHABLE;
+        } else if ((! stored) && searchable) {
+            ift = NON_STORED_SEARCHABLE;
+        } else if (stored && (! searchable)) {
+            ift = STORED_NON_SEARCHABLE;
+        } else if ((! stored) && (! searchable)) {
+            ift = NON_STORED_NON_SEARCHABLE;
+        }
+        assert ift != null;
+        return new Field(key, value, ift);
     }
 
     // -----------------------------------------------------------------------
@@ -720,7 +764,7 @@ public final class ClusteredIndexables {
 
         private static final String[] EMPTY = new String[0];
 
-        private final List<Fieldable> fields = new ArrayList<Fieldable>();
+        private final List<Field> fields = new ArrayList<Field>();
         boolean consumed;
 
         MemIndexDocument(@NonNull final String primaryKey) {
@@ -728,7 +772,7 @@ public final class ClusteredIndexables {
             fields.add(sourceNameField(primaryKey));
         }
 
-        public List<Fieldable> getFields() {
+        public List<Field> getFields() {
             return fields;
         }
 
@@ -742,15 +786,12 @@ public final class ClusteredIndexables {
             if (consumed) {
                 throw new IllegalStateException("Modifying Document after adding it into index.");  //NOI18N
             }
-            final Field field = new Field (key, value,
-                    stored ? Field.Store.YES : Field.Store.NO,
-                    searchable ? Field.Index.NOT_ANALYZED_NO_NORMS : Field.Index.NO);
-            fields.add (field);
+            fields.add (createField(key, value, searchable, stored));
         }
 
         @Override
         public String getValue(String key) {
-            for (Fieldable field : fields) {
+            for (Field field : fields) {
                 if (field.name().equals(key)) {
                     return field.stringValue();
                 }
@@ -761,7 +802,7 @@ public final class ClusteredIndexables {
         @Override
         public String[] getValues(String key) {
             final List<String> result = new ArrayList<String>();
-            for (Fieldable field : fields) {
+            for (Field field : fields) {
                 if (field.name().equals(key)) {
                     result.add(field.stringValue());
                 }
@@ -769,8 +810,8 @@ public final class ClusteredIndexables {
             return result.toArray(result.isEmpty() ? EMPTY : new String[result.size()]);
         }
 
-        private Fieldable sourceNameField(@NonNull String primaryKey) {
-            return new Field(FIELD_PRIMARY_KEY, primaryKey, Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS);
+        private Field sourceNameField(@NonNull String primaryKey) {
+            return createField(FIELD_PRIMARY_KEY, primaryKey, true, true);
         }
     }
     //</editor-fold>
@@ -786,7 +827,7 @@ public final class ClusteredIndexables {
 
         ReusableIndexDocument(@NonNull final MemIndexDocument memDoc) {
             Parameters.notNull("memDoc", memDoc);   //NOI18N
-            for (Fieldable field : memDoc.getFields()) {
+            for (Field field : memDoc.getFields()) {
                 doc.add(field);
             }
         }
@@ -809,15 +850,15 @@ public final class ClusteredIndexables {
 
         @Override
         public void addPair(String key, String value, boolean searchable, boolean stored) {
-            doc.add(new Field (
+            doc.add(createField(
                 key,
                 value,
-                stored ? Field.Store.YES : Field.Store.NO,
-                searchable ? Field.Index.NOT_ANALYZED_NO_NORMS : Field.Index.NO));
+                searchable,
+                stored));
         }
 
         void clear() {
-            doc.getFields().clear();
+            doc.clear();
         }
     }
     //</editor-fold>
@@ -873,10 +914,10 @@ public final class ClusteredIndexables {
             final MemIndexDocument mdoc = (MemIndexDocument)doc;
             final int oldDocsPointer = docsPointer;
             final int oldDataPointer = dataPointer;
-            for (Fieldable fld : mdoc.getFields()) {
+            for (Field fld : mdoc.getFields()) {
                 final String fldName = fld.name();
-                final boolean stored = fld.isStored();
-                final boolean indexed = fld.isIndexed();
+                final boolean stored = fld.fieldType().stored();
+                final boolean indexed = fld.fieldType().indexOptions() != IndexOptions.NONE;
                 final String fldValue = fld.stringValue();
                 int index;
                 Integer indexBoxed = fieldNames.get(fldName);

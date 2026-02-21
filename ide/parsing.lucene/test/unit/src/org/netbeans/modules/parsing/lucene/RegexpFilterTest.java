@@ -16,18 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.parsing.lucene.support;
+package org.netbeans.modules.parsing.lucene;
 
-import java.lang.reflect.Field;
 import java.util.regex.Pattern;
-import org.netbeans.modules.parsing.lucene.support.Queries.RegexpFilter;
-import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
 
-public class QueriesTest {
+public class RegexpFilterTest {
 
-    public QueriesTest() {
+    public RegexpFilterTest() {
     }
 
     @Test
@@ -46,10 +44,7 @@ public class QueriesTest {
     }
 
     private String getRegexpFilterPrefixForPattern(String pattern) throws Exception {
-        RegexpFilter rf = new RegexpFilter("dummy", pattern, true);
-        Field startPrefix = RegexpFilter.class.getDeclaredField("startPrefix");
-        startPrefix.setAccessible(true);
-        return (String) startPrefix.get(rf);
+        return RegexpFilter.getStartText(pattern);
     }
 
 }

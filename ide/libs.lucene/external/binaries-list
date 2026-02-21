@@ -14,4 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-9EC77E2507F9CC01756964C71D91EFD8154A8C47 org.apache.lucene:lucene-core:3.6.2
+B4B3FBE8608B438D0A810D15187498E6DE974D0E org.apache.lucene:lucene-core:9.12.3
+1C25766443C63D4B75C4ACB5D2AE162A67D6F937 org.apache.lucene:lucene-analysis-common:9.12.3

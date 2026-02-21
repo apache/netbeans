@@ -78,6 +78,14 @@ public class EvaluationTest extends NbTestCase {
         }
     }
 
+    public void testMemberRefToPrivate () throws Exception {
+        try {
+            checkEval ("java.util.List.of(\"A\", \"B\").stream().map(EvalApp::toLen).count()", "long", "2");
+        } finally {
+            support.doFinish ();
+        }
+    }
+
     private void checkEval (String expression, int value) {
         try {
             Variable var = support.getDebugger ().evaluate (expression);

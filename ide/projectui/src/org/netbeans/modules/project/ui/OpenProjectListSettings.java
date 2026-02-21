@@ -38,7 +38,7 @@ import org.openide.util.NbPreferences;
  */
 public class OpenProjectListSettings {
 
-    private static OpenProjectListSettings INSTANCE = new OpenProjectListSettings();
+    private static final OpenProjectListSettings INSTANCE = new OpenProjectListSettings();
     
     private static final String RECENT_PROJECTS_DISPLAY_NAMES = "RecentProjectsDisplayNames"; //NOI18N
     private static final String RECENT_PROJECTS_DISPLAY_ICONS = "RecentProjectsIcons"; //NOI18N
@@ -310,8 +310,11 @@ public class OpenProjectListSettings {
         if (result == null || !(new File(result)).exists()) {
             // property for overriding default projects dir location
             String userPrjDir = System.getProperty("netbeans.projects.dir"); // NOI18N
-            if (userPrjDir != null) {
+            if (userPrjDir != null && !userPrjDir.isBlank()) {
                 File f = new File(userPrjDir);
+                if (create && !f.exists()) {
+                    f.mkdirs();
+                }
                 if (f.exists() && f.isDirectory()) {
                     return FileUtil.normalizeFile(f);
                 }

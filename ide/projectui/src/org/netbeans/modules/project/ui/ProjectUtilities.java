@@ -44,7 +44,6 @@ import javax.swing.SwingUtilities;
 import org.netbeans.api.actions.Openable;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
-import static org.netbeans.modules.project.ui.Bundle.*;
 import org.netbeans.modules.project.ui.groups.Group;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.netbeans.spi.project.ui.support.ProjectConvertors;
@@ -60,6 +59,7 @@ import org.openide.util.ContextAwareAction;
 import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -67,6 +67,8 @@ import org.openide.xml.XMLUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import static org.netbeans.modules.project.ui.Bundle.*;
 
 /** The util methods for projectui module.
  *
@@ -600,6 +602,12 @@ public class ProjectUtilities {
             set.add(url);
         }    
         return new ArrayList<>(set);
+    }
+    
+    // called from (ide.branding) layer.xml on Favorites tab open
+    public static URL getProjectsFolder() throws MalformedURLException {
+        File projectsFolder = OpenProjectListSettings.getInstance().getProjectsFolder(true);
+        return Utilities.toURI(projectsFolder).toURL();
     }
 
     // interface for handling project's documents stored in project private.xml

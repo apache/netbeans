@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.netbeans.libs.jcef.linux.amd64
+OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/jcef/linux/amd64/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Java-Dependencies: Java > 11
+OpenIDE-Module-Requires: org.openide.modules.os.Linux, org.openide.modules.arch.amd64
+OpenIDE-Module-Provides: org.openide.modules.jcef.native

@@ -601,6 +601,7 @@
                 <friend>org.cakephp.netbeans</friend>
                 <friend>org.nbphpcouncil.modules.php.yii</friend>
                 <friend>org.netbeans.modules.php.dbgp</friend>
+                <friend>org.netbeans.modules.php.blade</friend>
                 <friend>org.netbeans.modules.php.nette</friend>
                 <friend>org.netbeans.modules.php.prado</friend>
                 <friend>org.netbeans.modules.php.refactoring</friend>

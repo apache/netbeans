@@ -1,0 +1,6 @@
+@if($x)
+    @section($y)
+        @if($x)
+        @endif
+    @endsection
+@endif

@@ -1,0 +1,5 @@
+Token #0 HTML [<div>\n    ]
+Token #1 BLADE_ECHO_DELIMITOR [{{]
+Token #2 PHP_BLADE_ECHO_EXPR [ $isTrue ? 'x' : 'z' ]
+Token #3 BLADE_ECHO_DELIMITOR [}}]
+Token #4 HTML [\n</div>\n]

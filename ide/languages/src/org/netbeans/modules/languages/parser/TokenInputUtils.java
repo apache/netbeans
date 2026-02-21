@@ -154,6 +154,7 @@ public abstract class TokenInputUtils {
                 return t.getOffset () + t.getLength ();
             } else {
                 t = (ASTToken) next (1);
+                if (t == null) return 0;
                 return t.getOffset ();
             }
         }

@@ -522,25 +522,12 @@
 -->
  <answer id="exec-property">
   <p>
-   
     <api type="export" group="systemproperty" name="netbeans.user" category="devel">
         During runtime the JNLP launcher enhances the behaviour of the <code>netbeans.user</code>
         property as defined in the NetBeans core. In addition to standard
         content provided from core, 
         it can contain string <q>${user.home}/</q> which gets replaced
         with the correct location of user directory.
-    </api>
-  </p>
-  
-  <p>
-   
-    <api type="export" group="systemproperty" name="netbeans.jnlp.fixPolicy" category="devel">
-        During runtime the JNLP launcher checks whether value <code>true</code> is assigned
-        to this system property. If it is "true" a special security policy is applied
-        for all the code base - it is granting all permissions to all code bases.
-        <strong>Use with care!</strong>. It allows you e.g. to have the module
-        jar files unsigned (they must also not require the all-permissions in
-        their .jnlp file for this to to work).
     </api>
   </p>
  </answer>

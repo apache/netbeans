@@ -44,8 +44,6 @@
   </information>
   <security><all-permissions/></security>
   <resources>
-    <!-- The following property is needed when running with unsigned jars: -->
-    <property name="netbeans.jnlp.fixPolicy" value="$${netbeans.jnlp.fixPolicy}"/>
     <extension name='branding' href='branding.jnlp' />
 <!-- The following line will be replaced with an automatically generated list of resources: -->
 <!--$${jnlp.resources}-->
@@ -304,14 +302,6 @@
         
         <loadfile property="jnlp.resources" srcfile="${jnlp.master.dir}/resources.xml"/>
 
-        <condition property="netbeans.jnlp.fixPolicy">
-            <isfalse value="${jnlp.sign.jars}"/>
-        </condition>
-        <!-- Anyone knows a better way to negate a property value? -->
-        <condition property="netbeans.jnlp.fixPolicy" value="false">
-            <istrue value="${jnlp.sign.jars}"/>
-        </condition>
-        
         <condition property="app.icon.safe" value="${app.icon}" else=".png">
             <isset property="app.icon" />
         </condition>
@@ -330,7 +320,6 @@
                 <replacestring from="$${app.title}" to="${app.title}"/>
                 <replacestring from="$${app.icon}" to="master.${app.icon.ext}"/>
                 <replacestring from="$${branding.token}" to="${branding.token}"/>
-                <replacestring from="$${netbeans.jnlp.fixPolicy}" to="${netbeans.jnlp.fixPolicy}"/>
             </filterchain>
         </copy>
         <jnlpupdatemanifeststartup appname="${app.name}"

@@ -70,4 +70,7 @@
     <fontcolor name="uncovered" default="uncovered" />
     <fontcolor name="inferred" default="inferred" />
     <fontcolor name="partial" default="partial" />
+
+    <!-- embedding -->
+    <fontcolor name="css-embedding" bgColor="ffe3f2e1"/>
 </fontscolors>

@@ -50,11 +50,12 @@ import org.openide.util.Exceptions;
  */
 public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFactory, BracesMatcher.ContextLocator {
 
-    private static final char [] PAIRS = new char [] { '(', ')', '[', ']', '{', '}' }; //NOI18N
+    private static final char [] PAIRS = new char [] { '(', ')', '[', ']', '{', '}', '<', '>' }; //NOI18N
     private static final JavaTokenId [] PAIR_TOKEN_IDS = new JavaTokenId [] { 
         JavaTokenId.LPAREN, JavaTokenId.RPAREN, 
         JavaTokenId.LBRACKET, JavaTokenId.RBRACKET, 
-        JavaTokenId.LBRACE, JavaTokenId.RBRACE
+        JavaTokenId.LBRACE, JavaTokenId.RBRACE,
+        JavaTokenId.LT, JavaTokenId.GT
     };
     
     private final MatcherContext context;
@@ -98,13 +99,13 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                 context.getLimitOffset(), 
                 PAIRS
             );
-
+            
             if (origin != null) {
                 originOffset = origin[0];
                 originChar = PAIRS[origin[1]];
                 matchingChar = PAIRS[origin[1] + origin[2]];
                 backward = origin[2] < 0;
-
+                
                 // Filter out block and line comments
                 TokenHierarchy<Document> th = TokenHierarchy.get(context.getDocument());
                 sequences = getEmbeddedTokenSequences(th, originOffset, backward, JavaTokenId.language());
@@ -146,17 +147,17 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                     list = th.tokenSequenceList(seq.languagePath(), originOffset + 1, context.getDocument().getLength());
                 }
                 int counter = 0;
-
+                
                 seq.move(originOffset);
                 if (seq.moveNext()) {
                     Token<?> token = seq.token();
-
+                    
                     if (token.id() == JavaTokenId.STRING_LITERAL ||
                         token.id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
 
                         for(TokenSequenceIterator tsi = new TokenSequenceIterator(list, backward); tsi.hasMore(); ) {
                             TokenSequence<?> sq = tsi.getSequence();
-
+                            
                             if (sq.token().id() == JavaTokenId.STRING_LITERAL ||
                                 sq.token().id() == JavaTokenId.MULTILINE_STRING_LITERAL) {
 
@@ -249,6 +250,97 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
 
                 JavaTokenId originId = getTokenId(originChar);
                 JavaTokenId lookingForId = getTokenId(matchingChar);
+                
+                /* The lexer tokenizes << and >> because they are bit shift
+                ** operators. Special handler is required to bracematch angle
+                ** brackets in generic types so that generic angles are 
+                ** differentiated from bitwise operators.*/
+                
+                /* One idea was to modify the input TokenHierachy to split
+                ** GTGT tokens into 2 separate GT and GT tokens. However,
+                ** it seems like almost all token related classes are immutable
+                ** or inaccessible due to private constructors. Leading me to
+                ** write this. */
+                if (originId == JavaTokenId.LT || originId == JavaTokenId.GT) {
+                    
+                    for(TokenSequenceIterator tsi = new TokenSequenceIterator(list, backward); tsi.hasMore();) {
+                        TokenSequence<?> sq = tsi.getSequence();
+
+                        if (sq.token().id() == JavaTokenId.GTGT) {
+                            if (originId == JavaTokenId.GT) {
+                                if (originOffset != sq.offset()) {
+                                    counter += (originOffset - sq.offset());
+                                } else {
+                                    counter++;
+                                }
+                            }
+                            
+                            if (lookingForId == JavaTokenId.GT) {  
+                                if (counter <= 1) {
+                                    return new int [] {sq.offset() + counter, sq.offset() + 1 + counter};
+                                } else {
+                                    counter -= 2;
+                                }
+                            } 
+                        }
+                        
+                        if (sq.token().id() == JavaTokenId.GTGTGT) {
+                            if (originId == JavaTokenId.GT) {
+                                if (originOffset != sq.offset()) {
+                                    int test = sq.offset();
+                                    counter += (originOffset - sq.offset());
+                                } else {
+                                    counter++;
+                                }
+                            }
+                            
+                            if (lookingForId == JavaTokenId.GT) {
+                                if (counter <= 2) {
+                                    return new int [] {sq.offset() + counter, sq.offset() + 1 + counter};
+                                } else {
+                                    counter -= 3;
+                                }
+                            }
+                        }
+                        
+                        if (sq.token().id() == JavaTokenId.LTLT) {
+                            if (originId == JavaTokenId.LT) {
+                                if (originOffset != sq.offset()) {
+                                    counter += 2;
+                                } else {
+                                    counter++;
+                                }
+                            }
+    
+                            //Shouldn't happen, but added it anyways.
+                            if (lookingForId == JavaTokenId.LT) {
+                                switch (counter) {
+                                    case 1:
+                                        return new int [] {sq.offset(), sq.offset() + 1 + counter};
+                                    case 0:
+                                        return new int [] {sq.offset() + 1, sq.offset() + 1 + counter};
+                                    default:
+                                        counter -= 2;
+                                        break;
+                                }
+                            }
+                        }
+                        
+                        if (originId == sq.token().id()) {
+                            counter++;
+                        }
+                        
+                        if (lookingForId == sq.token().id()) {
+                            if (counter == 0) {
+                                return new int [] {sq.offset(), sq.offset() + sq.token().length()};
+                            } else {
+                                counter--;
+                            }
+                        }
+                    }
+                    
+                    return null;
+                }
 
                 for(TokenSequenceIterator tsi = new TokenSequenceIterator(list, backward); tsi.hasMore(); ) {
                     TokenSequence<?> sq = tsi.getSequence();
@@ -428,7 +520,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
         for(int i = sequences.size() - 1; i >= 0; i--) {
             TokenSequence<?> seq = sequences.get(i);
             if (seq.language() == language) {
-                break;
+               break; 
             } else {
                 sequences.remove(i);
             }

@@ -24,15 +24,19 @@
         <asadmin jar="client/appserver-cli.jar"/>
     </tools>
     <java version="21">
+        <platform version="17"/>
+        <platform version="18"/>
+        <platform version="19"/>
+        <platform version="20"/>
         <platform version="21"/>
         <platform version="22"/>
         <platform version="23"/>
         <platform version="24"/>
         <platform version="25"/>
     </java>
-    <javaee version="11.0.0">
-        <profile version="11.0.0" type="web"/>
-        <profile version="11.0.0" type="full" check="full"/>
+    <javaee version="10.0.0">
+        <profile version="10.0.0" type="web"/>
+        <profile version="10.0.0" type="full" check="full"/>
         <module type="war"/>
         <module type="car" check="full"/>
         <module type="ear" check="full"/>
@@ -57,12 +61,12 @@
             </fileset>
         </classpath>
         <javadocs>
-            <lookup path="docs/jakartaee11-doc-api.jar"/>
+            <lookup path="docs/jakartaee10-doc-api.jar"/>
         </javadocs>
         <sources>
         </sources>
     </library>
-    <library id="Jersey 4">
+    <library id="Jersey 3">
         <classpath>
             <fileset dir="modules">
                 <include name="jackson.+\.jar"/>
@@ -71,7 +75,7 @@
             </fileset>
         </classpath>
         <javadocs>
-            <link url="https://repo.maven.apache.org/maven2/org/glassfish/jersey/jersey-documentation/4.0.0-M4/jersey-documentation-4.0.0-M4-docbook.zip"/>
+            <link url="https://repo.maven.apache.org/maven2/org/glassfish/jersey/jersey-documentation/3.1.11/jersey-documentation-3.1.11-docbook.zip"/>
         </javadocs>
         <sources>
         </sources>

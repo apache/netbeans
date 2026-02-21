@@ -288,6 +288,11 @@
 ]]>
         </code>
     </codetemplate>
+    <codetemplate abbreviation="tryr" contexts="BLOCK,CASE,LABELED_STATEMENT,DO_WHILE_LOOP,ENHANCED_FOR_LOOP,FOR_LOOP,IF,WHILE_LOOP,LAMBDA_EXPRESSION" descriptionId="CT_tryr">
+        <code><![CDATA[try (${cursor}) {
+    ${selection}
+}]]></code>
+    </codetemplate>
     <codetemplate abbreviation="newo">
         <code>
         <![CDATA[${TYPE default="Object"} ${OBJ newVarName default="obj"} = new ${TYPE}(${cursor});]]>

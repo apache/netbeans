@@ -31,6 +31,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.DoWhileLoopTree;
+import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -1835,6 +1836,21 @@ public class JavaFixUtilities {
         }
 
         private static boolean canSafelyRemove(CompilationInfo info, TreePath tp) {
+            if (tp.getParentPath() != null) {
+                //cannot remove from some parent trees:
+                switch (tp.getParentPath().getLeaf().getKind()) {
+                    case BINDING_PATTERN -> {
+                        return false;
+                    }
+                    case ENHANCED_FOR_LOOP -> {
+                        EnhancedForLoopTree loop = (EnhancedForLoopTree) tp.getParentPath().getLeaf();
+
+                        if (loop.getVariable() == tp.getLeaf()) {
+                            return false;
+                        }
+                    }
+                }
+            }
             AtomicBoolean ret = new AtomicBoolean(true);
             Element el = info.getTrees().getElement(tp);
             if (el != null) {

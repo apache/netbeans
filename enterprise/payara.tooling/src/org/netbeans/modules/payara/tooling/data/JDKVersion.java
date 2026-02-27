@@ -283,24 +283,55 @@ public final class JDKVersion {
         return IDE_JDK_VERSION;
     }
 
-    public static boolean isCorrectJDK(JDKVersion jdkVersion, Optional<String> vendorOrVM, Optional<JDKVersion> minVersion, Optional<JDKVersion> maxVersion) {
+    public static boolean isCorrectJDK(JDKVersion jdkVersion,
+            Optional<String> vendorOrVM,
+            Optional<JDKVersion> minVersion,
+            Optional<JDKVersion> maxVersion,
+            String jvmOption,
+            String javaHome) {
+
         boolean correctJDK = true;
 
         if (vendorOrVM.isPresent()) {
-            correctJDK = jdkVersion.getVendor().map(vendor -> vendor.contains(vendorOrVM.get())).orElse(false)
-                    || jdkVersion.getVM().map(vm -> vm.contains(vendorOrVM.get())).orElse(false);
+            correctJDK
+                    = jdkVersion.getVendor()
+                            .map(v -> v.contains(vendorOrVM.get()))
+                            .orElse(false)
+                    || jdkVersion.getVM()
+                            .map(vm -> vm.contains(vendorOrVM.get()))
+                            .orElse(false);
         }
+
         if (correctJDK && minVersion.isPresent()) {
             correctJDK = jdkVersion.ge(minVersion.get());
         }
+
         if (correctJDK && maxVersion.isPresent()) {
             correctJDK = jdkVersion.le(maxVersion.get());
         }
+
+        if (correctJDK
+                && jvmOption != null
+                && jvmOption.matches("^-XX:[+-]?CRaC.*")) {
+
+            correctJDK = isCRaCJDK(javaHome);
+        }
+
         return correctJDK;
     }
 
-    public static boolean isCorrectJDK(Optional<JDKVersion> minVersion, Optional<JDKVersion> maxVersion) {
-        return isCorrectJDK(IDE_JDK_VERSION, Optional.empty(), minVersion, maxVersion);
+    /**
+     * Checks whether the given JDK installation supports CRaC by verifying the
+     * presence of the lib/criu directory.
+     *
+     * @param javaHome Java home directory to check
+     * @return true if CRaC-enabled JDK
+     */
+    public static boolean isCRaCJDK(String javaHome) {
+        return Optional.ofNullable(javaHome)
+                .map(home -> new java.io.File(home, "lib/criu"))
+                .map(java.io.File::exists)
+                .orElse(false);
     }
 
     static {

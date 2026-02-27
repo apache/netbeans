@@ -157,11 +157,22 @@ public class ServerTasks {
             }
         }
 
-        JDKVersion javaVersion = args.getJavaVersion() == null ? JDKVersion.getDefaultPlatformVersion() : args.getJavaVersion() ;
+        JDKVersion javaVersion = args.getJavaVersion() == null ? JDKVersion.getDefaultPlatformVersion() : args.getJavaVersion();
+        String selectedJavaHome
+                = args.getJavaHome() != null
+                ? args.getJavaHome()
+                : System.getProperty("java.home");
         List<String> optList
                 = jvmConfigReader.getJvmOptions()
                         .stream()
-                        .filter(fullOption -> JDKVersion.isCorrectJDK(javaVersion, fullOption.vendorOrVM, fullOption.minVersion, fullOption.maxVersion))
+                        .filter(fullOption
+                                -> JDKVersion.isCorrectJDK(
+                                javaVersion,
+                                fullOption.vendorOrVM,
+                                fullOption.minVersion,
+                                fullOption.maxVersion,
+                                fullOption.option,
+                                selectedJavaHome))
                         .map(fullOption -> fullOption.option)
                         .collect(toList());
 

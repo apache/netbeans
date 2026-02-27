@@ -34,5 +34,10 @@
         <file>src/org/netbeans/modules/markdown/resources/Template.md</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="TEMPLATE_MINIMAL_IP" />
-    </fileset>    
+    </fileset>
+    <fileset>
+        <file>src/org/netbeans/modules/markdown/resources/Coloring.md</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="TEMPLATE_MINIMAL_IP" />
+    </fileset>  
 </licenseinfo>

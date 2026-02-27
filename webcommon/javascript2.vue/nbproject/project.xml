@@ -188,10 +188,6 @@
                         <compile-dependency/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.javascript2.jade</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.netbeans.modules.editor.mimelookup</code-name-base>
                         <recursive/>
                         <compile-dependency/>

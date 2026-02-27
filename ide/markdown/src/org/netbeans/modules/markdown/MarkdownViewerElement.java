@@ -19,6 +19,7 @@
 package org.netbeans.modules.markdown;
 
 import com.vladsch.flexmark.ext.anchorlink.AnchorLinkExtension;
+import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
@@ -49,6 +50,7 @@ import javax.swing.text.StyledDocument;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
+import static org.netbeans.modules.markdown.MarkdownDataObject.MIME_TYPE;
 import org.netbeans.modules.markdown.ui.preview.MarkdownEditorKit;
 import org.openide.awt.HtmlBrowser;
 import org.openide.awt.UndoRedo;
@@ -71,7 +73,7 @@ import org.openide.windows.TopComponent;
 @MultiViewElement.Registration(
         displayName = "#LBL_MarkdownViewer",
         iconBase = "org/netbeans/modules/markdown/markdown.png",
-        mimeType = "text/x-markdown",
+        mimeType = MIME_TYPE,
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "MarkdownViewer",
         position = 2000
@@ -94,7 +96,8 @@ public class MarkdownViewerElement implements MultiViewElement {
             .set(Parser.EXTENSIONS, Arrays.asList(
                     AnchorLinkExtension.create(),
                     TablesExtension.create(),
-                    TaskListExtension.create()
+                    TaskListExtension.create(),
+                    StrikethroughExtension.create()
             ))
             .set(HtmlRenderer.INDENT_SIZE, 2)
             .set(HtmlRenderer.RENDER_HEADER_ID, true)
@@ -111,6 +114,9 @@ public class MarkdownViewerElement implements MultiViewElement {
             .set(TablesExtension.APPEND_MISSING_COLUMNS, true)
             .set(TablesExtension.DISCARD_EXTRA_COLUMNS, true)
             .set(TablesExtension.HEADER_SEPARATOR_COLUMN_MATCH, true)
+            // Strikethrough change from del to s tag
+            .set(StrikethroughExtension.STRIKETHROUGH_STYLE_HTML_OPEN, "<s>")
+            .set(StrikethroughExtension.STRIKETHROUGH_STYLE_HTML_CLOSE, "</s>")
             .toImmutable();
 
     final Parser parser = Parser.builder(OPTIONS).build();

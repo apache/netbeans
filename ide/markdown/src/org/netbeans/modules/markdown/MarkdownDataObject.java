@@ -105,11 +105,11 @@ import org.openide.windows.TopComponent;
 @GrammarRegistration(mimeType=MarkdownDataObject.MIME_TYPE, grammar="markdown.tmLanguage.json")
 public class MarkdownDataObject extends MultiDataObject {
 
-    public static final String MIME_TYPE = "text/x-markdown-nb";
+    public static final String MIME_TYPE = "text/x-markdown";
 
     public MarkdownDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
-        registerEditor("text/x-markdown", true);
+        registerEditor(MIME_TYPE, true);
     }
 
     @Override

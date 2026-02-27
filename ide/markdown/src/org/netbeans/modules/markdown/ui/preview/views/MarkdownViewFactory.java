@@ -41,6 +41,8 @@ public class MarkdownViewFactory extends HTMLEditorKit.HTMLFactory {
 
         if (isElementOfTag(elem, HTML.Tag.INPUT)) {
             return new CheckboxView(elem);
+        } else if (isElementOfTag(elem, HTML.Tag.HR)) {
+            return new HorizontalRuleView(elem);
         }
 
         return super.create(elem);

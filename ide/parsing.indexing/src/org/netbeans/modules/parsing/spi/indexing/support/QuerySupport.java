@@ -40,13 +40,13 @@ import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.java.queries.BinaryForSourceQuery;
-import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.parsing.impl.RunWhenScanFinishedSupport;
@@ -524,13 +524,13 @@ public final class QuerySupport {
             @NonNull
             public Query and(@NonNull final Query...queries) {
                 Parameters.notNull("queries", queries);     //NOI18N
-                final org.apache.lucene.search.BooleanQuery bq = new org.apache.lucene.search.BooleanQuery();
+                BooleanQuery.Builder bq = new BooleanQuery.Builder();
                 for (Query q : queries) {
                     bq.add(new BooleanClause(q.queryImpl, org.apache.lucene.search.BooleanClause.Occur.MUST));
                 }
                 return new Query(
                     qs,
-                    bq);
+                    bq.build());
             }
 
             /**
@@ -541,13 +541,13 @@ public final class QuerySupport {
             @NonNull
             public Query or(@NonNull final Query...queries) {
                 Parameters.notNull("queries", queries);     //NOI18N
-                final org.apache.lucene.search.BooleanQuery bq = new org.apache.lucene.search.BooleanQuery();
+                BooleanQuery.Builder bq = new BooleanQuery.Builder();
                 for (Query q : queries) {
                     bq.add(new BooleanClause(q.queryImpl, org.apache.lucene.search.BooleanClause.Occur.SHOULD));
                 }
                 return new Query(
                     qs,
-                    bq);
+                    bq.build());
             }
 
             /**

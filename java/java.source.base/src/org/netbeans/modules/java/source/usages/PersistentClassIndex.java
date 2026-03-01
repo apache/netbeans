@@ -27,10 +27,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.lang.model.element.ElementKind;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause.Occur;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.util.BytesRef;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -48,14 +47,14 @@ import org.netbeans.modules.parsing.lucene.support.Convertor;
 import org.netbeans.modules.parsing.lucene.support.Index;
 import org.netbeans.modules.parsing.lucene.support.IndexManager;
 import org.netbeans.modules.parsing.lucene.support.Queries;
-import org.netbeans.modules.parsing.lucene.support.StoppableConvertor;
-import org.netbeans.modules.parsing.lucene.support.StoppableConvertor.Stop;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.Pair;
 import org.openide.util.Parameters;
+
+import static org.netbeans.modules.java.source.usages.DocumentUtil.FIELD_REFERENCES;
 
 /**
  *
@@ -183,7 +182,7 @@ public final class PersistentClassIndex extends ClassIndexImpl {
     @Override
     public String getSourceName (final String binaryName) throws IOException, InterruptedException {
         try {
-            final Query q = DocumentUtil.binaryNameQuery(binaryName);
+            final Query q = DocumentUtil.binaryNameQuery(binaryName).build();
             Set<String> names = new HashSet<>();
             index.query(names, DocumentUtil.sourceNameConvertor(), DocumentUtil.sourceNameFieldSelector(), cancel.get(), q);
             return names.isEmpty() ? null : names.iterator().next();
@@ -273,7 +272,7 @@ public final class PersistentClassIndex extends ClassIndexImpl {
             @NonNull final String simpleName,
             @NonNull final ClassIndex.NameKind kind,
             @NonNull final Set<? extends ClassIndex.SearchScopeType> scope,
-            @NonNull final FieldSelector selector,
+            @NonNull final Set<String> selector,
             @NonNull final Convertor<? super Document, T> convertor,
             @NonNull final Collection<? super T> result) throws InterruptedException, IOException {
         final Pair<Convertor<? super Document, T>,Index> ctu = indexPath.getPatch(convertor);
@@ -316,7 +315,7 @@ public final class PersistentClassIndex extends ClassIndexImpl {
                 index.queryDocTerms(
                         result,
                         ctu.first(),
-                        Term::text,
+                        BytesRef::utf8ToString,
                         DocumentUtil.declaredTypesFieldSelector(false, false),
                         cancel.get(),
                         query);
@@ -324,7 +323,7 @@ public final class PersistentClassIndex extends ClassIndexImpl {
                     ctu.second().queryDocTerms(
                             result,
                             convertor,
-                            Term::text,
+                            BytesRef::utf8ToString,
                             DocumentUtil.declaredTypesFieldSelector(false, false),
                             cancel.get(),
                             query);
@@ -356,8 +355,8 @@ public final class PersistentClassIndex extends ClassIndexImpl {
                 } else {
                     collectInto = result;
                 }
-                final Pair<StoppableConvertor<Term,String>,Term> filter = QueryUtil.createPackageFilter(prefix,directOnly);
-                index.queryTerms(collectInto, filter.second(), filter.first(), cancel.get());
+                final Pair<Convertor<BytesRef,String>,String> filter = QueryUtil.createPackageFilter(prefix,directOnly);
+                index.queryTerms(collectInto, DocumentUtil.FIELD_PACKAGE_NAME, filter.second(), filter.first(), cancel.get());
                 if (cacheOp) {
                     synchronized (PersistentClassIndex.this) {
                         if (rootPkgCache == null) {
@@ -384,12 +383,12 @@ public final class PersistentClassIndex extends ClassIndexImpl {
         }
         try {
             IndexManager.priorityAccess(() -> {
-                final Term startTerm = DocumentUtil.referencesTerm("", null, true);    //NOI18N
-                final StoppableConvertor<Index.WithTermFrequencies.TermFreq,Void> convertor = new FreqCollector(
-                        startTerm, typeFreq, pkgFreq);
+                final Convertor<Index.WithTermFrequencies.TermFreq,Void> convertor = new FreqCollector(
+                        FIELD_REFERENCES, typeFreq, pkgFreq);
                 ((Index.WithTermFrequencies)index).queryTermFrequencies(
                         Collections.<Void>emptyList(),
-                        startTerm,
+                        FIELD_REFERENCES,
+                        null,
                         convertor,
                         cancel.get());
                 return null;
@@ -701,7 +700,7 @@ public final class PersistentClassIndex extends ClassIndexImpl {
     }
 
 
-    private static final class FreqCollector implements StoppableConvertor<Index.WithTermFrequencies.TermFreq, Void> {
+    private static final class FreqCollector implements Convertor<Index.WithTermFrequencies.TermFreq, Void> {
 
         private final int postfixLen = ClassIndexImpl.UsageType.values().length;
         private final String fieldName;
@@ -710,10 +709,10 @@ public final class PersistentClassIndex extends ClassIndexImpl {
 
 
         FreqCollector(
-                @NonNull final Term startTerm,
+                @NonNull final String fieldName,
                 @NonNull final Map<String,Integer> typeFreqs,
                 @NonNull final Map<String,Integer> pkgFreq) {
-            this.fieldName = startTerm.field();
+            this.fieldName = fieldName;
             this.typeFreq = typeFreqs;
             this.pkgFreq = pkgFreq;
         }
@@ -721,13 +720,10 @@ public final class PersistentClassIndex extends ClassIndexImpl {
         @CheckForNull
         @Override
         @SuppressWarnings("StringEquality")
-        public Void convert(@NonNull final Index.WithTermFrequencies.TermFreq param) throws Stop {
-            final Term term = param.getTerm();
-            if (fieldName != term.field()) {
-                throw new Stop();
-            }
+        public Void convert(@NonNull final Index.WithTermFrequencies.TermFreq param) {
+            final BytesRef term = param.getTerm();
             final int docCount = param.getFreq();
-            final String encBinName = term.text();
+            final String encBinName = term.utf8ToString();
             final String binName = encBinName.substring(
                 0,
                 encBinName.length() - postfixLen);

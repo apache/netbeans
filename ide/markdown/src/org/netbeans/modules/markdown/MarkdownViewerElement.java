@@ -28,6 +28,8 @@ import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import java.awt.BorderLayout;
 import java.awt.Rectangle;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -50,6 +52,7 @@ import javax.swing.text.StyledDocument;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
+import org.netbeans.modules.editor.settings.storage.api.EditorSettings;
 import static org.netbeans.modules.markdown.MarkdownDataObject.MIME_TYPE;
 import org.netbeans.modules.markdown.ui.preview.MarkdownEditorKit;
 import org.openide.awt.HtmlBrowser;
@@ -64,6 +67,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
+import org.openide.util.WeakListeners;
 import org.openide.windows.TopComponent;
 
 /**
@@ -140,6 +144,7 @@ public class MarkdownViewerElement implements MultiViewElement {
     };
 
     private final Task updater = RP.create(MarkdownViewerElement.this::updateView);
+    private final PropertyChangeListener pcl = this::colorProfileChange;
     private StyledDocument source;
 
     public MarkdownViewerElement(Lookup lookup) {
@@ -149,6 +154,7 @@ public class MarkdownViewerElement implements MultiViewElement {
     @Override
     public JComponent getVisualRepresentation() {
         if (component == null) {
+            EditorSettings.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(pcl, this));
             viewer = new JEditorPane();
             viewer.setEditorKit(new MarkdownEditorKit());
             viewer.setEditable(false);
@@ -293,6 +299,17 @@ public class MarkdownViewerElement implements MultiViewElement {
             } else if (evt.getURL() != null) {
                 HtmlBrowser.URLDisplayer.getDefault().showURL(evt.getURL());
             }
+        }
+    }
+
+    /**
+     * redraw document if profile changes
+     * @param evt 
+     */
+    public void colorProfileChange(PropertyChangeEvent evt) {
+        if (EditorSettings.PROP_CURRENT_FONT_COLOR_PROFILE.equals(evt.getPropertyName())) {
+            viewer.setEditorKit(new MarkdownEditorKit());
+            updateView();
         }
     }
 }

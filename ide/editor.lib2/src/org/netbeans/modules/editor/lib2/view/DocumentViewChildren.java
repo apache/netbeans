@@ -350,7 +350,7 @@ public class DocumentViewChildren extends ViewChildren<ParagraphView> {
                 pAlloc = getChildAllocation(docView, pIndex, docViewAlloc);
             }
             docView.op.getTextLayoutCache().activate(pView);
-            retOffset = pView.children.getNextVisualPositionY(pView, offset, bias, pAlloc, southDirection, biasRet, x);
+            retOffset = pView.getNextVisualPositionY(pView, offset, bias, pAlloc, southDirection, biasRet, x);
             if (retOffset == -1) {
                 offset = -1; // Continue by entering the paragraph from outside
             }

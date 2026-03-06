@@ -74,6 +74,8 @@ import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.Completion.Context;
 import org.netbeans.api.lsp.Completion.TriggerKind;
 import org.netbeans.api.lsp.StructureElement;
+import org.netbeans.modules.lsp.client.EnhancedLanguageServer;
+import org.netbeans.modules.lsp.client.EnhancedTextDocumentService;
 import org.netbeans.modules.lsp.client.Utils;
 import org.netbeans.spi.lsp.ErrorProvider;
 import org.netbeans.spi.lsp.StructureProvider;
@@ -82,7 +84,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
 
-public class BridgingLanguageServer implements LanguageServer, LanguageClientAware {
+public class BridgingLanguageServer implements EnhancedLanguageServer, LanguageClientAware {
 
     private static final int DIAGNOSTIC_DELAY = 500;
     private static final RequestProcessor WORKER = new RequestProcessor(BridgingLanguageServer.class.getName() + "-worker", 1, false, false);
@@ -147,8 +149,8 @@ public class BridgingLanguageServer implements LanguageServer, LanguageClientAwa
     }
 
     @Override
-    public TextDocumentService getTextDocumentService() {
-        return new TextDocumentService() {
+    public EnhancedTextDocumentService getTextDocumentService() {
+        return new EnhancedTextDocumentService() {
             @Override
             public void didOpen(DidOpenTextDocumentParams params) {
                 FileObject file = Utils.fromURI(params.getTextDocument().getUri());
@@ -260,6 +262,11 @@ public class BridgingLanguageServer implements LanguageServer, LanguageClientAwa
                 return result;
             }
         };
+    }
+
+    @Override
+    public EnhancedTextDocumentService getEnhancedTextDocumentService() {
+        return getTextDocumentService();
     }
 
     private CompletionItem convertCompletionItem(Document doc, Completion completion) {

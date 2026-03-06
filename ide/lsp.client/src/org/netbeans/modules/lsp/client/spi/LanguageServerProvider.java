@@ -24,6 +24,7 @@ import org.eclipse.lsp4j.services.LanguageServer;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.modules.lsp.client.EnhancedLanguageServer;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.LanguageServerProviderAccessor;
 import org.openide.util.Lookup;
@@ -61,17 +62,17 @@ public interface LanguageServerProvider {
             return new LanguageServerDescription(in, out, process, null);
         }
 
-        static @NonNull LanguageServerDescription create(@NonNull LanguageServer server) {
+        static @NonNull LanguageServerDescription create(@NonNull EnhancedLanguageServer server) {
             return new LanguageServerDescription(null, null, null, server);
         }
 
         private final InputStream in;
         private final OutputStream out;
         private final Process process;
-        private final LanguageServer server;
+        private final EnhancedLanguageServer server;
         private LSPBindings bindings;
 
-        private LanguageServerDescription(InputStream in, OutputStream out, Process process, LanguageServer server) {
+        private LanguageServerDescription(InputStream in, OutputStream out, Process process, EnhancedLanguageServer server) {
             this.in = in;
             this.out = out;
             this.process = process;
@@ -96,7 +97,7 @@ public interface LanguageServerProvider {
                 }
 
                 @Override
-                public LanguageServer getServer(LanguageServerDescription desc) {
+                public EnhancedLanguageServer getServer(LanguageServerDescription desc) {
                     return desc.server;
                 }
 
@@ -111,7 +112,7 @@ public interface LanguageServerProvider {
                 }
 
                 @Override
-                public LanguageServerDescription createLanguageServerDescription(LanguageServer server) {
+                public LanguageServerDescription createLanguageServerDescription(EnhancedLanguageServer server) {
                     return LanguageServerDescription.create(server);
                 }
             });

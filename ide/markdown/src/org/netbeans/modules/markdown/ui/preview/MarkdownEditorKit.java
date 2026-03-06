@@ -24,8 +24,7 @@ import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
-import org.netbeans.modules.editor.settings.storage.api.EditorSettings;
-import org.netbeans.modules.markdown.StyleUtils;
+import org.netbeans.modules.markdown.utils.StyleUtils;
 
 /**
  *

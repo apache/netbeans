@@ -119,8 +119,8 @@ public class MarkdownViewerElement implements MultiViewElement {
             .set(TablesExtension.DISCARD_EXTRA_COLUMNS, true)
             .set(TablesExtension.HEADER_SEPARATOR_COLUMN_MATCH, true)
             // Strikethrough change from del to s tag
-            .set(StrikethroughExtension.STRIKETHROUGH_STYLE_HTML_OPEN, "<s>")
-            .set(StrikethroughExtension.STRIKETHROUGH_STYLE_HTML_CLOSE, "</s>")
+            .set(StrikethroughExtension.STRIKETHROUGH_STYLE_HTML_OPEN, "<s>")  //NOI18N
+            .set(StrikethroughExtension.STRIKETHROUGH_STYLE_HTML_CLOSE, "</s>")  //NOI18N
             .toImmutable();
 
     final Parser parser = Parser.builder(OPTIONS).build();
@@ -144,8 +144,12 @@ public class MarkdownViewerElement implements MultiViewElement {
     };
 
     private final Task updater = RP.create(MarkdownViewerElement.this::updateView);
-    private final PropertyChangeListener pcl = this::colorProfileChange;
+
     private StyledDocument source;
+
+    //Font config update listener
+    private volatile boolean fontChanged = false;
+    private final PropertyChangeListener pcl = this::colorProfileChange;
 
     public MarkdownViewerElement(Lookup lookup) {
         dataObject = lookup.lookup(MarkdownDataObject.class);
@@ -303,11 +307,27 @@ public class MarkdownViewerElement implements MultiViewElement {
     }
 
     /**
-     * redraw document if profile changes
+     * redraw document if profile changes or font setting changes
      * @param evt 
      */
     public void colorProfileChange(PropertyChangeEvent evt) {
-        if (EditorSettings.PROP_CURRENT_FONT_COLOR_PROFILE.equals(evt.getPropertyName())) {
+        if (viewer == null) {
+            return;
+        }
+
+        String newValue =(evt.getNewValue() instanceof String ) ? (String) evt.getNewValue() : ""; // NOI18N
+
+        //patch for triggering font update
+        if (!fontChanged &&
+                "fontColors".equals(evt.getPropertyName()) // NOI18N
+                && evt.getOldValue() != null
+                && !newValue.startsWith("test") // NOI18N
+                ) { 
+            fontChanged = true;
+        }
+
+        if (fontChanged || EditorSettings.PROP_CURRENT_FONT_COLOR_PROFILE.equals(evt.getPropertyName())) {
+            fontChanged = false;
             viewer.setEditorKit(new MarkdownEditorKit());
             updateView();
         }

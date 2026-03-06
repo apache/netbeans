@@ -24,6 +24,7 @@
     <fontcolor name="body" default="default"/>
     <fontcolor name="code" bgColor="F6F8FA"/>
     <fontcolor name="pre" bgColor="F6F8FA"/>
+    <fontcolor name="blockquote"/>
     <fontcolor name="heading1"/>
     <fontcolor name="heading2" default="heading1"/>
     <fontcolor name="heading3" default="heading1"/>

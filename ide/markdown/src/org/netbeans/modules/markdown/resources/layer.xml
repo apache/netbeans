@@ -24,7 +24,7 @@
     <folder name="Editors">
         <folder name="text">
             <folder name="x-markdown">
-                <attr name="displayName" bundlevalue="org.netbeans.modules.markdown.resources.Bundle#Editors/text/x-markdown"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.markdown.resources.Bundle#Editors/text/x-markdown-preview"/>
                 <folder name="FontsColors">
                     <folder name="NetBeans">
                         <folder name="Defaults">
@@ -47,6 +47,20 @@
                             </file>
                         </folder>
                     </folder>
+                    <folder name="Earth">
+                        <folder name="Defaults">
+                            <file name="FontAndColors-earth.xml" url="FontAndColors-earth.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.markdown.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
+                    <folder name="FlatLafDark">
+                        <folder name="Defaults">
+                            <file name="FontAndColors-flatlafdark.xml" url="FontAndColors-flatlafdark.xml">
+                                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.markdown.resources.Bundle"/>
+                            </file>
+                        </folder>
+                    </folder>
                 </folder>
             </folder>
         </folder>
@@ -61,7 +75,7 @@
     <folder name="OptionsDialog">
         <folder name="PreviewExamples">
             <folder name="text">
-                <file name="x-markdown" url="coloring.md"/>
+                <file name="x-markdown" url="Coloring.md"/>
             </folder>
         </folder>
     </folder>

@@ -1,4 +1,10 @@
-No preview for the moment 
+
+=========================
+```
+COLORING PREVIEW NOT ENABLED
+```
+=========================
+
 # Markdown Cheat Sheet (Example File)
 
 This is a **generic Markdown template** showcasing essential formatting features.

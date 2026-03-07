@@ -24,6 +24,7 @@ import org.eclipse.lsp4j.services.LanguageServer;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider.LanguageServerDescription;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -57,4 +58,5 @@ public abstract class LanguageServerProviderAccessor {
     public abstract LSPBindings getBindings(LanguageServerDescription desc);
     public abstract void setBindings(LanguageServerDescription desc, LSPBindings bindings);
     public abstract LanguageServerDescription createLanguageServerDescription(@NonNull LanguageServer server);
+    public abstract Lookup getLookup(LanguageServerDescription desc);
 }

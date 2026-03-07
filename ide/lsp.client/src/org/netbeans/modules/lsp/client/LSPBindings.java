@@ -92,6 +92,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.modules.lsp.client.bindings.LanguageClientImpl;
 import org.netbeans.modules.lsp.client.bindings.TextDocumentSyncServerCapabilityHandler;
 import org.netbeans.modules.lsp.client.options.MimeTypeInfo;
+import org.netbeans.modules.lsp.client.spi.LanguageIdResolver;
 import org.netbeans.modules.lsp.client.spi.ServerRestarter;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider;
 import org.netbeans.modules.lsp.client.spi.LanguageServerProvider.LanguageServerDescription;
@@ -372,7 +373,9 @@ public class LSPBindings {
                     }
                     InitializeResult result = initServer(process, server, dir); //XXX: what if a different root is expected????
                     server.initialized(new InitializedParams());
-                    b = new LSPBindings(server, result, LanguageServerProviderAccessor.getINSTANCE().getProcess(desc));
+                    process = LanguageServerProviderAccessor.getINSTANCE().getProcess(desc);
+                    Lookup serverLookup = LanguageServerProviderAccessor.getINSTANCE().getLookup(desc);
+                    b = new LSPBindings(server, result, process, serverLookup.lookup(LanguageIdResolver.class));
                     // Register cleanup via LSPReference#run
                     new LSPReference(b, Utilities.activeReferenceQueue());
                     lci.setBindings(b);
@@ -426,7 +429,7 @@ public class LSPBindings {
                 LanguageServer server = launcher.getRemoteProxy();
                 InitializeResult result = initServer(null, server, root);
                 server.initialized(new InitializedParams());
-                LSPBindings bindings = new LSPBindings(server, result, null);
+                LSPBindings bindings = new LSPBindings(server, result, null, null);
 
                 lc.setBindings(bindings);
 
@@ -521,11 +524,13 @@ public class LSPBindings {
     private final LanguageServer server;
     private final InitializeResult initResult;
     private final Process process;
+    private final LanguageIdResolver languageIdResolver;
 
-    private LSPBindings(LanguageServer server, InitializeResult initResult, Process process) {
+    private LSPBindings(LanguageServer server, InitializeResult initResult, Process process, LanguageIdResolver languageIdResolver) {
         this.server = server;
         this.initResult = initResult;
         this.process = process;
+        this.languageIdResolver = languageIdResolver;
     }
 
     public TextDocumentService getTextDocumentService() {
@@ -539,6 +544,16 @@ public class LSPBindings {
     public InitializeResult getInitResult() {
         //XXX: defenzive copy?
         return initResult;
+    }
+
+    public String resolveLanguageId(FileObject fileObject) {
+        if(languageIdResolver != null) {
+            String languageId = languageIdResolver.resolveLanguageId(fileObject);
+            if (languageId != null) {
+                return languageId;
+            }
+        }
+        return FileUtil.getMIMEType(fileObject);
     }
 
     @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")

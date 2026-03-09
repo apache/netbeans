@@ -35,18 +35,93 @@ public class AddMissingAltAttributeRuleTest extends TestBase {
         return AddMissingAltAttributeRule.getInstance();
     }
 
+    // ===== Basic img tests =====
+
     public void testProvideTextAlternativeHint() throws Exception {
-        checkHints(this, createRule(), "testfiles/hints/addMissingAltAttribute1.html", "<img^");
+        checkHints(this, createRule(), "testfiles/hints/other/addMissingAltAttribute1.html", "<img^");
     }
 
-    //~ Fix
-    public void testProvideTextAlternativeHintFix_01() throws Exception {
+    public void testProvideTextAlternativeHintFix() throws Exception {
         applyHint(
             this,
             createRule(),
-            "testfiles/hints/addMissingAltAttribute1.html",
+            "testfiles/hints/other/addMissingAltAttribute1.html",
             "<img^",
             "Provide Text Alternatives"
         );
+    }
+
+    // ===== Multiple images tests =====
+
+    public void testMultipleImagesOnly2ImageHint() throws Exception {
+        checkHints(this, createRule(), "testfiles/hints/other/addMissingAltAttribute2.html", "<img src=\"image2.png\"^");
+    }
+
+    public void testMultipleImagesOnly2ImageFix() throws Exception {
+        applyHint(
+            this,
+            createRule(),
+            "testfiles/hints/other/addMissingAltAttribute2.html",
+            "<img src=\"image2.png\"^",
+            "Provide Text Alternatives"
+        );
+    }
+
+    public void testMultipleImagesFirstHasAltNoHint() throws Exception {
+        checkHints(this, createRule(), "testfiles/hints/other/addMissingAltAttribute2.html", "<img src=\"image1.png\"^");
+    }
+
+    // ===== Applet tests =====
+
+    public void testAppletHint() throws Exception {
+        checkHints(this, createRule(), "testfiles/hints/other/addMissingAltAttributeApplet.html", "<applet^");
+    }
+
+    public void testAppletFix() throws Exception {
+        applyHint(
+            this,
+            createRule(),
+            "testfiles/hints/other/addMissingAltAttributeApplet.html",
+            "<applet^",
+            "Provide Text Alternatives"
+        );
+    }
+
+    // ===== Area tests =====
+
+    public void testAreaHint() throws Exception {
+        checkHints(this, createRule(), "testfiles/hints/other/addMissingAltAttributeArea.html", "<area^");
+    }
+
+    public void testAreaFix() throws Exception {
+        applyHint(
+            this,
+            createRule(),
+            "testfiles/hints/other/addMissingAltAttributeArea.html",
+            "<area^",
+            "Provide Text Alternatives"
+        );
+    }
+
+    // ===== Multiline img tests =====
+
+    public void testMultilineHint() throws Exception {
+        checkHints(this, createRule(), "testfiles/hints/other/addMissingAltAttributeMultiline.html", "<img src=\"test.png\"^");
+    }
+
+    public void testMultilineFix() throws Exception {
+        applyHint(
+            this,
+            createRule(),
+            "testfiles/hints/other/addMissingAltAttributeMultiline.html",
+            "<img src=\"test.png\"^",
+            "Provide Text Alternatives"
+        );
+    }
+
+    // ===== Existing alt attribute tests (no hint expected) =====
+
+    public void testExistingAltNoHint() throws Exception {
+        checkHints(this, createRule(), "testfiles/hints/other/addMissingAltAttributeExisting.html", "<img^");
     }
 }

@@ -21,15 +21,18 @@ package org.netbeans.modules.html.editor.hints.other;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.html.lexer.HTMLTokenId;
+import org.netbeans.api.lexer.Token;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.csl.api.Hint;
 import org.netbeans.modules.csl.api.HintFix;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.html.editor.api.Utils;
 import org.netbeans.modules.html.editor.hints.HtmlRuleContext;
-import org.netbeans.modules.html.editor.utils.HtmlTagContextUtils;
+import org.netbeans.modules.html.editor.lib.api.elements.OpenTag;
+import org.netbeans.modules.parsing.api.Snapshot;
 
 /**
  *
@@ -37,13 +40,24 @@ import org.netbeans.modules.html.editor.utils.HtmlTagContextUtils;
  */
 public class AddMissingAltAttributeHint extends Hint {
 
-    public AddMissingAltAttributeHint(HtmlRuleContext context, OffsetRange range) {
+    public AddMissingAltAttributeHint(HtmlRuleContext context, OpenTag openTag) {
         super(AddMissingAltAttributeRule.getInstance(),
             AddMissingAltAttributeRule.getInstance().getDescription(),
             context.getFile(),
-            range,
-            Collections.<HintFix>singletonList(new AddMissingAltAttributeHintFix(context, range)),
+            createOffsetRange(context.getSnapshot(), openTag),
+            Collections.<HintFix>singletonList(new AddMissingAltAttributeHintFix(context, openTag)),
             10);
+    }
+
+    private static OffsetRange createOffsetRange(Snapshot snapshot, OpenTag openTag) {
+        int originalFrom = snapshot.getOriginalOffset(openTag.from());
+        int originalTo = snapshot.getOriginalOffset(openTag.to());
+        if (originalFrom == -1 || originalTo == -1) {
+            // Fallback to snapshot offsets if translation fails
+            return new OffsetRange(openTag.from(), openTag.to());
+        }
+
+        return new OffsetRange(originalFrom, originalTo);
     }
 
     private static class AddMissingAltAttributeHintFix implements HintFix {
@@ -51,11 +65,11 @@ public class AddMissingAltAttributeHint extends Hint {
         private static final Logger LOGGER = Logger.getLogger(AddMissingAltAttributeHintFix.class.getSimpleName());
 
         private final HtmlRuleContext context;
-        private final OffsetRange range;
+        private final OpenTag openTag;
 
-        public AddMissingAltAttributeHintFix(HtmlRuleContext context, OffsetRange range) {
+        public AddMissingAltAttributeHintFix(HtmlRuleContext context, OpenTag openTag) {
             this.context = context;
-            this.range = range;
+            this.openTag = openTag;
         }
 
         @Override
@@ -66,25 +80,63 @@ public class AddMissingAltAttributeHint extends Hint {
         @Override
         public void implement() throws Exception {
             BaseDocument document = (BaseDocument) context.getSnapshot().getSource().getDocument(true);
+            Snapshot snapshot = context.getSnapshot();
+
             document.runAtomic(() -> {
                 try {
-                    OffsetRange adjustedRange = HtmlTagContextUtils.adjustContextRange(document, range.getStart(), range.getEnd(), true);
-                    String tagContent = document.getText(adjustedRange.getStart(), adjustedRange.getLength());
+                    int insertPosition = -1;
+                    boolean isSelfClosing = false;
 
-                    // Find last self-closing or non self-closing tag
-                    Pattern closingTagPattern = Pattern.compile("(/?>)");
-                    Matcher closingTagMatcher = closingTagPattern.matcher(tagContent);
-
-                    if (closingTagMatcher.find()) {
-                        int altInsertPosition = adjustedRange.getStart() + closingTagMatcher.start(1);
-
-                        // Check whether a space before alt is needed or not
-                        boolean needsSpaceBefore = altInsertPosition == 0 || tagContent.charAt(closingTagMatcher.start(1) - 1) != ' ';
-                        boolean isSelfClosing = closingTagMatcher.group(0).endsWith("/>");
-                        String altAttribute = (needsSpaceBefore ? " " : "") + "alt=\"\"" + (isSelfClosing ? " " : ""); // NOI18N
-
-                        document.insertString(altInsertPosition, altAttribute, null);
+                    // Convert snapshot offset to original document offset
+                    int originalTagStart = snapshot.getOriginalOffset(openTag.from());
+                    if (originalTagStart == -1) {
+                        return;
                     }
+
+                    // Try lexer tokens first - use original document offsets
+                    TokenSequence<HTMLTokenId> ts = Utils.getJoinedHtmlSequence(document, originalTagStart);
+
+                    if (ts != null) {
+                        ts.move(originalTagStart);
+                        while (ts.moveNext()) {
+                            Token<HTMLTokenId> token = ts.token();
+                            if (token == null) {
+                                break;
+                            }
+
+                            if (token.id() == HTMLTokenId.TAG_CLOSE_SYMBOL) {
+                                insertPosition = ts.offset();
+                                isSelfClosing = "/>".contentEquals(token.text()); // NOI18N
+                                break;
+                            } else if (token.id() == HTMLTokenId.TAG_OPEN) {
+                                // We've hit another tag - stop searching
+                                break;
+                            }
+                        }
+                    }
+
+                    // Fallback to parser-based position if lexer didn't work
+                    if (insertPosition == -1) {
+                        int originalTagEnd = snapshot.getOriginalOffset(openTag.to());
+                        if (originalTagEnd == -1) {
+                            return;
+                        }
+                        isSelfClosing = openTag.isEmpty();
+                        // tagEnd points after '>', so go back 1 for '>', or 2 for '/>'
+                        insertPosition = isSelfClosing ? originalTagEnd - 2 : originalTagEnd - 1;
+                    }
+
+                    if (insertPosition <= 0) {
+                        return;
+                    }
+
+                    // Check whether a space before alt is needed
+                    char charBefore = document.getText(insertPosition - 1, 1).charAt(0);
+                    boolean needsSpaceBefore = charBefore != ' ';
+
+                    String altAttribute = (needsSpaceBefore ? " " : "") + "alt=\"\"" + (isSelfClosing ? " " : ""); // NOI18N
+
+                    document.insertString(insertPosition, altAttribute, null);
                 } catch (BadLocationException ex) {
                     LOGGER.log(Level.WARNING, "Invalid offset: {0}", ex.offsetRequested());
                 }

@@ -64,6 +64,61 @@ public class JavaCompletionTask121FeaturesTest extends CompletionTestBase {
         performTest("RecordPattern", 1107, null, "AutoCompletion_RecordPattern_5.pass", SOURCE_LEVEL);
     }
 
+    public void testRecordPatternLocalClass1() throws Exception {
+        performTest("Method", 935,
+                    """
+                    record Local(int i) {}
+                    Object o = null;
+                    switch (o) {
+                        case Loc""",
+                    "LocalClass.pass",
+                    SOURCE_LEVEL);
+    }
+
+    public void testRecordPatternLocalClass2() throws Exception {
+        performTest("Method", 935,
+                    """
+                    record Local(int i) {}
+                    Object o = null;
+                    switch (o) {
+                        case Local""",
+                    "LocalRecordPattern.pass",
+                    SOURCE_LEVEL);
+    }
+
+    public void testRecordPatternLocalClass3() throws Exception {
+        performTest("Method", 935,
+                    """
+                    record Local(int i) {}
+                    Object o = null;
+                    boolean b = o instanceof Local""",
+                    "LocalRecordPattern.pass",
+                    SOURCE_LEVEL);
+    }
+
+    public void testRecordPatternLocalClass4() throws Exception {
+        performTest("Method", 935,
+                    """
+                    record Local(int i) {}
+                    record Box(Local l) {}
+                    Object o = null;
+                    boolean b = o instanceof Box(Local""",
+                    "LocalRecordPattern.pass",
+                    SOURCE_LEVEL);
+    }
+
+    public void testRecordPatternLocalClass5() throws Exception {
+        performTest("Method", 935,
+                    """
+                    record Local(int i) {}
+                    record Box(Local l) {}
+                    Object o = null;
+                    switch (o) {
+                        case Box(Local""",
+                    "LocalRecordPattern.pass",
+                    SOURCE_LEVEL);
+    }
+
     public void testCaseLabels_1() throws Exception {
         performTest("SwitchPatternMatching", 971, null, "AutoCompletion_CaseLabels_PatternMatchingSwitch_1.pass", SOURCE_LEVEL);
     }

@@ -1869,9 +1869,13 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         if (el != null && (el.getKind().isClass() || el.getKind().isInterface())) {
                             if (parent.getKind() == Tree.Kind.NEW_CLASS && ((NewClassTree) parent).getIdentifier() == fa && prefix != null) {
                                 String typeName = controller.getElementUtilities().getElementName(el, true) + "." + prefix; //NOI18N
-                                TypeMirror tm = controller.getTreeUtilities().parseType(typeName, env.getScope().getEnclosingClass());
+                                TypeMirror tm = controller.getTreeUtilities().parseType(typeName, env.getScope());
                                 if (tm != null && tm.getKind() == TypeKind.DECLARED) {
-                                    addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, inImport, insideNew, false, false, switchItemAdder);
+                                    TypeElement te = (TypeElement) ((DeclaredType) tm).asElement();
+                                    addMembers(env, tm, te, EnumSet.of(CONSTRUCTOR), null, inImport, insideNew, false, false, switchItemAdder);
+                                    if (shouldExcludeTypeInNewClass(te, env)) {
+                                        env.addToExcludes(te);
+                                    }
                                 }
                             }
                         }
@@ -1917,9 +1921,13 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         if (el != null && el.getKind() == PACKAGE) {
                             if (parent.getKind() == Tree.Kind.NEW_CLASS && ((NewClassTree) parent).getIdentifier() == fa && prefix != null) {
                                 String typeName = controller.getElementUtilities().getElementName(el, true) + "." + prefix; //NOI18N
-                                TypeMirror tm = controller.getTreeUtilities().parseType(typeName, env.getScope().getEnclosingClass());
+                                TypeMirror tm = controller.getTreeUtilities().parseType(typeName, env.getScope());
                                 if (tm != null && tm.getKind() == TypeKind.DECLARED) {
-                                    addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, inImport, insideNew, false, false, switchItemAdder);
+                                    TypeElement te = (TypeElement) ((DeclaredType) tm).asElement();
+                                    addMembers(env, tm, te, EnumSet.of(CONSTRUCTOR), null, inImport, insideNew, false, false, switchItemAdder);
+                                    if (shouldExcludeTypeInNewClass(te, env)) {
+                                        env.addToExcludes(te);
+                                    }
                                 }
                             }
                             if (exs != null && !exs.isEmpty()) {
@@ -2051,7 +2059,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (path.getParentPath().getLeaf().getKind() == Kind.CONSTANT_CASE_LABEL) {
             CompilationController controller = env.getController();
             controller.toPhase(Phase.RESOLVED);
-            TypeMirror tm = controller.getTreeUtilities().parseType(fullName(mi.getMethodSelect()), env.getScope().getEnclosingClass());
+            TypeMirror tm = controller.getTreeUtilities().parseType(fullName(mi.getMethodSelect()), env.getScope());
             if (tm != null && tm.getKind() == TypeKind.DECLARED) {
                 TypeElement te = (TypeElement) ((DeclaredType) tm).asElement();
                 if (te.getKind() == RECORD) {
@@ -2062,7 +2070,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         if (ts != null && (ts.token().id() == JavaTokenId.LPAREN || ts.token().id() == JavaTokenId.COMMA)) {
                             if (componentType.getKind() == TypeKind.DECLARED) {
                                 if (prefix != null) {
-                                    TypeMirror ptm = controller.getTreeUtilities().parseType(prefix, env.getScope().getEnclosingClass());
+                                    TypeMirror ptm = controller.getTreeUtilities().parseType(prefix, env.getScope());
                                     if (ptm != null && ptm.getKind() == TypeKind.DECLARED) {
                                         TypeElement pte = (TypeElement) ((DeclaredType) ptm).asElement();
                                         if (pte != null && pte.getKind() == RECORD) {
@@ -2135,12 +2143,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
                             ? controller.getTypes().getDeclaredType(tel) : null;
                     TypeElement toExclude = null;
                     if (nc.getIdentifier().getKind() == Tree.Kind.IDENTIFIER && prefix != null) {
-                        TypeMirror tm = controller.getTreeUtilities().parseType(prefix, env.getScope().getEnclosingClass());
+                        TypeMirror tm = controller.getTreeUtilities().parseType(prefix, env.getScope());
                         if (tm != null && tm.getKind() == TypeKind.DECLARED) {
                             TypeElement te = (TypeElement) ((DeclaredType) tm).asElement();
                             addMembers(env, tm, te, EnumSet.of(CONSTRUCTOR), base, false, true, false);
-                            if ((te.getTypeParameters().isEmpty() || SourceVersion.RELEASE_5.compareTo(controller.getSourceVersion()) > 0)
-                                    && !hasAccessibleInnerClassConstructor(te, env.getScope(), controller.getTrees())) {
+                            if (shouldExcludeTypeInNewClass(te, env)) {
                                 toExclude = te;
                             }
                         }
@@ -2225,6 +2232,13 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     break;
             }
         }
+    }
+
+    private boolean shouldExcludeTypeInNewClass(TypeElement te, Env env) throws IOException {
+        CompilationController controller = env.getController();
+
+        return (te.getTypeParameters().isEmpty() || SourceVersion.RELEASE_5.compareTo(controller.getSourceVersion()) > 0)
+                && !hasAccessibleInnerClassConstructor(te, env.getScope(), controller.getTrees());
     }
 
     private void insideTry(Env env) throws IOException {
@@ -2550,7 +2564,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     } else {
                         if (env.getController().getSourceVersion().compareTo(RELEASE_21) >= 0) {
                             if (prefix != null) {
-                                TypeMirror ptm = controller.getTreeUtilities().parseType(prefix, env.getScope().getEnclosingClass());
+                                TypeMirror ptm = controller.getTreeUtilities().parseType(prefix, env.getScope());
                                 if (ptm != null && ptm.getKind() == TypeKind.DECLARED) {
                                     TypeElement pte = (TypeElement) ((DeclaredType) ptm).asElement();
                                     if (pte != null && pte.getKind() == RECORD) {
@@ -2754,7 +2768,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, iot, env.getOffset());
         if (ts != null && ts.token().id() == JavaTokenId.INSTANCEOF) {
             if (prefix != null && controller.getSourceVersion().compareTo(RELEASE_21) >= 0) {
-                TypeMirror tm = controller.getTreeUtilities().parseType(prefix, env.getScope().getEnclosingClass());
+                TypeMirror tm = controller.getTreeUtilities().parseType(prefix, env.getScope());
                 if (tm != null && tm.getKind() == TypeKind.DECLARED) {
                     TypeElement te = (TypeElement) ((DeclaredType) tm).asElement();
                     if (te != null && te.getKind() == RECORD) {
@@ -3485,7 +3499,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     TypeMirror componentType = recordComponents.get(size - 1).getAccessor().getReturnType();
                     if (componentType.getKind() == TypeKind.DECLARED) {
                         if (prefix != null) {
-                            TypeMirror ptm = controller.getTreeUtilities().parseType(prefix, env.getScope().getEnclosingClass());
+                            TypeMirror ptm = controller.getTreeUtilities().parseType(prefix, env.getScope());
                             if (ptm != null && ptm.getKind() == TypeKind.DECLARED) {
                                 TypeElement pte = (TypeElement) ((DeclaredType) ptm).asElement();
                                 if (pte != null && pte.getKind() == RECORD) {
@@ -4088,6 +4102,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
         ElementUtilities.ElementAcceptor acceptor = new ElementUtilities.ElementAcceptor() {
             @Override
             public boolean accept(Element e, TypeMirror t) {
+                if (!(env.getExcludes() == null || !env.getExcludes().contains(e))) {
+                    return false; //TODO: correct?
+                }
                 switch (simplifyElementKind(e.getKind())) {
                     case FIELD:
                         if (!startsWith(env, e.getSimpleName().toString())) {
@@ -4889,6 +4906,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     CharSequence fqn = ((TypeElement) ((DeclaredType) type).asElement()).getQualifiedName();
                     if (JAVA_LANG_CLASS.contentEquals(fqn)) {
                         String name = value.endsWith(".class") ? value.substring(0, value.length() - 6) : value; //NOI18N
+                        //NOTE: for annotations, not sure if keeping this is not more sensible. Can annotations realistically use local classes as attribute values?
                         TypeMirror tm = tu.parseType(name, eu.outermostTypeElement(element));
                         typeElement = tm != null && tm.getKind() == TypeKind.DECLARED ? (TypeElement) ((DeclaredType) tm).asElement() : null;
                         if (typeElement != null && startsWith(env, typeElement.getSimpleName().toString())) {

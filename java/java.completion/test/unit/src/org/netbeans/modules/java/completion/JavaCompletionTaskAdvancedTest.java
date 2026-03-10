@@ -958,4 +958,35 @@ public class JavaCompletionTaskAdvancedTest extends CompletionTestBase {
     public void testGenericMethod2() throws Exception {
         performTest("GenericMethodInvocation", 1231, "run2(\"\", arg", "GenericMethodInvocation2.pass");
     }
+
+    public void testLocalClassConstructor1() throws Exception {
+        performTest("Method", 935,
+                    """
+                    class Local {
+                        Local() {}
+                        Local(int i) {}
+                    }
+                    new Local""",
+                    "LocalClassConstructor.pass");
+    }
+
+    public void testLocalClassConstructor2() throws Exception {
+        performTest("Method", 935,
+                    """
+                    class LocalOuter {
+                        static class Local {
+                            Local() {}
+                            Local(int i) {}
+                        }
+                    }
+                    new LocalOuter.Local""",
+                    "LocalClassConstructor.pass");
+    }
+
+    public void testConstructorFromPackage() throws Exception {
+        performTest("Method", 935,
+                    """
+                    new java.lang.String""",
+                    "stringConstructors.pass");
+    }
 }

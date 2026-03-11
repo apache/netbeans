@@ -12,10 +12,10 @@ The MIT License (MIT)
 
 Copyright 2011, John Resig
 Dual licensed under the MIT or GPL Version 2 licenses.
-https://jquery.org/license
+http://jquery.org/license
 
 Includes Sizzle.js
-https://sizzlejs.com/
+http://sizzlejs.com/
 Copyright 2011, The Dojo Foundation
 Released under the MIT, BSD, and GPL Licenses.
 
@@ -41,7 +41,7 @@ Parts of this work are licensed:
 
                                 Apache License
                            Version 2.0, January 2004
-                        https://www.apache.org/licenses/
+                        http://www.apache.org/licenses/
 
    TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
@@ -233,7 +233,7 @@ Parts of this work are licensed:
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
-       https://www.apache.org/licenses/LICENSE-2.0
+       http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,

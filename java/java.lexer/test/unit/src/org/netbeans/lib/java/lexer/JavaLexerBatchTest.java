@@ -560,6 +560,23 @@ public class JavaLexerBatchTest extends TestCase {
         LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.SEMICOLON, ";");
     }
 
+    public void testVarUnnamed() {
+        String text = "var _ = 0;";
+        InputAttributes attr = new InputAttributes();
+        attr.setValue(JavaTokenId.language(), "version", Integer.valueOf(22), true);
+        TokenHierarchy<?> hi = TokenHierarchy.create(text, false, JavaTokenId.language(), EnumSet.noneOf(JavaTokenId.class), attr);
+        TokenSequence<?> ts = hi.tokenSequence();
+
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.VAR, "var");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.UNDERSCORE, "_");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.EQ, "=");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.WHITESPACE, " ");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.INT_LITERAL, "0");
+        LexerTestUtilities.assertNextTokenEquals(ts, JavaTokenId.SEMICOLON, ";");
+    }
+
     public void testVarWeird() {
         String text = "var = 0; varu = 0; val = 0; if (a.var);";
         InputAttributes attr = new InputAttributes();

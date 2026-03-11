@@ -20,6 +20,7 @@ package org.netbeans.modules.html.editor.hints.other;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.text.Document;
 import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.api.lexer.Token;
@@ -96,38 +97,42 @@ public class AltAttributeVisitor implements ElementVisitor {
             return false;
         }
 
-        TokenSequence<HTMLTokenId> ts = Utils.getJoinedHtmlSequence(doc, originalTagStart);
-        if (ts == null) {
-            return false;
-        }
-
-        ts.move(originalTagStart);
-        while (ts.moveNext()) {
-            Token<HTMLTokenId> token = ts.token();
-            if (token == null) {
-                break;
+        final AtomicBoolean result = new AtomicBoolean();
+        doc.render(() -> {
+            TokenSequence<HTMLTokenId> ts = Utils.getJoinedHtmlSequence(doc, originalTagStart);
+            if (ts == null) {
+                return;
             }
 
-            // Stop if we've gone past the tag end
-            if (ts.offset() >= originalTagEnd) {
-                break;
-            }
+            ts.move(originalTagStart);
+            while (ts.moveNext()) {
+                Token<HTMLTokenId> token = ts.token();
+                if (token == null) {
+                    break;
+                }
 
-            HTMLTokenId id = token.id();
+                // Stop if we've gone past the tag end
+                if (ts.offset() >= originalTagEnd) {
+                    break;
+                }
 
-            // Found an attribute name - check if it's "alt"
-            if (id == HTMLTokenId.ARGUMENT) {
-                if (LexerUtils.equals(token.text(), ALT_ATTR, true, false)) {
-                    return true; // Found alt attribute
+                HTMLTokenId id = token.id();
+
+                // Found an attribute name - check if it's "alt"
+                if (id == HTMLTokenId.ARGUMENT) {
+                    if (LexerUtils.equals(token.text(), ALT_ATTR, true, false)) {
+                        result.set(true);
+                        return;
+                    }
+                }
+
+                // Stop at tag close or next tag open
+                if (id == HTMLTokenId.TAG_CLOSE_SYMBOL || id == HTMLTokenId.TAG_OPEN_SYMBOL) {
+                    break;
                 }
             }
+        });
 
-            // Stop at tag close or next tag open
-            if (id == HTMLTokenId.TAG_CLOSE_SYMBOL || id == HTMLTokenId.TAG_OPEN_SYMBOL) {
-                break;
-            }
-        }
-
-        return false;
+        return result.get();
     }
 }

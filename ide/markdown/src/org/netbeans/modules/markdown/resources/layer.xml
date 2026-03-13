@@ -23,6 +23,16 @@
 <filesystem>
     <folder name="Editors">
         <folder name="text">
+            <folder name="markdown">
+                <folder name="TokenListProvider">
+                    <file name="org-netbeans-modules-spellchecker-plain-PlainTokenListProvider.instance" />
+                </folder>
+                <folder name="CompletionProviders">
+                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance">
+                        <attr name="position" intvalue="600"/>
+                    </file>
+                </folder>
+            </folder>
             <folder name="x-markdown-nb-preview">
                 <attr name="displayName" bundlevalue="org.netbeans.modules.markdown.resources.Bundle#Editors/text/x-markdown-nb-preview"/>
                 <folder name="FontsColors">

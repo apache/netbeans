@@ -27,20 +27,25 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import org.junit.Test;
-import org.junit.After;
 import org.junit.Before;
 import org.openide.util.Utilities;
 
 import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 
-public class GradleFilesScanRootTest extends GradleFilesTest {
+public class GradleFilesScanRootTest {
+
+    @Rule
+    public final TemporaryFolder root = new TemporaryFolder();
 
     private File scanRoot;
     private File forbiddenTestsDir;
 
     @Before
     public void setup() {
-        scanRoot = root.getRoot().getParentFile();
+        scanRoot = new File(root.getRoot(), "scanRoot");
+        scanRoot.mkdirs();
         forbiddenTestsDir = new File(scanRoot, "forbiddenTests");
         File fd1 = new File(forbiddenTestsDir, "forbidden1");
         File fd2 = new File(new File(forbiddenTestsDir, "f2"), "forbidden2");
@@ -48,25 +53,6 @@ public class GradleFilesScanRootTest extends GradleFilesTest {
         System.setProperty("project.forbiddenFolders", fd1.getAbsolutePath() + ";" + fd2.getAbsolutePath());
         fd1.mkdirs();
         fd2.mkdirs();
-    }
-
-    @After
-    public void cleanup() {
-        try {
-            Files.walkFileTree(forbiddenTestsDir.toPath(), new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    return file.toFile().delete() ? FileVisitResult.CONTINUE : FileVisitResult.TERMINATE;
-                }
-
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    return dir.toFile().delete() ? FileVisitResult.CONTINUE : FileVisitResult.TERMINATE;
-                }
-            });
-        } catch (IOException e) {
-            e.printStackTrace(System.err);
-        }
     }
 
     private static File normalizeTempDir(File root) {
@@ -80,78 +66,129 @@ public class GradleFilesScanRootTest extends GradleFilesTest {
     }
 
     @Test
-    public void testGetProjectAboveRoot() throws IOException {
-        File dirAboveScanRoot = scanRoot.getParentFile();
-        File settings = new File(dirAboveScanRoot, "settings.gradle");
-        File build = new File(dirAboveScanRoot, "build.gradle.kts");
-        try {
-            String subPath = root.getRoot().getAbsolutePath().substring(dirAboveScanRoot.getAbsolutePath().length() + 1);
-            build.createNewFile();            
-            settings.createNewFile();
-            Files.write(settings.toPath(), List.of(
-                    "rootProject.name = 'example'",
-                    "include('" + subPath + "/app')"
-            ));
-            File app = root.newFolder("app");
-            // Check that the project is not resolved
-            GradleFiles gf = new GradleFiles(app);
-            assertNull(gf.getBuildScript());
-            assertNull(gf.getSettingsScript());
-            assertNull(gf.getParentScript());
-            assertFalse(gf.isProject());
-            assertFalse(gf.isRootProject());
-
-            // Also check the root project
-            File rootBuild = root.newFile(root.getRoot().getName() + ".gradle.kts");
-            GradleFiles rootGf = new GradleFiles(root.getRoot());
-            assertEquals(normalizeTempDir(rootBuild), normalizeTempDir(rootGf.getBuildScript()));
-            assertNull(rootGf.getSettingsScript());
-            assertNull(rootGf.getParentScript());
-            assertTrue(rootGf.isProject());
-            assertTrue(rootGf.isRootProject());
-
-            // Now ensure that the above project structure does work when below the scanRoot.
-            File newRoot = root.newFolder(subPath);
-            File newSettings = Files.move(settings.toPath(), root.getRoot().toPath().resolve(settings.getName())).toFile();
-            File newBuild = Files.move(build.toPath(), root.getRoot().toPath().resolve(build.getName())).toFile();
-            File newApp = Files.move(app.toPath(), newRoot.toPath().resolve(app.getName())).toFile();
-            GradleFiles newGf = new GradleFiles(newApp);
-            assertNull(newGf.getBuildScript());
-            assertEquals(normalizeTempDir(newSettings), normalizeTempDir(newGf.getSettingsScript()));
-            assertEquals(normalizeTempDir(newBuild), normalizeTempDir(newGf.getParentScript()));
-            assertTrue(newGf.isProject());
-            assertFalse(gf.isRootProject());
-        } finally {
-            settings.delete();
-            build.delete();
+    public void testAllScanRootTests() throws IOException {
+        // Due to the use of System.properties and the static initialization of GradleFiles,
+        // only a single @Test is used and individual tests are invoked from here.
+        SingleTestRunner runner = new SingleTestRunner(root.getRoot());
+        runner.runOneTest(() -> testGetProjectAboveRoot());
+        runner.runOneTest(() -> testGetSiblingScanRoot());
+        runner.runOneTest(() -> testGetForbiddenSubProject());
+        if (runner.getException() != null) {
+            throw runner.getException();
         }
     }
 
-    @Test
-    public void testGetSiblingScanRoot() throws IOException {
-        File dirAboveScanRoot = scanRoot.getParentFile();
+    private interface SingleUnit {
+        void run() throws IOException;
+    }
+
+    private static class SingleTestRunner {
+        private IOException exception;
+        private final File root;
+
+        public SingleTestRunner(File root) {
+            this.root = root;
+        }
+        
+        public void runOneTest(SingleUnit test) {
+            try {
+                test.run();
+            } catch (IOException e) {
+                e.printStackTrace(System.err);
+                if (exception == null) {
+                    exception = e;
+                } else {
+                    exception.addSuppressed(e);
+                }
+            } finally {
+                cleanup();
+            }
+        }
+
+        public IOException getException() {
+            return exception;
+        }
+
+        private void cleanup() {
+            try {
+                Files.walkFileTree(root.toPath(), new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        return file.toFile().delete() ? FileVisitResult.CONTINUE : FileVisitResult.TERMINATE;
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace(System.err);
+            }
+
+        }
+    }
+
+    private void testGetProjectAboveRoot() throws IOException {
+        File dirAboveScanRoot = root.getRoot();
+        File projectRoot = new File(scanRoot, "project");
+        File settings = new File(dirAboveScanRoot, "settings.gradle");
+        File build = new File(dirAboveScanRoot, "build.gradle.kts");
+
+        projectRoot.mkdirs();
+        String subPath = projectRoot.getAbsolutePath().substring(dirAboveScanRoot.getAbsolutePath().length() + 1);
+        build.createNewFile();
+        settings.createNewFile();
+        Files.write(settings.toPath(), List.of(
+                "projectRootProject.name = 'example'",
+                "include('" + subPath + "/app')"
+        ));
+        File app = new File(projectRoot, "app");
+        app.mkdirs();
+        // Check that the project is not resolved
+        GradleFiles gf = new GradleFiles(app);
+        assertNull(gf.getBuildScript());
+        assertNull(gf.getSettingsScript());
+        assertNull(gf.getParentScript());
+        assertFalse(gf.isProject());
+        assertFalse(gf.isRootProject());
+
+        // Also check the projectRoot project
+        File projectRootBuild = new File(projectRoot, projectRoot.getName() + ".gradle.kts");
+        projectRootBuild.createNewFile();
+        GradleFiles projectRootGf = new GradleFiles(projectRoot);
+        assertEquals(normalizeTempDir(projectRootBuild), normalizeTempDir(projectRootGf.getBuildScript()));
+        assertNull(projectRootGf.getSettingsScript());
+        assertNull(projectRootGf.getParentScript());
+        assertTrue(projectRootGf.isProject());
+        assertTrue(projectRootGf.isRootProject());
+
+        // Now ensure that the above project structure does work when below the scanRoot.
+        File newRoot = new File(projectRoot, subPath);
+        newRoot.mkdirs();
+        File newSettings = Files.move(settings.toPath(), projectRoot.toPath().resolve(settings.getName())).toFile();
+        File newBuild = Files.move(build.toPath(), projectRoot.toPath().resolve(build.getName())).toFile();
+        File newApp = Files.move(app.toPath(), newRoot.toPath().resolve(app.getName())).toFile();
+        GradleFiles newGf = new GradleFiles(newApp);
+        assertNull(newGf.getBuildScript());
+        assertEquals(normalizeTempDir(newSettings), normalizeTempDir(newGf.getSettingsScript()));
+        assertEquals(normalizeTempDir(newBuild), normalizeTempDir(newGf.getParentScript()));
+        assertTrue(newGf.isProject());
+        assertFalse(gf.isRootProject());
+    }
+
+    private void testGetSiblingScanRoot() throws IOException {
+        File dirAboveScanRoot = root.getRoot();
         File project = new File(dirAboveScanRoot, scanRoot.getName() + "2");
         File settings = new File(project, "settings.gradle");
         File build = new File(project, "build.gradle.kts");
-        try {
-            project.mkdirs();
-            build.createNewFile();
-            settings.createNewFile();
-            GradleFiles gf = new GradleFiles(project);
-            assertNull(gf.getBuildScript());
-            assertNull(gf.getSettingsScript());
-            assertNull(gf.getParentScript());
-            assertFalse(gf.isProject());
-            assertFalse(gf.isRootProject());
-        } finally {
-            settings.delete();
-            build.delete();
-            project.delete();
-        }
+        project.mkdirs();
+        build.createNewFile();
+        settings.createNewFile();
+        GradleFiles gf = new GradleFiles(project);
+        assertNull(gf.getBuildScript());
+        assertNull(gf.getSettingsScript());
+        assertNull(gf.getParentScript());
+        assertFalse(gf.isProject());
+        assertFalse(gf.isRootProject());
     }
 
-    @Test
-    public void testGetForbiddenSubProject() throws IOException {
+    private void testGetForbiddenSubProject() throws IOException {
         File parentPrj = forbiddenTestsDir;
         File settings = new File(parentPrj, "settings.gradle");
         settings.createNewFile();

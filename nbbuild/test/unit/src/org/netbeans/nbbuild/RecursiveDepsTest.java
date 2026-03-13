@@ -23,13 +23,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.Project;
+import org.junit.Rule;
 
 /**
  *
  * @author pzajac
  */
 public class RecursiveDepsTest extends TestBase {
-    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+        
     public RecursiveDepsTest(java.lang.String testName) {
         super(testName);
     }
@@ -43,7 +48,10 @@ public class RecursiveDepsTest extends TestBase {
     public void testDepsTest () throws Exception {
       // create test
       File projectxml = extractFile(RecursiveDepsTest.class.getResourceAsStream("RecursiveDepsProject.xml"),"project.xml");  
-      execute ("RecursiveDeps.xml", new String[] { "-verbose", "-Dproject.file=" + projectxml, "recursive-deps" });
+      System.setProperty("project.file", projectxml.getAbsolutePath());
+      buildRule.configureProject(getBuildFileInClassPath("RecursiveDeps.xml"),Project.MSG_VERBOSE);
+      buildRule.executeTarget("recursives-deps");
+        
     }
 
     private File extractFile(InputStream is, String fileName) throws IOException {

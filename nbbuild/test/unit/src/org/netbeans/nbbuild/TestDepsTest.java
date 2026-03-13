@@ -23,12 +23,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.Project;
+import org.junit.Rule;
 
 /**
  *
  * @author pzajac
  */
 public class TestDepsTest extends TestBase {
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
     
     public TestDepsTest(java.lang.String testName) {
         super(testName);
@@ -43,17 +49,23 @@ public class TestDepsTest extends TestBase {
     public void testDepsTest () throws Exception {
       // create test
       File projectxml = extractFile(TestDepsTest.class.getResourceAsStream("TestDepsProject.xml"),"project.xml");  
-      execute ("TestDeps.xml", new String[] { "-verbose", "-Dproject.file=" + projectxml, "test-deps" });
+      System.setProperty("project.file", projectxml.getAbsolutePath());
+      buildRule.configureProject(getBuildFileInClassPath("TestDeps.xml"),Project.MSG_VERBOSE);
+      buildRule.executeTarget("test-deps");
     }
+    
     public void testDepsNoTestDeps() throws Exception {
       File projectxml = extractFile(TestDepsTest.class.getResourceAsStream("TestDepsProjectNoTestDeps.xml"),"project.xml");
-      execute ("TestDeps.xml", new String[] { "-verbose", "-Dproject.file=" + projectxml, "test-deps-no-test-deps" });
-        
+      System.setProperty("project.file", projectxml.getAbsolutePath());
+      buildRule.configureProject(getBuildFileInClassPath("TestDeps.xml"),Project.MSG_VERBOSE);
+      buildRule.executeTarget("test-deps-no-test-deps");
     }
+    
   public void testMisingModuleEntryTestDeps() throws Exception {
       File projectxml = extractFile(TestDepsTest.class.getResourceAsStream("TestDepsMissingModuleEntry.xml"),"project.xml");
-      execute ("TestDeps.xml", new String[] { "-verbose", "-Dproject.file=" + projectxml, "test-deps-missing-module-entry-test-deps" });
-        
+      System.setProperty("project.file", projectxml.getAbsolutePath());
+      buildRule.configureProject(getBuildFileInClassPath("TestDeps.xml"),Project.MSG_VERBOSE);
+      buildRule.executeTarget("test-deps-missing-module-entry-test-deps");
     }
 
     private File extractFile(InputStream is, String fileName) throws IOException {

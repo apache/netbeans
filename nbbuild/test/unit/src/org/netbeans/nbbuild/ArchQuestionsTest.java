@@ -18,7 +18,7 @@
  */
 
 package org.netbeans.nbbuild;
-
+import org.apache.tools.ant.BuildFileRule;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.junit.Rule;
 import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -38,6 +39,8 @@ import org.xml.sax.SAXException;
 public class ArchQuestionsTest extends TestBase implements EntityResolver {
     /** debug messages to show if necessary */
     private List<String> msg = new ArrayList<>();
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
     
     public ArchQuestionsTest (String name) {
         super (name);
@@ -60,7 +63,8 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
                 "</project>"
                 
                 );
-        execute(f, new String[] { });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue("File is generated", output.exists());
         
@@ -90,8 +94,10 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "</project>"
 
         );
-        execute (f, new String[] { });
-
+        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        
         assertTrue ("File is generated", answers.exists ());
         
         String content = readFile(answers);
@@ -117,7 +123,9 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "</project>"
 
         );
-        execute (f, new String[] { });
+        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
 
         assertTrue ("File is generated", answers.exists ());
         
@@ -225,12 +233,11 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "</project>"
 
         );
-        execute (f, new String[] {  
-            "-Darch.generate=true",
-            "-Darch.private.disable.validation.for.test.purposes=true",
-                
-        });
-
+        
+        System.setProperty("arch.generate", "true");
+        System.setProperty("arch.private.disable.validation.for.test.purposes", "true");
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         assertTrue ("Answers still exists", answers.exists ());
         assertTrue ("Output file generated", output.exists ());
         
@@ -404,12 +411,13 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "</project>"
 
         );
-        execute (f, new String[] {  
-            "-Darch.generate=true",
-            "-Darch.private.disable.validation.for.test.purposes=true",
-                
-        });
 
+        System.setProperty("arch.generate", "true");
+        System.setProperty("arch.private.disable.validation.for.test.purposes", "true");
+        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        
         assertTrue ("Answers still exists", answers.exists ());
         assertTrue ("Output file generated", output.exists ());
 
@@ -478,8 +486,8 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
     public void testReadNbDepsFromProjectXMLWithPropertiesSetToNameAnd() throws Exception {
         String[] txt = new String[3];
         // txt[0] = is reserved for the doReadNbDepsFromProjectXML method and will contain a result
-        txt[1] = "-Darch.org.openide.util.name=UtilitiesAPI";
-        txt[2] = "-Darch.org.openide.util.category=official";
+        System.setProperty("arch.org.openide.util.name", "UtilitiesAPI");
+        System.setProperty("arch.org.openide.util.category", "official");
         Document dom = doReadNbDepsFromProjectXML(" <defaultanswer generate='here'/>", txt);
         
         
@@ -682,9 +690,10 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
 
         );
         // happy hacking first of the txt argument is used to pass args to the execution script
-        txt[0] = "-Darch.private.disable.validation.for.test.purposes=true";
-        execute (f, txt);
-
+        
+        System.setProperty("arch.private.disable.validation.for.test.purposes", "true");
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         assertTrue ("Answers still exists", answers.exists ());
         assertTrue ("Output file generated", output.exists ());
 
@@ -711,9 +720,13 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "</project>"
 
         );
-		execute (f, new String[] { "-Darch.generate=true" });
-
-		answers.deleteOnExit();
+       
+        System.setProperty("arch.generate", "true");
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.getProject().setProperty("arch.generate", "true");
+        buildRule.executeTarget("all");
+	
+	answers.deleteOnExit();
         assertTrue ("File is generated", answers.exists ());
     }
 
@@ -762,11 +775,12 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "</project>"
 
         );
-        String[] txt = new String[1];
-//        txt[0] = "-Darch.private.disable.validation.for.test.purposes=true";
-        txt[0] = "-verbose";
-        execute (f, txt);
 
+        System.setProperty("arch.private.disable.validation.for.test.purposes", "true");
+        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.getProject().setProperty("verbose", "true");
+        buildRule.executeTarget("all");
         assertTrue ("File is generated", output.exists ());
         
         String content = readFile(output);
@@ -797,7 +811,9 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "</project>"
 
         );
-        execute (f, new String[] { });
+        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
 
         assertTrue ("File is generated", output.exists ());
         

@@ -21,12 +21,18 @@ package org.netbeans.nbbuild;
 import java.io.File;
 import java.util.jar.JarFile;
 import junit.framework.AssertionFailedError;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
 
 /** Checks that javac.target gets reflected in the manifest.
  *
  * @author Jaroslav Tulach
  */
 public class JarWithModuleAttributesTest extends TestBase {
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+        
     public JarWithModuleAttributesTest (String name) {
         super (name);
     }
@@ -59,8 +65,9 @@ public class JarWithModuleAttributesTest extends TestBase {
         );
 
 
-        execute (f, new String[] { "-verbose" });
-        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+                
         assertTrue ("JAR created", jar.isFile());
 
         File extracted = new File(new File(output, "META-INF"), "MANIFEST.MF");
@@ -106,7 +113,8 @@ public class JarWithModuleAttributesTest extends TestBase {
         );
 
 
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("JAR created", jar.isFile());
 
@@ -163,8 +171,9 @@ public class JarWithModuleAttributesTest extends TestBase {
         );
 
 
-        execute (f, new String[] { "-verbose" });
-
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        
         assertTrue ("JAR created", jar.isFile());
 
         File extracted = new File(new File(output, "META-INF"), "MANIFEST.MF");
@@ -237,7 +246,8 @@ public class JarWithModuleAttributesTest extends TestBase {
         );
 
 
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("JAR created", jar.isFile());
 
@@ -277,8 +287,9 @@ public class JarWithModuleAttributesTest extends TestBase {
         );
 
 
-        execute (f, new String[] { "-verbose" });
-
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        
         assertTrue ("JAR created", jar.isFile());
 
         File extracted = new File(new File(output, "META-INF"), "MANIFEST.MF");

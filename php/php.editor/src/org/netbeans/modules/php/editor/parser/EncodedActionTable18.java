@@ -2963,7 +2963,9 @@ public class EncodedActionTable18 {
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
-        sb.append("\006");
+        sb.append("\010");
+        sb.append("\111");
+        sb.append("\ufee2");
         sb.append("\151");
         sb.append("\ufee2");
         sb.append("\232");
@@ -2971,9 +2973,11 @@ public class EncodedActionTable18 {
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
-        sb.append("\004");
+        sb.append("\006");
+        sb.append("\111");
+        sb.append("\u0494");
         sb.append("\151");
-        sb.append("\u05cd");
+        sb.append("\u0495");
         sb.append("\001");
         sb.append("\002");
         sb.append("\000");
@@ -4524,9 +4528,5 @@ public class EncodedActionTable18 {
         sb.append("\123");
         sb.append("\100");
         sb.append("\012");
-        sb.append("\101");
-        sb.append("\206");
-        sb.append("\102");
-        sb.append("\041");
     }
 }

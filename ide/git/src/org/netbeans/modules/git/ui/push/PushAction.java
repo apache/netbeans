@@ -121,12 +121,13 @@ public class PushAction extends SingleRepositoryAction {
     }
     
     public void push (final File repository) {
+        push(repository, null);
+    }
+
+    public void push (final File repository, final GitBranch branchToSelect) {
         if (EventQueue.isDispatchThread()) {
-            Utils.post(new Runnable () {
-                @Override
-                public void run () {
-                    push(repository);
-                }
+            Utils.post(() -> {
+                push(repository, branchToSelect);
             });
             return;
         }
@@ -140,7 +141,7 @@ public class PushAction extends SingleRepositoryAction {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run () {
-                PushWizard wiz = new PushWizard(repository, remotes);
+                PushWizard wiz = new PushWizard(repository, remotes, branchToSelect);
                 if (wiz.show()) {
                     Utils.logVCSExternalRepository("GIT", wiz.getPushUri()); //NOI18N
                     push(repository, wiz.getPushUri(), wiz.getPushMappings(), wiz.getFetchRefSpecs(), wiz.getRemoteName());
@@ -325,12 +326,7 @@ public class PushAction extends SingleRepositoryAction {
                                 logger.outputLine(Bundle.MSG_PushAction_updates_addBranch(update.getLocalName(),
                                         update.getNewObjectId(), update.getResult()));
                                 if (!remote && update.getNewObjectId() != null) {
-                                    int pos = update.getLocalName().indexOf('/');
-                                    if (pos >= 0 && update.getLocalName().substring(pos + 1).equals(currBranch.getName())) {
-                                        if (shallSetupTracking(currBranch, update.getLocalName())) {
-                                            SystemAction.get(SetTrackingAction.class).setupTrackedBranchImmediately(repository, currBranch.getName(), update.getLocalName());
-                                        }
-                                    }
+                                    callSetTrackingAction(update, currBranch, repository);
                                 }
                             } else {
                                 logger.outputLine(Bundle.MSG_PushAction_updates_updateBranch(update.getRemoteName(),
@@ -343,6 +339,11 @@ public class PushAction extends SingleRepositoryAction {
                                         LogUtils.logBranchUpdateReview(repository, update.getLocalName(),
                                                 update.getOldObjectId(), update.getNewObjectId(), logger);
                                     }
+                                }
+
+                                // Check if tracking should be set up for updated branches without tracking
+                                if (!remote && update.getNewObjectId() != null && currBranch.getTrackedBranch() == null) {
+                                    callSetTrackingAction(update, currBranch, repository);
                                 }
                             }
                         } else {
@@ -361,6 +362,15 @@ public class PushAction extends SingleRepositoryAction {
                             }
 
                         }
+                    }
+                }
+            }
+
+            private void callSetTrackingAction(GitTransportUpdate update, GitBranch currBranch, File repository1) {
+                int pos = update.getLocalName().indexOf('/');
+                if (pos >= 0 && update.getLocalName().substring(pos + 1).equals(currBranch.getName())) {
+                    if (shallSetupTracking(currBranch, update.getLocalName())) {
+                        SystemAction.get(SetTrackingAction.class).setupTrackedBranchImmediately(repository1, currBranch.getName(), update.getLocalName());
                     }
                 }
             }

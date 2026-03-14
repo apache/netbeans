@@ -46,10 +46,16 @@ class PullWizard  implements ChangeListener {
     private PanelsIterator wizardIterator;
     private WizardDescriptor wizardDescriptor;
     private final File repository;
+    private final GitBranch branchToSelect;
 
     public PullWizard (File repository, Map<String, GitRemoteConfig> remotes) {
+        this(repository, remotes, null);
+    }
+
+    public PullWizard (File repository, Map<String, GitRemoteConfig> remotes, GitBranch branchToSelect) {
         this.repository = repository;
         this.remotes = remotes;
+        this.branchToSelect = branchToSelect;
     }
 
     boolean show () {
@@ -154,7 +160,7 @@ class PullWizard  implements ChangeListener {
                 Map<String, GitBranch> remoteBranches = selectUriStep.getRemoteBranches();
                 pullBranchesStep.setRemote(remote);
                 if (remoteBranches != null) {
-                    pullBranchesStep.fillRemoteBranches(remoteBranches);
+                    pullBranchesStep.fillRemoteBranches(remoteBranches, branchToSelect);
                 }
                 selectUriStep.storeURI();
             }

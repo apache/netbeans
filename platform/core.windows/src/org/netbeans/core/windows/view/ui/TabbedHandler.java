@@ -30,11 +30,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
 import org.netbeans.core.windows.Constants;
 import org.netbeans.core.windows.ModeImpl;
 import org.netbeans.core.windows.Switches;
@@ -329,7 +327,10 @@ public final class TabbedHandler implements ChangeListener, ActionListener {
             } else if (TabbedContainer.COMMAND_CLOSE_ALL_BUT_THIS == cmd) {
                 TopComponent tc = tabbed.getTopComponentAt(tae.getTabIndex());
                 ActionUtils.closeAllExcept(tc, true);
-            //Pin button handling here
+            } else if (TabbedContainer.COMMAND_CLOSE_RIGHT.equals(cmd)) {
+                TopComponent tc = tabbed.getTopComponentAt(tae.getTabIndex());
+                ActionUtils.closeRight(tc.getTabPosition());
+                //Pin button handling here
             } else if (TabbedContainer.COMMAND_ENABLE_AUTO_HIDE.equals(cmd)) {
                 if( Switches.isTopComponentSlidingEnabled() && tabbed.getComponent().isShowing() ) {
                     TopComponent tc = tabbed.getTopComponentAt(tae.getTabIndex());

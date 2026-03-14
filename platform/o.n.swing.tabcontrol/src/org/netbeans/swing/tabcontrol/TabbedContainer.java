@@ -19,11 +19,6 @@
 
 package org.netbeans.swing.tabcontrol;
 
-import javax.accessibility.Accessible;
-import org.netbeans.swing.tabcontrol.event.TabActionEvent;
-import org.netbeans.swing.tabcontrol.plaf.DefaultTabbedContainerUI;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.AWTEventListener;
 import java.awt.event.ActionListener;
@@ -32,8 +27,12 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.accessibility.Accessible;
 import javax.accessibility.AccessibleRole;
+import javax.swing.*;
 import javax.swing.JComponent.AccessibleJComponent;
+import org.netbeans.swing.tabcontrol.event.TabActionEvent;
+import org.netbeans.swing.tabcontrol.plaf.DefaultTabbedContainerUI;
 import org.openide.util.NbBundle;
 
 
@@ -192,6 +191,8 @@ public class TabbedContainer extends JComponent implements Accessible {
     public static final String COMMAND_CLOSE_ALL = "closeAll"; //NOI18N
 
     public static final String COMMAND_CLOSE_ALL_BUT_THIS = "closeAllButThis"; //NOI18N
+    
+    public static final String COMMAND_CLOSE_RIGHT = "closeRight"; //NOI18N
 
     public static final String COMMAND_ENABLE_AUTO_HIDE = "enableAutoHide"; //NOI18N
 

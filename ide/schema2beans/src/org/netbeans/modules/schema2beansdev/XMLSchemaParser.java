@@ -42,7 +42,7 @@ public class XMLSchemaParser extends GeneralParser implements SchemaParser {
     private Stack parentUniqueNames = new Stack();
     private String lastDefinedType = null;
     private boolean lastDefinedExternalType = true;
-    private List perAttributeExtraData = new LinkedList();
+    private List<SwitchData> perAttributeExtraData = new LinkedList<>();
     private String targetNamespace;
     private Map elementsAlreadyDefined = new IdentityHashMap();
 
@@ -362,7 +362,7 @@ public class XMLSchemaParser extends GeneralParser implements SchemaParser {
             handler.addExtraDataCurLink(new MinOccursRestriction(el.getMinOccurs()));
         }
         if (perAttributeExtraData.size() > 0) {
-            for (Iterator it = perAttributeExtraData.iterator(); it.hasNext(); ) {
+            for (Iterator<SwitchData> it = perAttributeExtraData.iterator(); it.hasNext(); ) {
                 handler.addExtraDataCurLink(it.next());
             }
         }

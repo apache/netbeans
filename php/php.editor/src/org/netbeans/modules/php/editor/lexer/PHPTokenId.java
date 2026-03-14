@@ -41,6 +41,7 @@ import org.netbeans.spi.lexer.LexerRestartInfo;
 public enum PHPTokenId implements TokenId {
 
     T_INLINE_HTML(null, "php"), // NOI18N
+    T_EMBEDDED_CSS(null, "php"), // NOI18N
     PHP_OPENTAG(null, "phpopenclose"), //NOI18N
     T_OPEN_TAG_WITH_ECHO(null, "phpopenclose"),
     PHP_CLOSETAG(null, "phpopenclose"), //NOI18N
@@ -237,6 +238,11 @@ public enum PHPTokenId implements TokenId {
                 return LanguageEmbedding.create(HTMLTokenId.language(), 0, 0, true);
             } else if (id == PHPDOC_COMMENT) {
                 return LanguageEmbedding.create(PHPDocCommentTokenId.language(), 0, 0);
+            } else if (id == T_EMBEDDED_CSS) {
+                Language<?> jsLanguage = Language.find("text/css");
+                if (jsLanguage != null) {
+                    return LanguageEmbedding.create(jsLanguage, 0, 0, true);
+                }
             }
 
             return null; // No embedding

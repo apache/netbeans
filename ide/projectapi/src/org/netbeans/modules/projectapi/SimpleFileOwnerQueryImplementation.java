@@ -108,10 +108,10 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
     
     public Project getOwner(FileObject f) {
         List<FileObject> folders = new ArrayList<>();
-        
+
         deserialize();
         while (f != null) {
-            if (projectScanRoots != null && projectScanRoots.stream().noneMatch(f.getPath()::startsWith)) {
+            if (notWithinProjectScanRoots(f)) {
                 break;
             }
             boolean folder = f.isFolder();
@@ -210,6 +210,18 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
         return null;
     }
 
+    private static boolean notWithinProjectScanRoots(FileObject f) {
+        if (projectScanRoots == null)
+            return false;
+        String path = f.getPath();
+        for (String scanRoot : projectScanRoots) {
+            if (path.startsWith(scanRoot)
+                    && (path.length() == scanRoot.length()
+                    || path.charAt(scanRoot.length()) == '/'))
+                return false;
+        }
+        return true;
+    }
 
     private static boolean hasRoot(
             @NonNull final Set<URI> extRoots,

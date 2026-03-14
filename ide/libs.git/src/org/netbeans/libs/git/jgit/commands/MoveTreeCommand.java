@@ -77,23 +77,29 @@ abstract class MoveTreeCommand extends GitCommand {
         }
         sourceFile = tryNormalizeSymlink(sourceFile);
         targetFile = tryNormalizeSymlink(targetFile);
+        
         Repository repository = getRepository();
+        
+        File repoWorkTreeNormalized = tryNormalizeSymlink(repository.getWorkTree());
+        
         try {
             DirCache cache = repository.lockDirCache();
             try {
-                List<String> ignoredTargets = getIgnores(targetFile);
+                
+                List<String> ignoredTargets = getIgnores(this.source);
+                
                 boolean retried = false;
                 DirCacheBuilder builder = cache.builder();
                 TreeWalk treeWalk = new TreeWalk(repository);
-                PathFilter sourceFilter = PathFilter.create(Utils.getRelativePath(repository.getWorkTree(), sourceFile));
-                PathFilter targetFilter = PathFilter.create(Utils.getRelativePath(repository.getWorkTree(), targetFile));
+                PathFilter sourceFilter = PathFilter.create(Utils.getRelativePath(repoWorkTreeNormalized, sourceFile));
+                PathFilter targetFilter = PathFilter.create(Utils.getRelativePath(repoWorkTreeNormalized, targetFile));
                 treeWalk.setFilter(PathFilterGroup.create(Arrays.asList(sourceFilter, targetFilter)));
                 treeWalk.setRecursive(true);
                 treeWalk.reset();
                 treeWalk.addTree(new DirCacheBuildIterator(builder));
                 while (treeWalk.next() && !monitor.isCanceled()) {
                     String path = treeWalk.getPathString();
-                    File file = new File(repository.getWorkTree().getAbsolutePath() + File.separator + path);
+                    File file = new File(repoWorkTreeNormalized.getAbsolutePath() + File.separator + path);
                     DirCacheEntry e = treeWalk.getTree(0, DirCacheBuildIterator.class).getDirCacheEntry();
                     if (e != null) {
                         if (targetFilter.include(treeWalk)) {
@@ -118,8 +124,8 @@ abstract class MoveTreeCommand extends GitCommand {
                                 // reset whole iterator and start from the beginning
                                 sourceFile = sourceFile.getCanonicalFile();
                                 targetFile = targetFile.getCanonicalFile();
-                                sourceFilter = PathFilter.create(Utils.getRelativePath(repository.getWorkTree(), sourceFile));
-                                targetFilter = PathFilter.create(Utils.getRelativePath(repository.getWorkTree(), targetFile));
+                                sourceFilter = PathFilter.create(Utils.getRelativePath(repoWorkTreeNormalized, sourceFile));
+                                targetFilter = PathFilter.create(Utils.getRelativePath(repoWorkTreeNormalized, targetFile));
                                 treeWalk.setFilter(PathFilterGroup.create(Arrays.asList(sourceFilter, targetFilter)));
                                 treeWalk.reset();
                                 builder = cache.builder();
@@ -185,7 +191,9 @@ abstract class MoveTreeCommand extends GitCommand {
 
     private String getRelativePath (File file, File ancestor, File target) {
         String relativePathToAncestor = Utils.getRelativePath(ancestor, file);
-        StringBuilder relativePathToSource = new StringBuilder(Utils.getRelativePath(getRepository().getWorkTree(), target));
+        StringBuilder relativePathToSource = new StringBuilder(
+                Utils.getRelativePath(tryNormalizeSymlink(getRepository().getWorkTree()), target)
+        );
         if (!relativePathToAncestor.isEmpty()) {
             if (relativePathToSource.length() > 0) {
                 relativePathToSource.append("/"); //NOI18N

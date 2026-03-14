@@ -200,6 +200,9 @@ import org.openide.util.lookup.ProxyLookup;
         
         refreshToolbarButtons();
         setBorderPainted(true);
+
+        // Style editor toolbar separately from main toolbar [style].nb-editor-toolbar   = background: #FFFFFF
+        putClientProperty("FlatLaf.styleClass", "nb-editor-toolbar");
     }
 
     @Override

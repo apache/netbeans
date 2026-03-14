@@ -1452,11 +1452,14 @@ public abstract class PHPCompletionItem implements CompletionProposal {
                 if (phpVersion != null
                         && phpVersion.compareTo(PhpVersion.PHP_70) >= 0) {
                     Collection<TypeResolver> returnTypes = getBaseFunctionElement().getReturnTypes();
+                    // check whether the method in question is the constructor. If it is, the return type should not be added.
+                    boolean isConstructor = getBaseFunctionElement() instanceof MethodElement 
+                    && ((MethodElement) getBaseFunctionElement()).getName().equals(MethodElement.CONSTRUCTOR_NAME);
                     // we can also write a union type in phpdoc e.g. @return int|float
                     // check whether the union type is actual declared return type to avoid adding the union type for phpdoc
-                    if (returnTypes.size() == 1
+                    if (!isConstructor && (returnTypes.size() == 1
                             || getBaseFunctionElement().isReturnUnionType()
-                            || getBaseFunctionElement().isReturnIntersectionType()) {
+                            || getBaseFunctionElement().isReturnIntersectionType())) {
                         String returnType = getBaseFunctionElement().asString(PrintAs.ReturnTypes, typeNameResolver, phpVersion);
                         if (StringUtils.hasText(returnType)) {
                             boolean nullableType = CodeUtils.isNullableType(returnType);

@@ -148,7 +148,7 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                 jsfLibrary = panel.getLibrary();
                 // if the selected library is a default one, add also JSTL library
                 if (jsfLibrary.getName().equals(JSFUtils.DEFAULT_JSF_1_2_NAME)
-                        || jsfLibrary.getName().equals(JSFUtils.DEFAULT_JSF_2_0_NAME)
+                        || jsfLibrary.getName().equals(JSFUtils.DEFAULT_JSF_2_3_NAME)
                         || jsfLibrary.getName().equals(JSFUtils.DEFAULT_JSF_1_1_NAME)) {
                     jstlLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSTL_1_1_NAME);
                 }

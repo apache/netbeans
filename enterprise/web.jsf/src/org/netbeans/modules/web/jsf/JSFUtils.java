@@ -67,7 +67,7 @@ public class JSFUtils {
     // the names of bundled jsf libraries
     public static final String DEFAULT_JSF_1_1_NAME = "jsf1102";  //NOI18N
     public static final String DEFAULT_JSF_1_2_NAME = "jsf12";    //NOI18N
-    public static final String DEFAULT_JSF_2_0_NAME = "jsf20";    //NOI18N
+    public static final String DEFAULT_JSF_2_3_NAME = "jsf20";    //NOI18N
     public static final String DEFAULT_JSF_3_0_NAME = "jsf30";    //NOI18N
     public static final String DEFAULT_JSF_4_0_NAME = "jsf40";    //NOI18N
     public static final String DEFAULT_JSF_4_1_NAME = "jsf41";    //NOI18N
@@ -120,7 +120,7 @@ public class JSFUtils {
         }
 
         if (resource.isDirectory()) {
-            // Case of JSF version 2.1.2 and older - JSF library is created from packed directory
+            // Case of MyFaces and Mojarra version 2.1.2 and older - JSF library is created from packed directory
             File libFolder = new File(resource, LIB_FOLDER);
             if (libFolder.exists()) {
                 File[] files = libFolder.listFiles(new FileFilter() {
@@ -136,6 +136,9 @@ public class JSFUtils {
                 try {
                     List<File> list = Arrays.asList(files);
                     isJSF = ClasspathUtil.containsClass(list, FACES_EXCEPTION);
+                    if (!isJSF) {
+                        isJSF = ClasspathUtil.containsClass(list, JAKARTAEE_FACES_EXCEPTION);
+                    }
                 } catch (IOException exception) {
                     Exceptions.printStackTrace(exception);
                 }
@@ -143,9 +146,13 @@ public class JSFUtils {
                 result = NbBundle.getMessage(JSFUtils.class, "ERROR_THERE_IS_NOT_LIB_FOLDER", resource.getPath()); //NOI18N
             }
         } else {
-            // Case of JSF version 2.1.3+ - JSF library is delivered as a single JAR file
+            // Case of Mojarra version 2.1.3+ - JSF library is delivered as a single JAR file
             try {
-                isJSF = ClasspathUtil.containsClass(Collections.singletonList(resource), FACES_EXCEPTION);
+                List<File> list = Collections.singletonList(resource);
+                isJSF = ClasspathUtil.containsClass(list, FACES_EXCEPTION);
+                if (!isJSF) {
+                    isJSF = ClasspathUtil.containsClass(list, JAKARTAEE_FACES_EXCEPTION);
+                }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }

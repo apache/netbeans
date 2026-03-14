@@ -1,8 +1,10 @@
-Name: Commons Lang
-Version: 3.17.0
+Name: JCommander
+Version: 1.85
+Description: Parse command line parameters
 License: Apache-2.0
-Origin: https://commons.apache.org/proper/commons-lang/
-Description: Provides extra functionality for classes in java.lang.
+Origin: Cédric Beust
+URL: https://jcommander.org
+Files: jcommander-1.85.jar
 
                                  Apache License
                            Version 2.0, January 2004

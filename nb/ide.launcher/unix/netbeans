@@ -81,17 +81,19 @@ fi
 
 export DEFAULT_USERDIR_ROOT
 
-if ! [ "$NETBEANS_USERDIR" = "IGNORE" ]; then
-    # make sure own launcher directory is on PATH as a fallback
-    PATH=$PATH:`echo $progdir | absolutize_paths`
-fi
-
 # #68373: look for userdir, but do not modify "$@"
-if [ -z "$NETBEANS_USERDIR" ]; then
+if [ "$NETBEANS_USERDIR" = "IGNORE" ]; then
     userdir="${netbeans_default_userdir}"
 else
-    userdir="$NETBEANS_USERDIR"
+    # make sure own launcher directory is on PATH as a fallback
+    PATH=$PATH:`echo $progdir | absolutize_paths`
+    if [ -z "$NETBEANS_USERDIR" ]; then
+        userdir="${netbeans_default_userdir}"
+    else
+        userdir="$NETBEANS_USERDIR"
+    fi
 fi
+
 cachedir="${netbeans_default_cachedir}"
 
 founduserdir=""

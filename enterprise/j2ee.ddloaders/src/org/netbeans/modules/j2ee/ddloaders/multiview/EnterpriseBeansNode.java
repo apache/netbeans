@@ -118,7 +118,7 @@ public class EnterpriseBeansNode extends EjbSectionNode {
     }
 
     private void check() {
-        Map nodeMap = new HashMap();
+        Map<Object, Node> nodeMap = new HashMap<>();
         Children children = getChildren();
         Node[] nodes = children.getNodes();
         for (int i = 0; i < nodes.length; i++) {

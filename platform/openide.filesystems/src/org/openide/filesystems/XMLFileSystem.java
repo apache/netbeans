@@ -1122,7 +1122,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
         Stack<ResourceElem> resElemStack = new Stack<ResourceElem>();
         Stack<String> elementStack = new Stack<String>();
         URL urlContext;
-        private Map dtdMap;
+        private Map<String, String> dtdMap;
         private ResourceElem topRE;
         private StringBuffer pcdata = new StringBuffer();
         private int weight;

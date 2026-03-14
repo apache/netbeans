@@ -188,6 +188,7 @@
                 <friend>org.netbeans.modules.junit.ant</friend>
                 <friend>org.netbeans.modules.junit.ant.ui</friend>
                 <friend>org.netbeans.modules.junit.ui</friend>
+                <friend>org.netbeans.modules.maven.junit.ui</friend>
                 <friend>org.netbeans.modules.selenium2.java</friend>
                 <friend>org.netbeans.modules.testng</friend>
                 <friend>org.netbeans.modules.testng.ant</friend>

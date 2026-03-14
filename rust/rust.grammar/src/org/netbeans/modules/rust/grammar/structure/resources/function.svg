@@ -19,16 +19,21 @@
     under the License.
 
 -->
-<licenseinfo>
-    <fileset>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/enum.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/function.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/interface.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/module.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/snippet.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/struct.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/trait.png</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment type="COMMENT_UNSUPPORTED" />
-    </fileset>
-</licenseinfo>
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        opacity: .33;
+      }
+
+      .st1 {
+        fill: #ffb0a9;
+      }
+    </style>
+  </defs>
+  <circle class="st1" cx="10.5" cy="9.5" r="5.5"/>
+  <g class="st0">
+    <path d="M10.5,5c2.481,0,4.5,2.019,4.5,4.5s-2.019,4.5-4.5,4.5-4.5-2.019-4.5-4.5,2.019-4.5,4.5-4.5M10.5,4c-3.038,0-5.5,2.462-5.5,5.5s2.462,5.5,5.5,5.5,5.5-2.462,5.5-5.5-2.462-5.5-5.5-5.5h0Z"/>
+  </g>
+</svg>

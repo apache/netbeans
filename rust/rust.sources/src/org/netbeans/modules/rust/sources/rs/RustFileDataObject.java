@@ -99,6 +99,17 @@ import org.openide.windows.TopComponent;
             path = "Loaders/text/x-rust/Actions",
             id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
             position = 1400
+    ),
+    @ActionReference(
+            path = "Editors/text/x-rust/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.WhereUsedAction"),
+            position = 1400
+    ),
+    @ActionReference(
+            path = "Editors/text/x-rust/Popup",
+            id = @ActionID(category = "Refactoring", id = "org.netbeans.modules.refactoring.api.ui.RenameAction"),
+            position = 1500,
+            separatorAfter = 1550
     )
 })
 

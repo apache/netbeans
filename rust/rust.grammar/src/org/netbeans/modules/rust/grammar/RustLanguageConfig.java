@@ -23,13 +23,13 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.api.DeclarationFinder;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
-import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.parsing.spi.Parser;
+import org.netbeans.modules.rust.options.api.RustAnalyzerOptions;
 
-/**
- *
- */
-@LanguageRegistration(mimeType = "text/x-rust", useMultiview = true)
+// See LayerProviderImpl for information about layer handling and when this
+// needs to be uncommented
+//
+//@LanguageRegistration(mimeType = "text/x-rust", useMultiview = true)
 public class RustLanguageConfig extends DefaultLanguageConfig {
 
     private static final Language<RustTokenID> RUST_LANGUAGE = new RustLanguage().language();
@@ -46,12 +46,12 @@ public class RustLanguageConfig extends DefaultLanguageConfig {
 
     @Override
     public StructureScanner getStructureScanner() {
-        return new RustStructureScanner();
+        return RustAnalyzerOptions.getRustAnalyzerLocation(false, false) == null ? new RustStructureScanner() : null;
     }
 
     @Override
     public boolean hasStructureScanner() {
-        return true;
+        return RustAnalyzerOptions.getRustAnalyzerLocation(false, false) == null;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class RustLanguageConfig extends DefaultLanguageConfig {
 
     @Override
     public DeclarationFinder getDeclarationFinder() {
-        return new RustDeclarationFinder();
+        return RustAnalyzerOptions.getRustAnalyzerLocation(false, false) == null ? new RustDeclarationFinder() : null;
     }
 
 }

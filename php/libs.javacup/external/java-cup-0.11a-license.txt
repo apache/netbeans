@@ -3,7 +3,7 @@ Version: 11
 Description: LALR Parser Generator in Java
 License: JavaCUP
 Origin: http://www2.cs.tum.edu/projects/cup/
-Files: java-cup-11a.jar
+Files: java-cup-0.11a.jar
 Source: http://www2.cs.tum.edu/projects/cup/
 OSR: 11673
 

@@ -30,13 +30,20 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
 import org.apache.tools.ant.Project;
+import org.junit.Rule;
 import org.netbeans.junit.RandomlyFails;
 
 /**
  * @author Jaroslav Tulach
  */
 public class MakeNBMTest extends TestBase {
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+        
     public MakeNBMTest (String name) {
         super (name);
     }
@@ -91,7 +98,8 @@ public class MakeNBMTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Output exists", output.exists ());
         assertTrue ("Output directory created", output.isDirectory());
@@ -110,11 +118,13 @@ public class MakeNBMTest extends TestBase {
         Thread.sleep(1300);
 
         // execute once again
-        execute (f, new String[] { "-debug", "-Ddo.fail=true"});
+        System.setProperty("do.fail","true");
+        buildRule.configureProject(f.getAbsolutePath(),Project.MSG_DEBUG);
+        buildRule.executeTarget("all");
         
         long newTime = output.listFiles()[0].lastModified();
         
-        assertEquals("The file has not been modified:\n" + getStdOut(), time, newTime);
+        assertEquals("The file has not been modified:\n" + buildRule.getFullLog(), time, newTime);
         
         
         CHECK_SIGNED: {
@@ -196,8 +206,9 @@ public class MakeNBMTest extends TestBase {
         
         java.io.File f = extractString (script);
         try {
-            execute (f, new String[] { });
-        } catch (ExecutionError err) {
+            buildRule.configureProject(f.getAbsolutePath());
+            buildRule.executeTarget("all");
+        } catch (BuildException err) {
             if (err.getMessage().indexOf("java.security.ProviderException") != -1) {
                 // common error on Sun OS:
                 // org.netbeans.nbbuild.PublicPackagesInProjectizedXMLTest$ExecutionError: Execution has to finish without problems was: 1

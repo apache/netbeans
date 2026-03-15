@@ -24,6 +24,9 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.io.File;
 import java.io.IOException;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
 
 
 /** Check behaviour of ModuleSelector.
@@ -31,6 +34,8 @@ import java.io.IOException;
  * @author Jaroslav Tulach
  */
 public class CreateModuleXMLTest extends TestBase {
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
     
     public CreateModuleXMLTest(String testName) {
         super(testName);
@@ -57,8 +62,8 @@ public class CreateModuleXMLTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all"); 
         assertTrue ("Output exists", output.exists ());
         assertTrue ("Output directory created", output.isDirectory());
         
@@ -89,8 +94,8 @@ public class CreateModuleXMLTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         assertTrue ("Output exists", output.exists ());
         assertTrue ("Output directory created", output.isDirectory());
 
@@ -122,8 +127,10 @@ public class CreateModuleXMLTest extends TestBase {
             "</project>"
         );
         try {
-            execute(f, new String[] { "-verbose" });
-        } catch (ExecutionError ex) {
+            //execute(f, new String[] { "-verbose" });
+            buildRule.configureProject(f.getAbsolutePath());
+            buildRule.executeTarget("all");
+        } catch (BuildException ex) {
             // OK
             return;
         }
@@ -151,8 +158,10 @@ public class CreateModuleXMLTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-
+        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        
         assertTrue ("Output exists", output.exists ());
         assertTrue ("Output directory created", output.isDirectory());
 
@@ -185,8 +194,8 @@ public class CreateModuleXMLTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all"); 
         assertTrue ("Output exists", output.exists ());
         assertTrue ("Output directory created", output.isDirectory());
 
@@ -219,8 +228,8 @@ public class CreateModuleXMLTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         assertTrue ("Output exists", output.exists ());
         assertTrue ("Output directory created", output.isDirectory());
 
@@ -253,8 +262,11 @@ public class CreateModuleXMLTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-
+        
+        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        
         assertTrue ("Output exists", output.exists ());
         assertTrue ("Output directory created", output.isDirectory());
 

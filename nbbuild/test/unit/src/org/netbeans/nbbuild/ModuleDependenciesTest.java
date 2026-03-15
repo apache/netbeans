@@ -28,6 +28,8 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
 
 /** Check the behaviour ModuleDependencies task that prints out info about
  * module dependencies, etc.
@@ -35,6 +37,10 @@ import java.util.regex.Pattern;
  * @author Jaroslav Tulach
  */
 public class ModuleDependenciesTest extends TestBase {
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+    
     public ModuleDependenciesTest (String name) {
         super (name);
     }
@@ -106,7 +112,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -169,7 +176,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -251,7 +259,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</project>"
         );
         // this should succeed now, as the limit applies only to intercluster relations - #87076
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
     }
 
     public void testThereCanBeLimitOnNumberOfFriendsAmongGroups() throws Exception {
@@ -307,8 +316,9 @@ public class ModuleDependenciesTest extends TestBase {
             "</project>"
         );
 
-        execute (f, new String[] { "-verbose", "-Dlimit=1" });
-        
+        System.setProperty("limit", "1");
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         String res = readFile (friendPkg);
 
         assertEquals(
@@ -369,7 +379,9 @@ public class ModuleDependenciesTest extends TestBase {
             "</project>"
         );
 
-        execute (f, new String[] { "-verbose", "-Dlimit=1" });
+        System.setProperty("limit", "1");
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         String res = readFile (friendPkg);
 
@@ -416,7 +428,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -466,7 +479,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -522,7 +536,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -560,7 +575,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -610,7 +626,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -665,7 +682,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -719,7 +737,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -796,7 +815,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -865,7 +885,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -934,7 +955,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -1000,7 +1022,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -1069,7 +1092,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -1154,7 +1178,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -1210,7 +1235,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -1266,7 +1292,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -1316,7 +1343,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         
@@ -1374,7 +1402,8 @@ public class ModuleDependenciesTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         assertTrue ("Result generated", output.exists ());
         

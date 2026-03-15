@@ -22,12 +22,19 @@ package org.netbeans.nbbuild;
 import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.apache.tools.ant.Project;
+import org.junit.Rule;
 
 /**
  * @author Jaroslav Tulach
  */
 public class CheckLicenseTest extends TestBase {
-
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+    
     public CheckLicenseTest(String testName) {
         super(testName);
     }
@@ -54,13 +61,14 @@ public class CheckLicenseTest extends TestBase {
             "</project>"
         );
         // success
-        execute (f, new String[] { });
-
-        if (getStdErr().indexOf(license.getPath()) > - 1) {
-            fail("file name shall not be there: " + getStdErr());
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        
+        if (buildRule.getError().indexOf(license.getPath()) > - 1) {
+            fail("file name shall not be there: " + buildRule.getError());
         }
-        if (getStdErr().indexOf("no license") > - 1) {
-            fail("warning shall not be there: " + getStdErr());
+        if (buildRule.getError().indexOf("no license") > - 1) {
+            fail("warning shall not be there: " + buildRule.getError());
         }
     }        
 
@@ -94,13 +102,14 @@ public class CheckLicenseTest extends TestBase {
             "</project>"
         );
         try {
-            execute (f, new String[] { });
+            buildRule.configureProject(f.getAbsolutePath());
+            buildRule.executeTarget("all");
+            
             fail("Should fail as the license is missing");
-        } catch (ExecutionError ex) {
+        } catch (BuildException ex) {
             // ok
         }
-        
-        String out = getStdErr();
+        String out = buildRule.getLog();
         if (out.indexOf(license.getName()) == -1) {
             fail(license.getName() + " should be there: " + out);
         }
@@ -130,13 +139,14 @@ public class CheckLicenseTest extends TestBase {
             "</project>"
         );
         // success
-        execute (f, new String[] { });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
-        if (getStdErr().indexOf(license.getPath()) == - 1) {
-            fail("file name shall be there: " + getStdErr());
+        if (buildRule.getFullLog().indexOf(license.getPath()) == - 1) {
+            fail("file name shall be there: " + buildRule.getFullLog());
         }
-        if (getStdErr().indexOf("no license") == - 1) {
-            fail("warning shall be there: " + getStdErr());
+        if (buildRule.getFullLog().indexOf("no license") == - 1) {
+            fail("warning shall be there: " + buildRule.getFullLog());
         }
     }        
 
@@ -161,13 +171,14 @@ public class CheckLicenseTest extends TestBase {
             "</project>"
         );
         // success
-        execute (f, new String[] { });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
-        if (getStdErr().indexOf(license.getPath()) != - 1) {
-            fail("file name shall not be there: " + getStdErr());
+        if (buildRule.getError().indexOf(license.getPath()) != - 1) {
+            fail("file name shall not be there: " + buildRule.getError());
         }
-        if (getStdErr().indexOf("no license") != - 1) {
-            fail("warning shall not be there: " + getStdErr());
+        if (buildRule.getError().indexOf("no license") != - 1) {
+            fail("warning shall not be there: " + buildRule.getError());
         }
     }        
     
@@ -192,9 +203,10 @@ public class CheckLicenseTest extends TestBase {
             "</project>"
         );
         try {
-            execute (f, new String[] { });
+            buildRule.configureProject(f.getAbsolutePath());
+            buildRule.executeTarget("all");
             fail("Should fail as the license is missing");
-        } catch (ExecutionError ex) {
+        } catch (BuildException ex) {
             // ok
         }
     }        
@@ -226,14 +238,12 @@ public class CheckLicenseTest extends TestBase {
       
         java.io.File f = extractResource("CheckLicenseAnt.xml");
 
-        execute (f, new String[] { 
-            "-verbose", 
-            "-Ddir=" + java.getParent(),  
-            "-Dinclude=" + java.getName(),
-        });
-        
-        if (getStdOut().indexOf(java.getPath()) == - 1) {
-            fail("file name shall be there: " + getStdOut());
+        System.setProperty("dir", java.getParentFile().getAbsolutePath() );
+        System.setProperty("include", java.getName() );
+        buildRule.configureProject(f.getAbsolutePath(),Project.MSG_VERBOSE);
+        buildRule.executeTarget("all");
+        if (buildRule.getFullLog().indexOf(java.getPath()) == - 1) {
+            fail("file name shall be there: " + buildRule.getFullLog());
         }
         
         
@@ -283,14 +293,12 @@ public class CheckLicenseTest extends TestBase {
         assertTrue("File exists", html.exists());
       
 
-        execute (f, new String[] { 
-            "-verbose", 
-            "-Ddir=" + html.getParent(),  
-            "-Dinclude=" + html.getName(),
-        });
-        
-        if (getStdOut().indexOf(html.getPath()) == - 1) {
-            fail("file name shall be there: " + getStdOut());
+        System.setProperty("dir", html.getParentFile().getAbsolutePath() );
+        System.setProperty("include", html.getName() );
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        if (buildRule.getFullLog().indexOf(html.getPath()) == - 1) {
+            fail("file name shall be there: " + buildRule.getFullLog());
         }
         
         
@@ -341,13 +349,12 @@ public class CheckLicenseTest extends TestBase {
         assertTrue("File exists", html.exists());
       
 
-        execute (f, new String[] { 
-            "-Ddir=" + html.getParent(),  
-            "-Dinclude=" + html.getName(),
-        });
-        
-        if (getStdOut().indexOf(html.getPath()) != - 1) {
-            fail("file name shall not be there: " + getStdOut());
+        System.setProperty("dir", html.getParentFile().getAbsolutePath() );
+        System.setProperty("include", html.getName() );
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        if (buildRule.getLog().indexOf(html.getPath()) != - 1) {
+            fail("file name shall not be there: " + buildRule.getLog());
         }
         
     }        
@@ -373,13 +380,12 @@ public class CheckLicenseTest extends TestBase {
         assertTrue("File exists", html.exists());
       
 
-        execute (f, new String[] { 
-            "-Ddir=" + html.getParent(),  
-            "-Dinclude=" + html.getName(),
-        });
-        
-        if (getStdOut().indexOf("Original Code") != - 1) {
-            fail("Original Code shall not be there: " + getStdOut());
+        System.setProperty("dir", html.getParentFile().getAbsolutePath() );
+        System.setProperty("include", html.getName() );
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        if (buildRule.getFullLog().indexOf("Original Code") != - 1) {
+            fail("Original Code shall not be there: " + buildRule.getFullLog());
         }
 
         String out = readFile(html);
@@ -412,13 +418,12 @@ public class CheckLicenseTest extends TestBase {
         File fileScript = extractString(script);
         File fileTxt = extractString(txt);
         
-        execute (fileScript, new String[] { 
-            "-Ddir=" + fileTxt.getParent(),  
-            "-Dinclude=" + fileTxt.getName(),
-        });
-        
-        if (getStdOut().indexOf("Original Code") != - 1) {
-            fail("Original Code shall not be there: " + getStdOut());
+        System.setProperty("dir", fileTxt.getParentFile().getAbsolutePath() );
+        System.setProperty("include", fileTxt.getName() );
+        buildRule.configureProject(fileScript.getAbsolutePath());
+        buildRule.executeTarget("all");
+        if (buildRule.getFullLog().indexOf("Original Code") != - 1) {
+            fail("Original Code shall not be there: " + buildRule.getFullLog());
         }
 
         String out = readFile(fileTxt);
@@ -508,13 +513,14 @@ public class CheckLicenseTest extends TestBase {
         assertTrue("File exists", java.exists());
       
 
-        execute (f, new String[] { 
-            "-Ddir=" + java.getParent(),  
-            "-Dinclude=" + java.getName(),
-        });
+        System.setProperty("dir", java.getParentFile().getAbsolutePath() );
+        System.setProperty("include", java.getName() );
         
-        if (getStdOut().indexOf("Code") != - 1) {
-            fail("Original Code shall not be there: " + getStdOut());
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        
+        if (buildRule.getFullLog().indexOf("Code") != - 1) {
+            fail("Original Code shall not be there: " + buildRule.getFullLog());
         }
 
         String out = readFile(java);
@@ -547,14 +553,12 @@ public class CheckLicenseTest extends TestBase {
         tmp.renameTo(html);
         assertTrue("File exists", html.exists());
       
-
-        execute (f, new String[] { 
-            "-Ddir=" + html.getParent(),  
-            "-Dinclude=" + html.getName(),
-        });
-        
-        if (getStdOut().indexOf(html.getPath()) != - 1) {
-            fail("file name shall not be there: " + getStdOut());
+        System.setProperty("dir", html.getParentFile().getAbsolutePath() );
+        System.setProperty("include", html.getName() );
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        if (buildRule.getLog().indexOf(html.getPath()) != - 1) {
+            fail("file name shall not be there: " + buildRule.getLog());
         }
         
     }        
@@ -571,14 +575,14 @@ public class CheckLicenseTest extends TestBase {
         assertTrue("File exists", html.exists());
       
 
-        execute (f, new String[] { 
-            "-verbose", 
-            "-Ddir=" + html.getParent(),  
-            "-Dinclude=" + html.getName(),
-        });
+        System.setProperty("dir", html.getParentFile().getAbsolutePath() );
+        System.setProperty("include", html.getName() );
         
-        if (getStdOut().indexOf(html.getPath()) == - 1) {
-            fail("file name shall be there: " + getStdOut());
+        buildRule.configureProject(f.getAbsolutePath(),Project.MSG_VERBOSE);
+        buildRule.executeTarget("all");
+        
+        if (buildRule.getFullLog().indexOf(html.getPath()) == - 1) {
+            fail("file name shall be there: " + buildRule.getFullLog());
         }
         
         
@@ -638,14 +642,12 @@ public class CheckLicenseTest extends TestBase {
         assertTrue("File exists", xml.exists());
       
 
-        execute (f, new String[] { 
-            "-verbose", 
-            "-Ddir=" + xml.getParent(),  
-            "-Dinclude=" + xml.getName(),
-        });
-        
-        if (getStdOut().indexOf(xml.getPath()) == - 1) {
-            fail("file name shall be there: " + getStdOut());
+        System.setProperty("dir", xml.getParentFile().getAbsolutePath() );
+        System.setProperty("include", xml.getName() );
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        if (buildRule.getFullLog().indexOf(xml.getPath()) == - 1) {
+            fail("file name shall be there: " + buildRule.getFullLog());
         }
         
         
@@ -696,13 +698,12 @@ public class CheckLicenseTest extends TestBase {
         File fileScript = extractString(script);
         File fileTxt = extractString(txt);
         
-        execute (fileScript, new String[] { 
-            "-Ddir=" + fileTxt.getParent(),  
-            "-Dinclude=" + fileTxt.getName(),
-        });
-        
-        if (getStdOut().indexOf("Original Code") != - 1) {
-            fail("Original Code shall not be there: " + getStdOut());
+        System.setProperty("dir", fileTxt.getParentFile().getAbsolutePath() );
+        System.setProperty("include", fileTxt.getName() );
+        buildRule.configureProject(fileScript.getAbsolutePath());
+        buildRule.executeTarget("all");
+        if (buildRule.getFullLog().indexOf("Original Code") != - 1) {
+            fail("Original Code shall not be there: " + buildRule.getFullLog());
         }
 
         String out = readFile(fileTxt);
@@ -736,11 +737,10 @@ public class CheckLicenseTest extends TestBase {
         assertTrue("File exists", file.exists());
       
 
-        execute (f, new String[] { 
-            "-Ddir=" + file.getParent(),  
-            "-Dinclude=" + file.getName(),
-        });
-        
+        System.setProperty("dir", file.getParentFile().getAbsolutePath() );
+        System.setProperty("include", file.getName() );
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         String out = readFile(file);
         int first = out.indexOf("Sun Public");
         if (first != - 1) {
@@ -765,14 +765,11 @@ public class CheckLicenseTest extends TestBase {
         );
         String script = createScript();
         
-    
-        execute (
-            extractString(script), 
-            new String[] { 
-            "-Ddir=" + license.getParent(),  
-            "-Dinclude=" + license.getName(),
-        });
-        
+        java.io.File scriptf = extractString(script);
+        System.setProperty("dir", license.getParentFile().getAbsolutePath() );
+        System.setProperty("include", license.getName() );
+        buildRule.configureProject(scriptf.getAbsolutePath());
+        buildRule.executeTarget("all");
         String out = readFile(license);
 
 

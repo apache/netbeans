@@ -58,7 +58,11 @@ abstract class TestBase extends NbTestCase {
 
         return new String(data);
     }
-
+    protected final String getBuildFileInClassPath(String filename) {
+        // Hack to find where classes
+        return getDataDir().getAbsolutePath().replace("data", "classes") + 
+                File.separator + "org" + File.separator + "netbeans" + File.separator + "nbbuild" + File.separator+ filename;
+    }
     protected final Manifest createManifest() {
         Manifest m = new Manifest();
         m.getMainAttributes().putValue(java.util.jar.Attributes.Name.MANIFEST_VERSION.toString(), "1.0");
@@ -105,21 +109,19 @@ abstract class TestBase extends NbTestCase {
         }
     }
 
-    protected final void execute(String res, String... args) throws Exception {
-        execute(extractResource(res), args);
-    }
+   
 
     private static ByteArrayOutputStream out, err;
 
-    protected final String getStdOut() {
+    /*protected final String getStdOut() {
         return out.toString();
     }
 
     protected final String getStdErr() {
         return err.toString();
-    }
+    }*/
 
-    protected final void execute(File f, String[] args) throws Exception {
+    /*protected final void execute(File f, String[] args) throws Exception {
         // we need security manager to prevent System.exit
         if (!(System.getSecurityManager() instanceof MySecMan)) {
             out = new java.io.ByteArrayOutputStream();
@@ -165,7 +167,7 @@ abstract class TestBase extends NbTestCase {
             sec.setActive(false);
         }
     }
-
+    s*/
     protected static final class ExecutionError extends AssertionFailedError {
         public final int exitCode;
         public ExecutionError(String msg, int e) {
@@ -181,118 +183,5 @@ abstract class TestBase extends NbTestCase {
             }
         }
     }
-
-    private static class MySecExc extends SecurityException {
-        @Override
-        public void printStackTrace() {
-        }
-        @Override
-        public void printStackTrace(PrintStream ps) {
-        }
-        @Override
-        public void printStackTrace(PrintWriter ps) {
-        }
-    }
-
-    private static class MySecMan extends SecurityManager {
-        public Integer exitCode;
-        private boolean active;
-        @Override
-        public void checkExit(int status) {
-            if (active) {
-                exitCode = status;
-                throw new MySecExc();
-            }
-        }
-        @Override
-        public void checkPermission(Permission perm, Object context) {
-        }
-        @Override
-        public void checkPermission(Permission perm) {
-            /*
-            if (perm instanceof RuntimePermission) {
-            if (perm.getName ().equals ("setIO")) {
-            throw new MySecExc ();
-            }
-            }
-             */
-        }
-        @Override
-        public void checkMulticast(InetAddress maddr) {
-        }
-        @Override
-        public void checkAccess(ThreadGroup g) {
-        }
-        @Override
-        public void checkWrite(String file) {
-        }
-        @Override
-        public void checkLink(String lib) {
-        }
-        @Override
-        public void checkExec(String cmd) {
-        }
-        @Override
-        public void checkDelete(String file) {
-        }
-        @Override
-        public void checkPackageAccess(String pkg) {
-        }
-        @Override
-        public void checkPackageDefinition(String pkg) {
-        }
-        @Override
-        public void checkPropertyAccess(String key) {
-        }
-        @Override
-        public void checkRead(String file) {
-        }
-        @Override
-        public void checkSecurityAccess(String target) {
-        }
-        @Override
-        public void checkWrite(FileDescriptor fd) {
-        }
-        @Override
-        public void checkListen(int port) {
-        }
-        @Override
-        public void checkRead(FileDescriptor fd) {
-        }
-        @SuppressWarnings("deprecation")
-        @Override
-        public void checkMulticast(InetAddress maddr, byte ttl) {
-        }
-        @Override
-        public void checkAccess(Thread t) {
-        }
-        @Override
-        public void checkConnect(String host, int port, Object context) {
-        }
-        @Override
-        public void checkRead(String file, Object context) {
-        }
-        @Override
-        public void checkConnect(String host, int port) {
-        }
-        @Override
-        public void checkAccept(String host, int port) {
-        }
-        @Override
-        public void checkSetFactory() {
-        }
-        @Override
-        public void checkCreateClassLoader() {
-        }
-        @Override
-        public void checkPrintJobAccess() {
-        }
-        @Override
-        public void checkPropertiesAccess() {
-        }
-        void setActive(boolean b) {
-            active = b;
-        }
-    } // end of MySecMan
-
+    
 }

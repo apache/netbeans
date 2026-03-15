@@ -26,23 +26,11 @@
   <defaultexcludes add="**/.ade_path/**"/>
 
   <target name="init-tasks" unless="tasks-already-set">
-    <taskdef name="jnlpupdatemanifeststartup"
-         classname="org.netbeans.nbbuild.JNLPUpdateManifestStartup"
-         classpath="${nbantext.jar}"/>
-    <taskdef name="jnlpupdatemanifestbranding"
-         classname="org.netbeans.nbbuild.JNLPUpdateManifestBranding"
-         classpath="${nbantext.jar}"/>
-    <taskdef name="jhindexer"
-         classname="org.netbeans.nbbuild.JHIndexer"
-         classpath="${nbantext.jar}"/>
     <taskdef name="makenbm"
          classname="org.netbeans.nbbuild.MakeNBM"
-         classpath="${nbantext.jar}"/>
-    <taskdef name="makejnlp"
-         classname="org.netbeans.nbbuild.MakeJNLP"
-         classpath="${nbantext.jar}"/>
-    <taskdef name="makemasterjnlp"
-         classname="org.netbeans.nbbuild.MakeMasterJNLP"
+         classpath="${nbantext.jar}"/>    
+    <taskdef name="jhindexer"
+         classname="org.netbeans.nbbuild.JHIndexer"
          classpath="${nbantext.jar}"/>
     <taskdef name="genlist"
          classname="org.netbeans.nbbuild.MakeListOfNBM"
@@ -58,9 +46,6 @@
          classpath="${nbantext.jar}"/>
     <taskdef name="locjar"
          classname="org.netbeans.nbbuild.LocalizedJar"
-         classpath="${nbantext.jar}"/>
-    <taskdef name="locjhindexer"
-         classname="org.netbeans.nbbuild.LocJHIndexer"
          classpath="${nbantext.jar}"/>
     <taskdef name="locfiles"
          classname="org.netbeans.nbbuild.LocFiles"

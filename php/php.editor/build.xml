@@ -149,7 +149,7 @@
         </delete>
         <taskdef name="javacup"
                  classname="java_cup.anttask.CUPTask"
-                 classpath="${nb_all}/php/libs.javacup/external/java-cup-11a.jar" />
+                 classpath="${nb_all}/php/libs.javacup/external/java-cup-0.11a.jar" />
         <javacup srcfile="${basedir}/tools/ASTPHP5Parser.cup"
                  destdir="${basedir}/src"
                  parser="ASTPHP5Parser"

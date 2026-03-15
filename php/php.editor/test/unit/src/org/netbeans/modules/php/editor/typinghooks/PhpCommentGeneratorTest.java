@@ -1048,18 +1048,78 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                             "?>\n");
     }
 
+    public void testHookedField_01() throws Exception {
+        insertBreak(
+                // original
+                """
+                <?php
+                class PropertyHook {
+                    /**^
+                    public int|string $prop {
+                        get {}
+                        set {}
+                    }
+                }
+                """,
+                // expected
+                """
+                <?php
+                class PropertyHook {
+                    /**
+                     *\s
+                     * @var int|string^
+                     */
+                    public int|string $prop {
+                        get {}
+                        set {}
+                    }
+                }
+                """
+        );
+    }
+
+    public void testHookedField_02() throws Exception {
+        insertBreak(
+                // original
+                """
+                <?php
+                class PropertyHook {
+                    /**^
+                    public private(set) int|string $prop {
+                        get {}
+                        set {}
+                    }
+                }
+                """,
+                // expected
+                """
+                <?php
+                class PropertyHook {
+                    /**
+                     *\s
+                     * @var int|string^
+                     */
+                    public private(set) int|string $prop {
+                        get {}
+                        set {}
+                    }
+                }
+                """
+        );
+    }
+
     @Override
     public void insertNewline(String source, String reformatted, IndentPrefs preferences) throws Exception {
         int sourcePos = source.indexOf('^');
         assertNotNull(sourcePos);
-        source = source.substring(0, sourcePos) + source.substring(sourcePos + 1);
+        String src = source.substring(0, sourcePos) + source.substring(sourcePos + 1);
         Formatter formatter = getFormatter(null);
 
         int reformattedPos = reformatted.indexOf('^');
         assertNotNull(reformattedPos);
-        reformatted = reformatted.substring(0, reformattedPos) + reformatted.substring(reformattedPos + 1);
+        String expected = reformatted.substring(0, reformattedPos) + reformatted.substring(reformattedPos + 1);
 
-        JEditorPane ta = getPane(source);
+        JEditorPane ta = getPane(src);
         Caret caret = ta.getCaret();
         caret.setDot(sourcePos);
         BaseDocument doc = (BaseDocument) ta.getDocument();
@@ -1073,10 +1133,12 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
 
         // wait for generating comment
         Future<?> future = PhpCommentGenerator.RP.submit(() -> {});
-        future.get();
+        if (!future.isDone()) {
+            future.get();
+        }
 
         String formatted = doc.getText(0, doc.getLength());
-        assertEquals(reformatted, formatted);
+        assertEquals(expected, formatted);
 
         if (reformattedPos != -1) {
             assertEquals(reformattedPos, caret.getDot());

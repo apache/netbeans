@@ -1,6 +1,6 @@
 class ClassMethods {
       ------------
-HINT:Class "ClassMethods" contains abstract methods and must be declared abstract
+HINT:Class "ClassMethods" contains abstract members and must be declared abstract
 FIX:Add modifier: abstract
     abstract private function classAbstractPrivate();
                               --------------------
@@ -24,11 +24,11 @@ HINT:Interface method "ifaceFinalMethod" can not be declared final
 FIX:Remove modifier: final
 class PossibleAbstract {
       ----------------
-HINT:Class "PossibleAbstract" contains abstract methods and must be declared abstract
+HINT:Class "PossibleAbstract" contains abstract members and must be declared abstract
 FIX:Add modifier: abstract
 final class FinalAbstract {
             -------------
-HINT:Class "FinalAbstract" contains abstract methods and can not be declared final
+HINT:Class "FinalAbstract" contains abstract members and can not be declared final
 FIX:Remove modifier: final
-HINT:Class "FinalAbstract" contains abstract methods and must be declared abstract
+HINT:Class "FinalAbstract" contains abstract members and must be declared abstract
 FIX:Add modifier: abstract

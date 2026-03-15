@@ -1788,4 +1788,28 @@ public class PHPFormatterSpacesTest extends PHPFormatterTestBase {
         options.put(FmtOptions.SPACE_WITHIN_OTHER_PARENS, true);
         reformatFileContents("testfiles/formatting/spaces/php84/newWithoutParentheses_02.php", options,  false, true);
     }
+
+    public void testFieldDeclarationLeftBrace_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_FIELD_DECL_LEFT_BRACE, false);
+        reformatFileContents("testfiles/formatting/spaces/php84/propertyHooks_01.php", options,  false, true);
+    }
+
+    public void testFieldDeclarationLeftBrace_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_FIELD_DECL_LEFT_BRACE, true);
+        reformatFileContents("testfiles/formatting/spaces/php84/propertyHooks_01.php", options,  false, true);
+    }
+
+    public void testPropertyHookLeftBrace_01a() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_PROPERTY_HOOK_DECL_LEFT_BRACE, false);
+        reformatFileContents("testfiles/formatting/spaces/php84/propertyHooks_01.php", options,  false, true);
+    }
+
+    public void testPropertyHookLeftBrace_01b() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        options.put(FmtOptions.SPACE_BEFORE_PROPERTY_HOOK_DECL_LEFT_BRACE, true);
+        reformatFileContents("testfiles/formatting/spaces/php84/propertyHooks_01.php", options,  false, true);
+    }
 }

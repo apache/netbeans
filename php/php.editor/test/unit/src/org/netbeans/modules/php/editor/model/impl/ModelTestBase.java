@@ -67,7 +67,9 @@ public class ModelTestBase extends PHPNavTestBase {
         };
         if (wait) {
             Future<Void> parseWhenScanFinished = ParserManager.parseWhenScanFinished(Collections.singleton(testSource), userTask);
-            parseWhenScanFinished.get();
+            if (!parseWhenScanFinished.isDone()) {
+                parseWhenScanFinished.get();
+            }
         } else {
             ParserManager.parse(Collections.singleton(testSource), userTask);
         }

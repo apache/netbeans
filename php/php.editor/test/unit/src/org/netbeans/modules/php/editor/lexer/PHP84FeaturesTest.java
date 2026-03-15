@@ -51,4 +51,8 @@ public class PHP84FeaturesTest extends PHPLexerTestBase {
     public void testFinalFieldsAnonClass() throws Exception {
         performTest("lexer/php84/finalFieldsAnonClass");
     }
+
+    public void testPropertyHooks() throws Exception {
+        performTest("lexer/php84/propertyHooks");
+    }
 }

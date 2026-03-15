@@ -79,7 +79,7 @@ Not Searchable Keys:
 Document 7
 Searchable Keys:
   enum : testenum;TestEnum;1273;;;;1;;0;<TESTURL>/testPHP82DNFParameterTypes.php;
-  enum.case : case1;Case1;1293;?;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;
+  enum.case : case1;Case1;1293;?;0;<TESTURL>/testPHP82DNFParameterTypes.php;32;0;
   method : parametertype;parameterType;1320;$param1:X&Y:1::1:0:0:0:0:1:X&Y:,$param2:X|Y|Z:1::1:0:0:1:0:0:(X&Y)|Z:;(\X&\Y)|\Z;1;0;<TESTURL>/testPHP82DNFParameterTypes.php;1;0;(X&Y)|Z;
   top : testenum
 

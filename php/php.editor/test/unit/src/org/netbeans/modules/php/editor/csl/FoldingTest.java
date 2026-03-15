@@ -121,7 +121,29 @@ public class FoldingTest extends PHPTestBase {
         checkFolds("testfiles/parser/php81/enumerations_01.php");
     }
 
+
     public void testFoldingHeredocNowdoc() throws Exception {
         checkFolds("testfiles/parser/foldingHeredocNowdoc.php");
+    }
+
+    // GH-8035 PHP 8.4
+    public void testPropertyHooks() throws Exception {
+        checkFolds("testfiles/parser/php84/propertyHooks.php");
+    }
+
+    public void testPropertyHooksAbstract() throws Exception {
+        checkFolds("testfiles/parser/php84/propertyHooksAbstract.php");
+    }
+
+    public void testPropertyHooksCPP() throws Exception {
+        checkFolds("testfiles/parser/php84/propertyHooksCPP.php");
+    }
+
+    public void testPropertyHooksInterface() throws Exception {
+        checkFolds("testfiles/parser/php84/propertyHooksInterface.php");
+    }
+
+    public void testPropertyHooksTrait() throws Exception {
+        checkFolds("testfiles/parser/php84/propertyHooksTrait.php");
     }
 }

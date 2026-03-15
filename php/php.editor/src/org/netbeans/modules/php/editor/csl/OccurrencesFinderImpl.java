@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -135,11 +136,11 @@ public class OccurrencesFinderImpl extends OccurrencesFinder<PHPParseResult> {
         Collection<OffsetRange> result = new TreeSet<>();
         OccurencesSupport occurencesSupport = model.getOccurencesSupport(referenceSpan);
         if (cancelled) {
-            return Collections.emptyList();
+            return List.of();
         }
         Occurence caretOccurence = occurencesSupport.getOccurence();
         if (cancelled) {
-            return Collections.emptyList();
+            return List.of();
         }
         if (caretOccurence != null) {
             final EnumSet<Accuracy> handledAccuracyFlags = EnumSet.<Occurence.Accuracy>of(

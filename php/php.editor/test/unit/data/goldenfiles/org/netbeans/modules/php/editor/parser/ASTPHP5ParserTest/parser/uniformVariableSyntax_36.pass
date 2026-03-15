@@ -156,38 +156,11 @@
         <token id='T_SEMICOLON' start='108' end='109'>
             <text>;</text>
         </token>
-        <token id='T_OPEN_PARENTHESE' start='110' end='111'>
-            <text>(</text>
-        </token>
-        <token id='T_STRING' start='111' end='120'>
-            <text>getString</text>
-        </token>
-        <token id='T_OPEN_PARENTHESE' start='120' end='121'>
-            <text>(</text>
-        </token>
-        <token id='T_CLOSE_PARENTHESE' start='121' end='122'>
-            <text>)</text>
-        </token>
-        <token id='T_CLOSE_PARENTHESE' start='122' end='123'>
-            <text>)</text>
-        </token>
-        <token id='T_CURLY_OPEN' start='123' end='124'>
-            <text>{</text>
-        </token>
-        <token id='T_LNUMBER' start='124' end='125'>
-            <text>0</text>
-        </token>
-        <token id='T_CURLY_CLOSE' start='125' end='126'>
-            <text>}</text>
-        </token>
-        <token id='T_SEMICOLON' start='126' end='127'>
-            <text>;</text>
-        </token>
-        <token id='EOF' start='128' end='128'>
+        <token id='EOF' start='110' end='110'>
             <text></text>
         </token>
     </scanner>
-    <Program start='0' end='128'>
+    <Program start='0' end='110'>
         <Comments>
         </Comments>
         <Statements>
@@ -322,26 +295,6 @@
                     <Parameters>
                     </Parameters>
                 </FunctionInvocation>
-            </ExpressionStatement>
-            <ExpressionStatement start='110' end='127'>
-                <DereferencedArrayAccess start='110' end='126'>
-                    <ArrayDimension start='123' end='126'>
-                        <Index>
-                            <Scalar start='124' end='125' type='INT' value='0'/>
-                        </Index>
-                    </ArrayDimension>
-                    <DereferencableVariable start='110' end='123'>
-                        <FunctionInvocation start='111' end='122'>
-                            <FucntionName start='111' end='120'>
-                                <NamespaceName start='111' end='120' isCurrent='false' isGlobal='false'>
-                                    <Identifier start='111' end='120' name='getString'/>
-                                </NamespaceName>
-                            </FucntionName>
-                            <Parameters>
-                            </Parameters>
-                        </FunctionInvocation>
-                    </DereferencableVariable>
-                </DereferencedArrayAccess>
             </ExpressionStatement>
         </Statements>
     </Program>

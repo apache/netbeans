@@ -1,0 +1,15 @@
+        get{}
+        ---
+HINT:Abstract property hook must specify at least one abstract hook
+        set{}
+        ---
+HINT:Abstract property hook must specify at least one abstract hook
+    abstract private int $invalid02 { get; set; } // invalid2
+                          ---------
+HINT:Hooked property cannot be both private and abstract
+FIX:Remove modifier: private
+FIX:Remove modifier: abstract
+class NonAbstractClass { // invalid3
+      ----------------
+HINT:Class "NonAbstractClass" contains abstract members and must be declared abstract
+FIX:Add modifier: abstract

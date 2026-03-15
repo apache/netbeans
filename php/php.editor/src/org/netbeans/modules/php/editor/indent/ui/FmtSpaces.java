@@ -44,9 +44,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.modules.options.editor.spi.PreferencesCustomizer;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.indent.FmtOptions;
 import static org.netbeans.modules.php.editor.indent.FmtOptions.*;
 import org.openide.util.NbBundle;
@@ -95,17 +97,14 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
     }
 
     public static PreferencesCustomizer.Factory getController() {
-        return new PreferencesCustomizer.Factory() {
-            @Override
-            public PreferencesCustomizer create(Preferences preferences) {
-                String preview = ""; // NOI18N
-                try {
-                    preview = Utils.loadPreviewText(FmtTabsIndents.class.getClassLoader().getResourceAsStream(PREVIEW_FILE));
-                } catch (IOException ex) {
-                    LOGGER.log(Level.WARNING, null, ex);
-                }
-                return new SpacesCategorySupport(preferences, new FmtSpaces(), preview);
+        return (Preferences preferences) -> {
+            String preview = CodeUtils.EMPTY_STRING;
+            try {
+                preview = Utils.loadPreviewText(FmtTabsIndents.class.getClassLoader().getResourceAsStream(PREVIEW_FILE));
+            } catch (IOException ex) {
+                LOGGER.log(Level.WARNING, null, ex);
             }
+            return new SpacesCategorySupport(preferences, new FmtSpaces(), preview);
         };
     }
 
@@ -161,9 +160,7 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
 
         Object data = ((DefaultMutableTreeNode) value).getUserObject();
 
-        if (data instanceof Item) {
-            Item item = ((Item) data);
-
+        if (data instanceof Item item) {
             if (((DefaultMutableTreeNode) value).getAllowsChildren()) {
                 Component c = dr.getTreeCellRendererComponent(tree, value, leaf, expanded, leaf, row, hasFocus);
                 return c;
@@ -225,11 +222,8 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER) {
-
-            if (e.getSource() instanceof JTree) {
-                JTree tree = (JTree) e.getSource();
+            if (e.getSource() instanceof JTree tree) {
                 TreePath path = tree.getSelectionPath();
-
                 if (toggle(path)) {
                     e.consume();
                 }
@@ -240,7 +234,6 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
     // Private methods ---------------------------------------------------------
 
     private DefaultTreeModel createModel() {
-
         Item[] categories = new Item[] {
             new Item("BeforeKeywords",                          // NOI18N
                 new Item(SPACE_BEFORE_WHILE),
@@ -282,6 +275,8 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
             new Item("BeforeLeftBraces",                        // NOI18N
                 new Item(SPACE_BEFORE_CLASS_DECL_LEFT_BRACE),
                 new Item(SPACE_BEFORE_METHOD_DECL_LEFT_BRACE),
+                new Item(SPACE_BEFORE_FIELD_DECL_LEFT_BRACE),
+                new Item(SPACE_BEFORE_PROPERTY_HOOK_DECL_LEFT_BRACE),
                 new Item(SPACE_BEFORE_IF_LEFT_BRACE),
                 new Item(SPACE_BEFORE_ELSE_LEFT_BRACE),
                 new Item(SPACE_BEFORE_WHILE_LEFT_BRACE),
@@ -313,7 +308,6 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
                 new Item(SPACE_WITHIN_OTHER_PARENS)
             ),
 
-
              new Item("Other",                                  // NOI18N
                 new Item(SPACE_BEFORE_COMMA),
                 new Item(SPACE_AFTER_COMMA),
@@ -327,10 +321,8 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
 
         };
 
-
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("root", true); // NOI18N
         DefaultTreeModel dtm = new DefaultTreeModel(root);
-
 
         for (Item item : categories) {
             DefaultMutableTreeNode cn = new DefaultMutableTreeNode(item, true);
@@ -340,12 +332,10 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
                 cn.add(in);
             }
         }
-
         return dtm;
     }
 
     private boolean toggle(TreePath treePath) {
-
         if (treePath == null) {
             return false;
         }
@@ -355,19 +345,15 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
         DefaultTreeModel dtm = (DefaultTreeModel) cfgTree.getModel();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) treePath.getLastPathComponent();
 
-        if (o instanceof Item) {
-            Item item = (Item) o;
-
+        if (o instanceof Item item) {
             if (node.getAllowsChildren()) {
                 return false;
             }
-
             item.value = !item.value;
             dtm.nodeChanged(node);
             dtm.nodeChanged(node.getParent());
             scs.notifyChanged();
         }
-
         return false;
     }
 
@@ -434,12 +420,11 @@ public final class FmtSpaces extends JPanel implements TreeCellRenderer, MouseLi
         private List<Item> getAllItems() {
             List<Item> result = new LinkedList<>();
             DefaultMutableTreeNode root = (DefaultMutableTreeNode) ((FmtSpaces) panel).model.getRoot();
-            Enumeration children = root.depthFirstEnumeration();
+            Enumeration<TreeNode> children = root.depthFirstEnumeration();
             while (children.hasMoreElements()) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) children.nextElement();
                 Object o = node.getUserObject();
-                if (o instanceof Item) {
-                    Item item = (Item) o;
+                if (o instanceof Item item) {
                     if (item.items == null || item.items.length == 0) {
                         result.add(item);
                     }

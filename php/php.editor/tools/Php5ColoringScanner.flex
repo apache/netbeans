@@ -1104,6 +1104,10 @@ PHP_TYPE_NEVER=[n][e][v][e][r]
     return PHPTokenId.PHP__FUNCTION__;
 }
 
+<ST_PHP_IN_SCRIPTING>"__PROPERTY__" {
+    return PHPTokenId.PHP__PROPERTY__;
+}
+
 <ST_PHP_IN_SCRIPTING>"__METHOD__" {
     return PHPTokenId.PHP__METHOD__;
 }

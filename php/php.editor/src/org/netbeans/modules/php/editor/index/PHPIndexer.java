@@ -21,8 +21,6 @@ package org.netbeans.modules.php.editor.index;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -73,7 +71,7 @@ public final class PHPIndexer extends EmbeddingIndexer {
     @NbBundle.Messages("PHPResolver=PHP Files")
     private static final Logger LOG = Logger.getLogger(PHPIndexer.class.getName());
     // a workaround for issue #132388
-    private static final List<String> INDEXABLE_EXTENSIONS = FileUtil.getMIMETypeExtensions(FileUtils.PHP_MIME_TYPE);
+    private static final List<String> INDEXABLE_EXTENSIONS = List.copyOf(FileUtil.getMIMETypeExtensions(FileUtils.PHP_MIME_TYPE));
 
     public static final String FIELD_BASE = "base"; //NOI18N
     public static final String FIELD_EXTEND = "extend"; //NOI18N
@@ -102,36 +100,32 @@ public final class PHPIndexer extends EmbeddingIndexer {
     /** This field is for fast access top level elemnts. */
     public static final String FIELD_TOP_LEVEL = "top"; //NOI18N
 
-    private static final List<String> ALL_FIELDS = new LinkedList<>(
-            Arrays.asList(
-                new String[] {
-                    FIELD_BASE,
-                    FIELD_EXTEND,
-                    FIELD_CLASS,
-                    FIELD_IFACE,
-                    FIELD_CONST,
-                    FIELD_CLASS_CONST,
-                    FIELD_FIELD,
-                    FIELD_METHOD,
-                    FIELD_CONSTRUCTOR,
-                    FIELD_INCLUDE,
-                    FIELD_IDENTIFIER,
-                    FIELD_VAR,
-                    FIELD_TOP_LEVEL,
-                    FIELD_NAMESPACE,
-                    FIELD_TRAIT,
-                    FIELD_USED_TRAIT,
-                    FIELD_TRAIT_CONFLICT_RESOLUTION,
-                    FIELD_TRAIT_METHOD_ALIAS,
-                    FIELD_ENUM,
-                    FIELD_ENUM_CASE,
-                    FIELD_ATTRIBUTE_CLASS,
-                }
-            )
+    private static final List<String> ALL_FIELDS = List.of(
+            FIELD_BASE,
+            FIELD_EXTEND,
+            FIELD_CLASS,
+            FIELD_IFACE,
+            FIELD_CONST,
+            FIELD_CLASS_CONST,
+            FIELD_FIELD,
+            FIELD_METHOD,
+            FIELD_CONSTRUCTOR,
+            FIELD_INCLUDE,
+            FIELD_IDENTIFIER,
+            FIELD_VAR,
+            FIELD_TOP_LEVEL,
+            FIELD_NAMESPACE,
+            FIELD_TRAIT,
+            FIELD_USED_TRAIT,
+            FIELD_TRAIT_CONFLICT_RESOLUTION,
+            FIELD_TRAIT_METHOD_ALIAS,
+            FIELD_ENUM,
+            FIELD_ENUM_CASE,
+            FIELD_ATTRIBUTE_CLASS
     );
 
     public static List<String> getAllFields() {
-        return new LinkedList<>(ALL_FIELDS);
+        return ALL_FIELDS;
     }
 
     @Override
@@ -222,7 +216,7 @@ public final class PHPIndexer extends EmbeddingIndexer {
     public static final class Factory extends EmbeddingIndexerFactory {
 
         public static final String NAME = "php"; // NOI18N
-        public static final int VERSION = 39;
+        public static final int VERSION = 40;
 
         @Override
         public EmbeddingIndexer createIndexer(final Indexable indexable, final Snapshot snapshot) {

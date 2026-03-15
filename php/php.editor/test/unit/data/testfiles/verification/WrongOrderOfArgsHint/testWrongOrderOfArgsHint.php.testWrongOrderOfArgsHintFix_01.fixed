@@ -19,7 +19,7 @@
  */
 class WrongOrderClassName {
 
-    function wrongArgs($mandatory, $optional = null, $secondOpt = []) {
+    function wrongArgs($mandatory, $optional = null, $secondOpt = array()) {
 
     }
 

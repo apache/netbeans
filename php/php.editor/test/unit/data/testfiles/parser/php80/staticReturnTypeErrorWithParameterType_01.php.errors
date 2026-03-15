@@ -8,6 +8,9 @@
 [[878,879]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	)] 878-879:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	)
+[[886,887]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	{] 886-887:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	{
 [[894,895]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}] 894-895:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}

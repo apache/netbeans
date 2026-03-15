@@ -1,0 +1,31 @@
+        final get {} // invalid1
+              ---
+HINT:Private property hook "get" cannot be final
+FIX:Remove modifier: final
+        public get{} // invalid2
+               ---
+HINT:Property hook "get" cannot be declared public
+FIX:Remove modifier: public
+        static get {} // invalid3
+               ---
+HINT:Property hook "get" cannot be declared static
+FIX:Remove modifier: static
+    public static $invalidStatic02 { // invalid4
+                   ---------------
+HINT:Static property "$invalidStatic02" cannot have property hooks
+FIX:Remove modifier: static
+    public readonly int $invalidReadonly { // invalid5
+                         ---------------
+HINT:Field "$invalidReadonly" cannot be declared readonly
+FIX:Remove modifier: readonly
+    private abstract $invalidPrivateAbstract { // invalid6
+                      ----------------------
+HINT:Hooked property cannot be both private and abstract
+FIX:Remove modifier: private
+FIX:Remove modifier: abstract
+        get {} // invalid7
+        ---
+HINT:Abstract property hook must specify at least one abstract hook
+        get; // invalid8
+        ---
+HINT:Non-abstract property hook "get" must have a body

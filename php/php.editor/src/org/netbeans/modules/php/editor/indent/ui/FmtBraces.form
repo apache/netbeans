@@ -66,51 +66,48 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="forLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="ifLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="whileLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="switchLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="catchLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="useTraitLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="otherLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="methodDeclLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="classDeclLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="anonymousClassLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="groupUseLabel" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="classDeclCombo" linkSize="1" alignment="0" min="-2" max="-2" attributes="1"/>
-                                  <Component id="anonymousClassCombo" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="methodDeclCombo" linkSize="1" alignment="0" min="-2" max="-2" attributes="1"/>
-                                  <Component id="ifCombo" alignment="0" min="-2" max="-2" attributes="1"/>
-                                  <Component id="forCombo" alignment="0" max="-2" attributes="1"/>
-                                  <Component id="whileCombo" alignment="0" max="-2" attributes="1"/>
-                                  <Component id="switchCombo" alignment="0" max="-2" attributes="1"/>
-                                  <Component id="catchCombo" alignment="0" max="-2" attributes="1"/>
-                                  <Component id="useTraitCombo" alignment="0" min="-2" max="-2" attributes="1"/>
-                                  <Component id="groupUseCombo" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="otherCombo" alignment="0" min="-2" max="-2" attributes="1"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                              <Component id="bracesPlacementLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jSeparator1" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="matchLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="matchCombo" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <Component id="forLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="ifLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="whileLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="switchLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="catchLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="useTraitLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="otherLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="methodDeclLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="classDeclLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="anonymousClassLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="groupUseLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="matchLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="propertyHookLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="fieldDeclLabel" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="classDeclCombo" linkSize="1" alignment="0" min="-2" max="-2" attributes="1"/>
+                          <Component id="anonymousClassCombo" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="methodDeclCombo" linkSize="1" alignment="0" min="-2" max="-2" attributes="1"/>
+                          <Component id="fieldDeclComboBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="propertyHookComboBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="ifCombo" alignment="0" min="-2" max="-2" attributes="1"/>
+                          <Component id="forCombo" alignment="0" max="-2" attributes="1"/>
+                          <Component id="whileCombo" alignment="0" max="-2" attributes="1"/>
+                          <Component id="switchCombo" alignment="0" max="-2" attributes="1"/>
+                          <Component id="matchCombo" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="catchCombo" alignment="0" max="-2" attributes="1"/>
+                          <Component id="useTraitCombo" alignment="0" min="-2" max="-2" attributes="1"/>
+                          <Component id="groupUseCombo" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="otherCombo" alignment="0" min="-2" max="-2" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
+                      <Component id="bracesPlacementLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jSeparator1" max="32767" attributes="0"/>
+                      <EmptySpace pref="118" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -136,6 +133,16 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="methodDeclLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="methodDeclCombo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="fieldDeclLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="fieldDeclComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="propertyHookLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="propertyHookComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -618,6 +625,56 @@
                   <ResourceString bundle="org/netbeans/modules/php/editor/indent/ui/Bundle.properties" key="FmtBraces.matchCombo.AccessibleContext.accessibleDescription" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </AccessibilityProperties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="fieldDeclLabel">
+              <Properties>
+                <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                  <ComponentRef name="fieldDeclComboBox"/>
+                </Property>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/php/editor/indent/ui/Bundle.properties" key="FmtBraces.fieldDeclLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="fieldDeclComboBox">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="4">
+                    <StringItem index="0" value="Item 1"/>
+                    <StringItem index="1" value="Item 2"/>
+                    <StringItem index="2" value="Item 3"/>
+                    <StringItem index="3" value="Item 4"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="propertyHookLabel">
+              <Properties>
+                <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                  <ComponentRef name="propertyHookComboBox"/>
+                </Property>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="org/netbeans/modules/php/editor/indent/ui/Bundle.properties" key="FmtBraces.propertyHookLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="propertyHookComboBox">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="4">
+                    <StringItem index="0" value="Item 1"/>
+                    <StringItem index="1" value="Item 2"/>
+                    <StringItem index="2" value="Item 3"/>
+                    <StringItem index="3" value="Item 4"/>
+                  </StringArray>
+                </Property>
+              </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>

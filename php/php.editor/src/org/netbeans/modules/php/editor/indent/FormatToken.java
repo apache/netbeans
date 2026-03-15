@@ -79,6 +79,9 @@ public class FormatToken {
         WHITESPACE_AFTER_CLASS_LEFT_BRACE,
         WHITESPACE_AFTER_ANONYMOUS_CLASS_LEFT_BRACE,
         WHITESPACE_AFTER_KEYWORD,
+        WHITESPACE_AFTER_FIELD_LEFT_BRACE,
+        WHITESPACE_BEFORE_FIELD_LEFT_BRACE,
+        WHITESPACE_BEFORE_PROPERTY_HOOK_LEFT_BRACE,
         WHITESPACE_BEFORE_FUNCTION_LEFT_BRACE,
         WHITESPACE_BEFORE_IF_LEFT_BRACE,
         WHITESPACE_BEFORE_ELSE_LEFT_BRACE,
@@ -94,6 +97,8 @@ public class FormatToken {
         WHITESPACE_AFTER_OTHER_LEFT_BRACE,
         WHITESPACE_BEFORE_CLASS_RIGHT_BRACE,
         WHITESPACE_BEFORE_ANONYMOUS_CLASS_RIGHT_BRACE,
+        WHITESPACE_BEFORE_FIELD_RIGHT_BRACE,
+        WHITESPACE_BEFORE_PROPERTY_HOOK_RIGHT_BRACE,
         WHITESPACE_BEFORE_FUNCTION_RIGHT_BRACE,
         WHITESPACE_BEFORE_IF_RIGHT_BRACE,
         WHITESPACE_BEFORE_FOR_RIGHT_BRACE,
@@ -142,9 +147,13 @@ public class FormatToken {
         WHITESPACE_BEFORE_FIELDS,
         WHITESPACE_BETWEEN_FIELDS,
         WHITESPACE_AFTER_FIELDS,
+        WHITESPACE_BEFORE_PROPERTY_HOOKS,
+        WHITESPACE_BETWEEN_PROPERTY_HOOKS,
+        WHITESPACE_AFTER_PROPERTY_HOOKS,
         WHITESPACE_BETWEEN_LINE_COMMENTS,
         WHITESPACE_BETWEEN_OPEN_CLOSE_BRACES,
         WHITESPACE_BETWEEN_FUNCTION_OPEN_CLOSE_BRACES,
+        WHITESPACE_BETWEEN_PROPERTY_HOOK_OPEN_CLOSE_BRACES,
         WHITESPACE_IN_ARGUMENT_LIST,
         WHITESPACE_IN_ARRAY_ELEMENT_LIST,
         WHITESPACE_IN_INTERFACE_LIST,
@@ -251,8 +260,8 @@ public class FormatToken {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(id.name());
-        if (this instanceof IndentToken) {
-            sb.append("(").append(((IndentToken) this).getDelta()).append(")"); // NOI18N
+        if (this instanceof IndentToken indentToken) {
+            sb.append("(").append(indentToken.getDelta()).append(")"); // NOI18N
         }
         sb.append(" offset: ").append(offset); // NOI18N
         if (oldText != null) {

@@ -5,6 +5,9 @@
  unexpected:	?
  after:	|
  expected:	identifier, array, callable, define, static, (
+[[889,890]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	{] 889-890:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	{
 [[897,898]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}] 897-898:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}

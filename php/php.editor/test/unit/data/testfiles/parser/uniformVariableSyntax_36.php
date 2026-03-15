@@ -6,4 +6,3 @@
 (Example::bar());
 (Example::$bar)['test'];
 (Example::$bar)['baz']();
-(getString()){0};

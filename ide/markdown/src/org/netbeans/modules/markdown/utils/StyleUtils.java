@@ -20,7 +20,6 @@ package org.netbeans.modules.markdown.utils;
 
 import java.awt.Color;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import javax.swing.text.AttributeSet;
@@ -31,7 +30,7 @@ import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.modules.editor.settings.storage.api.EditorSettings;
 import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.modules.editor.settings.storage.api.FontColorSettingsFactory;
-import org.netbeans.modules.markdown.MarkdownDataObject;
+import static org.netbeans.modules.markdown.MarkdownViewerElement.MIME_TYPE_PREVIEW;
 import org.openide.util.NbBundle;
 
 /**
@@ -76,6 +75,8 @@ public class StyleUtils {
         cssRule.append(" {");  // NOI18N
         cssRule.append(rgbStyling("color", getThemeColor(attributeSet, defaultAttributes, StyleConstants.ColorConstants.Foreground)));  // NOI18N
         cssRule.append(rgbStyling("background-color", getThemeColor(attributeSet, defaultAttributes, StyleConstants.ColorConstants.Background)));  // NOI18N
+        cssRule.append(fontSizeStyling(getFontSize(attributeSet)));
+        cssRule.append(fontStyling("font-family", getFontStyleConfig(attributeSet, StyleConstants.ColorConstants.FontFamily)));
         cssRule.append("}");  // NOI18N
         ss.addRule(cssRule.toString());
     }
@@ -86,6 +87,15 @@ public class StyleUtils {
             color = (Color) defaultAttributes.getAttribute(constant);
         }
         return color;
+    }
+    
+    public static int getFontSize(AttributeSet attributeSet) {
+        Object fontSizeConfig = attributeSet.getAttribute(StyleConstants.ColorConstants.FontSize);
+        if (fontSizeConfig == null) {
+            return 0;
+        }
+        int fontSize = (int) fontSizeConfig;
+        return fontSize;
     }
 
     public static String rgbStyling(String property, Color color) {
@@ -105,6 +115,35 @@ public class StyleUtils {
         return cssRule.toString();
     }
 
+    public static String fontSizeStyling(int size) {
+        if (size == 0 ) {
+            return "";
+        }
+
+        StringBuilder cssRule = new StringBuilder();
+        cssRule.append("font-size:"); // NOI18N
+        cssRule.append(Integer.toString(size));
+        cssRule.append(";");  // NOI18N
+        return cssRule.toString();
+    }
+
+    public static String fontStyling(String property, String value) {
+        if (value == null) {
+            return ""; // NOI18N
+        }
+        
+        StringBuilder cssRule = new StringBuilder();
+        cssRule.append(property);
+        cssRule.append(":"); // NOI18N
+        cssRule.append(value);
+        cssRule.append(";");  // NOI18N
+        return cssRule.toString();
+    }
+
+    public static String getFontStyleConfig(AttributeSet attributeSet, Object option) {
+        return (String) attributeSet.getAttribute(option);
+    }
+    
     private static void appendDefaultMarkdownCssRules(StyleSheet ss) {
         String defaultRules = NbBundle.getMessage(StyleUtils.class, "CSS_DEFAULT");  // NOI18N
         ss.addRule(defaultRules);
@@ -112,12 +151,12 @@ public class StyleUtils {
 
     private static Iterator<AttributeSet> loadCustomizedMarkdownFontAttributes() {
         String profile = EditorSettings.getDefault().getCurrentFontColorProfile();
-        FontColorSettingsFactory fcsf = EditorSettings.getDefault().getFontColorSettings(new String[]{MarkdownDataObject.MIME_TYPE});
+        FontColorSettingsFactory fcsf = EditorSettings.getDefault().getFontColorSettings(new String[]{MIME_TYPE_PREVIEW});
         return fcsf.getAllFontColors(profile).iterator();
     }
 
     private static AttributeSet loadDefaultNbMarkdownFontAttributes() {
-        FontColorSettings fcs = (MimeLookup.getLookup(MimePath.get(MarkdownDataObject.MIME_TYPE)).lookup(FontColorSettings.class));
+        FontColorSettings fcs = (MimeLookup.getLookup(MimePath.get(MIME_TYPE_PREVIEW)).lookup(FontColorSettings.class));
         return fcs.getFontColors("default"); // NOI18N
     }
 

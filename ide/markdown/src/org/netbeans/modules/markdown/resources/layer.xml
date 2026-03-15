@@ -23,8 +23,8 @@
 <filesystem>
     <folder name="Editors">
         <folder name="text">
-            <folder name="x-markdown">
-                <attr name="displayName" bundlevalue="org.netbeans.modules.markdown.resources.Bundle#Editors/text/x-markdown-preview"/>
+            <folder name="x-markdown-nb-preview">
+                <attr name="displayName" bundlevalue="org.netbeans.modules.markdown.resources.Bundle#Editors/text/x-markdown-nb-preview"/>
                 <folder name="FontsColors">
                     <folder name="NetBeans">
                         <folder name="Defaults">
@@ -67,7 +67,7 @@
     </folder>
     <folder name="Loaders">
         <folder name="text">
-            <folder name="x-markdown">
+            <folder name="x-markdown-nb-preview">
                 <attr name="iconBase" stringvalue="org/netbeans/modules/markdown/markdown.png"/>
             </folder>
         </folder>
@@ -75,7 +75,7 @@
     <folder name="OptionsDialog">
         <folder name="PreviewExamples">
             <folder name="text">
-                <file name="x-markdown" url="Coloring.md"/>
+                <file name="x-markdown-nb-preview" url="Coloring.md"/>
             </folder>
         </folder>
     </folder>

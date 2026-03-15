@@ -74,6 +74,7 @@ import org.openide.windows.TopComponent;
  *
  * @author lkishalmi
  */
+
 @MultiViewElement.Registration(
         displayName = "#LBL_MarkdownViewer",
         iconBase = "org/netbeans/modules/markdown/markdown.png",
@@ -85,6 +86,7 @@ import org.openide.windows.TopComponent;
 @Messages("LBL_MarkdownViewer=Preview")
 public class MarkdownViewerElement implements MultiViewElement {
 
+    public static final String MIME_TYPE_PREVIEW = "text/x-markdown-nb-preview";
     private static final Logger LOG = Logger.getLogger(MarkdownViewerElement.class.getName());
     private static final RequestProcessor RP = new RequestProcessor(MarkdownViewerElement.class);
     private static final int UPDATE_DELAY = 500;
@@ -105,12 +107,12 @@ public class MarkdownViewerElement implements MultiViewElement {
             ))
             .set(HtmlRenderer.INDENT_SIZE, 2)
             .set(HtmlRenderer.RENDER_HEADER_ID, true)
-            .set(HtmlRenderer.FENCED_CODE_LANGUAGE_CLASS_PREFIX, "")
+            .set(HtmlRenderer.FENCED_CODE_LANGUAGE_CLASS_PREFIX, "") //NOI18N
             // JEditorPane search for the name attribute
             .set(AnchorLinkExtension.ANCHORLINKS_SET_NAME, true)
             .set(AnchorLinkExtension.ANCHORLINKS_SET_ID, false)
-            .set(AnchorLinkExtension.ANCHORLINKS_ANCHOR_CLASS, "")
-            .set(AnchorLinkExtension.ANCHORLINKS_TEXT_PREFIX, "")
+            .set(AnchorLinkExtension.ANCHORLINKS_ANCHOR_CLASS, "") //NOI18N
+            .set(AnchorLinkExtension.ANCHORLINKS_TEXT_PREFIX, "") //NOI18N
             // Make the table generation SWING Friendly
             .set(TablesExtension.COLUMN_SPANS, false)
             .set(TablesExtension.MIN_HEADER_ROWS, 1)

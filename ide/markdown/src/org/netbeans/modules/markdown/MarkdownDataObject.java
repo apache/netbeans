@@ -105,7 +105,7 @@ import org.openide.windows.TopComponent;
 @GrammarRegistration(mimeType=MarkdownDataObject.MIME_TYPE, grammar="markdown.tmLanguage.json")
 public class MarkdownDataObject extends MultiDataObject {
 
-    public static final String MIME_TYPE = "text/x-markdown";
+    public static final String MIME_TYPE = "text/markdown";
 
     public MarkdownDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
@@ -120,7 +120,7 @@ public class MarkdownDataObject extends MultiDataObject {
     @MultiViewElement.Registration(
             displayName = "#LBL_Markdown_EDITOR",
             iconBase = "org/netbeans/modules/markdown/markdown.png",
-            mimeType = "text/x-markdown",
+            mimeType = "text/markdown",
             persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
             preferredID = "Markdown",
             position = 1000

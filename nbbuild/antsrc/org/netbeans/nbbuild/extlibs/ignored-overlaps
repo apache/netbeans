@@ -126,3 +126,6 @@ enterprise/web.jspparser/external/jakarta.servlet.jsp.jstl-1.2.6.jar enterprise/
 enterprise/web.jspparser/external/jakarta.servlet.jsp.jstl-api-3.0.2.jar enterprise/libs.jstl/external/jakarta.servlet.jsp.jstl-api-3.0.2.jar
 enterprise/web.jspparser/external/jakarta.servlet.jsp.jstl-3.0.1.jar enterprise/libs.jstl/external/jakarta.servlet.jsp.jstl-3.0.1.jar
 enterprise/web.jspparser/external/commons-logging-1.3.1.jar platform/o.apache.commons.logging/external/commons-logging-1.3.1.jar
+
+# JFlex is used as scanner generator only and is not distributed
+webcommon/javascript2.jade/external/jflex-1.4.3.jar php/php.editor/external/jflex-1.4.3.jar

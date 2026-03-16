@@ -2651,13 +2651,13 @@ jobs:
     steps:
 
       - name: Delete Workspace Artifact
-        uses: geekyeggo/delete-artifact@f275313e70c08f6120db482d7a6b98377786765b # v5.1.0
+        uses: geekyeggo/delete-artifact@176a747ab7e287e3ff4787bf8a148716375ca118 # v6.0.0
         with:
           name: build.tar.zst 
           useGlob: false
 
       - name: Delete Dev Build Artifact
-        uses: geekyeggo/delete-artifact@f275313e70c08f6120db482d7a6b98377786765b # v5.1.0
+        uses: geekyeggo/delete-artifact@176a747ab7e287e3ff4787bf8a148716375ca118 # v6.0.0
         if: ${{ contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && cancelled() }}
         with:
           name: dev-build_${{github.event.pull_request.number || github.run_id}}.zip

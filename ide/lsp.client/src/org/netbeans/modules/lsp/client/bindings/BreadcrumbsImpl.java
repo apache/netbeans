@@ -90,7 +90,7 @@ public class BreadcrumbsImpl implements BackgroundTask {
                              capa -> Utils.isEnabled(capa.getDocumentSymbolProvider()),
                              () -> new DocumentSymbolParams(new TextDocumentIdentifier(Utils.toURI(file))),
                              (server, params) -> server.getTextDocumentService().documentSymbol(params),
-                             (server, result) -> allSymbols.add(Pair.of(server, result.stream().map(this::toDocumentSymbol).toList())));
+                             (server, result) -> allSymbols.add(Pair.of(server, result == null ? List.of() : result.stream().map(this::toDocumentSymbol).toList())));
 
         this.rootElement = new RootBreadcrumbsElementImpl(file, doc, allSymbols);
 

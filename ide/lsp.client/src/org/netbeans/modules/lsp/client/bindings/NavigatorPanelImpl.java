@@ -74,7 +74,7 @@ public class NavigatorPanelImpl extends AbstractNavigatorPanel<Either<SymbolInfo
                 String uri = Utils.toURI(file);
                 List<Either<SymbolInformation, DocumentSymbol>> symbols = bindings.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(uri))).get();
 
-                setKeys(symbols);
+                setKeys(symbols == null ? List.of() : symbols);
                 expandAll();
             } catch (ExecutionException ex) {
                 LOG.log(Level.FINE, null, ex);

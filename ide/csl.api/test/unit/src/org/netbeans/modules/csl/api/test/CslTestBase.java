@@ -22,7 +22,6 @@ package org.netbeans.modules.csl.api.test;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -346,17 +345,9 @@ public abstract class CslTestBase extends NbTestCase {
     }
 
     public static final FileObject copyStringToFileObject(FileObject fo, String content) throws IOException {
-        OutputStream os = fo.getOutputStream();
-        try {
-            InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-            try {
-                FileUtil.copy(is, os);
-                return fo;
-            } finally {
-                is.close();
-            }
-        } finally {
-            os.close();
+        try (OutputStream os = fo.getOutputStream()) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
+            return fo;
         }
     }
 
@@ -390,13 +381,10 @@ public abstract class CslTestBase extends NbTestCase {
 
     /** Copy-pasted from APISupport. */
     protected static String slurp(File file) throws IOException {
-        InputStream is = new FileInputStream(file);
-        try {
+        try (InputStream is = new FileInputStream(file)) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            FileUtil.copy(is, baos);
-            return baos.toString("UTF-8");
-        } finally {
-            is.close();
+            is.transferTo(baos);
+            return baos.toString(StandardCharsets.UTF_8);
         }
     }
 

@@ -697,7 +697,7 @@ final class OptionsExportModel {
      */
     private void copyFile(String relativePath, OutputStream out) throws IOException {
         try (InputStream in = getInputStream(relativePath)) {
-            FileUtil.copy(in, out);
+            in.transferTo(out);
         }
     }
 

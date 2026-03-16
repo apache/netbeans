@@ -447,13 +447,9 @@ public class BinaryAnalyserTest extends NbTestCase {
             File target = new File(where, current.getName());
             target.getParentFile().mkdirs();
             assertTrue(target.getParentFile().isDirectory());
-            InputStream in = jf.getInputStream(current);
-            OutputStream out = new BufferedOutputStream(new FileOutputStream(target));
-
-            FileUtil.copy(in, out);
-
-            in.close();
-            out.close();
+            try (InputStream in = jf.getInputStream(current); OutputStream out = new BufferedOutputStream(new FileOutputStream(target))) {
+                in.transferTo(out);
+            }
         }
     }
 

@@ -180,7 +180,7 @@ public class NbURLStreamHandlerFactoryTest extends NbTestCase {
         URLConnection conn = u.openConnection();
         InputStream is = conn.getInputStream();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        FileUtil.copy(is, baos);
+        is.transferTo(baos);
         is.close();
         return baos.toString("UTF-8");
     }

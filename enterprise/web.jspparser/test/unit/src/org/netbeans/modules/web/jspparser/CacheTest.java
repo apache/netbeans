@@ -311,16 +311,8 @@ public class CacheTest extends NbTestCase {
     }
 
     private void copy(FileObject source, FileObject target) throws Exception {
-        InputStream is = source.getInputStream();
-        OutputStream os = target.getOutputStream();
-        try {
-            try {
-                FileUtil.copy(is, os);
-            } finally {
-                is.close();
-            }
-        } finally {
-            os.close();
+        try (InputStream is = source.getInputStream(); OutputStream os = target.getOutputStream()) {
+            is.transferTo(os);
         }
     }
 }

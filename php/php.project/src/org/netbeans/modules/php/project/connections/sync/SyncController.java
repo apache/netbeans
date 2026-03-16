@@ -492,7 +492,7 @@ public final class SyncController implements Cancellable {
                 return false;
             }
             try (InputStream inputStream = source.getInputStream(); OutputStream outputStream = fileObject.getOutputStream()) {
-                FileUtil.copy(inputStream, outputStream);
+                inputStream.transferTo(outputStream);
             }
             return true;
         }

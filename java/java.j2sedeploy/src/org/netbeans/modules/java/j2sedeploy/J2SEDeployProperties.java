@@ -193,7 +193,7 @@ public final class J2SEDeployProperties {
         lock = buildExFo.lock();
         try (final InputStream in = J2SEDeployProperties.class.getClassLoader().getResourceAsStream(BUILD_SCRIPT_PROTOTYPE);
              final OutputStream out = buildExFo.getOutputStream(lock)) {
-            FileUtil.copy(in, out);
+            in.transferTo(out);
         } finally {
             lock.releaseLock();
         }

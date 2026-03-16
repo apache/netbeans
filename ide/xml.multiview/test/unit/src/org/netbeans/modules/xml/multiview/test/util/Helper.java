@@ -48,16 +48,9 @@ public class Helper {
 
             @Override
             public void run() throws IOException {
-                BufferedInputStream is = new BufferedInputStream(new FileInputStream(source));
-                try {
-                    BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(target));
-                    try {
-                        FileUtil.copy(is, os);
-                    } finally {
-                        os.close();
-                    }
-                } finally {
-                    is.close();
+                try (BufferedInputStream is = new BufferedInputStream(new FileInputStream(source));
+                     BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(target))) {
+                    is.transferTo(os);
                 }
             }
         });

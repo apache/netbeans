@@ -77,7 +77,7 @@ public class SampledCPUSnapshotTest {
         assertNotNull("Sample npss file found", is);
         FileObject sample = FileUtil.createMemoryFileSystem().getRoot().createData("sample.npss");
         try (OutputStream os = sample.getOutputStream()) {
-            FileUtil.copy(is, os);
+            is.transferTo(os);
         }
         return new SampledCPUSnapshot(sample);
     }

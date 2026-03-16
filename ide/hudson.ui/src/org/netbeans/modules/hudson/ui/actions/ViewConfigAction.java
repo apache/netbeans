@@ -23,7 +23,6 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,7 +33,6 @@ import javax.swing.AbstractAction;
 import org.netbeans.modules.hudson.api.ConnectionBuilder;
 import org.netbeans.modules.hudson.api.HudsonJob;
 import static org.netbeans.modules.hudson.ui.actions.Bundle.*;
-import org.openide.filesystems.FileUtil;
 import org.openide.text.CloneableEditorSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
@@ -71,14 +69,11 @@ public class ViewConfigAction extends AbstractAction {
         
         @Messages({"# {0} - URL", "ViewConfigAction_could_not_connect=Could not retrieve: {0}"})
         @Override public InputStream inputStream() throws IOException {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] byteArray;
             try {
                 URLConnection conn = new ConnectionBuilder().homeURL(new URL(home)).url(url).connection();
-                InputStream is = conn.getInputStream();
-                try {
-                    FileUtil.copy(is, baos);
-                } finally {
-                    is.close();
+                try (InputStream is = conn.getInputStream()) {
+                    byteArray = is.readAllBytes();
                 }
             } catch (IOException x) {
                 if (Exceptions.findLocalizedMessage(x) == null) {
@@ -86,7 +81,7 @@ public class ViewConfigAction extends AbstractAction {
                 }
                 throw x;
             }
-            return new ByteArrayInputStream(baos.toByteArray());
+            return new ByteArrayInputStream(byteArray);
         }
 
         @Override public OutputStream outputStream() throws IOException {

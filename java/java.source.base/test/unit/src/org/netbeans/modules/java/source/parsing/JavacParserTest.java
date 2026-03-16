@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URL;
@@ -36,12 +35,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiPredicate;
@@ -69,9 +66,7 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.tasklist.CompilerSettings;
-import org.netbeans.modules.openide.util.GlobalLookup;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
@@ -93,8 +88,6 @@ import org.netbeans.modules.parsing.spi.ParserFactory;
 import org.netbeans.modules.parsing.spi.SchedulerTask;
 import org.netbeans.modules.parsing.spi.SourceModificationEvent;
 import org.netbeans.modules.parsing.spi.TaskFactory;
-import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
-import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -702,11 +695,9 @@ public class JavacParserTest extends NbTestCase {
         assertNotNull("Resource found", resource);
         file.getParentFile().mkdirs();
         assertTrue("New file " + file + " created", file.createNewFile());
-        FileOutputStream os = new FileOutputStream(file);
-        InputStream is = resource.openStream();
-        FileUtil.copy(is, os);
-        is.close();
-        os.close();
+        try (InputStream is = resource.openStream(); FileOutputStream os = new FileOutputStream(file)) {
+            is.transferTo(os);
+        }
     }
     
     private static final CompilerSettingsImpl settings = new CompilerSettingsImpl();

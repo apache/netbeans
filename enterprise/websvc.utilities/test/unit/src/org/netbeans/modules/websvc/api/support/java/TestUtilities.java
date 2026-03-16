@@ -42,28 +42,21 @@ public class TestUtilities {
     }
 
     public static final FileObject copyStringToFileObject(FileObject fo, String content) throws IOException {
-        OutputStream os = fo.getOutputStream();
-        try {
-            InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-            FileUtil.copy(is, os);
+        try (OutputStream os = fo.getOutputStream()) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
             return fo;
-        } finally {
-            os.close();
         }
     }
 
     public static final String copyFileObjectToString (FileObject fo) throws java.io.IOException {
         int s = (int)FileUtil.toFile(fo).length();
         byte[] data = new byte[s];
-        InputStream stream = fo.getInputStream();
-        try {
+        try (InputStream stream = fo.getInputStream()) {
             int len = stream.read(data);
             if (len != s) {
                 throw new EOFException("truncated file");
             }
             return new String (data);
-        } finally {
-            stream.close();
         }
     }
     

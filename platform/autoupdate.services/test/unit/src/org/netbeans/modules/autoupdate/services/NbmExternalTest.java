@@ -225,7 +225,7 @@ public class NbmExternalTest extends NbTestCase {
         jos.putNextEntry(new ZipEntry("netbeans/modules/" + moduleFile + ".jar.external"));
 
         FileInputStream fis = new FileInputStream(ext);
-        FileUtil.copy(fis, jos);
+        fis.transferTo(jos);
         fis.close();
         ext.delete();
         jos.close();

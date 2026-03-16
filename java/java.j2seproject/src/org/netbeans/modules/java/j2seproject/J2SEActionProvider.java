@@ -760,7 +760,7 @@ public class J2SEActionProvider extends BaseActionProvider {
                 final FileLock lock = cosScript.lock();
                 try (InputStream in = getClass().getResourceAsStream(SCRIPT_TEMPLATE);
                         OutputStream out = cosScript.getOutputStream(lock)) {
-                    FileUtil.copy(in, out);
+                    in.transferTo(out);
                 } finally {
                     lock.releaseLock();
                 }

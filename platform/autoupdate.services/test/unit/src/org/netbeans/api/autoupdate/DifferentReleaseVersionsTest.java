@@ -195,7 +195,7 @@ public class DifferentReleaseVersionsTest extends NbTestCase {
         jos.putNextEntry(new ZipEntry("netbeans/modules/" + moduleFile + ".jar"));
 
         FileInputStream fis = new FileInputStream(jar);
-        FileUtil.copy(fis, jos);
+        fis.transferTo(jos);
         fis.close();
         jar.delete();
         jos.close();

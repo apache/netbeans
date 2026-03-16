@@ -155,7 +155,7 @@ public class SnippetsFolder implements PersistentSnippets {
         FileObject target = FileUtil.createFolder(pdir, PATH_SNIPPETS);
         
         try(OutputStream ostm = target.createAndOpen(name + ".java")) {
-            FileUtil.copy(contents, ostm);
+            contents.transferTo(ostm);
         } 
         FileObject snipFile = target.getFileObject(name + ".java");
         return snipFile;

@@ -54,7 +54,6 @@ import org.apache.maven.Maven;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
-import org.apache.maven.cli.MavenCli;
 import org.apache.maven.execution.MavenExecutionRequest;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
@@ -170,6 +169,7 @@ public final class NbMavenProjectImpl implements Project {
     private final Lookup completeLookup;
     private final Lookup lookup;
     private final Updater openedProjectUpdater;
+    private volatile boolean updaterAttached;
     
     private Reference<MavenProject> project;
     private boolean hardReferencingMavenProject = false; //only should be true when project is open.
@@ -263,12 +263,11 @@ public final class NbMavenProjectImpl implements Project {
 
             @Override
             public File[] getFiles() {
-                File homeFile = FileUtil.normalizeFile(MavenCli.USER_MAVEN_CONFIGURATION_HOME);
                 return new File[] {
                     new File(projectFile.getParentFile(), "nb-configuration.xml"), //NOI18N
                     projectFile,
                     new File(new File(projectFile.getParentFile(), ".mvn"), "maven.config"), //NOI18N
-                    new File(homeFile, "settings.xml"), //NOI18N
+                    EmbedderFactory.getUserSettingsXmlFile(),
                 };
             }
         });
@@ -807,10 +806,20 @@ public final class NbMavenProjectImpl implements Project {
 
     /** Begin listening to pom.xml changes. */
     void attachUpdater() {
+        updaterAttached = true;
         openedProjectUpdater.attachAll();
     }
    void detachUpdater() {
+        updaterAttached = false;
         openedProjectUpdater.detachAll();
+    }
+
+    public void refreshUpdater() {
+        if (!updaterAttached) {
+            return;
+        }
+        openedProjectUpdater.detachAll();
+        openedProjectUpdater.attachAll();
     }
 
     /**
@@ -1436,28 +1445,26 @@ public final class NbMavenProjectImpl implements Project {
                     assert false : "project opened twice in a row, issue #236211 for " + projectFile.getAbsolutePath();
                 }
             }
-            
-            if(lastMods == null) {
-                // attached for the first time, 
-                // preserve lastModified of interestig files 
-                lastMods = new HashMap<>(filesToWatch.size());
-                for (File file : filesToWatch) {
-                    lastMods.put(file, file.lastModified());
-                }
-            } else {
-                for (Map.Entry<File, Long> e : lastMods.entrySet()) {
-                    File file = e.getKey();
-                    long ts = file.lastModified();
-                    if( e.getValue() < ts ) {
-                        // attached after being previously dettached and 
-                        // lastModified of an interesting file changed in the meantime 
+
+            boolean reloadNeeded = false;
+            Map<File, Long> currentLastMods = new HashMap<>(filesToWatch.size());
+            for (File file : filesToWatch) {
+                long ts = file.lastModified();
+                if (lastMods != null) {
+                    Long oldTs = lastMods.get(file);
+                    if (oldTs != null && oldTs < ts) {
+                        // attached after being previously detached and
+                        // lastModified of an interesting file changed in the meantime
                         // -> force pom refresh
-                        lastMods.put(file, ts);
-                        NbMavenProject.fireMavenProjectReload(NbMavenProjectImpl.this);
+                        reloadNeeded = true;
                     }
                 }
-                
-            }            
+                currentLastMods.put(file, ts);
+            }
+            lastMods = currentLastMods;
+            if (reloadNeeded) {
+                NbMavenProject.fireMavenProjectReload(NbMavenProjectImpl.this);
+            }
         }
 
         protected List<File> getParents() {

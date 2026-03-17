@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.*;
@@ -57,9 +58,10 @@ import org.openide.util.BaseUtilities;
 public final class EmbedderFactory {
 
     public static final String PROP_COMMANDLINE_PATH = "commandLineMavenPath";
+    public static final String PROP_USER_SETTINGS_XML = "userSettingsXml";
     
     //same prop constant in MavenSettings.java
-    static final String PROP_DEFAULT_OPTIONS = "defaultOptions"; 
+    static final String PROP_DEFAULT_OPTIONS = "defaultOptions";
     private static final Set<String> forbidden = Set.of(
         "netbeans.logger.console", //NOI18N
         "java.util.logging.config.class", //NOI18N
@@ -112,6 +114,13 @@ public final class EmbedderFactory {
                 @Override
                 public void projectGroupChanged(ProjectGroupChangeEvent event) {}
             });
+        });
+        // Listen for external preference changes (e.g. from LSP module) and reset
+        // cached embedders so they pick up the new user settings XML path.
+        getPreferences().addPreferenceChangeListener((evt) -> {
+            if (PROP_USER_SETTINGS_XML.equals(evt.getKey())) {
+                resetCachedEmbedders();
+            }
         });
         // start initialization; guice can take a while the first time it runs
         // if something calls getProjectEmbedder() in the mean time, this is becomes a no-op
@@ -256,6 +265,33 @@ public final class EmbedderFactory {
         return new File(getEffectiveMavenHome(), "conf/settings.xml");
     }
 
+    public static @NonNull File getDefaultUserSettingsXmlFile() {
+        return SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE;
+    }
+
+    public static @NonNull File getUserSettingsXmlFile() {
+        String str = getPreferences().get(PROP_USER_SETTINGS_XML, null);
+        if (str != null) {
+            return FileUtil.normalizeFile(new File(str));
+        } else {
+            return getDefaultUserSettingsXmlFile();
+        }
+    }
+
+    public static void setUserSettingsXmlFile(File path) {
+        File oldValue = getUserSettingsXmlFile();
+        File defValue = getDefaultUserSettingsXmlFile();
+        if (oldValue.equals(path) || path == null && oldValue.equals(defValue)) {
+            return;
+        }
+        if (path == null || path.equals(defValue)) {
+            getPreferences().remove(PROP_USER_SETTINGS_XML);
+        } else {
+            getPreferences().put(PROP_USER_SETTINGS_XML, FileUtil.normalizeFile(path).getAbsolutePath());
+        }
+        resetCachedEmbedders();
+    }
+
     /**
      * #191267: suppresses logging from embedded Maven, since interesting results normally appear elsewhere.
      */
@@ -322,7 +358,7 @@ public final class EmbedderFactory {
 
         Properties userprops = new Properties();
         userprops.putAll(getCustomGlobalUserProperties());
-        EmbedderConfiguration configuration = new EmbedderConfiguration(pc, cloneStaticProps(), userprops, true, getSettingsXml());
+        EmbedderConfiguration configuration = new EmbedderConfiguration(pc, cloneStaticProps(), userprops, true, getSettingsXml(), getUserSettingsXmlFile());
         
         try {
             return new MavenEmbedder(configuration);
@@ -425,7 +461,7 @@ public final class EmbedderFactory {
 
         Properties userprops = new Properties();
         userprops.putAll(getCustomGlobalUserProperties());
-        EmbedderConfiguration req = new EmbedderConfiguration(pc, cloneStaticProps(), userprops, false, getSettingsXml());
+        EmbedderConfiguration req = new EmbedderConfiguration(pc, cloneStaticProps(), userprops, false, getSettingsXml(), getUserSettingsXmlFile());
 
 //        //TODO remove explicit activation
 //        req.addActiveProfile("netbeans-public").addActiveProfile("netbeans-private"); //NOI18N

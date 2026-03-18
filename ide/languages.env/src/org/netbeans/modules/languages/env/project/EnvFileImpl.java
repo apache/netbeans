@@ -18,25 +18,36 @@
  */
 package org.netbeans.modules.languages.env.project;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
+import org.netbeans.modules.languages.env.EnvFileResolver;
 import org.netbeans.modules.web.common.spi.ImportantFilesImplementation;
 import org.netbeans.modules.web.common.spi.ImportantFilesSupport;
 import org.netbeans.spi.project.LookupProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
+import org.openide.filesystems.FileObject;
 
 @ProjectServiceProvider(service = ImportantFilesImplementation.class, projectTypes = {
     @LookupProvider.Registration.ProjectType(id = "org-netbeans-modules-web-clientproject"),
     @LookupProvider.Registration.ProjectType(id = "org-netbeans-modules-php-project"),
 })
 public class EnvFileImpl implements ImportantFilesImplementation {
-
+    
     private final ImportantFilesSupport support;
 
     public EnvFileImpl(Project project) {
         assert project != null;
-        support = ImportantFilesSupport.create(project.getProjectDirectory(), ".env"); // NOI18N
+        List<String> envFiles = new ArrayList<>();
+ 
+        for (FileObject file : project.getProjectDirectory().getChildren()) {
+            if (!file.isFolder() && (file.getMIMEType().equals(EnvFileResolver.MIME_TYPE))) {
+                envFiles.add(file.getNameExt());
+            }
+        }
+        support = ImportantFilesSupport.create(project.getProjectDirectory(), envFiles.toArray(String[]::new));
     }
 
     @Override

@@ -97,6 +97,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import java.util.LinkedHashMap;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.minBy;
@@ -115,6 +116,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
     
     private int                 lineNumber;
     private int                 breakpointLineNumber;
+    private int                 lambdaIndex;
     private int                 lineNumberForUpdate = -1;
     private final Object        lineLock = new Object();
     private BreakpointsReader   reader;
@@ -143,9 +145,11 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                 lb,
                 getDebugger());
         int lbln = lb.getLineNumber();
+        int li = lb.getLambdaIndex();
         synchronized (lineLock) {
             breakpointLineNumber = lbln;
             lineNumber = theLineNumber;
+            lambdaIndex = li;
         }
    }
 
@@ -323,11 +327,13 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
         String failReason = null;
         ReferenceType noLocRefType = null;
         int lineNumberToSet;
+        int lambdaIndexToSet;
         final int origBreakpointLineNumber;
         int newBreakpointLineNumber;
         synchronized (lineLock) {
             lineNumberToSet = lineNumber;
             newBreakpointLineNumber = origBreakpointLineNumber = breakpointLineNumber;
+            lambdaIndexToSet = lambdaIndex;
         }
         String currFailReason = null;
 
@@ -347,6 +353,10 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                 );
                 if (logger.isLoggable(Level.FINE)) {
                     logger.fine("Locations in "+referenceType+" are: "+locations+", reason = '"+reason[0]);//+"', HAVE PARENT = "+haveParent);
+                }
+                locations = filterLocationsByLambdaIndex(locations, lambdaIndexToSet);
+                if (logger.isLoggable(Level.FINE)) {
+                    logger.fine("Filtered Locations in "+referenceType+" are: "+locations+", reason = '"+reason[0]);//+"', HAVE PARENT = "+haveParent);
                 }
                 if (locations.isEmpty()) {
                     failReason = reason[0];
@@ -695,6 +705,28 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
         }
       }
       return path;
+    }
+
+    private List<Location> filterLocationsByLambdaIndex(List<Location> locations, int lambdaIndex) {
+        if (lambdaIndex == Integer.MIN_VALUE) {
+            return locations;
+        } else if (lambdaIndex == (-1)) {
+            return locations.stream()
+                            .filter(l -> !l.method().name().startsWith("lambda$"))
+                            .collect(Collectors.toList());
+        } else {
+            List<Location> filtered =
+                    locations.stream()
+                             .filter(l -> l.method().name().startsWith("lambda$"))
+                             .collect(Collectors.toList());
+
+            Collections.reverse(filtered);
+            if (lambdaIndex < filtered.size()) {
+                return Collections.singletonList(filtered.get(lambdaIndex));
+            } else {
+                return filtered;
+            }
+        }
     }
 
     private int findBreakableLine(String url, final int lineNumber) {

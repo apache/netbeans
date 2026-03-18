@@ -135,8 +135,10 @@ public final class NbBreakpointsRequestHandler {
     private NbBreakpoint[] convertClientBreakpointsToDebugger(Source source, String sourceFile, SourceBreakpoint[] sourceBreakpoints, DebugAdapterContext context) {
         int n = sourceBreakpoints.length;
         int[] lines = new int[n];
+        Integer[] columns = new Integer[n];
         for (int i = 0; i < n; i++) {
             lines[i] = context.getDebuggerLine(sourceBreakpoints[i].getLine());
+            columns[i] = sourceBreakpoints[i].getColumn() != null ? context.getDebuggerLine(sourceBreakpoints[i].getColumn()) : null;
         }
         NbBreakpoint[] breakpoints = new NbBreakpoint[n];
         for (int i = 0; i < n; i++) {
@@ -146,7 +148,7 @@ public final class NbBreakpointsRequestHandler {
             } catch (NumberFormatException e) {
                 hitCount = 0; // If hitCount is not a number, ignore the hitCount.
             }
-            breakpoints[i] = new NbBreakpoint(source, sourceFile, lines[i], hitCount, sourceBreakpoints[i].getCondition(), sourceBreakpoints[i].getLogMessage(), context);
+            breakpoints[i] = new NbBreakpoint(source, sourceFile, lines[i], columns[i], hitCount, sourceBreakpoints[i].getCondition(), sourceBreakpoints[i].getLogMessage(), context);
         }
         return breakpoints;
     }

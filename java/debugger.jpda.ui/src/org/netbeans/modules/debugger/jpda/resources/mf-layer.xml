@@ -91,9 +91,11 @@
         </folder>
         <folder name="AnnotationTypes">  <!-- Editor gutter popup menu -->
             <file name="DisabledFieldBreakpoint.xml" url="DisabledFieldBreakpoint.xml"/>
+            <file name="DisabledLambdaBreakpoint.xml" url="DisabledLambdaBreakpoint.xml"/>
             <file name="DisabledMethodBreakpoint.xml" url="DisabledMethodBreakpoint.xml"/>
             <file name="DisabledClassBreakpoint.xml" url="DisabledClassBreakpoint.xml"/>
             <file name="FieldBreakpoint.xml" url="FieldBreakpoint.xml"/>
+            <file name="LambdaBreakpoint.xml" url="LambdaBreakpoint.xml"/>
             <file name="MethodBreakpoint.xml" url="MethodBreakpoint.xml"/>
             <file name="ClassBreakpoint.xml" url="ClassBreakpoint.xml"/>
             <file name="DisabledFieldBreakpoint_stroke.xml" url="DisabledFieldBreakpoint_stroke.xml"/>

@@ -130,6 +130,7 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
             tfFileName.getPreferredSize().height));
 
         tfLineNumber.setText(Integer.toString(b.getLineNumber()));
+        tfLambdaIndex.setText(Integer.toString(b.getLambdaIndex()));
         conditionsPanel = new ConditionsPanel(HELP_ID);
         setupConditionPane();
         conditionsPanel.showClassFilter(false);
@@ -143,6 +144,7 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
 
         tfFileName.getDocument().addDocumentListener(validityDocumentListener);
         tfLineNumber.getDocument().addDocumentListener(validityDocumentListener);
+        tfLambdaIndex.getDocument().addDocumentListener(validityDocumentListener);
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 controller.checkValid();
@@ -192,6 +194,8 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
         tfFileName = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         tfLineNumber = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        tfLambdaIndex = new javax.swing.JTextField();
         cPanel = new javax.swing.JPanel();
         pActions = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -248,6 +252,29 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
         tfLineNumber.getAccessibleContext().setAccessibleName("Line number");
         tfLineNumber.getAccessibleContext().setAccessibleDescription(bundle.getString("ACSD_TF_Line_Breakpoint_Line_Number")); // NOI18N
 
+        jLabel4.setLabelFor(tfLambdaIndex);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, bundle.getString("L_Line_Breakpoint_Lambda_Index")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pSettings.add(jLabel4, gridBagConstraints);
+        jLabel4.getAccessibleContext().setAccessibleDescription(bundle.getString("ACSD_L_Line_Breakpoint_Lambda_Index")); // NOI18N
+
+        tfLambdaIndex.setToolTipText(bundle.getString("TTT_TF_Line_Breakpoint_Lambda_Index")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(3, 3, 3, 3);
+        pSettings.add(tfLambdaIndex, gridBagConstraints);
+        tfLambdaIndex.getAccessibleContext().setAccessibleName("Lambda index");
+        tfLambdaIndex.getAccessibleContext().setAccessibleDescription(bundle.getString("ACSD_TF_Line_Breakpoint_Lambda_Index")); // NOI18N
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
@@ -286,10 +313,12 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
     private javax.swing.JPanel cPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel pActions;
     private javax.swing.JPanel pSettings;
     private javax.swing.JTextField tfFileName;
+    private javax.swing.JTextField tfLambdaIndex;
     private javax.swing.JTextField tfLineNumber;
     // End of variables declaration//GEN-END:variables
 
@@ -319,6 +348,7 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
             logger.fine("      => URL = '"+url+"'");
             breakpoint.setURL((url != null) ? url.toString() : path);
             breakpoint.setLineNumber(Integer.parseInt(tfLineNumber.getText().trim()));
+            breakpoint.setLambdaIndex(Integer.parseInt(tfLambdaIndex.getText().trim()));
             breakpoint.setCondition (conditionsPanel.getCondition());
             breakpoint.setHitCountFilter(conditionsPanel.getHitCount(),
                     conditionsPanel.getHitCountFilteringStyle());

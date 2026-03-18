@@ -107,12 +107,21 @@ public class BreakpointsNodeModel implements NodeModel {
             }
             return bold (
                 b,
-                NbBundle.getMessage (
-                        BreakpointsNodeModel.class,
-                        "CTL_Line_Breakpoint",
-                        EditorContextBridge.getFileName (b),
-                        line
-                    )
+                b.getLambdaIndex() >= 0 ?
+                    NbBundle.getMessage (
+                            BreakpointsNodeModel.class,
+                            "CTL_Line_Lambda_Breakpoint",
+                            EditorContextBridge.getFileName (b),
+                            line,
+                            b.getLambdaIndex()
+                        )
+                :
+                    NbBundle.getMessage (
+                            BreakpointsNodeModel.class,
+                            "CTL_Line_Breakpoint",
+                            EditorContextBridge.getFileName (b),
+                            line
+                        )
             );
         } else
         if (o instanceof ThreadBreakpoint) {

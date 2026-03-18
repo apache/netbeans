@@ -108,6 +108,7 @@ public class BreakpointsReader implements Properties.Reader, PropertyChangeListe
             LineBreakpoint lb = LineBreakpoint.create ("", 0);
             lb.setURL(properties.getString (LineBreakpoint.PROP_URL, null));
             lb.setLineNumber(properties.getInt (LineBreakpoint.PROP_LINE_NUMBER, 1));
+            lb.setLambdaIndex(properties.getInt (LineBreakpoint.PROP_LAMBDA_INDEX, -1));
             lb.setCondition (
                 properties.getString (LineBreakpoint.PROP_CONDITION, "")
             );
@@ -369,6 +370,10 @@ public class BreakpointsReader implements Properties.Reader, PropertyChangeListe
             properties.setInt (
                 LineBreakpoint.PROP_LINE_NUMBER, 
                 lb.getLineNumber ()
+            );
+            properties.setInt (
+                LineBreakpoint.PROP_LAMBDA_INDEX,
+                lb.getLambdaIndex ()
             );
             properties.setString (
                 LineBreakpoint.PROP_CONDITION, 

@@ -33,7 +33,6 @@ import java.nio.file.Files;
 import javax.swing.text.Document;
 import org.netbeans.modules.xml.wsdl.model.WSDLModel;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.FileLock;
 
 /**
@@ -139,13 +138,11 @@ public class TestUtil {
             dest = destFolder.createData(filename);
         }
         FileLock lock = dest.lock();
-        OutputStream out = dest.getOutputStream(lock);
-        InputStream in = TestUtil.class.getResourceAsStream(path);
         try {
-            FileUtil.copy(in, out);
+            try (InputStream in = TestUtil.class.getResourceAsStream(path); OutputStream out = dest.getOutputStream(lock)) {
+                in.transferTo(out);
+            }
         } finally {
-            out.close();
-            in.close();
             if (lock != null) lock.releaseLock();
         }
         return dest;

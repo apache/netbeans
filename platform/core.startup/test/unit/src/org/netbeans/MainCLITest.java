@@ -69,7 +69,7 @@ public class MainCLITest extends NbTestCase {
         os.write (TestHandler.class.getName ().getBytes ());
         String res = "/" + TestHandler.class.getName ().replace ('.', '/') + ".class";
         os.putNextEntry(new ZipEntry(res));
-        FileUtil.copy(getClass().getResourceAsStream(res), os);
+        getClass().getResourceAsStream(res).transferTo(os);
         os.close();
         
         TestHandler.called = false;

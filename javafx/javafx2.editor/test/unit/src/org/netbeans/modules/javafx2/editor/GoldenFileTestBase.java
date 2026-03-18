@@ -29,9 +29,7 @@ import java.util.Collection;
 import javax.swing.text.Document;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.modules.javafx2.editor.completion.model.FxmlParserResult;
-import org.netbeans.modules.javafx2.editor.parser.FxModelBuilder;
 import org.netbeans.modules.javafx2.editor.parser.PrintVisitor;
-import org.netbeans.modules.javafx2.editor.sax.XmlLexerParser;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -62,11 +60,9 @@ public abstract class GoldenFileTestBase extends FXMLCompletionTestBase {
                 replaceAll("\\.", "/") + "/" + fname + ".fxml");
         
         File w = new File(getWorkDir(), f.getName());
-        InputStream is = new FileInputStream(f);
-        OutputStream os = new FileOutputStream(w);
-        FileUtil.copy(is, os);
-        os.close();
-        is.close();
+        try (InputStream is = new FileInputStream(f); OutputStream os = new FileOutputStream(w)) {
+            is.transferTo(os);
+        }
         FileObject fo = FileUtil.toFileObject(w);
         sourceDO = DataObject.find(fo);
         document = ((EditorCookie)sourceDO.getCookie(EditorCookie.class)).openDocument();

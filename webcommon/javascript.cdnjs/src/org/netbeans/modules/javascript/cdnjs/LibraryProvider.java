@@ -245,7 +245,7 @@ public final class LibraryProvider {
         try (InputStream input = urlConnection.getInputStream()) {
             File file = Files.createTempFile("cdjns-download-", "tmp").toFile();
             try (OutputStream output = new FileOutputStream(file)) {
-                FileUtil.copy(input, output);
+                input.transferTo(output);
                 return file;
             }
         }

@@ -465,7 +465,7 @@ public class ElementHeadersTest extends NbTestCase {
             FileObject utilDir = FileUtil.createFolder(openideBin, "org/openide/util");
             FileObject cf = utilDir.createData("Cancellable", "class");
             try (InputStream is = cancURL.openStream(); OutputStream os = cf.getOutputStream()) {
-                FileUtil.copy(is, os);
+                is.transferTo(os);
             }
             classPathElements = new FileObject[] { openideBin };
             return null;

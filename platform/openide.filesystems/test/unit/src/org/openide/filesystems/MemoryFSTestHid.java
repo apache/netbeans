@@ -76,7 +76,7 @@ public class MemoryFSTestHid extends TestBaseHid {
         assertEquals(file.lastModified().getTime(), conn.getLastModified());
         assertEquals("text/x-hello", conn.getContentType());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        FileUtil.copy(conn.getInputStream(), baos);
+        conn.getInputStream().transferTo(baos);
         assertEquals("hello", baos.toString());
         assertEquals(file, URLMapper.findFileObject(u));
         assertEquals(null, URLMapper.findURL(file, URLMapper.EXTERNAL));

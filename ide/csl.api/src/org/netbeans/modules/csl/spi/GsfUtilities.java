@@ -448,12 +448,8 @@ public final class GsfUtilities {
             FileLock lock = fd.lock();
 
             try {
-                OutputStream os = fd.getOutputStream(lock);
-
-                try {
-                    FileUtil.copy(jis, os);
-                } finally {
-                    os.close();
+                try (OutputStream os = fd.getOutputStream(lock)) {
+                    jis.transferTo(os);
                 }
             } finally {
                 lock.releaseLock();

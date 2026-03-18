@@ -37,7 +37,6 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.netbeans.SetupHid;
 import org.netbeans.nbbuild.MakeOSGi;
-import org.openide.filesystems.FileUtil;
 import org.openide.modules.Dependency;
 import org.openide.util.Utilities;
 import org.openide.util.test.TestFileUtils;
@@ -185,16 +184,9 @@ class OSGiProcess {
                 if (!dir.isDirectory() && !dir.mkdirs()) {
                     throw new IOException("could not make dir " + dir);
                 }
-                OutputStream os = new FileOutputStream(f);
-                try {
-                    InputStream is = OSGiProcess.class.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/') + ".class");
-                    try {
-                        FileUtil.copy(is, os);
-                    } finally {
-                        is.close();
-                    }
-                } finally {
-                    os.close();
+                try (InputStream is = OSGiProcess.class.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/') + ".class");
+                     OutputStream os = new FileOutputStream(f)) {
+                    is.transferTo(os);
                 }
             }
             if (newModule.manifest != null) {

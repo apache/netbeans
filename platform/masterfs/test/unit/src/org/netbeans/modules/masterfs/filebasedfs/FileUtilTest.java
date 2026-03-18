@@ -76,7 +76,7 @@ public class FileUtilTest extends NbTestCase {
         InputStream is = fi.getInputStream();
         OutputStream os = fo.getOutputStream();
         long start = System.currentTimeMillis();
-        FileUtil.copy(is, os);
+        is.transferTo(os);
         long end = System.currentTimeMillis();
         long timeDefault = end - start + 1;
         is.close();
@@ -87,7 +87,7 @@ public class FileUtilTest extends NbTestCase {
         fileOut.createNewFile();
         os = new FileOutputStream(fileOut);
         start = System.currentTimeMillis();
-        FileUtil.copy(is, os);
+        is.transferTo(os);
         end = System.currentTimeMillis();
         is.close();
         os.close();

@@ -22,7 +22,6 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -58,7 +57,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.ModuleElement;
-import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -87,9 +85,7 @@ import org.netbeans.modules.java.source.parsing.FileObjects;
 import org.netbeans.modules.parsing.lucene.support.Convertor;
 import org.netbeans.modules.parsing.lucene.support.Convertors;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
-import org.openide.util.NbBundle;
 import org.openide.util.Parameters;
 import org.openide.util.RequestProcessor;
 
@@ -378,9 +374,7 @@ public class JavadocHelper {
                                 getFirstLocation(),
                                 Bundle.LBL_HTTPJavadocDownload());
                         }
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream(20 * 1024); // typical size for Javadoc page?
-                        FileUtil.copy(uncached, baos);
-                        data = baos.toByteArray();
+                        data = uncached.readAllBytes();
                         if (fileURI != null) {
                             remoteFileContentCache.put(fileURI, data);
                         }

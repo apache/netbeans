@@ -136,7 +136,7 @@ public class LanguageStorage {
                     syntax.setAttribute("textmate-grammar", findScope(grammar));
                     try (InputStream in = new FileInputStream(grammar);
                          OutputStream out = syntax.getOutputStream()) {
-                        FileUtil.copy(in, out);
+                        in.transferTo(out);
                     }
                     FileObject loader = FileUtil.getConfigFile("Loaders/" + description.mimeType + "/Factories/data-object.instance");
                     if (loader != null) {
@@ -174,7 +174,7 @@ public class LanguageStorage {
                         icon = FileUtil.createData(FileUtil.getConfigRoot(), "Loaders/" + description.mimeType + "/Factories/icon.png");
                         try (InputStream in = new FileInputStream(iconFile);
                              OutputStream out = icon.getOutputStream()) {
-                            FileUtil.copy(in, out);
+                            in.transferTo(out);
                         }
 
                         loader.setAttribute("iconBase", icon.getNameExt());

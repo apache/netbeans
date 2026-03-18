@@ -213,16 +213,9 @@ public final class LayerHandle {
 
     public static FileObject createLayer(FileObject projectDir, String layerPath) throws IOException {
         FileObject layerFO = createFileObject(projectDir, layerPath);
-        InputStream is = LayerHandle.class.getResourceAsStream("/org/netbeans/modules/apisupport/project/ui/resources/layer_template.xml"); // NOI18N
-        try {
-            OutputStream os = layerFO.getOutputStream();
-            try {
-                FileUtil.copy(is, os);
-            } finally {
-                os.close();
-            }
-        } finally {
-            is.close();
+        try (InputStream is = LayerHandle.class.getResourceAsStream("/org/netbeans/modules/apisupport/project/ui/resources/layer_template.xml"); // NOI18N
+             OutputStream os = layerFO.getOutputStream()) {
+            is.transferTo(os);
         }
         return layerFO;
     }

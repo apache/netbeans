@@ -180,6 +180,7 @@
                 <friend>org.netbeans.modules.editor.fold.nbui</friend>
                 <friend>org.netbeans.modules.parsing.indexing</friend>
                 <friend>org.netbeans.modules.parsing.nb</friend>
+                <friend>org.netbeans.modules.markdown</friend>
                 <package>org.netbeans.modules.editor.settings.storage.api</package>
                 <package>org.netbeans.modules.editor.settings.storage.spi</package>
                 <package>org.netbeans.modules.editor.settings.storage.spi.support</package>

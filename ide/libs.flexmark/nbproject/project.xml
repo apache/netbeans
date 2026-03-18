@@ -97,6 +97,10 @@
                 <runtime-relative-path>ext/flexmark-ext-gfm-tasklist-0.64.8.jar</runtime-relative-path>
                 <binary-origin>external/flexmark-ext-gfm-tasklist-0.64.8.jar</binary-origin>
             </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/flexmark-ext-gfm-strikethrough-0.64.8.jar</runtime-relative-path>
+                <binary-origin>external/flexmark-ext-gfm-strikethrough-0.64.8.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

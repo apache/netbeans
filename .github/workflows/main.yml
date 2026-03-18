@@ -2575,19 +2575,30 @@ jobs:
     #  * nothing else failed (allows manual restarts)
     #  * the workflow got cancelled
     if: ${{ always() && needs.base-build.result == 'success' && (!contains(needs.*.result, 'failure') || cancelled()) }}
+    permissions:
+      actions: write
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
 
       - name: Delete Workspace Artifact
-        uses: geekyeggo/delete-artifact@f275313e70c08f6120db482d7a6b98377786765b # v5.1.0
-        with:
-          name: build.tar.zst 
-          useGlob: false
+        run: |
+          ARTIFACT_ID=$(gh api /repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts --jq ".artifacts[] | select(.name == \"${NAME}\") | .id")
+          echo ${ARTIFACT_ID}
+          if [ -n "$ARTIFACT_ID" ]; then
+            gh api /repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID} -X DELETE
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NAME: build.tar.zst
 
       - name: Delete Dev Build Artifact
-        uses: geekyeggo/delete-artifact@f275313e70c08f6120db482d7a6b98377786765b # v5.1.0
         if: ${{ contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && cancelled() }}
-        with:
-          name: dev-build_${{github.event.pull_request.number || github.run_id}}.zip
-          useGlob: false
+        run: |
+          ARTIFACT_ID=$(gh api /repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts --jq ".artifacts[] | select(.name == \"${NAME}\") | .id")
+          if [ -n "$ARTIFACT_ID" ]; then
+            gh api /repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID} -X DELETE
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NAME: dev-build_${{github.event.pull_request.number || github.run_id}}.zip

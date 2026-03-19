@@ -18,7 +18,9 @@
  */
 package org.netbeans.jdk.fallback.lang;
 
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import org.junit.Test;
@@ -27,6 +29,9 @@ import static org.junit.Assert.*;
 import static org.junit.Assume.assumeTrue;
 
 public class NBLazyConstantTest {
+
+    // true if fallback or JDK 27 impl active
+    private static final boolean JDK27_SPEC = Runtime.version().feature() >= 27 || Runtime.version().feature() < 25;
 
     @Test
     public void testFactory() {
@@ -58,29 +63,60 @@ public class NBLazyConstantTest {
     @Test
     public void testRequireNPEOnNullResult() {
 
-        // StableValue allows null, we use the LazyConstant spec
-        assumeTrue(Runtime.version().feature() != 25);
+        // StableValue allows null, we use the LazyConstant JDK 27 spec
+        // since its the least permissive
+        assumeTrue("jdk 25 impl supports null", Runtime.version().feature() != 25);
 
         AtomicReference<Object> value = new AtomicReference<>();
+        AtomicInteger calls = new AtomicInteger();
         
-        Supplier<Object> lazy = NBLazyConstant.of(() -> value.get());
+        Supplier<Object> lazy = NBLazyConstant.of(() -> {
+            calls.incrementAndGet();
+            return value.get();
+        });
         assertNotNull(lazy);
 
         try {
             lazy.get();
             fail();
-        } catch (NullPointerException good) {}
+        } catch (NoSuchElementException good) {
+            assertTrue(JDK27_SPEC);
+            assertEquals(NullPointerException.class, good.getCause().getClass());
+        } catch (NullPointerException good) {
+            assertFalse(JDK27_SPEC);
+        }
+        assertEquals(1, calls.get());
 
         try {
             lazy.get();
             fail();
-        } catch (NullPointerException stillGood) {}
+        } catch (NoSuchElementException stillGood) {
+            assertTrue(JDK27_SPEC);
+            // no cause anymore
+        } catch (NullPointerException stillGood) {
+            assertFalse(JDK27_SPEC);
+        }
+
+        // JDK 25-26 spec has retries, we don't test those since fallback mimics JDK 27
+        if (Runtime.version().feature() == 26) {
+            return;
+        }
+
+        assertEquals(1, calls.get());
 
         value.set("good");
 
-        // constant can be computed from now on
-        assertEquals("good", lazy.get());
-        assertEquals("good", lazy.get());
+        // JDK 27+ spec -> no recovery from error state
+        try {
+            lazy.get();
+            fail();
+        } catch (NoSuchElementException stillGood) {
+            assertTrue(JDK27_SPEC);
+        } catch (NullPointerException stillGood) {
+            assertFalse(JDK27_SPEC);
+        }
+        assertEquals(1, calls.get());
+
     }
 
     @Test
@@ -100,18 +136,41 @@ public class NBLazyConstantTest {
         try {
             lazy.get();
             fail();
-        } catch (RuntimeException good) {}
+        } catch (NoSuchElementException good) {
+            assertTrue(JDK27_SPEC);
+            assertEquals(RuntimeException.class, good.getCause().getClass());
+        } catch (RuntimeException good) {
+            assertFalse(JDK27_SPEC);
+            assertEquals(RuntimeException.class, good.getClass());
+        }
 
         try {
             lazy.get();
             fail();
-        } catch (RuntimeException stillGood) {}
+        } catch (NoSuchElementException good) {
+            assertTrue(JDK27_SPEC);
+            // no cause anymore
+        } catch (RuntimeException good) {
+            assertFalse(JDK27_SPEC);
+            assertEquals(RuntimeException.class, good.getClass());
+        }
 
         fail.set(false);
 
-        // constant can be computed from now on
-        assertEquals("good", lazy.get());
-        assertEquals("good", lazy.get());
+        // we don't test error recovery of 25 and 26
+        if (!JDK27_SPEC) {
+//            assertEquals("good", lazy.get());
+//            assertEquals("good", lazy.get());
+            return;
+        }
+
+        try {
+            lazy.get();
+            fail();
+        } catch (RuntimeException stillInFailureState) {
+            assertEquals(NoSuchElementException.class, stillInFailureState.getClass());
+        }
+        
     }
     
 }

@@ -21,6 +21,7 @@ package org.netbeans.jdk.fallback.lang;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -28,6 +29,8 @@ import java.util.logging.Logger;
 
 /**
  * Delegates to JDK's LazyConstant and provides a fallback implementation if not available.
+ * 
+ * The fallback implementation simulates behavior of the JDk 27 LazyConstant spec.
  * 
  * Internal API, may be removed when no longer needed.
  * 
@@ -75,9 +78,6 @@ public final class NBLazyConstant {
     @SuppressWarnings("unchecked")
     public static <T> Supplier<T> of(Supplier<? extends T> computingFunction) {
         Objects.requireNonNull(computingFunction);
-        if (computingFunction instanceof DoubleCheckedFallback<? extends T> lc) {
-            return (Supplier<T>) lc;
-        }
         if (lazyConstantFactory != null) {
             try {
                 return (Supplier<T>) lazyConstantFactory.invokeExact(computingFunction);
@@ -91,6 +91,8 @@ public final class NBLazyConstant {
         }
     }
 
+    /// simmulates JDK 27 spec, 25 and 26 are more permissive
+    /// and may allow null or error recovery
     private static class DoubleCheckedFallback<T> implements Supplier<T> {
 
         private volatile T constant;
@@ -105,12 +107,19 @@ public final class NBLazyConstant {
             T c = constant;
             if (c == null) {
                 synchronized (this) {
+                    if (factory == null) { // error state due to past supplier failure
+                        throw new NoSuchElementException("Unable to access the constant because an Exception was thrown at initial computation");
+                    }
                     c = constant;
                     if (c == null) {
-                        c = factory.get();
-                        Objects.requireNonNull(c);
+                        try {
+                            c = factory.get();
+                            Objects.requireNonNull(c);
+                        } catch (Throwable t) {
+                            factory = null;
+                            throw new NoSuchElementException(t);
+                        }
                         constant = c;
-                        factory = null;
                     }
                 }
             }

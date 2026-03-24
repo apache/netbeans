@@ -347,7 +347,7 @@ jobs:
       - name: Check line endings and verify RAT report
         if: ${{ !cancelled() }}
         run: |
-          nbbuild/travis/check-line-endings.sh
+          nbbuild/ci/check-line-endings.sh
           ant $OPTS -quiet build-source-config
           mkdir scratch && cd scratch
           unzip -qq ../nbbuild/build/release-src*

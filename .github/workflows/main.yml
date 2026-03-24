@@ -441,6 +441,9 @@ jobs:
 #      - name: nb/updatecenters
 #        run: ant $OPTS -f nb/updatecenters test
 
+      - name: nbbuild
+        run: ant $OPTS -f nbbuild localtest
+
       # 5-6 min
       - name: Build nbms
         run: ant $OPTS build-nbms

@@ -120,7 +120,7 @@ public class MarkdownDataObject extends MultiDataObject {
     @MultiViewElement.Registration(
             displayName = "#LBL_Markdown_EDITOR",
             iconBase = "org/netbeans/modules/markdown/markdown.png",
-            mimeType = "text/markdown",
+            mimeType = MarkdownDataObject.MIME_TYPE,
             persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
             preferredID = "Markdown",
             position = 1000

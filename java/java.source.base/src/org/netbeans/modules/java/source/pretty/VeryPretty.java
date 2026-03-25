@@ -2901,17 +2901,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	        needSpace();
         }
     }
-    
-    private static final String[] flagLowerCaseNames = new String[FlagsEnum.values().length];
-    
-    static {
-        for (FlagsEnum flag : FlagsEnum.values()) {
-            flagLowerCaseNames[flag.ordinal()] = flag.name().toLowerCase(Locale.ENGLISH);
-        }
-        flagLowerCaseNames[FlagsEnum.NON_SEALED.ordinal()] = "non-sealed";
-        flagLowerCaseNames[FlagsEnum.TRANSIENT_OR_ACC_VARARGS.ordinal()] = "transient"; //TODO: there should be a test in java.source.base for this
-    }
-    
+
     /**
      * Workaround for defect #239258. Prints flag names converted to lowercase in ENGLISH locale to 
      * avoid weird Turkish I > i-without-dot-above conversion.
@@ -2925,7 +2915,8 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         String sep = ""; // NOI18N
         for (FlagsEnum flag : Flags.asFlagSet(flags)) {
             buf.append(sep);
-            String fname = flagLowerCaseNames[flag.ordinal()];
+            // Since JDK26 javac FlagsEnum#toString is usable for printing
+            String fname = flag.toString();
             buf.append(fname);
             sep = " "; // NOI18N
         }

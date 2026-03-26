@@ -3407,4 +3407,19 @@ public class Utilities {
         return ((IdentifierTree) assignTree.getVariable()).getName();
     }
 
+    public static VariableTree setVariableType(WorkingCopy copy, VariableTree var, Tree newType) {
+        TreeMaker make = copy.getTreeMaker();
+        Tree origType = var.getType();
+
+        if (origType != null) {
+            GeneratorUtilities.get(copy).copyComments(origType, newType, true);
+            GeneratorUtilities.get(copy).copyComments(origType, newType, false);
+        }
+
+        return make.Variable(var.getModifiers(),
+                var.getName(),
+                newType,
+                var.getInitializer()
+        );
+    }
 }

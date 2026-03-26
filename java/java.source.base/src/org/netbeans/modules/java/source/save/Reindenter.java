@@ -263,7 +263,6 @@ public class Reindenter implements IndentTask {
                     public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
                     }
                 }, Collections.singletonList("-proc:none"), null, Collections.<JavaFileObject>emptySet(), ctx); //NOI18N
-                JavaCompiler.instance(ctx).genEndPos = true;
                 text = context.document().getText(currentEmbeddingStartOffset, currentEmbeddingLength);
                 if (JavacParser.MIME_TYPE.equals(context.mimePath())) {
                     FileObject fo = Utilities.getFileObject(context.document());
@@ -277,12 +276,19 @@ public class Reindenter implements IndentTask {
                     sp = new SourcePositions() {
                         @Override
                         public long getStartPosition(CompilationUnitTree file, Tree tree) {
-                            return currentEmbeddingStartOffset + psp[0].getStartPosition(file, tree) - 1;
+                            return getStartPosition(tree);
                         }
-
+                        @Override
+                        public long getStartPosition(Tree tree) {
+                            return currentEmbeddingStartOffset + psp[0].getStartPosition(tree) - 1;
+                        }
                         @Override
                         public long getEndPosition(CompilationUnitTree file, Tree tree) {
-                            return currentEmbeddingStartOffset + psp[0].getEndPosition(file, tree) - 1;
+                            return getEndPosition(tree);
+                        }
+                        @Override
+                        public long getEndPosition(Tree tree) {
+                            return currentEmbeddingStartOffset + psp[0].getEndPosition(tree) - 1;
                         }
                     };
                 }

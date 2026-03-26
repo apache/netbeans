@@ -804,7 +804,7 @@ public final class TreeUtilities {
             try {
                 CharBuffer buf = CharBuffer.wrap((text+"\u0000").toCharArray(), 0, text.length());
                 ParserFactory factory = ParserFactory.instance(context);
-                Parser parser = factory.newParser(buf, false, true, false, false);
+                Parser parser = factory.newParser(buf, false, true, false);
                 if (parser instanceof JavacParser javacParser) {
                     if (sourcePositions != null)
                         sourcePositions[0] = new ParserSourcePositions(javacParser, offset);
@@ -844,11 +844,20 @@ public final class TreeUtilities {
 
         @Override
         public long getStartPosition(CompilationUnitTree file, Tree tree) {
+            return getStartPosition(tree);
+        }
+
+        @Override
+        public long getStartPosition(Tree tree) {
             return parser.getStartPos((JCTree)tree) - offset;
         }
 
         @Override
         public long getEndPosition(CompilationUnitTree file, Tree tree) {
+            return getEndPosition(tree);
+        }
+        @Override
+        public long getEndPosition(Tree tree) {
             return parser.getEndPos((JCTree)tree) - offset;
         }
     }

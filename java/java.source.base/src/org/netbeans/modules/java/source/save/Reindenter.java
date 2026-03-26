@@ -263,7 +263,6 @@ public class Reindenter implements IndentTask {
                     public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
                     }
                 }, Collections.singletonList("-proc:none"), null, Collections.<JavaFileObject>emptySet(), ctx); //NOI18N
-                JavaCompiler.instance(ctx).genEndPos = true;
                 text = context.document().getText(currentEmbeddingStartOffset, currentEmbeddingLength);
                 if (JavacParser.MIME_TYPE.equals(context.mimePath())) {
                     FileObject fo = Utilities.getFileObject(context.document());

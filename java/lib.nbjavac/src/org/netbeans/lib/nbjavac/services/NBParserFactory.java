@@ -70,9 +70,9 @@ public class NBParserFactory extends ParserFactory {
     }
 
     @Override
-    public JavacParser newParser(CharSequence input, boolean keepDocComments, boolean keepEndPos, boolean keepLineMap, boolean parseModuleInfo) {
+    public JavacParser newParser(CharSequence input, boolean keepDocComments, boolean keepLineMap, boolean parseModuleInfo) {
         Lexer lexer = scannerFactory.newScanner(input, keepDocComments);
-        return new NBJavacParser(this, lexer, keepDocComments, keepLineMap, keepEndPos, parseModuleInfo, cancelService);
+        return new NBJavacParser(this, lexer, keepDocComments, keepLineMap, parseModuleInfo, cancelService);
     }
 
     public static class NBJavacParser extends JavacParser {
@@ -80,8 +80,8 @@ public class NBParserFactory extends ParserFactory {
         private final NBTreeMaker make;
         private final CancelService cancelService;
 
-        public NBJavacParser(NBParserFactory fac, Lexer S, boolean keepDocComments, boolean keepLineMap, boolean keepEndPos, boolean parseModuleInfo, CancelService cancelService) {
-            super(fac, S, keepDocComments, keepLineMap, keepEndPos, parseModuleInfo);
+        public NBJavacParser(NBParserFactory fac, Lexer S, boolean keepDocComments, boolean keepLineMap, boolean parseModuleInfo, CancelService cancelService) {
+            super(fac, S, keepDocComments, keepLineMap, parseModuleInfo);
             this.make = fac.make;
             this.cancelService = cancelService;
         }
@@ -121,17 +121,6 @@ public class NBParserFactory extends ParserFactory {
         }
 
         @Override
-        protected AbstractEndPosTable newEndPosTable(boolean keepEndPositions) {
-            AbstractEndPosTable res = super.newEndPosTable(keepEndPositions);
-            
-            if (keepEndPositions) {
-                return new EndPosTableImpl(S, this, (SimpleEndPosTable) res);
-            }
-            
-            return res;
-        }
-
-        @Override
         protected JCClassDecl classDeclaration(JCModifiers mods, Comment dc) {
             if (cancelService != null) {
                 cancelService.abortIfCanceled();
@@ -166,7 +155,7 @@ public class NBParserFactory extends ParserFactory {
 
         @Override
         public int getEndPos(JCTree jctree) {
-            return TreeInfo.getEndPos(jctree, endPosTable);
+            return TreeInfo.getEndPos(jctree);
         }
 
         @Override
@@ -179,59 +168,10 @@ public class NBParserFactory extends ParserFactory {
             if (result instanceof JCEnhancedForLoop) {
                 JCEnhancedForLoop tree = (JCEnhancedForLoop) result;
                 if (getEndPos(tree.var) == Position.NOPOS) {
-                    ((EndPosTableImpl) endPosTable).setEnd(tree.var, getEndPos(tree.var.vartype));
+                    tree.var.endpos = getEndPos(tree.var.vartype);
                 }
             }
             return result;
-        }
-
-        public final class EndPosTableImpl extends AbstractEndPosTable {
-            
-            private final SimpleEndPosTable delegate;
-
-            private EndPosTableImpl(Lexer lexer, JavacParser parser, SimpleEndPosTable delegate) {
-                this.delegate = delegate;
-            }
-            
-            public void resetErrorEndPos() {
-                delegate.errorEndPos = Position.NOPOS;
-                errorEndPos = delegate.errorEndPos;
-            }
-            
-            @Override
-            public <T extends JCTree> T storeEnd(T tree, int endpos) {
-                if (endpos >= 0)
-                    return delegate.storeEnd(tree, endpos);
-                return null;
-            }
-
-            public void setEnd(JCTree tree, int endpos) {
-                if (endpos >= 0) {
-                    int oldErrorEndPos = delegate.errorEndPos;
-                    try {
-                        delegate.errorEndPos = -1;
-                        delegate.storeEnd(tree, endpos);
-                    } finally {
-                        delegate.errorEndPos = oldErrorEndPos;
-                    }
-                }
-            }
-
-            @Override
-            public void setErrorEndPos(int errPos) {
-                delegate.setErrorEndPos(errPos);
-                errorEndPos = delegate.errorEndPos;
-            }
-
-            @Override
-            public int getEndPos(JCTree jctree) {
-                return delegate.getEndPos(jctree);
-            }
-
-            @Override
-            public int replaceTree(JCTree jctree, JCTree jctree1) {
-                return delegate.replaceTree(jctree, jctree1);
-            }
         }
     }
 

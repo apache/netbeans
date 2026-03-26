@@ -784,7 +784,7 @@ public final class TreeUtilities {
             try {
                 CharBuffer buf = CharBuffer.wrap((text+"\u0000").toCharArray(), 0, text.length());
                 ParserFactory factory = ParserFactory.instance(context);
-                Parser parser = factory.newParser(buf, false, true, false, false);
+                Parser parser = factory.newParser(buf, false, true, false);
                 if (parser instanceof JavacParser javacParser) {
                     if (sourcePositions != null)
                         sourcePositions[0] = new ParserSourcePositions(javacParser, offset);

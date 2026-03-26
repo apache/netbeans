@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.hints.errors;
 
+import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.Tree;
@@ -41,6 +42,7 @@ import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.JavaFix;
 import org.openide.util.NbBundle.Messages;
 import javax.lang.model.util.Types;
+import org.netbeans.api.java.source.GeneratorUtilities;
 
 /**
  *
@@ -164,14 +166,10 @@ public class ConvertInvalidVarToExplicitArrayType implements ErrorRule<Void> {
                 }
 
                 arrayType = Utilities.resolveCapturedType(wc, arrayType);
+                ArrayTypeTree newType = make.ArrayType(make.Type(arrayType));
+                VariableTree newVariable = Utilities.setVariableType(wc, oldVariableTree, newType);
 
-                VariableTree newVariableTree = make.Variable(
-                        oldVariableTree.getModifiers(),
-                        oldVariableTree.getName(),
-                        make.ArrayType(make.Type(arrayType)),
-                        oldVariableTree.getInitializer()
-                );
-                tc.getWorkingCopy().rewrite(oldVariableTree, newVariableTree);
+                tc.getWorkingCopy().rewrite(oldVariableTree, newVariable);
             }
         }
     }

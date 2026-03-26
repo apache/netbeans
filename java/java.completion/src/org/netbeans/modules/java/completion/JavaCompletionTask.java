@@ -2027,7 +2027,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 }
                 case COMMA -> {
                     if (let.getParameters().isEmpty()
-                            || !env.getController().getTreeUtilities().isSynthetic(new TreePath(path, let.getParameters().get(0).getType()))) {
+                            || (let.getParameters().get(0).getType() instanceof Tree type && type.getKind() != Kind.VAR_TYPE)) {
                         addClassTypes(env, null);
                         addPrimitiveTypeKeywords(env);
                         addKeyword(env, FINAL_KEYWORD, SPACE, false);

@@ -317,7 +317,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         return TreeInfo.getStartPos(oldT);
     }
     public int endPos(JCTree t) {
-        return TreeInfo.getEndPos(t, diffContext.origUnit.endPositions);
+        return TreeInfo.getEndPos(t);
     }
     
     private java.util.List<? extends StatementTree> getStatements(Tree tree) {
@@ -1830,7 +1830,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             needSpace();
         if (diffContext.origUnit != null && TreePath.getPath(diffContext.origUnit, tree.expr) != null) {
             int a = TreeInfo.getStartPos(tree.expr);
-            int b = TreeInfo.getEndPos(tree.expr, diffContext.origUnit.endPositions);
+            int b = TreeInfo.getEndPos(tree.expr);
             print(diffContext.origText.substring(a, b));
             return;
         }
@@ -1885,6 +1885,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             && diffContext.origUnit != null
             && (start = diffContext.trees.getSourcePositions().getStartPosition(diffContext.origUnit, tree)) >= 0 //#137564
             && (end = diffContext.getEndPosition(diffContext.origUnit, tree)) >= 0
+            && diffContext.isPartOfCompilationUnit(diffContext.origUnit, tree)
             && origText != null) {
             print(origText.substring((int) start, (int) end));
             return ;
@@ -1893,6 +1894,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             && diffContext.mainUnit != null
             && (start = diffContext.trees.getSourcePositions().getStartPosition(diffContext.mainUnit, tree)) >= 0 //#137564
             && (end = diffContext.getEndPosition(diffContext.mainUnit, tree)) >= 0
+            && diffContext.isPartOfCompilationUnit(diffContext.mainUnit, tree)
             && diffContext.mainCode != null) {
             print(diffContext.mainCode.substring((int) start, (int) end));
             return ;
@@ -2788,7 +2790,6 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             ClasspathInfo cpInfo = ClasspathInfo.create(JavaPlatformManager.getDefault().getDefaultPlatform().getBootstrapLibraries(), empty, empty);
             JavacTaskImpl javacTask = JavacParser.createJavacTask(cpInfo, null, null, null, null, null, null, null, Arrays.asList(FileObjects.memoryFileObject("", "Scratch.java", code)));
             com.sun.tools.javac.util.Context ctx = javacTask.getContext();
-            JavaCompiler.instance(ctx).genEndPos = true;
             CompilationUnitTree tree = javacTask.parse().iterator().next(); //NOI18N
             SourcePositions sp = JavacTrees.instance(ctx).getSourcePositions();
             ClassTree clazz = (ClassTree) tree.getTypeDecls().get(0);
@@ -3075,7 +3076,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     private void printIndentedStat(JCTree tree, BracesGenerationStyle redundantBraces, boolean spaceBeforeLeftBrace, WrapStyle wrapStat) {
-        if (fromOffset >= 0 && toOffset >= 0 && (TreeInfo.getStartPos(tree) < fromOffset || TreeInfo.getEndPos(tree, diffContext.origUnit.endPositions) > toOffset))
+        if (fromOffset >= 0 && toOffset >= 0 && (TreeInfo.getStartPos(tree) < fromOffset || TreeInfo.getEndPos(tree) > toOffset))
             redundantBraces = BracesGenerationStyle.LEAVE_ALONE;
 	switch(redundantBraces) {
         case GENERATE:

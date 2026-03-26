@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-162196CDF0DAE37B7D3AD7991DE4310B78AFA30F com.dukescript.nbjavac:nb-javac:jdk-26+27
-F9B91950111918341594B7B5641B3731CA8CCF80 com.dukescript.nbjavac:nb-javac:jdk-26+27:api
+X file:${nb_all}/nb-javac/make/langtools/netbeans/nb-javac/dist/nb-javac-jdk-27+14-api.jar nb-javac-jdk-26+27-api.jar
+X file:${nb_all}/nb-javac/make/langtools/netbeans/nb-javac/dist/nb-javac-jdk-27+14-impl.jar nb-javac-jdk-26+27.jar

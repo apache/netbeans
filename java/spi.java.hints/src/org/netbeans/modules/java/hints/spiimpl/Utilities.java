@@ -68,7 +68,6 @@ import com.sun.tools.javac.parser.Scanner;
 import com.sun.tools.javac.parser.ScannerFactory;
 import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCase;
 import com.sun.tools.javac.tree.JCTree.JCCatch;
@@ -1259,7 +1258,7 @@ public class Utilities {
                          boolean keepLineMap,
                          CancelService cancelService,
                          Names names) {
-            super(fac, S, keepDocComments, keepLineMap, true, false, cancelService);
+            super(fac, S, keepDocComments, keepLineMap, false, cancelService);
             this.ctx = ctx;
             this.make = com.sun.tools.javac.tree.TreeMaker.instance(ctx);
             this.dollar = names.fromString("$");
@@ -1471,7 +1470,7 @@ public class Utilities {
                     IdentifierTree it = (IdentifierTree) mit.getMethodSelect();
 
                     if ("super".equals(it.getName().toString())) {
-                        return ((JCCompilationUnit) cut).endPositions.getEndPos(tree) == (-1);
+                        return tree.endpos == (-1);
                     }
                 }
             }
@@ -1570,22 +1569,7 @@ public class Utilities {
         @Override
         public long getEndPosition() {
             if (delegate instanceof JCDiagnostic jcDiag) {
-                return jcDiag.getDiagnosticPosition().getEndPosition(new EndPosTable() {
-                    @Override public int getEndPos(JCTree tree) {
-                        return (int) sp.getEndPosition(null, tree);
-                    }
-                    @Override
-                    public <T extends JCTree> T storeEnd(T tree, int endpos) {
-                        throw new UnsupportedOperationException("Not supported yet.");
-                    }
-                    @Override
-                    public void setErrorEndPos(int errpos) {
-                        throw new UnsupportedOperationException("Not supported yet.");
-                    }
-                    @Override public int replaceTree(JCTree oldtree, JCTree newtree) {
-                        throw new UnsupportedOperationException("Not supported yet.");
-                    }
-                }) + offset;
+                return jcDiag.getDiagnosticPosition().getEndPosition() + offset;
             }
             return delegate.getEndPosition() + offset;
         }

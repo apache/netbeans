@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 8.55.0
+#Version 8.56.0
 
 CLSS public abstract interface com.sun.source.doctree.AttributeTree
 innr public final static !enum ValueKind
@@ -786,6 +786,7 @@ fld public final static com.sun.source.tree.Tree$Kind UNSIGNED_RIGHT_SHIFT
 fld public final static com.sun.source.tree.Tree$Kind UNSIGNED_RIGHT_SHIFT_ASSIGNMENT
 fld public final static com.sun.source.tree.Tree$Kind USES
 fld public final static com.sun.source.tree.Tree$Kind VARIABLE
+fld public final static com.sun.source.tree.Tree$Kind VAR_TYPE
 fld public final static com.sun.source.tree.Tree$Kind WHILE_LOOP
 fld public final static com.sun.source.tree.Tree$Kind XOR
 fld public final static com.sun.source.tree.Tree$Kind XOR_ASSIGNMENT
@@ -861,6 +862,7 @@ meth public abstract {com.sun.source.tree.TreeVisitor%0} visitTypeParameter(com.
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitUnary(com.sun.source.tree.UnaryTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitUnionType(com.sun.source.tree.UnionTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitUses(com.sun.source.tree.UsesTree,{com.sun.source.tree.TreeVisitor%1})
+meth public abstract {com.sun.source.tree.TreeVisitor%0} visitVarType(com.sun.source.tree.VarTypeTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.tree.TreeVisitor%1})
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.tree.TreeVisitor%1})
@@ -895,6 +897,9 @@ meth public abstract java.util.List<? extends com.sun.source.tree.Tree> getTypeA
 CLSS public abstract interface com.sun.source.tree.UsesTree
 intf com.sun.source.tree.DirectiveTree
 meth public abstract com.sun.source.tree.ExpressionTree getServiceName()
+
+CLSS public abstract interface com.sun.source.tree.VarTypeTree
+intf com.sun.source.tree.Tree
 
 CLSS public abstract interface com.sun.source.tree.VariableTree
 intf com.sun.source.tree.StatementTree
@@ -1209,6 +1214,7 @@ meth public {com.sun.source.util.SimpleTreeVisitor%0} visitTypeParameter(com.sun
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitUnary(com.sun.source.tree.UnaryTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitUnionType(com.sun.source.tree.UnionTypeTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitUses(com.sun.source.tree.UsesTree,{com.sun.source.util.SimpleTreeVisitor%1})
+meth public {com.sun.source.util.SimpleTreeVisitor%0} visitVarType(com.sun.source.tree.VarTypeTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.SimpleTreeVisitor%1})
 meth public {com.sun.source.util.SimpleTreeVisitor%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.SimpleTreeVisitor%1})
@@ -1341,6 +1347,7 @@ meth public {com.sun.source.util.TreeScanner%0} visitTypeParameter(com.sun.sourc
 meth public {com.sun.source.util.TreeScanner%0} visitUnary(com.sun.source.tree.UnaryTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitUnionType(com.sun.source.tree.UnionTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitUses(com.sun.source.tree.UsesTree,{com.sun.source.util.TreeScanner%1})
+meth public {com.sun.source.util.TreeScanner%0} visitVarType(com.sun.source.tree.VarTypeTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitVariable(com.sun.source.tree.VariableTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWhileLoop(com.sun.source.tree.WhileLoopTree,{com.sun.source.util.TreeScanner%1})
 meth public {com.sun.source.util.TreeScanner%0} visitWildcard(com.sun.source.tree.WildcardTree,{com.sun.source.util.TreeScanner%1})
@@ -1641,6 +1648,7 @@ fld public final static javax.lang.model.SourceVersion RELEASE_23
 fld public final static javax.lang.model.SourceVersion RELEASE_24
 fld public final static javax.lang.model.SourceVersion RELEASE_25
 fld public final static javax.lang.model.SourceVersion RELEASE_26
+fld public final static javax.lang.model.SourceVersion RELEASE_27
 fld public final static javax.lang.model.SourceVersion RELEASE_3
 fld public final static javax.lang.model.SourceVersion RELEASE_4
 fld public final static javax.lang.model.SourceVersion RELEASE_5
@@ -2086,7 +2094,7 @@ meth public abstract javax.lang.model.type.TypeMirror getExtendsBound()
 meth public abstract javax.lang.model.type.TypeMirror getSuperBound()
 
 CLSS public abstract javax.lang.model.util.AbstractAnnotationValueVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 supr javax.lang.model.util.AbstractAnnotationValueVisitor9<{javax.lang.model.util.AbstractAnnotationValueVisitor14%0},{javax.lang.model.util.AbstractAnnotationValueVisitor14%1}>
 
@@ -2117,12 +2125,12 @@ cons protected init()
 supr javax.lang.model.util.AbstractAnnotationValueVisitor8<{javax.lang.model.util.AbstractAnnotationValueVisitor9%0},{javax.lang.model.util.AbstractAnnotationValueVisitor9%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractAnnotationValueVisitorPreview<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 supr javax.lang.model.util.AbstractAnnotationValueVisitor14<{javax.lang.model.util.AbstractAnnotationValueVisitorPreview%0},{javax.lang.model.util.AbstractAnnotationValueVisitorPreview%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractElementVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 meth public abstract {javax.lang.model.util.AbstractElementVisitor14%0} visitRecordComponent(javax.lang.model.element.RecordComponentElement,{javax.lang.model.util.AbstractElementVisitor14%1})
 supr javax.lang.model.util.AbstractElementVisitor9<{javax.lang.model.util.AbstractElementVisitor14%0},{javax.lang.model.util.AbstractElementVisitor14%1}>
@@ -2157,12 +2165,12 @@ meth public abstract {javax.lang.model.util.AbstractElementVisitor9%0} visitModu
 supr javax.lang.model.util.AbstractElementVisitor8<{javax.lang.model.util.AbstractElementVisitor9%0},{javax.lang.model.util.AbstractElementVisitor9%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractElementVisitorPreview<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 supr javax.lang.model.util.AbstractElementVisitor14<{javax.lang.model.util.AbstractElementVisitorPreview%0},{javax.lang.model.util.AbstractElementVisitorPreview%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractTypeVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 supr javax.lang.model.util.AbstractTypeVisitor9<{javax.lang.model.util.AbstractTypeVisitor14%0},{javax.lang.model.util.AbstractTypeVisitor14%1}>
 
@@ -2197,7 +2205,7 @@ cons protected init()
 supr javax.lang.model.util.AbstractTypeVisitor8<{javax.lang.model.util.AbstractTypeVisitor9%0},{javax.lang.model.util.AbstractTypeVisitor9%1}>
 
 CLSS public abstract javax.lang.model.util.AbstractTypeVisitorPreview<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 supr javax.lang.model.util.AbstractTypeVisitor14<{javax.lang.model.util.AbstractTypeVisitorPreview%0},{javax.lang.model.util.AbstractTypeVisitorPreview%1}>
 
@@ -2225,7 +2233,7 @@ supr java.lang.Object
 hfds CONSTRUCTOR_KIND,FIELD_KINDS,METHOD_KIND,MODULE_KIND,PACKAGE_KIND,RECORD_COMPONENT_KIND,TYPE_KINDS
 
 CLSS public javax.lang.model.util.ElementKindVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 cons protected init({javax.lang.model.util.ElementKindVisitor14%0})
 meth public {javax.lang.model.util.ElementKindVisitor14%0} visitRecordComponent(javax.lang.model.element.RecordComponentElement,{javax.lang.model.util.ElementKindVisitor14%1})
@@ -2285,13 +2293,13 @@ meth public {javax.lang.model.util.ElementKindVisitor9%0} visitModule(javax.lang
 supr javax.lang.model.util.ElementKindVisitor8<{javax.lang.model.util.ElementKindVisitor9%0},{javax.lang.model.util.ElementKindVisitor9%1}>
 
 CLSS public javax.lang.model.util.ElementKindVisitorPreview<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 cons protected init({javax.lang.model.util.ElementKindVisitorPreview%0})
 supr javax.lang.model.util.ElementKindVisitor14<{javax.lang.model.util.ElementKindVisitorPreview%0},{javax.lang.model.util.ElementKindVisitorPreview%1}>
 
 CLSS public javax.lang.model.util.ElementScanner14<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 cons protected init({javax.lang.model.util.ElementScanner14%0})
 meth public {javax.lang.model.util.ElementScanner14%0} visitExecutable(javax.lang.model.element.ExecutableElement,{javax.lang.model.util.ElementScanner14%1})
@@ -2340,7 +2348,7 @@ meth public {javax.lang.model.util.ElementScanner9%0} visitModule(javax.lang.mod
 supr javax.lang.model.util.ElementScanner8<{javax.lang.model.util.ElementScanner9%0},{javax.lang.model.util.ElementScanner9%1}>
 
 CLSS public javax.lang.model.util.ElementScannerPreview<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 cons protected init({javax.lang.model.util.ElementScannerPreview%0})
 supr javax.lang.model.util.ElementScanner14<{javax.lang.model.util.ElementScannerPreview%0},{javax.lang.model.util.ElementScannerPreview%1}>
@@ -2402,7 +2410,7 @@ meth public static javax.lang.model.util.Elements$Origin[] values()
 supr java.lang.Enum<javax.lang.model.util.Elements$Origin>
 
 CLSS public javax.lang.model.util.SimpleAnnotationValueVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 cons protected init({javax.lang.model.util.SimpleAnnotationValueVisitor14%0})
 supr javax.lang.model.util.SimpleAnnotationValueVisitor9<{javax.lang.model.util.SimpleAnnotationValueVisitor14%0},{javax.lang.model.util.SimpleAnnotationValueVisitor14%1}>
@@ -2451,13 +2459,13 @@ cons protected init({javax.lang.model.util.SimpleAnnotationValueVisitor9%0})
 supr javax.lang.model.util.SimpleAnnotationValueVisitor8<{javax.lang.model.util.SimpleAnnotationValueVisitor9%0},{javax.lang.model.util.SimpleAnnotationValueVisitor9%1}>
 
 CLSS public javax.lang.model.util.SimpleAnnotationValueVisitorPreview<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 cons protected init({javax.lang.model.util.SimpleAnnotationValueVisitorPreview%0})
 supr javax.lang.model.util.SimpleAnnotationValueVisitor14<{javax.lang.model.util.SimpleAnnotationValueVisitorPreview%0},{javax.lang.model.util.SimpleAnnotationValueVisitorPreview%1}>
 
 CLSS public javax.lang.model.util.SimpleElementVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 cons protected init({javax.lang.model.util.SimpleElementVisitor14%0})
 meth public {javax.lang.model.util.SimpleElementVisitor14%0} visitRecordComponent(javax.lang.model.element.RecordComponentElement,{javax.lang.model.util.SimpleElementVisitor14%1})
@@ -2501,13 +2509,13 @@ meth public {javax.lang.model.util.SimpleElementVisitor9%0} visitModule(javax.la
 supr javax.lang.model.util.SimpleElementVisitor8<{javax.lang.model.util.SimpleElementVisitor9%0},{javax.lang.model.util.SimpleElementVisitor9%1}>
 
 CLSS public javax.lang.model.util.SimpleElementVisitorPreview<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 cons protected init({javax.lang.model.util.SimpleElementVisitorPreview%0})
 supr javax.lang.model.util.SimpleElementVisitor14<{javax.lang.model.util.SimpleElementVisitorPreview%0},{javax.lang.model.util.SimpleElementVisitorPreview%1}>
 
 CLSS public javax.lang.model.util.SimpleTypeVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 cons protected init({javax.lang.model.util.SimpleTypeVisitor14%0})
 supr javax.lang.model.util.SimpleTypeVisitor9<{javax.lang.model.util.SimpleTypeVisitor14%0},{javax.lang.model.util.SimpleTypeVisitor14%1}>
@@ -2554,13 +2562,13 @@ cons protected init({javax.lang.model.util.SimpleTypeVisitor9%0})
 supr javax.lang.model.util.SimpleTypeVisitor8<{javax.lang.model.util.SimpleTypeVisitor9%0},{javax.lang.model.util.SimpleTypeVisitor9%1}>
 
 CLSS public javax.lang.model.util.SimpleTypeVisitorPreview<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 cons protected init({javax.lang.model.util.SimpleTypeVisitorPreview%0})
 supr javax.lang.model.util.SimpleTypeVisitor14<{javax.lang.model.util.SimpleTypeVisitorPreview%0},{javax.lang.model.util.SimpleTypeVisitorPreview%1}>
 
 CLSS public javax.lang.model.util.TypeKindVisitor14<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 cons protected init({javax.lang.model.util.TypeKindVisitor14%0})
 supr javax.lang.model.util.TypeKindVisitor9<{javax.lang.model.util.TypeKindVisitor14%0},{javax.lang.model.util.TypeKindVisitor14%1}>
@@ -2611,7 +2619,7 @@ meth public {javax.lang.model.util.TypeKindVisitor9%0} visitNoTypeAsModule(javax
 supr javax.lang.model.util.TypeKindVisitor8<{javax.lang.model.util.TypeKindVisitor9%0},{javax.lang.model.util.TypeKindVisitor9%1}>
 
 CLSS public javax.lang.model.util.TypeKindVisitorPreview<%0 extends java.lang.Object, %1 extends java.lang.Object>
- anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_26)
+ anno 0 javax.annotation.processing.SupportedSourceVersion(javax.lang.model.SourceVersion value=RELEASE_27)
 cons protected init()
 cons protected init({javax.lang.model.util.TypeKindVisitorPreview%0})
 supr javax.lang.model.util.TypeKindVisitor14<{javax.lang.model.util.TypeKindVisitorPreview%0},{javax.lang.model.util.TypeKindVisitorPreview%1}>

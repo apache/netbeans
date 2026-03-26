@@ -98,6 +98,9 @@ public interface GlassfishModule {
     /** Key to mark properties already imported into NetBeans 7.3 and fixed. */
     public static final String NB73_IMPORT_FIXED = "nb73ImportFixed";
 
+    /** Additional JVM options to pass when starting the server. */
+    public static final String JVM_OPTIONS_ATTR = "jvmOptions"; // NOI18N
+
     /** Properties fetching timeout [ms]. */
     public static final int PROPERTIES_FETCH_TIMEOUT = 10000;
 

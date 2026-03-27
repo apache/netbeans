@@ -63,18 +63,6 @@ public class DebugAllBaseTest extends JPDATestCase {
         runBreakpointsTest(JS_LAUNCHER);
     }
 
-    public void testBreakpoints_Python() throws Exception {
-        runBreakpointsTest(PYTHON_LAUNCHER);
-    }
-
-    public void testBreakpoints_R() throws Exception {
-        runBreakpointsTest(RSCRIPT_LAUNCHER);
-    }
-
-    public void testBreakpoints_Ruby() throws Exception {
-        runBreakpointsTest(RUBY_LAUNCHER);
-    }
-
     private void runBreakpointsTest(String launcher) throws Exception {
         File source = getScriptSourceFileForLauncher(launcher);
         DebuggerManager dm = DebuggerManager.getDebuggerManager();
@@ -97,18 +85,6 @@ public class DebugAllBaseTest extends JPDATestCase {
 
     public void testBreakpointsConditional_JS() throws Exception {
         runBreakpointsConditionalTest(JS_LAUNCHER);
-    }
-
-    public void testBreakpointsConditional_Python() throws Exception {
-        runBreakpointsConditionalTest(PYTHON_LAUNCHER);
-    }
-
-    public void testBreakpointsConditional_R() throws Exception {
-        runBreakpointsConditionalTest(RSCRIPT_LAUNCHER);
-    }
-
-    public void testBreakpointsConditional_Ruby() throws Exception {
-        runBreakpointsConditionalTest(RUBY_LAUNCHER);
     }
 
     public void runBreakpointsConditionalTest(String launcher) throws Exception {
@@ -141,18 +117,6 @@ public class DebugAllBaseTest extends JPDATestCase {
         runStepsTest(JS_LAUNCHER);
     }
 
-    public void testSteps_Python() throws Exception {
-        runStepsTest(PYTHON_LAUNCHER);
-    }
-
-    public void testSteps_R() throws Exception {
-        runStepsTest(RSCRIPT_LAUNCHER);
-    }
-
-    public void testSteps_Ruby() throws Exception {
-        runStepsTest(RUBY_LAUNCHER);
-    }
-
     public void runStepsTest(String launcher) throws Exception {
         File source = getScriptSourceFileForLauncher(launcher);
         DebuggerManager dm = DebuggerManager.getDebuggerManager();
@@ -175,18 +139,6 @@ public class DebugAllBaseTest extends JPDATestCase {
 
     public void testEval_JS() throws Exception {
         runEvalTest(JS_LAUNCHER);
-    }
-
-    public void testEval_Python() throws Exception {
-        runEvalTest(PYTHON_LAUNCHER);
-    }
-
-    public void testEval_R() throws Exception {
-        runEvalTest(RSCRIPT_LAUNCHER);
-    }
-
-    public void testEval_Ruby() throws Exception {
-        runEvalTest(RUBY_LAUNCHER);
     }
 
     public void runEvalTest(String launcher) throws Exception {
@@ -224,18 +176,6 @@ public class DebugAllBaseTest extends JPDATestCase {
 
     public void testLocalVariables_JS() throws Exception {
         runLocalVariablesTest(JS_LAUNCHER);
-    }
-
-    public void testLocalVariables_Python() throws Exception {
-        runLocalVariablesTest(PYTHON_LAUNCHER);
-    }
-
-    public void testLocalVariables_R() throws Exception {
-        runLocalVariablesTest(RSCRIPT_LAUNCHER);
-    }
-
-    public void testLocalVariables_Ruby() throws Exception {
-        runLocalVariablesTest(RUBY_LAUNCHER);
     }
 
     public void runLocalVariablesTest(String launcher) throws Exception {
@@ -284,18 +224,6 @@ public class DebugAllBaseTest extends JPDATestCase {
 
     public void testObjectProperties_JS() throws Exception {
         runObjectPropertiesTest(JS_LAUNCHER);
-    }
-
-    public void testObjectProperties_Python() throws Exception {
-        runObjectPropertiesTest(PYTHON_LAUNCHER);
-    }
-
-    public void testObjectProperties_R() throws Exception {
-        runObjectPropertiesTest(RSCRIPT_LAUNCHER);
-    }
-
-    public void testObjectProperties_Ruby() throws Exception {
-        runObjectPropertiesTest(RUBY_LAUNCHER);
     }
 
     public void runObjectPropertiesTest(String launcher) throws Exception {

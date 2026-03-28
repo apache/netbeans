@@ -25,8 +25,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
@@ -130,7 +132,7 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
             tfFileName.getPreferredSize().height));
 
         tfLineNumber.setText(Integer.toString(b.getLineNumber()));
-        tfLambdaIndex.setText(Integer.toString(b.getLambdaIndex()));
+        tfLambdaIndex.setText(Arrays.stream(b.getLambdaIndex()).mapToObj(String::valueOf).collect(Collectors.joining(", ")));
         conditionsPanel = new ConditionsPanel(HELP_ID);
         setupConditionPane();
         conditionsPanel.showClassFilter(false);
@@ -348,7 +350,12 @@ public class LineBreakpointPanel extends JPanel implements ControllerProvider, o
             logger.fine("      => URL = '"+url+"'");
             breakpoint.setURL((url != null) ? url.toString() : path);
             breakpoint.setLineNumber(Integer.parseInt(tfLineNumber.getText().trim()));
-            breakpoint.setLambdaIndex(Integer.parseInt(tfLambdaIndex.getText().trim()));
+            String lambdaIndexText = tfLambdaIndex.getText().trim();
+            if (lambdaIndexText.isEmpty()) {
+                breakpoint.setLambdaIndex(new int[0]);
+            } else {
+                breakpoint.setLambdaIndex(Arrays.stream(lambdaIndexText.split(", *")).mapToInt(v -> Integer.parseInt(v)).toArray());
+            }
             breakpoint.setCondition (conditionsPanel.getCondition());
             breakpoint.setHitCountFilter(conditionsPanel.getHitCount(),
                     conditionsPanel.getHitCountFilteringStyle());

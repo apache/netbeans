@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.Breakpoint.HIT_COUNT_FILTERING_STYLE;
+import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.spi.debugger.jpda.EditorContext;
 import org.netbeans.spi.debugger.ui.BreakpointAnnotation;
 
@@ -37,9 +38,6 @@ import org.openide.util.NbBundle;
  * @author   Jan Jancura
  */
 public class DebuggerBreakpointAnnotation extends BreakpointAnnotation {
-
-    public static final String LAMBDA_BREAKPOINT = "LambdaBreakpoint";
-    public static final String DISABLED_LAMBDA_BREAKPOINT = "DisabledLambdaBreakpoint";
 
     private final Line           line;
     private final String         type;
@@ -165,14 +163,6 @@ public class DebuggerBreakpointAnnotation extends BreakpointAnnotation {
         if (type == EditorContext.DISABLED_CLASS_BREAKPOINT_ANNOTATION_TYPE) {
             return NbBundle.getMessage
                 (DebuggerBreakpointAnnotation.class, "TOOLTIP_DISABLED_CLASS_BREAKPOINT"); // NOI18N
-        } else
-        if (type == LAMBDA_BREAKPOINT) {
-            return NbBundle.getMessage
-                (DebuggerBreakpointAnnotation.class, "TOOLTIP_LAMBDA_BREAKPOINT"); // NOI18N
-        } else
-        if (type == DISABLED_LAMBDA_BREAKPOINT) {
-            return NbBundle.getMessage
-                (DebuggerBreakpointAnnotation.class, "TOOLTIP_DISABLED_LAMBDA_BREAKPOINT"); // NOI18N
         }
         ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, new IllegalStateException("Unknown breakpoint type '"+type+"'."));
         return null;

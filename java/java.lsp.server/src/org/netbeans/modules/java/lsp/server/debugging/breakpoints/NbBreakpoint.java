@@ -35,8 +35,6 @@ import java.util.regex.Pattern;
 import org.eclipse.lsp4j.Position;
 
 import org.eclipse.lsp4j.debug.BreakpointEventArguments;
-import org.eclipse.lsp4j.debug.BreakpointLocation;
-import org.eclipse.lsp4j.debug.BreakpointLocationsResponse;
 import org.eclipse.lsp4j.debug.Source;
 
 import org.netbeans.api.debugger.Breakpoint;
@@ -49,7 +47,6 @@ import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -192,12 +189,11 @@ public final class NbBreakpoint {
         return CompletableFuture.completedFuture(this);
     }
 
-    private int getLambdaIndex(int line, int column) {
-        //TODO: performance!!
+    private int[] getLambdaIndex(int line, int column) {
         try {
             FileObject file = Utils.fromUri(sourceURL);
             JavaSource js = JavaSource.forFileObject(file);
-            int[] index = new int[] { -1 };
+            int[] index = new int[] { LineBreakpoint.LAMBDA_INDEX_STOP_OUTSIDE };
             js.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.PARSED);
                 //TODO: span only!
@@ -217,12 +213,12 @@ public final class NbBreakpoint {
                     }
                 }.scan(cc.getCompilationUnit(), null);
             }, true);
-            return index[0];
+            return index;
         } catch (IOException ex) {
             ex.printStackTrace();
         }
 
-        return Integer.MIN_VALUE;
+        return new int[0];
     }
     private static final String lsp2NBLogMessage(String message) {
         return message.replaceAll("\\{([^\\}]+)\\}", "{=$1}");      // NOI18N

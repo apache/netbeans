@@ -48,6 +48,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -96,6 +97,7 @@ import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import static java.util.stream.Collectors.collectingAndThen;
@@ -116,7 +118,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
     
     private int                 lineNumber;
     private int                 breakpointLineNumber;
-    private int                 lambdaIndex;
+    private int[]               lambdaIndex;
     private int                 lineNumberForUpdate = -1;
     private final Object        lineLock = new Object();
     private BreakpointsReader   reader;
@@ -145,7 +147,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                 lb,
                 getDebugger());
         int lbln = lb.getLineNumber();
-        int li = lb.getLambdaIndex();
+        int[] li = lb.getLambdaIndex();
         synchronized (lineLock) {
             breakpointLineNumber = lbln;
             lineNumber = theLineNumber;
@@ -327,7 +329,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
         String failReason = null;
         ReferenceType noLocRefType = null;
         int lineNumberToSet;
-        int lambdaIndexToSet;
+        int[] lambdaIndexToSet;
         final int origBreakpointLineNumber;
         int newBreakpointLineNumber;
         synchronized (lineLock) {
@@ -707,25 +709,36 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
       return path;
     }
 
-    private List<Location> filterLocationsByLambdaIndex(List<Location> locations, int lambdaIndex) {
-        if (lambdaIndex == Integer.MIN_VALUE) {
+    private List<Location> filterLocationsByLambdaIndex(List<Location> locations, int[] lambdaIndex) {
+        if (lambdaIndex.length == 0) {
             return locations;
-        } else if (lambdaIndex == (-1)) {
-            return locations.stream()
-                            .filter(l -> !l.method().name().startsWith("lambda$"))
-                            .collect(Collectors.toList());
         } else {
-            List<Location> filtered =
-                    locations.stream()
-                             .filter(l -> l.method().name().startsWith("lambda$"))
-                             .collect(Collectors.toList());
+            Map<String, List<Location>> lambda2Locations = new LinkedHashMap<>();
+            List<Location> outsideOfLambda = new ArrayList<>();
 
-            Collections.reverse(filtered);
-            if (lambdaIndex < filtered.size()) {
-                return Collections.singletonList(filtered.get(lambdaIndex));
-            } else {
-                return filtered;
+            for (Location l : locations) {
+                if (l.method().name().startsWith("lambda$")) {
+                    lambda2Locations.computeIfAbsent(l.method().name(), k -> new ArrayList<>()).add(l);
+                } else {
+                    outsideOfLambda.add(l);
+                }
             }
+
+            List<String> lambdas = new ArrayList<>(lambda2Locations.keySet());
+
+            Collections.reverse(lambdas);
+
+            List<Location> result = new ArrayList<>();
+
+            for (int index : lambdaIndex) {
+                if (index == LineBreakpoint.LAMBDA_INDEX_STOP_OUTSIDE) {
+                    result.addAll(outsideOfLambda);
+                } else if (index >= 0 && index < lambdas.size()) {
+                    result.addAll(lambda2Locations.get(lambdas.get(index)));
+                }
+            }
+
+            return result;
         }
     }
 

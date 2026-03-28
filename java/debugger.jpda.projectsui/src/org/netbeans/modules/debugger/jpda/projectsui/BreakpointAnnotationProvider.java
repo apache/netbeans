@@ -139,7 +139,6 @@ public class BreakpointAnnotationProvider implements AnnotationProvider {
             }
             annotatedFiles.add(fo);
         }
-        LambdaBreakpointManager.FactoryImpl.doRefresh(fo); //ensure spans of lambda breakpoints are updated
     }
 
     void setBreakpointsActive(boolean active) {
@@ -190,7 +189,6 @@ public class BreakpointAnnotationProvider implements AnnotationProvider {
                 breakpointToAnnotations.put(b, Collections.newSetFromMap(new WeakHashMap<>()));
                 for (FileObject fo : annotatedFiles) {
                     addAnnotationTo(b, fo);
-                    LambdaBreakpointManager.FactoryImpl.doRefresh(fo);
                 }
             }
         }
@@ -209,17 +207,12 @@ public class BreakpointAnnotationProvider implements AnnotationProvider {
                                             boolean active) {
         boolean isInvalid = b.getValidity() == VALIDITY.INVALID;
         String annotationType;
-        if (b instanceof LineBreakpoint lb) {
-            if (lb.getLambdaIndex() >= 0) {
-                annotationType = b.isEnabled() ? DebuggerBreakpointAnnotation.LAMBDA_BREAKPOINT
-                                               : DebuggerBreakpointAnnotation.DISABLED_LAMBDA_BREAKPOINT;
-            } else {
-                annotationType = b.isEnabled () ?
-                (isConditional ? EditorContext.CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE :
-                                 EditorContext.BREAKPOINT_ANNOTATION_TYPE) :
-                (isConditional ? EditorContext.DISABLED_CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE :
-                                 EditorContext.DISABLED_BREAKPOINT_ANNOTATION_TYPE);
-            }
+        if (b instanceof LineBreakpoint) {
+            annotationType = b.isEnabled () ?
+            (isConditional ? EditorContext.CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE :
+                             EditorContext.BREAKPOINT_ANNOTATION_TYPE) :
+            (isConditional ? EditorContext.DISABLED_CONDITIONAL_BREAKPOINT_ANNOTATION_TYPE :
+                             EditorContext.DISABLED_BREAKPOINT_ANNOTATION_TYPE);
         } else if (b instanceof FieldBreakpoint) {
             annotationType = b.isEnabled () ?
                 EditorContext.FIELD_BREAKPOINT_ANNOTATION_TYPE :
@@ -482,9 +475,6 @@ public class BreakpointAnnotationProvider implements AnnotationProvider {
         }
     }
     
-    Set<Annotation> getAnnotationsForBreakpoint(JPDABreakpoint b) {
-        return breakpointToAnnotations.getOrDefault(b, Set.of());
-    }
     /*
     // Not used
     @Override

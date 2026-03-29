@@ -22,10 +22,8 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -47,7 +45,7 @@ final class StandardModuleData extends ModuleData {
      * different modules try to load the same extension (which would cause them
      * to both load their own private copy, which may not be intended).
      */
-    private static final Map<File, Set<File>> extensionOwners = new HashMap<File, Set<File>>();
+    private static final Map<File, Set<File>> extensionOwners = new HashMap<>();
     /** Set of locale-variants JARs for this module (or null).
      * Added explicitly to classloader, and can be used by execution engine.
      */
@@ -80,12 +78,7 @@ final class StandardModuleData extends ModuleData {
         if (classPath != null) {
             StringTokenizer tok = new StringTokenizer(classPath);
             while (tok.hasMoreTokens()) {
-                String ext;
-                try {
-                    ext = URLDecoder.decode(tok.nextToken(), "UTF-8");
-                } catch (UnsupportedEncodingException ex) {
-                    throw new IllegalStateException(ex);
-                }
+                String ext = URLDecoder.decode(tok.nextToken(), StandardCharsets.UTF_8);
                 File extfile;
                 if (ext.equals("${java.home}/lib/ext/jfxrt.jar")) { // NOI18N
                     // special handling on JDK7
@@ -158,7 +151,7 @@ final class StandardModuleData extends ModuleData {
         }
     }
 
-    public StandardModuleData(ObjectInput dis) throws IOException {
+    public StandardModuleData(DataInput dis) throws IOException {
         super(dis);
         localeVariants = readFiles(dis);
         localeExtensions = readFiles(dis);
@@ -166,7 +159,7 @@ final class StandardModuleData extends ModuleData {
     }
 
     @Override
-    void write(ObjectOutput dos) throws IOException {
+    void write(DataOutput dos) throws IOException {
         super.write(dos);
         writeFiles(dos, localeVariants);
         writeFiles(dos, localeExtensions);
@@ -175,7 +168,7 @@ final class StandardModuleData extends ModuleData {
     
     private static Set<File> readFiles(DataInput is) throws IOException {
         int size = is.readInt();
-        Set<File> set = new HashSet<File>();
+        Set<File> set = new HashSet<>((int) Math.ceil(size / 0.75));
         while (size-- > 0) {
             set.add(new File(Stamps.readRelativePath(is)));
         }

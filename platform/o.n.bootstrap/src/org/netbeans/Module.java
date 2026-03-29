@@ -20,17 +20,19 @@
 package org.netbeans;
 
 import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.security.CodeSource;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,7 +82,7 @@ public abstract class Module extends ModuleInfo {
     private ModuleData data;
     private NbInstrumentation instr;
     
-    private static final Object DATA_LOCK = new Object();
+    private final Object DATA_LOCK = new Object();
 
     /** Use ModuleManager.create as a factory. */
     protected Module(ModuleManager mgr, Events ev, Object history, boolean reloadable, boolean autoload, boolean eager) throws IOException {
@@ -115,7 +117,7 @@ public abstract class Module extends ModuleInfo {
         enabled = false;
     }
     
-    ModuleData createData(ObjectInput in, Manifest mf) throws IOException {
+    ModuleData createData(DataInput in, Manifest mf) throws IOException {
         if (in != null) {
             return new ModuleData(in);
         } else {
@@ -123,7 +125,7 @@ public abstract class Module extends ModuleInfo {
         }
     }
     
-    final void writeData(ObjectOutput out) throws IOException {
+    final void writeData(DataOutput out) throws IOException {
         data().write(out);
     }
     
@@ -136,6 +138,9 @@ public abstract class Module extends ModuleInfo {
     }
     
     final ModuleData dataWithCheck() throws InvalidException {
+        if (data != null) {
+            return data;
+        }
         synchronized (DATA_LOCK) {
             if (data != null) {
                 return data;
@@ -143,10 +148,8 @@ public abstract class Module extends ModuleInfo {
             Util.err.log(Level.FINE, "Initialize data {0}", getJarFile()); // NOI18N
             InputStream is = mgr.dataFor(getJarFile());
             if (is != null) {
-                try {
-                    ObjectInputStream ois = new ObjectInputStream(is);
+                try (DataInputStream ois = new DataInputStream(is)) {
                     ModuleData mine = createData(ois, null);
-                    ois.close();
                     assert data == null;
                     data = mine;
                     return mine;
@@ -286,8 +289,9 @@ public abstract class Module extends ModuleInfo {
     
     @Override
     public Set<Dependency> getDependencies() {
-        return new HashSet<Dependency>(Arrays.asList(getDependenciesArray()));
+        return new HashSet<>(Arrays.asList(getDependenciesArray()));
     }
+
     public final Dependency[] getDependenciesArray() {
         Dependency[] dependenciesA;
         try {
@@ -317,8 +321,8 @@ public abstract class Module extends ModuleInfo {
     
     public @Override boolean owns(Class<?> clazz) {
         ClassLoader cl = clazz.getClassLoader();
-        if (cl instanceof Util.ModuleProvider) {
-            return ((Util.ModuleProvider) cl).getModule() == this;
+        if (cl instanceof Util.ModuleProvider mp) {
+            return mp.getModule() == this;
         }
         if (cl != classloader) {
             return false;
@@ -341,11 +345,8 @@ public abstract class Module extends ModuleInfo {
                     loc = new URL("jar:" + loc + "!/");
                 }
                 URL manifest = new URL(loc, "META-INF/MANIFEST.MF");
-                InputStream is = manifest.openStream();
-                try {
+                try (InputStream is = manifest.openStream()) {
                     return new Manifest(is).getMainAttributes().getValue("OpenIDE-Module");
-                } finally {
-                    is.close();
                 }
             } catch (IOException x) {
                 Logger.getLogger(Module.class.getName()).log(Level.FINE, null, x);
@@ -500,7 +501,7 @@ public abstract class Module extends ModuleInfo {
     public Set<Object> getProblems() { // cannot use Union2<Dependency,InvalidException> without being binary-incompatible
         if (! isValid()) throw new IllegalStateException("Not valid: " + this); // NOI18N
         if (isEnabled()) return Collections.emptySet();
-        Set<Object> problems = new HashSet<Object>();
+        Set<Object> problems = new HashSet<>();
         for (Union2<Dependency,InvalidException> problem : mgr.missingDependencies(this)) {
             if (problem.hasFirst()) {
                 problems.add(problem.first());
@@ -561,8 +562,8 @@ public abstract class Module extends ModuleInfo {
         try { // #149136
             ClassLoader cl = getClassLoader();
 
-            if (cl instanceof ProxyClassLoader) {
-                return ((ProxyClassLoader) cl).findResources(resources);
+            if (cl instanceof ProxyClassLoader pcl) {
+                return pcl.findResources(resources);
             }
             //TODO: other ClassLoaders - what can we expect here? can fallback to getResources for JVM classloaders, and nothing else should be here?
             throw new IllegalStateException("Unexpected ClassLoader: " + cl + ".");

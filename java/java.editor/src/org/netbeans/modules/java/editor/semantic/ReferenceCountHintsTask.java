@@ -552,7 +552,7 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
 
         @Override
         public void mouseMoved(MouseEvent e) {
-            pane.setCursor(findAction(e) != null ? java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR) : null);
+            pane.setCursor(findMatch(e) != null ? java.awt.Cursor.getPredefinedCursor(java.awt.Cursor.HAND_CURSOR) : null);
         }
 
         @Override
@@ -565,15 +565,15 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
             if (!SwingUtilities.isLeftMouseButton(e) || e.getClickCount() != 1 || e.isPopupTrigger()) {
                 return;
             }
-            HintActionData data = findAction(e);
-            if (data == null) {
+            HintMatch match = findMatch(e);
+            if (match == null) {
                 return;
             }
             e.consume();
-            JavaWhereUsedSupport.openDirectReferenceResults(data.handle, data.scope);
+            ReferenceUsagesPopup.show(pane, match.bounds, match.data.handle, match.data.scope, match.label);
         }
 
-        private HintActionData findAction(MouseEvent event) {
+        private HintMatch findMatch(MouseEvent event) {
             Document doc = pane.getDocument();
             int offset = pane.viewToModel2D(event.getPoint());
             if (offset < 0) {
@@ -588,10 +588,14 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
                 if (bounds == null || !bounds.contains(event.getPoint())) {
                     return null;
                 }
+                HintActionData data = getManager(doc).findAction(offset);
+                if (data == null) {
+                    return null;
+                }
+                return new HintMatch(data, bounds, (String) attrs.getAttribute(KEY_VIRTUAL_TEXT_BLOCK));
             } catch (BadLocationException ex) {
                 return null;
             }
-            return getManager(doc).findAction(offset);
         }
     }
 
@@ -599,5 +603,8 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
     }
 
     private record HintActionData(Position paragraphPosition, Position anchorPosition, TreePathHandle handle, Scope scope) {
+    }
+
+    private record HintMatch(HintActionData data, Rectangle2D bounds, String label) {
     }
 }

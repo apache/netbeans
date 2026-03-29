@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.java.editor.semantic;
 
+import com.sun.source.tree.Tree;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -46,6 +47,8 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -58,6 +61,7 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.TreePathHandle;
+import org.netbeans.api.java.source.ui.ElementIcons;
 import org.netbeans.modules.java.editor.overridden.PopupUtil;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringElement;
@@ -69,6 +73,7 @@ import org.netbeans.modules.refactoring.java.api.ui.JavaWhereUsedSupport;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
 import org.openide.filesystems.FileObject;
 import org.openide.text.PositionBounds;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.Lookups;
@@ -214,7 +219,9 @@ final class ReferenceUsagesPopup extends JPanel implements FocusListener {
         return location;
     }
 
-    private sealed interface PopupEntry permits ReferenceEntry, ActionEntry, MessageEntry {
+    private sealed interface PopupEntry permits GroupEntry, ReferenceEntry, ActionEntry, MessageEntry {
+
+        Icon icon();
 
         String leftHtml();
 
@@ -227,16 +234,53 @@ final class ReferenceUsagesPopup extends JPanel implements FocusListener {
         void activate();
     }
 
-    private record ReferenceEntry(RefactoringElement element) implements PopupEntry {
+    private record GroupEntry(ReferenceGroup group) implements PopupEntry {
+
+        @Override
+        public Icon icon() {
+            return group.icon();
+        }
 
         @Override
         public String leftHtml() {
-            return ReferencePresentation.displayText(element);
+            return ReferencePresentation.groupText(group);
         }
 
         @Override
         public String rightText() {
-            return ReferencePresentation.locationText(element);
+            return null;
+        }
+
+        @Override
+        public String tooltip() {
+            return group.tooltip();
+        }
+
+        @Override
+        public boolean selectable() {
+            return false;
+        }
+
+        @Override
+        public void activate() {
+        }
+    }
+
+    private record ReferenceEntry(RefactoringElement element) implements PopupEntry {
+
+        @Override
+        public Icon icon() {
+            return null;
+        }
+
+        @Override
+        public String leftHtml() {
+            return ReferencePresentation.usageText(element);
+        }
+
+        @Override
+        public String rightText() {
+            return null;
         }
 
         @Override
@@ -256,6 +300,11 @@ final class ReferenceUsagesPopup extends JPanel implements FocusListener {
     }
 
     private record ActionEntry(String text, Runnable action) implements PopupEntry {
+
+        @Override
+        public Icon icon() {
+            return null;
+        }
 
         @Override
         public String leftHtml() {
@@ -284,6 +333,11 @@ final class ReferenceUsagesPopup extends JPanel implements FocusListener {
     }
 
     private record MessageEntry(String text) implements PopupEntry {
+
+        @Override
+        public Icon icon() {
+            return null;
+        }
 
         @Override
         public String leftHtml() {
@@ -337,7 +391,7 @@ final class ReferenceUsagesPopup extends JPanel implements FocusListener {
 
             g.setColor(bgColor);
             g.fillRect(0, 0, getWidth(), getHeight());
-            CompletionUtilities.renderHtml(null, entry.leftHtml(), entry.rightText(), g, getFont(), fgColor, getWidth(), getHeight(), false);
+            CompletionUtilities.renderHtml(asImageIcon(entry.icon()), entry.leftHtml(), entry.rightText(), g, getFont(), fgColor, getWidth(), getHeight(), false);
         }
 
         private Color foregroundForEntry(PopupEntry entry, Color defaultColor, Color background) {
@@ -403,6 +457,16 @@ final class ReferenceUsagesPopup extends JPanel implements FocusListener {
                     ? component / 12.92d
                     : Math.pow((component + 0.055d) / 1.055d, 2.4d);
         }
+
+        private static ImageIcon asImageIcon(Icon icon) {
+            if (icon == null) {
+                return null;
+            }
+            if (icon instanceof ImageIcon imageIcon) {
+                return imageIcon;
+            }
+            return ImageUtilities.icon2ImageIcon(icon);
+        }
     }
 
     private static final class ReferenceLoader {
@@ -440,8 +504,14 @@ final class ReferenceUsagesPopup extends JPanel implements FocusListener {
             if (references.isEmpty()) {
                 return List.of(new MessageEntry(Bundle.LBL_ReferencePopup_NoReferences()));
             }
-            List<PopupEntry> entries = new ArrayList<>(references.size() + 1);
+            List<PopupEntry> entries = new ArrayList<>(references.size() * 2 + 1);
+            ReferenceGroup currentGroup = null;
             for (RefactoringElement reference : references) {
+                ReferenceGroup group = ReferencePresentation.groupOf(reference);
+                if (currentGroup == null || !group.id().equals(currentGroup.id())) {
+                    entries.add(new GroupEntry(group));
+                    currentGroup = group;
+                }
                 entries.add(new ReferenceEntry(reference));
             }
             entries.add(new ActionEntry(Bundle.LBL_ReferencePopup_ShowAll(), this::openAllReferences));
@@ -545,6 +615,14 @@ final class ReferenceUsagesPopup extends JPanel implements FocusListener {
 
     private static final class ReferencePresentation {
 
+        private static final Icon DEFAULT_GROUP_ICON = ElementIcons.getElementIcon(ElementKind.CLASS, null);
+        private static final Set<Tree.Kind> TYPE_TREE_KINDS = EnumSet.of(
+                Tree.Kind.CLASS,
+                Tree.Kind.INTERFACE,
+                Tree.Kind.ENUM,
+                Tree.Kind.ANNOTATION_TYPE,
+                Tree.Kind.RECORD);
+        private static final String USAGE_INDENT = "&nbsp;&nbsp;&nbsp;"; // NOI18N
         private static final Comparator<RefactoringElement> REFERENCE_ORDER = Comparator
                 .comparing(ReferencePresentation::sortPath)
                 .thenComparingInt(ReferencePresentation::sortLine)
@@ -558,7 +636,36 @@ final class ReferenceUsagesPopup extends JPanel implements FocusListener {
             if (text == null || text.isEmpty()) {
                 text = element.getText();
             }
-            return stripHtmlEnvelope(text);
+            return stripColorMarkup(stripHtmlEnvelope(text));
+        }
+
+        static String usageText(RefactoringElement element) {
+            return USAGE_INDENT + displayText(element);
+        }
+
+        static String groupText(ReferenceGroup group) {
+            return "<b>" + escapeHtml(group.displayName()) + "</b>"; // NOI18N
+        }
+
+        static ReferenceGroup groupOf(RefactoringElement element) {
+            FileObject file = element.getParentFile();
+            Object typeGrip = enclosingType(findGrip(element));
+            if (typeGrip != null) {
+                FileObject typeFile = fileObjectOf(typeGrip);
+                if (typeFile == null) {
+                    typeFile = file;
+                }
+                String filePath = typeFile != null ? typeFile.getPath() : ""; // NOI18N
+                String id = filePath + '#' + String.valueOf(invoke(typeGrip, "getHandle")); // NOI18N
+                String displayName = String.valueOf(typeGrip);
+                String tooltip = filePath.isEmpty() ? displayName : filePath;
+                Icon icon = iconOf(typeGrip);
+                return new ReferenceGroup(id, displayName, tooltip, icon);
+            }
+            String displayName = file != null ? file.getName() : ""; // NOI18N
+            String tooltip = file != null ? file.getPath() : displayName;
+            String id = file != null ? file.getPath() : displayName;
+            return new ReferenceGroup(id, displayName, tooltip, DEFAULT_GROUP_ICON);
         }
 
         static String locationText(RefactoringElement element) {
@@ -600,6 +707,70 @@ final class ReferenceUsagesPopup extends JPanel implements FocusListener {
             }
         }
 
+        private static Object enclosingType(Object grip) {
+            Object current = grip;
+            while (current != null && !TYPE_TREE_KINDS.contains(kindOf(current))) {
+                current = invoke(current, "getParent");
+            }
+            return current;
+        }
+
+        private static Object findGrip(RefactoringElement element) {
+            for (Object candidate : element.getLookup().lookupAll(Object.class)) {
+                if (candidate != null && kindOf(candidate) != null) {
+                    return candidate;
+                }
+            }
+            return null;
+        }
+
+        private static Tree.Kind kindOf(Object candidate) {
+            Object kind = invoke(candidate, "getKind");
+            return kind instanceof Tree.Kind ? (Tree.Kind) kind : null;
+        }
+
+        private static FileObject fileObjectOf(Object candidate) {
+            Object fileObject = invoke(candidate, "getFileObject");
+            return fileObject instanceof FileObject ? (FileObject) fileObject : null;
+        }
+
+        private static Icon iconOf(Object candidate) {
+            Object icon = invoke(candidate, "getIcon");
+            return icon instanceof Icon ? (Icon) icon : DEFAULT_GROUP_ICON;
+        }
+
+        private static Object invoke(Object target, String methodName) {
+            if (target == null) {
+                return null;
+            }
+            try {
+                return target.getClass().getMethod(methodName).invoke(target);
+            } catch (ReflectiveOperationException | SecurityException ex) {
+                return null;
+            }
+        }
+
+        private static String escapeHtml(String text) {
+            if (text == null || text.isEmpty()) {
+                return ""; // NOI18N
+            }
+            return text
+                    .replace("&", "&amp;") // NOI18N
+                    .replace("<", "&lt;") // NOI18N
+                    .replace(">", "&gt;"); // NOI18N
+        }
+
+        private static String stripColorMarkup(String text) {
+            if (text == null || text.isEmpty()) {
+                return ""; // NOI18N
+            }
+            return text
+                    .replaceAll("(?i)</?font\\b[^>]*>", "") // NOI18N
+                    .replaceAll("(?i)\\scolor\\s*=\\s*(['\"]).*?\\1", "") // NOI18N
+                    .replaceAll("(?i)\\scolor\\s*=\\s*#[0-9a-f]{3,8}", "") // NOI18N
+                    .replaceAll("(?i)\\sstyle\\s*=\\s*(['\"]).*?color\\s*:[^;'\"]*;?.*?\\1", ""); // NOI18N
+        }
+
         private static String stripHtmlEnvelope(String text) {
             if (text == null) {
                 return ""; // NOI18N
@@ -613,6 +784,9 @@ final class ReferenceUsagesPopup extends JPanel implements FocusListener {
             }
             return result;
         }
+    }
+
+    private record ReferenceGroup(String id, String displayName, String tooltip, Icon icon) {
     }
 
     private record ResolvedElement(ElementKind kind, String displayName) {

@@ -254,7 +254,6 @@
                 <equals arg1="${cluster.dir}" arg2="${cluster.dir.fallback}"/>
             </not>
         </condition>
-        <property name="jnlp.dest.dir" location="${nb.build.dir}/jnlp"/>
         <property name="build.javahelp.dir" location="${build.dir}/javahelp"/>
         <property name="javahelp.base" value="${code.name.base.slashes}/docs"/>
         <property name="javahelp.search" value="JavaHelpSearch"/>

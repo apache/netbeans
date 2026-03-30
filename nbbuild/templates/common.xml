@@ -389,61 +389,6 @@
 
     <target name="build" depends="netbeans,test-build"/>
 
-    <target name="-jnlp-init">
-        <fail unless="jnlp.dest.dir" >
-            You have to provide value to jnlp.dest.dir property!
-        </fail>
-        <mkdir dir="${jnlp.dest.dir}" />
-        <makeurl property="jnlp.codebase" file="${jnlp.dest.dir}"/>
-        <property name="jnlp.signjar.alias" value="jnlp" />
-        <property name="jnlp.signjar.keystore" location="${jnlp.dest.dir}/default.keystore" />
-        <property name="jnlp.signjar.password" value="netbeans" />
-        <property name="jnlp.permissions" value="&lt;security&gt;&lt;all-permissions/&gt;&lt;/security&gt;"/>
-        <property name="jnlp.verify.excludes" value="" />
-        <!-- Oddly, <available> as a task overrides existing properties, which is not what we want here. -->
-        <condition property="jnlp.sign.jars" value="true">
-            <available file="${jnlp.signjar.keystore}"/>
-        </condition>
-        <property name="jnlp.sign.jars" value="false"/>
-        <property name="jnlp.indirect.jars" value="[NOTHING]"/>
-        <property name="jnlp.indirect.files" value="[NOTHING]"/>
-        <property name="jnlp.generate.versions" value="false"/>
-    </target>
-
-    <target name="jnlp" depends="init,netbeans,jnlp-master,-jnlp-init" description="Builds JNLP descriptor and signs JAR files" >
-        <makejnlp
-            dir="${jnlp.dest.dir}"
-            alias="${jnlp.signjar.alias}"
-            storepass="${jnlp.signjar.password}"
-            keystore="${jnlp.signjar.keystore}"
-            codebase="${jnlp.codebase}"
-            verify="true"
-            verifyexcludes="${jnlp.verify.excludes}"
-            permissions="${jnlp.permissions}"
-            signjars="${jnlp.sign.jars}"
-            processjarversions="${jnlp.generate.versions}"
-        >
-            <modules dir="${cluster}" >
-                <include name="${module.jar}" />
-            </modules>
-            <indirectjars dir="${cluster}" includes="${jnlp.indirect.jars}"/>
-            <indirectfiles dir="${cluster}" includes="${jnlp.indirect.files}"/>
-        </makejnlp>
-    </target>
-
-    <target name="jnlp-master" depends="init,netbeans" if="jnlp.master.dir" >
-        <property name="jnlp.master.codebase" value="" />
-        <makemasterjnlp
-            dir="${jnlp.master.dir}"
-            codebase="${jnlp.master.codebase}"
-        >
-            <modules dir="${cluster}" >
-                <include name="${module.jar}" />
-            </modules>
-        </makemasterjnlp>
-    </target>
-
-
     <target name="-nbm-prompt-for-storepass" if="keystore" unless="storepass">
         <input addproperty="storepass" message="Enter password for ${keystore}:">
             <handler type="secure"/>

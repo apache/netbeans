@@ -302,7 +302,6 @@ public class ImportantFilesNodeFactory implements NodeFactory {
         /** Abstract location to display name. */
         private static final java.util.Map<String,String> FILES = new LinkedHashMap<String,String>();
         static {
-            FILES.put("master.jnlp", NbBundle.getMessage(SuiteLogicalView.class,"LBL_jnlp_master"));
             FILES.put("build.xml", NbBundle.getMessage(SuiteLogicalView.class,"LBL_build.xml"));
             FILES.put("nbproject/project.properties", NbBundle.getMessage(SuiteLogicalView.class,"LBL_project.properties"));
             FILES.put("nbproject/private/private.properties", NbBundle.getMessage(SuiteLogicalView.class,"LBL_private.properties"));

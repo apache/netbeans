@@ -95,7 +95,6 @@ public class SuiteLogicalViewTest extends TestBase {
         Locale.setDefault(Locale.US);
         
         SuiteProject suite = generateSuite("sweet");
-        FileObject master = suite.getProjectDirectory().createData("master.jnlp");
         
         LogicalViewProvider viewProv = suite.getLookup().lookup(LogicalViewProvider.class);
         Node n = viewProv.createLogicalView();

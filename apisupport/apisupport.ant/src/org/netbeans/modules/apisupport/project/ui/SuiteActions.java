@@ -79,23 +79,18 @@ import org.openide.util.actions.Presenter;
 public final class SuiteActions implements ActionProvider, ExecProject {
 
     private static final String COMMAND_BRANDING = "branding";
-    private static final String COMMAND_BUILD_JNLP = "build-jnlp";
     private static final String COMMAND_BUILD_MAC = "build-mac";
     private static final String COMMAND_BUILD_OSGI = "build-osgi";
     private static final String COMMAND_BUILD_OSGI_OBR = "build-osgi-obr";
     private static final String COMMAND_BUILD_ZIP = "build-zip";
-    private static final String COMMAND_DEBUG_JNLP = "debug-jnlp";
     private static final String COMMAND_DEBUG_OSGI = "debug-osgi";
     private static final String COMMAND_NBMS = "nbms";
     private static final String COMMAND_PROFILE_OSGI = "profile-osgi";
-    private static final String COMMAND_RUN_JNLP = "run-jnlp";
     private static final String COMMAND_RUN_OSGI = "run-osgi";
     private static final String SUITE_ACTIONS_TYPE = "org-netbeans-modules-apisupport-project-suite";
     private static final String SUITE_ACTIONS_PATH = "Projects/" + SUITE_ACTIONS_TYPE + "/Actions";
     private static final String SUITE_PACKAGE_ACTIONS_TYPE = SUITE_ACTIONS_TYPE + "-package";
     private static final String SUITE_PACKAGE_ACTIONS_PATH = "Projects/" + SUITE_PACKAGE_ACTIONS_TYPE + "/Actions";
-    private static final String SUITE_JNLP_ACTIONS_TYPE = SUITE_ACTIONS_TYPE + "-jnlp";
-    private static final String SUITE_JNLP_ACTIONS_PATH = "Projects/" + SUITE_JNLP_ACTIONS_TYPE + "/Actions";
     private static final String SUITE_OSGI_ACTIONS_TYPE = SUITE_ACTIONS_TYPE + "-osgi";
     private static final String SUITE_OSGI_ACTIONS_PATH = "Projects/" + SUITE_OSGI_ACTIONS_TYPE + "/Actions";
     private static final RequestProcessor RP = new RequestProcessor(SuiteActions.class);
@@ -146,38 +141,6 @@ public final class SuiteActions implements ActionProvider, ExecProject {
     @Messages("SUITE_ACTION_mac=Mac OS X Application")
     public static Action buildMac() {
         return ProjectSensitiveActions.projectCommandAction(COMMAND_BUILD_MAC, SUITE_ACTION_mac(), null);
-    }
-
-    @ActionID(category="Project", id="org.netbeans.modules.apisupport.project.suite.jnlpMenu")
-    @ActionRegistration(displayName="#SUITE_ACTION_jnlp_menu", lazy=false)
-    @ActionReference(path=SUITE_ACTIONS_PATH, position=1300)
-    @Messages("SUITE_ACTION_jnlp_menu=JNLP")
-    public static Action jnlpMenu() {
-        return new SubMenuAction(SUITE_ACTION_jnlp_menu(), Arrays.asList(CommonProjectActions.forType(SUITE_JNLP_ACTIONS_TYPE)));
-    }
-
-    @ActionID(category="Project", id="org.netbeans.modules.apisupport.project.suite.buildJnlp")
-    @ActionRegistration(displayName="#SUITE_ACTION_build_jnlp", lazy=false)
-    @ActionReference(path=SUITE_JNLP_ACTIONS_PATH, position=100)
-    @Messages("SUITE_ACTION_build_jnlp=Build")
-    public static Action buildJnlp() {
-        return ProjectSensitiveActions.projectCommandAction(COMMAND_BUILD_JNLP, SUITE_ACTION_build_jnlp(), null);
-    }
-
-    @ActionID(category="Project", id="org.netbeans.modules.apisupport.project.suite.runJnlp")
-    @ActionRegistration(displayName="#SUITE_ACTION_run_jnlp", lazy=false)
-    @ActionReference(path=SUITE_JNLP_ACTIONS_PATH, position=200)
-    @Messages("SUITE_ACTION_run_jnlp=Run")
-    public static Action runJnlp() {
-        return ProjectSensitiveActions.projectCommandAction(COMMAND_RUN_JNLP, SUITE_ACTION_run_jnlp(), null);
-    }
-
-    @ActionID(category="Project", id="org.netbeans.modules.apisupport.project.suite.debugJnlp")
-    @ActionRegistration(displayName="#SUITE_ACTION_debug_jnlp", lazy=false)
-    @ActionReference(path=SUITE_JNLP_ACTIONS_PATH, position=300)
-    @Messages("SUITE_ACTION_debug_jnlp=Debug")
-    public static Action debugJnlp() {
-        return ProjectSensitiveActions.projectCommandAction(COMMAND_DEBUG_JNLP, SUITE_ACTION_debug_jnlp(), null);
     }
 
     @ActionID(category="Project", id="org.netbeans.modules.apisupport.project.suite.osgiMenu")
@@ -296,9 +259,6 @@ public final class SuiteActions implements ActionProvider, ExecProject {
             ActionProvider.COMMAND_DEBUG,
             ActionProvider.COMMAND_TEST,
             COMMAND_BUILD_ZIP,
-            COMMAND_BUILD_JNLP,
-            COMMAND_RUN_JNLP,
-            COMMAND_DEBUG_JNLP,
             COMMAND_BUILD_OSGI,
             COMMAND_BUILD_OSGI_OBR,
             COMMAND_RUN_OSGI,
@@ -416,21 +376,6 @@ public final class SuiteActions implements ActionProvider, ExecProject {
                 return null;
             }
             targetNames = new String[] {COMMAND_BUILD_ZIP};
-        } else if (command.equals(COMMAND_BUILD_JNLP)) {
-            if (promptForAppName(PROMPT_FOR_APP_NAME_MODE_JNLP)) {
-                return null;
-            }
-            targetNames = new String[] {COMMAND_BUILD_JNLP};
-        } else if (command.equals(COMMAND_RUN_JNLP)) {
-            if (promptForAppName(PROMPT_FOR_APP_NAME_MODE_JNLP)) {
-                return null;
-            }
-            targetNames = new String[] {COMMAND_RUN_JNLP};
-        } else if (command.equals(COMMAND_DEBUG_JNLP)) {
-            if (promptForAppName(PROMPT_FOR_APP_NAME_MODE_JNLP)) {
-                return null;
-            }
-            targetNames = new String[] {COMMAND_DEBUG_JNLP};
         } else {
             targetNames = new String[] {command};
         }
@@ -444,11 +389,9 @@ public final class SuiteActions implements ActionProvider, ExecProject {
         return project.getProjectDirectory().getFileObject(GeneratedFilesHelper.BUILD_XML_PATH);
     }
     
-    private static final int PROMPT_FOR_APP_NAME_MODE_JNLP = 0;
-    private static final int PROMPT_FOR_APP_NAME_MODE_ZIP = 1;
+     private static final int PROMPT_FOR_APP_NAME_MODE_ZIP = 1;
     /** @return true if the dialog is shown */
     @Messages({
-        "ERR_app_name_jnlp=<html>The JNLP application cannot be built because this suite is not yet set up as a standalone application.<br>At least a branding name must be configured before building or running in JNLP mode.",
         "ERR_app_name_zip=<html>The ZIP file cannot be built because this suite is not yet set up as a standalone application.<br>At least a branding name must be configured before building an application ZIP.",
         "TITLE_app_name=Not Standalone Application",
         "LBL_configure_app_name=Configure Application...",
@@ -462,10 +405,7 @@ public final class SuiteActions implements ActionProvider, ExecProject {
         
         // #61372: warn the user, rather than disabling the action.
         String msg;
-        switch (mode) {
-            case PROMPT_FOR_APP_NAME_MODE_JNLP:
-                msg = ERR_app_name_jnlp();
-                break;
+        switch (mode) {             
             case PROMPT_FOR_APP_NAME_MODE_ZIP:
                 msg = ERR_app_name_zip();
                 break;

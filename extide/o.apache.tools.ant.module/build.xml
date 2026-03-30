@@ -71,59 +71,6 @@
 
     <target name="test-build" depends="jar-bridge,projectized-common.test-build"/>
 
-    <target name="jnlp" depends="netbeans,-jnlp-init">
-        <property name="dir" location="${jnlp.dest.dir}/org-apache-tools-ant-module"/>
-        <mkdir dir="${dir}"/>
-        <copy todir="${dir}" flatten="true">
-            <fileset dir="${cluster}">
-                <include name="${module.jar}"/>
-                <include name="ant/patches/*.jar"/>
-            </fileset>
-        </copy>
-        <copy todir="${dir}">
-            <fileset dir="${cluster}">
-                <include name="ant/lib/*.jar"/>
-            </fileset>
-            <mapper type="glob" from="ant${file.separator}lib${file.separator}*.jar" to="apache-*-1.10.15.jar"/>
-        </copy>
-        <copy file="${cluster}/ant/nblib/bridge.jar" tofile="${dir}/org-apache-tools-ant-module-bridge.jar"/>
-        <!-- XXX ought to only do this in case jnlp.sign.jars=true -->
-        <signjar alias="${jnlp.signjar.alias}" storepass="${jnlp.signjar.password}" keystore="${jnlp.signjar.keystore}">
-            <fileset dir="${dir}">
-                <include name="org-apache-tools-ant-module.jar"/>
-                <include name="org-apache-tools-ant-module-bridge.jar"/>
-                <include name="apache-ant*.jar"/>
-            </fileset>
-        </signjar>
-        <pathconvert property="ant-jar-resources" pathsep="'/&gt;&#10;    &lt;jar href='org-apache-tools-ant-module/">
-            <path>
-                <fileset dir="${dir}">
-                    <include name="apache-ant*.jar"/>
-                </fileset>
-            </path>
-            <mapper type="glob" from="${dir}${file.separator}*" to="*"/>
-        </pathconvert>
-        <echo file="${jnlp.dest.dir}/org-apache-tools-ant-module.jnlp"><![CDATA[<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE jnlp PUBLIC "-//Sun Microsystems, Inc//DTD JNLP Descriptor 6.0//EN" "http://java.sun.com/dtd/JNLP-6.0.dtd">
-<jnlp spec='1.0+' codebase='${jnlp.codebase}'>
-  <information>
-   <title>Apache Ant Integration</title>
-   <vendor>NetBeans</vendor>
-   <description kind='one-line'>Bundles Apache Ant.</description>
-   <description kind='short'>This module bundles the Apache Ant build tool.</description>
-  </information>
-  <security><all-permissions/></security>
-  <resources>
-    <jar href='org-apache-tools-ant-module/org-apache-tools-ant-module.jar'/>
-    <jar href='org-apache-tools-ant-module/org-apache-tools-ant-module-bridge.jar'/>
-    <jar href='org-apache-tools-ant-module/${ant-jar-resources}'/>
-  </resources>
-  <component-desc/>
-</jnlp>
-            ]]>
-        </echo>
-    </target>
-
     <!-- For use when making new releases: -->
     <target name="release-helper" depends="clean" description="Help do some things useful when bundling a new Ant release.">
         <ant dir="external" target="clean"/>

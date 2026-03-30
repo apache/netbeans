@@ -1331,6 +1331,7 @@ intf org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI
 meth public boolean equals(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public boolean isEE10Supported()
+meth public boolean isEE11Supported()
 meth public boolean isEE7Supported()
 meth public boolean isEE8Supported()
 meth public boolean isEE9Supported()
@@ -1366,6 +1367,7 @@ fld public final static java.lang.String SEPARATOR_PATTERN = "\u005c."
 meth public abstract boolean equals(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public abstract boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public abstract boolean isEE10Supported()
+meth public abstract boolean isEE11Supported()
 meth public abstract boolean isEE7Supported()
 meth public abstract boolean isEE8Supported()
 meth public abstract boolean isEE9Supported()
@@ -1517,6 +1519,7 @@ meth public boolean equals(org.netbeans.modules.payara.tooling.data.PayaraVersio
 meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraPlatformVersionAPI)
 meth public boolean equalsMajorMinor(org.netbeans.modules.payara.tooling.data.PayaraVersion)
 meth public boolean isEE10Supported()
+meth public boolean isEE11Supported()
 meth public boolean isEE7Supported()
 meth public boolean isEE8Supported()
 meth public boolean isEE9Supported()
@@ -1857,6 +1860,8 @@ fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEE
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v10_0_0_web
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v11_0_0
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v11_0_0_web
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v12_0_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v12_0_0_web
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_2
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_3
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile v1_4
@@ -1898,6 +1903,7 @@ CLSS public final static !enum org.netbeans.modules.payara.tooling.server.config
  outer org.netbeans.modules.payara.tooling.server.config.JavaEEProfile
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v10_0_0
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v11_0_0
+fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v12_0_0
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_2
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_3
 fld public final static org.netbeans.modules.payara.tooling.server.config.JavaEEProfile$Version v1_4

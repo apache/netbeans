@@ -488,7 +488,6 @@ Alternatively use "zip -yr ${app.name}.app" to create a simple zipped distributi
         <fail>Will not delete ${test.user.dir} because ${test.user.dir.lock} still exists; kill any running process and delete lock file if necessary</fail>
     </target>
     <target name="testuserdir-delete" depends="-testuserdir-delete-ok,-testuserdir-delete-fail" description="Delete testing user directory (if the application is not running); clears any saved settings etc.">
-        <ant antfile="${harness.dir}/jnlp.xml" target="clean"/>
     </target>
     
     <target name="clean" depends="-init,testuserdir-delete" description="Clean everything.">
@@ -526,28 +525,7 @@ Alternatively use "zip -yr ${app.name}.app" to create a simple zipped distributi
             <reference refid="cluster.path.id"/>
         </ant>
     </target>
-    
-    <target name="build-jnlp" depends="build,-jdk-init" description="Packages this suite as a JNLP application.">
-        <ant antfile="${harness.dir}/jnlp.xml" target="build">
-            <reference refid="cluster.path.id"/>
-            <property name="jnlp.generate.versions" value="${jnlp.generate.versions}"/>
-        </ant>
-    </target>
-    
-    <target name="run-jnlp" depends="build,-jdk-init" description="Runs this suite as a JNLP application.">
-        <ant antfile="${harness.dir}/jnlp.xml" target="run">
-            <reference refid="cluster.path.id"/>
-            <property name="jnlp.generate.versions" value="false"/>  <!-- versioning is not enabled w/o app server-->
-        </ant>
-    </target>
-    
-    <target name="debug-jnlp" depends="build,-jdk-init,-jdk-presetdef-nbjpdastart" description="Runs this suite as a JNLP application in the debugger.">
-        <ant antfile="${harness.dir}/jnlp.xml" target="debug">
-            <reference refid="cluster.path.id"/>
-            <property name="jnlp.generate.versions" value="false"/>  <!-- versioning is not enabled w/o app server-->
-        </ant>
-    </target>
-
+            
     <target name="build-osgi" depends="build,-jdk-init" description="Converts this suite into OSGi-compatible bundles.">
         <echo>OSGi support is EXPERIMENTAL for now; see: http://wiki.netbeans.org/NetBeansInOSGi</echo>
         <ant antfile="${harness.dir}/osgi.xml" target="build">

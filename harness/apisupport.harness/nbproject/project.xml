@@ -33,28 +33,8 @@
                         <release-version>1</release-version>
                     </run-dependency>
                 </dependency>
-            </module-dependencies>
-            <test-dependencies>
-                <test-type>
-                    <name>unit</name>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.libs.junit4</code-name-base>
-                        <compile-dependency/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.modules.nbjunit</code-name-base>
-                        <recursive/>
-                        <compile-dependency/>
-                    </test-dependency>
-                </test-type>
-            </test-dependencies>
-            <public-packages/>
-            <extra-compilation-unit>
-                <package-root>jnlp-src</package-root>
-                <classpath>${jnlp.cp}</classpath>
-                <built-to>${build.dir}/jnlp-launcher-classes</built-to>
-                <built-to>${cluster}/jnlp/jnlp-launcher.jar</built-to>
-            </extra-compilation-unit>
+            </module-dependencies>            
+            <public-packages/>            
         </data>
     </configuration>
 </project>

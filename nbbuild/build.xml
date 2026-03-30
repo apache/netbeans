@@ -355,52 +355,7 @@ metabuild.hash=${metabuild.hash}</echo>
           <buildpath path="${modules.sorted}"/>
       </subant-junit>
   </target>
-
-  <property name="jnlp.signjar.keystore" location="${nb.build.dir}/default.keystore" />
-  <available property="jnlp.signjar.keystore.exists" file="${jnlp.signjar.keystore}" />
-  <target name="jnlp-generate-keystore" depends="init" unless="jnlp.signjar.keystore.exists" >
-    <property name="jnlp.signjar.alias" value="jnlp" />
-    <property name="jnlp.signjar.password" value="netbeans" />
-    <property name="jnlp.signjar.vendor" value="CN=NetBeans, OU=NetBeans, O=netbeans.org, C=US" />
-    
-    <mkdir dir="${jnlp.signjar.keystore}/../" />
-    <echo message="Going to create default keystore in ${jnlp.signjar.keystore}" />
-    <genkey 
-        alias="${jnlp.signjar.alias}"
-        keystore="${jnlp.signjar.keystore}"
-        storepass="${jnlp.signjar.password}"
-        dname="${jnlp.signjar.vendor}"
-    />
-  </target>
-
-  <target name="build-jnlp" depends="init,jnlp-generate-keystore" description="Create a JNLP distribution.">
-      <fail message="Please build using Ant 1.8.4 or higher.">
-        <condition>
-          <not>
-            <antversion atleast="1.8.4"/>
-          </not>
-        </condition>
-      </fail>
-      <property name="jnlp.dest.dir" location="${nb.build.dir}/jnlp" />
-      <mkdir dir="${jnlp.dest.dir}" />
-      <makeurl property="jnlp.codebase" file="${jnlp.dest.dir}"/> <!-- fallback value unless otherwise configured -->
-      <property name="jnlp.fail.on.error" value="true"/>
-      <pathconvert property="jnlp.modules.fullpath">
-          <path>
-              <dirset dir="${nb_all}" includes="${config.jnlp.stable}"/>
-          </path>
-          <mapper type="identity"/>
-      </pathconvert>
-      <sortsuitemodules unsortedmodules="${jnlp.modules.fullpath}" sortedmodulesproperty="jnlp.modules.sorted"/>
-      <subant-junit target="jnlp" failonerror="${jnlp.fail.on.error}" report="${nb.build.dir}/build-all-jnlp.xml">
-          <buildpath path="${jnlp.modules.sorted}"/>
-      </subant-junit>
-      <taskdef name="verifyjnlp" classname="org.netbeans.nbbuild.VerifyJNLP" classpath="${nbantext.jar}"/>
-      <verifyjnlp report="${nb.build.dir}/verify-jnlp.xml" failonerror="jnlp.fail.on.error">
-          <fileset dir="${jnlp.dest.dir}" includes="*.jnlp"/>
-      </verifyjnlp>
-  </target>
-  
+ 
   <target name="build-javadoc" depends="javadoc"/>
 
   <target name="javadoc" depends="bootstrap" description="Builds Javadoc for all NetBeans modules with some APIs">

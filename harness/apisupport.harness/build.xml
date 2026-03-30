@@ -48,26 +48,6 @@
         <delete file="build/asm-9.9.jar"/>
     </target>
 
-    <target name="compile-jnlp-launcher" depends="init,compile">
-        <mkdir dir="${build.dir}/jnlp-launcher-classes"/>
-        <nb-javac srcdir="jnlp-src" destdir="${build.dir}/jnlp-launcher-classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" release="8" includeantruntime="false">
-            <classpath>
-                <path path="${jnlp.cp}"/>
-            </classpath>
-            <processorpath refid="processor.cp"/>
-        </nb-javac>
-        <copy todir="${build.dir}/jnlp-launcher-classes">
-            <fileset dir="jnlp-src" excludes="${jar-excludes}"/>
-        </copy>
-    </target>
-   
-    <target name="jar-jnlp-launcher" depends="compile-jnlp-launcher">
-        <mkdir dir="${cluster}/jnlp/"/>
-        <nb-ext-jar jarfile="${cluster}/jnlp/jnlp-launcher.jar" compress="false" manifest="jnlp-manifest.mf" >
-            <fileset dir="${build.dir}/jnlp-launcher-classes"/>
-        </nb-ext-jar>
-    </target>
-
-    <target name="netbeans-extra" depends="nbantext,jar-jnlp-launcher"/>
+    <target name="netbeans-extra" depends="nbantext"/>
 
 </project>

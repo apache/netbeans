@@ -8,7 +8,7 @@ the NBM project type module, so that you can open any module in the NB IDE and
 work with it naturally: build and test it using Ant, use Java code completion,
 and so on.
 
-Questions and comments should go to: dev@openide.netbeans.org
+Questions and comments should go to: dev@netbeans.apache.org
 
 BASIC FILE LAYOUT
 -----------------
@@ -101,7 +101,7 @@ projects. They would be ignored anyway so there is a dedicated check that
 project is not trying to setup something that would not work anyway. 
 
 For more info on uses of 'cluster.path' property and setting it in IDE, see
-http://wiki.netbeans.org/DevFaqHowToReuseModules.
+https://netbeans.apache.org/wiki/main/netbeansdevelopperfaq/DevFaqHowToReuseModules
 
 MODULE SUITES: CONFIGURATION FILES
 ----------------------------------
@@ -187,8 +187,8 @@ harness and platform rather than storing them in VCS.
 
 As of platform version 6.7, suite-chaining as described here is superseded by
 using 'cluster.path' property, see previous chapters and developer FAQ
-http://wiki.netbeans.org/DevFaqHowToReuseModules. For platform versions 6.5
-and older, read on.
+https://netbeans.apache.org/wiki/main/netbeansdevelopperfaq/DevFaqHowToReuseModules
+For platform versions 6.5 and older, read on.
 
 Suppose you have one platform P1, say the bare NetBeans Platform. Then you have
 a module suite S1 with modules M1a...M1z which uses P1. Now it may happen that
@@ -954,81 +954,6 @@ extra.test.libs.dir - directory with extra libraries needed for test run.
 tools.jar [since 5.0u1] - set to location of tools.jar in active JDK. Useful in
 case your module needs to compile against JDK-only classes. Meaningless on Mac
 OS X.
-
-To support builds of JNLP-based applications additional properties may be used
-or redefined in JNLP-related targets:
-
-jnlp.servlet.jar - must point to jnlp-servlet.jar as provided by JDK 5 in
-  the directory sample/jnlp/servlet/jnlp-servlet.jar if one wants to build 
-  a packaged war file of JNLP version of your suite
-
-jnlp.dest.dir - the location where to generate the JNLP files and signed 
-  jars. By default it is your ${suite.dir}/build/jnlp
-
-jnlp.master.dir - (category='private') location of a directory in which
-  to generate pieces of master JNLP file to be included in the resources
-  section.
-
-jnlp.signjar.alias -
-jnlp.signjar.keystore - 
-jnlp.signjar.password - allow you to sign your app with your own private key, if
-  unspecified then a default keystore is generated. Nice for trying things for
-  the first time, but not for production, then you very likely want to generate
-  your key and set these properties
-jnlp.signjar.vendor - you can override this to be the default dname for the keystore
-
-jnlp.platform.codebase - can point to a shared repository which can be generated
-  by ant -f nbbuild/build.xml build-jnlp. Then your WAR file will contain only 
-  modules of your suite and platform modules will be referenced by the value of
-  this property. Sample values with prebuilt binaries (good for testing):
-http://bits.netbeans.org/6.5/jnlp/
-http://bits.netbeans.org/6.7/fcs/jnlp/
-http://deadlock.netbeans.org/job/ide-jnlp/lastStableBuild/artifact/nbbuild/build/jnlp/
-
-jnlp.indirect.jars [since 6.0] - optional pattern of JARs in the cluster to load
-  in JNLP mode even though they are not listed as Class-Path extensions of the
-  module JAR. The module ought not directly refer to classes in these JARs (it
-  could not do so in non-JNLP mode) but it may load them reflectively using
-  InstalledFileLocator using the same path in regular as in JNLP mode. Note that
-  the physical path on disk to the resulting JAR will not necessarily contain
-  the directory prefix that the JAR in the cluster uses, so do not expect that
-  jar.getParentFile() is meaningful. The implementation creates an empty JAR
-  entry META-INF/clusterpath/$path where $path is the ('/'-separated) path
-  within the cluster where the JAR would be found in a normal installation.
-
-jnlp.indirect.files [since 6.7 M1] - optional pattern of files in the cluster to
-  load in JNLP mode. The module may load these files using InstalledFileLocator
-  using the same path in regular as in JNLP mode. Note that the physical path on
-  disk to the resulting file will not necessarily contain the directory prefix
-  that the file in the cluster uses, so do not expect that file.getParentFile()
-  is meaningful. The implementation creates a JAR entry META-INF/files/$path
-  where $path is the ('/'-separated) path within the cluster where the file
-  would be found in a normal installation.
-
-jnlp.verify.excludes - the default implementation of "jnlp" task in common.xml
-  does verification and compares that all files from module NBM are really
-  referenced from the JNLP file. Sometimes not all of them need to be, for
-  them you can put their full names (relative to your cluster root) into this
-  property and separate them by comma.
-
-jnlp.permissions - allows altering of the fragment in the resulting .jnlp file
-  that sets the permissions for individual modules. The default value is
-  &lt;security&gt;&lt;all-permissions/&gt;&lt;/security&gt; when jnlp.sign.jars
-  is true, &lt;security/&gt; when jnlp.sign.jars is false.
-  If you want to change the default to something else please define the value
-  of the property.
-
-jnlp.sign.jars [since 6.0] - defaults to true. If set to false the jars 
-  will not be signed, only the main (startup) jar. This should allow for 
-  faster startup but might compromise JNLP security. Use with extreme care.
-
-jnlp.generate.versions [since 6.7] - Defaults to false, which means versioning 
-  info is not generated (see 
-  http://java.sun.com/j2se/1.5.0/docs/guide/javaws/developersguide/downloadservletguide.html#resources).
-  If set true, build-jnlp target creates versioning info in jnlp descriptors and version.xml files.
-  This allows for incremental updates of Webstart applications, but requires download via
-  JnlpDownloadServlet (thus run-jnlp and debug-jnlp does not create versioning info even with this
-  property set to true).
   
 PROPERTIES WHICH MAY BE DEFINED IN YOUR SUITE platform.properties
 -----------------------------------------------------------------
@@ -1100,11 +1025,6 @@ dist.dir - directory (if not 'dist') to place the final application in. Since 6.
 
 modules - list of contained modules. Path format; entries resolved against the
 suite directory as needed.
-
-jnlp.codebase [since 5.0u1] - in case one wants to build a static repository not
-packaged in a WAR file, one needs to pass in the full URL for it. By default it
-is specified as "$$codebase" and replaced dynamically by the servlet packaged in
-the WAR file.
 
 
 TARGETS AVAILABLE FOR OVERRIDING IN YOUR build.xml
@@ -1187,10 +1107,6 @@ jar-prep - prepare to build the module JAR; define ${buildnumber}.
 
 javadoc - build module Javadoc.
 
-jnlp - generetes the JNLP component file for this module and all necessary
-  resources for it into ${jnlp.dest.dir} directory and also a fragment of
-  the master JNLP into ${jnlp.master.dir}
-
 javadoc-nb - same, and open it in a web browser (only from the IDE). Available
 as Build -> Generate Javadoc.
 
@@ -1256,9 +1172,6 @@ will be packed into
 
 build - build all suite modules.
 
-build-jnlp - builds a JNLP WAR file from your application suitable for
-publishing in a Java EE container.
-
 build-mac [since 5.0u2] - creates a Mac OS X application.
 
 build-zip - builds a ZIP file containing your application including launchers.
@@ -1268,16 +1181,12 @@ clean - clean everything.
 debug - like run, but run in the JPDA debugger. (Only available from inside the
 IDE.)
 
-debug-jnlp - starts debuging of your JNLP application (works only from NetBeans IDE)
-
 nbms [since 5.0u1] - creates NBMs for all modules in the suite, and generates
 an XML descriptor listing them suitable for use from Auto Update.
 
 profile - used from inside the NetBeans IDE to profile the entire suite
 
 run - start application for testing.
-
-run-jnlp - executes your JNLP application (currently from local files)
 
 test - run all module unit tests. Since NetBeans 6.8 runs tests of all suite modules
 by default, even if some of them fails and target succeeds regardless of test status.
@@ -1354,6 +1263,109 @@ Clients should make no other assumptions beyond these contracts. All
 other related files must be stored in 'testcoverage/<impl name>' 
 subfolder. 
 
+
+JNLP Legacy
+-----------
+
+PROPERTIES WHICH MAY BE DEFINED IN YOUR project.properties
+
+To support builds of JNLP-based applications additional properties may be used
+or redefined in JNLP-related targets:
+
+jnlp.servlet.jar - must point to jnlp-servlet.jar as provided by JDK 5 in
+  the directory sample/jnlp/servlet/jnlp-servlet.jar if one wants to build 
+  a packaged war file of JNLP version of your suite
+
+jnlp.dest.dir - the location where to generate the JNLP files and signed 
+  jars. By default it is your ${suite.dir}/build/jnlp
+
+jnlp.master.dir - (category='private') location of a directory in which
+  to generate pieces of master JNLP file to be included in the resources
+  section.
+
+jnlp.signjar.alias -
+jnlp.signjar.keystore - 
+jnlp.signjar.password - allow you to sign your app with your own private key, if
+  unspecified then a default keystore is generated. Nice for trying things for
+  the first time, but not for production, then you very likely want to generate
+  your key and set these properties
+jnlp.signjar.vendor - you can override this to be the default dname for the keystore
+
+jnlp.platform.codebase - can point to a shared repository which can be generated
+  by ant -f nbbuild/build.xml build-jnlp. Then your WAR file will contain only 
+  modules of your suite and platform modules will be referenced by the value of
+  this property. Sample values with prebuilt binaries (good for testing):
+http://bits.netbeans.org/6.5/jnlp/
+http://bits.netbeans.org/6.7/fcs/jnlp/
+http://deadlock.netbeans.org/job/ide-jnlp/lastStableBuild/artifact/nbbuild/build/jnlp/
+
+jnlp.indirect.jars [since 6.0] - optional pattern of JARs in the cluster to load
+  in JNLP mode even though they are not listed as Class-Path extensions of the
+  module JAR. The module ought not directly refer to classes in these JARs (it
+  could not do so in non-JNLP mode) but it may load them reflectively using
+  InstalledFileLocator using the same path in regular as in JNLP mode. Note that
+  the physical path on disk to the resulting JAR will not necessarily contain
+  the directory prefix that the JAR in the cluster uses, so do not expect that
+  jar.getParentFile() is meaningful. The implementation creates an empty JAR
+  entry META-INF/clusterpath/$path where $path is the ('/'-separated) path
+  within the cluster where the JAR would be found in a normal installation.
+
+jnlp.indirect.files [since 6.7 M1] - optional pattern of files in the cluster to
+  load in JNLP mode. The module may load these files using InstalledFileLocator
+  using the same path in regular as in JNLP mode. Note that the physical path on
+  disk to the resulting file will not necessarily contain the directory prefix
+  that the file in the cluster uses, so do not expect that file.getParentFile()
+  is meaningful. The implementation creates a JAR entry META-INF/files/$path
+  where $path is the ('/'-separated) path within the cluster where the file
+  would be found in a normal installation.
+
+jnlp.verify.excludes - the default implementation of "jnlp" task in common.xml
+  does verification and compares that all files from module NBM are really
+  referenced from the JNLP file. Sometimes not all of them need to be, for
+  them you can put their full names (relative to your cluster root) into this
+  property and separate them by comma.
+
+jnlp.permissions - allows altering of the fragment in the resulting .jnlp file
+  that sets the permissions for individual modules. The default value is
+  &lt;security&gt;&lt;all-permissions/&gt;&lt;/security&gt; when jnlp.sign.jars
+  is true, &lt;security/&gt; when jnlp.sign.jars is false.
+  If you want to change the default to something else please define the value
+  of the property.
+
+jnlp.sign.jars [since 6.0] - defaults to true. If set to false the jars 
+  will not be signed, only the main (startup) jar. This should allow for 
+  faster startup but might compromise JNLP security. Use with extreme care.
+
+jnlp.generate.versions [since 6.7] - Defaults to false, which means versioning 
+  info is not generated (see 
+  http://java.sun.com/j2se/1.5.0/docs/guide/javaws/developersguide/downloadservletguide.html#resources).
+  If set true, build-jnlp target creates versioning info in jnlp descriptors and version.xml files.
+  This allows for incremental updates of Webstart applications, but requires download via
+  JnlpDownloadServlet (thus run-jnlp and debug-jnlp does not create versioning info even with this
+  property set to true).
+
+PROPERTIES WHICH MAY BE DEFINED IN YOUR SUITE project.properties
+
+jnlp.codebase [since 5.0u1] - in case one wants to build a static repository not
+packaged in a WAR file, one needs to pass in the full URL for it. By default it
+is specified as "$$codebase" and replaced dynamically by the servlet packaged in
+the WAR file.
+
+TARGETS AVAILABLE FOR OVERRIDING IN YOUR build.xml
+
+jnlp - generetes the JNLP component file for this module and all necessary
+  resources for it into ${jnlp.dest.dir} directory and also a fragment of
+  the master JNLP into ${jnlp.master.dir}
+
+
+TARGETS AVAILABLE FOR OVERRIDING IN YOUR SUITE build.xml
+
+build-jnlp - builds a JNLP WAR file from your application suitable for
+publishing in a Java EE container.
+
+debug-jnlp - starts debuging of your JNLP application (works only from NetBeans IDE)
+
+run-jnlp - executes your JNLP application (currently from local files)
 
 ----------------
 Hey Emacs!

@@ -161,9 +161,9 @@ public final class AntJUnitNodeOpener extends NodeOpener {
         // Method node might belong to an inner class
         FileObject testfo = methodNode.getTestcase().getClassFileObject(true);
         String fqMethodName = methodNode.getTestcase().getClassName() + '.' + methodNode.getTestcase().getName();
-	if(testfo == null) {
-	    return;
-	}
+        if (testfo == null) {
+            return;
+        }
         final int[] lineNumStorage = new int[1];
         FileObject file = UIJavaUtils.getFile(frameInfo, lineNumStorage, locator);
         //lineNumStorage -1 means no regexp for stacktrace was matched.
@@ -182,10 +182,10 @@ public final class AntJUnitNodeOpener extends NodeOpener {
                 }
                 // if not found, return top line of stack trace.
                 if (index == st.length) {
-                    for(index=0; index < st.length; index++) {
-                        String trimmed=JavaRegexpUtils.specialTrim(st[index]);
-                        if (trimmed.startsWith(JavaRegexpUtils.CALLSTACK_LINE_PREFIX_CATCH) ||
-                               trimmed.startsWith(JavaRegexpUtils.CALLSTACK_LINE_PREFIX )){
+                    for (index = 0; index < st.length; index++) {
+                        String trimmed = JavaRegexpUtils.specialTrim(st[index]);
+                        if (trimmed.startsWith(JavaRegexpUtils.CALLSTACK_LINE_PREFIX_CATCH)
+                                || trimmed.startsWith(JavaRegexpUtils.CALLSTACK_LINE_PREFIX)) {
                             file = UIJavaUtils.getFile(st[index], lineNumStorage, locator);
                             break;
                         }

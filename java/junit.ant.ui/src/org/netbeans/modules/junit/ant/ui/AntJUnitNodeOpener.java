@@ -182,7 +182,6 @@ public final class AntJUnitNodeOpener extends NodeOpener {
                 }
                 // if not found, return top line of stack trace.
                 if (index == st.length) {
-                    index=0;
                     for(index=0; index < st.length; index++) {
                         String trimmed=JavaRegexpUtils.specialTrim(st[index]);
                         if (trimmed.startsWith(JavaRegexpUtils.CALLSTACK_LINE_PREFIX_CATCH) ||
@@ -194,7 +193,6 @@ public final class AntJUnitNodeOpener extends NodeOpener {
                 }
                 // if that fails, return the test file object.
                 if (file == null) {
-
                     file = testfo;
                 }
             }

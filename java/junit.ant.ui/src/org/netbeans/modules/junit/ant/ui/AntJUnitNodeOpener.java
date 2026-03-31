@@ -187,7 +187,9 @@ public final class AntJUnitNodeOpener extends NodeOpener {
                         if (trimmed.startsWith(JavaRegexpUtils.CALLSTACK_LINE_PREFIX_CATCH)
                                 || trimmed.startsWith(JavaRegexpUtils.CALLSTACK_LINE_PREFIX)) {
                             file = UIJavaUtils.getFile(st[index], lineNumStorage, locator);
-                            break;
+                            if (testfo.equals(file)) {
+                                break;
+                            }
                         }
                     }
                 }

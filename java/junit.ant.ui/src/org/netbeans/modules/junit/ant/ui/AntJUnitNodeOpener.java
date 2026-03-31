@@ -195,7 +195,8 @@ public final class AntJUnitNodeOpener extends NodeOpener {
                 }
                 // if that fails, return the test file object.
                 if (file == null) {
-                    file = testfo;
+                    openTestMethod(methodNode);
+                    return;
                 }
             }
         }

@@ -19,7 +19,6 @@
 
 package org.netbeans.core.startup;
 
-import java.beans.Introspector;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -89,7 +88,7 @@ public final class Main extends Object {
           return;
       }
       
-      Class uiClass = CLIOptions.uiClass;
+      Class<?> uiClass = CLIOptions.uiClass;
       // try again loading L&F class, this time with full module system.
       if (CLIOptions.uiClassName != null && CLIOptions.uiClass == null) {
           // try again
@@ -163,7 +162,7 @@ public final class Main extends Object {
                 SystemFileSystem.registerMutex(moduleSystem.getManager().mutex());
             } catch (IOException ioe) {
                 // System will be screwed up.
-                throw (IllegalStateException) new IllegalStateException("Module system cannot be created").initCause(ioe); // NOI18N
+                throw new IllegalStateException("Module system cannot be created", ioe); // NOI18N
             }
             StartLog.logProgress ("ModuleSystem created"); // NOI18N
         }
@@ -316,7 +315,6 @@ public final class Main extends Object {
         level.run();
     }
 
-    Splash.getInstance().setRunning(false);
     Splash.getInstance().dispose();
     StartLog.logProgress ("Splash hidden"); // NOI18N
     StartLog.logEnd ("Preparation"); // NOI18N
@@ -347,7 +345,7 @@ public final class Main extends Object {
     }
   
     /** Loads a class from available class loaders. */
-    private static final Class getKlass(String cls) {
+    private static Class<?> getKlass(String cls) {
         try {
             ClassLoader loader;
             ModuleSystem ms = moduleSystem;
@@ -380,7 +378,7 @@ public final class Main extends Object {
                 return classname != null && !installed.exists ();
             }
             
-            
+            @Override
             public void run() {
                 // This module is included in our distro somewhere... may or may not be turned on.
                 // Whatever - try running some classes from it anyway.
@@ -400,15 +398,11 @@ public final class Main extends Object {
                     } else {
                         LOG.log(Level.WARNING, null, ex);
                     }
-                } catch (Exception e) {
+                } catch (Exception | LinkageError e) {
                     // If exceptions are thrown, notify them - something is broken.
-                    LOG.log(Level.WARNING, null, e);
-                } catch (LinkageError e) {
-                    // These too...
                     LOG.log(Level.WARNING, null, e);
                 }
             }
-            
             
             public boolean canContinue () {
                 if (shouldDoAnImport ()) {
@@ -439,7 +433,6 @@ public final class Main extends Object {
                 }
             }
         }
-        
         
         ImportHandler handler = new ImportHandler ();
         
@@ -493,11 +486,8 @@ public final class Main extends Object {
                     } else {
                         LOG.log(Level.WARNING, null, ex);
                     }
-                } catch (Exception ex) {
+                } catch (Exception | LinkageError ex) {
                     // If exceptions are thrown, notify them - something is broken.
-                    LOG.log(Level.WARNING, null, ex);
-                } catch (LinkageError ex) {
-                    // These too...
                     LOG.log(Level.WARNING, null, ex);
                 }
             }

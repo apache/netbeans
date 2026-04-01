@@ -26,13 +26,18 @@ import com.sun.source.util.TreePathScanner;
 import java.io.IOException;
 import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,6 +50,9 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
+import javax.swing.JViewport;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -88,8 +96,10 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
     private static final Object KEY_BAG = new Object();
     private static final Object KEY_MANAGER = new Object();
     private static final Object KEY_INTERACTION = new Object();
+    private static final Object KEY_VIEWPORT_TRACKER = new Object();
     private static final int BLOCK_HINT_BOTTOM_GAP = 2;
     private static final int BLOCK_HINT_FONT_REDUCTION = 2;
+    private static final int VIEWPORT_MARGIN_MULTIPLIER = 1;
     private static final Logger LOG = Logger.getLogger(ReferenceCountHintsTask.class.getName());
     private static final Set<Tree.Kind> DECLARATION_PARENTS = EnumSet.of(
             Tree.Kind.CLASS,
@@ -150,11 +160,18 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
     }
 
     public static void install(JEditorPane pane) {
+        getManager(pane.getDocument()).attachPane(pane);
         if (pane.getClientProperty(KEY_INTERACTION) == null) {
             HintInteraction interaction = new HintInteraction(pane);
             pane.putClientProperty(KEY_INTERACTION, interaction);
             pane.addMouseListener(interaction);
             pane.addMouseMotionListener(interaction);
+        }
+        if (pane.getClientProperty(KEY_VIEWPORT_TRACKER) == null) {
+            ViewportTracker tracker = new ViewportTracker(pane);
+            pane.putClientProperty(KEY_VIEWPORT_TRACKER, tracker);
+            pane.addHierarchyListener(tracker);
+            tracker.attach();
         }
     }
 
@@ -178,7 +195,12 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
                         && InlineHintsSettings.isReferenceCountMethodsEnabled()) {
                     int[] nameSpan = info.getTreeUtilities().findNameSpan(tree);
                     if (nameSpan != null) {
-                        declarations.add(createDeclaration(doc, info, getCurrentPath(), nameSpan[0], element.getKind()));
+                        declarations.add(createDeclaration(
+                                doc,
+                                info,
+                                getCurrentPath(),
+                                declarationAnchorOffset(info, tree, nameSpan[0]),
+                                element.getKind()));
                     }
                 }
                 return super.visitMethod(tree, p);
@@ -196,13 +218,26 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
                         && DECLARATION_PARENTS.contains(parentPath.getLeaf().getKind())) {
                     int[] nameSpan = info.getTreeUtilities().findNameSpan(tree);
                     if (nameSpan != null) {
-                        declarations.add(createDeclaration(doc, info, getCurrentPath(), nameSpan[0], element.getKind()));
+                        declarations.add(createDeclaration(
+                                doc,
+                                info,
+                                getCurrentPath(),
+                                declarationAnchorOffset(info, tree, nameSpan[0]),
+                                element.getKind()));
                     }
                 }
                 return super.visitClass(tree, p);
             }
         }.scan(info.getCompilationUnit(), null);
         return declarations;
+    }
+
+    private static int declarationAnchorOffset(CompilationInfo info, Tree tree, int fallbackOffset) {
+        long start = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+        if (start >= 0 && start <= Integer.MAX_VALUE) {
+            return (int) start;
+        }
+        return fallbackOffset;
     }
 
     private static boolean isSupportedType(ElementKind kind) {
@@ -291,6 +326,7 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
         private final Document doc;
         private final RequestProcessor.Task task;
         private final Map<TreePathHandle, Integer> cache = new ConcurrentHashMap<>();
+        private final Set<TreePathHandle> dirtyHandles = ConcurrentHashMap.newKeySet();
         private volatile List<Declaration> declarations = Collections.emptyList();
         private volatile List<HintActionData> hintActions = Collections.emptyList();
         private volatile FileObject file;
@@ -299,10 +335,17 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
         private volatile ClassIndex classIndex;
         private volatile AtomicBoolean activeCancel = new AtomicBoolean();
         private volatile Future<Void> scanRetry;
+        private volatile JEditorPane pane;
 
         Manager(Document doc) {
             this.doc = doc;
             this.task = WORKER.create(this);
+        }
+
+        void attachPane(JEditorPane pane) {
+            if (pane != null && pane.getDocument() == doc) {
+                this.pane = pane;
+            }
         }
 
         void update(CompilationInfo info, List<Declaration> declarations) {
@@ -313,11 +356,12 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
             }
             registerIndexListener(info.getClasspathInfo().getClassIndex());
             Scope newScope = createScope(file);
-            boolean clearCache = !sameDeclarations(this.declarations, declarations) || !sameScope(this.scope, newScope);
+            boolean scopeChanged = !sameScope(this.scope, newScope);
+            updateCachedHandles(this.declarations, declarations, scopeChanged);
             this.file = file;
             this.scope = newScope;
             this.declarations = declarations;
-            schedule(clearCache);
+            schedule(false);
         }
 
         void defer(CompilationInfo info) {
@@ -346,6 +390,7 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
                 scanRetry = null;
             }
             cache.clear();
+            dirtyHandles.clear();
             declarations = Collections.emptyList();
             hintActions = Collections.emptyList();
             publish(Collections.emptyList(), new OffsetsBag(doc));
@@ -357,7 +402,7 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
             }
             classIndex = newClassIndex;
             newClassIndex.addClassIndexListener(WeakListeners.create(ClassIndexListener.class, this, newClassIndex));
-            cache.clear();
+            dirtyHandles.addAll(handlesOf(declarations));
         }
 
         private Scope createScope(FileObject file) {
@@ -368,18 +413,6 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
             return Scope.create(null, null, List.of(file));
         }
 
-        private boolean sameDeclarations(List<Declaration> previous, List<Declaration> current) {
-            if (previous.size() != current.size()) {
-                return false;
-            }
-            for (int i = 0; i < previous.size(); i++) {
-                if (!previous.get(i).handle.equals(current.get(i).handle)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         private boolean sameScope(Scope previous, Scope current) {
             return previous != null
                     && current != null
@@ -388,9 +421,29 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
                     && previous.isDependencies() == current.isDependencies();
         }
 
+        private void updateCachedHandles(List<Declaration> previous, List<Declaration> current, boolean scopeChanged) {
+            if (scopeChanged) {
+                cache.clear();
+                dirtyHandles.clear();
+                return;
+            }
+            Set<TreePathHandle> currentHandles = handlesOf(current);
+            cache.keySet().removeIf(handle -> !currentHandles.contains(handle));
+            dirtyHandles.removeIf(handle -> !currentHandles.contains(handle));
+        }
+
+        private Set<TreePathHandle> handlesOf(List<Declaration> declarations) {
+            Set<TreePathHandle> handles = new HashSet<>(Math.max(4, declarations.size()));
+            for (Declaration declaration : declarations) {
+                handles.add(declaration.handle);
+            }
+            return handles;
+        }
+
         private void schedule(boolean clearCache) {
             if (clearCache) {
                 cache.clear();
+                dirtyHandles.clear();
             }
             serial++;
             activeCancel.set(true);
@@ -441,16 +494,21 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
                 return;
             }
             AtomicBoolean currentCancel = activeCancel;
+            List<Declaration> visibleDeclarations = visibleDeclarations(currentDeclarations);
+            if (visibleDeclarations.isEmpty()) {
+                publish(Collections.emptyList(), new OffsetsBag(doc));
+                return;
+            }
             OffsetsBag newBag = new OffsetsBag(doc);
             List<HintActionData> actions = new ArrayList<>();
             List<String> debugCounts = new ArrayList<>();
-            for (Declaration declaration : currentDeclarations) {
+            for (Declaration declaration : visibleDeclarations) {
                 if (currentCancel.get() || currentSerial != serial) {
                     return;
                 }
                 Integer cachedCount = cache.get(declaration.handle);
                 int count;
-                if (cachedCount != null) {
+                if (cachedCount != null && !dirtyHandles.contains(declaration.handle)) {
                     count = cachedCount;
                 } else {
                     boolean cacheCount = true;
@@ -469,6 +527,7 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
                     }
                     if (cacheCount) {
                         cache.put(declaration.handle, count);
+                        dirtyHandles.remove(declaration.handle);
                     }
                 }
                 if (count <= 0) {
@@ -494,10 +553,47 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
                 }
             }
             if (currentSerial == serial) {
-                LOG.log(Level.INFO, "Reference count hints processed for {0}: declarations={1}, published={2}, counts={3}",
-                        new Object[]{file, currentDeclarations.size(), actions.size(), debugCounts});
+                LOG.log(Level.FINE, "Reference count hints processed for {0}: visibleDeclarations={1}, published={2}, counts={3}",
+                        new Object[]{file, visibleDeclarations.size(), actions.size(), debugCounts});
                 publish(actions, newBag);
             }
+        }
+
+        private List<Declaration> visibleDeclarations(List<Declaration> currentDeclarations) {
+            JEditorPane currentPane = pane;
+            if (currentPane == null || currentPane.getDocument() != doc || !currentPane.isShowing()) {
+                return currentDeclarations.subList(0, Math.min(currentDeclarations.size(), 24));
+            }
+            Rectangle visibleRect = currentPane.getVisibleRect();
+            if (visibleRect.isEmpty()) {
+                return currentDeclarations.subList(0, Math.min(currentDeclarations.size(), 24));
+            }
+            int margin = Math.max(visibleRect.height, 1) * VIEWPORT_MARGIN_MULTIPLIER;
+            int startOffset = viewOffset(currentPane, visibleRect.y - margin);
+            int endOffset = viewOffset(currentPane, visibleRect.y + visibleRect.height + margin);
+            if (startOffset < 0 || endOffset < 0) {
+                return currentDeclarations.subList(0, Math.min(currentDeclarations.size(), 24));
+            }
+            if (startOffset > endOffset) {
+                int tmp = startOffset;
+                startOffset = endOffset;
+                endOffset = tmp;
+            }
+            List<Declaration> visible = new ArrayList<>();
+            for (Declaration declaration : currentDeclarations) {
+                int paragraphOffset = declaration.paragraphPosition.getOffset();
+                if (paragraphOffset >= startOffset && paragraphOffset <= endOffset) {
+                    visible.add(declaration);
+                }
+            }
+            return visible;
+        }
+
+        private int viewOffset(JEditorPane pane, int y) {
+            int clampedY = Math.max(0, y);
+            Rectangle visibleRect = pane.getVisibleRect();
+            int x = Math.max(0, visibleRect.x);
+            return pane.viewToModel2D(new Point(x, clampedY));
         }
 
         private void publish(List<HintActionData> actions, OffsetsBag newBag) {
@@ -518,27 +614,67 @@ public final class ReferenceCountHintsTask extends JavaParserResultTask<Parser.R
 
         @Override
         public void typesAdded(org.netbeans.api.java.source.TypesEvent event) {
-            schedule(true);
+            dirtyHandles.addAll(handlesOf(declarations));
+            schedule(false);
         }
 
         @Override
         public void typesRemoved(org.netbeans.api.java.source.TypesEvent event) {
-            schedule(true);
+            dirtyHandles.addAll(handlesOf(declarations));
+            schedule(false);
         }
 
         @Override
         public void typesChanged(org.netbeans.api.java.source.TypesEvent event) {
-            schedule(true);
+            dirtyHandles.addAll(handlesOf(declarations));
+            schedule(false);
         }
 
         @Override
         public void rootsAdded(org.netbeans.api.java.source.RootsEvent event) {
-            schedule(true);
+            dirtyHandles.addAll(handlesOf(declarations));
+            schedule(false);
         }
 
         @Override
         public void rootsRemoved(org.netbeans.api.java.source.RootsEvent event) {
-            schedule(true);
+            dirtyHandles.addAll(handlesOf(declarations));
+            schedule(false);
+        }
+    }
+
+    private static final class ViewportTracker implements HierarchyListener, ChangeListener {
+
+        private final JEditorPane pane;
+        private JViewport viewport;
+
+        ViewportTracker(JEditorPane pane) {
+            this.pane = pane;
+        }
+
+        void attach() {
+            JViewport newViewport = (JViewport) SwingUtilities.getAncestorOfClass(JViewport.class, pane);
+            if (viewport == newViewport) {
+                return;
+            }
+            if (viewport != null) {
+                viewport.removeChangeListener(this);
+            }
+            viewport = newViewport;
+            if (viewport != null) {
+                viewport.addChangeListener(this);
+            }
+        }
+
+        @Override
+        public void hierarchyChanged(HierarchyEvent e) {
+            attach();
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            getManager(pane.getDocument()).attachPane(pane);
+            getManager(pane.getDocument()).schedule(false);
         }
     }
 

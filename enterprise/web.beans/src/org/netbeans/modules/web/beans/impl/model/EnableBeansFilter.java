@@ -190,7 +190,7 @@ class EnableBeansFilter {
             //no implementation on classpath/sources or it's fileterd by common logic(for usual beans)
             //first check if we have a class in white list (i.e. must be implemented in ee7 environment)
             String nm = myResult.getVariableType().toString();
-            if(nm.startsWith("javax.") || nm.startsWith("java.")) {//NOI18N
+            if(nm.startsWith("javax.") || nm.startsWith("java.") || nm.startsWith("jakarta.")) {//NOI18N
                 InjectableResultImpl res = handleEESpecificImplementations(getResult(), firstElement, enabledTypes);
                 if(res != null) {
                     return res;

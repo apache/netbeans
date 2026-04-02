@@ -1567,8 +1567,8 @@ jobs:
       - name: debugger.jpda.projectsui
         run: ant $OPTS -f java/debugger.jpda.projectsui test
 
-#      - name: debugger.jpda.truffle
-#        run: ant $OPTS -f java/debugger.jpda.truffle test
+      - name: debugger.jpda.truffle
+        run: ant $OPTS -f java/debugger.jpda.truffle test
 
       - name: debugger.jpda.ui
         run: ant $OPTS -f java/debugger.jpda.ui test-unit
@@ -2552,9 +2552,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        # TODO uses GraalVM 17 / 22.3.1 which is the last known release which offers all required language extensions
-        # GraalVM based on JDK 21+ doesn't support the 'gu' tool anymore - extensions are now regular application dependencies
-        graal: [ '22.3.1' ]
+        graal: [ '21.0.2' ]
       fail-fast: false
 
     steps:
@@ -2573,13 +2571,10 @@ jobs:
 
       - name: Setup GraalVM ${{ matrix.graal }}
         run: |
-          URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graal }}/graalvm-ce-java17-linux-amd64-${{ matrix.graal }}.tar.gz
+          URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-${{ matrix.graal }}/graalvm-community-jdk-${{ matrix.graal }}_linux-x64_bin.tar.gz
           curl -L $URL | tar -xz
-          GRAALVM=`pwd`/graalvm-ce-java17-${{ matrix.graal }}
+          GRAALVM=$(realpath graalvm-community-openjdk-*)
           echo "JAVA_HOME=$GRAALVM" >> $GITHUB_ENV
-
-      - name: Setup GraalVM Languages (python, R, ruby and js)
-        run: $JAVA_HOME/bin/gu install --no-progress python R ruby js
 
       - name: platform/core.network
         run: ant $OPTS -f platform/core.network test

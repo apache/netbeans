@@ -189,6 +189,9 @@ public final class AntJUnitNodeOpener extends NodeOpener {
                             file = UIJavaUtils.getFile(st[index], lineNumStorage, locator);
                             if (testfo.equals(file)) {
                                 break;
+                            } else {
+                                file = null;
+                                lineNumStorage[0] = -1;
                             }
                         }
                     }

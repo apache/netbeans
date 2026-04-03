@@ -184,27 +184,42 @@ public class PUDataObject extends XmlMultiViewDataObject {
                 Persistence newPersistence;
                 Persistence cleanPersistence;
                 try (InputStream is = getEditorSupport().getInputStream()) {
-                    if(Persistence.VERSION_3_2.equals(version)) {
-                        newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.Persistence.createGraph(is);
-                        cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.Persistence();
-                    } else if(Persistence.VERSION_3_1.equals(version)) {
-                        newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.Persistence.createGraph(is);
-                        cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.Persistence();
-                    } else if(Persistence.VERSION_3_0.equals(version)) {
-                        newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.Persistence.createGraph(is);
-                        cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.Persistence();
-                    } else if(Persistence.VERSION_2_2.equals(version)) {
-                        newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.Persistence.createGraph(is);
-                        cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.Persistence();
-                    } else if(Persistence.VERSION_2_1.equals(version)) {
-                        newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.Persistence.createGraph(is);
-                        cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.Persistence();
-                    } else if(Persistence.VERSION_2_0.equals(version)) {
-                        newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.Persistence.createGraph(is);
-                        cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.Persistence();
-                    } else {//1.0 - default
+                    if(null == version) {
                         newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.Persistence.createGraph(is);
                         cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.Persistence();
+                    } else switch (version) {
+                        case Persistence.VERSION_4_0 -> {
+                            newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_4_0.Persistence.createGraph(is);
+                            cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_4_0.Persistence();
+                        }
+                        case Persistence.VERSION_3_2 -> {
+                            newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.Persistence.createGraph(is);
+                            cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.Persistence();
+                        }
+                        case Persistence.VERSION_3_1 -> {
+                            newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.Persistence.createGraph(is);
+                            cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.Persistence();
+                        }
+                        case Persistence.VERSION_3_0 -> {
+                            newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.Persistence.createGraph(is);
+                            cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.Persistence();
+                        }
+                        case Persistence.VERSION_2_2 -> {
+                            newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.Persistence.createGraph(is);
+                            cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.Persistence();
+                        }
+                        case Persistence.VERSION_2_1 -> {
+                            newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.Persistence.createGraph(is);
+                            cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.Persistence();
+                        }
+                        case Persistence.VERSION_2_0 -> {
+                            newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.Persistence.createGraph(is);
+                            cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.Persistence();
+                        }
+                        default -> {
+                            newPersistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.Persistence.createGraph(is);
+                            cleanPersistence = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.Persistence();
+                        }
                     }
                 } catch (RuntimeException ex) { // must catch RTE (thrown by schema2beans when document is not valid)
                     LOG.log(Level.INFO, null, ex);
@@ -458,15 +473,11 @@ public class PUDataObject extends XmlMultiViewDataObject {
             if (model == null) {
                 return;
             }
-            try (Writer out = new StringWriter()) {
+            try (lock; Writer out = new StringWriter()) {
                 ((BaseBean) model).write(out);
                 getDataCache().setData(lock, out.toString(), modify);
             } catch (IOException | Schema2BeansException e) {
                 LOG.log(Level.INFO, null, e);
-            } finally {
-                if (lock != null){
-                    lock.releaseLock();
-                }
             }
         }
         

@@ -119,7 +119,7 @@ public class PersistenceUtils {
             }
         }
         
-        return result.toArray(new PersistenceUnit[0]);
+        return result.toArray(PersistenceUnit[]::new);
     }
     
     /**
@@ -202,7 +202,7 @@ public class PersistenceUtils {
     /**
      * method check target compile classpath for presence of persitence classes of certain version
      * returns max supported specification
-     * @param project
+     * @param target
      * @return
      */
     public static String getJPAVersion(Project target)
@@ -213,7 +213,9 @@ public class PersistenceUtils {
         SourceGroup firstGroup=groups[0];
         FileObject fo=firstGroup.getRootFolder();
         ClassPath compile=ClassPath.getClassPath(fo, ClassPath.COMPILE);
-        if(compile.findResource("jakarta/persistence/criteria/CriteriaSelect.class")!=null) {
+        if(compile.findResource("jakarta/persistence/query/StaticQuery.class")!=null) {
+            version=Persistence.VERSION_4_0;
+        } else if(compile.findResource("jakarta/persistence/criteria/CriteriaSelect.class")!=null) {
             version=Persistence.VERSION_3_2;
         } else if(compile.findResource("jakarta/persistence/spi/TransformerException.class")!=null) {
             version=Persistence.VERSION_3_1;
@@ -233,9 +235,11 @@ public class PersistenceUtils {
 
     public static String getJPAVersion(Library lib) {
         List<URL> roots=lib.getContent("classpath");
-        ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
+        ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(URL[]::new));
         String version=null;
-        if(cp.findResource("jakarta/persistence/criteria/CriteriaSelect.class")!=null) {
+        if(cp.findResource("jakarta/persistence/query/StaticQuery.class")!=null) {
+            version=Persistence.VERSION_4_0;
+        } else if(cp.findResource("jakarta/persistence/criteria/CriteriaSelect.class")!=null) {
             version=Persistence.VERSION_3_2;
         } else if(cp.findResource("jakarta/persistence/spi/TransformerException.class")!=null) {
             version=Persistence.VERSION_3_1;

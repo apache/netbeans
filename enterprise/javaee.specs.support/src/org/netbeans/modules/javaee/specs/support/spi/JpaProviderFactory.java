@@ -31,10 +31,24 @@ public final class JpaProviderFactory {
         return Accessor.getDefault().createJpaProvider(impl);
     }
     
+    /**
+     * 
+     * @param className
+     * @param isDefault
+     * @param isJpa1Supported
+     * @param isJpa2Supported
+     * @param isJpa21Supported
+     * @param isJpa22Supported
+     * @param isJpa30Supported
+     * @param isJpa31Supported
+     * @param isJpa32Supported
+     * @param isJpa40Supported
+     * @return 
+     */
     public static JpaProvider createJpaProvider(final String className, final boolean isDefault,
             final boolean isJpa1Supported, final boolean isJpa2Supported, final boolean isJpa21Supported,
             final boolean isJpa22Supported, final boolean isJpa30Supported, final boolean isJpa31Supported,
-            final boolean isJpa32Supported) {
+            final boolean isJpa32Supported, final boolean isJpa40Supported) {
         return Accessor.getDefault().createJpaProvider(new JpaProviderImplementation() {
 
             @Override
@@ -73,6 +87,11 @@ public final class JpaProviderFactory {
             }
             
             @Override
+            public boolean isJpa40Supported() {
+                return isJpa40Supported;
+            }
+            
+            @Override
             public boolean isDefault() {
                 return isDefault;
             }
@@ -100,7 +119,7 @@ public final class JpaProviderFactory {
                 return accessor;
             }
 
-            Class c = JpaProvider.class;
+            Class<JpaProvider> c = JpaProvider.class;
             try {
                 Class.forName(c.getName(), true, Accessor.class.getClassLoader());
             } catch (ClassNotFoundException cnf) {

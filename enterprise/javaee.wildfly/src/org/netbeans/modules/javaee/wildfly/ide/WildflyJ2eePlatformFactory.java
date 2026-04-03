@@ -321,6 +321,9 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
             if ("jpa3.1".equals(toolName)) { // NOI18N
                 return this.properties.isWildfly();
             }
+            if ("jpa4.0".equals(toolName)) { // NOI18N
+                return this.properties.isWildfly();
+            }
 
             if ("hibernatePersistenceProviderIsDefault2.0".equals(toolName)) {
                 return true;
@@ -351,7 +354,9 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
         }
 
         boolean containsPersistenceProvider(String providerName) {
-            return containsService(libraries, "javax.persistence.spi.PersistenceProvider", providerName);
+            final boolean isJavaEEPersistence = containsService(libraries, "javax.persistence.spi.PersistenceProvider", providerName);
+            final boolean isJakartaEEPersistence = containsService(libraries, "jakarta.persistence.spi.PersistenceProvider", providerName);
+            return isJavaEEPersistence || isJakartaEEPersistence;
         }
 
         private static boolean containsService(LibraryImplementation[] libraries, String serviceName, String serviceImplName) {

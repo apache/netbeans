@@ -121,7 +121,7 @@ jobs:
           cp NOTICE ${SOURCES}/NOTICE
           ls -l -R ${SOURCES}
       - name: Upload native sources 
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: profiler-external-sources-ASF
           path: profiler/lib.profiler/build/sources/
@@ -137,7 +137,7 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: profiler-external-sources-ASF
         
@@ -174,13 +174,13 @@ jobs:
       #   Upload interim build artifacts to GitHub
       #
       - name: Upload artifact Linux 64 bit
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: linux-amd64
           path: profiler/lib.profiler/release/lib/deployed/jdk16/linux-amd64/
           if-no-files-found: error
       - name: Upload artifact Linux 32 bit
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: linux
           path: profiler/lib.profiler/release/lib/deployed/jdk16/linux/
@@ -198,7 +198,7 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: profiler-external-sources-ASF
 
@@ -245,13 +245,13 @@ jobs:
       #   Upload interim build artifacts to GitHub
       #
       - name: Upload artifact Windows 64 bit
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: windows-amd64
           path: profiler/lib.profiler/release/lib/deployed/jdk16/windows-amd64/
           if-no-files-found: error
       - name: Upload artifact Windows 32 bit
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: windows
           path: profiler/lib.profiler/release/lib/deployed/jdk16/windows/
@@ -267,7 +267,7 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: profiler-external-sources-ASF
 
@@ -291,7 +291,7 @@ jobs:
       #   Upload interim build artifacts to GitHub
       #
       - name: Upload artifact MacOS 64 bit
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: mac
           path: profiler/lib.profiler/release/lib/deployed/jdk16/mac/
@@ -312,7 +312,7 @@ jobs:
       run: mkdir -p myfiles/lib/deployed/jdk16
 
     - name: Download artifacts from predecessor jobs
-      uses: actions/download-artifact@v7
+      uses: actions/download-artifact@v8
       with:
         path: myfiles/lib/deployed/jdk16
         
@@ -342,7 +342,7 @@ jobs:
 
 
     - name: Upload bundle
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: profiler-external-binaries-ASF
         path: myfiles/

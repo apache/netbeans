@@ -183,9 +183,9 @@ public class BuildZipDistributionTest extends TestBase {
             }
             File entry = new File(expand, path);
             entry.getParentFile().mkdirs();
-            FileOutputStream os = new FileOutputStream(entry);
-            FileUtil.copy(f.getInputStream(jarEntry), os);
-            os.close();
+            try (FileOutputStream os = new FileOutputStream(entry)) {
+                f.getInputStream(jarEntry).transferTo(os);
+            }
         }
 
         File root = new File(expand, "fakeapp");

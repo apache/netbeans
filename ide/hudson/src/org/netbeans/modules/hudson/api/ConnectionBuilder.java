@@ -31,6 +31,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -56,7 +57,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import static org.netbeans.modules.hudson.api.Bundle.*;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.NetworkSettings;
 import org.openide.util.RequestProcessor;
 import org.openide.xml.XMLUtil;
@@ -357,11 +357,10 @@ public final class ConnectionBuilder {
                                     LOG.log(Level.FINER, "Retrying after auth from {0}", authenticator);
                                     conn = retry;
                                     try { // check for CSRF before continuing
-                                        InputStream is = new ConnectionBuilder().url(new URL(home, "crumbIssuer/api/xml?xpath=concat(//crumbRequestField,'=',//crumb)")).homeURL(home).connection().getInputStream();
-                                        try {
+                                        try (InputStream is = new ConnectionBuilder().url(new URL(home, "crumbIssuer/api/xml?xpath=concat(//crumbRequestField,'=',//crumb)")).homeURL(home).connection().getInputStream()) {
                                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                            FileUtil.copy(is, baos);
-                                            String crumb = baos.toString("UTF-8");
+                                            is.transferTo(baos);
+                                            String crumb = baos.toString(StandardCharsets.UTF_8);
                                             String[] crumbA = crumb.split("=", 2);
                                             if (crumbA.length == 2 && crumbA[0].indexOf('\n') == -1) {
                                                 LOG.log(Level.FINER, "Received crumb: {0}", crumb);
@@ -369,8 +368,6 @@ public final class ConnectionBuilder {
                                             } else {
                                                 LOG.log(Level.WARNING, "Bad crumb response: {0}", crumb);
                                             }
-                                        } finally {
-                                            is.close();
                                         }
                                     } catch (FileNotFoundException x) {
                                         LOG.finer("not using crumbs");

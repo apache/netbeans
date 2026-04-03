@@ -35,7 +35,7 @@ public class LocFilesTest extends NbTestCase {
     private File src;
     private File dist;
     private LocFiles task;
-    
+
     public LocFilesTest(String n) {
         super(n);
     }
@@ -47,7 +47,7 @@ public class LocFilesTest extends NbTestCase {
         dist.mkdirs();
         src = new File(getWorkDir(), "src");
         src.mkdirs();
-        
+
         Project p = new Project();
         task = new LocFiles();
         task.setProject(p);
@@ -57,7 +57,7 @@ public class LocFilesTest extends NbTestCase {
         task.setSrc(src);
         task.setDestDir(dist);
     }
-    
+
     public void testOpenideUtilLookup() throws Exception {
         createSource("cs/platform/org-openide-util-lookup/netbeans/lib/org-openide-util-lookup/org/openide/util/lookup/Bundle_cs.properties");
         task.setCodeNameBase("org.openide.util.lookup");
@@ -81,7 +81,7 @@ public class LocFilesTest extends NbTestCase {
         task.execute();
         assertPattern("platform", "modules/locale/org-netbeans-modules-settings_cs.jar");
     }
-    
+
     public void testCoreWindows() throws Exception {
         final String pref = "cs/platform/org-netbeans-core-windows/org-netbeans-core-windows/org/netbeans/core/windows/";
         createSource(
@@ -94,7 +94,7 @@ public class LocFilesTest extends NbTestCase {
         );
         task.setCodeNameBase("org.netbeans.core.windows");
         task.execute();
-        assertDist("platform/modules/locale/org-netbeans-core-windows_cs.jar", 
+        assertDist("platform/modules/locale/org-netbeans-core-windows_cs.jar",
             "org/netbeans/core/windows/resources/Bundle_cs.properties",
             "org/netbeans/core/windows/actions/Bundle_cs.properties",
             "org/netbeans/core/windows/services/Bundle_cs.properties",
@@ -104,7 +104,7 @@ public class LocFilesTest extends NbTestCase {
         );
         assertPattern("platform", "modules/locale/org-netbeans-core-windows_cs.jar");
     }
-    
+
     public void testAutoupdateServices() throws Exception {
         final String pref = "cs/platform/autoupdate-services/autoupdate-services/org/netbeans/modules/autoupdate/";
         createSource(
@@ -115,18 +115,18 @@ public class LocFilesTest extends NbTestCase {
         );
         task.setCodeNameBase("org.netbeans.modules.autoupdate.services");
         task.execute();
-        assertDist("platform/modules/locale/org-netbeans-modules-autoupdate-services_cs.jar", 
+        assertDist("platform/modules/locale/org-netbeans-modules-autoupdate-services_cs.jar",
             "org/netbeans/modules/autoupdate/services/resources/Bundle_cs.properties",
             "org/netbeans/modules/autoupdate/services/Bundle_cs.properties",
             "org/netbeans/modules/autoupdate/updateprovider/Bundle_cs.properties"
         );
-        assertDist("platform/modules/ext/locale/updater_cs.jar", 
+        assertDist("platform/modules/ext/locale/updater_cs.jar",
             "org/netbeans/updater/Bundle_cs.properties"
         );
         assertPattern("platform", "modules/locale/org-netbeans-modules-autoupdate-services_cs.jar");
         assertPattern("platform", "modules/ext/locale/updater_cs.jar");
     }
-    
+
     public void testAnt() throws Exception {
         task.setLocales("ja");
         task.setCluster("java");
@@ -174,7 +174,7 @@ public class LocFilesTest extends NbTestCase {
         assertNotNull("Reference is found", ref);
         assertTrue("Right instance: " + ref, ref instanceof PatternSet);
         PatternSet ps = (PatternSet)ref;
-        
+
         List<String> arr = Arrays.asList(ps.getIncludePatterns(task.getProject()));
         assertTrue(file + " is there: " + arr, arr.contains(file));
     }

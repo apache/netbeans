@@ -93,7 +93,7 @@ public class AuxPropsImpl implements AuxiliaryProperties, PropertyChangeListener
             file = cacheDir.createData("checkstyle-checker", "xml");
         }
         try (in; OutputStream outst = file.getOutputStream()) {
-            FileUtil.copy(in, outst);
+            in.transferTo(outst);
         }
         return file;
     }

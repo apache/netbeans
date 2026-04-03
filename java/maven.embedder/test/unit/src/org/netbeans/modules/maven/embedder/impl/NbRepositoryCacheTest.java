@@ -36,7 +36,7 @@ public class NbRepositoryCacheTest {
     @Test
     @Ignore("Classpath is not setup correctly for test - needs investigation")
     public void testConstants() throws Exception {
-        Class cl = Class.forName("org.eclipse.aether.internal.impl.DataPool");
+        Class<?> cl = Class.forName("org.eclipse.aether.internal.impl.DataPool");
         assertNotNull("The constant value has changed most likely", cl);
     }
 

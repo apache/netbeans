@@ -1198,6 +1198,16 @@ public class GlassfishInstance implements ServerInstanceImplementation,
         return properties.get(GlassfishModule.GLASSFISH_FOLDER_ATTR);
     }
 
+    /**
+     * Get additional JVM options configured for this server instance.
+     * <p/>
+     * @return Additional JVM options string, or empty string if not set.
+     */
+    public String getAdditionalLauncherJvmOptions() {
+        String value = properties.get(GlassfishModule.JVM_OPTIONS_ATTR);
+        return value != null ? value : "";
+    }
+
     @Override
     public String getDisplayName() {
         return properties.get(GlassfishModule.DISPLAY_NAME_ATTR);

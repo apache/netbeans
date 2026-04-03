@@ -136,7 +136,7 @@ public class LanguageStorage {
                     syntax.setAttribute("textmate-grammar", findScope(grammar));
                     try (InputStream in = new FileInputStream(grammar);
                          OutputStream out = syntax.getOutputStream()) {
-                        FileUtil.copy(in, out);
+                        in.transferTo(out);
                     }
                     FileObject loader = FileUtil.getConfigFile("Loaders/" + description.mimeType + "/Factories/data-object.instance");
                     if (loader != null) {
@@ -174,7 +174,7 @@ public class LanguageStorage {
                         icon = FileUtil.createData(FileUtil.getConfigRoot(), "Loaders/" + description.mimeType + "/Factories/icon.png");
                         try (InputStream in = new FileInputStream(iconFile);
                              OutputStream out = icon.getOutputStream()) {
-                            FileUtil.copy(in, out);
+                            in.transferTo(out);
                         }
 
                         loader.setAttribute("iconBase", icon.getNameExt());
@@ -186,6 +186,9 @@ public class LanguageStorage {
                         langServer.setAttribute("command", description.languageServer.split(" "));
                         if (description.name != null) {
                             langServer.setAttribute("name", description.name);
+                        }
+                        if (description.languageId != null && !description.languageId.isBlank()) {
+                            langServer.setAttribute("languageId", description.languageId);
                         }
                     }
 
@@ -282,6 +285,7 @@ public class LanguageStorage {
         public String icon;
         public String mimeType;
         public boolean debugger;
+        public String languageId;
 
         public LanguageDescription() {
             this.id = null;
@@ -292,9 +296,10 @@ public class LanguageStorage {
             this.icon = null;
             this.debugger = false;
             this.mimeType = null;
+            this.languageId = null;
         }
 
-        public LanguageDescription(String id, String extensions, String syntaxGrammar, String languageServer, String name, String icon, boolean debugger) {
+        public LanguageDescription(String id, String extensions, String syntaxGrammar, String languageServer, String name, String icon, boolean debugger, String languageId) {
             this.id = id;
             this.extensions = extensions;
             this.syntaxGrammar = syntaxGrammar;
@@ -303,6 +308,7 @@ public class LanguageStorage {
             this.icon = icon;
             this.debugger = debugger;
             this.mimeType = "text/x-ext-" + id;
+            this.languageId = languageId;
         }
 
     }

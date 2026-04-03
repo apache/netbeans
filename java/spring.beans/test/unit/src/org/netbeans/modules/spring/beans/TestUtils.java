@@ -31,7 +31,6 @@ import org.netbeans.api.lexer.Language;
 import org.netbeans.api.xml.lexer.XMLTokenId;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.spring.api.beans.SpringConstants;
-import org.openide.filesystems.FileUtil;
 import org.openide.text.CloneableEditorSupport;
 
 /**
@@ -76,31 +75,20 @@ public class TestUtils {
     }
 
     public static void copyStringToFile(String string, File path) throws IOException {
-        InputStream inputStream = new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8));
-        try {
+        try (InputStream inputStream = new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8))) {
             copyStreamToFile(inputStream, path);
-        } finally {
-            inputStream.close();
         }
     }
 
     public static String copyFileToString(File path) throws IOException {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        FileInputStream inputStream = new FileInputStream(path);
-        try {
-            FileUtil.copy(inputStream, outputStream);
-        } finally {
-            inputStream.close();
+        try (FileInputStream inputStream = new FileInputStream(path)) {
+            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         }
-        return new String(outputStream.toByteArray(), StandardCharsets.UTF_8);
     }
 
     private static void copyStreamToFile(InputStream inputStream, File path) throws IOException {
-        FileOutputStream outputStream = new FileOutputStream(path, false);
-        try {
-            FileUtil.copy(inputStream, outputStream);
-        } finally {
-            outputStream.close();
+        try (FileOutputStream outputStream = new FileOutputStream(path, false)) {
+            inputStream.transferTo(outputStream);
         }
     }
 }

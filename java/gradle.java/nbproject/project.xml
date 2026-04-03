@@ -374,11 +374,6 @@
                         <recursive/>
                     </test-dependency>
                     <test-dependency>
-                        <code-name-base>org.netbeans.modules.gradle</code-name-base>
-                        <recursive/>
-                        <test/>
-                    </test-dependency>
-                    <test-dependency>
                         <code-name-base>org.netbeans.modules.project.dependency</code-name-base>
                         <compile-dependency/>
                     </test-dependency>

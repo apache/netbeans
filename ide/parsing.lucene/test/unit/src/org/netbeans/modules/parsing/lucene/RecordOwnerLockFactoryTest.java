@@ -22,6 +22,8 @@ package org.netbeans.modules.parsing.lucene;
 
 import java.io.IOException;
 import java.util.Collection;
+import org.apache.lucene.store.ByteBuffersDirectory;
+import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.Lock;
 import org.netbeans.junit.NbTestCase;
 
@@ -43,72 +45,60 @@ public class RecordOwnerLockFactoryTest extends NbTestCase {
         this.lockFactory = new RecordOwnerLockFactory();
     }
 
-    public void testLock() throws IOException {
-        final Lock lock = lockFactory.makeLock("test"); //NOI18N
-        assertFalse(lock.isLocked());
-        lock.obtain();
-        assertTrue(lock.isLocked());
-        lock.release();
-        assertFalse(lock.isLocked());
+    public void testClosedLockIsDetected() throws IOException {
+        Directory dir = new ByteBuffersDirectory();
+        Lock lock = lockFactory.obtainLock(dir, "test");
+        assertNotNull(lock);
+        lock.close();
+        boolean ioExceptionRecorded = false;
+        try {
+            lock.ensureValid();
+            assertFalse("Lock was not invalidated", true);
+        } catch (IOException ex) {
+            ioExceptionRecorded = true;
+        }
+        assertTrue("IOException was expected but not thrown", ioExceptionRecorded);
     }
 
-    public void testLockInstances() throws IOException {
-        final Lock lock1 = lockFactory.makeLock("test"); //NOI18N
-        final Lock lock2 = lockFactory.makeLock("test"); //NOI18N
-        assertFalse(lock1.isLocked());
-        assertFalse(lock2.isLocked());
-        lock1.obtain();
-        assertTrue(lock1.isLocked());
-        assertTrue(lock2.isLocked());
-        lock2.release();
-        assertFalse(lock1.isLocked());
-        assertFalse(lock2.isLocked());
+    public void testLockDetectsDuplicate() throws IOException {
+        Directory dir = new ByteBuffersDirectory();
+        Lock lock1 = lockFactory.obtainLock(dir, "test"); //NOI18N
+        assertNotNull(lock1);
+        lock1.ensureValid();
+        boolean ioExceptionRecorded = false;
+        try {
+            Lock lock2 = lockFactory.obtainLock(dir, "test"); //NOI18N
+        } catch (IOException ex) {
+            ioExceptionRecorded = true;
+        }
+        assertTrue("IOException was expected but not thrown", ioExceptionRecorded);
+        lock1.close();
     }
 
     public void testClearLock() throws IOException {
-        Lock lock = lockFactory.makeLock("test"); //NOI18N
-        assertFalse(lock.isLocked());
-        lock.obtain();
-        assertTrue(lock.isLocked());
-        lockFactory.clearLock("test");  //NOI18N
-        assertFalse(lock.isLocked());
-    }
-
-    public void testHasLocks() throws IOException {
-        assertFalse(lockFactory.hasLocks());
-        final Lock lock1 = lockFactory.makeLock("test1");   //NOI18N
-        final Lock lock2 = lockFactory.makeLock("test2");   //NOI18N
-        final Lock lock3 = lockFactory.makeLock("test3");   //NOI18N
-        final Lock lock4 = lockFactory.makeLock("test4");   //NOI18N
-        assertFalse(lockFactory.hasLocks());
-        assertTrue(lock2.obtain());
-        assertTrue(lockFactory.hasLocks());
-        lock2.release();
-        assertFalse(lockFactory.hasLocks());
-        assertTrue(lock3.obtain());
-        assertTrue(lockFactory.hasLocks());
-        assertTrue(lock4.obtain());
-        assertTrue(lockFactory.hasLocks());
-        lockFactory.clearLock("test3"); //NOI18N
-        assertTrue(lockFactory.hasLocks());
-        assertTrue(lock2.obtain());
-        lockFactory.clearLock("test4"); //NOI18N
-        assertTrue(lockFactory.hasLocks());
-        lock2.release();
-        assertFalse(lockFactory.hasLocks());
+        Directory dir = new ByteBuffersDirectory();
+        Lock lock = lockFactory.obtainLock(dir, "test");
+        assertNotNull(lock);
+        lock.ensureValid();
+        lock.close();
+        assertTrue(lockFactory.forceClearLocks().isEmpty());
     }
 
     public void testForceClearLocks() throws IOException {
-        final Lock lock1 = lockFactory.makeLock("test1");   //NOI18N
-        assertTrue(lock1.obtain());
+        Directory dir = new ByteBuffersDirectory();
+        Lock lock = lockFactory.obtainLock(dir, "test1");
+        lock.ensureValid();
         assertTrue(lockFactory.hasLocks());
-        lockFactory.makeLock("test2");  //NOI18N
-        assertTrue(lockFactory.makeLock("test3").obtain()); //NOI18N
-        lockFactory.makeLock("test3").release();    //NOI18N
+        Lock lock2 = lockFactory.obtainLock(dir, "test2");
+        lock2.ensureValid();
+        Lock lock3 = lockFactory.obtainLock(dir, "test3");
+        lock3.ensureValid();
+        lock2.close();
+        lock3.close();
         assertTrue(lockFactory.hasLocks());
-        Collection<? extends Lock> locks = lockFactory.forceClearLocks();
+        Collection<? extends RecordOwnerLockFactory.DirectoryLockPair> locks = lockFactory.forceClearLocks();
         assertEquals(1, locks.size());
-        assertEquals(lock1, locks.iterator().next());
+        assertEquals(new RecordOwnerLockFactory.DirectoryLockPair(dir, "test1"), locks.iterator().next());
         assertFalse(lockFactory.hasLocks());
     }
 

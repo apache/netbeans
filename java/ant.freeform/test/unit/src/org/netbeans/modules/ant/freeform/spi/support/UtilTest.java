@@ -30,7 +30,6 @@ import org.netbeans.modules.ant.freeform.TestBase;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.netbeans.spi.project.support.ant.AntProjectHelper;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.Utilities;
 import org.openide.xml.XMLUtil;
 import org.w3c.dom.Document;
@@ -137,11 +136,8 @@ public class UtilTest extends TestBase {
     }
     private static String xmlSimplified(FileObject f) throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        InputStream is = f.getInputStream();
-        try {
-            FileUtil.copy(is, baos);
-        } finally {
-            is.close();
+        try (InputStream is = f.getInputStream()) {
+            is.transferTo(baos);
         }
         return xmlSimplified(baos.toString("UTF-8"));
     }

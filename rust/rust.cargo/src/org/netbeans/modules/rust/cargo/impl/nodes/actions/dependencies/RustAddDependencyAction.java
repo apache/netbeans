@@ -104,6 +104,7 @@ public class RustAddDependencyAction extends AbstractAction {
                 break;
         }
         if (DialogDisplayer.getDefault().notify(wiz) == WizardDescriptor.FINISH_OPTION) {
+            @SuppressWarnings("unchecked")
             List<RustPackage> packages = (List<RustPackage>) wiz.getProperty(RustAddDependencyWizardPanel1.PROP_SELECTED_PACKAGES);
             List<String> names = packages.stream().map((p) -> String.format("%s@%s", p.getName(), p.getVersion())).collect(Collectors.toList());
             switch(dependencyType) {

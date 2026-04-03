@@ -46,7 +46,6 @@ import com.sun.tools.javap.ConstantWriter;
 import com.sun.tools.javap.Context;
 import com.sun.tools.javap.Messages;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -140,12 +139,8 @@ public class CodeGenerator {
 
         try {
             FileObject file = FileUtil.createMemoryFileSystem().getRoot().createData(toOpenHandle.getKind() == ElementKind.MODULE ? "module-info.java" : "test.java");  //NOI18N
-            OutputStream out = file.getOutputStream();
-
-            try {
-                FileUtil.copy(new ByteArrayInputStream("".getBytes(StandardCharsets.UTF_8)), out); //NOI18N
-            } finally {
-                out.close();
+            try (OutputStream out = file.getOutputStream()) {
+                out.write("".getBytes(StandardCharsets.UTF_8)); 
             }
 
             JavaSource js = JavaSource.create(cpInfo, file);
@@ -270,11 +265,8 @@ public class CodeGenerator {
                 if (resultFile != null && !resultFile.canWrite()) {
                     resultFile.setWritable(true);
                 }
-                out = result[0].getOutputStream();
-                try {
-                    FileUtil.copy(new ByteArrayInputStream(r.getResultingSource(file).getBytes(StandardCharsets.UTF_8)), out);
-                } finally {
-                    out.close();
+                try (OutputStream out = result[0].getOutputStream()) {
+                    out.write(r.getResultingSource(file).getBytes(StandardCharsets.UTF_8));
                 }
                 if (resultFile != null) {
                     resultFile.setReadOnly();

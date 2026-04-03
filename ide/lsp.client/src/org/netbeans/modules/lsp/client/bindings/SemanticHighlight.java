@@ -81,7 +81,12 @@ public class SemanticHighlight implements BackgroundTask {
                                         FileObject file,
                                         FontColorSettings[] fcs,
                                         OffsetsBag target) {
-        List<Integer> data = tokens.getData();
+        List<Integer> data;
+        if (tokens != null) {
+            data = tokens.getData();
+        } else {
+            data = List.of();
+        }
         int lastLine = 0;
         int lastColumn = 0;
         int offset = 0;

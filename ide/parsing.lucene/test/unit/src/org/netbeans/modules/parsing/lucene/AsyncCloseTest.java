@@ -26,9 +26,12 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import org.apache.lucene.analysis.KeywordAnalyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
+import org.apache.lucene.index.IndexOptions;
+import org.apache.lucene.index.IndexableFieldType;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.PrefixQuery;
 import org.apache.lucene.search.Query;
@@ -46,6 +49,14 @@ import org.openide.util.Parameters;
  * @author Tomas Zezula
  */
 public class AsyncCloseTest extends NbTestCase {
+    private static final IndexableFieldType STORED_ANALYZED;
+    static {
+        STORED_ANALYZED = new FieldType();
+        ((FieldType) STORED_ANALYZED).setStored(true);
+        ((FieldType) STORED_ANALYZED).setTokenized(true);
+        ((FieldType) STORED_ANALYZED).setIndexOptions(IndexOptions.DOCS);
+        ((FieldType) STORED_ANALYZED).freeze();
+    }
 
     private static final String FLD_KEY = "key";    //NOI18N
 
@@ -181,7 +192,7 @@ public class AsyncCloseTest extends NbTestCase {
             }
 
             final Document doc = new Document();
-            doc.add(new Field(FLD_KEY, p, Field.Store.YES, Field.Index.ANALYZED_NO_NORMS));   //NOI18N
+            doc.add(new Field(FLD_KEY, p, STORED_ANALYZED));
             return doc;
         }
     }

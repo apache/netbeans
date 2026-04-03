@@ -68,7 +68,7 @@
     <folder name="Templates">
         <folder name="Grammar">
             <!--less priority than XML-->
-            <attr name="position" intvalue="1800"/>
+            <attr name="position" intvalue="1840"/>
          </folder>
     </folder>
 </filesystem>

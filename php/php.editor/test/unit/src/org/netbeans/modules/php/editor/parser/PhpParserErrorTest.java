@@ -1556,4 +1556,17 @@ public class PhpParserErrorTest extends PHPTestBase {
     public void testFinalFieldsAnonClass() throws Exception {
         checkErrors("testfiles/parser/php84/finalFieldsAnonClass.php");
     }
+    
+    // PHP 8.5
+    public void testPipeOperator_01() throws Exception {
+        checkErrors("testfiles/parser/php85/pipeOperator_01.php");
+    }
+
+    public void testPipeOperator_02() throws Exception {
+        checkErrors("testfiles/parser/php85/pipeOperator_02.php");
+    }
+    
+    public void testPipeOperator_03() throws Exception {
+        checkErrors("testfiles/parser/php85/pipeOperator_03.php");
+    }
 }

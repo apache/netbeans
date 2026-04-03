@@ -97,7 +97,7 @@ jobs:
           ls -l -R ${SOURCES}
 
       - name: Upload native sources
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: nativeexecution-external-sources
           path: ide/dlight.nativeexecution/build/sources/
@@ -113,7 +113,7 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: nativeexecution-external-sources
 
@@ -129,7 +129,7 @@ jobs:
         working-directory: ide/dlight.nativeexecution/tools
 
       - name: Upload artifact Linux 64 bit
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: Linux-x86_64
           path: ide/dlight.nativeexecution/tools/buildall/
@@ -147,7 +147,7 @@ jobs:
 #    steps:
 #
 #      - name: Download sources
-#        uses: actions/download-artifact@v7
+#        uses: actions/download-artifact@v8
 #        with:
 #          name: nativeexecution-external-sources
 #
@@ -161,7 +161,7 @@ jobs:
 #        shell: bash
 #        working-directory: ide/dlight.nativeexecution/tools
 #      - name: Upload artifact Windows 64 bit
-#        uses: actions/upload-artifact@v6
+#        uses: actions/upload-artifact@v7
 #        with:
 #          name: Windows-x86_64
 #          path: ide/dlight.nativeexecution/tools/buildall/
@@ -177,7 +177,7 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: nativeexecution-external-sources
 
@@ -191,7 +191,7 @@ jobs:
         working-directory: ide/dlight.nativeexecution/tools
 
       - name: Upload artifact macOS x86_64
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: MacOSX-x86_64
           path: ide/dlight.nativeexecution/tools/buildall/
@@ -206,7 +206,7 @@ jobs:
     steps:
 
       - name: Download sources
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: nativeexecution-external-sources
 
@@ -220,7 +220,7 @@ jobs:
         working-directory: ide/dlight.nativeexecution/tools
 
       - name: Upload artifact macOS arm64
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: MacOSX-arm_64
           path: ide/dlight.nativeexecution/tools/buildall/
@@ -241,7 +241,7 @@ jobs:
       run: mkdir -p myfiles/
 
     - name: Download artifacts from predecessor jobs
-      uses: actions/download-artifact@v7
+      uses: actions/download-artifact@v8
       with:
         path: myfiles/
 
@@ -270,7 +270,7 @@ jobs:
          echo ""                                                               >> "$BUILDINFO"
 
     - name: Upload bundle
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: nativeexecution-external-binaries
         path: myfiles/

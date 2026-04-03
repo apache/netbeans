@@ -79,7 +79,7 @@ public class RustProjectOperationsTest {
         try {
             try (InputStream is = RustProjectOperationsTest.class.getResourceAsStream("data/" + fileName);
                  OutputStream os = tempFile.getOutputStream()) {
-                FileUtil.copy(is, os);
+                is.transferTo(os);
             }
             RustProjectOperations.updateProjectName(tempFile, "Renamed\"Test");
             String reference = URLMapper

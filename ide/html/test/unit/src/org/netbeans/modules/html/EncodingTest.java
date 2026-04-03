@@ -145,22 +145,16 @@ public class EncodingTest extends NbTestCase {
     }
 
     private void copy(final String res, final FileObject data) throws Exception {
-        final InputStream is = getClass ().getResourceAsStream ("data/"+res);   //NOI18N
-        try {
+        try (InputStream is = getClass ().getResourceAsStream ("data/"+res)) { //NOI18N
             assertNotNull (res+" should exist", is);    //NOI18N
             FileLock lock = data.lock();
             try {
-                OutputStream os = data.getOutputStream (lock);
-                try {
-                    FileUtil.copy (is, os);
-                } finally {
-                    os.close ();
+                try (OutputStream os = data.getOutputStream(lock)) {
+                    is.transferTo(os);
                 }
             } finally {
                 lock.releaseLock ();
             }
-        } finally {
-            is.close ();
         }
     }
 
@@ -189,7 +183,7 @@ public class EncodingTest extends NbTestCase {
         FileObject data = FileUtil.createData (FileUtil.toFileObject(getWorkDir()), res);
         FileLock lock = data.lock();
         OutputStream os = data.getOutputStream (lock);
-        FileUtil.copy (is, os);
+        is.transferTo (os);
         is.close ();
         os.close ();
         lock.releaseLock ();

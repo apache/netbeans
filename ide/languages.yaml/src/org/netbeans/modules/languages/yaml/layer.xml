@@ -70,18 +70,6 @@
             </folder>
         </folder>
     </folder>
-    <folder name="Templates">
-        <folder name="Other">
-            <file name="EmptyYAML.yml" url="EmptyYAML.yml">
-                <attr name="position" intvalue="850"/>
-                <attr name="template" boolvalue="true"/>
-                <attr name="templateCategory" stringvalue="simple-files"/>
-                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.languages.yaml.Bundle"/>
-                <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/languages/yaml/EmptyYAMLFileDescription.html"/>
-                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/languages/yaml/yaml_files_16.png"/>
-            </file>
-        </folder>
-    </folder>
     <folder name="Loaders">
         <folder name="text">
             <folder name="x-yaml">

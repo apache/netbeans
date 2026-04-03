@@ -37,7 +37,7 @@
 
     <target name="build-crx-task" depends="keys.check" if="keys.present">
         <mkdir dir="build/antclasses"/>
-        <javac srcdir="antsrc" destdir="build/antclasses" debug="${build.compiler.debug}" deprecation="${build.compiler.deprecation}" includeantruntime="false">
+        <javac srcdir="antsrc" destdir="build/antclasses" release="${javac.release}" debug="${build.compiler.debug}" deprecation="${build.compiler.deprecation}" includeantruntime="false">
             <classpath>
                 <pathelement path="${antsrc.cp}"/>
             </classpath>

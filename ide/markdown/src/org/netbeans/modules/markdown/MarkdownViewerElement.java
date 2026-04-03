@@ -19,6 +19,7 @@
 package org.netbeans.modules.markdown;
 
 import com.vladsch.flexmark.ext.anchorlink.AnchorLinkExtension;
+import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughExtension;
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
@@ -26,7 +27,10 @@ import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.data.MutableDataSet;
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Rectangle;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -49,6 +53,8 @@ import javax.swing.text.StyledDocument;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
+import org.netbeans.modules.editor.settings.storage.api.EditorSettings;
+import static org.netbeans.modules.markdown.MarkdownDataObject.MIME_TYPE;
 import org.netbeans.modules.markdown.ui.preview.MarkdownEditorKit;
 import org.openide.awt.HtmlBrowser;
 import org.openide.awt.UndoRedo;
@@ -62,16 +68,18 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
+import org.openide.util.WeakListeners;
 import org.openide.windows.TopComponent;
 
 /**
  *
  * @author lkishalmi
  */
+
 @MultiViewElement.Registration(
         displayName = "#LBL_MarkdownViewer",
         iconBase = "org/netbeans/modules/markdown/markdown.png",
-        mimeType = "text/x-markdown",
+        mimeType = MIME_TYPE,
         persistenceType = TopComponent.PERSISTENCE_NEVER,
         preferredID = "MarkdownViewer",
         position = 2000
@@ -79,6 +87,7 @@ import org.openide.windows.TopComponent;
 @Messages("LBL_MarkdownViewer=Preview")
 public class MarkdownViewerElement implements MultiViewElement {
 
+    public static final String MIME_TYPE_PREVIEW = "text/x-markdown-nb-preview";
     private static final Logger LOG = Logger.getLogger(MarkdownViewerElement.class.getName());
     private static final RequestProcessor RP = new RequestProcessor(MarkdownViewerElement.class);
     private static final int UPDATE_DELAY = 500;
@@ -94,16 +103,17 @@ public class MarkdownViewerElement implements MultiViewElement {
             .set(Parser.EXTENSIONS, Arrays.asList(
                     AnchorLinkExtension.create(),
                     TablesExtension.create(),
-                    TaskListExtension.create()
+                    TaskListExtension.create(),
+                    StrikethroughExtension.create()
             ))
             .set(HtmlRenderer.INDENT_SIZE, 2)
             .set(HtmlRenderer.RENDER_HEADER_ID, true)
-            .set(HtmlRenderer.FENCED_CODE_LANGUAGE_CLASS_PREFIX, "")
+            .set(HtmlRenderer.FENCED_CODE_LANGUAGE_CLASS_PREFIX, "") //NOI18N
             // JEditorPane search for the name attribute
             .set(AnchorLinkExtension.ANCHORLINKS_SET_NAME, true)
             .set(AnchorLinkExtension.ANCHORLINKS_SET_ID, false)
-            .set(AnchorLinkExtension.ANCHORLINKS_ANCHOR_CLASS, "")
-            .set(AnchorLinkExtension.ANCHORLINKS_TEXT_PREFIX, "")
+            .set(AnchorLinkExtension.ANCHORLINKS_ANCHOR_CLASS, "") //NOI18N
+            .set(AnchorLinkExtension.ANCHORLINKS_TEXT_PREFIX, "") //NOI18N
             // Make the table generation SWING Friendly
             .set(TablesExtension.COLUMN_SPANS, false)
             .set(TablesExtension.MIN_HEADER_ROWS, 1)
@@ -111,6 +121,9 @@ public class MarkdownViewerElement implements MultiViewElement {
             .set(TablesExtension.APPEND_MISSING_COLUMNS, true)
             .set(TablesExtension.DISCARD_EXTRA_COLUMNS, true)
             .set(TablesExtension.HEADER_SEPARATOR_COLUMN_MATCH, true)
+            // Strikethrough change from del to s tag
+            .set(StrikethroughExtension.STRIKETHROUGH_STYLE_HTML_OPEN, "<s>")  //NOI18N
+            .set(StrikethroughExtension.STRIKETHROUGH_STYLE_HTML_CLOSE, "</s>")  //NOI18N
             .toImmutable();
 
     final Parser parser = Parser.builder(OPTIONS).build();
@@ -134,7 +147,11 @@ public class MarkdownViewerElement implements MultiViewElement {
     };
 
     private final Task updater = RP.create(MarkdownViewerElement.this::updateView);
+
     private StyledDocument source;
+
+    //Font config update listener
+    private final PropertyChangeListener pcl = this::colorProfileChange;
 
     public MarkdownViewerElement(Lookup lookup) {
         dataObject = lookup.lookup(MarkdownDataObject.class);
@@ -143,10 +160,13 @@ public class MarkdownViewerElement implements MultiViewElement {
     @Override
     public JComponent getVisualRepresentation() {
         if (component == null) {
+            EditorSettings.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(pcl, this));
             viewer = new JEditorPane();
             viewer.setEditorKit(new MarkdownEditorKit());
             viewer.setEditable(false);
             viewer.addHyperlinkListener(this::linkHandler);
+            Cursor textCursor = Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR);
+            viewer.setCursor(textCursor);
 
             JPanel panel = new JPanel(new BorderLayout());
             panel.add(new JScrollPane(viewer), BorderLayout.CENTER);
@@ -250,7 +270,6 @@ public class MarkdownViewerElement implements MultiViewElement {
                 kit.read(htmlReader, doc, 0);
 
                 viewer.scrollRectToVisible(vis);
-
             } catch (IOException ex) {
                 viewer.setText(Bundle.TXT_MarkdownViewerElement_Error());
                 LOG.log(Level.WARNING, "Could not parse markdown!", ex); //NOI18N
@@ -287,6 +306,31 @@ public class MarkdownViewerElement implements MultiViewElement {
             } else if (evt.getURL() != null) {
                 HtmlBrowser.URLDisplayer.getDefault().showURL(evt.getURL());
             }
+        }
+    }
+
+    /**
+     * redraw document if profile changes or font setting changes
+     * @param evt 
+     */
+    public void colorProfileChange(PropertyChangeEvent evt) {
+        if (viewer == null) {
+            return;
+        }
+
+        String newValue = evt.getNewValue() instanceof String value ? value : ""; // NOI18N
+        boolean fontChanged = false;
+        //patch for triggering font update
+        if ("fontColors".equals(evt.getPropertyName()) // NOI18N
+                && evt.getOldValue() != null
+                && !newValue.startsWith("test") // NOI18N
+                ) { 
+            fontChanged = true;
+        }
+
+        if (fontChanged || EditorSettings.PROP_CURRENT_FONT_COLOR_PROFILE.equals(evt.getPropertyName())) {
+            viewer.setEditorKit(new MarkdownEditorKit());
+            updateView();
         }
     }
 }

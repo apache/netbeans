@@ -120,32 +120,34 @@ public class Refactoring {
         @Override
         public Problem prepare(RefactoringElementsBag refactoringElements) {
             BiConsumer<LSPBindings, List<? extends Location>> handleResult = (server, usages) -> {
-                for (Location l : usages) {
-                    if (isCanceled()) {
-                        break;
-                    }
-                    FileObject file = Utils.fromURI(l.getUri());
-                    if (file != null) {
-                        PositionBounds bounds;
-                        try {
-                            CloneableEditorSupport es = file.getLookup().lookup(CloneableEditorSupport.class);
-                            EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
-                            StyledDocument doc = ec.openDocument();
-
-                            bounds = new PositionBounds(es.createPositionRef(Utils.getOffset(doc, l.getRange().getStart()), Position.Bias.Forward),
-                                                            es.createPositionRef(Utils.getOffset(doc, l.getRange().getEnd()), Position.Bias.Forward));
-                        } catch (IOException ex) {
-                            Exceptions.printStackTrace(ex);
-                            bounds = null;
+                if (usages != null) {
+                    for (Location l : usages) {
+                        if (isCanceled()) {
+                            break;
                         }
-                        LineCookie lc = file.getLookup().lookup(LineCookie.class);
-                        Line startLine = lc.getLineSet().getCurrent(l.getRange().getStart().getLine());
-                        String lineText = startLine.getText();
-                        int highlightEnd = Math.min(lineText.length(), l.getRange().getEnd().getCharacter());
-                        String annotatedLine = lineText.substring(0, l.getRange().getStart().getCharacter()) +
+                        FileObject file = Utils.fromURI(l.getUri());
+                        if (file != null) {
+                            PositionBounds bounds;
+                            try {
+                                CloneableEditorSupport es = file.getLookup().lookup(CloneableEditorSupport.class);
+                                EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
+                                StyledDocument doc = ec.openDocument();
+
+                                bounds = new PositionBounds(es.createPositionRef(Utils.getOffset(doc, l.getRange().getStart()), Position.Bias.Forward),
+                                        es.createPositionRef(Utils.getOffset(doc, l.getRange().getEnd()), Position.Bias.Forward));
+                            } catch (IOException ex) {
+                                Exceptions.printStackTrace(ex);
+                                bounds = null;
+                            }
+                            LineCookie lc = file.getLookup().lookup(LineCookie.class);
+                            Line startLine = lc.getLineSet().getCurrent(l.getRange().getStart().getLine());
+                            String lineText = startLine.getText();
+                            int highlightEnd = Math.min(lineText.length(), l.getRange().getEnd().getCharacter());
+                            String annotatedLine = lineText.substring(0, l.getRange().getStart().getCharacter()) +
                                                "<strong>" + lineText.substring(l.getRange().getStart().getCharacter(), highlightEnd) + "</strong>" +
                                                lineText.substring(highlightEnd);
-                        refactoringElements.add(query, new LSPRefactoringElementImpl(annotatedLine, file, bounds));
+                            refactoringElements.add(query, new LSPRefactoringElementImpl(annotatedLine, file, bounds));
+                        }
                     }
                 }
             };
@@ -191,110 +193,112 @@ public class Refactoring {
         @Override
         public Problem prepare(RefactoringElementsBag refactoringElements) {
             BiConsumer<LSPBindings, WorkspaceEdit> handleResult = (server, edit) -> {
-                try {
-                    List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = edit.getDocumentChanges();
-                    ModificationResult result = new ModificationResult();
-                    Map<FileObject, List<Difference>> file2Diffs = new HashMap<>();
-                    Map<String, String> newURI2Old = new HashMap<>();
-                    Map<String, String> newFileURI2Content = new HashMap<>();
+                if(edit != null) {
+                    try {
+                        List<Either<TextDocumentEdit, ResourceOperation>> documentChanges = edit.getDocumentChanges();
+                        ModificationResult result = new ModificationResult();
+                        Map<FileObject, List<Difference>> file2Diffs = new HashMap<>();
+                        Map<String, String> newURI2Old = new HashMap<>();
+                        Map<String, String> newFileURI2Content = new HashMap<>();
 
-                    if (documentChanges != null) {
-                        for (Either<TextDocumentEdit, ResourceOperation> part : documentChanges) {
-                            if (isCanceled()) {
-                                break;
-                            }
-                            if (part.isLeft()) {
-                                String uri = part.getLeft().getTextDocument().getUri();
-                                uri = newURI2Old.getOrDefault(uri, uri);
-                                FileObject file = Utils.fromURI(uri);
+                        if (documentChanges != null) {
+                            for (Either<TextDocumentEdit, ResourceOperation> part : documentChanges) {
+                                if (isCanceled()) {
+                                    break;
+                                }
+                                if (part.isLeft()) {
+                                    String uri = part.getLeft().getTextDocument().getUri();
+                                    uri = newURI2Old.getOrDefault(uri, uri);
+                                    FileObject file = Utils.fromURI(uri);
 
-                                if (file != null) {
-                                    for (TextEdit te : part.getLeft().getEdits()) {
-                                        Difference diff = textEdit2Difference(file, te);
-                                        file2Diffs.computeIfAbsent(file, f -> new ArrayList<>())
-                                                  .add(diff);
+                                    if (file != null) {
+                                        for (TextEdit te : part.getLeft().getEdits()) {
+                                            Difference diff = textEdit2Difference(file, te);
+                                            file2Diffs.computeIfAbsent(file, f -> new ArrayList<>())
+                                                      .add(diff);
+                                        }
+                                    } else if (newFileURI2Content.containsKey(uri)) {
+                                        FileObject temp = FileUtil.createMemoryFileSystem().getRoot().createData("temp.txt");
+                                        try (OutputStream out = temp.getOutputStream()) {
+                                            out.write(newFileURI2Content.get(uri).getBytes()); //TODO: encoding - native, OK?
+                                        }
+                                        List<Difference> diffs = new ArrayList<>();
+                                        for (TextEdit te : part.getLeft().getEdits()) {
+                                            diffs.add(textEdit2Difference(temp, te));
+                                        }
+                                        ModificationResult tempResult = new ModificationResult();
+                                        tempResult.addDifferences(temp, diffs);
+                                        newFileURI2Content.put(uri, tempResult.getResultingSource(temp));
+                                    } else {
+                                        //XXX: problem...
                                     }
-                                } else if (newFileURI2Content.containsKey(uri)) {
-                                    FileObject temp = FileUtil.createMemoryFileSystem().getRoot().createData("temp.txt");
-                                    try (OutputStream out = temp.getOutputStream()) {
-                                        out.write(newFileURI2Content.get(uri).getBytes()); //TODO: encoding - native, OK?
-                                    }
-                                    List<Difference> diffs = new ArrayList<>();
-                                    for (TextEdit te : part.getLeft().getEdits()) {
-                                        diffs.add(textEdit2Difference(temp, te));
-                                    }
-                                    ModificationResult tempResult = new ModificationResult();
-                                    tempResult.addDifferences(temp, diffs);
-                                    newFileURI2Content.put(uri, tempResult.getResultingSource(temp));
                                 } else {
-                                    //XXX: problem...
+                                    switch (part.getRight().getKind()) {
+                                        case ResourceOperationKind.Rename: {
+                                            RenameFile rename = (RenameFile) part.getRight();
+                                            FileObject file = Utils.fromURI(rename.getOldUri());
+                                            refactoringElements.addFileChange(refactoring, new LSPRenameFile(file, rename.getNewUri()));
+                                            newURI2Old.put(rename.getNewUri(), rename.getOldUri());
+                                            break;
+                                        }
+                                        case ResourceOperationKind.Delete: {
+                                            DeleteFile delete = (DeleteFile) part.getRight();
+                                            FileObject file = Utils.fromURI(delete.getUri());
+                                            refactoringElements.addFileChange(refactoring, new LSPDeleteFile(file));
+                                            break;
+                                        }
+                                        case ResourceOperationKind.Create: {
+                                            CreateFile create = (CreateFile) part.getRight();
+                                            String uri = create.getUri();
+                                            newFileURI2Content.put(uri, "");
+                                            break;
+                                        }
+                                        default:
+                                            addProblem(new Problem(true, "Unknown file operation: " + part.getRight().getKind()));
+                                            break;
+                                    }
                                 }
-                            } else {
-                                switch (part.getRight().getKind()) {
-                                    case ResourceOperationKind.Rename: {
-                                        RenameFile rename = (RenameFile) part.getRight();
-                                        FileObject file = Utils.fromURI(rename.getOldUri());
-                                        refactoringElements.addFileChange(refactoring, new LSPRenameFile(file, rename.getNewUri()));
-                                        newURI2Old.put(rename.getNewUri(), rename.getOldUri());
-                                        break;
-                                    }
-                                    case ResourceOperationKind.Delete: {
-                                        DeleteFile delete = (DeleteFile) part.getRight();
-                                        FileObject file = Utils.fromURI(delete.getUri());
-                                        refactoringElements.addFileChange(refactoring, new LSPDeleteFile(file));
-                                        break;
-                                    }
-                                    case ResourceOperationKind.Create: {
-                                        CreateFile create = (CreateFile) part.getRight();
-                                        String uri = create.getUri();
-                                        newFileURI2Content.put(uri, "");
-                                        break;
-                                    }
-                                    default:
-                                        addProblem(new Problem(true, "Unknown file operation: " + part.getRight().getKind()));
-                                        break;
+                            }
+                        } else {
+                            for (Entry<String, List<TextEdit>> fileAndChanges : edit.getChanges().entrySet()) {
+                                if (isCanceled()) {
+                                    break;
+                                }
+                                //TODO: errors:
+                                FileObject file = Utils.fromURI(fileAndChanges.getKey());
+
+                                for (TextEdit te : fileAndChanges.getValue()) {
+                                    Difference diff = textEdit2Difference(file, te);
+                                    file2Diffs.computeIfAbsent(file, f -> new ArrayList<>())
+                                              .add(diff);
                                 }
                             }
                         }
-                    } else {
-                        for (Entry<String, List<TextEdit>> fileAndChanges : edit.getChanges().entrySet()) {
-                            if (isCanceled()) {
-                                break;
-                            }
-                            //TODO: errors:
-                            FileObject file = Utils.fromURI(fileAndChanges.getKey());
-
-                            for (TextEdit te : fileAndChanges.getValue()) {
-                                Difference diff = textEdit2Difference(file, te);
-                                file2Diffs.computeIfAbsent(file, f -> new ArrayList<>())
-                                          .add(diff);
-                            }
-                        }
-                    }
-
-                    if (isCanceled()) {
-                        addProblem(new Problem(false, Bundle.TXT_Canceled()));
-                    } else {
-
-                        file2Diffs.entrySet()
-                            .forEach(e -> {
-                                e.getValue()
-                                    .forEach(diff -> refactoringElements.add(refactoring, DiffElement.create(diff, e.getKey(), result)));
-                                result.addDifferences(e.getKey(), e.getValue());
-                            });
-
-                        newFileURI2Content.entrySet()
-                            .forEach(e -> {
-                                refactoringElements.add(refactoring, new LSPCreateFile(e.getKey(), e.getValue()));
-                            });
-                        refactoringElements.registerTransaction(new RefactoringCommit(Collections.singletonList(result)));
 
                         if (isCanceled()) {
                             addProblem(new Problem(false, Bundle.TXT_Canceled()));
+                        } else {
+
+                            file2Diffs.entrySet()
+                                .forEach(e -> {
+                                    e.getValue()
+                                        .forEach(diff -> refactoringElements.add(refactoring, DiffElement.create(diff, e.getKey(), result)));
+                                    result.addDifferences(e.getKey(), e.getValue());
+                                });
+
+                            newFileURI2Content.entrySet()
+                                .forEach(e -> {
+                                    refactoringElements.add(refactoring, new LSPCreateFile(e.getKey(), e.getValue()));
+                                });
+                            refactoringElements.registerTransaction(new RefactoringCommit(Collections.singletonList(result)));
+
+                            if (isCanceled()) {
+                                addProblem(new Problem(false, Bundle.TXT_Canceled()));
+                            }
                         }
+                    } catch ( IOException ex) {
+                        addProblem(new Problem(true, ex.getLocalizedMessage()));
                     }
-                } catch ( IOException ex) {
-                    addProblem(new Problem(true, ex.getLocalizedMessage()));
                 }
             };
 

@@ -71,11 +71,8 @@ class AntDeploymentProviderImpl implements AntDeploymentProvider {
 
     @Override
     public void writeDeploymentScript(OutputStream os, Object moduleType) throws IOException {
-        InputStream is = AntDeploymentProviderImpl.class.getResourceAsStream("ant-deploy.xml"); // NOI18N            
-        try {
-            FileUtil.copy(is, os);
-        } finally {
-            is.close();
+        try (InputStream is = AntDeploymentProviderImpl.class.getResourceAsStream("ant-deploy.xml")) { // NOI18N
+            is.transferTo(os);
         }
     }
 

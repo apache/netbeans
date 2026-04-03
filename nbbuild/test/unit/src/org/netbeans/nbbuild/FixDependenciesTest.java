@@ -22,6 +22,8 @@ package org.netbeans.nbbuild;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
 
 
 /** Behaviour of fixing module dependencies. Knows how to replace old
@@ -30,6 +32,9 @@ import java.util.regex.Pattern;
  * @author Jaroslav Tulach
  */
 public class FixDependenciesTest extends TestBase {
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+        
     public FixDependenciesTest (String name) {
         super (name);
     }
@@ -56,7 +61,8 @@ public class FixDependenciesTest extends TestBase {
         );
 
         String input = readFile (xml);
-        execute (f, new String[] { });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         String result = readFile (xml);
 
         if (result.indexOf ("org.openide.util") == -1) {
@@ -119,7 +125,9 @@ public class FixDependenciesTest extends TestBase {
 
         );
 
-        execute (f, new String[] { });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        
         String result = readFile (xml);
 
         if (result.indexOf ("org.openide.util") == -1) {
@@ -152,7 +160,8 @@ public class FixDependenciesTest extends TestBase {
         );
 
         String before = readFile(xml);
-        execute (f, new String[] { });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         String after = readFile(xml);
 
         assertEquals("No change", before, after);
@@ -180,7 +189,9 @@ public class FixDependenciesTest extends TestBase {
         );
 
         String before = readFile(xml);
-        execute (f, new String[] { });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+        
         String after = readFile(xml);
 
         assertEquals("No change", before, after);
@@ -220,7 +231,8 @@ public class FixDependenciesTest extends TestBase {
         );
 
         String before = readFile(xml);
-        execute (f, new String[] { });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         String after = readFile(xml);
 
         assertEquals("No change", before, after);
@@ -260,7 +272,8 @@ public class FixDependenciesTest extends TestBase {
             "</project>"
 
         );
-        execute (f, new String[] { });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         String result = readFile (xml);
         
@@ -311,8 +324,8 @@ public class FixDependenciesTest extends TestBase {
             "</project>"
 
         );
-        execute (f, new String[] { });
-
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         String result = readFile (xml);
 
         if (result.indexOf ("org.openide.util") == -1) {
@@ -372,8 +385,8 @@ public class FixDependenciesTest extends TestBase {
             "</project>"
 
         );
-        execute (f, new String[] { });
-
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         String result = readFile (xml);
 
         if (result.indexOf ("org.openide.util") == -1) {
@@ -464,8 +477,9 @@ public class FixDependenciesTest extends TestBase {
             "</project>"
 
         );
-        execute (f, new String[] { "-Dbuildscript=" + f.getPath () });
-        
+        System.setProperty("buildscript", f.getAbsolutePath());
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         String result = readFile (xml);
         
         if (result.indexOf ("org.openide.keep") == -1) {
@@ -570,7 +584,9 @@ public class FixDependenciesTest extends TestBase {
         assertNotNull ("Originally can be parsed", doc);
         
         
-        execute (f, new String[] { "-Dbuildscript=" + f.getPath () });
+        System.setProperty("buildscript", f.getAbsolutePath());
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         doc = javax.xml.parsers.DocumentBuilderFactory.newInstance ().newDocumentBuilder ().parse (xml);
         
@@ -644,7 +660,9 @@ public class FixDependenciesTest extends TestBase {
             "</project>"
 
         );
-        execute (f, new String[] { "-Dbuildscript=" + f.getPath () });
+        System.setProperty("buildscript", f.getAbsolutePath());
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         
         String result = readFile (xml);
 
@@ -728,8 +746,9 @@ public class FixDependenciesTest extends TestBase {
             "</project>"
 
         );
-        execute (f, new String[] { "-Dbuildscript=" + f.getPath () });
-        
+        System.setProperty("buildscript", f.getAbsolutePath());
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         String result = readFile (xml);
         
         if (result.indexOf ("org.openide.keep") == -1) {
@@ -785,8 +804,9 @@ public class FixDependenciesTest extends TestBase {
             "</project>"
 
         );
-        execute (f, new String[] { "-Dbuildscript=" + f.getPath () });
-        
+        System.setProperty("buildscript", f.getAbsolutePath());
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         String result = readFile (xml);
         
         if (result.indexOf ("org.openide") > -1) {

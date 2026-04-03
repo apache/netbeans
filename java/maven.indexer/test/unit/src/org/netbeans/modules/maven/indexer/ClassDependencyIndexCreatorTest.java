@@ -32,7 +32,6 @@ import org.netbeans.modules.maven.indexer.api.RepositoryInfo;
 import org.netbeans.modules.maven.indexer.api.RepositoryQueries.ClassUsage;
 import org.netbeans.modules.maven.indexer.spi.ClassUsageQuery;
 import org.netbeans.modules.maven.indexer.spi.ClassesQuery;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.test.JarBuilder;
 import org.openide.util.test.TestFileUtils;
 
@@ -154,9 +153,7 @@ public class ClassDependencyIndexCreatorTest extends NexusTestBase {
                 "pkg/Clazz.class:ABC");
         Map<String, byte[]> content = new TreeMap<>();
         new ClassDependencyIndexCreator().read(jar, (String name, InputStream classData, Set<String> siblings) -> {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            FileUtil.copy(classData, out);
-            content.put(name, out.toByteArray());
+            content.put(name, classData.readAllBytes());
         });
         assertEquals("[pkg/Clazz]", content.keySet().toString());
         assertEquals("[65, 66, 67]", Arrays.toString(content.get("pkg/Clazz")));

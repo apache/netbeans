@@ -139,6 +139,7 @@ public class InstanceLocalPanel extends InstancePanel {
         super.enableFields();
         hostLocalField.setEnabled(true);
         localIpCB.setEnabled(true);
+        additionalLauncherJvmOptionsField.setEnabled(true);
     }
 
 }

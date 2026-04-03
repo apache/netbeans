@@ -526,6 +526,10 @@ public class TomcatManager implements DeploymentManager {
     public boolean isJpa32() {
         return false;
     }
+    
+    public boolean isJpa40() {
+        return false;
+    }
 
     public boolean isJpa22() {
         return isTomEE8();

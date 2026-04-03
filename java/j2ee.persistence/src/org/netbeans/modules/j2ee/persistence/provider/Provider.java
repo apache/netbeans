@@ -81,22 +81,19 @@ public abstract class Provider {
     {
         String classRelativePath = getProviderClass().replace('.', '/') + ".class"; //NOI18N
         boolean ret = cp.findResource(classRelativePath) != null;
-        if(ret && version != null)
-        {
-            if(Persistence.VERSION_3_2.equals(version)) {
-                ret &= cp.findResource("jakarta/persistence/criteria/CriteriaSelect.class") != null;
-            } else if(Persistence.VERSION_3_1.equals(version)){
-                ret &= cp.findResource("jakarta/persistence/spi/TransformerException.class") != null;
-            } else if(Persistence.VERSION_3_0.equals(version)){
-                ret &= cp.findResource("jakarta/persistence/Entity.class") != null;
-            } else if (Persistence.VERSION_2_2.equals(version)) {
-                ret &= cp.findResource("javax/persistence/TableGenerators.class") != null;
-            } else if (Persistence.VERSION_2_1.equals(version)) {
-                ret &= cp.findResource("javax/persistence/criteria/CriteriaUpdate.class") != null;
-            } else if (Persistence.VERSION_2_0.equals(version)) {
-                ret &= cp.findResource("javax/persistence/criteria/JoinType.class") != null;
-            } else if (Persistence.VERSION_1_0.equals(version)) {
-                ret &= cp.findResource("javax/persistence/Entity.class") != null && cp.findResource("javax/persistence/criteria/JoinType.class") == null;
+        if(ret && version != null) {
+            if(null != version) switch (version) {
+                case Persistence.VERSION_4_0 -> ret &= cp.findResource("jakarta/persistence/query/StaticQuery.class") != null;
+                case Persistence.VERSION_3_2 -> ret &= cp.findResource("jakarta/persistence/criteria/CriteriaSelect.class") != null;
+                case Persistence.VERSION_3_1 -> ret &= cp.findResource("jakarta/persistence/spi/TransformerException.class") != null;
+                case Persistence.VERSION_3_0 -> ret &= cp.findResource("jakarta/persistence/Entity.class") != null;
+                case Persistence.VERSION_2_2 -> ret &= cp.findResource("javax/persistence/TableGenerators.class") != null;
+                case Persistence.VERSION_2_1 -> ret &= cp.findResource("javax/persistence/criteria/CriteriaUpdate.class") != null;
+                case Persistence.VERSION_2_0 -> ret &= cp.findResource("javax/persistence/criteria/JoinType.class") != null;
+                case Persistence.VERSION_1_0 -> ret &= cp.findResource("javax/persistence/Entity.class") != null 
+                        && cp.findResource("javax/persistence/criteria/JoinType.class") == null;
+                default -> {
+                }
             }
         }
         return ret;
@@ -111,15 +108,15 @@ public abstract class Provider {
       return getVersion()!=null && Float.parseFloat(Persistence.VERSION_2_2) < Float.parseFloat(getVersion());
     }
     
-    private Set initPropertyNames(){
+    private Set<String> initPropertyNames(){
         Set<String> result = new HashSet<>();
         result.add(getJdbcDriver());
         result.add(getJdbcUsername());
         result.add(getJdbcUrl());
         result.add(getJdbcPassword());
         result.add(getTableGenerationPropertyName());
-        for (Iterator it = getUnresolvedVendorSpecificProperties().keySet().iterator(); it.hasNext();) {
-            String propertyName = (String) it.next();
+        for (Iterator<String> it = getUnresolvedVendorSpecificProperties().keySet().iterator(); it.hasNext();) {
+            String propertyName = it.next();
             result.add(propertyName);
         }
         return result;
@@ -127,9 +124,9 @@ public abstract class Provider {
     
     /**
      * Gets the names of all provider specific properties.
-     * @return Set of Strings representing names of provider specific properties.
+     * @return Set{@code <String>} representing names of provider specific properties.
      */
-    public Set getPropertyNames(){
+    public Set<String> getPropertyNames(){
         return this.vendorSpecificProperties;
     }
     
@@ -142,21 +139,18 @@ public abstract class Provider {
             return null;
         }
         Property result;
-        if (Persistence.VERSION_3_2.equals(version)) {
-            result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.Property();
-        } else if (Persistence.VERSION_3_1.equals(version)) {
-            result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.Property();
-        } else if (Persistence.VERSION_3_0.equals(version)) {
-            result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.Property();
-        } else if  (Persistence.VERSION_2_2.equals(version)) {
-                result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.Property();
-        } else if  (Persistence.VERSION_2_1.equals(version)) {
-                result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.Property();
-        } else if  (Persistence.VERSION_2_0.equals(version)) {
-                result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.Property();
-        } else {
+        if (null == version) {
             result = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.Property();
-        }
+        } else result = switch (version) {
+            case Persistence.VERSION_4_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_4_0.Property();
+            case Persistence.VERSION_3_2 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.Property();
+            case Persistence.VERSION_3_1 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.Property();
+            case Persistence.VERSION_3_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.Property();
+            case Persistence.VERSION_2_2 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.Property();
+            case Persistence.VERSION_2_1 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.Property();
+            case Persistence.VERSION_2_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.Property();
+            default -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.Property();
+        };
         result.setName(getTableGenerationPropertyName());
         if (TABLE_GENERATION_CREATE.equals(strategy)){
             result.setValue(getTableGenerationCreateValue());
@@ -260,13 +254,13 @@ public abstract class Provider {
     /**
      * @return Map{@code <String, String>} containing vendor specific properties.
      */
-    public abstract Map getUnresolvedVendorSpecificProperties();
+    public abstract Map<String, String> getUnresolvedVendorSpecificProperties();
     
     /**
      * @return Map{@code <String, String>} containing vendor specific properties
      * which should be set on a new unit by default.
      */
-    public abstract Map getDefaultVendorSpecificProperties();
+    public abstract Map<String, String> getDefaultVendorSpecificProperties();
     
     /**
      * Gets a map containing provider specific name / values pairs of given

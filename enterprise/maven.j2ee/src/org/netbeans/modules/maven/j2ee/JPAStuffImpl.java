@@ -102,10 +102,11 @@ public class JPAStuffImpl implements JPAModuleInfo, JPADataSourcePopulator,
         if (platform == null) {
             return null;
         }
-        JpaSupport support = JpaSupport.getInstance(platform);
-        JpaProvider provider = support.getDefaultProvider();
+        JpaSupport _support = JpaSupport.getInstance(platform);
+        JpaProvider provider = _support.getDefaultProvider();
         if (provider != null) {
-            return (Persistence.VERSION_3_2.equals(version) && provider.isJpa32Supported())
+            return (Persistence.VERSION_4_0.equals(version) && provider.isJpa40Supported())
+                    || (Persistence.VERSION_3_2.equals(version) && provider.isJpa32Supported())
                     || (Persistence.VERSION_3_1.equals(version) && provider.isJpa31Supported())
                     || (Persistence.VERSION_3_0.equals(version) && provider.isJpa30Supported())
                     || (Persistence.VERSION_2_2.equals(version) && provider.isJpa22Supported())

@@ -38,6 +38,12 @@ public interface JpaProviderImplementation {
     
     boolean isJpa32Supported();
     
+    /**
+     * JPA 4.0 is supported by Jakarta EE 12
+     * @return true if JPA 4.0 is supported
+     */
+    boolean isJpa40Supported();
+    
     boolean isDefault();
     
     String getClassName();

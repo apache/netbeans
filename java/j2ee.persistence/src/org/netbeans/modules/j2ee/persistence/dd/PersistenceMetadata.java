@@ -41,7 +41,7 @@ public final class PersistenceMetadata {
     private Map<FileObject, Persistence> ddMap;
     
     private PersistenceMetadata() {
-        ddMap = new WeakHashMap<>(5);
+        ddMap = new WeakHashMap<>(8);
     }
     
     /**
@@ -79,21 +79,20 @@ public final class PersistenceMetadata {
                 }
 
                 try (InputStream is=fo.getInputStream()) {
-                    if (Persistence.VERSION_3_2.equals(version)) {
-                        persistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.Persistence.createGraph(is);
-                    } else if(Persistence.VERSION_3_1.equals(version)) {
-                        persistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.Persistence.createGraph(is);
-                    } else if(Persistence.VERSION_3_0.equals(version)) {
-                        persistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.Persistence.createGraph(is);
-                    } else if(Persistence.VERSION_2_2.equals(version)) {
-                        persistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.Persistence.createGraph(is);
-                    } else if(Persistence.VERSION_2_1.equals(version)) {
-                        persistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.Persistence.createGraph(is);
-                    } else if(Persistence.VERSION_2_0.equals(version)) {
-                        persistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.Persistence.createGraph(is);
-                    } else {//1.0 - default
+                    // 1.0 - default
+                    if (null == version) {
                         persistence = org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.Persistence.createGraph(is);
-                    }
+                    } else persistence = switch (version) {
+                        case Persistence.VERSION_4_0 -> org.netbeans.modules.j2ee.persistence.dd.persistence.model_4_0.Persistence.createGraph(is);
+                        case Persistence.VERSION_3_2 -> org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.Persistence.createGraph(is);
+                        case Persistence.VERSION_3_1 -> org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.Persistence.createGraph(is);
+                        case Persistence.VERSION_3_0 -> org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.Persistence.createGraph(is);
+                        case Persistence.VERSION_2_2 -> org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.Persistence.createGraph(is);
+                        case Persistence.VERSION_2_1 -> org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.Persistence.createGraph(is);
+                        case Persistence.VERSION_2_0 -> org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.Persistence.createGraph(is);
+                        default -> org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.Persistence.createGraph(is);
+                    };
+                    
                 }
                 ddMap.put(fo, persistence);
             }

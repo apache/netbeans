@@ -45,43 +45,35 @@ public class PersistenceValidatorTest extends PersistenceEditorTestBase {
     public void testValidateNameIsUnique() {
         String version=dataObject.getPersistence().getVersion();
         PersistenceUnit unit1 = null;
-        if(Persistence.VERSION_3_2.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
-        } else if(Persistence.VERSION_3_1.equals(version)) {
+        if(null == version) {
             unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
-        } else if(Persistence.VERSION_3_0.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
-        } else if(Persistence.VERSION_2_2.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
-        } else if(Persistence.VERSION_2_1.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
-        } else if(Persistence.VERSION_2_0.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
-        } else if(Persistence.VERSION_1_0.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
-        } else {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
-        }
+        } else unit1 = switch (version) {
+            case Persistence.VERSION_4_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_4_0.PersistenceUnit();
+            case Persistence.VERSION_3_2 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
+            case Persistence.VERSION_3_1 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
+            case Persistence.VERSION_3_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
+            case Persistence.VERSION_2_2 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
+            case Persistence.VERSION_2_1 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
+            case Persistence.VERSION_2_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
+            case Persistence.VERSION_1_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
+            default -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
+        };
         unit1.setName("name1");
         dataObject.addPersistenceUnit(unit1);
         PersistenceUnit unit2 = null;
-        if(Persistence.VERSION_3_2.equals(version)) {
-            unit2 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
-        } else if(Persistence.VERSION_3_1.equals(version)) {
+        if(null == version) {
             unit2 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
-        } else if(Persistence.VERSION_3_0.equals(version)) {
-            unit2 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
-        } else if(Persistence.VERSION_2_2.equals(version)) {
-            unit2 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
-        } else if(Persistence.VERSION_2_1.equals(version)) {
-            unit2 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
-        } else if(Persistence.VERSION_2_0.equals(version)) {
-            unit2 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
-        } else if(Persistence.VERSION_1_0.equals(version)) {
-            unit2 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
-        } else {
-            unit2 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
-        }
+        } else unit2 = switch (version) {
+            case Persistence.VERSION_4_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_4_0.PersistenceUnit();
+            case Persistence.VERSION_3_2 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
+            case Persistence.VERSION_3_1 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
+            case Persistence.VERSION_3_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
+            case Persistence.VERSION_2_2 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
+            case Persistence.VERSION_2_1 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
+            case Persistence.VERSION_2_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
+            case Persistence.VERSION_1_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
+            default -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
+        };
         unit2.setName("name1");
         dataObject.addPersistenceUnit(unit2);
         PersistenceValidator validator = new PersistenceValidatorImpl(dataObject, false);
@@ -101,23 +93,19 @@ public class PersistenceValidatorTest extends PersistenceEditorTestBase {
         PersistenceValidator javaSEvalidator = new PersistenceValidatorImpl(dataObject, true);
         String version=dataObject.getPersistence().getVersion();
         PersistenceUnit unit1 = null;
-        if(Persistence.VERSION_3_2.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
-        } else if(Persistence.VERSION_3_1.equals(version)) {
+        if(null == version) {
             unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
-        } else if(Persistence.VERSION_3_0.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
-        } else if(Persistence.VERSION_2_2.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
-        } else if(Persistence.VERSION_2_1.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
-        } else if(Persistence.VERSION_2_0.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
-        } else if(Persistence.VERSION_1_0.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
-        } else {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
-        }
+        } else unit1 = switch (version) {
+            case Persistence.VERSION_4_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_4_0.PersistenceUnit();
+            case Persistence.VERSION_3_2 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
+            case Persistence.VERSION_3_1 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
+            case Persistence.VERSION_3_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
+            case Persistence.VERSION_2_2 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
+            case Persistence.VERSION_2_1 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
+            case Persistence.VERSION_2_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
+            case Persistence.VERSION_1_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
+            default -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
+        };
         unit1.setName("unit1");
         unit1.setExcludeUnlistedClasses(true);
         dataObject.addPersistenceUnit(unit1);
@@ -139,23 +127,19 @@ public class PersistenceValidatorTest extends PersistenceEditorTestBase {
         PersistenceValidator javaSEvalidator = new PersistenceValidatorImpl(dataObject, true);
         String version=dataObject.getPersistence().getVersion();
         PersistenceUnit unit1 = null;
-        if(Persistence.VERSION_3_2.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
-        } else if(Persistence.VERSION_3_1.equals(version)) {
+        if(null == version) {
             unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
-        } else if(Persistence.VERSION_3_0.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
-        } else if(Persistence.VERSION_2_2.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
-        } else if(Persistence.VERSION_2_1.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
-        } else if(Persistence.VERSION_2_0.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
-        } else if(Persistence.VERSION_1_0.equals(version)) {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
-        } else {
-            unit1 = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
-        }
+        } else unit1 = switch (version) {
+            case Persistence.VERSION_4_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_4_0.PersistenceUnit();
+            case Persistence.VERSION_3_2 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
+            case Persistence.VERSION_3_1 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
+            case Persistence.VERSION_3_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
+            case Persistence.VERSION_2_2 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
+            case Persistence.VERSION_2_1 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
+            case Persistence.VERSION_2_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
+            case Persistence.VERSION_1_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
+            default -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
+        };
         unit1.setName("unit1");
         unit1.addJarFile("my-jar.jar");
         dataObject.addPersistenceUnit(unit1);

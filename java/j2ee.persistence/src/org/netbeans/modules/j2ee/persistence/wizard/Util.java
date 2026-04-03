@@ -90,7 +90,8 @@ public class Util {
         Persistence.VERSION_2_2,
         Persistence.VERSION_3_0,
         Persistence.VERSION_3_1,
-        Persistence.VERSION_3_2
+        Persistence.VERSION_3_2,
+        Persistence.VERSION_4_0
     };
     
     /*
@@ -185,11 +186,11 @@ public class Util {
             return false;
         }
         if (JPAModuleInfo.ModuleType.EJB == moduleInfo.getType()
-                && asList("3.0", "3.1", "3.2", "3.2.6", "4.0").contains(moduleInfo.getVersion())) {
+                && asList("3.0", "3.1", "3.2", "3.2.6", "4.0", "4.1").contains(moduleInfo.getVersion())) {
             return true;
         }
         if (JPAModuleInfo.ModuleType.WEB == moduleInfo.getType()
-                && asList("2.5", "3.1", "3.0", "4.0", "5.0", "6.0", "6.1").contains(moduleInfo.getVersion())) {
+                && asList("2.5", "3.1", "3.0", "4.0", "5.0", "6.0", "6.1", "6.2").contains(moduleInfo.getVersion())) {
             return true;
         }
         return false;
@@ -244,7 +245,8 @@ public class Util {
                     || Util.isJPAVersionSupported(project, Persistence.VERSION_2_2)
                     || Util.isJPAVersionSupported(project, Persistence.VERSION_3_0)
                     || Util.isJPAVersionSupported(project, Persistence.VERSION_3_1)
-                    || Util.isJPAVersionSupported(project, Persistence.VERSION_3_2)) 
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_3_2)
+                    || Util.isJPAVersionSupported(project, Persistence.VERSION_4_0)) 
                     && (defProviderVersion == null || defProviderVersion.equals(Persistence.VERSION_1_0));//jpa 3.1 is supported by default (or first) is jpa1.0 or udefined version provider
             if(specialCase){
                 for (int i = 1; i<providers.size() ; i++){
@@ -363,21 +365,19 @@ public class Util {
         String version = (lib != null && libIsAdded) ? PersistenceUtils.getJPAVersion(lib) : PersistenceUtils.getJPAVersion(project);//use library if possible it will provide better result, TODO: may be usage of project should be removed and use 1.0 is no library was found
         if (result == createPUButton) {
             PersistenceUnit punit = null;
-            if (Persistence.VERSION_3_2.equals(version)) {
-                punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
-            } else if (Persistence.VERSION_3_1.equals(version)) {
-                punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
-            } else if (Persistence.VERSION_3_0.equals(version)) {
-                punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
-            } else if (Persistence.VERSION_2_2.equals(version)) {
-                punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
-            } else if (Persistence.VERSION_2_1.equals(version)) {
-                punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
-            } else if (Persistence.VERSION_2_0.equals(version)) {
-                punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
-            } else {//currently default 1.0
+            if (null == version) {
+                //currently default 1.0
                 punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
-            }
+            } else punit = switch (version) {
+                case Persistence.VERSION_4_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_4_0.PersistenceUnit();
+                case Persistence.VERSION_3_2 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
+                case Persistence.VERSION_3_1 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
+                case Persistence.VERSION_3_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
+                case Persistence.VERSION_2_2 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
+                case Persistence.VERSION_2_1 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
+                case Persistence.VERSION_2_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
+                default -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
+            };
             if (isContainerManaged) {
                 PersistenceUnitWizardPanelDS puPanel = (PersistenceUnitWizardPanelDS) panel;
                 if (puPanel.getDatasource() != null && !"".equals(puPanel.getDatasource().trim())) {
@@ -482,21 +482,19 @@ public class Util {
             }
         }
         PersistenceUnit punit = null;
-        if (Persistence.VERSION_3_2.equals(version)) {
-            punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
-        } else if (Persistence.VERSION_3_1.equals(version)) {
-            punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
-        } else if (Persistence.VERSION_3_0.equals(version)) {
-            punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
-        } else if (Persistence.VERSION_2_2.equals(version)) {
-            punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
-        } else if (Persistence.VERSION_2_1.equals(version)) {
-            punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
-        } else if (Persistence.VERSION_2_0.equals(version)) {
-            punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
-        } else {//currently default 1.0
+        if (null == version) {
+            //currently default 1.0
             punit = new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
-        }
+        } else punit = switch (version) {
+            case Persistence.VERSION_4_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_4_0.PersistenceUnit();
+            case Persistence.VERSION_3_2 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit();
+            case Persistence.VERSION_3_1 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit();
+            case Persistence.VERSION_3_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit();
+            case Persistence.VERSION_2_2 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit();
+            case Persistence.VERSION_2_1 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit();
+            case Persistence.VERSION_2_0 -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit();
+            default -> new org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit();
+        };
         if (isContainerManaged) {
             if (preselectedDB == null || preselectedDB.trim().isEmpty()) {
                 //find first with default/sample part in name
@@ -601,7 +599,9 @@ public class Util {
             return false;
         }
         String version = Persistence.VERSION_1_0;
-        if(punit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) {
+        if(punit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_4_0.PersistenceUnit) {
+            version = Persistence.VERSION_4_0;
+        } else if(punit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) {
             version = Persistence.VERSION_3_2;
         } else if(punit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {
             version = Persistence.VERSION_3_1;
@@ -744,7 +744,8 @@ public class Util {
     public static void addPersistenceUnitToProject(Project project) {
         if(PersistenceUtils.getJPAVersion(project) == null){
             Library lib;
-            if(isJPAVersionSupported(project, Persistence.VERSION_3_2)
+            if(isJPAVersionSupported(project, Persistence.VERSION_4_0)
+                    || isJPAVersionSupported(project, Persistence.VERSION_3_2)
                     || isJPAVersionSupported(project, Persistence.VERSION_3_1)
                     || isJPAVersionSupported(project, Persistence.VERSION_3_0)
                     || isJPAVersionSupported(project, Persistence.VERSION_2_2)

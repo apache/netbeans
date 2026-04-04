@@ -29,7 +29,6 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.Action;
-import jdk.internal.net.http.common.Log;
 import org.netbeans.api.extexecution.print.LineConvertors.FileLocator;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
@@ -160,7 +159,7 @@ public final class AntJUnitNodeOpener extends NodeOpener {
         }
         // Method node might belong to an inner class
         FileObject testfo = methodNode.getTestcase().getClassFileObject(true);
-        String fqMethodName = methodNode.getTestcase().getClassName() + '.' + methodNode.getTestcase().getName();
+        String fqMethodNameParen = methodNode.getTestcase().getClassName() + '.' + methodNode.getTestcase().getName()+'(';
         if (testfo == null) {
             return;
         }
@@ -174,7 +173,7 @@ public final class AntJUnitNodeOpener extends NodeOpener {
                 //Jump to the first line matching the fully qualified test method name.
                 // and ignore the infrastructure stack lines in the process
                 while (index < st.length) {
-                    if (st[index].contains(fqMethodName)) {
+                    if (st[index].contains(fqMethodNameParen)) {
                         file = UIJavaUtils.getFile(st[index], lineNumStorage, locator);
                         break;
                     }

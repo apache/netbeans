@@ -57,6 +57,7 @@ import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_2_2;
 import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_2_3;
 import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_3_0;
 import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_4_0;
+import static org.netbeans.modules.web.jsfapi.api.JsfVersion.JSF_5_0;
 import org.netbeans.modules.web.wizards.Utilities;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.project.ui.templates.support.Templates;
@@ -141,7 +142,10 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
                     for (InitParam param : parameters) {
                         if (param.getParamName().equals(FACES_CONFIG_PARAM) || param.getParamName().equals(JAKARTAEE_FACES_CONFIG_PARAM)) {
                             found = true;
-                            String value = param.getParamValue() + ",\n            /" + FileUtil.getRelativePath(wm.getDocumentBase(), targetDir) + "/" + targetName + ".xml";  //NOI18N
+                            String value = param.getParamValue() 
+                                    + ",\n            /" 
+                                    + FileUtil.getRelativePath(wm.getDocumentBase(), targetDir) 
+                                    + "/" + targetName + ".xml";  //NOI18N
                             ddRoot.removeContextParam(param);
                             InitParam newParameter = (InitParam) ddRoot.createBean(INIT_PARAM);
                             newParameter.setParamName(param.getParamName());
@@ -153,8 +157,10 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
                     }
                     if (!found) {
                         InitParam contextParam = (InitParam) ddRoot.createBean(INIT_PARAM);
-                        if(WebApp.VERSION_6_1.equals(ddRoot.getVersion()) || WebApp.VERSION_6_0.equals(ddRoot.getVersion()) || 
-                                WebApp.VERSION_5_0.equals(ddRoot.getVersion())) {
+                        if(WebApp.VERSION_6_2.equals(ddRoot.getVersion()) 
+                                || WebApp.VERSION_6_1.equals(ddRoot.getVersion()) 
+                                || WebApp.VERSION_6_0.equals(ddRoot.getVersion()) 
+                                || WebApp.VERSION_5_0.equals(ddRoot.getVersion())) {
                             contextParam.setParamName(JAKARTAEE_FACES_CONFIG_PARAM);
                         } else {
                             contextParam.setParamName(FACES_CONFIG_PARAM);
@@ -191,7 +197,9 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
         // not found on project classpath (case of Maven project with JSF in deps)
         if (jsfVersion == null) {
             Profile profile = wm.getJ2eeProfile();
-            if (profile.isAtLeast(Profile.JAKARTA_EE_11_WEB)) {
+            if (profile.isAtLeast(Profile.JAKARTA_EE_12_WEB)) {
+                return JSFCatalog.RES_FACES_CONFIG_5_0;
+            } else if (profile.isAtLeast(Profile.JAKARTA_EE_11_WEB)) {
                 return JSFCatalog.RES_FACES_CONFIG_4_1;
             } else if (profile.isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
                 return JSFCatalog.RES_FACES_CONFIG_4_0;
@@ -227,6 +235,8 @@ public class FacesConfigIterator implements TemplateWizard.Iterator {
 
     private static String facesConfigForVersion(JsfVersion jsfVersion) {
         switch (jsfVersion) {
+            case JSF_5_0:
+                return JSFCatalog.RES_FACES_CONFIG_5_0;
             case JSF_4_1:
                 return JSFCatalog.RES_FACES_CONFIG_4_1;
             case JSF_4_0:

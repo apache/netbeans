@@ -125,7 +125,6 @@ import javax.xml.validation.SchemaFactory;
 import org.netbeans.api.xml.services.UserCatalog;
 import org.netbeans.modules.web.jsf.editor.facelets.DefaultFaceletLibraries;
 import org.netbeans.modules.web.jsfapi.api.JsfNamespaces;
-import org.openide.util.Exceptions;
 import org.w3c.dom.*;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
@@ -258,7 +257,7 @@ public class ConfigManager {
 
         // initialize the resource providers for faces-config documents
         List<ConfigurationResourceProvider> facesConfigProviders =
-          new ArrayList<ConfigurationResourceProvider>(3);
+          new ArrayList<ConfigurationResourceProvider>(8);
         facesConfigProviders.add(new MojarraFacesConfigResourceProvider());
         facesConfigProviders.add(new MetaInfFacesConfigResourceProvider());
         facesConfigProviders.add(new WebAppFlowConfigResourceProvider());
@@ -267,7 +266,7 @@ public class ConfigManager {
 
         // initialize the resource providers for facelet-taglib documents
         List<ConfigurationResourceProvider> faceletTaglibProviders =
-              new ArrayList<ConfigurationResourceProvider>(3);
+              new ArrayList<ConfigurationResourceProvider>(4);
         faceletTaglibProviders.add(new MetaInfFaceletTaglibraryConfigProvider());
         faceletTaglibProviders.add(new WebFaceletTaglibResourceProvider());
         FACELET_TAGLIBRARY_RESOURCE_PROVIDERS = Collections.unmodifiableList(faceletTaglibProviders);
@@ -972,7 +971,8 @@ public class ConfigManager {
 
         private static final Map<String, String> VERSION_FACES_SCHEMA_FACES_MAPPING;
         static {
-            Map<String, String> map = new HashMap<>();
+            Map<String, String> map = new HashMap<>(16);
+            map.put("5.0", "com/sun/faces/web-facesconfig_5_0.xsd");
             map.put("4.1", "com/sun/faces/web-facesconfig_4_1.xsd");
             map.put("4.0", "com/sun/faces/web-facesconfig_4_0.xsd");
             map.put("3.0", "com/sun/faces/web-facesconfig_3_0.xsd");
@@ -986,7 +986,8 @@ public class ConfigManager {
 
         private static final Map<String, String> VERSION_FACES_SCHEMA_FACELET_TAGLIB_MAPPING;
         static {
-            Map<String, String> map = new HashMap<>();
+            Map<String, String> map = new HashMap<>(16);
+            map.put("5.0", "com/sun/faces/web-facelettaglibrary_5_0.xsd");
             map.put("4.1", "com/sun/faces/web-facelettaglibrary_4_1.xsd");
             map.put("4.0", "com/sun/faces/web-facelettaglibrary_4_0.xsd");
             map.put("3.0", "com/sun/faces/web-facelettaglibrary_3_0.xsd");

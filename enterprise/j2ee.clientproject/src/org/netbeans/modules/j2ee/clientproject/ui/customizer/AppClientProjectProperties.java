@@ -263,14 +263,15 @@ public final class AppClientProjectProperties {
     public static final String JAVA_SOURCE_BASED = "java.source.based";
 
     
-    private final List<ActionListener> optionListeners = new CopyOnWriteArrayList<ActionListener>();
+    private final List<ActionListener> optionListeners = new CopyOnWriteArrayList<>();
 
     AppClientProject getProject() {
         return project;
     }
     
     /** Creates a new instance of J2SEUIProperties and initializes them */
-    AppClientProjectProperties( AppClientProject project, UpdateHelper updateHelper, PropertyEvaluator evaluator, ReferenceHelper refHelper, GeneratedFilesHelper genFileHelper ) {
+    AppClientProjectProperties( AppClientProject project, UpdateHelper updateHelper, 
+            PropertyEvaluator evaluator, ReferenceHelper refHelper, GeneratedFilesHelper genFileHelper ) {
         this.project = project;
         this.updateHelper  = updateHelper;
         this.evaluator = evaluator;
@@ -324,6 +325,9 @@ public final class AppClientProjectProperties {
         SpecificationVersion minimalSourceLevel = null;
         Profile profile = Profile.fromPropertiesString(evaluator.getProperty(J2EE_PLATFORM));
         switch (profile) {
+            case JAKARTA_EE_12_FULL:
+                minimalSourceLevel = new SpecificationVersion("21");
+                break;
             case JAKARTA_EE_11_FULL:
                 minimalSourceLevel = new SpecificationVersion("17");
                 break;

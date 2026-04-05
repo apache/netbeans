@@ -167,7 +167,7 @@ public final class AppClientProvider extends J2eeModuleProvider
         ClassPath cp = ClassPathFactory.createClassPath(
                     ProjectClassPathSupport.createPropertyBasedClassPathImplementation(
                     FileUtil.toFile(project.getProjectDirectory()), project.evaluator(), new String[]{"javac.classpath"}));
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         for (FileObject fo : cp.getRoots()) {
             if (FileUtil.getArchiveFile(fo) == null) {
                 continue;
@@ -352,6 +352,9 @@ public final class AppClientProvider extends J2eeModuleProvider
             return AppClient.VERSION_6_0;
         }
         switch (p) {
+            case JAKARTA_EE_12_FULL:
+            case JAKARTA_EE_12_WEB:
+                return AppClient.VERSION_12_0;
             case JAKARTA_EE_11_FULL:
             case JAKARTA_EE_11_WEB:
                 return AppClient.VERSION_11_0;

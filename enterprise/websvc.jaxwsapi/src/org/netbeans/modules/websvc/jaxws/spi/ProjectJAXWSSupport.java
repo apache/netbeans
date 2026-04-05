@@ -53,7 +53,6 @@ import org.openide.ErrorManager;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileSystem.AtomicAction;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
@@ -83,6 +82,7 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
     protected static final String JAKARTA_EE_VERSION_91="jakarta-ee-version-91"; //NOI18N
     protected static final String JAKARTA_EE_VERSION_10="jakarta-ee-version-10"; //NOI18N
     protected static final String JAKARTA_EE_VERSION_11="jakarta-ee-version-11"; //NOI18N
+    protected static final String JAKARTA_EE_VERSION_12="jakarta-ee-version-12"; //NOI18N
 
     private Project project;
     private AntProjectHelper antProjectHelper;
@@ -332,22 +332,11 @@ public abstract class ProjectJAXWSSupport implements JAXWSSupportImpl {
             if (jaxWsFo != null) {
                 jaxWsFo.getFileSystem().runAtomicAction(new AtomicAction() {
                     public void run() {
-                        FileLock lock=null;
-                        OutputStream os=null;
-                        try {
-                            lock = jaxWsFo.lock();
-                            os = jaxWsFo.getOutputStream(lock);
+                        try (FileLock lock = jaxWsFo.lock();
+                                OutputStream os = jaxWsFo.getOutputStream(lock)) {
                             jaxWsModel.write(os);
-                            os.close();
                         } catch (java.io.IOException ex) {
                             ErrorManager.getDefault().notify(ex);
-                        } finally {
-                            if (os!=null) {
-                                try {
-                                    os.close();
-                                } catch (IOException ex) {}
-                            }
-                            if (lock!=null) lock.releaseLock();
                         }
                     }
                 });

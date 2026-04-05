@@ -24,7 +24,6 @@ import java.io.OutputStream;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.project.classpath.ProjectClassPathModifier;
 import org.netbeans.api.project.Project;
@@ -371,24 +370,13 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
             endpoint.setImplementation(serviceImpl);
             endpoint.setUrlPattern("/" + wsName);
             endpoints.addEnpoint(endpoint);
-            FileLock lock = null;
-            OutputStream os = null;
             synchronized (this) {
-                try{
-                    lock = sunjaxwsFile.lock();
-                    os = sunjaxwsFile.getOutputStream(lock);
+                try (FileLock lock = sunjaxwsFile.lock();
+                        OutputStream os = sunjaxwsFile.getOutputStream(lock)) {
                     endpoints.write(os);
-                }finally{
-                    if(lock != null) {
-                        lock.releaseLock();
-                    }
-
-                    if(os != null) {
-                        os.close();
-                    }
                 }
             }
-        }else{
+        } else {
             String mes = NbBundle.getMessage(WebProjectJAXWSSupport.class, "MSG_CannotFindWEB-INF"); // NOI18N
             NotifyDescriptor desc = new NotifyDescriptor.Message(mes, NotifyDescriptor.Message.ERROR_MESSAGE);
             DialogDisplayer.getDefault().notify(desc);
@@ -441,45 +429,30 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
         if(ddFolder != null){
             FileObject sunjaxwsFile = ddFolder.getFileObject("sun-jaxws.xml");
             if(sunjaxwsFile != null){
-                FileLock lock = null;
                 //if there are no more services, delete the file
                 JaxWsModel jaxWsModel = project.getLookup().lookup(JaxWsModel.class);
                 if(jaxWsModel.getServices().length == 0) {
                     synchronized(this) {
-                        try{
-                            lock = sunjaxwsFile.lock();
+                        try (FileLock lock = sunjaxwsFile.lock()) {
                             sunjaxwsFile.delete(lock);
-                        } finally{
-                            if(lock != null){
-                                lock.releaseLock();
-                            }
                         }
                     }
-                } else{
+                } else {
                     //remove the entry from the sunjaxwsFile
                     Endpoints endpoints = EndpointsProvider.getDefault().getEndpoints(sunjaxwsFile);
                     Endpoint endpoint = endpoints.findEndpointByName(serviceName);
                     if(endpoint != null){
                         endpoints.removeEndpoint(endpoint);
-                        OutputStream os = null;
                         synchronized(this) {
-                            try{
-                                lock = sunjaxwsFile.lock();
-                                os = sunjaxwsFile.getOutputStream(lock);
+                            try (FileLock lock = sunjaxwsFile.lock();
+                                    OutputStream os = sunjaxwsFile.getOutputStream(lock)) {
                                 endpoints.write(os);
-                            }finally{
-                                if(lock != null){
-                                    lock.releaseLock();
-                                }
-                                if(os != null){
-                                    os.close();
-                                }
                             }
                         }
                     }
                 }
             }
-        }else{
+        } else {
             String mes = NbBundle.getMessage(WebProjectJAXWSSupport.class, "MSG_CannotFindDDDirectory"); // NOI18N
             NotifyDescriptor desc = new NotifyDescriptor.Message(mes, NotifyDescriptor.Message.ERROR_MESSAGE);
             DialogDisplayer.getDefault().notify(desc);
@@ -620,6 +593,9 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
                 case JAKARTA_EE_11_WEB:
                 case JAKARTA_EE_11_FULL:
                     return JAKARTA_EE_VERSION_11;
+                case JAKARTA_EE_12_WEB:
+                case JAKARTA_EE_12_FULL:
+                    return JAKARTA_EE_VERSION_12;
                 case JAVA_EE_5:
                     return JAVA_EE_VERSION_15;
                 default:

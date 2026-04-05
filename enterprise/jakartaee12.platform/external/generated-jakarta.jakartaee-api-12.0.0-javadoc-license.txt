@@ -2,7 +2,7 @@ Name: JakartaEE API 12.0.0 Documentation
 Version: 12.0.0
 License: EPL-v20
 Description: JakartaEE API 12.0.0 Documentation
-Origin: Generated from jakarta.jakartaee-api-12.0.0-M1-javadoc.jar
+Origin: Generated from jakarta.jakartaee-api-11.0.0-javadoc.jar
 Type: generated
 
 Eclipse Public License - v 2.0

@@ -31,17 +31,17 @@
     <target name="-check-prepared-doc">
         <condition property="jakartaee12.platform.doccreated" value="present">
             <and>
-                <available file="external/generated-jakarta.jakartaee-api-12.0.0-javadoc.jar" />
+                <available file="external/generated-jakarta.jakartaee-api-11.0.0-javadoc.jar" />
             </and>
         </condition>
     </target>
 
-    <target name="prepare-doc" depends="-check-prepared-doc" unless="jakartaee11.platform.doccreated">
-        <delete file="external/generated-jakarta.jakartaee-api-12.0.0-javadoc.jar" />
+    <target name="prepare-doc" depends="-check-prepared-doc" unless="jakartaee12.platform.doccreated">
+        <delete file="external/generated-jakarta.jakartaee-api-11.0.0-javadoc.jar" />
 
         <!-- repackage doc file into the format netbeans used prior to switching to the maven central artefact -->
-        <jar destfile="external/generated-jakarta.jakartaee-api-12.0.0-javadoc.jar">
-            <zipfileset src="external/jakarta.jakartaee-api-12.0.0-M1-javadoc.jar" includes="**" prefix="docs/api" />
+        <jar destfile="external/generated-jakarta.jakartaee-api-11.0.0-javadoc.jar">
+            <zipfileset src="external/jakarta.jakartaee-api-11.0.0-javadoc.jar" includes="**" prefix="docs/api" />
         </jar>
     </target>
 </project>

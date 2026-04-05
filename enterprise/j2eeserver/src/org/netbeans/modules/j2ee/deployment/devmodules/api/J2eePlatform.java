@@ -575,7 +575,7 @@ public final class J2eePlatform implements Lookup.Provider {
      *
      * @since 1.9
      */
-    public Set getSupportedJavaPlatformVersions() {
+    public Set<String> getSupportedJavaPlatformVersions() {
         return impl.getSupportedJavaPlatformVersions();
     }
 

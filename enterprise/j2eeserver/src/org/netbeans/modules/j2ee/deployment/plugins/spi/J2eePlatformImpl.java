@@ -239,7 +239,7 @@ public abstract class J2eePlatformImpl {
      *
      * @since 1.9
      */
-    public abstract Set/*<String>*/ getSupportedJavaPlatformVersions();
+    public abstract Set<String> getSupportedJavaPlatformVersions();
     
     /**
      * Return server J2SE platform or null if the platform is unknown, not 

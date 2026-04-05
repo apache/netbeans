@@ -400,9 +400,9 @@ public final class ProjectWebModule extends J2eeModuleProvider
         String inst = getServerInstanceID ();
         if (inst != null) {
             String id = Deployment.getDefault().getServerID(inst);
-            if (id != null) {
-                return id;
-            }
+                if (id != null) {
+                    return id;
+                }
         }
         return helper.getAntProjectHelper().getStandardPropertyEvaluator ().getProperty (WebProjectProperties.J2EE_SERVER_TYPE);
     }
@@ -561,6 +561,9 @@ public final class ProjectWebModule extends J2eeModuleProvider
         if (null == platformVersion) {
             return WebApp.VERSION_3_1;
         } else switch (platformVersion) {
+            case JAKARTA_EE_12_FULL:
+            case JAKARTA_EE_12_WEB:
+                return WebApp.VERSION_6_2;
             case JAKARTA_EE_11_FULL:
             case JAKARTA_EE_11_WEB:
                 return WebApp.VERSION_6_1;

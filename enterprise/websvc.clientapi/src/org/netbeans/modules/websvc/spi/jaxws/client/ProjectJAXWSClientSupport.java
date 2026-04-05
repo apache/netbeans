@@ -54,7 +54,6 @@ import org.openide.NotifyDescriptor;
 import org.openide.execution.ExecutorTask;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node;
 import org.openide.util.Mutex;
@@ -87,6 +86,7 @@ public abstract class ProjectJAXWSClientSupport implements JAXWSClientSupportImp
     protected static final String JAKARTA_EE_VERSION_91="jakarta-ee-version-91"; //NOI18N
     protected static final String JAKARTA_EE_VERSION_10="jakarta-ee-version-10"; //NOI18N
     protected static final String JAKARTA_EE_VERSION_11="jakarta-ee-version-11"; //NOI18N
+    protected static final String JAKARTA_EE_VERSION_12="jakarta-ee-version-12"; //NOI18N
 
     Project project;
     private AntProjectHelper helper;

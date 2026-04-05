@@ -72,7 +72,9 @@ public final class CompositeComponentWizardIterator implements TemplateWizard.It
         WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
         if (webModule != null) {
             JsfVersion version = JsfVersionUtils.forWebModule(webModule);
-            if (version != null && version.isAtLeast(JsfVersion.JSF_4_1)) {
+            if (version != null && version.isAtLeast(JsfVersion.JSF_5_0)) {
+                templateProperties.put("isJSF50", Boolean.TRUE); //NOI18N
+            } else if (version != null && version.isAtLeast(JsfVersion.JSF_4_1)) {
                 templateProperties.put("isJSF41", Boolean.TRUE); //NOI18N
             } else if (version != null && version.isAtLeast(JsfVersion.JSF_4_0)) {
                 templateProperties.put("isJSF40", Boolean.TRUE); //NOI18N

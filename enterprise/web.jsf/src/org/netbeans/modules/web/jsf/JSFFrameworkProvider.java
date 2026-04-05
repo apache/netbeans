@@ -577,7 +577,9 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                 if (ddRoot != null) {
                     Profile profile = webModule.getJ2eeProfile();
                     if (profile != null && profile.isAtLeast(Profile.JAVA_EE_5) && jsfVersion != null) {
-                        if (jsfVersion.isAtLeast(JsfVersion.JSF_4_1)) {
+                        if (jsfVersion.isAtLeast(JsfVersion.JSF_5_0)) {
+                            facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_5_0;
+                        } else if (jsfVersion.isAtLeast(JsfVersion.JSF_4_1)) {
                             facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_4_1;
                         } else if (jsfVersion.isAtLeast(JsfVersion.JSF_4_0)) {
                             facesConfigTemplate = JSFCatalog.RES_FACES_CONFIG_4_0;
@@ -700,7 +702,9 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
                     FileObject template = FileUtil.getConfigRoot().getFileObject(WELCOME_XHTML_TEMPLATE);
                     HashMap<String, Object> params = new HashMap<>();
                     if (jsfVersion != null) {
-                        if (jsfVersion.isAtLeast(JsfVersion.JSF_4_1)) {
+                        if (jsfVersion.isAtLeast(JsfVersion.JSF_5_0)) {
+                            params.put("isJSF50", Boolean.TRUE);    //NOI18N
+                        } else if (jsfVersion.isAtLeast(JsfVersion.JSF_4_1)) {
                             params.put("isJSF41", Boolean.TRUE);    //NOI18N
                         } if (jsfVersion.isAtLeast(JsfVersion.JSF_4_0)) {
                             params.put("isJSF40", Boolean.TRUE);    //NOI18N
@@ -755,7 +759,8 @@ public class JSFFrameworkProvider extends WebFrameworkProvider {
             String shortName;
             try {
                 shortName = Deployment.getDefault().getServerInstance(serverInstanceID).getServerID();
-                if ("gfv800ee11".equals(shortName) || "gfv700ee10".equals(shortName) 
+                if ("gfv900ee12".equals(shortName)
+                        || "gfv800ee11".equals(shortName) || "gfv700ee10".equals(shortName) 
                         || "gfv610ee9".equals(shortName) || "gfv6ee9".equals(shortName) 
                         || "gfv510ee8".equals(shortName) || "gfv5ee8".equals(shortName) 
                         || "gfv5".equals(shortName) || "gfv4ee7".equals(shortName) 

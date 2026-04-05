@@ -79,33 +79,39 @@ public final class WebFragmentProvider {
 
     private WebFragment createWebFragment(FileObject fo, String version) throws IOException, SAXException {
         try {
-            if (WebFragment.VERSION_6_1.equals(version)) {
-                try (InputStream inputStream = fo.getInputStream()) {
-                    return org.netbeans.modules.j2ee.dd.impl.web.model_6_1_frag.WebFragment.createGraph(inputStream);
-                }
-            } else 
-                if (WebFragment.VERSION_6_0.equals(version)) {
-                try (InputStream inputStream = fo.getInputStream()) {
-                    return org.netbeans.modules.j2ee.dd.impl.web.model_6_0_frag.WebFragment.createGraph(inputStream);
-                }
-            } else if (WebFragment.VERSION_5_0.equals(version)) {
-                try (InputStream inputStream = fo.getInputStream()) {
-                    return org.netbeans.modules.j2ee.dd.impl.web.model_5_0_frag.WebFragment.createGraph(inputStream);
-                }
-            } else if (WebFragment.VERSION_4_0.equals(version)) {
-                try (InputStream inputStream = fo.getInputStream()) {
-                    return org.netbeans.modules.j2ee.dd.impl.web.model_4_0_frag.WebFragment.createGraph(inputStream);
-                }
-            } else if (WebFragment.VERSION_3_1.equals(version)) {
-                try (InputStream inputStream = fo.getInputStream()) {
-                    return org.netbeans.modules.j2ee.dd.impl.web.model_3_1_frag.WebFragment.createGraph(inputStream);
-                }
-            } else if (WebFragment.VERSION_3_0.equals(version)) {
-                try (InputStream inputStream = fo.getInputStream()) {
-                    return org.netbeans.modules.j2ee.dd.impl.web.model_3_0_frag.WebFragment.createGraph(inputStream);
-                }
-            } else {
+            if (null == version) {
                 throw new IOException("Unsupported version of web-fragment.xml found! Version: "+version);
+            } else switch (version) {
+                case WebFragment.VERSION_6_2:
+                    try (InputStream inputStream = fo.getInputStream()) {
+                        return org.netbeans.modules.j2ee.dd.impl.web.model_6_2_frag.WebFragment.createGraph(inputStream);
+                    }
+                case WebFragment.VERSION_6_1:
+                    try (InputStream inputStream = fo.getInputStream()) {
+                        return org.netbeans.modules.j2ee.dd.impl.web.model_6_1_frag.WebFragment.createGraph(inputStream);
+                    }
+                case WebFragment.VERSION_6_0:
+                    try (InputStream inputStream = fo.getInputStream()) {
+                        return org.netbeans.modules.j2ee.dd.impl.web.model_6_0_frag.WebFragment.createGraph(inputStream);
+                    }
+                case WebFragment.VERSION_5_0:
+                    try (InputStream inputStream = fo.getInputStream()) {
+                        return org.netbeans.modules.j2ee.dd.impl.web.model_5_0_frag.WebFragment.createGraph(inputStream);
+                    }
+                case WebFragment.VERSION_4_0:
+                    try (InputStream inputStream = fo.getInputStream()) {
+                        return org.netbeans.modules.j2ee.dd.impl.web.model_4_0_frag.WebFragment.createGraph(inputStream);
+                    }
+                case WebFragment.VERSION_3_1:
+                    try (InputStream inputStream = fo.getInputStream()) {
+                        return org.netbeans.modules.j2ee.dd.impl.web.model_3_1_frag.WebFragment.createGraph(inputStream);
+                    }
+                case WebFragment.VERSION_3_0:
+                    try (InputStream inputStream = fo.getInputStream()) {
+                        return org.netbeans.modules.j2ee.dd.impl.web.model_3_0_frag.WebFragment.createGraph(inputStream);
+                    }
+                default:
+                    throw new IOException("Unsupported version of web-fragment.xml found! Version: "+version);
             }
         } catch (RuntimeException ex) {
             throw new SAXException(ex);

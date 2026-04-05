@@ -20,9 +20,7 @@
 package org.netbeans.modules.j2ee.dd.api.client;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -57,9 +55,9 @@ public final class DDProvider {
     private final Map<URL, SAXParseException> errorMap;
     
     private DDProvider() {
-        ddMap = new HashMap<URL, WeakReference<AppClientProxy>>(5);
-        baseBeanMap = new HashMap<URL, WeakReference<AppClient>>(5);
-        errorMap = new HashMap<URL, SAXParseException>(5);
+        ddMap = new HashMap<URL, WeakReference<AppClientProxy>>(8);
+        baseBeanMap = new HashMap<URL, WeakReference<AppClient>>(8);
+        errorMap = new HashMap<URL, SAXParseException>(8);
         fileChangeListener = new FCA();
     }
     

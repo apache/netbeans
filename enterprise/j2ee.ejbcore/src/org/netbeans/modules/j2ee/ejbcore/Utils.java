@@ -243,6 +243,7 @@ public class Utils {
 
         final boolean isEjb31LiteSupported = isEjb31LiteSupported(enterpriseProject);
         final boolean isEjb40LiteSupported = isEjb40LiteSupported(enterpriseProject);
+        final boolean isEjb41LiteSupported = isEjb41LiteSupported(enterpriseProject);
 
         List<Project> filteredResults = new ArrayList<Project>(allProjects.length);
         for (int i = 0; i < allProjects.length; i++) {
@@ -263,7 +264,8 @@ public class Utils {
             // If the caller project is a freeform project, include caller itself only
             // If the caller project is a Java EE 6 web project, include itself in the list
             if ((isEJBModule && !isCallerFreeform) ||
-                    (enterpriseProject.equals(allProjects[i]) && (isCallerFreeform || isEjb31LiteSupported || isEjb40LiteSupported) ) ) {
+                    (enterpriseProject.equals(allProjects[i]) && 
+                    (isCallerFreeform || isEjb31LiteSupported || isEjb40LiteSupported || isEjb41LiteSupported) ) ) {
                 filteredResults.add(allProjects[i]);
             }
         }
@@ -276,6 +278,10 @@ public class Utils {
     
     public static boolean isEjb40LiteSupported(Project enterpriseProject) {
         return J2eeProjectCapabilities.forProject(enterpriseProject).isEjb40LiteSupported();
+    }
+    
+    public static boolean isEjb41LiteSupported(Project enterpriseProject) {
+        return J2eeProjectCapabilities.forProject(enterpriseProject).isEjb41LiteSupported();
     }
 
     public static boolean isAppClient(Project project) {

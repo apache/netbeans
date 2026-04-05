@@ -21,7 +21,6 @@ package org.netbeans.modules.j2ee.ejbjarproject.ui.wizards;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.HashSet;
 
 import java.util.NoSuchElementException;
@@ -227,8 +226,10 @@ public class NewEjbJarProjectWizardIterator implements WizardDescriptor.Progress
     public final void removeChangeListener(ChangeListener l) {}
 
     private static String adaptSourceLevelToJavaEEProfile(Profile javaEEProfile, String defaultSourceLevel) {
-        if (javaEEProfile.isAtLeast(Profile.JAKARTA_EE_11_WEB)) {
+        if (javaEEProfile.isAtLeast(Profile.JAKARTA_EE_12_WEB)) {
             return "21"; //NOI18N
+        } else if (javaEEProfile.isAtLeast(Profile.JAKARTA_EE_11_WEB)) {
+            return "17"; //NOI18N
         } else if (javaEEProfile.isAtLeast(Profile.JAKARTA_EE_9_1_WEB)) {
             return "11"; //NOI18N
         } else if (javaEEProfile.isAtLeast(Profile.JAVA_EE_8_WEB)) {

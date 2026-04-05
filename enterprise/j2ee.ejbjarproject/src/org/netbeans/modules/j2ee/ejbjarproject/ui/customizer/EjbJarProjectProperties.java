@@ -323,7 +323,9 @@ public final class EjbJarProjectProperties {
         SpecificationVersion minimalSourceLevel = null;
         Profile profile = Profile.fromPropertiesString(evaluator.getProperty(J2EE_PLATFORM));
         if (profile != null && profile.isFullProfile()) {
-            if (profile.isAtLeast(Profile.JAKARTA_EE_11_FULL)) {
+            if (profile.isAtLeast(Profile.JAKARTA_EE_12_FULL)) {
+                minimalSourceLevel = new SpecificationVersion("21");
+            } else if (profile.isAtLeast(Profile.JAKARTA_EE_11_FULL)) {
                 minimalSourceLevel = new SpecificationVersion("17");
             } else if (profile.isAtLeast(Profile.JAKARTA_EE_9_1_FULL)) {
                 minimalSourceLevel = new SpecificationVersion("11");

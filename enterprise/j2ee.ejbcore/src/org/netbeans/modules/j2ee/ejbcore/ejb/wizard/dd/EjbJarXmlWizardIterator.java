@@ -94,7 +94,9 @@ public final class EjbJarXmlWizardIterator implements WizardDescriptor.Instantia
             String resource;
             // see #213631 - caused by fact that EJB DD schemas have different numbering than WEB DD schemas
             //   (so Java EE6 Web-DD is of the version 3.0, but Ejb-DD is of the version 3.1)
-            if (j2eeProfile != null && j2eeProfile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+            if (j2eeProfile != null && j2eeProfile.isAtLeast(Profile.JAKARTA_EE_12_WEB)) {
+                resource = "org-netbeans-modules-j2ee-ejbjarproject/ejb-jar-4.1.xml";
+            } else if (j2eeProfile != null && j2eeProfile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
                 resource = "org-netbeans-modules-j2ee-ejbjarproject/ejb-jar-4.0.xml";
             } else if (j2eeProfile != null && j2eeProfile.isAtLeast(Profile.JAVA_EE_7_WEB)) {
                 resource = "org-netbeans-modules-j2ee-ejbjarproject/ejb-jar-3.2.xml";

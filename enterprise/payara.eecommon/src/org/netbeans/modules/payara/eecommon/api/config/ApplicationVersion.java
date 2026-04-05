@@ -88,6 +88,13 @@ public final class ApplicationVersion extends J2EEBaseVersion {
         "11.0", 11000,	// NOI18N
         "11.0", 11000	// NOI18N
         );
+    
+    /** Represents application version 12.0
+     */
+    public static final ApplicationVersion APPLICATION_12_0 = new ApplicationVersion(
+        "12.0", 12000,	// NOI18N
+        "12.0", 12000	// NOI18N
+        );
 
     /** Creates a new instance of ApplicationVersion 
      */
@@ -128,6 +135,8 @@ public final class ApplicationVersion extends J2EEBaseVersion {
             result = APPLICATION_10_0;
         } else if (APPLICATION_11_0.toString().equals(version)) {
             result = APPLICATION_11_0;
+        } else if (APPLICATION_12_0.toString().equals(version)) {
+            result = APPLICATION_12_0;
         }
 
         return result;

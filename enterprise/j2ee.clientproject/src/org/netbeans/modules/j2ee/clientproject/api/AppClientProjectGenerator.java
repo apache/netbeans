@@ -164,6 +164,10 @@ public class AppClientProjectGenerator {
             resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
         } else { 
             switch (j2eeProfile) {
+                case JAKARTA_EE_12_FULL:
+                case JAKARTA_EE_12_WEB:
+                    resource = "org-netbeans-modules-j2ee-clientproject/application-client-12.xml"; // NOI18N
+                    break;
                 case JAKARTA_EE_11_FULL:
                 case JAKARTA_EE_11_WEB:
                     resource = "org-netbeans-modules-j2ee-clientproject/application-client-11.xml"; // NOI18N
@@ -411,6 +415,10 @@ public class AppClientProjectGenerator {
                 resource = "org-netbeans-modules-j2ee-clientproject/application-client-6.xml"; // NOI18N
             } else {
                 switch (j2eeProfile) {
+                    case JAKARTA_EE_12_FULL:
+                    case JAKARTA_EE_12_WEB:
+                        resource = "org-netbeans-modules-j2ee-clientproject/application-client-12.xml"; // NOI18N
+                        break;
                     case JAKARTA_EE_11_FULL:
                     case JAKARTA_EE_11_WEB:
                         resource = "org-netbeans-modules-j2ee-clientproject/application-client-11.xml"; // NOI18N

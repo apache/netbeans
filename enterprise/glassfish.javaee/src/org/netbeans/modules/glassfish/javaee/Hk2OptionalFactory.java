@@ -109,6 +109,12 @@ public class Hk2OptionalFactory extends OptionalDeploymentManagerFactory {
         return null == t ? null : new Hk2OptionalFactory(Hk2DeploymentFactory.createJakartaEe11(),
                 t, true);
     }
+    
+    public static Hk2OptionalFactory createJakartaEe12() {
+        ServerUtilities t = ServerUtilities.getJakartaEe12Utilities();
+        return null == t ? null : new Hk2OptionalFactory(Hk2DeploymentFactory.createJakartaEe12(),
+                t, true);
+    }
 
     @Override
     public StartServer getStartServer(DeploymentManager dm) {

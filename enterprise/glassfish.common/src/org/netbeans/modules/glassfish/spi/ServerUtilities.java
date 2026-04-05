@@ -118,6 +118,12 @@ public final class ServerUtilities {
         return null == gip ? null : new ServerUtilities(gip,
                 GlassfishWizardProvider.createJakartaEe11());
     }
+    
+    public static ServerUtilities getJakartaEe12Utilities() {
+        GlassfishInstanceProvider gip = GlassfishInstanceProvider.getProvider();
+        return null == gip ? null : new ServerUtilities(gip,
+                GlassfishWizardProvider.createJakartaEe12());
+    }
 
 //    public static ServerUtilities getEe6WCUtilities() {
 //        GlassfishInstanceProvider gip = GlassfishInstanceProvider.getProvider();

@@ -72,15 +72,10 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
         // Do some moderate sanity checking to see if this v3 build looks ok.
         File jar = ServerUtilities.getJarName(glassfishHome, ServerUtilities.GFV3_JAR_MATCHER);
 
-
         if (jar==null) {
             return false;
         }
-        if (jar.exists()) {
-            return true;
-        }
-
-        return false;
+        return jar.exists();
     }
 
     private static final RequestProcessor RP = new RequestProcessor("JavaEEServerModuleFactory");
@@ -124,7 +119,7 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
             RP.post(new Runnable() {
                 @Override
                 public void run() {
-                    ensureEclipseLinkSupport(glassfishRoot);
+                    ensureEclipseLinkSupport(glassfishRoot, commonModule.getInstance().getVersion());
                     ensureCometSupport(glassfishRoot);
                     ensureGlassFishApiSupport(commonModule.getInstance());
                     // lookup the javadb register service here and use it.
@@ -156,43 +151,75 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
 
     private static final String PERSISTENCE_API_JAR_MATCHER_1 = "javax.javaee" + ServerUtilities.GFV3_VERSION_MATCHER; // NOI18N
     private static final String PERSISTENCE_API_JAR_MATCHER_2 = "javax.persistence" + ServerUtilities.GFV3_VERSION_MATCHER; // NOI18N
-        
-    private static final String PERSISTENCE_JAVADOC = "javaee-doc-api.jar"; // NOI18N
+    private static final String PERSISTENCE_API_JAR_MATCHER_3 = "jakarta.persistence" + ServerUtilities.GFV3_VERSION_MATCHER; // NOI18N
     
-    private static boolean ensureEclipseLinkSupport(String installRoot) {
-        List<URL> libraryList = new ArrayList<URL>();
-        List<URL> docList = new ArrayList<URL>();
+    private static boolean ensureEclipseLinkSupport(String installRoot, GlassFishVersion version) {
+        List<URL> libraryList = new ArrayList<>();
+        List<URL> docList = new ArrayList<>();
         try {
             File f = ServerUtilities.getJarName(installRoot, EL_CORE_JAR_MATCHER);
             if (f != null && f.exists()) {
                 libraryList.add(ServerUtilities.fileToUrl(f));
-            } else {// we are in the final V3 Prelude jar name structure
+            } else {
+                // we are in the final V3 Prelude jar name structure
                 // find the org.eclipse.persistence*.jar files and add them
                 for (File candidate : new File(installRoot, "modules").listFiles()) {// NOI18N
-                    if (candidate.getName().indexOf("org.eclipse.persistence") != -1) {// NOI18N
+                    if (candidate.getName().contains("org.eclipse.persistence")) {// NOI18N
                         libraryList.add(ServerUtilities.fileToUrl(candidate));
                     }
                 }
             }
-            f = ServerUtilities.getJarName(installRoot, PERSISTENCE_API_JAR_MATCHER_1);
-            if (f != null && f.exists()) {
-                libraryList.add(ServerUtilities.fileToUrl(f));
-            } else {
+            
+            if (GlassFishVersion.ge(version, GlassFishVersion.GF_6)) {
+                f = ServerUtilities.getJarName(installRoot, PERSISTENCE_API_JAR_MATCHER_3);
+                if (f != null && f.exists()) {
+                    libraryList.add(ServerUtilities.fileToUrl(f));
+                }
+            } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_3)) {
                 f = ServerUtilities.getJarName(installRoot, PERSISTENCE_API_JAR_MATCHER_2);
                 if (f != null && f.exists()) {
                     libraryList.add(ServerUtilities.fileToUrl(f));
                 }
+            } else {
+                f = ServerUtilities.getJarName(installRoot, PERSISTENCE_API_JAR_MATCHER_1);
+                if (f != null && f.exists()) {
+                    libraryList.add(ServerUtilities.fileToUrl(f));
+                }
             }
-            // TODO: add support for JPA 3.x
-
-            File j2eeDoc = InstalledFileLocator.getDefault().locate(
-                    "docs/" + PERSISTENCE_JAVADOC,
+            
+            File j2eeDoc = null;
+            if (GlassFishVersion.ge(version, GlassFishVersion.GF_9_0_0)) {
+                j2eeDoc = InstalledFileLocator.getDefault().locate(
+                    "docs/" + JAKARTA_EE_12_JAVADOC,
                     Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);
+            } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_8_0_0)) {
+                j2eeDoc = InstalledFileLocator.getDefault().locate(
+                    "docs/" + JAKARTA_EE_11_JAVADOC,
+                    Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);
+            } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_7_0_0)) {
+                j2eeDoc = InstalledFileLocator.getDefault().locate(
+                    "docs/" + JAKARTA_EE_10_JAVADOC,
+                    Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);
+            } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_6)) {
+                j2eeDoc = InstalledFileLocator.getDefault().locate(
+                    "docs/" + JAKARTA_EE_9_JAVADOC,
+                    Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);
+            } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_5_1_0)) {
+                j2eeDoc = InstalledFileLocator.getDefault().locate(
+                    "docs/" + JAKARTA_EE_8_JAVADOC,
+                    Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);
+            } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_3)) {
+                j2eeDoc = InstalledFileLocator.getDefault().locate(
+                    "docs/" + JAVA_EE_JAVADOC,
+                    Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);
+            }
+            
             if (j2eeDoc != null) {
                 docList.add(ServerUtilities.fileToUrl(j2eeDoc));
             } else {
-                LOG.log(Level.WARNING, "Warning: Java EE documentation not found when registering EclipseLink library.");
+                LOG.log(Level.WARNING, "Warning: Java/Jakarta EE documentation not found when registering EclipseLink library.");
             }
+            
         } catch (MalformedURLException ex) {
             LOG.log(Level.WARNING, ex.getLocalizedMessage(), ex);
             return false;
@@ -206,6 +233,7 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
                 NbBundle.getMessage(JavaEEServerModuleFactory.class, "DNAME_GF_ECLIPSELINK"),  // NOI18N
                 NbBundle.getMessage(JavaEEServerModuleFactory.class, "DESC_GF_ECLIPSELINK"));  // NOI18N
     }
+    
     private static final String COMET_LIB = "Comet-GlassFish-v3-Prelude"; // NOI18N
     private static final String COMET_LIB_2 = "Comet-GlassFish-v3"; // NOI18N
     private static final String COMET_JAR_MATCHER = "grizzly-module" + ServerUtilities.GFV3_VERSION_MATCHER; // NOI18N
@@ -213,7 +241,7 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
     private static final String GRIZZLY_OPTIONAL_JAR_MATCHER = "grizzly-optional" + ServerUtilities.GFV3_VERSION_MATCHER; // NOI18N
 
     private static boolean ensureCometSupport(String installRoot) {
-        List<URL> libraryList = new ArrayList<URL>();
+        List<URL> libraryList = new ArrayList<>();
         String name = COMET_LIB;
         File f = ServerUtilities.getJarName(installRoot, GRIZZLY_OPTIONAL_JAR_MATCHER);
         if (f == null || !f.exists()) {
@@ -253,11 +281,12 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
     private static final String JAKARTA_EE_9_JAVADOC = "jakartaee9-doc-api.jar"; // NOI18N
     private static final String JAKARTA_EE_10_JAVADOC = "jakartaee10-doc-api.jar"; // NOI18N
     private static final String JAKARTA_EE_11_JAVADOC = "jakartaee11-doc-api.jar"; // NOI18N
+    private static final String JAKARTA_EE_12_JAVADOC = "jakartaee12-doc-api.jar"; // NOI18N
 
     private static boolean ensureGlassFishApiSupport(GlassFishServer server) {
         String installRoot = server.getServerRoot();
         List<URL> libraryList = Hk2LibraryProvider.getProvider(server).getJavaEEClassPathURLs();
-        List<URL> docList = new ArrayList<URL>();
+        List<URL> docList = new ArrayList<>();
         String name = JAVA_EE_5_LIB;
 
         File f = ServerUtilities.getJarName(installRoot, "gmbal" + ServerUtilities.GFV3_VERSION_MATCHER);
@@ -266,7 +295,11 @@ public class JavaEEServerModuleFactory implements GlassfishModuleFactory {
         }
         
         File j2eeDoc;
-        if (GlassFishVersion.ge(server.getVersion(), GlassFishVersion.GF_8_0_0)) {
+        if (GlassFishVersion.ge(server.getVersion(), GlassFishVersion.GF_9_0_0)) {
+            j2eeDoc = InstalledFileLocator.getDefault().locate(
+                "docs/" + JAKARTA_EE_12_JAVADOC,
+                Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);
+        } else if (GlassFishVersion.ge(server.getVersion(), GlassFishVersion.GF_8_0_0)) {
             j2eeDoc = InstalledFileLocator.getDefault().locate(
                 "docs/" + JAKARTA_EE_11_JAVADOC,
                 Hk2LibraryProvider.JAVAEE_DOC_CODE_BASE, false);

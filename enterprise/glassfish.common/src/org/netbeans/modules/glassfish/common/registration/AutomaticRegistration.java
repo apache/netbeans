@@ -84,7 +84,10 @@ public class AutomaticRegistration {
         String deployer = "deployer:gfv3ee6";
         String defaultDisplayNamePrefix = "GlassFish Server ";
         GlassFishVersion version = ServerUtils.getServerVersion(glassfishRoot);
-        if (GlassFishVersion.ge(version, GlassFishVersion.GF_8_0_0)) {
+        if (GlassFishVersion.ge(version, GlassFishVersion.GF_9_0_0)) {
+            deployer = "deployer:gfv900ee12";
+            config = "GlassFishJakartaEE12/Instances";
+        } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_8_0_0)) {
             deployer = "deployer:gfv800ee11";
             config = "GlassFishJakartaEE11/Instances";
         } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_7_0_0)) {

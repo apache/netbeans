@@ -149,7 +149,9 @@ public enum GlassFishVersion {
     /** GlassFish 7.1.0 */
     GF_7_1_0       ((short) 7, (short) 1, (short) 0, (short) 0, GlassFishVersion.GF_7_1_0_STR),
     /** GlassFish 8.0.0 */
-    GF_8_0_0       ((short) 8, (short) 0, (short) 0, (short) 0, GlassFishVersion.GF_8_0_0_STR);
+    GF_8_0_0       ((short) 8, (short) 0, (short) 0, (short) 0, GlassFishVersion.GF_8_0_0_STR),
+    /** GlassFish 9.0.0 */
+    GF_9_0_0       ((short) 9, (short) 0, (short) 0, (short) 0, GlassFishVersion.GF_9_0_0_STR);
     // Class attributes                                                       //
     /** GlassFish version enumeration length. */
     public static final int length = GlassFishVersion.values().length;
@@ -436,6 +438,11 @@ public enum GlassFishVersion {
     static final String GF_8_0_0_STR = "8.0.0";
     /** Additional {@code String} representations of GF_8_0_0 value. */
     static final String GF_8_0_0_STR_NEXT[] = {"8.0.0", "8.0.0.0"};
+    
+    /** A {@code String} representation of GF_9_0_0 value. */
+    static final String GF_9_0_0_STR = "9.0.0";
+    /** Additional {@code String} representations of GF_9_0_0 value. */
+    static final String GF_9_0_0_STR_NEXT[] = {"9.0.0", "9.0.0.0"};
 
     /**
      * Stored <code>String</code> values for backward <code>String</code>
@@ -501,6 +508,7 @@ public enum GlassFishVersion {
         initStringValuesMapFromArray(GF_7_0_25, GF_7_0_25_STR_NEXT);
         initStringValuesMapFromArray(GF_7_1_0, GF_7_1_0_STR_NEXT);
         initStringValuesMapFromArray(GF_8_0_0, GF_8_0_0_STR_NEXT);
+        initStringValuesMapFromArray(GF_9_0_0, GF_9_0_0_STR_NEXT);
     }
 
     // Static methods                                                         //

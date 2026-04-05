@@ -70,6 +70,10 @@ public final class JpaProvider {
     public boolean isJpa32Supported() {
         return impl.isJpa32Supported();
     }
+    
+    public boolean isJpa40Supported() {
+        return impl.isJpa40Supported();
+    }
 
     public boolean isDefault() {
         return impl.isDefault();

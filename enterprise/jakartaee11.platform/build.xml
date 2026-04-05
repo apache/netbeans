@@ -41,7 +41,7 @@
 
         <!-- repackage doc file into the format netbeans used prior to switching to the maven central artefact -->
         <jar destfile="external/generated-jakarta.jakartaee-api-11.0.0-javadoc.jar">
-            <zipfileset src="external/jakarta.jakartaee-api-11.0.0-M1-javadoc.jar" includes="**" prefix="docs/api" />
+            <zipfileset src="external/jakarta.jakartaee-api-11.0.0-javadoc.jar" includes="**" prefix="docs/api" />
         </jar>
     </target>
 </project>

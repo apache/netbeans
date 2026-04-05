@@ -55,6 +55,8 @@ public class GradleJavaEEProjectSettings implements JavaEEProjectSettingsImpleme
     static final Map<String, Profile> PROFILE_DEPENDENCIES = new LinkedHashMap<>();
 
     static {
+        PROFILE_DEPENDENCIES.put("jakarta.platform:jakarta.jakartaee-api:12.*", JAKARTA_EE_12_FULL);
+        PROFILE_DEPENDENCIES.put("jakarta.platform:jakarta.jakartaee-web-api:12.*", JAKARTA_EE_12_WEB);
         PROFILE_DEPENDENCIES.put("jakarta.platform:jakarta.jakartaee-api:11.*", JAKARTA_EE_11_FULL);
         PROFILE_DEPENDENCIES.put("jakarta.platform:jakarta.jakartaee-web-api:11.*", JAKARTA_EE_11_WEB);
         PROFILE_DEPENDENCIES.put("jakarta.platform:jakarta.jakartaee-api:10.*", JAKARTA_EE_10_FULL);

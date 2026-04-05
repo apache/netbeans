@@ -61,6 +61,7 @@ public final class DDProvider {
     private static final String EJB_31_DOCTYPE = "http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"; //NOI18N
     private static final String EJB_32_DOCTYPE = "http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_2.xsd"; //NOI18N
     private static final String EJB_40_DOCTYPE = "https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd"; //NOI18N
+    private static final String EJB_41_DOCTYPE = "https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_1.xsd"; //NOI18N
     private static final DDProvider ddProvider = new DDProvider();
     private final Map<Object, EjbJarProxy> ddMap;
 
@@ -68,7 +69,7 @@ public final class DDProvider {
      * Creates a new instance of DDProvider.
      */
     private DDProvider() {
-        ddMap = new HashMap<>(5);
+        ddMap = new HashMap<>(8);
     }
 
     /**

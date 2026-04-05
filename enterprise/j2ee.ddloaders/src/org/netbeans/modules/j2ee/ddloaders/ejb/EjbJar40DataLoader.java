@@ -30,6 +30,7 @@ public class EjbJar40DataLoader extends EjbJarDataLoader{
     
     private static final long serialVersionUID = 1L;
     private static final String REQUIRED_MIME_PREFIX_4_0 = "text/x-dd-ejbjar4.0"; // NOI18N
+    private static final String REQUIRED_MIME_PREFIX_4_1 = "text/x-dd-ejbjar4.1"; // NOI18N
 
     public EjbJar40DataLoader () {
         super ("org.netbeans.modules.j2ee.ddloaders.multiview.EjbJarMultiViewDataObject");  // NOI18N
@@ -40,7 +41,7 @@ public class EjbJar40DataLoader extends EjbJarDataLoader{
     }
     
     protected String[] getSupportedMimeTypes(){
-        return new String[]{REQUIRED_MIME_PREFIX_4_0};
+        return new String[]{REQUIRED_MIME_PREFIX_4_0, REQUIRED_MIME_PREFIX_4_1};
     }
 
 }

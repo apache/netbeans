@@ -49,11 +49,8 @@ public class ClientParseUtils {
     /** Parsing just for detecting the version  SAX parser used
      */
     public static String getVersion(FileObject fo) throws java.io.IOException, SAXException {
-        InputStream inputStream = fo.getInputStream();
-        try {
+        try (InputStream inputStream = fo.getInputStream()) {
             return ParseUtils.getVersion(inputStream, new VersionHandler(), DDResolver.getInstance());
-        } finally {
-            inputStream.close();
         }
     }
     
@@ -106,6 +103,18 @@ public class ClientParseUtils {
                 return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application-client_5.xsd"); //NOI18N
             } else if ("http://java.sun.com/xml/ns/javaee/application-client_6.xsd".equals(systemId)) {
                 return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application-client_6.xsd"); //NOI18N
+            } else if ("http://xmlns.jcp.org/xml/ns/javaee/application-client_7.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application-client_7.xsd"); //NOI18N
+            } else if ("http://xmlns.jcp.org/xml/ns/javaee/application-client_8.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application-client_8.xsd"); //NOI18N
+            } else if ("https://jakarta.ee/xml/ns/jakartaee/application-client_9.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application-client_9.xsd"); //NOI18N
+            } else if ("https://jakarta.ee/xml/ns/jakartaee/application-client_10.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application-client_10.xsd"); //NOI18N
+            } else if ("https://jakarta.ee/xml/ns/jakartaee/application-client_11.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application-client_11.xsd"); //NOI18N
+            } else if ("https://jakarta.ee/xml/ns/jakartaee/application-client_12.xsd".equals(systemId)) {
+                return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application-client_12.xsd"); //NOI18N
             } else {
                 // use the default behaviour
                 return null;
@@ -116,11 +125,8 @@ public class ClientParseUtils {
 
     public static SAXParseException parse(FileObject fo)
     throws org.xml.sax.SAXException, java.io.IOException {
-        InputStream inputStream = fo.getInputStream();
-        try {
+        try (InputStream inputStream = fo.getInputStream()) {
             return parse(new InputSource(inputStream));
-        } finally {
-            inputStream.close();
         }
     }
     

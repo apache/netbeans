@@ -20,9 +20,7 @@
 package org.netbeans.modules.tomcat5.util;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
@@ -419,7 +417,7 @@ public class TomcatProperties {
     
     public boolean getSecManager() {
         String val = ip.getProperty(PROP_SEC_MANAGER);
-        return val != null ? Boolean.valueOf(val)
+        return val != null ? Boolean.parseBoolean(val)
                            : DEF_VALUE_SEC_MANAGER;
     }
     
@@ -430,7 +428,7 @@ public class TomcatProperties {
     
     public boolean getCustomScript() {
         String val = ip.getProperty(PROP_CUSTOM_SCRIPT);
-        return val != null ? Boolean.valueOf(val)
+        return val != null ? Boolean.parseBoolean(val)
                            : DEF_VALUE_CUSTOM_SCRIPT;
     }
     
@@ -453,7 +451,7 @@ public class TomcatProperties {
             return false;
         }
         String val = ip.getProperty(PROP_FORCE_STOP);
-        return val != null ? Boolean.valueOf(val)
+        return val != null ? Boolean.parseBoolean(val)
                            : DEF_VALUE_FORCE_STOP;
     }
     
@@ -476,7 +474,7 @@ public class TomcatProperties {
     
     public boolean getMonitor() {
         String val = ip.getProperty(PROP_MONITOR);
-        return val != null ? Boolean.valueOf(val)
+        return val != null ? Boolean.parseBoolean(val)
                            : DEF_VALUE_MONITOR;
     }
     
@@ -486,7 +484,7 @@ public class TomcatProperties {
     
     public boolean getProxyEnabled() {
         String val = ip.getProperty(PROP_PROXY_ENABLED);
-        return val != null ? Boolean.valueOf(val)
+        return val != null ? Boolean.parseBoolean(val)
                            : DEF_VALUE_PROXY_ENABLED;
     }
     
@@ -647,7 +645,7 @@ public class TomcatProperties {
         ip.setProperty(PROP_DRIVER_DEPLOYMENT, Boolean.toString(enabled));
     }
 
-    public List/*<URL>*/ getClasses() {
+    public List<URL> getClasses() {
         String[] nbFilter = new String[] {
             "httpmonitor",
             "schema2beans",

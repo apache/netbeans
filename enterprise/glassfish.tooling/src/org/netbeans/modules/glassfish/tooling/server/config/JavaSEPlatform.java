@@ -76,7 +76,9 @@ public enum JavaSEPlatform {
     /** JavaSE 25. */
     v25,
     /** JavaSE 26. */
-    v26;
+    v26,
+    /** JavaSE 27. */
+    v27;
 
     // Class attributes                                                       //
     /** GlassFish JavaEE platform enumeration length. */
@@ -90,7 +92,7 @@ public enum JavaSEPlatform {
      * conversion.
      */
     private static final Map<String, JavaSEPlatform> stringValuesMap
-            = new HashMap<>(values().length);
+            = new HashMap<>(64);
 
     // Initialize backward String conversion Map.
     static {

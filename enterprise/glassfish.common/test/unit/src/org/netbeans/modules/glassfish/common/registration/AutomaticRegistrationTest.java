@@ -29,6 +29,22 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishVersion;
 public class AutomaticRegistrationTest {
     
     @Test
+    public void testRegistrationGF9() {
+        GlassFishVersion version = GlassFishVersion.GF_9_0_0;
+        if (GlassFishVersion.ge(version, GlassFishVersion.GF_9_0_0)) {
+            assertTrue("Success!", true);
+        } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_6)) {
+            fail("GF_6");
+        } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_5_1_0)) {
+            fail("GF_5_1_0");
+        } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_5)) {
+            fail("GF_5");
+        } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_3_1)) {
+            fail("GF_3_1");
+        }
+    }
+    
+    @Test
     public void testRegistrationGF8() {
         GlassFishVersion version = GlassFishVersion.GF_8_0_0;
         if (GlassFishVersion.ge(version, GlassFishVersion.GF_8_0_0)) {

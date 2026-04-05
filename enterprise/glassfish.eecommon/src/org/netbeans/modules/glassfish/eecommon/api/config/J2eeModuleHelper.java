@@ -55,13 +55,13 @@ public abstract class J2eeModuleHelper {
     private static final Map<Object, J2eeModuleHelper> gfhelperMap;
 
     static {
-        Map<Object, J2eeModuleHelper> map = new HashMap<Object, J2eeModuleHelper>();
+        Map<Object, J2eeModuleHelper> map = new HashMap<>(8);
         map.put(J2eeModule.Type.WAR, new WebDDHelper());
         map.put(J2eeModule.Type.EJB, new EjbDDHelper());
         map.put(J2eeModule.Type.EAR, new EarDDHelper());
         map.put(J2eeModule.Type.CAR, new ClientDDHelper());
         helperMap = Collections.unmodifiableMap(map);
-        map = new HashMap<Object, J2eeModuleHelper>();
+        map = new HashMap<Object, J2eeModuleHelper>(8);
         map.put(J2eeModule.Type.WAR, new WebDDHelper(GF_WEB_XML_V2, null));
         map.put(J2eeModule.Type.EJB, new EjbDDHelper("META-INF/glassfish-ejb-jar.xml", "META-INF/glassfish-cmp-mappings.xml"));
         map.put(J2eeModule.Type.EAR, new EarDDHelper("META-INF/glassfish-application.xml", null));
@@ -208,6 +208,8 @@ public abstract class J2eeModuleHelper {
                 result = ASDDVersion.GLASSFISH_7;
             } else if (ServletVersion.SERVLET_6_1.equals(servletVersion)) {
                 result = ASDDVersion.GLASSFISH_8;
+            } else if (ServletVersion.SERVLET_6_2.equals(servletVersion)) {
+                result = ASDDVersion.GLASSFISH_9;
             }
             return result;
         }
@@ -244,6 +246,8 @@ public abstract class J2eeModuleHelper {
                 result = ASDDVersion.GLASSFISH_7;
             } else if (ServletVersion.SERVLET_6_1.equals(servletVersion)) {
                 result = ASDDVersion.GLASSFISH_8;
+            } else if (ServletVersion.SERVLET_6_2.equals(servletVersion)) {
+                result = ASDDVersion.GLASSFISH_9;
             }
             return result;
         }
@@ -285,6 +289,8 @@ public abstract class J2eeModuleHelper {
                 result = ASDDVersion.GLASSFISH_7;
             } else if (EjbJarVersion.EJBJAR_4_0_1.equals(ejbJarVersion)) {
                 result = ASDDVersion.GLASSFISH_8;
+            } else if (EjbJarVersion.EJBJAR_4_1.equals(ejbJarVersion)) {
+                result = ASDDVersion.GLASSFISH_9;
             }
             return result;
         }
@@ -326,6 +332,8 @@ public abstract class J2eeModuleHelper {
                 result = ASDDVersion.GLASSFISH_7;
             } else if (ApplicationVersion.APPLICATION_11_0.equals(applicationVersion)) {
                 result = ASDDVersion.GLASSFISH_8;
+            } else if (ApplicationVersion.APPLICATION_12_0.equals(applicationVersion)) {
+                result = ASDDVersion.GLASSFISH_9;
             }
             return result;
         }
@@ -367,12 +375,13 @@ public abstract class J2eeModuleHelper {
                 result = ASDDVersion.GLASSFISH_7;
             } else if (AppClientVersion.APP_CLIENT_11_0.equals(appClientVersion)) {
                 result = ASDDVersion.GLASSFISH_8;
+            } else if (AppClientVersion.APP_CLIENT_12_0.equals(appClientVersion)) {
+                result = ASDDVersion.GLASSFISH_9;
             }
             return result;
         }
 
     }
-
 
 
 }

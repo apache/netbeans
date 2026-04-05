@@ -97,6 +97,12 @@ public final class J2EEVersion extends J2EEBaseVersion {
     public static final J2EEVersion JAKARTAEE_11_0 = new J2EEVersion(
             "11.0.0", 110000,    // NOI18N
             "11.0.0", 110000);   // NOI18N
+    
+    /** Represents Jakarta EE version 12.0.0
+     */
+    public static final J2EEVersion JAKARTAEE_12_0 = new J2EEVersion(
+            "12.0.0", 120000,    // NOI18N
+            "12.0.0", 120000);   // NOI18N
 
     /** Creates a new instance of J2EEVersion
      */
@@ -141,6 +147,8 @@ public final class J2EEVersion extends J2EEBaseVersion {
             result = JAKARTAEE_10_0;
         } else if(JAKARTAEE_11_0.toString().equals(version)) {
             result = JAKARTAEE_11_0;
+        } else if(JAKARTAEE_12_0.toString().equals(version)) {
+            result = JAKARTAEE_12_0;
         }
 
         return result;

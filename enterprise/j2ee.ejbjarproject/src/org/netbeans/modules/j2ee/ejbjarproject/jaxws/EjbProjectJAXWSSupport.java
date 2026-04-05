@@ -20,7 +20,6 @@
 package org.netbeans.modules.j2ee.ejbjarproject.jaxws;
 
 import java.io.IOException;
-import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.api.ejbjar.EjbJar;
 import org.netbeans.modules.j2ee.dd.api.webservices.WebservicesMetadata;
@@ -183,6 +182,8 @@ public String addService(String name, String serviceImpl, String wsdlUrl, String
                 case JAKARTA_EE_11_WEB:
                 case JAKARTA_EE_11_FULL:
                     return JAKARTA_EE_VERSION_11;
+                case JAKARTA_EE_12_FULL:
+                    return JAKARTA_EE_VERSION_12;
                 case JAVA_EE_5:
                     return JAVA_EE_VERSION_15;
                 default:

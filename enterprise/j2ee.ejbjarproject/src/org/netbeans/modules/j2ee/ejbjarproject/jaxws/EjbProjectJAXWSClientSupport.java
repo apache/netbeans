@@ -22,7 +22,6 @@ package org.netbeans.modules.j2ee.ejbjarproject.jaxws;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.j2ee.api.ejbjar.EjbJar;
 import org.netbeans.modules.j2ee.core.api.support.SourceGroups;
@@ -112,6 +111,8 @@ public class EjbProjectJAXWSClientSupport extends ProjectJAXWSClientSupport/* im
                 case JAKARTA_EE_11_WEB:
                 case JAKARTA_EE_11_FULL:
                     return JAKARTA_EE_VERSION_11;
+                case JAKARTA_EE_12_FULL:
+                    return JAKARTA_EE_VERSION_12;
                 case JAVA_EE_5:
                     return JAVA_EE_VERSION_15;
                 default:

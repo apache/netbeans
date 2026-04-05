@@ -96,7 +96,14 @@ public class WebRecoPrivTemplates implements RecommendedTemplates, PrivilegedTem
         "ejb-types_3_2",        // NOI18N
         "ejb-deployment-descriptor", // NOI18N
     };
-
+    
+    private static final String[] WEB_TYPES_EJB41_LITE = new String[] {
+        "ejb-types",            // NOI18N
+        "ejb-types_3_0",        // NOI18N
+        "ejb-types_3_1",        // NOI18N
+        "ejb-types_3_2",        // NOI18N
+        "ejb-deployment-descriptor", // NOI18N
+    };
 
     private static final String[] WEB_PRIVILEGED_NAMES = new String[] {
         "Templates/JSP_Servlet/JSP.jsp",            // NOI18N
@@ -154,6 +161,8 @@ public class WebRecoPrivTemplates implements RecommendedTemplates, PrivilegedTem
                         toRet.addAll(Arrays.asList(WEB_TYPES_EJB32_LITE));
                     } else if (cap.isEjb31LiteSupported()) {
                         toRet.addAll(Arrays.asList(WEB_TYPES_EJB_LITE));
+                    } else if (cap.isEjb41LiteSupported()) {
+                        toRet.addAll(Arrays.asList(WEB_TYPES_EJB41_LITE));
                     }
                 }
                 return toRet.toArray(new String[0]);
@@ -180,7 +189,7 @@ public class WebRecoPrivTemplates implements RecommendedTemplates, PrivilegedTem
                     if (cap.isEjb31LiteSupported()) {
                         toRet.addAll(Arrays.asList(WEB_PRIVILEGED_NAMES_EE6_WEB));
                     }
-                    if (cap.isEjb32LiteSupported() || cap.isEjb40LiteSupported()) {
+                    if (cap.isEjb32LiteSupported() || cap.isEjb40LiteSupported() || cap.isEjb41LiteSupported()) {
                         toRet.addAll(Arrays.asList(WEB_PRIVILEGED_NAMES_EE7_WEB));
                     }
                 }
@@ -191,13 +200,9 @@ public class WebRecoPrivTemplates implements RecommendedTemplates, PrivilegedTem
     }
 
     private boolean isServerSupportingEJB31() {
-        if (ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_6_FULL)
+        return ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_6_FULL)
                 || ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_7_FULL)
                 || ProjectUtil.getSupportedProfiles(project).contains(Profile.JAVA_EE_8_FULL)
-                || ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_8_FULL)) {
-
-            return true;
-        }
-        return false;
+                || ProjectUtil.getSupportedProfiles(project).contains(Profile.JAKARTA_EE_8_FULL);
     }
 }

@@ -23,11 +23,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.j2ee.core.Profile;
@@ -137,31 +135,18 @@ public class WebModuleImpl extends BaseEEModuleImpl implements WebModuleImplemen
         if (pomProfile != null) {
             // If might happened in cases when WAR project uses Java EE full stack
             // Simply return corresponding Web profile until #232478 will be resolved
-            if (Profile.JAVA_EE_6_FULL.equals(pomProfile)) {
-                return Profile.JAVA_EE_6_WEB;
-            }
-            if (Profile.JAVA_EE_7_FULL.equals(pomProfile)) {
-                return Profile.JAVA_EE_7_WEB;
-            }
-            if (Profile.JAVA_EE_8_FULL.equals(pomProfile)) {
-                return Profile.JAVA_EE_8_WEB;
-            }
-            if (Profile.JAKARTA_EE_8_FULL.equals(pomProfile)) {
-                return Profile.JAKARTA_EE_8_WEB;
-            }
-            if (Profile.JAKARTA_EE_9_FULL.equals(pomProfile)) {
-                return Profile.JAKARTA_EE_9_WEB;
-            }
-            if (Profile.JAKARTA_EE_9_1_FULL.equals(pomProfile)) {
-                return Profile.JAKARTA_EE_9_1_WEB;
-            }
-            if (Profile.JAKARTA_EE_10_FULL.equals(pomProfile)) {
-                return Profile.JAKARTA_EE_10_WEB;
-            }
-            if (Profile.JAKARTA_EE_11_FULL.equals(pomProfile)) {
-                return Profile.JAKARTA_EE_11_WEB;
-            }
-            return pomProfile;
+            return switch (pomProfile) {
+                case JAVA_EE_6_FULL -> Profile.JAVA_EE_6_WEB;
+                case JAVA_EE_7_FULL -> Profile.JAVA_EE_7_WEB;
+                case JAVA_EE_8_FULL -> Profile.JAVA_EE_8_WEB;
+                case JAKARTA_EE_8_FULL -> Profile.JAKARTA_EE_8_WEB;
+                case JAKARTA_EE_9_FULL -> Profile.JAKARTA_EE_9_WEB;
+                case JAKARTA_EE_9_1_FULL -> Profile.JAKARTA_EE_9_1_WEB;
+                case JAKARTA_EE_10_FULL -> Profile.JAKARTA_EE_10_WEB;
+                case JAKARTA_EE_11_FULL -> Profile.JAKARTA_EE_11_WEB;
+                case JAKARTA_EE_12_FULL -> Profile.JAKARTA_EE_12_WEB;
+                default -> pomProfile;
+            };
         }
 
         Profile descriptorProfile = getProfileFromDescriptor();

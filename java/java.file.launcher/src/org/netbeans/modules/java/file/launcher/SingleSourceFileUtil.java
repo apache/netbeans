@@ -54,12 +54,7 @@ public final class SingleSourceFileUtil {
     // TODO this checks the runtime JDK of NB!
     public static int findJavaVersion() throws NumberFormatException {
         // JEP-330 is supported only on JDK-11 and above.
-        String javaVersion = System.getProperty("java.specification.version"); //NOI18N
-        if (javaVersion.startsWith("1.")) { //NOI18N
-            javaVersion = javaVersion.substring(2);
-        }
-        int version = Integer.parseInt(javaVersion);
-        return version;
+        return Runtime.version().feature();
     }
 
     public static final String GLOBAL_VM_OPTIONS = "java_file_launcher_global_vm_options"; //NOI18N

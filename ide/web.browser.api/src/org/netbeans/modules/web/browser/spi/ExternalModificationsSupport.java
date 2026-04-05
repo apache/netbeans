@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.web.browser.spi;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
@@ -27,7 +26,6 @@ import javax.swing.text.StyledDocument;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.modules.web.browser.Helper;
-import org.netbeans.modules.web.common.api.DependentFileQuery;
 import org.netbeans.modules.web.common.api.ServerURLMapping;
 import org.netbeans.modules.web.common.api.WebUtils;
 import org.openide.DialogDescriptor;
@@ -106,28 +104,20 @@ public final class ExternalModificationsSupport {
                 }
             }
         }
-        OutputStream os = null;
         FileLock lock = null;
         try {
             lock = modifiedFile.lock();
-            os = modifiedFile.getOutputStream(lock);
-            // TODO: is encoding going to be OK?? what encoding CDT sends the file in??
-            FileUtil.copy(new ByteArrayInputStream(content.getBytes()), os);
+            try (OutputStream os = modifiedFile.getOutputStream(lock)) {
+                // TODO: is encoding going to be OK?? what encoding CDT sends the file in??
+                os.write(content.getBytes());
+            }
         } catch (FileAlreadyLockedException ex) {
             DialogDisplayer.getDefault().notify(new DialogDescriptor.Message(
                     "Content of "+FileUtil.getFileDisplayName(modifiedFile)+" cannot be updated with "
                     + "changes coming from the Chrome Developer Tools because file is locked!"));
-            return;
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
             if (lock != null) {
                 lock.releaseLock();
             }

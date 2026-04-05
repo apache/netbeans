@@ -181,20 +181,9 @@ public final class Startup {
         } else {
             //Should get us metal where it doesn't get us GTK
             uiClassName = UIManager.getSystemLookAndFeelClassName();
-            // Enable GTK L&F only for JDK version 1.6.0 update 1 and later.
-            // GTK L&F quality unacceptable for earlier versions.
-            // Also enable GTK L&F for OpenJDK
-            String javaVersion = System.getProperty("java.version");
-            if ("1.6.0_01".compareTo(javaVersion) > 0 && System.getProperty("java.vm.name") != null && System.getProperty("java.vm.name").indexOf("OpenJDK") < 0) {
-                // IDE runs on 1.5 or 1.6 - useGtk can enabled Gtk
-                if (uiClassName.indexOf("gtk") >= 0 && !Boolean.getBoolean("useGtk")) {
-                    uiClassName = "javax.swing.plaf.metal.MetalLookAndFeel";
-                }
-            } else {
-                // IDE runs on 1.6_0_01 or higher - useGtk can disabled Gtk
-                if (uiClassName.indexOf("gtk") >= 0 && System.getProperty("useGtk") != null && !Boolean.getBoolean("useGtk")) {
-                    uiClassName = "javax.swing.plaf.metal.MetalLookAndFeel";
-                }
+            // useGtk can disabled Gtk
+            if (uiClassName.indexOf("gtk") >= 0 && System.getProperty("useGtk") != null && !Boolean.getBoolean("useGtk")) {
+                uiClassName = "javax.swing.plaf.metal.MetalLookAndFeel";
             }
             // #118534 - don't allow Nimbus L&F as default system L&F,
             // as we're not ready to support it yet

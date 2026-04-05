@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.48
+#Version 1.49
 
 CLSS public abstract interface java.io.Serializable
 
@@ -14,6 +14,7 @@ cons public init(java.lang.Object)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(long)
 supr java.lang.Error
+hfds serialVersionUID
 
 CLSS public abstract interface java.lang.Cloneable
 
@@ -23,13 +24,17 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -38,9 +43,11 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+hfds name,ordinal
 
 CLSS public java.lang.Error
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -49,6 +56,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -57,6 +65,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -68,6 +77,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -85,6 +95,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -107,6 +118,8 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -140,6 +153,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public abstract java.util.AbstractMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons protected init()
 innr public static SimpleEntry
@@ -162,6 +178,7 @@ meth public {java.util.AbstractMap%1} get(java.lang.Object)
 meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.AbstractMap%1})
 meth public {java.util.AbstractMap%1} remove(java.lang.Object)
 supr java.lang.Object
+hfds keySet,values
 
 CLSS public abstract interface java.util.Comparator<%0 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
@@ -217,9 +234,13 @@ meth public {java.util.HashMap%1} putIfAbsent({java.util.HashMap%0},{java.util.H
 meth public {java.util.HashMap%1} remove(java.lang.Object)
 meth public {java.util.HashMap%1} replace({java.util.HashMap%0},{java.util.HashMap%1})
 supr java.util.AbstractMap<{java.util.HashMap%0},{java.util.HashMap%1}>
+hfds DEFAULT_INITIAL_CAPACITY,DEFAULT_LOAD_FACTOR,MAXIMUM_CAPACITY,MIN_TREEIFY_CAPACITY,TREEIFY_THRESHOLD,UNTREEIFY_THRESHOLD,entrySet,loadFactor,modCount,serialVersionUID,size,table,threshold
+hcls EntryIterator,EntrySet,EntrySpliterator,HashIterator,HashMapSpliterator,KeyIterator,KeySet,KeySpliterator,Node,TreeNode,UnsafeHolder,ValueIterator,ValueSpliterator,Values
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry
+meth public !varargs static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> ofEntries(java.util.Map$Entry<? extends {%%0},? extends {%%1}>[])
+ anno 0 java.lang.SafeVarargs()
 meth public abstract boolean containsKey(java.lang.Object)
 meth public abstract boolean containsValue(java.lang.Object)
 meth public abstract boolean equals(java.lang.Object)
@@ -236,6 +257,19 @@ meth public abstract {java.util.Map%1} put({java.util.Map%0},{java.util.Map%1})
 meth public abstract {java.util.Map%1} remove(java.lang.Object)
 meth public boolean remove(java.lang.Object,java.lang.Object)
 meth public boolean replace({java.util.Map%0},{java.util.Map%1},{java.util.Map%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map$Entry<{%%0},{%%1}> entry({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> copyOf(java.util.Map<? extends {%%0},? extends {%%1}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
 meth public void forEach(java.util.function.BiConsumer<? super {java.util.Map%0},? super {java.util.Map%1}>)
 meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
 meth public {java.util.Map%1} compute({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
@@ -284,7 +318,7 @@ meth public void run(junit.framework.TestResult)
 supr junit.extensions.TestDecorator
 
 CLSS public junit.framework.Assert
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons protected init()
 meth public static java.lang.String format(java.lang.String,java.lang.Object,java.lang.Object)
 meth public static void assertEquals(boolean,boolean)
@@ -625,7 +659,7 @@ CLSS public abstract org.hamcrest.BaseMatcher<%0 extends java.lang.Object>
 cons public init()
 intf org.hamcrest.Matcher<{org.hamcrest.BaseMatcher%0}>
 meth public final void _dont_implement_Matcher___instead_extend_BaseMatcher_()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String toString()
 meth public void describeMismatch(java.lang.Object,org.hamcrest.Description)
 supr java.lang.Object
@@ -751,7 +785,7 @@ CLSS public abstract interface org.hamcrest.Matcher<%0 extends java.lang.Object>
 intf org.hamcrest.SelfDescribing
 meth public abstract boolean matches(java.lang.Object)
 meth public abstract void _dont_implement_Matcher___instead_extend_BaseMatcher_()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void describeMismatch(java.lang.Object,org.hamcrest.Description)
 
 CLSS public org.hamcrest.MatcherAssert
@@ -873,7 +907,7 @@ CLSS public org.hamcrest.core.Is<%0 extends java.lang.Object>
 cons public init(org.hamcrest.Matcher<{org.hamcrest.core.Is%0}>)
 meth public boolean matches(java.lang.Object)
 meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> is(java.lang.Class<{%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> is(org.hamcrest.Matcher<{%%0}>)
 meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> is({%%0})
 meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<{%%0}> isA(java.lang.Class<{%%0}>)
@@ -992,9 +1026,9 @@ intf java.lang.annotation.Annotation
 CLSS public org.junit.Assert
 cons protected init()
 meth public static <%0 extends java.lang.Object> void assertThat(java.lang.String,{%%0},org.hamcrest.Matcher<? super {%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends java.lang.Object> void assertThat({%%0},org.hamcrest.Matcher<? super {%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends java.lang.Throwable> {%%0} assertThrows(java.lang.Class<{%%0}>,org.junit.function.ThrowingRunnable)
 meth public static <%0 extends java.lang.Throwable> {%%0} assertThrows(java.lang.String,java.lang.Class<{%%0}>,org.junit.function.ThrowingRunnable)
 meth public static void assertArrayEquals(boolean[],boolean[])
@@ -1016,19 +1050,19 @@ meth public static void assertArrayEquals(java.lang.String,short[],short[])
 meth public static void assertArrayEquals(long[],long[])
 meth public static void assertArrayEquals(short[],short[])
 meth public static void assertEquals(double,double)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void assertEquals(double,double,double)
 meth public static void assertEquals(float,float,float)
 meth public static void assertEquals(java.lang.Object,java.lang.Object)
 meth public static void assertEquals(java.lang.Object[],java.lang.Object[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void assertEquals(java.lang.String,double,double)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void assertEquals(java.lang.String,double,double,double)
 meth public static void assertEquals(java.lang.String,float,float,float)
 meth public static void assertEquals(java.lang.String,java.lang.Object,java.lang.Object)
 meth public static void assertEquals(java.lang.String,java.lang.Object[],java.lang.Object[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void assertEquals(java.lang.String,long,long)
 meth public static void assertEquals(long,long)
 meth public static void assertFalse(boolean)
@@ -1057,7 +1091,7 @@ supr java.lang.Object
 
 CLSS public org.junit.Assume
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public !varargs static void assumeNotNull(java.lang.Object[])
 meth public static <%0 extends java.lang.Object> void assumeThat(java.lang.String,{%%0},org.hamcrest.Matcher<{%%0}>)
 meth public static <%0 extends java.lang.Object> void assumeThat({%%0},org.hamcrest.Matcher<{%%0}>)
@@ -1159,7 +1193,7 @@ CLSS public static org.junit.experimental.categories.Categories$CategoryFilter
  outer org.junit.experimental.categories.Categories
 cons protected init(boolean,java.util.Set<java.lang.Class<?>>,boolean,java.util.Set<java.lang.Class<?>>)
 cons public init(java.lang.Class<?>,java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public !varargs static org.junit.experimental.categories.Categories$CategoryFilter exclude(boolean,java.lang.Class<?>[])
 meth public !varargs static org.junit.experimental.categories.Categories$CategoryFilter exclude(java.lang.Class<?>[])
 meth public !varargs static org.junit.experimental.categories.Categories$CategoryFilter include(boolean,java.lang.Class<?>[])
@@ -1227,7 +1261,7 @@ meth public org.junit.runner.Result run(java.lang.Class<?>)
 meth public org.junit.runner.Result run(org.junit.runner.Request)
 meth public org.junit.runner.Result run(org.junit.runner.Request,org.junit.runner.JUnitCore)
 meth public static org.junit.experimental.max.MaxCore forFolder(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.junit.experimental.max.MaxCore storedLocally(java.io.File)
 supr java.lang.Object
 hfds MALFORMED_JUNIT_3_TEST_CLASS_PREFIX,history
@@ -1253,7 +1287,7 @@ hfds result
 
 CLSS public org.junit.experimental.results.ResultMatchers
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.hamcrest.Matcher<java.lang.Object> hasSingleFailureContaining(java.lang.String)
 meth public static org.hamcrest.Matcher<org.junit.experimental.results.PrintableResult> failureCountIs(int)
 meth public static org.hamcrest.Matcher<org.junit.experimental.results.PrintableResult> hasFailureContaining(java.lang.String)
@@ -1380,15 +1414,15 @@ hfds fCause,fIndices,fMessage,serialVersionUID
 
 CLSS public org.junit.internal.AssumptionViolatedException
 cons public init(java.lang.Object,org.hamcrest.Matcher<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,boolean,java.lang.Object,org.hamcrest.Matcher<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.Object,org.hamcrest.Matcher<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,java.lang.Throwable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf org.hamcrest.SelfDescribing
 meth public java.lang.String getMessage()
 meth public void describeTo(org.hamcrest.Description)
@@ -1402,7 +1436,7 @@ supr java.lang.Object
 
 CLSS public org.junit.internal.Classes
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.Class<?> getClass(java.lang.String) throws java.lang.ClassNotFoundException
 meth public static java.lang.Class<?> getClass(java.lang.String,java.lang.Class<?>) throws java.lang.ClassNotFoundException
 supr java.lang.Object
@@ -1429,7 +1463,7 @@ supr org.junit.internal.ComparisonCriteria
 CLSS public abstract interface org.junit.internal.JUnitSystem
 meth public abstract java.io.PrintStream out()
 meth public abstract void exit(int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public org.junit.internal.MethodSorter
 fld public final static java.util.Comparator<java.lang.reflect.Method> DEFAULT
@@ -1442,7 +1476,7 @@ cons public init()
 intf org.junit.internal.JUnitSystem
 meth public java.io.PrintStream out()
 meth public void exit(int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 
 CLSS public org.junit.internal.TextListener
@@ -1491,23 +1525,23 @@ supr org.junit.internal.runners.JUnit38ClassRunner
 CLSS public org.junit.matchers.JUnitMatchers
 cons public init()
 meth public !varargs static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<{%%0}>> hasItems(org.hamcrest.Matcher<? super {%%0}>[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public !varargs static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<{%%0}>> hasItems({%%0}[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends java.lang.Exception> org.hamcrest.Matcher<{%%0}> isException(org.hamcrest.Matcher<{%%0}>)
 meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<? super {%%0}>> hasItem(org.hamcrest.Matcher<? super {%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<? super {%%0}>> hasItem({%%0})
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends java.lang.Object> org.hamcrest.Matcher<java.lang.Iterable<{%%0}>> everyItem(org.hamcrest.Matcher<{%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends java.lang.Object> org.hamcrest.core.CombinableMatcher$CombinableBothMatcher<{%%0}> both(org.hamcrest.Matcher<? super {%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends java.lang.Object> org.hamcrest.core.CombinableMatcher$CombinableEitherMatcher<{%%0}> either(org.hamcrest.Matcher<? super {%%0}>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends java.lang.Throwable> org.hamcrest.Matcher<{%%0}> isThrowable(org.hamcrest.Matcher<{%%0}>)
 meth public static org.hamcrest.Matcher<java.lang.String> containsString(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 
 CLSS public org.junit.rules.DisableOnDebug
@@ -1533,13 +1567,13 @@ CLSS public org.junit.rules.ExpectedException
 intf org.junit.rules.TestRule
 meth public final boolean isAnyExceptionExpected()
 meth public org.junit.rules.ExpectedException handleAssertionErrors()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.junit.rules.ExpectedException handleAssumptionViolatedExceptions()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.junit.rules.ExpectedException reportMissingExceptionWithMessage(java.lang.String)
 meth public org.junit.runners.model.Statement apply(org.junit.runners.model.Statement,org.junit.runner.Description)
 meth public static org.junit.rules.ExpectedException none()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void expect(java.lang.Class<? extends java.lang.Throwable>)
 meth public void expect(org.hamcrest.Matcher<?>)
 meth public void expectCause(org.hamcrest.Matcher<?>)
@@ -1633,14 +1667,14 @@ meth protected void failed(java.lang.Throwable,org.junit.runner.Description)
 meth protected void finished(org.junit.runner.Description)
 meth protected void skipped(org.junit.AssumptionViolatedException,org.junit.runner.Description)
 meth protected void skipped(org.junit.internal.AssumptionViolatedException,org.junit.runner.Description)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void starting(org.junit.runner.Description)
 meth protected void succeeded(org.junit.runner.Description)
 meth public org.junit.runners.model.Statement apply(org.junit.runners.model.Statement,org.junit.runner.Description)
 supr java.lang.Object
 
 CLSS public org.junit.rules.TestWatchman
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 intf org.junit.rules.MethodRule
 meth public org.junit.runners.model.Statement apply(org.junit.runners.model.Statement,org.junit.runners.model.FrameworkMethod,java.lang.Object)
@@ -1653,7 +1687,7 @@ supr java.lang.Object
 CLSS public org.junit.rules.Timeout
 cons protected init(org.junit.rules.Timeout$Builder)
 cons public init(int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(long,java.util.concurrent.TimeUnit)
 innr public static Builder
 intf org.junit.rules.TestRule
@@ -1974,13 +2008,13 @@ meth protected org.junit.runners.model.Statement possiblyExpectingExceptions(org
 meth protected org.junit.runners.model.Statement withAfters(org.junit.runners.model.FrameworkMethod,java.lang.Object,org.junit.runners.model.Statement)
 meth protected org.junit.runners.model.Statement withBefores(org.junit.runners.model.FrameworkMethod,java.lang.Object,org.junit.runners.model.Statement)
 meth protected org.junit.runners.model.Statement withPotentialTimeout(org.junit.runners.model.FrameworkMethod,java.lang.Object,org.junit.runners.model.Statement)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void collectInitializationErrors(java.util.List<java.lang.Throwable>)
 meth protected void runChild(org.junit.runners.model.FrameworkMethod,org.junit.runner.notification.RunNotifier)
 meth protected void validateConstructor(java.util.List<java.lang.Throwable>)
 meth protected void validateFields(java.util.List<java.lang.Throwable>)
 meth protected void validateInstanceMethods(java.util.List<java.lang.Throwable>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void validateNoNonStaticInnerClass(java.util.List<java.lang.Throwable>)
 meth protected void validateOnlyOneConstructor(java.util.List<java.lang.Throwable>)
 meth protected void validateTestMethods(java.util.List<java.lang.Throwable>)
@@ -2066,7 +2100,7 @@ meth protected org.junit.runners.model.Statement classBlock(org.junit.runner.not
 meth protected org.junit.runners.model.Statement withAfterClasses(org.junit.runners.model.Statement)
 meth protected org.junit.runners.model.Statement withBeforeClasses(org.junit.runners.model.Statement)
 meth protected org.junit.runners.model.TestClass createTestClass(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void collectInitializationErrors(java.util.List<java.lang.Throwable>)
 meth protected void validatePublicVoidNoArgMethods(java.lang.Class<? extends java.lang.annotation.Annotation>,boolean,java.util.List<java.lang.Throwable>)
 meth public final org.junit.runners.model.TestClass getTestClass()
@@ -2140,7 +2174,7 @@ meth public <%0 extends java.lang.annotation.Annotation> {%%0} getAnnotation(jav
 meth public boolean equals(java.lang.Object)
 meth public boolean isShadowedBy(org.junit.runners.model.FrameworkMethod)
 meth public boolean producesType(java.lang.reflect.Type)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public int hashCode()
 meth public java.lang.Class<?> getDeclaringClass()
 meth public java.lang.Class<?> getReturnType()

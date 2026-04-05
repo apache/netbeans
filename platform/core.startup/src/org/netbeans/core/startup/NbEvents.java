@@ -19,7 +19,6 @@
 
 package org.netbeans.core.startup;
 
-import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -27,6 +26,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -51,7 +51,6 @@ import static org.netbeans.core.startup.Bundle.*;
 import org.openide.modules.SpecificationVersion;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.NbCollections;
-import org.openide.util.RequestProcessor;
 
 /** Report events to the performance logger, status text/splash screen,
  * console, and so on.
@@ -333,9 +332,8 @@ final class NbEvents extends Events {
     private static final class Notifier implements Runnable {
         private static boolean showDialog = true;
         
-        private boolean warn;
+        private final boolean warn;
         private String text;
-        private static RequestProcessor RP = new RequestProcessor("Notify About Module System"); // NOI18N
         
         public Notifier(String text, boolean type) {
             this.warn = type;
@@ -347,7 +345,11 @@ final class NbEvents extends Events {
                 if (EventQueue.isDispatchThread()) {
                     run();
                 } else {
-                    RP.post(this, 0, Thread.MIN_PRIORITY).waitFinished ();
+                    try {
+                        EventQueue.invokeAndWait(this);
+                    } catch (InterruptedException | InvocationTargetException ex) {
+                        logger.log(Level.SEVERE, "Notifier failed", ex); // NOI18N
+                    }
                 }
             }
         }
@@ -362,17 +364,9 @@ final class NbEvents extends Events {
             int type = warn ? JOptionPane.WARNING_MESSAGE : JOptionPane.INFORMATION_MESSAGE;
             String msg = warn ? MSG_warning() : MSG_info();
 
-            Splash out = Splash.getInstance();
-            final Component c = out.getComponent() == null ? null : out.getComponent();
             try {
                 UIManager.setLookAndFeel (UIManager.getSystemLookAndFeelClassName ());
-            } catch (ClassNotFoundException ex) {
-                logger.log(Level.INFO, null, ex);
-            } catch (InstantiationException ex) {
-                logger.log(Level.INFO, null, ex);
-            } catch (IllegalAccessException ex) {
-                logger.log(Level.INFO, null, ex);
-            } catch (UnsupportedLookAndFeelException ex) {
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                 logger.log(Level.INFO, null, ex);
             }
             JTextPane tp = new JTextPane ();
@@ -423,7 +417,7 @@ final class NbEvents extends Events {
             Object [] options = new JButton [] {continueButton, exitButton};
             op.setOptions (options);
             op.setInitialValue (options [1]);
-            JDialog d = op.createDialog (c, msg);
+            JDialog d = op.createDialog(Splash.getInstance().getComponent(), msg);
             d.setResizable (true);
             d.pack();
             d.setVisible (true);

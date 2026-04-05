@@ -1763,7 +1763,7 @@ public final class LibrariesNode extends AbstractNode {
             }
             chooser.enableVariableBasedSelection(true);
             chooser.setFileHidingEnabled(false);
-            FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
+            chooser.setCurrentDirectory(null);
             chooser.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
             chooser.setMultiSelectionEnabled( true );
             chooser.setDialogTitle( NbBundle.getMessage( LibrariesNode.class, "LBL_AddJar_DialogTitle" ) ); // NOI18N

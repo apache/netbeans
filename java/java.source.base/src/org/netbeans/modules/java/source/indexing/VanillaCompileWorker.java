@@ -524,7 +524,7 @@ final class VanillaCompileWorker extends CompileWorker {
     private static void copyFile(FileObject updatedFile, JavaFileObject target) throws IOException {
         try (InputStream ins = updatedFile.getInputStream();
              OutputStream out = target.openOutputStream()) {
-            FileUtil.copy(ins, out);
+            ins.transferTo(out);
         }
     }
 

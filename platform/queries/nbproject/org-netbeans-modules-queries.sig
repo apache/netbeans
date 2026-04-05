@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.73
+#Version 1.74
 
 CLSS public abstract interface java.io.Serializable
 
@@ -9,13 +9,17 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -24,14 +28,17 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -68,6 +75,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public java.util.EventObject
 cons public init(java.lang.Object)
 fld protected java.lang.Object source
@@ -75,6 +85,7 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
+hfds serialVersionUID
 
 CLSS public javax.swing.event.ChangeEvent
 cons public init(java.lang.Object)
@@ -85,10 +96,10 @@ meth public abstract org.openide.filesystems.FileObject getFolder()
 
 CLSS public final org.netbeans.api.queries.CollocationQuery
 meth public static boolean areCollocated(java.io.File,java.io.File)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean areCollocated(java.net.URI,java.net.URI)
 meth public static java.io.File findRoot(java.io.File)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.net.URI findRoot(java.net.URI)
 supr java.lang.Object
 hfds implementations,implementations2
@@ -115,16 +126,16 @@ hcls ProxyCharset
 
 CLSS public final org.netbeans.api.queries.SharabilityQuery
 fld public final static int MIXED = 3
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int NOT_SHARABLE = 2
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int SHARABLE = 1
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int UNKNOWN = 0
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr public final static !enum Sharability
 meth public static int getSharability(java.io.File)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.queries.SharabilityQuery$Sharability getSharability(java.net.URI)
 meth public static org.netbeans.api.queries.SharabilityQuery$Sharability getSharability(org.openide.filesystems.FileObject)
 supr java.lang.Object
@@ -157,7 +168,7 @@ hfds INSTANCE,cachedVqiInstances,listeners,resultListener,vqiListener,vqiResult
 hcls ResultListener,VqiChangedListener
 
 CLSS public abstract interface org.netbeans.spi.queries.CollocationQueryImplementation
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract boolean areCollocated(java.io.File,java.io.File)
 meth public abstract java.io.File findRoot(java.io.File)
 
@@ -175,7 +186,7 @@ meth public abstract java.nio.charset.Charset getEncoding(org.openide.filesystem
 supr java.lang.Object
 
 CLSS public abstract interface org.netbeans.spi.queries.SharabilityQueryImplementation
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract int getSharability(java.io.File)
 
 CLSS public abstract interface org.netbeans.spi.queries.SharabilityQueryImplementation2

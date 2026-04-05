@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.92.0
+#Version 1.93.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -7,6 +7,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -30,7 +31,7 @@ meth protected java.net.InetAddress getHostAddress(java.net.URL)
 meth protected java.net.URLConnection openConnection(java.net.URL,java.net.Proxy) throws java.io.IOException
 meth protected void parseURL(java.net.URL,java.lang.String,int,int)
 meth protected void setURL(java.net.URL,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void setURL(java.net.URL,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 supr java.lang.Object
 
@@ -166,11 +167,11 @@ CLSS public abstract org.openide.filesystems.FileSystem
 cons public init()
 fld public final static java.lang.String PROP_DISPLAY_NAME = "displayName"
 fld public final static java.lang.String PROP_HIDDEN = "hidden"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String PROP_READ_ONLY = "readOnly"
 fld public final static java.lang.String PROP_ROOT = "root"
 fld public final static java.lang.String PROP_SYSTEM_NAME = "systemName"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String PROP_VALID = "valid"
 innr public abstract interface static AtomicAction
 intf java.io.Serializable
@@ -178,7 +179,7 @@ meth protected final void fireFileStatusChanged(org.openide.filesystems.FileStat
 meth protected final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth protected final void fireVetoableChange(java.lang.String,java.lang.Object,java.lang.Object) throws java.beans.PropertyVetoException
 meth protected final void setSystemName(java.lang.String) throws java.beans.PropertyVetoException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract boolean isReadOnly()
 meth public abstract java.lang.String getDisplayName()
 meth public abstract org.openide.filesystems.FileObject findResource(java.lang.String)
@@ -186,7 +187,7 @@ meth public abstract org.openide.filesystems.FileObject getRoot()
 meth public final boolean isDefault()
 meth public final boolean isValid()
 meth public final java.lang.String getSystemName()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void addFileChangeListener(org.openide.filesystems.FileChangeListener)
 meth public final void addFileStatusListener(org.openide.filesystems.FileStatusListener)
 meth public final void addPropertyChangeListener(java.beans.PropertyChangeListener)
@@ -199,7 +200,7 @@ meth public final void runAtomicAction(org.openide.filesystems.FileSystem$Atomic
 meth public java.lang.String toString()
 meth public org.openide.filesystems.FileObject createTempFile(org.openide.filesystems.FileObject,java.lang.String,java.lang.String,boolean) throws java.io.IOException
 meth public org.openide.filesystems.FileObject find(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.filesystems.FileObject getTempFolder() throws java.io.IOException
 meth public org.openide.filesystems.StatusDecorator getDecorator()
 meth public org.openide.util.Lookup findExtrasFor(java.util.Set<org.openide.filesystems.FileObject>)
@@ -257,7 +258,7 @@ meth public boolean isReadOnly()
 meth public final boolean getPropagateMasks()
 meth public java.lang.String getDisplayName()
 meth public org.openide.filesystems.FileObject find(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.filesystems.FileObject findResource(java.lang.String)
 meth public org.openide.filesystems.FileObject getRoot()
 meth public void addNotify()
@@ -276,7 +277,7 @@ meth public abstract org.openide.filesystems.FileObject[] getFileObjects(java.ne
 meth public static java.net.URL findURL(org.openide.filesystems.FileObject,int)
 meth public static org.openide.filesystems.FileObject findFileObject(java.net.URL)
 meth public static org.openide.filesystems.FileObject[] findFileObjects(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds CACHE_JUST_COMPUTING,cache,result,threadCache
 hcls DefaultURLMapper

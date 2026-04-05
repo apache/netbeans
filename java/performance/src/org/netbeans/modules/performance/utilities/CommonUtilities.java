@@ -223,20 +223,6 @@ public class CommonUtilities {
             mainWindow.pushKey(java.awt.event.KeyEvent.VK_ESCAPE);
         }
     }
-    
-    /**
-     * Work around issue 35962 (Main menu popup accidentally rolled up)
-     * Issue has been fixed for JDK 1.5, so we will use it only for JDK 1.4.X
-     */
-    public static void workarroundMainMenuRolledUp() {
-        if(System.getProperty("java.version").indexOf("1.4") != -1) {
-            String helpMenu = Bundle.getStringTrimmed("org.netbeans.core.Bundle","Menu/Help") + "|" + Bundle.getStringTrimmed("org.netbeans.core.actions.Bundle" , "About");
-            String about = Bundle.getStringTrimmed("org.netbeans.core.Bundle_nb", "CTL_About_Title");
-            
-            new ActionNoBlock(helpMenu, null).perform();
-            new NbDialogOperator(about).close();
-        }
-    }
 
     public static String jEditProjectOpen() {
 

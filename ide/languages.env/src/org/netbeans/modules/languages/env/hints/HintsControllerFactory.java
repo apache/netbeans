@@ -30,7 +30,7 @@ public class HintsControllerFactory {
 
     @OptionsPanelController.SubRegistration(
             id = "EnvFileHints",
-            location = "Env/Hints",
+            location = "Editor/Hints",
             displayName = "#HintsControllerFactory.name"
     )
     @NbBundle.Messages("HintsControllerFactory.name=Env File Hints")

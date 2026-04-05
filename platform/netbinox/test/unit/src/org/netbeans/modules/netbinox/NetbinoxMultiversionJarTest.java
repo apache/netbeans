@@ -69,7 +69,7 @@ public class NetbinoxMultiversionJarTest extends NetigsoHid {
         ToolProvider.getSystemJavaCompiler()
                 .getTask(null, null, d -> {
                     throw new IllegalStateException(d.toString());
-                }, Arrays.asList("-d", classes.getAbsolutePath()), null,
+                }, Arrays.asList("-d", classes.getAbsolutePath(), "-proc:none"), null,
                         Arrays.asList(new SourceFileObject("test/Impl.java", "package test; public class Impl { public static String get() { return \"base\"; } }"),
                                 new SourceFileObject("api/API.java", "package api; public class API { public static String run() { return test.Impl.get(); } }")))
                 .call();
@@ -78,7 +78,7 @@ public class NetbinoxMultiversionJarTest extends NetigsoHid {
         ToolProvider.getSystemJavaCompiler()
                 .getTask(null, null, d -> {
                     throw new IllegalStateException(d.toString());
-                }, Arrays.asList("-d", classes9.getAbsolutePath(), "-classpath", classes.getAbsolutePath()), null,
+                }, Arrays.asList("-d", classes9.getAbsolutePath(), "-classpath", classes.getAbsolutePath(), "-proc:none"), null,
                         Arrays.asList(new SourceFileObject("test/Impl.java", "package test; public class Impl { public static String get() { return \"9\"; } }")))
                 .call();
         Map<String, byte[]> jarContent = new LinkedHashMap<>();

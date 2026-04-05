@@ -86,10 +86,10 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
         
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test1.sig",
-                                                       "cache/s1/java/15/classes/test/Test1a.sig",
-                                                       "cache/s1/java/15/classes/test/Test2.sig",
-                                                       "cache/s1/java/15/classes/test/Test2a.sig")),
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/16/classes/test/Test1.sig",
+                                                       "cache/s1/java/16/classes/test/Test1a.sig",
+                                                       "cache/s1/java/16/classes/test/Test2.sig",
+                                                       "cache/s1/java/16/classes/test/Test2a.sig")),
                      createdFiles);
         assertFalse(ErrorsCache.isInError(getRoot(), true));
     }
@@ -108,7 +108,7 @@ public abstract class CompileWorkerTestBase extends NbTestCase {
             createdFiles.add(getWorkDir().toURI().relativize(created.toURI()).getPath());
         }
 
-        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/15/classes/test/Test.sig")),
+        assertEquals(new HashSet<String>(Arrays.asList("cache/s1/java/16/classes/test/Test.sig")),
                      createdFiles);
         assertFalse(ErrorsCache.isInError(getRoot(), false));
 

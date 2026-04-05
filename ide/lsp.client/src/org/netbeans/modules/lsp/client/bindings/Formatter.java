@@ -119,7 +119,10 @@ public class Formatter implements ReformatTask {
             IndentUtils.isExpandTabs(ctx.document())));
         List<TextEdit> edits = new ArrayList<>();
         try {
-            edits.addAll(bindings.getTextDocumentService().formatting(dfp).get());
+            List<? extends TextEdit> editInputs = bindings.getTextDocumentService().formatting(dfp).get();
+            if (editInputs != null) {
+                edits.addAll(editInputs);
+            }
         } catch (InterruptedException | ExecutionException ex) {
             LOG.log(Level.INFO,
                 String.format("LSP document format failed for {0}", fo),

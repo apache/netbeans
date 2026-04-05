@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.85
+#Version 2.86
 
 CLSS public abstract interface !annotation com.google.common.annotations.GwtCompatible
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -95,7 +95,7 @@ hfds wordBoundary,wordSeparator
 hcls StringConverter
 
 CLSS public abstract com.google.common.base.CharMatcher
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
+ anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 cons protected init()
 intf com.google.common.base.Predicate<java.lang.Character>
 meth public abstract boolean matches(char)
@@ -159,7 +159,7 @@ hfds DISTINCT_CHARS
 hcls And,Any,AnyOf,Ascii,BitSetMatcher,BreakingWhitespace,Digit,FastMatcher,ForPredicate,InRange,Invisible,Is,IsEither,IsNot,JavaDigit,JavaIsoControl,JavaLetter,JavaLetterOrDigit,JavaLowerCase,JavaUpperCase,NamedFastMatcher,Negated,NegatedFastMatcher,None,Or,RangesMatcher,SingleWidth,Whitespace
 
 CLSS public final com.google.common.base.Charsets
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
+ anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 fld public final static java.nio.charset.Charset ISO_8859_1
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.nio.charset.Charset US_ASCII
@@ -189,10 +189,8 @@ hfds DOUBLE_DEFAULT,FLOAT_DEFAULT
 CLSS public final com.google.common.base.Enums
  anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
 meth public static <%0 extends java.lang.Enum<{%%0}>> com.google.common.base.Converter<java.lang.String,{%%0}> stringConverter(java.lang.Class<{%%0}>)
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
 meth public static <%0 extends java.lang.Enum<{%%0}>> com.google.common.base.Optional<{%%0}> getIfPresent(java.lang.Class<{%%0}>,java.lang.String)
 meth public static java.lang.reflect.Field getField(java.lang.Enum<?>)
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
 supr java.lang.Object
 hfds enumConstantCache
 hcls StringConverter
@@ -287,7 +285,7 @@ CLSS public final com.google.common.base.Predicates
 supr java.lang.Object
 
 CLSS public final com.google.common.base.Splitter
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
+ anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 innr public final static MapSplitter
 meth public com.google.common.base.Splitter limit(int)
 meth public com.google.common.base.Splitter omitEmptyStrings()
@@ -351,7 +349,7 @@ supr java.lang.Enum
 hfds key
 
 CLSS public final com.google.common.base.Stopwatch
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
+ anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 meth public boolean isRunning()
 meth public com.google.common.base.Stopwatch reset()
  anno 0 com.google.errorprone.annotations.CanIgnoreReturnValue()
@@ -375,7 +373,6 @@ supr java.lang.Object
 
 CLSS public abstract interface com.google.common.base.Supplier
 intf java.util.function.Supplier
-meth public abstract java.lang.Object get()
 
 CLSS public final com.google.common.base.Suppliers
 supr java.lang.Object
@@ -392,7 +389,7 @@ supr java.lang.Object
 hfds SYSTEM_TICKER
 
 CLSS public final com.google.common.base.Utf8
- anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=true, boolean serializable=false)
+ anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
 meth public static boolean isWellFormed(byte[])
 meth public static boolean isWellFormed(byte[],int,int)
 meth public static int encodedLength(java.lang.CharSequence)
@@ -777,6 +774,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public abstract java.io.InputStream
 cons public init()
@@ -797,6 +795,7 @@ meth public void mark(int)
 meth public void reset() throws java.io.IOException
 meth public void skipNBytes(long) throws java.io.IOException
 supr java.lang.Object
+hfds DEFAULT_BUFFER_SIZE,MAX_BUFFER_SIZE,MAX_SKIP_BUFFER_SIZE
 
 CLSS public abstract java.io.OutputStream
 cons public init()
@@ -829,6 +828,7 @@ meth public static java.io.Reader nullReader()
 meth public void mark(int) throws java.io.IOException
 meth public void reset() throws java.io.IOException
 supr java.lang.Object
+hfds TRANSFER_BUFFER_SIZE,maxSkipBufferSize,skipBuffer
 
 CLSS public abstract interface java.io.Serializable
 
@@ -851,6 +851,7 @@ meth public void write(int) throws java.io.IOException
 meth public void write(java.lang.String) throws java.io.IOException
 meth public void write(java.lang.String,int,int) throws java.io.IOException
 supr java.lang.Object
+hfds WRITE_BUFFER_SIZE,writeBuffer
 
 CLSS public abstract interface java.lang.Appendable
 meth public abstract java.lang.Appendable append(char) throws java.io.IOException
@@ -907,6 +908,8 @@ meth public void setClassAssertionStatus(java.lang.String,boolean)
 meth public void setDefaultAssertionStatus(boolean)
 meth public void setPackageAssertionStatus(java.lang.String,boolean)
 supr java.lang.Object
+hfds assertionLock,classAssertionStatus,classLoaderValueMap,classes,defaultAssertionStatus,defaultDomain,libraries,name,nameAndId,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,unnamedModule
+hcls ParallelLoaders
 
 CLSS public abstract interface java.lang.Cloneable
 
@@ -939,6 +942,7 @@ meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+hfds name,ordinal
 
 CLSS public java.lang.Error
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -947,6 +951,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -955,6 +960,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -968,6 +974,15 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.RuntimeException
+hfds serialVersionUID
+
+CLSS public java.lang.IllegalStateException
+cons public init()
+cons public init(java.lang.String)
+cons public init(java.lang.String,java.lang.Throwable)
+cons public init(java.lang.Throwable)
+supr java.lang.RuntimeException
+hfds serialVersionUID
 
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
@@ -1003,6 +1018,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public java.lang.Thread
 cons public init()
@@ -1068,6 +1084,8 @@ meth public void setContextClassLoader(java.lang.ClassLoader)
 meth public void setUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler)
 meth public void start()
 supr java.lang.Object
+hfds EMPTY_STACK_TRACE,blocker,blockerLock,contextClassLoader,daemon,defaultUncaughtExceptionHandler,eetop,group,inheritableThreadLocals,inheritedAccessControlContext,interrupted,name,parkBlocker,priority,stackSize,stillborn,target,threadInitNumber,threadLocalRandomProbe,threadLocalRandomSecondarySeed,threadLocalRandomSeed,threadLocals,threadSeqNumber,threadStatus,tid,uncaughtExceptionHandler
+hcls Caches,WeakClassKey
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -1090,6 +1108,8 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -1141,12 +1161,15 @@ meth public static void reachabilityFence(java.lang.Object)
 meth public void clear()
 meth public {java.lang.ref.Reference%0} get()
 supr java.lang.Object
+hfds discovered,next,processPendingActive,processPendingLock,queue,referent
+hcls ReferenceHandler
 
 CLSS public java.lang.ref.SoftReference<%0 extends java.lang.Object>
 cons public init({java.lang.ref.SoftReference%0})
 cons public init({java.lang.ref.SoftReference%0},java.lang.ref.ReferenceQueue<? super {java.lang.ref.SoftReference%0}>)
 meth public {java.lang.ref.SoftReference%0} get()
 supr java.lang.ref.Reference<{java.lang.ref.SoftReference%0}>
+hfds clock,timestamp
 
 CLSS public java.lang.ref.WeakReference<%0 extends java.lang.Object>
 cons public init({java.lang.ref.WeakReference%0})
@@ -1172,6 +1195,7 @@ meth public static java.net.URLClassLoader newInstance(java.net.URL[])
 meth public static java.net.URLClassLoader newInstance(java.net.URL[],java.lang.ClassLoader)
 meth public void close() throws java.io.IOException
 supr java.security.SecureClassLoader
+hfds acc,closeables,ucp
 
 CLSS public java.security.SecureClassLoader
 cons protected init()
@@ -1181,6 +1205,8 @@ meth protected final java.lang.Class<?> defineClass(java.lang.String,byte[],int,
 meth protected final java.lang.Class<?> defineClass(java.lang.String,java.nio.ByteBuffer,java.security.CodeSource)
 meth protected java.security.PermissionCollection getPermissions(java.security.CodeSource)
 supr java.lang.ClassLoader
+hfds pdcache
+hcls CodeSourceKey,DebugHolder
 
 CLSS public abstract java.util.AbstractMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons protected init()
@@ -1204,6 +1230,7 @@ meth public {java.util.AbstractMap%1} get(java.lang.Object)
 meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.AbstractMap%1})
 meth public {java.util.AbstractMap%1} remove(java.lang.Object)
 supr java.lang.Object
+hfds keySet,values
 
 CLSS public java.util.EventObject
 cons public init(java.lang.Object)
@@ -1212,6 +1239,7 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
+hfds serialVersionUID
 
 CLSS public java.util.HashMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init()
@@ -1246,6 +1274,8 @@ meth public {java.util.HashMap%1} putIfAbsent({java.util.HashMap%0},{java.util.H
 meth public {java.util.HashMap%1} remove(java.lang.Object)
 meth public {java.util.HashMap%1} replace({java.util.HashMap%0},{java.util.HashMap%1})
 supr java.util.AbstractMap<{java.util.HashMap%0},{java.util.HashMap%1}>
+hfds DEFAULT_INITIAL_CAPACITY,DEFAULT_LOAD_FACTOR,MAXIMUM_CAPACITY,MIN_TREEIFY_CAPACITY,TREEIFY_THRESHOLD,UNTREEIFY_THRESHOLD,entrySet,loadFactor,modCount,serialVersionUID,size,table,threshold
+hcls EntryIterator,EntrySet,EntrySpliterator,HashIterator,HashMapSpliterator,KeyIterator,KeySet,KeySpliterator,Node,TreeNode,UnsafeHolder,ValueIterator,ValueSpliterator,Values
 
 CLSS public abstract interface java.util.Iterator<%0 extends java.lang.Object>
 meth public abstract boolean hasNext()
@@ -1309,6 +1339,11 @@ meth public abstract boolean test({java.util.function.BiPredicate%0},{java.util.
 meth public java.util.function.BiPredicate<{java.util.function.BiPredicate%0},{java.util.function.BiPredicate%1}> and(java.util.function.BiPredicate<? super {java.util.function.BiPredicate%0},? super {java.util.function.BiPredicate%1}>)
 meth public java.util.function.BiPredicate<{java.util.function.BiPredicate%0},{java.util.function.BiPredicate%1}> negate()
 meth public java.util.function.BiPredicate<{java.util.function.BiPredicate%0},{java.util.function.BiPredicate%1}> or(java.util.function.BiPredicate<? super {java.util.function.BiPredicate%0},? super {java.util.function.BiPredicate%1}>)
+
+CLSS public abstract interface java.util.function.Consumer<%0 extends java.lang.Object>
+ anno 0 java.lang.FunctionalInterface()
+meth public abstract void accept({java.util.function.Consumer%0})
+meth public java.util.function.Consumer<{java.util.function.Consumer%0}> andThen(java.util.function.Consumer<? super {java.util.function.Consumer%0}>)
 
 CLSS public abstract interface java.util.function.Function<%0 extends java.lang.Object, %1 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()
@@ -3104,7 +3139,7 @@ fld public final static java.lang.String USER_HOME
 intf org.apache.maven.cli.configuration.ConfigurationProcessor
 meth public void process(org.apache.maven.cli.CliRequest) throws java.lang.Exception
 supr java.lang.Object
-hfds logger,settingsBuilder,settingsDecrypter
+hfds logger,mavenRepositorySystem,settingsBuilder,settingsDecrypter
 
 CLSS public org.apache.maven.execution.AbstractExecutionListener
 cons public init()
@@ -5459,9 +5494,16 @@ meth public abstract <%0 extends java.lang.Object> {%%0} getConfiguredMojo(java.
 meth public abstract org.apache.maven.plugin.ExtensionRealmCache$CacheRecord setupExtensionsRealm(org.apache.maven.project.MavenProject,org.apache.maven.model.Plugin,org.eclipse.aether.RepositorySystemSession) throws org.apache.maven.plugin.PluginManagerException
 meth public abstract org.apache.maven.plugin.descriptor.MojoDescriptor getMojoDescriptor(org.apache.maven.model.Plugin,java.lang.String,java.util.List<org.eclipse.aether.repository.RemoteRepository>,org.eclipse.aether.RepositorySystemSession) throws org.apache.maven.plugin.InvalidPluginDescriptorException,org.apache.maven.plugin.MojoNotFoundException,org.apache.maven.plugin.PluginDescriptorParsingException,org.apache.maven.plugin.PluginResolutionException
 meth public abstract org.apache.maven.plugin.descriptor.PluginDescriptor getPluginDescriptor(org.apache.maven.model.Plugin,java.util.List<org.eclipse.aether.repository.RemoteRepository>,org.eclipse.aether.RepositorySystemSession) throws org.apache.maven.plugin.InvalidPluginDescriptorException,org.apache.maven.plugin.PluginDescriptorParsingException,org.apache.maven.plugin.PluginResolutionException
-meth public abstract void checkRequiredMavenVersion(org.apache.maven.plugin.descriptor.PluginDescriptor) throws org.apache.maven.plugin.PluginIncompatibleException
 meth public abstract void releaseMojo(java.lang.Object,org.apache.maven.plugin.MojoExecution)
 meth public abstract void setupPluginRealm(org.apache.maven.plugin.descriptor.PluginDescriptor,org.apache.maven.execution.MavenSession,java.lang.ClassLoader,java.util.List<java.lang.String>,org.eclipse.aether.graph.DependencyFilter) throws org.apache.maven.plugin.PluginContainerException,org.apache.maven.plugin.PluginResolutionException
+meth public void checkPrerequisites(org.apache.maven.plugin.descriptor.PluginDescriptor) throws org.apache.maven.plugin.PluginIncompatibleException
+meth public void checkRequiredMavenVersion(org.apache.maven.plugin.descriptor.PluginDescriptor) throws org.apache.maven.plugin.PluginIncompatibleException
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+
+CLSS public abstract interface org.apache.maven.plugin.MavenPluginPrerequisitesChecker
+ anno 0 java.lang.FunctionalInterface()
+intf java.util.function.Consumer<org.apache.maven.plugin.descriptor.PluginDescriptor>
+meth public abstract void accept(org.apache.maven.plugin.descriptor.PluginDescriptor)
 
 CLSS public org.apache.maven.plugin.MavenPluginValidator
 cons public init(org.apache.maven.artifact.Artifact)
@@ -6848,6 +6890,7 @@ supr java.lang.Object
 hfds host,nonProxyHosts,ntlmDomain,ntlmHost,password,port,protocol,userName
 
 CLSS public abstract interface org.apache.maven.repository.RepositorySystem
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.io.File defaultUserLocalRepository
 fld public final static java.io.File userMavenConfigurationHome
 fld public final static java.lang.String DEFAULT_LOCAL_REPO_ID = "local"
@@ -6904,7 +6947,7 @@ supr org.apache.maven.wagon.TransferFailedException
 CLSS public org.apache.maven.repository.legacy.DefaultUpdateCheckManager
  anno 0 org.codehaus.plexus.component.annotations.Component(boolean isolatedRealm=false, java.lang.Class<?> role=class org.apache.maven.repository.legacy.UpdateCheckManager, java.lang.String alias="", java.lang.String composer="", java.lang.String configurator="", java.lang.String description="", java.lang.String factory="", java.lang.String hint="", java.lang.String instantiationStrategy="", java.lang.String lifecycleHandler="", java.lang.String profile="", java.lang.String type="", java.lang.String version="")
 cons public init()
-cons public init(org.codehaus.plexus.logging.Logger)
+cons public init(org.codehaus.plexus.logging.Logger,org.eclipse.aether.internal.impl.TrackingFileManager)
 fld public final static java.lang.String LAST_UPDATE_TAG = ".lastUpdated"
 intf org.apache.maven.repository.legacy.UpdateCheckManager
 meth public boolean isUpdateRequired(org.apache.maven.artifact.Artifact,org.apache.maven.artifact.repository.ArtifactRepository)
@@ -6913,7 +6956,7 @@ meth public java.lang.String getError(org.apache.maven.artifact.Artifact,org.apa
 meth public void touch(org.apache.maven.artifact.Artifact,org.apache.maven.artifact.repository.ArtifactRepository,java.lang.String)
 meth public void touch(org.apache.maven.artifact.repository.metadata.RepositoryMetadata,org.apache.maven.artifact.repository.ArtifactRepository,java.io.File)
 supr org.codehaus.plexus.logging.AbstractLogEnabled
-hfds ERROR_KEY_SUFFIX,TOUCHFILE_NAME
+hfds ERROR_KEY_SUFFIX,TOUCHFILE_NAME,trackingFileManager
 
 CLSS public org.apache.maven.repository.legacy.DefaultWagonManager
  anno 0 org.codehaus.plexus.component.annotations.Component(boolean isolatedRealm=false, java.lang.Class<?> role=class org.apache.maven.repository.legacy.WagonManager, java.lang.String alias="", java.lang.String composer="", java.lang.String configurator="", java.lang.String description="", java.lang.String factory="", java.lang.String hint="", java.lang.String instantiationStrategy="", java.lang.String lifecycleHandler="", java.lang.String profile="", java.lang.String type="", java.lang.String version="")
@@ -10906,9 +10949,17 @@ meth public abstract java.lang.Object get(java.lang.Object)
 meth public abstract void set(java.lang.Object,java.lang.Object)
 
 CLSS public abstract interface org.eclipse.aether.SyncContext
+innr public final static FailedToAcquireLockException
 intf java.io.Closeable
 meth public abstract void acquire(java.util.Collection<? extends org.eclipse.aether.artifact.Artifact>,java.util.Collection<? extends org.eclipse.aether.metadata.Metadata>)
 meth public abstract void close()
+
+CLSS public final static org.eclipse.aether.SyncContext$FailedToAcquireLockException
+ outer org.eclipse.aether.SyncContext
+cons public init(boolean,java.lang.String)
+meth public boolean isShared()
+supr java.lang.IllegalStateException
+hfds shared
 
 CLSS public abstract org.eclipse.aether.artifact.AbstractArtifact
 cons public init()
@@ -11819,18 +11870,21 @@ hfds item,repository
 CLSS public final org.eclipse.aether.resolution.VersionRangeRequest
 cons public init()
 cons public init(org.eclipse.aether.artifact.Artifact,java.util.List<org.eclipse.aether.repository.RemoteRepository>,java.lang.String)
+cons public init(org.eclipse.aether.artifact.Artifact,java.util.List<org.eclipse.aether.repository.RemoteRepository>,org.eclipse.aether.metadata.Metadata$Nature,java.lang.String)
 meth public java.lang.String getRequestContext()
 meth public java.lang.String toString()
 meth public java.util.List<org.eclipse.aether.repository.RemoteRepository> getRepositories()
 meth public org.eclipse.aether.RequestTrace getTrace()
 meth public org.eclipse.aether.artifact.Artifact getArtifact()
+meth public org.eclipse.aether.metadata.Metadata$Nature getNature()
 meth public org.eclipse.aether.resolution.VersionRangeRequest addRepository(org.eclipse.aether.repository.RemoteRepository)
 meth public org.eclipse.aether.resolution.VersionRangeRequest setArtifact(org.eclipse.aether.artifact.Artifact)
+meth public org.eclipse.aether.resolution.VersionRangeRequest setNature(org.eclipse.aether.metadata.Metadata$Nature)
 meth public org.eclipse.aether.resolution.VersionRangeRequest setRepositories(java.util.List<org.eclipse.aether.repository.RemoteRepository>)
 meth public org.eclipse.aether.resolution.VersionRangeRequest setRequestContext(java.lang.String)
 meth public org.eclipse.aether.resolution.VersionRangeRequest setTrace(org.eclipse.aether.RequestTrace)
 supr java.lang.Object
-hfds artifact,context,repositories,trace
+hfds artifact,context,nature,repositories,trace
 
 CLSS public org.eclipse.aether.resolution.VersionRangeResolutionException
 cons public init(org.eclipse.aether.resolution.VersionRangeResult)
@@ -12474,6 +12528,11 @@ CLSS public abstract interface static org.eclipse.aether.util.FileUtils$TempFile
  outer org.eclipse.aether.util.FileUtils
 intf java.io.Closeable
 meth public abstract java.nio.file.Path getPath()
+
+CLSS public final org.eclipse.aether.util.PathUtils
+meth public static java.lang.String stringToPathSegment(java.lang.String)
+supr java.lang.Object
+hfds ILLEGAL_PATH_SEGMENT_REPLACEMENTS
 
 CLSS public final org.eclipse.aether.util.StringDigestUtil
 cons public init(java.lang.String)
@@ -14820,10 +14879,10 @@ meth public static java.io.File getEffectiveMavenHome(org.netbeans.api.project.u
 meth public static java.io.File getMavenHome()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static java.util.List<org.apache.maven.model.Model> createModelLineage(java.io.File,org.netbeans.modules.maven.embedder.MavenEmbedder) throws org.apache.maven.model.building.ModelBuildingException
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="")
 meth public static java.util.Properties fillEnvVars(java.util.Properties)
 meth public static org.apache.maven.artifact.repository.ArtifactRepository createRemoteRepository(org.netbeans.modules.maven.embedder.MavenEmbedder,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="")
 meth public static org.netbeans.modules.maven.embedder.MavenEmbedder createProjectLikeEmbedder() throws org.codehaus.plexus.PlexusContainerException
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.modules.maven.embedder.MavenEmbedder getOnlineEmbedder()
@@ -14878,7 +14937,7 @@ meth public static java.util.List<org.netbeans.modules.maven.embedder.MavenEmbed
 meth public static java.util.Set<java.lang.String> getAllProjectProfiles(org.apache.maven.project.MavenProject)
 meth public static void normalizePaths(org.apache.maven.project.MavenProject)
 meth public void resolve(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.repository.ArtifactRepository) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="")
 meth public void resolveArtifact(org.apache.maven.artifact.Artifact,java.util.List<org.apache.maven.artifact.repository.ArtifactRepository>,org.apache.maven.artifact.repository.ArtifactRepository) throws org.apache.maven.artifact.resolver.ArtifactNotFoundException,org.apache.maven.artifact.resolver.ArtifactResolutionException
 meth public void setUpLegacySupport()
 supr java.lang.Object

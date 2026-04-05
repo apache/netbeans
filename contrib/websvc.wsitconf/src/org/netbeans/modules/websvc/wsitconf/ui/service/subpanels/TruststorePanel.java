@@ -335,18 +335,15 @@ public class TruststorePanel extends JPanel {
     
     private void storeLocationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storeLocationButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setDialogTitle(NbBundle.getMessage(TruststorePanel.class, "LBL_TruststoreBrowse_Title")); //NOI18N
         chooser.setFileSelectionMode (JFileChooser.FILES_ONLY);
         chooser.setMultiSelectionEnabled(false);
         chooser.setFileFilter(new StoreFileFilter());
         File f = new File(storeLocationTextField.getText());
-        if ((f != null) && (f.exists())) {
-            if (f.isDirectory()) {
-                chooser.setCurrentDirectory(f);
-            } else {
-                chooser.setCurrentDirectory(f.getParentFile());
-            }
+        if (f.exists()) {
+            chooser.setCurrentDirectory(f);
+        } else {
+            chooser.setCurrentDirectory(null);
         }
         if (chooser.showOpenDialog(this)== JFileChooser.APPROVE_OPTION) {
             File file = chooser.getSelectedFile();

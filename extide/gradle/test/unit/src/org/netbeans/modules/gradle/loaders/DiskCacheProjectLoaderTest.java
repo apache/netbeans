@@ -20,6 +20,7 @@ package org.netbeans.modules.gradle.loaders;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -93,8 +94,9 @@ public class DiskCacheProjectLoaderTest extends AbstractGradleProjectTestCase{
         projectDir = ret.createFolder(name);
         projectDir.getFileSystem().runAtomicAction(() -> {;
             FileObject bs = projectDir.createData("build.gradle");
-            try (OutputStream os = bs.getOutputStream()) {
-                FileUtil.copy(getClass().getResourceAsStream(resource), os);
+            try (InputStream is = getClass().getResourceAsStream(resource);
+                 OutputStream os = bs.getOutputStream()) {
+                is.transferTo(os);
             }
         });
         return projectDir;

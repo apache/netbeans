@@ -21,7 +21,6 @@ package org.netbeans.core.windows.options;
 
 import java.util.prefs.Preferences;
 import javax.swing.JPanel;
-import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.core.windows.FloatingWindowTransparencyManager;
 import org.netbeans.core.windows.nativeaccess.NativeWindowSystem;
 import org.netbeans.spi.options.OptionsPanelController;
@@ -40,8 +39,7 @@ public class WinSysPanel extends javax.swing.JPanel {
         this.controller = controller;
         initComponents();
         // TODO listen to changes in form fields and call controller.changed()
-        boolean isMacJDK17 = isMacJDK7();
-        this.isAlphaFloating.setEnabled(!isMacJDK17);
+        this.isAlphaFloating.setEnabled(true);
     }
 
     /** This method is called from within the constructor to
@@ -156,9 +154,8 @@ private void isSnappingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private void fireChanged() {
         boolean isChanged = false;
         boolean isNotSolaris = Utilities.getOperatingSystem() != Utilities.OS_SOLARIS;
-        boolean isMacJDK17 = isMacJDK7();
-        if (isDragImage.isSelected() != prefs.getBoolean(WinSysPrefs.DND_DRAGIMAGE, isNotSolaris && !isMacJDK17)
-                || isDragImageAlpha.isSelected() != prefs.getBoolean(WinSysPrefs.TRANSPARENCY_DRAGIMAGE, isNotSolaris && !isMacJDK17)
+        if (isDragImage.isSelected() != prefs.getBoolean(WinSysPrefs.DND_DRAGIMAGE, isNotSolaris)
+                || isDragImageAlpha.isSelected() != prefs.getBoolean(WinSysPrefs.TRANSPARENCY_DRAGIMAGE, isNotSolaris)
                 || isAlphaFloating.isSelected() != prefs.getBoolean(WinSysPrefs.TRANSPARENCY_FLOATING, false)
                 || isSnapping.isSelected() != prefs.getBoolean(WinSysPrefs.SNAPPING, true)
                 || isSnapScreenEdges.isSelected() != prefs.getBoolean(WinSysPrefs.SNAPPING_SCREENEDGES, true)) {
@@ -169,9 +166,8 @@ private void isSnappingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     protected void load() {
         boolean isNotSolaris = Utilities.getOperatingSystem() != Utilities.OS_SOLARIS;
-        boolean isMacJDK17 = isMacJDK7();
-        isDragImage.setSelected(prefs.getBoolean(WinSysPrefs.DND_DRAGIMAGE, isNotSolaris && !isMacJDK17));
-        isDragImageAlpha.setSelected(prefs.getBoolean(WinSysPrefs.TRANSPARENCY_DRAGIMAGE, isNotSolaris && !isMacJDK17));
+        isDragImage.setSelected(prefs.getBoolean(WinSysPrefs.DND_DRAGIMAGE, isNotSolaris));
+        isDragImageAlpha.setSelected(prefs.getBoolean(WinSysPrefs.TRANSPARENCY_DRAGIMAGE, isNotSolaris));
 
         isAlphaFloating.setSelected(prefs.getBoolean(WinSysPrefs.TRANSPARENCY_FLOATING,false));
         
@@ -232,15 +228,6 @@ private void isSnappingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             isAlphaFloating.setToolTipText(
                     NbBundle.getMessage(WinSysPanel.class, "NoAlphaSupport")); // NOI18N
         }
-    }
-    
-    private static boolean isMacJDK7() {
-        if( Utilities.isMac() ) {
-            String version = System.getProperty("java.version"); //NOI18N
-            if( null != version && version.startsWith("1.7" ) ) //NOI18N
-                return true;
-        }
-        return false;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

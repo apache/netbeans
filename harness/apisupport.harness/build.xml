@@ -40,7 +40,7 @@
             </classpath>
         </taskdef>
         <echo file="build/binaries-list">C29635C8A7AFA03D74B33C1884DF8ABB2B3F3DCC org.ow2.asm:asm:9.9</echo>
-        <TestDownload>
+        <TestDownload server="${binaries.server}" repos="${binaries.repos}">
             <manifest dir="build">
                 <include name="binaries-list"/>
             </manifest>

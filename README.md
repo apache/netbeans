@@ -38,7 +38,7 @@ Apache NetBeans is an open source development environment, tooling platform, and
 
   * Git
   * Ant
-  * JDK 17 or above (to build and run NetBeans)
+  * JDK 21 or above (to build and run NetBeans)
 
 #### Notes:
 
@@ -161,8 +161,8 @@ This gives you just few log entries including the initial checkin and
 change of the file headers to Apache. But then the magic comes:
 
 ```bash
-$ git remote add emilian https://github.com/emilianbold/netbeans-releases.git
-$ git fetch emilian # this takes a while, the history is huge!
+$ git remote add archive https://github.com/codelerity/netbeans-releases.git
+$ git fetch archive # this takes a while, the history is huge!
 $ git replace 6daa72c98 32042637 # the 1st donation
 $ git replace 6035076ee 32042637 # the 2nd donation
 ```
@@ -174,6 +174,6 @@ $ git log platform/uihandler/arch.xml
 $ git blame platform/uihandler/arch.xml
 ```
 
-Many thanks to Emilian Bold who converted the ancient history to his
-[Git repository](https://github.com/emilianbold/netbeans-releases)
-and made the magic possible!
+You can browse the archived repo [here](https://github.com/codelerity/netbeans-releases).
+
+Many thanks to Emilian Bold who created the original archive repository.

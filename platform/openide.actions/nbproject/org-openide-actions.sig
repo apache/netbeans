@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.69
+#Version 6.70
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -15,13 +15,16 @@ CLSS public abstract interface java.io.Serializable
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -79,6 +82,7 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void putValue(java.lang.String,java.lang.Object)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void setEnabled(boolean)
+meth public boolean accept(java.lang.Object)
 
 CLSS public abstract org.openide.actions.ActionManager
 cons public init()
@@ -89,7 +93,7 @@ meth public final void addPropertyChangeListener(java.beans.PropertyChangeListen
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public static org.openide.actions.ActionManager getDefault()
 meth public void invokeAction(javax.swing.Action,java.awt.event.ActionEvent)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds supp
 hcls Trivial
@@ -276,7 +280,7 @@ meth public org.openide.util.HelpCtx getHelpCtx()
 meth public org.openide.util.datatransfer.PasteType[] getPasteTypes()
 meth public void actionPerformed(java.awt.event.ActionEvent)
 meth public void setPasteTypes(org.openide.util.datatransfer.PasteType[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.openide.util.actions.CallbackSystemAction
 hfds globalModel,types
 hcls ActSubMenuModel,ActionPT,DelegateAction,NodeSelector
@@ -390,7 +394,7 @@ meth public javax.swing.JMenuItem getMenuPresenter()
 meth public javax.swing.JMenuItem getPopupPresenter()
 meth public org.openide.util.HelpCtx getHelpCtx()
 meth public static void setModel(org.openide.actions.ToolsAction$Model)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void actionPerformed(java.awt.event.ActionEvent)
 supr org.openide.util.actions.SystemAction
 hfds serialVersionUID,taskGl
@@ -398,7 +402,7 @@ hcls DelegateAction,G,Inline,Popup
 
 CLSS public abstract interface static org.openide.actions.ToolsAction$Model
  outer org.openide.actions.ToolsAction
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.openide.util.actions.SystemAction[] getActions()
 meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
 meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
@@ -418,7 +422,7 @@ hfds SWING_DEFAULT_LABEL,last,listener,redoAction,undoAction
 hcls Listener
 
 CLSS public org.openide.actions.UndockAction
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 meth protected boolean asynchronous()
 meth protected java.lang.String iconResource()
@@ -438,7 +442,7 @@ meth public org.openide.util.HelpCtx getHelpCtx()
 supr org.openide.util.actions.CookieAction
 
 CLSS public org.openide.actions.WorkspaceSwitchAction
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 meth public java.lang.String getName()
 meth public javax.swing.JMenuItem getMenuPresenter()
@@ -452,10 +456,10 @@ meth public abstract javax.swing.Action createContextAwareInstance(org.openide.u
 
 CLSS public final org.openide.util.HelpCtx
 cons public init(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 cons public init(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.util.HelpCtx DEFAULT_HELP
 innr public abstract interface static Displayer
 innr public abstract interface static Provider
@@ -524,12 +528,12 @@ meth public boolean getSurviveFocusChange()
 meth public java.lang.Object getActionMapKey()
 meth public javax.swing.Action createContextAwareInstance(org.openide.util.Lookup)
 meth public org.openide.util.actions.ActionPerformer getActionPerformer()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void actionPerformed(java.awt.event.ActionEvent)
 meth public void performAction()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setActionPerformer(org.openide.util.actions.ActionPerformer)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setSurviveFocusChange(boolean)
 supr org.openide.util.actions.CallableSystemAction
 hfds LISTENER,PROP_ACTION_PERFORMER,err,notSurviving,serialVersionUID,surviving
@@ -563,9 +567,9 @@ meth public boolean isEnabled()
 meth public final org.openide.nodes.Node[] getActivatedNodes()
 meth public javax.swing.Action createContextAwareInstance(org.openide.util.Lookup)
 meth public void actionPerformed(java.awt.event.ActionEvent)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void performAction()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setEnabled(boolean)
 supr org.openide.util.actions.CallableSystemAction
 hfds PROP_HAS_LISTENERS,PROP_LAST_ENABLED,PROP_LAST_NODES,l,listeningActions,serialVersionUID
@@ -611,7 +615,7 @@ meth public final void putValue(java.lang.String,java.lang.Object)
 meth public final void setIcon(javax.swing.Icon)
 meth public static <%0 extends org.openide.util.actions.SystemAction> {%%0} get(java.lang.Class<{%%0}>)
 meth public static javax.swing.JPopupMenu createPopupMenu(org.openide.util.actions.SystemAction[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static javax.swing.JToolBar createToolbarPresenter(org.openide.util.actions.SystemAction[])
 meth public static org.openide.util.actions.SystemAction[] linkActions(org.openide.util.actions.SystemAction[],org.openide.util.actions.SystemAction[])
 meth public void setEnabled(boolean)

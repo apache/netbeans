@@ -81,6 +81,26 @@ public class JavaCompletionTask116FeaturesTest extends CompletionTestBase {
         performTest("Records", 1071, null, "recordVariableSuggestion.pass", SOURCE_LEVEL);
     }
 
+    public void testRecordFirstComponentType() throws Exception {
+        performTest("Records", 1036, "Str", "typesStartingStr.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordSecondComponentType() throws Exception {
+        performTest("Records", 1036, "Exception a, Str", "typesStartingStr.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordThirdComponentType() throws Exception {
+        performTest("Records", 1036, "Exception a, Exception b, Str", "typesStartingStr.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordThirdComponentAnnotation() throws Exception {
+        performTest("Records", 1036, "Exception a, Exception b, @Dep", "deprecated.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordThirdComponentAnnotationThenType() throws Exception {
+        performTest("Records", 1036, "Exception a, Exception b, @Deprecated Str", "typesStartingStr.pass", SOURCE_LEVEL);
+    }
+
     static {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }

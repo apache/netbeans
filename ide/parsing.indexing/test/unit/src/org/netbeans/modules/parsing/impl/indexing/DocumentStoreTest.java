@@ -34,7 +34,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import org.apache.lucene.analysis.KeywordAnalyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.search.Query;
 import org.netbeans.api.annotations.common.NonNull;

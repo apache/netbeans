@@ -39,7 +39,6 @@ import org.netbeans.modules.debugger.jpda.models.ShortenedStrings;
 import org.netbeans.modules.debugger.jpda.models.ShortenedStrings.StringInfo;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.awt.Actions;
 import org.openide.awt.Mnemonics;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.NbBundle;
@@ -51,37 +50,10 @@ import org.openide.util.RequestProcessor;
  */
 class BigStringCustomEditor extends JPanel implements ActionListener {
     
-    static final int MAX_STRING_LENGTH;
+    static final int MAX_STRING_LENGTH = AbstractObjectVariable.MAX_STRING_LENGTH;
 
     private final StringInfo shortenedInfo;
     private final String fullString;
-
-    static {
-        int maxStringLength = AbstractObjectVariable.MAX_STRING_LENGTH;
-        String javaV = System.getProperty("java.version");
-        if (javaV.startsWith("1.8.0")) {
-            String update = "";
-            for (int i = "1.8.0_".length(); i < javaV.length(); i++) {
-                char c = javaV.charAt(i);
-                if (Character.isDigit(c)) {
-                    update += c;
-                } else {
-                    break;
-                }
-            }
-            int updateNo = 0;
-            if (!update.isEmpty()) {
-                try {
-                    updateNo = Integer.parseInt(update);
-                } catch (NumberFormatException nfex) {}
-            }
-            if (updateNo < 60) {
-                // Memory problem on JDK 8, fixed in update 60 (https://bugs.openjdk.java.net/browse/JDK-8072775):
-                maxStringLength = 1000;
-            }
-        }
-        MAX_STRING_LENGTH = maxStringLength;
-    }
     
     private BigStringCustomEditor(Component delegateCustomEditor, StringInfo shortenedInfo, int preferredShortLength) {
         this.shortenedInfo = shortenedInfo;

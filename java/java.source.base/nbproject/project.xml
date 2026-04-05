@@ -78,14 +78,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.libs.asm</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>5.4</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.libs.javacapi</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -98,8 +90,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>3</release-version>
-                        <specification-version>3.0</specification-version>
+                        <release-version>9</release-version>
+                        <specification-version>9.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -221,8 +213,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>2.33</specification-version>
+                        <release-version>3</release-version>
+                        <specification-version>3.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

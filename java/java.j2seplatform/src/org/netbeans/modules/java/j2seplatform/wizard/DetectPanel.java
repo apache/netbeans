@@ -355,7 +355,6 @@ public class DetectPanel extends javax.swing.JPanel {
     
     private String browse (String oldValue, String title) {
         JFileChooser chooser = new JFileChooser ();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         if (Utilities.isMac()) {
             //New JDKs and JREs are bundled into package, allow JFileChooser to navigate in

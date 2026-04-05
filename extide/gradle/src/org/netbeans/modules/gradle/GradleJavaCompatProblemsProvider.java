@@ -118,12 +118,7 @@ public final class GradleJavaCompatProblemsProvider implements ProjectProblemsPr
         }
 
         if (javaHome == null) {
-            String javaVersion = System.getProperty("java.specification.version");
-            int dot = javaVersion.indexOf('.');
-            if (dot > 0) {
-                javaVersion = javaVersion.substring(0, dot);
-            }
-            return Integer.parseInt(javaVersion);
+            return Runtime.version().feature();
         } else {
             return getJavaMajorVersion(javaHome);
         }
@@ -144,15 +139,10 @@ public final class GradleJavaCompatProblemsProvider implements ProjectProblemsPr
             }
             String javaVersion = releasePros.getProperty("JAVA_VERSION"); //NOI18N
             // This should look like "17" or "17.0.9"
-            //TODO: Use Runtime.Version (when we move to Java 11)
             if ((javaVersion != null) && javaVersion.startsWith("\"") && javaVersion.endsWith("\"")) {
-                int dot = javaVersion.indexOf('.');
-                javaVersion = dot > 0
-                        ? javaVersion.substring(1, javaVersion.indexOf('.'))
-                        : javaVersion.substring(1, javaVersion.length() - 1);
                 try {
-                    ret = Integer.parseInt(javaVersion);
-                } catch (NumberFormatException ex) {
+                    ret = Runtime.Version.parse(javaVersion.substring(1, javaVersion.length() - 1)).feature();
+                } catch (IllegalArgumentException ex) {
                     // Do nothing return empty
                 }
             }

@@ -22,6 +22,7 @@ package org.netbeans.api.autoupdate;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -37,7 +38,6 @@ import org.netbeans.spi.autoupdate.CustomInstaller;
 import org.netbeans.spi.autoupdate.UpdateItem;
 import org.netbeans.spi.autoupdate.UpdateLicense;
 import org.netbeans.spi.autoupdate.UpdateProvider;
-import org.openide.filesystems.FileUtil;
 /**
  *
  * @author Radek Matous, Jirka Rechtacek
@@ -78,9 +78,9 @@ public class TestUtils {
             }
         }
         
-        FileOutputStream os = new FileOutputStream(create);
-        FileUtil.copy(res.openStream(), os);
-        os.close();
+        try (InputStream is = res.openStream(); FileOutputStream os = new FileOutputStream(create)) {
+            is.transferTo(os);
+        }
         
         return create;
     }

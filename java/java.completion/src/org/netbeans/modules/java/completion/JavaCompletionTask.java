@@ -2218,6 +2218,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case GTGTGT:
                     controller = env.getController();
                     TypeMirror tm = controller.getTrees().getTypeMirror(new TreePath(path, nc.getIdentifier()));
+                    if (tm.getKind() == TypeKind.ERROR) {
+                        tm = env.getController().getTrees().getOriginalType((ErrorType) tm);
+                    }
                     addMembers(env, tm, ((DeclaredType) tm).asElement(), EnumSet.of(CONSTRUCTOR), null, false, false, false, true, addSwitchItemDefault);
                     break;
             }
@@ -3353,7 +3356,6 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         List<? extends Tree> members = cls.getMembers();
 
-        Tree lastParam = null;
         for (Tree member : members) {
             if (member.getKind() == Tree.Kind.VARIABLE) {
                 ModifiersTree modifiers = ((VariableTree) member).getModifiers();
@@ -3364,29 +3366,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     if (paramPos == Diagnostic.NOPOS || offset <= paramPos) {
                         break;
                     }
-                    lastParam = member;
                     startPos = paramPos;
                 }
             }
-
-            if (lastParam != null) {
-                TokenSequence<JavaTokenId> first = findFirstNonWhitespaceToken(env, startPos, offset);
-                if (first != null && first.token().id() == JavaTokenId.COMMA) {
-                    controller.toPhase(Phase.ELEMENTS_RESOLVED);
-                    env.addToExcludes(controller.getTrees().getElement(path));
-                    addTypes(env, EnumSet.of(INTERFACE, ANNOTATION_TYPE), null);
-                    return;
-                }
-                if (first != null && first.token().id() == JavaTokenId.RPAREN) {
-                    first = nextNonWhitespaceToken(first);
-                    if (!tu.isInterface(cls) && first.token().id() == JavaTokenId.LBRACE) {
-                        addKeyword(env, IMPLEMENTS_KEYWORD, SPACE, false);
-                    }
-
-                }
-                return;
-            }
-
         }
 
         TypeParameterTree lastTypeParam = null;
@@ -3402,7 +3384,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TokenSequence<JavaTokenId> lastNonWhitespaceToken = findLastNonWhitespaceToken(env, startPos, offset);
         if (lastNonWhitespaceToken != null) {
             switch (lastNonWhitespaceToken.token().id()) {
-                case LPAREN:
+                case COMMA, LPAREN:
                     addMemberModifiers(env, Collections.<Modifier>emptySet(), true);
                     addClassTypes(env, null);
                     break;
@@ -5996,7 +5978,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         path = new TreePath(path, mid);
                         TypeMirror typeMirror = controller.getTrees().getTypeMirror(path);
                         final ExecutableType midTM = typeMirror != null && typeMirror.getKind() == TypeKind.EXECUTABLE ? (ExecutableType) typeMirror : null;
-                        final ExecutableElement midEl = midTM == null ? null : (ExecutableElement) controller.getTrees().getElement(path);
+                        final ExecutableElement midEl = midTM != null && controller.getTrees().getElement(path) instanceof ExecutableElement ee ? ee : null;
                         switch (mid.getKind()) {
                             case MEMBER_SELECT: {
                                 String name = ((MemberSelectTree) mid).getIdentifier().toString();

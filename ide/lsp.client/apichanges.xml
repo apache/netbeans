@@ -25,6 +25,34 @@
     <apidef name="lsp_client">LSP Client API</apidef>
 </apidefs>
 <changes>
+    <change id="LanguageIdProvider">
+        <api name="lsp_client" />
+        <summary>Adding LanguageIdProvider</summary>
+        <version major="0" minor="1.34" />
+        <date day="27" month="2" year="2026" />
+        <author login="mmatblsi" />
+        <compatibility addition="yes" binary="compatible" source="compatible" />
+        <description>
+            <p>
+                While NetBeans uses mimetypes as primary identifier for source types,
+                LSP uses languageId as a carrier to inform what language/type of file
+                is being edited. Even a single language server can provide support
+                for multiple languages. One such example is the typescript language
+                server, which defaults to typescript, but also supports the
+                typescript variant that embeds react templates (TSX).
+            </p>
+            <p>
+                To support this an implementation can provide a resolver. The
+                resolver has to implement the interface
+                <code>org.netbeans.modules.lsp.client.spi.LanguageIdResolver</code>
+                and will be provided by a lookup provided to the
+                <code>LanguageServerDescription</code>. For each opened file
+                the resolver will be called with the file object and will return
+                the language id if it can resolve it for the given file.
+            </p>
+        </description>
+        <class name="LanguageIdResolver" package="org.netbeans.modules.lsp.client.spi"/>
+    </change>
     <change id="MultiMimeLanguageServerProvider">
         <api name="lsp_client" />
         <summary>Adding MultiMimeLanguageServerProvider</summary>

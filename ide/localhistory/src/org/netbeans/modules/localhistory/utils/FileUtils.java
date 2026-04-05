@@ -34,8 +34,6 @@ import org.netbeans.modules.localhistory.LocalHistory;
 import org.netbeans.modules.versioning.core.api.VCSFileProxy;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
-import org.openide.util.lookup.Lookups;
 
 /**
  * @author Tomas Stupka
@@ -114,13 +112,8 @@ public class FileUtils {
         if (os == null ) {
             throw new NullPointerException("output stream must not be null"); // NOI18N
         }        
-        InputStream is = null;
-        try {
-            is = createInputStream(file);            
-            FileUtil.copy(is, os);
-        } finally {
-            if (is != null) { try { is.close(); } catch (IOException ex) { } }
-            if (os != null) { try { os.close(); } catch (IOException ex) { } }
+        try (InputStream is = createInputStream(file); os) {
+            is.transferTo(os);
         }
     }
     
@@ -139,13 +132,8 @@ public class FileUtils {
         if (os == null ) {
             throw new NullPointerException("output stream must not be null"); // NOI18N
         }        
-        InputStream is = null;
-        try {
-            is = createInputStream(file);            
-            FileUtil.copy(is, os);
-        } finally {
-            if (is != null) { try { is.close(); } catch (IOException ex) { } }
-            if (os != null) { try { os.close(); } catch (IOException ex) { } }
+        try (InputStream is = createInputStream(file); os) {            
+            is.transferTo(os);
         }
     }
     

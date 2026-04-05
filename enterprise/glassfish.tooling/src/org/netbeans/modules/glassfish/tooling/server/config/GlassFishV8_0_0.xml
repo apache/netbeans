@@ -28,6 +28,7 @@
         <platform version="22"/>
         <platform version="23"/>
         <platform version="24"/>
+        <platform version="25"/>
     </java>
     <javaee version="11.0.0">
         <profile version="11.0.0" type="web"/>
@@ -70,7 +71,7 @@
             </fileset>
         </classpath>
         <javadocs>
-            <link url="https://repo.maven.apache.org/maven2/org/glassfish/jersey/jersey-documentation/4.0.0-M3/jersey-documentation-4.0.0-M3-docbook.zip"/>
+            <link url="https://repo.maven.apache.org/maven2/org/glassfish/jersey/jersey-documentation/4.0.0/jersey-documentation-4.0.0-docbook.zip"/>
         </javadocs>
         <sources>
         </sources>

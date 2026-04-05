@@ -587,7 +587,6 @@ public final class CustomizerSupport {
 
         private void addPathElement () {
             JFileChooser chooser = new JFileChooser();
-            FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
             chooser.setMultiSelectionEnabled (true);
             String title = null;
             String message = null;

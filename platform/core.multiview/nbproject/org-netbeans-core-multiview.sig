@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.74
+#Version 1.75
 
 CLSS public abstract interface java.io.Serializable
 
@@ -7,6 +7,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -226,11 +227,11 @@ meth public org.openide.text.Line$Set getLineSet()
 meth public org.openide.util.Task prepareDocument()
 meth public static javax.swing.text.EditorKit getEditorKit(java.lang.String)
 meth public void addChangeListener(javax.swing.event.ChangeListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void open()
 meth public void print()
 meth public void removeChangeListener(javax.swing.event.ChangeListener)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void saveDocument() throws java.io.IOException
 meth public void setMIMEType(java.lang.String)
 supr org.openide.windows.CloneableOpenSupport

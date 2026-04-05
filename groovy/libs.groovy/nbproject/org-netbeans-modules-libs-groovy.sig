@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.30
+#Version 2.31
 
 CLSS public abstract interface !annotation groovy.beans.Bindable
  anno 0 java.lang.annotation.Documented()
@@ -6862,10 +6862,14 @@ fld public final java.lang.String type
 meth protected groovyjarjarasm.asm.Attribute read(groovyjarjarasm.asm.ClassReader,int,int,char[],int,groovyjarjarasm.asm.Label[])
 meth protected groovyjarjarasm.asm.ByteVector write(groovyjarjarasm.asm.ClassWriter,byte[],int,int,int)
 meth protected groovyjarjarasm.asm.Label[] getLabels()
+ anno 0 java.lang.Deprecated()
 meth public boolean isCodeAttribute()
 meth public boolean isUnknown()
+meth public static byte[] write(groovyjarjarasm.asm.Attribute,groovyjarjarasm.asm.ClassWriter,byte[],int,int,int)
+meth public static groovyjarjarasm.asm.Attribute read(groovyjarjarasm.asm.Attribute,groovyjarjarasm.asm.ClassReader,int,int,char[],int,groovyjarjarasm.asm.Label[])
+meth public static groovyjarjarasm.asm.Label readLabel(groovyjarjarasm.asm.ClassReader,int,groovyjarjarasm.asm.Label[])
 supr java.lang.Object
-hfds content,nextAttribute
+hfds cachedContent,nextAttribute
 hcls Set
 
 CLSS public groovyjarjarasm.asm.ByteVector
@@ -6895,6 +6899,7 @@ fld public final static int SKIP_DEBUG = 2
 fld public final static int SKIP_FRAMES = 4
 meth protected groovyjarjarasm.asm.Label readLabel(int,groovyjarjarasm.asm.Label[])
 meth protected void readBytecodeInstructionOffset(int)
+meth public byte[] readBytes(int,int)
 meth public int getAccess()
 meth public int getItem(int)
 meth public int getItemCount()
@@ -6964,6 +6969,7 @@ meth public final groovyjarjarasm.asm.FieldVisitor visitField(int,java.lang.Stri
 meth public final groovyjarjarasm.asm.MethodVisitor visitMethod(int,java.lang.String,java.lang.String,java.lang.String,java.lang.String[])
 meth public final groovyjarjarasm.asm.ModuleVisitor visitModule(java.lang.String,int,java.lang.String)
 meth public final groovyjarjarasm.asm.RecordComponentVisitor visitRecordComponent(java.lang.String,java.lang.String,java.lang.String)
+meth public final void setFlags(int)
 meth public final void visit(int,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String[])
 meth public final void visitAttribute(groovyjarjarasm.asm.Attribute)
 meth public final void visitEnd()
@@ -7342,6 +7348,8 @@ fld public final static int V20 = 64
 fld public final static int V21 = 65
 fld public final static int V22 = 66
 fld public final static int V23 = 67
+fld public final static int V24 = 68
+fld public final static int V25 = 69
 fld public final static int V9 = 53
 fld public final static int V_PREVIEW = -65536
 fld public final static java.lang.Integer DOUBLE

@@ -375,18 +375,15 @@ public class KeystorePanel extends JPanel {
     
     private void keystoreLocationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keystoreLocationButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setDialogTitle(NbBundle.getMessage(KeystorePanel.class, "LBL_KeystoreBrowse_Title")); //NOI18N
         chooser.setFileSelectionMode (JFileChooser.FILES_ONLY);
         chooser.setMultiSelectionEnabled(false);
         chooser.setFileFilter(new StoreFileFilter());
         File f = new File(keystoreLocationTextField.getText());
-        if ((f != null) && (f.exists())) {
-            if (f.isDirectory()) {
-                chooser.setCurrentDirectory(f);
-            } else {
-                chooser.setCurrentDirectory(f.getParentFile());
-            }
+        if (f.exists()) {
+            chooser.setCurrentDirectory(f);
+        } else {
+            chooser.setCurrentDirectory(null);
         }
         if (chooser.showOpenDialog(this)== JFileChooser.APPROVE_OPTION) {
             File file = chooser.getSelectedFile();

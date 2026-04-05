@@ -1,13 +1,15 @@
 #Signature file v4.1
-#Version 7.77
+#Version 7.78
 
 CLSS public abstract interface java.io.Serializable
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -16,11 +18,13 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -52,6 +56,8 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -142,7 +148,7 @@ meth public boolean isNotifiable(int)
 meth public final java.lang.Throwable annotate(java.lang.Throwable,java.lang.String)
 meth public final java.lang.Throwable annotate(java.lang.Throwable,java.lang.Throwable)
 meth public final java.lang.Throwable copyAnnotation(java.lang.Throwable,java.lang.Throwable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void log(java.lang.String)
 meth public final void notify(java.lang.Throwable)
 meth public static org.openide.ErrorManager getDefault()
@@ -272,7 +278,7 @@ supr org.openide.NotifyDescriptor
 
 CLSS public final static org.openide.NotifyDescriptor$Exception
  outer org.openide.NotifyDescriptor
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.Throwable)
 cons public init(java.lang.Throwable,java.lang.Object)
 supr org.openide.NotifyDescriptor$Confirmation
@@ -324,7 +330,7 @@ supr java.lang.Object
 hfds description,label,selected
 
 CLSS public abstract org.openide.ServiceType
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 fld public final static java.lang.String PROP_NAME = "name"
 innr public abstract static Registry
@@ -333,11 +339,11 @@ intf java.io.Serializable
 intf org.openide.util.HelpCtx$Provider
 meth protected final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected java.lang.String displayName()
 meth public abstract org.openide.util.HelpCtx getHelpCtx()
 meth public final org.openide.ServiceType createClone()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public java.lang.String getName()
@@ -347,7 +353,7 @@ hfds err,name,serialVersionUID,supp
 
 CLSS public final static org.openide.ServiceType$Handle
  outer org.openide.ServiceType
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.openide.ServiceType)
 intf java.io.Serializable
 meth public java.lang.String toString()
@@ -357,16 +363,16 @@ hfds className,name,serialVersionUID,serviceType
 
 CLSS public abstract static org.openide.ServiceType$Registry
  outer org.openide.ServiceType
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 intf java.io.Serializable
 meth public <%0 extends org.openide.ServiceType> java.util.Enumeration<{%%0}> services(java.lang.Class<{%%0}>)
 meth public abstract java.util.Enumeration<org.openide.ServiceType> services()
 meth public abstract java.util.List getServiceTypes()
 meth public abstract void setServiceTypes(java.util.List)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.ServiceType find(java.lang.Class)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.ServiceType find(java.lang.String)
 supr java.lang.Object
 hfds serialVersionUID
@@ -415,7 +421,7 @@ meth public final void doFinishClick()
 meth public final void doNextClick()
 meth public final void doPreviousClick()
 meth public final void setPanels(org.openide.WizardDescriptor$Iterator)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.Object getProperty(java.lang.String)
 meth public java.lang.Object getValue()
 meth public java.text.MessageFormat getTitleFormat()
@@ -476,7 +482,7 @@ meth public abstract void validate() throws org.openide.WizardValidationExceptio
 
 CLSS public abstract interface static org.openide.WizardDescriptor$FinishPanel<%0 extends java.lang.Object>
  outer org.openide.WizardDescriptor
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf org.openide.WizardDescriptor$Panel<{org.openide.WizardDescriptor$FinishPanel%0}>
 
 CLSS public abstract interface static org.openide.WizardDescriptor$FinishablePanel<%0 extends java.lang.Object>
@@ -531,10 +537,10 @@ hfds localizedMessage,source
 
 CLSS public final org.openide.util.HelpCtx
 cons public init(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 cons public init(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.util.HelpCtx DEFAULT_HELP
 innr public abstract interface static Displayer
 innr public abstract interface static Provider

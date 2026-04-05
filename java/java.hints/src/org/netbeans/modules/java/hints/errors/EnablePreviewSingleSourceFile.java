@@ -49,7 +49,7 @@ public class EnablePreviewSingleSourceFile implements PreviewEnabler {
 
     private static final String FILE_VM_OPTIONS = "single_file_vm_options"; //NOI18N
 
-    private FileObject file;
+    private final FileObject file;
 
     private EnablePreviewSingleSourceFile(@NonNull FileObject file) {
         Parameters.notNull("file", file); //NOI18N
@@ -68,7 +68,7 @@ public class EnablePreviewSingleSourceFile implements PreviewEnabler {
         Matcher m = SOURCE_FLAG_PATTERN.matcher(compilerArgs);
 
         if (newSourceLevel == null) {
-            newSourceLevel = getJdkRunVersion();
+            newSourceLevel = Integer.toString(Runtime.version().feature());
         }
 
         if (compilerArgs.contains(SOURCE_FLAG)) {
@@ -136,15 +136,6 @@ public class EnablePreviewSingleSourceFile implements PreviewEnabler {
             });
         } catch (MutexException ex) {
         }
-    }
-
-    private static String getJdkRunVersion() {
-        String javaVersion = System.getProperty("java.specification.version"); //NOI18N 
-        if (javaVersion.startsWith("1.")) { //NOI18N
-            javaVersion = javaVersion.substring(2);
-        }
-
-        return javaVersion;
     }
 
     @ServiceProvider(service=Factory.class)

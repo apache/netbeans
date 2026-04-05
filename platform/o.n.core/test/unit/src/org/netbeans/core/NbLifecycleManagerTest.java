@@ -18,14 +18,14 @@
  */
 package org.netbeans.core;
 
+import org.netbeans.junit.NbTestCase;
 import org.openide.LifecycleManager;
-import org.openide.LifecycleManagerTest;
 
 /**
  *
  * @author Jaroslav Tulach <jtulach@netbeans.org>
  */
-public class NbLifecycleManagerTest extends LifecycleManagerTest {
+public class NbLifecycleManagerTest extends NbTestCase {
 
     public NbLifecycleManagerTest(String n) {
         super(n);

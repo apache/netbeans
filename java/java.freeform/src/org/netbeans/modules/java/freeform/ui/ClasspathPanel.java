@@ -710,10 +710,7 @@ public class ClasspathPanel extends javax.swing.JPanel implements HelpCtx.Provid
     }//GEN-LAST:event_removeClasspathActionPerformed
 
     private void addClasspathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClasspathActionPerformed
-        FileChooser chooser;
-        chooser = new FileChooser(model.getBaseFolder(), null);
-
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
+        FileChooser chooser = new FileChooser(model.getBaseFolder(), null);
         chooser.setFileSelectionMode (JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setMultiSelectionEnabled(true);
         chooser.setDialogTitle(NbBundle.getMessage(ClasspathPanel.class, "LBL_Browse_Classpath"));

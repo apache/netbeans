@@ -445,7 +445,7 @@ public class EvaluatorVisitor extends ErrorAwareTreePathScanner<Mirror, Evaluati
         } else if (type instanceof ClassType) {
             cType = (ClassType) type;
         } else {
-            if (JPDAUtils.IS_JDK_180_40 && (type instanceof InterfaceType) && isStatic) {
+            if ((type instanceof InterfaceType) && isStatic) {
                 cType = null;
                 iType = (InterfaceType) type;
             } else {

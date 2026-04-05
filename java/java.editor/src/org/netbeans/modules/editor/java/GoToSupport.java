@@ -45,8 +45,6 @@ import com.sun.source.util.Trees;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -478,30 +476,17 @@ public class GoToSupport {
                         }
                     }
                     if (el != null && el.getKind() == ElementKind.METHOD) {
-                        for (Element peer : el.getEnclosingElement().getEnclosedElements()) {
-                            if (peer.getKind().name().contains("RECORD_COMPONENT")) {
-                                try {
-                                    Class<?> recordComponent = Class.forName("javax.lang.model.element.RecordComponentElement", true, VariableTree.class.getClassLoader());
-                                    Method getAccessor = recordComponent.getDeclaredMethod("getAccessor");
-                                    Method getRecordComponents = TypeElement.class.getDeclaredMethod("getRecordComponents");
-                                    for (Element component : (Iterable<Element>) getRecordComponents.invoke(peer.getEnclosingElement())) {
-                                        if (Objects.equals(el, getAccessor.invoke(component))) {
-                                            el = component;
-                                            break;
+                        Element enclosing = el.getEnclosingElement();
+                        if (enclosing.getKind() == ElementKind.RECORD) {
+                            OUTER:
+                            for (Element peer : enclosing.getEnclosedElements()) {
+                                if (peer.getKind() == ElementKind.RECORD_COMPONENT) {
+                                    for (RecordComponentElement rc : ((TypeElement)enclosing).getRecordComponents()) {
+                                        if (Objects.equals(el, rc.getAccessor())) {
+                                            el = rc;
+                                            break OUTER;
                                         }
                                     }
-                                } catch (ClassNotFoundException ex) {
-                                    Exceptions.printStackTrace(ex);
-                                } catch (IllegalAccessException ex) {
-                                    Exceptions.printStackTrace(ex);
-                                } catch (IllegalArgumentException ex) {
-                                    Exceptions.printStackTrace(ex);
-                                } catch (InvocationTargetException ex) {
-                                    Exceptions.printStackTrace(ex);
-                                } catch (NoSuchMethodException ex) {
-                                    Exceptions.printStackTrace(ex);
-                                } catch (SecurityException ex) {
-                                    Exceptions.printStackTrace(ex);
                                 }
                             }
                         }
@@ -869,7 +854,7 @@ public class GoToSupport {
                 if (found != null) {
                     return null;
                 }
-                if (tree != null && "BINDING_PATTERN".equals(tree.getKind().name())) {
+                if (tree != null && tree.getKind() == Kind.BINDING_PATTERN) {
                     if (process(new TreePath(getCurrentPath(), tree))) {
                         return null;
                     }

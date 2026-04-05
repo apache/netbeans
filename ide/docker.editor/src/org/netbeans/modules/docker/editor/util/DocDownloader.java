@@ -65,7 +65,7 @@ public class DocDownloader {
             try {
                 final ByteArrayOutputStream out = new ByteArrayOutputStream();
                 try(BufferedInputStream in = new BufferedInputStream(url.openStream())) {
-                    FileUtil.copy(in, out);
+                    in.transferTo(out);
                 }
                 return cancel.call() ?
                         ""  //NOI18N

@@ -6274,13 +6274,12 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testForVar1() throws Exception {
+        sourceLevel = "10";
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
         DataObject testSourceDO = DataObject.find(testSourceFO);
         EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
-        String oldLevel = JavaSourceTest.SourceLevelQueryImpl.sourceLevel;
-        JavaSourceTest.SourceLevelQueryImpl.sourceLevel = "1.10";
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
         String content
@@ -6299,17 +6298,15 @@ public class FormatingTest extends NbTestCase {
                 + "    }\n"
                 + "}\n";
         reformat(doc, content, golden);
-        JavaSourceTest.SourceLevelQueryImpl.sourceLevel = oldLevel;
     }
 
     public void testForVar2() throws Exception {
+        sourceLevel = "10";
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
         DataObject testSourceDO = DataObject.find(testSourceFO);
         EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
-        String oldLevel = JavaSourceTest.SourceLevelQueryImpl.sourceLevel;
-        JavaSourceTest.SourceLevelQueryImpl.sourceLevel = "1.10";
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
         String content
@@ -6328,7 +6325,52 @@ public class FormatingTest extends NbTestCase {
                 + "    }\n"
                 + "}\n";
         reformat(doc, content, golden);
-        JavaSourceTest.SourceLevelQueryImpl.sourceLevel = oldLevel;
+    }
+
+    public void testForVarUnnamed() throws Exception {
+        sourceLevel = "22";
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content
+                = """
+                  package hierbas.del.litoral;
+                  
+                  public class Test {
+                  
+                      public static void main(String[] args) {
+                          int[] orderIDs = {34, 45, 23, 27, 15};
+                          int total = 0;
+                          for (   var   _:orderIDs) {
+                            total++;
+                          }
+                      }
+                  }
+                  """;
+
+        String golden
+                = """
+                  package hierbas.del.litoral;
+                  
+                  public class Test {
+                  
+                      public static void main(String[] args) {
+                          int[] orderIDs = {34, 45, 23, 27, 15};
+                          int total = 0;
+                          for (var _ : orderIDs) {
+                              total++;
+                          }
+                      }
+                  }
+                  """;
+
+        //check no change then formatted
+        reformat(doc, golden, golden);
+        reformat(doc, content, golden);
     }
 
     public void testTryBlockAfterIf() throws Exception {

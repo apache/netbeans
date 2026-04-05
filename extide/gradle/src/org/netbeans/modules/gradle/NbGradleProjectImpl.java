@@ -44,6 +44,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectState;
@@ -217,10 +218,7 @@ public final class NbGradleProjectImpl implements Project {
     void attachAllUpdater() {
         synchronized (this) {
             if (openedProjectUpdater == null) {
-                openedProjectUpdater = new Updater((new FileProvider() {
-
-                    @Override
-                    public Set<File> getFiles() {
+                openedProjectUpdater = new Updater(() -> {
                         GradleFiles gf = getGradleFiles();
                         Set<File> ret = new LinkedHashSet<>();
                         for (GradleFiles.Kind kind : GradleFiles.Kind.PROJECT_FILES) {
@@ -230,8 +228,7 @@ public final class NbGradleProjectImpl implements Project {
                             }
                         }
                         return ret;
-                    }
-                }));
+                });
             }
         }
 
@@ -306,33 +303,6 @@ public final class NbGradleProjectImpl implements Project {
             // synchronously
             return null;
         }
-    }
-    
-    /**
-     * Obtains a project attempting at least the defined quality, without setting
-     * that quality level for subsequent loads. Note that the returned project's quality
-     * must be checked. If the currently loaded project declares the desired quality,
-     * no load is performed.
-     * <p>
-     * This method should be used in preference to {@link #loadProject()} or {@link #loadOWnProject},
-     * unless it's desired to force refresh the project contents to the current disk state.
-     * <div class="nonnormative">
-     * Implementation note: project reload events are dispatched <b>synchronously</b>
-     * in the calling thread.
-     * </div>
-     * @param desc optional description for the loading process, can be {@code null}.
-     * @param aim aimed quality
-     * @param interactive true, if user messages/confirmations can be displayed
-     * @param force to force load even though the quality does not change.
-     * @return project instance
-     */
-    @Deprecated
-    public CompletableFuture<GradleProject> projectWithQualityTask(String desc, Quality aim, boolean interactive, boolean force) {
-        return projectWithQualityTask(NbGradleProject.loadOptions(aim).
-                setDescription(desc).
-                setInteractive(interactive).
-                setForce(force)
-        );
     }
     
     /**
@@ -556,18 +526,8 @@ public final class NbGradleProjectImpl implements Project {
             loadedProjectSerial = s;
             this.attemptedQuality = options.getAim();
             
-            boolean replace = project == null || options.isForce();
-            if (project != null) {
-                if (prj.getQuality().betterThan(project.getQuality())) {
-                    replace = true;
-                } else if (
-                        project.getQuality().equals(prj.getQuality()) && 
-                        !project.getProblems().equals(prj.getProblems()) &&
-                        !prj.getProblems().isEmpty()) {
-                    // exception: if the new project is the same quality fallback, but contains (different) problem info, use it
-                    replace = true;
-                }
-            }
+            boolean replace = prj.betterThan(project) || options.isForce();
+
             if (!replace) {
                 // avoid replacing a project when nothing has changed.
                 LOG.log(Level.FINER, "Current project {1} sufficient for attempted quality {0}", new Object[] { this.project, options.getAim() });
@@ -613,8 +573,6 @@ public final class NbGradleProjectImpl implements Project {
                 f.ownThreadCompletion.remove();
                 f.complete(prj);
             }
-        } catch (ThreadDeath t) {
-            throw t;
         } catch (RuntimeException | Error ex) {
             f.completeExceptionally(ex);
             throw ex;
@@ -645,8 +603,8 @@ public final class NbGradleProjectImpl implements Project {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof Project) {
-            NbGradleProjectImpl impl = ((Project) obj).getLookup().lookup(NbGradleProjectImpl.class);
+        if (obj instanceof Project prj) {
+            NbGradleProjectImpl impl = prj.getLookup().lookup(NbGradleProjectImpl.class);
             if (impl != null) {
                 return getGradleFiles().equals(impl.getGradleFiles());
             }
@@ -725,9 +683,6 @@ public final class NbGradleProjectImpl implements Project {
             } catch (Throwable t) {
                 LOG.log(Level.FINER, t, () -> String.format("Priming errored for %s", project));
                 ret.completeExceptionally(t);
-                if (t instanceof ThreadDeath) {
-                    throw t;
-                }
             }
         });
         return ret;
@@ -753,20 +708,21 @@ public final class NbGradleProjectImpl implements Project {
 
         @Override
         protected void projectOpened() {
-            Runnable open = () -> {
-                setAimedQuality(FULL);
-                attachAllUpdater();
-                if (ProjectProblems.isBroken(NbGradleProjectImpl.this)) {
-                    ProjectProblems.showAlert(NbGradleProjectImpl.this);
-                }
-            };
             if (GradleExperimentalSettings.getDefault().isOpenLazy()) {
-                RELOAD_RP.post(open, 100);
+                RELOAD_RP.post(this::open, 100);
             } else {
-                open.run();
+                open();
             }
         }
 
+        private void open() {
+            setAimedQuality(FULL);
+            attachAllUpdater();
+            if (ProjectProblems.isBroken(NbGradleProjectImpl.this)) {
+                ProjectProblems.showAlert(NbGradleProjectImpl.this);
+            }            
+        }
+        
         @Override
         protected void projectClosed() {
             setAimedQuality(Quality.FALLBACK);
@@ -775,11 +731,6 @@ public final class NbGradleProjectImpl implements Project {
             getLookup().lookup(ProjectConnection.class).close();
             getLookup().lookup(GradleProjectErrorNotifications.class).clear();
         }
-    }
-
-    interface FileProvider {
-
-        Set<File> getFiles();
     }
 
     private class CacheDirProvider implements CacheDirectoryProvider {
@@ -902,11 +853,11 @@ public final class NbGradleProjectImpl implements Project {
 
     private class Updater implements FileChangeListener {
 
-        final FileProvider fileProvider;
+        final Supplier<Set<File>> fileProvider;
         Set<File> filesToWatch;
         long lastEventTime = 0;
 
-        Updater(FileProvider fp) {
+        Updater(Supplier<Set<File>> fp) {
             fileProvider = fp;
         }
 
@@ -945,7 +896,7 @@ public final class NbGradleProjectImpl implements Project {
         }
 
         synchronized void attachAll() {
-            filesToWatch = fileProvider.getFiles();
+            filesToWatch = fileProvider.get();
             if (filesToWatch != null) {
                 for (File f : filesToWatch) {
                     if (f != null) {

@@ -666,6 +666,102 @@ public class AddParameterOrLocalFixTest extends ErrorHintsTestBase {
                 """.replaceAll("[ \t\n]+", " "));
     }
 
+    public void testLocalClass1() throws Exception {
+        sourceLevel = "17";
+        performAnalysisTest("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    private void t() {
+                        record R(int i) {}
+                        r|r = new R(0);
+                    }
+                }
+                """,
+                "AddParameterOrLocalFix:rr:java.lang.Record:PARAMETER",
+                "AddParameterOrLocalFix:rr:R:LOCAL_VARIABLE");
+    }
+
+    public void testLocalClass2() throws Exception {
+        sourceLevel = "17";
+        performFixTest("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    private void t() {
+                        record R(int i) {}
+                        r|r = new R(0);
+                    }
+                }
+                """,
+                "AddParameterOrLocalFix:rr:R:LOCAL_VARIABLE",
+                """
+                package test;
+                public class Test {
+                    private void t() {
+                        record R(int i) {}
+                        R rr = new R(0);
+                    }
+                }
+                """.replaceAll("[ \t\n]+", " "));
+                
+    }
+
+    public void testTWRLocalClass() throws Exception {
+        sourceLevel = "17";
+        performFixTest("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    private void t() {
+                        class Impl implements AutoCloseable {
+                            public void close() {}
+                        }
+                        try (|impl = new Impl()) {
+                        }
+                    }
+                }
+                """,
+                "AddParameterOrLocalFix:impl:Impl:RESOURCE_VARIABLE",
+                """
+                package test;
+                public class Test {
+                    private void t() {
+                        class Impl implements AutoCloseable {
+                            public void close() {}
+                        }
+                        try (Impl impl = new Impl()) {
+                        }
+                    }
+                }
+                """.replaceAll("[ \t\n]+", " "));
+    }
+
+    public void testLocalClassForInit() throws Exception {
+        sourceLevel = "17";
+        performFixTest("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    private void t() {
+                        record R(int i) {}
+                        for (r|r = new R(0); ;) {}
+                    }
+                }
+                """,
+                "AddParameterOrLocalFix:rr:R:OTHER",
+                """
+                package test;
+                public class Test {
+                    private void t() {
+                        record R(int i) {}
+                        for (R rr = new R(0); ;) {}
+                    }
+                }
+                """.replaceAll("[ \t\n]+", " "));
+                
+    }
+
     @Override
     protected List<Fix> computeFixes(CompilationInfo info, String diagnosticCode, int pos, TreePath path) throws Exception {
         List<Fix> fixes = super.computeFixes(info, diagnosticCode, pos, path);

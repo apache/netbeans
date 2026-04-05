@@ -22,6 +22,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab in GitHub UI
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 # cancel other workflow run in the same head-base group if it exists
 concurrency: 
   group: dep-checker-${{ github.head_ref || github.run_id }}-${{ github.base_ref }}

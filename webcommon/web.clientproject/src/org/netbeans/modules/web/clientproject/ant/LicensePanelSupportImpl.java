@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.web.clientproject.ant;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -105,11 +104,8 @@ extends Licenses implements CustomizerUtilities.LicensePanelContentHandler {
             } else {
                 fo = FileUtil.toFileObject(file);
             }
-            OutputStream out = fo.getOutputStream();
-            try {
-                FileUtil.copy(new ByteArrayInputStream(licenseContent.getBytes()), out);
-            } finally {
-                out.close();
+            try (OutputStream out = fo.getOutputStream()) {
+                out.write(licenseContent.getBytes());
             }
         }
     }

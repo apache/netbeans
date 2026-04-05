@@ -41,6 +41,11 @@ on:
   # keep in mind this will have ALL tests enabled
   workflow_dispatch:
 
+# read access for repo checkout and cache restore action; jobs may request more where needed
+permissions:
+  contents: read
+  actions: read
+
 # cancel other PR workflow run in the same head-base group if it exists (e.g. during PR syncs)
 # if this is not a PR run (no github.head_ref and github.base_ref defined), use an UID as group
 concurrency: 
@@ -134,10 +139,13 @@ jobs:
     name: Build Clusters on JDK ${{ matrix.java }}
     if: contains(github.event.pull_request.labels.*.name, 'ci:no-build') == false
     runs-on: ubuntu-latest
+    # write access for cache
+    permissions:
+      actions: write
     timeout-minutes: 40
     strategy:
       matrix:
-        java: [ '17', '25', '26-ea' ]
+        java: [ '21', '25', '26' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
       fail-fast: false
@@ -167,30 +175,30 @@ jobs:
         run: ant $OPTS -quiet -Dcluster.config=$CLUSTER_CONFIG build-nozip
 
       - name: Prepare Artifact
-        if: ${{ matrix.java == '17' }}
+        if: ${{ matrix.java == '21' }}
         run: tar -I 'zstd -9 -T0' -cf /tmp/build.tar.zst --exclude ".git" .
 
       - name: Upload Workspace
-        if: ${{ (matrix.java == '17') && success() }}
-        uses: actions/upload-artifact@v6
+        if: ${{ (matrix.java == '21') && success() }}
+        uses: actions/upload-artifact@v7
         with:
-          name: build
           path: /tmp/build.tar.zst
-          compression-level: 0
+          archive: false
           retention-days: 2
           if-no-files-found: error
           
       - name: Create Dev Build
-        if: ${{ matrix.java == '17' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
-        run: ant $OPTS -quiet -Dcluster.config=$CLUSTER_CONFIG zip-cluster-config
+        if: ${{ matrix.java == '21' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
+        run: |
+          ant $OPTS -quiet -Dcluster.config=$CLUSTER_CONFIG zip-cluster-config
+          mv nbbuild/NetBeans-*.zip nbbuild/dev-build_${{github.event.pull_request.number || github.run_id}}.zip
 
       - name: Upload Dev Build
-        if: ${{ matrix.java == '17' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
-        uses: actions/upload-artifact@v6
+        if: ${{ matrix.java == '21' && contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && success() }}
+        uses: actions/upload-artifact@v7
         with:
-          name: dev-build_${{github.event.pull_request.number || github.run_id}}
-          path: nbbuild/NetBeans-*.zip
-          compression-level: 0
+          path: nbbuild/dev-build_*.zip
+          archive: false
           retention-days: 7
           if-no-files-found: error
 
@@ -239,10 +247,10 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
-        java: [ 17 ]
+        java: [ '21' ]
         include:
           - os: ubuntu-latest
-            java: 26-ea
+            java: 26
       fail-fast: false
     steps:
 
@@ -259,9 +267,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       # tar on MacOS is not aware of zstd "tar --zstd -xf build.tar.zst" doesn't work
       - name: Extract on MacOS
@@ -273,7 +281,7 @@ jobs:
         run: tar --zstd -xf build.tar.zst
 
       - name: platform/masterfs
-        if: ${{ matrix.java == '17' }}
+        if: ${{ matrix.java == '21' }}
         run: .github/retry.sh ant $OPTS -f platform/masterfs test
 
       - name: Commit Validation tests
@@ -301,7 +309,7 @@ jobs:
       ANT_OPTS: -Dmetabuild.jsonurl=https://raw.githubusercontent.com/apache/netbeans-jenkins-lib/master/meta/netbeansrelease.json
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
     steps:
 
       - name: Check PR labels
@@ -339,7 +347,7 @@ jobs:
       - name: Check line endings and verify RAT report
         if: ${{ !cancelled() }}
         run: |
-          nbbuild/travis/check-line-endings.sh
+          nbbuild/ci/check-line-endings.sh
           ant $OPTS -quiet build-source-config
           mkdir scratch && cd scratch
           unzip -qq ../nbbuild/build/release-src*
@@ -351,9 +359,9 @@ jobs:
 
       - name: Download Build
         if: ${{ needs.base-build.result == 'success' && !cancelled() }}
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         if: ${{ needs.base-build.result == 'success' && !cancelled() }}
@@ -379,7 +387,7 @@ jobs:
     timeout-minutes: 100
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
       fail-fast: false
     steps:
 
@@ -395,9 +403,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -420,8 +428,9 @@ jobs:
       - name: ergonomics/ide.ergonomics
         run: ant $OPTS -f ergonomics/ide.ergonomics test -Dtest.config=commit
 
-      - name: nb/deadlock.detector
-        run: ant $OPTS -f nb/deadlock.detector test
+      # TODO not JDK 21 compatible
+#      - name: nb/deadlock.detector
+#        run: ant $OPTS -f nb/deadlock.detector test
 
       - name: nb/ide.branding
         run: ant $OPTS -f nb/ide.branding test
@@ -431,6 +440,9 @@ jobs:
 
 #      - name: nb/updatecenters
 #        run: ant $OPTS -f nb/updatecenters test
+
+      - name: nbbuild
+        run: ant $OPTS -f nbbuild localtest
 
       # 5-6 min
       - name: Build nbms
@@ -473,7 +485,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
         config: [ 'platform', 'release' ]
       fail-fast: false
     steps:
@@ -485,9 +497,9 @@ jobs:
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -519,7 +531,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
       fail-fast: false
     steps:
 
@@ -535,9 +547,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -849,9 +861,9 @@ jobs:
     timeout-minutes: 50
     strategy:
       matrix:
-        java: [ '17', '21', '26-ea' ]
+        java: [ '21', '25', '26' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
       fail-fast: false
     steps:
 
@@ -867,9 +879,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -931,32 +943,31 @@ jobs:
 #      - name: java/ant.grammar
 #        run: ant $OPTS -f java/ant.grammar test
 
+      - name: extide/o.apache.tools.ant.module
+        run: ant $OPTS -f extide/o.apache.tools.ant.module test
+
       - name: java/gradle.test
         run: ant $OPTS -f java/gradle.test test
 
-      # TODO next are JDK 21 or 25 incompatibe steps
-      - name: java/java.mx.project
-        if: ${{ matrix.java == '17' || matrix.java == '21' }}
-        run: .github/retry.sh ant $OPTS -f java/java.mx.project test
-
       - name: java/gradle.java
-        if: ${{ matrix.java == '17' || matrix.java == '21' }}
+        if: ${{ matrix.java == '21' || matrix.java == '25' }}
         run: .github/retry.sh ant $OPTS -f java/gradle.java test
 
       - name: extide/gradle
-        if: ${{ matrix.java == '17' || matrix.java == '21' }}
+        if: ${{ matrix.java == '21' || matrix.java == '25' }}
         run: ant $OPTS -f extide/gradle test
 
       - name: java/gradle.dependencies
-        if: ${{ matrix.java == '17' }}
+        if: ${{ matrix.java == '21' || matrix.java == '25' }}
         run: ant $OPTS -f java/gradle.dependencies test
 
-      - name: extide/o.apache.tools.ant.module
-        if: ${{ matrix.java == '17' }}
-        run: ant $OPTS -f extide/o.apache.tools.ant.module test
+      # TODO next are JDK 25 incompatibe steps
+      - name: java/java.mx.project
+        if: ${{ matrix.java == '21' }}
+        run: .github/retry.sh ant $OPTS -f java/java.mx.project test
 
       - name: apisupport.ant
-        if: ${{ matrix.java == '17' }}
+        if: ${{ matrix.java == '21' }}
         run: ant $OPTS -f apisupport/apisupport.ant test
 
       - name: Create Test Summary
@@ -975,7 +986,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
       fail-fast: false
     steps:
 
@@ -991,9 +1002,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -1138,7 +1149,7 @@ jobs:
     timeout-minutes: 90
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
       fail-fast: false
     steps:
 
@@ -1154,9 +1165,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -1273,7 +1284,7 @@ jobs:
     timeout-minutes: 100
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
       fail-fast: false
     steps:
 
@@ -1289,9 +1300,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -1459,10 +1470,10 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '26-ea' ]
+        java: [ '21', '26' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '26-ea' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '26' }}
       fail-fast: false
     steps:
 
@@ -1478,9 +1489,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -1516,7 +1527,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '25', '26-ea' ]
+        java: [ '21', '25', '26' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
       fail-fast: false
@@ -1534,9 +1545,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -1556,8 +1567,8 @@ jobs:
       - name: debugger.jpda.projectsui
         run: ant $OPTS -f java/debugger.jpda.projectsui test
 
-#      - name: debugger.jpda.truffle
-#        run: ant $OPTS -f java/debugger.jpda.truffle test
+      - name: debugger.jpda.truffle
+        run: ant $OPTS -f java/debugger.jpda.truffle test
 
       - name: debugger.jpda.ui
         run: ant $OPTS -f java/debugger.jpda.ui test-unit
@@ -1578,7 +1589,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
       fail-fast: false
     steps:
 
@@ -1594,9 +1605,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -1623,7 +1634,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
       fail-fast: false
     steps:
 
@@ -1639,9 +1650,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -1801,7 +1812,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
       fail-fast: false
     steps:
 
@@ -1817,9 +1828,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -1849,9 +1860,9 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17', '21' ]
-        exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
+        java: [ '21' ]
+#        exclude:
+#          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '21' }}
       fail-fast: false
     steps:
 
@@ -1867,9 +1878,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -1902,7 +1913,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
       fail-fast: false
     steps:
 
@@ -1918,9 +1929,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -1950,7 +1961,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
       fail-fast: false
     steps:
 
@@ -1966,9 +1977,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -2195,7 +2206,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
       fail-fast: false
 
     steps:
@@ -2211,9 +2222,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -2278,7 +2289,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
       fail-fast: false
 
     services:
@@ -2304,9 +2315,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -2340,7 +2351,7 @@ jobs:
       DISPLAY: ":99.0"
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
         os: [ 'windows-latest', 'ubuntu-latest' ]
         exclude:
           - os: ${{ github.event_name == 'pull_request' && 'nothing' || 'windows-latest' }}
@@ -2370,7 +2381,7 @@ jobs:
       # linux specific setup
       - name: Setup PHP
         if: contains(matrix.os, 'ubuntu')
-        uses: shivammathur/setup-php@ec406be512d7077f68eed36e63f4d91bc006edc4 # v2.35.4
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.37.0
         with:
           php-version: '8.3'
           tools: pecl
@@ -2383,9 +2394,9 @@ jobs:
       # - - -
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -2496,7 +2507,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '17' ]
+        java: [ '21' ]
       fail-fast: false
 
     steps:
@@ -2512,9 +2523,9 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
@@ -2541,9 +2552,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        # TODO uses GraalVM 17 / 22.3.1 which is the last known release which offers all required language extensions
-        # GraalVM based on JDK 21+ doesn't support the 'gu' tool anymore - extensions are now regular application dependencies
-        graal: [ '22.3.1' ]
+        graal: [ '21.0.2' ]
       fail-fast: false
 
     steps:
@@ -2553,22 +2562,19 @@ jobs:
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
 
       - name: Download Build
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
-          name: build
+          name: build.tar.zst 
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
 
       - name: Setup GraalVM ${{ matrix.graal }}
         run: |
-          URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${{ matrix.graal }}/graalvm-ce-java17-linux-amd64-${{ matrix.graal }}.tar.gz
+          URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-${{ matrix.graal }}/graalvm-community-jdk-${{ matrix.graal }}_linux-x64_bin.tar.gz
           curl -L $URL | tar -xz
-          GRAALVM=`pwd`/graalvm-ce-java17-${{ matrix.graal }}
+          GRAALVM=$(realpath graalvm-community-openjdk-*)
           echo "JAVA_HOME=$GRAALVM" >> $GITHUB_ENV
-
-      - name: Setup GraalVM Languages (python, R, ruby and js)
-        run: $JAVA_HOME/bin/gu install --no-progress python R ruby js
 
       - name: platform/core.network
         run: ant $OPTS -f platform/core.network test
@@ -2637,12 +2643,12 @@ jobs:
       - name: Delete Workspace Artifact
         uses: geekyeggo/delete-artifact@f275313e70c08f6120db482d7a6b98377786765b # v5.1.0
         with:
-          name: build
+          name: build.tar.zst 
           useGlob: false
 
       - name: Delete Dev Build Artifact
         uses: geekyeggo/delete-artifact@f275313e70c08f6120db482d7a6b98377786765b # v5.1.0
         if: ${{ contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && cancelled() }}
         with:
-          name: dev-build_${{github.event.pull_request.number || github.run_id}}
+          name: dev-build_${{github.event.pull_request.number || github.run_id}}.zip
           useGlob: false

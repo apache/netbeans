@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.ZipEntry;
@@ -324,13 +323,9 @@ public final class NewProjectIterator extends BasicWizardIterator {
         }
     }
     
-    private static void createZipFile(OutputStream target, FileObject root, Collection /* FileObject*/ files) throws IOException {
-        ZipOutputStream str = null;
-        try {
-            str = new ZipOutputStream(target);
-            Iterator it = files.iterator();
-            while (it.hasNext()) {
-                FileObject fo = (FileObject)it.next();
+    private static void createZipFile(OutputStream target, FileObject root, Collection<FileObject> files) throws IOException {
+        try (ZipOutputStream str = new ZipOutputStream(target)) {
+            for (FileObject fo : files) {
                 String path = FileUtil.getRelativePath(root, fo);
                 if (fo.isFolder() && !path.endsWith("/")) {
                     path = path + "/";
@@ -338,21 +333,11 @@ public final class NewProjectIterator extends BasicWizardIterator {
                 ZipEntry entry = new ZipEntry(path);
                 str.putNextEntry(entry);
                 if (fo.isData()) {
-                    InputStream in = null;
-                    try {
-                        in = fo.getInputStream();
-                        FileUtil.copy(in, str);
-                    } finally {
-                        if (in != null) {
-                            in.close();
-                        }
+                    try (InputStream in = fo.getInputStream()) {
+                        in.transferTo(str);
                     }
                 }
                 str.closeEntry();
-            }
-        } finally {
-            if (str != null) {
-                str.close();
             }
         }
     }

@@ -99,16 +99,15 @@ public class HistoryDiffView implements PropertyChangeListener {
                     
                     CompareMode mode = tc.getMode();
                     switch(mode) {
-                        case TOCURRENT:
+                        case TOCURRENT -> {
                             refreshCurrentDiffPanel(entry1, file1);
                             return;
-
-                        case TOPARENT:    
+                        }
+                        case TOPARENT -> {    
                             refreshRevisionDiffPanel(null, entry1, null, file1);
                             return;
-                            
-                        default:
-                            throw new IllegalStateException("Wrong mode selected: " + mode); // NOI18N
+                        }
+                        default -> throw new IllegalStateException("Wrong mode selected: " + mode); // NOI18N
                     }
                     
                 }
@@ -338,11 +337,8 @@ public class HistoryDiffView implements PropertyChangeListener {
                     }
                     file1 = file2;
                     if (entry1 == null) {
-                        EventQueue.invokeLater(new Runnable() {
-                            @Override
-                            public void run () {
-                                showNoContent(NbBundle.getMessage(HistoryDiffView.class, "MSG_DiffPanel_NoVersionToCompare")); // NOI18N                                
-                            }
+                        EventQueue.invokeLater(() -> {
+                            showNoContent(NbBundle.getMessage(HistoryDiffView.class, "MSG_DiffPanel_NoVersionToCompare")); // NOI18N                                
                         });
                         return;
                     }                
@@ -655,7 +651,7 @@ public class HistoryDiffView implements PropertyChangeListener {
 
         synchronized void schedule() {          
             task = History.getInstance().getRequestProcessor().create(this);
-            task.schedule(500);        
+            task.schedule(200);        
         }
         
         protected synchronized boolean isCancelled() {

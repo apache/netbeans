@@ -22,7 +22,7 @@
         iconBase = "org/netbeans/modules/rust/options/rust-logo-big.png", 
         keywords = "#OptionsCategory_Keywords_Rust", 
         keywordsCategory = "Rust",
-        position = 10000)
+        position = 720)
 @NbBundle.Messages(value = {"OptionsCategory_Name_Rust=Rust", "OptionsCategory_Keywords_Rust=rust cargo"})
 package org.netbeans.modules.rust.options;
 

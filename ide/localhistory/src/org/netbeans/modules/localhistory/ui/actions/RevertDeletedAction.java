@@ -30,7 +30,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -193,8 +192,6 @@ public class RevertDeletedAction extends NodeAction {
         }
         File storeFile = se.getStoreFile();
                 
-        InputStream is = null;
-        OutputStream os = null;
         try {               
             FileObject parentFO = file.getParentFile().toFileObject();             
             if(parentFO != null) {
@@ -203,9 +200,10 @@ public class RevertDeletedAction extends NodeAction {
                 } else {            
                     FileObject fo = FileUtil.createData(parentFO, file.getName());                
 
-                    os = getOutputStream(fo);     
-                    is = se.getStoreFileInputStream();                    
-                    FileUtil.copy(is, os);            
+                    try (InputStream is = se.getStoreFileInputStream();
+                         OutputStream os = getOutputStream(fo)) {     
+                        is.transferTo(os);
+                    }
                 }
             } else {
                 VCSFileProxy parentFile = file.getParentFile();
@@ -216,22 +214,16 @@ public class RevertDeletedAction extends NodeAction {
                     if(!storeFile.isFile()) {
                         file.toFile().mkdirs();
                     } else {            
-                        is = se.getStoreFileInputStream();                    
-                        FileUtils.copy(is, file.toFile());
+                        try (InputStream is = se.getStoreFileInputStream()) {
+                            FileUtils.copy(is, file.toFile());
+                        }
                     }
-                    
                 } else {
                     LocalHistory.LOG.log(Level.WARNING, "FileObject for remote file {0} is null. Can''t revert.", file.getParentFile().getPath());
                 }
             }
         } catch (Exception e) {            
             LocalHistory.LOG.log(Level.SEVERE, null, e);
-            return;
-        } finally {
-            try {
-                if(os != null) { os.close(); }
-                if(is != null) { is.close(); }
-            } catch (IOException e) {}
         } 
     }
     

@@ -284,7 +284,6 @@ public final class EditMediator implements ActionListener, ListSelectionListener
                             }
                             chooser.enableVariableBasedSelection(true);
                             chooser.setFileHidingEnabled(false);
-                            FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
                             chooser.setFileSelectionMode(fileSelectionMode);
                             chooser.setMultiSelectionEnabled( true );
                             chooser.setDialogTitle( NbBundle.getMessage( EditMediator.class, "LBL_AddJar_DialogTitle" ) ); // NOI18N

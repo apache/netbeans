@@ -21,7 +21,6 @@ package org.netbeans.api.java.source;
 
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -698,11 +697,8 @@ public class SourceUtilsTest extends ClassIndexTestCase {
         final FileObject fo = FileUtil.createData(folder, name);
         final FileLock lock = fo.lock();
         try {
-            final OutputStream out = fo.getOutputStream(lock);
-            try {
-                FileUtil.copy(new ByteArrayInputStream(content.getBytes()), out);
-            } finally {
-                out.close();
+            try (OutputStream out = fo.getOutputStream(lock)) {
+                out.write(content.getBytes());
             }
         } finally {
             lock.releaseLock();

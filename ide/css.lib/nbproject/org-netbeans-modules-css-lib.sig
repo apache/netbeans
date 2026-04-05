@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.10
+#Version 2.11
 
 CLSS public abstract interface java.io.Serializable
 
@@ -24,6 +24,7 @@ meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+hfds name,ordinal
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -1015,6 +1016,7 @@ fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCate
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory GRID
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory HYPERLINKS
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory IMAGES
+fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory IMAGES_4
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory INTERNET_EXPLORER
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory LINE
 fld public final static org.netbeans.modules.css.lib.api.properties.PropertyCategory LISTS_AND_COUNTERS

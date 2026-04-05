@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.195.0
+#Version 0.196.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -161,6 +161,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public abstract interface java.io.Serializable
 
@@ -193,6 +194,7 @@ meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -201,6 +203,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -238,6 +241,8 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -277,6 +282,7 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
+hfds serialVersionUID
 
 CLSS public final org.netbeans.api.java.loaders.JavaDataSupport
 meth public static org.openide.loaders.MultiDataObject$Entry createJavaFileEntry(org.openide.loaders.MultiDataObject,org.openide.filesystems.FileObject)
@@ -1613,6 +1619,8 @@ meth public boolean isEnum(com.sun.source.tree.ClassTree)
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isEnumConstant(com.sun.source.tree.VariableTree)
 meth public boolean isExpressionStatement(com.sun.source.tree.ExpressionTree)
+meth public boolean isImplicitlyDeclaredClass(com.sun.source.tree.ClassTree)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public boolean isInterface(com.sun.source.tree.ClassTree)
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isModuleInfo(com.sun.source.tree.CompilationUnitTree)
@@ -1688,7 +1696,7 @@ meth public javax.lang.model.type.TypeMirror reattributeTree(com.sun.source.tree
 meth public org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> tokensFor(com.sun.source.tree.Tree)
 meth public org.netbeans.api.lexer.TokenSequence<org.netbeans.api.java.lexer.JavaTokenId> tokensFor(com.sun.source.tree.Tree,com.sun.source.util.SourcePositions)
 supr java.lang.Object
-hfds ESCAPE_ENCODE,ESCAPE_UNENCODE,EXOTIC_ESCAPE,IGNORE_TOKENS,LOG,handler,info
+hfds ESCAPE_ENCODE,ESCAPE_UNENCODE,EXOTIC_ESCAPE,IGNORE_TOKENS,LOG,SPAN_CLASS_IDENTIFIERS,SPAN_CLASS_TOKENS,SPAN_COMMENT_TOKENS,handler,info
 hcls DummyJFO,NBScope,NoImports,ParserSourcePositions,UncaughtExceptionsVisitor,UnrelatedTypeMirrorSet
 
 CLSS public final org.netbeans.api.java.source.TypeMirrorHandle<%0 extends javax.lang.model.type.TypeMirror>

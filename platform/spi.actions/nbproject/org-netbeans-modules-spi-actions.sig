@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.58
+#Version 1.59
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -9,6 +9,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -40,6 +41,7 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void putValue(java.lang.String,java.lang.Object)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void setEnabled(boolean)
+meth public boolean accept(java.lang.Object)
 
 CLSS public abstract org.netbeans.spi.actions.ContextAction<%0 extends java.lang.Object>
 cons protected init(java.lang.Class<{org.netbeans.spi.actions.ContextAction%0}>)

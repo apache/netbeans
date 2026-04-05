@@ -167,7 +167,6 @@ public class PanelProjectLocationVisual extends SettingsPanel implements Documen
         String command = evt.getActionCommand();        
         if ( "BROWSE".equals( command ) ) { // NOI18N                
             JFileChooser chooser = new JFileChooser ();
-            FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
             chooser.setDialogTitle(NbBundle.getMessage(PanelSourceFolders.class,"LBL_NWP1_SelectProjectLocation"));
             chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
             String path = this.projectLocationTextField.getText();
@@ -324,7 +323,6 @@ public class PanelProjectLocationVisual extends SettingsPanel implements Documen
     
     private static JFileChooser createChooser() {
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
         chooser.setAcceptAllFileFilterUsed( false );
         chooser.setName( "Select Project Directory" ); // XXX // NOI18N

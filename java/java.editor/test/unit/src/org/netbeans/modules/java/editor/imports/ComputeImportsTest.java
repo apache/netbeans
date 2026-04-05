@@ -34,7 +34,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +67,7 @@ import org.openide.loaders.DataObject;
  */
 public class ComputeImportsTest extends NbTestCase {
     
-    private static final Set<String> IGNORE_CLASSES = new HashSet<String>(Arrays.asList(new String[] {
+    private static final Set<String> IGNORE_CLASSES = Set.of(
         "com.sun.tools.javac.util.List",
         "com.sun.tools.javac.code.Attribute.RetentionPolicy",
         "com.sun.tools.classfile.Opcode.Set",
@@ -81,6 +80,8 @@ public class ComputeImportsTest extends NbTestCase {
         "com.sun.xml.internal.bind.v2.runtime.output.NamespaceContextImpl.Element",
         "com.sun.xml.internal.bind.v2.schemagen.xmlschema.Element",
         "sun.text.normalizer.RangeValueIterator.Element",
+        "jdk.internal.org.commonmark.node.Document",
+        "java.lang.StringTemplate.STR",
         "javax.xml.bind.Element",
         "javax.lang.model.element.Element",
         "com.sun.org.apache.xalan.internal.xsltc.runtime.AttributeList",
@@ -90,13 +91,13 @@ public class ComputeImportsTest extends NbTestCase {
         "com.sun.org.apache.xalan.internal.xsltc.compiler.util.Type.Element",
         "com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections",
         "com.azul.crs.client.service.JarLoadMonitor.ProcessedJarFiles.LRU.Element"
-    }));
+    );
     
-    private static final List<Pattern> IGNORE_PATTERNS = Collections.unmodifiableList(Arrays.asList(
+    private static final List<Pattern> IGNORE_PATTERNS = List.of(
         Pattern.compile("jdk\\..*\\.internal\\..*"),
         Pattern.compile("org\\.graalvm\\..*"),
         Pattern.compile("com\\.azul\\.crs\\..*") // https://docs.azul.com/vulnerability-detection/detailed-information/configuration-options
-    ));
+    );
 
     private FileObject testSource;
     private JavaSource js;

@@ -18,7 +18,7 @@
  */
 
 plugins {
-    id("io.micronaut.application") version "3.5.1"
+    id("io.micronaut.application") version "4.6.1"
     id('java')
     id('application')
 }
@@ -27,8 +27,10 @@ repositories {
     mavenCentral()
 }
 
-mainClassName = 'test.App'
-
 dependencies {
     implementation("io.micronaut:micronaut-http-clientx")
+}
+
+application {
+    mainClass = 'test.App'
 }

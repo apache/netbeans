@@ -57,25 +57,47 @@ public interface LanguageServerProvider {
          * @param process the process of the running language server, or null if none.
          * @return an instance of LanguageServerDescription
          */
-        public static @NonNull LanguageServerDescription create(@NonNull InputStream in, @NonNull OutputStream out, @NullAllowed Process process) {
-            return new LanguageServerDescription(in, out, process, null);
+        public static @NonNull LanguageServerDescription create(
+                @NonNull InputStream in,
+                @NonNull OutputStream out,
+                @NullAllowed Process process) {
+            return create(in, out, process, null);
+        }
+
+        /**
+         * Create the description of a running language server.
+         *
+         * @param in the InputStream that should be used to communicate with the server
+         * @param out the OutputStream that should be used to communicate with the server
+         * @param process the process of the running language server, or null if none.
+         * @param lookup lookup to be provided by the server
+         * @return an instance of LanguageServerDescription
+         */
+        public static @NonNull LanguageServerDescription create(
+                @NonNull InputStream in,
+                @NonNull OutputStream out,
+                @NullAllowed Process process,
+                @NullAllowed Lookup lookup) {
+            return new LanguageServerDescription(in, out, process, null, lookup == null ? Lookup.EMPTY : lookup);
         }
 
         static @NonNull LanguageServerDescription create(@NonNull LanguageServer server) {
-            return new LanguageServerDescription(null, null, null, server);
+            return new LanguageServerDescription(null, null, null, server, Lookup.EMPTY);
         }
 
         private final InputStream in;
         private final OutputStream out;
         private final Process process;
         private final LanguageServer server;
+        private final Lookup lookup;
         private LSPBindings bindings;
 
-        private LanguageServerDescription(InputStream in, OutputStream out, Process process, LanguageServer server) {
+        private LanguageServerDescription(InputStream in, OutputStream out, Process process, LanguageServer server, Lookup lookup) {
             this.in = in;
             this.out = out;
             this.process = process;
             this.server = server;
+            this.lookup = lookup;
         }
 
         static {
@@ -108,6 +130,11 @@ public interface LanguageServerProvider {
                 @Override
                 public void setBindings(LanguageServerDescription desc, LSPBindings bindings) {
                     desc.bindings = bindings;
+                }
+
+                @Override
+                public Lookup getLookup(LanguageServerDescription desc) {
+                    return desc.lookup;
                 }
 
                 @Override

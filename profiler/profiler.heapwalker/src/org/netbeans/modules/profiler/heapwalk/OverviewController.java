@@ -464,7 +464,7 @@ public class OverviewController extends AbstractController {
                         // sw.append("&nbsp;&nbsp;<span style=\"color: #0033CC\">"); // NOI18N
                         sb.append("&nbsp;&nbsp;<a name=").append(threadInstance.getInstanceId()).append("></a><b ").append(style).append(">");   // NOI18N
                         // -------------------------------------------------------------------
-                        sb.append("\"").append(htmlize(threadName)).append("\"").append(daemon.booleanValue() ? " daemon" : "").append(" prio=").append(priority);   // NOI18N
+                        sb.append("\"").append(htmlize(threadName)).append("\"").append(Boolean.TRUE.equals(daemon) ? " daemon" : "").append(" prio=").append(priority);   // NOI18N
                         if (threadId != null) {
                             sb.append(" tid=").append(threadId);    // NOI18N
                         }

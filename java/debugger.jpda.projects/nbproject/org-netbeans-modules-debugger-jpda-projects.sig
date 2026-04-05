@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.70
+#Version 1.71
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -70,6 +70,7 @@ meth public {java.util.AbstractMap%1} get(java.lang.Object)
 meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.AbstractMap%1})
 meth public {java.util.AbstractMap%1} remove(java.lang.Object)
 supr java.lang.Object
+hfds keySet,values
 
 CLSS public abstract interface java.util.Comparator<%0 extends java.lang.Object>
  anno 0 java.lang.FunctionalInterface()

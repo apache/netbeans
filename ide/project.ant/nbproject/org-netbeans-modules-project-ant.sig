@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.97
+#Version 1.98
 
 CLSS public abstract interface java.io.Serializable
 
@@ -68,6 +68,7 @@ meth public {java.util.AbstractMap%1} get(java.lang.Object)
 meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.AbstractMap%1})
 meth public {java.util.AbstractMap%1} remove(java.lang.Object)
 supr java.lang.Object
+hfds keySet,values
 
 CLSS public abstract interface java.util.EventListener
 
@@ -78,6 +79,7 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
+hfds serialVersionUID
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry

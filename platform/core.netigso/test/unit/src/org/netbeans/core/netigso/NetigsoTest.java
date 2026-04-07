@@ -22,6 +22,7 @@ package org.netbeans.core.netigso;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import org.netbeans.MockModuleInstaller;
 import org.netbeans.MockEvents;
 import org.netbeans.Module;
@@ -213,4 +214,26 @@ public class NetigsoTest extends NetigsoHid {
             mgr.mutexPrivileged().exitWriteAccess();
         }
     }
+
+    public void testSplitExportPackages() {
+        String exportPkgs = "a.b,"
+                + "a.b.c;version=\"1.0.0\";uses:=\"x.y.z,x.y.z.k\","
+                + "a.b.c.d;version=\"1.0.0\","
+                + "a.b.c.e;version=\"1.0.0\";uses:=\"x.y.z\"";
+        List<String> result = Netigso.splitExportPackages(exportPkgs);
+        assertEquals(4, result.size());
+        assertEquals("a.b", result.get(0));
+        assertEquals("a.b.c;version=\"1.0.0\";uses:=\"x.y.z,x.y.z.k\"", result.get(1));
+        assertEquals("a.b.c.d;version=\"1.0.0\"", result.get(2));
+        assertEquals("a.b.c.e;version=\"1.0.0\";uses:=\"x.y.z\"", result.get(3));
+
+        // Test that the \" are ignored.
+        exportPkgs = "x.y.z,a.b.c;a=\"\\\"\",d.e.f";
+        result = Netigso.splitExportPackages(exportPkgs);
+        assertEquals(3, result.size());
+        assertEquals("x.y.z", result.get(0));
+        assertEquals("a.b.c;a=\"\\\"\"", result.get(1));
+        assertEquals("d.e.f", result.get(2));
+    }
+
 }

@@ -391,8 +391,6 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
                     if (done || resultChanged) {
                         lastSize = newSize[0];
                         lastProvCount = newProvCount;
-                        model.remove(toRemove);
-                        model.add(toAdd);
                         attrCopier.checkWrongCase(toRemove, toAdd);
                         if ( isCanceled ) {
                             LOG.log(
@@ -405,6 +403,17 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
                             Level.FINE,
                             "Worker for text {0} finished after {1} ms.", //NOI18N
                             new Object[]{text, System.currentTimeMillis() - createTime});
+                        /* NB: model.remove and model.add must happen inside
+                           the invokeLater runnable, guarded by !isCanceled,
+                           so that
+                           (a) the remove and add are a single EDT turn (no
+                               intervening repaint/keystroke between them),
+                               and
+                           (b) a Worker that was cancelled after
+                               getSymbolNames cannot mutate the live model
+                               one final time. The cancel flag is set from
+                               the EDT in setListModel, so checking it on
+                               the EDT here is race-free. */
                         SwingUtilities.invokeLater(() -> {
                             if (done) {
                                 final Pair<String, String> nameAndScope = Utils.splitNameAndScope(text);
@@ -418,6 +427,8 @@ final class ContentProviderImpl implements GoToPanelImpl.ContentProvider {
                                         nameAndScope.second());
                             }
                             if (!isCanceled) {
+                                model.remove(toRemove);
+                                model.add(toAdd);
                                 enableOK(panel.setModel(model, done));
                             }
                         });

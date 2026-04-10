@@ -47,13 +47,13 @@ import org.openide.util.RequestProcessor;
 
 /**
  * Plugs into IDE filesystem and delegates annotation work to registered versioning systems.
- * 
+ *
  * @author Maros Sandor
  */
 public class VersioningAnnotationProvider {
-    
+
     private static final VersioningAnnotationProvider instance = new VersioningAnnotationProvider();
-    
+
     private static final Logger LOG = Logger.getLogger(VersioningAnnotationProvider.class.getName());
     private static final int CACHE_INITIAL_SIZE = 500;
     private static final long CACHE_ITEM_MAX_AGE = getMaxAge();
@@ -62,11 +62,11 @@ public class VersioningAnnotationProvider {
 
     private VersioningAnnotationProvider() {
     }
-    
+
     public static VersioningAnnotationProvider getDefault() {
         return instance;
     }
-    
+
     private VersioningSystem getOwner(VCSFileProxy file, Boolean isFile) {
         return file == null ? null : VersioningManager.getInstance().getOwner(file, isFile);
     }
@@ -101,7 +101,7 @@ public class VersioningAnnotationProvider {
                 SystemAction.get(InitLHSystemAction.class)
             };
         }
-        
+
         List<Action> actions = new ArrayList<>();
         LocalHistoryActions localHistoryAction = null;
 
@@ -136,8 +136,8 @@ public class VersioningAnnotationProvider {
             vs = owners.keySet().iterator().next();
         } else {
             return actions.toArray(Action[]::new);
-        } 
-        
+        }
+
         VCSAnnotator an = null;
         if (vs != null) {
             an = vs.getVCSAnnotator();
@@ -150,13 +150,13 @@ public class VersioningAnnotationProvider {
 
         return actions.toArray(Action[]::new);
     }
-    
+
     public static class VersioningSystemActions extends AbstractVersioningSystemActions {
     }
 
     public static class LocalHistoryActions extends AbstractVersioningSystemActions {
     }
-    
+
     public static class InitLHSystemAction extends InitVersioningSystemAction {
         public InitLHSystemAction() {
             super();
@@ -166,7 +166,7 @@ public class VersioningAnnotationProvider {
             return NbBundle.getMessage(VersioningAnnotationProvider.class, "CTL_MenuItem_LocalHistory");
         }
     }
-    
+
     public static class InitVersioningSystemAction extends SystemAction implements Presenter.Popup {
 
         @Override
@@ -184,9 +184,9 @@ public class VersioningAnnotationProvider {
             return null;
         }
     }
-    
+
     public abstract static class AbstractVersioningSystemActions extends SystemAction implements ContextAwareAction {
-        
+
         private VersioningSystem system;
 
         @Override
@@ -213,7 +213,7 @@ public class VersioningAnnotationProvider {
             this.system = system;
         }
     }
-    
+
     private static class RealVersioningSystemActions extends AbstractAction implements Presenter.Popup {
 
         private final VersioningSystem system;
@@ -234,10 +234,10 @@ public class VersioningAnnotationProvider {
         public JMenuItem getPopupPresenter() {
             return new VersioningSystemMenuItem();
         }
-        
+
         @NbBundle.Messages("LBL_PopupMenu_Initializing=Initializing...")
         private class VersioningSystemMenuItem extends JMenu {
-        
+
             private boolean popupContructed;
 
             public VersioningSystemMenuItem() {
@@ -284,7 +284,7 @@ public class VersioningAnnotationProvider {
             instance.refreshAnnotations(null);
         }
     }
-                   
+
     /**
      * Refreshes annotations for all given files and all parent folders of those files.
      *
@@ -295,77 +295,83 @@ public class VersioningAnnotationProvider {
     }
 
     void refreshAnnotations(Set<VCSFileProxy> files, boolean removeFromCache) {
-        if (files == null) {            
+
+        if (files == null) {
             LOG.log(Level.FINE, "refreshing all annotations"); //NOI18N
             refreshAllAnnotationsTask.schedule(2000);
             return;
         }
-        
-        if (removeFromCache) {
-            LOG.log(Level.FINE, "refreshing annotations for {0}", files); //NOI18N
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.log(Level.FINEST, "refreshing annotations called from:", new Exception()); //NOI18N
-            }
-        }
-        
-        for (VCSFileProxy file : files) {
-            // try to limit the number of normalizeFile calls:
-            // let's find the closest existent FO, then list it's parents with FileObject.getParent();
-            FileObject fo = file.toFileObject();
-            if (fo == null) {
-                fo = getExistingParent(file);
-            } else {
-                // file exists, plan it to refresh
-                addToMap(filesToRefresh, fo, removeFromCache);
-                fo = fo.getParent();
-            }
+
+        final RequestProcessor.Task refreshAnnotationsTask = rp.create(() -> {
 
             if (removeFromCache) {
-                // fo is the closest existing parent
-                for (FileObject parent = fo; parent != null; parent = parent.getParent()) {
-                    // plan parent to refresh
-                    addToMap(parentsToRefresh, parent, removeFromCache);
+                LOG.log(Level.FINE, "refreshing annotations for {0}", files); //NOI18N
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.log(Level.FINEST, "refreshing annotations called from:", new Exception()); //NOI18N
                 }
             }
-        }
-        
-        fireFileStatusChangedTask.schedule(2000);
+
+            for (VCSFileProxy file : files) {
+                // try to limit the number of normalizeFile calls:
+                // let's find the closest existent FO, then list it's parents with FileObject.getParent();
+                FileObject fo = file.toFileObject();
+                if (fo == null) {
+                    fo = getExistingParent(file);
+                } else {
+                    // file exists, plan it to refresh
+                    addToMap(filesToRefresh, fo, removeFromCache);
+                    fo = fo.getParent();
+                }
+
+                if (removeFromCache) {
+                    // fo is the closest existing parent
+                    for (FileObject parent = fo; parent != null; parent = parent.getParent()) {
+                        // plan parent to refresh
+                        addToMap(parentsToRefresh, parent, removeFromCache);
+                    }
+                }
+            }
+
+            fireFileStatusChangedTask.schedule(2000);
+        });
+
+        refreshAnnotationsTask.schedule(0);
     }
-    
+
     /**
-     * Stores all files which have to be refreshed 
+     * Stores all files which have to be refreshed
      */
     private final Map<FileSystem, Set<FileObject>> filesToRefresh = new HashMap<>();
-    
+
     /**
-     * Stores all parents from files which have to be refreshed 
+     * Stores all parents from files which have to be refreshed
      */
     private final Map<FileSystem, Set<FileObject>> parentsToRefresh = new HashMap<>();
-    
+
     private RequestProcessor rp = new RequestProcessor("Versioning fire FileStatusChanged", 1, true);
-    
+
     /**
      * Refreshes all annotations and clears the maps holding all files and their parents which have to be refreshed
      */
-    private RequestProcessor.Task refreshAllAnnotationsTask = rp.create(new Runnable() {        
+    private RequestProcessor.Task refreshAllAnnotationsTask = rp.create(new Runnable() {
         @Override
-        public void run() {            
+        public void run() {
             clearMap(filesToRefresh);
             clearMap(parentsToRefresh);
             labelCache.removeAll();
             iconCache.removeAll();
-            
+
             VersioningManager.deliverStatusEvent(new VCSAnnotationEvent(true, true));
         }
-    });    
-    
+    });
+
     /**
      * Refreshes all files stored in filesToRefresh and parentsToRefresh
-     */ 
+     */
     private RequestProcessor.Task fireFileStatusChangedTask = rp.create(new Runnable() {
         @Override
         public void run() {
-            
+
             // createInitializingMenu and fire for all files which have to be refreshed
             List<VCSAnnotationEvent> fileEvents = new ArrayList<>();
             List<VCSAnnotationEvent> folderEvents = new ArrayList<>();
@@ -384,7 +390,7 @@ public class VersioningAnnotationProvider {
                         } else {
                             files.add(fo);
                         }
-                    }        
+                    }
                     set.clear();
                     e.setValue(new HashSet<>());
                     if(!files.isEmpty()) {
@@ -393,33 +399,33 @@ public class VersioningAnnotationProvider {
                     if(!folders.isEmpty()) {
                         folderEvents.add(new VCSAnnotationEvent(folders, true,  true));
                     }
-                }        
-            }    
+                }
+            }
 
             fireFileStatusEvents(fileEvents);
             fireFileStatusEvents(folderEvents);
 
             // createInitializingMenu and fire events for all parent from each file which has to be refreshed
-            List<VCSAnnotationEvent> parentEvents = new ArrayList<>(); 
+            List<VCSAnnotationEvent> parentEvents = new ArrayList<>();
             synchronized(parentsToRefresh) {
                 for (Map.Entry<FileSystem, Set<FileObject>> e : parentsToRefresh.entrySet()) {
                     Set<FileObject> set = e.getValue();
                     Set<FileObject> files = new HashSet<>(set);
                     parentEvents.add(new VCSAnnotationEvent(files, true, false));
-                    e.setValue(new HashSet<>()); 
+                    e.setValue(new HashSet<>());
                     set.clear();
                 }
             }
             fireFileStatusEvents(parentEvents);
         }
-        
+
         private void fireFileStatusEvents(Collection<VCSAnnotationEvent> events) {
             for(VCSAnnotationEvent event : events) {
                 VersioningManager.deliverStatusEvent(event);
             }
-        }          
-    });    
-    
+        }
+    });
+
     private void clearMap(Map<FileSystem, Set<FileObject>> map)  {
         synchronized(map) {
             if(!map.isEmpty()) {
@@ -427,7 +433,7 @@ public class VersioningAnnotationProvider {
             }
         }
     }
-    
+
     private void addToMap(Map<FileSystem, Set<FileObject>> map, FileObject fo, boolean removeFromCache) {
         if(fo == null) {
             return;
@@ -438,8 +444,8 @@ public class VersioningAnnotationProvider {
         } catch (FileStateInvalidException e) {
             // ignore files in invalid filesystems
             return;
-        }        
-        synchronized (map) {                        
+        }
+        synchronized (map) {
             map.computeIfAbsent(fs, k -> new HashSet<>())
                .add(fo);
             if (removeFromCache) {
@@ -624,7 +630,7 @@ public class VersioningAnnotationProvider {
                 return null;
             }
         }
-        
+
         private T annotate (T initialValue, Set<? extends FileObject> files) {
             long ft = System.currentTimeMillis();
             if (LOG.isLoggable(Level.FINEST)) {

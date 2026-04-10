@@ -23,6 +23,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.MissingResourceException;
 import java.io.File;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
@@ -38,9 +40,9 @@ import org.netbeans.spi.queries.CollocationQueryImplementation;
  * @author ondra
  */
 @VersioningSystem.Registration(
-    displayName="#CTL_Git_DisplayName", 
-    menuLabel="#CTL_Git_MainMenu", 
-    metadataFolderNames={".git"}, 
+    displayName="#CTL_Git_DisplayName",
+    menuLabel="#CTL_Git_MainMenu",
+    metadataFolderNames={".git"},
     actionsCategory="Git"
 )
 public class GitVCS extends VersioningSystem implements PropertyChangeListener, PreferenceChangeListener {
@@ -48,7 +50,7 @@ public class GitVCS extends VersioningSystem implements PropertyChangeListener, 
     private static final Logger LOG = Logger.getLogger("org.netbeans.modules.git.GitVCS"); //NOI18N
 
     public GitVCS() {
-        putProperty(PROP_DISPLAY_NAME, getDisplayName()); 
+        putProperty(PROP_DISPLAY_NAME, getDisplayName());
         putProperty(PROP_MENU_LABEL, org.openide.util.NbBundle.getMessage(GitVCS.class, "CTL_Git_MainMenu")); // NOI18N
         GitModuleConfig.getDefault().getPreferences().addPreferenceChangeListener(this);
         Git.getInstance().registerGitVCS(this);
@@ -77,7 +79,7 @@ public class GitVCS extends VersioningSystem implements PropertyChangeListener, 
     public File getTopmostManagedAncestor(File file) {
         return Git.getInstance().getTopmostManagedAncestor(file);
     }
-    
+
     @Override
     public CollocationQueryImplementation getCollocationQueryImplementation() {
         return collocationQueryImplementation;
@@ -111,6 +113,13 @@ public class GitVCS extends VersioningSystem implements PropertyChangeListener, 
         if (event.getPropertyName().equals(FileStatusCache.PROP_FILE_STATUS_CHANGED)) {
             FileStatusCache.ChangedEvent changedEvent = (FileStatusCache.ChangedEvent) event.getNewValue();
             fireStatusChanged(changedEvent.getFile());
+        } else if (event.getPropertyName().equals(FileStatusCache.PROP_FILES_STATUS_CHANGED)) {
+            List<FileStatusCache.ChangedEvent> changedEvents = (List<FileStatusCache.ChangedEvent>) event.getNewValue();
+            Set<File> files = HashSet.newHashSet(changedEvents.size());
+            for (FileStatusCache.ChangedEvent e : changedEvents) {
+                files.add(e.getFile());
+            }
+            fireStatusChanged(files);
         } else if (event.getPropertyName().equals(Git.PROP_ANNOTATIONS_CHANGED)) {
             fireAnnotationsChanged((Set<File>) event.getNewValue());
         } else if (event.getPropertyName().equals(Git.PROP_VERSIONED_FILES_CHANGED)) {

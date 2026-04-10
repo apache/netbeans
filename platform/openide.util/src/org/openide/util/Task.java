@@ -55,7 +55,7 @@ public class Task extends Object implements Runnable {
 
     /** map of subclasses to booleans whether they override waitFinished() or not
      */
-    private static java.util.WeakHashMap<Class, Boolean> overrides;
+    private static java.util.WeakHashMap<Class<?>, Boolean> overrides;
 
     /** request processor for workarounding compatibility problem with
      * classes that do not override waitFinished (long)
@@ -225,6 +225,7 @@ public class Task extends Object implements Runnable {
     * <p>Note that this call runs synchronously, but typically the creator
     * of the task will call this method in a separate thread.
     */
+    @Override
     public void run() {
         try {
             notifyRunning();
@@ -270,6 +271,7 @@ public class Task extends Object implements Runnable {
         list.remove(l);
     }
 
+    @Override
     public String toString() {
         return "task " + run; // NOI18N
     }
@@ -287,12 +289,12 @@ public class Task extends Object implements Runnable {
             return true;
         }
 
-        java.util.WeakHashMap<Class,Boolean> m;
+        java.util.WeakHashMap<Class<?>, Boolean> m;
         Boolean does;
 
         synchronized (Task.class) {
             if (overrides == null) {
-                overrides = new java.util.WeakHashMap<Class, Boolean>();
+                overrides = new java.util.WeakHashMap<>();
                 RP = new RequestProcessor("Timeout waitFinished compatibility processor", 255); // NOI18N
             }
 
@@ -301,16 +303,16 @@ public class Task extends Object implements Runnable {
             does = m.get(getClass());
 
             if (does != null) {
-                return does.booleanValue();
+                return does;
             }
 
             try {
-                java.lang.reflect.Method method = getClass().getMethod("waitFinished", new Class[] { Long.TYPE }); // NOI18N
-                does = Boolean.valueOf(method.getDeclaringClass() != Task.class);
+                java.lang.reflect.Method method = getClass().getMethod("waitFinished", Long.TYPE); // NOI18N
+                does = method.getDeclaringClass() != Task.class;
                 m.put(getClass(), does);
 
-                return does.booleanValue();
-            } catch (Exception ex) {
+                return does;
+            } catch (NoSuchMethodException ex) {
                 Exceptions.printStackTrace(ex);
 
                 return true;

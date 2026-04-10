@@ -89,15 +89,16 @@ public class DDHelper {
         } else if (Profile.J2EE_13 == j2eeProfile) {
             template = "web-2.3.xml"; //NOI18N
         }
-        if (template == null)
+        if (template == null) {
             return null;
-
+        }
         MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, "web.xml");
         FileUtil.runAtomicAction(action);
-        if (action.getException() != null)
+        if (action.getException() != null) {
             throw action.getException();
-        else
+        } else {
             return action.getResult();
+        }
     }
 
     /**
@@ -145,15 +146,16 @@ public class DDHelper {
             default:
                 break;
         }
-        if (template == null)
+        if (template == null) {
             return null;
-
+        }
         MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, "web-fragment.xml");
         FileUtil.runAtomicAction(action);
-        if (action.getException() != null)
+        if (action.getException() != null) {
             throw action.getException();
-        else
+        } else {
             return action.getResult();
+        }
     }
 
     /**
@@ -216,15 +218,16 @@ public class DDHelper {
                 break;
         }
 
-        if (template == null)
+        if (template == null) {
             return null;
-
+        }
         MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, name+".xml");
         FileUtil.runAtomicAction(action);
-        if (action.getException() != null)
+        if (action.getException() != null) {
             throw action.getException();
-        else
+        } else {
             return action.getResult();
+        }
     }
 
     /**
@@ -289,10 +292,11 @@ public class DDHelper {
 
         MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, name+".xml");
         FileUtil.runAtomicAction(action);
-        if (action.getException() != null)
+        if (action.getException() != null) {
             throw action.getException();
-        else
+        } else {
             return action.getResult();
+        }
     }
 
     /**
@@ -352,15 +356,16 @@ public class DDHelper {
             default:
                 break;
         }
-        if (template == null)
+        if (template == null) {
             return null;
-
+        }
         MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, name+".xml");
         FileUtil.runAtomicAction(action);
-        if (action.getException() != null)
+        if (action.getException() != null) {
             throw action.getException();
-        else
+        } else {
             return action.getResult();
+        }
     }
 
     /**

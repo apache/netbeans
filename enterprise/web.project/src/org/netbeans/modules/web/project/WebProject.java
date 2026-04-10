@@ -2418,8 +2418,9 @@ public final class WebProject implements Project {
         private void updateLookup(){
             List<Lookup> lookups = new ArrayList<>();
             lookups.add(base);
+            // profile will be null at the beginning
             Profile profile = Profile.fromPropertiesString(project.evaluator().getProperty(WebProjectProperties.J2EE_PLATFORM));
-            if (profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
+            if (null != profile && profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
                 lookups.add(ee6);
             }
             if ("true".equals(project.evaluator().getProperty(WebProjectProperties.DISPLAY_BROWSER))) {

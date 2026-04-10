@@ -48,7 +48,7 @@ public class DDWeb60DataLoader extends DDDataLoader {
 
     @Override
     protected String[] getSupportedMimeTypes() {
-        return new String[]{REQUIRED_MIME_60, REQUIRED_MIME_61, REQUIRED_MIME_61};
+        return new String[]{REQUIRED_MIME_60, REQUIRED_MIME_61, REQUIRED_MIME_62};
     }
 
     @Override

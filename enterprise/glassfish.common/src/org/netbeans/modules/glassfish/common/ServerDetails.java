@@ -593,7 +593,7 @@ public enum ServerDetails {
      * details for an instance of GlassFish Server 9.0.0
      */
     GLASSFISH_SERVER_9_0_0(NbBundle.getMessage(ServerDetails.class, "STR_900_SERVER_NAME", new Object[]{}), // NOI18N
-        GlassfishInstanceProvider.JAKARTAEE11_DEPLOYER_FRAGMENT,
+        GlassfishInstanceProvider.JAKARTAEE12_DEPLOYER_FRAGMENT,
         GlassFishVersion.GF_9_0_0,
         "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/9.0.0-M1/glassfish-9.0.0-M1.zip", // NOI18N
         "https://repo.maven.apache.org/maven2/org/glassfish/main/distributions/glassfish/9.0.0-M1/glassfish-9.0.0-M1.zip", // NOI18N

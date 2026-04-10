@@ -111,26 +111,29 @@ public class DDUtils {
 
     public static WebApp createWebApp(InputStream is, String version) throws IOException, SAXException {
         try {
-            if (WebApp.VERSION_2_4.equals(version)) {
-                return org.netbeans.modules.j2ee.dd.impl.web.model_2_4.WebApp.createGraph(is);
-            } else if (WebApp.VERSION_2_5.equals(version)) {
-                return org.netbeans.modules.j2ee.dd.impl.web.model_2_5.WebApp.createGraph(is);
-            } else if (WebApp.VERSION_3_0.equals(version)) {
-                return org.netbeans.modules.j2ee.dd.impl.web.model_3_0.WebApp.createGraph(is);
-            } else if (WebApp.VERSION_3_1.equals(version)) {
-                return org.netbeans.modules.j2ee.dd.impl.web.model_3_1.WebApp.createGraph(is);
-            } else if (WebApp.VERSION_4_0.equals(version)) {
-                return org.netbeans.modules.j2ee.dd.impl.web.model_4_0.WebApp.createGraph(is);
-            } else if (WebApp.VERSION_5_0.equals(version)) {
-                return org.netbeans.modules.j2ee.dd.impl.web.model_5_0.WebApp.createGraph(is);
-            } else if (WebApp.VERSION_6_0.equals(version)) {
-                return org.netbeans.modules.j2ee.dd.impl.web.model_6_0.WebApp.createGraph(is);
-            } else if (WebApp.VERSION_6_1.equals(version)) {
-                return org.netbeans.modules.j2ee.dd.impl.web.model_6_1.WebApp.createGraph(is);
-            } else if (WebApp.VERSION_6_2.equals(version)) {
-                return org.netbeans.modules.j2ee.dd.impl.web.model_6_2.WebApp.createGraph(is);
-            } else {
+            if (null == version) {
                 return null;
+            } else switch (version) {
+                case WebApp.VERSION_2_4:
+                    return org.netbeans.modules.j2ee.dd.impl.web.model_2_4.WebApp.createGraph(is);
+                case WebApp.VERSION_2_5:
+                    return org.netbeans.modules.j2ee.dd.impl.web.model_2_5.WebApp.createGraph(is);
+                case WebApp.VERSION_3_0:
+                    return org.netbeans.modules.j2ee.dd.impl.web.model_3_0.WebApp.createGraph(is);
+                case WebApp.VERSION_3_1:
+                    return org.netbeans.modules.j2ee.dd.impl.web.model_3_1.WebApp.createGraph(is);
+                case WebApp.VERSION_4_0:
+                    return org.netbeans.modules.j2ee.dd.impl.web.model_4_0.WebApp.createGraph(is);
+                case WebApp.VERSION_5_0:
+                    return org.netbeans.modules.j2ee.dd.impl.web.model_5_0.WebApp.createGraph(is);
+                case WebApp.VERSION_6_0:
+                    return org.netbeans.modules.j2ee.dd.impl.web.model_6_0.WebApp.createGraph(is);
+                case WebApp.VERSION_6_1:
+                    return org.netbeans.modules.j2ee.dd.impl.web.model_6_1.WebApp.createGraph(is);
+                case WebApp.VERSION_6_2:
+                    return org.netbeans.modules.j2ee.dd.impl.web.model_6_2.WebApp.createGraph(is);
+                default:
+                    return null;
             }
         } catch (RuntimeException ex) {
             throw new SAXException(ex);

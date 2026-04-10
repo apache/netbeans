@@ -705,6 +705,26 @@ public final class TreeUtilities {
      * @param expr type specification
      * @param scope in which simple names should be resolved
      * @return parsed {@link TypeMirror} or null if the given specification cannot be parsed
+     * @since 2.84
+     */
+    public TypeMirror parseType(String expr, Scope scope) {
+        Env<AttrContext> env = getEnv(scope);
+        if (scope instanceof NBScope && ((NBScope)scope).areAccessibilityChecksDisabled()) {
+            NBResolve.instance(info.impl.getJavacTask().getContext()).disableAccessibilityChecks();
+        }
+        try {
+            Tree type = parseType(expr);
+            return attributeTree(info.impl.getJavacTask(), env.toplevel, (JCTree) type, scope, true, new ArrayList<>());
+        } finally {
+            NBResolve.instance(info.impl.getJavacTask().getContext()).restoreAccessbilityChecks();
+        }
+    }
+
+    /**Parses given type in given context.
+     *
+     * @param expr type specification
+     * @param scope in which simple names should be resolved
+     * @return parsed {@link TypeMirror} or null if the given specification cannot be parsed
      */
     Tree parseType(String expr) {
         return doParse(expr, null, 0, Parser::parseType);
@@ -922,7 +942,7 @@ public final class TreeUtilities {
             NBResolve.instance(info.impl.getJavacTask().getContext()).disableAccessibilityChecks();
         }
         try {
-            return attributeTree(info.impl.getJavacTask(), env.toplevel, (JCTree) tree, scope, new ArrayList<>());
+            return attributeTree(info.impl.getJavacTask(), env.toplevel, (JCTree) tree, scope, false, new ArrayList<>());
         } finally {
             NBResolve.instance(info.impl.getJavacTask().getContext()).restoreAccessbilityChecks();
         }
@@ -949,7 +969,7 @@ public final class TreeUtilities {
             NBResolve.instance(info.impl.getJavacTask().getContext()).disableAccessibilityChecks();
         }
         try {
-            return attributeTree(info.impl.getJavacTask(), env.toplevel, (JCTree)tree, scope, new ArrayList<>());
+            return attributeTree(info.impl.getJavacTask(), env.toplevel, (JCTree)tree, scope, false, new ArrayList<>());
         } finally {
             NBResolve.instance(info.impl.getJavacTask().getContext()).restoreAccessbilityChecks();
         }
@@ -968,7 +988,7 @@ public final class TreeUtilities {
     }
     
     //from org/netbeans/modules/java/hints/spiimpl/Utilities.java:
-    private static TypeMirror attributeTree(JavacTaskImpl jti, CompilationUnitTree cut, Tree tree, Scope scope, final List<Diagnostic<? extends JavaFileObject>> errors) {
+    private static TypeMirror attributeTree(JavacTaskImpl jti, CompilationUnitTree cut, Tree tree, Scope scope, boolean attributeAsType, final List<Diagnostic<? extends JavaFileObject>> errors) {
         Log log = Log.instance(jti.getContext());
         JavaFileObject prev = log.useSource(new DummyJFO());
         Log.DiagnosticHandler discardHandler = log.new DiscardDiagnosticHandler() {
@@ -986,6 +1006,9 @@ public final class TreeUtilities {
         try {
             Attr attr = Attr.instance(jti.getContext());
             Env<AttrContext> env = getEnv(scope);
+            if (attributeAsType) {
+                return attr.attribType((JCTree) tree, env);
+            }
             if (tree instanceof JCExpression)
                 return attr.attribExpr((JCTree) tree,env, Type.noType);
             return attr.attribStat((JCTree) tree,env);

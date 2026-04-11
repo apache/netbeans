@@ -11,13 +11,14 @@
     SPDX-License-Identifier: EPL-2.0 OR BSD-3-Clause
 
 -->
+
 <!-- persistence.xml schema -->
-<xsd:schema targetNamespace="https://jakarta.ee/xml/ns/persistence" 
-            xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-            xmlns:persistence="https://jakarta.ee/xml/ns/persistence" 
-            elementFormDefault="qualified" 
-            attributeFormDefault="unqualified" 
-            version="4.0">
+<xsd:schema targetNamespace="https://jakarta.ee/xml/ns/persistence"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:persistence="https://jakarta.ee/xml/ns/persistence"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  version="4.0">
 
    <xsd:annotation>
      <xsd:documentation><![CDATA[
@@ -59,7 +60,8 @@
 
         <!-- **************************************************** -->
 
-        <xsd:element name="persistence-unit" minOccurs="1" maxOccurs="unbounded">
+        <xsd:element name="persistence-unit"
+                     minOccurs="1" maxOccurs="unbounded">
           <xsd:complexType>
             <xsd:annotation>
               <xsd:documentation>
@@ -72,7 +74,8 @@
 
             <!-- **************************************************** -->
 
-              <xsd:element name="description" type="xsd:string" minOccurs="0">
+              <xsd:element name="description" type="xsd:string"
+                           minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -84,7 +87,8 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="provider" type="xsd:string" minOccurs="0">
+              <xsd:element name="provider" type="xsd:string"
+                           minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -97,7 +101,8 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="qualifier" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+              <xsd:element name="qualifier" type="xsd:string"
+                           minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -109,7 +114,8 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="scope" type="xsd:string" minOccurs="0">
+              <xsd:element name="scope" type="xsd:string"
+                           minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -121,7 +127,8 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="jta-data-source" type="xsd:string" minOccurs="0">
+              <xsd:element name="jta-data-source" type="xsd:string"
+                           minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -133,7 +140,8 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="non-jta-data-source" type="xsd:string" minOccurs="0">
+              <xsd:element name="non-jta-data-source" type="xsd:string"
+                           minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -145,7 +153,8 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="mapping-file" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+              <xsd:element name="mapping-file" type="xsd:string"
+                           minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -158,7 +167,8 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="jar-file" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+              <xsd:element name="jar-file" type="xsd:string"
+                           minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -170,7 +180,8 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="class" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+              <xsd:element name="class" type="xsd:string"
+                           minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -184,7 +195,8 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="exclude-unlisted-classes" type="xsd:boolean" default="true" minOccurs="0">
+              <xsd:element name="exclude-unlisted-classes" type="xsd:boolean"
+                           default="true" minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -197,9 +209,27 @@
                 </xsd:annotation>
               </xsd:element>
 
+
               <!-- **************************************************** -->
 
-              <xsd:element name="shared-cache-mode" type="persistence:persistence-unit-caching-type" minOccurs="0">
+              <xsd:element name="default-to-one-fetch-type"
+                           type="persistence:persistence-unit-default-to-one-fetch-type"
+                           minOccurs="0">
+                <xsd:annotation>
+                  <xsd:documentation>
+
+                    The default fetch type for one-to-one and many-to-one associations.
+
+                  </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+
+
+              <!-- **************************************************** -->
+
+              <xsd:element name="shared-cache-mode"
+                           type="persistence:persistence-unit-caching-type"
+                           minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -219,7 +249,9 @@
 
               <!-- **************************************************** -->
 
-              <xsd:element name="validation-mode" type="persistence:persistence-unit-validation-mode-type" minOccurs="0">
+              <xsd:element name="validation-mode"
+                           type="persistence:persistence-unit-validation-mode-type"
+                           minOccurs="0">
                 <xsd:annotation>
                   <xsd:documentation>
 
@@ -243,22 +275,26 @@
                 </xsd:annotation>
                 <xsd:complexType>
                   <xsd:sequence>
-                    <xsd:element name="property" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:element name="property"
+                                 minOccurs="0" maxOccurs="unbounded">
                       <xsd:annotation>
                         <xsd:documentation>
                           A name-value pair.
                         </xsd:documentation>
                       </xsd:annotation>
                       <xsd:complexType>
-                        <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        <xsd:attribute name="value" type="xsd:string" use="required"/>
+                        <xsd:attribute name="name" type="xsd:string"
+                                       use="required"/>
+                        <xsd:attribute name="value" type="xsd:string"
+                                       use="required"/>
                       </xsd:complexType>
                     </xsd:element>
                   </xsd:sequence>
                 </xsd:complexType>
               </xsd:element>
 
-              <xsd:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded">
+              <xsd:any namespace="##other" processContents="lax"
+                       minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                   <xsd:documentation>
                     An extension point for integration related configuration, e.g. cdi:
@@ -288,7 +324,8 @@
 
             <!-- **************************************************** -->
 
-            <xsd:attribute name="transaction-type" type="persistence:persistence-unit-transaction-type">
+            <xsd:attribute name="transaction-type"
+                           type="persistence:persistence-unit-transaction-type">
               <xsd:annotation>
                 <xsd:documentation>
 
@@ -302,7 +339,8 @@
           </xsd:complexType>
         </xsd:element>
       </xsd:sequence>
-      <xsd:attribute name="version" type="persistence:versionType" fixed="4.0" use="required"/>
+      <xsd:attribute name="version" type="persistence:versionType"
+                     fixed="4.0" use="required"/>
     </xsd:complexType>
   </xsd:element>
 
@@ -322,7 +360,24 @@
     </xsd:restriction>
   </xsd:simpleType>
 
-<!-- **************************************************** -->
+  <!-- **************************************************** -->
+
+  <xsd:simpleType name="persistence-unit-default-to-one-fetch-type">
+    <xsd:annotation>
+      <xsd:documentation>
+
+        public enum FetchType { LAZY, EAGER, DEFAULT };
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="LAZY"/>
+      <xsd:enumeration value="EAGER"/>
+      <!-- no DEFAULT -->
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- **************************************************** -->
 
   <xsd:simpleType name="persistence-unit-caching-type">
     <xsd:annotation>
@@ -347,7 +402,7 @@
     <xsd:annotation>
       <xsd:documentation>
 
-        public enum ValidationMode { AUTO, CALLBACK, NONE};
+        public enum ValidationMode { AUTO, CALLBACK, NONE };
 
       </xsd:documentation>
     </xsd:annotation>

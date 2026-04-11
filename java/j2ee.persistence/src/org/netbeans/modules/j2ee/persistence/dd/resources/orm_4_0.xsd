@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    Copyright (c) 2023 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2023, 2024 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0 which is available at
@@ -113,6 +113,10 @@
         <xsd:element name="named-query" type="orm:named-query"
                      minOccurs="0" maxOccurs="unbounded"/>
         <xsd:element name="named-native-query" type="orm:named-native-query"
+                     minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element name="named-statement" type="orm:named-statement"
+                     minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element name="named-native-statement" type="orm:named-native-statement"
                      minOccurs="0" maxOccurs="unbounded"/>
         <xsd:element name="named-stored-procedure-query"
                      type="orm:named-stored-procedure-query"
@@ -252,6 +256,10 @@
                    minOccurs="0" maxOccurs="unbounded"/>
       <xsd:element name="named-native-query" type="orm:named-native-query"
                    minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="named-statement" type="orm:named-statement"
+                   minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="named-native-statement" type="orm:named-native-statement"
+                   minOccurs="0" maxOccurs="unbounded"/>
       <xsd:element name="named-stored-procedure-query"
                    type="orm:named-stored-procedure-query"
                    minOccurs="0" maxOccurs="unbounded"/>
@@ -264,6 +272,7 @@
                    minOccurs="0"/>
       <xsd:element name="entity-listeners" type="orm:entity-listeners"
                    minOccurs="0"/>
+      <xsd:element name="pre-merge" type="orm:pre-remove" minOccurs="0"/>
       <xsd:element name="pre-persist" type="orm:pre-persist" minOccurs="0"/>
       <xsd:element name="post-persist" type="orm:post-persist"
                    minOccurs="0"/>
@@ -271,6 +280,12 @@
       <xsd:element name="post-remove" type="orm:post-remove" minOccurs="0"/>
       <xsd:element name="pre-update" type="orm:pre-update" minOccurs="0"/>
       <xsd:element name="post-update" type="orm:post-update" minOccurs="0"/>
+      <xsd:element name="pre-upsert" type="orm:pre-update" minOccurs="0"/>
+      <xsd:element name="post-upsert" type="orm:post-update" minOccurs="0"/>
+      <xsd:element name="pre-insert" type="orm:pre-update" minOccurs="0"/>
+      <xsd:element name="post-insert" type="orm:post-update" minOccurs="0"/>
+      <xsd:element name="pre-delete" type="orm:pre-update" minOccurs="0"/>
+      <xsd:element name="post-delete" type="orm:post-update" minOccurs="0"/>
       <xsd:element name="post-load" type="orm:post-load" minOccurs="0"/>
       <xsd:element name="attribute-override" type="orm:attribute-override"
                    minOccurs="0" maxOccurs="unbounded"/>
@@ -387,7 +402,7 @@
       <xsd:element name="basic" type="orm:basic"
                    minOccurs="0" maxOccurs="unbounded"/>
       <xsd:element name="version" type="orm:version"
-                   minOccurs="0" maxOccurs="unbounded"/>
+                   minOccurs="0"/>
       <xsd:element name="many-to-one" type="orm:many-to-one"
                    minOccurs="0" maxOccurs="unbounded"/>
       <xsd:element name="one-to-many" type="orm:one-to-many"
@@ -400,6 +415,9 @@
                    minOccurs="0" maxOccurs="unbounded"/>
       <xsd:element name="embedded" type="orm:embedded"
                    minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="excluded-from-versioning"
+                   type="orm:excluded-from-versioning"
+                   minOccurs="0"/>
       <xsd:element name="transient" type="orm:transient"
                    minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
@@ -495,6 +513,8 @@
           ForeignKey foreignKey() default @ForeignKey(ConstraintMode.PROVIDER_DEFAULT);
           UniqueConstraint[] uniqueConstraints() default {};
           Index[] indexes() default {};
+          CheckConstraint[] check() default {};
+          String comment() default "";
           String options() default "";
         }
 
@@ -502,6 +522,7 @@
     </xsd:annotation>
     <xsd:sequence>
       <xsd:sequence>
+        <xsd:element name="comment" type="xsd:string" minOccurs="0" />
         <xsd:element name="join-column" type="orm:join-column"
                      minOccurs="0" maxOccurs="unbounded"/>
         <xsd:element name="foreign-key" type="orm:foreign-key"
@@ -510,6 +531,8 @@
       <xsd:element name="unique-constraint" type="orm:unique-constraint"
                    minOccurs="0" maxOccurs="unbounded"/>
       <xsd:element name="index" type="orm:index"
+                   minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="check-constraint" type="orm:check-constraint"
                    minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
     <xsd:attribute name="name" type="xsd:string"/>
@@ -538,6 +561,7 @@
           int length() default 255;
           int precision() default 0; // decimal precision
           int scale() default 0; // decimal scale
+          int secondPrecision() default -1; //fractional second precision
           CheckConstraint[] check() default {};
           String comment() default "";
         }
@@ -560,6 +584,7 @@
     <xsd:attribute name="length" type="xsd:int"/>
     <xsd:attribute name="precision" type="xsd:int"/>
     <xsd:attribute name="scale" type="xsd:int"/>
+    <xsd:attribute name="second-precision" type="xsd:int"/>
   </xsd:complexType>
 
 <!-- **************************************************** -->
@@ -676,10 +701,14 @@
           String columnDefinition() default "";
           String options() default "";
           int length() default 31;
+          String comment() default "";
         }
 
       </xsd:documentation>
     </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="comment" type="xsd:string" minOccurs="0" />
+    </xsd:sequence>
     <xsd:attribute name="name" type="xsd:string"/>
     <xsd:attribute name="discriminator-type" type="orm:discriminator-type"/>
     <xsd:attribute name="column-definition" type="xsd:string"/>
@@ -919,6 +948,7 @@
     </xsd:annotation>
     <xsd:sequence>
       <xsd:element name="description" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="pre-merge" type="orm:pre-remove" minOccurs="0"/>
       <xsd:element name="pre-persist" type="orm:pre-persist" minOccurs="0"/>
       <xsd:element name="post-persist" type="orm:post-persist"
                    minOccurs="0"/>
@@ -926,6 +956,12 @@
       <xsd:element name="post-remove" type="orm:post-remove" minOccurs="0"/>
       <xsd:element name="pre-update" type="orm:pre-update" minOccurs="0"/>
       <xsd:element name="post-update" type="orm:post-update" minOccurs="0"/>
+      <xsd:element name="pre-upsert" type="orm:pre-update" minOccurs="0"/>
+      <xsd:element name="post-upsert" type="orm:post-update" minOccurs="0"/>
+      <xsd:element name="pre-insert" type="orm:pre-update" minOccurs="0"/>
+      <xsd:element name="post-insert" type="orm:post-update" minOccurs="0"/>
+      <xsd:element name="pre-delete" type="orm:pre-update" minOccurs="0"/>
+      <xsd:element name="post-delete" type="orm:post-update" minOccurs="0"/>
       <xsd:element name="post-load" type="orm:post-load" minOccurs="0"/>
     </xsd:sequence>
     <xsd:attribute name="class" type="xsd:string" use="required"/>
@@ -1160,6 +1196,8 @@
           String name() default "";
           String columnList();
           boolean unique() default false;
+          String kind() default "";
+          String type() default "";
           String options() default "";
         }
 
@@ -1171,6 +1209,8 @@
     <xsd:attribute name="name" type="xsd:string"/>
     <xsd:attribute name="column-list" type="xsd:string" use="required"/>
     <xsd:attribute name="unique" type="xsd:boolean"/>
+    <xsd:attribute name="kind" type="xsd:string"/>
+    <xsd:attribute name="type" type="xsd:string"/>
     <xsd:attribute name="options" type="xsd:string"/>
   </xsd:complexType>
 
@@ -1337,7 +1377,25 @@
     </xsd:restriction>
   </xsd:simpleType>
 
-<!-- **************************************************** -->
+  <!-- **************************************************** -->
+
+  <xsd:simpleType name="pessimistic-lock-scope">
+    <xsd:annotation>
+      <xsd:documentation>
+
+        public enum PessimisticLockScope implements FindOption, RefreshOption, LockOption { NORMAL, EXTENDED, FETCHED }
+
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="NORMAL"/>
+      <xsd:enumeration value="EXTENDED"/>
+      <xsd:enumeration value="FETCHED"/>
+
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- **************************************************** -->
 
 <xsd:complexType name="many-to-many">
     <xsd:annotation>
@@ -1454,11 +1512,14 @@
 
         @Target({METHOD, FIELD}) @Retention(RUNTIME)
         public @interface MapKey {
+          String value() default "";
+          @Deprecated
           String name() default "";
         }
 
       </xsd:documentation>
     </xsd:annotation>
+    <!-- no need to reflect annotation member name change here -->
     <xsd:attribute name="name" type="xsd:string"/>
   </xsd:complexType>
 
@@ -1497,10 +1558,17 @@
           int length() default 255;
           int precision() default 0; // decimal precision
           int scale() default 0; // decimal scale
+          CheckConstraint[] check() default {};
+          String comment() default "";
         }
 
       </xsd:documentation>
     </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="comment" type="xsd:string" minOccurs="0" />
+      <xsd:element name="check-constraint" type="orm:check-constraint"
+                   minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
     <xsd:attribute name="name" type="xsd:string"/>
     <xsd:attribute name="unique" type="xsd:boolean"/>
     <xsd:attribute name="nullable" type="xsd:boolean"/>
@@ -1533,13 +1601,18 @@
           String options() default "";
           String table() default "";
           ForeignKey foreignKey() default @ForeignKey(ConstraintMode.PROVIDER_DEFAULT);
+          CheckConstraint[] check() default {};
+          String comment() default "";
         }
 
       </xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
+      <xsd:element name="comment" type="xsd:string" minOccurs="0" />
       <xsd:element name="foreign-key" type="orm:foreign-key"
                    minOccurs="0"/>
+      <xsd:element name="check-constraint" type="orm:check-constraint"
+                   minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
     <xsd:attribute name="name" type="xsd:string"/>
     <xsd:attribute name="referenced-column-name" type="xsd:string"/>
@@ -1580,6 +1653,7 @@
                    minOccurs="0"/>
       <xsd:element name="entity-listeners" type="orm:entity-listeners"
                    minOccurs="0"/>
+      <xsd:element name="pre-merge" type="orm:pre-remove" minOccurs="0"/>
       <xsd:element name="pre-persist" type="orm:pre-persist" minOccurs="0"/>
       <xsd:element name="post-persist" type="orm:post-persist"
                    minOccurs="0"/>
@@ -1587,6 +1661,12 @@
       <xsd:element name="post-remove" type="orm:post-remove" minOccurs="0"/>
       <xsd:element name="pre-update" type="orm:pre-update" minOccurs="0"/>
       <xsd:element name="post-update" type="orm:post-update" minOccurs="0"/>
+      <xsd:element name="pre-upsert" type="orm:pre-update" minOccurs="0"/>
+      <xsd:element name="post-upsert" type="orm:post-update" minOccurs="0"/>
+      <xsd:element name="pre-insert" type="orm:pre-update" minOccurs="0"/>
+      <xsd:element name="post-insert" type="orm:post-update" minOccurs="0"/>
+      <xsd:element name="pre-delete" type="orm:pre-update" minOccurs="0"/>
+      <xsd:element name="post-delete" type="orm:post-update" minOccurs="0"/>
       <xsd:element name="post-load" type="orm:post-load" minOccurs="0"/>
       <xsd:element name="attributes" type="orm:attributes" minOccurs="0"/>
     </xsd:sequence>
@@ -1694,30 +1774,86 @@
 
   <xsd:complexType name="named-query">
     <xsd:annotation>
-      <xsd:documentation>
+      <xsd:documentation><![CDATA[
 
         @Repeatable(NamedQueries.class)
         @Target({TYPE}) @Retention(RUNTIME)
         public @interface NamedQuery {
           String name();
           String query();
+          Class<?> resultClass() default void.class;
           LockModeType lockMode() default LockModeType.NONE;
+          PessimisticLockScope lockScope() default PessimisticLockScope.NORMAL;
           QueryHint[] hints() default {};
+          String entityGraph() default "";
         }
 
-      </xsd:documentation>
+      ]]></xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
       <xsd:element name="description" type="xsd:string" minOccurs="0"/>
       <xsd:element name="query" type="xsd:string"/>
       <xsd:element name="lock-mode" type="orm:lock-mode-type" minOccurs="0"/>
+      <xsd:element name="lock-scope" type="orm:pessimistic-lock-scope" minOccurs="0"/>
+      <xsd:element name="hint" type="orm:query-hint"
+                   minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="entity-graph" type="xsd:string" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" use="required"/>
+    <xsd:attribute name="result-class" type="xsd:string"/>
+</xsd:complexType>
+
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="named-native-statement">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[
+
+        @Repeatable(NamedNativeStatements.class)
+        @Target({TYPE}) @Retention(RUNTIME)
+        public @interface NamedNativeStatement {
+          String name();
+          String statement();
+          QueryHint[] hints() default {};
+        }
+
+      ]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="description" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="statement" type="xsd:string"/>
       <xsd:element name="hint" type="orm:query-hint"
                    minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
     <xsd:attribute name="name" type="xsd:string" use="required"/>
-</xsd:complexType>
+  </xsd:complexType>
 
-<!-- **************************************************** -->
+  <!-- **************************************************** -->
+
+  <xsd:complexType name="named-statement">
+    <xsd:annotation>
+      <xsd:documentation><![CDATA[
+
+        @Repeatable(NamedStatements.class)
+        @Target({TYPE}) @Retention(RUNTIME)
+        public @interface NamedStatement {
+          String name();
+          String statement();
+          QueryHint[] hints() default {};
+        }
+
+      ]]></xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="description" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="statement" type="xsd:string"/>
+      <xsd:element name="hint" type="orm:query-hint"
+                   minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="name" type="xsd:string" use="required"/>
+  </xsd:complexType>
+
+  <!-- **************************************************** -->
 
   <xsd:complexType name="named-stored-procedure-query">
     <xsd:annotation>
@@ -1938,10 +2074,14 @@
           boolean updatable() default true;
           String columnDefinition() default "";
           String options() default "";
+          String comment() default "";
         }
 
       </xsd:documentation>
     </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="comment" type="xsd:string" minOccurs="0" />
+    </xsd:sequence>
     <xsd:attribute name="name" type="xsd:string"/>
     <xsd:attribute name="nullable" type="xsd:boolean"/>
     <xsd:attribute name="insertable" type="xsd:boolean"/>
@@ -2101,13 +2241,18 @@
           String columnDefinition() default "";
           String options() default "";
           ForeignKey foreignKey() default @ForeignKey(PROVIDER_DEFAULT);
+          CheckConstraint[] check() default {};
+          String comment() default "";
         }
 
       </xsd:documentation>
     </xsd:annotation>
     <xsd:sequence>
+      <xsd:element name="comment" type="xsd:string" minOccurs="0" />
       <xsd:element name="foreign-key" type="orm:foreign-key"
                    minOccurs="0"/>
+      <xsd:element name="check-constraint" type="orm:check-constraint"
+                   minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
     <xsd:attribute name="name" type="xsd:string"/>
     <xsd:attribute name="referenced-column-name" type="xsd:string"/>
@@ -2388,7 +2533,22 @@
      </xsd:restriction>
   </xsd:simpleType>
 
-<!-- **************************************************** -->
+    <!-- **************************************************** -->
+
+    <xsd:complexType name="excluded-from-versioning">
+        <xsd:annotation>
+            <xsd:documentation>
+
+                @Target({METHOD, FIELD})
+                @Retention(RUNTIME)
+                public @interface ExcludedFromVersioning {}
+
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+
+    <!-- **************************************************** -->
 
   <xsd:complexType name="transient">
     <xsd:annotation>

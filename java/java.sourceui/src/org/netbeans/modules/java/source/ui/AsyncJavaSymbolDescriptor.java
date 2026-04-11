@@ -104,21 +104,20 @@ final class AsyncJavaSymbolDescriptor extends JavaSymbolDescriptorBase implement
     @Override
     public void open() {
         final Collection<? extends SymbolDescriptor> symbols = resolve();
-        /* resolve() falls back to Collections.singleton(this) if it could
-           not enrich the descriptor (e.g. javac threw CompletionFailure
-           for some transient reason). Detect that case explicitly to
-           avoid recursing into our own open(); fall back to opening the
-           type by its ElementHandle via ElementOpen, which goes through
-           ClassIndex/SourceUtils. */
-        if (symbols.size() == 1 && symbols.iterator().next() == this) {
+        if (symbols.isEmpty()) {
+            return;
+        }
+        SymbolDescriptor sd = symbols.iterator().next();
+        if (sd != this) {
+            sd.open();
+        } else {
+            /* The case where resolve() returns an un-enriched Collections.singleton(this) because
+            of some error (e.g. javac threw CompletionFailure). Fall back to opening the type by
+            its ElementHandle via ElementOpen, which goes through ClassIndex/SourceUtils. */
             final FileObject file = getFileObject();
             if (file != null) {
                 ElementOpen.open(ClasspathInfo.create(file), getOwner());
             }
-            return;
-        }
-        if (!symbols.isEmpty()) {
-            symbols.iterator().next().open();
         }
     }
 
@@ -186,33 +185,17 @@ final class AsyncJavaSymbolDescriptor extends JavaSymbolDescriptorBase implement
         final List<SymbolDescriptor> symbols = new ArrayList<>();
         try {
             final String binName = ElementHandleAccessor.getInstance().getJVMSignature(getOwner())[0];
-            /* Build the JavacTask via JavacParser.createJavacTask
-               (which pre-registers NetBeans' javac context enhancers --
-               most importantly NBClassReader, plus NBAttr, NBEnter,
-               NBMemberEnter, NBResolve, NBClassFinder, NBJavaCompiler,
-               NBClassWriter, etc.) instead of calling
-               JavacTool.create().getTask(...) directly. NetBeans .sig
-               files (the per-root cached form of indexed Java classes)
-               are written by NBClassWriter and use a relaxed/extended
-               class-file format that only NBClassReader knows how to
-               read; stock javac's ClassReader rejects them with
-               BadClassFile, which propagates as CompletionFailure.
-               ElementUtils.getTypeElementByBinaryName silently catches
-               the CompletionFailure and returns null, and resolve()
-               therefore returned an empty collection for every Java
-               type whose .sig had any NB-specific encoding -- the
-               actual cause of the long-standing Go to Symbol
-               disappearance bug. */
+            /* Build the JavacTask via JavacParser.createJavacTask, which pre-registers NetBeans'
+            javac context enhancers, e.g. NBClassReader plus NBAttr, NBEnter, NBMemberEnter,
+            NBResolve, NBClassFinder, NBJavaCompiler, NBClassWriter, instead of calling
+            JavacTool.create().getTask(...) directly.
+
+            NetBeans .sig files (the per-root cached form of indexed Java classes) are written by
+            NBClassWriter and use a relaxed/extended class-file format that only NBClassReader knows
+            how to read. Stock javac's ClassReader would rejects them with BadClassFile. */
             final ClasspathInfo cpInfo = ClasspathInfo.create(getRoot());
             final JavacTaskImpl jt = JavacParser.createJavacTask(
-                    cpInfo,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
+                    cpInfo, null, null, null, null, null, null, null,
                     Collections.<JavaFileObject>emptyList());
             //Force JTImpl.prepareCompiler to get JTImpl into Context
             jt.enter();
@@ -253,26 +236,20 @@ final class AsyncJavaSymbolDescriptor extends JavaSymbolDescriptorBase implement
                 }
             }
         } catch (RuntimeException e) {
-            /* Swallow so that unexpected javac failures (e.g.
-               CompletionFailure, which is a RuntimeException) fall through
-               to the "no enriched symbols" path below rather than
-               propagating into the WORKER thread and leaving the descriptor
-               in a half-initialized state. Previously this was a catch for
-               IOException, thrown by the old hand-rolled JavaFileManager
-               wiring that has now been deleted. */
+            /* Swallow so that unexpected javac failures (e.g. CompletionFailure, which is a
+            RuntimeException) fall through to the "no enriched symbols" path below rather than
+            propagating into the WORKER thread and leaving the descriptor in a half-initialized
+            state. */
             Exceptions.printStackTrace(e);
         }
-        /* The async path is meant to *enrich* a descriptor that the
-           (Lucene-backed) JavaSymbolProvider already produced -- not to
-           delete it. If javac couldn't load the TypeElement (te==null),
-           no enclosed element matched ident, or the lookup threw, the
-           entry is still a valid match from the index and must remain
-           in the list. Returning an empty collection here would cause
-           Models.MutableListModelImpl#descriptorChanged to remove the
-           source from the live model, producing the long-standing
-           "search results appear briefly then disappear" Go to Symbol
-           symptom. Fall back to keeping the AsyncJavaSymbolDescriptor
-           itself. */
+        /* The async path is meant to *enrich* a descriptor that the (Lucene-backed)
+        JavaSymbolProvider already produced, not to delete it. If javac couldn't load the
+        TypeElement (te==null), no enclosed element matched ident, or the lookup threw, the entry is
+        still a valid match from the index and must remain in the list. Returning an empty
+        collection here would cause Models.MutableListModelImpl#descriptorChanged to remove the
+        source from the live model, causing Lucene-based search results to appear briefly then
+        disappear in the Go to Symbol dialog. Fall back to keeping the AsyncJavaSymbolDescriptor
+        itself. */
         if (symbols.isEmpty()) {
             return Collections.<SymbolDescriptor>singleton(this);
         }

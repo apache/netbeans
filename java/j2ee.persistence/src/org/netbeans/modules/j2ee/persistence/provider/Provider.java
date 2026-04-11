@@ -83,7 +83,7 @@ public abstract class Provider {
         boolean ret = cp.findResource(classRelativePath) != null;
         if(ret && version != null) {
             if(null != version) switch (version) {
-                case Persistence.VERSION_4_0 -> ret &= cp.findResource("jakarta/persistence/query/StaticQuery.class") != null;
+                case Persistence.VERSION_4_0 -> ret &= cp.findResource("jakarta/persistence/PostDelete.class") != null;
                 case Persistence.VERSION_3_2 -> ret &= cp.findResource("jakarta/persistence/criteria/CriteriaSelect.class") != null;
                 case Persistence.VERSION_3_1 -> ret &= cp.findResource("jakarta/persistence/spi/TransformerException.class") != null;
                 case Persistence.VERSION_3_0 -> ret &= cp.findResource("jakarta/persistence/Entity.class") != null;

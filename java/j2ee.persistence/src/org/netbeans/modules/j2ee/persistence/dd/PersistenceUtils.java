@@ -213,7 +213,7 @@ public class PersistenceUtils {
         SourceGroup firstGroup=groups[0];
         FileObject fo=firstGroup.getRootFolder();
         ClassPath compile=ClassPath.getClassPath(fo, ClassPath.COMPILE);
-        if(compile.findResource("jakarta/persistence/query/StaticQuery.class")!=null) {
+        if(compile.findResource("jakarta/persistence/PostDelete.class")!=null) {
             version=Persistence.VERSION_4_0;
         } else if(compile.findResource("jakarta/persistence/criteria/CriteriaSelect.class")!=null) {
             version=Persistence.VERSION_3_2;
@@ -237,7 +237,7 @@ public class PersistenceUtils {
         List<URL> roots=lib.getContent("classpath");
         ClassPath cp = ClassPathSupport.createClassPath(roots.toArray(URL[]::new));
         String version=null;
-        if(cp.findResource("jakarta/persistence/query/StaticQuery.class")!=null) {
+        if(cp.findResource("jakarta/persistence/PostDelete.class")!=null) {
             version=Persistence.VERSION_4_0;
         } else if(cp.findResource("jakarta/persistence/criteria/CriteriaSelect.class")!=null) {
             version=Persistence.VERSION_3_2;

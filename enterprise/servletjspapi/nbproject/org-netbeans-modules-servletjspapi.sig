@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.62.0
+#Version 1.63.0
 
 CLSS public jakarta.el.ArrayELResolver
 cons public init()
@@ -139,6 +139,7 @@ hfds elManager,factory
 
 CLSS public abstract jakarta.el.ELResolver
 cons public init()
+innr public static StandaloneIdentifierMarker
 meth public <%0 extends java.lang.Object> {%%0} convertToType(jakarta.el.ELContext,java.lang.Object,java.lang.Class<{%%0}>)
 meth public abstract boolean isReadOnly(jakarta.el.ELContext,java.lang.Object,java.lang.Object)
 meth public abstract java.lang.Class<?> getCommonPropertyType(jakarta.el.ELContext,java.lang.Object)
@@ -146,6 +147,10 @@ meth public abstract java.lang.Class<?> getType(jakarta.el.ELContext,java.lang.O
 meth public abstract java.lang.Object getValue(jakarta.el.ELContext,java.lang.Object,java.lang.Object)
 meth public abstract void setValue(jakarta.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Object)
 meth public java.lang.Object invoke(jakarta.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Class<?>[],java.lang.Object[])
+supr java.lang.Object
+
+CLSS public static jakarta.el.ELResolver$StandaloneIdentifierMarker
+ outer jakarta.el.ELResolver
 supr java.lang.Object
 
 CLSS public abstract jakarta.el.EvaluationListener
@@ -1223,6 +1228,7 @@ fld public final static int SC_BAD_REQUEST = 400
 fld public final static int SC_CONFLICT = 409
 fld public final static int SC_CONTINUE = 100
 fld public final static int SC_CREATED = 201
+fld public final static int SC_EARLY_HINTS = 103
 fld public final static int SC_EXPECTATION_FAILED = 417
 fld public final static int SC_FORBIDDEN = 403
 fld public final static int SC_FOUND = 302
@@ -1274,6 +1280,7 @@ meth public abstract void addCookie(jakarta.servlet.http.Cookie)
 meth public abstract void addDateHeader(java.lang.String,long)
 meth public abstract void addHeader(java.lang.String,java.lang.String)
 meth public abstract void addIntHeader(java.lang.String,int)
+meth public abstract void sendEarlyHints()
 meth public abstract void sendError(int) throws java.io.IOException
 meth public abstract void sendError(int,java.lang.String) throws java.io.IOException
 meth public abstract void sendRedirect(java.lang.String,int,boolean) throws java.io.IOException
@@ -1302,6 +1309,7 @@ meth public void addCookie(jakarta.servlet.http.Cookie)
 meth public void addDateHeader(java.lang.String,long)
 meth public void addHeader(java.lang.String,java.lang.String)
 meth public void addIntHeader(java.lang.String,int)
+meth public void sendEarlyHints()
 meth public void sendError(int) throws java.io.IOException
 meth public void sendError(int,java.lang.String) throws java.io.IOException
 meth public void sendRedirect(java.lang.String) throws java.io.IOException
@@ -1922,7 +1930,6 @@ meth public void mark(int)
 meth public void reset() throws java.io.IOException
 meth public void skipNBytes(long) throws java.io.IOException
 supr java.lang.Object
-hfds DEFAULT_BUFFER_SIZE,MAX_BUFFER_SIZE,MAX_SKIP_BUFFER_SIZE
 
 CLSS public abstract java.io.OutputStream
 cons public init()
@@ -1957,7 +1964,6 @@ meth public void write(int) throws java.io.IOException
 meth public void write(java.lang.String) throws java.io.IOException
 meth public void write(java.lang.String,int,int) throws java.io.IOException
 supr java.lang.Object
-hfds WRITE_BUFFER_SIZE,writeBuffer
 
 CLSS public abstract interface java.lang.Appendable
 meth public abstract java.lang.Appendable append(char) throws java.io.IOException
@@ -1998,7 +2004,6 @@ meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -2007,7 +2012,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -2031,7 +2035,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -2054,8 +2057,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -2101,7 +2102,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public javax.el.ArrayELResolver
 cons public init()

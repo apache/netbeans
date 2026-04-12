@@ -81,6 +81,9 @@ public class LogCommand extends GitCommand {
     private final boolean fetchBranchInfo;
     private static final Logger LOG = Logger.getLogger(LogCommand.class.getName());
 
+    /// see RevWalk.newFlag(); note: don't trust the doc! check RevWalk.RESERVED_FLAGS
+    static final int MAX_REVWALK_FLAGS = 23;
+
     public LogCommand (Repository repository, GitClassFactory gitFactory, SearchCriteria criteria,
             boolean fetchBranchInfo, ProgressMonitor monitor, RevisionInfoListener listener) {
         super(repository, gitFactory, monitor);
@@ -210,7 +213,7 @@ public class LogCommand extends GitCommand {
                     }
                 } else {
                     usedFlags.add(flagId);
-                    if (i <= 23) { // leave one spare flag for the run method, see RevWalk.newFlag()
+                    if (i <= MAX_REVWALK_FLAGS - 1) { // leave one spare flag for the run method
                         i++;
                         RevFlag flag = walk.newFlag(flagId);
                         List<GitBranch> branches = new ArrayList<>(allBranches.size());

@@ -20,19 +20,20 @@ BASE=`dirname $0`
 cd $BASE
 BASE=`pwd`
 
-git clone https://git.eclipse.org/r/equinox/rt.equinox.framework
-cd rt.equinox.framework
+git clone https://github.com/eclipse-equinox/equinox.framework
+cd equinox.framework
 git checkout M20140115-0800
 git show M20140115-0800:bundles/org.eclipse.osgi/core/framework/org/eclipse/osgi/framework/internal/core/Framework.java  >Framework.java
+git show M20140115-0800:bundles/org.eclipse.osgi/resolver/src/org/eclipse/osgi/internal/resolver/StateBuilder.java  >StateBuilder.java
 patch <../M20140115-0800.patch
 if ! [ -e org.eclipse.osgi-3.9.1.v20140110-1610.jar ]; then
   wget https://repo.eclipse.org/content/repositories/releases/org/eclipse/core/org.eclipse.osgi/3.9.1.v20140110-1610/org.eclipse.osgi-3.9.1.v20140110-1610.jar
 fi
 mkdir -p out
-javac -cp org.eclipse.osgi-3.9.1.v20140110-1610.jar Framework.java -d out || exit 1
+javac --release 17 -cp org.eclipse.osgi-3.9.1.v20140110-1610.jar Framework.java StateBuilder.java -d out || exit 1
 cd out
 zip -d ../org.eclipse.osgi-3.9.1.v20140110-1610.jar META-INF/ECLIPSE_.SF META-INF/ECLIPSE_.RSA
 zip -r ../org.eclipse.osgi-3.9.1.v20140110-1610.jar .
 
 cd "$BASE"
-mv rt.equinox.framework/org.eclipse.osgi-3.9.1.v20140110-1610.jar org.eclipse.osgi_3.9.1.nb9.jar
+mv equinox.framework/org.eclipse.osgi-3.9.1.v20140110-1610.jar org.eclipse.osgi_3.9.1.nb10.jar

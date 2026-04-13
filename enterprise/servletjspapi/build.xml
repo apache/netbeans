@@ -25,8 +25,8 @@
     <target name="-check-prepared-jar">
         <condition property="servletjspapi.jarcreated" value="present">
             <and>
-                <available file="external/generated-servlet-jsp-api-4.1_2.3.jar" />
-                <available file="external/generated-servlet-jsp-api-6.2_3.0.jar" />
+                <available file="external/generated-servlet-jsp-api-4.0_2.3.jar" />
+                <available file="external/generated-servlet-jsp-api-6.2_4.1.jar" />
             </and>
         </condition>
     </target>
@@ -36,7 +36,7 @@
         <property name="build_location" location="build/servletjspapi_api_location"/>
         <property name="build_location_jakarta" location="build/servletjspapi_api_location_jakarta"/>
 
-        <echo message="Creating generated-servlet-jsp-api-4.1_2.3.jar"/>
+        <echo message="Creating generated-servlet-jsp-api-4.0_2.3.jar"/>
         <mkdir dir="${build_location}"/>
         <unzip src="${jars_location}/gf-client-module-9.0.0-M1.jar" dest="${build_location}/"/>
         <unzip src="${jars_location}/jakarta.servlet-api-4.0.4.jar" dest="${build_location}/"/>
@@ -101,14 +101,14 @@
             </fileset>
         </copy>
 
-        <delete file="./external/generated-servlet-jsp-api-4.1_2.3.jar" />
+        <delete file="./external/generated-servlet-jsp-api-4.0_2.3.jar" />
         <zip  basedir="${build_location}"
                 includes="javax/servlet/jsp/**, javax/servlet/**, resources/**, javax/el/**"
-                            zipfile="./external/generated-servlet-jsp-api-4.1_2.3.jar" />
+                            zipfile="./external/generated-servlet-jsp-api-4.0_2.3.jar" />
         <delete dir="${build_location}" />
 
 
-        <echo message="Creating generated-servlet-jsp-api-6.2_3.0.jar"/>
+        <echo message="Creating generated-servlet-jsp-api-6.2_4.1.jar"/>
         <mkdir dir="${build_location_jakarta}"/>
         <unzip src="${jars_location}/gf-client-module-9.0.0-M1.jar" dest="${build_location_jakarta}/"/>
         <unzip src="${jars_location}/jakarta.servlet-api-4.0.4.jar" dest="${build_location_jakarta}/"/>
@@ -211,11 +211,11 @@
             </fileset>
         </copy>
 
-        <delete file="./external/generated-servlet-jsp-api-6.2_3.0.jar" />
+        <delete file="./external/generated-servlet-jsp-api-6.2_4.1.jar" />
         <!-- jakarta/servlet/jsp/**, jakarta/servlet/**, jakarta/el/** -->
         <zip  basedir="${build_location_jakarta}"
               includes="jakarta/servlet/jsp/**, jakarta/servlet/**, jakarta/el/**, resources/**"
-              zipfile="./external/generated-servlet-jsp-api-6.2_3.0.jar" />
+              zipfile="./external/generated-servlet-jsp-api-6.2_4.1.jar" />
         <delete dir="${build_location_jakarta}" />
     </target>
 </project>

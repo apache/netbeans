@@ -1,6 +1,6 @@
 Name: Java API for Jakarta Servlets, Java API for Jakarta Server Pages
 License: EPL-v20
-Version: 6.2_3.0
+Version: 6.2_4.1
 Type: generated
 Description: Java API for Jakarta Servlets, Java API for Jakarta Server Pages, Java API for Jakarta Expression Language
 Origin: Eclipse Foundation (https://projects.eclipse.org/projects/ee4j)

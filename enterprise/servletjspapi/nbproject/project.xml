@@ -44,12 +44,12 @@
                 <package>javax.servlet.jsp.tagext</package>
             </public-packages>
             <class-path-extension>
-                <runtime-relative-path>ext/servlet4.1-jsp2.3-api.jar</runtime-relative-path>
-                <binary-origin>external/generated-servlet-jsp-api-4.1_2.3.jar</binary-origin>
+                <runtime-relative-path>ext/servlet4.0-jsp2.3-api.jar</runtime-relative-path>
+                <binary-origin>external/generated-servlet-jsp-api-4.0_2.3.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/servlet-jsp-api-6.2_3.0.jar</runtime-relative-path>
-                <binary-origin>external/generated-servlet-jsp-api-6.2_3.0.jar</binary-origin>
+                <runtime-relative-path>ext/servlet-jsp-api-6.2_4.1.jar</runtime-relative-path>
+                <binary-origin>external/generated-servlet-jsp-api-6.2_4.1.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

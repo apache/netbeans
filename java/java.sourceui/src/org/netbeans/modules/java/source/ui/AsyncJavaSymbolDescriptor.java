@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -63,25 +64,33 @@ final class AsyncJavaSymbolDescriptor extends JavaSymbolDescriptorBase implement
 
     private static final RequestProcessor WORKER = new RequestProcessor(AsyncJavaSymbolDescriptor.class);
     private static final String INIT = "<init>"; //NOI18N
+    private final ConcurrentHashMap<FileObject,JavacTaskImpl> javacCache;
 
     private final String ident;
     private final boolean caseSensitive;
     private final List<DescriptorChangeListener<SymbolDescriptor>> listeners;
     private final AtomicBoolean initialized;
 
+    /**
+     * @param javacCache a cache map to be shared between instances during a single search, to avoid
+     *        creating a JavacTaskImpl for every symbol
+     */
     AsyncJavaSymbolDescriptor (
             @NullAllowed final ProjectInformation projectInformation,
             @NonNull final FileObject root,
             @NonNull final ClassIndexImpl ci,
             @NonNull final ElementHandle<TypeElement> owner,
             @NonNull final String ident,
-            final boolean caseSensitive) {
+            final boolean caseSensitive,
+            ConcurrentHashMap<FileObject,JavacTaskImpl> javacCache)
+    {
         super(owner, projectInformation, root, ci);
         assert ident != null;
         this.ident = ident;
         this.listeners = new CopyOnWriteArrayList<>();
         this.initialized = new AtomicBoolean();
         this.caseSensitive = caseSensitive;
+        this.javacCache = javacCache;
     }
 
     @Override
@@ -181,25 +190,30 @@ final class AsyncJavaSymbolDescriptor extends JavaSymbolDescriptorBase implement
     }
 
     @NonNull
+    private JavacTaskImpl getOrCreateJavac(@NonNull FileObject root) {
+        return javacCache.computeIfAbsent(root, r -> {
+            final ClasspathInfo cpInfo = ClasspathInfo.create(root);
+            JavacTaskImpl ret = JavacParser.createJavacTask(
+                    cpInfo, null, null, null, null, null, null, null,
+                    Collections.<JavaFileObject>emptyList());
+            // Force JTImpl.prepareCompiler to get JTImpl into Context
+            ret.enter();
+            return ret;
+        });
+    }
+
+    @NonNull
     private Collection<? extends SymbolDescriptor> resolve() {
         final List<SymbolDescriptor> symbols = new ArrayList<>();
         try {
             final String binName = ElementHandleAccessor.getInstance().getJVMSignature(getOwner())[0];
-            /* Build the JavacTask via JavacParser.createJavacTask, which pre-registers NetBeans'
-            javac context enhancers, e.g. NBClassReader plus NBAttr, NBEnter, NBMemberEnter,
-            NBResolve, NBClassFinder, NBJavaCompiler, NBClassWriter, instead of calling
-            JavacTool.create().getTask(...) directly.
-
-            NetBeans .sig files (the per-root cached form of indexed Java classes) are written by
-            NBClassWriter and use a relaxed/extended class-file format that only NBClassReader knows
-            how to read. Stock javac's ClassReader would rejects them with BadClassFile. */
-            final ClasspathInfo cpInfo = ClasspathInfo.create(getRoot());
-            final JavacTaskImpl jt = JavacParser.createJavacTask(
-                    cpInfo, null, null, null, null, null, null, null,
-                    Collections.<JavaFileObject>emptyList());
-            //Force JTImpl.prepareCompiler to get JTImpl into Context
-            jt.enter();
-            final TypeElement te = ElementUtils.getTypeElementByBinaryName(jt, binName);
+            final JavacTaskImpl jt = getOrCreateJavac(getRoot());
+            final TypeElement te;
+            /* Keep access to shared JavacTaskImpl instances thread-safe in case javacCache gets
+            shared across threads. */
+            synchronized (jt) {
+                te = ElementUtils.getTypeElementByBinaryName(jt, binName);
+            }
             if (te != null) {
                 if (ident.equals(getSimpleName(te, null, caseSensitive))) {
                     final String simpleName = te.getSimpleName().toString();

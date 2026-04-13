@@ -22,7 +22,7 @@ package org.netbeans.modules.web.el.hints;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import org.netbeans.api.java.source.ClasspathInfo;
+
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
@@ -33,6 +33,7 @@ import org.netbeans.modules.csl.api.Rule;
 import org.netbeans.modules.csl.api.Rule.AstRule;
 import org.netbeans.modules.csl.api.RuleContext;
 import org.netbeans.modules.web.el.CompilationContext;
+import org.netbeans.modules.web.el.ELParserResult;
 import org.netbeans.modules.web.el.ELTypeUtilities;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -64,7 +65,12 @@ public final class ELHintsProvider implements HintsProvider {
                 @Override
                 public void run(CompilationController info) throws Exception {
                     info.toPhase(JavaSource.Phase.RESOLVED);
-                    CompilationContext ccontext = CompilationContext.create(file, info);
+                    CompilationContext ccontext;
+                    if (context.parserResult instanceof ELParserResult elParserResult) {
+                        ccontext = CompilationContext.create(file, info, elParserResult.getContext());
+                    } else {
+                        ccontext = CompilationContext.create(file, info);
+                    }
                     for (ELRule rule : ids) {
                         if (manager.isEnabled(rule)) {
                             rule.run(ccontext, context, hints);

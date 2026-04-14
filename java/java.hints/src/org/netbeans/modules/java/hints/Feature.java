@@ -45,7 +45,12 @@ public enum Feature {
     VIRTUAL_THREADS(19, 21),
 
     /// https://openjdk.org/jeps/440
-    RECORD_PATTERN(19, 21);
+    RECORD_PATTERN(19, 21),
+    
+    /// https://openjdk.org/jeps/456
+    UNNAMED_VARIABLES(21, 22),
+
+    ;
 
     /// preview begin
     public final int PREVIEW;

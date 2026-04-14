@@ -28,7 +28,6 @@ import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
-import org.netbeans.modules.j2ee.common.ProjectUtil;
 import org.netbeans.modules.j2ee.common.ServerUtil;
 
 import org.openide.WizardDescriptor;
@@ -40,7 +39,7 @@ import org.openide.util.NbBundle;
  * Panel asking for web frameworks to use.
  * @author Radko Najman
  */
-final class ManagedBeanPanel implements WizardDescriptor.Panel, WizardDescriptor.FinishablePanel, ChangeListener {
+final class ManagedBeanPanel implements WizardDescriptor.FinishablePanel<WizardDescriptor>, ChangeListener {
 
     private TemplateWizard wizard;
     private ManagedBeanPanelVisual component;
@@ -81,7 +80,7 @@ final class ManagedBeanPanel implements WizardDescriptor.Panel, WizardDescriptor
             return;
         }
 
-        if ((targetName == null) || targetName.trim().equals("")) {
+        if ((targetName == null) || targetName.trim().isEmpty()) {
             return;
         }
 
@@ -140,21 +139,21 @@ final class ManagedBeanPanel implements WizardDescriptor.Panel, WizardDescriptor
         }
     }
     protected final void fireChangeEvent() {
-        Iterator it;
+        Iterator<ChangeListener> it;
         synchronized (listeners) {
-            it = new HashSet(listeners).iterator();
+            it = new HashSet<>(listeners).iterator();
         }
         ChangeEvent ev = new ChangeEvent(this);
         while (it.hasNext()) {
-            ((ChangeListener)it.next()).stateChanged(ev);
+            it.next().stateChanged(ev);
         }
     }
 
     @Override
-    public void readSettings(Object settings) {
+    public void readSettings(WizardDescriptor settings) {
         wizard = (TemplateWizard) settings;
         component.read(wizard);
-        
+
         // XXX hack, TemplateWizard in final setTemplateImpl() forces new wizard's title
         // this name is used in NewProjectWizard to modify the title
         Object substitute = ((JComponent) component).getClientProperty("NewProjectWizard_Title"); // NOI18N
@@ -163,11 +162,10 @@ final class ManagedBeanPanel implements WizardDescriptor.Panel, WizardDescriptor
     }
 
     @Override
-    public void storeSettings(Object settings) {
-        WizardDescriptor d = (WizardDescriptor) settings;
-        component.store(d);
+    public void storeSettings(WizardDescriptor settings) {
+        component.store(settings);
 
-        ((WizardDescriptor) d).putProperty("NewProjectWizard_Title", null); // NOI18N
+        settings.putProperty("NewProjectWizard_Title", null); // NOI18N
     }
 
     @Override

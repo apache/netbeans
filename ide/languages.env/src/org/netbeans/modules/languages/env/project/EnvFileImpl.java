@@ -32,27 +32,28 @@ import org.openide.filesystems.FileObject;
 
 @ProjectServiceProvider(service = ImportantFilesImplementation.class, projectTypes = {
     @LookupProvider.Registration.ProjectType(id = "org-netbeans-modules-web-clientproject"),
-    @LookupProvider.Registration.ProjectType(id = "org-netbeans-modules-php-project"),
-})
+    @LookupProvider.Registration.ProjectType(id = "org-netbeans-modules-php-project"),})
 public class EnvFileImpl implements ImportantFilesImplementation {
-    
+
+    private final Project project;
     private final ImportantFilesSupport support;
 
     public EnvFileImpl(Project project) {
         assert project != null;
-        List<String> envFiles = new ArrayList<>();
- 
-        for (FileObject file : project.getProjectDirectory().getChildren()) {
-            if (!file.isFolder() && (file.getMIMEType().equals(EnvFileResolver.MIME_TYPE))) {
-                envFiles.add(file.getNameExt());
-            }
-        }
-        support = ImportantFilesSupport.create(project.getProjectDirectory(), envFiles.toArray(String[]::new));
+        this.project = project;
+        support = ImportantFilesSupport.create(project.getProjectDirectory(), EnvFileResolver.DOT_ENV);
     }
 
     @Override
     public Collection<ImportantFilesImplementation.FileInfo> getFiles() {
-        return support.getFiles(null);
+        //custom env files
+        List<FileInfo> envFiles = new ArrayList<>();
+        for (FileObject file : project.getProjectDirectory().getChildren()) {
+            if (!file.isFolder() && (file.getMIMEType().equals(EnvFileResolver.MIME_TYPE))) {
+                envFiles.add(new FileInfo(file));
+            }
+        }
+        return envFiles;
     }
 
     @Override

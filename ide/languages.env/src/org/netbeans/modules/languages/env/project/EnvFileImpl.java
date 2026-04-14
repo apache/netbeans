@@ -28,41 +28,82 @@ import org.netbeans.modules.web.common.spi.ImportantFilesImplementation;
 import org.netbeans.modules.web.common.spi.ImportantFilesSupport;
 import org.netbeans.spi.project.LookupProvider;
 import org.netbeans.spi.project.ProjectServiceProvider;
+import org.openide.filesystems.FileChangeAdapter;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileRenameEvent;
+import org.openide.util.ChangeSupport;
+import org.openide.util.WeakListeners;
 
 @ProjectServiceProvider(service = ImportantFilesImplementation.class, projectTypes = {
     @LookupProvider.Registration.ProjectType(id = "org-netbeans-modules-web-clientproject"),
-    @LookupProvider.Registration.ProjectType(id = "org-netbeans-modules-php-project"),
-})
+    @LookupProvider.Registration.ProjectType(id = "org-netbeans-modules-php-project"),})
 public class EnvFileImpl implements ImportantFilesImplementation {
-    
-    private final ImportantFilesSupport support;
+
+    private final Project project;
+    private final FileObject projectDir;
+    private final FilesListener fileChangeListener = new FilesListener();
+    @SuppressWarnings("this-escape")
+    private final ChangeSupport changeSupport = new ChangeSupport(this);
 
     public EnvFileImpl(Project project) {
         assert project != null;
-        List<String> envFiles = new ArrayList<>();
- 
-        for (FileObject file : project.getProjectDirectory().getChildren()) {
-            if (!file.isFolder() && (file.getMIMEType().equals(EnvFileResolver.MIME_TYPE))) {
-                envFiles.add(file.getNameExt());
-            }
-        }
-        support = ImportantFilesSupport.create(project.getProjectDirectory(), envFiles.toArray(String[]::new));
+        this.project = project;
+        this.projectDir = project.getProjectDirectory();
+        projectDir.addFileChangeListener(WeakListeners.create(FileChangeListener.class, fileChangeListener, projectDir));
     }
 
     @Override
     public Collection<ImportantFilesImplementation.FileInfo> getFiles() {
-        return support.getFiles(null);
+        //custom env files
+        List<FileInfo> envFiles = new ArrayList<>();
+        for (FileObject file : project.getProjectDirectory().getChildren()) {
+            if (file.isFolder()) {
+                continue;
+            }
+            if (!file.getExt().equals(EnvFileResolver.ENV_EXT) && !file.getName().startsWith(EnvFileResolver.DOT_ENV)) {
+                continue;
+            }
+            if (file.getMIMEType().equals(EnvFileResolver.MIME_TYPE)) {
+                envFiles.add(new FileInfo(file));
+            }
+        }
+        return envFiles;
     }
 
     @Override
     public void addChangeListener(ChangeListener listener) {
-        support.addChangeListener(listener);
+        changeSupport.addChangeListener(listener);
     }
 
     @Override
     public void removeChangeListener(ChangeListener listener) {
-        support.removeChangeListener(listener);
+        changeSupport.removeChangeListener(listener);
     }
 
+    private final class FilesListener extends FileChangeAdapter {
+
+        @Override
+        public void fileRenamed(FileRenameEvent fe) {
+            check(fe.getFile().getNameExt());
+            check(fe.getName() + "." + fe.getExt()); // NOI18N
+        }
+
+        @Override
+        public void fileDeleted(FileEvent fe) {
+            check(fe.getFile().getNameExt());
+        }
+
+        @Override
+        public void fileDataCreated(FileEvent fe) {
+            check(fe.getFile().getNameExt());
+        }
+
+        private void check(String filename) {
+            if (filename.startsWith(EnvFileResolver.DOT_ENV) || filename.endsWith(EnvFileResolver.DOT_ENV)) {
+                changeSupport.fireChange();
+            }
+        }
+    }
 }

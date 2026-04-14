@@ -292,7 +292,9 @@ public final class DropTargetGlassPane extends JPanel implements DropTargetListe
     private Stroke stroke;
     private Stroke getIndicationStroke() {
         if (stroke == null) {
-            stroke = new BasicStroke(3, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f, new float[] {10.0f}, 0.0f);
+            int strokeWidth = UIManager.getInt("Panel.dropTargetGlassPane.strokeWidth");
+            strokeWidth = strokeWidth < 1 ? 3 : strokeWidth;
+            stroke = new BasicStroke(strokeWidth, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 10.0f, new float[] {10.0f}, 0.0f);
         }
         return stroke;
     }        

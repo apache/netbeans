@@ -1,9 +1,9 @@
 Name: Apache Maven components under EPL v2.0
 Description: These Apache Maven components are under EPL v2.0: org.eclipse.sisu.inject-1.0.0.jar org.eclipse.sisu.plexus-1.0.0.jar
-Version: 3.9.14
+Version: 3.9.15
 License: EPL-v20
 Origin: Apache Software Foundation
-Files: apache-maven-3.9.14-bin.zip!/apache-maven-3.9.14/lib/org.eclipse.sisu.inject-1.0.0.jar apache-maven-3.9.14-bin.zip!/apache-maven-3.9.14/lib/org.eclipse.sisu.plexus-1.0.0.jar
+Files: apache-maven-3.9.15-bin.zip!/apache-maven-3.9.15/lib/org.eclipse.sisu.inject-1.0.0.jar apache-maven-3.9.15-bin.zip!/apache-maven-3.9.15/lib/org.eclipse.sisu.plexus-1.0.0.jar
 
 Eclipse Public License - v 2.0
 

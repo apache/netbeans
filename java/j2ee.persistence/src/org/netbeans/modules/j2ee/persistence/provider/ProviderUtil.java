@@ -488,6 +488,8 @@ public class ProviderUtil {
             version =  Persistence.VERSION_2_1;
         } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) {
             version =  Persistence.VERSION_2_0;
+        } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit) {
+            version =  Persistence.VERSION_1_0;
         }
         Map<String, String> propertiesMap = provider.getConnectionPropertiesMap(connection, version);
 
@@ -604,6 +606,8 @@ public class ProviderUtil {
             version =  Persistence.VERSION_2_1;
         } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) {
             version =  Persistence.VERSION_2_0;
+        } else if(persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_1_0.PersistenceUnit) {
+            version =  Persistence.VERSION_1_0;
         }
         long top_version = Math.round(Double.parseDouble(version) * 100);
         long longVersion = top_version;

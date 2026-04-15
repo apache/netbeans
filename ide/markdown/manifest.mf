@@ -3,5 +3,5 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.markdown
 OpenIDE-Module-Layer: org/netbeans/modules/markdown/resources/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/markdown/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.20
+OpenIDE-Module-Specification-Version: 1.21
 

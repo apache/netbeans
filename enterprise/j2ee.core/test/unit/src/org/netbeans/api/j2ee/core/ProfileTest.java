@@ -67,10 +67,10 @@ public class ProfileTest extends NbTestCase {
         assertEquals(Profile.JAKARTA_EE_11_FULL, Profile.fromPropertiesString("JAKARTA_EE_11_FULL"));
         assertEquals(Profile.JAKARTA_EE_11_WEB, Profile.fromPropertiesString("11-web"));
         assertEquals(Profile.JAKARTA_EE_11_WEB, Profile.fromPropertiesString("JAKARTA_EE_11_WEB"));
-        assertEquals(Profile.JAKARTA_EE_11_FULL, Profile.fromPropertiesString("12"));
-        assertEquals(Profile.JAKARTA_EE_11_FULL, Profile.fromPropertiesString("JAKARTA_EE_12_FULL"));
-        assertEquals(Profile.JAKARTA_EE_11_WEB, Profile.fromPropertiesString("12-web"));
-        assertEquals(Profile.JAKARTA_EE_11_WEB, Profile.fromPropertiesString("JAKARTA_EE_12_WEB"));
+        assertEquals(Profile.JAKARTA_EE_12_FULL, Profile.fromPropertiesString("12"));
+        assertEquals(Profile.JAKARTA_EE_12_FULL, Profile.fromPropertiesString("JAKARTA_EE_12_FULL"));
+        assertEquals(Profile.JAKARTA_EE_12_WEB, Profile.fromPropertiesString("12-web"));
+        assertEquals(Profile.JAKARTA_EE_12_WEB, Profile.fromPropertiesString("JAKARTA_EE_12_WEB"));
         assertNull(Profile.fromPropertiesString("something"));
         assertNull(Profile.fromPropertiesString(null));
     }

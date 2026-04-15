@@ -279,8 +279,8 @@ public class J2eeProjectCapabilitiesTest extends NbTestCase {
         assertFalse(cap.isEjb32LiteSupported());
         assertFalse(cap.isEjb40Supported());
 //        assertTrue(cap.isEjb40LiteSupported());
-        assertTrue(cap.isEjb41Supported());
-        assertTrue(cap.isEjb41LiteSupported());
+        assertFalse(cap.isEjb41Supported());
+        assertFalse(cap.isEjb41LiteSupported());
 
         // WAR
         p = createProject(Profile.JAVA_EE_5, Type.WAR);
@@ -508,7 +508,7 @@ public class J2eeProjectCapabilitiesTest extends NbTestCase {
         assertFalse(cap.isEjb32LiteSupported());
         assertFalse(cap.isEjb40Supported());
         assertFalse(cap.isEjb40LiteSupported());
-        assertTrue(cap.isEjb41Supported());
+        assertFalse(cap.isEjb41Supported());
         assertTrue(cap.isEjb41LiteSupported());
         
     }

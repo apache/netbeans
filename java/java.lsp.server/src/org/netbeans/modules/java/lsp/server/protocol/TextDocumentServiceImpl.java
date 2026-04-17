@@ -2640,8 +2640,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             }
                         };
                         SemanticHighlighterImpl highlighter = new SemanticHighlighterImpl();
-                        highlighter.process(cc, doc);
                         cancel.registerCancel(highlighter::cancel);
+                        if (cancel.isCancelled()) {
+                            return ;
+                        }
+                        highlighter.process(cc, doc);
                     }, true);
                 } catch (IOException ex) {
                     //TODO: include stack trace:

@@ -77,8 +77,11 @@ public class EjbJarImpl extends BaseEEModuleImpl implements EjbJarImplementation
         }
         String ver = getModuleVersion();
 
+        if (EjbJar.VERSION_4_1.equals(ver)) {
+            return Profile.JAKARTA_EE_12_FULL;
+        }
         if (EjbJar.VERSION_4_0.equals(ver)) {
-            return Profile.JAKARTA_EE_9_FULL;
+            return Profile.JAKARTA_EE_9_1_FULL;
         }
         if (EjbJar.VERSION_3_2.equals(ver)) {
             return Profile.JAVA_EE_7_FULL;
@@ -92,7 +95,7 @@ public class EjbJarImpl extends BaseEEModuleImpl implements EjbJarImplementation
         if (EjbJar.VERSION_2_1.equals(ver)) {
             return Profile.J2EE_14;
         }
-        return Profile.JAVA_EE_8_FULL;
+        return Profile.JAKARTA_EE_8_FULL;
     }
     
     @Override

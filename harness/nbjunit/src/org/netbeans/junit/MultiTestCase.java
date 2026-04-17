@@ -44,7 +44,7 @@ public abstract class MultiTestCase extends NbTestCase{
     
     private Throwable err = null;
     /**
-     * Internal method to set an error occured while preparation for executing the testcase.
+     * Internal method to set an error occurred while preparation for executing the testcase.
      */
     void setError(Throwable e){
         err = e;

@@ -48,7 +48,7 @@ public abstract class DiffProvider extends Object {
      * @param r1 the first source
      * @param r2 the second source to be compared with the first one.
      * @return the list of differences found, instances of {@link Difference};
-     *         or <code>null</code> when some error occured.
+     *         or <code>null</code> when some error occurred.
      * @throws IOException when the reading from input streams fails.
      */
     public abstract Difference[] computeDiff(Reader r1, Reader r2) throws IOException;

@@ -27,6 +27,7 @@ import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
 
 public class PriorityQueueRun {
@@ -195,5 +196,17 @@ public class PriorityQueueRun {
         NORMAL,
         HIGH,
         HIGHER;
+    }
+
+    public void testsWaitQueueEmpty() {
+        synchronized (this) {
+            while (priority2Tasks.values().stream().anyMatch(l -> !l.isEmpty())) {
+                try {
+                    this.wait(10);
+                } catch (InterruptedException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
     }
 }

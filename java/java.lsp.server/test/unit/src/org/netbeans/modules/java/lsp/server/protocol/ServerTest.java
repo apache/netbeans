@@ -661,6 +661,7 @@ public class ServerTest extends NbTestCase {
         assertTrue(hook.didCloseCompleted.tryAcquire(400, TimeUnit.MILLISECONDS));
         Reference<StyledDocument> refDoc = new WeakReference<>(d3);
         d3 = null;
+        PriorityQueueRun.getInstance().testsWaitQueueEmpty();
         assertGC("Document should be collected", refDoc);
         assertNull(cake.getDocument());
 
@@ -5996,7 +5997,7 @@ public class ServerTest extends NbTestCase {
             @Override
             public void publishDiagnostics(PublishDiagnosticsParams params) {
                 synchronized (diags) {
-                    diags[0] = params.getDiagnostics();
+                    diags.add(params.getDiagnostics());
                     diags.notifyAll();
                 }
             }

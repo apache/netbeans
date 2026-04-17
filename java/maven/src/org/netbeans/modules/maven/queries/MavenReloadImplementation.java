@@ -216,7 +216,7 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
         "ERR_UnprimedInOfflineMode=Priming build for {0} is required, but offline operation was requested.",
         "# {0} - project name",
         "# {1} - parent gav",
-        "ERR_ParentPomMissing=Project {0} is missing its parent artifact ({1}) is missing and offline operation was requested"
+        "ERR_ParentPomMissing=Project {0} is missing its parent artifact ({1}) is missing."
     })
     @Override
     public CompletableFuture reload(Project project, StateRequest request, LoadContext context) {
@@ -254,20 +254,19 @@ public class MavenReloadImplementation implements ProjectReloadImplementation, P
                     future.complete(createStateData(p, null));
                     return;
                 }
-
-                // check that the project is consistent with known files:
-                Collection<FileObject> fos = findProjectFiles0(p);
-                boolean obsolete = false;
-                for (FileObject f : fos) {
-                    if (f.lastModified().getTime() > ts) {
-                        LOG.log(Level.FINE, "Maven Project {0}@{1} is obsolete because of {2}, file stamp: {3}", new Object[] { p, Integer.toHexString(System.identityHashCode(p)),  f, f.lastModified().getTime() });
-                        obsolete = true;
-                    }
+            }
+            // check that the project is consistent with known files, if not the reading results will not change -> do nothing.
+            Collection<FileObject> fos = findProjectFiles0(p);
+            boolean obsolete = false;
+            for (FileObject f : fos) {
+                if (f.lastModified().getTime() > ts) {
+                    LOG.log(Level.FINE, "Maven Project {0}@{1} is obsolete because of {2}, file stamp: {3}", new Object[] { p, Integer.toHexString(System.identityHashCode(p)),  f, f.lastModified().getTime() });
+                    obsolete = true;
                 }
-                if (!obsolete) {
-                    future.complete(createStateData(p, null));
-                    return;
-                }
+            }
+            if (!obsolete) {
+                future.complete(createStateData(p, null));
+                return;
             }
         }
         loadMavenProject3(future);

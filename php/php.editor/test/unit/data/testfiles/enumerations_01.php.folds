@@ -46,16 +46,16 @@
 |     case C = "C";
 |     case D = "D";
 |     case E = "E" . "E";
-|     case F = <<<F
++     case F = <<<F
 |     Test
 |     Test
 |     Test
-|     F;
-|     case G = <<<'G'
+-     F;
++     case G = <<<'G'
 |     Test
 |     Test
 |     Test
-|     G;
+-     G;
 - }
   
 + enum Impl implements Iface1, Iface2 {

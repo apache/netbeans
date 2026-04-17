@@ -20,7 +20,7 @@ package org.netbeans.swing.laf.flatlaf.icons;
 
 public class NBFlatTreeOpenIcon extends NBFlatAdapterIcon {
     public NBFlatTreeOpenIcon() {
-        // Will load the SVG version if available.
+        // Will load the SVG version if an SVG loader is available.
         super("org/netbeans/swing/plaf/resources/hidpi-folder-open.png");
     }
 }

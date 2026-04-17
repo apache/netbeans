@@ -23,14 +23,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,7 +32,6 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
-import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
@@ -47,7 +39,6 @@ import javax.swing.text.Element;
 import javax.swing.text.StyledDocument;
 import org.netbeans.api.debugger.DebuggerEngine;
 import org.netbeans.api.debugger.DebuggerManager;
-import org.netbeans.api.debugger.Watch;
 import org.netbeans.api.debugger.jpda.CallStackFrame;
 import org.netbeans.api.debugger.jpda.Field;
 import org.netbeans.api.debugger.jpda.InvalidExpressionException;
@@ -65,7 +56,6 @@ import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.TreeUtilities;
 import org.netbeans.editor.EditorUI;
-import org.netbeans.editor.PopupManager;
 import org.netbeans.editor.Utilities;
 import org.netbeans.editor.ext.ToolTipSupport;
 import org.netbeans.modules.parsing.api.ParserManager;
@@ -76,27 +66,21 @@ import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.spi.debugger.jpda.EditorContext.Operation;
 import org.netbeans.spi.debugger.ui.EditorContextDispatcher;
-import org.netbeans.spi.debugger.ui.EditorPin;
-import org.netbeans.spi.debugger.ui.PinWatchUISupport;
 import org.netbeans.spi.debugger.ui.ToolTipUI;
 import org.netbeans.spi.debugger.ui.ViewFactory;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.text.Annotation;
 import org.openide.text.DataEditorSupport;
 import org.openide.text.Line;
 import org.openide.text.Line.Part;
 import org.openide.text.NbDocument;
-import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakListeners;
-
 
 public class ToolTipAnnotation extends Annotation implements Runnable {
 
-    private static final Set<String> JAVA_KEYWORDS = new HashSet<String>(Arrays.asList(new String[] {
+    private static final Set<String> JAVA_KEYWORDS = Set.of(
         "abstract",     "continue",     "for",          "new",  	"switch",
         "assert", 	"default", 	"goto", 	"package", 	"synchronized",
         "boolean", 	"do",           "if",           "private", 	/*"this",*/
@@ -106,37 +90,10 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
         "catch",        "extends", 	"int",          "short", 	"try",
         "char",         "final", 	"interface", 	"static", 	"void",
         /*"class",*/    "finally", 	"long", 	"strictfp", 	"volatile",
-        "const",        "float", 	"native", 	"super", 	"while",
-    }));
+        "const",        "float", 	"native", 	"super", 	"while"
+    );
 
-    private static final int MAX_STRING_LENGTH;
-
-    static {
-        int maxStringLength = 100000;
-        String javaV = System.getProperty("java.version");
-        if (javaV.startsWith("1.8.0")) {
-            String update = "";
-            for (int i = "1.8.0_".length(); i < javaV.length(); i++) {
-                char c = javaV.charAt(i);
-                if (Character.isDigit(c)) {
-                    update += c;
-                } else {
-                    break;
-                }
-            }
-            int updateNo = 0;
-            if (!update.isEmpty()) {
-                try {
-                    updateNo = Integer.parseInt(update);
-                } catch (NumberFormatException nfex) {}
-            }
-            if (updateNo < 60) {
-                // Memory problem on JDK 8, fixed in update 60 (https://bugs.openjdk.java.net/browse/JDK-8072775):
-                maxStringLength = 1000;
-            }
-        }
-        MAX_STRING_LENGTH = maxStringLength;
-    }
+    private static final int MAX_STRING_LENGTH = 100000;
 
     private Part lp;
     private EditorCookie ec;
@@ -266,8 +223,8 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
                 return ; // Something went wrong...
             }
             String type = v.getType ();
-            if (v instanceof ObjectVariable) {
-                tooltipVariable = (ObjectVariable) v;
+            if (v instanceof ObjectVariable objectVariable) {
+                tooltipVariable = objectVariable;
                 try {
                     Object jdiValue = v.getClass().getMethod("getJDIValue").invoke(v);
                     if (jdiValue == null) {
@@ -275,27 +232,27 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
                     }
                 } catch (Exception ex) {}
                 if (tooltipVariable != null) {
-                    v = getFormattedValue(d, (ObjectVariable) v);
+                    v = getFormattedValue(d, objectVariable);
                 }
             }
-            if (v instanceof ObjectVariable) {
+            if (v instanceof ObjectVariable objectVariable) {
                 try {
-                    String toString = ((ObjectVariable) v).getToStringValue();
+                    String toString = objectVariable.getToStringValue();
                     toolTipText = expression + " = " +
-                        (type.length () == 0 ?
+                        (type.isEmpty() ?
                             "" :
                             "(" + type + ") ") +
                         toString;
                 } catch (InvalidExpressionException ex) {
                     toolTipText = expression + " = " +
-                        (type.length () == 0 ?
+                        (type.isEmpty() ?
                             "" :
                             "(" + type + ") ") +
                         v.getValue ();
                 }
             } else {
                 toolTipText = expression + " = " +
-                    (type.length () == 0 ?
+                    (type.isEmpty() ?
                         "" :
                         "(" + type + ") ") +
                     v.getValue ();
@@ -462,7 +419,7 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
         final String[] className = new String[]{""};
         Future<Void> parsingTask;
         try {
-            parsingTask = ParserManager.parseWhenScanFinished(Collections.singleton(Source.create(doc)), new UserTask() {
+            parsingTask = ParserManager.parseWhenScanFinished(List.of(Source.create(doc)), new UserTask() {
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
                     Result res = resultIterator.getParserResult(offset);
@@ -530,7 +487,7 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
                             isValid[0] = false;
                             return;
                         }
-                        if (TreeUtilities.CLASS_TREE_KINDS.contains(kind) && className[0].length() == 0) {
+                        if (TreeUtilities.CLASS_TREE_KINDS.contains(kind) && className[0].isEmpty()) {
                             TypeElement typeElement = (TypeElement)controller.getTrees().getElement(path);
                             className[0] = ElementUtilities.getBinaryName(typeElement);
                         }
@@ -547,8 +504,8 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
                                 if (ElementKind.CLASS.equals(tk) ||
                                     ElementKind.ENUM.equals(tk) ||
                                     ElementKind.INTERFACE.equals(tk)) {*/
-                                if (typeElement instanceof TypeElement) {
-                                    String binaryClassName = ElementUtilities.getBinaryName((TypeElement) typeElement);
+                                if (typeElement instanceof TypeElement typeElement1) {
+                                    String binaryClassName = ElementUtilities.getBinaryName(typeElement1);
                                     fieldOfPtr[0] = binaryClassName;
                                     /*
                                     String currentClassName = currentFrame.getClassName();
@@ -582,7 +539,7 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
             return false;
         }
         if (className[0].length() > 0) {
-            Set<String> superTypeNames = new HashSet<String>();
+            Set<String> superTypeNames = new HashSet<>();
             This thisVar = currentFrame.getThisVariable();
             if (thisVar != null) {
                 String fqn = thisVar.getType();
@@ -676,7 +633,7 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
         final String[] result = new String[1];
         result[0] = null;
         try {
-            ParserManager.parse(Collections.singleton(source), new UserTask() {
+            ParserManager.parse(List.of(source), new UserTask() {
                 @Override
                 public void run(ResultIterator resultIterator) throws Exception {
                     Result res = resultIterator.getParserResult(offset);

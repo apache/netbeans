@@ -116,7 +116,7 @@ implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor>, Cha
                 if (c instanceof JComponent) { // assume Swing components
                     JComponent jc = (JComponent) c;
                     // Sets step number of a component
-                    jc.putClientProperty ("WizardPanel_contentSelectedIndex", new Integer (i));
+                    jc.putClientProperty ("WizardPanel_contentSelectedIndex", i);
                     // Sets steps names for a panel
                     jc.putClientProperty ("WizardPanel_contentData", steps);
                 }
@@ -148,7 +148,7 @@ implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor>, Cha
                 if (c instanceof JComponent) { // assume Swing components
                     JComponent jc = (JComponent) c;
                     // Sets step number of a component
-                    jc.putClientProperty ("WizardPanel_contentSelectedIndex", new Integer (i));
+                    jc.putClientProperty ("WizardPanel_contentSelectedIndex", i);
                     // Sets steps names for a panel
                     jc.putClientProperty ("WizardPanel_contentData", steps);
                 }

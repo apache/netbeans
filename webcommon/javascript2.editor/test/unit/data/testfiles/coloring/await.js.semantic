@@ -1,1 +1,1 @@
-for |>CUSTOM2:await<| (const i of num()) {}
+for |>CUSTOM2:await<| (|>CUSTOM2:const<| i of num()) {}

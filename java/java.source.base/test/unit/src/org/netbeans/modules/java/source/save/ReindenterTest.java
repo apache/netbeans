@@ -2066,6 +2066,43 @@ public class ReindenterTest extends NbTestCase {
         }
     }
 
+    public void testCompactSourceFilesNewLineIndent() throws Exception {
+        performNewLineIndentationTest(
+                """
+                void main() {|
+                """,
+                """
+                void main() {
+                \s\s\s\s
+                """);
+    }
+
+    public void testCompactSourceFilesReindent() throws Exception {
+        performSpanIndentationTest(
+                """
+                |void main() {
+                switch (0) {
+                case 0 -> {
+                if (true) {
+                System.err.println(0);
+                }
+                }
+                }
+                }|
+                """,
+                """
+                void main() {
+                    switch (0) {
+                        case 0 -> {
+                            if (true) {
+                                System.err.println(0);
+                            }
+                        }
+                    }
+                }
+                """);
+    }
+
     private void performNewLineIndentationTest(String code, String golden) throws Exception {
         int pos = code.indexOf('|');
 

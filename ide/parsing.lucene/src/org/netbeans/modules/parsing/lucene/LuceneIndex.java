@@ -28,15 +28,16 @@ import java.io.InterruptedIOException;
 import java.lang.ref.SoftReference;
 import java.net.URI;
 import java.nio.channels.ClosedByInterruptException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -50,24 +51,26 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.index.*;
 import org.apache.lucene.search.*;
+import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.IOContext;
+import org.apache.lucene.store.IndexInput;
+import org.apache.lucene.store.IndexOutput;
 import org.apache.lucene.store.LockFactory;
 import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.store.NIOFSDirectory;
-import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.store.SimpleFSDirectory;
-import org.apache.lucene.util.Version;
+import org.apache.lucene.util.BytesRef;
+import org.apache.lucene.util.BytesRefHash;
+import org.apache.lucene.util.automaton.CompiledAutomaton;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.parsing.lucene.support.Convertor;
 import org.netbeans.modules.parsing.lucene.support.Index;
 import org.netbeans.modules.parsing.lucene.support.IndexReaderInjection;
-import org.netbeans.modules.parsing.lucene.support.StoppableConvertor;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Exceptions;
 import org.openide.util.Pair;
@@ -111,11 +114,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
 
     static boolean awaitPendingEvictors() throws InterruptedException {
         try {
-            return DirCache.EVICTOR_RP.submit(new Runnable() {
-                @Override
-                public void run() {
-                }
-            }, Boolean.TRUE).get();
+            return DirCache.EVICTOR_RP.submit(() -> {}, Boolean.TRUE).get();
         } catch (ExecutionException e) {
             return false;
         }
@@ -135,7 +134,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
     public <T> void query (
             final @NonNull Collection<? super T> result,
             final @NonNull Convertor<? super Document, T> convertor,
-            @NullAllowed FieldSelector selector,
+            @NullAllowed Set<String> selector,
             final @NullAllowed AtomicBoolean cancel,
             final @NonNull Query... queries
             ) throws IOException, InterruptedException {
@@ -143,9 +142,6 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
         Parameters.notNull("convertor", convertor); //NOI18N
         Parameters.notNull("result", result);       //NOI18N   
         
-        if (selector == null) {
-            selector = AllFieldsSelector.INSTANCE;
-        }
         IndexReader in = null;
         try {
             in = dirCache.acquireReader();
@@ -153,68 +149,77 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                 LOGGER.log(Level.FINE, "{0} is invalid!", this);
                 return;
             }
+            IndexSearcher searcher = new IndexSearcher(in);
             final BitSet bs = new BitSet(in.maxDoc());
             final Collector c = new BitSetCollector(bs);
-            final IndexSearcher searcher = new IndexSearcher(in);
-            try {
-                for (Query q : queries) {
-                    if (cancel != null && cancel.get()) {
-                        throw new InterruptedException ();
-                    }
-                    searcher.search(q, c);
+            for (Query q : queries) {
+                if (cancel != null && cancel.get()) {
+                    throw new InterruptedException ();
                 }
-            } finally {
-                searcher.close();
+                searcher.search(q, c);
             }
-            if (convertor instanceof IndexReaderInjection) {
-                ((IndexReaderInjection)convertor).setIndexReader(in);
-            }
+            changeIndexReader(convertor, in);
             try {
                 for (int docNum = bs.nextSetBit(0); docNum >= 0; docNum = bs.nextSetBit(docNum+1)) {
                     if (cancel != null && cancel.get()) {
                         throw new InterruptedException ();
                     }
-                    final Document doc = in.document(docNum, selector);
+                    final Document doc = in.storedFields().document(docNum, selector);
                     final T value = convertor.convert(doc);
                     if (value != null) {
                         result.add (value);
                     }
                 }
             } finally {
-                if (convertor instanceof IndexReaderInjection) {
-                    ((IndexReaderInjection)convertor).setIndexReader(null);
-                }
+                changeIndexReader(convertor, null);
             }
         } finally {
             dirCache.releaseReader(in);
         }
     }
-    
+
+    private static void changeIndexReader(Object convertor, IndexReader in) {
+        if (convertor instanceof IndexReaderInjection iri) {
+            iri.setIndexReader(in);
+        }
+    }
+
     @Override
     public <T> void queryTerms(
             final @NonNull Collection<? super T> result,
-            final @NullAllowed Term seekTo,
-            final @NonNull StoppableConvertor<Term,T> filter,
+            final @NonNull String field,
+            final @NullAllowed String seekTo,
+            final @NonNull Convertor<BytesRef,T> filter,
             final @NullAllowed AtomicBoolean cancel) throws IOException, InterruptedException {
-        queryTermsImpl(result, seekTo, Convertors.newTermEnumToTermConvertor(filter), cancel);
+        queryTermsImpl(result, field, seekTo, Convertors.newTermEnumToTermConvertor(filter), cancel);
     }
     
     @Override
     public <T> void queryTermFrequencies(
             final @NonNull Collection<? super T> result,
-            final @NullAllowed Term seekTo,
-            final @NonNull StoppableConvertor<Index.WithTermFrequencies.TermFreq,T> filter,
+            final @NonNull String field,
+            final @NullAllowed String seekTo,
+            final @NonNull Convertor<Index.WithTermFrequencies.TermFreq,T> filter,
             final @NullAllowed AtomicBoolean cancel) throws IOException, InterruptedException {
-        queryTermsImpl(result, seekTo, Convertors.newTermEnumToFreqConvertor(filter), cancel);
+        queryTermsImpl(result, field, seekTo, Convertors.newTermEnumToFreqConvertor(filter), cancel);
     }
     
     //where
     private <T> void queryTermsImpl(
             final @NonNull Collection<? super T> result,
-            final @NullAllowed Term seekTo,
-            final @NonNull StoppableConvertor<TermEnum,T> adapter,
+            final @NonNull String field,
+            @NullAllowed String startValue,
+            final @NonNull Convertor<TermsEnum,T> adapter,
             final @NullAllowed AtomicBoolean cancel) throws IOException, InterruptedException {
-        
+
+        BytesRef startBytesRef;
+
+        if (startValue == null) {
+            startBytesRef = new BytesRef("");
+        } else {
+            startBytesRef = new BytesRef(startValue);
+        }
+
         IndexReader in = null;
         try {
             in = dirCache.acquireReader();
@@ -223,30 +228,24 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                 return;
             }
 
-            final TermEnum terms = seekTo == null ? in.terms () : in.terms (seekTo);        
+            changeIndexReader(adapter, in);
             try {
-                if (adapter instanceof IndexReaderInjection) {
-                    ((IndexReaderInjection)adapter).setIndexReader(in);
-                }
-                try {
-                    do {
-                        if (cancel != null && cancel.get()) {
-                            throw new InterruptedException ();
-                        }
-                        final T vote = adapter.convert(terms);
-                        if (vote != null) {
-                            result.add(vote);
-                        }
-                    } while (terms.next());
-                } catch (StoppableConvertor.Stop stop) {
-                    //Stop iteration of TermEnum finally {
-                } finally {
-                    if (adapter instanceof IndexReaderInjection) {
-                        ((IndexReaderInjection)adapter).setIndexReader(null);
+                for(LeafReaderContext lrc: in.leaves()) {
+                    TermsEnum te = lrc.reader().terms(field).iterator();
+                    if (te.seekCeil(startBytesRef) != TermsEnum.SeekStatus.END) {
+                        do {
+                            if (cancel != null && cancel.get()) {
+                                throw new InterruptedException();
+                            }
+                            final T vote = adapter.convert(te);
+                            if (vote != null) {
+                                result.add(vote);
+                            }
+                        } while (te.next() != null);
                     }
                 }
             } finally {
-                terms.close();
+                changeIndexReader(adapter, null);
             }
         } finally {
             dirCache.releaseReader(in);
@@ -257,8 +256,8 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
     public <S, T> void queryDocTerms(
             final @NonNull Map<? super T, Set<S>> result,
             final @NonNull Convertor<? super Document, T> convertor,
-            final @NonNull Convertor<? super Term, S> termConvertor,
-            @NullAllowed FieldSelector selector,
+            final @NonNull Convertor<? super BytesRef, S> termConvertor,
+            @NullAllowed Set<String> selector,
             final @NullAllowed AtomicBoolean cancel,
             final @NonNull Query... queries) throws IOException, InterruptedException {
         Parameters.notNull("queries", queries);             //NOI18N
@@ -266,9 +265,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
         Parameters.notNull("convertor", convertor);         //NOI18N
         Parameters.notNull("termConvertor", termConvertor); //NOI18N
         Parameters.notNull("result", result);               //NOI18N
-        if (selector == null) {
-            selector = AllFieldsSelector.INSTANCE;
-        }
+
         IndexReader in = null;
         try {
             in = dirCache.acquireReader();
@@ -276,69 +273,99 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                 LOGGER.log(Level.FINE, "{0} is invalid!", this);
                 return;
             }
-            final BitSet bs = new BitSet(in.maxDoc());
-            final Collector c = new BitSetCollector(bs);
-            final IndexSearcher searcher = new IndexSearcher(in);
-            final TermCollector termCollector = new TermCollector(c);
-            try {
+            for (LeafReaderContext lrc : in.leaves()) {
+                final LeafReader lr = lrc.reader();
+                Map<Integer,Set<BytesRef>> docTermMap = new HashMap<>();
                 for (Query q : queries) {
                     if (cancel != null && cancel.get()) {
-                        throw new InterruptedException ();
+                        throw new InterruptedException();
                     }
-                    if (q instanceof TermCollector.TermCollecting) {
-                        ((TermCollector.TermCollecting)q).attach(termCollector);
-                    } else {
-                        throw new IllegalArgumentException (
-                                String.format("Query: %s does not implement TermCollecting",    //NOI18N
-                                q.getClass().getName()));
-                    }
-                    searcher.search(q, termCollector);
-                }
-            } finally {
-                searcher.close();
-            }
-        
-            boolean logged = false;
-            if (convertor instanceof IndexReaderInjection) {
-                ((IndexReaderInjection)convertor).setIndexReader(in);
-            }
-            try {
-                if (termConvertor instanceof IndexReaderInjection) {
-                    ((IndexReaderInjection)termConvertor).setIndexReader(in);
-                }
-                try {
-                    for (int docNum = bs.nextSetBit(0); docNum >= 0; docNum = bs.nextSetBit(docNum+1)) {
-                        if (cancel != null && cancel.get()) {
-                            throw new InterruptedException ();
-                        }
-                        final Document doc = in.document(docNum, selector);
-                        final T value = convertor.convert(doc);
-                        if (value != null) {
-                            final Set<Term> terms = termCollector.get(docNum);
-                            if (terms != null) {
-                                result.put (value, convertTerms(termConvertor, terms));
-                            } else {
-                                if (!logged) {
-                                    LOGGER.log(Level.WARNING, "Index info [maxDoc: {0} numDoc: {1} docs: {2}]",
-                                            new Object[] {
-                                                in.maxDoc(),
-                                                in.numDocs(),
-                                                termCollector.docs()
-                                            });
-                                    logged = true;
+                    if (q instanceof TermQuery) {
+                        Terms terms = lr.terms(((TermQuery) q).getTerm().field());
+                        if (terms != null) {
+                            TermsEnum te = terms.iterator();
+                            if (te.seekExact(((TermQuery) q).getTerm().bytes())) {
+                                PostingsEnum pe = te.postings(null);
+                                for (int doc = pe.nextDoc(); doc != DocIdSetIterator.NO_MORE_DOCS; doc = pe.nextDoc()) {
+                                    docTermMap.computeIfAbsent(doc, s -> new HashSet<>())
+                                            .add(((TermQuery) q).getTerm().bytes());
                                 }
-                                LOGGER.log(Level.WARNING, "No terms found for doc: {0}", docNum);
                             }
                         }
-                    }
-                } finally {
-                    if (termConvertor instanceof IndexReaderInjection) {
-                        ((IndexReaderInjection)termConvertor).setIndexReader(null);
+                    } else if (q instanceof PrefixQuery) {
+                        Terms terms = lr.terms(((PrefixQuery) q).getField());
+                        if (terms != null) {
+                            TermsEnum te = new CompiledAutomaton(((PrefixQuery) q).getAutomaton()).getTermsEnum(terms);
+                            for (BytesRef termValue = te.next(); termValue != null; termValue = te.next()) {
+                                PostingsEnum pe = te.postings(null);
+                                BytesRef localRef = null;
+                                for (int doc = pe.nextDoc(); doc != DocIdSetIterator.NO_MORE_DOCS; doc = pe.nextDoc()) {
+                                    // Defensive copy as TermEnumeration might reuse the returned BytesRef
+                                    if(localRef == null) {
+                                        localRef = BytesRef.deepCopyOf(termValue);
+                                    }
+                                    docTermMap.computeIfAbsent(doc, s -> new HashSet<>())
+                                            .add(localRef);
+                                }
+                            }
+                        }
+                    } else if (q instanceof RegexpFilter) {
+                        Terms terms = lr.terms(((RegexpFilter) q).getField());
+                        if (terms != null) {
+                            TermsEnum te = ((RegexpFilter) q).getTermsEnum(terms);
+                            for (BytesRef termValue = te.next(); termValue != null; termValue = te.next()) {
+                                PostingsEnum pe = te.postings(null);
+                                BytesRef localRef = null;
+                                for (int doc = pe.nextDoc(); doc != DocIdSetIterator.NO_MORE_DOCS; doc = pe.nextDoc()) {
+                                    // Defensive copy as TermEnumeration might reuse the returned BytesRef
+                                    if(localRef == null) {
+                                        localRef = BytesRef.deepCopyOf(termValue);
+                                    }
+                                    docTermMap.computeIfAbsent(doc, s -> new HashSet<>())
+                                            .add(localRef);
+                                }
+                            }
+                        }
+                    } else {
+                        throw new IllegalArgumentException(
+                                "Query: %s does not implement TermCollecting".formatted(q.getClass().getName())); //NOI18N
                     }
                 }
-            } finally {
-                if (convertor instanceof IndexReaderInjection) {
-                    ((IndexReaderInjection)convertor).setIndexReader(null);
+
+                boolean logged = false;
+                changeIndexReader(convertor, in);
+                try {
+                    changeIndexReader(termConvertor, in);
+                    try {
+                        for (Entry<Integer,Set<BytesRef>> docNum: docTermMap.entrySet()) {
+                            if (cancel != null && cancel.get()) {
+                                throw new InterruptedException();
+                            }
+                            final Document doc = lr.storedFields().document(docNum.getKey(), selector);
+                            final T value = convertor.convert(doc);
+                            if (value != null) {
+                                final Set<BytesRef> terms = docNum.getValue();
+                                if (terms != null) {
+                                    result.put(value, convertTerms(termConvertor, terms));
+                                } else {
+                                    if (!logged) {
+                                        LOGGER.log(Level.WARNING, "Index info [maxDoc: {0} numDoc: {1} docs: {2}]",
+                                                new Object[] {
+                                                    in.maxDoc(),
+                                                    in.numDocs(),
+                                                    docNum.getValue()
+                                                });
+                                        logged = true;
+                                    }
+                                    LOGGER.log(Level.WARNING, "No terms found for doc: {0}", docNum);
+                                }
+                            }
+                        }
+                    } finally {
+                        changeIndexReader(termConvertor, null);
+                    }
+                } finally {
+                    changeIndexReader(convertor, null);
                 }
             }
         } finally {
@@ -346,9 +373,9 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
         }
     }
     
-    private static <T> Set<T> convertTerms(final Convertor<? super Term, T> convertor, final Set<? extends Term> terms) {
+    private static <T> Set<T> convertTerms(final Convertor<? super BytesRef, T> convertor, final Set<? extends BytesRef> terms) {
         final Set<T> result = new HashSet<T>(terms.size());
-        for (Term term : terms) {
+        for (BytesRef term : terms) {
             result.add(convertor.convert(term));
         }
         return result;
@@ -412,37 +439,60 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                 for (S td : toDelete) {
                     out.deleteDocuments(queryConvertor.convert(td));
                 }
-            }            
+            }
             if (data.isEmpty()) {
                 return;
             }
             final LowMemoryWatcher lmListener = LowMemoryWatcher.getInstance();
             Directory memDir = null;
-            IndexWriter activeOut = null;
+            IndexWriter activeOut;
             if (lmListener.isLowMemory()) {
                 activeOut = out;
             } else {
-                memDir = new RAMDirectory ();
+                memDir = new ByteBuffersDirectory ();
                 activeOut = new IndexWriter (
                     memDir,
                     new IndexWriterConfig(
-                        Version.LUCENE_35,
                         dirCache.getAnalyzer()));
             }
             for (Iterator<T> it = fastRemoveIterable(data).iterator(); it.hasNext();) {
                 T entry = it.next();
                 it.remove();
                 final Document doc = docConvertor.convert(entry);
-                activeOut.addDocument(doc);
-                if (memDir != null && lmListener.isLowMemory()) {
-                    activeOut.close();
-                    out.addIndexes(memDir);
-                    memDir = new RAMDirectory ();
-                    activeOut = new IndexWriter (
-                        memDir,
-                        new IndexWriterConfig(
-                            Version.LUCENE_35,
-                            dirCache.getAnalyzer()));
+                try {
+                    activeOut.addDocument(doc);
+                    if (memDir != null && lmListener.isLowMemory()) {
+                        activeOut.close();
+                        out.addIndexes(memDir);
+                        memDir = new ByteBuffersDirectory ();
+                        activeOut = new IndexWriter (
+                            memDir,
+                            new IndexWriterConfig(
+                                dirCache.getAnalyzer()));
+                    }
+                } catch (IllegalArgumentException ex) {
+                    if(ex.getCause() instanceof BytesRefHash.MaxBytesLengthExceededException brh) {
+                        // Lucene limits terms to a maximum size of 32766 (lucene 9)
+                        // This codepath tries to fix this by removing potentially
+                        // removing field reaching the bounds of this
+                        Iterator<IndexableField> fieldIterator = doc.iterator();
+                        while(fieldIterator.hasNext()) {
+                            IndexableField indexableField = fieldIterator.next();
+                            if((indexableField.stringValue() != null && indexableField.stringValue().length() > 30_000) ||
+                                    (indexableField.binaryValue() != null && indexableField.binaryValue().length > 30_000)
+                                    ) {
+                                LOGGER.warning(() -> "Removed field from document for indexing: " + indexableField);
+                                fieldIterator.remove();
+                            }
+                        }
+                        try {
+                            activeOut.addDocument(doc);
+                        } catch (IllegalArgumentException ex2) {
+                            LOGGER.warning(() -> "Failed to store document " + doc.toString() + " to index");
+                        }
+                    } else {
+                        throw ex;
+                    }
                 }
             }
             data.clear();
@@ -534,7 +584,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                     @Override
                     public Iterator<T> iterator() {
                         return new Iterator<T>() {
-                            private final ListIterator<T> delegate = ((List)c).listIterator();
+                            private final ListIterator<T> delegate = ((List<T>)c).listIterator();
 
                             @Override
                             public boolean hasNext() {
@@ -595,7 +645,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
         private final StoreCloseSynchronizer storeCloseSynchronizer;
         private volatile FSDirectory fsDir;
         //@GuardedBy("this")
-        private RAMDirectory memDir;
+        private ByteBuffersDirectory memDir;
         private CleanReference ref;
         private IndexReader reader;
         private volatile boolean closed;
@@ -659,16 +709,13 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                         try {
                             fsDir.deleteFile(file);
                         } catch (IOException e) {
-                            //Some temporary files
-                            if (fsDir.fileExists(file)) {
-                                dirty = true;
-                            }
+                            dirty = true;
                         }
                     }
                 }
                 if (dirty) {
                     //Try to delete dirty files and log what's wrong
-                    final File cacheDir = fsDir.getDirectory();
+                    final File cacheDir = fsDir.getDirectory().toFile();
                     final File[] children = cacheDir.listFiles();
                     if (children != null) {
                         for (final File child : children) {
@@ -699,23 +746,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
             } finally {
                 LOGGER.log(Level.FINE, "TX writer cleared for {0}", this);
                 indexWriterRef.release();
-                try {
-                    if (!success) {
-                        if (IndexWriter.isLocked(fsDir)) {
-                            IndexWriter.unlock(fsDir);
-                        }
-                    }
-                } catch (IOException ioe) {
-                    LOGGER.log(
-                       Level.WARNING,
-                       "Cannot unlock index {0} while recovering, {1}.",  //NOI18N
-                       new Object[] {
-                           folder.getAbsolutePath(),
-                        ioe.getMessage()
-                       });
-                } finally {
-                    refreshReader();
-                }
+                refreshReader();
             }
         }
 
@@ -780,7 +811,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
         
         boolean exists() {
             try {
-                return IndexReader.indexExists(this.fsDir);
+                return DirectoryReader.indexExists((Directory) this.fsDir);
             } catch (IOException e) {
                 return false;
             } catch (RuntimeException e) {
@@ -812,9 +843,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                             try {
                                 getReader();
                                 res = Status.VALID;
-                            } catch (java.io.IOException e) {
-                                clear();
-                            } catch (RuntimeException e) {
+                            } catch (IOException | RuntimeException e) {
                                 clear();
                             }
                         } else {
@@ -873,19 +902,16 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
             rwLock.readLock().lock();
             try {
                 try {
-                    final IndexWriter writer = indexWriterRef.acquire(new Callable<IndexWriter>() {
-                        @NonNull
-                        public IndexWriter call() throws IOException {
-                            final IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_35, analyzer);
-                            //Linux: The posix::fsync(int) is very slow on Linux ext3,
-                            //minimize number of files sync is done on.
-                            //http://netbeans.org/bugzilla/show_bug.cgi?id=208224
-                            //All OS: The CFS is better for SSD disks.
-                            final TieredMergePolicy mergePolicy = new TieredMergePolicy();
-                            mergePolicy.setNoCFSRatio(1.0);
-                            iwc.setMergePolicy(mergePolicy);
-                            return new FlushIndexWriter (fsDir, iwc);
-                        }
+                    IndexWriter writer = indexWriterRef.acquire(() -> {
+                        IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
+                        //Linux: The posix::fsync(int) is very slow on Linux ext3,
+                        //minimize number of files sync is done on.
+                        //http://netbeans.org/bugzilla/show_bug.cgi?id=208224
+                        //All OS: The CFS is better for SSD disks.
+                        TieredMergePolicy mergePolicy = new TieredMergePolicy();
+                        mergePolicy.setNoCFSRatio(1.0);
+                        iwc.setMergePolicy(mergePolicy);
+                        return new FlushIndexWriter (fsDir, iwc);
                     });
                     ok = true;
                     return writer;
@@ -945,16 +971,22 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                 try {
                     Directory source;
                     if (cachePolicy.hasMemCache() && fitsIntoMem(fsDir)) {
-                        memDir = new RAMDirectory(fsDir);
+                        memDir = new ByteBuffersDirectory();
+                        for(String file: fsDir.listAll()) {
+                            try(IndexOutput io = memDir.createOutput(file, IOContext.READONCE);
+                                    IndexInput ii = fsDir.openInput(file, IOContext.READONCE)) {
+                                io.copyBytes(ii, ii.length());
+                            }
+                        }
                         if (cachePolicy == CachePolicy.DYNAMIC) {
-                            ref = new CleanReference (new RAMDirectory[] {this.memDir});
+                            ref = new CleanReference (this.memDir);
                         }
                         source = memDir;
                     } else {
                         source = fsDir;
                     }
                     assert source != null;
-                    this.reader = IndexReader.open(source,true);
+                    this.reader = DirectoryReader.open(source);
                 } catch (final FileNotFoundException | ClosedByInterruptException | InterruptedIOException e) {
                     //Either the index dir does not exist or the thread is interrupted
                     //pass - returns null
@@ -983,7 +1015,7 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                     try {
                         synchronized (this) {
                             if (reader != null) {
-                                final IndexReader newReader = IndexReader.openIfChanged(reader);
+                                IndexReader newReader = DirectoryReader.openIfChanged((DirectoryReader) reader);
                                 if (newReader != null) {
                                     reader.close();
                                     reader = newReader;
@@ -1055,18 +1087,15 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
                 final LockFactory lockFactory) throws IOException {
             assert indexFolder != null;
             assert lockFactory != null;
-            final FSDirectory directory;
             final String dirType = System.getProperty(PROP_DIR_TYPE);
-            if(DIR_TYPE_MMAP.equals(dirType)) {
-                directory = new MMapDirectory(indexFolder, lockFactory);
-            } else if (DIR_TYPE_NIO.equals(dirType)) {
-                directory = new NIOFSDirectory(indexFolder, lockFactory);
-            } else if (DIR_TYPE_IO.equals(dirType)) {
-                directory = new SimpleFSDirectory(indexFolder, lockFactory);
-            } else {
-                directory = FSDirectory.open(indexFolder, lockFactory);
+            if (dirType == null) {
+                return FSDirectory.open(indexFolder.toPath(), lockFactory);
             }
-            return directory;
+            return switch (dirType) {
+                case DIR_TYPE_MMAP -> new MMapDirectory(indexFolder.toPath(), lockFactory);
+                case DIR_TYPE_NIO -> new NIOFSDirectory(indexFolder.toPath(), lockFactory);
+                default -> FSDirectory.open(indexFolder.toPath(), lockFactory);
+            };
         }        
 
         private static boolean fitsIntoMem(@NonNull final Directory dir) {
@@ -1187,21 +1216,28 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
             }
         }
 
-        private final class CleanReference extends SoftReference<RAMDirectory[]> implements Runnable {
+        private final class CleanReference extends SoftReference<ByteBuffersDirectory> implements Runnable {
             
             @SuppressWarnings("VolatileArrayField")
-            private volatile Directory[] hardRef; //clearHRef may be called by more concurrently (read lock).
+            private volatile Directory hardRef; //clearHRef may be called by more concurrently (read lock).
             private final AtomicLong size = new AtomicLong();  //clearHRef may be called by more concurrently (read lock).
 
-            private CleanReference(final RAMDirectory[] dir) {
+            private CleanReference(final ByteBuffersDirectory dir) {
                 super (dir, BaseUtilities.activeReferenceQueue());
                 final IndexCacheFactory.RAMController c = IndexCacheFactory.getDefault().getRAMController();
                 final boolean doHardRef = !c.isFull();
                 if (doHardRef) {
-                    this.hardRef = dir;
-                    long _size = dir[0].sizeInBytes();
-                    size.set(_size);
-                    c.acquire(_size);
+                    try {
+                        this.hardRef = dir;
+                        long _size = 0;
+                        for(String file: dir.listAll()) {
+                            _size += dir.fileLength(file);
+                        }
+                        size.set(_size);
+                        c.acquire(_size);
+                    } catch (IOException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
                 }
                 LOGGER.log(Level.FINEST, "Caching index: {0} cache policy: {1}",    //NOI18N
                 new Object[]{
@@ -1255,13 +1291,19 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
          */
         void callFlush(boolean triggerMerges, boolean flushDeletes) throws IOException {
             // flushStores ignored in Lucene 3.5
-            super.flush(triggerMerges, true, flushDeletes);
+            super.flush();
+            if(flushDeletes) {
+                super.forceMergeDeletes(true);
+            }
+            if(triggerMerges) {
+                super.maybeMerge();
+            }
         }
     }
 
     private static final class StoreCloseSynchronizer {
 
-        private ThreadLocal<Boolean> isWriterThread = new ThreadLocal<Boolean>(){
+        private final ThreadLocal<Boolean> isWriterThread = new ThreadLocal<>(){
             @Override
             protected Boolean initialValue() {
                 return Boolean.FALSE;
@@ -1364,11 +1406,6 @@ public class LuceneIndex implements Index.Transactional, Index.WithTermFrequenci
         @Override
         public boolean isFile() {
             return !isDirectory();
-        }
-
-        @Override
-        public Path toPath() {
-            throw IPE;
         }
     }
 }

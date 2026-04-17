@@ -30,7 +30,6 @@
 <property name="javadoc.docs.org-openide-util" value="${javadoc.web.root}/org-openide-util"/>
 <property name="javadoc.docs.org-netbeans-modules-nbjunit" value="${javadoc.web.root}/org-netbeans-modules-nbjunit"/>
 <property name="javadoc.docs.org-openide-actions" value="${javadoc.web.root}/org-openide-actions"/>
-<property name="javadoc.docs.org-openide-options" value="${javadoc.web.root}/org-openide-options"/>
 <property name="javadoc.docs.org-openide-compat" value="${javadoc.web.root}/org-openide-compat"/>
 <property name="javadoc.docs.org-openide-awt" value="${javadoc.web.root}/org-openide-awt"/>
 <property name="javadoc.docs.org-openide-dialogs" value="${javadoc.web.root}/org-openide-dialogs"/>

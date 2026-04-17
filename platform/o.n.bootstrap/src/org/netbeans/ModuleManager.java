@@ -29,7 +29,6 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -744,7 +743,7 @@ public final class ModuleManager extends Modules {
             ProxyClassLoader priviledged = null;
             NetigsoLoader osgi = null;
             if (!name.startsWith("java.")) { // NOI18N
-                Class<?>[] stack = TopSecurityManager.getStack();
+                List<Class<?>> stack = Util.getStack();
                 for (Class<?> c: stack) {
                     ClassLoader l = c.getClassLoader();
                     if (l == this) {
@@ -1272,10 +1271,10 @@ public final class ModuleManager extends Modules {
      * from other objects, that can't be compatibly passed 'willEnable' info.
      */
     static class EnableContext {
-        final List<Module> willEnable;
+        final Set<Module> willEnable;
 
         public EnableContext(List<Module> willEnable) {
-            this.willEnable = willEnable;
+            this.willEnable = new HashSet<>(willEnable);
         }
     }
     
@@ -2407,7 +2406,7 @@ public final class ModuleManager extends Modules {
             Util.err.warning("Cyclic module dependencies, will not shut down cleanly: " + deps); // NOI18N
             return new TaskFuture(true, Task.EMPTY);
         }
-        if (!TopSecurityManager.officialExit && !installer.closing(sortedModules)) {
+        if (!NbExit.isExiting() && !installer.closing(sortedModules)) {
             return new TaskFuture(false, Task.EMPTY);
         }
         if (midHook != null) {
@@ -2546,9 +2545,9 @@ public final class ModuleManager extends Modules {
                 os.writeUTF(m.getCodeNameBase());
                 
                 ByteArrayOutputStream data = new ByteArrayOutputStream();
-                ObjectOutputStream dos = new ObjectOutputStream(data);
-                m.writeData(dos);
-                dos.close();
+                try (DataOutputStream dos = new DataOutputStream(data)) {
+                    m.writeData(dos);
+                }
                 
                 byte[] arr = data.toByteArray();
                 os.writeInt(arr.length);

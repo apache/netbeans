@@ -200,6 +200,10 @@ public final class BugtrackingManager implements LookupListener {
         return LOCAL_CONNECTOR_ID.equals(connectorID);
     }
 
+    public boolean hasRegisteredConnectors() {
+        return getConnectors().length > 0;
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         support.addPropertyChangeListener(listener);
     }

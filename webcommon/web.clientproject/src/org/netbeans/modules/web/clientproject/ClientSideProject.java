@@ -597,7 +597,7 @@ public class ClientSideProject implements Project {
 
         @Override
         public Icon getIcon() {
-            return new ImageIcon(ImageUtilities.loadImage(ClientSideProject.HTML5_PROJECT_ICON));
+            return ImageUtilities.loadIcon(ClientSideProject.HTML5_PROJECT_ICON);
         }
 
         @Override

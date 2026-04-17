@@ -1,0 +1,18 @@
+Code completion result for source line:
+public private(set) readonly final |
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      AsymmetricVisibility            [PUBLIC]   testAsymmetricVisibilityClassTyping07.php
+------------------------------------
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    false                                      null
+KEYWORD    float                                      null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    mixed                                      null
+KEYWORD    null                                       null
+KEYWORD    object                                     null
+KEYWORD    parent                                     null
+KEYWORD    self                                       null
+KEYWORD    string                                     null
+KEYWORD    true                                       null

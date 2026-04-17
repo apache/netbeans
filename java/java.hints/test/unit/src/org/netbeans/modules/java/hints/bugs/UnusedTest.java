@@ -85,4 +85,124 @@ public class UnusedTest extends NbTestCase {
                 .run(Unused.class)
                 .assertWarnings();
     }
+
+    public void testNoFixForTopLevelPackagePrivateClass() throws Exception {
+        HintTest.create()
+                .input(
+                    """
+                    package test;
+                    class Test {
+                    }
+                    """)
+                .run(Unused.class)
+                .assertWarnings();
+    }
+
+    public void testNoFixForTopLevelPackagePrivateEnum() throws Exception {
+        HintTest.create()
+                .input(
+                    """
+                    package test;
+                    enum Test {
+                    }
+                    """)
+                .run(Unused.class)
+                .assertWarnings();
+    }
+
+    public void testNoFixForTopLevelPackagePrivateInterface() throws Exception {
+        HintTest.create()
+                .input(
+                    """
+                    package test;
+                    interface Test {
+                    }
+                    """)
+                .run(Unused.class)
+                .assertWarnings();
+    }
+
+    public void testNoFixForTopLevelPackagePrivateRecord() throws Exception {
+        HintTest.create()
+                .sourceLevel(17)
+                .input(
+                    """
+                    package test;
+                    record Test() {
+                    }
+                    """)
+                .run(Unused.class)
+                .assertWarnings();
+    }
+
+    public void testUnusedForEach() throws Exception {
+        HintTest.create()
+                .input("""
+                       package test;
+                       public class Test {
+                           public void test(String[] args) {
+                               for (String a : args) {}
+                           }
+                       }
+                       """)
+                .run(Unused.class)
+                .assertWarnings("3:20-3:21:verifier:" + Bundle.ERR_NotRead("a"))
+                .findWarning("3:20-3:21:verifier:" + Bundle.ERR_NotRead("a"))
+                .assertFixes();
+    }
+
+    public void testToUndescore1() throws Exception {
+        HintTest.create()
+                .sourceLevel("22")
+                .input("""
+                       package test;
+                       public class Test {
+                           public void test(String[] args) {
+                               String u = "";
+                           }
+                       }
+                       """)
+                .run(Unused.class)
+                .findWarning("3:15-3:16:verifier:" + Bundle.ERR_NotRead("u"))
+                .applyFix(Bundle.FIX_RenameToUnderscore())
+                .assertCompilable()
+                .assertOutput("""
+                              package test;
+                              public class Test {
+                                  public void test(String[] args) {
+                                      String _ = "";
+                                  }
+                              }
+                              """);
+    }
+
+    public void testToUndescore2() throws Exception {
+        HintTest.create()
+                .sourceLevel("22")
+                .input("""
+                       package test;
+                       public class Test {
+                           String u = "";
+                       }
+                       """)
+                .run(Unused.class)
+                .findWarning("2:11-2:12:verifier:" + Bundle.ERR_NotRead("u"))
+                .assertFixes(Bundle.FIX_RemoveUsedElement("u"));
+    }
+
+    public void testToUndescore3() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       public class Test {
+                           public void test(String[] args) {
+                               String u = "";
+                           }
+                       }
+                       """)
+                .run(Unused.class)
+                .findWarning("3:15-3:16:verifier:" + Bundle.ERR_NotRead("u"))
+                .assertFixes(Bundle.FIX_RemoveUsedElement("u"));
+    }
 }

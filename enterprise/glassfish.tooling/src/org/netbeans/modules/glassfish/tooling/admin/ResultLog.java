@@ -31,17 +31,11 @@ package org.netbeans.modules.glassfish.tooling.admin;
  */
 public class ResultLog extends Result<ValueLog> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Server log value returned by admin command execution. */
     ValueLog value;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish admin command result
      * for <code>List&ltString&gt</code> result value containing server log.
@@ -50,10 +44,7 @@ public class ResultLog extends Result<ValueLog> {
         super();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get server log value returned by admin command execution.
      * <p/>

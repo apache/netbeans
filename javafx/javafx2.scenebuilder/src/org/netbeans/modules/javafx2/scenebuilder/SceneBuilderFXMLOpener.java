@@ -33,10 +33,10 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.ServiceProvider;
 
-@ServiceProvider(service=FXMLOpener.class)
 /**
  * Opens an FXML file in SceneBuilder instance if available.
  */
+@ServiceProvider(service=FXMLOpener.class)
 public final class SceneBuilderFXMLOpener extends FXMLOpener {
     private static final Logger LOG = Logger.getLogger(SceneBuilderFXMLOpener.class.getName());
     private Settings settings = Settings.getInstance();

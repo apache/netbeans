@@ -34,6 +34,7 @@
 using namespace std;
 
 const char *NbLauncher::NBEXEC_FILE_PATH = NBEXEC_DLL;
+const char *ENV_NETBEANS_USERDIR="NETBEANS_USERDIR";
 const char *NbLauncher::OPT_NB_DEFAULT_USER_DIR = "netbeans_default_userdir=";
 const char *NbLauncher::OPT_NB_DEFAULT_CACHE_DIR = "netbeans_default_cachedir=";
 const char *NbLauncher::OPT_NB_DEFAULT_OPTIONS = "netbeans_default_options=";
@@ -43,6 +44,7 @@ const char *NbLauncher::ENV_USER_PROFILE = "USERPROFILE";
 const char *NbLauncher::HOME_TOKEN = "${HOME}";
 const char *NbLauncher::DEFAULT_USERDIR_ROOT_TOKEN = "${DEFAULT_USERDIR_ROOT}";
 const char *NbLauncher::DEFAULT_CACHEDIR_ROOT_TOKEN = "${DEFAULT_CACHEDIR_ROOT}";
+const char *NbLauncher::BASEDIR_TOKEN = "${BASEDIR}";
 const char *NbLauncher::NETBEANS_DIRECTORY = "\\NetBeans\\";
 const char *NbLauncher::NETBEANS_CACHES_DIRECTORY = "\\NetBeans\\Cache\\";
 
@@ -73,6 +75,10 @@ int NbLauncher::start(char *cmdLine) {
     return start(args.getCount(), args.getArgs());
 }
 
+const char* NbLauncher::findUserDirViaEnvVar() {
+    return getenv(ENV_NETBEANS_USERDIR);
+}
+
 int NbLauncher::start(int argc, char *argv[]) {
     SetErrorMode(SetErrorMode(0) | SEM_FAILCRITICALERRORS | SEM_NOOPENFILEERRORBOX);
     
@@ -81,13 +87,26 @@ int NbLauncher::start(int argc, char *argv[]) {
         return -1;
     }
 
-    parseConfigFile((baseDir + "\\etc\\" + getAppName() + ".conf").c_str());
+    bool skipUserDir = false;
+    const char *userDirViaEnv = findUserDirViaEnvVar();
+    if (userDirViaEnv != NULL) {
+        logMsg("NbLauncher::using NETBEANS_USERDIR env variable (%s)", userDirViaEnv);
+        string udve = userDirViaEnv;
+        if (udve == "IGNORE") {
+            skipUserDir = true;
+            userDirViaEnv = NULL;
+        } else {
+            userDir = userDirViaEnv;
+        }
+    }
+
+    parseConfigFile((baseDir + "\\etc\\" + getAppName() + ".conf").c_str(), userDirViaEnv == NULL);
 
     if (!parseArgs(argc, argv)) {
         return -1;
     }
     string oldUserDir = userDir;
-    parseConfigFile((userDir + "\\etc\\" + getAppName() + ".conf").c_str());
+    parseConfigFile((userDir + "\\etc\\" + getAppName() + ".conf").c_str(), userDirViaEnv == NULL);
     userDir = oldUserDir;
 
     addExtraClusters();
@@ -113,6 +132,18 @@ int NbLauncher::start(int argc, char *argv[]) {
     if (!userDir.empty()) {
         newArgs.add(ARG_NAME_USER_DIR);
         newArgs.add(userDir.c_str());
+        if (!skipUserDir) {
+            string toSet = ENV_NETBEANS_USERDIR;
+            toSet = toSet + "=" + userDir;
+            putenv(toSet.c_str());
+
+            const char* path = getenv("PATH");
+            if (path != NULL) {
+                string setPath = "PATH=";
+                setPath = setPath + path + ";" + baseDir + "\\bin\\";
+                putenv(setPath.c_str());
+            }
+        }
     }
     if (!defUserDirRoot.empty()) {
         newArgs.add(ARG_DEFAULT_USER_DIR_ROOT);
@@ -214,6 +245,11 @@ bool NbLauncher::initBaseNames() {
     baseDir = path;
 
     logMsg("Base dir: %s", baseDir.c_str());
+
+    getDefaultUserDirRoot();
+    getDefaultCacheDirRoot();
+    getUserHome();
+
     return true;
 }
 
@@ -365,83 +401,77 @@ bool NbLauncher::parseArgs(int argc, char *argv[]) {
 }
 
 bool NbLauncher::findUserDir(const char *str) {
-    logMsg("NbLauncher::findUserDir()");    
-    if (strncmp(str, HOME_TOKEN, strlen(HOME_TOKEN)) == 0) {
-        if (userHome.empty()) {
-            char *userProfile = getenv(ENV_USER_PROFILE);
-            if (userProfile) {
-                userHome = userProfile;
-            } else {
-                TCHAR userHomeChar[MAX_PATH]; 
-                if (FAILED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, userHomeChar))) {    
-                    return false;
-                }
-                userHome = userHomeChar;
-                userHome.erase(userHome.rfind('\\'));
-            }
-            logMsg("User home: %s", userHome.c_str());
-        }
-        userDir = userHome + (str + strlen(HOME_TOKEN));
-    } else if (strncmp(str, DEFAULT_USERDIR_ROOT_TOKEN, strlen(DEFAULT_USERDIR_ROOT_TOKEN)) == 0) {       
-        std::string s = std::string("Replacing ") + DEFAULT_USERDIR_ROOT_TOKEN;
-        logMsg(s.c_str());
-        userDir = getDefaultUserDirRoot() + (str + strlen(DEFAULT_USERDIR_ROOT_TOKEN));
-    } else {
-        getDefaultUserDirRoot();
-        userDir = str;
-    }
+    logMsg("NbLauncher::findUserDir(%s)", str);
+    userDir = str;
+    replaceToken(userDir);
+    logMsg("NbLauncher::findUserDir: %s", userDir.c_str());
     return true;
 }
 
 bool NbLauncher::findCacheDir(const char *str) {
-    logMsg("NbLauncher::findCacheDir()");
-    if (strncmp(str, HOME_TOKEN, strlen(HOME_TOKEN)) == 0) {
-        if (userHome.empty()) {
-            char *userProfile = getenv(ENV_USER_PROFILE);
-            if (userProfile) {
-                userHome = userProfile;
-            } else {
-                TCHAR userHomeChar[MAX_PATH]; 
-                if (FAILED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, userHomeChar))) {    
-                    return false;
-                }
-                userHome = userHomeChar;
-                userHome.erase(userHome.rfind('\\'));
-            }
-            logMsg("User home: %s", userHome.c_str());
-        }
-        cacheDir = userHome + (str + strlen(HOME_TOKEN));
-    } else if (strncmp(str, DEFAULT_CACHEDIR_ROOT_TOKEN, strlen(DEFAULT_CACHEDIR_ROOT_TOKEN)) == 0) {   
-        std::string s = std::string("Replacing ") + DEFAULT_CACHEDIR_ROOT_TOKEN;
-        logMsg(s.c_str());
-        cacheDir = getDefaultCacheDirRoot() + (str + strlen(DEFAULT_CACHEDIR_ROOT_TOKEN));
-    } else {
-        getDefaultCacheDirRoot();
-        cacheDir = str;
-    }
+    logMsg("NbLauncher::findCacheDir(%s)", str);
+    cacheDir = str;
+    replaceToken(cacheDir);
+    logMsg("NbLauncher::findCacheDir: %s", cacheDir.c_str());
     return true;
 }
 
-string NbLauncher::getDefaultUserDirRoot() {
+void NbLauncher::replaceToken(std::string& str) {
+    // Replace the allowed tokens in configuration options
+    replaceString(str, HOME_TOKEN, userHome);
+    replaceString(str, DEFAULT_CACHEDIR_ROOT_TOKEN, defCacheDirRoot);
+    replaceString(str, DEFAULT_USERDIR_ROOT_TOKEN, defUserDirRoot);
+    replaceString(str, BASEDIR_TOKEN, baseDir);
+}
+
+void NbLauncher::replaceString(std::string& str, const std::string& from, const std::string& to) {
+    if(from.empty()) {
+        return;
+    }
+    // Loop over all occurrences of the search string in the input string and
+    // replace them all
+    size_t start_pos = 0;
+    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+        str.replace(start_pos, from.length(), to);
+        // Skip over the replacement
+        start_pos += to.length();
+    }
+}
+
+void NbLauncher::getDefaultUserDirRoot() {
     TCHAR defUserDirRootChar[MAX_PATH];
     if (FAILED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, defUserDirRootChar))) {
-        return std::string();
+        defUserDirRoot = std::string();
     }
     defUserDirRoot = constructApplicationDir((string) defUserDirRootChar, false);
     defUserDirRoot.erase(defUserDirRoot.rfind('\\'));
     logMsg("Default Userdir Root: %s", defUserDirRoot.c_str());
-    return defUserDirRoot;
 }
 
-string NbLauncher::getDefaultCacheDirRoot() {
+void NbLauncher::getDefaultCacheDirRoot() {
     TCHAR defCacheDirRootChar[MAX_PATH];
     if (FAILED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, defCacheDirRootChar))) {
-        return std::string();
+        defCacheDirRoot = std::string();
     }
     defCacheDirRoot = constructApplicationDir((string) defCacheDirRootChar, true);
     defCacheDirRoot.erase(defCacheDirRoot.rfind('\\'));
     logMsg("Default Cachedir Root: %s", defCacheDirRoot.c_str());
-    return defCacheDirRoot;
+}
+
+void NbLauncher::getUserHome() {
+    char *userProfile = getenv(ENV_USER_PROFILE);
+    if (userProfile) {
+        userHome = userProfile;
+    } else {
+        TCHAR userHomeChar[MAX_PATH];
+        if (FAILED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, userHomeChar))) {
+            defCacheDirRoot = std::string();
+            userHome = std::string();
+        }
+        userHome = userHomeChar;
+        userHome.erase(userHome.rfind('\\'));
+    }
+    logMsg("User home: %s", userHome.c_str());
 }
 
 bool NbLauncher::getOption(char *&str, const char *opt) {
@@ -460,7 +490,7 @@ bool NbLauncher::getOption(char *&str, const char *opt) {
     return false;
 }
 
-bool NbLauncher::parseConfigFile(const char* path) {
+bool NbLauncher::parseConfigFile(const char* path, const bool searchUserDir) {
     logMsg("parseConfigFile(%s)", path);
     FILE *file = fopen(path, "r");
     if (!file) {
@@ -474,7 +504,7 @@ bool NbLauncher::parseConfigFile(const char* path) {
         if (*str == '#') {
             continue;
         }
-        if (getOption(str, getDefUserDirOptName())) {
+        if (searchUserDir && getOption(str, getDefUserDirOptName())) {
              findUserDir(str);
              logMsg("User dir: %s", userDir.c_str());
         } else if (getOption(str, getDefCacheDirOptName())) {
@@ -492,12 +522,15 @@ bool NbLauncher::parseConfigFile(const char* path) {
             }
             str[k] = '\0';
             nbOptions = str;
+            replaceToken(nbOptions);
             logMsg("After replacement: %s", nbOptions.c_str());
 
         } else if (getOption(str, getExtraClustersOptName())) {
             extraClusters = str;
         } else if (getOption(str, getJdkHomeOptName())) {
             jdkHome = str;
+            replaceToken(jdkHome);
+            logMsg("jdkHome: %s", jdkHome.c_str());
         }
     }
     bool ok = ferror(file) == 0;

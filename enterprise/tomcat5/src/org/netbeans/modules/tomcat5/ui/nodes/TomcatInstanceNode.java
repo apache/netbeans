@@ -33,6 +33,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.Lookup;
 import org.openide.util.actions.SystemAction;
 import org.netbeans.modules.tomcat5.customizer.Customizer;
+import org.netbeans.modules.tomcat5.ui.nodes.actions.EditContextXmlAction;
 import org.netbeans.modules.tomcat5.ui.nodes.actions.SharedContextLogAction;
 import org.netbeans.modules.tomcat5.ui.nodes.actions.EditServerXmlAction;
 import org.netbeans.modules.tomcat5.ui.nodes.actions.OpenServerOutputAction;
@@ -94,7 +95,7 @@ public class TomcatInstanceNode extends AbstractNode implements Node.Cookie {
 
     @Override
     public javax.swing.Action[] getActions(boolean context) {
-        java.util.List actions = new LinkedList();
+        java.util.List<SystemAction> actions = new LinkedList<>();
         // terminate does not work on Windows, see issue #63157
         if (!Utilities.isWindows()) {
             actions.add(null);
@@ -102,6 +103,7 @@ public class TomcatInstanceNode extends AbstractNode implements Node.Cookie {
         }
         actions.add(null);
         actions.add(SystemAction.get(EditServerXmlAction.class));
+        actions.add(SystemAction.get(EditContextXmlAction.class));
         if (tm.isTomcat50() || tm.isTomcat55()) {
             actions.add(SystemAction.get(AdminConsoleAction.class));
         }
@@ -112,15 +114,15 @@ public class TomcatInstanceNode extends AbstractNode implements Node.Cookie {
             actions.add(SystemAction.get(ServerLogAction.class));
         }
         actions.add(SystemAction.get(OpenServerOutputAction.class));
-        return (SystemAction[])actions.toArray(new SystemAction[0]);
+        return actions.toArray(new SystemAction[0]);
     }
-        
+
     private FileObject getTomcatConf() {
         tm.ensureCatalinaBaseReady(); // generated the catalina base folder if empty
         TomcatProperties tp = tm.getTomcatProperties();
         return FileUtil.toFileObject(tp.getServerXml());
     }
-    
+
     /**
      * Open server.xml file in editor.
      */
@@ -135,6 +137,35 @@ public class TomcatInstanceNode extends AbstractNode implements Node.Cookie {
             }
             if (dataObject != null) {
                 EditorCookie editorCookie = (EditorCookie)dataObject.getCookie(EditorCookie.class);
+                if (editorCookie != null) {
+                    editorCookie.open();
+                } else {
+                    Logger.getLogger(TomcatInstanceNode.class.getName()).log(Level.INFO, "Cannot find EditorCookie."); // NOI18N
+                }
+            }
+        }
+    }
+
+    private FileObject getTomcatContextXml() {
+        tm.ensureCatalinaBaseReady(); // generated the catalina base folder if empty
+        TomcatProperties tp = tm.getTomcatProperties();
+        return FileUtil.toFileObject(tp.getContextXml());
+    }
+
+    /**
+     * Open context.xml file in editor.
+     */
+    public void editContextXml() {
+        FileObject fileObject = getTomcatContextXml();
+        if (fileObject != null) {
+            DataObject dataObject = null;
+            try {
+                dataObject = DataObject.find(fileObject);
+            } catch (DataObjectNotFoundException ex) {
+                Logger.getLogger(TomcatInstanceNode.class.getName()).log(Level.INFO, null, ex);
+            }
+            if (dataObject != null) {
+                EditorCookie editorCookie = dataObject.getLookup().lookup(EditorCookie.class);
                 if (editorCookie != null) {
                     editorCookie.open();
                 } else {

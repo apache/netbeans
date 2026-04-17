@@ -33,7 +33,6 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.Trees;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -76,18 +75,6 @@ import static javax.lang.model.type.TypeKind.EXECUTABLE;
  * @author lahvac
  */
 public class Tiny {
-
-    private static final SourceVersion RELEASE_11;
-
-    static {
-        SourceVersion tmp;
-        try {
-            tmp = SourceVersion.valueOf("RELEASE_11");
-        } catch (IllegalArgumentException ex) {
-            tmp = null;
-        }
-        RELEASE_11 = tmp;
-    }
 
     static final boolean SC_IGNORE_SUBSTRING_DEFAULT = true;
     @BooleanOption(displayName = "#LBL_org.netbeans.modules.java.hints.perf.Tiny.SC_IGNORE_SUBSTRING", tooltip = "#TP_org.netbeans.modules.java.hints.perf.Tiny.SC_IGNORE_SUBSTRING", defaultValue=SC_IGNORE_SUBSTRING_DEFAULT)
@@ -379,7 +366,7 @@ public class Tiny {
             TreePath type = ctx.getVariables().get("$clazz");
             String typeName = type.getLeaf().toString();
             
-            if (RELEASE_11 != null && version.compareTo(RELEASE_11) >= 0) {
+            if (version.compareTo(SourceVersion.RELEASE_11) >= 0) {
                 String byRef = NbBundle.getMessage(Tiny.class, "FIX_Tiny_collectionsToArrayByMethodRef", typeName);
                 fixes = new Fix[] {
                     JavaFixUtilities.rewriteFix(ctx, byRef, ctx.getPath(), "$collection.toArray($clazz[]::new)"),
@@ -403,8 +390,8 @@ public class Tiny {
 
     private static boolean isNewArrayWithSize(TreePath type) {
         Tree parent = type.getParentPath().getLeaf();
-        if (parent instanceof NewArrayTree) {
-            List<? extends ExpressionTree> dim = ((NewArrayTree) parent).getDimensions();
+        if (parent instanceof NewArrayTree newArrayTree) {
+            List<? extends ExpressionTree> dim = newArrayTree.getDimensions();
             return dim.isEmpty() ? false : dim.get(0).getKind() == Kind.METHOD_INVOCATION; // size()
         }
         return false;

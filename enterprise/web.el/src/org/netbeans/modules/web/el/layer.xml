@@ -70,6 +70,16 @@
                     </folder>
                 </folder>
             </folder>
+            <folder name="MarkOccurrences">
+                <folder name="text">
+                    <folder name="x-el">
+                        <file name="MarkOccurences.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.web.el.options.MarkOccurencesOptionsPanelController"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
         </folder>
     </folder>
 

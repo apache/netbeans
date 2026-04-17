@@ -37,20 +37,14 @@ import org.openide.util.NbBundle;
  */
 public class ServerUtils {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = GlassFishLogger.get(ServerUtils.class);
     /** Domains folder prefix. */
     private static final String DOMAINS_FOLDER_PREFIX = "GF_";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get the file attribute with the specified name as {@see String}.
      * <p/>

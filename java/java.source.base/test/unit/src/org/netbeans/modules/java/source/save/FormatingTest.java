@@ -1556,6 +1556,76 @@ public class FormatingTest extends NbTestCase {
         preferences.putBoolean("specialElseIf", false);
         reformat(doc, content, golden);
         preferences.putBoolean("specialElseIf", true);
+        
+       content = """
+                  package hierbas.del.litoral;
+                  class Test extends Integer implements Runnable, Serializable{
+                  public void run(){
+                     if ("foo".contains("bar"))))) )))  {
+                                System.out.println("bar");
+                    }
+                  }
+                  }
+                 """;
+        golden = """
+                 package hierbas.del.litoral;
+                 
+                 class Test extends Integer implements Runnable, Serializable {
+                 
+                     public void run() {
+                         if ("foo".contains("bar"))))) )))  {
+                             System.out.println("bar");
+                         }
+                     }
+                 }
+                 """;
+       reformat(doc, content, golden);
+       
+       content = """
+                  package hierbas.del.litoral;
+                  class Test extends Integer implements Runnable, Serializable{
+                  public void run(){
+                     if ("foo".contains("bar"))))) ))) 
+                  }
+                  }
+                 """;
+        golden = """
+                 package hierbas.del.litoral;
+                 
+                 class Test extends Integer implements Runnable, Serializable {
+                 
+                     public void run() {
+                         if ("foo".contains("bar"))))) )))
+                     }
+                 }
+                 """;
+       reformat(doc, content, golden);
+       
+       content = """
+                  package hierbas.del.litoral;
+                  class Test extends Integer implements Runnable, Serializable{
+                  public void run(){
+                     if ("foo".contains("bar"))))) ))) 
+                 else {
+                       System.out.println("bar2")
+                    }
+                  }
+                  }
+                 """;
+        golden = """
+                 package hierbas.del.litoral;
+                 
+                 class Test extends Integer implements Runnable, Serializable {
+                 
+                     public void run() {
+                         if ("foo".contains("bar"))))) )))
+                 else {
+                                     System.out.println("bar2")
+                                 }
+                     }
+                 }
+                 """;
+       reformat(doc, content, golden);
     }
 
     public void testWhile() throws Exception {
@@ -3525,9 +3595,9 @@ public class FormatingTest extends NbTestCase {
 
     public void testAnnotatedRecord() throws Exception {
         try {
-            SourceVersion.valueOf("RELEASE_19"); //NOI18N
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
         } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_19, skip test
+            //OK, no RELEASE_17, skip test
             return;
         }
         testFile = new File(getWorkDir(), "Test.java");
@@ -6204,13 +6274,12 @@ public class FormatingTest extends NbTestCase {
     }
 
     public void testForVar1() throws Exception {
+        sourceLevel = "10";
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
         DataObject testSourceDO = DataObject.find(testSourceFO);
         EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
-        String oldLevel = JavaSourceTest.SourceLevelQueryImpl.sourceLevel;
-        JavaSourceTest.SourceLevelQueryImpl.sourceLevel = "1.10";
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
         String content
@@ -6229,17 +6298,15 @@ public class FormatingTest extends NbTestCase {
                 + "    }\n"
                 + "}\n";
         reformat(doc, content, golden);
-        JavaSourceTest.SourceLevelQueryImpl.sourceLevel = oldLevel;
     }
 
     public void testForVar2() throws Exception {
+        sourceLevel = "10";
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
         FileObject testSourceFO = FileUtil.toFileObject(testFile);
         DataObject testSourceDO = DataObject.find(testSourceFO);
         EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
-        String oldLevel = JavaSourceTest.SourceLevelQueryImpl.sourceLevel;
-        JavaSourceTest.SourceLevelQueryImpl.sourceLevel = "1.10";
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
         String content
@@ -6258,7 +6325,52 @@ public class FormatingTest extends NbTestCase {
                 + "    }\n"
                 + "}\n";
         reformat(doc, content, golden);
-        JavaSourceTest.SourceLevelQueryImpl.sourceLevel = oldLevel;
+    }
+
+    public void testForVarUnnamed() throws Exception {
+        sourceLevel = "22";
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content
+                = """
+                  package hierbas.del.litoral;
+                  
+                  public class Test {
+                  
+                      public static void main(String[] args) {
+                          int[] orderIDs = {34, 45, 23, 27, 15};
+                          int total = 0;
+                          for (   var   _:orderIDs) {
+                            total++;
+                          }
+                      }
+                  }
+                  """;
+
+        String golden
+                = """
+                  package hierbas.del.litoral;
+                  
+                  public class Test {
+                  
+                      public static void main(String[] args) {
+                          int[] orderIDs = {34, 45, 23, 27, 15};
+                          int total = 0;
+                          for (var _ : orderIDs) {
+                              total++;
+                          }
+                      }
+                  }
+                  """;
+
+        //check no change then formatted
+        reformat(doc, golden, golden);
+        reformat(doc, content, golden);
     }
 
     public void testTryBlockAfterIf() throws Exception {
@@ -6683,6 +6795,90 @@ public class FormatingTest extends NbTestCase {
                 + "}\n";
         reformat(doc, content, golden);
     }
+    
+    // #6573
+    public void testRecordConstructorReformat() throws Exception {
+        sourceLevel="16";
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = testSourceDO.getLookup().lookup(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = 
+                """
+                package hierbas.del.litoral;
+                
+                public class Test {
+                
+                    public record Rec(int a, int b) {
+                
+                        public Rec { // add no space for synthetic params
+                        }
+                    }
+                }
+                """;
+        String golden = content;
+                
+        reformat(doc, content, golden);
+    }    
+
+    // verify closing '}' position during record formatting
+    public void testRecordClosingBrace7043() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        sourceLevel = "17";
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        preferences.putBoolean("spaceWithinMethodDeclParens", true);
+        preferences.putInt("blankLinesAfterClassHeader", 0);
+
+        String content ="""
+                        package test;
+                        record Student(int id,String lastname,String firstname) implements Serializable {
+                        int m(int x){ 
+                        return id+x;
+                        }
+                        } // should stay flush to left margin
+                        """;
+        String golden = """
+                        package test;
+
+                        record Student( int id, String lastname, String firstname ) implements Serializable {
+                            int m( int x ) {
+                                return id + x;
+                            }
+                        } // should stay flush to left margin
+                        """;
+        reformat(doc, content, golden);
+
+        preferences.putBoolean("spaceWithinMethodDeclParens", false);
+        golden =        """
+                        package test;
+
+                        record Student(int id, String lastname, String firstname) implements Serializable {
+                            int m(int x) {
+                                return id + x;
+                            }
+                        } // should stay flush to left margin
+                        """;
+        reformat(doc, content, golden);
+    }
+    
     @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
     public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {
 

@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -40,7 +41,6 @@ import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileSystem;
 import org.openide.util.NbBundle;
-import org.openide.util.WeakSet;
 import org.openide.windows.CloneableOpenSupport;
 import org.openide.windows.CloneableTopComponent;
 
@@ -348,7 +348,7 @@ public abstract class OpenSupport extends CloneableOpenSupport {
     private static final class FileSystemNameListener
     implements PropertyChangeListener, VetoableChangeListener {
         /** Set of Env's interested in changes on fs name. */
-        private final Set<Env> environments = new WeakSet<Env>(30);
+        private final Set<Env> environments = Collections.newSetFromMap(new WeakHashMap<>(30));
         
         public FileSystemNameListener() {
         }

@@ -81,7 +81,6 @@
 <!-- Generated from apichanges.xml -->
     <head>
       <title>Change History for the Keyring API</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>
 <p class="overviewlink"><a href="@TOP@/overview-summary.html">Overview</a></p>

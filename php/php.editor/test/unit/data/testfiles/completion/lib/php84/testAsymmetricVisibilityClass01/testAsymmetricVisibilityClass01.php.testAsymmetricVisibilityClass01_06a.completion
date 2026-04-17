@@ -1,0 +1,5 @@
+Code completion result for source line:
+fin|al protected private(set) int $finalProtectedPrivateSet; // prop
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    final                                      null

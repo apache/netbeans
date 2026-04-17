@@ -24,7 +24,7 @@
     <folder name="Templates">
         <folder name="Project">
             <folder name="Native">
-                <attr name="position" intvalue="650"/>
+                <attr name="position" intvalue="660"/>
                 <attr name="displayName" bundlevalue="org.netbeans.modules.cpplite.project.Bundle#CPPLite_NewProject" />
             </folder>
         </folder>

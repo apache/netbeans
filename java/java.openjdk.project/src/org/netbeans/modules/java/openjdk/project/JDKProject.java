@@ -197,10 +197,11 @@ public class JDKProject implements Project {
                 roots.clear();
                 roots.addAll(newRoots);
             }
-            String testRoots = moduleRepository.moduleTests(currentModule.name);
 
-            if (testRoots != null) {
-                addRoots(RootKind.TEST_SOURCES, Arrays.asList(Pair.<String, String>of(testRoots, null)));
+            List<String> testRoots = moduleRepository.moduleTests(currentModule.name);
+
+            for (String testRoot : testRoots) {
+                addRoots(RootKind.TEST_SOURCES, Arrays.asList(Pair.<String, String>of(testRoot, null)));
             }
 
         }

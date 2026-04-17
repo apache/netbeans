@@ -115,19 +115,22 @@ label {
 }
 .action-button {
     border: none;
-    border-radius: 4px;
-	padding: 2px;
-	margin: 3px 0px;
+    padding: 4px 10px 4px 10px;
+    margin: 2px;
     color: var(--vscode-input-foreground);
-    background-color: transparent;
+    background-color: var(--vscode-list-hoverBackground);
 }
+
 .action-button:hover {
-	background-color: var(--vscode-list-inactiveSelectionBackground);
+    color: var(--vscode-button-foreground);
+    background-color: var(--vscode-button-hoverBackground);
 }
+
 .action-button:focus, .action-button:hover:focus {
     color: var(--vscode-button-foreground);
     background-color: var(--vscode-button-hoverBackground);
-    outline: none;
+    outline: 1px solid var(--vscode-button-hoverBackground);
+    outline-offset: 2px;
 }
 .checkbox-label {
     align-self: center;

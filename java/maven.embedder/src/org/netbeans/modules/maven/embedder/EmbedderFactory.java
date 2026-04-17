@@ -470,7 +470,7 @@ public final class EmbedderFactory {
      * @return 
      * @deprecated use MavenEmbedder.createRemoteRepository
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public static ArtifactRepository createRemoteRepository(MavenEmbedder embedder, String url, String id) {
         return embedder.createRemoteRepository(url, id);
     }
@@ -485,7 +485,7 @@ public final class EmbedderFactory {
      * @throws ModelBuildingException if the POM or parents could not even be parsed; warnings are not reported
      * @deprecated use MavenEmbedder.createModelLineage
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public static List<Model> createModelLineage(File pom, MavenEmbedder embedder) throws ModelBuildingException {
         return embedder.createModelLineage(pom);
     }

@@ -19,9 +19,10 @@
 
 package org.netbeans.modules.maven.indexer;
 
+import java.util.Collections;
 import java.util.Set;
+import java.util.WeakHashMap;
 import org.openide.util.Cancellable;
-import org.openide.util.WeakSet;
 
 /**
  * Thrown when a task is canceled.
@@ -33,7 +34,7 @@ final class Cancellation extends Error {
         super("canceled");
     }
 
-    private static final Set<Cancellable> cancellables = new WeakSet<>();
+    private static final Set<Cancellable> cancellables = Collections.newSetFromMap(new WeakHashMap<>());
 
     public static synchronized void register(Cancellable c) {
         cancellables.add(c);

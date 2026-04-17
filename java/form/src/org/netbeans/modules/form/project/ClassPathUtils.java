@@ -35,7 +35,7 @@ import org.netbeans.api.project.*;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressRunnable;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.form.FormUtils;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 
@@ -238,7 +238,7 @@ public class ClassPathUtils {
             });
         } else {
             String msg = getBundleString("MSG_UpdatingClassPath"); // NOI18N
-            Object retVal = ProgressUtils.showProgressDialogAndRun(new ProgressRunnable<Object>() {
+            Object retVal = BaseProgressUtils.showProgressDialogAndRun(new ProgressRunnable<Object>() {
                 @Override
                 public Object run(ProgressHandle handle) {
                     try {

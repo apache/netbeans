@@ -164,6 +164,7 @@
                 <file name="org-netbeans-modules-java-hints-errors-RemoveFinalModifierFromVariable.instance">
                         <attr name="instanceCreate" methodvalue="org.netbeans.modules.java.hints.errors.AddOrRemoveFinalModifier.createRemoveFinalFromVariable"/>
                 </file>
+                <file name="org-netbeans-modules-java-hints-errors-AddDefaultCase.instance"/>
 		<file name="org-netbeans-modules-java-hints-errors-RemoveInvalidModifier.instance"/>
 		<file name="org-netbeans-modules-java-hints-errors-RemoveUselessCast.instance"/>
                 <file name="org-netbeans-modules-java-hints-errors-SuppressWarningsFixer.instance"/>
@@ -327,7 +328,7 @@
 
                 <folder name="bugs">
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.java.hints.resources.Bundle"/>
-                    <file name="org-netbeans-modules-java-hints-SuspiciousNamesCombination.instance" />
+                    <file name="org-netbeans-modules-java-hints-SuspiciousNamesCombination.instance"/>
                 </folder>
 
                 <folder name="thread">

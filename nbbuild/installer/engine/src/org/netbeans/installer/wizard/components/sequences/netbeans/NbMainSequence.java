@@ -60,7 +60,6 @@ import org.netbeans.installer.wizard.components.sequences.ProductWizardSequence;
  *
  */
 public class NbMainSequence extends WizardSequence {
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
 
     private DownloadConfigurationLogicAction downloadConfigurationLogicAction;
@@ -646,7 +645,6 @@ public class NbMainSequence extends WizardSequence {
     public boolean canExecuteForward() {
         return ExecutionMode.NORMAL == ExecutionMode.getCurrentExecutionMode();
     }
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     public static final String DEFAULT_IA_TITLE =
             ResourceUtils.getString(

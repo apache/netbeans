@@ -54,7 +54,7 @@
                 <p>
                     <a href="@TOP@/org/openide/util/Mutex.html#EVENT">Mutex.EVENT</a>
                     methods have been enhanced to work well with
-                    <a href="@org-openide-util-lookup@/org/openide/util/lookup/Lookups.html#executeWith-org.openide.util.Lookup-java.lang.Runnable-">Lookups.executeWith(...)</a>.
+                    <a href="@org-openide-util-lookup@/org/openide/util/lookup/Lookups.html#executeWith(org.openide.util.Lookup,java.lang.Runnable)">Lookups.executeWith(...)</a>.
                 </p>
             </description>
             <class package="org.openide.util" name="Mutex"/>
@@ -186,7 +186,6 @@
     <htmlcontents>
         <head>
             <title>Change History for the Base Utilities API</title>
-            <link rel="stylesheet" href="prose.css" type="text/css"/>
         </head>
         <body>
             <p class="overviewlink">

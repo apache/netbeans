@@ -27,10 +27,7 @@ package org.netbeans.modules.payara.tooling.admin;
  */
 public enum ProcessIOResult {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Unknown response. */
     UNKNOWN,
 

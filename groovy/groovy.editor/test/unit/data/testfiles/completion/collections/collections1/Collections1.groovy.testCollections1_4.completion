@@ -3,6 +3,7 @@ Code completion result for source line:
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 METHOD     decode(String)                  [STATIC,   Integer
+METHOD     describeConstable()             [PUBLIC]   Optional<Integer>
 METHOD     div(Character)                             Number
 METHOD     div(Number)                                Number
 METHOD     divideUnsigned(int, int)        [STATIC,   int

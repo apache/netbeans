@@ -355,9 +355,9 @@ public abstract class OptionsPanelController {
          * <blockquote><table>
          * <caption>Split examples showing array and keywords</caption>
          * <tr><th>Provided array</th><th>Keywords</th></tr> 
-         * <tr><td align=center>{ "Boo", "fOo" }</td><td><tt>{ "BOO", "FOO" }</tt></td></tr>
-         * <tr><td align=center>{ "boo and", "foo" }</td><td><tt>{ "BOO AND", "FOO" }</tt></td></tr>
-         * <tr><td align=center>{ "boo,and", "foo" }</td><td><tt>{ "BOO", "AND", "FOO" }</tt></td></tr> 
+         * <tr><td>{ "Boo", "fOo" }</td><td><code>{ "BOO", "FOO" }</code></td></tr>
+         * <tr><td>{ "boo and", "foo" }</td><td><code>{ "BOO AND", "FOO" }</code></td></tr>
+         * <tr><td>{ "boo,and", "foo" }</td><td><code>{ "BOO", "AND", "FOO" }</code></td></tr> 
          * </table></blockquote>
          *
          * <p> The user's search-text is split around the space character to form words.
@@ -367,10 +367,10 @@ public abstract class OptionsPanelController {
          * <blockquote><table> 
          * <caption>Search examples showing search-text and results</caption>
          * <tr><th>User's search-text</th><th>Result</th></tr>
-         * <tr><td align=center>"boo"</td><td><tt>keyword found</tt></td></tr>
-         * <tr><td align=center>"nd"</td><td><tt>keyword found</tt></td></tr>
-         * <tr><td align=center>"boo and"</td><td><tt>keyword found</tt></td></tr>
-         * <tr><td align=center>"boo moo"</td><td><tt>keyword NOT found</tt></td></tr>
+         * <tr><td>"boo"</td><td><code>keyword found</code></td></tr>
+         * <tr><td>"nd"</td><td><code>keyword found</code></td></tr>
+         * <tr><td>"boo and"</td><td><code>keyword found</code></td></tr>
+         * <tr><td>"boo moo"</td><td><code>keyword NOT found</code></td></tr>
          * </table></blockquote>
          */
         String[] keywords();

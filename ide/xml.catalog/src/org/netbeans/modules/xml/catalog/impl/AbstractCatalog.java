@@ -18,16 +18,13 @@
  */
 package org.netbeans.modules.xml.catalog.impl;
 
-import java.awt.*;
 import java.io.*;
 import java.beans.*;
 import java.util.*;
 
-import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import org.openide.util.*;
 
 import org.netbeans.modules.xml.catalog.spi.*;
 import org.netbeans.modules.xml.catalog.lib.*;
@@ -44,51 +41,61 @@ import org.netbeans.modules.xml.catalog.lib.*;
 public abstract class AbstractCatalog {
 
     /** Public identifier mappings. */
-    private Map publicMap = new HashMap();
+    private final Map publicMap = new HashMap();
 
     /** System identifier mappings (aliases). */
-    private Map systemMap = new HashMap();
+    private final Map systemMap = new HashMap();
 
     private String location;
-    
-    private Vector listeners;
-    
+
+    @SuppressWarnings("UseOfObsoleteCollectionType")
+    private final Vector<CatalogListener> listeners = new Vector<>(2);
+
     // catalog delegation and chaining
-    
+
     /** Delegates. */
-    private Map delegate = new HashMap();
-    
+    @SuppressWarnings("UseOfObsoleteCollectionType")
+    private final Map delegate = new HashMap();
+
     /** Delegates ordering. */
-    private Vector delegateOrder = new Vector();
+    @SuppressWarnings("UseOfObsoleteCollectionType")
+    private final Vector delegateOrder = new Vector();
 
     /** Contains patch catalogs. */
+    @SuppressWarnings("UseOfObsoleteCollectionType")
     protected Vector extenders = new Vector();
-    
+
     //
     // Public methods
     //
 
     /**
      * Set catalog location URI.
+     *
+     * @deprecated unused and ignored
      */
+    @Deprecated
     public void setLocation(String location) {
         this.location = location;
     }
-    
+
+    /**
+     * @return
+     * @deprecated unused and ignored
+     */
+    @Deprecated
     public String getLocation() {
         return location;
     }
-    
-    
+
     /**
      * Optional operation allowing to listen at catalog for changes.
      * @throws UnsupportedOpertaionException if not supported by the implementation.
      */
     public synchronized void addCatalogListener(CatalogListener l) {
-        if (listeners == null) listeners = new Vector(2);
         listeners.add(l);
     }
-    
+
     /**
      * Optional operation couled with addCatalogListener.
      * @see addCatalogListener
@@ -96,24 +103,23 @@ public abstract class AbstractCatalog {
     public synchronized void removeCatalogListener(CatalogListener l) {
         if (listeners == null) return;
         if (listeners != null) listeners.remove(l);
-        if (listeners.isEmpty()) listeners = null;
     }
-    
+
 
     protected void notifyInvalidate() {
-        
-        CatalogListener[] lis = null;
-        
+
+        CatalogListener[] lis;
+
         synchronized (this) {
-            if (listeners == null || listeners.isEmpty()) return;       
+            if (listeners == null || listeners.isEmpty()) return;
             lis = (CatalogListener[]) listeners.toArray(new CatalogListener[0]);
         }
-        
+
         for (int i = 0; i<lis.length; i++) {
             lis[i].notifyInvalidate();
-        }            
+        }
     }
-    
+
     /**
      * Adds a public to system identifier mapping.
      *
@@ -186,7 +192,7 @@ public abstract class AbstractCatalog {
         delegateOrder.clear();
         extenders.clear();
     }
-    
+
     /**
      * Returns a system identifier alias.
      *
@@ -199,7 +205,7 @@ public abstract class AbstractCatalog {
         return (String)systemMap.get(systemId);
     }
 
-    
+
     /**
      * Get String iterator representing all public IDs registered in catalog.
      * @return null if cannot proceed, try later.
@@ -208,7 +214,7 @@ public abstract class AbstractCatalog {
         return getPublicIDs(""); // NOI18N
     }
 
-    /** 
+    /**
      * Obtain public IDs that starts with given prefix.
      */
     private Iterator getPublicIDs(String prefix) {
@@ -217,7 +223,7 @@ public abstract class AbstractCatalog {
 
         IteratorIterator set = new IteratorIterator();
         set.add(getPublicMappingKeys());
-        
+
         Iterator it = extenders.iterator();
         while (it.hasNext()) {
             set.add(((AbstractCatalog) it.next()).getPublicIDs());
@@ -228,24 +234,25 @@ public abstract class AbstractCatalog {
             String _prefix = (String) en.nextElement();
             AbstractCatalog delegee = (AbstractCatalog) delegate.get(_prefix);
             set.add(delegee.getPublicIDs(_prefix));
-        } 
+        }
 
         return new FilterIterator(set, new PrefixFilter(prefix));
     }
-    
+
     private class PrefixFilter implements FilterIterator.Filter {
-        
+
         private final String prefix;
-        
+
         PrefixFilter(String prefix) {
             this.prefix = prefix;
         }
-        
+
+        @Override
         public boolean accept(Object obj) {
-            return ((String)obj).startsWith(prefix);            
+            return ((String)obj).startsWith(prefix);
         }
     }
-    
+
 
     /**
      * Get registered systemid for given public Id or null if not registered.
@@ -254,7 +261,7 @@ public abstract class AbstractCatalog {
     public String getSystemID(String publicId) {
         return getPublicMapping(publicId);
     }
-    
+
     /**
      * Resolves external entities.
      *
@@ -268,11 +275,11 @@ public abstract class AbstractCatalog {
      *         if no resolution is possible.
      *
      * @exception org.xml.sax.SAXException Exception thrown on SAX error.
-     * @exception java.io.IOException Exception thrown on i/o error. 
+     * @exception java.io.IOException Exception thrown on i/o error.
      */
-    public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException 
+    public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException
     {
-        
+
         // public id -> system id
         InputSource ret = resolvePublicId(publicId);
         if (ret != null) return ret;
@@ -280,22 +287,22 @@ public abstract class AbstractCatalog {
         // system id(1) -> system id(2)
         return resolveSystemId(systemId);
     }
-    
+
     protected InputSource resolvePublicId(String publicId) {
 
         // public id -> system id
         if (publicId != null) {
             String value = getPublicMapping(publicId);
-            if (value != null) {                
+            if (value != null) {
                 InputSource input = new InputSource(value);
                 input.setPublicId(publicId);
                 return input;
             }
         }
-        
+
         return null;
     }
-    
+
     protected InputSource resolveSystemId(String systemId) {
 
         if (systemId != null) {
@@ -306,13 +313,13 @@ public abstract class AbstractCatalog {
 
             return new InputSource(value);
         }
-        
+
         return null;
     }
-    
+
     // Catalog delegation stuff ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-    
+
+
     /**
      * Adds a delegate mapping. If the prefix of a public identifier
      * matches a delegate prefix, then the delegate catalog is
@@ -326,7 +333,7 @@ public abstract class AbstractCatalog {
      * @param catalog The delegate catalog.
      */
     public void addDelegateCatalog(String prefix, AbstractCatalog catalog) {
-        
+
         synchronized (delegate) {
             // insert prefix in proper order
             if (!delegate.containsKey(prefix)) {
@@ -344,53 +351,53 @@ public abstract class AbstractCatalog {
                     delegateOrder.addElement(prefix);
                 }
             }
-            
+
             // replace (or add new) prefix mapping
             delegate.put(prefix, catalog);
         }
-        
+
     }
-    
+
     /**
      * Removes a delegate.
      *
      * @param prefix The delegate prefix to remove.
      */
     public void removeDelegateCatalog(String prefix) {
-        
+
         synchronized (delegate) {
             delegate.remove(prefix);
             delegateOrder.removeElement(prefix);
         }
-        
+
     } // removeDelegateCatalog(String)
-    
+
     /** Returns an enumeration of delegate prefixes. */
     public Enumeration getDelegateCatalogKeys() {
         return delegateOrder.elements();
     }
-    
+
     /** Returns the catalog for the given delegate prefix. */
     public AbstractCatalog getDelegateCatalog(String prefix) {
         return (AbstractCatalog)delegate.get(prefix);
     }
-    
-    
-    
-    // Listeners ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
-    
-    
-    
-    private PropertyChangeSupport support = new PropertyChangeSupport(this);
+
+
+
+    // Listeners ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+    private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     /**
-     * Should provide callbacks on PROP_CATALOG_ICON, PROP_CATALOG_DESC 
+     * Should provide callbacks on PROP_CATALOG_ICON, PROP_CATALOG_DESC
      * and PROP_CATALOG_NAME changes as defined in CatalogDescriptor.
-     */    
+     */
     public void addPropertyChangeListener(PropertyChangeListener l) {
         support.addPropertyChangeListener(l);
     }
-    
+
     public void removePropertyChangeListener(PropertyChangeListener l) {
         support.removePropertyChangeListener(l);
     }
@@ -398,16 +405,16 @@ public abstract class AbstractCatalog {
     protected void firePropertyChange(String prop, Object val1, Object val2) {
         support.firePropertyChange(prop, val1, val2);
     }
-    
+
     /** Get icon from bean info or null. */
     protected String getDefaultIcon(int type) {
         return null;
     }
-    
+
     protected String getDefaultErrorIcon(int type) {
         return null;
     }
-    
+
     /**
      * Get registered URI for the given name or null if not registered.
      * @return null if not registered
@@ -418,9 +425,9 @@ public abstract class AbstractCatalog {
     /**
      * Get registered URI for the given publicId or null if not registered.
      * @return null if not registered
-     */ 
+     */
     public String resolvePublic(String publicId) {
         return null;
     }
-    
+
 }

@@ -39,7 +39,7 @@ public class MnemonicEditor extends PropertyEditorSupport implements NamedProper
         char value = (char)0;
         
         if (java.lang.Character.class.isInstance(ovalue))
-            value = ((Character)ovalue).charValue();
+            value = ((Character)ovalue);
         else if (java.lang.Integer.class.isInstance(ovalue))
             value = (char)(((Integer)ovalue).intValue());
         
@@ -73,12 +73,12 @@ public class MnemonicEditor extends PropertyEditorSupport implements NamedProper
     @Override
     public void setAsText(String text) throws IllegalArgumentException {
         if (text.length() < 1) {
-            setValue(new Integer(0));
+            setValue(0);
             return;
         }
         
         if (text.length() == 1 && text.charAt(0) != '\\') {
-            setValue(new Character(text.charAt(0)));
+            setValue(text.charAt(0));
             return;
         }                
                 
@@ -112,16 +112,14 @@ public class MnemonicEditor extends PropertyEditorSupport implements NamedProper
                         return;
                         
             }
-            setValue(new Character(value));
+            setValue(value);
             return;
         }
         
         try {
-            setValue(new Integer(text));
-            return;            
+            setValue(Integer.valueOf(text));
         } catch (NumberFormatException e) {
             setValue(text);
-            return;
         }
         
     }
@@ -136,15 +134,14 @@ public class MnemonicEditor extends PropertyEditorSupport implements NamedProper
         if  (newValue instanceof Integer) {
             super.setValue(newValue);
             return;
-        }
-        if  (newValue instanceof Character) {
-            super.setValue(new Integer((int)(((Character)newValue).charValue())));
+        } else if (newValue instanceof Character) {
+            char c = (Character) newValue;
+            super.setValue((int)c);
             return;
-        }
-        if (newValue instanceof String) {
-            String text = (String ) newValue;
+        } else if (newValue instanceof String) {
+            String text = (String) newValue;
             if (text.length() >= 1) {
-                super.setValue(new Integer((int)text.charAt(0)));
+                super.setValue((int)text.charAt(0));
                 return;
             }
         }

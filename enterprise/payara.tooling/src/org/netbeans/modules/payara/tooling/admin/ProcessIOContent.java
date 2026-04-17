@@ -30,10 +30,7 @@ import org.netbeans.modules.payara.tooling.utils.StringPrefixTree;
  */
 public class ProcessIOContent {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Prefix tree final node content.
      */
@@ -243,17 +240,11 @@ public class ProcessIOContent {
     
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(ProcessIOContent.class);
     
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Process input prompt. Data on standard input are expected after sending
      *  this string to standard output. */
     private final String prompt;
@@ -261,10 +252,7 @@ public class ProcessIOContent {
     /** List of tokens to be processed. */
     private final LinkedList<Token> tokens;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of server administration command execution content.
      * <p/>
@@ -285,10 +273,7 @@ public class ProcessIOContent {
         this(null);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get global process input prompt.
      * <p/>
@@ -309,10 +294,7 @@ public class ProcessIOContent {
         return tokenPrompt != null ? tokenPrompt : prompt;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Add next expected process output to be matched.
      * <p/>

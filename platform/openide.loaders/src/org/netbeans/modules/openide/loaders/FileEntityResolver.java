@@ -362,9 +362,7 @@ public final class FileEntityResolver extends EntityCatalog implements Environme
 
     private static final StopSaxException STOP = new StopSaxException();
     
-    ////////////////////////////////////////////////////////////////////////
     // DTDParser
-    ////////////////////////////////////////////////////////////////////////
     /** resolve the PUBLIC item from the xml header of .settings file */
     private static class DTDParser extends org.xml.sax.helpers.DefaultHandler
     implements org.xml.sax.ext.LexicalHandler {

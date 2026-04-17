@@ -45,6 +45,7 @@ import org.openide.ErrorManager;
 import org.openide.util.NbBundle;
 import java.util.MissingResourceException;
 import java.awt.Toolkit;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.openide.filesystems.FileObject;
 
@@ -97,8 +98,8 @@ public class NbEditorUtilities {
         return null;
     }
 
-    /** This method is a composition of <tt>Utilities.getIdentifierBlock()</tt>
-    * and <tt>SyntaxSupport.getFunctionBlock()</tt>.
+    /** This method is a composition of <code>Utilities.getIdentifierBlock()</code>
+    * and <code>SyntaxSupport.getFunctionBlock()</code>.
     * @return null if there's no identifier at the given position.
     *   identifier block if there's identifier but it's not a function call.
     *   three member array for the case that there is an identifier followed
@@ -135,7 +136,7 @@ public class NbEditorUtilities {
                 Line.Set lineSet = lc.getLineSet();
                 if (lineSet != null) {
                     try {
-                        int lineOffset = Utilities.getLineOffset(doc, offset);
+                        int lineOffset = LineDocumentUtils.getLineIndex(doc, offset);
                         return original
                                ? lineSet.getOriginal(lineOffset)
                                : lineSet.getCurrent(lineOffset);

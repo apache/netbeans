@@ -621,7 +621,7 @@ public final class AddDriverDialog extends javax.swing.JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                progressHandle = ProgressHandleFactory.createHandle(null);
+                progressHandle = ProgressHandle.createHandle(null);
                 progressComponent = ProgressHandleFactory.createProgressComponent(progressHandle);
                 progressContainerPanel.add(progressComponent, BorderLayout.CENTER);
                 progressHandle.start();

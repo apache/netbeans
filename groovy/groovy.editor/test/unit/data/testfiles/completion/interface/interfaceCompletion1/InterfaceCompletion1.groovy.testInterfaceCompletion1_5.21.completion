@@ -1,0 +1,9 @@
+Code completion result for source line:
+class SpecialGroovyClass implements Runnable, Se|rializable {
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+CLASS      SequencedCollection                        null
+CLASS      SequencedMap                               null
+CLASS      SequencedSet                               null
+CLASS      Serializable                               null
+CLASS      Set                                        null

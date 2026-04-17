@@ -33,25 +33,16 @@ import org.netbeans.modules.payara.tooling.admin.RunnerRestClass;
 @RunnerRestClass(runner=RunnerRestCloudDeploy.class)
 public class CommandCloudDeploy extends CommandCloud {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for deploy command. */
     private static final String COMMAND = "deploy";
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** File to deploy. */
     final File path;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server deploy command entity.
      * <p/>

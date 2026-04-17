@@ -38,7 +38,6 @@ import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.undo.UndoManager;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.websvc.api.support.RefreshCookie;
 import org.netbeans.modules.websvc.api.wseditor.InvalidDataException;
 import org.netbeans.modules.websvc.api.wseditor.WSEditor;
@@ -110,7 +109,7 @@ public class CustomizationWSEditor implements WSEditor {
                     }
                 }
             }
-            final ProgressHandle handle = ProgressHandleFactory.createHandle
+            final ProgressHandle handle = ProgressHandle.createHandle
                     (NbBundle.getMessage(CustomizationWSEditor.class, "TXT_Refreshing")); //NOI18N
             handle.start(100);
             handle.switchToIndeterminate();

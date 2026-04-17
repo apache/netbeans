@@ -133,7 +133,7 @@ public class TestVCSInterceptor extends VCSInterceptor {
         doCopyFiles.add(to);
         FileInputStream is = new FileInputStream(from);
         FileOutputStream os = new FileOutputStream(to);
-        FileUtil.copy(is, os);
+        is.transferTo(os);
         is.close();
         os.close();
     }

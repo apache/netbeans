@@ -514,13 +514,10 @@ class ModeParser {
         }
     }
     
-    //////////////////////////////////////////////////////////////////
     // BEGIN Code to keep order of TopComponents in Mode.
     //
     // It is taken from FolderOrder and FolderList where it is used
     // to keep order of DataObjects.
-    //////////////////////////////////////////////////////////////////
-    
     /** Reads the order of tcRefs from disk.
      */
     private void readOrder () {
@@ -634,10 +631,7 @@ class ModeParser {
         }
         return tcs;
     }
-    //////////////////////////////////////////////////////////////////
     // END Code to keep order of TopComponents in Mode.
-    //////////////////////////////////////////////////////////////////
-    
     /** Removes TCRefParser from ModeParser and cleans wstcref file from local folder.
      * @param tcRefName unique name of tcRef
      */

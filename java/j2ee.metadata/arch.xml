@@ -122,7 +122,7 @@
     class. The client then implements a model action, represented by the 
     <a href="@TOP@org/netbeans/modules/j2ee/metadata/model/api/MetadataModelAction.html">MetadataModelAction</a> class,
     and executes this action in the model context by calling the model's 
-    <a href="@TOP@org/netbeans/modules/j2ee/metadata/model/api/MetadataModel.html#runReadAction-org.netbeans.modules.j2ee.metadata.model.api.MetadataModelAction-">runReadAction()</a>
+    <a href="@TOP@org/netbeans/modules/j2ee/metadata/model/api/MetadataModel.html#runReadAction(org.netbeans.modules.j2ee.metadata.model.api.MetadataModelAction)">runReadAction()</a>
     method:
    </p>
    <pre>

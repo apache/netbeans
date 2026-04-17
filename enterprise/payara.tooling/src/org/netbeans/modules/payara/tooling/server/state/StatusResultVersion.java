@@ -37,17 +37,11 @@ import org.netbeans.modules.payara.tooling.TaskEvent;
  */
 class StatusResultVersion extends StatusResult {
 
-    ////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                //
-    ////////////////////////////////////////////////////////////////////////
-
     /** Command <code>version</code> execution result. */
     final ResultString result;
 
-    ////////////////////////////////////////////////////////////////////////
     // Constructors                                                       //
-    ////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of individual server status result
      * for <code>version</code> command.
@@ -65,9 +59,7 @@ class StatusResultVersion extends StatusResult {
         this.result = result;
     }
 
-    ////////////////////////////////////////////////////////////////////////
     // Getters                                                            //
-    ////////////////////////////////////////////////////////////////////////
     /**
      * Get <code>version</code> command execution result.
      * <p/>

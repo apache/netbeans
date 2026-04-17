@@ -28,10 +28,10 @@ import java.util.HashMap;
 * and ending with the target context from which the token
 * is being returned.
 * It is final and has no public constructor.
-* The only entrypoint is through the <tt>get()</tt> method.
+* The only entrypoint is through the <code>get()</code> method.
 * It's guaranteed that the two context-paths containing
 * the same contexts in the same order are the same objects
-* and the equal-operator can be used instead of calling <tt>equals()</tt>.
+* and the equal-operator can be used instead of calling <code>equals()</code>.
 *
 * @author Miloslav Metelka
 * @version 1.00

@@ -61,9 +61,7 @@ public class ModeParserTest extends NbTestCase {
 //        PersistenceManager.getDefault().setRootLocalFolder(fo);
     }
     
-    ////////////////////////////////
     //Testing VALID data
-    ////////////////////////////////
     /** Test of loaded data
      */
     public void testLoadMode01 () throws Exception {
@@ -486,9 +484,7 @@ public class ModeParserTest extends NbTestCase {
         System.out.println("ModeParserTest.testSaveMode08 FINISH");
     }
     
-    ////////////////////////////////
     //Testing INVALID data
-    ////////////////////////////////
     /** Test of missing file
      */
     public void testLoadMode01Invalid () throws Exception {

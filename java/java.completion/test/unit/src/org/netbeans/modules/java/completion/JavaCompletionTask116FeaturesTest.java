@@ -41,6 +41,66 @@ public class JavaCompletionTask116FeaturesTest extends CompletionTestBase {
         performTest("InstanceofPattern", 926, null, "stringContent.pass", SOURCE_LEVEL);
     }
 
+    public void testBeforeLeftRecordBraces() throws Exception {
+        performTest("Records", 896, null, "implementsKeyword.pass", SOURCE_LEVEL);
+    }
+
+    public void testBeforeRecParamsLeftParen() throws Exception {
+        performTest("Records", 892, null, "empty.pass", SOURCE_LEVEL);
+    }
+
+    public void testAfterTypeParamInRecParam() throws Exception {
+        performTest("Records", 890, null, "extendsKeyword.pass", SOURCE_LEVEL);
+    }
+
+    public void testInsideRecAfterStaticKeyWord() throws Exception {
+        performTest("Records", 918, "R", "typesRecordStaticMembersAndVars.pass", SOURCE_LEVEL);
+    }
+
+    public void testAnnotationInRecordParam() throws Exception {
+        performTest("Records", 999, null, "override.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordKeywordInsideMethod() throws Exception {
+        performTest("Records", 1014, "rec", "record.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordKeywordInsideClass() throws Exception {
+        performTest("Records", 844, "rec", "record.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordKeywordInsideMethodIfPrefixDoesntMatch() throws Exception {
+        performTest("Records", 1014, "someprefix", "empty.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordKeywordInsideClassIfPrefixDoesntMatch() throws Exception {
+        performTest("Records", 844, "someprefix", "empty.pass", SOURCE_LEVEL);
+    }
+
+    public void testVariableNameSuggestion() throws Exception {
+        performTest("Records", 1071, null, "recordVariableSuggestion.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordFirstComponentType() throws Exception {
+        performTest("Records", 1036, "Str", "typesStartingStr.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordSecondComponentType() throws Exception {
+        performTest("Records", 1036, "Exception a, Str", "typesStartingStr.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordThirdComponentType() throws Exception {
+        performTest("Records", 1036, "Exception a, Exception b, Str", "typesStartingStr.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordThirdComponentAnnotation() throws Exception {
+        performTest("Records", 1036, "Exception a, Exception b, @Dep", "deprecated.pass", SOURCE_LEVEL);
+    }
+
+    public void testRecordThirdComponentAnnotationThenType() throws Exception {
+        performTest("Records", 1036, "Exception a, Exception b, @Deprecated Str", "typesStartingStr.pass", SOURCE_LEVEL);
+    }
+
     static {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
     }

@@ -1,59 +1,55 @@
 <html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>errorsInLinkTag</b>()</pre><p><div id="snippet1" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet1">Copy</a></div>
 <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>link</b></i> tag mark up attribute <sub>^</sub><b><i>substring</b></i></span>
 </code></pre></div>
- 
- <div id="snippet2" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet2">Copy</a></div>
+
+<div id="snippet2" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet2">Copy</a></div>
 <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>link</b></i> tag mark up attribute <sub>^</sub><b><i>substring</b></i></span>
 </code></pre></div>
- 
- <div id="snippet3" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet3">Copy</a></div>
+
+<div id="snippet3" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet3">Copy</a></div>
 <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>link</b></i> tag mark up attribute <sub>^</sub><b><i>substring</b></i></span>
 </code></pre></div>
- 
- <div id="snippet4" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet4">Copy</a></div>
+
+<div id="snippet4" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet4">Copy</a></div>
 <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>link</b></i> tag mark up attribute <sub>^</sub><b><i>regex</b></i></span>
 </code></pre></div>
- 
- <div id="snippet5" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet5">Copy</a></div>
+
+<div id="snippet5" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet5">Copy</a></div>
 <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>link</b></i> tag mark up attribute <sub>^</sub><b><i>regex</b></i></span>
 </code></pre></div>
- 
- <div id="snippet6" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet6">Copy</a></div>
+
+<div id="snippet6" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet6">Copy</a></div>
 <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>link</b></i> tag mark up attribute <sub>^</sub><b><i>regex</b></i></span>
 </code></pre></div>
- 
- <div id="snippet7" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet7">Copy</a></div>
+
+<div id="snippet7" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet7">Copy</a></div>
 <pre><code><span style="color:red;">error: snippet markup: Missing <sub>^</sub><b><i>link</b></i> tag attribute : <sub>^</sub><b><i>target</b></i></span>
 </code></pre></div>
- 
- <div id="snippet8" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet8">Copy</a></div>
+
+<div id="snippet8" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet8">Copy</a></div>
 <pre><code><span style="color:red;">error: snippet markup: Missing <sub>^</sub><b><i>link</b></i> tag attribute : <sub>^</sub><b><i>target</b></i></span>
 </code></pre></div>
- 
- <div id="snippet9" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet9">Copy</a></div>
+
+<div id="snippet9" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet9">Copy</a></div>
 <pre><code><span style="color:red;">error: snippet markup: Invalid value <sub>^</sub><b><i>Blank</b></i> for <sub>^</sub><b><i>link</b></i> tag mark up attribute <sub>^</sub><b><i>substring</b></i></span>
 </code></pre></div>
- 
- <div id="snippet10" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet10">Copy</a></div>
-<pre><code> <a href='*1'>c</a><a href='*1'>l</a><a href='*1'>a</a><a href='*1'>s</a><a href='*1'>s</a> Helloclass {
- }
- 
+
+<div id="snippet10" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet10">Copy</a></div>
+<pre><code><a href='*1'>c</a><a href='*1'>l</a><a href='*1'>a</a><a href='*1'>s</a><a href='*1'>s</a> Helloclass {
+}
 </code></pre></div>
- 
- <div id="snippet11" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet11">Copy</a></div>
-<pre><code> class Hello<a href='*2'>C</a><a href='*2'>l</a><a href='*2'>a</a><a href='*2'>s</a><a href='*2'>s</a> {
- }
- 
+
+<div id="snippet11" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet11">Copy</a></div>
+<pre><code>class Hello<a href='*2'>C</a><a href='*2'>l</a><a href='*2'>a</a><a href='*2'>s</a><a href='*2'>s</a> {
+}
 </code></pre></div>
- 
- <div id="snippet12" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet12">Copy</a></div>
-<pre><code> class Helloclass {
- }
- 
+
+<div id="snippet12" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet12">Copy</a></div>
+<pre><code>class Helloclass {
+}
 </code></pre></div>
- 
- <div id="snippet13" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet13">Copy</a></div>
-<pre><code><a href='*4'> </a>class<a href='*4'> </a>HelloClass<a href='*4'> </a>{
- }
- 
+
+<div id="snippet13" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet13">Copy</a></div>
+<pre><code>class<a href='*4'> </a>HelloClass<a href='*4'> </a>{
+}
 </code></pre></div><p>

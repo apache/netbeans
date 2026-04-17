@@ -32,10 +32,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class RunnerHttpCreateAdminObject extends RunnerHttp {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Create JDBC connection pool command <code>restype</code>
      *  parameter name. */
     private static final String RESOURCE_TYPE_PARAM = "restype";
@@ -56,10 +53,7 @@ public class RunnerHttpCreateAdminObject extends RunnerHttp {
      *  parameter name. */
     private static final String ENABLED_PARAM = "enabled";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Builds create JDBC connection pool query string for given command.
      * <p/>
@@ -123,10 +117,7 @@ public class RunnerHttpCreateAdminObject extends RunnerHttp {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.

@@ -201,7 +201,7 @@ class Ordering {
                     if (n.contains("ergonomics")) { // NOI18N
                         break IGNORE_ERGO;
                     }
-                    presentNames.add(n);
+                    presentNames.add(n + "@" + cap.position);
                 }
                 LOG.log(
                     Level.WARNING, "Not all children in {0}/ marked with the position attribute: {1}, but some are: {2}",

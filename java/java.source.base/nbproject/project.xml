@@ -78,14 +78,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.libs.asm</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>5.4</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.libs.javacapi</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -98,8 +90,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>3</release-version>
-                        <specification-version>3.0</specification-version>
+                        <release-version>9</release-version>
+                        <specification-version>9.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -221,8 +213,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>2.33</specification-version>
+                        <release-version>3</release-version>
+                        <specification-version>3.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -231,7 +223,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.13</specification-version>
+                        <specification-version>1.99</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -296,9 +288,6 @@
             <test-dependencies>
                 <test-type>
                     <name>unit</name>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.api.progress.nb</code-name-base>
-                    </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.core.startup</code-name-base>
                         <compile-dependency/>
@@ -421,9 +410,6 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.openide.filesystems</code-name-base>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.openide.options</code-name-base>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.openide.text</code-name-base>

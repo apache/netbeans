@@ -347,4 +347,130 @@ public class ThrowableNotThrownTest extends NbTestCase {
                 .run(ThrowableNotThrown.class)
                 .assertWarnings();
     }
+
+    public void testEnhancedSwitch1() throws Exception {
+        HintTest.create()
+                .sourceLevel(25)
+                .input("""
+                       package test;
+                       import java.io.FileInputStream;
+                       import java.io.IOException;
+
+                       public class Test {
+                           void test() throws Throwable {
+                               try {
+                                   new FileInputStream("/foo");
+                               } catch (IOException ex) {
+                                   switch (ex.getCause()) {
+                                       case IOException ioe -> throw ioe;
+                                       case Throwable _ -> throw ex;
+                                   }
+                               }
+                           }
+                       }
+                       """)
+                .run(ThrowableNotThrown.class)
+                .assertWarnings();
+    }
+
+    public void testEnhancedSwitch2() throws Exception {
+        HintTest.create()
+                .sourceLevel(25)
+                .input("""
+                       package test;
+                       import java.io.FileInputStream;
+                       import java.io.IOException;
+
+                       public class Test {
+                           void test() throws Throwable {
+                               try {
+                                   new FileInputStream("/foo");
+                               } catch (IOException ex) {
+                                   switch (ex.getCause()) {
+                                       case IOException ioe -> throw ex;
+                                       case Throwable _ -> throw ex;
+                                   }
+                               }
+                           }
+                       }
+                       """)
+                .run(ThrowableNotThrown.class)
+                .assertWarnings("9:20-9:33:verifier:Throwable method result is ignored");
+    }
+
+    public void testEnhancedSwitchExpressionNoWarn1() throws Exception {
+        HintTest.create()
+                .sourceLevel(25)
+                .input("""
+                       package test;
+                       import java.io.FileInputStream;
+                       import java.io.IOException;
+
+                       public class Test {
+                           void test() throws Throwable {
+                               try {
+                                   new FileInputStream("/foo");
+                               } catch (IOException ex) {
+                                   throw switch (ex.getCause()) {
+                                       case IOException ioe -> ioe;
+                                       case Throwable _ -> ex;
+                                   };
+                               }
+                           }
+                       }
+                       """)
+                .run(ThrowableNotThrown.class)
+                .assertWarnings();
+    }
+
+    public void testEnhancedSwitchExpressionNoWarn2() throws Exception {
+        HintTest.create()
+                .sourceLevel(25)
+                .input("""
+                       package test;
+                       import java.io.FileInputStream;
+                       import java.io.IOException;
+
+                       public class Test {
+                           void test() throws Throwable {
+                               try {
+                                   new FileInputStream("/foo");
+                               } catch (IOException ex) {
+                                   Throwable t = switch (ex.getCause()) {
+                                       case IOException ioe -> ioe;
+                                       case Throwable tt -> throw tt;
+                                   };
+                               }
+                           }
+                       }
+                       """)
+                .run(ThrowableNotThrown.class)
+                .assertWarnings();
+    }
+
+    public void testEnhancedSwitchExpressionWarn() throws Exception {
+        HintTest.create()
+                .sourceLevel(25)
+                .input("""
+                       package test;
+                       import java.io.FileInputStream;
+                       import java.io.IOException;
+
+                       public class Test {
+                           void test() throws Throwable {
+                               try {
+                                   new FileInputStream("/foo");
+                               } catch (IOException ex) {
+                                   Throwable t = switch (ex.getCause()) {
+                                       case IOException ioe -> ioe;
+                                       case Throwable tt -> tt;
+                                   };
+                               }
+                           }
+                       }
+                       """)
+                .run(ThrowableNotThrown.class)
+                .assertWarnings("9:34-9:47:verifier:Throwable method result is ignored");
+    }
+
 }

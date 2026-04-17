@@ -563,6 +563,7 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
         containerPathLabel.setMinimumSize(new java.awt.Dimension(100, 14));
 
         dockerVolumeCheckBox.setText(org.openide.util.NbBundle.getMessage(AddDomainLocationVisualPanel.class, "AddDomainLocationVisualPanel.dockerVolumeCheckBox.text")); // NOI18N
+        dockerVolumeCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(AddDomainLocationVisualPanel.class, "AddDomainLocationVisualPanel.dockerVolumeCheckBox.toolTipText")); // NOI18N
         dockerVolumeCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dockerVolumeCheckBoxActionPerformed(evt);
@@ -576,6 +577,7 @@ public class AddDomainLocationVisualPanel extends javax.swing.JPanel {
         containerPathField.setText(org.openide.util.NbBundle.getMessage(AddDomainLocationVisualPanel.class, "AddDomainLocationVisualPanel.containerPathField.text")); // NOI18N
 
         wslCheckBox.setText(org.openide.util.NbBundle.getMessage(AddDomainLocationVisualPanel.class, "AddDomainLocationVisualPanel.wslCheckBox.text")); // NOI18N
+        wslCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(AddDomainLocationVisualPanel.class, "AddDomainLocationVisualPanel.wslCheckBox.toolTipText")); // NOI18N
         wslCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 wslCheckBoxActionPerformed(evt);

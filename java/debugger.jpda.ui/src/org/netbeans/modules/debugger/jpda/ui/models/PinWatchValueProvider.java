@@ -56,7 +56,6 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 
 /**
  *

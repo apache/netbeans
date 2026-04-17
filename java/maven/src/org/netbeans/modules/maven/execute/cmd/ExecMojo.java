@@ -19,6 +19,8 @@
 
 package org.netbeans.modules.maven.execute.cmd;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -31,6 +33,11 @@ import org.apache.maven.model.InputSource;
 import org.codehaus.plexus.util.Base64;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.netbeans.api.annotations.common.CheckForNull;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 
 /**
@@ -46,6 +53,7 @@ public class ExecMojo extends ExecutionEventObject {
         private InputLocation location;
         private URL[] classpathURLs;
         private String implementationClass;
+        private File currentProjectLocation;
 
 
     public ExecMojo(String goal, GAV plugin, String phase, String executionId, ExecutionEvent.Type type) {
@@ -101,6 +109,12 @@ public class ExecMojo extends ExecutionEventObject {
             toRet.setClasspathURLs(urlList.toArray(new URL[0]));
         }
         toRet.setImplementationClass((String) mojo.get("impl"));
+        File prjFile = null;
+        String file = (String) mojo.get("prjFile");
+        if (file != null) {
+            prjFile = FileUtil.normalizeFile(new File(file));
+        }
+        toRet.setCurrentProjectLocation(prjFile);
         return toRet;
     }
 
@@ -154,5 +168,25 @@ public class ExecMojo extends ExecutionEventObject {
 
     void setImplementationClass(String implementationClass) {
         this.implementationClass = implementationClass;
+    }
+
+    public @CheckForNull Project findProject() {
+        if (currentProjectLocation != null) {
+            FileObject fo = FileUtil.toFileObject(currentProjectLocation);
+            if (fo != null) {
+                try {
+                    return ProjectManager.getDefault().findProject(fo);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                } catch (IllegalArgumentException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+        return null;
+    }
+
+    void setCurrentProjectLocation(File currentProjectLocation) {
+        this.currentProjectLocation = currentProjectLocation;
     }
 }

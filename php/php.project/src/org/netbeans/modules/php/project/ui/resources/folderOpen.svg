@@ -19,32 +19,25 @@
     under the License.
 
 -->
-<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
   <defs>
     <style>
-      .cls-1, .cls-2 {
-        fill: #000;
-      }
-
-      .cls-1, .cls-2, .cls-3 {
-        stroke-width: 0px;
-      }
-
-      .cls-4, .cls-2 {
-        opacity: .33;
-      }
-
-      .cls-3 {
+      .st0 {
         fill: #fbdc7c;
+      }
+
+      .st1 {
+        opacity: .33;
       }
     </style>
   </defs>
   <g>
-    <polygon class="cls-3" points="13 14 0 14 0 2 6 2 7.5 4 13 4 13 14"/>
-    <g class="cls-4">
-      <path class="cls-1" d="M5.5,3l1.2,1.6.3.4h5v8H1V3h4.5M6,2H0v12h13V4h-5.5l-1.5-2h0Z"/>
+    <polygon class="st0" points="13 14 0 14 0 2 6 2 7.5 4 13 4 13 14"/>
+    <g class="st1">
+      <path d="M5.5,3l1.2,1.6.3.4h5v8H1V3h4.5M6,2H0v12h13V4h-5.5l-1.5-2h0Z"/>
     </g>
   </g>
-  <polygon class="cls-3" points="13 14 0 14 3 6 16 6 13 14"/>
-  <path class="cls-2" d="M12,6v.5H2.812L0,14h13l3-8h-4ZM12.307,13H.909l2.25-6h11.398l-2.25,6Z"/>
+  <polygon class="st0" points="13 14 0 14 3 6 16 6 13 14"/>
+  <path class="st1" d="M12,6v.5H2.812L0,14h13l3-8h-4ZM12.307,13H.909l2.25-6h11.398l-2.25,6Z"/>
 </svg>

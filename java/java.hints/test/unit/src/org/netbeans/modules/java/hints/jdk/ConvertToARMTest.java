@@ -1554,4 +1554,58 @@ public class ConvertToARMTest extends NbTestCase {
             }
         }
     }
+
+    // Case: 
+    public void testGH9046() throws Exception {
+        HintTest
+                .create()
+                .input("""
+                        package test;
+                        import java.io.ByteArrayOutputStream;
+                        import java.io.InputStream;
+
+                        public class Test {
+
+                            public static byte[] test(InputStream input) throws Exception {
+                                ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+                                int len;
+
+                                byte[] buffer = new byte[1024];
+
+                                while ((len = input.read(buffer)) != -1) {
+                                    outStream.write(buffer, 0, len);
+                                }
+                                input.close();
+
+                                return outStream.toByteArray();
+                            }
+                        }
+                        """)
+                .sourceLevel("17")
+                .run(ConvertToARM.class)
+                .findWarning("12:22-12:27:verifier:TXT_ConvertToARM")
+                .applyFix("TXT_ConvertToARM")
+                .assertOutput("""
+                        package test;
+                        import java.io.ByteArrayOutputStream;
+                        import java.io.InputStream;
+
+                        public class Test {
+
+                            public static byte[] test(InputStream input) throws Exception {
+                                ByteArrayOutputStream outStream;
+                                try (input) {
+                                    outStream = new ByteArrayOutputStream();
+                                    int len;
+                                    byte[] buffer = new byte[1024];
+                                    while ((len = input.read(buffer)) != -1) {
+                                        outStream.write(buffer, 0, len);
+                                    }
+                                }
+
+                                return outStream.toByteArray();
+                            }
+                        }
+                        """);
+    }
 }

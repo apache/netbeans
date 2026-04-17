@@ -30,8 +30,6 @@ import org.openide.explorer.propertysheet.editors.EnhancedPropertyEditor;
 * @author Martin Matula
 */
 public class IdxPropertyTypeEditor extends PropertyEditorSupport implements EnhancedPropertyEditor {
-    /** Current value */
-//    private Type type;
     
     /** Default types */
     private final String[] types = new String[] {

@@ -123,8 +123,6 @@ import com.sun.source.util.JavacTask;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.util.data.DataHolder;
-import com.vladsch.flexmark.util.data.MutableDataSet;
 import javax.lang.model.element.RecordComponentElement;
 import org.netbeans.api.java.queries.SourceLevelQuery;
 import org.netbeans.api.java.queries.SourceLevelQuery.Profile;
@@ -191,7 +189,7 @@ public class ElementJavadoc {
     }
     
     /** Creates an object describing the Javadoc of given element. The object
-     * is capable of getting the text formated into HTML, resolve the links,
+     * is capable of getting the text formatted into HTML, resolve the links,
      * jump to external javadoc.
      * 
      * @param compilationInfo CompilationInfo
@@ -203,7 +201,7 @@ public class ElementJavadoc {
     }
 
     /** Creates an object describing the Javadoc of given element. The object
-     * is capable of getting the text formated into HTML, resolve the links,
+     * is capable of getting the text formatted into HTML, resolve the links,
      * jump to external javadoc.
      *
      * @param compilationInfo CompilationInfo
@@ -216,7 +214,7 @@ public class ElementJavadoc {
         return new ElementJavadoc(compilationInfo, element, null, cancel);
     }
     
-    /** Gets the javadoc comment formated as HTML.      
+    /** Gets the javadoc comment formatted as HTML.
      * @return HTML text of the javadoc
      */
     public String getText() {
@@ -228,7 +226,7 @@ public class ElementJavadoc {
         }
     }
 
-    /** Gets the javadoc comment formated as HTML.
+    /** Gets the javadoc comment formatted as HTML.
      * @return {@link Future} of HTML text of the javadoc
      * @since 1.20
      */
@@ -237,7 +235,7 @@ public class ElementJavadoc {
     }
 
     /** Gets URL of the external javadoc.
-     * @return Text of the Javadoc comment formated as HTML
+     * @return Text of the Javadoc comment formatted as HTML
      */ 
     public URL getURL() {
         return docURL;
@@ -422,7 +420,7 @@ public class ElementJavadoc {
             return;
         }
         try {
-            //Optimisitic no http
+            //Optimistic no http
             CharSequence doc = getElementDoc(element, compilationInfo, header, url, true);
             if (doc == null) {
                 computeDocURL(Collections.emptyList(), true, cancel);
@@ -858,7 +856,7 @@ public class ElementJavadoc {
                         });
                         sb.append("<p>"); //NOI18N
                         if (doc.containsKey(DocTree.Kind.DEPRECATED)) {
-                            sb.append("<b>").append(NbBundle.getMessage(ElementJavadoc.class, "JCD-deprecated")).append("</b> <i>").append(doc.get(DocTree.Kind.DEPRECATED)).append("</i><p>"); //NOI18N
+                            sb.append("<b>").append(NbBundle.getMessage(ElementJavadoc.class, "JCD-deprecated")).append("</b> <div style=\"font-style: italic\">").append(doc.get(DocTree.Kind.DEPRECATED)).append("</div><p>"); //NOI18N
                         }
                         if (doc.containsKey(null)) {
                             sb.append(doc.get(null));
@@ -1391,6 +1389,8 @@ public class ElementJavadoc {
                     sb.append("<code>"); //NOI18N
                     sb.append(systemPropTag.getPropertyName());
                     sb.append("</code>"); //NOI18N
+                    break;
+                case COMMENT:
                     break;
                 default:
                     sb.append("<code>"); //NOI18N

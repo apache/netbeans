@@ -1,0 +1,22 @@
+    final final function finalFinalEnumMethod(): void {}
+                         --------------------
+HINT:Multiple final modifiers are not allowed
+FIX:Remove modifier: final
+    public public function publicPublicEnumMethod(): void {}
+                           ----------------------
+HINT:Multiple public modifiers are not allowed
+FIX:Remove modifier: public
+    public private function publicPrivateEnumMethod(): void {}
+                            -----------------------
+HINT:Multiple access type modifiers are not allowed
+FIX:Remove modifier: public
+FIX:Remove modifier: private
+    public protected function publicProtectedEnumMethod(): void {}
+                              -------------------------
+HINT:Multiple access type modifiers are not allowed
+FIX:Remove modifier: public
+FIX:Remove modifier: protected
+    static static function staticStaticEnumMethod(): void {}
+                           ----------------------
+HINT:Multiple static modifiers are not allowed
+FIX:Remove modifier: static

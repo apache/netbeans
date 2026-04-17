@@ -128,7 +128,7 @@ that they operate without loading other openide classes
 (if they need an implementation class they get it from Lookup).
 </p>
 
-<h4>Hyperlink SPI</h4>
+<h2>Hyperlink SPI</h2>
 <api group="java" name="EditorHyperlinkSPI" type="export" category="devel">
     Hyperlink SPI in <code>org.netbeans.lib.editor.hyperlink.spi</code>
     allows the editors for a particular mime-type to respond to the situation

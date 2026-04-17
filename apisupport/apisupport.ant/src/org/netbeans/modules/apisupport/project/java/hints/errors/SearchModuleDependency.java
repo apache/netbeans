@@ -50,7 +50,7 @@ import org.netbeans.api.java.source.Task;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -377,7 +377,7 @@ public class SearchModuleDependency implements org.netbeans.modules.java.hints.s
             SingleModuleProperties props = SingleModuleProperties.getInstance(project);
             final ModuleDependency[] newDeps = AddModulePanel.selectDependencies(props, clazz);
             final AtomicBoolean cancel = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 public @Override
                 void run() {
                     ProjectXMLManager pxm = new ProjectXMLManager(project);

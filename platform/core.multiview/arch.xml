@@ -506,7 +506,7 @@ Nothing is executed.
 <api name="multiview.toolbarVisible" category="devel" group="preferences" type="export">
     <p>
     The visibility of 
-    <a href="@TOP@/org/netbeans/core/spi/multiview/MultiViewElement.html#getToolbarRepresentation--">toolbar</a>
+    <a href="@TOP@/org/netbeans/core/spi/multiview/MultiViewElement.html#getToolbarRepresentation()">toolbar</a>
     is controlled by a preference shared with editor module.
     The multiview implementation listens and uses following property:
     </p>

@@ -29,10 +29,7 @@ import org.netbeans.modules.payara.tooling.TaskState;
  */
 public abstract class Result<T> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** State of Payara server administration command execution. */
     TaskState state;
 
@@ -42,10 +39,7 @@ public abstract class Result<T> {
      *  Value of <code>false</code> means that authorization failed. */
     boolean auth;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara administration command result.
      */
@@ -54,10 +48,7 @@ public abstract class Result<T> {
         this.auth = true;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get state of Payara server administration command execution.
      * <p/>

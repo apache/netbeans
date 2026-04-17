@@ -41,8 +41,8 @@ public class ConfigFileProvider implements CommandProvider {
     private final TempFileGenerator bootstrapPropertiesFileGenerator;
 
     public ConfigFileProvider() {
-        this.applicationPropertiesFileGenerator = new TempFileGenerator("application-", ".properties", GET_CONFIG_FILE_PATH, false); // NOI18N
-        this.bootstrapPropertiesFileGenerator = new TempFileGenerator("bootstrap-", ".properties", GET_CONFIG_FILE_PATH, false); // NOI18N
+        this.applicationPropertiesFileGenerator = new TempFileGenerator("application-", ".properties"); // NOI18N
+        this.bootstrapPropertiesFileGenerator = new TempFileGenerator("bootstrap-", ".properties"); // NOI18N
     }
     
     @Override

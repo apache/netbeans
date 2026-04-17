@@ -1,0 +1,37 @@
+Code completion result for source line:
+public(set) |Foo $publicSet; // prop
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CLASS      AsymmetricVisibility            [PUBLIC]   testAsymmetricVisibilityClass01.php
+CLASS      AsymmetricVisibilityPromoted    [PUBLIC]   testAsymmetricVisibilityClass01.php
+CLASS      Bar                             [PUBLIC]   testAsymmetricVisibilityClass01.php
+CLASS      Foo                             [PUBLIC]   testAsymmetricVisibilityClass01.php
+------------------------------------
+KEYWORD    abstract                                   null
+KEYWORD    array                                      null
+KEYWORD    bool                                       null
+KEYWORD    const                                      null
+KEYWORD    false                                      null
+KEYWORD    final                                      null
+KEYWORD    float                                      null
+KEYWORD    function                                   null
+KEYWORD    int                                        null
+KEYWORD    iterable                                   null
+KEYWORD    mixed                                      null
+KEYWORD    null                                       null
+KEYWORD    object                                     null
+KEYWORD    parent                                     null
+KEYWORD    private                                    null
+KEYWORD    private(set)                               null
+KEYWORD    protected                                  null
+KEYWORD    protected private(set)                     null
+KEYWORD    protected(set)                             null
+KEYWORD    public                                     null
+KEYWORD    public private(set)                        null
+KEYWORD    public protected(set)                      null
+KEYWORD    public(set)                                null
+KEYWORD    readonly                                   null
+KEYWORD    self                                       null
+KEYWORD    static                                     null
+KEYWORD    string                                     null
+KEYWORD    true                                       null
+KEYWORD    var                                        null

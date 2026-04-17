@@ -42,7 +42,7 @@ import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.xml.lexer.XMLTokenId;
 import org.netbeans.lib.editor.hyperlink.spi.HyperlinkProvider;
 import org.netbeans.modules.editor.NbEditorUtilities;
@@ -160,7 +160,7 @@ public class TestNGSuiteHyperlingProvider implements HyperlinkProvider {
 
     public void performClickAction(final Document doc, final int offset) {
         final AtomicBoolean cancel = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() {
+        BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
             public void run() {
                 performGoTo(doc, offset, file, method, targetType, cancel);

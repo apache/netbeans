@@ -68,9 +68,7 @@ public final class ModeImpl implements Mode.Xml {
     }
     
     
-    ///////////////////////////////////////////////////////////////////
     // Start of org.openide.windows.Mode interface implementation.
-    ///////////////////////////////////////////////////////////////////
     /** Gets the programmatic name of this mode.
      * This name should be unique, as it is used to find modes etc.
      * Implements <code>Mode</code> interface method.
@@ -215,11 +213,7 @@ public final class ModeImpl implements Mode.Xml {
     public void removePropertyChangeListener (PropertyChangeListener pchl) {
         changeSupport.removePropertyChangeListener(pchl);
     }
-    ///////////////////////////////////////////////////////////////////
     // End of org.openide.windows.Mode interface implementation.
-    ///////////////////////////////////////////////////////////////////
-
-    
     /** Actually performs the docking operation.
      * @param tc top component to dock into this mode
      * @param orderWeight weight for ordering. Smaller weight number means
@@ -524,7 +518,6 @@ public final class ModeImpl implements Mode.Xml {
     }
     
     
-    ////////////////////
     // Utility methods>>
     /*private*/ static String getUnusedModeName() {
         String base = MODE_ANONYMOUS_NAME;
@@ -545,8 +538,6 @@ public final class ModeImpl implements Mode.Xml {
         return result;
     }
     // Utility methods<<
-    ////////////////////
-
     public void setModeName(String text) {
         getCentral().setModeName(this, text);
     }

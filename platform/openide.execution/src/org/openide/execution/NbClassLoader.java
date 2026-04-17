@@ -43,7 +43,7 @@ import org.openide.windows.InputOutput;
 /** A class loader which is capable of loading classes from the Repository.
  * XXX the only useful thing this class does is effectively make
  * ExecutionEngine.createPermissions public! Consider deprecating this class...
- * @see <a href="@org-netbeans-api-java-classpath@/org/netbeans/api/java/classpath/ClassPath.html#getClassLoader-boolean-"><code>ClassPath.getClassLoader(...)</code></a>
+ * @see <a href="@org-netbeans-api-java-classpath@/org/netbeans/api/java/classpath/ClassPath.html#getClassLoader(boolean)"><code>ClassPath.getClassLoader(...)</code></a>
 * @author Ales Novak, Petr Hamernik, Jaroslav Tulach, Ian Formanek
 */
 public class NbClassLoader extends URLClassLoader {

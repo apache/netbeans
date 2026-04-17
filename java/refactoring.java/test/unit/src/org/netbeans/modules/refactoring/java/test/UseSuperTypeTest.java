@@ -49,11 +49,16 @@ public class UseSuperTypeTest extends RefactoringTestBase {
     }
     
     public void test230345() throws Exception { // #230345 - [Use Supertype Where Possible] removes the generic type information
+        int javaVersion = Runtime.version().feature();
         writeFilesAndWaitForScan(src,
                 new File("u/Main.java", "package u; import java.util.*; public class Main { public void method() { LinkedHashSet<String> verz = new LinkedHashSet<String>(); } }"));
         performFromMethodUseSuperType(src.getFileObject("u/Main.java"), 8);
+
+        String expectedCode = javaVersion >= 21
+                ? "package u; import java.util.*; public class Main { public void method() { SequencedCollection<String> verz = new LinkedHashSet<String>(); } }"
+                : "package u; import java.util.*; public class Main { public void method() { Set<String> verz = new LinkedHashSet<String>(); } }";
         verifyContent(src,
-                new File("u/Main.java", "package u; import java.util.*; public class Main { public void method() { Set<String> verz = new LinkedHashSet<String>(); } }"));
+                new File("u/Main.java", expectedCode ));
     }
     
     public void unfinished228636a() throws Exception { // #228636 - UseSupertypeWherePossible ignores use of generic type

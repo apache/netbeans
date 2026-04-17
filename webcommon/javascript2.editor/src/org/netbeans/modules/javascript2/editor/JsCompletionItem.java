@@ -142,8 +142,7 @@ public class JsCompletionItem implements CompletionProposal {
     @Override
     public String getRhsHtml(HtmlFormatter formatter) {
         String location = null;
-        if (element instanceof JsElement) {
-            JsElement jsElement = (JsElement) element;
+        if (element instanceof JsElement jsElement) {
             if (jsElement.isPlatform()) {
                 location = Bundle.JsCompletionItem_lbl_js_platform();
             } else if (jsElement.getSourceLabel() != null) {
@@ -184,7 +183,7 @@ public class JsCompletionItem implements CompletionProposal {
         Set<Modifier> modifiers;
 
         if (getElement() == null || getElement().getModifiers().isEmpty()) {
-            modifiers = Collections.EMPTY_SET;
+            modifiers = Collections.emptySet();
         } else {
             modifiers = EnumSet.noneOf(Modifier.class);
             modifiers.addAll(getElement().getModifiers());
@@ -206,8 +205,8 @@ public class JsCompletionItem implements CompletionProposal {
     @Override
     public int getSortPrioOverride() {
         int order = 100;
-        if (element instanceof JsElement) {
-            if (((JsElement)element).isPlatform()) {
+        if (element instanceof JsElement jsElement) {
+            if (jsElement.isPlatform()) {
                 if (ModelUtils.PROTOTYPE.equals(element.getName())) { //NOI18N
                     order = 1;
                 } else {
@@ -261,7 +260,7 @@ public class JsCompletionItem implements CompletionProposal {
         private final Map<String, Set<String>> parametersTypes;
         JsFunctionCompletionItem(ElementHandle element, CompletionRequest request, Set<String> resolvedReturnTypes, Map<String, Set<String>> parametersTypes) {
             super(element, request);
-            this.returnTypes = resolvedReturnTypes != null ? resolvedReturnTypes : Collections.EMPTY_SET;
+            this.returnTypes = resolvedReturnTypes != null ? resolvedReturnTypes : Collections.emptySet();
             this.parametersTypes = parametersTypes != null ? parametersTypes : Collections.<String, Set<String>>emptyMap();
         }
 
@@ -338,7 +337,7 @@ public class JsCompletionItem implements CompletionProposal {
         public ImageIcon getIcon() {
             if (getModifiers().contains(Modifier.PROTECTED)) {
                 if(priviligedIcon == null) {
-                    priviligedIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/methodPriviliged.png")); //NOI18N
+                    priviligedIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/methodPriviliged.png", false); //NOI18N
                 }
                 return priviligedIcon;
             }
@@ -370,8 +369,8 @@ public class JsCompletionItem implements CompletionProposal {
             boolean result = false;
             char firstChar = getName().charAt(0);
             JsElement.Kind jsKind = null;
-            if (element instanceof JsElement) {
-                jsKind = ((JsElement)element).getJSKind();
+            if (element instanceof JsElement jsElement) {
+                jsKind = jsElement.getJSKind();
             }
             if ((jsKind != null && jsKind == JsElement.Kind.CONSTRUCTOR) || Character.isUpperCase(firstChar)) {
                 boolean isAfterNew = isAfterNewKeyword();
@@ -408,17 +407,17 @@ public class JsCompletionItem implements CompletionProposal {
         public ImageIcon getIcon() {
             if (getModifiers().contains(Modifier.PUBLIC)) {
                 if (publicGenerator == null) {
-                    publicGenerator = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/generatorPublic.png")); //NOI18N
+                    publicGenerator = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/generatorPublic.png", false); //NOI18N
                 }
                 return publicGenerator;
             } else if (getModifiers().contains(Modifier.PRIVATE)) {
                 if (privateGenerator == null) {
-                    privateGenerator = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/generatorPrivate.png")); //NOI18N
+                    privateGenerator = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/generatorPrivate.png", false); //NOI18N
                 }
                 return privateGenerator;
             } else if (getModifiers().contains(Modifier.PROTECTED)) {
                 if (priviligedGenerator == null) {
-                    priviligedGenerator = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/generatorPriviliged.png")); //NOI18N
+                    priviligedGenerator = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/generatorPriviliged.png", false); //NOI18N
                 }
                 return priviligedGenerator;
             }
@@ -429,7 +428,7 @@ public class JsCompletionItem implements CompletionProposal {
 
     public static class JsCallbackCompletionItem extends JsCompletionItem {
         private static ImageIcon callbackIcon = null;
-        private IndexedElement.FunctionIndexedElement function;
+        private final IndexedElement.FunctionIndexedElement function;
 
         public JsCallbackCompletionItem(IndexedElement.FunctionIndexedElement element, CompletionRequest request) {
             super(element, request);
@@ -439,7 +438,7 @@ public class JsCompletionItem implements CompletionProposal {
         @Override
         public ImageIcon getIcon() {
             if (callbackIcon == null) {
-                callbackIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/methodCallback.png")); //NOI18N
+                callbackIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/methodCallback.png", false); //NOI18N
             }
             return callbackIcon;
         }
@@ -572,7 +571,7 @@ public class JsCompletionItem implements CompletionProposal {
         @Override
         public ImageIcon getIcon() {
             if (keywordIcon == null) {
-                keywordIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/javascript.png")); //NOI18N
+                keywordIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/javascript.png", false); //NOI18N
             }
             return keywordIcon;
         }
@@ -592,40 +591,40 @@ public class JsCompletionItem implements CompletionProposal {
             }
 
             switch(type) {
-                case SIMPLE:
+                case SIMPLE -> {
                     builder.append(getName());
-                    break;
-                case ENDS_WITH_SPACE:
+                }
+                case ENDS_WITH_SPACE -> {
                     builder.append(getName());
                     builder.append(" ${cursor}"); //NOI18N
-                    break;
-                case CURSOR_INSIDE_BRACKETS:
+                }
+                case CURSOR_INSIDE_BRACKETS -> {
                     builder.append(getName());
                     builder.append("(${cursor})"); //NOI18N
-                    break;
-                case ENDS_WITH_CURLY_BRACKETS:
+                }
+                case ENDS_WITH_CURLY_BRACKETS -> {
                     builder.append(getName());
                     builder.append(" {${cursor}}"); //NOI18N
-                    break;
-                case ENDS_WITH_SEMICOLON:
+                }
+                case ENDS_WITH_SEMICOLON -> {
                     builder.append(getName());
                     CharSequence text = request.info.getSnapshot().getText();
                     int index = request.anchor + request.prefix.length();
                     if (index == text.length() || ';' != text.charAt(index)) { //NOI18N
                         builder.append(";"); //NOI18N
                     }
-                    break;
-                case ENDS_WITH_COLON:
+                }
+                case ENDS_WITH_COLON -> {
                     builder.append(getName());
                     builder.append(" ${cursor}:"); //NOI18N
-                    break;
-                case ENDS_WITH_DOT:
+                }
+                case ENDS_WITH_DOT -> {
                     builder.append(getName());
                     builder.append(".${cursor}"); //NOI18N
-                    break;
-                default:
+                }
+                default -> {
                     assert false : type.toString();
-                    break;
+                }
             }
             return builder.toString();
         }
@@ -642,7 +641,7 @@ public class JsCompletionItem implements CompletionProposal {
 
         JsPropertyCompletionItem(ElementHandle element, CompletionRequest request, Set<String> resolvedTypes) {
             super(element, request);
-            this.resolvedTypes = resolvedTypes != null ? resolvedTypes : Collections.EMPTY_SET;
+            this.resolvedTypes = resolvedTypes != null ? resolvedTypes : Collections.emptySet();
         }
 
         @Override
@@ -696,11 +695,7 @@ public class JsCompletionItem implements CompletionProposal {
                         return;
                     }
                     switch (element.getJSKind()) {
-                        case CONSTRUCTOR:
-                        case FUNCTION:
-                        case METHOD:
-                        case GENERATOR:
-                        case ARROW_FUNCTION:
+                        case CONSTRUCTOR, FUNCTION, METHOD, GENERATOR, ARROW_FUNCTION -> {
                             Set<String> returnTypes = new HashSet<>();
                             HashMap<String, Set<String>> allParameters = new LinkedHashMap<>();
                             if (element instanceof JsFunction) {
@@ -715,7 +710,7 @@ public class JsCompletionItem implements CompletionProposal {
                                     for (TypeUsage type : jsObject.getAssignmentForOffset(jsObject.getOffset() + 1)) {
                                         Set<String> resolvedType = resolvedTypes.get(type.getType());
                                         if (resolvedType == null) {
-                                            resolvedType = new HashSet(1);
+                                            resolvedType = new HashSet<>(1);
                                             String displayName = ModelUtils.getDisplayName(type);
                                             if (!displayName.isEmpty()) {
                                                 resolvedType.add(displayName);
@@ -726,10 +721,10 @@ public class JsCompletionItem implements CompletionProposal {
                                     }
                                     allParameters.put(jsObject.getName(), paramTypes);
                                 }
-                            } else if (element instanceof IndexedElement.FunctionIndexedElement) {
+                            } else if (element instanceof IndexedElement.FunctionIndexedElement functionIndexedElement) {
                                 // count return types
                                 HashSet<TypeUsage> returnTypeUsages = new HashSet<>();
-                                for (String type : ((IndexedElement.FunctionIndexedElement) element).getReturnTypes()) {
+                                for (String type : functionIndexedElement.getReturnTypes()) {
                                     returnTypeUsages.add(new TypeUsage(type, -1, false));
                                 }
                                 Collection<TypeUsage> resolveTypes = ModelUtils.resolveTypes(returnTypeUsages,
@@ -737,13 +732,13 @@ public class JsCompletionItem implements CompletionProposal {
                                         jsIndex, false);
                                 returnTypes.addAll(Utils.getDisplayNames(resolveTypes));
                                 // count parameters type
-                                LinkedHashMap<String, Collection<String>> parameters = ((IndexedElement.FunctionIndexedElement) element).getParameters();
+                                LinkedHashMap<String, Collection<String>> parameters = functionIndexedElement.getParameters();
                                 for (Map.Entry<String, Collection<String>> paramEntry : parameters.entrySet()) {
                                     Set<String> paramTypes = new HashSet<>();
                                     for (String type : paramEntry.getValue()) {
                                         Set<String> resolvedType = resolvedTypes.get(type);
                                         if (resolvedType == null) {
-                                            resolvedType = new HashSet(1);
+                                            resolvedType = new HashSet<>(1);
                                             String displayName = ModelUtils.getDisplayName(type);
                                             if (!displayName.isEmpty()) {
                                                 resolvedType.add(displayName);
@@ -763,20 +758,13 @@ public class JsCompletionItem implements CompletionProposal {
                                         : new JsGeneratorCompletionItem(element, request, returnTypes, allParameters);
                                 signatures.put(signature, item);
                             }
-                            break;
-                        case PARAMETER:
-                        case PROPERTY:
-                        case PROPERTY_GETTER:
-                        case PROPERTY_SETTER:
-                        case FIELD:
-                        case VARIABLE:
+                        }
+                        case PARAMETER, PROPERTY, PROPERTY_GETTER, PROPERTY_SETTER, FIELD, VARIABLE -> {
                             Set<String> typesToDisplay = new HashSet<>();
                             Collection<? extends TypeUsage> assignment = null;
-                            if (element instanceof JsObject) {
-                                JsObject jsObject = (JsObject) element;
+                            if (element instanceof JsObject jsObject) {
                                 assignment = jsObject.getAssignments();
-                            } else if (element instanceof IndexedElement) {
-                                IndexedElement iElement = (IndexedElement) element;
+                            } else if (element instanceof IndexedElement iElement) {
                                 assignment = iElement.getAssignments();
                             }
                             if (assignment != null && !assignment.isEmpty()) {
@@ -791,7 +779,7 @@ public class JsCompletionItem implements CompletionProposal {
                                         if (resolvedType == null) {
                                             toResolve.clear();
                                             toResolve.add(type);
-                                            resolvedType = new HashSet(1);
+                                            resolvedType = new HashSet<>(1);
                                             Collection<TypeUsage> resolved = ModelUtils.resolveTypes(toResolve,
                                                     Model.getModel(request.result, false),
                                                     jsIndex, false);
@@ -808,19 +796,20 @@ public class JsCompletionItem implements CompletionProposal {
                                 }
                             }
                             // signatures
-                            signature = element.getName() + ":" + createTypeSignature(typesToDisplay);
+                            String signature = element.getName() + ":" + createTypeSignature(typesToDisplay);
                             if (!signatures.containsKey(signature)) {
                                 // add the item to the cc only if doesn't exist any similar
                                 JsCompletionItem item = new JsPropertyCompletionItem(element, request, typesToDisplay);
                                 signatures.put(signature, item);
                             }
-                            break;
-                        default:
-                            signature = element.getName();
+                        }
+                        default -> {
+                            String signature = element.getName();
                             if (!signatures.containsKey(signature)) {
                                 JsCompletionItem item = new JsCompletionItem(element, request);
                                 signatures.put(signature, item);
                             }
+                        }
                     }
                 }
                 for (JsCompletionItem item: signatures.values()) {

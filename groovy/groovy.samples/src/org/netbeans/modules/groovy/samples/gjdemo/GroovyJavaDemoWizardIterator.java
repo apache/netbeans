@@ -20,7 +20,6 @@ package org.netbeans.modules.groovy.samples.gjdemo;
 
 import java.awt.Component;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -119,7 +118,7 @@ public class GroovyJavaDemoWizardIterator implements WizardDescriptor./*Progress
                 JComponent jc = (JComponent) c;
                 // Step #.
                 // TODO if using org.openide.dialogs >= 7.8, can use WizardDescriptor.PROP_*:
-                jc.putClientProperty("WizardPanel_contentSelectedIndex", new Integer(i));
+                jc.putClientProperty("WizardPanel_contentSelectedIndex", i);
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty("WizardPanel_contentData", steps);
             }
@@ -134,8 +133,7 @@ public class GroovyJavaDemoWizardIterator implements WizardDescriptor./*Progress
     }
 
     public String name() {
-        return MessageFormat.format("{0} of {1}",
-                new Object[]{new Integer(index + 1), new Integer(panels.length)});
+        return MessageFormat.format("{0} of {1}", index + 1, panels.length);
     }
 
     public boolean hasNext() {
@@ -172,8 +170,7 @@ public class GroovyJavaDemoWizardIterator implements WizardDescriptor./*Progress
     }
 
     private static void unZipFile(InputStream source, FileObject projectRoot) throws IOException {
-        try {
-            ZipInputStream str = new ZipInputStream(source);
+        try (ZipInputStream str = new ZipInputStream(source);) {
             ZipEntry entry;
             while ((entry = str.getNextEntry()) != null) {
                 if (entry.isDirectory()) {
@@ -188,25 +185,18 @@ public class GroovyJavaDemoWizardIterator implements WizardDescriptor./*Progress
                     }
                 }
             }
-        } finally {
-            source.close();
         }
     }
 
     private static void writeFile(ZipInputStream str, FileObject fo) throws IOException {
-        OutputStream out = fo.getOutputStream();
-        try {
-            FileUtil.copy(str, out);
-        } finally {
-            out.close();
+        try (OutputStream out = fo.getOutputStream()) {
+            str.transferTo(out);
         }
     }
 
     private static void filterProjectXML(FileObject fo, ZipInputStream str, String name) throws IOException {
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            FileUtil.copy(str, baos);
-            Document doc = XMLUtil.parse(new InputSource(new ByteArrayInputStream(baos.toByteArray())), false, false, null, null);
+            Document doc = XMLUtil.parse(new InputSource(new ByteArrayInputStream(str.readAllBytes())), false, false, null, null);
             NodeList nl = doc.getDocumentElement().getElementsByTagName("name");
             if (nl != null) {
                 for (int i = 0; i < nl.getLength(); i++) {
@@ -220,11 +210,8 @@ public class GroovyJavaDemoWizardIterator implements WizardDescriptor./*Progress
                     }
                 }
             }
-            OutputStream out = fo.getOutputStream();
-            try {
+            try (OutputStream out = fo.getOutputStream()) {
                 XMLUtil.write(doc, out, "UTF-8");
-            } finally {
-                out.close();
             }
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);

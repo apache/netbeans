@@ -18,7 +18,6 @@
  */
 package org.netbeans.lib.chrome_devtools_protocol.runtime;
 
-import java.net.URI;
 import java.util.Objects;
 
 /**
@@ -27,7 +26,7 @@ import java.util.Objects;
 public final class CallFrame {
     private String functionName;
     private String scriptId;
-    private URI url;
+    private String url;
     private int lineNumber;
     private int columnNumber;
 
@@ -65,14 +64,14 @@ public final class CallFrame {
     /**
      * JavaScript script name or url.
      */
-    public URI getUrl() {
+    public String getUrl() {
         return url;
     }
 
     /**
      * JavaScript script name or url.
      */
-    public void setUrl(URI url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 

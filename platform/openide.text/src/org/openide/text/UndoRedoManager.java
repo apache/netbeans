@@ -48,18 +48,18 @@ import org.openide.awt.UndoRedo;
  *     when "coming out of the savepoint" and redone when "coming to a savepoint".</li>
  * </ul>
  * <p>
- * <tt>Undo Grouping</tt> allows explicit control of what
- * <tt>UndoableEdit</tt>s are coalesced into compound edits, rather than using
+ * <code>Undo Grouping</code> allows explicit control of what
+ * <code>UndoableEdit</code>s are coalesced into compound edits, rather than using
  * the rules defined by the edits themselves. Groups are defined using
  * BEGIN_COMMIT_GROUP and END_COMMIT_GROUP. Send these to UndoableEditListener.
  * These must always be paired. <p> These use cases are supported. </p> <ol>
  * <li> Default behavior is defined by {@link UndoManager}.</li> <li>
- * <tt>UnddoableEdit</tt>s issued between {@link #BEGIN_COMMIT_GROUP} and {@link #END_COMMIT_GROUP}
+ * <code>UnddoableEdit</code>s issued between {@link #BEGIN_COMMIT_GROUP} and {@link #END_COMMIT_GROUP}
  * are placed into a single
- * {@link CompoundEdit}. Thus <tt>undo()</tt> and <tt>redo()</tt> treat them as
+ * {@link CompoundEdit}. Thus <code>undo()</code> and <code>redo()</code> treat them as
  * a single undo/redo.</li> <li>BEGIN/END nest.</li> <li> Issue
- * MARK_COMMIT_GROUP to commit accumulated <tt>UndoableEdit</tt>s into a single
- * <tt>CompoundEdit</tt> and to continue accumulating; an application could do
+ * MARK_COMMIT_GROUP to commit accumulated <code>UndoableEdit</code>s into a single
+ * <code>CompoundEdit</code> and to continue accumulating; an application could do
  * this at strategic points, such as EndOfLine input or cursor movement.</li>
  * </ol>
  * 
@@ -481,7 +481,7 @@ final class UndoRedoManager extends UndoRedo.Manager {
     }
     
     /**
-     * Begin coalescing <tt>UndoableEdit</tt>s that are added into a <tt>CompoundEdit</tt>.
+     * Begin coalescing <code>UndoableEdit</code>s that are added into a <code>CompoundEdit</code>.
      * <p>If edits are already being coalesced and some have been 
      * accumulated, they are flagged for commitment as an atomic group and
      * a new group will be started.
@@ -496,11 +496,11 @@ final class UndoRedoManager extends UndoRedo.Manager {
     }
 
     /**
-     * Stop coalescing edits. Until <tt>beginUndoGroupManager</tt> is invoked,
-     * any received <tt>UndoableEdit</tt>s are added singly.
+     * Stop coalescing edits. Until <code>beginUndoGroupManager</code> is invoked,
+     * any received <code>UndoableEdit</code>s are added singly.
      * <p>
      * This has no effect if edits are not being coalesced, for example
-     * if <tt>beginUndoGroup</tt> has not been called.
+     * if <code>beginUndoGroup</code> has not been called.
      */
     private void endUndoGroup() {
         buildUndoGroup--;
@@ -517,14 +517,14 @@ final class UndoRedoManager extends UndoRedo.Manager {
     }
 
     /**
-     * Commit any accumulated <tt>UndoableEdit</tt>s as an atomic
-     * <tt>undo</tt>/<tt>redo</tt> group. {@link CompoundEdit#end}
-     * is invoked on the <tt>CompoundEdit</tt> and it is added as a single
-     * <tt>UndoableEdit</tt> to this <tt>UndoManager</tt>.
+     * Commit any accumulated <code>UndoableEdit</code>s as an atomic
+     * <code>undo</code>/<code>redo</code> group. {@link CompoundEdit#end}
+     * is invoked on the <code>CompoundEdit</code> and it is added as a single
+     * <code>UndoableEdit</code> to this <code>UndoManager</code>.
      * <p>
      * If edits are currently being coalesced, a new undo group is started.
      * This has no effect if edits are not being coalesced, for example
-     * <tt>beginUndoGroup</tt> has not been called.
+     * <code>beginUndoGroup</code> has not been called.
      */
     private void commitUndoGroup() {
         if(undoGroup == null) {

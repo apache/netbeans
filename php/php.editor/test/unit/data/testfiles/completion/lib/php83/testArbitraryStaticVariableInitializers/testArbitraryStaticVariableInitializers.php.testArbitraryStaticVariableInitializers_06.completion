@@ -1,0 +1,4 @@
+Code completion result for source line:
+static $example9 = $param1 <= 100 ? ru|n($param1 + 1) : "Test $param1";
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     run(int $param1)                [PUBLIC]   Example

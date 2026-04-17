@@ -27,7 +27,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Caret;
 import javax.swing.text.Document;
@@ -43,6 +42,7 @@ import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.web.core.api.JspContextInfo;
 import org.netbeans.modules.web.jsps.parserapi.JspParserAPI;
 import org.netbeans.modules.web.jsps.parserapi.PageInfo;
+import org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
@@ -250,7 +250,7 @@ public final class JspPaletteUtilities {
         if (fobj != null) {
             JspParserAPI.ParseResult result = JspContextInfo.getContextInfo(fobj).getCachedParseResult(fobj, false, true);
             if (result != null && result.getPageInfo() != null) {
-                 for (TagLibraryInfo tli : result.getPageInfo().getTaglibs()) {
+                 for (TagLibraryInfo tli : result.getPageInfo().getTagLibraries().values()) {
                      if (tagLibUri.equals(tli.getURI()))
                          return tli.getPrefixString();
                  }

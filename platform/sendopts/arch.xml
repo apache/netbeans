@@ -127,12 +127,11 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
    <usecase id="cli-just-parse" name="Just Parse the Command Line" >
        There needs to be a simple API for someone who has an array of strings 
        and wants to parse them. One does not need to search for providers,
        just ask the infrastructure to do the parse and get the result. 
-       <p></p>
+       <br/>
        The correct way to achieve this is to call 
         <code><a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html">CommandLine</a>.getDefault().process(args)</code>.
    </usecase>
@@ -140,15 +139,15 @@
        Since version 2.20 one can define own classes with fields and annotate
        them with <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">@Arg</a>
        annotation. Those classes can then be passed into a 
-       <a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html#create-java.lang.Class...-">
+       <a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html#create(java.lang.Class...)">
        factory method
        </a>
-       that creates new <a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html#create-java.lang.Class...-">command line</a>.
+       that creates new <a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html#create(java.lang.Class...)">command line</a>.
        One can then process the arguments as many times as needed via the
-        <a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html#process-java.lang.String...-">process</a>
+        <a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html#process(java.lang.String...)">process</a>
         method. Example:
         <pre>
-public final class MyOption implements <a href="@JDK@/java/lang/Runnable.html">Runnable</a> {
+public final class MyOption implements <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/lang/Runnable.html">Runnable</a> {
   <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">@Arg</a>(longName="hello")
   public String name;
 
@@ -157,8 +156,8 @@ public final class MyOption implements <a href="@JDK@/java/lang/Runnable.html">R
   }
   
   public static void main(String... args) {
-    <a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html">CommandLine</a> line = <a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html#create-java.lang.Class...-">CommandLine.create</a>(MyOption.class);
-    line.<a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html#process-java.lang.String...-">process</a>(args);
+    <a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html">CommandLine</a> line = <a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html#create(java.lang.Class...)">CommandLine.create</a>(MyOption.class);
+    line.<a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html#process(java.lang.String...)">process</a>(args);
   }
 }
 </pre>
@@ -173,17 +172,17 @@ public final class MyOption implements <a href="@JDK@/java/lang/Runnable.html">R
        Moreover the long form is optimized for abbrevations. If there are no 
        conflicts between multiple options, then one can only use double dash followed
        with a prefix of a long option.
-       <p></p>
+       <br/>
        When using the <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">declarative annotation style</a>
        one can always specify 
        <code><a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">@Arg</a>(longName="text", shortName='t')</code>.
        The <code>longName</code> attribute is required, but if there is supposed to be
        no long version of the argument, it can be set to empty string.
-       <p></p>
+       <br/>
        One can create an <a href="@TOP@org/netbeans/spi/sendopts/Option.html">Option</a>
        by calling any of its factory methods 
        (like 
-        <a href="@TOP@org/netbeans/spi/sendopts/Option.html#withoutArgument-char-java.lang.String-">withoutArgument</a>)
+        <a href="@TOP@org/netbeans/spi/sendopts/Option.html#withoutArgument(char,java.lang.String)">withoutArgument</a>)
         and provider <code>char</code> for the one letter option and/or string for
         the long getopts option.
    </usecase>
@@ -192,7 +191,7 @@ public final class MyOption implements <a href="@JDK@/java/lang/Runnable.html">R
        a required one and those with optional one. Each one can be created
        by appropriate factory method in the 
        <a href="@TOP@org/netbeans/spi/sendopts/Option.html">Option</a> class.
-       <p></p>
+       <br/>
        When using the <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">declarative annotation style</a>
        one needs to annotate a field of type <code>boolean</code> to create
        an option without an argument.
@@ -353,7 +352,7 @@ public final class MyOption implements <a href="@JDK@/java/lang/Runnable.html">R
        That is why
        every option can be associated with a short description providing info
        about what it is useful for using
-       <a href="@TOP@/org/netbeans/spi/sendopts/Option.html#shortDescription-org.netbeans.spi.sendopts.Option-java.lang.String-java.lang.String-">
+       <a href="@TOP@/org/netbeans/spi/sendopts/Option.html#shortDescription(org.netbeans.spi.sendopts.Option,java.lang.String,java.lang.String)">
            Option.shortDescription
        </a> method. When using the 
        <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">@Arg</a> style, there
@@ -362,7 +361,7 @@ public final class MyOption implements <a href="@JDK@/java/lang/Runnable.html">R
        and short description with the option.
        To get such descriptions for all available options one 
        can use 
-       <a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html#usage-java.io.PrintWriter-">
+       <a href="@TOP@/org/netbeans/api/sendopts/CommandLine.html#usage(java.io.PrintWriter)">
         CommandLine.getDefault().usage(java.io.PrintWriter)</a>.
    </usecase>
    <usecase id="cli-errorrecovery" name="Finding and Reporting when Options Are Not Correct" >
@@ -385,11 +384,11 @@ public final class MyOption implements <a href="@JDK@/java/lang/Runnable.html">R
        parse them. It is an error if more than one or no handler expresses 
        an interest in extra arguments and those are given. One can register
        such option by using the <code>
-       <a href="@TOP@org/netbeans/spi/sendopts/Option.html#additionalArguments-char-java.lang.String-">
+       <a href="@TOP@org/netbeans/spi/sendopts/Option.html#additionalArguments(char,java.lang.String)">
            Option.additionalArgument
        </a>
        </code> factory method.
-       <p></p>
+       <br/>
        When using the 
        <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">declarative annotation style</a>
        one may annotate a field of type <code>String[]</code> which then means
@@ -420,11 +419,11 @@ public final class MyOption implements <a href="@JDK@/java/lang/Runnable.html">R
        It is an error if such non-options are provided and no or more than one
        handler is around to handle them. One can create such option by 
        using <code>
-       <a href="@TOP@org/netbeans/spi/sendopts/Option.html#defaultArguments--">Option.defaultArguments</a>
+       <a href="@TOP@org/netbeans/spi/sendopts/Option.html#defaultArguments()">Option.defaultArguments</a>
        </code> factory method. With the
        <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">declarative annotation style</a>
        one can annotate a field of type <code>String[]</code> and specify that
-       it is supposed to be <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html#implicit--">implicit</a>.
+       it is supposed to be <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html#implicit()">implicit</a>.
    </usecase>
    <usecase id="cli-lazy-handler-initiliazation" name="Only those processor need to process the options are created" >
        For purposes of usage in NetBeans, it is needed to not-initialize those
@@ -442,9 +441,9 @@ public final class MyOption implements <a href="@JDK@/java/lang/Runnable.html">R
        and then also tell what to do with the output. It is unconvenient 
        to process that as one option with argument(s), that is why one can 
        use the 
-<a href="@TOP@org/netbeans/spi/sendopts/OptionGroups.html#allOf-org.netbeans.spi.sendopts.Option...-">
+<a href="@TOP@org/netbeans/spi/sendopts/OptionGroups.html#allOf(org.netbeans.spi.sendopts.Option...)">
 OptionGroups.allOf</a>,
-<a href="@TOP@org/netbeans/spi/sendopts/OptionGroups.html#someOf-org.netbeans.spi.sendopts.Option...-">
+<a href="@TOP@org/netbeans/spi/sendopts/OptionGroups.html#someOf(org.netbeans.spi.sendopts.Option...)">
 OptionGroups.someOf</a>, for example like: <pre>
 class PP extends OptionProcessor {
     private static Option tune = Option.requiredArgument(Option.NO_SHORT_NAME, "tune");
@@ -452,7 +451,7 @@ class PP extends OptionProcessor {
     
     public Set&lt;Option&gt; getOptions() {
       return Collections.singleton(
-        <a href="@TOP@org/netbeans/spi/sendopts/OptionGroups.html#allOf-org.netbeans.spi.sendopts.Option...-">OptionGroups.allOf</a>(tune, stream)
+        <a href="@TOP@org/netbeans/spi/sendopts/OptionGroups.html#allOf(org.netbeans.spi.sendopts.Option...)">OptionGroups.allOf</a>(tune, stream)
       );
     }
     
@@ -468,7 +467,7 @@ When the two options are registered and command line like
 <q>--tune 91.9 --stream radio1.mp3</q> is being processed, the 
 <code>PP</code>'s <code>process</code> method is going to get 
 called with values <q>91.9</q> and <q>radio1.mp3</q>.
-<p></p>
+<br/>
 This kind of grouping is not currently supported with the 
 <a href="@TOP@/org/netbeans/spi/sendopts/Arg.html">declarative annotation style</a>
 registration.
@@ -481,7 +480,7 @@ registration.
        For example is there is a way to tune the radio with direct frequency
        or with name of the station. Just one can be provided and one is needed.
        This can be specified by using 
-<a href="@TOP@org/netbeans/spi/sendopts/OptionGroups.html#oneOf-org.netbeans.spi.sendopts.Option...-">
+<a href="@TOP@org/netbeans/spi/sendopts/OptionGroups.html#oneOf(org.netbeans.spi.sendopts.Option...)">
 OptionGroups.oneOf</a> factory methods:
 <pre>
 Option freq = Option.requiredArgument(Option.NO_SHORT_NAME, "tune");
@@ -491,7 +490,6 @@ Option tune = OptionGroups.oneOf(freq, station);
 The option <code>tune</code> then signals that just one of the station or
 freq options can appear and that they both are replaceable.
    </usecase>
-  </p>
  </answer>
 
 

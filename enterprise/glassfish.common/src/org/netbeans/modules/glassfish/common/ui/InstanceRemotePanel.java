@@ -29,18 +29,12 @@ import org.netbeans.modules.glassfish.common.GlassfishInstance;
  */
 public class InstanceRemotePanel extends InstancePanel {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = GlassFishLogger.get(InstanceRemotePanel.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of remote GlassFish server properties editor.
      * <p/>
@@ -55,12 +49,11 @@ public class InstanceRemotePanel extends InstancePanel {
         localIpCB.setVisible(false);
         domainLabel.setVisible(true);
         domainField.setVisible(true);
+        jvmOptionsLabel.setVisible(false);
+        additionalLauncherJvmOptionsField.setVisible(false);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented abstract methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Remote host field initialization.
      * <p/>
@@ -95,10 +88,7 @@ public class InstanceRemotePanel extends InstancePanel {
         return hostRemoteField.getText().trim();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Enable form fields that can be modified by user.
      * <p/>

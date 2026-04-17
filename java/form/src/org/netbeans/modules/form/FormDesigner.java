@@ -2104,7 +2104,7 @@ public class FormDesigner {
                 hasExplPrefSize = visual.isPreferredSizeSet();
             }
             if (getLayoutDesigner().logTestCode()) {
-                getLayoutDesigner().testCode.add("  hasExplicitPrefSize.put(\"" + componentId + "\", new Boolean(" + hasExplPrefSize + "));"); //NOI18N
+                getLayoutDesigner().testCode.add("  hasExplicitPrefSize.put(\"" + componentId + "\", " + hasExplPrefSize + ");"); //NOI18N
             }
             return hasExplPrefSize;
         }
@@ -2148,7 +2148,7 @@ public class FormDesigner {
 
             if (getLayoutDesigner().logTestCode()) {
                 String id = componentId + "-" + width + "-" + height; //NOI18N
-                getLayoutDesigner().testCode.add("  baselinePosition.put(\"" + id + "\", new Integer(" + baseLinePos + "));"); //NOI18N
+                getLayoutDesigner().testCode.add("  baselinePosition.put(\"" + id + "\", Integer.valueOf(" + baseLinePos + "));"); //NOI18N
             }
 
             return baseLinePos;
@@ -2172,7 +2172,7 @@ public class FormDesigner {
             if (comp1 == null || comp2 == null) { // not JComponents...
                 if (getLayoutDesigner().logTestCode()) {
                     getLayoutDesigner().testCode.add("  prefPadding.put(\"" + id +                  //NOI18N
-                "\", new Integer(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType");       //NOI18N
+                "\", Integer.valueOf(10)); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType");       //NOI18N
                 }
                 return 10; // default distance between components (for non-JComponents)
             }
@@ -2202,7 +2202,7 @@ public class FormDesigner {
                 : SwingLayoutBuilder.PADDING_SEPARATE_VALUE; // not in LayoutStyle
 
             if (getLayoutDesigner().logTestCode()) {
-                getLayoutDesigner().testCode.add("  prefPadding.put(\"" + id + "\", new Integer(" + prefPadding +   //NOI18N
+                getLayoutDesigner().testCode.add("  prefPadding.put(\"" + id + "\", Integer.valueOf(" + prefPadding +   //NOI18N
                 ")); // comp1Id-comp2Id-dimension-comp2Alignment-paddingType");             //NOI18N
             }
             
@@ -2231,7 +2231,7 @@ public class FormDesigner {
             if (comp == null) {
                 if (getLayoutDesigner().logTestCode()) {
                     getLayoutDesigner().testCode.add("  prefPaddingInParent.put(\"" + id +      //NOI18N
-                "\", new Integer(10)); // parentId-compId-dimension-compAlignment");    //NOI18N
+                "\", Integer.valueOf(10)); // parentId-compId-dimension-compAlignment");    //NOI18N
                 }
                 return 10; // default distance from parent border (for non-JComponents)
             }
@@ -2261,7 +2261,7 @@ public class FormDesigner {
             int prefPadding = FormLAF.getDesignerLayoutStyle().getContainerGap(comp, alignment, parent);
 
             if (getLayoutDesigner().logTestCode()) {
-                getLayoutDesigner().testCode.add("  prefPaddingInParent.put(\"" + id + "\", new Integer(" +  //NOI18N
+                getLayoutDesigner().testCode.add("  prefPaddingInParent.put(\"" + id + "\", Integer.valueOf(" +  //NOI18N
             prefPadding + ")); // parentId-compId-dimension-compAlignment");             //NOI18N
             }
 

@@ -30,7 +30,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
@@ -39,6 +38,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.libs.git.GitClient.DiffMode;
 import org.netbeans.libs.git.GitException;
 import org.netbeans.libs.git.GitRevisionInfo;
@@ -69,18 +69,33 @@ import org.openide.util.actions.SystemAction;
 import org.openide.windows.WindowManager;
 
 /**
+ * Shelve modifications of one or more files in form of a patch file.
  *
  * @author Ondra Vrabec
  */
 @ActionID(id = "org.netbeans.modules.git.ui.shelve.ShelveChangesAction", category = "Git")
 @ActionRegistration(displayName = "#CTL_ShelveChanges_Title")
 @NbBundle.Messages({
-    "CTL_ShelveChanges_Title=&Shelve Changes...",
-    "LBL_ShelveChangesAction_Name=&Shelve Changes..."
+    "CTL_ShelveChanges_Title=&Shelve selected Changes...",
+    "LBL_ShelveChangesAction_Name=&Shelve selected Changes..."
 })
 public class ShelveChangesAction extends SingleRepositoryAction {
+
     private static ShelveChangesActionProvider ACTION_PROVIDER;
     
+    // TODO pick/create better icon
+    @StaticResource
+    private static final String ICON_RESOURCE = "org/netbeans/modules/git/resources/icons/diff.png"; //NOI18N
+
+    public ShelveChangesAction() {
+        super(ICON_RESOURCE);
+    }
+
+    @Override
+    protected String iconResource() {
+        return ICON_RESOURCE;
+    }
+
     @Override
     protected void performAction (File repository, File[] roots, VCSContext context) {
         shelve(repository, roots);
@@ -94,14 +109,13 @@ public class ShelveChangesAction extends SingleRepositoryAction {
         if (Git.getInstance().getFileStatusCache().listFiles(roots,
                 FileInformation.STATUS_MODIFIED_HEAD_VS_WORKING).length == 0) {
             // no local changes found
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run () {
-                    JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(),
-                            Bundle.MSG_ShelveAction_noModifications_text(),
-                            Bundle.LBL_ShelveAction_noModifications_title(),
-                            JOptionPane.INFORMATION_MESSAGE);
-                }
+            EventQueue.invokeLater(() -> {
+                JOptionPane.showMessageDialog(
+                    WindowManager.getDefault().getMainWindow(),
+                    Bundle.MSG_ShelveAction_noModifications_text(),
+                    Bundle.LBL_ShelveAction_noModifications_title(),
+                    JOptionPane.INFORMATION_MESSAGE
+                );
             });
             return;
         }
@@ -192,33 +206,26 @@ public class ShelveChangesAction extends SingleRepositoryAction {
             "# {0} - repository name", "MSG_ShelveChanges.progress.reverting=Reverting local changes - {0}"
         })
         protected void postExportCleanup () {
-            final Collection<File> notifiedFiles = new HashSet<File>();
+            final Collection<File> notifiedFiles = new HashSet<>();
             if (support.isCanceled()) {
                 return;
             }
             try {
-                GitUtils.runWithoutIndexing(new Callable<Void>() {
-                    @Override
-                    public Void call () throws Exception {
-                        support.setDisplayName(Bundle.MSG_ShelveChanges_progress_reverting(repository.getName()));
-                        // init client
-                        GitClient client = Git.getInstance().getClient(repository);
-                        client.addNotificationListener(new FileListener() {
-                            @Override
-                            public void notifyFile (File file, String relativePathToRoot) {
-                                notifiedFiles.add(file);
-                            }
-                        });
-                        client.addNotificationListener(support.new DefaultFileListener(modifications));
-
-                        // revert
-                        client.checkout(modifications, doRevertIndex ? GitUtils.HEAD : null,
-                                true, support.getProgressMonitor());
-                        if(doPurge) {
-                            client.clean(modifications, support.getProgressMonitor());
-                        }
-                        return null;
+                GitUtils.runWithoutIndexing(() -> {
+                    support.setDisplayName(Bundle.MSG_ShelveChanges_progress_reverting(repository.getName()));
+                    // init client
+                    GitClient client = Git.getInstance().getClient(repository);
+                    client.addNotificationListener((FileListener) (file, relativePathToRoot) -> {
+                        notifiedFiles.add(file);
+                    });
+                    client.addNotificationListener(support.new DefaultFileListener(modifications));
+                    
+                    // revert
+                    client.checkout(modifications, doRevertIndex ? GitUtils.HEAD : null, true, support.getProgressMonitor());
+                    if(doPurge) {
+                        client.clean(modifications, support.getProgressMonitor());
                     }
+                    return null;
                 }, modifications);
             } catch (GitException ex) {
                 GitClientExceptionHandler.notifyException(ex, true);
@@ -239,8 +246,9 @@ public class ShelveChangesAction extends SingleRepositoryAction {
             support = new ShelveChangesProgressSupport() {
                 @Override
                 protected void perform () {
-                    modifications = Git.getInstance().getFileStatusCache().listFiles(roots, 
-                            FileInformation.STATUS_MODIFIED_HEAD_VS_WORKING);
+                    modifications = Git.getInstance().getFileStatusCache().listFiles(
+                        roots, FileInformation.STATUS_MODIFIED_HEAD_VS_WORKING
+                    );
                     // shelve changes builds common root, it must be the repository root folder
                     // because we use export diff action from the git api 
                     File[] arr = Arrays.copyOf(modifications, modifications.length + 1);
@@ -274,7 +282,7 @@ public class ShelveChangesAction extends SingleRepositoryAction {
 
                 @Override
                 public JComponent[] getUnshelveActions (VCSContext ctx, boolean popup) {
-                    JComponent[] cont = UnshelveMenu.getInstance().getMenu(ctx, popup);
+                    JComponent[] cont = UnstashMenu.getInstance().getMenu(ctx, popup);
                     if (cont == null) {
                         cont = super.getUnshelveActions(ctx, popup);
                     }
@@ -294,18 +302,20 @@ public class ShelveChangesAction extends SingleRepositoryAction {
         }
     }
     
+    // TODO git unstash in shelve action?
+    
     @NbBundle.Messages({
         "CTL_UnstashMenu.name=&Git Unstash",
         "CTL_UnstashMenu.name.popup=Git Unstash",
         "# {0} - stash index", "# {1} - stash name", "CTL_UnstashAction.name={0} - {1}"
     })
-    private static class UnshelveMenu {
+    private static class UnstashMenu {
 
-        private static UnshelveMenu instance;
+        private static UnstashMenu instance;
         
-        static synchronized UnshelveMenu getInstance () {
+        static synchronized UnstashMenu getInstance() {
             if (instance == null) {
-                instance = new UnshelveMenu();
+                instance = new UnstashMenu();
             }
             return instance;
         }

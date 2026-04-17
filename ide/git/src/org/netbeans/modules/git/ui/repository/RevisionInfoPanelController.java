@@ -25,6 +25,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
+import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.netbeans.modules.git.client.GitClient;
 import org.netbeans.libs.git.GitException;
 import org.netbeans.libs.git.GitRevisionInfo;
@@ -182,7 +183,7 @@ public class RevisionInfoPanelController {
                     mergedStatus = commonAncestor != null && commonAncestor.getRevision().equals(revisionInfo.getRevision());
                 }
             } catch (GitException ex) {
-                if (!(ex instanceof GitException.MissingObjectException)) {
+                if (!(ex instanceof GitException.MissingObjectException || ex.getCause() instanceof AmbiguousObjectException)) {
                     GitClientExceptionHandler.notifyException(ex, true);
                 }
                 revisionInfo = null;

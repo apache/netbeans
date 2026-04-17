@@ -396,7 +396,7 @@ public class Utilities {
     }
     
     private static boolean tryRefreshProviders (Collection<UpdateUnitProvider> providers, PluginManagerUI manager, boolean force) {
-        ProgressHandle handle = ProgressHandleFactory.createHandle (NbBundle.getMessage(SettingsTableModel.class,  ("Utilities_CheckingForUpdates")));
+        ProgressHandle handle = ProgressHandle.createHandle (NbBundle.getMessage(SettingsTableModel.class,  ("Utilities_CheckingForUpdates")));
         JComponent progressComp = ProgressHandleFactory.createProgressComponent (handle);
         JLabel detailLabel = ProgressHandleFactory.createDetailLabelComponent (handle);
         detailLabel.setHorizontalAlignment (SwingConstants.LEFT);
@@ -457,7 +457,7 @@ public class Utilities {
         startAsWorkerThread(new Runnable() {
             @Override
             public void run() {
-                final ProgressHandle handle = ProgressHandleFactory.createHandle(progressDisplayName); // NOI18N                
+                final ProgressHandle handle = ProgressHandle.createHandle(progressDisplayName); // NOI18N                
                 JComponent progressComp = ProgressHandleFactory.createProgressComponent(handle);
                 JLabel detailLabel = ProgressHandleFactory.createDetailLabelComponent(handle);
                 

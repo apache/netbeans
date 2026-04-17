@@ -249,10 +249,7 @@ implements java.beans.PropertyChangeListener, FileSystem.AtomicAction {
         return request;
     }
     
-    /////////////////////////////////////////////////////////////////////////
     // InstanceCookieImpl
-    /////////////////////////////////////////////////////////////////////////
-    
     /** InstanceCookie implementation. */
     final class InstanceCookieImpl implements InstanceCookie.Of {
         private SoftReference<Object> cachedInstance;// = new SoftReference(null);
@@ -383,10 +380,7 @@ implements java.beans.PropertyChangeListener, FileSystem.AtomicAction {
         }
     }
     
-////////////////////////////////////////////////////////////////////////////
 // NodeConvertor
-////////////////////////////////////////////////////////////////////////////
-    
     /** allow to postpone the node creation */
     private static final class NodeConvertor 
             implements org.openide.util.lookup.InstanceContent.Convertor<InstanceProvider, Node> {

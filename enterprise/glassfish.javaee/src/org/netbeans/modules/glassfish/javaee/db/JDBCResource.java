@@ -28,10 +28,7 @@ import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
  */
 public class JDBCResource implements Datasource {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Recognized attributes in JDBC resource.
      */
@@ -135,10 +132,7 @@ public class JDBCResource implements Datasource {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Resource JNDI name. */
     private String jndiName;
 
@@ -158,10 +152,7 @@ public class JDBCResource implements Datasource {
     /** JDBC connection pool reference. */
     private JDBCConnectionPool pool;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of JDBC resource (data source) content with
      * no values set.
@@ -197,10 +188,7 @@ public class JDBCResource implements Datasource {
         this.pool            = pool;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Datasource interface getters                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get resource JNDI name.
      * <p/>
@@ -261,10 +249,7 @@ public class JDBCResource implements Datasource {
         return pool != null ? pool.getDriverClass() : null;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get resource object type.
      * <p/>
@@ -321,10 +306,7 @@ public class JDBCResource implements Datasource {
         this.pool = pool;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Set property value depending on {@link AttrType} type
      * <code>enum</code> value.

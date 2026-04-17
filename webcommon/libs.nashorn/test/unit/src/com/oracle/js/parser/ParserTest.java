@@ -126,6 +126,116 @@ public class ParserTest {
     }
 
     @Test
+    public void testConstructor() {
+        assertParses("""
+            class T {
+                constructor() {}
+            }
+        """);
+        // Parser should reject multiple constructors
+        assertParsesNot(Integer.MAX_VALUE, """
+            class T {
+                constructor() {}
+                constructor() {}
+            }
+        """);
+        // Parser should reject private constructors
+        assertParsesNot(Integer.MAX_VALUE, """
+            class T {
+                #constructor() {}
+            }
+        """);
+        // Parser should reject fields with name constructor
+        assertParsesNot(Integer.MAX_VALUE, """
+            class T {
+                constructor = X
+            }
+        """);
+        // Parser should reject generator function as constructor
+        assertParsesNot(Integer.MAX_VALUE, """
+            class T {
+                *constructor() {}
+            }
+        """);
+        // Parser should reject getter function as constructor
+        assertParsesNot(Integer.MAX_VALUE, """
+            class T {
+                get constructor() {}
+            }
+        """);
+        // Parser should reject getter function as constructor
+        assertParsesNot(Integer.MAX_VALUE, """
+            class T {
+                set constructor(value) {}
+            }
+        """);
+    }
+
+    @Test
+    public void testRejectDuplicatePrivateMembers() {
+        assertParses(Integer.MAX_VALUE, """
+            class T {
+                get #X() {};
+                set #X(value) {};
+            }
+        """);
+        // Plain field and getter should be rejected
+        assertParsesNot(Integer.MAX_VALUE, """
+            class T {
+                #X;
+                get #X() {};
+            }
+        """);
+        assertParsesNot(Integer.MAX_VALUE, """
+            class T {
+                #X = 1;
+                get #X() {};
+            }
+        """);
+        // Plain field and setter should be rejected
+        assertParsesNot(Integer.MAX_VALUE, """
+            class T {
+                #X;
+                set #X() {};
+            }
+        """);
+        assertParsesNot(Integer.MAX_VALUE, """
+            class T {
+                #X = 1;
+                set #X() {};
+            }
+        """);
+        // Plain field and method should be rejected
+        assertParsesNot(Integer.MAX_VALUE, """
+            class T {
+                #X;
+                #X() {};
+            }
+        """);
+        // Duplicate method should be rejected
+        assertParsesNot(Integer.MAX_VALUE, """
+            class T {
+                #X() {};
+                #X() {};
+            }
+        """);
+        // Duplicate fields should be rejected
+        assertParsesNot(Integer.MAX_VALUE, """
+            class T {
+                #X;
+                #X;
+            }
+        """);
+        // Mixed static declarations should be rejected
+       assertParsesNot(Integer.MAX_VALUE, """
+            class T {
+                get #X() {};
+                static set #X(value) {};
+            }
+        """);
+    }
+
+    @Test
     public void testNullishCoalesce() {
         assertParses("let a = b ?? 3");
         assertParsesNot( 10, "let a = b ?? 3");
@@ -346,6 +456,17 @@ public class ParserTest {
         assertParses(12, false, true, "function dummy() {await Promise.resolve(1);}");
     }
 
+    @Test
+    public void testAsyncGenerator() {
+        assertParsesNot(8, "class Demo {\nasync * generator() {\nyield i;\nyield i + 10;\n}\n}");
+        assertParses("class Demo {\nasync * generator() {\nyield 1;\nyield 1 + 10;\n}\n}");
+        assertParses("class Demo {\nasync * generator(i) {\nyield i;\nyield i + 10;\n}\n}");
+        assertParsesNot(8, "class Demo {\nasync * [Symbol.asyncIterator]() {\nyield i;\nyield i + 10;\n}\n}");
+        assertParses("class Demo {\nasync * [Symbol.asyncIterator]() {\nyield 1;\nyield 1 + 10;\n}\n}");
+        assertParses("class Demo {\nasync * [Symbol.asyncIterator](i) {\nyield i;\nyield i + 10;\n}\n}");
+        assertParses("class Demo {\nasync * [Symbol.asyncIterator]() {\nyield await this.next();\n}\n}");
+    }
+
     private Predicate<Node> functionNodeWithName(String name) {
         return n -> n instanceof FunctionNode && name.equals(((FunctionNode) n).getName());
     }
@@ -379,7 +500,6 @@ public class ParserTest {
             assertNull("Parsing should have failed", fn);
         } else {
             assertNotNull("Parser did not yield result", fn);
-            dumpTree(fn);
         }
     }
 

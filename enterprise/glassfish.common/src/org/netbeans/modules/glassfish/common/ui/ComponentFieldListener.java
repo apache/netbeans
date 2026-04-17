@@ -31,19 +31,13 @@ import javax.swing.event.DocumentListener;
  */
 abstract class ComponentFieldListener implements DocumentListener {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Abstract methods                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Process received notification from all notification types.
      */
     abstract void processEvent();
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Interface Methods                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Gives notification that there was an insert into component field.
      * <p/>

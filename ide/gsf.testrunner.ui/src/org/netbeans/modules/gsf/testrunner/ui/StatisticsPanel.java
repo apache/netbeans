@@ -85,10 +85,10 @@ public final class StatisticsPanel extends JPanel {
     private static final Icon alwaysOpenNewTabIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/gsf/testrunner/resources/newTab.png", true);
 
     private static final Icon rerunIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/gsf/testrunner/resources/rerun.png", true);
-    private static final Icon rerunFailedIcon = ImageUtilities.image2Icon(ImageUtilities.mergeImages(
-                            ImageUtilities.loadImage("org/netbeans/modules/gsf/testrunner/resources/rerun.png"), //NOI18N
-                            ImageUtilities.loadImage("org/netbeans/modules/gsf/testrunner/resources/error-badge.gif"), //NOI18N
-                            8, 8));
+    private static final Icon rerunFailedIcon = ImageUtilities.mergeIcons(
+                            ImageUtilities.loadIcon("org/netbeans/modules/gsf/testrunner/resources/rerun.png"), //NOI18N
+                            ImageUtilities.loadIcon("org/netbeans/modules/gsf/testrunner/resources/error-badge.gif"), //NOI18N
+                            8, 8);
 
     private static final boolean isMacLaf = "Aqua".equals(UIManager.getLookAndFeel().getID());
     private static final Color macBackground = UIManager.getColor("NbExplorerView.background");

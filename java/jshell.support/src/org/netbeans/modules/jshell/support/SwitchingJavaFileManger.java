@@ -201,8 +201,6 @@ final class SwitchingJavaFileManger implements StandardJavaFileManager, ChangeLi
         return delegate().isSupportedOption(option);
     }
     
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Override
     public Iterable<? extends JavaFileObject> getJavaFileObjectsFromFiles(Iterable<? extends File> files) {
         throw new UnsupportedOperationException("Unsupported");

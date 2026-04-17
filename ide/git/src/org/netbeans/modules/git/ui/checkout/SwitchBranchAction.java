@@ -25,7 +25,7 @@ import java.io.File;
 import java.util.AbstractMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.AbstractAction;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.libs.git.GitBranch;
 import org.netbeans.modules.git.ui.repository.RepositoryInfo;
 import org.netbeans.modules.git.ui.repository.RevisionDialogController;
@@ -129,7 +129,7 @@ public class SwitchBranchAction extends AbstractCheckoutAction {
                         }
                     }
                 };
-                ProgressUtils.runOffEventDispatchThread(run, Bundle.MSG_GitAction_savingFiles_progress(), canceled, false);
+                BaseProgressUtils.runOffEventDispatchThread(run, Bundle.MSG_GitAction_savingFiles_progress(), canceled, false);
             }
         }
     }

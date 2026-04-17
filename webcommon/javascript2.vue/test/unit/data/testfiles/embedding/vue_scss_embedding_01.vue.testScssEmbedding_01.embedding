@@ -1,0 +1,17 @@
+
+    $font: Helvetica, sans-serif, Arial;
+    $color-blue: blue;
+
+    p {
+      font: 100% $font;
+      color: $color-blue;
+    }
+
+    @mixin darkTheme($theme: DarkGray) {
+      font-size: 14px;
+      background: #002752;
+    }
+
+    .footer {
+      @include darkTheme;
+    }

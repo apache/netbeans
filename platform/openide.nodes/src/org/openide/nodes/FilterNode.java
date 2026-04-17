@@ -26,7 +26,6 @@ import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
-import org.openide.util.WeakSet;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.datatransfer.NewType;
 import org.openide.util.datatransfer.PasteType;
@@ -2098,7 +2097,7 @@ public class FilterNode extends Node {
 
             synchronized (this) {
                 if (results == null) {
-                    results = new WeakSet<ProxyResult>();
+                    results = Collections.newSetFromMap(new WeakHashMap<>());
                 }
 
                 results.add(p);

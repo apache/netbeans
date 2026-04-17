@@ -18,20 +18,14 @@
  */
 package org.netbeans.modules.xml.text.indent;
 
-import java.io.IOException;
 import javax.swing.text.Document;
 import javax.swing.text.BadLocationException;
-
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.Syntax;
-import org.netbeans.editor.TokenID;
-import org.netbeans.editor.TokenItem;
-import org.netbeans.editor.TokenItem;
 import org.netbeans.editor.ext.AbstractFormatLayer;
 import org.netbeans.editor.ext.FormatTokenPosition;
 import org.netbeans.editor.ext.ExtFormatter;
-import org.netbeans.editor.ext.FormatLayer;
 import org.netbeans.editor.ext.FormatSupport;
-import org.netbeans.editor.ext.ExtFormatSupport;
 import org.netbeans.editor.ext.FormatWriter;
 import org.netbeans.editor.Utilities;
 import org.netbeans.editor.BaseDocument;
@@ -95,7 +89,7 @@ public class DTDFormatter extends ExtFormatter {
                 bdoc.insertString (offset, "\n", null); // NOI18N
                 offset++;
 
-                int fullLine = Utilities.getFirstNonWhiteBwd (bdoc, offset - 1);
+                int fullLine = LineDocumentUtils.getPreviousNonWhitespace (bdoc, offset - 1);
                 int indent = Utilities.getRowIndent (bdoc, fullLine);
                 
 //                if ( Util.THIS.isLoggable() ) /* then */ Util.THIS.debug ("+             ::indentNewLine: fullLine = " + fullLine); // NOI18N

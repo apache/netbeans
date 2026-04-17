@@ -19,23 +19,21 @@
 
 package org.netbeans.modules.parsing.api;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.nio.charset.CoderMalfunctionError;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -334,81 +332,70 @@ public final class Source implements Lookup.Provider {
                 // The code below is a copy of CharacterConversions.lineSeparatorToLineFeed() method
                 // and it handles line-end conversion. In general EditorKits can do more conversions,
                 // but they usually don't and this should be good enough for Snapshots.
-                try {
-                    if (fileObject.isValid ()) {
-                        if (fileObject.getSize() <= Utilities.getMaxFileSize()) {
-                            final InputStream is = fileObject.getInputStream ();
-                            assert is != null : "FileObject.getInputStream() returned null for FileObject: " + FileUtil.getFileDisplayName(fileObject); //NOI18N
-                            try {
-                                InputStreamReader reader = new InputStreamReader (
-                                        is,
-                                        FileEncodingQuery.getEncoding (fileObject)
-                                );
-                                try {
-                                    StringBuilder output = new StringBuilder(Math.max(16, (int) fileObject.getSize()));
-                                    List<Integer> lso = new LinkedList<Integer>();
-                                    boolean lastCharCR = false;
-                                    char [] buffer = new char [65536];
-                                    int size = -1;
+                if (fileObject.isValid()) {
+                    if (fileObject.getSize() <= Utilities.getMaxFileSize()) {
+                        try (InputStreamReader reader = new InputStreamReader(fileObject.getInputStream(), FileEncodingQuery.getEncoding(fileObject))) {
+                            StringBuilder output = new StringBuilder(Math.max(16, (int) fileObject.getSize()));
+                            List<Integer> lso = new ArrayList<>();
+                            boolean lastCharCR = false;
+                            char[] buffer = new char [65536];
+                            int size = -1;
 
-                                    final char LF = '\n'; //NOI18N, Unicode line feed (0x000A)
-                                    final char CR = '\r'; //NOI18N, Unicode carriage return (0x000D)
-                                    final char LS = 0x2028; // Unicode line separator (0x2028)
-                                    final char PS = 0x2029; // Unicode paragraph separator (0x2029)
+                            final char LF = '\n'; //NOI18N, Unicode line feed (0x000A)
+                            final char CR = '\r'; //NOI18N, Unicode carriage return (0x000D)
+                            final char LS = 0x2028; // Unicode line separator (0x2028)
+                            final char PS = 0x2029; // Unicode paragraph separator (0x2029)
 
-                                    lso.add(0);
-                                    while(-1 != (size = reader.read(buffer, 0, buffer.length))) {
-                                        for(int i = 0; i < size; i++) {
-                                            char ch = buffer[i];
-                                            if (lastCharCR && ch == LF) {
-                                                // CR-LF pair changed to single LF
-                                                continue;
-                                            }
-                                            if (ch == CR) {
-                                                // convert to LF; subsequent LF will be skipped
-                                                output.append(LF);
-                                                lso.add(output.length());
-                                                lastCharCR = true;
-                                            } else if (ch == LS || ch == PS) { // Unicode LS, PS
-                                                output.append(LF);
-                                                lso.add(output.length());
-                                                lastCharCR = false;
-                                            } else { // current char not CR
-                                                lastCharCR = false;
-                                                output.append(ch);
-                                            }
-                                        }
+                            lso.add(0);
+                            while(-1 != (size = reader.read(buffer, 0, buffer.length))) {
+                                for(int i = 0; i < size; i++) {
+                                    char ch = buffer[i];
+                                    if (lastCharCR && ch == LF) {
+                                        // CR-LF pair changed to single LF
+                                        continue;
                                     }
-
-                                    int [] lsoArr = new int [lso.size()];
-                                    int idx = 0;
-                                    for(Integer offset : lso) {
-                                        lsoArr[idx++] = offset;
+                                    if (ch == CR) {
+                                        // convert to LF; subsequent LF will be skipped
+                                        output.append(LF);
+                                        lso.add(output.length());
+                                        lastCharCR = true;
+                                    } else if (ch == LS || ch == PS) { // Unicode LS, PS
+                                        output.append(LF);
+                                        lso.add(output.length());
+                                        lastCharCR = false;
+                                    } else { // current char not CR
+                                        lastCharCR = false;
+                                        output.append(ch);
                                     }
-
-                                    text[0] = output;
-                                    lineStartOffsets[0] = lsoArr;
-                                } finally {
-                                    reader.close ();
                                 }
-                            } finally {
-                                is.close ();
                             }
-                        } else {
-                            LOG.log(
-                                Level.WARNING,
-                                "Source {0} of size: {1} has been ignored due to large size. Files large then {2} bytes are ignored, you can increase the size by parse.max.file.size property.",  //NOI18N
-                                new Object[]{
-                                    FileUtil.getFileDisplayName(fileObject),
-                                    fileObject.getSize(),
-                                    Utilities.getMaxFileSize()
-                                });
+
+                            int[] lsoArr = new int[lso.size()];
+                            int idx = 0;
+                            for(Integer offset : lso) {
+                                lsoArr[idx++] = offset;
+                            }
+
+                            text[0] = output;
+                            lineStartOffsets[0] = lsoArr;
+                        } catch (CoderMalfunctionError | IOException ex) {
+                            text[0] = ""; //NOI18N
+                            lineStartOffsets[0] = new int[] { 0 };
+                            LOG.log(Level.WARNING, "Can''t create snapshot of {0}, mimeType={1}. {2}: {3}", new Object[] {
+                                fileObject, mimeType, ex.getClass().getName(), ex.getMessage()
+                            });
+                            LOG.log(Level.FINE, null, ex);
                         }
+                    } else {
+                        LOG.log(
+                            Level.WARNING,
+                            "Source {0} of size: {1} has been ignored due to large size. Files large then {2} bytes are ignored, you can increase the size by parse.max.file.size property.",  //NOI18N
+                            new Object[]{
+                                FileUtil.getFileDisplayName(fileObject),
+                                fileObject.getSize(),
+                                Utilities.getMaxFileSize()
+                            });
                     }
-                } catch (FileNotFoundException fnfe) {
-                    // working with a stale FileObject, just ignore this (eg see #158119)
-                } catch (IOException ioe) {
-                    LOG.log (Level.WARNING, null, ioe);
                 }
             } else {
                 final Document d = doc;
@@ -429,6 +416,8 @@ public final class Source implements Lookup.Provider {
                                 lineStartOffsets[0] = lso;
                             }
                         } catch (BadLocationException ble) {
+                            text[0] = ""; //NOI18N
+                            lineStartOffsets[0] = new int [] { 0 };
                             LOG.log (Level.WARNING, null, ble);
                         }
                     }

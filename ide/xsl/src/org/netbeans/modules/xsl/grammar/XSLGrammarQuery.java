@@ -125,7 +125,6 @@ public final class XSLGrammarQuery implements GrammarQuery{
         this.dataObject = dataObject;
     }
 
-    //////////////////////////////////////////7
     // Getters for the static members
 
     private static Map getElementDecls() {
@@ -138,7 +137,6 @@ public final class XSLGrammarQuery implements GrammarQuery{
             Set<String> tmpSet;
             String spaceAtt = "xml:space";  // NOI18N
 
-            ////////////////////////////////////////////////
             // Initialize common sets
 
             Set<String> charInstructions = new TreeSet<>(Arrays.asList(new String[]{"apply-templates", // NOI18N
@@ -165,7 +163,6 @@ public final class XSLGrammarQuery implements GrammarQuery{
             resultElementAttr = new TreeSet<>(Arrays.asList(new String[]{"extension-element-prefixes", // NOI18N
             "exclude-result-prefixes","use-attribute-sets","version"})); // NOI18N
 
-            ////////////////////////////////////////////////
             // Add items to elementDecls and attrDecls maps
 
             // xsl:stylesheet
@@ -408,7 +405,6 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
 
 
-    ////////////////////////////////////////////////////////////////////////////////
     // GrammarQuery interface fulfillment
 
     /**
@@ -790,7 +786,6 @@ public final class XSLGrammarQuery implements GrammarQuery{
         return new org.openide.nodes.Node.Property[]{attrNameProp, attrValueProp};
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
     // Private helper methods
 
     /**
@@ -959,7 +954,6 @@ public final class XSLGrammarQuery implements GrammarQuery{
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////////
     // Private helper classes
 
     private class ResultHintContext extends ResultNode implements HintContext {

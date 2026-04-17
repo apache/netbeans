@@ -114,11 +114,11 @@ public class ServerLocationManager  {
 	    loader.addURL(f);
 	    
 	    //for AS 8.1: no more endorsed dir!!!
-//////	    f = new File(installRoot+"/lib/xercesImpl.jar");
-//////	    loader.addURL(f);
-//////	    f = new File(installRoot+"/lib/dom.jar");
-//////	    loader.addURL(f);
-//////	    f = new File(installRoot+"/lib/xalan.jar");
+//	    f = new File(installRoot+"/lib/xercesImpl.jar");
+//	    loader.addURL(f);
+//	    f = new File(installRoot+"/lib/dom.jar");
+//	    loader.addURL(f);
+//	    f = new File(installRoot+"/lib/xalan.jar");
 	//    loader.addURL(f);
 	    //for AS 8.1:
 	    f = new File(installRoot+"/lib/jaxrpc-api.jar");//NOI18N
@@ -263,8 +263,8 @@ public class ServerLocationManager  {
 	}
 	
 	//one extra test to detect 8.0 versus 8.1: dom.jar has to be in lib not endorsed anymore:
-////	File f = new File(candidate.getAbsolutePath()+"/lib/dom.jar");
-////	return f.exists();
+//	File f = new File(candidate.getAbsolutePath()+"/lib/dom.jar");
+//	return f.exists();
         return true;
 	
     }

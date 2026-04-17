@@ -48,7 +48,6 @@ import org.apache.tools.ant.TaskContainer;
  
  */
 public class ForEach extends Task implements TaskContainer {
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     /**
      * The list of values over which the iteration process should go.
@@ -97,7 +96,7 @@ public class ForEach extends Task implements TaskContainer {
      */
     private boolean wrongArgs;
     
-    // constructor //////////////////////////////////////////////////////////////////
+    // constructor
     /**
      * Constructs a new instance of the {@link ForEach} task. It simply sets the
      * default values for the attributes.
@@ -112,7 +111,7 @@ public class ForEach extends Task implements TaskContainer {
         children = new LinkedList<Task>();
     }
     
-    // setters //////////////////////////////////////////////////////////////////////
+    // setters
     /**
      * Setter for the 'list' property.
      * 
@@ -201,7 +200,7 @@ public class ForEach extends Task implements TaskContainer {
         children.add(task);
     }
     
-    // execution ////////////////////////////////////////////////////////////////////
+    // execution
     /**
      * Executes the task. Basing on which attributes were set, the choice is made of
      * whether the iteration should happen over a list or an integer range. Then the
@@ -239,7 +238,7 @@ public class ForEach extends Task implements TaskContainer {
         }
     }
     
-    // private //////////////////////////////////////////////////////////////////////    
+    // private
     private void executeChildren(String value, String arg) throws BuildException {        
         getProject().setProperty(this.propertyArg, arg);
         executeChildren(value);
@@ -255,7 +254,6 @@ public class ForEach extends Task implements TaskContainer {
         }
     }    
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     /**
      * Default value for the 'separator' property.

@@ -41,15 +41,15 @@ import org.openide.util.lookup.Lookups;
  */
 public class RenameRefactoringUIImpl implements RefactoringUI {
 
-    private final LSPBindings bindings;
+    private final LSPBindingsCollection servers;
     private final FileObject file;
     private final Position position;
     private final String name;
     private final RenameParams params;
     private RenamePanel panel;
 
-    public RenameRefactoringUIImpl(LSPBindings binding, FileObject file, Position position, String name) {
-        this.bindings = binding;
+    public RenameRefactoringUIImpl(LSPBindingsCollection servers, FileObject file, Position position, String name) {
+        this.servers = servers;
         this.file = file;
         this.position = position;
         this.name = name;
@@ -113,7 +113,7 @@ public class RenameRefactoringUIImpl implements RefactoringUI {
 
     @Override
     public AbstractRefactoring getRefactoring() {
-        return new RenameRefactoring(Lookups.fixed(bindings, params));
+        return new RenameRefactoring(Lookups.fixed(servers, params));
     }
 
     @Override

@@ -53,7 +53,7 @@ public class ProjectTestRestServicesAction extends AbstractAction implements Pre
     private JMenuItem menuPresenter;
     private Lookup lookup;
     private Class<?>[] watch;
-    private Lookup.Result results[];
+    private Lookup.Result<?>[] results;
     private boolean needsRefresh = true;
     private boolean initialized = false;
     private boolean refreshing = false;

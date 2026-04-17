@@ -201,12 +201,6 @@ public class PlainLogger implements HudsonLogger {
             URLDisplayer.getDefault().showURL(u);
         }
 
-        @Override
-        public void outputLineSelected(OutputEvent ev) {}
-
-        @Override
-        public void outputLineCleared(OutputEvent ev) {}
-
         public @Override String toString() {
             return u.toString();
         }

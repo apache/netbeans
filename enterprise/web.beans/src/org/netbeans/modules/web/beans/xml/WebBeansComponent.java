@@ -29,6 +29,7 @@ public interface WebBeansComponent extends DocumentComponent<WebBeansComponent> 
     
     String WEB_BEANS_NAMESPACE_OLD = "http://java.sun.com/xml/ns/javaee";   // NOI18N
     String WEB_BEANS_NAMESPACE = "http://xmlns.jcp.org/xml/ns/javaee";   // NOI18N
+    String WEB_BEANS_NAMESPACE_JAKARTA = "https://jakarta.ee/xml/ns/jakartaee";   // NOI18N
 
     WebBeansModel getModel();
     

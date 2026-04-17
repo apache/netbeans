@@ -710,7 +710,7 @@ class EntrySupportLazy extends EntrySupport {
         }
     }
 
-    /** holds node for entry; 1:1 mapping */
+    /* holds node for entry; 1:1 mapping */
 
     /** Dummy node class for entries without any node */
     static class DummyNode extends AbstractNode {

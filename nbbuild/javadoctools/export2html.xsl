@@ -47,10 +47,8 @@
                     <xsl:text>API List</xsl:text>
                 </xsl:element>
                 <link rel="stylesheet" href="netbeans.css" type="text/css"/>
-                <link rel="icon" type="image/png" sizes="32x32" href="//netbeans.apache.org/favicon-32x32.png" /> 
-                <link rel="icon" type="image/png" sizes="16x16" href="//netbeans.apache.org/favicon-16x16.png" />
-          
-
+                <link rel="icon" type="image/png" sizes="32x32" href="https://netbeans.apache.org/favicon-32x32.png" />
+                <link rel="icon" type="image/png" sizes="16x16" href="https://netbeans.apache.org/favicon-16x16.png" />
             </head>
 
             <body>
@@ -272,7 +270,7 @@
                                 </xsl:attribute>
                                 <a>
                                     <xsl:attribute name="href">
-                                        <xsl:value-of select="substring-before(@target,'/')" />/overview-summary.html</xsl:attribute>
+                                        <xsl:value-of select="substring-before(@target,'/')" />/index.html</xsl:attribute>
                                     <xsl:attribute name="target">classFrame</xsl:attribute>
                                     <xsl:value-of select="@name"/>
                                 </a> -
@@ -305,7 +303,7 @@
                         <li>
                             <xsl:variable name="where" select="substring-before(@target, '/')"/>
                             <b>
-                                <a href="{$where}/overview-summary.html">
+                                <a href="{$where}/index.html">
                                     <xsl:value-of select="$where"/>
                                 </a>
                             </b>

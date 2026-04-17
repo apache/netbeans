@@ -28,7 +28,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.docker.api.Credentials;
 import org.netbeans.modules.docker.api.DockerInstance;
 import org.netbeans.modules.docker.api.DockerException;
@@ -143,7 +142,7 @@ public class PullImageAction extends NodeAction {
         @Override
         public void run() {
             final InputOutput io = IOProvider.getDefault().getIO(Bundle.MSG_Pulling(image), false);
-            ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.MSG_Pulling(image), new AbstractAction() {
+            ProgressHandle handle = ProgressHandle.createHandle(Bundle.MSG_Pulling(image), null, new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     io.select();

@@ -51,9 +51,9 @@ import org.openide.util.Exceptions;
  * <table>
  * <caption>Description of DebuggerManager</caption>
  * <tbody><tr>
- * <td colspan="2" style="background-color:#4D7A97"><font size="+2"><b>Description </b></font></td>
- * </tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Functionality</b></font></td><td> 
+ * <td colspan="2" style="background-color:#4D7A97"><b>Description </b></td>
+ * </tr><tr><td>
+ * <b>Functionality</b></td><td> 
  *
  * <b>Start &amp; finish debugging:</b>
  *    DebuggerManager manages a process of starting a new debugging (
@@ -99,22 +99,22 @@ import org.openide.util.Exceptions;
  *    {@link org.netbeans.api.debugger.DebuggerManagerListener}.
  *
  * <br>
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Clinents / Providers</b></font></td><td> 
+ * </td></tr><tr><td>
+ * <b>Clinents / Providers</b></td><td> 
  *
  * DebuggerCore module should be the only one provider of this abstract class.
  * This class should be called from debugger plug-in modules and from debugger
  * UI modules. 
  * 
  * <br>
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Lifecycle</b></font></td><td> 
+ * </td></tr><tr><td>
+ * <b>Lifecycle</b></td><td> 
  *
  * The only one instance of DebuggerManager should exist, and it should be 
  * created in {@link #getDebuggerManager} method.
  * 
- * </td></tr><tr><td align="left" valign="top" width="1%"><font size="+1">
- * <b>Evolution</b></font></td><td>
+ * </td></tr><tr><td>
+ * <b>Evolution</b></td><td>
  *
  * No method should be removed from this class, but some functionality can 
  * be added.

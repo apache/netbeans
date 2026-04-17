@@ -25,10 +25,7 @@ package org.netbeans.modules.payara.tooling.data;
  */
 public interface ToolConfig {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get tool JAR path (relative under Payara home).
      * <p/>

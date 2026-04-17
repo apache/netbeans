@@ -48,6 +48,7 @@ import javax.swing.JPanel;
 import org.netbeans.modules.j2ee.sun.share.configbean.Utils;
 import org.openide.awt.Mnemonics;
 import org.openide.util.HelpCtx;
+import org.openide.util.ImageUtilities;
 
 
 /* A modal dialog object with Ok, Cancel, Help buttons and an optional required
@@ -287,7 +288,7 @@ public abstract class InputDialog extends JDialog implements HelpCtx.Provider {
 
                 // Add warning message
                 JLabel label = new JLabel();
-                label.setIcon(Util.warningMessageIcon);
+                label.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/j2ee/sun/share/configbean/customizers/common/resources/warningIcon.png"));
                 label.setText("<html>" + message + "</html>"); // NOI18N
                 label.getAccessibleContext().setAccessibleName(bundle.getString("ASCN_WarningMessage")); // NOI18N
                 label.getAccessibleContext().setAccessibleDescription(message);
@@ -308,7 +309,7 @@ public abstract class InputDialog extends JDialog implements HelpCtx.Provider {
 
                 // Add error message
                 JLabel label = new JLabel();
-                label.setIcon(Util.errorMessageIcon);
+                label.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/j2ee/sun/share/configbean/customizers/common/resources/errorIcon.png"));
                 label.setText("<html>" + message + "</html>"); // NOI18N
                 label.getAccessibleContext().setAccessibleName(bundle.getString("ASCN_ErrorMessage")); // NOI18N
                 label.getAccessibleContext().setAccessibleDescription(message);

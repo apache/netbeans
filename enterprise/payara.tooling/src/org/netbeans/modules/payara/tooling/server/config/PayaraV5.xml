@@ -27,6 +27,7 @@ under the License.
         <platform version="1.8"/>
         <platform version="11"/>
         <platform version="17"/>
+        <platform version="21"/>
     </java>
     <javaee version="1.8">
         <profile version="1.3" type="full"/>

@@ -598,6 +598,7 @@ public final class GenerationUtils {
                 classTree.getTypeParameters(),
                 classTree.getExtendsClause(),
                 (List<ExpressionTree>)classTree.getImplementsClause(),
+                classTree.getPermitsClause(),
                 classTree.getMembers());
     }
 

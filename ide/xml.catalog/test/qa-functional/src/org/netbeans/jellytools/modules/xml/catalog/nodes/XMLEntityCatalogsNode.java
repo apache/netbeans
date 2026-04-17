@@ -73,7 +73,7 @@ public class XMLEntityCatalogsNode extends AbstractNode {
         propertiesAction.perform(this);
     }
     
-    // LIB /////////////////////////////////////////////////////////////////////
+    // LIB
     
     /** returns default XML Entity Catalogs node instance */
     public static XMLEntityCatalogsNode getInstance() {

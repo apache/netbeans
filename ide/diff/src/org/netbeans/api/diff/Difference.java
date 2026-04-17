@@ -54,8 +54,8 @@ public class Difference extends Object implements Serializable {
     
     /**
      * Creates a new instance of Difference
-     * @param type The type of the difference. Must be one of the {@link Part#DELETE DELETE},
-     *             {@link Part#ADD ADD} or {@link Part#CHANGE CHANGE}
+     * @param type The type of the difference. Must be one of the {@link #DELETE DELETE},
+     *             {@link #ADD ADD} or {@link #CHANGE CHANGE}
      * @param firstStart The line number on which the difference starts in the first file.
      * @param firstEnd The line number on which the difference ends in the first file.
      * @param secondStart The line number on which the difference starts in the second file.
@@ -67,8 +67,8 @@ public class Difference extends Object implements Serializable {
     
     /**
      * Creates a new instance of Difference
-     * @param type The type of the difference. Must be one of the {@link Part#DELETE DELETE},
-     *             {@link Part#ADD ADD} or {@link Part#CHANGE CHANGE}
+     * @param type The type of the difference. Must be one of the {@link #DELETE DELETE},
+     *             {@link #ADD ADD} or {@link #CHANGE CHANGE}
      * @param firstStart The line number on which the difference starts in the first file.
      * @param firstEnd The line number on which the difference ends in the first file.
      * @param secondStart The line number on which the difference starts in the second file.
@@ -83,8 +83,8 @@ public class Difference extends Object implements Serializable {
     
     /**
      * Creates a new instance of Difference
-     * @param type The type of the difference. Must be one of the {@link Part#DELETE DELETE},
-     *             {@link Part#ADD ADD} or {@link Part#CHANGE CHANGE}
+     * @param type The type of the difference. Must be one of the {@link #DELETE DELETE},
+     *             {@link #ADD ADD} or {@link #CHANGE CHANGE}
      * @param firstStart The line number on which the difference starts in the first file.
      * @param firstEnd The line number on which the difference ends in the first file.
      * @param secondStart The line number on which the difference starts in the second file.
@@ -115,8 +115,8 @@ public class Difference extends Object implements Serializable {
     }
 
     /**
-     * Get the difference type. It's one of {@link Part#DELETE DELETE},
-     * {@link Part#ADD ADD} or {@link Part#CHANGE CHANGE} meaning
+     * Get the difference type. It's one of {@link #DELETE DELETE},
+     * {@link #ADD ADD} or {@link #CHANGE CHANGE} meaning
      * respective change in second source.
      */
     public int getType() {
@@ -210,8 +210,8 @@ public class Difference extends Object implements Serializable {
     
         /**
           * Creates a new instance of LineDiff
-          * @param type The type of the difference. Must be one of the {@link Part#DELETE DELETE},
-          *             {@link Part#ADD ADD} or {@link Part#CHANGE CHANGE}
+          * @param type The type of the difference. Must be one of the {@link #DELETE DELETE},
+          *             {@link #ADD ADD} or {@link #CHANGE CHANGE}
           * @param line The line number
           * @param pos1 The position on which the difference starts on this line.
           * @param pos2 The position on which the difference ends on this line.
@@ -227,8 +227,8 @@ public class Difference extends Object implements Serializable {
         }
         
         /**
-          * Get the difference type. It's one of {@link Part#DELETE DELETE},
-          * {@link Part#ADD ADD} or {@link Part#CHANGE CHANGE}.
+          * Get the difference type. It's one of {@link #DELETE DELETE},
+          * {@link #ADD ADD} or {@link #CHANGE CHANGE}.
           */
         public int getType() {
             return this.type;

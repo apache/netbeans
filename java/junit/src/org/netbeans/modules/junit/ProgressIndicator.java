@@ -20,7 +20,6 @@
 package org.netbeans.modules.junit;
 
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
@@ -45,7 +44,7 @@ final class ProgressIndicator implements Cancellable {
     ProgressIndicator() {
         String msg = NbBundle.getMessage(ProgressIndicator.class,
                                         "LBL_generator_progress_title");//NOI18N
-        progressHandle = ProgressHandleFactory.createHandle(msg);
+        progressHandle = ProgressHandle.createHandle(msg);
     }
 
     public boolean cancel() {

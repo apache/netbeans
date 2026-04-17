@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="24" height="24" version="1.1" viewBox="0 0 24 24">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #2e92ff;
+      }
+
+      .st1 {
+        opacity: .33;
+      }
+
+      .st2 {
+        fill: #3aea00;
+      }
+    </style>
+  </defs>
+  <g>
+    <circle class="st0" cx="12" cy="12.029" r="11"/>
+    <path class="st2" d="M15.777,1.737c-1.151.882-2.555,2.409-2.555,4.181,0,2.58-3.083,3.254-3.989,3.951-.754.58-1.075.733-.806,1.898.228.987,1.293,1.402,2.244,1.265,1.428-.205,1.626.234,1.922,1.565.194.871-.04,2.674.67,3.272.957.806,1.79-.37,2.142-1.21.435-1.035.46-1.701.552-2.841.106-1.299,1.051-1.561,1.719-2.493.452-.632,2.615-2.275,4.341-3.797-1.208-2.684-3.46-4.772-6.24-5.793Z"/>
+    <path class="st2" d="M12.393,3.635c-.255,1.277-1.081,2.189-1.843,2.037-.762-.153-1.174-1.312-.918-2.589s1.081-2.189,1.843-2.037c.763.153,1.174,1.312.918,2.589Z"/>
+  </g>
+  <g class="st1">
+    <path d="M12,2.029c5.514,0,10,4.486,10,10s-4.486,10-10,10S2,17.543,2,12.029,6.486,2.029,12,2.029M12,1.029C5.925,1.029,1,5.954,1,12.029s4.925,11,11,11,11-4.925,11-11S18.075,1.029,12,1.029h0Z"/>
+  </g>
+  <description>Apache NetBeans Logo
+  </description>
+</svg>

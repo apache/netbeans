@@ -41,10 +41,7 @@ import org.netbeans.modules.glassfish.tooling.utils.NetUtils;
 public abstract class FetchLogPiped
         extends FetchLog implements Callable<TaskState> {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(FetchLogPiped.class);
 
@@ -54,10 +51,7 @@ public abstract class FetchLogPiped
     /** Log refresh delay in miliseconds. */
     static final int LOG_REFRESH_DELAY = 1000;
     
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server log fetcher depending
      * on server being remote or local.
@@ -134,10 +128,7 @@ public abstract class FetchLogPiped
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Output stream where to write retrieved remote server log. */
     final PipedOutputStream out;
 
@@ -156,10 +147,7 @@ public abstract class FetchLogPiped
     /** Listeners for state change events in GlassFish log fetcher. */
     private final LinkedList<FetchLogEventListener> eventListeners;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish remote server log fetcher.
      * <p/>
@@ -231,10 +219,7 @@ public abstract class FetchLogPiped
         internalExecutor = false;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructor callback which initializes log <code>InputStream</code>
      * as <code>PipedInputStream</code> sending data from remote server
@@ -253,10 +238,7 @@ public abstract class FetchLogPiped
         return new PipedInputStream(PIPE_BUFFER_SIZE);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Add GlassFish log fetcher state change listener at the end
      * of listeners list.

@@ -62,7 +62,7 @@ final  class ResourcePathItem extends AbstractCompletionItem {
     @Override
     protected ImageIcon getIcon() {
         if (icon == null) {
-            icon = new ImageIcon(target.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
+            icon = ImageUtilities.icon2ImageIcon(ImageUtilities.image2Icon(target.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16)));
         }
         return icon;
     }

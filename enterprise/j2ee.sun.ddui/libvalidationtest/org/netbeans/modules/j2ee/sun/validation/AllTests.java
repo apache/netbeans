@@ -48,8 +48,8 @@ public class AllTests{
             org.netbeans.modules.j2ee.sun.validation.util.UtilsTest.class);
         suite.addTestSuite(
             org.netbeans.modules.j2ee.sun.validation.constraints.ConstraintTest.class);
-        ///suite.addTestSuite(
-            ///org.netbeans.modules.j2ee.sun.validation.constraints.ConstraintUtilsTest.class);
+        //suite.addTestSuite(
+            //org.netbeans.modules.j2ee.sun.validation.constraints.ConstraintUtilsTest.class);
         
         //
         // For a master test suite, use this pattern.

@@ -20,6 +20,7 @@ package org.netbeans.modules.javascript.cdtdebug;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -42,6 +43,7 @@ import org.netbeans.modules.web.common.sourcemap.SourceMapsTranslator;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 public class ScriptsHandler {
@@ -55,11 +57,8 @@ public class ScriptsHandler {
     private final SourceMapsTranslator smt;
     private final String remotePathPrefix;
     private final boolean doPathTranslation;
-    private final int numPrefixes;
     private final String[] localPathPrefixes;
     private final String[] serverPathPrefixes;
-    private final char localPathSeparator;
-    private final char serverPathSeparator;
     @NullAllowed
     private final FileObject[] localRoots;
     @NullAllowed
@@ -76,27 +75,23 @@ public class ScriptsHandler {
             // dbg can be null in tests
             this.remotePathPrefix = "";
         }
-        if (localPaths != null && !localPaths.isEmpty() && serverPaths != null && !serverPaths.isEmpty()) {
+        if (localPaths != null && !localPaths.isEmpty()
+                && serverPaths != null && !serverPaths.isEmpty()
+                && !localPaths.equals(serverPaths)) {
             this.doPathTranslation = true;
             int n = localPaths.size();
-            this.numPrefixes = n;
             this.localPathPrefixes = new String[n];
             this.serverPathPrefixes = new String[n];
             for (int i = 0; i < n; i++) {
-                this.localPathPrefixes[i] = stripSeparator(localPaths.get(i));
+                this.localPathPrefixes[i] = toUrl(localPaths.get(i));
             }
-            this.localPathSeparator = findSeparator(localPaths.get(0));
             for (int i = 0; i < n; i++) {
-                this.serverPathPrefixes[i] = stripSeparator(serverPaths.get(i));
+                this.serverPathPrefixes[i] = toUrl(serverPaths.get(i));
             }
-            this.serverPathSeparator = findSeparator(serverPaths.get(0));
         } else {
             this.doPathTranslation = false;
             this.localPathPrefixes = null;
             this.serverPathPrefixes = null;
-            this.localPathSeparator = 0;
-            this.serverPathSeparator = 0;
-            this.numPrefixes = 0;
         }
         if (localPaths != null && !localPaths.isEmpty()) {
             FileObject[] lroots = new FileObject[localPaths.size()];
@@ -140,11 +135,11 @@ public class ScriptsHandler {
             this.localPathExclusionFilters = null;
         }
         LOG.log(Level.FINE,
-                "ScriptsHandler: doPathTranslation = {0}, localPathPrefixes = {1}, separator = {2}, "
-                + "serverPathPrefixes = {3}, separator = {4}, "
-                + "localRoots = {5}, localPathExclusionFilters = {6}.",
-                new Object[]{doPathTranslation, Arrays.toString(localPathPrefixes), localPathSeparator,
-                    Arrays.toString(serverPathPrefixes), serverPathSeparator,
+                "ScriptsHandler: doPathTranslation = {0}, localPathPrefixes = {1},"
+                + "serverPathPrefixes = {2},"
+                + "localRoots = {3}, localPathExclusionFilters = {4}.",
+                new Object[]{doPathTranslation, Arrays.toString(localPathPrefixes),
+                    Arrays.toString(serverPathPrefixes),
                     Arrays.toString(this.localRoots),
                     Arrays.toString(this.localPathExclusionFilters)});
         this.dbg = dbg;
@@ -238,37 +233,27 @@ public class ScriptsHandler {
     }
 
     public FileObject getFile(@NonNull CDTScript script) {
-        String name = script.getUrl().getPath();
-        if(name == null) {
+        String url = script.getUrl();
+        if(url == null) {
             return null;
         }
-        File localFile = null;
-        if (doPathTranslation) {
+
+        String lp = getLocalPath(url);
+        if (lp != null) {
             try {
-                String lp = getLocalPath(name);
-                localFile = new File(lp);
-            } catch (OutOfScope oos) {
-            }
-        } else {
-            File f = new File(name);
-            if (f.isAbsolute()) {
-                localFile = f;
-            }
-        }
-        if (localFile != null) {
-            FileObject fo = FileUtil.toFileObject(localFile);
-            if (fo != null) {
-                synchronized (scriptsByURL) {
-                    scriptsByURL.put(fo.toURL(), script);
+                FileObject localFile = URLMapper.findFileObject(new URI(lp).toURL());
+                if (localFile != null) {
+                    synchronized (scriptsByURL) {
+                        scriptsByURL.put(localFile.toURL(), script);
+                    }
+                    return localFile;
                 }
-                return fo;
+            } catch (URISyntaxException | MalformedURLException ex) {
+                // Ignore
             }
-        }
-        if (name == null) {
-            name = "unknown.js";
         }
         // prepend <host>_<port>/ to the name.
-        name = remotePathPrefix + name;
+        String name = remotePathPrefix + url;
         URL sourceURL = SourceFilesCache.getDefault().getSourceFile(name, script.getHash(), new ScriptContentLoader(script, dbg));
         synchronized (scriptsByURL) {
             scriptsByURL.put(sourceURL, script);
@@ -276,112 +261,50 @@ public class ScriptsHandler {
         return URLMapper.findFileObject(sourceURL);
     }
 
-    /**
-     * Find a known script by it's actual URL.
-     * @param scriptURL Script's URL returned by {@link #getFile(org.netbeans.lib.v8debug.CDTScript)}
-     * @return the script or <code>null</code> when not found.
-     */
-    @CheckForNull
-    public CDTScript findScript(@NonNull URL scriptURL) {
-        synchronized (scriptsByURL) {
-            return scriptsByURL.get(scriptURL);
-        }
-    }
-
     @CheckForNull
     public String getServerPath(@NonNull FileObject fo) {
+        if(! doPathTranslation) {
+            return toTripleSlashUri(fo.toURI()).toString();
+        }
         String serverPath;
-        File file = FileUtil.toFile(fo);
-        if (file != null) {
-            String localPath = file.getAbsolutePath();
-            try {
-                serverPath = getServerPath(localPath);
-            } catch (ScriptsHandler.OutOfScope oos) {
-                serverPath = null;
-            }
-        } else {
-            URL url = fo.toURL();
-            CDTScript script = findScript(url);
-            if (script != null) {
-                serverPath = script.getUrl().getPath();
-            } else if (SourceFilesCache.URL_PROTOCOL.equals(url.getProtocol())) {
-                String path = fo.getPath();
-                int begin = path.indexOf('/');
-                if (begin > 0) {
-                    path = path.substring(begin + 1);
-                    // subtract <host>_<port>/ :
-                    if (path.startsWith(remotePathPrefix)) {
-                        serverPath = path.substring(remotePathPrefix.length());
-                    } else {
-                        serverPath = null;
-                    }
+        URL url = fo.toURL();
+        if (SourceFilesCache.URL_PROTOCOL.equals(url.getProtocol())) {
+            String path = fo.getPath();
+            int begin = path.indexOf('/');
+            if (begin > 0) {
+                path = path.substring(begin + 1);
+                // subtract <host>_<port>/ :
+                if (path.startsWith(remotePathPrefix)) {
+                    serverPath = path.substring(remotePathPrefix.length());
                 } else {
                     serverPath = null;
                 }
             } else {
                 serverPath = null;
             }
-        }
-        return serverPath;
-    }
-
-    @CheckForNull
-    public String getServerPath(@NonNull URL url) {
-        if (!SourceFilesCache.URL_PROTOCOL.equals(url.getProtocol())) {
-            return null;
-        }
-        String path;
-        try {
-            path = url.toURI().getPath();
-        } catch (URISyntaxException usex) {
-            return null;
-        }
-        int l = path.length();
-        int index = 0;
-        while (index < l && path.charAt(index) == '/') {
-            index++;
-        }
-        int begin = path.indexOf('/', index);
-        if (begin > 0) {
-            // path.substring(begin + 1).startsWith(remotePathPrefix)
-            if (path.regionMatches(begin + 1, remotePathPrefix, 0, remotePathPrefix.length())) {
-                path = path.substring(begin + 1 + remotePathPrefix.length());
-                return path;
-            } else {
-                // Path with a different prefix
-                return null;
-            }
         } else {
-            return null;
+            String fileUri = toTripleSlashUri(fo.toURI()).toString();
+            for (int i = 0; i < localPathPrefixes.length; i++) {
+                if (fileUri.startsWith(localPathPrefixes[i])) {
+                    return serverPathPrefixes[i] + fileUri.substring(localPathPrefixes[i].length());
+                }
+            }
         }
+        return null;
     }
 
-    public String getLocalPath(@NonNull String serverPath) throws OutOfScope {
+
+    public String getLocalPath(@NonNull String serverPath) {
         if (!doPathTranslation) {
             return serverPath;
         } else {
-            for (int i = 0; i < numPrefixes; i++) {
-                if (isChildOf(serverPathPrefixes[i], serverPath)) {
-                    return translate(serverPath, serverPathPrefixes[i], serverPathSeparator,
-                                     localPathPrefixes[i], localPathSeparator);
+            for (int i = 0; i < serverPathPrefixes.length; i++) {
+                if (serverPath.startsWith(serverPathPrefixes[i])) {
+                    return localPathPrefixes[i] + serverPath.substring(serverPathPrefixes[i].length());
                 }
             }
         }
-        throw new OutOfScope(serverPath, Arrays.toString(serverPathPrefixes));
-    }
-
-    public String getServerPath(@NonNull String localPath) throws OutOfScope {
-        if (!doPathTranslation) {
-            return localPath;
-        } else {
-            for (int i = 0; i < numPrefixes; i++) {
-                if (isChildOf(localPathPrefixes[i], localPath)) {
-                    return translate(localPath, localPathPrefixes[i], localPathSeparator,
-                                     serverPathPrefixes[i], serverPathSeparator);
-                }
-            }
-        }
-        throw new OutOfScope(localPath, Arrays.toString(localPathPrefixes));
+        return null;
     }
 
     public File[] getLocalRoots() {
@@ -396,86 +319,42 @@ public class ScriptsHandler {
         return roots;
     }
 
-    private static boolean isChildOf(String parent, String child) {
-        if (!child.startsWith(parent)) {
-            return false;
+    private static String toUrl(String path) {
+        // Assume Windows path if not starts with slash
+        if (! path.startsWith("/")) {
+                path = "/" + path;
         }
-        int l = parent.length();
-        if (!isRootPath(parent)) { // When the parent is the root, do not do further checks.
-            if (child.length() > l && !isSeparator(child.charAt(l))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static String translate(String path, String pathPrefix, char pathSeparator, String otherPathPrefix, char otherPathSeparator) throws OutOfScope {
-        if (!path.startsWith(pathPrefix)) {
-            throw new OutOfScope(path, pathPrefix);
-        }
-        int l = pathPrefix.length();
-        if (!isRootPath(pathPrefix)) { // When the prefix is the root, do not do further checks.
-            if (path.length() > l && !isSeparator(path.charAt(l))) {
-                throw new OutOfScope(path, pathPrefix);
-            }
-        }
-        while (path.length() > l && isSeparator(path.charAt(l))) {
-            l++;
-        }
-        String otherPath = path.substring(l);
-        if (pathSeparator != otherPathSeparator) {
-            otherPath = otherPath.replace(pathSeparator, otherPathSeparator);
-        }
-        if (otherPath.isEmpty()) {
-            return otherPathPrefix;
-        } else {
-            if (isRootPath(otherPathPrefix)) { // Do not append further slashes to the root
-                return otherPathPrefix + otherPath;
+        try {
+            URI fileUri = new URI("file", "", path.replace("\\", "/"), null);
+            String fileString = fileUri.toString();
+            if(! fileString.endsWith("/")) {
+                return fileString + "/";
             } else {
-                return otherPathPrefix + otherPathSeparator + otherPath;
+                return fileString;
             }
+        } catch (URISyntaxException ex) {
+            Exceptions.printStackTrace(ex);
+            return null;
         }
     }
 
-    private static char findSeparator(String path) {
-        if (path.indexOf('/') >= 0) {
-            return '/';
-        }
-        if (path.indexOf('\\') >= 0) {
-            return '\\';
-        }
-        return '/';
-    }
 
-    private static boolean isSeparator(char c) {
-        return c == '/' || c == '\\';
-    }
-
-    private static boolean isRootPath(String path) {
-        if ("/".equals(path)) {
-            return true;
-        }
-        if (path.length() == 4 && path.endsWith(":\\\\")) { // "C:\\"
-            return true;
-        }
-        return false;
-    }
-
-    private static String stripSeparator(String path) {
-        if (isRootPath(path)) { // Do not remove slashes the root
-            return path;
-        }
-        while (path.length() > 1 && (path.endsWith("/") || path.endsWith("\\"))) {
-            path = path.substring(0, path.length() - 1);
-        }
-        return path;
-    }
-
-
-    public static final class OutOfScope extends Exception {
-
-        private OutOfScope(String path, String scope) {
-            super(path);
+    private URI toTripleSlashUri(URI inputUri) {
+        // Only handle file URIs and file uris with a null host (single slash variant)
+        if((! "file".equals(inputUri.getScheme())) || inputUri.getHost() != null) {
+            return inputUri;
+        } else {
+            try {
+                return new URI(
+                        inputUri.getScheme(),
+                        "",
+                        inputUri.getRawPath(),
+                        null
+                );
+            } catch (URISyntaxException ex) {
+                Exceptions.printStackTrace(ex);
+                return null;
+            }
         }
     }
 

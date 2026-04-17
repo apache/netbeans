@@ -22,7 +22,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -84,6 +83,7 @@ import org.openide.util.lookup.ProxyLookup;
         mimeType="",
         position=1000000 // lets leave some space in case somebody really wants to be the last
 )
+@SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
 public final class HistoryComponent extends JPanel implements MultiViewElement, HelpCtx.Provider, PropertyChangeListener {
 
     private HistoryFileView masterView;
@@ -155,16 +155,16 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
         if(context == null) return;
         synchronized(FILE_LOCK) {
             DataObject dataObject = context.lookup(DataObject.class);
-            List<VCSFileProxy> filesList = new LinkedList<VCSFileProxy>();
-            if (dataObject instanceof DataShadow) {
-                dataObject = ((DataShadow) dataObject).getOriginal();
+            List<VCSFileProxy> filesList = new LinkedList<>();
+            if (dataObject instanceof DataShadow dataShadow) {
+                dataObject = dataShadow.getOriginal();
             }
             if (dataObject != null) {
                 Set<FileObject> daoFiles = dataObject.files();
                 Collection<VCSFileProxy> doFiles = toFileCollection(daoFiles);
                 if(files != null && files.length > 0) {
                     // check for possible changes
-                    Set<FileObject> s = new HashSet<FileObject>(Arrays.asList(files));
+                    Set<FileObject> s = new HashSet<>(Arrays.asList(files));
                     boolean changed = false;
                     for (FileObject fo : daoFiles) {
                         if(!s.contains(fo)) {
@@ -179,24 +179,19 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
                 }
                 filesList.addAll(doFiles);
             }
-            initFiles(filesList.toArray(new VCSFileProxy[0]));
+            initFiles(filesList.toArray(VCSFileProxy[]::new));
         }
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                resetUI();
-            }
-        };
+        Runnable reset = this::resetUI;
         if(EventQueue.isDispatchThread()) {
-            r.run();
+            reset.run();
         } else {
-            SwingUtilities.invokeLater(r);
+            SwingUtilities.invokeLater(reset);
         }
     }
     
     private synchronized void initFiles(VCSFileProxy[] files) {
         synchronized(FILE_LOCK) {
-            List<FileObject> l = new ArrayList<FileObject>(files.length);
+            List<FileObject> l = new ArrayList<>(files.length);
             unregisterFileListeners();
             for (VCSFileProxy proxy : files) {
                 final FileObject fo = proxy.toFileObject();
@@ -204,12 +199,12 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
                     l.add(fo);
                 }
             }    
-            this.files = l.toArray(new FileObject[0]);
+            this.files = l.toArray(FileObject[]::new);
             registerFileListeners();
         }
     }
 
-    private final Map<FileObject, FileChangeListener> listeners = new HashMap<FileObject, FileChangeListener>(1);
+    private final Map<FileObject, FileChangeListener> listeners = new HashMap<>(1);
     private void unregisterFileListeners() {
         synchronized(listeners) {
             if(!listeners.isEmpty()) {
@@ -255,7 +250,7 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
     }
     
     private Collection<VCSFileProxy> toFileCollection(Collection<? extends FileObject> fileObjects) {
-        Set<VCSFileProxy> ret = new HashSet<VCSFileProxy>(fileObjects.size());
+        Set<VCSFileProxy> ret = new HashSet<>((int) Math.ceil(fileObjects.size() / 0.75));
         for (FileObject fo : fileObjects) {
             ret.add(VCSFileProxy.createFileProxy(fo));
         }
@@ -344,12 +339,7 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
                hasLocalHistory != (History.getHistoryProvider(History.getInstance().getLocalHistory(fo)) != null)) 
             {
                 versioningSystem = vs;
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        resetUI();
-                    }
-                });
+                SwingUtilities.invokeLater(this::resetUI);
             }
         }
     }
@@ -590,12 +580,9 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
             modeLabel = new JLabel(NbBundle.getMessage(HistoryComponent.class, "LBL_CompareMode"));  // NOI18N
             modeCombo = new ValueSizedCombo();
             modeCombo.setModel(new DefaultComboBoxModel(new Object[] {CompareMode.TOCURRENT, CompareMode.TOPARENT}));
-            modeCombo.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    if(e.getStateChange() == ItemEvent.SELECTED) {
-                        onModeChange();
-                    }
+            modeCombo.addItemListener(e -> {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    onModeChange();
                 }
             });
             
@@ -604,18 +591,15 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
             filterCombo.setRenderer(new DefaultListCellRenderer() {
                 @Override
                 public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                    if(value instanceof Filter) {
-                        return super.getListCellRendererComponent(list, ((Filter) value).getDisplayName(), index, isSelected, cellHasFocus);
+                    if (value instanceof Filter filter) {
+                        return super.getListCellRendererComponent(list, filter.getDisplayName(), index, isSelected, cellHasFocus);
                     }
                     return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 }
             });
-            filterCombo.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    if(e.getStateChange() == ItemEvent.SELECTED) {
-                        onFilterChange();
-                    }
+            filterCombo.addItemListener(e -> {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    onFilterChange();
                 }
             });
             
@@ -763,7 +747,7 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
     
         private class ShowHistoryAction extends AbstractAction {
             private VersioningSystem vs;
-            private final Set<String> forPaths = new HashSet<String>(1);
+            private final Set<String> forPaths = new HashSet<>(1);
             private Action delegate;
 
             public ShowHistoryAction(VersioningSystem vs) {
@@ -786,19 +770,16 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
             
             @Override
             public void actionPerformed(final ActionEvent e) {
-                History.getInstance().getRequestProcessor().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (FileObject fo : getFiles()) {
-                            if(!forPaths.contains(fo.getPath())) {
-                                init();
-                                break;
-                            }
+                History.getInstance().getRequestProcessor().post(() -> {
+                    for (FileObject fo : getFiles()) {
+                        if(!forPaths.contains(fo.getPath())) {
+                            init();
+                            break;
                         }
-                        assert delegate != null;
-                        if(delegate != null) {
-                            delegate.actionPerformed(e);
-                        }
+                    }
+                    assert delegate != null;
+                    if(delegate != null) {
+                        delegate.actionPerformed(e);
                     }
                 }); 
             }
@@ -900,10 +881,7 @@ public final class HistoryComponent extends JPanel implements MultiViewElement, 
         }
         public abstract String getDisplayName();
         protected HistoryEntry getEntry(Object value) {
-            if(value instanceof Node) {
-                return getHistoryEntry((Node)value);
-            }
-            return null;
+            return value instanceof Node node ? getHistoryEntry(node) : null;
         }
  
         private HistoryEntry getHistoryEntry(Node node) {

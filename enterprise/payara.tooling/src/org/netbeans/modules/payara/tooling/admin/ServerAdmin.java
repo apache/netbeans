@@ -34,10 +34,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class ServerAdmin {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Set global password authenticator for Payara servers.
      * <p/>

@@ -23,7 +23,6 @@ import java.awt.Image;
 import java.beans.BeanInfo;
 import java.lang.ref.WeakReference;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.refactoring.spi.ui.TreeElement;
@@ -55,7 +54,7 @@ public class SourceGroupTreeElement implements TreeElement {
             try {
                 Image image = DataObject.find(sg.getRootFolder()).getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16);
                 image = ImageUtilities.mergeImages( image, ImageUtilities.loadImage(PACKAGE_BADGE), 7, 7 );
-                icon = new ImageIcon(image);
+                icon = ImageUtilities.image2Icon(image);
             } catch (DataObjectNotFoundException d) {
             }
         }

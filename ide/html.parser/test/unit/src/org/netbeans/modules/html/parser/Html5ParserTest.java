@@ -600,11 +600,11 @@ public class Html5ParserTest extends NbTestCase {
 // Depends on file not donated by oracle to the apache foundation
 //    //Bug 211776 - Self-closing element breaks code folding
 //    public void testIssue211776() throws ParseException {
-////        ParseTreeBuilder.setLoggerLevel(Level.ALL);
+// //        ParseTreeBuilder.setLoggerLevel(Level.ALL);
 //
 //        HtmlParseResult result = parse(getTestFile("testfiles/test6.html"));
 //        Node root = result.root();
-////        ElementUtils.dumpTree(root);
+// //        ElementUtils.dumpTree(root);
 //
 //        OpenTag body = ElementUtils.query(root, "html/body");
 //        assertNotNull(body);
@@ -777,7 +777,7 @@ public class Html5ParserTest extends NbTestCase {
 //                + "</body>"
 //                + "</html>";
 //
-////        ParseTreeBuilder.setLoggerLevel(Level.FINER);
+// //        ParseTreeBuilder.setLoggerLevel(Level.FINER);
 //        HtmlParseResult result = parse(code);
 //        Node root = result.root();
 //

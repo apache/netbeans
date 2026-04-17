@@ -51,7 +51,7 @@ public class CatalogTest extends JellyTestCase {
         super(testName);
     }
     
-    // TESTS ///////////////////////////////////////////////////////////////////
+    // TESTS
     
     public void testMountCatalogDialog() throws Exception {
         System.out.println("running testMountCatalogDialog");
@@ -128,7 +128,7 @@ public class CatalogTest extends JellyTestCase {
         removeCatalogEntry(catalogName, publicID);
     }
     
-// LIB /////////////////////////////////////////////////////////////////////
+// LIB
     
     
     private synchronized void mountCatalog(String type, String url) {
@@ -190,7 +190,7 @@ public class CatalogTest extends JellyTestCase {
     }
     
     
-// MAIN ////////////////////////////////////////////////////////////////////
+// MAIN
     
     public static Test suite() {
         TestSuite suite = new NbTestSuite();

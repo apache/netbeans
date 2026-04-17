@@ -21,9 +21,11 @@ package org.netbeans.modules.java.lsp.server.protocol;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -33,6 +35,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Logger;
+
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -40,6 +43,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -129,7 +133,7 @@ public final class LoggerGenerator extends CodeActionsProvider {
         try {
             String uri = data.getAsJsonPrimitive(URI).getAsString();
             int offset = data.getAsJsonPrimitive(OFFSET).getAsInt();
-            client.showInputBox(new ShowInputBoxParams(Bundle.DN_GenerateLogger(), Bundle.DN_SelectLoggerName(), "LOG", false)).thenAccept(value -> {
+            client.showInputBox(new ShowInputBoxParams(Bundle.DN_GenerateLogger(), Bundle.DN_SelectLoggerName(), org.netbeans.modules.java.editor.codegen.LoggerGenerator.getBaseLoggerName(), false)).thenAccept(value -> {
                 try {
                     if (value != null && BaseUtilities.isJavaIdentifier(value)) {
                         FileObject file = Utils.fromUri(uri);
@@ -143,7 +147,7 @@ public final class LoggerGenerator extends CodeActionsProvider {
                             tp = wc.getTreeUtilities().getPathElementOfKind(TreeUtilities.CLASS_TREE_KINDS, tp);
                             if (tp != null) {
                                 ClassTree cls = (ClassTree) tp.getLeaf();
-                                VariableTree field = org.netbeans.modules.java.editor.codegen.LoggerGenerator.createLoggerField(wc.getTreeMaker(), cls, value, EnumSet.of(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL));
+                                VariableTree field = org.netbeans.modules.java.editor.codegen.LoggerGenerator.createLoggerField(wc.getTreeMaker(), cls, value, EnumSet.of(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL), wc);
                                 wc.rewrite(cls, GeneratorUtilities.get(wc).insertClassMember(cls, field));
                             }
                         });

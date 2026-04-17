@@ -34,7 +34,7 @@ import static org.netbeans.modules.beans.BeanUtils.*;
 
 /** Class representing a JavaBeans Property
  * @author Petr Hrebejk
- */;
+ */
 public class PropertyPattern extends Pattern {
 
     /** Constant for READ/WRITE mode of properties */

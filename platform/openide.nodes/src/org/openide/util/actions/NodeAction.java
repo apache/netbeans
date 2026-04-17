@@ -29,9 +29,11 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -46,7 +48,6 @@ import org.openide.util.LookupListener;
 import org.openide.util.Mutex;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 /**
  * A type of action that listens on change in activated nodes selection and
@@ -84,7 +85,7 @@ public abstract class NodeAction extends CallableSystemAction implements Context
     private static NodesL l;
 
     /** set of actions with listeners */
-    private static final Set<NodeAction> listeningActions = new WeakSet<NodeAction>(100);
+    private static final Set<NodeAction> listeningActions = Collections.newSetFromMap(new WeakHashMap<>(100));
 
     /* Initialize the listener.
     */

@@ -105,6 +105,7 @@ final class JUnit3TestGenerator extends AbstractTestGenerator {
                     Collections.<TypeParameterTree>emptyList(),//type params
                     extendsClause,                             //extends
                     Collections.<ExpressionTree>emptyList(),   //implements
+                    Collections.<ExpressionTree>emptyList(),   //permits
                     members);                                  //members
     }
     
@@ -158,6 +159,7 @@ final class JUnit3TestGenerator extends AbstractTestGenerator {
                 tstClass.getTypeParameters(),
                 tstClass.getExtendsClause(),
                 (List<? extends ExpressionTree>) tstClass.getImplementsClause(),
+                (List<? extends ExpressionTree>) tstClass.getPermitsClause(),
                 tstMembers);
         return newClass;
     }
@@ -358,6 +360,7 @@ final class JUnit3TestGenerator extends AbstractTestGenerator {
                 tstClass.getTypeParameters(),
                 tstClass.getExtendsClause(),
                 (List<? extends ExpressionTree>) tstClass.getImplementsClause(),
+                (List<? extends ExpressionTree>) tstClass.getPermitsClause(),
                 tstMembers);
     }
 

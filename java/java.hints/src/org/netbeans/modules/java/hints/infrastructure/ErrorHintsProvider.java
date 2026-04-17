@@ -51,6 +51,7 @@ import javax.swing.text.Position.Bias;
 import javax.swing.text.StyledDocument;
 import javax.tools.Diagnostic;
 import org.netbeans.api.editor.document.EditorDocumentUtils;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaParserResultTask;
@@ -108,7 +109,7 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
         errorKind2Severity.put(Diagnostic.Kind.ERROR, Severity.ERROR);
         errorKind2Severity.put(Diagnostic.Kind.MANDATORY_WARNING, Severity.WARNING);
         errorKind2Severity.put(Diagnostic.Kind.WARNING, Severity.WARNING);
-        errorKind2Severity.put(Diagnostic.Kind.NOTE, Severity.WARNING);
+        errorKind2Severity.put(Diagnostic.Kind.NOTE, Severity.HINT);
         errorKind2Severity.put(Diagnostic.Kind.OTHER, Severity.WARNING);
     }
 
@@ -189,8 +190,8 @@ public final class ErrorHintsProvider extends JavaParserResultTask {
 
         if (forPosition != null) {
             try {
-                int posRowStart = org.netbeans.editor.Utilities.getRowStart((NbEditorDocument) doc, forPosition);
-                int errRowStart = org.netbeans.editor.Utilities.getRowStart((NbEditorDocument) doc, range[0].getOffset());
+                int posRowStart = LineDocumentUtils.getLineStartOffset((NbEditorDocument) doc, forPosition);
+                int errRowStart = LineDocumentUtils.getLineStartOffset((NbEditorDocument) doc, range[0].getOffset());
                 if (posRowStart != errRowStart) {
                     return null;
                 }

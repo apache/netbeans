@@ -51,7 +51,6 @@ import org.openide.filesystems.URLMapper;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.TaskListener;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -96,7 +95,7 @@ public class WhiteListTaskProvider extends  PushTaskScanner {
         if (scope == null || callback == null)
             return ;
 
-        final Set<FileObject> files = new WeakSet<FileObject>();
+        final Set<FileObject> files = Collections.newSetFromMap(new WeakHashMap<>());
         for (FileObject file : scope.getLookup().lookupAll(FileObject.class)) {
             files.add(file);
         }
@@ -173,7 +172,7 @@ public class WhiteListTaskProvider extends  PushTaskScanner {
         synchronized (root2FilesWithAttachedErrors) {
             Set<FileObject> result = root2FilesWithAttachedErrors.get(root);
             if (result == null) {
-                root2FilesWithAttachedErrors.put(root, result = new WeakSet<FileObject>());
+                root2FilesWithAttachedErrors.put(root, result = Collections.newSetFromMap(new WeakHashMap<>()));
             }
             return result;
         }

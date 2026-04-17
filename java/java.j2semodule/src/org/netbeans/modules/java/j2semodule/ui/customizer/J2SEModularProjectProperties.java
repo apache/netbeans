@@ -20,7 +20,6 @@
 package org.netbeans.modules.java.j2semodule.ui.customizer;
 
 import java.awt.event.ActionListener;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -469,11 +468,8 @@ public class J2SEModularProjectProperties {
                 } else {
                     fo = FileUtil.toFileObject(file);
                 }
-                OutputStream out = fo.getOutputStream();
-                try {
-                    FileUtil.copy(new ByteArrayInputStream(CHANGED_LICENSE_PATH_CONTENT.getBytes()), out);
-                } finally {
-                    out.close();
+                try (OutputStream out = fo.getOutputStream()) {
+                    out.write(CHANGED_LICENSE_PATH_CONTENT.getBytes());
                 }
             }
             // Store properties

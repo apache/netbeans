@@ -1512,7 +1512,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                         handleDeclaredFunction(currentBlockScope, parentFn, fnNode);
                     }
                     for (VarNode varNode : declaredVars) {
-                        if (varNode.isLet()) {
+                        if (varNode.isBlockScoped()) {
                             // block scope variable
                             handleDeclaredVariable(currentBlockScope, parentFn, varNode, docHolder);
                         } else {
@@ -1779,10 +1779,15 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
                 pathIndex++;
                 lastVisited = getPath().get(pathSize - pathIndex);
             }
-            if ( lastVisited instanceof VarNode) {
+            if (lastVisited instanceof VarNode) {
                 fqName = getName((VarNode)lastVisited);
                 isDeclaredInParent = true;
-                JsObject declarationScope = ((VarNode)lastVisited).isLet() ? modelBuilder.getCurrentDeclarationScope() : modelBuilder.getCurrentDeclarationFunction();
+                JsObject declarationScope;
+                if (((VarNode) lastVisited).isBlockScoped()) {
+                    declarationScope = modelBuilder.getCurrentDeclarationScope();
+                } else {
+                    declarationScope = modelBuilder.getCurrentDeclarationFunction();
+                }
                 parent = declarationScope;
                 if (fqName.size() == 1 && !ModelUtils.isGlobal(declarationScope)) {
                     isPrivate = true;
@@ -2408,7 +2413,7 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
 //                                    newRef.addOccurrence(occurence.getOffsetRange());
 //                                }
 //                                if (originalFnc instanceof JsFunctionImpl) {
-////                                    ((JsFunctionImpl)originalFnc).setAnonymous(true);
+// //                                    ((JsFunctionImpl)originalFnc).setAnonymous(true);
 //                                    JsObject parent = jsObject.getParent();
 //                                    if (ModelUtils.PROTOTYPE.equals(parent.getName())) {
 //                                        parent = parent.getParent();
@@ -3124,41 +3129,41 @@ public class ModelVisitor extends PathNodeVisitor implements ModelResolver {
             return Collections.<Identifier>emptyList();
         }
     }
+
+//    private Variable findVarWithName(final Scope scope, final String name) {
+//        Variable result = null;
+//        Collection<Variable> variables = ScopeImpl.filter(scope.getElements(), new ScopeImpl.ElementFilter() {
 //
-////    private Variable findVarWithName(final Scope scope, final String name) {
-////        Variable result = null;
-////        Collection<Variable> variables = ScopeImpl.filter(scope.getElements(), new ScopeImpl.ElementFilter() {
-////
-////            @Override
-////            public boolean isAccepted(ModelElement element) {
-////                return element.getJSKind().equals(JsElement.Kind.VARIABLE)
-////                        && element.getName().equals(name);
-////            }
-////        });
-////
-////        if (!variables.isEmpty()) {
-////            result = variables.iterator().next();
-////        } else {
-////            if (!(scope instanceof FileScope)) {
-////                result = findVarWithName((Scope)scope.getInElement(), name);
-////            }
-////        }
-////
-////        return result;
-////    }
-////
-////    private Field findFieldWithName(FunctionScope function, final String name) {
-////        Field result = null;
-////        Collection<? extends Field> fields = function.getFields();
-////        result = ModelUtils.getFirst(ModelUtils.getFirst(fields, name));
-////        if (result == null && function.getInElement() instanceof FunctionScope) {
-////            FunctionScope parent = (FunctionScope)function.getInElement();
-////            fields = parent.getFields();
-////            result = ModelUtils.getFirst(ModelUtils.getFirst(fields, name));
-////        }
-////        return result;
-////    }
+//            @Override
+//            public boolean isAccepted(ModelElement element) {
+//                return element.getJSKind().equals(JsElement.Kind.VARIABLE)
+//                        && element.getName().equals(name);
+//            }
+//        });
 //
+//        if (!variables.isEmpty()) {
+//            result = variables.iterator().next();
+//        } else {
+//            if (!(scope instanceof FileScope)) {
+//                result = findVarWithName((Scope)scope.getInElement(), name);
+//            }
+//        }
+//
+//        return result;
+//    }
+//
+//    private Field findFieldWithName(FunctionScope function, final String name) {
+//        Field result = null;
+//        Collection<? extends Field> fields = function.getFields();
+//        result = ModelUtils.getFirst(ModelUtils.getFirst(fields, name));
+//        if (result == null && function.getInElement() instanceof FunctionScope) {
+//            FunctionScope parent = (FunctionScope)function.getInElement();
+//            fields = parent.getFields();
+//            result = ModelUtils.getFirst(ModelUtils.getFirst(fields, name));
+//        }
+//        return result;
+//    }
+
     private boolean isInPropertyNode() {
         boolean inFunction = false;
         for (int i = getPath().size() - 1; i > 0 ; i--) {

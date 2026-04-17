@@ -35,11 +35,9 @@ import org.openide.util.Parameters;
 public class ExtensionAndImplementationWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
 
     private static final String ANNOTATION_TYPE_TEMPLATE_NAME = "AnnotationType";
-    private static final String APPLET_TEMPLATE_NAME = "Applet";
     private static final String EMPTY_TEMPLATE_NAME = "Empty";
     private static final String ENUM_TEMPLATE_NAME = "Enum";
     private static final String INTERFACE_TEMPLATE_NAME = "Interface";
-    private static final String JAPPLET_TEMPLATE_NAME = "JApplet";
     private static final String RECORD_TEMPLATE_NAME = "Record";
     private ExtensionAndImplementationVisualPanel component;
     private final WizardDescriptor wizardDescriptor;
@@ -72,9 +70,7 @@ public class ExtensionAndImplementationWizardPanel implements WizardDescriptor.P
                                 .build();
                         break;
                     }
-                    case APPLET_TEMPLATE_NAME:
                     case ENUM_TEMPLATE_NAME:
-                    case JAPPLET_TEMPLATE_NAME:
                     case RECORD_TEMPLATE_NAME: {
                         component = ExtensionAndImplementationVisualPanel.builder(this)
                                 .withImplementationBox()

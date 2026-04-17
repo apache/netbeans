@@ -83,18 +83,18 @@ public abstract class CPStructureItem implements StructureItem {
     public String getHtml(HtmlFormatter formatter) {
         switch (handle.getType()) {
             case VARIABLE_GLOBAL_DECLARATION:
-                formatter.appendHtml("<font color=000000><b>"); //NOI18N
+                formatter.emphasis(true);
                 break;
         }
-        
+
         formatter.appendText(getName());
-        
+
         switch (handle.getType()) {
             case VARIABLE_GLOBAL_DECLARATION:
-                formatter.appendHtml("</b></font>"); //NOI18N);
+                formatter.emphasis(false);
                 break;
         }
-        
+
         return formatter.getText();
     }
 

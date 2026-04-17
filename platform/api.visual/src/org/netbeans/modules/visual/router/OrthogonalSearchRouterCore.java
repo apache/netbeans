@@ -290,20 +290,20 @@ final class OrthogonalSearchRouterCore {
         //KRIS: this is never used since OPTIMALIZE_REGIONS is false always
 //        if (OPTIMALIZE_REGIONS) {
 //            for (int a = depth; a > 0; a --) {
-////                if (infiniteY[a]) {
+// //                if (infiniteY[a]) {
 //                final int newY = controlPoints[a + 3].y;
 //                final OrthogonalSearchRouterRegion regionY = regions[a];
 //                final OrthogonalSearchRouterRegion regionY1 = regions[a - 1];
 //                if (newY >= regionY.y && newY < regionY.y + regionY.height && newY >= regionY1.y && newY < regionY1.y + regionY1.height)
 //                    controlPoints[a + 1].y = controlPoints[a + 2].y = newY;
-////                }
-////                if (infiniteX[a]) {
+// //                }
+// //                if (infiniteX[a]) {
 //                final int newX = controlPoints[a + 3].x;
 //                final OrthogonalSearchRouterRegion regionX = regions[a];
 //                final OrthogonalSearchRouterRegion regionX1 = regions[a - 1];
 //                if (newX >= regionX.x && newX < regionX.x + regionX.width && newX >= regionX1.x && newX < regionX1.x + regionX1.width)
 //                    controlPoints[a + 1].x = controlPoints[a + 2].x = newX;
-////                }
+// //                }
 //            }
 //        }
 

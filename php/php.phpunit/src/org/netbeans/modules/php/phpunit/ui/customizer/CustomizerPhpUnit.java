@@ -96,6 +96,7 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         runPhpUnitOnlyCheckBox.setSelected(PhpUnitPreferences.getRunPhpUnitOnly(phpModule));
         runTestUsingUnitCheckBox.setSelected(PhpUnitPreferences.getRunAllTestFiles(phpModule));
         askForTestGroupsCheckBox.setSelected(PhpUnitPreferences.getAskForTestGroups(phpModule));
+        isRelativePathEnabled.setSelected(PhpUnitPreferences.isRelativePathEnabled(phpModule));
         initPhpUnitVersion();
 
         enableFile(bootstrapCheckBox.isSelected(), bootstrapLabel, bootstrapTextField, bootstrapGenerateButton, bootstrapBrowseButton, bootstrapForCreateTestsCheckBox);
@@ -180,6 +181,7 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         PhpUnitPreferences.setRunPhpUnitOnly(phpModule, runPhpUnitOnlyCheckBox.isSelected());
         PhpUnitPreferences.setRunAllTestFiles(phpModule, runTestUsingUnitCheckBox.isSelected());
         PhpUnitPreferences.setAskForTestGroups(phpModule, askForTestGroupsCheckBox.isSelected());
+        PhpUnitPreferences.setRelativePathEnabled(phpModule, isRelativePathEnabled.isSelected());
     }
 
     private void initFile(boolean enabled, String file, JCheckBox checkBox, JTextField textField) {
@@ -329,6 +331,7 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
         askForTestGroupsCheckBox = new JCheckBox();
         versionLabel = new JLabel();
         versionLineLabel = new JLabel();
+        isRelativePathEnabled = new JCheckBox();
 
         bootstrapLabel.setLabelFor(bootstrapTextField);
         Mnemonics.setLocalizedText(bootstrapLabel, NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.bootstrapLabel.text")); // NOI18N
@@ -414,6 +417,8 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
 
         Mnemonics.setLocalizedText(versionLineLabel, "VERSION"); // NOI18N
 
+        Mnemonics.setLocalizedText(isRelativePathEnabled, NbBundle.getMessage(CustomizerPhpUnit.class, "CustomizerPhpUnit.isRelativePathEnabled.text")); // NOI18N
+
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(Alignment.LEADING)
@@ -464,7 +469,8 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
                     .addComponent(runTestUsingUnitCheckBox)
                     .addComponent(askForTestGroupsCheckBox)
                     .addComponent(scriptCheckBox)
-                    .addComponent(runPhpUnitOnlyCheckBox))
+                    .addComponent(runPhpUnitOnlyCheckBox)
+                    .addComponent(isRelativePathEnabled))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(versionLabel)
@@ -504,14 +510,16 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
                     .addComponent(suiteBrowseButton))
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(suiteInfoLabel)
-                .addPreferredGap(ComponentPlacement.UNRELATED)
+                .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(scriptCheckBox)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(Alignment.BASELINE)
                     .addComponent(scriptLabel)
                     .addComponent(scriptTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(scriptBrowseButton))
-                .addPreferredGap(ComponentPlacement.UNRELATED)
+                .addPreferredGap(ComponentPlacement.RELATED)
+                .addComponent(isRelativePathEnabled)
+                .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(runPhpUnitOnlyCheckBox)
                 .addPreferredGap(ComponentPlacement.RELATED)
                 .addComponent(runTestUsingUnitCheckBox)
@@ -645,6 +653,7 @@ public final class CustomizerPhpUnit extends JPanel implements HelpCtx.Provider 
     private JButton configurationGenerateButton;
     private JLabel configurationLabel;
     private JTextField configurationTextField;
+    private JCheckBox isRelativePathEnabled;
     private JCheckBox runPhpUnitOnlyCheckBox;
     private JCheckBox runTestUsingUnitCheckBox;
     private JButton scriptBrowseButton;

@@ -80,7 +80,7 @@ final class PaletteVisibility {
                 FileObject fo = findPaletteTopComponentSettings();
                 try {
                     if( null != fo )
-                        fo.setAttribute("_palette_visible_" + paletteId, new Boolean(isVisible));
+                        fo.setAttribute("_palette_visible_" + paletteId, isVisible);
                 } catch (IOException ex) {
                     Logger.getLogger(PaletteVisibility.class.getName()).log( Level.INFO, null, ex );
                 }

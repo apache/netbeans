@@ -38,6 +38,7 @@ import static org.netbeans.modules.javascript2.editor.JsTestBase.JS_SOURCE_ID;
  * @author Petr Pisl
  */
 public class JsGlobalIsNotDeclaredTest extends HintTestBase {
+
     private static boolean CLEAN_CACHE_DIR = true;
 
     public JsGlobalIsNotDeclaredTest(String testName) {
@@ -45,6 +46,7 @@ public class JsGlobalIsNotDeclaredTest extends HintTestBase {
     }
 
     private static class GlobalIsNotDefinedHint extends GlobalIsNotDefined {
+
         @Override
         public HintSeverity getDefaultSeverity() {
             return HintSeverity.WARNING;
@@ -135,7 +137,7 @@ public class JsGlobalIsNotDeclaredTest extends HintTestBase {
         // The cache dir also holds the index cache - if the cache is cleared,
         // the runtime of the tests increased ten-fold (the core stubs take
         // around 2s, the dom stubs 8s))
-        if(CLEAN_CACHE_DIR) {
+        if (CLEAN_CACHE_DIR) {
             CLEAN_CACHE_DIR = false;
             return true;
         } else {
@@ -149,8 +151,8 @@ public class JsGlobalIsNotDeclaredTest extends HintTestBase {
         // Both the core stubs and the dom-stubs need to be made available
         cpRoots.addAll(ClasspathProviderImplAccessor.getJsStubs());
         return Collections.singletonMap(
-            JS_SOURCE_ID,
-            ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
+                JS_SOURCE_ID,
+                ClassPathSupport.createClassPath(cpRoots.toArray(new FileObject[0]))
         );
     }
 

@@ -42,10 +42,7 @@ import static org.netbeans.modules.payara.tooling.admin.CommandRestTest.payaraSe
 @Test(enabled = false, groups = {"unit-tests"})
 public class CommandRestStopDASTest extends CommandRestTest {
     
-     ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     @Test
     @SuppressWarnings("SleepWhileInLoop")
     public void startDASTest() {

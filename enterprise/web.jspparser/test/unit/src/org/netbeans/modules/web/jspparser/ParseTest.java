@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.netbeans.modules.web.jsps.parserapi.JspParserAPI;
-import org.netbeans.modules.web.jsps.parserapi.JspParserFactory;
 import org.openide.filesystems.FileObject;
 
 import org.netbeans.junit.NbTestCase;
@@ -59,20 +58,40 @@ public class ParseTest extends NbTestCase {
         parserTestInProject("project2", "/web/main.jsp");
     }
 
+    public void testAnalysisMainJakarta() throws Exception {
+        parserTestInProject("project2_jakarta", "/web/main.jsp");
+    }
+
     public void testAnalysisBean() throws Exception {
         parserTestInProject("project2", "/web/more_for_test/bean.jsp");
+    }
+
+    public void testAnalysisBeanJakarta() throws Exception {
+        parserTestInProject("project2_jakarta", "/web/more_for_test/bean.jsp");
     }
 
     public void testAnalysisTagLinkList() throws Exception {
         parserTestInProject("project2", "/web/WEB-INF/tags/linklist.tag");
     }
 
+    public void testAnalysisTagLinkListJakarta() throws Exception {
+        parserTestInProject("project2_jakarta", "/web/WEB-INF/tags/linklist.tag");
+    }
+
     public void testAnalysisFaulty() throws Exception {
         parserTestInProject("project2", "/web/faulty.jsp");
     }
 
+    public void testAnalysisFaultyJakarta() throws Exception {
+        parserTestInProject("project2_jakarta", "/web/faulty.jsp");
+    }
+
     public void testAnalysisOutsideWM() throws Exception {
         parserTestInProject("project2", "/outside/outsidewm.jsp");
+    }
+
+    public void testAnalysisOutsideWMJakarta() throws Exception {
+        parserTestInProject("project2_jakarta", "/outside/outsidewm.jsp");
     }
 
     // TODO: temporarily disabled because of JDK 5 and 6 differences
@@ -84,13 +103,28 @@ public class ParseTest extends NbTestCase {
         parserTestInProject("project2", "/web/jspInclude.jsp");
     }
 
+    public void testJSPIncludeJakarta() throws Exception {
+        parserTestInProject("project2_jakarta", "/web/jspInclude.jsp");
+    }
+
     public void testInclude() throws Exception {
         parserTestInProject("project2", "/web/include.jsp");
 
     }
 
+    public void testIncludeJakarta() throws Exception {
+        parserTestInProject("project2_jakarta", "/web/include.jsp");
+
+    }
+
     public void testIncludePreludeCoda() throws Exception {
         JspParserAPI.ParseResult result = parserTestInProject("project2", "/web/includePreludeCoda.jsp");
+        log("Prelude: " + result.getPageInfo().getIncludePrelude());
+        log("Coda: " + result.getPageInfo().getIncludeCoda());
+    }
+
+    public void testIncludePreludeCodaJakarta() throws Exception {
+        JspParserAPI.ParseResult result = parserTestInProject("project2_jakarta", "/web/includePreludeCoda.jsp");
         log("Prelude: " + result.getPageInfo().getIncludePrelude());
         log("Coda: " + result.getPageInfo().getIncludeCoda());
     }

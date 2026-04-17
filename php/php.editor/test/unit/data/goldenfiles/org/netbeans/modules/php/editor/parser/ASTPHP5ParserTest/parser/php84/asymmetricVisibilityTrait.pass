@@ -1,0 +1,2668 @@
+<testresult testFile='asymmetricVisibilityTrait.php'>
+    <scanner>
+        <token id='T_TRAIT' start='815' end='820'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='821' end='846'>
+            <text>AsymmetricVisibilityTrait</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='847' end='848'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='875' end='886'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='887' end='893'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='894' end='904'>
+            <text>$publicSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='904' end='905'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='929' end='943'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='944' end='950'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='951' end='964'>
+            <text>$protectedSet</text>
+        </token>
+        <token id='T_EQUAL' start='965' end='966'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='967' end='973'>
+            <text>"test"</text>
+        </token>
+        <token id='T_SEMICOLON' start='973' end='974'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='998' end='1010'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='1011' end='1017'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1018' end='1029'>
+            <text>$privateSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='1029' end='1030'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='1086' end='1097'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_READONLY' start='1098' end='1106'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='1107' end='1113'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1114' end='1132'>
+            <text>$publicSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='1132' end='1133'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='1157' end='1171'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_READONLY' start='1172' end='1180'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='1181' end='1187'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1188' end='1209'>
+            <text>$protectedSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='1209' end='1210'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='1234' end='1246'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_READONLY' start='1247' end='1255'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='1256' end='1262'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1263' end='1282'>
+            <text>$privateSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='1282' end='1283'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='1307' end='1315'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='1316' end='1327'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='1328' end='1334'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1335' end='1353'>
+            <text>$readonlyPublicSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='1353' end='1354'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='1378' end='1386'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='1387' end='1401'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='1402' end='1408'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1409' end='1430'>
+            <text>$readonlyProtectedSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='1430' end='1431'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='1455' end='1463'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='1464' end='1476'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='1477' end='1483'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1484' end='1503'>
+            <text>$readonlyPrivateSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='1503' end='1504'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1562' end='1568'>
+            <text>public</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='1569' end='1580'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='1581' end='1584'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1585' end='1601'>
+            <text>$publicPublicSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='1601' end='1602'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1607' end='1613'>
+            <text>public</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='1614' end='1628'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='1629' end='1632'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1633' end='1652'>
+            <text>$publicProtectedSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='1652' end='1653'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='1658' end='1664'>
+            <text>public</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='1665' end='1677'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='1678' end='1681'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1682' end='1699'>
+            <text>$publicPrivateSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='1699' end='1700'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='1705' end='1714'>
+            <text>protected</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='1715' end='1726'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='1727' end='1730'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1731' end='1750'>
+            <text>$protectedPublicSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='1750' end='1751'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='1765' end='1774'>
+            <text>protected</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='1775' end='1789'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='1790' end='1793'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1794' end='1816'>
+            <text>$protectedProtectedSet</text>
+        </token>
+        <token id='T_EQUAL' start='1817' end='1818'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1819' end='1820'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='1820' end='1821'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='1826' end='1835'>
+            <text>protected</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='1836' end='1848'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='1849' end='1852'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1853' end='1873'>
+            <text>$protectedPrivateSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='1873' end='1874'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='1879' end='1886'>
+            <text>private</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='1887' end='1898'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='1899' end='1902'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1903' end='1920'>
+            <text>$privatePublicSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='1920' end='1921'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='1935' end='1942'>
+            <text>private</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='1943' end='1957'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='1958' end='1961'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1962' end='1982'>
+            <text>$privateProtectedSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='1982' end='1983'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='1997' end='2004'>
+            <text>private</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='2005' end='2017'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='2018' end='2021'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2022' end='2040'>
+            <text>$privatePrivateSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='2040' end='2041'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='2046' end='2057'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_PUBLIC' start='2058' end='2064'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='2065' end='2068'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2069' end='2085'>
+            <text>$publicSetPublic</text>
+        </token>
+        <token id='T_SEMICOLON' start='2085' end='2086'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='2091' end='2102'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_PROTECTED' start='2103' end='2112'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='2113' end='2116'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2117' end='2136'>
+            <text>$publicSetProtected</text>
+        </token>
+        <token id='T_SEMICOLON' start='2136' end='2137'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='2151' end='2162'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_PRIVATE' start='2163' end='2170'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='2171' end='2174'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2175' end='2192'>
+            <text>$publicSetPrivate</text>
+        </token>
+        <token id='T_SEMICOLON' start='2192' end='2193'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='2207' end='2221'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_PUBLIC' start='2222' end='2228'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='2229' end='2232'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2233' end='2252'>
+            <text>$protectedSetPublic</text>
+        </token>
+        <token id='T_SEMICOLON' start='2252' end='2253'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='2258' end='2272'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_PROTECTED' start='2273' end='2282'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='2283' end='2286'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2287' end='2309'>
+            <text>$protectedSetProtected</text>
+        </token>
+        <token id='T_SEMICOLON' start='2309' end='2310'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='2315' end='2329'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_PRIVATE' start='2330' end='2337'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='2338' end='2341'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2342' end='2362'>
+            <text>$protectedSetPrivate</text>
+        </token>
+        <token id='T_SEMICOLON' start='2362' end='2363'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='2377' end='2389'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_PUBLIC' start='2390' end='2396'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='2397' end='2400'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2401' end='2418'>
+            <text>$privateSetPublic</text>
+        </token>
+        <token id='T_SEMICOLON' start='2418' end='2419'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='2424' end='2436'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_PROTECTED' start='2437' end='2446'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='2447' end='2450'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2451' end='2471'>
+            <text>$privateSetProtected</text>
+        </token>
+        <token id='T_SEMICOLON' start='2471' end='2472'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='2477' end='2489'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_PRIVATE' start='2490' end='2497'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='2498' end='2501'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2502' end='2520'>
+            <text>$privateSetPrivate</text>
+        </token>
+        <token id='T_EQUAL' start='2521' end='2522'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='2523' end='2524'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='2524' end='2525'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='2574' end='2580'>
+            <text>public</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='2581' end='2592'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_READONLY' start='2593' end='2601'>
+            <text>readonly</text>
+        </token>
+        <token id='T_VARIABLE' start='2602' end='2626'>
+            <text>$publicPublicSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='2626' end='2627'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='2641' end='2647'>
+            <text>public</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='2648' end='2662'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_READONLY' start='2663' end='2671'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='2672' end='2675'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2676' end='2703'>
+            <text>$publicProtectedSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='2703' end='2704'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='2709' end='2715'>
+            <text>public</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='2716' end='2730'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_READONLY' start='2731' end='2739'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='2740' end='2743'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2744' end='2772'>
+            <text>$publicProtectedSetReadonly2</text>
+        </token>
+        <token id='T_EQUAL' start='2773' end='2774'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='2775' end='2776'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='2776' end='2777'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='2791' end='2797'>
+            <text>public</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='2798' end='2810'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_READONLY' start='2811' end='2819'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='2820' end='2823'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2824' end='2849'>
+            <text>$publicPrivateSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='2849' end='2850'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='2855' end='2861'>
+            <text>public</text>
+        </token>
+        <token id='T_READONLY' start='2862' end='2870'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='2871' end='2882'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='2883' end='2886'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2887' end='2911'>
+            <text>$publicReadonlyPublicSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='2911' end='2912'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='2917' end='2923'>
+            <text>public</text>
+        </token>
+        <token id='T_READONLY' start='2924' end='2932'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='2933' end='2947'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='2948' end='2951'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='2952' end='2979'>
+            <text>$publicReadonlyProtectedSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='2979' end='2980'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='2985' end='2991'>
+            <text>public</text>
+        </token>
+        <token id='T_READONLY' start='2992' end='3000'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='3001' end='3013'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='3014' end='3017'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3018' end='3043'>
+            <text>$publicReadonlyPrivateSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='3043' end='3044'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='3049' end='3058'>
+            <text>protected</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='3059' end='3070'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_READONLY' start='3071' end='3079'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='3080' end='3083'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3084' end='3111'>
+            <text>$protectedPublicSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='3111' end='3112'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='3126' end='3135'>
+            <text>protected</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='3136' end='3150'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_READONLY' start='3151' end='3159'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='3160' end='3163'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3164' end='3194'>
+            <text>$protectedProtectedSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='3194' end='3195'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='3200' end='3209'>
+            <text>protected</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='3210' end='3222'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_READONLY' start='3223' end='3231'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='3232' end='3235'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3236' end='3264'>
+            <text>$protectedPrivateSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='3264' end='3265'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='3270' end='3279'>
+            <text>protected</text>
+        </token>
+        <token id='T_READONLY' start='3280' end='3288'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='3289' end='3300'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='3301' end='3304'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3305' end='3332'>
+            <text>$protectedReadonlyPublicSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='3332' end='3333'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='3347' end='3356'>
+            <text>protected</text>
+        </token>
+        <token id='T_READONLY' start='3357' end='3365'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='3366' end='3380'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='3381' end='3384'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3385' end='3415'>
+            <text>$protectedReadonlyProtectedSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='3415' end='3416'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED' start='3421' end='3430'>
+            <text>protected</text>
+        </token>
+        <token id='T_READONLY' start='3431' end='3439'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='3440' end='3452'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='3453' end='3456'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3457' end='3485'>
+            <text>$protectedReadonlyPrivateSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='3485' end='3486'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='3491' end='3498'>
+            <text>private</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='3499' end='3510'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_READONLY' start='3511' end='3519'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='3520' end='3523'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3524' end='3549'>
+            <text>$privatePublicSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='3549' end='3550'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='3564' end='3571'>
+            <text>private</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='3572' end='3586'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_READONLY' start='3587' end='3595'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='3596' end='3599'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3600' end='3628'>
+            <text>$privateProtectedSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='3628' end='3629'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='3643' end='3650'>
+            <text>private</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='3651' end='3663'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_READONLY' start='3664' end='3672'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='3673' end='3676'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3677' end='3703'>
+            <text>$privatePrivateSetReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='3703' end='3704'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='3709' end='3716'>
+            <text>private</text>
+        </token>
+        <token id='T_READONLY' start='3717' end='3725'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='3726' end='3737'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='3738' end='3741'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3742' end='3767'>
+            <text>$privateReadonlyPublicSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='3767' end='3768'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='3782' end='3789'>
+            <text>private</text>
+        </token>
+        <token id='T_READONLY' start='3790' end='3798'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='3799' end='3813'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='3814' end='3817'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3818' end='3846'>
+            <text>$privateReadonlyProtectedSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='3846' end='3847'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE' start='3861' end='3868'>
+            <text>private</text>
+        </token>
+        <token id='T_READONLY' start='3869' end='3877'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='3878' end='3890'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='3891' end='3894'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3895' end='3921'>
+            <text>$privateReadonlyPrivateSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='3921' end='3922'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='3927' end='3938'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_PUBLIC' start='3939' end='3945'>
+            <text>public</text>
+        </token>
+        <token id='T_READONLY' start='3946' end='3954'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='3955' end='3961'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='3962' end='3986'>
+            <text>$publicSetPublicReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='3986' end='3987'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='3992' end='4003'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_PROTECTED' start='4004' end='4013'>
+            <text>protected</text>
+        </token>
+        <token id='T_READONLY' start='4014' end='4022'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='4023' end='4029'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='4030' end='4057'>
+            <text>$publicSetProtectedReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='4057' end='4058'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='4072' end='4083'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_PRIVATE' start='4084' end='4091'>
+            <text>private</text>
+        </token>
+        <token id='T_READONLY' start='4092' end='4100'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='4101' end='4107'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='4108' end='4133'>
+            <text>$publicSetPrivateReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='4133' end='4134'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='4148' end='4159'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_READONLY' start='4160' end='4168'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC' start='4169' end='4175'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='4176' end='4182'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='4183' end='4207'>
+            <text>$publicSetReadonlyPublic</text>
+        </token>
+        <token id='T_SEMICOLON' start='4207' end='4208'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='4213' end='4224'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_READONLY' start='4225' end='4233'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED' start='4234' end='4243'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='4244' end='4250'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='4251' end='4278'>
+            <text>$publicSetReadonlyProtected</text>
+        </token>
+        <token id='T_SEMICOLON' start='4278' end='4279'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='4293' end='4304'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_READONLY' start='4305' end='4313'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE' start='4314' end='4321'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='4322' end='4328'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='4329' end='4354'>
+            <text>$publicSetReadonlyPrivate</text>
+        </token>
+        <token id='T_SEMICOLON' start='4354' end='4355'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='4369' end='4383'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_PUBLIC' start='4384' end='4390'>
+            <text>public</text>
+        </token>
+        <token id='T_READONLY' start='4391' end='4399'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='4400' end='4406'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='4407' end='4434'>
+            <text>$protectedSetPublicReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='4434' end='4435'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='4440' end='4454'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_PROTECTED' start='4455' end='4464'>
+            <text>protected</text>
+        </token>
+        <token id='T_READONLY' start='4465' end='4473'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='4474' end='4480'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='4481' end='4511'>
+            <text>$protectedSetProtectedReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='4511' end='4512'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='4517' end='4531'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_PRIVATE' start='4532' end='4539'>
+            <text>private</text>
+        </token>
+        <token id='T_READONLY' start='4540' end='4548'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='4549' end='4555'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='4556' end='4584'>
+            <text>$protectedSetPrivateReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='4584' end='4585'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='4599' end='4613'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_READONLY' start='4614' end='4622'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC' start='4623' end='4629'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='4630' end='4636'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='4637' end='4664'>
+            <text>$protectedSetReadonlyPublic</text>
+        </token>
+        <token id='T_SEMICOLON' start='4664' end='4665'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='4670' end='4684'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_READONLY' start='4685' end='4693'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED' start='4694' end='4703'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='4704' end='4710'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='4711' end='4741'>
+            <text>$protectedSetReadonlyProtected</text>
+        </token>
+        <token id='T_SEMICOLON' start='4741' end='4742'>
+            <text>;</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='4747' end='4761'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_READONLY' start='4762' end='4770'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE' start='4771' end='4778'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='4779' end='4785'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='4786' end='4814'>
+            <text>$protectedSetReadonlyPrivate</text>
+        </token>
+        <token id='T_SEMICOLON' start='4814' end='4815'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='4829' end='4841'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_PUBLIC' start='4842' end='4848'>
+            <text>public</text>
+        </token>
+        <token id='T_READONLY' start='4849' end='4857'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='4858' end='4864'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='4865' end='4890'>
+            <text>$privateSetPublicReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='4890' end='4891'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='4896' end='4908'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_PROTECTED' start='4909' end='4918'>
+            <text>protected</text>
+        </token>
+        <token id='T_READONLY' start='4919' end='4927'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='4928' end='4934'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='4935' end='4963'>
+            <text>$privateSetProtectedReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='4963' end='4964'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='4969' end='4981'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_PRIVATE' start='4982' end='4989'>
+            <text>private</text>
+        </token>
+        <token id='T_READONLY' start='4990' end='4998'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='4999' end='5005'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='5006' end='5032'>
+            <text>$privateSetPrivateReadonly</text>
+        </token>
+        <token id='T_SEMICOLON' start='5032' end='5033'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='5038' end='5050'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_READONLY' start='5051' end='5059'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC' start='5060' end='5066'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='5067' end='5073'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='5074' end='5099'>
+            <text>$privateSetReadonlyPublic</text>
+        </token>
+        <token id='T_SEMICOLON' start='5099' end='5100'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='5105' end='5117'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_READONLY' start='5118' end='5126'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED' start='5127' end='5136'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='5137' end='5143'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='5144' end='5172'>
+            <text>$privateSetReadonlyProtected</text>
+        </token>
+        <token id='T_SEMICOLON' start='5172' end='5173'>
+            <text>;</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='5178' end='5190'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_READONLY' start='5191' end='5199'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE' start='5200' end='5207'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='5208' end='5214'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='5215' end='5241'>
+            <text>$privateSetReadonlyPrivate</text>
+        </token>
+        <token id='T_SEMICOLON' start='5241' end='5242'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='5247' end='5255'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC' start='5256' end='5262'>
+            <text>public</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='5263' end='5274'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='5275' end='5281'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='5282' end='5306'>
+            <text>$readOnlyPublicPublicSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='5306' end='5307'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='5312' end='5320'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC' start='5321' end='5327'>
+            <text>public</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='5328' end='5342'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='5343' end='5349'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='5350' end='5377'>
+            <text>$readOnlyPublicProtectedSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='5377' end='5378'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='5383' end='5391'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC' start='5392' end='5398'>
+            <text>public</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='5399' end='5411'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='5412' end='5418'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='5419' end='5444'>
+            <text>$readOnlyPublicPrivateSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='5444' end='5445'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='5450' end='5458'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED' start='5459' end='5468'>
+            <text>protected</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='5469' end='5480'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='5481' end='5487'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='5488' end='5515'>
+            <text>$readOnlyProtectedPublicSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='5515' end='5516'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='5530' end='5538'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED' start='5539' end='5548'>
+            <text>protected</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='5549' end='5563'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='5564' end='5570'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='5571' end='5601'>
+            <text>$readOnlyProtectedProtectedSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='5601' end='5602'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='5607' end='5615'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED' start='5616' end='5625'>
+            <text>protected</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='5626' end='5638'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='5639' end='5645'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='5646' end='5674'>
+            <text>$readOnlyProtectedPrivateSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='5674' end='5675'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='5680' end='5688'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE' start='5689' end='5696'>
+            <text>private</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='5697' end='5708'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_STRING' start='5709' end='5715'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='5716' end='5741'>
+            <text>$readOnlyPrivatePublicSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='5741' end='5742'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='5756' end='5764'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE' start='5765' end='5772'>
+            <text>private</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='5773' end='5787'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_STRING' start='5788' end='5794'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='5795' end='5823'>
+            <text>$readOnlyPrivateProtectedSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='5823' end='5824'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='5838' end='5846'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE' start='5847' end='5854'>
+            <text>private</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='5855' end='5867'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='5868' end='5874'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='5875' end='5901'>
+            <text>$readOnlyPrivatePrivateSet</text>
+        </token>
+        <token id='T_SEMICOLON' start='5901' end='5902'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='5907' end='5915'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='5916' end='5927'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_PUBLIC' start='5928' end='5934'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='5935' end='5941'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='5942' end='5966'>
+            <text>$readOnlyPublicSetPublic</text>
+        </token>
+        <token id='T_SEMICOLON' start='5966' end='5967'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='5972' end='5980'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='5981' end='5992'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_PROTECTED' start='5993' end='6002'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='6003' end='6009'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='6010' end='6037'>
+            <text>$readOnlyPublicSetProtected</text>
+        </token>
+        <token id='T_SEMICOLON' start='6037' end='6038'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='6052' end='6060'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PUBLIC_SET' start='6061' end='6072'>
+            <text>public(set)</text>
+        </token>
+        <token id='T_PRIVATE' start='6073' end='6080'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='6081' end='6087'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='6088' end='6113'>
+            <text>$readOnlyPublicSetPrivate</text>
+        </token>
+        <token id='T_SEMICOLON' start='6113' end='6114'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='6128' end='6136'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='6137' end='6151'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_PUBLIC' start='6152' end='6158'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='6159' end='6165'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='6166' end='6193'>
+            <text>$readOnlyProtectedSetPublic</text>
+        </token>
+        <token id='T_SEMICOLON' start='6193' end='6194'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='6199' end='6207'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='6208' end='6222'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_PROTECTED' start='6223' end='6232'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='6233' end='6239'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='6240' end='6270'>
+            <text>$readOnlyProtectedSetProtected</text>
+        </token>
+        <token id='T_SEMICOLON' start='6270' end='6271'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='6276' end='6284'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PROTECTED_SET' start='6285' end='6299'>
+            <text>protected(set)</text>
+        </token>
+        <token id='T_PRIVATE' start='6300' end='6307'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='6308' end='6314'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='6315' end='6343'>
+            <text>$readOnlyProtectedSetPrivate</text>
+        </token>
+        <token id='T_SEMICOLON' start='6343' end='6344'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='6358' end='6366'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='6367' end='6379'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_PUBLIC' start='6380' end='6386'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='6387' end='6393'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='6394' end='6419'>
+            <text>$readOnlyPrivateSetPublic</text>
+        </token>
+        <token id='T_SEMICOLON' start='6419' end='6420'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='6425' end='6433'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='6434' end='6446'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_PROTECTED' start='6447' end='6456'>
+            <text>protected</text>
+        </token>
+        <token id='T_STRING' start='6457' end='6463'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='6464' end='6492'>
+            <text>$readOnlyPrivateSetProtected</text>
+        </token>
+        <token id='T_SEMICOLON' start='6492' end='6493'>
+            <text>;</text>
+        </token>
+        <token id='T_READONLY' start='6498' end='6506'>
+            <text>readonly</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='6507' end='6519'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_PRIVATE' start='6520' end='6527'>
+            <text>private</text>
+        </token>
+        <token id='T_STRING' start='6528' end='6534'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='6535' end='6561'>
+            <text>$readOnlyPrivateSetPrivate</text>
+        </token>
+        <token id='T_SEMICOLON' start='6561' end='6562'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='6563' end='6564'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='6565' end='6565'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='6565'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='853' end='871' commentType='singleLine'/>
+            <Comment start='906' end='925' commentType='singleLine'/>
+            <Comment start='975' end='994' commentType='singleLine'/>
+            <Comment start='1031' end='1050' commentType='singleLine'/>
+            <Comment start='1054' end='1082' commentType='singleLine'/>
+            <Comment start='1134' end='1153' commentType='singleLine'/>
+            <Comment start='1211' end='1230' commentType='singleLine'/>
+            <Comment start='1284' end='1303' commentType='singleLine'/>
+            <Comment start='1355' end='1374' commentType='singleLine'/>
+            <Comment start='1432' end='1451' commentType='singleLine'/>
+            <Comment start='1505' end='1524' commentType='singleLine'/>
+            <Comment start='1528' end='1558' commentType='singleLine'/>
+            <Comment start='1752' end='1761' commentType='singleLine'/>
+            <Comment start='1922' end='1931' commentType='singleLine'/>
+            <Comment start='1984' end='1993' commentType='singleLine'/>
+            <Comment start='2138' end='2147' commentType='singleLine'/>
+            <Comment start='2194' end='2203' commentType='singleLine'/>
+            <Comment start='2364' end='2373' commentType='singleLine'/>
+            <Comment start='2530' end='2570' commentType='singleLine'/>
+            <Comment start='2628' end='2637' commentType='singleLine'/>
+            <Comment start='2778' end='2787' commentType='singleLine'/>
+            <Comment start='3113' end='3122' commentType='singleLine'/>
+            <Comment start='3334' end='3343' commentType='singleLine'/>
+            <Comment start='3551' end='3560' commentType='singleLine'/>
+            <Comment start='3630' end='3639' commentType='singleLine'/>
+            <Comment start='3769' end='3778' commentType='singleLine'/>
+            <Comment start='3848' end='3857' commentType='singleLine'/>
+            <Comment start='4059' end='4068' commentType='singleLine'/>
+            <Comment start='4135' end='4144' commentType='singleLine'/>
+            <Comment start='4280' end='4289' commentType='singleLine'/>
+            <Comment start='4356' end='4365' commentType='singleLine'/>
+            <Comment start='4586' end='4595' commentType='singleLine'/>
+            <Comment start='4816' end='4825' commentType='singleLine'/>
+            <Comment start='5517' end='5526' commentType='singleLine'/>
+            <Comment start='5743' end='5752' commentType='singleLine'/>
+            <Comment start='5825' end='5834' commentType='singleLine'/>
+            <Comment start='6039' end='6048' commentType='singleLine'/>
+            <Comment start='6115' end='6124' commentType='singleLine'/>
+            <Comment start='6345' end='6354' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='853' end='871' commentType='singleLine'/>
+            <Comment start='906' end='925' commentType='singleLine'/>
+            <Comment start='975' end='994' commentType='singleLine'/>
+            <Comment start='1031' end='1050' commentType='singleLine'/>
+            <Comment start='1054' end='1082' commentType='singleLine'/>
+            <Comment start='1134' end='1153' commentType='singleLine'/>
+            <Comment start='1211' end='1230' commentType='singleLine'/>
+            <Comment start='1284' end='1303' commentType='singleLine'/>
+            <Comment start='1355' end='1374' commentType='singleLine'/>
+            <Comment start='1432' end='1451' commentType='singleLine'/>
+            <Comment start='1505' end='1524' commentType='singleLine'/>
+            <Comment start='1528' end='1558' commentType='singleLine'/>
+            <Comment start='1752' end='1761' commentType='singleLine'/>
+            <Comment start='1922' end='1931' commentType='singleLine'/>
+            <Comment start='1984' end='1993' commentType='singleLine'/>
+            <Comment start='2138' end='2147' commentType='singleLine'/>
+            <Comment start='2194' end='2203' commentType='singleLine'/>
+            <Comment start='2364' end='2373' commentType='singleLine'/>
+            <Comment start='2530' end='2570' commentType='singleLine'/>
+            <Comment start='2628' end='2637' commentType='singleLine'/>
+            <Comment start='2778' end='2787' commentType='singleLine'/>
+            <Comment start='3113' end='3122' commentType='singleLine'/>
+            <Comment start='3334' end='3343' commentType='singleLine'/>
+            <Comment start='3551' end='3560' commentType='singleLine'/>
+            <Comment start='3630' end='3639' commentType='singleLine'/>
+            <Comment start='3769' end='3778' commentType='singleLine'/>
+            <Comment start='3848' end='3857' commentType='singleLine'/>
+            <Comment start='4059' end='4068' commentType='singleLine'/>
+            <Comment start='4135' end='4144' commentType='singleLine'/>
+            <Comment start='4280' end='4289' commentType='singleLine'/>
+            <Comment start='4356' end='4365' commentType='singleLine'/>
+            <Comment start='4586' end='4595' commentType='singleLine'/>
+            <Comment start='4816' end='4825' commentType='singleLine'/>
+            <Comment start='5517' end='5526' commentType='singleLine'/>
+            <Comment start='5743' end='5752' commentType='singleLine'/>
+            <Comment start='5825' end='5834' commentType='singleLine'/>
+            <Comment start='6039' end='6048' commentType='singleLine'/>
+            <Comment start='6115' end='6124' commentType='singleLine'/>
+            <Comment start='6345' end='6354' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <TraitDeclaration start='815' end='6564'>
+                <TraitName>
+                    <Identifier start='821' end='846' name='AsymmetricVisibilityTrait'/>
+                </TraitName>
+                <Block start='847' end='6564' isCurly='true'>
+                    <FieldsDeclaration start='875' end='905' modifier='public public(set)'>
+                        <FieldType>
+                            <NamespaceName start='887' end='893' isCurrent='false' isGlobal='false'>
+                                <Identifier start='887' end='893' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='894' end='904' isDollared='true'>
+                                <Identifier start='895' end='904' name='publicSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='929' end='974' modifier='public protected(set)'>
+                        <FieldType>
+                            <NamespaceName start='944' end='950' isCurrent='false' isGlobal='false'>
+                                <Identifier start='944' end='950' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='951' end='964' isDollared='true'>
+                                <Identifier start='952' end='964' name='protectedSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='967' end='973' type='STRING' value='"test"'/>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='998' end='1030' modifier='public private(set)'>
+                        <FieldType>
+                            <NamespaceName start='1011' end='1017' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1011' end='1017' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1018' end='1029' isDollared='true'>
+                                <Identifier start='1019' end='1029' name='privateSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1086' end='1133' modifier='public public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='1107' end='1113' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1107' end='1113' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1114' end='1132' isDollared='true'>
+                                <Identifier start='1115' end='1132' name='publicSetReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1157' end='1210' modifier='public protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='1181' end='1187' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1181' end='1187' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1188' end='1209' isDollared='true'>
+                                <Identifier start='1189' end='1209' name='protectedSetReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1234' end='1283' modifier='public private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='1256' end='1262' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1256' end='1262' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1263' end='1282' isDollared='true'>
+                                <Identifier start='1264' end='1282' name='privateSetReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1307' end='1354' modifier='public public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='1328' end='1334' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1328' end='1334' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1335' end='1353' isDollared='true'>
+                                <Identifier start='1336' end='1353' name='readonlyPublicSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1378' end='1431' modifier='public protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='1402' end='1408' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1402' end='1408' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1409' end='1430' isDollared='true'>
+                                <Identifier start='1410' end='1430' name='readonlyProtectedSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1455' end='1504' modifier='public private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='1477' end='1483' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1477' end='1483' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1484' end='1503' isDollared='true'>
+                                <Identifier start='1485' end='1503' name='readonlyPrivateSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1562' end='1602' modifier='public public(set)'>
+                        <FieldType>
+                            <NamespaceName start='1581' end='1584' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1581' end='1584' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1585' end='1601' isDollared='true'>
+                                <Identifier start='1586' end='1601' name='publicPublicSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1607' end='1653' modifier='public protected(set)'>
+                        <FieldType>
+                            <NamespaceName start='1629' end='1632' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1629' end='1632' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1633' end='1652' isDollared='true'>
+                                <Identifier start='1634' end='1652' name='publicProtectedSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1658' end='1700' modifier='public private(set)'>
+                        <FieldType>
+                            <NamespaceName start='1678' end='1681' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1678' end='1681' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1682' end='1699' isDollared='true'>
+                                <Identifier start='1683' end='1699' name='publicPrivateSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1705' end='1751' modifier='protected public(set)'>
+                        <FieldType>
+                            <NamespaceName start='1727' end='1730' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1727' end='1730' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1731' end='1750' isDollared='true'>
+                                <Identifier start='1732' end='1750' name='protectedPublicSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1765' end='1821' modifier='protected protected(set)'>
+                        <FieldType>
+                            <NamespaceName start='1790' end='1793' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1790' end='1793' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1794' end='1816' isDollared='true'>
+                                <Identifier start='1795' end='1816' name='protectedProtectedSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='1819' end='1820' type='INT' value='1'/>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1826' end='1874' modifier='protected private(set)'>
+                        <FieldType>
+                            <NamespaceName start='1849' end='1852' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1849' end='1852' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1853' end='1873' isDollared='true'>
+                                <Identifier start='1854' end='1873' name='protectedPrivateSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1879' end='1921' modifier='private public(set)'>
+                        <FieldType>
+                            <NamespaceName start='1899' end='1902' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1899' end='1902' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1903' end='1920' isDollared='true'>
+                                <Identifier start='1904' end='1920' name='privatePublicSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1935' end='1983' modifier='private protected(set)'>
+                        <FieldType>
+                            <NamespaceName start='1958' end='1961' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1958' end='1961' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1962' end='1982' isDollared='true'>
+                                <Identifier start='1963' end='1982' name='privateProtectedSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1997' end='2041' modifier='private private(set)'>
+                        <FieldType>
+                            <NamespaceName start='2018' end='2021' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2018' end='2021' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2022' end='2040' isDollared='true'>
+                                <Identifier start='2023' end='2040' name='privatePrivateSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2046' end='2086' modifier='public public(set)'>
+                        <FieldType>
+                            <NamespaceName start='2065' end='2068' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2065' end='2068' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2069' end='2085' isDollared='true'>
+                                <Identifier start='2070' end='2085' name='publicSetPublic'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2091' end='2137' modifier='protected public(set)'>
+                        <FieldType>
+                            <NamespaceName start='2113' end='2116' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2113' end='2116' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2117' end='2136' isDollared='true'>
+                                <Identifier start='2118' end='2136' name='publicSetProtected'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2151' end='2193' modifier='private public(set)'>
+                        <FieldType>
+                            <NamespaceName start='2171' end='2174' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2171' end='2174' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2175' end='2192' isDollared='true'>
+                                <Identifier start='2176' end='2192' name='publicSetPrivate'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2207' end='2253' modifier='public protected(set)'>
+                        <FieldType>
+                            <NamespaceName start='2229' end='2232' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2229' end='2232' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2233' end='2252' isDollared='true'>
+                                <Identifier start='2234' end='2252' name='protectedSetPublic'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2258' end='2310' modifier='protected protected(set)'>
+                        <FieldType>
+                            <NamespaceName start='2283' end='2286' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2283' end='2286' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2287' end='2309' isDollared='true'>
+                                <Identifier start='2288' end='2309' name='protectedSetProtected'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2315' end='2363' modifier='private protected(set)'>
+                        <FieldType>
+                            <NamespaceName start='2338' end='2341' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2338' end='2341' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2342' end='2362' isDollared='true'>
+                                <Identifier start='2343' end='2362' name='protectedSetPrivate'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2377' end='2419' modifier='public private(set)'>
+                        <FieldType>
+                            <NamespaceName start='2397' end='2400' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2397' end='2400' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2401' end='2418' isDollared='true'>
+                                <Identifier start='2402' end='2418' name='privateSetPublic'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2424' end='2472' modifier='protected private(set)'>
+                        <FieldType>
+                            <NamespaceName start='2447' end='2450' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2447' end='2450' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2451' end='2471' isDollared='true'>
+                                <Identifier start='2452' end='2471' name='privateSetProtected'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2477' end='2525' modifier='private private(set)'>
+                        <FieldType>
+                            <NamespaceName start='2498' end='2501' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2498' end='2501' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2502' end='2520' isDollared='true'>
+                                <Identifier start='2503' end='2520' name='privateSetPrivate'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='2523' end='2524' type='INT' value='1'/>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2574' end='2627' modifier='public public(set) readonly'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2602' end='2626' isDollared='true'>
+                                <Identifier start='2603' end='2626' name='publicPublicSetReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2641' end='2704' modifier='public protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='2672' end='2675' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2672' end='2675' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2676' end='2703' isDollared='true'>
+                                <Identifier start='2677' end='2703' name='publicProtectedSetReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2709' end='2777' modifier='public protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='2740' end='2743' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2740' end='2743' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2744' end='2772' isDollared='true'>
+                                <Identifier start='2745' end='2772' name='publicProtectedSetReadonly2'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='2775' end='2776' type='INT' value='1'/>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2791' end='2850' modifier='public private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='2820' end='2823' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2820' end='2823' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2824' end='2849' isDollared='true'>
+                                <Identifier start='2825' end='2849' name='publicPrivateSetReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2855' end='2912' modifier='public public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='2883' end='2886' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2883' end='2886' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2887' end='2911' isDollared='true'>
+                                <Identifier start='2888' end='2911' name='publicReadonlyPublicSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2917' end='2980' modifier='public protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='2948' end='2951' isCurrent='false' isGlobal='false'>
+                                <Identifier start='2948' end='2951' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2952' end='2979' isDollared='true'>
+                                <Identifier start='2953' end='2979' name='publicReadonlyProtectedSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2985' end='3044' modifier='public private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='3014' end='3017' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3014' end='3017' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3018' end='3043' isDollared='true'>
+                                <Identifier start='3019' end='3043' name='publicReadonlyPrivateSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3049' end='3112' modifier='protected public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='3080' end='3083' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3080' end='3083' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3084' end='3111' isDollared='true'>
+                                <Identifier start='3085' end='3111' name='protectedPublicSetReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3126' end='3195' modifier='protected protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='3160' end='3163' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3160' end='3163' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3164' end='3194' isDollared='true'>
+                                <Identifier start='3165' end='3194' name='protectedProtectedSetReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3200' end='3265' modifier='protected private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='3232' end='3235' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3232' end='3235' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3236' end='3264' isDollared='true'>
+                                <Identifier start='3237' end='3264' name='protectedPrivateSetReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3270' end='3333' modifier='protected public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='3301' end='3304' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3301' end='3304' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3305' end='3332' isDollared='true'>
+                                <Identifier start='3306' end='3332' name='protectedReadonlyPublicSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3347' end='3416' modifier='protected protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='3381' end='3384' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3381' end='3384' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3385' end='3415' isDollared='true'>
+                                <Identifier start='3386' end='3415' name='protectedReadonlyProtectedSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3421' end='3486' modifier='protected private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='3453' end='3456' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3453' end='3456' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3457' end='3485' isDollared='true'>
+                                <Identifier start='3458' end='3485' name='protectedReadonlyPrivateSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3491' end='3550' modifier='private public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='3520' end='3523' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3520' end='3523' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3524' end='3549' isDollared='true'>
+                                <Identifier start='3525' end='3549' name='privatePublicSetReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3564' end='3629' modifier='private protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='3596' end='3599' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3596' end='3599' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3600' end='3628' isDollared='true'>
+                                <Identifier start='3601' end='3628' name='privateProtectedSetReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3643' end='3704' modifier='private private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='3673' end='3676' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3673' end='3676' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3677' end='3703' isDollared='true'>
+                                <Identifier start='3678' end='3703' name='privatePrivateSetReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3709' end='3768' modifier='private public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='3738' end='3741' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3738' end='3741' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3742' end='3767' isDollared='true'>
+                                <Identifier start='3743' end='3767' name='privateReadonlyPublicSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3782' end='3847' modifier='private protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='3814' end='3817' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3814' end='3817' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3818' end='3846' isDollared='true'>
+                                <Identifier start='3819' end='3846' name='privateReadonlyProtectedSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3861' end='3922' modifier='private private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='3891' end='3894' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3891' end='3894' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3895' end='3921' isDollared='true'>
+                                <Identifier start='3896' end='3921' name='privateReadonlyPrivateSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3927' end='3987' modifier='public public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='3955' end='3961' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3955' end='3961' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3962' end='3986' isDollared='true'>
+                                <Identifier start='3963' end='3986' name='publicSetPublicReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3992' end='4058' modifier='protected public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='4023' end='4029' isCurrent='false' isGlobal='false'>
+                                <Identifier start='4023' end='4029' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='4030' end='4057' isDollared='true'>
+                                <Identifier start='4031' end='4057' name='publicSetProtectedReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='4072' end='4134' modifier='private public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='4101' end='4107' isCurrent='false' isGlobal='false'>
+                                <Identifier start='4101' end='4107' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='4108' end='4133' isDollared='true'>
+                                <Identifier start='4109' end='4133' name='publicSetPrivateReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='4148' end='4208' modifier='public public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='4176' end='4182' isCurrent='false' isGlobal='false'>
+                                <Identifier start='4176' end='4182' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='4183' end='4207' isDollared='true'>
+                                <Identifier start='4184' end='4207' name='publicSetReadonlyPublic'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='4213' end='4279' modifier='protected public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='4244' end='4250' isCurrent='false' isGlobal='false'>
+                                <Identifier start='4244' end='4250' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='4251' end='4278' isDollared='true'>
+                                <Identifier start='4252' end='4278' name='publicSetReadonlyProtected'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='4293' end='4355' modifier='private public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='4322' end='4328' isCurrent='false' isGlobal='false'>
+                                <Identifier start='4322' end='4328' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='4329' end='4354' isDollared='true'>
+                                <Identifier start='4330' end='4354' name='publicSetReadonlyPrivate'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='4369' end='4435' modifier='public protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='4400' end='4406' isCurrent='false' isGlobal='false'>
+                                <Identifier start='4400' end='4406' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='4407' end='4434' isDollared='true'>
+                                <Identifier start='4408' end='4434' name='protectedSetPublicReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='4440' end='4512' modifier='protected protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='4474' end='4480' isCurrent='false' isGlobal='false'>
+                                <Identifier start='4474' end='4480' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='4481' end='4511' isDollared='true'>
+                                <Identifier start='4482' end='4511' name='protectedSetProtectedReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='4517' end='4585' modifier='private protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='4549' end='4555' isCurrent='false' isGlobal='false'>
+                                <Identifier start='4549' end='4555' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='4556' end='4584' isDollared='true'>
+                                <Identifier start='4557' end='4584' name='protectedSetPrivateReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='4599' end='4665' modifier='public protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='4630' end='4636' isCurrent='false' isGlobal='false'>
+                                <Identifier start='4630' end='4636' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='4637' end='4664' isDollared='true'>
+                                <Identifier start='4638' end='4664' name='protectedSetReadonlyPublic'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='4670' end='4742' modifier='protected protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='4704' end='4710' isCurrent='false' isGlobal='false'>
+                                <Identifier start='4704' end='4710' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='4711' end='4741' isDollared='true'>
+                                <Identifier start='4712' end='4741' name='protectedSetReadonlyProtected'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='4747' end='4815' modifier='private protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='4779' end='4785' isCurrent='false' isGlobal='false'>
+                                <Identifier start='4779' end='4785' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='4786' end='4814' isDollared='true'>
+                                <Identifier start='4787' end='4814' name='protectedSetReadonlyPrivate'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='4829' end='4891' modifier='public private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='4858' end='4864' isCurrent='false' isGlobal='false'>
+                                <Identifier start='4858' end='4864' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='4865' end='4890' isDollared='true'>
+                                <Identifier start='4866' end='4890' name='privateSetPublicReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='4896' end='4964' modifier='protected private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='4928' end='4934' isCurrent='false' isGlobal='false'>
+                                <Identifier start='4928' end='4934' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='4935' end='4963' isDollared='true'>
+                                <Identifier start='4936' end='4963' name='privateSetProtectedReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='4969' end='5033' modifier='private private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='4999' end='5005' isCurrent='false' isGlobal='false'>
+                                <Identifier start='4999' end='5005' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='5006' end='5032' isDollared='true'>
+                                <Identifier start='5007' end='5032' name='privateSetPrivateReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='5038' end='5100' modifier='public private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='5067' end='5073' isCurrent='false' isGlobal='false'>
+                                <Identifier start='5067' end='5073' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='5074' end='5099' isDollared='true'>
+                                <Identifier start='5075' end='5099' name='privateSetReadonlyPublic'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='5105' end='5173' modifier='protected private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='5137' end='5143' isCurrent='false' isGlobal='false'>
+                                <Identifier start='5137' end='5143' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='5144' end='5172' isDollared='true'>
+                                <Identifier start='5145' end='5172' name='privateSetReadonlyProtected'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='5178' end='5242' modifier='private private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='5208' end='5214' isCurrent='false' isGlobal='false'>
+                                <Identifier start='5208' end='5214' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='5215' end='5241' isDollared='true'>
+                                <Identifier start='5216' end='5241' name='privateSetReadonlyPrivate'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='5247' end='5307' modifier='public public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='5275' end='5281' isCurrent='false' isGlobal='false'>
+                                <Identifier start='5275' end='5281' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='5282' end='5306' isDollared='true'>
+                                <Identifier start='5283' end='5306' name='readOnlyPublicPublicSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='5312' end='5378' modifier='public protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='5343' end='5349' isCurrent='false' isGlobal='false'>
+                                <Identifier start='5343' end='5349' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='5350' end='5377' isDollared='true'>
+                                <Identifier start='5351' end='5377' name='readOnlyPublicProtectedSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='5383' end='5445' modifier='public private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='5412' end='5418' isCurrent='false' isGlobal='false'>
+                                <Identifier start='5412' end='5418' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='5419' end='5444' isDollared='true'>
+                                <Identifier start='5420' end='5444' name='readOnlyPublicPrivateSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='5450' end='5516' modifier='protected public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='5481' end='5487' isCurrent='false' isGlobal='false'>
+                                <Identifier start='5481' end='5487' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='5488' end='5515' isDollared='true'>
+                                <Identifier start='5489' end='5515' name='readOnlyProtectedPublicSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='5530' end='5602' modifier='protected protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='5564' end='5570' isCurrent='false' isGlobal='false'>
+                                <Identifier start='5564' end='5570' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='5571' end='5601' isDollared='true'>
+                                <Identifier start='5572' end='5601' name='readOnlyProtectedProtectedSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='5607' end='5675' modifier='protected private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='5639' end='5645' isCurrent='false' isGlobal='false'>
+                                <Identifier start='5639' end='5645' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='5646' end='5674' isDollared='true'>
+                                <Identifier start='5647' end='5674' name='readOnlyProtectedPrivateSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='5680' end='5742' modifier='private public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='5709' end='5715' isCurrent='false' isGlobal='false'>
+                                <Identifier start='5709' end='5715' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='5716' end='5741' isDollared='true'>
+                                <Identifier start='5717' end='5741' name='readOnlyPrivatePublicSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='5756' end='5824' modifier='private protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='5788' end='5794' isCurrent='false' isGlobal='false'>
+                                <Identifier start='5788' end='5794' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='5795' end='5823' isDollared='true'>
+                                <Identifier start='5796' end='5823' name='readOnlyPrivateProtectedSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='5838' end='5902' modifier='private private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='5868' end='5874' isCurrent='false' isGlobal='false'>
+                                <Identifier start='5868' end='5874' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='5875' end='5901' isDollared='true'>
+                                <Identifier start='5876' end='5901' name='readOnlyPrivatePrivateSet'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='5907' end='5967' modifier='public public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='5935' end='5941' isCurrent='false' isGlobal='false'>
+                                <Identifier start='5935' end='5941' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='5942' end='5966' isDollared='true'>
+                                <Identifier start='5943' end='5966' name='readOnlyPublicSetPublic'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='5972' end='6038' modifier='protected public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='6003' end='6009' isCurrent='false' isGlobal='false'>
+                                <Identifier start='6003' end='6009' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='6010' end='6037' isDollared='true'>
+                                <Identifier start='6011' end='6037' name='readOnlyPublicSetProtected'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='6052' end='6114' modifier='private public(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='6081' end='6087' isCurrent='false' isGlobal='false'>
+                                <Identifier start='6081' end='6087' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='6088' end='6113' isDollared='true'>
+                                <Identifier start='6089' end='6113' name='readOnlyPublicSetPrivate'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='6128' end='6194' modifier='public protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='6159' end='6165' isCurrent='false' isGlobal='false'>
+                                <Identifier start='6159' end='6165' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='6166' end='6193' isDollared='true'>
+                                <Identifier start='6167' end='6193' name='readOnlyProtectedSetPublic'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='6199' end='6271' modifier='protected protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='6233' end='6239' isCurrent='false' isGlobal='false'>
+                                <Identifier start='6233' end='6239' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='6240' end='6270' isDollared='true'>
+                                <Identifier start='6241' end='6270' name='readOnlyProtectedSetProtected'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='6276' end='6344' modifier='private protected(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='6308' end='6314' isCurrent='false' isGlobal='false'>
+                                <Identifier start='6308' end='6314' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='6315' end='6343' isDollared='true'>
+                                <Identifier start='6316' end='6343' name='readOnlyProtectedSetPrivate'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='6358' end='6420' modifier='public private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='6387' end='6393' isCurrent='false' isGlobal='false'>
+                                <Identifier start='6387' end='6393' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='6394' end='6419' isDollared='true'>
+                                <Identifier start='6395' end='6419' name='readOnlyPrivateSetPublic'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='6425' end='6493' modifier='protected private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='6457' end='6463' isCurrent='false' isGlobal='false'>
+                                <Identifier start='6457' end='6463' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='6464' end='6492' isDollared='true'>
+                                <Identifier start='6465' end='6492' name='readOnlyPrivateSetProtected'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='6498' end='6562' modifier='private private(set) readonly'>
+                        <FieldType>
+                            <NamespaceName start='6528' end='6534' isCurrent='false' isGlobal='false'>
+                                <Identifier start='6528' end='6534' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='6535' end='6561' isDollared='true'>
+                                <Identifier start='6536' end='6561' name='readOnlyPrivateSetPrivate'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                    </FieldsDeclaration>
+                </Block>
+            </TraitDeclaration>
+        </Statements>
+    </Program>
+</testresult>

@@ -536,7 +536,7 @@ public class TestMerge extends BaseTest {
 //                out("If this is expected and acceptable, change the memUsageReference value in TestMerge.java, to be " + k2);
 //            }
 //        } else {
-///*            //	We consume less memory than expected
+// /*            //	We consume less memory than expected
 //            float p = Math.abs(diff)/memUsageReference*100;
 //            if (p > 25.0) {
 //                out("It seems that the last schema2beans code changes have decreased the memory consumption by " + p + "% !!!");

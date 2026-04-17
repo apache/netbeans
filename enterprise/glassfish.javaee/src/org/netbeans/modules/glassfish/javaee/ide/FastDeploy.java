@@ -187,10 +187,13 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
             (GlassfishModule2)commonSupport : null);
         boolean restart = false;
         try {
-            restart = HttpMonitorHelper.synchronizeMonitor(commonSupport.getInstanceProperties().get(GlassfishModule.DOMAINS_FOLDER_ATTR),
+            restart = HttpMonitorHelper.synchronizeMonitor(
+                    commonSupport.getInstanceProperties().get(GlassfishModule.DOMAINS_FOLDER_ATTR),
                     commonSupport.getInstanceProperties().get(GlassfishModule.DOMAIN_NAME_ATTR),
                     Boolean.parseBoolean(commonSupport.getInstanceProperties().get(GlassfishModule.HTTP_MONITOR_FLAG)),
-                    "modules/org-netbeans-modules-schema2beans.jar");
+                    commonSupport.getInstance().getVersion().getMajor() > 5,
+                    "modules/org-netbeans-modules-schema2beans.jar"
+            );
         } catch (IOException ex) {
             Logger.getLogger("glassfish-javaee").log(Level.WARNING, "http monitor state", ex);
         } catch (SAXException ex) {
@@ -306,6 +309,7 @@ public class FastDeploy extends IncrementalDeployment implements IncrementalDepl
                     commonSupport.getInstanceProperties().get(GlassfishModule.DOMAINS_FOLDER_ATTR),
                     commonSupport.getInstanceProperties().get(GlassfishModule.DOMAIN_NAME_ATTR),
                     Boolean.parseBoolean(commonSupport.getInstanceProperties().get(GlassfishModule.HTTP_MONITOR_FLAG)),
+                    commonSupport.getInstance().getVersion().getMajor() > 5,
                     "modules/org-netbeans-modules-schema2beans.jar");
         } catch (IOException ex) {
             Logger.getLogger("glassfish-javaee").log(Level.WARNING,"http monitor state",

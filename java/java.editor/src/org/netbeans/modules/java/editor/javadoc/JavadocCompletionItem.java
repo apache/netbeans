@@ -212,7 +212,7 @@ final class JavadocCompletionItem implements CompletionItem {
         @Override
         public CompletionItem createJavadocExecutableItem(CompilationInfo info, ExecutableElement e, ExecutableType et, int startOffset, boolean isInherited, boolean isDeprecated) {
             CompletionItem delegate = JavaCompletionItem.createExecutableItem(
-                    info, e, et, null, startOffset, null, isInherited, isDeprecated, false, false, false, -1, false, null);
+                    info, e, et, null, startOffset, null, isInherited, isDeprecated, false, false, false, false, -1, false, null);
             return new JavadocExecutableItem(delegate, e, startOffset);
         }
 

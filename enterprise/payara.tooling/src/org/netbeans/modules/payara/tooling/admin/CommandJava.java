@@ -25,17 +25,11 @@ package org.netbeans.modules.payara.tooling.admin;
  */
 public abstract class CommandJava extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Java SE home used to select JRE for Payara server. */
     final String javaHome;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server administration command entity
      * with specified server command and Java SE home.
@@ -48,10 +42,7 @@ public abstract class CommandJava extends Command {
         this.javaHome = javaHome;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Java SE home used to select JRE for Payara server.
      * <p/>

@@ -22,7 +22,6 @@
 <HTML>
 <HEAD>
 <TITLE>Lookup Library API</TITLE>
-<link rel="Stylesheet" href="@TOP@/prose.css" type="text/css" title="NetBeans Open APIs Style">
 </HEAD>
 <BODY>
 <H1>Lookup library API</H1>
@@ -38,13 +37,9 @@ The first question you might ask is this: how can I get hold of a
 lookup instance? There are basically two ways how you can get it.
 
 <H3> Global lookup </H3>
-As you can see in the
+As you can see in the {@link org.openide.util.Lookup Lookup } Javadoc there is a static method
 
-<a href="@TOP@org/openide/util/Lookup.html">Lookup</a>
-
-Javadoc there is a static method
-
-<pre><a href="@TOP@org/openide/util/Lookup.html#getDefault--">public static Lookup getDefault()</a></pre>
+{@link org.openide.util.Lookup#getDefault() public static Lookup getDefault() }
 
 The object returned from this method is
 a global lookup that can serve as a central place for registering services.
@@ -65,7 +60,7 @@ The following code will return you a newly created instance of
 <code>com.foo.impl.ImplOfTheAPI</code>:
 
 <PRE>
-   <font class="keyword">import</FONT> org.openide.util.Lookup;
+   <span class="keyword">import</span> org.openide.util.Lookup;
    return Lookup.getDefault().lookup(com.my.APIClass.class);
 </PRE>
 
@@ -90,14 +85,14 @@ results.
 Let's examine following example:
 
 <pre>
-        <font class="keyword">import</FONT> org.openide.util.Lookup;
+        <span class="keyword">import</span> org.openide.util.Lookup;
 
-        <font class="type">Lookup</font> <font class="variable-name">lookup</font> = ...;
-        Lookup.<font class="type">Template</font> <font class="variable-name">template</font> = <font class="keyword">new</font> Lookup.<font class="type">Template</font>(MyService.<font class="keyword">class</font>);
-        Lookup.<font class="type">Result</font> <font class="variable-name">result</font> = lookup.lookup(template);
-        <font class="type">Collection</font> <font class="variable-name">c</font> = result.allInstances();
-        <font class="keyword">for</font> (<font class="type">Iterator</font> <font class="variable-name">i</font> = c.iterator(); i.hasNext(); ) {
-            <font class="type">MyService</font> <font class="variable-name">s</font> = (<font class="type">MyService</font>)i.next();
+        <span class="type">Lookup</span> <span class="variable-name">lookup</span> = ...;
+        Lookup.<span class="type">Template</span> <span class="variable-name">template</span> = <span class="keyword">new</span> Lookup.<span class="type">Template</span>(MyService.<span class="keyword">class</span>);
+        Lookup.<span class="type">Result</span> <span class="variable-name">result</span> = lookup.lookup(template);
+        <span class="type">Collection</span> <span class="variable-name">c</span> = result.allInstances();
+        <span class="keyword">for</span> (<span class="type">Iterator</span> <span class="variable-name">i</span> = c.iterator(); i.hasNext(); ) {
+            <span class="type">MyService</span> <span class="variable-name">s</span> = (<span class="type">MyService</span>)i.next();
             s.callMyService();
         }
 </pre>
@@ -111,12 +106,12 @@ available.
 If you are not interested in all objects as in the previous example, you can use the
 template to ask for one resulting object (wrapped in special Item instance):
 <pre>
-        <font class="keyword">import</FONT> org.openide.util.Lookup;
+        <span class="keyword">import</span> org.openide.util.Lookup;
 
-        <font class="type">Lookup</font> <font class="variable-name">lookup</font> = ...;
-        Lookup.<font class="type">Template</font> <font class="variable-name">template</font> = <font class="keyword">new</font> Lookup.<font class="type">Template</font>(MyService.<font class="keyword">class</font>);
-        Lookup.<font class="type">Item</font> <font class="variable-name">item</font> = lookup.lookupItem(template);
-        <font class="type">MyService</font> <font class="variable-name">s</font> = (<font class="type">MyService</font>)item.getInstance();
+        <span class="type">Lookup</span> <span class="variable-name">lookup</span> = ...;
+        Lookup.<span class="type">Template</span> <span class="variable-name">template</span> = <span class="keyword">new</span> Lookup.<span class="type">Template</span>(MyService.<span class="keyword">class</span>);
+        Lookup.<span class="type">Item</span> <span class="variable-name">item</span> = lookup.lookupItem(template);
+        <span class="type">MyService</span> <span class="variable-name">s</span> = (<span class="type">MyService</span>)item.getInstance();
         s.callMyService();
 </pre>
 
@@ -138,23 +133,23 @@ in cases where the lookup changes asynchronously.
 So here is some sample code using the listenner:
 
 <pre>
-        <font class="keyword">import</FONT> org.openide.util.Lookup;
-        <font class="keyword">import</FONT> org.openide.util.LookupListener;
-        <font class="keyword">import</FONT> org.openide.util.LookupEvent;
+        <span class="keyword">import</span> org.openide.util.Lookup;
+        <span class="keyword">import</span> org.openide.util.LookupListener;
+        <span class="keyword">import</span> org.openide.util.LookupEvent;
 
-        <font class="type">Lookup</font> <font class="variable-name">lookup</font> = ...;
-        Lookup.<font class="type">Template</font> <font class="variable-name">template</font> = <font class="keyword">new</font> Lookup.<font class="type">Template</font>(MyService.<font class="keyword">class</font>);
-        <font class="keyword">final</font> <font class="variable-name">Lookup</font>.<font class="type">Result</font> <font class="variable-name">result</font> = lookup.lookup(template);
-        result.addLookupListener(<font class="keyword">new</font> <font class="type">LookupListener</font>() {
-            <font class="keyword">public</font> <font class="type">void</font> <font class="function-name">resultChanged</font>(<font class="type">LookupEvent</font> <font class="variable-name">e</font>) {
+        <span class="type">Lookup</span> <span class="variable-name">lookup</span> = ...;
+        Lookup.<span class="type">Template</span> <span class="variable-name">template</span> = <span class="keyword">new</span> Lookup.<span class="type">Template</span>(MyService.<span class="keyword">class</span>);
+        <span class="keyword">final</span> <span class="variable-name">Lookup</span>.<span class="type">Result</span> <span class="variable-name">result</span> = lookup.lookup(template);
+        result.addLookupListener(<span class="keyword">new</span> <span class="type">LookupListener</span>() {
+            <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">resultChanged</span>(<span class="type">LookupEvent</span> <span class="variable-name">e</span>) {
                 reaction(result);
             }
         });
         reaction(result);
     }
-    <font class="keyword">private</font> <font class="keyword">static</font> <font class="type">void</font> <font class="function-name">reaction</font>(Lookup.<font class="type">Result</font> <font class="variable-name">r</font>) {
-        <font class="keyword">for</font> (<font class="type">Iterator</font> <font class="variable-name">i</font> = r.allInstances().iterator(); i.hasNext(); ) {
-            <font class="type">MyService</font> <font class="variable-name">s</font> = (<font class="type">MyService</font>)i.next();
+    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">void</span> <span class="function-name">reaction</span>(Lookup.<span class="type">Result</span> <span class="variable-name">r</span>) {
+        <span class="keyword">for</span> (<span class="type">Iterator</span> <span class="variable-name">i</span> = r.allInstances().iterator(); i.hasNext(); ) {
+            <span class="type">MyService</span> <span class="variable-name">s</span> = (<span class="type">MyService</span>)i.next();
             s.callMyService();
         }
     }

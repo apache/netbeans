@@ -1,0 +1,2 @@
+    public function |>MARK_OCCURRENCES:publicMethod<|(): void {} // anon4
+}->|>MARK_OCCURRENCES:public^Method<|();

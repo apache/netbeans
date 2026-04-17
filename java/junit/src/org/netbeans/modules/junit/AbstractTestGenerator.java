@@ -506,6 +506,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                     Collections.<TypeParameterTree>emptyList(),   //type params
                     null,                                         //extends
                     implemetnts,                                  //implements
+                    Collections.<ExpressionTree>emptyList(),      //permits
                     members);                                     //members
             default: // should be never happen. We'll generate a class anyway.
             case CLASS:
@@ -516,6 +517,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                     Collections.<TypeParameterTree>emptyList(),   //type params
                     maker.QualIdent(srcClass),                    //extends
                     Collections.<ExpressionTree>emptyList(),      //implements
+                    Collections.<ExpressionTree>emptyList(),      //permits
                     members);                                     //members
         }
     }
@@ -1007,6 +1009,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                 tstClass.getTypeParameters(),
                 tstClass.getExtendsClause(),
                 (List<? extends ExpressionTree>) tstClass.getImplementsClause(),
+                (List<? extends ExpressionTree>) tstClass.getPermitsClause(),
                 tstMembers);
         return newClass;
     }
@@ -1134,6 +1137,7 @@ abstract class AbstractTestGenerator implements CancellableTask<WorkingCopy>{
                 tstClass.getTypeParameters(),
                 tstClass.getExtendsClause(),
                 (List<? extends ExpressionTree>) tstClass.getImplementsClause(),
+                (List<? extends ExpressionTree>) tstClass.getPermitsClause(),
                 tstMembers);
         return newClass;
     }

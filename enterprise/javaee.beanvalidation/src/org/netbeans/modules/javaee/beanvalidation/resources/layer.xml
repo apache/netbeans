@@ -19,11 +19,11 @@
     under the License.
 
 -->
-<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Templates">
         <folder name="Bean_Validation">
-             <attr name="position" intvalue="701"/>
+            <attr name="position" intvalue="701"/>
             <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javaee.beanvalidation.resources.Bundle"/>
             <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javaee/beanvalidation/resources/WebInfo.html"/>
 
@@ -38,11 +38,15 @@
                 <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
             </file>
             <file name="Validator.java" url="Validator.template">
-                <attr name="position" intvalue="0"/>
+                <attr name="position" intvalue="1004"/>
+                <attr name="template" boolvalue="true"/>
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.javaee.beanvalidation.resources.Bundle"/>
+                <attr name="templateCategory" stringvalue="web-types,j2ee-types"/>
+                <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/org/netbeans/modules/java/resources/class.gif"/>
             </file>
             <file name="validation.xml" url="validation.xml">
-                <attr name="position" intvalue="1004"/>
+                <attr name="position" intvalue="1005"/>
                 <attr name="template" boolvalue="true"/>
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javaee/beanvalidation/resources/ValidationConfiguration.html"/>
@@ -51,7 +55,7 @@
                 <attr name="templateCategory" stringvalue="web-types,j2ee-types"/>
             </file>
             <file name="constraint.xml" url="constraint.xml">
-                <attr name="position" intvalue="1005"/>
+                <attr name="position" intvalue="1006"/>
                 <attr name="template" boolvalue="true"/>
                 <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                 <attr name="templateWizardURL" urlvalue="nbresloc:/org/netbeans/modules/javaee/beanvalidation/resources/ValidationMapping.html"/>

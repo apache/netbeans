@@ -18,7 +18,7 @@
  */
 
 package org.netbeans.nbbuild;
-
+import org.apache.tools.ant.BuildFileRule;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.junit.Rule;
 import org.w3c.dom.Document;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -38,18 +39,28 @@ import org.xml.sax.SAXException;
 public class ArchQuestionsTest extends TestBase implements EntityResolver {
     /** debug messages to show if necessary */
     private List<String> msg = new ArrayList<>();
-    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        System.clearProperty("arch.generate");
+        System.clearProperty("arch.private.disable.validation.for.test.purposes");
+        System.clearProperty("arch.org.openide.util.name");
+        System.clearProperty("arch.org.openide.util.category");
+    }
     public ArchQuestionsTest (String name) {
         super (name);
     }
-    
+
     public void testGeneratePreferencesArch() throws Exception {
         java.io.File answers = extractResource("arch-preferences.xml");
         java.io.File output = extractString("");
         output.delete();
-        
-        
-        
+
+
+
         java.io.File f = extractString(
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
@@ -58,12 +69,13 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
                 "  <arch answers=\"" + answers + "\" output='" + output + "' />" +
                 "</target>" +
                 "</project>"
-                
+
                 );
-        execute(f, new String[] { });
-        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+
         assertTrue("File is generated", output.exists());
-        
+
         String content = readFile(output);
         if (content.indexOf("resources-preferences") == -1) {
             fail("resources-preferences shall be in output:\n" + content);
@@ -73,7 +85,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
         }
     }
 
-    
+
     public void testGenerateArchFileWhenEmpty () throws Exception {
         java.io.File answers = extractString ("");
         answers.delete ();
@@ -90,12 +102,14 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "</project>"
 
         );
-        execute (f, new String[] { });
+
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
 
         assertTrue ("File is generated", answers.exists ());
-        
+
         String content = readFile(answers);
-        
+
         if (content.indexOf("module=") >= 0) {
             fail("No mention of a module should be there anymore:\n" + content);
         }
@@ -117,10 +131,12 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "</project>"
 
         );
-        execute (f, new String[] { });
+
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
 
         assertTrue ("File is generated", answers.exists ());
-        
+
         String res = readFile(answers);
         DocumentBuilderFactory fack = DocumentBuilderFactory.newInstance();
         fack.setValidating(false);
@@ -140,7 +156,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             while (n != null) {
                 n = n.getParentNode();
                 assertNotNull ("No parent node answer found: " + res, n);
-                
+
                 if (n.getNodeName().equals ("answer")) {
                     String id = n.getAttributes().getNamedItem("id").getNodeValue();
                     if (id.equals ("dep-nb")) {
@@ -151,10 +167,10 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
                 }
             }
         }
-        
+
         fail ("dep-nb question should have a defaultanswer: " + res);
     }
-    
+
     public void testDoNotCorruptTheFileWhenItExists() throws Exception {
         java.io.File answers = extractString (
 "<?xml version='1.0' encoding='UTF-8'?>\n" +
@@ -174,7 +190,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
 ">\n" +
 "\n" +
   // "&api-questions;\n" +
-  // replaced by part of api-questions entity            
+  // replaced by part of api-questions entity
 "<api-questions version='1.25'>\n" +
     "<category id='arch' name='General Information'>\n" +
         "<question id='arch-what' when='init' >\n" +
@@ -200,7 +216,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
         "</question>\n" +
     "</category>\n" +
 "</api-questions>                \n" +
-// end of Arch-api-questionx.xmls            
+// end of Arch-api-questionx.xmls
 "\n" +
 "\n" +
 "<answer id='arch-what'>\n" +
@@ -211,9 +227,9 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
 "\n" +
 "</api-answers>    \n"
         );
-        
+
         java.io.File output = extractString("");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
@@ -225,15 +241,14 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "</project>"
 
         );
-        execute (f, new String[] {  
-            "-Darch.generate=true",
-            "-Darch.private.disable.validation.for.test.purposes=true",
-                
-        });
 
+        System.setProperty("arch.generate", "true");
+        System.setProperty("arch.private.disable.validation.for.test.purposes", "true");
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         assertTrue ("Answers still exists", answers.exists ());
         assertTrue ("Output file generated", output.exists ());
-        
+
         String s1 = readFile(answers);
         if (s1.indexOf("answer id=\"arch-overall\"") == -1) {
             fail ("There should be a answer template for arch-overall in answers: " + s1);
@@ -250,8 +265,8 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
         }
 
     }
-    
-    
+
+
     public void testIncludeAPIChangesDocumentIntoSetOfAnswersIfSpecified() throws Exception {
         java.io.File answers = extractString (
 "<?xml version='1.0' encoding='UTF-8'?>\n" +
@@ -271,7 +286,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
 ">\n" +
 "\n" +
   // "&api-questions;\n" +
-  // replaced by part of api-questions entity            
+  // replaced by part of api-questions entity
 "<api-questions version='1.25'>\n" +
     "<category id='arch' name='General Information'>\n" +
         "<question id='arch-what' when='init' >\n" +
@@ -297,7 +312,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
         "</question>\n" +
     "</category>\n" +
 "</api-questions>                \n" +
-// end of Arch-api-questionx.xmls            
+// end of Arch-api-questionx.xmls
 "\n" +
 "\n" +
 "<answer id='arch-what'>\n" +
@@ -308,7 +323,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
 "\n" +
 "</api-answers>    \n"
         );
-        
+
         java.io.File apichanges = extractString(
 "<?xml version='1.0' encoding='UTF-8'?>\n" +
 "<!--\n" +
@@ -373,7 +388,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
 "</body>\n" +
 "</htmlcontents>\n" +
 "</apichanges>\n" +
-"");        
+"");
 
         java.io.File xsl = extractString(
 "<?xml version='1.0' encoding='UTF-8' ?>\n" +
@@ -387,10 +402,10 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
     "</xsl:template>\n" +
 "</xsl:stylesheet> \n"
         );
-        
-        
+
+
         java.io.File output = extractString("");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
@@ -404,11 +419,12 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "</project>"
 
         );
-        execute (f, new String[] {  
-            "-Darch.generate=true",
-            "-Darch.private.disable.validation.for.test.purposes=true",
-                
-        });
+
+        System.setProperty("arch.generate", "true");
+        System.setProperty("arch.private.disable.validation.for.test.purposes", "true");
+
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
 
         assertTrue ("Answers still exists", answers.exists ());
         assertTrue ("Output file generated", output.exists ());
@@ -416,92 +432,92 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
         String txt = readFile(output);
 
         org.w3c.dom.Document dom = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(output);
-        
+
         org.w3c.dom.NodeList list;
         list =  dom.getElementsByTagName("apidef");
         assertEquals ("One apidef element:\n" + txt, 1, list.getLength());
-        
+
         list = dom.getElementsByTagName("change");
         assertEquals("Two change elements:\n" + txt, 2, list.getLength());
-        
+
     }
 
-    
+
     public void testReadNbDepsFromProjectXML() throws Exception {
         String[] txt = new String[1];
         Document dom = doReadNbDepsFromProjectXML("", txt);
-        
-        
+
+
         org.w3c.dom.NodeList list;
         list =  dom.getElementsByTagName("api");
         assertTrue("There is more than one api tag: " + txt[0], list.getLength() > 0);
-        
+
         for (int i = 0; i < list.getLength(); i++) {
                 org.w3c.dom.Node n = list.item(i);
-                
+
                 assertEquals ("group is java", "java", n.getAttributes().getNamedItem("group").getNodeValue());
                 assertEquals ("type is import", "import", n.getAttributes().getNamedItem("type").getNodeValue());
         }
     }
 
-    
+
     public void testReadNbDepsFromProjectXMLWhenDefaultAnswerRequested() throws Exception {
         String[] txt = new String[1];
         Document dom = doReadNbDepsFromProjectXML(" <defaultanswer generate='here'/>", txt);
-        
-        
+
+
         org.w3c.dom.NodeList list;
         list =  dom.getElementsByTagName("api");
         assertTrue("There is more than one api tag: " + txt[0], list.getLength() > 0);
-        
+
         for (int i = 0; i < list.getLength(); i++) {
                 org.w3c.dom.Node n = list.item(i);
-                
+
                 assertEquals ("group is java", "java", n.getAttributes().getNamedItem("group").getNodeValue());
                 assertEquals ("type is import", "import", n.getAttributes().getNamedItem("type").getNodeValue());
         }
-        
+
         assertEquals("Warnings are not included if defaultanswer is present: " + txt[0], -1, txt[0].indexOf("Default answer to this question"));
     }
 
     public void testReadNbDepsFromProjectXMLWhenDefaultAnswerProhibited () throws Exception {
         String[] txt = new String[1];
         Document dom = doReadNbDepsFromProjectXML(" <defaultanswer generate='none'/>", txt);
-        
-        
+
+
         org.w3c.dom.NodeList list;
         list =  dom.getElementsByTagName("api");
-        
+
         assertEquals("There is no api tag", 0, list.getLength());
     }
 
     public void testReadNbDepsFromProjectXMLWithPropertiesSetToNameAnd() throws Exception {
         String[] txt = new String[3];
         // txt[0] = is reserved for the doReadNbDepsFromProjectXML method and will contain a result
-        txt[1] = "-Darch.org.openide.util.name=UtilitiesAPI";
-        txt[2] = "-Darch.org.openide.util.category=official";
+        System.setProperty("arch.org.openide.util.name", "UtilitiesAPI");
+        System.setProperty("arch.org.openide.util.category", "official");
         Document dom = doReadNbDepsFromProjectXML(" <defaultanswer generate='here'/>", txt);
-        
-        
+
+
         org.w3c.dom.NodeList list;
         list =  dom.getElementsByTagName("api");
         assertTrue("There is more than one api tag: " + txt[0], list.getLength() > 0);
-        
+
         for (int i = 0; i < list.getLength(); i++) {
                 org.w3c.dom.Node n = list.item(i);
-                
+
                 assertEquals ("group is java", "java", n.getAttributes().getNamedItem("group").getNodeValue());
                 assertEquals ("type is import", "import", n.getAttributes().getNamedItem("type").getNodeValue());
-                
+
                 if ("UtilitiesAPI".equals(n.getAttributes().getNamedItem("name").getNodeValue())) {
                     assertEquals("Category is official", "official", n.getAttributes().getNamedItem("category").getNodeValue());
                     return;
                 }
         }
-        
+
         fail ("There should be the name='UtilitiesAPI' used " + txt[0]);
     }
-    
+
     private Document doReadNbDepsFromProjectXML(String inlinedCode, String[] txt) throws Exception {
         java.io.File answers = extractString (
 "<?xml version='1.0' encoding='UTF-8'?>\n" +
@@ -521,7 +537,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
 ">\n" +
 "\n" +
   // "&api-questions;\n" +
-  // replaced by part of api-questions entity            
+  // replaced by part of api-questions entity
 "<api-questions version='1.25'>\n" +
     "<category id='dep' name='Dependencies'>\n" +
         "<question id='dep-nb' when='init' >\n" +
@@ -534,7 +550,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
         "</question>\n" +
     "</category>\n" +
 "</api-questions>                \n" +
-// end of Arch-api-questionx.xmls            
+// end of Arch-api-questionx.xmls
 "\n" +
 "\n" +
 "<answer id='dep-nb'>\n" +
@@ -546,7 +562,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
 "\n" +
 "</api-answers>    \n"
         );
-        
+
         java.io.File project = extractString(
 "<?xml version='1.0' encoding='UTF-8'?>\n" +
 "<!--\n" +
@@ -648,9 +664,9 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
         "</data>\n" +
     "</configuration>\n" +
 "</project>\n" +
-"");        
-        
-        
+"");
+
+
         java.io.File output = extractString("");
         assertTrue("File can be deleted: " + output, output.delete());
 
@@ -666,14 +682,14 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
     "</xsl:template>\n" +
 "</xsl:stylesheet> \n"
         );
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"arch\" classname=\"org.netbeans.nbbuild.Arch\" classpath=\"${nbantext.jar}\"/>" +
             "  <arch answers=\"" + answers + "\" output='" + output + "'" +
             "     project='" + project + "' \n" +
-            "     xsl='" + xsl + "' \n" + 
+            "     xsl='" + xsl + "' \n" +
             "   />\n" +
             "<target name=\"all\" >" +
             "  " +
@@ -682,9 +698,10 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
 
         );
         // happy hacking first of the txt argument is used to pass args to the execution script
-        txt[0] = "-Darch.private.disable.validation.for.test.purposes=true";
-        execute (f, txt);
 
+        System.setProperty("arch.private.disable.validation.for.test.purposes", "true");
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         assertTrue ("Answers still exists", answers.exists ());
         assertTrue ("Output file generated", output.exists ());
 
@@ -695,7 +712,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
         return dom;
     }
 
-    
+
     public void testGenerateArchInExternalDir () throws Exception {
         java.io.File answers = java.io.File.createTempFile("arch", ".xml", new java.io.File (System.getProperty("user.home")));
         answers.delete();
@@ -711,18 +728,22 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "</project>"
 
         );
-		execute (f, new String[] { "-Darch.generate=true" });
 
-		answers.deleteOnExit();
+        System.setProperty("arch.generate", "true");
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.getProject().setProperty("arch.generate", "true");
+        buildRule.executeTarget("all");
+
+	answers.deleteOnExit();
         assertTrue ("File is generated", answers.exists ());
     }
 
     public void testGenerateArchWithLogging () throws Exception {
         File dtd = extractResource("Arch.dtd");
         File quest = extractResource("Arch-api-questions.xml");
-        
-        
-        
+
+
+
         java.io.File answers = extractString(
 "<?xml version='1.0' encoding='UTF-8'?>\n" +
 "<!--\n" +
@@ -762,15 +783,16 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "</project>"
 
         );
-        String[] txt = new String[1];
-//        txt[0] = "-Darch.private.disable.validation.for.test.purposes=true";
-        txt[0] = "-verbose";
-        execute (f, txt);
 
+        System.setProperty("arch.private.disable.validation.for.test.purposes", "true");
+
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.getProject().setProperty("verbose", "true");
+        buildRule.executeTarget("all");
         assertTrue ("File is generated", output.exists ());
-        
+
         String content = readFile(output);
-        
+
         if (content.indexOf("MyLogger") == -1) {
             fail(content);
         }
@@ -778,7 +800,7 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             fail(content);
         }
     }
-    
+
     public void testGenerateProfilerArch () throws Exception {
         java.io.File answers = extractResource("arch-profiler.xml");
         java.io.File output = extractString("");
@@ -797,10 +819,12 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
             "</project>"
 
         );
-        execute (f, new String[] { });
+
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
 
         assertTrue ("File is generated", output.exists ());
-        
+
         String content = readFile(output);
 
         if (content.indexOf("My Lovely Profiler - NetBeans Architecture Questions") == -1) {
@@ -813,6 +837,6 @@ public class ArchQuestionsTest extends TestBase implements EntityResolver {
         String x = "";
         return new InputSource(new StringReader(x));
     }
-    
-    
+
+
 }

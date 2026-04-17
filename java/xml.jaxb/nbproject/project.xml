@@ -62,11 +62,12 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.api.progress.nb</code-name-base>
+                    <code-name-base>org.netbeans.core.multiview</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>1.40</specification-version>
+                        <release-version>1</release-version>
+                        <specification-version>1.75</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -239,14 +240,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.openide.util.ui</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>9.3</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.openide.util</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -262,13 +255,26 @@
                         <specification-version>8.0</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.ui</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.3</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.windows</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>6.108</specification-version>
+                    </run-dependency>
+                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>
                     <name>unit</name>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.api.progress</code-name-base>
-                    </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.bootstrap</code-name-base>
                     </test-dependency>
@@ -334,9 +340,6 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.openide.nodes</code-name-base>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.openide.options</code-name-base>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.openide.text</code-name-base>

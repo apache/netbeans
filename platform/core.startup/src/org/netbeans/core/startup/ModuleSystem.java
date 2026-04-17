@@ -19,7 +19,6 @@
 
 package org.netbeans.core.startup;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
@@ -84,11 +83,9 @@ public final class ModuleSystem {
 
     final void init(FileSystem systemFileSystem) throws IOException {
         if (Boolean.getBoolean("org.netbeans.core.startup.ModuleSystem.CULPRIT")) Thread.dumpStack(); // NOI18N
-        PropertyChangeListener l = new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent ev) {
-                if (ModuleManager.PROP_CLASS_LOADER.equals(ev.getPropertyName())) {
-                    org.netbeans.core.startup.MainLookup.systemClassLoaderChanged(mgr.getClassLoader());
-                }
+        PropertyChangeListener l = (evt) -> {
+            if (ModuleManager.PROP_CLASS_LOADER.equals(evt.getPropertyName())) {
+                org.netbeans.core.startup.MainLookup.systemClassLoaderChanged(mgr.getClassLoader());
             }
         };
         mgr.addPropertyChangeListener(l);
@@ -135,7 +132,7 @@ public final class ModuleSystem {
     public List<File> getModuleJars () {
         mgr.mutexPrivileged().enterReadAccess();
         try {
-            List<File> l = new ArrayList<File>();
+            List<File> l = new ArrayList<>();
             for (Module m: mgr.getEnabledModules()) {
                 l.addAll(m.getAllJars());
             }
@@ -158,7 +155,7 @@ public final class ModuleSystem {
         // Keep a list of manifest URL bases which we know we do not need to
         // parse. Some of these manifests might be signed, and if so, we do not
         // want to touch them, as it slows down startup quite a bit.
-        Set<File> ignoredJars = new HashSet<File>();
+        Set<File> ignoredJars = new HashSet<>();
         String javaHome = System.getProperty("java.home"); // NOI18N
         if (javaHome != null) {
             File lib = new File(new File(javaHome).getParentFile(), "lib"); // NOI18N
@@ -173,7 +170,7 @@ public final class ModuleSystem {
         mgr.mutexPrivileged().enterWriteAccess();
         ev.log(Events.START_LOAD_BOOT_MODULES);
         try {
-            bootModules = new HashSet<Module>(10);
+            bootModules = new HashSet<>(10);
             ClassLoader upperLoader = ModuleSystem.class.getClassLoader();
             // wrap alien loader, so it can be used among parent loaders of module (instanceof ProxyClassLoader)
             ClassLoader loader = new JarClassLoader(Collections.<File>emptyList(), new ClassLoader[] { Module.class.getClassLoader() });
@@ -183,7 +180,7 @@ public final class ModuleSystem {
             ev.log(Events.PERF_TICK, "got all manifests"); // NOI18N
             
             // There will be duplicates: cf. #32576.
-            Set<URL> checkedManifests = new HashSet<URL>();
+            Set<URL> checkedManifests = new HashSet<>();
             
             // process libs in 2 passes; first, process bootstrap libraries in platform/libs, creating
             // FixedModules with a classloader that only loads from those libs.
@@ -284,16 +281,16 @@ public final class ModuleSystem {
         } finally {
             mgr.mutexPrivileged().exitWriteAccess();
         }
-	ev.log(Events.PERF_END, "ModuleSystem.readList"); // NOI18N
+        ev.log(Events.PERF_END, "ModuleSystem.readList"); // NOI18N
     }
     
     /** Install read modules.
      */
     public void restore() {
-	ev.log(Events.PERF_START, "ModuleSystem.restore"); // NOI18N
+        ev.log(Events.PERF_START, "ModuleSystem.restore"); // NOI18N
         mgr.mutexPrivileged().enterWriteAccess();
         try {
-            Set<Module> toTrigger = new HashSet<Module>(bootModules/*Collections.EMPTY_SET*/);
+            Set<Module> toTrigger = new HashSet<>(bootModules/*Collections.EMPTY_SET*/);
             list.trigger(toTrigger);
             mgr.releaseModuleManifests();
         } finally {
@@ -312,9 +309,7 @@ public final class ModuleSystem {
     public boolean shutDown(final Runnable midHook) {
         try {
             return shutDownAsync(midHook).get();
-        } catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (ExecutionException ex) {
+        } catch (InterruptedException | ExecutionException ex) {
             Exceptions.printStackTrace(ex);
         }
         return false;
@@ -333,12 +328,9 @@ public final class ModuleSystem {
      */
     public Future<Boolean> shutDownAsync(final Runnable midHook) {
         mgr.mutexPrivileged().enterWriteAccess();
-        Runnable both = new Runnable() {
-            @Override
-            public void run() {
-                midHook.run();
-                Stamps.getModulesJARs().shutdown();
-            }
+        Runnable both = () -> {
+            midHook.run();
+            Stamps.getModulesJARs().shutdown();
         };
         Future<Boolean> res;
         try {
@@ -370,7 +362,7 @@ public final class ModuleSystem {
             // The test module:
             Module tm = null;
             // Anything that needs to be turned back on later:
-            Set<Module> toReenable = new HashSet<Module>();
+            Set<Module> toReenable = new HashSet<>();
             // First see if this refers to an existing module.
             // (If so, make sure it is reloadable.)
             for (Module m : mgr.getModules()) {
@@ -406,7 +398,7 @@ public final class ModuleSystem {
                         tm = mgr.create(jar, new ModuleHistory(jar.getAbsolutePath()), true, false, false);
                     } catch (DuplicateException dupe2) {
                         // Should not happen.
-                        throw (IOException) new IOException(dupe2.toString()).initCause(dupe2);
+                        throw new IOException(dupe2);
                     }
                 }
             }
@@ -514,6 +506,7 @@ public final class ModuleSystem {
      */
     private static final class QuietEvents extends Events {
         QuietEvents() {}
+        @Override
         protected void logged(String message, Object[] args) {}
     }
 

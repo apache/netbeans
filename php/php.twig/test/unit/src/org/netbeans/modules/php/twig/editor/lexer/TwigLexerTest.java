@@ -680,6 +680,14 @@ public class TwigLexerTest extends TwigLexerTestBase {
         performTest("preceded-double-quote-by-backslash_07");
     }
 
+    public void testCommentInlineExpression() throws Exception {
+        performTest("comment-inline-expression");
+    }
+
+    public void testCommentInline() throws Exception {
+        performTest("comment-inline");
+    }
+
     @Override
     protected String getTestResult(String filename) throws Exception {
         String content = TestUtils.getFileContent(new File(getDataDir(), "testfiles/lexer/twig/" + filename + ".twig"));

@@ -1110,6 +1110,9 @@
                             <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
                             <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
                         </file>
+                        <file name="org-netbeans-modules-editor-annotations-colorings.xml" url="NetBeans55-annotations.xml">
+                            <attr name="nbeditor-settings-ColoringType" stringvalue="annotation"/>
+                        </file>
                     </folder>
                 </folder>
             
@@ -1123,9 +1126,11 @@
                             <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
                             <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
                         </file>
+                        <file name="org-netbeans-modules-editor-annotations-colorings.xml" url="NetBeansEarth-annotations.xml">
+                            <attr name="nbeditor-settings-ColoringType" stringvalue="annotation"/>
+                        </file>
                     </folder>
                 </folder>
-            
             
                 <folder name="CityLights">
                     <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
@@ -1136,6 +1141,9 @@
                         <file name="org-netbeans-modules-defaults-highlight-colorings.xml" url="CityLights-editor.xml">
                             <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
                             <attr name="nbeditor-settings-ColoringType" stringvalue="highlight"/>
+                        </file>
+                        <file name="org-netbeans-modules-editor-annotations-colorings.xml" url="CityLights-annotations.xml">
+                            <attr name="nbeditor-settings-ColoringType" stringvalue="annotation"/>
                         </file>
                     </folder>
                 </folder>

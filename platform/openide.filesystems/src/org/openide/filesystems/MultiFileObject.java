@@ -500,7 +500,7 @@ final class MultiFileObject extends AbstractFolder implements FileObject.Priorit
         return res;
     }
 
-    /** When refreshing, also update the state of delegates.
+    /* When refreshing, also update the state of delegates.
     */
     /** [PENDING] expected rename of some refresh method */
 

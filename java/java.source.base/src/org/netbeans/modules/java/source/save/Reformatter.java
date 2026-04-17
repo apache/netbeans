@@ -947,7 +947,7 @@ public class Reformatter implements ReformatTask {
                     }
                     List<? extends Tree> perms = node.getPermitsClause();
                     if (perms != null && !perms.isEmpty()) {
-                        wrapToken(cs.wrapExtendsImplementsKeyword(), 1, EXTENDS); 
+                        wrapToken(cs.wrapExtendsImplementsKeyword(), 1, EXTENDS);
                         wrapList(cs.wrapExtendsImplementsList(), cs.alignMultilineImplements(), true, COMMA, perms);
                     }
                 } finally {
@@ -1352,6 +1352,7 @@ public class Reformatter implements ReformatTask {
                 if (!recParams.isEmpty()) {
                     spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
                     wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, recParams);
+                    spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true); // solves #7403
                 }
                 accept(RPAREN);
                 List<? extends Tree> impls = node.getImplementsClause();
@@ -1398,8 +1399,6 @@ public class Reformatter implements ReformatTask {
                                 isFirstMember = false;
                             }
                         }
-
-                        spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
                     }
                 } finally {
                     indent = oldIndent;
@@ -1517,7 +1516,9 @@ public class Reformatter implements ReformatTask {
                     }
                     try {
                         spaces(cs.spaceWithinMethodDeclParens() ? 1 : 0, true);
-                        wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, params);
+                        if (!isSynthetic(getCurrentPath().getCompilationUnit(), node)) {
+                            wrapList(cs.wrapMethodParams(), cs.alignMultilineMethodParams(), false, COMMA, params);
+                        }
                     } finally {
                         indent = oldIndent;
                         lastIndent = oldLastIndent;
@@ -2566,7 +2567,36 @@ public class Reformatter implements ReformatTask {
             StatementTree elseStat = node.getElseStatement();
             CodeStyle.BracesGenerationStyle redundantIfBraces = cs.redundantIfBraces();
             int eoln = findNewlineAfterStatement(node);
-            if ((elseStat != null && redundantIfBraces == CodeStyle.BracesGenerationStyle.ELIMINATE && danglingElseChecker.hasDanglingElse(node.getThenStatement())) ||
+            Boolean hasErrThenStatement = node.getThenStatement() instanceof ExpressionStatementTree thenStatement
+                                          && thenStatement.getExpression() instanceof ErroneousTree;
+            if (hasErrThenStatement) {
+                if (getCurrentPath().getParentPath().getLeaf() instanceof BlockTree parentStTree) {
+                    boolean isPreviousIfTree = false;
+                    int endPositionOfErrThenStatement = endPos;
+                    for (StatementTree statement : parentStTree.getStatements()) {
+                        if (isPreviousIfTree) {
+                            int startPositionOfNextErrorStatement = (int) sp.getStartPosition(getCurrentPath().getCompilationUnit(), statement);
+                            endPositionOfErrThenStatement = startPositionOfNextErrorStatement;
+                            break;
+                        } else if (statement == node) {
+                            isPreviousIfTree = true;
+                            endPositionOfErrThenStatement = (int) sp.getEndPosition(getCurrentPath().getCompilationUnit(), parentStTree) - 1;
+                        }
+
+                    }
+                    if (isPreviousIfTree) {
+                        while (tokens.offset() <= endPositionOfErrThenStatement && endPositionOfErrThenStatement != -1) {
+                            tokens.moveNext();
+                        }
+                        tokens.movePrevious();
+                        if (endPositionOfErrThenStatement != -1) {
+                            endPos = endPositionOfErrThenStatement;
+                        }
+                    }
+                }
+            }
+            
+            if (hasErrThenStatement || (elseStat != null && redundantIfBraces == CodeStyle.BracesGenerationStyle.ELIMINATE && danglingElseChecker.hasDanglingElse(node.getThenStatement())) ||
                     (redundantIfBraces == CodeStyle.BracesGenerationStyle.GENERATE && (startOffset > sp.getStartPosition(root, node) || endOffset < eoln || node.getCondition().getKind() == Tree.Kind.ERRONEOUS))) {
                 redundantIfBraces = CodeStyle.BracesGenerationStyle.LEAVE_ALONE;
             }
@@ -5425,7 +5455,7 @@ public class Reformatter implements ReformatTask {
         }
 
         /**
-         * 
+         *
          * @see <a href="https://docs.oracle.com/en/java/javase/22/docs/specs/javadoc/doc-comment-spec.html#Where%20Tags%20Can%20Be%20Used">for more info on inline tags check documentation here.</a>
          * @return returns true if has inline tag prefix like "{+@tagname"
          */
@@ -5584,8 +5614,9 @@ public class Reformatter implements ReformatTask {
             if (tree.pos == (-1))
                 return true;
             if (leaf.getKind() == Tree.Kind.METHOD) {
-                //check for synthetic constructor:
-                return (((JCMethodDecl)leaf).mods.flags & Flags.GENERATEDCONSTR) != 0L;
+                //check for synthetic constructor and compact record constuctor
+                return (((JCMethodDecl)leaf).mods.flags & Flags.GENERATEDCONSTR) != 0L
+                  || (((JCMethodDecl)leaf).mods.flags & Flags.COMPACT_RECORD_CONSTRUCTOR) != 0L;
             }
             //check for synthetic superconstructor call:
             if (leaf.getKind() == Tree.Kind.EXPRESSION_STATEMENT) {

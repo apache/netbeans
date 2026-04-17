@@ -44,10 +44,7 @@ import static org.netbeans.modules.glassfish.tooling.server.state.StatusJobState
  */
 public class StatusScheduler {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * GlassFish status tasks scheduler {@link ThreadFactory}.
      * <p/>
@@ -94,10 +91,7 @@ public class StatusScheduler {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(StatusScheduler.class);
 
@@ -126,10 +120,7 @@ public class StatusScheduler {
     /** Administration port connect timeout [ms]. */
     private static final int CONNECT_TIMEOUT = 5000;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Allows to initialize this class to use external executor.
      * <p/>
@@ -213,20 +204,14 @@ public class StatusScheduler {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Executor to run server status checks. */
     private ScheduledThreadPoolExecutor executor;
 
     /** Server status jobs. */
     private final Map<GlassFishServer, StatusJob> jobs;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of server status checks scheduler.
      * <p/>
@@ -237,10 +222,7 @@ public class StatusScheduler {
         jobs = new HashMap<>();
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Check if given GlassFisg server instance is registered.
      * <p/>

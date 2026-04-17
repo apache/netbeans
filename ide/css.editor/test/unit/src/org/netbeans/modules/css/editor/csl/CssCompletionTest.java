@@ -86,7 +86,7 @@ public class CssCompletionTest extends CssModuleTestBase {
 //        checkCC("h1 { color: | }", arr("red"), Match.CONTAINS);
 //        checkCC("h1 { color: r| }", arr("red"), Match.CONTAINS);
 //
-////        checkCC("h1 { color: red| }", arr("red"), Match.CONTAINS);
+// //        checkCC("h1 { color: red| }", arr("red"), Match.CONTAINS);
 //        checkCC("h1 { color: r|ed }", arr("red"), Match.CONTAINS);
 //
 //        checkCC("h1 { color: red | }", arr(), Match.EMPTY);

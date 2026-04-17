@@ -27,7 +27,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.5.1:exec</goal>
         </goals>
         <properties>
                 &runProperties;
@@ -40,7 +40,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.5.1:exec</goal>
         </goals>
         <properties>
                 &debugProperties;
@@ -53,7 +53,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.5.1:exec</goal>
         </goals>
         <properties>
                 &profileProperties;

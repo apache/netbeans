@@ -73,7 +73,7 @@ public final class UnitTable extends JTable {
     @Override
     public void addNotify() {
         super.addNotify();
-        ////instead of setFillsViewportHeight(true);        
+        //instead of setFillsViewportHeight(true);        
         getParent().setBackground(getBackground());
     }
     

@@ -37,10 +37,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraConfig;
  */
 public class PayaraConfigXMLImpl implements PayaraConfig {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara configuration XML file. */
     private final URL configFile;
 
@@ -51,10 +48,7 @@ public class PayaraConfigXMLImpl implements PayaraConfig {
      *  was already read and processed */
     private volatile boolean readDone;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Payara configuration API.
      * <p/>
@@ -65,10 +59,7 @@ public class PayaraConfigXMLImpl implements PayaraConfig {
         readDone = false;
     }
    
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Payara libraries configuration.
      * <p/>
@@ -113,10 +104,7 @@ public class PayaraConfigXMLImpl implements PayaraConfig {
         return reader.getTools();
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Make sure Payara configuration XML file was read and processed.
      */

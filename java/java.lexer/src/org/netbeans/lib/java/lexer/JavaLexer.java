@@ -1196,7 +1196,9 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                                             next = nextToken();
                                         } while (next != null && AFTER_VAR_TOKENS.contains(next.id()));
 
-                                        varKeyword = next != null && next.id() == JavaTokenId.IDENTIFIER;
+                                        varKeyword = next != null
+                                                && (next.id() == JavaTokenId.IDENTIFIER
+                                                || next.id() == JavaTokenId.UNDERSCORE);
                                     }
 
                                     input.backup(input.readLengthEOF()- len);

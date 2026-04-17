@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
@@ -35,7 +34,7 @@ import java.util.prefs.Preferences;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.options.OptionsDisplayer;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.modules.cordova.CordovaPerformer;
@@ -188,7 +187,7 @@ public class CordovaCustomizerPanel extends javax.swing.JPanel implements Action
         createConfigsLabel.setVisible(false);
         mobilePlatformsSetup.setVisible(true);
         jTabbedPane1.setVisible(true);
-        ProgressUtils.showProgressDialogAndRun(new Runnable() {
+        BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
 
             @Override
             public void run() {
@@ -268,10 +267,10 @@ public class CordovaCustomizerPanel extends javax.swing.JPanel implements Action
         }
     }
 
-    @Override
     /**
      * Store listener
      */
+    @Override
     public void actionPerformed(ActionEvent e) {
 
         try {

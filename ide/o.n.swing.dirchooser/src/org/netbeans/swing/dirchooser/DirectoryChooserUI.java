@@ -43,6 +43,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
@@ -103,9 +104,8 @@ import org.openide.util.Utilities;
 public class DirectoryChooserUI extends BasicFileChooserUI {
     private static final String DIALOG_IS_CLOSING = "JFileChooserDialogIsClosingProperty";
 
-    private static final Dimension horizontalStrut1 = new Dimension(25, 1);
+    private static final Dimension horizontalStrut1 = new Dimension(10, 1);
     private static final Dimension verticalStrut1  = new Dimension(1, 4);
-    private static final Dimension verticalStrut2  = new Dimension(1, 6);
     private static final Dimension verticalStrut3  = new Dimension(1, 8);
     private static Dimension PREF_SIZE = new Dimension(425, 245);
     private static Dimension MIN_SIZE = new Dimension(425, 245);
@@ -273,7 +273,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             useShellFolder = false;
             File[] roots = fileChooser.getFileSystemView().getRoots();
             if (roots != null && roots.length == 1) {
-                File[] cbFolders = getShellFolderRoots();
+                File[] cbFolders = fileChooser.getFileSystemView().getChooserComboBoxFiles();
                 if (cbFolders != null && cbFolders.length > 0 && Arrays.asList(cbFolders).contains(roots[0])) {
                     useShellFolder = true;
                 }
@@ -329,54 +329,15 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             return null;
         }
     }
-    
-    /** Reflection alternative of
-     * sun.awt.shell.ShellFolder.getShellFolder(file)
-     */
-    private File getShellFolderForFile (File file) {
+
+    private File getShellFolderForFileLinkLoc(File file) {
         try {
-            Class<?> clazz = Class.forName("sun.awt.shell.ShellFolder");
-            return (File) clazz.getMethod("getShellFolder", File.class).invoke(null, file);
-        } catch (Exception exc) {
-            // reflection not succesfull, just log the exception and return null
-            Logger.getLogger(DirectoryChooserUI.class.getName()).log(
-                    Level.FINE, "ShellFolder can't be used.", exc);
+            return fileChooser.getFileSystemView().getLinkLocation(file);
+        } catch (FileNotFoundException ex) {
             return null;
         }
     }
 
-    /** Reflection alternative of
-     * sun.awt.shell.ShellFolder.getShellFolder(dir).getLinkLocation()
-     */
-    private File getShellFolderForFileLinkLoc (File file) {
-        try {
-            Class<?> clazz = Class.forName("sun.awt.shell.ShellFolder");
-            Object sf = clazz.getMethod("getShellFolder", File.class).invoke(null, file);
-            return (File) clazz.getMethod("getLinkLocation").invoke(sf);
-        } catch (Exception exc) {
-            // reflection not succesfull, just log the exception and return null
-            Logger.getLogger(DirectoryChooserUI.class.getName()).log(
-                    Level.FINE, "ShellFolder can't be used.", exc);
-            return null;
-        }
-        
-    }
-    
-    /** Reflection alternative of
-     * sun.awt.shell.ShellFolder.get("fileChooserComboBoxFolders")
-     */ 
-    private File[] getShellFolderRoots () {
-        try {
-            Class<?> clazz = Class.forName("sun.awt.shell.ShellFolder");
-            return (File[]) clazz.getMethod("get", String.class).invoke(null, "fileChooserComboBoxFolders");
-        } catch (Exception exc) {
-            // reflection not succesfull, just log the exception and return null
-            Logger.getLogger(DirectoryChooserUI.class.getName()).log(
-                    Level.FINE, "ShellFolder can't be used.", exc);
-            return null;
-        }
-    }
-    
     private void createBottomPanel(JFileChooser fc) {
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.LINE_AXIS));
@@ -476,9 +437,9 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         }
         approveButton.addActionListener(getApproveSelectionAction());
         approveButton.setToolTipText(getApproveButtonToolTipText(fc));
-        buttonPanel.add(Box.createRigidArea(verticalStrut1));
+        buttonPanel.add(Box.createRigidArea(verticalStrut3));
         buttonPanel.add(approveButton);
-        buttonPanel.add(Box.createRigidArea(verticalStrut2));
+        buttonPanel.add(Box.createRigidArea(verticalStrut3));
         
         cancelButton = new JButton(cancelButtonText) {
             @Override
@@ -650,7 +611,6 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         }
         
         topPanel.add(upFolderButton);
-        topPanel.add(Box.createRigidArea(new Dimension(2, 0)));
         
         // no home on Win platform
         if (!Utilities.isWindows()) {
@@ -710,11 +670,10 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
         }
         
         topPanel.add(newFolderButton);
-        topPanel.add(Box.createRigidArea(new Dimension(2, 0)));
         
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(4, 9, 8, 0));
+        panel.setBorder(BorderFactory.createEmptyBorder(2, 9, 8, 0));
         panel.add(topPanel, BorderLayout.CENTER);
         
         return panel;
@@ -1867,11 +1826,9 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
      * Data model for a type-face selection combo-box.
      */
     private class DirectoryComboBoxModel extends AbstractListModel implements ComboBoxModel {
-        Vector<File> directories = new Vector<>();
-        int[] depths = null;
-        File selectedDirectory = null;
-        JFileChooser chooser = getFileChooser();
-        FileSystemView fsv = chooser.getFileSystemView();
+        private final Vector<File> directories = new Vector<>();
+        private int[] depths = null;
+        private File selectedDirectory = null;
         
         public DirectoryComboBoxModel() {
             // Add the current directory to the model, and make it the
@@ -1896,7 +1853,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             directories.clear();
             
             if(useShellFolder) {
-                directories.addAll(Arrays.asList(getShellFolderRoots()));
+                directories.addAll(Arrays.asList(fileChooser.getFileSystemView().getChooserComboBoxFiles()));
             } else {
                 directories.addAll(Arrays.asList(fileChooser.getFileSystemView().getRoots()));
             }
@@ -1914,8 +1871,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
             }
             
             // create File instances of each directory leading up to the top
-            File sf = useShellFolder? getShellFolderForFile(canonical) : canonical;
-            File f = sf;
+            File f = canonical;
             Vector<File> path = new Vector<>(10);
 
             
@@ -1943,7 +1899,7 @@ public class DirectoryChooserUI extends BasicFileChooserUI {
                 }
             }
             calculateDepths();
-            setSelectedItem(sf);
+            setSelectedItem(canonical);
         }
         
         private void calculateDepths() {

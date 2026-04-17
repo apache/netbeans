@@ -1,9 +1,18 @@
-            private ...$incorrect1,
+            private ...$incorrect1, // error1
             ----------------------
 HINT:Can't declare a promoted property with a variadic parameter.
-            private string ...$incorrect1,
+            private string ...$incorrect1, // error2
             -----------------------------
 HINT:Can't declare a promoted property with a variadic parameter.
-            protected string ...$incorrect1,
-            -------------------------------
+            protected(set) string ...$incorrect1, // error3
+            ------------------------------------
+HINT:Can't declare a promoted property with a variadic parameter.
+            private(set) ...$incorrect1, // error4
+            ---------------------------
+HINT:Can't declare a promoted property with a variadic parameter.
+            private(set) string ...$incorrect1, // error5
+            ----------------------------------
+HINT:Can't declare a promoted property with a variadic parameter.
+            protected(set) string ...$incorrect1, // error6
+            ------------------------------------
 HINT:Can't declare a promoted property with a variadic parameter.

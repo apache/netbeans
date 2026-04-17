@@ -28,17 +28,11 @@ import org.netbeans.modules.glassfish.tooling.utils.OsUtils;
  */
 public class AsadminTool extends GlassFishTool implements ToolConfig {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Asadmin tool JAR path (relative under GlassFish home). */
     private final String jar;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of GlassFish asadmin tool.
      * <p/>
@@ -50,10 +44,7 @@ public class AsadminTool extends GlassFishTool implements ToolConfig {
         this.jar = OsUtils.joinPaths(lib, jar);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get asadmin tool JAR path (relative under GlassFish home)
      * <p/>

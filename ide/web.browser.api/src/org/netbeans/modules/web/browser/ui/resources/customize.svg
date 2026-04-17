@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #e0e0e0;
+      }
+
+      .st1 {
+        fill: #ab8349;
+      }
+
+      .st2 {
+        fill: #abb1b8;
+      }
+
+      .st3 {
+        fill: #c3cad1;
+      }
+
+      .st4 {
+        fill: #ffc36d;
+      }
+
+      .st5 {
+        opacity: .33;
+      }
+
+      .st6 {
+        opacity: .15;
+      }
+    </style>
+  </defs>
+  <g>
+    <path class="st0" d="M15.802,2.136l-1.856,1.856-1.704-.24-.24-1.705,1.851-1.851c.148-.196-1.119-.196-1.852-.196-3,0-4,1.791-4,4,0,.271.028.536.08.792l-2.825,2.429c-.397-.132-.814-.22-1.255-.22-2.209,0-4,1-4,4,0,.739,0,2,.198,1.864l1.856-1.856,1.704.24.24,1.705-1.851,1.851c-.148.196,1.119.196,1.852.196,3,0,4-1.791,4-4,0-.273-.028-.539-.08-.796l2.822-2.426c.398.133.816.222,1.259.222,2.209,0,4-1,4-4,0-.739,0-2-.198-1.864Z"/>
+    <g class="st5">
+      <path d="M11.623,1.011l-.329.329-.353.353.07.494.24,1.705.105.746.746.105,1.704.24.494.07.353-.353.337-.337c-.105,1.821-1.04,2.638-2.99,2.638-.29,0-.598-.056-.942-.17l-.538-.179-.43.37-2.822,2.426-.444.382.116.574c.04.199.06.4.06.598,0,1.945-.813,2.879-2.623,2.989l.329-.329.353-.353-.07-.494-.24-1.705-.105-.746-.746-.105-1.704-.24-.494-.07-.353.353-.337.337c.105-1.821,1.04-2.638,2.99-2.638.289,0,.596.055.939.169l.538.179.43-.369,2.825-2.429.444-.381-.115-.574c-.04-.199-.06-.399-.06-.595,0-1.945.813-2.879,2.623-2.989M12,0c-3,0-4,1.791-4,4,0,.271.028.536.08.792l-2.825,2.429c-.397-.132-.814-.22-1.255-.22-2.209,0-4,1-4,4,0,.701,0,1.874.17,1.874.009,0,.018-.003.028-.01l1.856-1.856,1.704.24.24,1.705-1.851,1.851c-.148.196,1.119.196,1.852.196,3,0,4-1.791,4-4,0-.273-.028-.539-.08-.796l2.822-2.426c.398.133.816.222,1.259.222,2.209,0,4-1,4-4,0-.701,0-1.874-.17-1.874-.009,0-.018.003-.028.01l-1.856,1.856-1.704-.24-.24-1.705,1.851-1.851c.148-.196-1.119-.196-1.852-.196h0Z"/>
+    </g>
+  </g>
+  <g>
+    <polygon class="st4" points="1.557 5.5 .113 3 1.557 .5 4.443 .5 5.887 3 4.443 5.5 1.557 5.5"/>
+    <path class="st1" d="M4.155,1l1.155,2-1.155,2H1.845L.691,3,1.845,1h2.309M4.732,0H1.268L-.464,3l1.732,3h3.464l1.732-3-1.732-3h0Z"/>
+  </g>
+  <g class="st5">
+    <circle cx="3" cy="3" r="1"/>
+  </g>
+  <g>
+    <path class="st3" d="M14.5,9h-1.5v1h-2.251c-.962,0-1.749.787-1.749,1.749v.502c0,.962.787,1.749,1.749,1.749h2.251v1h1.5c.825,0,1.5-.675,1.5-1.5v-3c0-.825-.675-1.5-1.5-1.5Z"/>
+    <g class="st5">
+      <path d="M14.5,10c.271,0,.5.229.5.5v3c0,.271-.229.5-.5.5h-.5v-1h-3.251c-.413,0-.749-.336-.749-.749v-.502c0-.413.336-.749.749-.749h3.251v-1h.5M14.5,9h-1.5v1h-2.251c-.962,0-1.749.787-1.749,1.749v.502c0,.962.787,1.749,1.749,1.749h2.251v1h1.5c.825,0,1.5-.675,1.5-1.5v-3c0-.825-.675-1.5-1.5-1.5h0Z"/>
+    </g>
+  </g>
+  <g class="st5">
+    <polygon points="14 11 13 11 13 13 14 13 14 11 14 11"/>
+  </g>
+  <g class="st6">
+    <rect class="st2" x="11" y="11" width=".5" height="2"/>
+    <polygon points="11.5 11 11 11 11 13 11.5 13 11.5 11 11.5 11"/>
+  </g>
+  <g class="st6">
+    <rect class="st2" x="12" y="11" width=".5" height="2"/>
+    <polygon points="12.5 11 12 11 12 13 12.5 13 12.5 11 12.5 11"/>
+  </g>
+  <description>Apache NetBeans Logo
+  </description>
+</svg>

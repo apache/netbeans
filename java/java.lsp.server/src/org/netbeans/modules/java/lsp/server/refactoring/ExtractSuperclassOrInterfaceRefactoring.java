@@ -40,7 +40,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -244,7 +243,7 @@ public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactori
                 refactoring = r;
             }
             refactoring.getContext().add(JavaRefactoringUtils.getClasspathInfoFor(file));
-            client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, EXTRACT_SUPERCLASS_REFACTORING_COMMAND.equals(command) ? "Extract Superclass" : "Extract Interface")));
+            sendRefactoringChanges(client, refactoring, EXTRACT_SUPERCLASS_REFACTORING_COMMAND.equals(command) ? "Extract Superclass" : "Extract Interface");
         } catch (Exception ex) {
             client.showMessage(new MessageParams(MessageType.Error, ex.getLocalizedMessage()));
         }

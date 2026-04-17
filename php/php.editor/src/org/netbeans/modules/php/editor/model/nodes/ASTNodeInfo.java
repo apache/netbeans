@@ -31,6 +31,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ASTNode;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrayCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ArrowFunctionDeclaration;
+import org.netbeans.modules.php.editor.parser.astnodes.Block;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreation;
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.Expression;
@@ -48,10 +49,12 @@ import org.netbeans.modules.php.editor.parser.astnodes.Reference;
 import org.netbeans.modules.php.editor.parser.astnodes.ReturnStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.Scalar;
 import org.netbeans.modules.php.editor.parser.astnodes.SingleUseStatementPart;
+import org.netbeans.modules.php.editor.parser.astnodes.Statement;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticConstantAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticDispatch;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticMethodInvocation;
+import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.UseTraitStatementPart;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
 import org.netbeans.modules.php.editor.parser.astnodes.Variadic;
@@ -454,8 +457,14 @@ public class ASTNodeInfo<T extends ASTNode> {
         private final List<UseTraitStatementPart> useParts = new LinkedList<>();
 
         @Override
-        public void visit(UseTraitStatementPart node) {
-            useParts.add(node);
+        public void visit(Block node) {
+            for (Statement statement : node.getStatements()) {
+                if (statement instanceof UseTraitStatement useTraitStatement) {
+                    for (UseTraitStatementPart parts : useTraitStatement.getParts()) {
+                        useParts.add(parts);
+                    }
+                }
+            }
         }
 
         public Collection<QualifiedName> getUsedTraits() {

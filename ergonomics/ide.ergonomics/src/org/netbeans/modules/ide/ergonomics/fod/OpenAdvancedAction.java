@@ -19,7 +19,9 @@
 package org.netbeans.modules.ide.ergonomics.fod;
 
 import java.beans.PropertyVetoException;
+import java.util.Collections;
 import java.util.Set;
+import java.util.WeakHashMap;
 import org.netbeans.modules.ide.ergonomics.Utilities;
 import org.openide.cookies.OpenCookie;
 import org.openide.filesystems.FileObject;
@@ -32,11 +34,10 @@ import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.RequestProcessor.Task;
-import org.openide.util.WeakSet;
 import org.openide.util.actions.CookieAction;
 
 public final class OpenAdvancedAction extends CookieAction {
-    private static Set<FileObject> candidates = new WeakSet<FileObject>();
+    private static Set<FileObject> candidates = Collections.newSetFromMap(new WeakHashMap<>());
 
     public static void registerCandidate(FileObject fo) {
         synchronized (candidates) {

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="24" height="24" version="1.1" viewBox="0 0 24 24">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #6d6d6d;
+      }
+
+      .st1 {
+        opacity: .33;
+      }
+
+      .st2 {
+        fill: #8d8d8d;
+      }
+
+      .st3 {
+        fill: #b2fc84;
+      }
+
+      .st4 {
+        fill: #ececec;
+      }
+    </style>
+  </defs>
+  <description>Apache NetBeans Logo
+  </description>
+  <polygon class="st4" points="6.5 22.5 6.5 3.5 16.5 3.5 22.5 9.5 22.5 22.5 6.5 22.5"/>
+  <polygon class="st2" points="22 11 22 10 16 10 16 4 15 4 15 11 22 11"/>
+  <path class="st0" d="M23,9.293l-6.293-6.293H6v20h17v-13.707ZM16.293,4l5.707,5.707v12.293H7V4h9.293Z"/>
+  <g>
+    <polygon class="st3" points="13 6 10 6 10 3 6 3 6 6 3 6 3 10 6 10 6 13 10 13 10 10 13 10 13 6"/>
+    <g class="st1">
+      <path d="M9,4v3h3v2h-3v3h-2v-3h-3v-2h3v-3h2M10,3h-4v3h-3v4h3v3h4v-3h3v-4h-3v-3h0Z"/>
+    </g>
+  </g>
+</svg>

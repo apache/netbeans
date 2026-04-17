@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="8" height="8" version="1.1" viewBox="0 0 8 8">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #566066;
+      }
+
+      .st1 {
+        fill: #dfe8ef;
+      }
+    </style>
+  </defs>
+  <description>Apache NetBeans Logo
+  </description>
+  <g>
+    <path class="st1" d="M4.96,7.462c-.154,0-.301-.071-.396-.194-.057-.074-.092-.161-.102-.251l-.021.075c-.059.218-.257.37-.482.37h-1c-.155,0-.301-.072-.396-.194-.057-.073-.091-.16-.102-.25l-.021.076c-.06.217-.257.368-.482.368H.96c-.155,0-.303-.073-.397-.196-.095-.124-.126-.284-.085-.435L1.835,1.832c.059-.218.257-.369.482-.369h.965c.095,0,.187.027.265.076.259-.122.508-.183.745-.183.168,0,.331.03.483.091.162.065.304.162.421.283.016-.011.031-.021.047-.031.364-.229.713-.344,1.037-.344.17,0,.334.032.487.094.365.147.632.459.729.856.081.325.049.703-.104,1.223l-.949,3.564c-.059.219-.257.371-.483.371h-1Z"/>
+    <path class="st0" d="M6.28,1.855c.106,0,.206.019.299.057.22.088.373.271.433.513.059.235.028.532-.099.961l-.953,3.577h-1l.991-3.849c.011-.037.021-.072.029-.104-.187.128-.41.276-.664.503-.174.155-.398.346-.574.55l-.783,2.9h-1l1.005-3.849c.011-.037.021-.072.028-.104-.187.129-.41.276-.666.503-.173.154-.386.346-.571.55l-.796,2.9H.96L2.317,1.963h.965l-.112.383c.102-.081.256-.163.354-.225.281-.178.538-.266.768-.266.105,0,.205.019.299.056.22.088.374.27.435.512.005.019,0,.046.003.066.167-.141.327-.27.482-.367.282-.177.54-.267.769-.267M6.28.855c-.336,0-.685.091-1.038.27-.087-.055-.18-.103-.278-.142-.215-.086-.44-.128-.672-.128-.245,0-.495.048-.748.142-.084-.023-.172-.035-.262-.035h-.965c-.451,0-.847.302-.965.738L-.005,6.701c-.082.301-.018.622.171.869.189.247.483.393.794.393h1c.18,0,.352-.048.5-.134.15.087.322.134.5.134h1c.18,0,.352-.048.5-.134.15.087.322.134.5.134h1c.453,0,.85-.305.966-.742l.953-3.577c.173-.584.207-1.043.103-1.461-.136-.552-.511-.99-1.03-1.198-.209-.085-.437-.129-.672-.129h0Z"/>
+  </g>
+</svg>

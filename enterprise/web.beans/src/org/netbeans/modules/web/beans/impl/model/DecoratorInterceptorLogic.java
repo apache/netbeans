@@ -219,10 +219,10 @@ abstract class DecoratorInterceptorLogic extends EventInjectionPointLogic {
             getAllMembers( decorator );
         List<VariableElement> fields = ElementFilter.fieldsIn(allMembers);
         for (VariableElement field : fields) {
-            if ( AnnotationObjectProvider.hasAnnotation(field, 
-                    DELEGATE_ANNOTATION, getModel().getHelper() ) && 
-                    AnnotationObjectProvider.hasAnnotation(field, 
-                            INJECT_ANNOTATION, getModel().getHelper() ))
+            if (AnnotationObjectProvider.hasAnnotation(field, DELEGATE_ANNOTATION, getModel().getHelper())
+                    && AnnotationObjectProvider.hasAnnotation(field, INJECT_ANNOTATION, getModel().getHelper())
+                    || (AnnotationObjectProvider.hasAnnotation(field, DELEGATE_ANNOTATION_JAKARTA, getModel().getHelper())
+                    && AnnotationObjectProvider.hasAnnotation(field, INJECT_ANNOTATION_JAKARTA, getModel().getHelper())))
             {
                 TypeMirror delegateType = getCompilationController().getTypes().
                     asMemberOf((DeclaredType)decorator.asType(), field);
@@ -238,8 +238,8 @@ abstract class DecoratorInterceptorLogic extends EventInjectionPointLogic {
         allMethods.addAll( ctors );
         allMethods.addAll( methods );
         for (ExecutableElement method : allMethods) {
-            if ( !AnnotationObjectProvider.hasAnnotation(method, INJECT_ANNOTATION,
-                    getModel().getHelper())){
+            if (!(AnnotationObjectProvider.hasAnnotation(method, INJECT_ANNOTATION, getModel().getHelper())
+                    || AnnotationObjectProvider.hasAnnotation(method, INJECT_ANNOTATION_JAKARTA, getModel().getHelper()))) {
                 continue;
             }
             result = getDelegate(method, decorator);
@@ -258,8 +258,8 @@ abstract class DecoratorInterceptorLogic extends EventInjectionPointLogic {
         int index =0;
         VariableElement delegate = null;
         for (VariableElement variableElement : parameters) {
-            if ( AnnotationObjectProvider.hasAnnotation(variableElement, 
-                    DELEGATE_ANNOTATION, getModel().getHelper()))
+            if ( AnnotationObjectProvider.hasAnnotation(variableElement, DELEGATE_ANNOTATION, getModel().getHelper())
+                    || AnnotationObjectProvider.hasAnnotation(variableElement, DELEGATE_ANNOTATION_JAKARTA, getModel().getHelper()))
             {
                 delegate = variableElement;
                 break;
@@ -292,10 +292,10 @@ abstract class DecoratorInterceptorLogic extends EventInjectionPointLogic {
         boolean newQualifier = false; 
         
         if ( quilifierAnnotations.size() == 1 ){
-            newQualifier = getModel().getHelper().hasAnnotation(quilifierAnnotations,
-                    NEW_QUALIFIER_ANNOTATION);
-            defaultQualifier = getModel().getHelper().hasAnnotation(quilifierAnnotations,
-                    DEFAULT_QUALIFIER_ANNOTATION);
+            newQualifier = getModel().getHelper().hasAnnotation(quilifierAnnotations, NEW_QUALIFIER_ANNOTATION)
+                    ||  getModel().getHelper().hasAnnotation(quilifierAnnotations, NEW_QUALIFIER_ANNOTATION_JAKARTA);
+            defaultQualifier = getModel().getHelper().hasAnnotation(quilifierAnnotations, DEFAULT_QUALIFIER_ANNOTATION)
+                    ||  getModel().getHelper().hasAnnotation(quilifierAnnotations, DEFAULT_QUALIFIER_ANNOTATION_JAKARTA);
             
         }
         else if ( quilifierAnnotations.size() == 0 && anyQualifier) {
@@ -309,8 +309,8 @@ abstract class DecoratorInterceptorLogic extends EventInjectionPointLogic {
             }
             else {
                 List<AnnotationMirror> qualifiers = getQualifiers(element, true);
-                return getModel().getHelper().hasAnnotation(qualifiers,
-                        DEFAULT_QUALIFIER_ANNOTATION);
+                return getModel().getHelper().hasAnnotation(qualifiers, DEFAULT_QUALIFIER_ANNOTATION_JAKARTA)
+                        || getModel().getHelper().hasAnnotation(qualifiers, DEFAULT_QUALIFIER_ANNOTATION);
             }
         }
         else if (newQualifier){
@@ -337,13 +337,17 @@ abstract class DecoratorInterceptorLogic extends EventInjectionPointLogic {
             getQualifiers(element, true);
         Set<String> elementAnnotationFqns = getAnnotationFqns(elementAnnotations);
         
-        if ( requiredAnnotationFqns.contains(DEFAULT_QUALIFIER_ANNOTATION) &&
-                !elementAnnotationFqns.contains(DEFAULT_QUALIFIER_ANNOTATION) && 
-                !hasImplicitDefaultQualifier(element))
+        if ((requiredAnnotationFqns.contains(DEFAULT_QUALIFIER_ANNOTATION_JAKARTA)
+                && !elementAnnotationFqns.contains(DEFAULT_QUALIFIER_ANNOTATION_JAKARTA)
+                && !hasImplicitDefaultQualifier(element))
+                || (requiredAnnotationFqns.contains(DEFAULT_QUALIFIER_ANNOTATION)
+                && !elementAnnotationFqns.contains(DEFAULT_QUALIFIER_ANNOTATION)
+                && !hasImplicitDefaultQualifier(element)))
         {
             return false;
         }
         requiredAnnotationFqns.remove(DEFAULT_QUALIFIER_ANNOTATION);
+        requiredAnnotationFqns.remove(DEFAULT_QUALIFIER_ANNOTATION_JAKARTA);
         return elementAnnotationFqns.containsAll(requiredAnnotationFqns);
     }
     

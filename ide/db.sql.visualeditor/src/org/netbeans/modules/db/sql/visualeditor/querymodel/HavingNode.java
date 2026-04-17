@@ -17,14 +17,14 @@
  * under the License.
  */
 package org.netbeans.modules.db.sql.visualeditor.querymodel;
-
-/**
- * Represents a HAVING clause in a SQL Table Expression
- */
 import java.util.Collection;
 
 import org.netbeans.api.db.sql.support.SQLIdentifiers;
 
+
+/**
+ * Represents a HAVING clause in a SQL Table Expression
+ */
 public class HavingNode implements Having {
 
     // Fields

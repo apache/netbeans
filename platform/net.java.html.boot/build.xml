@@ -22,4 +22,11 @@
 <project name="platform/net.java.html.boot" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar"/>
+    <target name="release" depends="projectized.release">
+        <java sourcefile="scripts/WorkaroundBogusManifest.java"
+              failonerror="true"
+              fork="true">
+            <arg value="${cluster}/modules/net-java-html-boot.jar"/>
+        </java>
+    </target>
 </project>

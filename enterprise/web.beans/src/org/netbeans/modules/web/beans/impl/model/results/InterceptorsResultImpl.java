@@ -48,6 +48,7 @@ import org.netbeans.modules.web.beans.impl.model.WebBeansModelProviderImpl;
 public class InterceptorsResultImpl implements InterceptorsResult {
     
     static final String INTERCEPTORS = "javax.interceptor.Interceptors";    // NOI18N
+    static final String INTERCEPTORS_JAKARTA = "jakarta.interceptor.Interceptors";    // NOI18N
     
     public InterceptorsResultImpl( Element element , 
             List<TypeElement> enabledInterceptors, 
@@ -166,8 +167,11 @@ public class InterceptorsResultImpl implements InterceptorsResult {
     {
         List<? extends AnnotationMirror> annotationMirrors = 
             getController().getElements().getAllAnnotationMirrors( subjectElement );
-        AnnotationMirror annotationMirror = getHelper().getAnnotationsByType( 
-                annotationMirrors).get(INTERCEPTORS);
+        AnnotationMirror annotationMirror = getHelper().getAnnotationsByType(annotationMirrors).get(INTERCEPTORS);
+        if ( annotationMirror != null ){
+            parser.parse(annotationMirror);
+        }
+        annotationMirror = getHelper().getAnnotationsByType(annotationMirrors).get(INTERCEPTORS_JAKARTA);
         if ( annotationMirror != null ){
             parser.parse(annotationMirror);
         }

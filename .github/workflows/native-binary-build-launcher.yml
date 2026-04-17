@@ -50,6 +50,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab in GitHub UI
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 # cancel other PR workflow run in the same head-base group if it exists (e.g. during PR syncs)
 # if this is not a PR run (no github.head_ref and github.base_ref defined), use an UID as group
 concurrency:
@@ -61,12 +64,12 @@ jobs:
   source:
 
     name: Package Sources
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
           submodules: false
@@ -86,7 +89,7 @@ jobs:
           ls -l -R ${SOURCES}
 
       - name: Upload native sources
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: launcher-external-sources
           path: nbbuild/build/native/launcher/sources/
@@ -96,7 +99,7 @@ jobs:
   build-linux:
 
     name: Build with MinGW
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: source
 
     steps:
@@ -105,7 +108,7 @@ jobs:
         run: sudo apt install mingw-w64 mingw-w64-tools
 
       - name: Download sources
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: launcher-external-sources
 
@@ -119,7 +122,7 @@ jobs:
         working-directory: platform/o.n.bootstrap/launcher/windows/
 
       - name: Upload bootstrap artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: launcher-bootstrap-bin
           path: platform/o.n.bootstrap/launcher/windows/build/
@@ -135,7 +138,7 @@ jobs:
         working-directory: harness/apisupport.harness/windows-launcher-src
 
       - name: Upload harness artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: launcher-harness-bin
           path: harness/apisupport.harness/windows-launcher-src/build/
@@ -151,7 +154,7 @@ jobs:
         working-directory: nb/ide.launcher/windows
 
       - name: Upload IDE artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: launcher-ide-bin
           path: nb/ide.launcher/windows/build/
@@ -160,7 +163,7 @@ jobs:
   build-zip-with-build-artifacts:
 
     name: Package Binaries
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     # Only run when the platform specific builds are finished
     needs: [build-linux]
@@ -171,7 +174,7 @@ jobs:
       run: mkdir -p myfiles/
 
     - name: Download artifacts from predecessor jobs
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         path: myfiles/
 
@@ -203,7 +206,7 @@ jobs:
          echo ""                                                               >> "$BUILDINFO"
 
     - name: Upload bundle
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: launcher-external-binaries
         path: myfiles/

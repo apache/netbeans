@@ -421,7 +421,7 @@ public abstract class ElementScanningTask extends IndexingAwareParserResultTask<
 
         public ImageIcon getCustomIcon() {
             String iconBase = language.getIconBase();
-            return iconBase == null ? null : new ImageIcon(ImageUtilities.loadImage(iconBase));
+            return iconBase == null ? null : ImageUtilities.loadImageIcon(iconBase, false);
         }
     }
 }    

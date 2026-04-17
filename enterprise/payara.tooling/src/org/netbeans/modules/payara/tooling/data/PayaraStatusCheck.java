@@ -29,10 +29,7 @@ import org.netbeans.modules.payara.tooling.logging.Logger;
  */
 public enum PayaraStatusCheck {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Administration port check. */
     PORT,
 
@@ -42,10 +39,7 @@ public enum PayaraStatusCheck {
     /** Locations command check. */
     LOCATIONS;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(PayaraStatusCheck.class);
 
@@ -71,10 +65,7 @@ public enum PayaraStatusCheck {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns a <code>PayaraStatusCheck</code> with a value represented
      * by the specified <code>String</code>.
@@ -98,10 +89,7 @@ public enum PayaraStatusCheck {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>PayaraStatusCheck</code> value to <code>String</code>.
      * <p/>

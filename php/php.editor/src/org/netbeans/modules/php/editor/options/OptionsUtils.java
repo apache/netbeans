@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.php.editor.options;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
@@ -31,7 +30,6 @@ import org.openide.util.WeakListeners;
  * @author Tomas Mysik
  */
 public final class OptionsUtils {
-    private static final AtomicBoolean INITED = new AtomicBoolean(false);
 
     private static final PreferenceChangeListener PREFERENCES_TRACKER = new PreferenceChangeListener() {
         @Override
@@ -145,22 +143,22 @@ public final class OptionsUtils {
 
     private static Preferences preferences;
 
-    private static Boolean autoCompletionFull = null;
-    private static Boolean autoCompletionVariables = null;
-    private static Boolean autoCompletionTypes = null;
-    private static Boolean autoCompletionNamespaces = null;
-    private static Boolean autoCompletionSmartQuotes = null;
-    private static Boolean autoStringConcatination = null;
-    private static Boolean autoCompletionUseLowercaseTrueFalseNull = null;
-    private static Boolean autoCompletionCommentAsterisk = null;
+    private static volatile Boolean autoCompletionFull = null;
+    private static volatile Boolean autoCompletionVariables = null;
+    private static volatile Boolean autoCompletionTypes = null;
+    private static volatile Boolean autoCompletionNamespaces = null;
+    private static volatile Boolean autoCompletionSmartQuotes = null;
+    private static volatile Boolean autoStringConcatination = null;
+    private static volatile Boolean autoCompletionUseLowercaseTrueFalseNull = null;
+    private static volatile Boolean autoCompletionCommentAsterisk = null;
 
-    private static Boolean codeCompletionStaticMethods = null;
-    private static Boolean codeCompletionNonStaticMethods = null;
-    private static Boolean codeCompletionSmartParametersPreFilling = null;
-    private static Boolean codeCompletionFirstClassCallable = null;
-    private static Boolean autoImport = null;
-    private static Boolean autoImportFileScope = null;
-    private static Boolean autoImportNamespaceScope = null;
+    private static volatile Boolean codeCompletionStaticMethods = null;
+    private static volatile Boolean codeCompletionNonStaticMethods = null;
+    private static volatile Boolean codeCompletionSmartParametersPreFilling = null;
+    private static volatile Boolean codeCompletionFirstClassCallable = null;
+    private static volatile Boolean autoImport = null;
+    private static volatile Boolean autoImportFileScope = null;
+    private static volatile Boolean autoImportNamespaceScope = null;
 
     private static CodeCompletionPanel.VariablesScope codeCompletionVariablesScope = null;
 
@@ -363,8 +361,8 @@ public final class OptionsUtils {
         return autoImportNamespaceScope;
     }
 
-    private static void lazyInit() {
-        if (INITED.compareAndSet(false, true)) {
+    private synchronized static void lazyInit() {
+        if (preferences == null) {
             preferences = MimeLookup.getLookup(FileUtils.PHP_MIME_TYPE).lookup(Preferences.class);
             preferences.addPreferenceChangeListener(WeakListeners.create(PreferenceChangeListener.class, PREFERENCES_TRACKER, preferences));
             PREFERENCES_TRACKER.preferenceChange(null);

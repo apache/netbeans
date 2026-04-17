@@ -27,14 +27,12 @@ import org.netbeans.installer.utils.exceptions.InitializationException;
  * @author Kirill Sorokin
  */
 public class ConfigurationLogic extends NbClusterConfigurationLogic {
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     private static final String PHP_CLUSTER = 
             "{php-cluster}"; // NOI18N
     private static final String ID = 
             "PHP"; // NOI18N
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     public ConfigurationLogic() throws InitializationException {
         super(new String[]{

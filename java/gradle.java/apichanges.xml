@@ -83,6 +83,18 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="action-for-running-tests-in-parallel">
+            <api name="gradle.java.api"/>
+            <summary>Added action for running tests in parallel</summary>
+            <version major="1" minor="30"/>
+            <date day="18" month="12" year="2024"/>
+            <author login="petrovic-d"/>
+            <compatibility semantic="compatible" addition="yes" deprecation="yes"/>
+            <description>
+                Added action for running tests in parallel with ability to specify the projects on which
+                the action will be applied.
+            </description>
+        </change>
         <change id="sourceset-compiler-javahome">
             <api name="gradle.java.api"/>
             <summary>Support for per-language output directories</summary>
@@ -94,7 +106,7 @@ is the proper place.
                 <p>
                     Gradle 6.7 introduced Java Toolchains to separate Gradle Java Runtime
                     and the Java used for compilation (and other Java execution).
-                    <code><a href="@TOP@/org/netbeans/modules/gradle/java/api/GradleJavaSourceSet.html#getCompilerJavaHome-org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType-">GradleJavaSourceSet.getCompilerJavaHome</a></code> has been added to
+                    <code><a href="@TOP@/org/netbeans/modules/gradle/java/api/GradleJavaSourceSet.html#getCompilerJavaHome(org.netbeans.modules.gradle.java.api.GradleJavaSourceSet.SourceType)">GradleJavaSourceSet.getCompilerJavaHome</a></code> has been added to
                     return the Java Home of the JDK in use for compilation.
                 </p>
                 <p>
@@ -225,7 +237,6 @@ is the proper place.
         -->
         <head>
             <title>Change History for the Gradle Java Project API</title>
-            <link rel="stylesheet" href="prose.css" type="text/css"/>
         </head>
         <body>
 

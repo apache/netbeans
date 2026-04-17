@@ -1081,8 +1081,7 @@
    <api name="OptionsExportLayers"
         group="layer"
         type="export"
-        category="devel"
-        url="">
+        category="devel">
         Use OptionsExport/&lt;MyCategory&gt; folder for registration of items for export/import
         of options. Registration in layers looks as follows
  <pre style="background-color: rgb(255, 255, 153);">

@@ -1,0 +1,8 @@
+    final private function finalPrivateEnumMethod(): void {} // warning enum
+                           ----------------------
+HINT:Private methods cannot be final as they are never overridden by other classes
+FIX:Remove modifier: final
+    final private static function finalPrivateStaticEnumMethod(): void {} // warning enum
+                                  ----------------------------
+HINT:Private methods cannot be final as they are never overridden by other classes
+FIX:Remove modifier: final

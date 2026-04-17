@@ -169,6 +169,7 @@ committed to the repository for legal reasons. You need to download it:
         </div>
     </xsl:template>
     <xsl:template name="htmlfooter">
+        <script src="https://netbeans.apache.org/_/js/vendor/jquery.min.js"></script>
         <script>
             $('.modulesclasslist').hide();
             
@@ -233,9 +234,8 @@ committed to the repository for legal reasons. You need to download it:
             <meta name="msapplication-TileColor" content="#ffc40d" />
             <meta name="theme-color" content="#ffffff"/>
             <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-            <link rel="icon" type="image/png" sizes="32x32" href="//netbeans.apache.org/favicon-32x32.png" />
-            <link rel="icon" type="image/png" sizes="16x16" href="//netbeans.apache.org/favicon-16x16.png" />
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+            <link rel="icon" type="image/png" sizes="32x32" href="https://netbeans.apache.org/favicon-32x32.png" />
+            <link rel="icon" type="image/png" sizes="16x16" href="https://netbeans.apache.org/favicon-16x16.png" />
         </head>
     </xsl:template>
     <xsl:template name="htmlmainmenu">

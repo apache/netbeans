@@ -99,7 +99,7 @@ public class JvmOptions extends ModuleMBean implements Constants{
                     jpdaAttr = new Attribute(JPDA_PORT, value);
                 }
             }else{ 
-                Integer value = new Integer(addrValue);
+                Integer value = Integer.valueOf(addrValue);
                 jpdaAttr = new Attribute(JPDA_PORT, (Object)value);
             }    
             attList = this.conn.getAttributes(this.configObjName, attributes);
@@ -243,7 +243,7 @@ public class JvmOptions extends ModuleMBean implements Constants{
             String addrValue = getAddressValue();
             Integer value = null;
             try{
-                value = new Integer(addrValue);
+                value = Integer.valueOf(addrValue);
             }catch(Exception ex){
                 if(this.isServerEightOne){
                     value = 9009;

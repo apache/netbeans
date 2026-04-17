@@ -50,6 +50,177 @@
                         </folder>
                     </folder>
                 </folder>
+                <folder name="FoldManager">
+                    <file name="org-netbeans-modules-csl-editor-fold-GsfFoldManagerFactory.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.editor.fold.GsfFoldManagerFactory"/>
+                        <attr intvalue="900" name="position"/>
+                    </file>
+                </folder>
+                <file name="org-netbeans-modules-csl-core-CslEditorKit-createEditorKitInstance.instance">
+                    <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                    <attr methodvalue="org.netbeans.modules.csl.core.CslEditorKit.createEditorKitInstance" name="instanceCreate"/>
+                    <attr name="instanceOf" stringvalue="javax.swing.text.EditorKit"/>
+                </file>
+                <file name="org-netbeans-modules-csl-core-CslEditorKit-createLexerLanguageInstance.instance">
+                    <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                    <attr methodvalue="org.netbeans.modules.csl.core.CslEditorKit.createLexerLanguageInstance" name="instanceCreate"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.api.lexer.Language"/>
+                </file>
+                <file name="org-netbeans-modules-csl-core-GsfParserFactory-create.instance">
+                    <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                    <attr methodvalue="org.netbeans.modules.csl.core.GsfParserFactory.create" name="instanceCreate"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.ParserFactory"/>
+                </file>
+                <folder name="CompletionProviders">
+                    <file name="org-netbeans-lib-editor-codetemplates-CodeTemplateCompletionProvider.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="org.netbeans.lib.editor.codetemplates.CodeTemplateCompletionProvider"/>
+                    </file>
+                    <file name="org-netbeans-modules-csl-editor-completion-GsfCompletionProvider.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.editor.completion.GsfCompletionProvider"/>
+                    </file>
+                    <file name="org-netbeans-modules-parsing-ui-WaitScanFinishedCompletionProvider.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.parsing.ui.WaitScanFinishedCompletionProvider"/>
+                    </file>
+                </folder>
+                <folder name="HoverProviders">
+                    <file name="org-netbeans-modules-csl-editor-completion-GsfHoverProvider.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.editor.completion.GsfHoverProvider"/>
+                    </file>
+                </folder>
+                <folder name="CodeTemplateProcessorFactories">
+                    <file name="org-netbeans-modules-csl-editor-codetemplates-GsfCodeTemplateProcessor$Factory.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.editor.codetemplates.GsfCodeTemplateProcessor$Factory"/>
+                    </file>
+                </folder>
+                <folder name="CodeTemplateFilterFactories">
+                    <file name="org-netbeans-modules-csl-editor-codetemplates-GsfCodeTemplateFilter$Factory.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.editor.codetemplates.GsfCodeTemplateFilter$Factory"/>
+                    </file>
+                </folder>
+                <folder name="HyperlinkProviders">
+                    <file name="org-netbeans-modules-csl-editor-hyperlink-GsfHyperlinkProvider.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.editor.hyperlink.GsfHyperlinkProvider"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.lib.editor.hyperlink.spi.HyperlinkProviderExt"/>
+                        <attr intvalue="1000" name="position"/>
+                    </file>
+                </folder>
+                <folder name="HyperlinkLocationProviders">
+                    <file name="org-netbeans-modules-csl-editor-hyperlink-GsfHyperlinkProvider$LocationProvider.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.editor.hyperlink.GsfHyperlinkProvider$LocationProvider"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.lsp.HyperlinkLocationProvider"/>
+                        <attr intvalue="1000" name="position"/>
+                    </file>
+                </folder>
+                <file name="org-netbeans-modules-csl-editor-semantic-HighlightsLayerFactoryImpl.instance">
+                    <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.editor.semantic.HighlightsLayerFactoryImpl"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.highlighting.HighlightsLayerFactory"/>
+                </file>
+                <folder name="UpToDateStatusProvider">
+                    <file name="org-netbeans-modules-csl-hints-GsfUpToDateStateProviderFactory.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.hints.GsfUpToDateStateProviderFactory"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.spi.editor.errorstripe.UpToDateStatusProviderFactory"/>
+                    </file>
+                    <file name="org-netbeans-modules-csl-editor-semantic-OccurrencesMarkProviderCreator.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.editor.semantic.OccurrencesMarkProviderCreator"/>
+                        <attr name="instanceOf" stringvalue="org.netbeans.modules.editor.errorstripe.privatespi.MarkProviderCreator"/>
+                    </file>
+                </folder>
+                <folder name="Popup">
+                    <folder name="goto">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr intvalue="500" name="position"/>
+                        <attr bundlevalue="org.netbeans.modules.csl.core.Bundle#generate-goto-popup" name="displayName"/>
+                        <file name="goto-declaration">
+                            <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                            <attr intvalue="500" name="position"/>
+                        </file>
+                        <file name="goto">
+                            <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                            <attr intvalue="600" name="position"/>
+                        </file>
+                    </folder>
+                    <file name="SeparatorBeforeCut.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr intvalue="1200" name="position"/>
+                    </file>
+                    <file name="format">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr intvalue="750" name="position"/>
+                    </file>
+                    <file name="SeparatorAfterFormat.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr intvalue="780" name="position"/>
+                    </file>
+                </folder>
+                <folder name="Toolbars">
+                    <folder name="Default">
+                        <file name="Separator-before-comment.instance">
+                            <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr intvalue="30000" name="position"/>
+                        </file>
+                        <file name="comment">
+                            <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                            <attr intvalue="30100" name="position"/>
+                        </file>
+                        <file name="uncomment">
+                            <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                            <attr intvalue="30200" name="position"/>
+                        </file>
+                    </folder>
+                </folder>
+                <folder name="FoldManager">
+                    <file name="org-netbeans-modules-csl-editor-fold-GsfFoldManagerFactory.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.editor.fold.GsfFoldManagerFactory"/>
+                        <attr intvalue="900" name="position"/>
+                    </file>
+                </folder>
+                <file name="org-netbeans-modules-csl-core-TLIndexerFactory.instance">
+                    <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.core.TLIndexerFactory"/>
+                    <attr name="instanceOf" stringvalue="org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexerFactory"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="CslPlugins">
+        <folder name="text">
+            <folder name="x-rust">
+                <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                <attr intvalue="2" name="genver"/>
+                <attr boolvalue="true" name="useMultiview"/>
+                <file name="language.instance">
+                    <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                    <attr name="instanceClass" stringvalue="org.netbeans.modules.rust.grammar.RustLanguageConfig"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-rust">
+                <folder name="Factories">
+                    <file name="org-netbeans-modules-csl-core-GsfDataLoader.instance">
+                        <!--org.netbeans.modules.rust.grammar.RustLanguageConfig-->
+                        <attr name="instanceClass" stringvalue="org.netbeans.modules.csl.core.GsfDataLoader"/>
+                        <attr intvalue="89998" name="position"/>
+                    </file>
+                </folder>
             </folder>
         </folder>
     </folder>

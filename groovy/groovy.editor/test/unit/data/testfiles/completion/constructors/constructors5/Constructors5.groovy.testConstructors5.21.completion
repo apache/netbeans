@@ -1,0 +1,35 @@
+Code completion result for source line:
+Foo f = new F|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+CONSTRUCTO Foo()                                      null
+CONSTRUCTO Foo(int)                                   null
+------------------------------------
+CLASS      Factory                                    null
+CLASS      FactoryBuilderSupport                      null
+CLASS      File                                       null
+CLASS      FileDescriptor                             null
+CLASS      FileFilter                                 null
+CLASS      FileInputStream                            null
+CLASS      FileNameByRegexFinder                      null
+CLASS      FileNameMap                                null
+CLASS      FileNotFoundException                      null
+CLASS      FileOutputStream                           null
+CLASS      FilePermission                             null
+CLASS      FileReader                                 null
+CLASS      FileTreeBuilder                            null
+CLASS      FileWriter                                 null
+CLASS      FilenameFilter                             null
+CLASS      FilterInputStream                          null
+CLASS      FilterOutputStream                         null
+CLASS      FilterReader                               null
+CLASS      FilterWriter                               null
+CLASS      Float                                      null
+CLASS      Flushable                                  null
+CLASS      Foo                                        null
+CLASS      FormatFlagsConversionMismatchE             null
+CLASS      FormatProcessor                            null
+CLASS      Formattable                                null
+CLASS      FormattableFlags                           null
+CLASS      Formatter                                  null
+CLASS      FormatterClosedException                   null
+CLASS      FunctionalInterface                        null

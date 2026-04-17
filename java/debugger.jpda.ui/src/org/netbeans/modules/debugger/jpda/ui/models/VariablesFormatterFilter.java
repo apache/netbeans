@@ -584,7 +584,7 @@ public class VariablesFormatterFilter extends VariablesFilterAdapter {
     }
     
     private static HashSet toStringValueType;
-    private static boolean isToStringValueType (String type) {
+    static boolean isToStringValueType (String type) {
         if (toStringValueType == null) {
             toStringValueType = new HashSet ();
             toStringValueType.add ("java.lang.StringBuffer");

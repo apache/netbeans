@@ -66,7 +66,7 @@ class XmlHeapModel implements org.netbeans.insane.model.HeapModel {
     }
     
     public Item getItem(int id) {
-        Item itm = items.get(new java.lang.Integer(id));
+        Item itm = items.get(id);
         if (itm == null) throw new IllegalArgumentException("Bad ID");
         return itm;
     }

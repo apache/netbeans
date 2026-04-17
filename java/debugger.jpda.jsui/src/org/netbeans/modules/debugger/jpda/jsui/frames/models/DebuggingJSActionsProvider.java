@@ -242,8 +242,10 @@ public class DebuggingJSActionsProvider implements NodeActionsProviderFilter {
                     JSStackFrame jsframe = (JSStackFrame) ch;
                     frame = jsframe.getJavaFrame();
                     String cName = frame.getClassName();
-                    if (cName.startsWith(JSUtils.NASHORN_SCRIPT)) {
-                        cName = cName.substring(JSUtils.NASHORN_SCRIPT.length());
+                    if (cName.startsWith(JSUtils.NASHORN_SCRIPT_JDK)) {
+                        cName = cName.substring(JSUtils.NASHORN_SCRIPT_JDK.length());
+                    } else if (cName.startsWith(JSUtils.NASHORN_SCRIPT_EXT)) {
+                        cName = cName.substring(JSUtils.NASHORN_SCRIPT_EXT.length());
                     }
                     frameStr.append("\tat ");
                     frameStr.append(cName);

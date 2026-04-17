@@ -24,6 +24,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.Collections;
+import java.util.HashMap;
 import javax.swing.JButton;
 import org.netbeans.libs.git.GitBranch;
 import org.netbeans.modules.git.ui.repository.RevisionDialogController;
@@ -45,6 +46,11 @@ public final class BranchSelector {
     public BranchSelector (File repository) {
         this.revisionPicker = new RevisionDialogController(repository, new File[0],
                 Collections.<String, GitBranch>emptyMap(), null);
+        panel = new SelectBranchPanel(revisionPicker.getPanel());
+    }
+    
+    public BranchSelector(File repository, HashMap<String, GitBranch> branches) {
+        this.revisionPicker = new RevisionDialogController(repository, new File[0], branches, null);
         panel = new SelectBranchPanel(revisionPicker.getPanel());
     }
 

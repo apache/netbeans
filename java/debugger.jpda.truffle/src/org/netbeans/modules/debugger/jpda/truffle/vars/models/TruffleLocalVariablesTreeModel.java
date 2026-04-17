@@ -21,6 +21,9 @@ package org.netbeans.modules.debugger.jpda.truffle.vars.models;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 import org.netbeans.modules.debugger.jpda.truffle.access.CurrentPCInfo;
 import org.netbeans.modules.debugger.jpda.truffle.access.TruffleAccess;
@@ -36,12 +39,11 @@ import org.netbeans.spi.viewmodel.TreeModel;
 import org.netbeans.spi.viewmodel.TreeModelFilter;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 @DebuggerServiceRegistration(path="netbeans-JPDASession/"+TruffleStrataProvider.TRUFFLE_STRATUM+"/LocalsView",  types = TreeModelFilter.class)
 public class TruffleLocalVariablesTreeModel extends TruffleVariablesTreeModel {
 
-    private final WeakSet<CurrentPCInfo> cpisListening = new WeakSet<CurrentPCInfo>();
+    private final Set<CurrentPCInfo> cpisListening = Collections.newSetFromMap(new WeakHashMap<>());
     private final CurrentInfoPropertyChangeListener cpiChL = new CurrentInfoPropertyChangeListener();
     
     public TruffleLocalVariablesTreeModel(ContextProvider lookupProvider) {

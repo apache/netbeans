@@ -159,7 +159,7 @@ public class SunWebDetailsPanel extends BaseSectionNodeInnerPanel {
 //		if(bean != null) {
 //			try {
 //				bean.setHttpservletSecurityProvider(jTxtHttpservletSecurityProvider.getText());
-////				masterPanel.validateField(WebAppRoot.FIELD_HTTP_SERVLET_SECURITY_PROVIDER);
+// //				masterPanel.validateField(WebAppRoot.FIELD_HTTP_SERVLET_SECURITY_PROVIDER);
 //			} catch(java.beans.PropertyVetoException exception) {
 //				jTxtHttpservletSecurityProvider.setText(bean.getHttpservletSecurityProvider());
 //			}
@@ -171,7 +171,7 @@ public class SunWebDetailsPanel extends BaseSectionNodeInnerPanel {
 //		if(bean != null) {
 //			try {
 //				bean.setErrorUrl(jTxtErrorUrl.getText());
-////				masterPanel.validateField(WebAppRoot.FIELD_ERROR_URL);
+// //				masterPanel.validateField(WebAppRoot.FIELD_ERROR_URL);
 //			} catch(java.beans.PropertyVetoException exception) {
 //				jTxtErrorUrl.setText(bean.getErrorUrl());
 //			}
@@ -183,7 +183,7 @@ public class SunWebDetailsPanel extends BaseSectionNodeInnerPanel {
 //		if(bean != null) {
 //			try {
 //				bean.setContextRoot(jTxtContextRoot.getText());
-////				masterPanel.validateField(WebAppRoot.FIELD_CONTEXT_ROOT);
+// //				masterPanel.validateField(WebAppRoot.FIELD_CONTEXT_ROOT);
 //			} catch(java.beans.PropertyVetoException exception) {
 //				jTxtContextRoot.setText(bean.getContextRoot());
 //			}

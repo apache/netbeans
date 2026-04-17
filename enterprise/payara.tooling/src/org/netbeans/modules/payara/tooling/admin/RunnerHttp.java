@@ -41,18 +41,12 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class RunnerHttp extends Runner {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Character used to separate individual items in libraries query
      *  parameter. */
     static final char LIBRARY_SEPARATOR = ',';
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Calculate properties length based on properties map. 
      * <p/>
@@ -220,10 +214,7 @@ public class RunnerHttp extends Runner {
         return retVal;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Manifest from server response.
      * <p/>
@@ -245,10 +236,7 @@ public class RunnerHttp extends Runner {
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     ResultString result;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.
@@ -294,10 +282,7 @@ public class RunnerHttp extends Runner {
         silentFailureAllowed = false;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
    /**
      * Create <code>ResultString</code> object corresponding
      * to <code>String</code>command execution value to be returned.
@@ -450,10 +435,7 @@ public class RunnerHttp extends Runner {
         return result.value != null;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Fake Getters                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Override to provide the lastModified date for data source whose
      * inputstream is returned by getInputStream.  Must not return null if
@@ -465,10 +447,7 @@ public class RunnerHttp extends Runner {
         return null;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Retrieve <i>message<i> from <code>Manifest</code> object.
      * <p/>

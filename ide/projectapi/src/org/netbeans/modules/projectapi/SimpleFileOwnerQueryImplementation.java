@@ -49,7 +49,6 @@ import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.BaseUtilities;
 import org.openide.util.NbPreferences;
-import org.openide.util.WeakSet;
 
 /**
  * Finds a project by searching the directory tree.
@@ -92,7 +91,7 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
         return getOwner(file);
     }
     
-    private final Set<FileObject> warnedAboutBrokenProjects = new WeakSet<FileObject>();
+    private final Set<FileObject> warnedAboutBrokenProjects = Collections.newSetFromMap(new WeakHashMap<>());
         
     private Map<FileObject, Reference<Project>> projectCache = new WeakHashMap<>();    
     /**

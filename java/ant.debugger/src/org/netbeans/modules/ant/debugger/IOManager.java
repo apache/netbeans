@@ -136,9 +136,7 @@ public class IOManager {
     // innerclasses ............................................................
     
     private class Listener implements OutputListener {
-        @Override
-        public void outputLineSelected (OutputEvent ev) {
-        }
+
         @Override
         public void outputLineAction (final OutputEvent ev) {
             SwingUtilities.invokeLater (new Runnable () {

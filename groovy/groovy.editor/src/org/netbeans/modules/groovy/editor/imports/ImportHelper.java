@@ -35,7 +35,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.swing.Icon;
 import javax.swing.text.BadLocationException;
-import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClassIndex.NameKind;
@@ -43,9 +43,8 @@ import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.ui.ElementIcons;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.EditList;
 import org.netbeans.modules.groovy.editor.api.GroovyIndex;
 import org.netbeans.modules.groovy.editor.api.elements.index.IndexedClass;
@@ -125,7 +124,7 @@ public final class ImportHelper {
 
         if (!singleCandidates.isEmpty()) {
             Collections.sort(singleCandidates);
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                 @Override
                 public void run() {
@@ -329,11 +328,11 @@ public final class ImportHelper {
                 try {
                     int packageLine = getPackageLineIndex(doc);
                     int afterPackageLine = packageLine + 1;
-                    int afterPackageOffset = Utilities.getRowStartFromLineOffset(doc, afterPackageLine);
+                    int afterPackageOffset = LineDocumentUtils.getLineStartFromIndex(doc, afterPackageLine);
                     int importLine = getAppropriateLine(doc, fqName);
                     if (importLine >= 0) {
                         // If the line after the package statement isn't empty, put one empty line there
-                        if (!Utilities.isRowWhite(doc, afterPackageOffset)) {
+                        if (!LineDocumentUtils.isLineWhitespace(doc, afterPackageOffset)) {
                             edits.replace(afterPackageOffset, 0, "\n", false, 0);
                         } else {
                             if (collectImports(doc).isEmpty()) {
@@ -342,14 +341,14 @@ public final class ImportHelper {
                         }
 
                         // Find appropriate place to import and put it there
-                        int importOffset = Utilities.getRowStartFromLineOffset(doc, importLine);
+                        int importOffset = LineDocumentUtils.getLineStartFromIndex(doc, importLine);
                         edits.replace(importOffset, 0, "import " + fqName + "\n", false, 0);
 
                         // If it's the last import and if the line after the last import
                         // statement isn't empty, put one empty line there
-                        int afterImportsOffset = Utilities.getRowStartFromLineOffset(doc, importLine);
+                        int afterImportsOffset = LineDocumentUtils.getLineStartFromIndex(doc, importLine);
 
-                        if (!Utilities.isRowWhite(doc, afterImportsOffset) && isLastImport(doc, fqName)) {
+                        if (!LineDocumentUtils.isLineWhitespace(doc, afterImportsOffset) && isLastImport(doc, fqName)) {
                             edits.replace(afterImportsOffset, 0, "\n", false, 0);
                         }
                     }
@@ -441,7 +440,7 @@ public final class ImportHelper {
                             break IMPORT_COUNTER;
                     }
                 }
-                result.put(sb.toString(), Utilities.getLineOffset(doc, ts.offset()));
+                result.put(sb.toString(), LineDocumentUtils.getLineIndex(doc, ts.offset()));
             }
         }
         return result;
@@ -459,7 +458,7 @@ public final class ImportHelper {
         try {
             int lastPackageOffset = getLastPackageStatementOffset(doc);
             if (lastPackageOffset != -1) {
-                return Utilities.getLineOffset(doc, lastPackageOffset);
+                return LineDocumentUtils.getLineIndex(doc, lastPackageOffset);
             }
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);
@@ -500,7 +499,7 @@ public final class ImportHelper {
         try {
             int lastImportOffset = getLastImportStatementOffset(doc);
             if (lastImportOffset != -1) {
-                return Utilities.getLineOffset(doc, lastImportOffset);
+                return LineDocumentUtils.getLineIndex(doc, lastImportOffset);
             }
         } catch (BadLocationException ex) {
             Exceptions.printStackTrace(ex);

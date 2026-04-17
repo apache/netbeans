@@ -29,10 +29,7 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
  */
 public interface GlassFishCloud {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Interface Methods                                                      //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get GlassFish cloud name.
      * <p/>

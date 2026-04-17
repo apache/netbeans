@@ -550,6 +550,7 @@ public class J2eeUtil {
                                         classTree.getTypeParameters(),
                                         classTree.getExtendsClause(),
                                         classTree.getImplementsClause(),
+                                        classTree.getPermitsClause(),
                                         classTree.getMembers());
                             workingCopy.rewrite(classTree, modifiedClass);
                         }

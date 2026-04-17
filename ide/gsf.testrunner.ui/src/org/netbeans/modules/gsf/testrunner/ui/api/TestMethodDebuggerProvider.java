@@ -22,7 +22,6 @@ import java.util.Arrays;
 import javax.swing.JEditorPane;
 import javax.swing.text.Document;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.gsf.testrunner.api.CommonUtils;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.SingleMethod;
@@ -111,7 +110,7 @@ public abstract class TestMethodDebuggerProvider {
 		    singleMethod = TestMethodRunnerProvider.findTestMethod(doc, caret, TestMethodDebuggerProvider.this::getTestMethod);
 		}
 	    });
-	    final ProgressHandle ph = ProgressHandleFactory.createHandle(Bundle.Search_For_Test_Method(), singleMethodTask);
+	    final ProgressHandle ph = ProgressHandle.createHandle(Bundle.Search_For_Test_Method(), singleMethodTask);
 	    singleMethodTask.addTaskListener(new TaskListener() {
 		@Override
 		public void taskFinished(org.openide.util.Task task) {

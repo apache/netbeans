@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #e3f1ff;
+      }
+
+      .st1 {
+        fill: #4c80c7;
+      }
+    </style>
+  </defs>
+  <g>
+    <path class="st0" d="M9.609,11.598c-.13,0-.255-.051-.348-.141l-.718-.696c-.198-.192-.203-.509-.011-.707l.537-.554H3c-.276,0-.5-.224-.5-.5v-1c0-.276.224-.5.5-.5h6.069l-.537-.554c-.192-.198-.188-.515.011-.707l.718-.696c.093-.09.218-.141.348-.141h.008c.132.002.259.057.351.152l2.519,2.598c.188.194.188.502,0,.696l-2.519,2.598c-.092.095-.219.15-.351.152h-.008Z"/>
+    <path class="st1" d="M9.609,5.902l2.519,2.598-2.519,2.598-.718-.696,1.359-1.402H3v-1h7.25l-1.359-1.402.718-.696M9.609,4.902c-.26,0-.51.101-.696.282l-.718.696c-.308.299-.383.748-.22,1.12H3c-.552,0-1,.448-1,1v1c0,.552.448,1,1,1h4.975c-.163.371-.088.821.22,1.12l.718.696c.187.181.437.282.696.282.005,0,.01,0,.015,0,.265-.004.518-.113.703-.304l2.519-2.598c.376-.388.376-1.004,0-1.392l-2.519-2.598c-.185-.19-.437-.3-.703-.304-.005,0-.01,0-.015,0h0Z"/>
+  </g>
+  <description>Apache NetBeans Logo
+  </description>
+</svg>

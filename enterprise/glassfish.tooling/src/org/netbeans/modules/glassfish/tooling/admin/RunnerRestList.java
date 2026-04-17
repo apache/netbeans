@@ -30,18 +30,12 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
  */
 public class RunnerRestList extends RunnerRest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Result object - contains list of JDBC resources names.*/
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     ResultList<String> result;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * REST interface.
@@ -53,10 +47,7 @@ public class RunnerRestList extends RunnerRest {
         super(server, command);
     }   
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create <code>ResultList</code> object corresponding
      * to server log command execution value to be returned.

@@ -24,6 +24,7 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,7 +50,6 @@ import org.netbeans.spi.viewmodel.UnknownTypeException;
 
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.openide.util.datatransfer.PasteType;
 
 @DebuggerServiceRegistration(path="CPPLiteSession/DebuggingView",
@@ -70,8 +70,8 @@ public class DebuggingModel extends CachedChildrenTreeModel implements ExtendedN
     private final Map<CPPThread, ThreadStateListener> threadStateListeners = new WeakHashMap<>();
     private final Reference<CPPThread> lastCurrentThreadRef = new WeakReference<>(null);
     private final Reference<CPPFrame> lastCurrentFrameRef = new WeakReference<>(null);
-    private final Set<Object> expandedExplicitly = new WeakSet<Object>();
-    private final Set<Object> collapsedExplicitly = new WeakSet<Object>();
+    private final Set<Object> expandedExplicitly = Collections.newSetFromMap(new WeakHashMap<>());
+    private final Set<Object> collapsedExplicitly = Collections.newSetFromMap(new WeakHashMap<>());
     private final RequestProcessor RP = new RequestProcessor("Debugging Tree View Refresh", 1); // NOI18N
 
     public DebuggingModel(ContextProvider contextProvider) {

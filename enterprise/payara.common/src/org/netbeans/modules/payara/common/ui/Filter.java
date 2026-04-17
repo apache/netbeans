@@ -29,10 +29,7 @@ import javax.swing.text.DocumentFilter;
  */
 public class Filter {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Filter out characters that are not valid for network port numbers.
      */

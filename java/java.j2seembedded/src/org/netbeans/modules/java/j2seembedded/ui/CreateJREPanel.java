@@ -604,8 +604,8 @@ public class CreateJREPanel extends javax.swing.JPanel {
     }
 
     private static final class EJDKFileView extends FileView {
-        private static final Image BADGE = ImageUtilities.loadImage("org/netbeans/modules/java/j2seembedded/resources/ejdkBadge.gif", false); // NOI18N
-        private static final ImageIcon EMPTY = ImageUtilities.loadImageIcon("org/netbeans/modules/java/j2seembedded/resources/empty.gif", false); // NOI18N
+        private static final Icon BADGE = ImageUtilities.loadIcon("org/netbeans/modules/java/j2seembedded/resources/ejdkBadge.gif"); // NOI18N
+        private static final Icon EMPTY = ImageUtilities.loadIcon("org/netbeans/modules/java/j2seembedded/resources/empty.gif"); // NOI18N
 
         private final FileSystemView fsv;
         private Icon lastOrig;
@@ -628,11 +628,11 @@ public class CreateJREPanel extends javax.swing.JPanel {
                     assert lastMerged != null;
                     return lastMerged;
                 }
-                lastMerged = ImageUtilities.image2Icon(ImageUtilities.mergeImages(
-                        ImageUtilities.icon2Image(original),
+                lastMerged = ImageUtilities.mergeIcons(
+                        original,
                         BADGE,
-                        original.getIconWidth() - BADGE.getWidth(null),
-                        original.getIconHeight()- BADGE.getHeight(null)));
+                        original.getIconWidth() - BADGE.getIconWidth(),
+                        original.getIconHeight()- BADGE.getIconHeight());
                 lastOrig = original;
                 return lastMerged;
             } else {

@@ -72,6 +72,8 @@ public interface Visitor {
     //public void endVisit(ClassDeclaration classDeclaration);
     public void visit(ClassInstanceCreation classInstanceCreation);
 
+    public void visit(ClassInstanceCreationVariable classInstanceCreationVariable);
+
     //public void endVisit(ClassInstanceCreation classInstanceCreation);
     public void visit(ClassName className);
 
@@ -82,6 +84,8 @@ public interface Visitor {
     public void visit(Comment comment);
 
     public void visit(ConstantVariable constantVariable);
+    
+    public void visit(CompositionExpression conditionalExpression);
 
     //public void endVisit(Comment comment);
     public void visit(ConditionalExpression conditionalExpression);
@@ -294,16 +298,16 @@ public interface Visitor {
 
     public void visit(Variadic variadic);
 
-    ////public void endVisit(Variable variable);
+    //public void endVisit(Variable variable);
     public void visit(WhileStatement whileStatement);
 
     public void visit(YieldExpression node);
 
     public void visit(YieldFromExpression node);
 
-    ////public void endVisit(WhileStatement whileStatement);
+    //public void endVisit(WhileStatement whileStatement);
     public void visit(ASTNode node);
-    ////public void endVisit(ASTNode node);
+    //public void endVisit(ASTNode node);
 
     public void visit(AnonymousObjectVariable node);
 

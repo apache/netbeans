@@ -1,0 +1,4 @@
+    public int $|>MARK_OCCURRENCES:publicField<| = 1;
+        $example = new Example()->|>MARK_OCCURRENCES:publicField<|;
+new Example()->|>MARK_OCCURRENCES:public^Field<|; // test
+new Example()->returnThis()->|>MARK_OCCURRENCES:publicField<|; // test

@@ -91,8 +91,8 @@ public abstract class AbstractMavenExecutor extends OutputTabMaintainer<Abstract
 
     protected RunConfig config;
     private TabContext tabContext;
-    private List<String> messages = new ArrayList<String>();
-    private List<OutputListener> listeners = new ArrayList<OutputListener>();
+    private final List<String> messages = new ArrayList<>();
+    private final List<OutputListener> listeners = new ArrayList<>();
     protected ExecutorTask task;
     protected MavenItem item;
     protected final Object SEMAPHORE = new Object();
@@ -210,7 +210,7 @@ public abstract class AbstractMavenExecutor extends OutputTabMaintainer<Abstract
     class ReRunAction extends AbstractAction {
 
         private RunConfig config;
-        private boolean debug;
+        private final boolean openGoalsPanel;
 
         @Messages({
             "TXT_Rerun_extra=Re-run with different parameters",
@@ -218,15 +218,13 @@ public abstract class AbstractMavenExecutor extends OutputTabMaintainer<Abstract
             "TIP_Rerun_Extra=Re-run with different parameters",
             "TIP_Rerun=Re-run the goals."
         })
-        ReRunAction(boolean debug) {
-            this.debug = debug;
-            this.putValue(Action.SMALL_ICON, debug ? ImageUtilities.loadImageIcon("org/netbeans/modules/maven/execute/refreshdebug.png", false) : //NOI18N
-                    ImageUtilities.loadImageIcon("org/netbeans/modules/maven/execute/refresh.png", false));//NOI18N
-
-            putValue(Action.NAME, debug ? TXT_Rerun_extra() : TXT_Rerun());
-            putValue(Action.SHORT_DESCRIPTION, debug ? TIP_Rerun_Extra() : TIP_Rerun());
+        ReRunAction(boolean openGoalsPanel) {
+            this.openGoalsPanel = openGoalsPanel;
+            String img = openGoalsPanel ? "org/netbeans/modules/maven/execute/refreshdebug.png" : "org/netbeans/modules/maven/execute/refresh.png"; //NOI18N
+            putValue(Action.SMALL_ICON, ImageUtilities.loadImageIcon(img, false));
+            putValue(Action.NAME, openGoalsPanel ? TXT_Rerun_extra() : TXT_Rerun());
+            putValue(Action.SHORT_DESCRIPTION, openGoalsPanel ? TIP_Rerun_Extra() : TIP_Rerun());
             setEnabled(false);
-
         }
 
         void setConfig(RunConfig config) {
@@ -236,16 +234,17 @@ public abstract class AbstractMavenExecutor extends OutputTabMaintainer<Abstract
         @Messages("TIT_Run_maven=Run Maven")
         @Override public void actionPerformed(ActionEvent e) {
             BeanRunConfig newConfig = new BeanRunConfig(config);
-            if (debug) {
+            if (openGoalsPanel) {
                 RunGoalsPanel pnl = new RunGoalsPanel();
+                pnl.showPersistenceBar(false);
                 DialogDescriptor dd = new DialogDescriptor(pnl, TIT_Run_maven());
                 pnl.readConfig(config);
                 Object retValue = DialogDisplayer.getDefault().notify(dd);
                 if (retValue == DialogDescriptor.OK_OPTION) {
                     pnl.applyValues(newConfig);
-            } else {
+                } else {
                     return;
-            }
+                }
             }
             actionStatesAtStart();
             InputOutput inputOutput = getInputOutput();
@@ -292,7 +291,7 @@ public abstract class AbstractMavenExecutor extends OutputTabMaintainer<Abstract
                 StatusDisplayer.getDefault().setStatusText(ResumeAction_could_not_find_module());
                 return;
             }
-            final AtomicReference<Thread> t = new AtomicReference<Thread>();
+            final AtomicReference<Thread> t = new AtomicReference<>();
             final ProgressHandle handle = ProgressHandle.createHandle(ResumeAction_scanning(), new Cancellable() {
                 @Override public boolean cancel() {
                     Thread _t = t.get();
@@ -325,7 +324,7 @@ public abstract class AbstractMavenExecutor extends OutputTabMaintainer<Abstract
                     String rel = root != null && module != null ? FileUtilities.relativizeFile(root, module) : null;
                     String id = rel != null ? rel : nbmp.getMavenProject().getGroupId() + ':' + nbmp.getMavenProject().getArtifactId();
                     BeanRunConfig newConfig = new BeanRunConfig(config);
-                    List<String> goals = new ArrayList<String>(config.getGoals());
+                    List<String> goals = new ArrayList<>(config.getGoals());
                     int rf = goals.indexOf("--resume-from");
                     if (rf != -1) {
                         goals.set(rf + 1, id);
@@ -363,11 +362,7 @@ public abstract class AbstractMavenExecutor extends OutputTabMaintainer<Abstract
 
         @Override public void actionPerformed(ActionEvent e) {
             setEnabled(false);
-            RequestProcessor.getDefault().post(new Runnable() {
-                @Override public void run() {
-                    exec.cancel();
-                }
-            });
+            RequestProcessor.getDefault().post(exec::cancel);
         }
     }
 

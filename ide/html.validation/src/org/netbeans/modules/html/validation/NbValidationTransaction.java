@@ -51,7 +51,6 @@ import nu.validator.xml.*;
 import nu.validator.xml.dataattributes.DataAttributeDroppingSchemaWrapper;
 import nu.validator.xml.langattributes.XmlLangAttributeDroppingSchemaWrapper;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.html.editor.lib.api.HtmlVersion;
 import org.netbeans.modules.html.editor.lib.api.ProblemDescription;
 import org.openide.util.NbBundle;
@@ -149,7 +148,7 @@ public class NbValidationTransaction extends ValidationTransaction {
             return;
         }
 
-        ProgressHandle progress = ProgressHandleFactory.createHandle(NbBundle.getMessage(NbValidationTransaction.class, "MSG_InitHTMLValidation")); //NOI18N
+        ProgressHandle progress = ProgressHandle.createHandle(NbBundle.getMessage(NbValidationTransaction.class, "MSG_InitHTMLValidation")); //NOI18N
 
         progress.start();
         progress.switchToIndeterminate();

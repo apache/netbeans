@@ -44,7 +44,6 @@ import org.netbeans.api.fileinfo.NonRecursiveFolder;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.analysis.RunAnalysisPanel.DialogState;
@@ -90,7 +89,7 @@ public class RunAnalysis {
                "BN_Cancel=Cancel",
                "TL_Inspect=Inspect"})
     public static void showDialogAndRunAnalysis(final Lookup context, DialogState startingState) {
-        final ProgressHandle progress = ProgressHandleFactory.createHandle("Analyzing...", null, null);
+        final ProgressHandle progress = ProgressHandle.createHandle("Analyzing...", null, null);
         final JButton runAnalysis = new JButton(Bundle.BN_Inspect());
         final RunAnalysisPanel rap = new RunAnalysisPanel(progress, context, runAnalysis, startingState);
         JButton cancel = new JButton(Bundle.BN_Cancel());

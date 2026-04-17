@@ -426,7 +426,6 @@ public class BasicPanelVisual extends JPanel implements DocumentListener, Window
         String command = evt.getActionCommand();
         if ("BROWSE".equals(command)) { //NOI18N
             JFileChooser chooser = new JFileChooser();
-            chooser.setCurrentDirectory(null);
             chooser.setDialogTitle(TIT_Select_Project_Location());
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             String path = this.projectLocationTextField.getText();

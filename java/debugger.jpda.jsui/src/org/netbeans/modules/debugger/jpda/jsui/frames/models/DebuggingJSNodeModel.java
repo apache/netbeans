@@ -108,7 +108,13 @@ public class DebuggingJSNodeModel implements ExtendedNodeModelFilter {
             CallStackFrame javaFrame = ((JSStackFrame) node).getJavaFrame();
             descr = original.getDisplayName(javaFrame);
             //System.out.println("ORIG descr = '"+descr+"'");
-            int i = descr.indexOf(JSUtils.NASHORN_SCRIPT);
+            String nashornScriptClass = JSUtils.NASHORN_SCRIPT_JDK;
+            int i = descr.indexOf(nashornScriptClass);
+            if (i < 0) {
+                // if Legacy JDK not found, search for external Nashorn
+                nashornScriptClass = JSUtils.NASHORN_SCRIPT_EXT;
+                i = descr.indexOf(nashornScriptClass);
+            }
             int i2 = 0;
             if (i < 0) {
                 if (descr.startsWith(SCRIPT_CLASS_PREFIX)) {
@@ -122,7 +128,7 @@ public class DebuggingJSNodeModel implements ExtendedNodeModelFilter {
                     }
                 }
             } else {
-                i2 = i + JSUtils.NASHORN_SCRIPT.length();
+                i2 = i + nashornScriptClass.length();
             }
             if (i >= 0) {
                 descr = descr.substring(0, i) + descr.substring(i2);

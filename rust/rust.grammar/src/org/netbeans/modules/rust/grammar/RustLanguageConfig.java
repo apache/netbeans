@@ -20,21 +20,16 @@ package org.netbeans.modules.rust.grammar;
 
 import org.netbeans.modules.rust.grammar.structure.RustStructureScanner;
 import org.netbeans.api.lexer.Language;
-import org.netbeans.core.spi.multiview.MultiViewElement;
-import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.csl.api.DeclarationFinder;
 import org.netbeans.modules.csl.api.StructureScanner;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
-import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.parsing.spi.Parser;
-import org.openide.util.Lookup;
-import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
+import org.netbeans.modules.rust.options.api.RustAnalyzerOptions;
 
-/**
- *
- */
-@LanguageRegistration(mimeType = "text/x-rust", useMultiview = true)
+// See LayerProviderImpl for information about layer handling and when this
+// needs to be uncommented
+//
+//@LanguageRegistration(mimeType = "text/x-rust", useMultiview = true)
 public class RustLanguageConfig extends DefaultLanguageConfig {
 
     private static final Language<RustTokenID> RUST_LANGUAGE = new RustLanguage().language();
@@ -51,12 +46,12 @@ public class RustLanguageConfig extends DefaultLanguageConfig {
 
     @Override
     public StructureScanner getStructureScanner() {
-        return new RustStructureScanner();
+        return RustAnalyzerOptions.getRustAnalyzerLocation(false, false) == null ? new RustStructureScanner() : null;
     }
 
     @Override
     public boolean hasStructureScanner() {
-        return true;
+        return RustAnalyzerOptions.getRustAnalyzerLocation(false, false) == null;
     }
 
     @Override
@@ -71,19 +66,7 @@ public class RustLanguageConfig extends DefaultLanguageConfig {
 
     @Override
     public DeclarationFinder getDeclarationFinder() {
-        return new RustDeclarationFinder();
-    }
-
-    @NbBundle.Messages("Source=&Source")
-    @MultiViewElement.Registration(
-            displayName = "#Source",
-            persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
-            mimeType = "text/x-rust",
-            preferredID = "rust.source",
-            position = 100
-    )
-    public static MultiViewEditorElement createMultiViewEditorElement(Lookup context) {
-        return new MultiViewEditorElement(context);
+        return RustAnalyzerOptions.getRustAnalyzerLocation(false, false) == null ? new RustDeclarationFinder() : null;
     }
 
 }

@@ -24,6 +24,8 @@
 #define	_JVMLAUNCHER_H
 
 #include <windows.h>
+#include <processenv.h>
+#include <shlwapi.h>
 #include <string>
 #include <list>
 #include "jni.h"
@@ -65,6 +67,8 @@ private:
     bool checkJava(const char *javaPath, const char *prefix);
     bool findJava(const char *minJavaVersion);
     bool findJava(const char *javaKey, const char *prefix, const char *minJavaVersion);
+    bool findJavaByPath();
+    bool findJavaByJavaHome();
     bool startOutProcJvm(const char *mainClassName, const std::list<std::string> &args, const std::list<std::string> &options, DWORD *retCode);
     bool startInProcJvm(const char *mainClassName, const std::list<std::string> &args, const std::list<std::string> &options);
     bool isVersionString(const char *str);

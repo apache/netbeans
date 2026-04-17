@@ -1,5 +1,0 @@
-Code completion result for source line:
-ClassA.ex|ecute();
-(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
-------------------------------------
-METHOD     execute()                       [STATIC,   void

@@ -217,8 +217,6 @@ public abstract class BeansCompletionItem implements CompletionItem {
     }
 
     private abstract static class BeansXmlCompletionItem extends BeansCompletionItem {
-        /////////
-
         protected int substitutionOffset;
 
         protected BeansXmlCompletionItem(int substitutionOffset) {
@@ -306,7 +304,6 @@ public abstract class BeansCompletionItem implements CompletionItem {
         }
 
         public abstract String getDisplayText();
-        /////////
     }
 
     private static class TagClassValueItem extends BeansXmlCompletionItem {

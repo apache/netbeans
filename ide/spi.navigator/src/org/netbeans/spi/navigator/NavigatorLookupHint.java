@@ -24,7 +24,7 @@ package org.netbeans.spi.navigator;
  *
  * Usage: Implementation of this interface should be inserted into
  * client's specific topComponent's lookup, see
- * <a href="@org-openide-windows@/org/openide/windows/TopComponent.html#getLookup--">TopComponent.getLookup()</a>
+ * {@link org.openide.windows.TopComponent#getLookup() TopComponent.getLookup() }
  * method. When mentioned <code>TopComponent</code> gets active in the system, system will
  * ask <code>NavigatorLookupHint</code> implementation for content type
  * to show in Navigator UI.
@@ -33,10 +33,10 @@ package org.netbeans.spi.navigator;
  */
 public interface NavigatorLookupHint {
 
-    /** Hint for content type that should be used in Navigator 
-     * 
+    /** Hint for content type that should be used in Navigator
+     *
      * @return String representation of content type (in mime-type style)
      */
     public String getContentType ();
-    
+
 }

@@ -30,10 +30,7 @@ import java.util.Map;
  */
 public class StartupArgsEntity implements StartupArgs {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command line arguments passed to bootstrap jar. */
     private List<String>glassfishArgs;
 
@@ -46,10 +43,7 @@ public class StartupArgsEntity implements StartupArgs {
     /** Installation home of Java SDK used to run GlassFish. */
     private String javaHome;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs empty class instance. No default values are set.
      */
@@ -73,10 +67,7 @@ public class StartupArgsEntity implements StartupArgs {
         this.javaHome = javaHome;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get command line arguments passed to bootstrap jar.
      * <p/>

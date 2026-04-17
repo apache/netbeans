@@ -504,10 +504,6 @@ public class BrowserConsoleLogger implements Console.Listener {
             this.column = column;
             this.project = project;
         }
-        
-        @Override
-        public void outputLineSelected(OutputEvent ev) {
-        }
 
         @Override
         public void outputLineAction(OutputEvent ev) {
@@ -519,10 +515,6 @@ public class BrowserConsoleLogger implements Console.Listener {
         }
         private Line getLine() {
             return BrowserConsoleLogger.getLine(project, url, line-1);
-        }
-
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
         }
         
         public boolean isValidHyperlink() {

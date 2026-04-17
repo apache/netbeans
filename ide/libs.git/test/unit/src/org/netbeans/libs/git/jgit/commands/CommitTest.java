@@ -643,9 +643,9 @@ public class CommitTest extends AbstractGitTestCase {
                 new GitUser("user2", "user2.email"), new GitUser("committer2", "committer2.email"), true, NULL_PROGRESS_MONITOR);
         RevCommit amendedCommit = walk.parseCommit(repository.resolve(lastCommit.getRevision()));
         assertEquals("Commit time should not change after amend", time, lastCommit.getCommitTime());
-        assertEquals(originalCommit.getAuthorIdent().getWhen(), amendedCommit.getAuthorIdent().getWhen());
+        assertEquals(originalCommit.getAuthorIdent().getWhenAsInstant(), amendedCommit.getAuthorIdent().getWhenAsInstant());
         // commit time should not equal.
-        assertFalse(originalCommit.getCommitterIdent().getWhen().equals(amendedCommit.getCommitterIdent().getWhen()));
+        assertFalse(originalCommit.getCommitterIdent().getWhenAsInstant().equals(amendedCommit.getCommitterIdent().getWhenAsInstant()));
         statuses = client.getStatus(new File[] { workDir }, NULL_PROGRESS_MONITOR);
         assertStatus(statuses, workDir, newOne, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
         assertStatus(statuses, workDir, another, true, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, GitStatus.Status.STATUS_NORMAL, false);
@@ -693,7 +693,9 @@ public class CommitTest extends AbstractGitTestCase {
         GitRevisionInfo commit = client.commit(new File[0], info.getFullMessage(), null, null, NULL_PROGRESS_MONITOR);
         assertEquals(info.getAuthor(), commit.getAuthor());
         assertEquals(info.getCommitTime(), commit.getCommitTime());
-        assertEquals(Utils.findCommit(repository, info.getRevision()).getAuthorIdent().getWhen(),
-                Utils.findCommit(repository, commit.getRevision()).getAuthorIdent().getWhen());
+        assertEquals(
+            Utils.findCommit(repository, info.getRevision()).getAuthorIdent().getWhenAsInstant(),
+            Utils.findCommit(repository, commit.getRevision()).getAuthorIdent().getWhenAsInstant()
+        );
     }
 }

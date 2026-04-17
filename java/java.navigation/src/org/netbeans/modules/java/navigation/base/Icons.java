@@ -19,11 +19,8 @@
 
 package org.netbeans.modules.java.navigation.base;
 
-import java.awt.Image;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import org.openide.util.ImageUtilities;
-import org.openide.util.Utilities;
 
 /** Capable of serving incns for the navigator modules. Notice that it is not
  * used for Element icons. May not be necessary an may be removed later.
@@ -41,13 +38,7 @@ public class Icons {
     }
     
     public static Icon getBusyIcon () {
-        Image img = ImageUtilities.loadImage (WAIT);
-        if (img == null) {
-            return null;
-        }
-        else {
-            return new ImageIcon (img);
-        }
+        return ImageUtilities.loadIcon (WAIT);
     }
     
 }

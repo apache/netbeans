@@ -46,12 +46,13 @@ import org.openide.windows.WindowManager;
 )
 @TopComponent.Description(
         preferredID = "CheckRegexTopComponent",
+        iconBase="org/netbeans/modules/java/hints/resources/regexp.png",
         persistenceType = TopComponent.PERSISTENCE_ALWAYS
 )
 @TopComponent.Registration(mode = "output", openAtStartup = false, position = 13000)
 @ActionID(category = "Window", id = "org.netbeans.modules.java.hints.jdk.CheckRegexTopComponent")
 @ActionReferences({
-    @ActionReference(name = "Check Regex", path = "Menu/Window", position = 950),
+    @ActionReference(name = "Check Regex", path = "Menu/Window/Tools", position = 20200),
     @ActionReference(path = "Shortcuts", name = "C-8")})
 @TopComponent.OpenActionRegistration(
         displayName = "#CTL_CheckRegexAction",
@@ -113,106 +114,58 @@ public final class CheckRegexTopComponent extends TopComponent {
 
         org.openide.awt.Mnemonics.setLocalizedText(multilineMenuItem, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.multilineMenuItem.text")); // NOI18N
         multilineMenuItem.setToolTipText(org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.multilineMenuItem.toolTipText")); // NOI18N
-        multilineMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                multilineMenuItemActionPerformed(evt);
-            }
-        });
+        multilineMenuItem.addActionListener(this::multilineMenuItemActionPerformed);
         flagsPopupMenu.add(multilineMenuItem);
 
         org.openide.awt.Mnemonics.setLocalizedText(literalMenuItem, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.literalMenuItem.text")); // NOI18N
         literalMenuItem.setToolTipText(org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.literalMenuItem.toolTipText")); // NOI18N
-        literalMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                literalMenuItemActionPerformed(evt);
-            }
-        });
+        literalMenuItem.addActionListener(this::literalMenuItemActionPerformed);
         flagsPopupMenu.add(literalMenuItem);
 
         org.openide.awt.Mnemonics.setLocalizedText(dotAllMenuItem, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.dotAllMenuItem.text")); // NOI18N
         dotAllMenuItem.setToolTipText(org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.dotAllMenuItem.toolTipText")); // NOI18N
-        dotAllMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dotAllMenuItemActionPerformed(evt);
-            }
-        });
+        dotAllMenuItem.addActionListener(this::dotAllMenuItemActionPerformed);
         flagsPopupMenu.add(dotAllMenuItem);
 
         org.openide.awt.Mnemonics.setLocalizedText(caseInsensitiveMenuItem, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.caseInsensitiveMenuItem.text")); // NOI18N
         caseInsensitiveMenuItem.setToolTipText(org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.caseInsensitiveMenuItem.toolTipText")); // NOI18N
-        caseInsensitiveMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                caseInsensitiveMenuItemActionPerformed(evt);
-            }
-        });
+        caseInsensitiveMenuItem.addActionListener(this::caseInsensitiveMenuItemActionPerformed);
         flagsPopupMenu.add(caseInsensitiveMenuItem);
 
         org.openide.awt.Mnemonics.setLocalizedText(commentsMenuItem, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.commentsMenuItem.text")); // NOI18N
         commentsMenuItem.setToolTipText(org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.commentsMenuItem.toolTipText")); // NOI18N
-        commentsMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                commentsMenuItemActionPerformed(evt);
-            }
-        });
+        commentsMenuItem.addActionListener(this::commentsMenuItemActionPerformed);
         flagsPopupMenu.add(commentsMenuItem);
 
         org.openide.awt.Mnemonics.setLocalizedText(unixLinesMenuItem, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.unixLinesMenuItem.text")); // NOI18N
         unixLinesMenuItem.setToolTipText(org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.unixLinesMenuItem.toolTipText")); // NOI18N
-        unixLinesMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                unixLinesMenuItemActionPerformed(evt);
-            }
-        });
+        unixLinesMenuItem.addActionListener(this::unixLinesMenuItemActionPerformed);
         flagsPopupMenu.add(unixLinesMenuItem);
 
         org.openide.awt.Mnemonics.setLocalizedText(canonEqMenuItem, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.canonEqMenuItem.text")); // NOI18N
         canonEqMenuItem.setToolTipText(org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.canonEqMenuItem.toolTipText")); // NOI18N
-        canonEqMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                canonEqMenuItemActionPerformed(evt);
-            }
-        });
+        canonEqMenuItem.addActionListener(this::canonEqMenuItemActionPerformed);
         flagsPopupMenu.add(canonEqMenuItem);
 
         org.openide.awt.Mnemonics.setLocalizedText(unicodeCaseMenuItem, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.unicodeCaseMenuItem.text")); // NOI18N
         unicodeCaseMenuItem.setToolTipText(org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.unicodeCaseMenuItem.toolTipText")); // NOI18N
-        unicodeCaseMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                unicodeCaseMenuItemActionPerformed(evt);
-            }
-        });
+        unicodeCaseMenuItem.addActionListener(this::unicodeCaseMenuItemActionPerformed);
         flagsPopupMenu.add(unicodeCaseMenuItem);
 
         org.openide.awt.Mnemonics.setLocalizedText(unicodeCharacterClassMenuItem, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.unicodeCharacterClassMenuItem.text")); // NOI18N
         unicodeCharacterClassMenuItem.setToolTipText(org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.unicodeCharacterClassMenuItem.toolTipText")); // NOI18N
-        unicodeCharacterClassMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                unicodeCharacterClassMenuItemActionPerformed(evt);
-            }
-        });
+        unicodeCharacterClassMenuItem.addActionListener(this::unicodeCharacterClassMenuItemActionPerformed);
         flagsPopupMenu.add(unicodeCharacterClassMenuItem);
 
         org.openide.awt.Mnemonics.setLocalizedText(flagsButton, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.flagsButton.text")); // NOI18N
-        flagsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                flagsButtonActionPerformed(evt);
-            }
-        });
+        flagsButton.addActionListener(this::flagsButtonActionPerformed);
 
         org.openide.awt.Mnemonics.setLocalizedText(examplesButton, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.examplesButton.text")); // NOI18N
-        examplesButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                examplesButtonActionPerformed(evt);
-            }
-        });
+        examplesButton.addActionListener(this::examplesButtonActionPerformed);
 
         org.openide.awt.Mnemonics.setLocalizedText(strictCheckBox, org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.strictCheckBox.text")); // NOI18N
         strictCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(CheckRegexTopComponent.class, "CheckRegexTopComponent.strictCheckBox.toolTipText")); // NOI18N
-        strictCheckBox.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                strictCheckBoxItemStateChanged(evt);
-            }
-        });
+        strictCheckBox.addItemListener(this::strictCheckBoxItemStateChanged);
 
         verticalSplitPane.setDividerLocation(80);
         verticalSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -510,15 +463,6 @@ public final class CheckRegexTopComponent extends TopComponent {
     private javax.swing.JCheckBoxMenuItem unixLinesMenuItem;
     private javax.swing.JSplitPane verticalSplitPane;
     // End of variables declaration//GEN-END:variables
-    @Override
-    public void componentOpened() {
-        // TODO add custom code on component opening
-    }
-
-    @Override
-    public void componentClosed() {
-        // TODO add custom code on component closing
-    }
 
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
@@ -550,8 +494,8 @@ public final class CheckRegexTopComponent extends TopComponent {
                     "Cannot find " + PREFERRED_ID + " component. It will not be located properly in the window system.");   // NOI18N
             return getDefault();
         }
-        if (win instanceof CheckRegexTopComponent) {
-            return (CheckRegexTopComponent) win;
+        if (win instanceof CheckRegexTopComponent regexTC) {
+            return regexTC;
         }
         Logger.getLogger(CheckRegexTopComponent.class.getName()).warning(
                 "There seem to be multiple components with the '" + PREFERRED_ID

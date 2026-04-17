@@ -35,7 +35,6 @@ import org.netbeans.installer.utils.system.windows.WindowsRegistry;
 import static org.netbeans.installer.utils.system.windows.WindowsRegistry.HKLM;
 
 public class JavaFXUtils {
-    /////////////////////////////////////////////////////////////////////////////////
     // Static    
 
     public static String getJavaFXSDKInstallationPath (Platform platform) {        
@@ -45,8 +44,6 @@ public class JavaFXUtils {
     public static String getJavaFXRuntimeInstallationPath (Platform platform) {     
         return getFXRegistryMaxValue(platform, FXRUNTIME_INSTALLATION_KEY);
     }
-
-    /////////////////////////////////////////////////////////////////////////////////
 
     private static String getFXRegistryValue (Platform platform, String registryKey, String registryItemKey) {
         String result = null;
@@ -185,13 +182,11 @@ public class JavaFXUtils {
         return SystemUtils.executeCommand(nbLocation, commands.toArray(new String[]{})).getErrorCode() == 0;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     private JavaFXUtils() {
         // does nothing
     }
 
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
 
     public static final String FXSDK_KEY =

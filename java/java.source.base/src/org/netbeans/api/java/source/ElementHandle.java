@@ -26,8 +26,11 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.jvm.Target;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Name;
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import javax.lang.model.element.Element;
@@ -421,8 +424,6 @@ public final class ElementHandle<T extends Element> {
     public @NonNull ElementKind getKind () {
         return this.kind;
     }
-    
-    private static final WeakSet<ElementHandle<?>> NORMALIZATION_CACHE = new WeakSet<ElementHandle<?>>();
 
     /**
      * Factory method for creating {@link ElementHandle}.
@@ -436,9 +437,7 @@ public final class ElementHandle<T extends Element> {
      * @throws IllegalArgumentException if the element is of an unsupported {@link ElementKind}
      */
     public static @NonNull <T extends Element> ElementHandle<T> create (@NonNull final T element) throws IllegalArgumentException {
-        ElementHandle<T> eh = createImpl(element);
-
-        return (ElementHandle<T>) NORMALIZATION_CACHE.putIfAbsent(eh);
+        return createImpl(element);
     }
     
     /**
@@ -492,9 +491,8 @@ public final class ElementHandle<T extends Element> {
     private static @NonNull <T extends Element> ElementHandle<T> createImpl (@NonNull final T element) throws IllegalArgumentException {
         Parameters.notNull("element", element);
         ElementKind kind = element.getKind();
-        ElementKind simplifiedKind = kind;
         String[] signatures;
-        switch (simplifiedKind) {
+        switch (kind) {
             case PACKAGE:
                 assert element instanceof PackageElement;
                 signatures = new String[]{((PackageElement)element).getQualifiedName().toString()};

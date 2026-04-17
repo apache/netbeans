@@ -1,0 +1,11 @@
+|-DeprecatedAttributeTest [824, 1371] : ESCAPED{DeprecatedAttributeTest}
+|--DeprecatedEnumCase [855, 1064] : ESCAPED{DeprecatedEnumCase}
+|---Case1 [885, 890] : ESCAPED{Case1}
+|---DeprecatedCase1 [919, 934] : ESCAPED{DeprecatedCase1}
+|---DeprecatedCase2 [995, 1010] : DEPRECATED{ESCAPED{DeprecatedCase2}}
+|---DeprecatedCase3 [1046, 1061] : DEPRECATED{ESCAPED{DeprecatedCase3}}
+|--DeprecatedBackedEnumCase [1071, 1371] : ESCAPED{DeprecatedBackedEnumCase}<font color="#999999">(ESCAPED{string})</font>
+|---Case1 [1115, 1120] : ESCAPED{Case1}ESCAPED{ }<font color="#999999">ESCAPED{"case 1"}</font>
+|---DeprecatedCase1 [1160, 1175] : ESCAPED{DeprecatedCase1}ESCAPED{ }<font color="#999999">ESCAPED{"deprecated case 1"}</font>
+|---DeprecatedCase2 [1258, 1273] : DEPRECATED{ESCAPED{DeprecatedCase2}}ESCAPED{ }<font color="#999999">ESCAPED{"deprecated case 2"}</font>
+|---DeprecatedCase3 [1331, 1346] : DEPRECATED{ESCAPED{DeprecatedCase3}}ESCAPED{ }<font color="#999999">ESCAPED{"deprecated case 3"}</font>

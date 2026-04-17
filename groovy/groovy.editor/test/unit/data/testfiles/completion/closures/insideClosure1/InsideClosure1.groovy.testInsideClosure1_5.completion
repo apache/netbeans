@@ -10,6 +10,7 @@ CLASS      IdentityHashMap                            null
 CLASS      IllegalAccessError                         null
 CLASS      IllegalAccessException                     null
 CLASS      IllegalArgumentException                   null
+CLASS      IllegalCallerException                     null
 CLASS      IllegalFormatCodePointExceptio             null
 CLASS      IllegalFormatConversionExcepti             null
 CLASS      IllegalFormatException                     null

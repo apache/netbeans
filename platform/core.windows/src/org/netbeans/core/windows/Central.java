@@ -102,7 +102,6 @@ final class Central implements ControllerHandler {
                                                 : View.TOPCOMPONENT_ATTENTION_HIGHLIGHT_OFF, tc, tc));
     }
     
-    /////////////////////
     // Mutators >>
     /** Sets visible or invisible window system and requests view accordingly. */
     public void setVisible(boolean visible) {
@@ -590,7 +589,6 @@ final class Central implements ControllerHandler {
         }
     }
     
-    ////////////////////////////
     // Mode specific >>
     private void closeMode(ModeImpl mode) {
         if(mode == null) {
@@ -1119,9 +1117,7 @@ final class Central implements ControllerHandler {
         // It is silent now, has to be used only for closed yet unloaded components!
         model.removeModeClosedTopComponentID(mode, tcID);
     }
-    /// << Mode specific    
-    //////////////////////////////
-    
+    // << Mode specific    
     // TopComponentGroup>>
     public boolean isGroupOpened(TopComponentGroupImpl tcGroup) {
         return model.isGroupOpened(tcGroup);
@@ -1398,13 +1394,7 @@ final class Central implements ControllerHandler {
     }
     // XXX<<
     // TopComponentGroup<<
-    //////////////////////////////
-    
     // Mutators <<
-    /////////////////////
-
-    
-    /////////////////////
     // Accessors>>
     
     /** Indicates whether windows system shows GUI. */
@@ -1498,8 +1488,7 @@ final class Central implements ControllerHandler {
         return model.getToolbarConfigName();
     }
 
-    ////////////////////////////////
-    /// >> Mode specific
+    // >> Mode specific
     /** Gets programatic name of mode. */
     public String getModeName(ModeImpl mode) {
         return model.getModeName(mode);
@@ -1600,10 +1589,7 @@ final class Central implements ControllerHandler {
         model.addModeOtherName( mode, modeOtherName );
     }
     
-    /// << Mode specific
-    ////////////////////////////////
-    
-    ////////////////////////////////////
+    // << Mode specific
     // TopComponentGroup specific >>
     public Set<TopComponentGroupImpl> getTopComponentGroups() {
         return model.getTopComponentGroups();
@@ -1627,12 +1613,7 @@ final class Central implements ControllerHandler {
         return model.getGroupClosingTopComponents(tcGroup);
     }
     // TopComponentGroup specific <<
-    ////////////////////////////////////
-
     // Accessors<<
-    /////////////////////
-    
-    
     // Others>>
     // PENDING>>
     public void topComponentDisplayNameChanged(ModeImpl mode, TopComponent tc) {
@@ -1868,7 +1849,6 @@ final class Central implements ControllerHandler {
     }
     
     
-    ///////////////////////////
     // ControllerHandler>>
     @Override
     public void userActivatedMode(ModeImpl mode) {
@@ -3076,8 +3056,6 @@ final class Central implements ControllerHandler {
     }
     
     // ControllerHandler <<
-    ////////////////////////////
-    
     /**
      * Creates a new mode and moves the given TopComponent into it.
      * @param tc 

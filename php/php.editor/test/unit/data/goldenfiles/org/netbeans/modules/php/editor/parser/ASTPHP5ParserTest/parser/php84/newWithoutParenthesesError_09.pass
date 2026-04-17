@@ -1,0 +1,84 @@
+<testresult testFile='newWithoutParenthesesError_09.php'>
+    <scanner>
+        <token id='T_STRING' start='159' end='163'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='163' end='164'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='164' end='167'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='168' end='172'>
+            <text>Test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='172' end='173'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='173' end='174'>
+            <text>)</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='174' end='176'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='176' end='177'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='177' end='178'>
+            <text>;</text>
+        </token>
+        <token id='T_ECHO' start='180' end='184'>
+            <text>echo</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='185' end='191'>
+            <text>"test"</text>
+        </token>
+        <token id='T_SEMICOLON' start='191' end='192'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='193' end='193'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='193'>
+        <Comments>
+            <Comment start='6' end='158' commentType='singleLine'/>
+            <Comment start='6' end='158' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='159' end='178'>
+                <FunctionInvocation start='159' end='177'>
+                    <FucntionName start='159' end='163'>
+                        <NamespaceName start='159' end='163' isCurrent='false' isGlobal='false'>
+                            <Identifier start='159' end='163' name='test'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <StaticConstantAccess start='164' end='176' isDynamicName='false'>
+                            <ClassInstanceCreationVariable start='164' end='174'>
+                                <ClassInstanceCreation start='164' end='174' anonymous='false'>
+                                    <ClassName start='168' end='172'>
+                                        <NamespaceName start='168' end='172' isCurrent='false' isGlobal='false'>
+                                            <Identifier start='168' end='172' name='Test'/>
+                                        </NamespaceName>
+                                    </ClassName>
+                                    <Parameters>
+                                    </Parameters>
+                                </ClassInstanceCreation>
+                            </ClassInstanceCreationVariable>
+                            <Constant>
+                                <Identifier start='176' end='176' name=''/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='176' end='176' name=''/>
+                            </Member>
+                        </StaticConstantAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+            <EchoStatement start='180' end='192'>
+                <Scalar start='185' end='191' type='STRING' value='"test"'/>
+            </EchoStatement>
+        </Statements>
+    </Program>
+</testresult>

@@ -32,7 +32,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Date;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -60,7 +60,6 @@ import org.netbeans.api.queries.FileBuiltQuery.Status;
 import org.netbeans.api.queries.VisibilityQuery;
 import org.netbeans.modules.java.preprocessorbridge.api.CompileOnSaveActionQuery;
 import org.netbeans.modules.java.preprocessorbridge.spi.CompileOnSaveAction;
-import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.indexing.COSSynchronizingIndexer;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.java.source.parsing.FileObjects;
@@ -80,7 +79,6 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -125,7 +123,7 @@ public class BuildArtifactMapperImpl {
         }
     }
 
-    private static final Set<Object> alreadyWarned = new WeakSet<Object>();
+    private static final Set<Object> alreadyWarned = Collections.newSetFromMap(new WeakHashMap<>());
 
     private static boolean protectAgainstErrors(URL targetFolder, FileObject[][] sources, Object context) throws MalformedURLException {
         Preferences pref = NbPreferences.forModule(BuildArtifactMapperImpl.class).node(BuildArtifactMapperImpl.class.getSimpleName());
@@ -247,34 +245,15 @@ public class BuildArtifactMapperImpl {
             LOG.log(Level.FINER, "#227791: proceeding to overwrite {0} with {1}", new Object[] {target, updatedFile});
         }
 
-        InputStream ins = null;
-        OutputStream out = null;
 
         try {
-            ins = new FileInputStream(updatedFile);
-            out = new FileOutputStream(target);
-
-            FileUtil.copy(ins, out);
+            try (InputStream ins = new FileInputStream(updatedFile); OutputStream out = new FileOutputStream(target)) {
+                ins.transferTo(out);
+            }
             return true;
         } catch (FileNotFoundException fnf) {
             LOG.log(Level.INFO, "Cannot open file.", fnf);   //NOI18N
             return false;
-        } finally {
-            if (ins != null) {
-                try {
-                    ins.close();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
         }
     }
     
@@ -286,31 +265,9 @@ public class BuildArtifactMapperImpl {
             }
         }
 
-        InputStream ins = null;
-        OutputStream out = null;
-
-        try {
-            ins = updatedFile.getInputStream();
-            out = new FileOutputStream(target);
-
-            FileUtil.copy(ins, out);
+        try (InputStream ins = updatedFile.getInputStream(); OutputStream out = new FileOutputStream(target)) {
+            ins.transferTo(out);
             //target.setLastModified(MINIMAL_TIMESTAMP); see 156153
-        } finally {
-            if (ins != null) {
-                try {
-                    ins.close();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
         }
     }
 
@@ -589,7 +546,7 @@ public class BuildArtifactMapperImpl {
 
         private RequestProcessor NOTIFY = new RequestProcessor(FileChangeListenerImpl.class.getName());
         
-        private Set<ChangeListener> notify = new WeakSet<ChangeListener>();
+        private Set<ChangeListener> notify = Collections.newSetFromMap(new WeakHashMap<>());
         
         public void fileCreated(FileChangeSupportEvent event) {
             notifyListeners();

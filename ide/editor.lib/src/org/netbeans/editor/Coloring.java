@@ -41,7 +41,7 @@ import org.netbeans.modules.editor.lib.drawing.DrawContext;
 * by using the modes. There are two modes - font-mode and color-mode.
 * The deafult font-mode simply overwrites the whole font. The font-mode
 * constants allow to change the underlying font by only changing some
-* of the font-name, style or size. The <tt>FONT_MODE_APPLY_STYLE</tt>
+* of the font-name, style or size. The <code>FONT_MODE_APPLY_STYLE</code>
 * for example will only apply the style of the coloring's font.
 * The "rest" of the coloring's font (name and size in this case)
 * is not used so there can be any valid values ("Monospaced" and 12 for example).

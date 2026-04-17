@@ -29,10 +29,7 @@ import org.netbeans.modules.glassfish.tooling.utils.OsUtils;
  */
 public class RunnerAsadminRestoreDomain extends RunnerAsadmin {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER
             = new Logger(RunnerAsadminRestoreDomain.class);
@@ -50,10 +47,7 @@ public class RunnerAsadminRestoreDomain extends RunnerAsadmin {
     private static final String FORCE_PARAM = "--force";
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Builds <code>change-admin-password</code> command query string.
      */
@@ -88,18 +82,12 @@ public class RunnerAsadminRestoreDomain extends RunnerAsadmin {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Holding data for command execution. */
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     final CommandRestoreDomain command;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * command line asadmin interface.
@@ -119,10 +107,7 @@ public class RunnerAsadminRestoreDomain extends RunnerAsadmin {
         }
     }
  
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create internal <code>ProcessIOContent</code> object corresponding
      * to command execution IO.

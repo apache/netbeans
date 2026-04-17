@@ -54,7 +54,6 @@ import org.netbeans.modules.csl.spi.support.CancelSupport;
 import org.netbeans.modules.javascript2.lexer.api.JsTokenId;
 import org.netbeans.modules.javascript2.lexer.api.LexUtilities;
 import org.netbeans.modules.javascript2.model.api.ModelUtils;
-import org.netbeans.modules.javascript2.editor.parser.JsParserResult;
 import org.netbeans.modules.javascript2.model.api.Index;
 import org.netbeans.modules.javascript2.model.api.JsReference;
 import org.netbeans.modules.javascript2.types.api.Type;
@@ -146,8 +145,8 @@ public class JsStructureScanner implements StructureScanner {
                         collectedItems.add(new JsFunctionStructureItem(function, children, result));
                     }
                 }
-            } else if (((child.getJSKind() == JsElement.Kind.OBJECT && (children.size() > 0 || child.isDeclared())) || child.getJSKind() == JsElement.Kind.OBJECT_LITERAL || child.getJSKind() == JsElement.Kind.ANONYMOUS_OBJECT)
-                    && (children.size() > 0 || child.isDeclared())) {
+            } else if (((child.getJSKind() == JsElement.Kind.OBJECT && (!children.isEmpty() || child.isDeclared())) || child.getJSKind() == JsElement.Kind.OBJECT_LITERAL || child.getJSKind() == JsElement.Kind.ANONYMOUS_OBJECT)
+                    && (!children.isEmpty() || child.isDeclared())) {
                 if(!(jsObject.getJSKind() == JsElement.Kind.FILE && JsTokenId.JSON_MIME_TYPE.equals(jsObject.getMimeType()))) {
                     collectedItems.add(new JsObjectStructureItem(child, children, result));
                 } else {
@@ -172,8 +171,7 @@ public class JsStructureScanner implements StructureScanner {
             }
          }
 
-        if (jsObject instanceof JsFunction) {
-            JsFunction jsFunction = (JsFunction)jsObject;
+        if (jsObject instanceof JsFunction jsFunction) {
             for (JsObject param: jsFunction.getParameters()) {
                 if (hasDeclaredProperty(param) && !(jsObject instanceof JsReference && !((JsReference)jsObject).getOriginal().isAnonymous())) {
                     final List<StructureItem> items = new ArrayList<>();
@@ -224,14 +222,16 @@ public class JsStructureScanner implements StructureScanner {
         return false;
     }
 
-    private boolean isNotAnonymousFunction(TokenSequence ts, int functionKeywordPosition) {
+    private boolean isNotAnonymousFunction(TokenSequence<?> tsInput, int functionKeywordPosition) {
+        @SuppressWarnings("unchecked")
+        TokenSequence<JsTokenId> ts = (TokenSequence<JsTokenId>) tsInput;
         // expect that the ts in on "{"
         int position = ts.offset();
         boolean value = false;
         // find the function keyword
         ts.move(functionKeywordPosition);
         ts.moveNext();
-        Token<? extends JsTokenId> token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.WHITESPACE));
+        Token<?> token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.WHITESPACE));
         if ((token.id() == JsTokenId.OPERATOR_ASSIGNMENT || token.id() == JsTokenId.OPERATOR_COLON) && ts.movePrevious()) {
             token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.WHITESPACE));
             if (token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) {
@@ -274,8 +274,8 @@ public class JsStructureScanner implements StructureScanner {
             folds = foldsJson((ParserResult)info);
         } else {
             folds = new HashMap<>();
-            TokenHierarchy th = info.getSnapshot().getTokenHierarchy();
-            TokenSequence ts = th.tokenSequence(language);
+            TokenHierarchy<?> th = info.getSnapshot().getTokenHierarchy();
+            TokenSequence<?> ts = th.tokenSequence(language);
             List<TokenSequence<?>> list = th.tokenSequenceList(ts.languagePath(), 0, info.getSnapshot().getText().length());
             List<FoldingItem> stack = new ArrayList<>();
             for (TokenSequenceIterator tsi = new TokenSequenceIterator(list, false); tsi.hasMore();) {
@@ -334,8 +334,8 @@ public class JsStructureScanner implements StructureScanner {
 
     private Map<String, List<OffsetRange>> foldsJson(ParserResult info) {
         final Map<String, List<OffsetRange>> folds = new HashMap<>();
-        TokenHierarchy th = info.getSnapshot().getTokenHierarchy();
-        TokenSequence ts = th.tokenSequence(language);
+        TokenHierarchy<?> th = info.getSnapshot().getTokenHierarchy();
+        TokenSequence<?> ts = th.tokenSequence(language);
         List<TokenSequence<?>> list = th.tokenSequenceList(ts.languagePath(), 0, info.getSnapshot().getText().length());
         List<FoldingItem> stack = new ArrayList<>();
         for (TokenSequenceIterator tsi = new TokenSequenceIterator(list, false); tsi.hasMore();) {
@@ -421,6 +421,7 @@ public class JsStructureScanner implements StructureScanner {
         }
 
         @Override
+        @SuppressWarnings("AccessingNonPublicFieldOfAnotherObject")
         public boolean equals(Object obj) {
             if (obj == null) {
                 return false;
@@ -479,7 +480,7 @@ public class JsStructureScanner implements StructureScanner {
             Set<Modifier> modifiers;
 
             if (modelElement.getModifiers().isEmpty()) {
-                modifiers = Collections.EMPTY_SET;
+                modifiers = Collections.emptySet();
             } else {
                 modifiers = EnumSet.noneOf(Modifier.class);
                 modifiers.addAll(modelElement.getModifiers());
@@ -667,30 +668,30 @@ public class JsStructureScanner implements StructureScanner {
         public ImageIcon getCustomIcon() {
             if (getFunctionScope().getJSKind() == JsElement.Kind.CALLBACK) {
                 if (callbackIcon == null) {
-                    callbackIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/methodCallback.png")); //NOI18N
+                    callbackIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/methodCallback.png", false); //NOI18N
                 }
                 return callbackIcon;
             } else  if (getFunctionScope().getJSKind() == JsElement.Kind.GENERATOR) {
                 if (getModifiers().contains(Modifier.PUBLIC)) {
                     if (publicGenerator == null) {
-                        publicGenerator = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/generatorPublic.png")); //NOI18N
+                        publicGenerator = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/generatorPublic.png", false); //NOI18N
                     }
                     return publicGenerator;
                 } else if (getModifiers().contains(Modifier.PRIVATE)) {
                     if (privateGenerator == null) {
-                        privateGenerator = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/generatorPrivate.png")); //NOI18N
+                        privateGenerator = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/generatorPrivate.png", false); //NOI18N
                     }
                     return privateGenerator;
                 } else if (getModifiers().contains(Modifier.PROTECTED)) {
                     if (priviligedGenerator == null) {
-                        priviligedGenerator = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/generatorPriviliged.png")); //NOI18N
+                        priviligedGenerator = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/generatorPriviliged.png", false); //NOI18N
                     }
                     return priviligedGenerator;
                 }
             }
             if (getModifiers().contains(Modifier.PROTECTED)) {
                 if(priviligedIcon == null) {
-                    priviligedIcon = new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/javascript2/editor/resources/methodPriviliged.png")); //NOI18N
+                    priviligedIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/javascript2/editor/resources/methodPriviliged.png", false); //NOI18N
                 }
                 return priviligedIcon;
             }

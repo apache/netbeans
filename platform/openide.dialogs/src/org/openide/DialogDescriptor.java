@@ -286,7 +286,7 @@ public class DialogDescriptor extends NotifyDescriptor implements HelpCtx.Provid
 
         int oldValue = this.optionsAlign;
         this.optionsAlign = optionsAlign;
-        firePropertyChange(PROP_OPTIONS_ALIGN, new Integer(oldValue), new Integer(optionsAlign));
+        firePropertyChange(PROP_OPTIONS_ALIGN, oldValue, optionsAlign);
     }
 
     /** Get modal status.
@@ -312,7 +312,7 @@ public class DialogDescriptor extends NotifyDescriptor implements HelpCtx.Provid
 
         boolean oldModal = this.modal;
         this.modal = modal;
-        firePropertyChange(PROP_MODAL, Boolean.valueOf(oldModal), Boolean.valueOf(modal));
+        firePropertyChange(PROP_MODAL, oldModal, modal);
     }
 
     /** Get leaf status. If is leaf then cannot be the owner to other one dialog.

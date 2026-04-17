@@ -73,6 +73,7 @@ import com.sun.source.doctree.ValueTree;
 import com.sun.source.doctree.VersionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.YieldTree;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.DocTreeScanner;
 
@@ -855,6 +856,13 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     @Override
+    public void visitModuleImport(JCModuleImport tree) {
+        print("import module ");
+        print(tree.module);
+        print(';');
+    }
+
+    @Override
     public void visitClassDef(JCClassDecl tree) {
         JCClassDecl enclClassPrev = enclClass;
 	enclClass = tree;
@@ -1355,8 +1363,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 print(tree.getGuard());
             }
         }
-        Object caseKind = tree.getCaseKind();
-        if (caseKind == null || !String.valueOf(caseKind).equals("RULE")) {
+        if (tree.getCaseKind() != CaseTree.CaseKind.RULE) {
             print(':');
             newline();
             indent();
@@ -1364,7 +1371,12 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             undent(old);
         } else {
             print(" -> "); //TODO: configure spaces!
-            printStat(tree.stats.head);
+            if (tree.stats.head.getKind() == Kind.YIELD) {
+                print((JCTree) ((YieldTree) tree.stats.head).getValue());
+                print(";");
+            } else {
+                printStat(tree.stats.head);
+            }
             undent(old);
         }
     }
@@ -2882,22 +2894,14 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 
     public void printFlags(long flags, boolean addSpace) {
 	print(flagNames(flags & ~INTERFACE & ~ANNOTATION & ~ENUM));
-        if ((flags & StandardFlags) != 0) {
+        if ((flags & (StandardFlags | Flags.SEALED | Flags.NON_SEALED)) != 0) {
             if (cs.placeNewLineAfterModifiers())
                 toColExactly(out.leftMargin);
             else if (addSpace)
 	        needSpace();
         }
     }
-    
-    private static final String[] flagLowerCaseNames = new String[Flag.values().length];
-    
-    static {
-        for (Flag flag : Flag.values()) {
-            flagLowerCaseNames[flag.ordinal()] = flag.name().toLowerCase(Locale.ENGLISH);
-        }
-    }
-    
+
     /**
      * Workaround for defect #239258. Prints flag names converted to lowercase in ENGLISH locale to 
      * avoid weird Turkish I > i-without-dot-above conversion.
@@ -2909,9 +2913,10 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         flags = flags & Flags.ExtendedStandardFlags;
         StringBuilder buf = new StringBuilder();
         String sep = ""; // NOI18N
-        for (Flag flag : Flags.asFlagSet(flags)) {
+        for (FlagsEnum flag : Flags.asFlagSet(flags)) {
             buf.append(sep);
-            String fname = flagLowerCaseNames[flag.ordinal()];
+            // Since JDK26 javac FlagsEnum#toString is usable for printing
+            String fname = flag.toString();
             buf.append(fname);
             sep = " "; // NOI18N
         }
@@ -2952,8 +2957,13 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         int lastGroup = -1;
         for (JCTree importStat : imports) {
             if (importGroups != null) {
-                Name name = fullName(((JCImport)importStat).qualid);
-                int group = name != null ? importGroups.getGroupId(name.toString(), ((JCImport)importStat).staticImport) : -1;
+                int group;
+                if (importStat instanceof JCImport imp) {
+                    Name name = fullName(imp.qualid);
+                    group = name != null ? importGroups.getGroupId(name.toString(), imp.staticImport) : -1;
+                } else {
+                    group = -1;
+                }
                 if (lastGroup >= 0 && lastGroup != group)
                     blankline();
                 lastGroup = group;

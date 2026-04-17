@@ -35,7 +35,6 @@ import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -176,7 +175,7 @@ public abstract class ExportDiffSupport {
                         return true; 
                     }
                 };
-                final ProgressHandle handle = ProgressHandleFactory.createHandle(getMessage("CTL_Attaching"), c);
+                final ProgressHandle handle = ProgressHandle.createHandle(getMessage("CTL_Attaching"), c);
                 handle.start();
                 t[0] = Utils.createTask(new Runnable() {
                     public void run() {

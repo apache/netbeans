@@ -579,7 +579,7 @@ public class NbMoveRefactoringPlugin extends AbstractRefactoringPlugin {
     
     
     
-    ///------- copied from MoveRefactoringPlugin
+    //------- copied from MoveRefactoringPlugin
     
     private void setup(Collection fileObjects, String postfix, boolean recursively) {
         for (Iterator i = fileObjects.iterator(); i.hasNext(); ) {

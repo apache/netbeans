@@ -46,9 +46,10 @@ public class ListsAndCountersModuleTest extends CssModuleTestBase {
                 "repeating-radial-gradient","disc","lower-alpha","lower-roman",
                 "!identifier","georgian","element","upper-alpha","armenian",
                 "upper-latin","linear-gradient","!string","image","decimal",
-                "upper-roman","!uri","cross-fade","radial-gradient","inside",
-                "decimal-leading-zero","square", "circle","none","symbols",
-                "outside", "initial", "inherit", "unset", "var");
+                "upper-roman","!uri","cross-fade","radial-gradient", "conic-gradient",
+                "inside", "decimal-leading-zero","square", "circle","none",
+                "symbols", "outside", "initial", "inherit", "unset", "revert",
+                "image-set", "var");
     }
     
     public void testListStyleType() {
@@ -66,14 +67,14 @@ public class ListsAndCountersModuleTest extends CssModuleTestBase {
             "lower-latin", "circle", "lower-greek", "decimal", "upper-roman",
             "disc", "lower-alpha", "symbols", "lower-roman", "none",
             "decimal-leading-zero", "square", "!identifier", "initial",
-            "inherit", "unset", "var");
+            "inherit", "unset", "revert", "var");
         
         assertAlternatives(p.getGrammarElement(null), "symbols", "(");
         assertAlternatives(p.getGrammarElement(null), "symbols(",
             "repeating-linear-gradient", "element", "numeric", "linear-gradient",
             "!string", "alphabetic", "image", "symbolic", "repeating-radial-gradient",
             "!uri", "repeating", "cross-fade", "non-repeating", "radial-gradient",
-            "var");
+            "conic-gradient", "image-set", "var");
     }
     
     public void testListStyleImage() {

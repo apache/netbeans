@@ -1,0 +1,4 @@
+Code completion result for source line:
+}->publicMet|hod7()::publicStaticTestMethod7();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicMethod7()                 [PUBLIC]   {}

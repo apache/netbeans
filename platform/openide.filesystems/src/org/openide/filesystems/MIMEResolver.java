@@ -194,7 +194,7 @@ public abstract class MIMEResolver {
          * Show file filters for this MIME type. Set localized names of file
          * filters that should contain files resolved by this resolver.
          *
-         * @see <a href="@org-openide-filesystems-nb@/org/openide/filesystems/FileChooserBuilder.html#addDefaultFileFilters--" >FileChooserBuilder#addDefaultFileFilters()</a>
+         * @see <a href="@org-openide-filesystems-nb@/org/openide/filesystems/FileChooserBuilder.html#addDefaultFileFilters()" >FileChooserBuilder#addDefaultFileFilters()</a>
          * @since 8.1
          */
         public String[] showInFileChooser() default {};
@@ -327,7 +327,7 @@ public abstract class MIMEResolver {
          * types resolved by file name or extension (not by file content) are
          * supported.
          *
-         * @see <a href="@org-openide-filesystems-nb@/org/openide/filesystems/FileChooserBuilder.html#addDefaultFileFilters--" >FileChooserBuilder#addDefaultFileFilters()</a>
+         * @see <a href="@org-openide-filesystems-nb@/org/openide/filesystems/FileChooserBuilder.html#addDefaultFileFilters()" >FileChooserBuilder#addDefaultFileFilters()</a>
          * @since 8.1
          */
         public String[] showInFileChooser() default {};

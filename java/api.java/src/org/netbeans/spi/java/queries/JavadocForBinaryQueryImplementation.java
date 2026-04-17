@@ -33,7 +33,7 @@ import org.netbeans.api.java.queries.JavadocForBinaryQuery;
  * this query, if it depends on the Java Project module and uses this style.
  * </p>
  * @see JavadocForBinaryQuery
- * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup--">Project#getLookup</a>
+ * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup()">Project#getLookup</a>
  * @author David Konecny, Jesse Glick
  * @since org.netbeans.api.java/1 1.4
  */

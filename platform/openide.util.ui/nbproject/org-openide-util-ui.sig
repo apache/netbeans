@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.34
+#Version 9.40
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -15,6 +15,7 @@ meth public void addFlavorListener(java.awt.datatransfer.FlavorListener)
 meth public void removeFlavorListener(java.awt.datatransfer.FlavorListener)
 meth public void setContents(java.awt.datatransfer.Transferable,java.awt.datatransfer.ClipboardOwner)
 supr java.lang.Object
+hfds currentDataFlavors,flavorListeners,name
 
 CLSS public abstract interface java.awt.datatransfer.Transferable
 meth public abstract boolean isDataFlavorSupported(java.awt.datatransfer.DataFlavor)
@@ -76,6 +77,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public abstract java.io.InputStream
 cons public init()
@@ -94,7 +96,9 @@ meth public static java.io.InputStream nullInputStream()
 meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
+meth public void skipNBytes(long) throws java.io.IOException
 supr java.lang.Object
+hfds DEFAULT_BUFFER_SIZE,MAX_BUFFER_SIZE,MAX_SKIP_BUFFER_SIZE
 
 CLSS public abstract interface java.io.ObjectInput
 intf java.io.DataInput
@@ -148,6 +152,8 @@ meth public void readFully(byte[]) throws java.io.IOException
 meth public void readFully(byte[],int,int) throws java.io.IOException
 meth public void registerValidation(java.io.ObjectInputValidation,int) throws java.io.InvalidObjectException,java.io.NotActiveException
 supr java.io.InputStream
+hfds NULL_HANDLE,UNSAFE,bin,closed,curContext,defaultDataEnd,depth,enableOverride,enableResolve,handles,passHandle,primClasses,serialFilter,streamFilterSet,totalObjectRefs,unsharedMarker,vlist
+hcls BlockDataInputStream,Caches,FieldValues,FilterValues,HandleTable,Logging,PeekInputStream,ValidationList
 
 CLSS public abstract interface java.io.ObjectOutput
 intf java.io.DataOutput
@@ -197,6 +203,8 @@ meth public void writeShort(int) throws java.io.IOException
 meth public void writeUTF(java.lang.String) throws java.io.IOException
 meth public void writeUnshared(java.lang.Object) throws java.io.IOException
 supr java.io.OutputStream
+hfds bout,curContext,curPut,debugInfoStack,depth,enableOverride,enableReplace,extendedDebugInfo,handles,primVals,protocol,subs
+hcls BlockDataOutputStream,Caches,DebugTraceInfoStack,HandleTable,PutFieldImpl,ReplaceTable
 
 CLSS public abstract interface java.io.ObjectStreamConstants
 fld public final static byte SC_BLOCK_DATA = 8
@@ -264,6 +272,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -302,6 +311,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -324,6 +334,8 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -363,6 +375,8 @@ meth public java.lang.Object clone()
 meth public java.lang.Object parseObject(java.lang.String) throws java.text.ParseException
 meth public java.text.AttributedCharacterIterator formatToCharacterIterator(java.lang.Object)
 supr java.lang.Object
+hfds serialVersionUID
+hcls FieldDelegate
 
 CLSS public abstract java.util.AbstractCollection<%0 extends java.lang.Object>
 cons protected init()
@@ -405,6 +419,7 @@ meth public {java.util.AbstractMap%1} get(java.lang.Object)
 meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.AbstractMap%1})
 meth public {java.util.AbstractMap%1} remove(java.lang.Object)
 supr java.lang.Object
+hfds keySet,values
 
 CLSS public abstract java.util.AbstractSet<%0 extends java.lang.Object>
 cons protected init()
@@ -446,6 +461,7 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
+hfds serialVersionUID
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry
@@ -854,15 +870,20 @@ meth public final static java.awt.Image assignToolTipToImage(java.awt.Image,java
 meth public final static java.awt.Image icon2Image(javax.swing.Icon)
 meth public final static java.awt.Image loadImage(java.lang.String)
 meth public final static java.awt.Image loadImage(java.lang.String,boolean)
+meth public final static java.awt.Image loadImage(java.net.URI)
 meth public final static java.awt.Image mergeImages(java.awt.Image,java.awt.Image,int,int)
 meth public final static java.lang.String getImageToolTip(java.awt.Image)
 meth public final static javax.swing.Icon image2Icon(java.awt.Image)
+meth public final static javax.swing.Icon loadIcon(java.lang.String)
+meth public final static javax.swing.Icon loadIcon(java.lang.String,boolean)
+meth public final static javax.swing.Icon mergeIcons(javax.swing.Icon,javax.swing.Icon,int,int)
+meth public final static javax.swing.ImageIcon icon2ImageIcon(javax.swing.Icon)
 meth public final static javax.swing.ImageIcon loadImageIcon(java.lang.String,boolean)
 meth public static java.awt.Image createDisabledImage(java.awt.Image)
 meth public static java.net.URL findImageBaseURL(java.awt.Image)
 meth public static javax.swing.Icon createDisabledIcon(javax.swing.Icon)
 supr java.lang.Object
-hfds DARK_LAF_SUFFIX,ERR,LOGGER,NO_ICON,PNG_READER,TOOLTIP_SEPAR,cache,classLoaderLoader,component,compositeCache,dummyIconComponentButton,dummyIconComponentLabel,extraInitialSlashes,imageIconFilter,imageToolTipCache,localizedCache,mediaTrackerID,svgLoaderLoader,tracker
+hfds DARK_LAF_SUFFIX,LOGGER,NO_ICON,PNG_READER,TOOLTIP_SEPAR,cache,classLoaderLoader,component,compositeCache,dummyIconComponentButton,dummyIconComponentLabel,extraInitialSlashes,imageIconFilter,imageToolTipCache,localizedCache,mediaTrackerID,svgLoaderLoader,tracker
 hcls ActiveRef,CachedLookupLoader,CompositeImageKey,DisabledButtonFilter,IconImageIcon,MergedIcon,ToolTipImage,ToolTipImageKey
 
 CLSS public abstract org.openide.util.Lookup
@@ -1431,6 +1452,7 @@ meth public static javax.swing.event.DocumentListener document(javax.swing.event
 supr java.lang.Object
 
 CLSS public org.openide.util.WeakSet<%0 extends java.lang.Object>
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="")
 cons public init()
 cons public init(int)
 cons public init(int,float)

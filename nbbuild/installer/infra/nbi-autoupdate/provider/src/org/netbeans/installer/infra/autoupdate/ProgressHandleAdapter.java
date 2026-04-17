@@ -27,7 +27,6 @@ import org.netbeans.installer.utils.progress.ProgressListener;
  *
  */
 public class ProgressHandleAdapter implements ProgressListener {
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     private ProgressHandle progressHandle;
     
@@ -38,7 +37,7 @@ public class ProgressHandleAdapter implements ProgressListener {
         this.progressHandle.start(Progress.COMPLETE);
     }
     
-    // progresslistener /////////////////////////////////////////////////////////////
+    // progresslistener
     public void progressUpdated(
             final Progress progress) {
         progressHandle.setDisplayName(

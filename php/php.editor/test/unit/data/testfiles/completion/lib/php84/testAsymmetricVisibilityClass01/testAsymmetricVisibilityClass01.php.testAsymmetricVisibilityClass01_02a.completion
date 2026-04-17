@@ -1,0 +1,6 @@
+Code completion result for source line:
+privat|e(set) string|int $privateSet = 1; // prop
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    private                                    null
+KEYWORD    private(set)                               null

@@ -21,7 +21,6 @@ package org.netbeans.modules.parsing.lucene.support;
 
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.parsing.lucene.IndexFactory;
-import org.netbeans.modules.parsing.lucene.LuceneIndex;
 import org.openide.util.Parameters;
 
 /**

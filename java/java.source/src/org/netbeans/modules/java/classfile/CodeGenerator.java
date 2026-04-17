@@ -46,7 +46,6 @@ import com.sun.tools.javap.ConstantWriter;
 import com.sun.tools.javap.Context;
 import com.sun.tools.javap.Messages;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -140,12 +139,8 @@ public class CodeGenerator {
 
         try {
             FileObject file = FileUtil.createMemoryFileSystem().getRoot().createData(toOpenHandle.getKind() == ElementKind.MODULE ? "module-info.java" : "test.java");  //NOI18N
-            OutputStream out = file.getOutputStream();
-
-            try {
-                FileUtil.copy(new ByteArrayInputStream("".getBytes(StandardCharsets.UTF_8)), out); //NOI18N
-            } finally {
-                out.close();
+            try (OutputStream out = file.getOutputStream()) {
+                out.write("".getBytes(StandardCharsets.UTF_8)); 
             }
 
             JavaSource js = JavaSource.create(cpInfo, file);
@@ -270,11 +265,8 @@ public class CodeGenerator {
                 if (resultFile != null && !resultFile.canWrite()) {
                     resultFile.setWritable(true);
                 }
-                out = result[0].getOutputStream();
-                try {
-                    FileUtil.copy(new ByteArrayInputStream(r.getResultingSource(file).getBytes(StandardCharsets.UTF_8)), out);
-                } finally {
-                    out.close();
+                try (OutputStream out = result[0].getOutputStream()) {
+                    out.write(r.getResultingSource(file).getBytes(StandardCharsets.UTF_8));
                 }
                 if (resultFile != null) {
                     resultFile.setReadOnly();
@@ -406,14 +398,14 @@ public class CodeGenerator {
 
                 switch (e.getKind()) {
                     case CLASS:
-                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getSuperclass()), computeSuper(e.getInterfaces()), members));
+                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getSuperclass()), computeSuper(e.getInterfaces()), computeSuper(e.getPermittedSubclasses()), members));
                     case INTERFACE:
-                        return addDeprecated(e, make.Interface(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getInterfaces()), members));
+                        return addDeprecated(e, make.Interface(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), computeSuper(e.getInterfaces()), computeSuper(e.getPermittedSubclasses()), members));
                     case ENUM:
                         return addDeprecated(e, make.Enum(mods, e.getSimpleName(), computeSuper(e.getInterfaces()), members));
                     case RECORD:
                         // TODO generates final class atm
-                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), null, computeSuper(e.getInterfaces()), members));
+                        return addDeprecated(e, make.Class(mods, e.getSimpleName(), constructTypeParams(e.getTypeParameters()), null, computeSuper(e.getInterfaces()), List.of(), members));
 //                        return addDeprecated(e, make.Record(mods, e.getSimpleName(), computeSuper(e.getInterfaces()), members));
                     case ANNOTATION_TYPE:
                         return addDeprecated(e, make.AnnotationType(mods, e.getSimpleName(), members));

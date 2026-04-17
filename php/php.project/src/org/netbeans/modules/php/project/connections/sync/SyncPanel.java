@@ -1238,7 +1238,7 @@ public final class SyncPanel extends JPanel implements HelpCtx.Provider {
                 .addGap(5, 5, 5))
         );
 
-        diffButton.setIcon(new ImageIcon(getClass().getResource("/org/netbeans/modules/php/project/ui/resources/diff.png"))); // NOI18N
+        diffButton.setIcon(ImageUtilities.loadIcon("org/netbeans/modules/php/project/ui/resources/diff.png"));
         diffButton.setEnabled(false);
         operationButtonsPanel.add(diffButton);
 

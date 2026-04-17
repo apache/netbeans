@@ -35,20 +35,14 @@ import org.netbeans.modules.glassfish.tooling.utils.Utils;
  */
 public class RunnerHttpUndeploy extends RunnerHttp {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Enable/Disable command <code>DEFAULT</code> param name. */
     private static final String DEFAULT_PARAM = "DEFAULT";
 
     /** Enable/Disable command <code>target</code> param name. */
     private static final String TARGET_PARAM = "target";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Builds enable/disable query string for given command.
      * <p/>
@@ -91,10 +85,7 @@ public class RunnerHttpUndeploy extends RunnerHttp {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.

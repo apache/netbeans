@@ -140,7 +140,6 @@ import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -1909,7 +1908,7 @@ public class JPDADebuggerImpl extends JPDADebugger {
         this.currentSuspendedNoFireThread = thread;
     }
 
-    private Set<JPDAThreadGroup> interestedThreadGroups = new WeakSet<JPDAThreadGroup>();
+    private Set<JPDAThreadGroup> interestedThreadGroups = Collections.newSetFromMap(new WeakHashMap<>());
 
     public void interestedInThreadGroup(JPDAThreadGroup tg) {
         interestedThreadGroups.add(tg);

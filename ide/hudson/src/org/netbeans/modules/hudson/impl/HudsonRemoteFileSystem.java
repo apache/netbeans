@@ -32,12 +32,14 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.hudson.api.ConnectionBuilder;
@@ -52,7 +54,6 @@ import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Enumerations;
 import org.openide.util.NbCollections;
-import org.openide.util.WeakSet;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -81,7 +82,7 @@ final class HudsonRemoteFileSystem extends RemoteFileSystem implements
         info = this;
         synchronized (Mapper.class) {
             if (Mapper.workspaces == null) {
-                Mapper.workspaces = new WeakSet<HudsonRemoteFileSystem>();
+                Mapper.workspaces = Collections.newSetFromMap(new WeakHashMap<>());
             }
             Mapper.workspaces.add(this);
         }

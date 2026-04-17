@@ -22,6 +22,7 @@ package org.netbeans.modules.groovy.editor.hints.utils;
 import javax.swing.text.BadLocationException;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.api.RuleContext;
@@ -56,8 +57,8 @@ public final class HintUtils {
         // This should be replaced with marking the indentifier only.
         try {
 
-            int lineStart = Utilities.getRowStart(context.doc, error.getStartPosition());
-            int lineEnd = Utilities.getRowEnd(context.doc, error.getEndPosition());
+            int lineStart = LineDocumentUtils.getLineStartOffset(context.doc, error.getStartPosition());
+            int lineEnd = LineDocumentUtils.getLineEndOffset(context.doc, error.getEndPosition());
 
             return new OffsetRange(lineStart, lineEnd);
             

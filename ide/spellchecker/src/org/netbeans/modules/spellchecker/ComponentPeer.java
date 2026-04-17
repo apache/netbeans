@@ -92,7 +92,6 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -418,7 +417,7 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
         }
     }
 
-    private static Set<Document> knownDocuments = new WeakSet<Document>();
+    private static Set<Document> knownDocuments = Collections.newSetFromMap(new WeakHashMap<>());
     private static Map<Locale, DictionaryImpl> locale2UsersLocalDictionary = new HashMap<Locale, DictionaryImpl>();
     private static Map<Project, Reference<DictionaryImpl>> project2Reference = new WeakHashMap<Project, Reference<DictionaryImpl>>();
     

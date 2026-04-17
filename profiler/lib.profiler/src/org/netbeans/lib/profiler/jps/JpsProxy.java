@@ -56,7 +56,7 @@ public class JpsProxy {
             MonitoredHost monitoredHost = MonitoredHost.getMonitoredHost(hostId);
             String selfName = ManagementFactory.getRuntimeMXBean().getName();
 
-            //// get the list active VMs on the specified host.
+            // get the list active VMs on the specified host.
             Set jvms = monitoredHost.activeVms();
 
             if (jvms.isEmpty()) {
@@ -79,8 +79,8 @@ public class JpsProxy {
                     id = new VmIdentifier(uriString);
                     vm = monitoredHost.getMonitoredVm(id, 0);
                 } catch (URISyntaxException e) {
-                    //// this error should not occur as we are creating our own VMIdentifiers above based on a validated HostIdentifier.
-                    //// This would be an unexpected condition.
+                    // this error should not occur as we are creating our own VMIdentifiers above based on a validated HostIdentifier.
+                    // This would be an unexpected condition.
                     MiscUtils.printWarningMessage("in jvmps, detected malformed VM Identifier: " + uriString + "; ignored"); // NOI18N
 
                     continue;
@@ -88,15 +88,15 @@ public class JpsProxy {
                     System.out.println("Ex " + e.getMessage());
                     e.printStackTrace();
 
-                    //// it's possible that from the time we acquired the list of available jvms that a jvm has terminated. Therefore, it is
-                    //// best just to ignore this error.
+                    // it's possible that from the time we acquired the list of available jvms that a jvm has terminated. Therefore, it is
+                    // best just to ignore this error.
                     continue;
                 } catch (Exception e) {
-                    //// certain types of errors, such as access acceptions, can be encountered when attaching to a jvm.
-                    //// These are reported as exceptions, not as some subclass of security exception.
+                    // certain types of errors, such as access acceptions, can be encountered when attaching to a jvm.
+                    // These are reported as exceptions, not as some subclass of security exception.
 
-                    //// FIXME - we should probably have some provision for logging these types of errors, or possibly just print out the
-                    //// the Java Virtual Machine lvmid in a finally clause: System.out.println(String.valueOf(lvmid));
+                    // FIXME - we should probably have some provision for logging these types of errors, or possibly just print out the
+                    // the Java Virtual Machine lvmid in a finally clause: System.out.println(String.valueOf(lvmid));
                     MiscUtils.printWarningMessage("in jvmps, for VM = " + String.valueOf(lvmid) + " got exception: " + e); // NOI18N
 
                     continue;

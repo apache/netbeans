@@ -52,6 +52,7 @@
 /platform/o.n.bootstrap/launcher/windows/nbproject/Package-*.bash
 /enterprise/web.jspparser/test/unit/data/emptyWebProject/lib/*.jar
 /enterprise/web.jspparser/test/unit/data/project2/lib/*.jar
+/enterprise/web.jspparser/test/unit/data/project2_jakarta/lib/*.jar
 
 # Database logs
 derby.log

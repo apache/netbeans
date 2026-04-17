@@ -24,7 +24,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.Map;
 import java.util.Iterator;
 
-import javax.servlet.jsp.tagext.TagLibraryInfo;
+import org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo;
 
 /** Holds data relevant to the JSP coloring for one JSP page. The main purposes
  * of this class are
@@ -35,35 +35,40 @@ import javax.servlet.jsp.tagext.TagLibraryInfo;
  * @author Petr Jiricka
  */
 public final class JspColoringData extends PropertyChangeSupport {
-    
-    /** An property whose change is fired every time the tag library 
-    *  information changes in such a way that recoloring of the document is required. 
+
+    /** An property whose change is fired every time the tag library
+    *  information changes in such a way that recoloring of the document is required.
     */
     public static final String PROP_COLORING_CHANGE = "coloringChange"; // NOI18N
     public static final String PROP_PARSING_SUCCESSFUL = "parsingSuccessful"; //NOI18N
     public static final String PROP_PARSING_IN_PROGRESS = "parsingInProgress"; //NOI18N
-    
+
     /** Taglib id -> TagLibraryInfo */
     private Map<String, TagLibraryInfo> taglibs;
-    
+
     /** Prefix -> Taglib id */
     private Map<String, String> prefixMapper;
-    
+
     private boolean elIgnored = false;
-    
+
     private boolean xmlSyntax = false;
 
     private boolean initialized = false;
-    
-    /** Creates a new instance of JspColoringData. */
+
+    /**
+     * Creates a new instance of JspColoringData.
+     * @param sourceBean
+     */
     public JspColoringData(Object sourceBean) {
         super(sourceBean);
     }
-    
-    public Map getPrefixMapper(){
+
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
+    public Map<String, String> getPrefixMapper(){
         return prefixMapper;
     }
-    
+
+    @Override
     public String toString() {
         return "JSPColoringData, taglibMap:\n" +
           (prefixMapper == null ?
@@ -71,9 +76,9 @@ public final class JspColoringData extends PropertyChangeSupport {
             mapToString(prefixMapper, "  ")
           );
     }
-    
+
     private static String mapToString(Map m, String indent) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         Iterator it = m.keySet().iterator();
         while (it.hasNext()) {
             Object key = it.next();
@@ -82,7 +87,10 @@ public final class JspColoringData extends PropertyChangeSupport {
         return sb.toString();
     }
 
-    /** Returns true if the given tag library prefix is known in this page.
+    /**
+     * Returns true if the given tag library prefix is known in this page.
+     * @param prefix
+     * @return
      */
     public boolean isTagLibRegistered(String prefix) {
         if ((taglibs == null) || (prefixMapper == null)) {
@@ -91,56 +99,67 @@ public final class JspColoringData extends PropertyChangeSupport {
         return prefixMapper.containsKey(prefix);
     }
 
-    /** returns true if the JspColoringInfo has already been updated based on parser result. */
+    /**
+     * returns true if the JspColoringInfo has already been updated based on parser result.
+     * @return
+     */
     public boolean isInitialized() {
         return initialized;
     }
 
-    /** Returns true if the EL is ignored in this page.
+    /**
+     * Returns true if the EL is ignored in this page.
+     * @return
      */
     public boolean isELIgnored() {
         return elIgnored;
     }
-    
-    /** Returns true if the page is in xml syntax (JSP Documnet). 
+
+    /**
+     * Returns true if the page is in xml syntax (JSP Documnet).
      * If the page is in standard syntax, returns false.
+     *
+     * @return
      */
     public boolean isXMLSyntax(){
         return xmlSyntax;
     }
     /*public boolean isBodyIntepretedByTag(String prefix, String tagName) {
     }*/
-        
+
     public void parsingStarted() {
         firePropertyChange(PROP_PARSING_IN_PROGRESS, null, true);
     }
-    
+
     /** Incorporates new parse data from the parser, possibly firing a change about coloring.
      * @param newTaglibs the new map of (uri -> TagLibraryInfo)
      * @param newPrefixMapper the new map of (prefix, uri)
+     * @param newELIgnored
+     * @param newXMLSyntax
      * @param parseSuccessful whether parsing was successful. If false, then the new information is partial only
      */
+    @SuppressWarnings("AssignmentToCollectionOrArrayFieldFromParameter")
     public void applyParsedData(Map<String, TagLibraryInfo> newTaglibs, Map<String, String> newPrefixMapper, boolean newELIgnored, boolean newXMLSyntax, boolean parseSuccessful) {
 
         initialized = true;
 
         // check whether coloring has not changed
         boolean coloringSame = equalsColoringInformation(taglibs, prefixMapper, newTaglibs, newPrefixMapper);
-        
+
         firePropertyChange(PROP_PARSING_SUCCESSFUL, null, parseSuccessful);
-        
+
         // check and apply EL data
         if (parseSuccessful) {
             coloringSame = coloringSame && (elIgnored == newELIgnored);
             elIgnored = newELIgnored;
         }
-        
-        //An additional check for the coloring change -> 
+
+        //An additional check for the coloring change ->
         //if the elIgnored and xmlSyntax have default values and the taglibs and prefixes are empty,
-        //there is no need to repaint the editor (fire the property change).        
+        //there is no need to repaint the editor (fire the property change).
         //Test if this is a first call of this method - after opening of the editor
         if((taglibs == null) && (prefixMapper == null)) {
-            coloringSame = ((newELIgnored == elIgnored) && 
+            coloringSame = ((newELIgnored == elIgnored) &&
                            (newXMLSyntax == xmlSyntax) &&
                            newTaglibs.isEmpty() &&
                            newPrefixMapper.isEmpty());
@@ -149,8 +168,8 @@ public final class JspColoringData extends PropertyChangeSupport {
         if (newXMLSyntax != xmlSyntax){
             xmlSyntax = newXMLSyntax;
             coloringSame = false;
-        }        
-        
+        }
+
         // appy taglib data
         if (parseSuccessful || (taglibs == null) || (prefixMapper == null)) {
             // overwrite
@@ -180,8 +199,10 @@ public final class JspColoringData extends PropertyChangeSupport {
         }
     }
 
-    private static boolean equalsColoringInformation(Map<String, TagLibraryInfo> taglibs1, Map<String, String> prefixMapper1,
-            Map<String, TagLibraryInfo> taglibs2, Map<String, String> prefixMapper2) {
+    private static boolean equalsColoringInformation(
+            Map<String, TagLibraryInfo> taglibs1, Map<String, String> prefixMapper1,
+            Map<String, TagLibraryInfo> taglibs2, Map<String, String> prefixMapper2
+    ) {
 
         if ((taglibs1 == null) != (taglibs2 == null)) {
             return false;
@@ -218,10 +239,10 @@ public final class JspColoringData extends PropertyChangeSupport {
 
     private static boolean equalsColoringInformation(TagLibraryInfo tli1, TagLibraryInfo tli2) {
         /** PENDING
-         * should be going through all tags and checking whether the value 
+         * should be going through all tags and checking whether the value
          * returned by tagInfo.getBodyContent() has not changed.
          */
         return true;
     }
-    
+
 }

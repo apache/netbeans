@@ -28,11 +28,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+
 import static java.util.function.Predicate.not;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -483,8 +486,8 @@ public class LibraryDeclarationChecker extends HintsProvider {
                             int from = range.getFrom();
                             int to = range.getTo();
                             //check if the line before the area is white
-                            int lineBeginning = Utilities.getRowStart(document, from);
-                            int firstNonWhite = Utilities.getFirstNonWhiteBwd(document, from);
+                            int lineBeginning = LineDocumentUtils.getLineStartOffset(document, from);
+                            int firstNonWhite = LineDocumentUtils.getPreviousNonWhitespace(document, from);
                             if (lineBeginning > firstNonWhite) {
                                 //delete the white content before the area inclusing the newline
                                 from = lineBeginning - 1; // (-1 => includes the line end)

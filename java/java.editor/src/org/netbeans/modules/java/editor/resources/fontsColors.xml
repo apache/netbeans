@@ -66,6 +66,9 @@
     <fontcolor name="mod-enum-declaration" default="identifier">
         <font style="bold" />
     </fontcolor>
+    <fontcolor name="mod-record-declaration" default="identifier">
+        <font style="bold" />
+    </fontcolor>
     
     <fontcolor name="mod-field" default="field"/>        
     <fontcolor name="mod-record-component" default="field"/>

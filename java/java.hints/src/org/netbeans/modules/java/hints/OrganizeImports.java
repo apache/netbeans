@@ -22,14 +22,18 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.ModuleElement;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.util.Types;
 import javax.swing.text.JTextComponent;
@@ -37,6 +41,7 @@ import javax.tools.Diagnostic;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -62,7 +67,7 @@ import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.ModificationResult.Difference;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.editor.BaseAction;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.editor.java.JavaKit;
@@ -80,6 +85,7 @@ import org.netbeans.spi.java.hints.JavaFix;
 import org.netbeans.spi.java.hints.TriggerTreeKind;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.util.Pair;
 
 /**
  *
@@ -160,10 +166,11 @@ public class OrganizeImports {
             }
         }
         final CodeStyle cs = CodeStyle.getDefault(copy.getFileObject());
-        Set<Element> starImports = new HashSet<Element>();
-        Set<Element> staticStarImports = new HashSet<Element>();
-        Set<Element> toImport = getUsedElements(copy, cu, starImports, staticStarImports);
-        List<ImportTree> imps = new LinkedList<ImportTree>();  
+        final Set<Element> starImports = new HashSet<>();
+        final Set<Element> staticStarImports = new HashSet<>();
+        final Set<Element> moduleImports = new HashSet<>();
+        Set<Element> toImport = getUsedElements(copy, cu, starImports, staticStarImports, moduleImports);
+        final List<ImportTree> imps = new LinkedList<>();  
         TreeMaker maker = copy.getTreeMaker();
         
         if (addImports != null) {
@@ -173,6 +180,7 @@ public class OrganizeImports {
         } else if (!toImport.isEmpty() || isBulkMode) {
             // track import star import scopes, so only one star import/scope appears in imps - #251977
             Set<Element> starImportScopes = new HashSet<>();
+            Map<ModuleElement, Pair<ExpressionTree, ModuleElement>> transitiveScopeToModuleImport = new HashMap<>();
             Trees trees = copy.getTrees();
             for (ImportTree importTree : cu.getImports()) {
                 Tree qualIdent = importTree.getQualifiedIdentifier();
@@ -181,13 +189,13 @@ public class OrganizeImports {
                     Element importedScope = trees.getElement(TreePath.getPath(cu, ((MemberSelectTree)qualIdent).getExpression()));
                     
                     if (importTree.isStatic()) {
-                        if (staticStarImports != null && 
+                        if (!staticStarImports.isEmpty() && 
                             staticStarImports.contains(importedScope) &&
                             !starImportScopes.contains(importedScope)) {
                             imp = maker.Import(qualIdent, true);
                         }
                     } else {
-                        if (starImports != null && 
+                        if (!starImports.isEmpty() && 
                             starImports.contains(importedScope) &&
                             !starImportScopes.contains(importedScope)) {
                             imp = maker.Import(qualIdent, false);
@@ -197,6 +205,28 @@ public class OrganizeImports {
                         starImportScopes.add(importedScope);
                         imps.add(imp);
                     }
+                } else if (importTree.isModule()) {
+                    ModuleElement importedScope = copy.getElements().getModuleElement(qualIdent.toString());
+                    if (qualIdent instanceof ExpressionTree moduleIdentifier) {
+                        if (importedScope == null) {
+                            //do not mark unresolvable element imports as unused
+                            imps.add(maker.ImportModule(moduleIdentifier));
+                        } else if (!moduleImports.isEmpty() && !starImportScopes.contains(importedScope)) {
+                            if (moduleImports.contains(importedScope)) {
+                                imps.add(maker.ImportModule(moduleIdentifier));
+                                starImportScopes.add(importedScope);
+                            } else {
+                                collectTransitivelyUsedModules(importedScope, moduleIdentifier, moduleImports, copy, transitiveScopeToModuleImport);
+                            }
+                        }
+                    }
+                }
+            }
+            // Add any used modules that are only referred by a transitive import
+            for (Map.Entry<ModuleElement, Pair<ExpressionTree, ModuleElement>> t : transitiveScopeToModuleImport.entrySet()) {
+                if (!starImportScopes.contains(t.getKey()) && !starImportScopes.contains(t.getValue().second())) {
+                    imps.add(maker.ImportModule(t.getValue().first()));
+                    starImportScopes.add(t.getValue().second());
                 }
             }
         } else {
@@ -213,21 +243,42 @@ public class OrganizeImports {
                         return 0;
                     String s1 = o1.getQualifiedIdentifier().toString();
                     String s2 = o2.getQualifiedIdentifier().toString();
-                    int bal = groups.getGroupId(s1, o1.isStatic()) - groups.getGroupId(s2, o2.isStatic());
+                    int bal;
+                    if (o1.isModule()) {
+                        bal = o2.isModule() ? 0 : 1; // Place element imports last
+                    } else if (o2.isModule()) {
+                        bal = -1;                    // Place element imports last
+                    } else {
+                        bal = groups.getGroupId(s1, o1.isStatic()) - groups.getGroupId(s2, o2.isStatic());
+                    }
                     return bal == 0 ? s1.compareTo(s2) : bal;
                 }
             });
         }
         CompilationUnitTree cut = maker.CompilationUnit(cu.getPackageAnnotations(), cu.getPackageName(), imps, cu.getTypeDecls(), cu.getSourceFile());
         ((JCCompilationUnit)cut).packge = ((JCCompilationUnit)cu).packge;
-        if (starImports != null || staticStarImports != null) {
-            ((JCCompilationUnit)cut).starImportScope = ((JCCompilationUnit)cu).starImportScope;
+        ((JCCompilationUnit)cut).starImportScope = ((JCCompilationUnit)cu).starImportScope;
+        if (!moduleImports.isEmpty()) {
+            ((JCCompilationUnit)cut).moduleImportScope = ((JCCompilationUnit)cu).moduleImportScope;
         }
         CompilationUnitTree ncu = toImport.isEmpty() ? cut : GeneratorUtilities.get(copy).addImports(cut, toImport);
         copy.rewrite(cu, ncu);
     }
+        
+    private static void collectTransitivelyUsedModules(final ModuleElement importedModule, final ExpressionTree importIdentifier, final Set<Element> usedModules, final CompilationInfo info, final Map<ModuleElement, Pair<ExpressionTree, ModuleElement>> transitiveModulesToImportingIdentifier) {
+        if (importedModule != null) {
+            if (usedModules.contains(importedModule))
+                return;
+            Pair<ExpressionTree, ModuleElement> root = Pair.of(importIdentifier, importedModule);            
+            for (PackageElement pack : info.getElementUtilities().transitivelyExportedPackages(importedModule)) {
+                if ((pack.getEnclosingElement() instanceof ModuleElement transitiveModule) && transitiveModule != importedModule && usedModules.contains(transitiveModule)) {
+                    transitiveModulesToImportingIdentifier.putIfAbsent(transitiveModule, root);
+                }
+            }
+        }
+    }
 
-    private static Set<Element> getUsedElements(final CompilationInfo info, final CompilationUnitTree cut, final Set<Element> starImports, final Set<Element> staticStarImports) {
+    private static Set<Element> getUsedElements(final CompilationInfo info, final CompilationUnitTree cut, final Set<Element> starImports, final Set<Element> staticStarImports, final Set<Element> moduleImports) {
         final Set<Element> ret = new HashSet<Element>();
         final Trees trees = info.getTrees();
         final Types types = info.getTypes();
@@ -273,7 +324,7 @@ public class OrganizeImports {
                         case FIELD:
                         case METHOD:
                             if (element.getModifiers().contains(Modifier.STATIC)) {
-                                Element glob = global(element, staticStarImports);
+                                Element glob = global(element, staticStarImports, moduleImports);
                                 if (glob != null)
                                     ret.add(glob);
                             }
@@ -283,14 +334,14 @@ public class OrganizeImports {
                         case RECORD:
                         case ENUM:
                         case INTERFACE:
-                            Element glob = global(element, starImports);
+                            Element glob = global(element, starImports, moduleImports);
                             if (glob != null)
                                 ret.add(glob);
                     }
                 }
             }
 
-            private Element global(Element element, Set<Element> stars) {
+            private Element global(Element element, Set<Element> stars, Set<Element> modules) {
                 for (Symbol sym : ((JCCompilationUnit)cut).namedImportScope.getSymbolsByName((Name)element.getSimpleName())) {
                     if (element == sym || element.asType().getKind() == TypeKind.ERROR && element.getKind() == sym.getKind())
                         return sym;
@@ -303,6 +354,14 @@ public class OrganizeImports {
                     if (element == sym || element.asType().getKind() == TypeKind.ERROR && element.getKind() == sym.getKind()) {
                         if (stars != null) {
                             stars.add(sym.owner);
+                        }
+                        return sym;
+                    }
+                }
+                for (Symbol sym : ((JCCompilationUnit)cut).moduleImportScope.getSymbolsByName((Name)element.getSimpleName())) {
+                    if (element == sym || element.asType().getKind() == TypeKind.ERROR && element.getKind() == sym.getKind()) {
+                        if (modules != null) {
+                            modules.add(sym.packge().modle);
                         }
                         return sym;
                     }
@@ -350,7 +409,7 @@ public class OrganizeImports {
             final Source source = Source.create(doc);
             if (source != null) {
                 final AtomicBoolean cancel = new AtomicBoolean();
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                     @Override
                     public void run() {
                         try {

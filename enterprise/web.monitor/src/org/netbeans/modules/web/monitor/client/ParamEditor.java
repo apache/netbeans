@@ -17,11 +17,6 @@
  * under the License.
  */
 
-/**
- * @author Simran Gleason
- * @author Ana von Klopp
- */
-
 
 package org.netbeans.modules.web.monitor.client;
 
@@ -48,6 +43,11 @@ import org.openide.NotifyDescriptor;
 import org.openide.awt.Mnemonics;
 import org.openide.util.NbBundle;
 
+
+/**
+ * @author Simran Gleason
+ * @author Ana von Klopp
+ */
 public class ParamEditor extends javax.swing.JPanel {
 
     private static final Dimension valueSize = new Dimension(400, 150);

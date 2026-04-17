@@ -215,7 +215,7 @@ public class PropertyEnv {
 
     // [PENDING]
 
-    /** The editor may be able to edit properties of different classes. It can decide to
+    /* The editor may be able to edit properties of different classes. It can decide to
      * be able to edit descendants of a base class.*/
 
     //Class propertyClass; // read-only property

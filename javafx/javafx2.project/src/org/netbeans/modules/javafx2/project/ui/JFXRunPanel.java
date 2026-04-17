@@ -1011,7 +1011,6 @@ private void buttonNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 
 private void buttonWorkDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonWorkDirActionPerformed
         JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(null);
         chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
         chooser.setMultiSelectionEnabled(false);
         
@@ -1154,7 +1153,6 @@ private void buttonWorkDirActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
 private void buttonWebPageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonWebPageActionPerformed
     JFileChooser chooser = new JFileChooser();
-    chooser.setCurrentDirectory(null);
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     chooser.setMultiSelectionEnabled(false);
     chooser.setFileFilter(new HtmlFileFilter());

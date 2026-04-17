@@ -74,9 +74,7 @@ public class CreateRegistrationProcessorTest extends NbTestCase {
                 content.append((char) read);
             }
 
-            assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                         "<!DOCTYPE filesystem PUBLIC \"-//NetBeans//DTD Filesystem 1.2//EN\"\n" +
-                         "                            \"http://www.netbeans.org/dtds/filesystem-1_2.dtd\">\n" +
+            assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE filesystem PUBLIC \"-//NetBeans//DTD Filesystem 1.2//EN\" \"http://www.netbeans.org/dtds/filesystem-1_2.dtd\">\n" +
                          "<filesystem>\n" +
                          "    <folder name=\"Editors\">\n" +
                          "        <folder name=\"text\">\n" +
@@ -122,9 +120,7 @@ public class CreateRegistrationProcessorTest extends NbTestCase {
                 content.append((char) read);
             }
 
-            assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                         "<!DOCTYPE filesystem PUBLIC \"-//NetBeans//DTD Filesystem 1.2//EN\"\n" +
-                         "                            \"http://www.netbeans.org/dtds/filesystem-1_2.dtd\">\n" +
+            assertEquals("<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE filesystem PUBLIC \"-//NetBeans//DTD Filesystem 1.2//EN\" \"http://www.netbeans.org/dtds/filesystem-1_2.dtd\">\n" +
                          "<filesystem>\n" +
                          "    <folder name=\"Editors\">\n" +
                          "        <file name=\"injection-grammar.json\" url=\"nbresloc:/injection-grammar.json\">\n" +

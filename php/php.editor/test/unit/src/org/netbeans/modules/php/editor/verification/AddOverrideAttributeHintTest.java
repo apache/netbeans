@@ -507,6 +507,10 @@ public class AddOverrideAttributeHintTest extends PHPHintsTestBase {
         applyHint("testRemoveOverrideAbstractClass_01.php", "    #[\\Overr^ide] // test", "Remove \"#[\\Override]\" Attribute");
     }
 
+    public void testNoOverrideHintOnConstructor_01() throws Exception{
+        checkHints("testNoOverrideHintOnConstructor_01.php");
+    }
+
     private void checkHints(String fileName, PhpVersion phpVersion) throws Exception {
         checkHints(new AddOverrideAttributeHintStub(phpVersion), fileName);
     }

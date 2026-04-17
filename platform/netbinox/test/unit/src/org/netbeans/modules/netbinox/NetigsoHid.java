@@ -97,7 +97,7 @@ public class NetigsoHid extends SetupHid {
             }
             os.putNextEntry(e);
             is = jf.getInputStream(e);
-            FileUtil.copy(is, os);
+            is.transferTo(os);
             is.close();
             os.closeEntry();
         }

@@ -443,7 +443,7 @@ public abstract class DataLoader extends SharedClassObject implements DataObject
     */
     @Override
     public void writeExternal (ObjectOutput oo) throws IOException {
-        oo.writeObject( new Integer(LOADER_VERSION) );
+        oo.writeObject(LOADER_VERSION);
         
         SystemAction[] arr = (SystemAction[])getProperty (PROP_ACTIONS);
         if (arr == null) {

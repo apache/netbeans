@@ -28,17 +28,11 @@ package org.netbeans.modules.glassfish.tooling.admin;
  */
 public abstract class CommandTarget extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Target GlassFish instance or cluster. */
     final String target;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server enable command entity.
      * <p/>

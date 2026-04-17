@@ -39,10 +39,10 @@ import java.util.logging.Logger;
 import javax.swing.JEditorPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.DataLoadersBridge;
 import org.netbeans.modules.css.lib.api.CssTokenId;
 import org.netbeans.modules.editor.indent.api.Indent;
@@ -99,7 +99,7 @@ public class CssExternalDropHandler extends ExternalDropHandler {
     private int getLineEndOffset(JEditorPane pane, Point location) {
         int offset = pane.getUI().viewToModel(pane, location);
         try {
-            return Utilities.getRowEnd((BaseDocument) pane.getDocument(), offset);
+            return LineDocumentUtils.getLineEndOffset((BaseDocument) pane.getDocument(), offset);
         } catch (BadLocationException ex) {
             //highly unlikely to happen
             Exceptions.printStackTrace(ex);
@@ -212,15 +212,15 @@ public class CssExternalDropHandler extends ExternalDropHandler {
                 public void run() {
                     try {
                         int ofs = offset;
-                        if (!Utilities.isRowWhite(document, ofs)) {
+                        if (!LineDocumentUtils.isLineWhitespace(document, ofs)) {
                             document.insertString(ofs, "\n", null);
                             ofs++;
                         }
                         document.insertString(ofs, sb.toString(), null);
 
                         //reformat the line
-                        final int from = Utilities.getRowStart(document, ofs);
-                        final int to = Utilities.getRowEnd(document, ofs);
+                        final int from = LineDocumentUtils.getLineStartOffset(document, ofs);
+                        final int to = LineDocumentUtils.getLineEndOffset(document, ofs);
 
                         indent.reindent(from, to);
 

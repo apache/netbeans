@@ -25,10 +25,7 @@ package org.netbeans.modules.glassfish.tooling.data;
  */
 public interface ToolConfig {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get tool JAR path (relative under GlassFish home).
      * <p/>

@@ -18,14 +18,15 @@
  */
 package org.netbeans.core.windows;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import org.openide.util.NbPreferences;
-import org.openide.util.WeakSet;
 import org.openide.windows.TopComponent;
 
 /**
@@ -40,7 +41,7 @@ public final class TopComponentTracker {
     
     private final Set<String> viewIds = new HashSet<String>(30);
     private final Set<String> editorIds = new HashSet<String>(30);
-    private final Set<TopComponent> editors = new WeakSet<TopComponent>( 100 );
+    private final Set<TopComponent> editors = Collections.newSetFromMap(new WeakHashMap<>(100));
     
     private static TopComponentTracker theInstance;
     

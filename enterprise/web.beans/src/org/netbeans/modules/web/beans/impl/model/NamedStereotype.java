@@ -26,6 +26,7 @@ import javax.lang.model.element.TypeElement;
 
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.AnnotationModelHelper;
 import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.PersistentObject;
+import org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil;
 import org.netbeans.modules.web.beans.impl.model.AbstractObjectProvider.Refreshable;
 
 
@@ -53,8 +54,8 @@ class NamedStereotype extends PersistentObject implements Refreshable{
                 getAllAnnotationMirrors(type);
         Map<String, ? extends AnnotationMirror> annotationsByType = 
                 getHelper().getAnnotationsByType( allAnnotationMirrors );
-        boolean isStereotype = annotationsByType.get( 
-                StereotypeChecker.STEREOTYPE) != null ;
+        boolean isStereotype = annotationsByType.get(AnnotationUtil.STEREOTYPE_FQN) != null
+                 || annotationsByType.get(AnnotationUtil.STEREOTYPE_FQN_JAKARTA) != null;
         if ( !isStereotype ){
             return false;
         }

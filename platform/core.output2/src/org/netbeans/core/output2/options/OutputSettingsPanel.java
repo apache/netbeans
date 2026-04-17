@@ -43,7 +43,6 @@ import org.openide.util.NbBundle;
 import org.openide.windows.IOColorPrint;
 import org.openide.windows.IOContainer;
 import org.openide.windows.InputOutput;
-import org.openide.windows.OutputEvent;
 import org.openide.windows.OutputListener;
 
 @NbBundle.Messages({
@@ -565,7 +564,7 @@ public final class OutputSettingsPanel extends javax.swing.JPanel {
         previewInputOutput.setInputVisible(true); // Instead of reading from in.
         previewInputOutput.getOut().println("Standard Output");         //NOI18N
         previewInputOutput.getErr().println("Error Output");            //NOI18N
-        OutputListener ol = new OutputListenerImpl();
+        OutputListener ol = new OutputListener() {};
         try {
             IOColorPrint.print(previewInputOutput, "Standard Link", //NOI18N
                     ol, false, null);
@@ -627,21 +626,4 @@ public final class OutputSettingsPanel extends javax.swing.JPanel {
         cmbLinkStyle.repaint();
     }
 
-    private static class OutputListenerImpl implements OutputListener {
-
-        public OutputListenerImpl() {
-        }
-
-        @Override
-        public void outputLineSelected(OutputEvent ev) {
-        }
-
-        @Override
-        public void outputLineAction(OutputEvent ev) {
-        }
-
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
-        }
-    }
 }

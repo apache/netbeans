@@ -183,6 +183,7 @@ CLASS      Groovydoc                                  null
 CLASS      HashMap                                    null
 CLASS      HashSet                                    null
 CLASS      Hashtable                                  null
+CLASS      HexFormat                                  null
 CLASS      HttpCookie                                 null
 CLASS      HttpRetryException                         null
 CLASS      HttpURLConnection                          null
@@ -194,6 +195,7 @@ CLASS      IdentityHashMap                            null
 CLASS      IllegalAccessError                         null
 CLASS      IllegalAccessException                     null
 CLASS      IllegalArgumentException                   null
+CLASS      IllegalCallerException                     null
 CLASS      IllegalFormatCodePointExceptio             null
 CLASS      IllegalFormatConversionExcepti             null
 CLASS      IllegalFormatException                     null
@@ -234,6 +236,7 @@ CLASS      InvalidPropertiesFormatExcepti             null
 CLASS      Iterable                                   null
 CLASS      Iterator                                   null
 CLASS      JarURLConnection                           null
+CLASS      LayerInstantiationException                null
 CLASS      Lazy                                       null
 CLASS      LineNumberInputStream                      null
 CLASS      LineNumberReader                           null
@@ -272,6 +275,8 @@ CLASS      MissingMethodException                     null
 CLASS      MissingPropertyException                   null
 CLASS      MissingResourceException                   null
 CLASS      Mixin                                      null
+CLASS      Module                                     null
+CLASS      ModuleLayer                                null
 CLASS      MulticastSocket                            null
 CLASS      MutableMetaClass                           null
 CLASS      NavigableMap                               null
@@ -301,6 +306,7 @@ CLASS      NumberRange                                null
 CLASS      Object                                     null
 CLASS      ObjectGraphBuilder                         null
 CLASS      ObjectInput                                null
+CLASS      ObjectInputFilter                          null
 CLASS      ObjectInputStream                          null
 CLASS      ObjectInputValidation                      null
 CLASS      ObjectOutput                               null
@@ -341,6 +347,7 @@ CLASS      PrintWriter                                null
 CLASS      PriorityQueue                              null
 CLASS      Process                                    null
 CLASS      ProcessBuilder                             null
+CLASS      ProcessHandle                              null
 CLASS      Properties                                 null
 CLASS      PropertyAccessInterceptor                  null
 CLASS      PropertyPermission                         null
@@ -363,6 +370,7 @@ CLASS      Range                                      null
 CLASS      ReadOnlyPropertyException                  null
 CLASS      Readable                                   null
 CLASS      Reader                                     null
+CLASS      Record                                     null
 CLASS      Reference                                  null
 CLASS      ReflectiveOperationException               null
 CLASS      ResourceBundle                             null
@@ -382,6 +390,7 @@ CLASS      SecurityException                          null
 CLASS      SecurityManager                            null
 CLASS      Sequence                                   null
 CLASS      SequenceInputStream                        null
+CLASS      Serial                                     null
 CLASS      Serializable                               null
 CLASS      SerializablePermission                     null
 CLASS      ServerSocket                               null
@@ -411,6 +420,7 @@ CLASS      SpreadMapEvaluatingException               null
 CLASS      Stack                                      null
 CLASS      StackOverflowError                         null
 CLASS      StackTraceElement                          null
+CLASS      StackWalker                                null
 CLASS      StandardProtocolFamily                     null
 CLASS      StandardSocketOptions                      null
 CLASS      StreamCorruptedException                   null
@@ -473,6 +483,7 @@ CLASS      URLStreamHandlerFactory                    null
 CLASS      UTFDataFormatException                     null
 CLASS      UUID                                       null
 CLASS      UncheckedIOException                       null
+CLASS      UnixDomainSocketAddress                    null
 CLASS      UnknownError                               null
 CLASS      UnknownFormatConversionExcepti             null
 CLASS      UnknownFormatFlagsException                null
@@ -510,8 +521,8 @@ METHOD     every(Closure)                             boolean
 METHOD     finalize()                      [PROTECTE  void
 METHOD     find()                                     Object
 METHOD     find(Closure)                              Object
-METHOD     findAll()                                  Collection
-METHOD     findAll(Closure)                           Collection
+METHOD     findAll()                                  List
+METHOD     findAll(Closure)                           List
 METHOD     findIndexOf(Closure)                       int
 METHOD     findIndexOf(int, Closure)                  int
 METHOD     findIndexValues(Closure)                   List

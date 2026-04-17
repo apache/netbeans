@@ -154,7 +154,7 @@ final class SaveAsAction extends AbstractAction implements ContextAwareAction {
         chooser.setMultiSelectionEnabled( false );
         if( null != newFile ) {
             chooser.setSelectedFile( newFile );
-            FileUtil.preventFileChooserSymlinkTraversal( chooser, newFile.getParentFile() );
+            chooser.setCurrentDirectory(newFile.getParentFile());
         }
         File initialFolder = getInitialFolderFrom( newFile );
         if( null != initialFolder )

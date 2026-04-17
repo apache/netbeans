@@ -117,9 +117,6 @@ public class DependencyAnalyzeOutputProcessor implements OutputProcessor {
             scope = sc;
             project = prj;
         }
-        @Override
-        public void outputLineSelected(OutputEvent arg0) {
-        }
         
         @Messages({"# {0} - groupId:artifactId", "MSG_Dependency=Dependency {0} added to project''s POM."})
         @Override
@@ -128,10 +125,6 @@ public class DependencyAnalyzeOutputProcessor implements OutputProcessor {
                     group, artifact, version, type, scope, null,false);
             NotifyDescriptor nd = new NotifyDescriptor.Message(MSG_Dependency(group + ":" + artifact));
             DialogDisplayer.getDefault().notify(nd);
-        }
-        
-        @Override
-        public void outputLineCleared(OutputEvent arg0) {
         }
     }
 }

@@ -112,7 +112,7 @@ public abstract class Provider {
     }
     
     private Set initPropertyNames(){
-        Set result = new HashSet();
+        Set<String> result = new HashSet<>();
         result.add(getJdbcDriver());
         result.add(getJdbcUsername());
         result.add(getJdbcUrl());

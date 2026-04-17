@@ -20,8 +20,8 @@ package org.netbeans.modules.gradle.java.spi.support;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.java.platform.JavaPlatform;
@@ -48,7 +48,7 @@ public final class JavaToolchainSupport {
     private static JavaToolchainSupport instance;
     
     private JavaToolchainSupport() {
-        platformCache = new HashMap<>();
+        platformCache = new ConcurrentHashMap<>();
     }
     
     public static JavaToolchainSupport getDefault() {

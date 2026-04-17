@@ -59,7 +59,7 @@ public class ModuleListStartLevelTest extends SetupHid {
         InputStream is = ModuleListStartLevelTest.class.getResourceAsStream("ModuleList-com-jcraft-jsch.xml");
         assertNotNull("Module definition found", is);
         final OutputStream os = fo.getOutputStream();
-        FileUtil.copy(is, os);
+        is.transferTo(os);
         os.close();
         is.close();
     }

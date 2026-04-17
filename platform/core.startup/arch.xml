@@ -620,7 +620,7 @@
           <a href="@org-openide-filesystems@/org/openide/filesystems/FileSystem.html">FileSystem</a>
           with a public default constructor. Such filesystem is then used during
           initialization of writable layer of system file system (see 
-          <a href="@org-openide-filesystems@/org/openide/filesystems/FileUtil.html#getConfigRoot--">getConfigRoot</a>).
+          <a href="@org-openide-filesystems@/org/openide/filesystems/FileUtil.html#getConfigRoot()">getConfigRoot</a>).
           The filesystem may use or may ignore value of 
           <code>System.getProperty("netbeans.user")</code>.
           </p>

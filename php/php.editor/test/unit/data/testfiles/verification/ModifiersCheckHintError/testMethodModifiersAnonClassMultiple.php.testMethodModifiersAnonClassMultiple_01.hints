@@ -1,0 +1,22 @@
+    final final function finalFinalAnonClassMethod(): void {}
+                         -------------------------
+HINT:Multiple final modifiers are not allowed
+FIX:Remove modifier: final
+    public public function publicPublicAnonClassMethod(): void {}
+                           ---------------------------
+HINT:Multiple public modifiers are not allowed
+FIX:Remove modifier: public
+    public private function publicPrivateAnonClassMethod(): void {}
+                            ----------------------------
+HINT:Multiple access type modifiers are not allowed
+FIX:Remove modifier: public
+FIX:Remove modifier: private
+    public protected function publicProtectedAnonClassMethod(): void {}
+                              ------------------------------
+HINT:Multiple access type modifiers are not allowed
+FIX:Remove modifier: public
+FIX:Remove modifier: protected
+    public static static function staticStaticAnonClassMethod(): void {}
+                                  ---------------------------
+HINT:Multiple static modifiers are not allowed
+FIX:Remove modifier: static

@@ -1,0 +1,42 @@
+<?php
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+class FinalFieldsClass {
+    // final, visibility, set visibility readonly
+    final public public(set) readonly $finalPublicPublicSetReadonlyError; // error1
+    final public public(set) readonly string|int $finalPublicPublicSetReadonly;
+    final public protected(set) readonly string|int $finalPublicProtectedSetReadonly;
+    final public private(set) readonly string|int $finalPublicPrivateSetReadonly;
+    final protected public(set) readonly string|int $finalProtectedPublicSetReadonly; // error2
+    final protected protected(set) readonly string|int $finalProtectedProtectedSetReadonly;
+    final protected private(set) readonly string|int $finalProtectedPrivateSetReadonly;
+
+    final private public(set) readonly string|int $finalPrivatePublicSetReadonly; // error3 fix1
+//  private public(set) readonly string|int $finalPrivatePublicSetReadonly; // error3 fix1
+//  final public(set) readonly string|int $finalPrivatePublicSetReadonly; // error3 fix1
+
+    final private protected(set) readonly string|int $finalPrivateProtectedSetReadonly; // error4 fix2
+//  private protected(set) readonly string|int $finalPrivateProtectedSetReadonly; // error4 fix2
+//  final protected(set) readonly string|int $finalPrivateProtectedSetReadonly; // error4 fix2
+
+    final private(set) readonly string|int $finalPrivatePrivateSetReadonly; // error5 fix3
+//  private private(set) readonly string|int $finalPrivatePrivateSetReadonly; // error5 fix3
+//  final private(set) readonly string|int $finalPrivatePrivateSetReadonly; // error5 fix3
+}

@@ -252,13 +252,13 @@ public class SetMainProject extends ProjectAction implements PropertyChangeListe
                 if (project == null) {
                     noneItem = (JRadioButtonMenuItem) jmi;
                 }
-                if ( jmi instanceof JRadioButtonMenuItem ) {
+                if (jmi instanceof JRadioButtonMenuItem radio) {
                     if ( OpenProjectList.getDefault().isMainProject( project ) ) {
-                        ((JRadioButtonMenuItem)jmi).setSelected( true );
+                        radio.setSelected(true);
                         prjSelected = true;
                     }
                     else {
-                        ((JRadioButtonMenuItem)jmi).setSelected( false );
+                        radio.setSelected(false);
                     }
                 }
             }
@@ -270,11 +270,10 @@ public class SetMainProject extends ProjectAction implements PropertyChangeListe
     }
     
     private void checkProjectNames() {
-        for(Component componentIter : subMenu.getMenuComponents()) {
-            if(componentIter instanceof JRadioButtonMenuItem) {
-                JRadioButtonMenuItem menuItem = (JRadioButtonMenuItem) componentIter;
+        for (Component componentIter : subMenu.getMenuComponents()) {
+            if (componentIter instanceof JRadioButtonMenuItem menuItem) {
                 Project projectIter = getItemProject(menuItem);
-                if(projectIter != null && !ProjectUtils.getInformation(projectIter).getDisplayName().equals(menuItem.getText())) {
+                if (projectIter != null && !ProjectUtils.getInformation(projectIter).getDisplayName().equals(menuItem.getText())) {
                     menuItem.setText(ProjectUtils.getInformation(projectIter).getDisplayName());
                 }
             }
@@ -284,40 +283,30 @@ public class SetMainProject extends ProjectAction implements PropertyChangeListe
     // Implementation of change listener ---------------------------------------
     
     
-    @Override public void propertyChange(PropertyChangeEvent e) {
-        
-        if ( OpenProjectList.PROPERTY_OPEN_PROJECTS.equals( e.getPropertyName() )) {
-            final Project projects[] = OpenProjectList.getDefault().getOpenProjects();
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                   createSubMenu(projects);
-                }
-            });
-            
-        } else if ( ProjectInformation.PROP_DISPLAY_NAME.equals( e.getPropertyName() )) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (subMenu != null) {
-                        checkProjectNames();
-                    }
-                }
-            });
-            
-        } else if ( OpenProjectList.PROPERTY_MAIN_PROJECT.equals( e.getPropertyName() )) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (subMenu != null) {
-                        selectMainProject();
-                    }
-                }
-            });            
-            
+    @Override
+    public void propertyChange(PropertyChangeEvent e) {
+        String prop = e.getPropertyName();
+        if (prop == null) {
+            return;
         }
-        
-        
+        switch (prop) {
+            case OpenProjectList.PROPERTY_OPEN_PROJECTS -> {
+                Project[] projects = OpenProjectList.getDefault().getOpenProjects();
+                SwingUtilities.invokeLater(() -> {
+                    createSubMenu(projects);
+                });
+            }
+            case ProjectInformation.PROP_DISPLAY_NAME -> SwingUtilities.invokeLater(() -> {
+                if (subMenu != null) {
+                    checkProjectNames();
+                }
+            });
+            case OpenProjectList.PROPERTY_MAIN_PROJECT -> SwingUtilities.invokeLater(() -> {
+                if (subMenu != null) {
+                    selectMainProject();
+                }
+            });
+        }
     }
     
     /**
@@ -352,17 +341,10 @@ public class SetMainProject extends ProjectAction implements PropertyChangeListe
     private static class MenuItemActionListener implements ActionListener {
         
         @Override public void actionPerformed(ActionEvent e) {
-            
-            if ( e.getSource() instanceof JMenuItem ) {
-                JMenuItem jmi = (JMenuItem)e.getSource();
+            if (e.getSource() instanceof JMenuItem jmi) {
                 final Project project = getItemProject(jmi);
                 prefs().putBoolean(CONTEXT_MENU_ITEM_ENABLED, project != null);
-                RP.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        OpenProjectList.getDefault().setMainProject(project);
-                    }
-                });   
+                RP.post(() -> OpenProjectList.getDefault().setMainProject(project));   
             }            
         }   
     }       

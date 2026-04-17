@@ -26,6 +26,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
@@ -34,6 +35,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +46,9 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.Name;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -55,6 +59,7 @@ import org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.modules.java.editor.base.javadoc.JavadocImports;
+import org.openide.util.Pair;
 
 /**
  *
@@ -109,6 +114,10 @@ public class UnusedImports {
         private final CompilationInfo info;
         
         private final Map<Element, ImportTree> element2Import = new HashMap<>();
+        private final Map<PackageElement, Pair<ModuleElement, ModuleElement>> packagesFromModuleImports2PrimaryModuleAndRealModule = new HashMap<>();
+        private final Map<ModuleElement, ImportTree> primaryModule2Import = new HashMap<>();
+        private final Set<ModuleElement> usedModules = new HashSet<>();
+        private final Map<ModuleElement, ModuleElement> usedTransitiveModule2PrimaryModule = new HashMap<>();
         private final Set<Element> importedBySingleImport = new HashSet<>();
         private final Map<String, Collection<ImportTree>> simpleName2UnresolvableImports = new HashMap<>();
         private final Set<ImportTree> unresolvablePackageImports = new HashSet<>();
@@ -133,6 +142,24 @@ public class UnusedImports {
         public Map<ImportTree, TreePath/*ImportTree*/> getUnusedImports() {
             Map<ImportTree, TreePath> ret = new HashMap<>(import2Highlight);
             ret.keySet().removeAll(usageCounts.keySet());
+            HashSet<ModuleElement> pendingUsedModules = new HashSet<>(usedModules);
+            for (Iterator<ModuleElement> it = pendingUsedModules.iterator(); it.hasNext(); ) {
+                ModuleElement primary = it.next();
+                ImportTree imp = primaryModule2Import.get(primary);
+
+                if (imp != null) {
+                    it.remove();
+                    ret.remove(imp);
+                }
+            }
+            for (ModuleElement remaining : pendingUsedModules) {
+                ModuleElement primary = usedTransitiveModule2PrimaryModule.get(remaining);
+                ImportTree imp = primary != null ? primaryModule2Import.get(primary) : null;
+
+                if (imp != null) {
+                    ret.remove(imp);
+                }
+            }
             return ret;
         }
 
@@ -163,6 +190,16 @@ public class UnusedImports {
         public Void visitCompilationUnit(CompilationUnitTree tree, Void d) {
 	    //ignore package X.Y.Z;:
 	    //scan(tree.getPackageDecl(), p);
+            PackageElement javaLang = info.getElements().getPackageElement("java.lang");
+            if (javaLang != null) {
+                List<TypeElement> types = ElementFilter.typesIn(javaLang.getEnclosedElements());
+                for (TypeElement te : types) {
+                    if (!element2Import.containsKey(te)) {
+                        element2Import.put(te, FAKE_IMPORT);
+                    }
+                }
+            }
+
 	    scan(tree.getImports(), d);
 	    scan(tree.getPackageAnnotations(), d);
 	    scan(tree.getTypeDecls(), d);
@@ -230,55 +267,73 @@ public class UnusedImports {
             if (parseErrorInImport(tree)) {
                 return super.visitImport(tree, null);
             }
-            if (tree.getQualifiedIdentifier() == null ||
-                tree.getQualifiedIdentifier().getKind() != Tree.Kind.MEMBER_SELECT) {
+            if (tree.getQualifiedIdentifier() == null) {
                 return super.visitImport(tree, null);
             }
-            MemberSelectTree qualIdent = (MemberSelectTree) tree.getQualifiedIdentifier();
             boolean assign = false;
-            
-            // static imports and star imports only use the qualifier part
-            boolean star = isStar(tree);
-            TreePath tp = tree.isStatic() || star ?
-                    new TreePath(new TreePath(getCurrentPath(), qualIdent), qualIdent.getExpression()) :
-                    new TreePath(getCurrentPath(), tree.getQualifiedIdentifier());
-            Element decl = info.getTrees().getElement(tp);
-            
-            import2Highlight.put(tree, getCurrentPath());
-            if (decl != null && !isErroneous(decl)) {
-                if (!tree.isStatic()) {
-                    if (star) {
-                        List<TypeElement> types = ElementFilter.typesIn(decl.getEnclosedElements());
-                        for (TypeElement te : types) {
-                            assign = true;
-                            if (!element2Import.containsKey(te)) {
-                                element2Import.put(te, tree);
-                            }
-                        }
-                    } else {
-                        element2Import.put(decl, tree);
-                        importedBySingleImport.add(decl);
-                    }
-                } else if (decl.getKind().isClass() || decl.getKind().isInterface()) {
-                    Name simpleName = star ? null : qualIdent.getIdentifier();
+            if (tree.isModule()) {
+                String moduleName = tree.getQualifiedIdentifier().toString();
+                ModuleElement primary = info.getElements().getModuleElement(moduleName);
+                if (primary != null) {
+                    primaryModule2Import.put(primary, tree);
 
-                    for (Element e : info.getElements().getAllMembers((TypeElement) decl)) {
-                        if (!e.getModifiers().contains(Modifier.STATIC)) continue;
-                        if (simpleName != null && !e.getSimpleName().equals(simpleName)) {
-                            continue;
+                    for (PackageElement pack : info.getElementUtilities().transitivelyExportedPackages(primary)) {
+                        usedTransitiveModule2PrimaryModule.putIfAbsent((ModuleElement) pack.getEnclosingElement(), primary);
+                        packagesFromModuleImports2PrimaryModuleAndRealModule.put(pack, Pair.of(primary, (ModuleElement) pack.getEnclosingElement()));
+                    }
+
+                    import2Highlight.put(tree, getCurrentPath());
+                } //do not mark unresolvable module imports as unused
+            } else {
+                if (tree.getQualifiedIdentifier().getKind() != Tree.Kind.MEMBER_SELECT) {
+                    return super.visitImport(tree, null);
+                }
+
+                MemberSelectTree qualIdent = (MemberSelectTree) tree.getQualifiedIdentifier();
+
+                // static imports and star imports only use the qualifier part
+                boolean star = isStar(tree);
+                TreePath tp = tree.isStatic() || star ?
+                        new TreePath(new TreePath(getCurrentPath(), qualIdent), qualIdent.getExpression()) :
+                        new TreePath(getCurrentPath(), tree.getQualifiedIdentifier());
+                Element decl = info.getTrees().getElement(tp);
+
+                import2Highlight.put(tree, getCurrentPath());
+                if (decl != null && !isErroneous(decl)) {
+                    if (!tree.isStatic()) {
+                        if (star) {
+                            List<TypeElement> types = ElementFilter.typesIn(decl.getEnclosedElements());
+                            for (TypeElement te : types) {
+                                assign = true;
+                                if (!element2Import.containsKey(te)) {
+                                    element2Import.put(te, tree);
+                                }
+                            }
+                        } else {
+                            element2Import.put(decl, tree);
+                            importedBySingleImport.add(decl);
                         }
-                        if (!star || !element2Import.containsKey(e)) {
-                            element2Import.put(e, tree);
+                    } else if (decl.getKind().isClass() || decl.getKind().isInterface()) {
+                        Name simpleName = star ? null : qualIdent.getIdentifier();
+
+                        for (Element e : info.getElements().getAllMembers((TypeElement) decl)) {
+                            if (!e.getModifiers().contains(Modifier.STATIC)) continue;
+                            if (simpleName != null && !e.getSimpleName().equals(simpleName)) {
+                                continue;
+                            }
+                            if (!star || !element2Import.containsKey(e)) {
+                                element2Import.put(e, tree);
+                            }
+                            assign = true;
                         }
-                        assign = true;
                     }
                 }
-            }
-            if (!assign) {
-                if (!tree.isStatic() && star) {
-                    unresolvablePackageImports.add(tree);
-                } else {
-                    addUnresolvableImport(qualIdent.getIdentifier(), tree);
+                if (!assign) {
+                    if (!tree.isStatic() && star) {
+                        unresolvablePackageImports.add(tree);
+                    } else {
+                        addUnresolvableImport(qualIdent.getIdentifier(), tree);
+                    }
                 }
             }
             super.visitImport(tree, null);
@@ -309,6 +364,18 @@ public class UnusedImports {
             if (decl != null && (expr == null || expr.getLeaf().getKind() == Kind.IDENTIFIER || expr.getLeaf().getKind() == Kind.PARAMETERIZED_TYPE)) {
                 if (!isErroneous(decl)) {
                     ImportTree imp = element2Import.get(decl);
+
+                    if (imp == null &&
+                        (decl.getKind().isClass() || decl.getKind().isInterface()) &&
+                        decl.getEnclosingElement().getKind() == ElementKind.PACKAGE &&
+                        (info.getCompilationUnit().getPackage() == null || !decl.getEnclosingElement().equals(info.getTrees().getElement(new TreePath(new TreePath(info.getCompilationUnit()), info.getCompilationUnit().getPackage()))))) {
+                        //TODO: also in a different package?
+                        Pair<ModuleElement, ModuleElement> modules = packagesFromModuleImports2PrimaryModuleAndRealModule.get(decl.getEnclosingElement());
+
+                        if (modules != null) {
+                            usedModules.add(modules.second());
+                        }
+                    }
 
                     if (imp != null) {
                         addUsage(imp);
@@ -357,4 +424,30 @@ public class UnusedImports {
         }
     }
     
+    private static final ImportTree FAKE_IMPORT = new ImportTree() {
+        @Override
+        public boolean isStatic() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public boolean isModule() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public Tree getQualifiedIdentifier() {
+            return null;
+        }
+
+        @Override
+        public Kind getKind() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    };
 }

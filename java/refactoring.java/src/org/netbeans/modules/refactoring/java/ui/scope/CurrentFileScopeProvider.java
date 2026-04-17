@@ -22,13 +22,13 @@ import java.beans.BeanInfo;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import org.netbeans.modules.refactoring.api.Scope;
 import org.netbeans.modules.refactoring.spi.ui.ScopeProvider;
 import org.netbeans.modules.refactoring.spi.ui.ScopeReference;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
@@ -42,7 +42,7 @@ import org.openide.util.NbBundle.Messages;
 public final class CurrentFileScopeProvider extends ScopeProvider {
 
     private Scope scope;
-    private ImageIcon icon;
+    private Icon icon;
     private String detail;
 
     @Override
@@ -57,7 +57,7 @@ public final class CurrentFileScopeProvider extends ScopeProvider {
             currentFileDo = DataObject.find(file);
         } catch (DataObjectNotFoundException ex) {
         } // Not important, only for Icon.
-        icon = currentFileDo != null ? new ImageIcon(currentFileDo.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16)) : null;
+        icon = currentFileDo != null ? ImageUtilities.image2Icon(currentFileDo.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16)) : null;
         detail = file.getNameExt();
         scope = Scope.create(null, null, Arrays.asList(file));
 

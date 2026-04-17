@@ -37,7 +37,7 @@ public record HintDescription(
 
     @Override
     public String toString() {
-        return "[HintDescription:" + trigger + "]";
+        return "[HintDescription:" + metadata + "]";
     }
 
     public AdditionalQueryConstraints getAdditionalConstraints() {

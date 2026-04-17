@@ -243,7 +243,7 @@ public class SCFTHandlerTest extends NbTestCase {
          FileObject xmldir = FileUtil.createFolder(root, "xml");
          FileObject xml = FileUtil.createData(xmldir, "class.txt");
          OutputStream os = xml.getOutputStream();
-         FileUtil.copy(getClass().getResourceAsStream("utf8.xml"), os);
+         getClass().getResourceAsStream("utf8.xml").transferTo(os);
          xml.setAttribute(ScriptingCreateFromTemplateHandler.SCRIPT_ENGINE_ATTR, "js");
          os.close();
          

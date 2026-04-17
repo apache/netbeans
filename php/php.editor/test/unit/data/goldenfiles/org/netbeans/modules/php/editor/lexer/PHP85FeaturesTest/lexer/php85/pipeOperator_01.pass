@@ -1,0 +1,94 @@
+token #0 PHP_OPENTAG <?php
+token #1 WHITESPACE \n
+token #2 PHP_COMMENT_START /*
+token #3 PHP_COMMENT \n * Licensed to the Apache Software Foundation (ASF) under one\n * or more contributor license agreements.  See the NOTICE file\n * distributed with this work for additional information\n * regarding copyright ownership.  The ASF licenses this file\n * to you under the Apache License, Version 2.0 (the\n * "License"); you may not use this file except in compliance\n * with the License.  You may obtain a copy of the License at\n *\n *   http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing,\n * software distributed under the License is distributed on an\n * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n * KIND, either express or implied.  See the License for the\n * specific language governing permissions and limitations\n * under the License.\n 
+token #4 PHP_COMMENT_END */
+token #5 WHITESPACE \n\n
+token #6 PHP_VARIABLE $result
+token #7 WHITESPACE  
+token #8 PHP_OPERATOR =
+token #9 WHITESPACE  
+token #10 PHP_CONSTANT_ENCAPSED_STRING "Example"
+token #11 WHITESPACE  
+token #12 PHP_OPERATOR |>
+token #13 WHITESPACE  
+token #14 PHP_STRING strlen
+token #15 PHP_TOKEN (
+token #16 PHP_OPERATOR ...
+token #17 PHP_TOKEN )
+token #18 PHP_SEMICOLON ;
+token #19 WHITESPACE \n\n
+token #20 PHP_VARIABLE $result
+token #21 WHITESPACE  
+token #22 PHP_OPERATOR =
+token #23 WHITESPACE  
+token #24 PHP_CONSTANT_ENCAPSED_STRING "Example"
+token #25 WHITESPACE \n    
+token #26 PHP_OPERATOR |>
+token #27 WHITESPACE  
+token #28 PHP_STRING htmlentities
+token #29 PHP_TOKEN (
+token #30 PHP_OPERATOR ...
+token #31 PHP_TOKEN )
+token #32 WHITESPACE \n    
+token #33 PHP_OPERATOR |>
+token #34 WHITESPACE  
+token #35 PHP_STRING str_split
+token #36 PHP_TOKEN (
+token #37 PHP_OPERATOR ...
+token #38 PHP_TOKEN )
+token #39 WHITESPACE \n    
+token #40 PHP_OPERATOR |>
+token #41 WHITESPACE  
+token #42 PHP_TOKEN (
+token #43 PHP_FN fn
+token #44 PHP_TOKEN (
+token #45 PHP_VARIABLE $x
+token #46 PHP_TOKEN )
+token #47 WHITESPACE  
+token #48 PHP_OPERATOR =>
+token #49 WHITESPACE  
+token #50 PHP_STRING array_map
+token #51 PHP_TOKEN (
+token #52 PHP_STRING strtoupper
+token #53 PHP_TOKEN (
+token #54 PHP_OPERATOR ...
+token #55 PHP_TOKEN )
+token #56 PHP_TOKEN ,
+token #57 WHITESPACE  
+token #58 PHP_VARIABLE $x
+token #59 PHP_TOKEN )
+token #60 PHP_TOKEN )
+token #61 WHITESPACE \n    
+token #62 PHP_OPERATOR |>
+token #63 WHITESPACE  
+token #64 PHP_TOKEN (
+token #65 PHP_FN fn
+token #66 PHP_TOKEN (
+token #67 PHP_VARIABLE $x
+token #68 PHP_TOKEN )
+token #69 WHITESPACE  
+token #70 PHP_OPERATOR =>
+token #71 WHITESPACE  
+token #72 PHP_STRING array_filter
+token #73 PHP_TOKEN (
+token #74 PHP_VARIABLE $x
+token #75 PHP_TOKEN ,
+token #76 WHITESPACE  
+token #77 PHP_FN fn
+token #78 PHP_TOKEN (
+token #79 PHP_VARIABLE $v
+token #80 PHP_TOKEN )
+token #81 WHITESPACE  
+token #82 PHP_OPERATOR =>
+token #83 WHITESPACE  
+token #84 PHP_VARIABLE $v
+token #85 WHITESPACE  
+token #86 PHP_OPERATOR !=
+token #87 WHITESPACE  
+token #88 PHP_CONSTANT_ENCAPSED_STRING 'O'
+token #89 PHP_TOKEN )
+token #90 PHP_TOKEN )
+token #91 WHITESPACE \n
+token #92 PHP_SEMICOLON ;
+token #93 WHITESPACE \n

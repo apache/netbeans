@@ -304,7 +304,7 @@ public class CompletionContextFinder {
         return false;
     }
 
-    private static boolean acceptTokenChains(TokenSequence tokenSequence, List<Object[]> tokenIdChains, boolean movePrevious) {
+    private static boolean acceptTokenChains(TokenSequence<JsTokenId> tokenSequence, List<Object[]> tokenIdChains, boolean movePrevious) {
         for (Object[] tokenIDChain : tokenIdChains){
             if (acceptTokenChain(tokenSequence, tokenIDChain, movePrevious)){
                 return true;
@@ -314,7 +314,7 @@ public class CompletionContextFinder {
         return false;
     }
 
-    private static boolean acceptTokenChain(TokenSequence tokenSequence, Object[] tokenIdChain, boolean movePrevious) {
+    private static boolean acceptTokenChain(TokenSequence<JsTokenId> tokenSequence, Object[] tokenIdChain, boolean movePrevious) {
         int orgTokenSequencePos = tokenSequence.offset();
         boolean accept = true;
         boolean moreTokens = movePrevious ? tokenSequence.movePrevious() : true;

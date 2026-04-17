@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.db.sql.editor;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
@@ -35,7 +34,6 @@ public final class OptionsUtils {
     public static final String PAIR_CHARACTERS_COMPLETION = "pair-characters-completion"; //NOI18N
     public static final String SQL_AUTO_COMPLETION_SUBWORDS = "sql-completion-subwords"; //NOI18N
     public static final boolean SQL_AUTO_COMPLETION_SUBWORDS_DEFAULT = false;
-    private static final AtomicBoolean INITED = new AtomicBoolean(false);
 
     private static final PreferenceChangeListener PREFERENCES_TRACKER = new PreferenceChangeListener() {
         @Override
@@ -54,8 +52,8 @@ public final class OptionsUtils {
 
     private static Preferences preferences;
 
-    private static boolean pairCharactersCompletion = true;
-    private static boolean sqlCompletionSubwords = SQL_AUTO_COMPLETION_SUBWORDS_DEFAULT;
+    private static volatile boolean pairCharactersCompletion = true;
+    private static volatile boolean sqlCompletionSubwords = SQL_AUTO_COMPLETION_SUBWORDS_DEFAULT;
 
     private OptionsUtils() {
     }
@@ -80,8 +78,8 @@ public final class OptionsUtils {
         return sqlCompletionSubwords;
     }
 
-    private static void lazyInit() {
-        if (INITED.compareAndSet(false, true)) {
+    private synchronized static void lazyInit() {
+        if (preferences == null) {
             preferences = MimeLookup.getLookup(SQLLanguageConfig.mimeType).lookup(Preferences.class);
             preferences.addPreferenceChangeListener(WeakListeners.create(PreferenceChangeListener.class, PREFERENCES_TRACKER, preferences));
             PREFERENCES_TRACKER.preferenceChange(null);

@@ -28,7 +28,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import javax.swing.text.JTextComponent;
-import javax.servlet.jsp.tagext.*;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
@@ -53,6 +52,10 @@ import org.netbeans.editor.ext.ExtSyntaxSupport;
 import org.netbeans.editor.ext.java.JavaTokenContext;
 import org.netbeans.modules.editor.NbEditorUtilities;
 import org.netbeans.modules.html.editor.api.completion.HtmlCompletionItem;
+import org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo;
+import org.netbeans.modules.web.jsps.parserapi.TagFileInfo;
+import org.netbeans.modules.web.jsps.parserapi.TagInfo;
+import org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo;
 import org.openide.filesystems.FileUtil;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.text.CloneableEditorSupport;
@@ -515,25 +518,25 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
         if (tagLibrary != null) {
             int tagInfosLength = 0;
             int tagAllInfosLength = 0;
-            TagInfo[] tagInfos = tagLibrary.getTags();
-            TagFileInfo[] tagFileInfos = tagLibrary.getTagFiles();
+            List<TagInfo> tagInfos = tagLibrary.getTags();
+            List<TagFileInfo> tagFileInfos = tagLibrary.getTagFiles();
 
             if (tagInfos != null) { // it can be null, when the jsp parser finished unexpectedly
-                tagInfosLength = tagInfos.length;
+                tagInfosLength = tagInfos.size();
                 tagAllInfosLength = tagInfosLength;
             }
             if (tagFileInfos != null) { // it can be null, when the jsp parser finished unexpectedly
-                tagAllInfosLength += tagFileInfos.length;
+                tagAllInfosLength += tagFileInfos.size();
             }
 
             allTags = new TagInfo[tagAllInfosLength];
 
             if (tagInfos != null) {
-                System.arraycopy(tagInfos, 0, allTags, 0, tagInfosLength);
+                System.arraycopy(tagInfos.toArray(), 0, allTags, 0, tagInfosLength);
             }
             if (tagFileInfos != null) {
-                for (int i = 0; i < tagFileInfos.length; i++) {
-                    allTags[tagInfosLength + i] = tagFileInfos[i].getTagInfo();
+                for (int i = 0; i < tagFileInfos.size(); i++) {
+                    allTags[tagInfosLength + i] = tagFileInfos.get(i).getTagInfo();
                 }
             }
         }
@@ -542,8 +545,8 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
 
     /**  Returns a list of strings - tag names available for a particular prefix.
      */
-    protected List getAllTags(String prefix, boolean requiresFresh) {
-        List items = new ArrayList();
+    protected List<TagInfo> getAllTags(String prefix, boolean requiresFresh) {
+        List<TagInfo> items = new ArrayList<>();
 
         // standard JSP tags (jsp:)
         initCompletionData();
@@ -567,9 +570,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                             tags[i].getTagClassName(), tags[i].getBodyContent(),
                             url + tags[i].getTagName() + ".html#tag-start-" + tags[i].getTagName()
                             + "#tag-end-" + tags[i].getTagName(), info,
-                            tags[i].getTagExtraInfo(), tags[i].getAttributes(),
-                            tags[i].getDisplayName(), tags[i].getSmallIcon(), tags[i].getLargeIcon(),
-                            tags[i].getTagVariableInfos(), tags[i].hasDynamicAttributes()));
+                            tags[i].getAttributes()));
                 }
             } else {
                 items.addAll(Arrays.asList(tags));
@@ -590,8 +591,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
             TagInfo[] stanTagDatas = getTagInfos();
             for (int i=0; i<stanTagDatas.length; i++) {
                 if (stanTagDatas[i].getTagName().equals(tag)) {
-                    TagAttributeInfo[] attrs = stanTagDatas[i].getAttributes();
-                    items.addAll(Arrays.asList(attrs));
+                    items.addAll(stanTagDatas[i].getAttributes());
                     break;
                 }
             }
@@ -607,19 +607,19 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                 }
             }
             if (tagInfo != null) {
-                TagAttributeInfo[] attributes = tagInfo.getAttributes();
+                List<TagAttributeInfo> attributes = tagInfo.getAttributes();
                 String url = (String)helpMap.get(tagInfo.getTagLibrary().getURI());
                 if (url != null && !url.equals("")){
-                    for (int i = 0; i < attributes.length; i++) {
-                        items.add(new TagAttributeInfo(attributes[i].getName(),
-                                attributes[i].isRequired(),
-                                url + tagInfo.getTagName() + ".html#attribute-start-" + attributes[i].getName()
-                                + "#attribute-end-" + attributes[i].getName(),
-                                attributes[i].canBeRequestTime(),
-                                attributes[i].isFragment()));
+                    for (TagAttributeInfo attribute: attributes) {
+                        items.add(new TagAttributeInfo(attribute.getName(),
+                                attribute.isRequired(),
+                                url + tagInfo.getTagName() + ".html#attribute-start-" + attribute.getName()
+                                + "#attribute-end-" + attribute.getName(),
+                                attribute.isCanBeRequestTime(),
+                                attribute.isFragment()));
                     }
                 } else {
-                    items.addAll(Arrays.asList(attributes));
+                    items.addAll(attributes);
                 }
             }
         }
@@ -661,8 +661,7 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
             directiveData = directiveJspData;
         for (int i=0; i<directiveData.length; i++) {
             if (directiveData[i].getTagName().equals(directive)) {
-                TagAttributeInfo[] attrs = directiveData[i].getAttributes();
-                items.addAll(Arrays.asList(attrs));
+                items.addAll(directiveData[i].getAttributes());
                 break;
             }
         }
@@ -1025,10 +1024,9 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                     output.append("    "); // NOI18N
                     output.append(ti.getTagName());
                     output.append("\n"); // NOI18N
-                    TagAttributeInfo[] attributes =  ti.getAttributes();
-                    for (int k = 0; k < attributes.length; k++) {
+                    for (TagAttributeInfo attribute: ti.getAttributes()) {
                         output.append("      "); // NOI18N
-                        output.append(attributes[k].getName());
+                        output.append(attribute.getName());
                         output.append("\n");// NOI18N
                     }
                 } else {
@@ -1056,10 +1054,10 @@ public class JspSyntaxSupport extends ExtSyntaxSupport implements FileChangeList
                 output.append("    "); // NOI18N
                 output.append(ti.getTagName());
                 output.append("\n"); // NOI18N
-                TagAttributeInfo[] attributes =  ti.getAttributes();
-                for (int k = 0; k < attributes.length; k++) {
+                List<TagAttributeInfo> attributes =  ti.getAttributes();
+                for (TagAttributeInfo attribute: ti.getAttributes()) {
                     output.append("      "); // NOI18N
-                    output.append(attributes[k].getName());
+                    output.append(attribute.getName());
                     output.append("\n");// NOI18N
                 }
             } else {

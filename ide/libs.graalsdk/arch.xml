@@ -55,7 +55,7 @@
     into
     <a href="@org-netbeans-api-scripting@/org/netbeans/api/scripting/Scripting.html">Scripting.createManager()</a>
     to obtain enhanced version of
-    <a href="@JDK@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>.
+    <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>.
     Please see the
     <a href="@TOP@/org/netbeans/libs/graalsdk/package-summary.html">scripting tutorial</a>
     to read about many interesting use-cases.
@@ -121,7 +121,6 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
       <usecase id="createScriptEngineManager" name="Create ScriptEngineManager">
           To access <a href="https://graalvm.org">GraalVM</a> languages
           use
@@ -131,7 +130,7 @@
               <a href="@org-netbeans-api-scripting@/org/netbeans/api/scripting/Scripting.html">Scripting</a>
               class offers static <code>createManager()</code> method that
               should be used whenever one needs an instance of
-              <a href="@JDK@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
+              <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
               inside of NetBeans based application.
           </api>
           Many client oriented use-cases are covered in the
@@ -154,7 +153,6 @@
               wrapper isn't enough.
           </api>
       </usecase>
-  </p>
  </answer>
 
 
@@ -546,7 +544,7 @@
         without)
         it automatically exports all available languages (obtained via
         <code>org.graalvm.polyglot.Engine</code>) as
-        <a href="@JDK@/javax/script/ScriptEngine.html">ScriptEngine</a>
+        <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngine.html">ScriptEngine</a>
         instances. These dynamically created engines use <code>GraalVM:</code>
         prefix (<code>GraalVM:js</code>, <code>GraalVM:python</code>) in their
         name.

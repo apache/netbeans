@@ -306,6 +306,7 @@ public class ReplaceConstructorWithBuilderPlugin extends JavaRefactoringPlugin {
                             typeParameters,
                             null,
                             Collections.EMPTY_LIST,
+                            Collections.EMPTY_LIST,
                             members);
                     FileObject root = ClassPath.getClassPath(constr.getFileObject(), ClassPath.SOURCE).findOwnerRoot(constr.getFileObject());
                     CompilationUnitTree builderUnit = make.CompilationUnit(root, refactoring.getBuilderName().replace('.', '/') + ".java", Collections.EMPTY_LIST, Collections.singletonList(builder));

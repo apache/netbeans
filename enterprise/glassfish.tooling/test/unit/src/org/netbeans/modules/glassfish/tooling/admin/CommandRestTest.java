@@ -58,10 +58,7 @@ import org.testng.annotations.Test;
  */
 public abstract class CommandRestTest extends CommandTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(CommandRestTest.class);
 
@@ -81,10 +78,7 @@ public abstract class CommandRestTest extends CommandTest {
     /** GlassFish test server stderr lines stored in linked list. */
     protected static volatile StreamLinesList gfStdErr = null;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get GlassFish test server properties.
      * <p>

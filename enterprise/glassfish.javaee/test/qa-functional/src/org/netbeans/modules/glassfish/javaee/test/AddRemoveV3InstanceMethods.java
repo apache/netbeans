@@ -147,9 +147,9 @@ public class AddRemoveV3InstanceMethods extends NbTestCase {
 //        return NbModuleSuite.create(
 //                NbModuleSuite.createConfiguration(AddRemoveV3InstanceMethods.class).
 //                addTest("addSjsasInstance","removeSjsasInstance").enableModules(".*").clusters(".*"));
-////        NbTestSuite suite = new NbTestSuite("AddRemoveSjsasInstanceMethods");
-////        suite.addTest(new AddRemoveSjsasInstanceMethods("addSjsasInstance"));
-////        suite.addTest(new AddRemoveSjsasInstanceMethods("removeSjsasInstance"));
-////        return suite;
+// //        NbTestSuite suite = new NbTestSuite("AddRemoveSjsasInstanceMethods");
+// //        suite.addTest(new AddRemoveSjsasInstanceMethods("addSjsasInstance"));
+// //        suite.addTest(new AddRemoveSjsasInstanceMethods("removeSjsasInstance"));
+// //        return suite;
 //    }
 }

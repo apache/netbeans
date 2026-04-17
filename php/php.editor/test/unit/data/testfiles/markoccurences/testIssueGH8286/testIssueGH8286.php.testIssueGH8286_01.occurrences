@@ -1,0 +1,2 @@
+    public function |>MARK_OCCURRENCES:get<|(string $param): string{
+\test\TestA::X->|>MARK_OCCURRENCES:ge^t<|();

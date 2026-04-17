@@ -146,7 +146,7 @@ public class JsfHtmlExtensionTest extends TestBaseForTestProject {
 
     private static void copyStreamToFile(InputStream inputStream, File path) throws IOException {
         try (FileOutputStream outputStream = new FileOutputStream(path, false)) {
-            FileUtil.copy(inputStream, outputStream);
+            inputStream.transferTo(outputStream);
         }
     }
     

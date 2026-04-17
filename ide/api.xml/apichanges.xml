@@ -376,7 +376,6 @@ is the proper place.
 -->
     <head>
       <title>XML Tools API Changes by Date</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
       <meta name="CATEGORY" content="OtherDevelopmentDoc"/>
       <meta name="DESCRIPTION" content="A cross-indexed list of all changes made to the NetBeans XML tools APIs."/>
     </head>

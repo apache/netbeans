@@ -145,6 +145,7 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
                    newTypeParams,
                    wrap ? null : make.Type(source.asType()), //superClass,
                    implementsList,
+                   Collections.emptyList(),
                    members);
             } else {    
                 newClassTree = make.Interface(
@@ -152,6 +153,7 @@ public class IntroduceLocalExtensionTransformer extends RefactoringVisitor {
                    name,
                    newTypeParams,
                    Collections.singletonList(make.Type(source.asType())), //superClass,
+                   Collections.emptyList(),
                    members);
             }
 

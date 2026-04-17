@@ -47,7 +47,6 @@ import net.java.html.json.Function;
 import net.java.html.json.Model;
 import net.java.html.json.ModelOperation;
 import net.java.html.json.Property;
-import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
 import org.eclipse.lsp4j.CodeAction;
 import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
@@ -407,7 +406,7 @@ public final class MoveRefactoring extends CodeRefactoring {
                 } else {
                     refactoring.setTarget(Lookup.EMPTY);
                 }
-                client.applyEdit(new ApplyWorkspaceEditParams(perform(refactoring, "Move")));
+                sendRefactoringChanges(client, refactoring, "Move");
             } catch (Exception ex) {
                 if (client == null) {
                     Exceptions.printStackTrace(

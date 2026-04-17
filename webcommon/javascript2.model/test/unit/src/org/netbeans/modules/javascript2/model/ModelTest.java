@@ -278,6 +278,10 @@ public class ModelTest extends ModelTestBase {
         checkModel("testfiles/markoccurences/issue252135.js");
     }
 
+    public void testGH8299() throws Exception {
+        checkModel("testfiles/markoccurences/issueGH8299.js");
+    }
+
     public void testIssue231530() throws Exception {
         checkModel("testfiles/model/issue231530.js");
     }

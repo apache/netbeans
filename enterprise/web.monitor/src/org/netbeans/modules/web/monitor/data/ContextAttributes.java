@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  * ContextAttributes.java
  *
  * Matches the DTD element ContextAttributes

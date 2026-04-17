@@ -26,7 +26,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.CLIHandler;
-import org.netbeans.TopSecurityManager;
+import org.netbeans.NbExit;
 import org.netbeans.core.startup.CLIOptions;
 import org.netbeans.core.startup.Main;
 import org.netbeans.core.startup.layers.SessionManager;
@@ -96,7 +96,7 @@ final class NbLifeExit implements Runnable {
                     final boolean doExit = !Boolean.getBoolean("netbeans.close.no.exit"); // NOI18N
                     NbLifecycleManager.LOG.log(Level.FINE, "Calling exit: {0}", doExit); // NOI18N
                     if (doExit) {
-                        TopSecurityManager.exit(status);
+                        NbExit.exit(status);
                     }
                 } finally {
                     NbLifecycleManager.LOG.log(Level.FINE, "After exit!"); // NOI18N
@@ -132,7 +132,7 @@ final class NbLifeExit implements Runnable {
         if (Boolean.getBoolean("netbeans.close.when.invisible")) { // NOI18N
             // hook to permit perf testing of time to *apparently* shut down
             try {
-                TopSecurityManager.exit(status);
+                NbExit.exit(status);
             } finally {
                 onExit.countDown();
             }

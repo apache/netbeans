@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CoderMalfunctionError;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -49,13 +50,13 @@ public class SingleLineStreamMatcher extends AbstractMatcher {
 
     private static final int limit = Constants.DETAILS_COUNT_LIMIT;
     private volatile boolean terminated = false;
-    private SearchPattern searchPattern;
-    private Pattern pattern;
+    private final SearchPattern searchPattern;
+    private final Pattern pattern;
     private int count = 0;
 
     public SingleLineStreamMatcher(SearchPattern searchPattern) {
         this.searchPattern = searchPattern;
-        pattern = TextRegexpUtil.makeTextPattern(searchPattern);
+        this.pattern = TextRegexpUtil.makeTextPattern(searchPattern);
     }
 
     @Override
@@ -72,7 +73,7 @@ public class SingleLineStreamMatcher extends AbstractMatcher {
             } else {
                 return new Def(file, charset, textDetails);
             }
-        } catch (CharacterCodingException e) {
+        } catch (CharacterCodingException | CoderMalfunctionError e) {
             handleDecodingError(listener, file, decoder, e);
             return null;
         } catch (Exception e) {

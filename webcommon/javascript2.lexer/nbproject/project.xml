@@ -149,6 +149,7 @@
                 <friend>org.netbeans.modules.javascript2.prototypejs</friend>
                 <friend>org.netbeans.modules.javascript2.requirejs</friend>
                 <friend>org.netbeans.modules.javascript2.sdoc</friend>
+                <friend>org.netbeans.modules.javascript2.vue</friend>
                 <package>org.netbeans.modules.javascript2.lexer.api</package>
             </friend-packages>
         </data>

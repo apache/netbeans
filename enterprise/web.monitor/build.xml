@@ -26,14 +26,53 @@
     <import file="../../nbbuild/templates/projectized.xml"/>
 
     <target name="compile-server" depends="init,compile">
+        <!-- Build the JavaEE version of the http monitor -->
         <mkdir dir="build/server-classes"/>
-        <javac srcdir="serversrc" destdir="build/server-classes" deprecation="${build.compiler.deprecation}" debug="${build.compiler.debug}" source="${javac.source}" release="8" target="1.8" includeantruntime="false">
+        <javac srcdir="serversrc" 
+               destdir="build/server-classes"
+               deprecation="${build.compiler.deprecation}"
+               debug="${build.compiler.debug}"
+               source="${javac.source}"
+               release="8"
+               includeantruntime="false"
+        >
             <classpath>
                 <path path="${server.cp.extra}:build/classes"/>
             </classpath>
         </javac>
         <copy todir="build/server-classes">
             <fileset dir="serversrc" excludes="${jar-excludes}"/>
+        </copy>
+
+        <!--
+            Build the JakartaEE version of the http monitor by using the source
+            of the JavaEE version and replacing the package references.
+
+            The requires to only access functionality present in both APIs
+            or use reflection to call the missing parts.
+        -->
+
+        <mkdir dir="build/server-jakarta-serversrc"/>
+        <copy todir="build/server-jakarta-serversrc">
+            <fileset dir="serversrc" />
+        </copy>
+
+        <replace dir="build/server-jakarta-serversrc" token="javax.servlet" value="jakarta.servlet" includes="**/*" />
+
+        <mkdir dir="build/server-jakarta-classes"/>
+        <javac srcdir="build/server-jakarta-serversrc" 
+               destdir="build/server-jakarta-classes"
+               deprecation="${build.compiler.deprecation}"
+               debug="${build.compiler.debug}"
+               source="${javac.source}"
+               release="8"
+               includeantruntime="false">
+            <classpath>
+                <path path="${server.cp.extra.jakarta}:build/classes"/>
+            </classpath>
+        </javac>
+        <copy todir="build/server-jakarta-classes">
+            <fileset dir="build/server-jakarta-serversrc" excludes="${jar-excludes}"/>
         </copy>
     </target>
 
@@ -45,6 +84,13 @@
         <jar jarfile="${cluster}/modules/ext/org-netbeans-modules-web-httpmonitor.jar" 
              compress="false">
             <fileset dir="build/server-classes"/>
+	    <fileset dir="build/classes">
+                <include name="org/netbeans/modules/web/monitor/data/"/>
+          </fileset>
+        </jar>
+        <jar jarfile="${cluster}/modules/ext/org-netbeans-modules-web-httpmonitor-jakarta.jar"
+             compress="false">
+            <fileset dir="build/server-jakarta-classes"/>
 	    <fileset dir="build/classes">
                 <include name="org/netbeans/modules/web/monitor/data/"/>
           </fileset>

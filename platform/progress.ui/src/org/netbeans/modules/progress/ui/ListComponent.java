@@ -196,7 +196,7 @@ public class ListComponent extends JPanel {
     static Icon iconOrImage2icon( Object iconOrImage ) {
         return (iconOrImage instanceof Icon)
                 ? (Icon) iconOrImage
-                : new ImageIcon( (Image) iconOrImage );
+                : ImageUtilities.image2Icon( (Image) iconOrImage );
     }
     
     

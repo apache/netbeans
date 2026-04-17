@@ -23,7 +23,8 @@
 
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    <!-- @start region="LayerActionsRegistration" -->
+    <!-- // @start region="LayerActionsRegistration" 
+    -->
     <folder name="Projects">
         <folder name="org-netbeans-modules-maven">
             <folder name="org.ntebeans.modules.maven:test.plugin">
@@ -42,5 +43,6 @@
             </folder>
         </folder>
     </folder>
-    <!-- @end region="LayerActionsRegistration" -->
+    <!-- // @end region="LayerActionsRegistration" 
+    -->
 </filesystem>

@@ -37,7 +37,6 @@ import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -75,8 +74,7 @@ import org.openide.util.NbBundle;
 
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.queries.SourceLevelQuery;
-import org.netbeans.api.options.OptionsDisplayer;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
@@ -576,7 +574,7 @@ private void saasBrowse(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saasB
                 }
                     
             };
-            ProgressUtils.showProgressDialogAndRun( runnable, 
+            BaseProgressUtils.showProgressDialogAndRun( runnable, 
                     NbBundle.getMessage(ClientInfo.class, "TXT_SaasWait")); // NOI18N
             
         }

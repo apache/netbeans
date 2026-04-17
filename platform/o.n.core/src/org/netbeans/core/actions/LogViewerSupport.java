@@ -106,7 +106,7 @@ public class LogViewerSupport implements Runnable {
             task.schedule(10000);
         }
         else {
-            ///System.out.println("end of infinite loop for log viewer\n\n\n\n");
+            //System.out.println("end of infinite loop for log viewer\n\n\n\n");
             stopUpdatingLogViewer();
         }
     }

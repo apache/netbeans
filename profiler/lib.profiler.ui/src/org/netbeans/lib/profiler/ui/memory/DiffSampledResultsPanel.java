@@ -190,13 +190,13 @@ public class DiffSampledResultsPanel extends SnapshotSampledResultsPanel {
     }
 
     protected Object computeValueAt(int row, int col) {
-        int index = ((Integer) filteredToFullIndexes.get(row)).intValue();
+        int index = (Integer) filteredToFullIndexes.get(row);
 
         switch (col) {
             case 0:
                 return sortedClassNames[index];
             case 1:
-                return new Long(totalLiveObjectsSize[index]);
+                return totalLiveObjectsSize[index];
             case 2:
                 return ((totalLiveObjectsSize[index] > 0) ? "+" : "") + intFormat.format(totalLiveObjectsSize[index]) + " B"; // NOI18N
             case 3:

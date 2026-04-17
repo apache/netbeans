@@ -120,7 +120,6 @@ question-version="1.25"
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
     <usecase id="content" name="Palette Content" >
         <p>The Common Palette content is a two-level hierarchy. The top-most level
         are <b>Categories</b>, the Category children are <b>Items</b>. It's 
@@ -278,15 +277,13 @@ question-version="1.25"
           <p>
               When an item is selected in the palette and user clicks into the editor window
               then the module can ask for selected item by calling 
-              <a href="@TOP@/org/netbeans/spi/palette/PaletteController.html#getSelectedItem--">PaletteController.getSelectedItem()</a>.
+              <a href="@TOP@/org/netbeans/spi/palette/PaletteController.html#getSelectedItem()">PaletteController.getSelectedItem()</a>.
               This method returns a Lookup that holds object(s) representing the selected item.
               After the item is inserted into the editor window the module may clear palette's selection
-              (<a href="@TOP@/org/netbeans/spi/palette/PaletteController.html#clearSelection--">PaletteController.clearSelection()</a>)
+              (<a href="@TOP@/org/netbeans/spi/palette/PaletteController.html#clearSelection()">PaletteController.clearSelection()</a>)
               or leave the item selected to implement 'multi drop' insertion scenario.
           </p>
       </usecase>
-  </p>
-  <p>
     <usecase id="filter" name="Filtering" >
         <p>It is possible to filter palette content and hide some categories and/or
            items from the user by extending <a href="@TOP@/org/netbeans/spi/palette/PaletteFilter.html">PaletteFilter</a> class.
@@ -324,15 +321,13 @@ question-version="1.25"
                 PaletteController controller = PaletteFactory.createPalette( "MyPalette", new MyPaletteActions(), filter, null );
           </pre>
           <p>It is necessary to call 
-          <a href="@TOP@/org/netbeans/spi/palette/PaletteController.html#refresh--">PaletteController.refresh()</a>
+          <a href="@TOP@/org/netbeans/spi/palette/PaletteController.html#refresh()">PaletteController.refresh()</a>
           to refresh and repaint the palette window whenever the filtering condition has changed:</p>
           <pre>
               myPaletteFilter.setShowSomeSpecialCategories( false );
               paletteController.refresh();
           </pre>
     </usecase>
-  </p>
-  <p>
     <usecase id="settings" name="Default Settings" >
         <p>The initial state of the palette can be overridden by setting appropriate
            attributes to palette model. The list of supported attributes is defined
@@ -371,9 +366,6 @@ question-version="1.25"
       &lt;/filesystem&gt;
             </pre>
     </usecase>
-  </p>
-
-    <p>
     <usecase id="newcontentatruntime" name="Adding categories and items at runtime" >
         <p>It is possible to add new palette categories and/or palette item at runtime
         when the palette window is already visible.</p>
@@ -395,9 +387,6 @@ question-version="1.25"
         <p>Please refer to Nodes API in case the palette content is defined as a 
         hierarchy of arbitrary Nodes.</p>
     </usecase>
-  </p>
-
-  <p>
     <usecase id="items" name="Palette content for text-based editors" >
         <p>The following steps must be taken when writing the item using the support provided by this module:</p>
             <ol>
@@ -414,7 +403,6 @@ question-version="1.25"
                 </li>
             </ol>
     </usecase>
-  </p>
  </answer>
 
 

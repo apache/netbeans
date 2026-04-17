@@ -30,18 +30,13 @@ import java.util.Map;
  * @author Tomas Kraus, Peter Benedikovic
  */
 public enum PayaraAdminInterface {
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
     /** Payara server administration interface is REST. */
     REST,
     /** Payara server administration interface is HTTP. */
     HTTP;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**  A <code>String</code> representation of REST value. */
     static final String REST_STR = "REST";
 
@@ -63,10 +58,7 @@ public enum PayaraAdminInterface {
                     adminInterface.toString().toUpperCase(), adminInterface);
         }
     }
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns a <code>PayaraAdminInterface</code> with a value represented
      * by the specified <code>String</code>. The
@@ -89,10 +81,7 @@ public enum PayaraAdminInterface {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>PayaraAdminInterface</code> value to <code>String</code>.
      * <p>

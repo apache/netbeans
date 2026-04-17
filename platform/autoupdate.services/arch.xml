@@ -130,7 +130,6 @@
     </question>
     -->
     <answer id="arch-usecases">
-        <p>
             <usecase id="browse" name="Browse all available units">
                 Give overview of IDE installation to users, it involve overview of installed modules (grouped together as feature),
                 overview of available updates, overview of available new features.
@@ -138,7 +137,7 @@
                 all its available updates, optionlly its backup instance.
                 <code>UpdateUnit</code> can represent either a feature (e.g. group
                 of modules), a single module or a localization.
-                <p></p>
+                <br/>
                 <i>Proposed usage of API:</i> Call <code>List&lt;UpdateUnit&gt; UpdateManager.getDefault().getUpdateUnits()</code>
                 <!-- JST:UpdateManager cannot be singleton because it has mutable
                   state with apply method. Imho, there should be UpdateManager.create(...).
@@ -149,12 +148,12 @@
             <usecase id="browse-by-style" name="Browse all units by chosen style (e.g. modules, features, localization)">
                 Sometimes there can be a need to get overview of units
                 by chosen style, e.g. feature, module or localization.
-                <p></p>
+                <br/>
                 <i>Proposed usage of API:</i> Call <code>List&lt;UpdateUnit&gt; UpdateManager.getDefault().getUpdateUnits(UpdateStyle style)</code>
             </usecase>
             <usecase id="browse-installed" name="Browse installed modules">
                 When an API client needs to get overview of installed modules.
-                <p></p>
+                <br/>
                 <i>Proposed usage of API:</i> Call <code>List&lt;UpdateUnit&gt; UpdateManager.getDefault().getUpdateUnits(UpdateStyle style)</code>
                 and filter units which haven't been installed yet.
                 <!-- JST: The comment by Tonda was that this may be too slow.
@@ -173,14 +172,14 @@
                 which are applicable to active IDE. <code>UpdateManager</code> will
                 search all available <code>UpdateUnit</code> given attribute.
             </usecase>
-            <a name="install-new-functionality"></a>
+            <a id="install-new-functionality"></a>
             <usecase id="install-new-functionality" name="Install new functionality">
                 An client needs to install new functionality into the IDE installation.
                 She knows what unit and what version wants to install.
                 Needs to identify if the functionality is ready to install,
                 resolve its dependencies, identify possible problems and locate
                 other unit what have to be installed together with asked functionality.
-                <p></p>
+                <br/>
                 <i>Proposed usage of API:</i>
                 <ul>
                     <li>Client needs install NetBeans module in required minimal specification version.</li>
@@ -198,14 +197,14 @@
                 already installed. She knows what unit and what update element (by version) wants to install.
                 Needs to identify possible problems with update install, resolve its dependencies, identify possible problems and locate
                 other unit what have to be installed together with asked functionality.
-                <p></p>
+                <br/>
                 <i>Proposed usage of API:</i> See above <a href="#install-new-functionality">Install new functionality</a>
             </usecase>
             <usecase id="uninstall-unit" name="Uninstall functionality">
                 An client needs to uninstall some functionality from IDE installation. She knows what unit wants to uninstall.
                 Needs to identify if the functionality is ready to uninstall, resolve its dependencies, identify possible problems and locate
                 other unit what will be disabled together.
-                <p></p>
+                <br/>
                 <i>Proposed usage of API:</i>
                 <ul>
                     <li>Client knows <code>UpdateElement</code> which wants to uninstall.</li>
@@ -215,11 +214,11 @@
                     <li>If all okay, then uninstall the unit: <code>OperationContainer.doOperation()</code></li>
                 </ul>
             </usecase>
-            <a name="disable-unit"/>
+            <a id="disable-unit"/>
             <usecase id="disable-unit" name="Switch off functionality">
                 An client needs to switch off (disable) some functionality in IDE installation. Needs to resolve its dependencies,
                 identify possible problems and locate other unit what will be disabled together.
-                <p></p>
+                <br/>
                 <i>Proposed usage of API:</i>
                 <ul>
                     <li>Client knows <code>UpdateElement</code> which wants to uninstall.</li>
@@ -236,7 +235,7 @@
                 Sometimes an client needs to rollback of installed update of unit to previous version.
                 Needs to resolve its dependencies, identify possible problems and locate
                 other unit what are affected by rollback.
-                <p></p>
+                <br/>
                 <i>Proposed usage of API:</i> Like above  <a href="#disable-unit">Switch off functionality</a>
                 <ul>
                     <li>Client knows <code>UpdateElement</code> which wants to uninstall.</li>
@@ -283,7 +282,6 @@
             </usecase>
             <usecase id="specify-target-cluster" name="Specify the cluster where to install">TBD</usecase>
             <usecase id="get-installed-files" name="Get all installed files of given unit">TBD</usecase>
-        </p>
     </answer>
 
 
@@ -609,7 +607,9 @@
     </question>
     -->
     <answer id="deploy-dependencies">
-        <defaultanswer generate="here"/>
+        <p>
+            default anwser deploy-dependencies XXX non existing
+        </p>
     </answer>
 
 

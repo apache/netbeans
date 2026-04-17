@@ -66,10 +66,7 @@ import org.netbeans.modules.glassfish.tooling.server.state.StatusScheduler;
  */
 public enum GlassFishStatus {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Server status is unknown. */
     UNKNOWN,
 
@@ -87,10 +84,7 @@ public enum GlassFishStatus {
      *  or responding. */
     SHUTDOWN;
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(GlassFishStatus.class);
 
@@ -122,10 +116,7 @@ public enum GlassFishStatus {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns a <code>GlassFishStatus</code> with a value represented by the
      * specified <code>String</code>.
@@ -484,10 +475,7 @@ public enum GlassFishStatus {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Convert <code>GlassFishStatus</code> value to <code>String</code>.
      * <p/>

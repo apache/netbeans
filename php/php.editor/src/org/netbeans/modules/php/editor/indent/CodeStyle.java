@@ -486,6 +486,10 @@ public final class CodeStyle {
         return preferences.getBoolean(SPACE_WITHIN_ATTRIBUTE_DECL_PARENS, getDefaultAsBoolean(SPACE_WITHIN_ATTRIBUTE_DECL_PARENS));
     }
 
+    public boolean spaceWithinOtherParens() {
+        return preferences.getBoolean(SPACE_WITHIN_OTHER_PARENS, getDefaultAsBoolean(SPACE_WITHIN_OTHER_PARENS));
+    }
+
     public boolean spaceBeforeComma() {
         return preferences.getBoolean(SPACE_BEFORE_COMMA, getDefaultAsBoolean(SPACE_BEFORE_COMMA));
     }

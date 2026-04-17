@@ -22,8 +22,12 @@ TEST=$(getopt -q -a "f:" $@ | cut -d ' ' -f3)
     $@
 } || {
     echo "::warning::$TEST failed: starting retry 1"
-    $@
+    echo "::group::retry 1" && $@ && echo "::endgroup::"
 } || {
+    echo "::endgroup::"
     echo "::warning::$TEST failed: starting retry 2"
-    $@
+    echo "::group::retry 2" && $@ && echo "::endgroup::"
+} || {
+    echo "::endgroup::"
+    exit 1
 }

@@ -21,6 +21,7 @@ package org.netbeans.modules.css.prep.editor.refactoring;
 import java.util.Collections;
 import javax.swing.Icon;
 import javax.swing.text.Position.Bias;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.modules.csl.api.Modifier;
 
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -29,7 +30,6 @@ import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.UiUtils;
 import org.netbeans.modules.csl.spi.GsfUtilities;
-import org.netbeans.modules.css.refactoring.api.Entry;
 import org.netbeans.modules.refactoring.spi.SimpleRefactoringElementImplementation;
 import org.openide.filesystems.FileObject;
 import org.openide.text.CloneableEditorSupport;
@@ -108,16 +108,16 @@ public class WhereUsedElement extends SimpleRefactoringElementImplementation {
             // for for example find subclasses (using a singly dummy FileInfo) I need
             // to read it here instead
             content = bdoc.getText(0, bdoc.getLength());
-            sta = Utilities.getRowFirstNonWhite(bdoc, start);
+            sta = LineDocumentUtils.getLineFirstNonWhitespace(bdoc, start);
 
             if (sta == -1) {
-                sta = Utilities.getRowStart(bdoc, start);
+                sta = LineDocumentUtils.getLineStartOffset(bdoc, start);
             }
 
-            en = Utilities.getRowLastNonWhite(bdoc, start);
+            en = LineDocumentUtils.getLineLastNonWhitespace(bdoc, start);
 
             if (en == -1) {
-                en = Utilities.getRowEnd(bdoc, start);
+                en = LineDocumentUtils.getLineEndOffset(bdoc, start);
             } else {
                 // Last nonwhite - left side of the last char, not inclusive
                 en++;

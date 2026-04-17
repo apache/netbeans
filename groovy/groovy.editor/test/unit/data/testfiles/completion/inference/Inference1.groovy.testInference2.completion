@@ -36,4 +36,6 @@ METHOD     tokenize()                                 List
 METHOD     tokenize(CharSequence)                     List
 METHOD     tokenize(Character)                        List
 METHOD     tr(CharSequence, CharSequence)             String
+METHOD     transform(Function<? super Str  [PUBLIC]   R
+METHOD     translateEscapes()              [PUBLIC]   String
 METHOD     trim()                          [PUBLIC]   String

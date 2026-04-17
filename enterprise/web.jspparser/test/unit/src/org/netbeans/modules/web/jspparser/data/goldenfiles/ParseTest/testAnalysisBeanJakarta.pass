@@ -1,0 +1,162 @@
+--------- JspParserAPI.parseResult(), success: true
+ ---- PAGEINFO
+----- PageInfo -----
+      imports:
+        jakarta.servlet.*
+        jakarta.servlet.http.*
+        jakarta.servlet.jsp.*
+      dependants:
+      taglibsMap:
+      prefixMapper:
+      approxXmlPrefixMapper :
+      language            : java
+      xtends              : org.apache.jasper.runtime.HttpJspBase
+      contentType         : text/html
+      session             : true
+      buffer              : 8192
+      autoFlush           : true
+      threadSafe          : true
+      isErrorPage         : false
+      errorPage           : null
+      scriptless          : true
+      scriptingInvalid    : false
+      elIgnored           : false
+      omitXmlDecl         : null
+      isJspPrefixHijacked : false
+      doctypeName         : null
+      doctypeSystem       : null
+      doctypePublic       : null
+      hasJspRoot          : false
+      prefixes:
+      includePrelude:
+      includeCoda:
+      pluginDcls:
+      beans:
+        bean : bean1,    more_for_test.TestBean
+ ------- XML View (constructed from the original data structure) -----
+<?xml version="1.0" encoding="UTF-8" ?>
+<jsp:root
+  version="2.0"
+  xmlns:jsp="http://java.sun.com/JSP/Page"
+  jsp:id="0"
+>
+<jsp:directive.page
+  jsp:id="1"
+  pageEncoding="UTF-8"
+  contentType="text/html"
+/>
+<jsp:text
+  jsp:id="2"
+>
+<![CDATA[
+
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="3"
+>
+<![CDATA[
+<html>
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="4"
+>
+<![CDATA[
+<head>]]>
+</jsp:text>
+<jsp:text
+  jsp:id="5"
+>
+<![CDATA[
+<title>JSP Page]]>
+</jsp:text>
+<jsp:text
+  jsp:id="6"
+>
+<![CDATA[
+</title>]]>
+</jsp:text>
+<jsp:text
+  jsp:id="7"
+>
+<![CDATA[
+</head>
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="8"
+>
+<![CDATA[
+<body>
+
+]]>
+</jsp:text>
+<jsp:useBean
+  id="bean1"
+  scope="session"
+  class="more_for_test.TestBean"
+  jsp:id="9"
+/>
+<jsp:text
+  jsp:id="10"
+>
+<![CDATA[
+
+]]>
+</jsp:text>
+<jsp:getProperty
+  name="bean1"
+  property="sampleProperty"
+  jsp:id="11"
+/>
+<jsp:text
+  jsp:id="12"
+>
+<![CDATA[
+
+
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="13"
+>
+<![CDATA[
+</body>
+]]>
+</jsp:text>
+<jsp:text
+  jsp:id="14"
+>
+<![CDATA[
+</html>
+]]>
+</jsp:text>
+</jsp:root>
+
+ ---- NODES
+
+Node [/more_for_test/bean.jsp(1,1), PageDirective] <%@ page contentType="text/html"%>
+Node [/more_for_test/bean.jsp(1,34), TemplateText] 
+
+Node [/more_for_test/bean.jsp(2,0), TemplateText] <html>
+
+Node [/more_for_test/bean.jsp(3,0), TemplateText] <head>
+Node [/more_for_test/bean.jsp(3,6), TemplateText] <title>JSP Page
+Node [/more_for_test/bean.jsp(3,21), TemplateText] </title>
+Node [/more_for_test/bean.jsp(3,29), TemplateText] </head>
+
+Node [/more_for_test/bean.jsp(4,0), TemplateText] <body>
+
+
+Node [/more_for_test/bean.jsp(6,0), UseBean] <jsp:useBean id="bean1" scope="session" class="more_for_test.TestBean"></jsp:useBean>
+Node [/more_for_test/bean.jsp(6,73), TemplateText] 
+
+Node [/more_for_test/bean.jsp(7,0), GetProperty] <jsp:getProperty name="bean1" property="sampleProperty"/>
+Node [/more_for_test/bean.jsp(7,59), TemplateText] 
+
+
+Node [/more_for_test/bean.jsp(9,0), TemplateText] </body>
+
+Node [/more_for_test/bean.jsp(10,0), TemplateText] </html>
+

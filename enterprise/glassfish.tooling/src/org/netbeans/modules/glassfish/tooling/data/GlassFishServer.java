@@ -27,10 +27,7 @@ package org.netbeans.modules.glassfish.tooling.data;
  */
 public interface GlassFishServer {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Interface Methods                                                      //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get GlassFish server name.
      * <p/>

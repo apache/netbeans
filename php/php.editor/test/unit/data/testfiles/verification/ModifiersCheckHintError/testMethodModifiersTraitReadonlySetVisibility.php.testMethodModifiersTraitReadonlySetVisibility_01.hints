@@ -1,0 +1,28 @@
+    readonly function readonlyTraitMethodError(): void {}
+                      ------------------------
+HINT:Method "readonlyTraitMethodError" cannot be declared readonly
+FIX:Remove modifier: readonly
+    public(set) function publicSetTraitMethodError(): void {}
+                         -------------------------
+HINT:Method "publicSetTraitMethodError" cannot be declared public(set)
+FIX:Remove modifier: public(set)
+    private(set) function privateSetTraitMethodError(): void {}
+                          --------------------------
+HINT:Method "privateSetTraitMethodError" cannot be declared private(set)
+FIX:Remove modifier: private(set)
+    protected(set) function protectedSetTraitMethodError(): void {}
+                            ----------------------------
+HINT:Method "protectedSetTraitMethodError" cannot be declared protected(set)
+FIX:Remove modifier: protected(set)
+    public public(set) function publicPublicSetTraitMethodError(): void {}
+                                -------------------------------
+HINT:Method "publicPublicSetTraitMethodError" cannot be declared public(set)
+FIX:Remove modifier: public(set)
+    public private(set) function publicPrivateSetTraitMethodError(): void {}
+                                 --------------------------------
+HINT:Method "publicPrivateSetTraitMethodError" cannot be declared private(set)
+FIX:Remove modifier: private(set)
+    public protected(set) static function publicProtectedSetStaticTraitMethodError(): void {}
+                                          ----------------------------------------
+HINT:Method "publicProtectedSetStaticTraitMethodError" cannot be declared protected(set)
+FIX:Remove modifier: protected(set)

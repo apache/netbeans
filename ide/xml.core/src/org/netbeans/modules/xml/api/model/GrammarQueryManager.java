@@ -108,7 +108,7 @@ public abstract class GrammarQueryManager {
 
         private static final String FOLDER = "Plugins/XML/GrammarQueryManagers";// NOI18N
         
-        private Lookup.Result registrations;
+        private Lookup.Result<GrammarQueryManager> registrations;
         
         private static ThreadLocal<GrammarQueryManager> transaction =
                 new ThreadLocal<GrammarQueryManager>();
@@ -145,8 +145,9 @@ public abstract class GrammarQueryManager {
             }
         }
         
+        @Override
         public Enumeration enabled(GrammarEnvironment ctx) {
-            Iterator<GrammarQueryManager> it = getRegistrations();
+            Iterator<? extends GrammarQueryManager> it = getRegistrations();
             transaction.set(null);
             List list = new ArrayList<>(5);
             {
@@ -172,7 +173,7 @@ public abstract class GrammarQueryManager {
             return null;
         }
         
-        private synchronized Iterator getRegistrations() {
+        private synchronized Iterator<? extends GrammarQueryManager> getRegistrations() {
             if (registrations != null) {
                 return registrations.allInstances().iterator();
             }

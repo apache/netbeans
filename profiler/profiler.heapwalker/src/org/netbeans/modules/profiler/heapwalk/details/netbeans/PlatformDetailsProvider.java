@@ -225,11 +225,11 @@ public class PlatformDetailsProvider extends DetailsProvider.Basic {
     private Long getUniqueInstanceId(Heap heap, Instance instance) {
         long id = instance.getInstanceId()^System.identityHashCode(heap);
         
-        return new Long(id);
+        return id;
     }
 
     private String getFileSeparator(Heap heap) {
-        Long id = new Long(System.identityHashCode(heap));
+        Long id = Long.valueOf(System.identityHashCode(heap));
         String sep = cache.get(id);
         if (sep == null) {
             sep = heap.getSystemProperties().getProperty("file.separator","/"); // NOI18N

@@ -23,7 +23,7 @@ import org.netbeans.modules.schema2beans.BaseBean;
 /**
  * Interface representing the root of interfaces bean tree structure.
  *
- *<p><b><font color="red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></font></b>
+ *<p><b><span style="color:red"><em>Important note: Do not provide an implementation of this interface unless you are a DD API provider!</em></span></b>
  *</p>
  *
  * @author Milan Kuchtiak

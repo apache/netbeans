@@ -277,7 +277,7 @@ public class SnapshotReverseMemCallGraphPanel extends ReverseMemCallGraphPanel {
                                 case 0:
                                     return pNode;
                                 case 1:
-                                    return new Long(pNode.totalObjSize);
+                                    return pNode.totalObjSize;
                                 case 2:
                                     value = ((PresoObjLivenessCCTNode) root).totalObjSize;
 
@@ -304,7 +304,7 @@ public class SnapshotReverseMemCallGraphPanel extends ReverseMemCallGraphPanel {
                                 case 0:
                                     return pNode;
                                 case 1:
-                                    return new Long(pNode.totalObjSize);
+                                    return pNode.totalObjSize;
                                 case 2:
                                     value = ((PresoObjAllocCCTNode) root).totalObjSize;
 

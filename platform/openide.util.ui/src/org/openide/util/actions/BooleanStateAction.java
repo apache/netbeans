@@ -26,7 +26,7 @@ package org.openide.util.actions;
 * <p>
 * This action is not the most effective way to implement checkbox in
 * a menu. Consider using more modern alternative:
-* <a href="@org-openide-awt@/org/openide/awt/Actions.html#checkbox-java.lang.String-java.lang.String-java.lang.String-java.lang.String-boolean-">
+* <a href="@org-openide-awt@/org/openide/awt/Actions.html#checkbox(java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean)">
 * Actions.checkbox</a>, or declarative <a href="@org-openide-awt@/org/openide/awt/ActionState.html">ActionState annotation</a>.
 *
 * @author   Ian Formanek, Petr Hamernik

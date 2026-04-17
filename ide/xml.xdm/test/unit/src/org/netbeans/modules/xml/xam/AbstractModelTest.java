@@ -1025,10 +1025,7 @@ public class AbstractModelTest extends NbTestCase {
         plistener.assertEvent(DocumentComponent.TEXT_CONTENT_PROPERTY, a, " <nondomain>101</nondomain>", " <nondomain>1001</nondomain>");
     }
     
-    //////////////////////////////////////////////////////////////
     // The following two tests must be reviewed at a later time //
-    //////////////////////////////////////////////////////////////
-    
     public void testUndoOnMutationFromSyncEvent() throws Exception {
         defaultSetup();
         mModel.addComponentListener(new Handler());

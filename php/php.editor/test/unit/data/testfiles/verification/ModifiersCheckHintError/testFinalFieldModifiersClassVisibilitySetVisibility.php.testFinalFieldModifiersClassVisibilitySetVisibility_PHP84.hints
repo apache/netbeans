@@ -1,0 +1,45 @@
+    final public public(set) $finalPublicPublicSet; // error1: must have type
+                              --------------------
+HINT:Asymmetric visibility property "$finalPublicPublicSet" must have type
+    final public public(set) $finalPublicPublicSet2; // error2
+                              ---------------------
+HINT:Asymmetric visibility property "$finalPublicPublicSet2" must have type
+    final private public(set) string|int $finalPrivatePublicSet1; // error3 fix1 PHP Fatal error:  Property cannot be both final and private
+                                          ----------------------
+HINT:Private field cannot be final.
+FIX:Remove modifier: final
+FIX:Remove modifier: private
+    final private private(set) string|int $finalPrivatePrivateSet1; // error4 fix2
+                                           -----------------------
+HINT:Private field cannot be final.
+FIX:Remove modifier: final
+FIX:Remove modifier: private
+    final private protected(set) string|int $finalPrivateProtectedSet1; // error5 fix3
+                                             -------------------------
+HINT:Private field cannot be final.
+FIX:Remove modifier: final
+FIX:Remove modifier: private
+    final protected public(set) string|int $finalProtectedPublicSet1; // error6
+                                            ------------------------
+HINT:Visibility(protected) of property "$finalProtectedPublicSet1" must not be weaker than set visibility(public(set))
+    final public(set) public $finalPublicSetPublic2; // error7
+                              ---------------------
+HINT:Asymmetric visibility property "$finalPublicSetPublic2" must have type
+    final public(set) private string|int $finalPublicSetPrivate1; // error8 fix4
+                                          ----------------------
+HINT:Private field cannot be final.
+FIX:Remove modifier: final
+FIX:Remove modifier: private
+    final public(set) protected string|int $finalPublicSetProtected1; // error9
+                                            ------------------------
+HINT:Visibility(protected) of property "$finalPublicSetProtected1" must not be weaker than set visibility(public(set))
+    final private(set) private string|int $finalPrivateSetPrivate1; // error10 fix5
+                                           -----------------------
+HINT:Private field cannot be final.
+FIX:Remove modifier: final
+FIX:Remove modifier: private
+    final protected(set) private string|int $finalProtectedSetPrivate1; // error11 fix6
+                                             -------------------------
+HINT:Private field cannot be final.
+FIX:Remove modifier: final
+FIX:Remove modifier: private

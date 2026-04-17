@@ -177,11 +177,11 @@ public class ParameterInfo {
     
     private Object generateDefaultValue() {
         if (type == Integer.class || type == Integer.TYPE) {
-            return new Integer(0);
+            return 0;
         } else if (type == Short.class || type == Short.TYPE) {
             return (short)0;
         } else if (type == Long.class || type == Long.TYPE) {
-            return new Long(0);
+            return 0L;
         } else if (type == Float.class || type == Float.TYPE) {
             return 0F;
         } else if (type == Double.class || type == Double.TYPE) {
@@ -189,7 +189,7 @@ public class ParameterInfo {
         } else if (type == Boolean.class || type == Boolean.TYPE) {
             return Boolean.FALSE;
         } else if (type == Character.class || type == Character.TYPE) {
-            return new Character('\0');
+            return '\0';
         }
         
         return null;

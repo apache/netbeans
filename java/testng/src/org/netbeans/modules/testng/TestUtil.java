@@ -170,15 +170,15 @@ public class TestUtil extends CommonTestUtil {
 //            return df.getPrimaryFile();
 //        }
 //        
-////XXX: retouche
-////        ClassElement ce = (ClassElement) node.getCookie(ClassElement.class);
-////        if (null != ce) {
-////            // find the parent DataObject, which node belongs to
-////            while (null != (node = node.getParentNode())) {
-////                if (null != (dO = (DataObject) node.getCookie(DataObject.class)))
-////                    return dO.getPrimaryFile();
-////            }
-////        }
+// //XXX: retouche
+// //        ClassElement ce = (ClassElement) node.getCookie(ClassElement.class);
+// //        if (null != ce) {
+// //            // find the parent DataObject, which node belongs to
+// //            while (null != (node = node.getParentNode())) {
+// //                if (null != (dO = (DataObject) node.getCookie(DataObject.class)))
+// //                    return dO.getPrimaryFile();
+// //            }
+// //        }
 //        return null;
 //    }
 

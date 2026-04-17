@@ -86,7 +86,7 @@ public class EnableStep implements WizardDescriptor.FinishablePanel<WizardDescri
                     doEnableRunning = true;
                     FindComponentModules find = new FindComponentModules(info);
                     ModulesActivator activator = new ModulesActivator(forEnable, find);
-                    ProgressHandle enableHandle = ProgressHandleFactory.createHandle (
+                    ProgressHandle enableHandle = ProgressHandle.createHandle (
                             getBundle ("ModulesStep_Enable",
                             presentElementsForEnable (find)));
                     JComponent enableComponent = ProgressHandleFactory.createProgressComponent (enableHandle);

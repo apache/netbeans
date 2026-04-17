@@ -46,7 +46,7 @@ import org.netbeans.modules.web.beans.impl.model.results.DefinitionErrorResult;
 public class ParametersTest extends CommonTestCase {
 
     public ParametersTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
     
     public void testSimpleParameter() throws IOException, InterruptedException{

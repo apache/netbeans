@@ -29,17 +29,11 @@ package org.netbeans.modules.glassfish.tooling.admin;
 @RunnerRestClass(runner=RunnerRestFetchLogData.class)
 public class CommandFetchLogData extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for view log command. */
     private static final String COMMAND = "view-log";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Query parameters to be used to read only log entries added in particular
      * interval starting from previous call that returned this value of
@@ -49,10 +43,7 @@ public class CommandFetchLogData extends Command {
      */
     final String paramsAppendNext;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server view log command entity.
      * <p/>

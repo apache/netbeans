@@ -95,9 +95,9 @@ public class SimpleDocumentIndexCache implements DocumentIndexCache {
         if (toAdd == null || toRemove == null) {
             assert toAdd == null && toRemove == null;
             assert dataRef == null;
-            toAdd = new ArrayList<IndexDocument>();
-            toRemove = new ArrayList<String>();
-            dataRef = new SoftReference<List<?>[]>(new List<?>[] {toAdd, toRemove});
+            toAdd = new ArrayList<>();
+            toRemove = new ArrayList<>();
+            dataRef = new SoftReference<>(new List<?>[] {toAdd, toRemove});
         }
         return dataRef;
     }

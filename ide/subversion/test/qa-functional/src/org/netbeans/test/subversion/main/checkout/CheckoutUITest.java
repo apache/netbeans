@@ -296,7 +296,7 @@ public class CheckoutUITest extends JellyTestCase{
         rso = new RepositoryStepOperator();
         rso.setRepositoryURL(RepositoryStepOperator.ITEM_SVNSSH);
         //rso.lblUseExternal();
-        ///rso.lblTunnelCommand();
+        //rso.lblTunnelCommand();
         //JTextFieldOperator txt = rso.txtTunnelCommand();
         //txt.typeText("plink");
         new EventTool().waitNoEvent(2000);

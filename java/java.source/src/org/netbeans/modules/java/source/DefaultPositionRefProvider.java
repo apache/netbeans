@@ -52,7 +52,7 @@ public final class DefaultPositionRefProvider extends PositionRefProvider {
     }
     
     /**
-     * Notes for compatibility: PositonRef *happens* to implement Position. The
+     * Notes for compatibility: PositionRef *happens* to implement Position. The
      * compatibility bridge typecasts this Position instance into back into PositionRef.
      * Another solution would be to wrap PositionRef into a Position-like type known to the
      * compatible bridge, so the PositionRef could be unwrapped.

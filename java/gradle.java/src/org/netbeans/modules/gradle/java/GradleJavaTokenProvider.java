@@ -31,7 +31,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.netbeans.api.java.source.ClasspathInfo;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.project.Project;
+import org.netbeans.spi.project.NestedClass;
 import org.netbeans.spi.project.SingleMethod;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -50,12 +53,14 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
     private static final String AFFECTED_BUILD_TASK  = "affectedBuildTasks";//NOI18N
     private static final String TEST_TASK_NAME       = "testTaskName";      //NOI18N
     private static final String CLEAN_TEST_TASK_NAME = "cleanTestTaskName"; //NOI18N
+    private static final String SOURCE_SET_NAMES     = "sourceSetNames";    //NOI18N
 
     private static final Set<String> SUPPORTED = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(
             SELECTED_CLASS,
             SELECTED_CLASS_NAME,
             SELECTED_METHOD,
             SELECTED_PACKAGE,
+            SOURCE_SET_NAMES,
             AFFECTED_BUILD_TASK
     )));
 
@@ -82,8 +87,9 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
 
     private void processSelectedPackageAndClass(final Map<String, String> map, Lookup context) {
         FileObject fo = RunUtils.extractFileObjectfromLookup(context);
+        NestedClass nestedClass = context.lookup(NestedClass.class);
         GradleJavaProject gjp = GradleJavaProject.get(project);
-        String className = evaluateClassName(gjp, fo);
+        String className = evaluateClassName(gjp, fo, nestedClass);
         if (className != null) {
             map.put(SELECTED_CLASS, className);
             int dot = className.lastIndexOf('.');
@@ -102,7 +108,8 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
         FileObject fo = method != null ? method.getFile() : RunUtils.extractFileObjectfromLookup(context);
         if ((fo != null) && fo.isData()) {
             GradleJavaProject gjp = GradleJavaProject.get(project);
-            String className = evaluateClassName(gjp, fo);
+            NestedClass nestedClass = method != null ? method.getNestedClass() : context.lookup(NestedClass.class);
+            String className = evaluateClassName(gjp, fo, nestedClass);
             String selectedMethod = method != null ? className + '.' + method.getMethodName() : className;
             map.put(SELECTED_METHOD, selectedMethod);
         }
@@ -118,6 +125,7 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
                 GradleJavaSourceSet ss = gjp.containingSourceSet(f);
                 if (ss != null) {
                     Set<GradleJavaSourceSet.SourceType> types = ss.getSourceTypes(f);
+                    map.merge(SOURCE_SET_NAMES, ss.getName(), (oldVal, newVal) -> oldVal.trim() + "," + newVal.trim());
                     for (GradleJavaSourceSet.SourceType type : types) {
                         buildTasks.add(ss.getBuildTaskName(type));
                     }
@@ -131,7 +139,7 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
         }
     }
 
-    private String evaluateClassName(GradleJavaProject gjp, FileObject fo) {
+    private String evaluateClassName(GradleJavaProject gjp, FileObject fo, NestedClass nestedClass) {
         String ret = null;
         if ((gjp != null) && (fo != null)) {
             File f = FileUtil.toFile(fo);
@@ -139,11 +147,11 @@ public class GradleJavaTokenProvider implements ReplaceTokenProvider {
             if (sourceSet != null) {
                 String relPath = sourceSet.relativePath(f);
                 if (relPath != null) {
-                    ret = (relPath.lastIndexOf('.') > 0 ?
-                            relPath.substring(0, relPath.lastIndexOf('.')) :
-                            relPath).replace('/', '.');
                     if (fo.isFolder()) {
+                        ret = relPath.replace('/', '.');
                         ret = ret + '*';
+                    } else {
+                        ret = SourceUtils.classNameFor(ClasspathInfo.create(fo), relPath, nestedClass);
                     }
                 }
             }

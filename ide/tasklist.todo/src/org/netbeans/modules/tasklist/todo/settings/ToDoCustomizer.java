@@ -96,7 +96,7 @@ class ToDoCustomizer extends javax.swing.JPanel implements DocumentListener{
                 if ("tableCellEditor".equals(evt.getPropertyName())) { //NOI18N
                     if (!table.isEditing()) { //  A cell has stopped editing
                         fireChanged();
-                        firePropertyChange(OptionsPanelController.PROP_CHANGED, new Boolean(changed), Boolean.TRUE);
+                        firePropertyChange(OptionsPanelController.PROP_CHANGED, Boolean.valueOf(changed), Boolean.TRUE);
                         firePropertyChange(OptionsPanelController.PROP_VALID, null, null);
                     }
                 }
@@ -752,9 +752,8 @@ private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     
     boolean wasChanged = changed;
     fireChanged();
-    firePropertyChange( OptionsPanelController.PROP_CHANGED, new Boolean(wasChanged), Boolean.TRUE);
-    
-    firePropertyChange( OptionsPanelController.PROP_VALID, new Boolean(wasValid), new Boolean(isDataValid()));
+    firePropertyChange( OptionsPanelController.PROP_CHANGED, Boolean.valueOf(wasChanged), Boolean.TRUE);
+    firePropertyChange( OptionsPanelController.PROP_VALID, Boolean.valueOf(wasValid), Boolean.valueOf(isDataValid()));
 }//GEN-LAST:event_btnRemoveActionPerformed
 
 private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangeActionPerformed
@@ -769,7 +768,7 @@ private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
             editor.removeCellEditorListener( this );
             table.setValueAt(editor.getCellEditorValue(), selRow, 0);
             fireChanged();
-            firePropertyChange( OptionsPanelController.PROP_CHANGED, new Boolean(wasChanged), Boolean.TRUE);
+            firePropertyChange( OptionsPanelController.PROP_CHANGED, Boolean.valueOf(wasChanged), Boolean.TRUE);
             firePropertyChange(OptionsPanelController.PROP_VALID, null, null);
         }
 
@@ -792,7 +791,7 @@ private void btnChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
                 editor.removeCellEditorListener( this );
                 model.setValueAt(editor.getCellEditorValue(), model.getRowCount() - 1, 0);
                 fireChanged();
-                firePropertyChange( OptionsPanelController.PROP_CHANGED, new Boolean(wasChanged), Boolean.TRUE);
+                firePropertyChange( OptionsPanelController.PROP_CHANGED, Boolean.valueOf(wasChanged), Boolean.TRUE);
                 firePropertyChange(OptionsPanelController.PROP_VALID, null, null);
             }
 
@@ -807,7 +806,7 @@ private void scanCommentsOnlyChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
         return;
     boolean wasChanged = changed;
     fireChanged();
-    firePropertyChange( OptionsPanelController.PROP_CHANGED, new Boolean(wasChanged), Boolean.TRUE);
+    firePropertyChange( OptionsPanelController.PROP_CHANGED, Boolean.valueOf(wasChanged), Boolean.TRUE);
 }//GEN-LAST:event_scanCommentsOnlyChanged
 
     private void btnAddMimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMimeActionPerformed

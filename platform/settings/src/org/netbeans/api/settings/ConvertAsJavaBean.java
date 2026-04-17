@@ -36,10 +36,10 @@ import java.lang.annotation.Target;
  * default constructor:
  * <pre>
  * <code>@</code>ConvertAsJavaBean
- * <font class="type">public class</font> YourObject {
- *   <font class="type">public</font> YourObject() {}
- *   <font class="type">public</font> <font class="type">String</font> <font class="function-name">getName</font>();
- *   <font class="type">public void</font> <font class="function-name">setName</font>(<font class="type">String</font> <font class="variable-name">name</font>);
+ * <span class="type">public class</span> YourObject {
+ *   <span class="type">public</span> YourObject() {}
+ *   <span class="type">public</span> <span class="type">String</span> <span class="function-name">getName</span>();
+ *   <span class="type">public void</span> <span class="function-name">setName</span>(<span class="type">String</span> <span class="variable-name">name</span>);
  * }
  * </pre>
  * If the bean supports {@link PropertyChangeListener} notifications and

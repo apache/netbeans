@@ -94,6 +94,22 @@
             </folder>
         </folder>
         <folder name="Editor">
+            <folder name="MarkOccurrences">
+                <folder name="text">
+                    <folder name="x-antlr3">
+                        <file name="MarkOccurences.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.languages.antlr.v3.MarkOccurencesOptionsPanelController"/>
+                        </file>
+                    </folder>
+                    <folder name="x-antlr4">
+                        <file name="MarkOccurences.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.languages.antlr.v4.MarkOccurencesOptionsPanelController"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
             <folder name="Formatting">
                 <folder name="text">
                     <folder name="x-antlr3">

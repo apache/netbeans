@@ -18,14 +18,9 @@
  */
 package org.netbeans.modules.java.hints.errors;
 
-import com.sun.source.util.TreePath;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
-import org.netbeans.modules.java.hints.spi.ErrorRule.Data;
-import org.netbeans.spi.editor.hints.Fix;
 
 /**
  *
@@ -34,7 +29,7 @@ import org.netbeans.spi.editor.hints.Fix;
 public class NewImportClassTest extends ErrorHintsTestBase {
 
     public NewImportClassTest(String name) {
-        super(name);
+        super(name, ImportClass.class);
         doRunIndexing = true;
     }
     
@@ -60,16 +55,6 @@ public class NewImportClassTest extends ErrorHintsTestBase {
                         "import java.lang.Map;\n" +
                         "import java.util.Map.Entry;\n" +
                         "public class Test { Map b; }\n").replaceAll("[ \t\n]+", " "));
-    }
-    
-    @Override
-    protected List<Fix> computeFixes(CompilationInfo info, int pos, TreePath path) throws Exception {
-        return new ImportClass().run(info, null, pos, path, new Data<Void>());
-    }
-
-    @Override
-    protected String toDebugString(CompilationInfo info, Fix f) {
-        return f.getText();
     }
     
 }

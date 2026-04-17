@@ -71,8 +71,11 @@ KEYWORD    new                                        null
 KEYWORD    or                                         null
 KEYWORD    print '';                                  Language Construct
 KEYWORD    private                                    null
+KEYWORD    private(set)                               null
 KEYWORD    protected                                  null
+KEYWORD    protected(set)                             null
 KEYWORD    public                                     null
+KEYWORD    public(set)                                null
 KEYWORD    readonly                                   null
 KEYWORD    require '';                                Language Construct
 KEYWORD    require_once '';                           Language Construct

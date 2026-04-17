@@ -116,7 +116,7 @@ public final class ProgressSupport {
             progressPanel.setCancelVisible(cancellable);
             progressPanel.addCancelActionListener(this);
 
-            ProgressHandle progressHandle = ProgressHandleFactory.createHandle(null);
+            ProgressHandle progressHandle = ProgressHandle.createHandle(null);
             JComponent progressComponent = ProgressHandleFactory.createProgressComponent(progressHandle);
             progressHandle.start();
             progressHandle.switchToIndeterminate();

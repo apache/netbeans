@@ -138,6 +138,7 @@ public class TokenFormatter {
         public boolean spaceWithinAttributeBrackets;
         public boolean spaceWithinAttributeDeclParens;
         public boolean spaceWithinTypeCastParens;
+        public boolean spaceWithinOtherParens;
         public boolean spaceBeforeComma;
         public boolean spaceAfterComma;
         public boolean spaceBeforeSemi;
@@ -307,6 +308,7 @@ public class TokenFormatter {
             spaceWithinAttributeBrackets = codeStyle.spaceWithinAttributeBrackets();
             spaceWithinAttributeDeclParens = codeStyle.spaceWithinAttributeDeclParens();
             spaceWithinTypeCastParens = codeStyle.spaceWithinTypeCastParens();
+            spaceWithinOtherParens = codeStyle.spaceWithinOtherParens();
 
             spaceBeforeComma = codeStyle.spaceBeforeComma();
             spaceAfterComma = codeStyle.spaceAfterComma();
@@ -1617,6 +1619,9 @@ public class TokenFormatter {
                                         // change here if we add the option for it
                                         countSpaces = 0;
                                         break;
+                                    case WHITESPACE_WITHIN_OTHER_PARENS:
+                                        countSpaces = docOptions.spaceWithinOtherParens ? 1 : 0;
+                                        break;
                                     case WHITESPACE_WITHIN_DYNAMIC_NAME_BRACES:
                                         // change here if we add the option for it
                                         countSpaces = 0;
@@ -1833,7 +1838,7 @@ public class TokenFormatter {
                                                             : Integer.valueOf(0);
                                                 }
 
-                                                int lineOffset = LineDocumentUtils.getLineStart(doc, phpOpenTagOffset);
+                                                int lineOffset = LineDocumentUtils.getLineStartOffset(doc, phpOpenTagOffset);
                                                 int firstNonWhiteCharacterOffset = LineDocumentUtils.getNextNonWhitespace(doc, lineOffset);
                                                 if (firstNonWhiteCharacterOffset == phpOpenTagOffset) {
                                                     indentRule = true;
@@ -1943,7 +1948,7 @@ public class TokenFormatter {
                                                 int lineNumber = LineDocumentUtils.getLineIndex(doc, offset);
                                                 Integer suggestedIndent = suggestedLineIndents.get(lineNumber);
                                                 if (suggestedIndent != null) {
-                                                    int lineOffset = LineDocumentUtils.getLineStart(doc, offset);
+                                                    int lineOffset = LineDocumentUtils.getLineStartOffset(doc, offset);
                                                     int firstNW = LineDocumentUtils.getNextNonWhitespace(doc, lineOffset);
                                                     if (firstNW == offset) {
                                                         countSpaces = lastPHPIndent == 0 ? htmlIndent : lastPHPIndent + htmlIndent + docOptions.initialIndent;

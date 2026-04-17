@@ -72,8 +72,8 @@ public class ScrollbarBeanInfo extends ComponentBeanInfo.Support {
         public void setAsText(String s) {
             Integer i;
             getTags();
-            if (s.equals(tags[0])) i = new Integer(Scrollbar.HORIZONTAL);
-            else i = new Integer(Scrollbar.VERTICAL);
+            if (s.equals(tags[0])) i = Scrollbar.HORIZONTAL;
+            else i = Scrollbar.VERTICAL;
             setValue(i);
         }
 

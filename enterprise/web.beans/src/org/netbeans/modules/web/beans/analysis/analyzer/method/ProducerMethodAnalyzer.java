@@ -34,13 +34,18 @@ import org.netbeans.modules.web.beans.analysis.CdiAnalysisResult;
 import org.netbeans.modules.web.beans.analysis.analyzer.MethodElementAnalyzer.MethodAnalyzer;
 import org.openide.util.NbBundle;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.PRODUCES_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.PRODUCES_FQN_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.SPECIALIZES;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.SPECIALIZES_JAKARTA;
+
 
 /**
  * @author ads
  *
  */
-public class ProducerMethodAnalyzer extends AbstractProducerAnalyzer 
-    implements MethodAnalyzer 
+public class ProducerMethodAnalyzer extends AbstractProducerAnalyzer
+    implements MethodAnalyzer
 {
 
     /* (non-Javadoc)
@@ -50,8 +55,7 @@ public class ProducerMethodAnalyzer extends AbstractProducerAnalyzer
     public void analyze( ExecutableElement element, TypeMirror returnType,
             TypeElement parent,  AtomicBoolean cancel , CdiAnalysisResult result )
     {
-        if  ( !AnnotationUtil.hasAnnotation(element, AnnotationUtil.PRODUCES_FQN, 
-                result.getInfo() ))
+        if (!AnnotationUtil.hasAnnotation(element, result.getInfo(), PRODUCES_FQN_JAKARTA, PRODUCES_FQN))
         {
             return;
         }
@@ -65,7 +69,7 @@ public class ProducerMethodAnalyzer extends AbstractProducerAnalyzer
         }
         checkSpecializes( element , result  );
     }
-    
+
     /* (non-Javadoc)
      * @see org.netbeans.modules.web.beans.analysis.analyzer.AbstractProducerAnalyzer#hasTypeVar(javax.lang.model.element.Element, javax.lang.model.type.TypeMirror, org.netbeans.modules.web.beans.analysis.analyzer.ElementAnalyzer.Result)
      */
@@ -76,7 +80,7 @@ public class ProducerMethodAnalyzer extends AbstractProducerAnalyzer
         result.addError( element, NbBundle.getMessage(
                             ProducerMethodAnalyzer.class, "ERR_ProducerReturnIsTypeVar"));    // NOI18N
     }
-    
+
     /* (non-Javadoc)
      * @see org.netbeans.modules.web.beans.analysis.analyzer.AbstractProducerAnalyzer#hasWildCard(javax.lang.model.element.Element, javax.lang.model.type.TypeMirror, org.netbeans.modules.web.beans.analysis.analyzer.ElementAnalyzer.Result)
      */
@@ -87,18 +91,17 @@ public class ProducerMethodAnalyzer extends AbstractProducerAnalyzer
         result.addError(element, NbBundle.getMessage(
                     ProducerMethodAnalyzer.class,"ERR_ProducerReturnHasWildcard")); // NOI18N
     }
-    
+
     private void checkSpecializes(ExecutableElement element, CdiAnalysisResult result )
     {
-        if ( !AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES, 
-                result.getInfo() ))
+        if (!(AnnotationUtil.hasAnnotation(element, result.getInfo(), SPECIALIZES_JAKARTA, SPECIALIZES)))
         {
             return;
         }
         Set<Modifier> modifiers = element.getModifiers();
         if ( modifiers.contains( Modifier.STATIC )){
             result.addError( element,  NbBundle.getMessage(
-                        ProducerMethodAnalyzer.class, 
+                        ProducerMethodAnalyzer.class,
                         "ERR_StaticSpecializesProducer"));    // NOI18N
         }
         CompilationInfo compInfo = result.getInfo();
@@ -112,12 +115,11 @@ public class ProducerMethodAnalyzer extends AbstractProducerAnalyzer
         TypeElement containingClass = compInfo.getElementUtilities().
             enclosingTypeElement( element );
         TypeMirror typeDirectSuper = containingClass.getSuperclass();
-        if ( !superClass.equals(compInfo.getTypes().asElement(typeDirectSuper)) || 
-                !AnnotationUtil.hasAnnotation(overridenMethod, 
-                        AnnotationUtil.PRODUCES_FQN, compInfo))
+        if (!superClass.equals(compInfo.getTypes().asElement(typeDirectSuper))
+                || (!AnnotationUtil.hasAnnotation(overridenMethod, compInfo, PRODUCES_FQN_JAKARTA, PRODUCES_FQN)))
         {
             result.addError( element, NbBundle.getMessage(
-                        ProducerMethodAnalyzer.class, 
+                        ProducerMethodAnalyzer.class,
                         "ERR_NoDirectSpecializedProducer"));    // NOI18N
         }
     }

@@ -116,7 +116,6 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
       <usecase id="createScriptEngineManager" name="Create ScriptEngineManager">
           To create new instance script engine manager ready for the NetBeans
           execution environment use
@@ -124,7 +123,7 @@
               <a href="@TOP@/org/netbeans/api/scripting/Scripting.html">Scripting</a>
               class offers static <code>createManager()</code> method that
               should be used whenever one needs an instance of
-              <a href="@JDK@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
+              <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
               inside of NetBeans based application.
           </api>
           Many client oriented use-cases are covered in the
@@ -137,9 +136,9 @@
               and register it into global lookup via
               <a href="@org-openide-util-lookup@/org/openide/util/lookup/ServiceProvider.html">ServiceProvider</a>
               to dynamically discover and offer new
-              <a href="@JDK@/javax/script/ScriptEngine.html">ScriptEngine</a>s
+              <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngine.html">ScriptEngine</a>s
               to users of
-              <a href="@JDK@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
+              <a href="@JDK@@JDKMODULE_JAVA_SCRIPTING@/javax/script/ScriptEngineManager.html">ScriptEngineManager</a>
               obtained via
               <a href="@TOP@/org/netbeans/api/scripting/Scripting.html">Scripting</a>
               factory methods.
@@ -163,7 +162,6 @@
             API.
           </p>
       </usecase>
-  </p>
  </answer>
 
 
@@ -549,7 +547,7 @@
  <answer id="exec-component">
   <p>
       <api group="property" category="stable" name="allowAllAccess" type="export" url="@TOP@/org/netbeans/api/scripting/Scripting.html">
-          If <a href="@TOP@/org/netbeans/api/scripting/Scripting.html#allowAllAccess-boolean-">Scripting.allowAllAccess</a>
+          If <a href="@TOP@/org/netbeans/api/scripting/Scripting.html#allowAllAccess(boolean)">Scripting.allowAllAccess</a>
           is used, then a property <code>allowAllAccess</code> is placed into the
           <code>ScriptManager.getBindings()</code> with value <code>true</code>.
       </api>
@@ -653,8 +651,6 @@
             in the application are really enabled and the dependencies are
             satisfied.
         </api>
-  <p>
-  </p>
  </answer>
 
 

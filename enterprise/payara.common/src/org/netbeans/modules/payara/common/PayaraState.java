@@ -41,10 +41,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServerStatus;
  */
 public class PayaraState {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Check mode.
      * <p/>
@@ -52,10 +49,7 @@ public class PayaraState {
      */
     public static enum Mode {
 
-        ////////////////////////////////////////////////////////////////////////
         // Enum values                                                        //
-        ////////////////////////////////////////////////////////////////////////
-
         /** Default server state check mode. All special features
          *  are turned off. */
         DEFAULT,
@@ -66,10 +60,7 @@ public class PayaraState {
          *  for remote servers. */
         REFRESH;
 
-        ////////////////////////////////////////////////////////////////////////
         // Methods                                                            //
-        ////////////////////////////////////////////////////////////////////////
-
         /**
          * Convert <code>Mode</code> value to <code>String</code>.
          * <p/>
@@ -88,10 +79,7 @@ public class PayaraState {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(PayaraState.class);

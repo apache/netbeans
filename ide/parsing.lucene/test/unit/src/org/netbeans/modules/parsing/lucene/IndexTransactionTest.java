@@ -19,7 +19,6 @@
 package org.netbeans.modules.parsing.lucene;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -27,9 +26,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.apache.lucene.analysis.KeywordAnalyzer;
+import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.FieldType;
+import org.apache.lucene.index.IndexOptions;
+import org.apache.lucene.index.IndexableFieldType;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
@@ -47,6 +49,14 @@ import org.netbeans.modules.parsing.lucene.support.Queries;
  * @author sdedic
  */
 public class IndexTransactionTest extends NbTestCase {
+    private static final IndexableFieldType STORED_ANALYZED;
+    static {
+        STORED_ANALYZED = new FieldType();
+        ((FieldType) STORED_ANALYZED).setStored(true);
+        ((FieldType) STORED_ANALYZED).setTokenized(true);
+        ((FieldType) STORED_ANALYZED).setIndexOptions(IndexOptions.DOCS_AND_FREQS);
+        ((FieldType) STORED_ANALYZED).freeze();
+    }
 
     public IndexTransactionTest(String name) {
         super(name);
@@ -75,9 +85,9 @@ public class IndexTransactionTest extends NbTestCase {
 
         //Empty index => invalid
         assertEquals(Index.Status.EMPTY, index.getStatus(true));
-        final List<String> refs = new ArrayList<String>();
+        List<String> refs = new ArrayList<>();
         refs.add("A");
-        final Set<String> toDel = new HashSet<String>();
+        Set<String> toDel = new HashSet<>();
         
         index.txStore(
                 refs,
@@ -90,7 +100,7 @@ public class IndexTransactionTest extends NbTestCase {
         assertTrue(cache.listFiles().length>0);
         
         // Open a reader, and check that the reader does NOT see the change, although flushed
-        Collection<String> result = new LinkedList<String>();
+        Collection<String> result = new LinkedList<>();
         AtomicBoolean cancel = new AtomicBoolean(false);
         index.query(
                 result, 
@@ -144,7 +154,7 @@ public class IndexTransactionTest extends NbTestCase {
         final SimpleDocumentIndexCache cache = new SimpleDocumentIndexCache();
         DocumentIndex docIndex = IndexManager.createDocumentIndex(index, cache);
         IndexDocument doc = IndexManager.createDocument("manicka");
-        doc.addPair("name", "manicka", true, false);
+        doc.addPair("name", "manicka", true, true);
         doc.addPair("age", "10", true, true);
         
         Collection<? extends IndexDocument> results = 
@@ -184,7 +194,7 @@ public class IndexTransactionTest extends NbTestCase {
         final SimpleDocumentIndexCache cache = new SimpleDocumentIndexCache();
         DocumentIndex docIndex = IndexManager.createDocumentIndex(index, cache);
         IndexDocument doc = IndexManager.createDocument("manicka");
-        doc.addPair("name", "manicka", true, false);
+        doc.addPair("name", "manicka", true, true);
         doc.addPair("age", "10", true, true);
         
         Collection<? extends IndexDocument> results;
@@ -231,7 +241,7 @@ public class IndexTransactionTest extends NbTestCase {
     }
     
     private static class DocToStrConvertor implements Convertor<Document, String> {
-        private String name;
+        private final String name;
 
         public DocToStrConvertor(String name) {
             this.name = name;
@@ -254,7 +264,7 @@ public class IndexTransactionTest extends NbTestCase {
         @Override
         public Document convert(final String p) {
             final Document doc = new Document();
-            doc.add(new Field(name, p, Field.Store.YES, Field.Index.ANALYZED));
+            doc.add(new Field(name, p, STORED_ANALYZED));
             return doc;
         }        
     }

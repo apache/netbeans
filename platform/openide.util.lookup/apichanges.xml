@@ -37,14 +37,14 @@
             <p>
                 One of the most common usages of  <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html">ProxyLookup</a>
                 is to dynamically change the set of lookups being delegated to. However the 
-                <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html#setLookups-org.openide.util.Lookup...-">setLookups(...)</a>
+                <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html#setLookups(org.openide.util.Lookup...)">setLookups(...)</a>
                 method is <code>protected</code>. To avoid the need to subclass 
                 <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html">ProxyLookup</a>
                 this change introduces
                 <a href="@TOP@/org/openide/util/lookup/ProxyLookup.Controller.html">ProxyLookup.Controller</a>
                 that gives the creator of <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html">ProxyLookup</a>
                 a way to call 
-                <a href="@TOP@/org/openide/util/lookup/ProxyLookup.Controller.html#setLookups-org.openide.util.Lookup...-">setLookups(...)</a>
+                <a href="@TOP@/org/openide/util/lookup/ProxyLookup.Controller.html#setLookups(org.openide.util.Lookup...)">setLookups(...)</a>
                 without exposing the method to others having just a reference to 
                 the <a href="@TOP@/org/openide/util/lookup/ProxyLookup.html">ProxyLookup</a>.
             </p>
@@ -62,15 +62,15 @@
         <description>
             <p>
                 Typically <code>AbstractServiceProviderProcessor</code> subclasses declare some 
-                <a href="@JDK@/javax/lang/model/SourceVersion.html"><code>SourceVersion</code></a> support,
+                <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/lang/model/SourceVersion.html"><code>SourceVersion</code></a> support,
                 but as new JDKs are released, the declaration becomes obsolete and produces spurious warnings. The processors
                 are typically not affected by newer Java language features.
             </p>
             <p>
                 This change changes the default behaviour if NO 
-                <a href="@JDK@/javax/annotation/processing/SupportedSourceVersion.html"><code>@SupportedSourceVersion</code></a>
+                <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/annotation/processing/SupportedSourceVersion.html"><code>@SupportedSourceVersion</code></a>
                 annotation is present on subclass. From 8.40, the Processor will report 
-                <a href="@JDK@/javax/lang/model/SourceVersion.html#latest--"><code>@SourceVersion.latest()</code></a>.
+                <a href="@JDK@@JDKMODULE_JAVA_COMPILER@/javax/lang/model/SourceVersion.html#latest()"><code>@SourceVersion.latest()</code></a>.
             </p>
         </description>
         <class name="LayerGeneratingProcessor" package="org.openide.filesystems.annotations" link="no" /> <!-- external -->
@@ -87,7 +87,7 @@
             binary="compatible" deletion="no" deprecation="no"
             modification="no" semantic="incompatible" source="compatible"
         >
-            The clients of <a href="@TOP@/org/openide/util/Lookup.html#getDefault--">
+            The clients of <a href="@TOP@/org/openide/util/Lookup.html#getDefault()">
             Lookup.getDefault()</a> are mostly unaffected by this change,
             just they need to be ready for the fact that the return 
             value of the method may no longer be fixed one, but can mutate
@@ -95,10 +95,10 @@
         </compatibility>
         <description>
             <p>
-                One can use <a href="@TOP@/org/openide/util/lookup/Lookups.html#executeWith-org.openide.util.Lookup-java.lang.Runnable-">
+                One can use <a href="@TOP@/org/openide/util/lookup/Lookups.html#executeWith(org.openide.util.Lookup,java.lang.Runnable)">
                 Lookups.execute(yourLookup, yourRunnable)
                 </a> to temporarily influence return value from
-                <a href="@TOP@/org/openide/util/Lookup.html#getDefault--">
+                <a href="@TOP@/org/openide/util/Lookup.html#getDefault()">
                 Lookup.getDefault()</a>. 
             </p>
         </description>
@@ -122,7 +122,7 @@
                 <a href="@TOP@org/openide/util/lookup/NamedServiceDefinition.html">NamedServiceDefinition</a> 
                 for those who define their own annotations that register
                 something into 
-                <a href="@TOP@org/openide/util/lookup/Lookups.html#forPath-java.lang.String-">
+                <a href="@TOP@org/openide/util/lookup/Lookups.html#forPath(java.lang.String)">
                 Lookups.forPath</a> registration area.
             </p>
         </description>
@@ -149,7 +149,7 @@
             <code>allInstances</code> or <code>allClasses</code> and relied
             on side effect of such call. In case you want to trigger the 
             computation call some method on the returned
-            <a href="@JDK@/java/util/Collection.html">Collection</a> 
+            <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/Collection.html">Collection</a> 
             (other than <code>iterator()</code>) like <code>size()</code>
             or <code>isEmpty</code>.
             </p>
@@ -162,7 +162,7 @@
                 waiting for or creating all of them:
             </p>
            <pre>
-for (<a href="@JDK@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFactory</a> first : <a href="@TOP@/org/openide/util/Lookup.html#getDefault--">Lookup.getDefault()</a>.lookupAll(<a href="@JDK@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFactory</a>.class)) {
+for (<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFactory</a> first : <a href="@TOP@/org/openide/util/Lookup.html#getDefault()">Lookup.getDefault()</a>.lookupAll(<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFactory</a>.class)) {
     return first;
 }
            </pre>
@@ -266,7 +266,7 @@ for (<a href="@JDK@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFacto
             <p>
                 All modification methods in <code>AbstractLookup</code> and <code>ProxyLookup</code>
                 were extended to accept an 
-                <a href="@JDK@/java/util/concurrent/Executor.html">Executor</a>.
+                <a href="@JDK@@JDKMODULE_JAVA_BASE@/java/util/concurrent/Executor.html">Executor</a>.
                 If not null, it is used to dispatch events to listeners sometime
                 "later". Also the <code>AbstractLookup.Content</code> 
                 and <code>InstanceContent</code> constructors
@@ -288,7 +288,7 @@ for (<a href="@JDK@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFacto
         <compatibility addition="yes"/>
         <description>
             <p>
-                New method <a href="@TOP@/org/openide/util/lookup/Lookups.html#forPath-java.lang.String-">Lookups.forPath(String)</a>
+                New method <a href="@TOP@/org/openide/util/lookup/Lookups.html#forPath(java.lang.String)">Lookups.forPath(String)</a>
                 has been added to replace now deprecated <a href="@org-openide-loaders@/org/openide/loaders/FolderLookup.html">FolderLookup</a>
                 and allow modules who wants to read settings from layers
                 to do so with a simpler code, without dependency on DataSystems API.
@@ -440,7 +440,7 @@ for (<a href="@JDK@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFacto
         <description>
           The content of <code>Lookup.getDefault()</code> can be specified
           by a standard JDK registration mechanism, using JARs'
-          <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Service%20Provider" shape="rect">
+          <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/jar/jar.html#Service%20Provider">
             META-INF/services
           </a>
           directory. This is suitable for services that do not change,
@@ -457,7 +457,7 @@ for (<a href="@JDK@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFacto
          <compatibility addition="yes" binary="compatible" source="compatible" semantic="compatible" deprecation="no" deletion="no" modification="no"/>
          <description>New utility class added. The class cannot be instantiated
            and contains following static methods:
-        <pre xml:space="preserve">
+        <pre>
 <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">Lookup</span> <span class="function-name">singleton</span>(<span class="type">Object</span> <span class="variable-name">objectToLookup</span>);
 <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">Lookup</span> <span class="function-name">fixed</span>(<span class="type">Object</span>[] <span class="variable-name">objectsToLookup</span>);
 <span class="keyword">public</span> <span class="keyword">static</span> <span class="type">Lookup</span> <span class="function-name">fixed</span>(<span class="type">Object</span>[] <span class="variable-name">keys</span>, <span class="type">InstanceContent.Convertor</span> <span class="variable-name">convertor</span>);
@@ -587,7 +587,6 @@ for (<a href="@JDK@/java/net/URLStreamHandlerFactory.html">URLStreamHandlerFacto
 <htmlcontents>
 <head>
 <title>Change History for the Lookup API</title>
-<link rel="stylesheet" href="prose.css" type="text/css"/>
 </head>
 <body>
 <p class="overviewlink">

@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.project.Project;
 import static org.netbeans.modules.fish.payara.micro.plugin.Constants.PAYARA_MICRO_MAVEN_PLUGIN;
@@ -171,4 +172,55 @@ public class MicroApplication {
                 .get(PAYARA_MICRO_MAVEN_PLUGIN) != null;
     }
     
+    public static Artifact getPayaraMicroProject(Project project) {
+        NbMavenProject nbMavenProject = project.getLookup().lookup(NbMavenProject.class);
+        MavenProject mavenProject = nbMavenProject.getMavenProject();
+        return mavenProject.getPluginArtifactMap()
+                .get(PAYARA_MICRO_MAVEN_PLUGIN);
+    }
+    
+    public static boolean isDevModeAvailable(Project project) {
+        if (isPayaraMicroProject(project)) {
+            String versionString = getPayaraMicroProject(project).getVersion();
+            if (versionString != null) {
+                try {
+                    String[] parts = versionString.split("\\.");
+                    if (parts.length >= 2) {
+                        double version = Double.parseDouble(parts[0] + "." + parts[1]);
+                        if (version >= 2.1) {
+                            return true;
+                        }
+                    }
+                
+                } catch (NumberFormatException e) {
+                     if ("RELEASE".equals(versionString)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    public static boolean isPluginVersionAtLeast(Project project, double minVersion) {
+        if (isPayaraMicroProject(project)) {
+            String versionString = getPayaraMicroProject(project).getVersion();
+            if (versionString != null) {
+                try {
+                    String[] parts = versionString.split("\\.");
+                    if (parts.length >= 2) {
+                        double version = Double.parseDouble(parts[0] + "." + parts[1]);
+                        return version >= minVersion;
+                    }
+                } catch (NumberFormatException e) {
+                    // For snapshot or release tags like "RELEASE", "SNAPSHOT", etc.
+                    if ("RELEASE".equalsIgnoreCase(versionString)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
 }

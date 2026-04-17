@@ -35,20 +35,14 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
 @RunnerRestClass(runner=RunnerRestStartCluster.class)
 public class CommandStartCluster extends CommandTarget {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for start-cluster command. */
     private static final String COMMAND = "start-cluster";
 
     /** Error message for administration command execution exception .*/
     private static final String ERROR_MESSAGE = "Cluster start failed.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
    /**
      * Starts cluster.
      * <p/>
@@ -71,10 +65,7 @@ public class CommandStartCluster extends CommandTarget {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server start-cluster command entity.
      * <p/>

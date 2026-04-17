@@ -38,14 +38,18 @@ import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.web.beans.analysis.CdiAnalysisResult;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.SPECIALIZES;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.SPECIALIZES_JAKARTA;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.TYPED;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.TYPED_JAKARTA;
 
 /**
  * @author ads
  *
  */
 public abstract class AbstractTypedAnalyzer {
-    
-    public void analyze( Element element, TypeMirror elementType, 
+
+    public void analyze( Element element, TypeMirror elementType,
             AtomicBoolean cancel , CdiAnalysisResult result )
     {
         CompilationInfo compInfo = result.getInfo();
@@ -67,27 +71,26 @@ public abstract class AbstractTypedAnalyzer {
         if ( cancel.get()){
             return;
         }
-        if ( AnnotationUtil.hasAnnotation(element, AnnotationUtil.SPECIALIZES, 
-                compInfo))
+        if (AnnotationUtil.hasAnnotation(element, compInfo, SPECIALIZES_JAKARTA, SPECIALIZES))
         {
             result.requireCdiEnabled(element);
             checkSpecializes( element , elementType , list,  cancel , result );
         }
     }
-    
+
     protected abstract void checkSpecializes( Element element, TypeMirror elementType,
             List<TypeMirror> restrictedTypes, AtomicBoolean cancel , CdiAnalysisResult result );
 
-    protected boolean hasBeanType( Element subject, TypeMirror elementType, 
+    protected boolean hasBeanType( Element subject, TypeMirror elementType,
             TypeMirror requiredBeanType,CompilationInfo compInfo )
     {
         return compInfo.getTypes().isSubtype(elementType, requiredBeanType);
     }
-    
-    protected abstract void addError ( Element element , 
+
+    protected abstract void addError ( Element element ,
             CdiAnalysisResult result );
 
-    protected void collectAncestors(TypeElement type , Set<TypeElement> ancestors, 
+    protected void collectAncestors(TypeElement type , Set<TypeElement> ancestors,
             CompilationInfo compInfo )
     {
         TypeMirror superclass = type.getSuperclass();
@@ -97,7 +100,7 @@ public abstract class AbstractTypedAnalyzer {
             addAncestor(interfaze, ancestors, compInfo);
         }
     }
-    
+
     private void addAncestor( TypeMirror parent , Set<TypeElement> ancestors,
             CompilationInfo compInfo)
     {
@@ -114,24 +117,24 @@ public abstract class AbstractTypedAnalyzer {
             collectAncestors((TypeElement)parentElement, ancestors, compInfo);
         }
     }
-    
-    protected List<TypeMirror> getRestrictedTypes(Element element, 
+
+    protected List<TypeMirror> getRestrictedTypes(Element element,
             CompilationInfo compInfo , AtomicBoolean cancel)
     {
-        AnnotationMirror typedMirror = AnnotationUtil.getAnnotationMirror(element, 
-                AnnotationUtil.TYPED, compInfo);
+        AnnotationMirror typedMirror = AnnotationUtil.getAnnotationMirror(
+                element, compInfo, TYPED_JAKARTA, TYPED);
         if ( typedMirror == null ){
             return null;
         }
-        Map<? extends ExecutableElement, ? extends AnnotationValue> values = 
+        Map<? extends ExecutableElement, ? extends AnnotationValue> values =
             typedMirror.getElementValues();
         AnnotationValue restrictedTypes = null;
-        for (Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : 
-            values.entrySet() ) 
+        for (Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
+            values.entrySet() )
         {
             ExecutableElement key = entry.getKey();
             AnnotationValue value = entry.getValue();
-            if ( AnnotationUtil.VALUE.contentEquals(key.getSimpleName())){ 
+            if ( AnnotationUtil.VALUE.contentEquals(key.getSimpleName())){
                 restrictedTypes = value;
                 break;
             }
@@ -144,7 +147,7 @@ public abstract class AbstractTypedAnalyzer {
         }
         Object value = restrictedTypes.getValue();
         if ( value instanceof List<?> ){
-            List<TypeMirror> result = new ArrayList<TypeMirror>(((List<?>)value).size());
+            List<TypeMirror> result = new ArrayList<>(((List<?>)value).size());
             for( Object type : (List<?>)value){
                 AnnotationValue annotationValue = (AnnotationValue)type;
                 type = annotationValue.getValue();
@@ -156,20 +159,20 @@ public abstract class AbstractTypedAnalyzer {
         }
         return Collections.emptyList();
     }
-    
+
     protected Set<TypeElement> getUnrestrictedBeanTypes( TypeElement element,
             CompilationInfo compInfo)
     {
-        Set<TypeElement> set = new HashSet<TypeElement>();
+        Set<TypeElement> set = new HashSet<>();
         set.add( element );
         collectAncestors(element, set, compInfo);
         return set;
     }
-    
+
     protected Set<TypeElement> getElements( Collection<TypeMirror> types ,
             CompilationInfo info  )
     {
-        Set<TypeElement> result = new HashSet<TypeElement>();
+        Set<TypeElement> result = new HashSet<>();
         for (TypeMirror typeMirror : types) {
             Element element = info.getTypes().asElement(typeMirror);
             if ( element instanceof TypeElement  ){
@@ -178,5 +181,5 @@ public abstract class AbstractTypedAnalyzer {
         }
         return result;
     }
-    
+
 }

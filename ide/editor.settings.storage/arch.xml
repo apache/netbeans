@@ -85,7 +85,7 @@ of XML files with settings. The following XML files are supported.
     </li>
 </ul>
 
-<h3>Profiles and setting folders</h3>
+<h2>Profiles and setting folders</h2>
 <p>
 The setting files are stored in <code>MimeLookup</code> in the folders hierarchy
 under the <code>Editors/</code> folder on the default filesystem. The storage follows
@@ -116,7 +116,7 @@ The <code>editor/settings/storage</code> module dedicates a special folder for
 each profile and stores all the profile related files in that folder.
 </p>
 
-<h4>Special profiles and mime types</h4>
+<h3>Special profiles and mime types</h3>
 <p>
 The module provides a special treatment for profiles with names starting with
 the <code>"test"</code> string. These profiles are handled as a temporary in-memory
@@ -139,7 +139,7 @@ Since this functionality is defacto an API it is being tracked as
 <api name="SpecialProfilesAndMimeTypesAPI" category="friend" group="java" type="export" />.
 </p>
 
-<h3>User changes and defaults</h3>
+<h2>User changes and defaults</h2>
 
 <p>
 The editor settings storage is organized in the way that allows storing user
@@ -153,7 +153,7 @@ original values the files with user changes are simply deleted and the profile
 is reloaded from the default files.
 </p>
 
-<h4>Font &amp; color files</h4>
+<h3>Font &amp; color files</h3>
 
 <p><b>Since version 1.10</b> the storage module does not require coloring files to be
 called any special name. The coloring profiles and files are expected to be
@@ -224,7 +224,7 @@ scheme. All of those three files had the same structure, but different purpose.
 </ul>
 
 
-<h4>Key bindings files</h4>
+<h3>Key bindings files</h3>
 <p>
 <b>Since version 1.10</b> modules can provide their keybindings in multiple files
 placed under the special folder called <code>Keybindings</code> and its profiles'
@@ -265,7 +265,7 @@ and should not be used anymore. It is however still supported to preserve
 backwards compatibility.
 </p>
 
-<h3>Platform specific settings</h3>
+<h2>Platform specific settings</h2>
 
 <p>
 <b>Since 1.10</b> it is possible to mark setting files as applicable only on a certain

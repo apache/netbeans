@@ -30,7 +30,6 @@ import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import java.util.Set;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ModuleElement;
 import javax.lang.model.element.TypeElement;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -72,8 +71,7 @@ public class ElementUtils {
                 if (result != null) {
                     if (foundInUnamedModule == true) {
                         for (TypeElement elem : new TypeElement[]{result, found}) {
-                            if ((elem.getKind().isClass() || elem.getKind().isInterface())
-                                    && (((ClassSymbol) elem).packge().modle != syms.unnamedModule)) {
+                            if (elem.getKind().isDeclaredType() && ((ClassSymbol) elem).packge().modle != syms.unnamedModule) {
                                 return elem;
                             }
                         }
@@ -95,13 +93,13 @@ public class ElementUtils {
     public static TypeElement getTypeElementByBinaryName(JavacTask task, ModuleElement mod, String name) {
         Context ctx = ((JavacTaskImpl) task).getContext();
         Names names = Names.instance(ctx);
-        Symtab syms = Symtab.instance(ctx);
         Check chk = Check.instance(ctx);
         final Name wrappedName = names.fromString(name);
         ClassSymbol clazz = chk.getCompiled((ModuleSymbol) mod, wrappedName);
         if (clazz != null) {
             return clazz;
         }
+        Symtab syms = Symtab.instance(ctx);
         clazz = syms.enterClass((ModuleSymbol) mod, wrappedName);
         
         try {

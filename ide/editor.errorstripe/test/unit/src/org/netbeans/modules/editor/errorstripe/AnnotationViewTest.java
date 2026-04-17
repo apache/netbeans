@@ -27,9 +27,9 @@ import java.util.List;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.BaseKit;
-import org.netbeans.editor.Utilities;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.editor.errorstripe.caret.CaretMarkProviderCreator;
 import org.netbeans.modules.editor.errorstripe.privatespi.Mark;
@@ -63,7 +63,7 @@ public class AnnotationViewTest extends NbTestCase {
                 
                 assertEquals(aView.viewToModel(pos)[0], aView.viewToModel(aView.modelToView(aView.viewToModel(pos)[0]))[0]);
                 
-                assertEquals((-1.0), aView.modelToView(Utilities.getLineOffset(document, document.getLength()) + 1), 0.0001d);
+                assertEquals((-1.0), aView.modelToView(LineDocumentUtils.getLineIndex(document, document.getLength()) + 1), 0.0001d);
             }
         });
     }
@@ -120,7 +120,7 @@ public class AnnotationViewTest extends NbTestCase {
         performTest(new Action() {
             public void test(AnnotationView aView, BaseDocument document) throws Exception {
                 int startLine = 1;
-                int linesCount = Utilities.getRowCount(document);
+                int linesCount = LineDocumentUtils.getLineCount(document);
                 
                 while (startLine < linesCount) {
                     int[] span = aView.getLinesSpan(startLine);

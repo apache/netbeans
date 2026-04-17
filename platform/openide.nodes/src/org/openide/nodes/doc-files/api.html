@@ -22,23 +22,16 @@
 <html>
 <head>
 <title>Nodes API</title>
-<link rel="Stylesheet" href="../../../../prose.css" type="text/css" title="NetBeans Open APIs Style">
 </head>
 <body>
 
-<p class="overviewlink"><a href="../../../../overview-summary.html">Overview</a></p>
+<p class="overviewlink"><a href="@TOP@/index.html">Overview</a></p>
 
 <h1>Javadoc</h1>
 
-The Javadoc for this API resides in
+The Javadoc for this API resides in {@link org.openide.nodes}.
 
-<a href="../package-summary.html"><code>org.openide.nodes</code></a>.
-
-In particular, the class
-
-<a href="../Node.html"><code>Node</code></a>
-
-is the logical starting point.
+In particular, the class {@link org.openide.nodes.Node Node} is the logical starting point.
 
 
 <h1>Contents</h1>
@@ -93,7 +86,7 @@ features.</p>
 
 <div class="nonnormative">
 
-<h2><a name="node-intro">What is a Node?</a></h2>
+<h2 id="node-intro">What is a Node?</h2>
 
 A node provides the visual representation and apparent behavior of
 most objects in NetBeans. It may be used to represent a data object
@@ -109,7 +102,7 @@ be stored in a data object, or in some other appropriate storage
 mechanism. Rather, they provide a presentation device for existing
 data.
 
-<h3><a name="javabean-intro">JavaBeans and nodes</a></h3>
+<h3 id="javabean-intro">JavaBeans and nodes</h3>
 
 A node is a sort of extension to the JavaBeans concept, adding some
 features that were necessary for the full functioning of explorer views. Some
@@ -119,9 +112,7 @@ key components that were missing from the
 
 <ul>
 
-<li>Full hierarchy support. The Java 2
-
-<a href="@JDK@/java/beans/beancontext/package-summary.html">Bean Context API</a>
+<li>Full hierarchy support. The Java 2 {@link java.beans.beancontext Bean Context API }
 
 provides basic support for hierarchies of Beans in a tree structure,
 but not enough to handle the requirements of NetBeans, such as special
@@ -151,7 +142,7 @@ implementations</a> are available which wrap around standard JavaBeans
 and present them as nodes, including handling any Bean Context
 available, introspected properties, and so on.
 
-<h3><a name="explorer">Nodes in the Explorer</a></h3>
+<h3 id="explorer">Nodes in the Explorer</h3>
 
 Using the
 
@@ -180,7 +171,7 @@ Environment subtree has immediate effect). These capabilities owe to
 the <a href="#event">rich event notification</a> supported by the
 Nodes API.
 
-<h3><a name="common-types">Common node types</a></h3>
+<h3 id="common-types">Common node types</h3>
 
 This is a partial list of common types of nodes, some more apparent
 than others, to give an idea of what is possible with the API:
@@ -238,7 +229,7 @@ and probably be easier to write as well.
 </div>
 
 
-<h2><a name="create">Creating Custom Nodes</a></h2>
+<h2 id="create">Creating Custom Nodes</h2>
 
 This section details the steps you must take to create various kinds
 of customized nodes. In simple cases, you need do very little, as
@@ -248,23 +239,16 @@ particular type (as is the case with e.g. the Active Processes list),
 some more work is necessary, but again much of it will involve
 subclassing existing supports.
 
-<h3><a name="create-genl">General Aspects</a></h3>
+<h3 id="create-genl">General Aspects</h3>
 
-All nodes must subclass the general
-
-<a href="../Node.html"><code>Node</code></a>
+All nodes must subclass the general {@link org.openide.nodes.Node Node }
 
 abstract class. However, in practice it is most common to actually
-subclass a convenient base class,
-
-<a href="../AbstractNode.html"><code>AbstractNode</code></a>,
-
+subclass a convenient base class, {@link org.openide.nodes.AbstractNode AbstractNode},
 or one of its subclasses. Your node class needs to specify a list of
 child nodes in the constructor (the contents of which may be changed
 later, but not the identity of the <code>Children</code> object
-itself); for the case of a leaf node, just pass in
-
-<a href="../Children.html#LEAF"><code>Children.LEAF</code></a>.
+itself); for the case of a leaf node, just pass in {@link org.openide.nodes.Children#LEAF Children.LEAF }.
 
 <p>As this class is not abstract, there are no strict requirements on
 what needs to be overridden. However, the following general methods
@@ -272,8 +256,7 @@ you are likely to want to override:
 
 <ul>
 
-<li><a href="../AbstractNode.html#canCopy--"><code>AbstractNode.canCopy()</code></a>
-
+<li>{@link org.openide.nodes.AbstractNode#canCopy() AbstractNode.canCopy() }
 and related methods (for cutting, renaming, and destroying) are all
 true by default, so that the node may be moved around somewhat
 arbitrarily (though to paste requires the permission of the new
@@ -292,21 +275,21 @@ reconstituting a node after serialization.
 
 <p>You may set these explicitly with
 
-<a href="../Node.html#setName-java.lang.String-"><code>Node.setName(...)</code></a>
+{@link org.openide.nodes.Node#setName(java.lang.String) Node.setName(...) }
 
 and
 
-<a href="../Node.html#setDisplayName-java.lang.String-"><code>Node.setDisplayName(...)</code></a>,
+{@link org.openide.nodes.Node#setDisplayName(java.lang.String) Node.setDisplayName(...) },
 
 or you may want to take advantage of <code>AbstractNode</code>'s
 ability to have the display name be calculated implicitly from the
 system name by means of a
 
-<a href="../AbstractNode.html#displayFormat">format string</a>.
+{@link org.openide.nodes.AbstractNode#displayFormat format string }.
 
 There is also a
 
-<a href="../Node.html#setShortDescription-java.lang.String-">short description</a>
+{@link org.openide.nodes.Node#setShortDescription(java.lang.String) short description }
 
 which is intended for things such as tool tips on the node.
 
@@ -315,33 +298,33 @@ specify a set of icons according to whether small or large icons are
 to be used, whether the node's hierarchy (if applicable) is expanded
 or collapsed, etc. The best approach is to use
 
-<a href="../AbstractNode.html#setIconBaseWithExtension-java.lang.String-"><code>AbstractNode.setIconBaseWithExtension(...)</code></a>
+{@link org.openide.nodes.AbstractNode#setIconBaseWithExtension(java.lang.String) AbstractNode.setIconBaseWithExtension(...) }
 
 to set the base name for the icon image resources.
 
 </ul>
 
-<h3><a name="create-prop">Properties, sets, and sheets</a></h3>
+<h3 id="create-prop">Properties, sets, and sheets</h3>
 
 There are three levels of organization for node properties:
 
 <ol>
 
-<li><a href="../Node.Property.html"><em>Properties</em></a>,
+<li>{@link org.openide.nodes.Node.Property Properties },
 
 which represent individual settable properties of the node object,
 with a definition class and so on, very similar to JavaBean properties
 (and in fact extending
 
-<a href="@JDK@/java/beans/FeatureDescriptor.html">Bean features</a>).
+{@link java.beans.FeatureDescriptor Bean features}).
 
-<li><a href="../Node.PropertySet.html"><em>Property sets</em></a>,
+<li>{@link org.openide.nodes.Node.PropertySet Property sets },
 
 which are just collections of properties that typically would be
 displayed together - for example, all the event handlers for a form
 component.
 
-<li><a href="../Sheet.html"><em>Sheets</em></a>,
+<li>{@link org.openide.nodes.Sheet Sheets},
 
 which group together several named property sets - for example, the
 same form component may also have a normal Bean property set
@@ -352,12 +335,12 @@ same form component may also have a normal Bean property set
 Nodes are only required to cluster properties into sets, by
 implementing
 
-<a href="../Node.html#getPropertySets--"><code>Node.getPropertySets()</code></a>;
+{@link org.openide.nodes.Node#getPropertySets() Node.getPropertySets() };
 
 but sheets are convenient to handle, and they may be used from an
 <code>AbstractNode</code>, for example by overriding
 
-<a href="../AbstractNode.html#createSheet--"><code>AbstractNode.createSheet()</code></a>
+{@link org.openide.nodes.AbstractNode#createSheet() AbstractNode.createSheet() }
 
 to provide the basic list of property sets desired for the
 node. (You should get the sheet set you need from it, checking
@@ -372,27 +355,27 @@ effect.)
 <li>It has a name, frequently corresponding to a Bean property name,
 obtainable from
 
-<a href="@JDK@/java/beans/FeatureDescriptor.html#getName--"><code>FeatureDescriptor.getName()</code></a>.
+{@link java.beans.FeatureDescriptor#getName() FeatureDescriptor.getName() }.
 
 It may also have a display name, similarly.
 
 <li>It may be read-only, read-write, or (rarely) write-only, according
 to
 
-<a href="../Node.Property.html#canRead--"><code>Node.Property.canRead()</code></a>
+{@link org.openide.nodes.Node.Property#canRead() Node.Property.canRead() }
 
 and
 
-<a href="../Node.Property.html#canWrite--"><code>Node.Property.canWrite()</code></a>.
+{@link org.openide.nodes.Node.Property#canWrite() Node.Property.canWrite() }.
 
 <li>It has a defined value type, to which its actual value must be
 assignable, as determined by
 
-<a href="../Node.Property.html#getValueType--"><code>Node.Property.getValueType()</code></a>.
+{@link org.openide.nodes.Node.Property#getValueType() Node.Property.getValueType() }.
 
 There may also be a
 
-<a href="../Node.Property.html#supportsDefaultValue--">default value</a>.
+{@link org.openide.nodes.Node.Property#supportsDefaultValue() default value }.
 
 <li>It may be indexed (i.e. be an array type with access to the
 individual elements).
@@ -404,7 +387,7 @@ which provide useful refinements:
 
 <ul>
 
-<li><a href="../PropertySupport.Name.html"><code>PropertySupport.Name</code></a>
+<li>{@link org.openide.nodes.PropertySupport.Name PropertySupport.Name }
 
 creates a property specifically binding the node's name (system name,
 not display name; if you are using <code>AbstractNode</code>, handling
@@ -414,15 +397,15 @@ the property sheet. If modifying the name should be permitted but
 would need to trigger other changes, the support probably would not be
 helpful (or it could be subclassed).
 
-<li><a href="../IndexedPropertySupport.html"><code>IndexedPropertySupport</code></a>
+<li>{@link org.openide.nodes.IndexedPropertySupport IndexedPropertySupport }
 
 helps create indexed properties.
 
-<li><a href="../PropertySupport.ReadOnly.html"><code>PropertySupport.ReadOnly</code></a>
+<li>{@link org.openide.nodes.PropertySupport.ReadOnly PropertySupport.ReadOnly }
 
 and similar classes restrict the directionality of the property.
 
-<li><a href="../PropertySupport.Reflection.html"><code>PropertySupport.Reflection</code></a>
+<li>{@link org.openide.nodes.PropertySupport.Reflection PropertySupport.Reflection }
 
 helps create a property based on JavaBean introspection.
 
@@ -440,7 +423,7 @@ descriptors, and so may have internal and display names, etc.
 may automatically create a sheet with some useful properties on it;
 then this sheet should generally be appended to by overriding
 
-<a href="../AbstractNode.html#createSheet--"><code>AbstractNode.createSheet()</code></a>
+{@link org.openide.nodes.AbstractNode#createSheet() AbstractNode.createSheet() }
 
 and calling the superclass method first.
 
@@ -450,11 +433,11 @@ edit individual properties, especially without getting a holistic
 preview. If this is the case, a customizing GUI component may be
 returned from
 
-<a href="../Node.html#getCustomizer--"><code>Node.getCustomizer()</code></a>,
+{@link org.openide.nodes.Node#getCustomizer() Node.getCustomizer() },
 
 and
 
-<a href="../Node.html#hasCustomizer--"><code>Node.hasCustomizer()</code></a>
+{@link org.openide.nodes.Node#hasCustomizer() Node.hasCustomizer() }
 
 turned on. The exact way in which the customizer will be displayed is
 determined by NetBeans, but typically it will be popped up in a dialog
@@ -464,7 +447,7 @@ however appropriate.
 <p>If a full customizer is not required, individual properties may
 still have a custom editing style associated with them;
 
-<a href="../Node.Property.html#getPropertyEditor--"><code>Node.Property.getPropertyEditor()</code></a>
+{@link org.openide.nodes.Node.Property#getPropertyEditor() Node.Property.getPropertyEditor() }
 
 is used to look for a property editor, defaulting to the standard
 JavaBeans property editor for the appropriate type.
@@ -472,7 +455,7 @@ JavaBeans property editor for the appropriate type.
 <p>Note that the Nodes API, unlike JavaBeans, permits a specific
 instance of
 
-<a href="@JDK@/java/beans/PropertyEditor.html"><code>PropertyEditor</code></a>
+{@link java.beans.PropertyEditor PropertyEditor }
 
 to be associated with the node, not just its class - so if you override
 <code>getPropertyEditor()</code>, it is possible to select an editor
@@ -481,12 +464,12 @@ a completely different editor when it is bound to a SQL rowset), or to
 keep an initialized editor associated with a node that may have some
 UI state not kept in the node itself.
 
-<h3><a name="create-hier">Hierarchy nodes and their children</a></h3>
+<h3 id="create-hier">Hierarchy nodes and their children</h3>
 
 Creating a leaf node - a node with no children - is fairly
 straightforward, since the child list may simply be specified as
 
-<a href="../Node.html#EMPTY"><code>Node.EMPTY</code></a>.
+{@link org.openide.nodes.Node#EMPTY Node.EMPTY}.
 
 To create a hierarchy node that will act as a parent for other nodes,
 you must consider both what type of children it will have, and how
@@ -494,7 +477,7 @@ those children should be managed.
 
 <p>The basic data structure for managing a child list is
 
-<a href="../Children.html"><code>Children</code></a>,
+{@link org.openide.nodes.Children Children},
 
 which is not likely to be subclasses directly but rather used in the
 form of one of the support classes available for it. Note that the
@@ -504,16 +487,16 @@ and structure of children under it.
 
 <p>A simple child list may be created with
 
-<a href="../Children.Array.html"><code>Children.Array</code></a>.
+{@link org.openide.nodes.Children.Array Children.Array }.
 
 You need only create it with the default constructor, and add child
 nodes to it (at any time, or remove them later for that matter) using
 
-<a href="../Children.html#add-org.openide.nodes.Node:A-"><code>Children.add(...)</code></a>.
+{@link org.openide.nodes.Children#add(org.openide.nodes.Node[]) Children.add(...) }.
 
 <p>If it is desirable that the children be sorted when displayed, you can use e.g.
 
-<a href="../Children.SortedArray.html"><code>Children.SortedArray</code></a>
+{@link org.openide.nodes.Children.SortedArray Children.SortedArray }
 
 to do this. In this case, the comparator (i.e. sort criteria) can be
 changed at any time.
@@ -521,15 +504,15 @@ changed at any time.
 <p>If the children need to be accessed based on keys, as in a
 hashtable, this is possible with
 
-<a href="../Children.Map.html"><code>Children.Map</code></a>
+{@link org.openide.nodes.Children.Map Children.Map }
 
 (and also
 
-<a href="../Children.SortedMap.html"><code>Children.SortedMap</code></a>).
+{@link org.openide.nodes.Children.SortedMap Children.SortedMap }).
 
 Along similar lines,
 
-<a href="../Children.Keys.html"><code>Children.Keys</code></a>
+{@link org.openide.nodes.Children.Keys Children.Keys }
 
 permits clustering of the children by key, where several children may
 be associated with one key. This class may be especially useful when
@@ -543,7 +526,7 @@ frequently - the provided support classes should handle the common
 cases. If it is necessary to subclass, the documentation for
 <code>Children</code> should suffice.
 
-<h3><a name="create-order">Indexing and reordering children</a></h3>
+<h3 id="create-order">Indexing and reordering children</h3>
 
 Many structural constraints on children are probably satisfied by the
 children class itself - i.e. using <code>Children.SortedArray</code>
@@ -555,28 +538,28 @@ children.
 <p>Generally you will want to make the children rearrangeable by
 the user, as well as by external code. To do so, you should implement the
 
-<a href="../Index.html"><code>Index</code></a>
+{@link org.openide.nodes.Index Index }
 
 cookie on your node, which exists to handle this case. This cookie provides ways
 for the user to move particular children around, or to undertake a
 complete rearrangement using a
 
-<a href="../Index.Support.html#showIndexedCustomizer-org.openide.nodes.Index-">dialog box</a>.
+{@link org.openide.nodes.Index.Support#showIndexedCustomizer(org.openide.nodes.Index) dialog box }.
 
 There is a generic
 
-<a href="../Index.Support.html">support class</a>
+{@link org.openide.nodes.Index.Support support class}
 
 which implements the raw requirements of the cookie, but this is
 usually used in a more friendly form by using a special children
 implementation such as
 
-<a href="../Index.ArrayChildren.html"><code>Index.ArrayChildren</code></a>.
+{@link org.openide.nodes.Index.ArrayChildren Index.ArrayChildren }.
 
 This implementation stores a list of children and makes it
 straightforward for the user to manipulate the order in several ways.
 
-<h3><a name="create-cookie-act">Cookie and action support</a></h3>
+<h3 id="create-cookie-act">Cookie and action support</h3>
 
 One important ability provided by the Nodes API is to associate
 cookies and actions with nodes. What cookies are and how to create
@@ -601,7 +584,7 @@ API describes these defaults.)
 implement certain behaviors, is quite straightforward. The basic
 interface for retrieving a cookie is
 
-<a href="../Node.html#getCookie-java.lang.Class-"><code>Node.getCookie(...)</code></a>.
+{@link org.openide.nodes.Node#getCookie(java.lang.Class) Node.getCookie(...) }.
 
 However, this is abstract in <code>Node</code>, and also
 <code>Node</code> itself does not set any policy for settings up the
@@ -610,13 +593,13 @@ cookies for a node or changing them.
 <p>Rather, if you are subclassing <code>AbstractNode</code>, you may
 use
 
-<a href="../AbstractNode.html#setCookieSet-org.openide.nodes.CookieSet-"><code>AbstractNode.setCookieSet(...)</code></a>
+{@link org.openide.nodes.AbstractNode#setCookieSet(org.openide.nodes.CookieSet) AbstractNode.setCookieSet(...) }
 
 to specify a set of cookies to be returned by the node (and you should
 merge your cookies with those provided by the superclass, as a
 rule). The
 
-<a href="../CookieSet.html"><code>CookieSet</code></a>
+{@link org.openide.nodes.CookieSet CookieSet}
 
 is a simple container for cookies looked up by their representation
 class. The <code>AbstractNode</code> will then use this as an index
@@ -624,16 +607,16 @@ for implementing <code>getCookie(...)</code>.
 
 <p>To attach actions to a node, which are listed by
 
-<a href="../Node.html#getActions--"><code>Node.getActions()</code></a>
+{@link org.openide.nodes.Node#getActions() Node.getActions() }
 
 (and sometimes a primary and obvious action in
 
-<a href="../Node.html#getDefaultAction--"><code>Node.getDefaultAction()</code></a>),
+{@link org.openide.nodes.Node#getDefaultAction() Node.getDefaultAction() }),
 
 you should merge the superclass' actions into your own (if desired),
 and override e.g.
 
-<a href="../AbstractNode.html#createActions--"><code>AbstractNode.createActions()</code></a>,
+{@link org.openide.nodes.AbstractNode#createActions() AbstractNode.createActions() },
 
 which is called to set up the actions list when
 <code>getActions()</code> is first called.
@@ -642,21 +625,21 @@ which is called to set up the actions list when
 associate commands with the node, e.g. by providing them in a pop-up
 menu.
 
-<a href="../Node.html#getDefaultAction--"><code>Node.getDefaultAction()</code></a>
+{@link org.openide.nodes.Node#getDefaultAction() Node.getDefaultAction() }
 
 and
 
-<a href="../Node.html#getContextActions--"><code>Node.getContextActions()</code></a>
+{@link org.openide.nodes.Node#getContextActions() Node.getContextActions() }
 
 provide more refined variants of the actions list which may be
 appropriate for different presentations. Nodes with unusual needs for
 action presentation can override
 
-<a href="../Node.html#getContextMenu--"><code>Node.getContextMenu()</code></a>
+{@link org.openide.nodes.Node#getContextMenu() Node.getContextMenu() }
 
 to define a particular UI for this presentation.
 
-<h3><a name="create-mod">Installing special nodes from modules</a></h3>
+<h3 id="create-mod">Installing special nodes from modules</h3>
 
 Frequently nodes will be created secondarily, especially as a result
 of being delegates to data objects (in which case their creation is
@@ -703,13 +686,13 @@ placed in the <samp>UI/Services/</samp> folder, again using
 <a href="@org-openide-util-ui@/org/openide/util/doc-files/api.html#settings">Services API</a>.
 
 
-<h2><a name="special">Special Node Usage</a></h2>
+<h2 id="special">Special Node Usage</h2>
 
 There are a few sorts of special operations and techniques which it
 may be useful to apply to nodes, either in the course of implementing
 a node or node hierarchy, or just using nodes from other code.
 
-<h3><a name="serial">Serialization and traversal</a></h3>
+<h3 id="serial">Serialization and traversal</h3>
 
 If you need to store (serialize) a node for any reason, this is
 generally impossible due to the welter of Java-level references
@@ -718,11 +701,11 @@ special serializable handle which represents the node by its position
 in the hierarchy, and permits finding the original node again after
 deserialization (if it still exists). To create a handle, just call
 
-<a href="../Node.html#getHandle--"><code>Node.getHandle()</code></a>,
+{@link org.openide.nodes.Node#getHandle() Node.getHandle() },
 
 and to restore the node call
 
-<a href="../Node.Handle.html#getNode--"><code>Node.Handle.getNode()</code></a>.
+{@link org.openide.nodes.Node.Handle#getNode() Node.Handle.getNode() }.
 
 <p>Creation of a usable handle is implemented in
 <code>AbstractNode</code>, and you should not need to override
@@ -736,12 +719,12 @@ reconstructing your root from scratch, and return it from
 
 <p>The methods in <code>NodeOp</code> such as
 
-<a href="../NodeOp.html#findPath-org.openide.nodes.Node-java.lang.String:A-"><code>NodeOp.findPath(...)</code></a>
+{@link org.openide.nodes.NodeOp#findPath(org.openide.nodes.Node,java.lang.String[]) NodeOp.findPath(...) }
 
 may also be used for general-purpose navigation along the hierarchy,
 should this be necessary.
 
-<h3><a name="javabean-bridge">JavaBean bridging</a></h3>
+<h3 id="javabean-bridge">JavaBean bridging</h3>
 
 It is possible to create a node which picks up its node behavior from
 an underlying JavaBean. That is, Bean introspection will be used to
@@ -754,7 +737,7 @@ on.
 <p>Since most of this behavior is automatic and driven by the
 JavaBeans API, you need do little to use it: just create a node using
 
-<a href="../BeanNode.html#BeanNode-java.lang.Object-"><code>new BeanNode(...)</code></a>.
+{@link org.openide.nodes.BeanNode#BeanNode(java.lang.Object) new BeanNode(...) }.
 
 <p class="nonnormative">Do not confuse such a bean node, which may be any sort of node that
 just happens to use the JavaBeans API to implement its behavior, with
@@ -763,7 +746,7 @@ file is found to be a JavaBean (serialized, or as a class) - this
 latter type of node behaves in most respects like any other data node,
 and just adds a couple of features like a Customize action.
 
-<h3><a name="delegate">Data object delegates</a></h3>
+<h3 id="delegate">Data object delegates</h3>
 
 Many nodes serve primarily to represent a data object, which would
 otherwise be invisible to the user. While such data nodes may be
@@ -775,7 +758,7 @@ and supports for creating these. Please refer to the
 
 for details.
 
-<h3><a name="filter">Filters and cloning</a></h3>
+<h3 id="filter">Filters and cloning</h3>
 
 Under some circumstances, it may be useful to create a node which does
 nothing except serve as a sort of symbolic link to another primary
@@ -783,17 +766,17 @@ node; this may be used when the visual organization of a hierarchy
 requires one object to appear in more than one place. In such a case,
 you may use
 
-<a href="../FilterNode.html#FilterNode-org.openide.nodes.Node-"><code>new FilterNode(...)</code></a>
+{@link org.openide.nodes.FilterNode#FilterNode(org.openide.nodes.Node) new FilterNode(...) }
 
 to create such a proxy.
 
 <p>Or, you may use
 
-<a href="../AbstractNode.html#cloneNode--"><code>AbstractNode.cloneNode()</code></a>
+{@link org.openide.nodes.AbstractNode#cloneNode() AbstractNode.cloneNode() }
 
 to create the filter if the node does not intrinsically support
 
-<a href="@JDK@/java/lang/Cloneable.html"><code>Cloneable</code></a>,
+{@link java.lang.Cloneable Cloneable },
 
 or to really clone it if it does. Note that a properly-designed node
 does not actually store real data, but just provides an interface to
@@ -804,7 +787,7 @@ as such behavior would be contrary to the UI goal of having a data
 node live in one place in the Repository according to the position of
 the data object and primary file object.
 
-<h3><a name="event">Event model</a></h3>
+<h3 id="event">Event model</h3>
 
 Every interesting aspect of nodes may be listened to using the Java
 Event Model, as is routine in the IDE:
@@ -814,7 +797,7 @@ Event Model, as is routine in the IDE:
 <li>Changes to the basic structure or presence of nodes may be
 listened to. Attach a listener with
 
-<a href="../Node.html#addNodeListener-org.openide.nodes.NodeListener-"><code>Node.addNodeListener(...)</code></a>.
+{@link org.openide.nodes.Node#addNodeListener(org.openide.nodes.NodeListener) Node.addNodeListener(...) }.
 
 This will report the changes mentioned directly in
 <code>NodeListener</code>, as well as several varieties of standard
@@ -826,26 +809,26 @@ values), and icons.
 <li>Changes to the values of node properties may be listened to;
 attach to
 
-<a href="../Node.html#addPropertyChangeListener-java.beans.PropertyChangeListener-"><code>Node.addPropertyChangeListener(...)</code></a>.
+{@link org.openide.nodes.Node#addPropertyChangeListener(java.beans.PropertyChangeListener) Node.addPropertyChangeListener(...) }.
 
 This will report only changes relating to the exposed Bean-like
 properties of the node, <em>not</em> intrinsic properties like the
 parent.
 
-<li><a href="../CookieSet.html#addChangeListener-javax.swing.event.ChangeListener-">Cookie sets</a>,
+<li>{@link org.openide.nodes.CookieSet#addChangeListener(javax.swing.event.ChangeListener) Cookie sets },
 
-<a href="../Sheet.Set.html#addPropertyChangeListener-java.beans.PropertyChangeListener-">property sets</a>,
+{@link org.openide.nodes.Sheet.Set#addPropertyChangeListener(java.beans.PropertyChangeListener) property sets },
 
 and
 
-<a href="../Sheet.html#addPropertyChangeListener-java.beans.PropertyChangeListener-">property sheets</a>
+{@link org.openide.nodes.Sheet#addPropertyChangeListener(java.beans.PropertyChangeListener) property sheets }
 
 may all have listeners attached to them individually, although generally it
 is easier just to listen to the node holding them.
 
 </ul>
 
-<h3><a name="edit">Edit operations on nodes</a></h3>
+<h3 id="edit">Edit operations on nodes</h3>
 
 Nodes can support a variety of mechanisms for the basic edit
 operations.
@@ -855,11 +838,11 @@ operations.
 <p>There are some simple node-level operations which do not need to
 use data transfer.
 
-<a href="../AbstractNode.html#setName-java.lang.String-"><code>AbstractNode.setName(...)</code></a>
+{@link org.openide.nodes.AbstractNode#setName(java.lang.String) AbstractNode.setName(...) }
 
 and
 
-<a href="../Node.html#destroy--"><code>Node.destroy()</code></a>
+{@link org.openide.nodes.Node#destroy() Node.destroy() }
 
 may simply be overridden to handle customized renames and
 deletes. (Or, you could attach a <code>NodeListener</code> to take
@@ -867,12 +850,12 @@ action after the fact, if that suffices.)
 
 <p>Supporting creation of fresh children is possible by overriding
 
-<a href="../Node.html#getNewTypes--"><code>Node.getNewTypes()</code></a>
+{@link org.openide.nodes.Node#getNewTypes() Node.getNewTypes() }
 
 to provide a list of new types of data which can be created under your
 node. Each of these should implement
 
-<a href="@org-openide-util-ui@/org/openide/util/datatransfer/NewType.html#create--"><code>NewType.create()</code></a>
+{@link org.openide.util.datatransfer.NewType#create() NewType.create() }
 
 to actually create a new child. Make sure that you include
 
@@ -880,7 +863,7 @@ to actually create a new child. Make sure that you include
 
 in your
 
-<a href="../Node.html#getActions--">list of actions</a>.
+{@link org.openide.nodes.Node#getActions() list of actions }.
 
 <h4>Data transfer</h4>
 
@@ -926,10 +909,7 @@ arbitrary Node A.
 <a href="@org-openide-actions@/org/openide/actions/CopyAction.html">Copy</a>
 
 is enabled (from a context menu, the Edit menu, etc.), because node A
-indicated it could be copied using
-
-<a href="../Node.html#canCopy--"><code>Node.canCopy()</code></a>
-
+indicated it could be copied using {@link org.openide.nodes.Node#canCopy() Node.canCopy() }
 (turned on in <code>AbstractNode</code>).
 
 Note that
@@ -942,17 +922,17 @@ provides the regular implementation of <code>CopyAction</code> for any
 
 <li>The user invokes the Copy action.
 
-<a href="../AbstractNode.html#clipboardCopy--"><code>AbstractNode.clipboardCopy()</code></a>
+{@link org.openide.nodes.AbstractNode#clipboardCopy() AbstractNode.clipboardCopy() }
 
 is called. It creates a transferable supporting only one flavor, which is invisible
 to the APIs. The creation of this transferable is done by a special utility method which
 hides the data flavor and transferables contents:
 
-<a href="../NodeTransfer.html#transferable-org.openide.nodes.Node-int-"><code>NodeTransfer.transferable(...)</code></a>.
+{@link org.openide.nodes.NodeTransfer#transferable(org.openide.nodes.Node,int) NodeTransfer.transferable(...) }.
 
 The copy action
 
-<a href="@JDK@/java/awt/datatransfer/Clipboard.html#setContents-java.awt.datatransfer.Transferable-java.awt.datatransfer.ClipboardOwner-">sets</a>
+{@link java.awt.datatransfer.Clipboard#setContents(java.awt.datatransfer.Transferable,java.awt.datatransfer.ClipboardOwner) sets}
 
 that transferable to the clipboard.
 
@@ -964,11 +944,11 @@ holding children. One effect of the change in selection is that the
 action checks to see if it should be enabled. To do so, it checks node
 B's
 
-<a href="../AbstractNode.html#getPasteTypes-java.awt.datatransfer.Transferable-"><code>AbstractNode.getPasteTypes(...)</code></a>,
+{@link org.openide.nodes.AbstractNode#getPasteTypes(java.awt.datatransfer.Transferable) AbstractNode.getPasteTypes(...) },
 
 which in turns calls
 
-<a href="../AbstractNode.html#createPasteTypes-java.awt.datatransfer.Transferable-java.util.List-"><code>AbstractNode.createPasteTypes(...)</code></a>
+{@link org.openide.nodes.AbstractNode#createPasteTypes(java.awt.datatransfer.Transferable,java.util.List) AbstractNode.createPasteTypes(...) }
 
 to do the work.
 
@@ -977,7 +957,7 @@ to do the work.
 accepted by the node (so-called "intelligent pastes"); this flavor is
 hidden from the APIs but can be tested for in a transferable using
 
-<a href="../NodeTransfer.html#findPaste-java.awt.datatransfer.Transferable-"><code>NodeTransfer.findPaste(Transferable)</code></a>.
+{@link org.openide.nodes.NodeTransfer#findPaste(java.awt.datatransfer.Transferable) NodeTransfer.findPaste(Transferable) }.
 
 This is not the flavor that was provided by the copy, so no paste type
 is created in the super method. However, Node B
@@ -1004,7 +984,7 @@ public class Shortcuts extends AbstractNode {
       ls.add (new PasteType () {
         public Transferable paste () throws IOException {
           Node[] nue = new Node[ns.length];
-          for (int i = 0; i < nue.length; i++)
+          for (int i = 0; i &lt; nue.length; i++)
             nue[i] = ns[i].cloneNode ();
           getChildren ().add (nue);
           return null;
@@ -1069,11 +1049,11 @@ displayed in the same order as they were added.
 <li>Since <code>AbstractNode</code> by default just looks for the secret data
 flavor represented by
 
-<a href="../NodeTransfer.html#createPaste-org.openide.nodes.NodeTransfer.Paste-"><code>NodeTransfer.createPaste(Paste)</code></a>
+{@link org.openide.nodes.NodeTransfer#createPaste(org.openide.nodes.NodeTransfer.Paste) NodeTransfer.createPaste(Paste) }
 
 and
 
-<a href="../NodeTransfer.html#findPaste-java.awt.datatransfer.Transferable-"><code>NodeTransfer.findPaste(Transferable)</code></a>,
+{@link org.openide.nodes.NodeTransfer#findPaste(java.awt.datatransfer.Transferable) NodeTransfer.findPaste(Transferable) },
 
 any part of the
 system that wants to be able to paste to nodes can do so without
@@ -1116,13 +1096,13 @@ or added as an alternate flavor to any transferable already there.
 pasted to from nodes may do so by accepting transferables in the
 clipboard satisfying
 
-<a href="../NodeTransfer.html#node-java.awt.datatransfer.Transferable-int-"><code>NodeTransfer.node(...)</code></a>,
+{@link org.openide.nodes.NodeTransfer#node(java.awt.datatransfer.Transferable,int) NodeTransfer.node(...) },
 
-<a href="../NodeTransfer.html#nodes-java.awt.datatransfer.Transferable-int-"><code>NodeTransfer.nodes(...)</code></a>,
+{@link org.openide.nodes.NodeTransfer#nodes(java.awt.datatransfer.Transferable,int) NodeTransfer.nodes(...) },
 
 or
 
-<a href="../NodeTransfer.html#cookie-java.awt.datatransfer.Transferable-int-java.lang.Class-"><code>NodeTransfer.cookie(...)</code></a>;
+{@link org.openide.nodes.NodeTransfer#cookie(java.awt.datatransfer.Transferable,int,java.lang.Class) NodeTransfer.cookie(...) };
 
 then no special
 cooperation is required from the node (provided it is an
@@ -1152,28 +1132,28 @@ an existing one (several levels of inner classes would be required!).
 
 <div class="nonnormative">
 
-<h2><a name="diagrams">UML Diagrams</a></h2>
+<h2 id="diagrams">UML Diagrams</h2>
 
 First class diagram listed shows structure of the API in general, all other
 diagrams provides specialized view of specific section of the API.
 
-<h3><a name="diagram_nodes">General node structure class diagram</a></h3>
+<h3 id="diagram_nodes">General node structure class diagram</h3>
 
 <img src="nodes.gif" alt="general UML">
 
-<h3><a name="diagram_children">Node children class diagram</a></h3>
+<h3 id="diagram_children">Node children class diagram</h3>
 
 <img src="children.gif" alt="children UML">
 
-<h3><a name="diagram_events">Node events class diagram</a></h3>
+<h3 id="diagram_events">Node events class diagram</h3>
 
 <img src="events.gif" alt="events UML">
 
-<h3><a name="diagram_ordering">Node ordering class diagram</a></h3>
+<h3 id="diagram_ordering">Node ordering class diagram</h3>
 
 <img src="ordering.gif" alt="ordering UML">
 
-<h3><a name="diagram_properties">Node properties class diagram</a></h3>
+<h3 id="diagram_properties">Node properties class diagram</h3>
 
 <img src="properties.gif" alt="properties UML">
 

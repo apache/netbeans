@@ -114,7 +114,8 @@ public final class WebBeansModel {
         if ( typeElement instanceof TypeElement ){
             String typeElementFqn = ((TypeElement)typeElement).getQualifiedName().
                 toString();
-            if ( WebBeansModelProviderImpl.EVENT_INTERFACE.equals( typeElementFqn )){
+            if ( WebBeansModelProviderImpl.EVENT_INTERFACE.equals( typeElementFqn )
+                    || WebBeansModelProviderImpl.EVENT_INTERFACE_JAKARTA.equals( typeElementFqn )){
                 try {
                     return isInjectionPoint(element);
                 }

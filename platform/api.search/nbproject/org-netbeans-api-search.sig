@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.46
+#Version 1.52
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -18,14 +20,17 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -35,6 +40,9 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public final org.netbeans.api.search.RegexpUtil
 meth public static java.util.regex.Pattern makeFileNamePattern(org.netbeans.api.search.SearchScopeOptions)
@@ -77,18 +85,18 @@ CLSS public final org.netbeans.api.search.SearchHistory
 fld public final static java.lang.String ADD_TO_HISTORY = "add-to-history"
 fld public final static java.lang.String ADD_TO_REPLACE = "add-to-replace"
 fld public final static java.lang.String LAST_SELECTED = "last-selected"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.netbeans.api.search.ReplacePattern> getReplacePatterns()
 meth public java.util.List<org.netbeans.api.search.SearchPattern> getSearchPatterns()
 meth public org.netbeans.api.search.SearchPattern getLastSelected()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.netbeans.api.search.SearchHistory getDefault()
 meth public void add(org.netbeans.api.search.SearchPattern)
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void addReplace(org.netbeans.api.search.ReplacePattern)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setLastSelected(org.netbeans.api.search.SearchPattern)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void storeFileNamePattern(java.lang.String)
 supr java.lang.Object
 hfds INSTANCE,MAX_PATTERN_LENGTH,MAX_SEARCH_PATTERNS_ITEMS,PREFS_NODE,PROP_REPLACE_PATTERN_PREFIX,PROP_SEARCH_PATTERN_PREFIX,pcs,prefs,replacePatternsList,searchPatternsList

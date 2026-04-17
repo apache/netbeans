@@ -26,7 +26,6 @@ import org.netbeans.lib.profiler.results.memory.PresoObjAllocCCTNode;
 import org.netbeans.lib.profiler.results.memory.PresoObjLivenessCCTNode;
 import org.netbeans.lib.profiler.ui.UIConstants;
 import org.netbeans.lib.profiler.ui.UIUtils;
-import org.netbeans.lib.profiler.ui.components.*;
 import org.netbeans.lib.profiler.ui.components.JTreeTable;
 import org.netbeans.lib.profiler.ui.components.table.CustomBarCellRenderer;
 import org.netbeans.lib.profiler.ui.components.treetable.AbstractTreeTableModel;
@@ -120,7 +119,7 @@ public class LiveReverseMemCallGraphPanel extends ReverseMemCallGraphPanel {
                                 case 0:
                                     return pNode.toString();
                                 case 1:
-                                    return new Long(pNode.totalObjSize);
+                                    return pNode.totalObjSize;
                                 case 2:
                                     value = ((PresoObjLivenessCCTNode) root).totalObjSize;
 
@@ -147,7 +146,7 @@ public class LiveReverseMemCallGraphPanel extends ReverseMemCallGraphPanel {
                                 case 0:
                                     return pNode.getNodeName();
                                 case 1:
-                                    return new Long(pNode.totalObjSize);
+                                    return pNode.totalObjSize;
                                 case 2:
                                     value = ((PresoObjAllocCCTNode) root).totalObjSize;
 

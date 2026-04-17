@@ -25,17 +25,11 @@ package org.netbeans.modules.payara.tooling.server.config;
  */
 public abstract class PayaraTool {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Tools library directory (relative under Payara home). */
     private final String lib;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Payara tool.
      * <p/>
@@ -45,10 +39,7 @@ public abstract class PayaraTool {
         this.lib = lib;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get tools library directory (relative under Payara home).
      * <p/>

@@ -32,10 +32,7 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
 @RunnerRestClass(runner = RunnerRestCreateJDBCResource.class)
 public class CommandCreateJDBCResource extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for create JDBC resource command. */
     private static final String COMMAND = "create-jdbc-resource";
 
@@ -43,10 +40,7 @@ public class CommandCreateJDBCResource extends Command {
     private static final String ERROR_MESSAGE
             = "Create JDBC resource failed.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create JDBC resource.
      * <p/>
@@ -110,10 +104,7 @@ public class CommandCreateJDBCResource extends Command {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Connection pool unique name (and ID). */
     final String connectionPoolId;
 
@@ -136,10 +127,7 @@ public class CommandCreateJDBCResource extends Command {
     /** Optional properties for configuring the resource. */
     final Map<String, String> properties;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server create JDBC resource
      * command entity.

@@ -43,7 +43,7 @@ and feels until JDK 1.4) to work without modification</li>
       NetBeans does not use the standard JDK implementation (GTK and Aqua).</li>
 </ul>
 
-<h4>Usage</h4>
+<h2>Usage</h2>
 An application using NetBeans tab control, window system, property sheet or some other component
 of NetBeans, which wants to guarantee that the same colors and styles are used in their application as in
 NetBeans, needs simply to call <code>org.netbeans.swing.plaf.Startup.run()</code> early in its startup
@@ -61,8 +61,9 @@ values would not be loaded unless requested; either approach is equivalent.
 Also, if a look and feel is designed to be an improvement on an existing platform-specific look and 
 feel (such as JGoodies for Windows or QuaQua for Apple), it may simply provide the appropriate existing
 LFCustoms subclass name in UIDefaults, in accordance with the following:
-<p>
+
 <table>
+<caption>LFCustoms subclass</caption>
 <tr>
 <th>Look and feel</th>
 <th>UIManager key</th>

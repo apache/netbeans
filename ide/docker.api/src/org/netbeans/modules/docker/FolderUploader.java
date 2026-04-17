@@ -84,7 +84,7 @@ public class FolderUploader {
                                             path);
                                     aos.putArchiveEntry(entry);
                                     try (InputStream is = new BufferedInputStream(child.getInputStream())) {
-                                        FileUtil.copy(is, aos);
+                                        is.transferTo(aos);
                                     }
                                     aos.closeArchiveEntry();
                                 }

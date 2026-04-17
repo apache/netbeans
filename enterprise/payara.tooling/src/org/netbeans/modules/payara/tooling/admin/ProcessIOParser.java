@@ -33,10 +33,7 @@ import org.netbeans.modules.payara.tooling.utils.OsUtils;
  */
 public class ProcessIOParser {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Parse process output.
      * <p/>
@@ -331,20 +328,14 @@ public class ProcessIOParser {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(ProcessIOParser.class);
 
     /** Internal IO buffer size. */
     private static final short BUFF_SIZE = 128;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Process standard input. */
     private final Writer stdIn;
 
@@ -363,10 +354,7 @@ public class ProcessIOParser {
     /** Vas process output verification already done? */
     private boolean verifydone;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of process IO verification parser.
      * <p/>
@@ -385,10 +373,7 @@ public class ProcessIOParser {
         verifydone = false;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Verify process output streams against content verification data
      * provided in constructor as <code>ioContent</code> argument.

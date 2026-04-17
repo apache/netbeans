@@ -98,7 +98,7 @@ public abstract class LookupManager {
         // @GuardedBy(this)
         private Collection lastResult = null;
         // @GuardedBy(self)
-        private final Set<LookupManager> lms = new WeakSet<LookupManager>(300);
+        private final Set<LookupManager> lms = Collections.newSetFromMap(new WeakHashMap<>(300));
 
         //
         // init

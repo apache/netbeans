@@ -35,12 +35,12 @@ public class LRUCacheTest extends NbTestCase {
         super(name);
     }
 
-    private Set<Integer> used = new HashSet<Integer>();
+    private Set<Integer> used = new HashSet<>();
 
     @Test
     public void testLRU() {
-        final LRUCache<Integer,Evictable> ev = new LRUCache<Integer, Evictable>(new TestEvictionPolicy());
-        final Set<Integer> golden = new HashSet<Integer>();
+        final LRUCache<Integer,Evictable> ev = new LRUCache<>(new TestEvictionPolicy());
+        final Set<Integer> golden = new HashSet<>();
         for (int i=0; i<10; i++) {
             used.add(i);
             ev.put(i, new EvictableInt(i));
@@ -78,7 +78,7 @@ public class LRUCacheTest extends NbTestCase {
 
     private class EvictableInt implements Evictable {
 
-        private Integer value;
+        private final Integer value;
         
         public EvictableInt(final int i) {
             this.value = i;

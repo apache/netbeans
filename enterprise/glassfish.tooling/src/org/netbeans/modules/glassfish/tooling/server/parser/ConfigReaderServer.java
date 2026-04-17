@@ -38,10 +38,7 @@ import org.xml.sax.SAXException;
 public class ConfigReaderServer extends TreeParser.NodeListener implements
         XMLReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** <code>classpath</code> library configuration XML element reader. */
     private ConfigReaderClasspath classpathReader = new ConfigReaderClasspath();
 
@@ -67,10 +64,7 @@ public class ConfigReaderServer extends TreeParser.NodeListener implements
     /** Library ID. */
     private String actualLibID;
 
-    ////////////////////////////////////////////////////////////////////////////
     // XML reader methods                                                     //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Provide paths to listen on.
      * <p/>
@@ -133,10 +127,7 @@ public class ConfigReaderServer extends TreeParser.NodeListener implements
         }                        
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get libraries read from XML file.
      * <p/>

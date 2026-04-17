@@ -192,7 +192,7 @@ is the proper place.
         <author login="jtulach"/>
         <compatibility addition="yes"/>
         <description> 
-            Provides support for <a href="@org-openide-util-lookup@/org/openide/util/lookup/Lookups.html#forPath-java.lang.String-">Lookups.forPath(String)</a>
+            Provides support for <a href="@org-openide-util-lookup@/org/openide/util/lookup/Lookups.html#forPath(java.lang.String)">Lookups.forPath(String)</a>
             method in order to replace now deprecated <a href="@org-openide-loaders@/org/openide/loaders/FolderLookup.html">FolderLookup</a>.
         </description>
         <issue number="98426"/>
@@ -258,7 +258,6 @@ is the proper place.
 -->
     <head>
       <title>Settings API/SPI Changes by Date</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>
 <!-- The actual lists of changes, as summaries and details: -->

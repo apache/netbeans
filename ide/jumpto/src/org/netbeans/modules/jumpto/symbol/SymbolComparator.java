@@ -223,14 +223,10 @@ public abstract class SymbolComparator extends EntityComparator<SymbolDescriptor
             @NonNull final String text,
             final boolean caseSensitive,
             final boolean preferOpPrjs) {
-        switch (kind) {
-            case LEXICOGRAPHIC:
-                return new Alphabet(caseSensitive, preferOpPrjs);
-            case LEVENSHTEIN:
-                return new Levenshtein(text, caseSensitive, preferOpPrjs);
-            default:
-                throw new IllegalArgumentException(String.valueOf(kind));
-        }
+        return switch (kind) {
+            case LEXICOGRAPHIC -> new Alphabet(caseSensitive, preferOpPrjs);
+            case LEVENSHTEIN -> new Levenshtein(text, caseSensitive, preferOpPrjs);
+        };
     }
 
     @NonNull

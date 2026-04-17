@@ -476,6 +476,50 @@ public class PHP83CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletion("typedClassConstantsTypingInterface10", "    public const (A&B)|(A&C) CONST_NAME = ^");
     }
 
+    public void testArbitraryStaticVariableInitializers_01() throws Exception {
+        checkCompletion("testArbitraryStaticVariableInitializers", "        static $example1 = te^st();");
+    }
+
+    public void testArbitraryStaticVariableInitializers_02() throws Exception {
+        checkCompletion("testArbitraryStaticVariableInitializers", "        static $example2 = $para^m1;");
+    }
+
+    public void testArbitraryStaticVariableInitializers_03() throws Exception {
+        checkCompletion("testArbitraryStaticVariableInitializers", "        static $example3 = $this->fi^eld;");
+    }
+
+    public void testArbitraryStaticVariableInitializers_04() throws Exception {
+        checkCompletion("testArbitraryStaticVariableInitializers", "        static $example4 = $this->metho^d();");
+    }
+
+    public void testArbitraryStaticVariableInitializers_05() throws Exception {
+        checkCompletion("testArbitraryStaticVariableInitializers", "        static $example6 = new stdClass($param^1);");
+    }
+
+    public void testArbitraryStaticVariableInitializers_06() throws Exception {
+        checkCompletion("testArbitraryStaticVariableInitializers", "        static $example9 = $param1 <= 100 ? ru^n($param1 + 1) : \"Test $param1\";");
+    }
+
+    public void testArbitraryStaticVariableInitializers_07() throws Exception {
+        checkCompletion("testArbitraryStaticVariableInitializers", "        static $example9 = $param1 <= 100 ? run($param1 + 1) : \"Test $param^1\";");
+    }
+
+    public void testArbitraryStaticVariableInitializers_08() throws Exception {
+        checkCompletion("testArbitraryStaticVariableInitializers", "        static $example10 = tes^t(), $example11 = test();");
+    }
+
+    public void testArbitraryStaticVariableInitializers_09() throws Exception {
+        checkCompletion("testArbitraryStaticVariableInitializers", "        static $example10 = test(), $example11 = tes^t();");
+    }
+
+    public void testArbitraryStaticVariableInitializers_10() throws Exception {
+        checkCompletion("testArbitraryStaticVariableInitializers", "static $example1 = te^st();");
+    }
+
+    public void testArbitraryStaticVariableInitializers_11() throws Exception {
+        checkCompletion("testArbitraryStaticVariableInitializers", "static $example2 = $variab^le;");
+    }
+
     public void testOverrideAttribute01() throws Exception {
         checkCompletionCustomTemplateResult(getTestPath("testOverrideAttribute01"), "    test^",
                 new DefaultFilter(PhpVersion.PHP_83, "test"), true);
@@ -505,5 +549,4 @@ public class PHP83CodeCompletionTest extends PHPCodeCompletionTestBase {
         checkCompletionCustomTemplateResult(getTestPath("testOverrideAttributeEnum01"), "    test^",
                 new DefaultFilter(PhpVersion.PHP_82, "test"), true);
     }
-
 }

@@ -47,10 +47,7 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishVersion;
  */
 public class ConfigBuilder {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build <code>List</code> of <code>GlassFishLibrary</code> objects
      * representing libraries found in particular GlassFish server installation.
@@ -128,10 +125,7 @@ public class ConfigBuilder {
         return result;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Library builder configuration. */
     private final Config config;
 
@@ -160,10 +154,7 @@ public class ConfigBuilder {
     /* GuarderBy(this)*/
     private GlassFishVersion version;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-    
     /**
      * Creates an instance of GlassFish library builder.
      * <p/>

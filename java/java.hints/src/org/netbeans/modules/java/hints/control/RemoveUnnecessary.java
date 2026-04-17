@@ -113,7 +113,9 @@ public class RemoveUnnecessary {
             List<? extends StatementTree> statements;
 
             tp = tp.getParentPath();
-
+            if (tp == null) {
+                return null;
+            }
             switch (tp.getLeaf().getKind()) {
                 case METHOD: {
                     if (targetLoop != null) return null; //TODO: unnecessary continue - can happen?

@@ -37,6 +37,7 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.SourceGroup;
@@ -144,7 +145,7 @@ public final class DatabaseResourceWizardIterator implements WizardDescriptor.In
         final String title = NbBundle.getMessage(RelatedCMPWizard.class, "TXT_EntityClassesGeneration");
         final ProgressContributor progressContributor = AggregateProgressFactory.createProgressContributor(title);
         final AggregateProgressHandle aggregateHandle =
-                AggregateProgressFactory.createHandle(title, new ProgressContributor[]{progressContributor}, null, null);
+                BasicAggregateProgressFactory.createHandle(title, new ProgressContributor[]{progressContributor}, null, null);
         progressPanel = new ProgressPanel();
         final JComponent progressComponent = AggregateProgressFactory.createProgressComponent(aggregateHandle);
 

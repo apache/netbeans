@@ -63,6 +63,7 @@ public abstract class TypeComparator extends EntityComparator<TypeDescriptor> im
         support.removeChangeListener(listener);
     }
 
+    @Override
     public abstract int compare(TypeDescriptor e1, TypeDescriptor e2);
 
     abstract void setText(@NonNull final String text);
@@ -231,13 +232,9 @@ public abstract class TypeComparator extends EntityComparator<TypeDescriptor> im
             @NonNull final String text,
             final boolean caseSensitive,
             final boolean preferOpPrjs) {
-        switch (kind) {
-            case LEVENSHTEIN:
-                return new Levenshtein(text, caseSensitive, preferOpPrjs);
-            case LEXICOGRAPHIC:
-                return new Alphabet(caseSensitive, preferOpPrjs);
-            default:
-                throw new IllegalArgumentException(String.valueOf(kind));
-        }
+        return switch (kind) {
+            case LEVENSHTEIN -> new Levenshtein(text, caseSensitive, preferOpPrjs);
+            case LEXICOGRAPHIC -> new Alphabet(caseSensitive, preferOpPrjs);
+        };
     }
 }

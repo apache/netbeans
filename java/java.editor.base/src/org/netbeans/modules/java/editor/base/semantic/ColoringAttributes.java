@@ -85,14 +85,17 @@ public enum ColoringAttributes {
         
         private Coloring() {}
         
+        @Override
         public int size() {
             return Integer.bitCount(value);
         }
 
+        @Override
         public boolean isEmpty() {
             return value == 0;
         }
 
+        @Override
         public boolean contains(Object o) {
             if (o instanceof ColoringAttributes) {
                 return (value & (1 << ((ColoringAttributes) o).ordinal())) !=0;
@@ -101,6 +104,7 @@ public enum ColoringAttributes {
             }
         }
 
+        @Override
         public Iterator<ColoringAttributes> iterator() {
             Set<ColoringAttributes> s = EnumSet.noneOf(ColoringAttributes.class);
             for (ColoringAttributes c : ColoringAttributes.values()) {
@@ -111,22 +115,27 @@ public enum ColoringAttributes {
             return s.iterator();
         }
 
+        @Override
         public Object[] toArray() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public <T> T[] toArray(T[] a) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public boolean add(ColoringAttributes o) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public boolean remove(Object o) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public boolean containsAll(Collection<?> c) {
             for (Object o : c) {
                 if (!contains(o))
@@ -136,18 +145,22 @@ public enum ColoringAttributes {
             return true;
         }
 
+        @Override
         public boolean addAll(Collection<? extends ColoringAttributes> c) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public boolean removeAll(Collection<?> c) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public boolean retainAll(Collection<?> c) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
         public void clear() {
             throw new UnsupportedOperationException("Not supported yet.");
         }

@@ -20,7 +20,6 @@ package org.netbeans.modules.docker.ui.build2;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Map;
@@ -30,7 +29,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.docker.api.BuildEvent;
 import org.netbeans.modules.docker.api.DockerAction;
 import org.netbeans.modules.docker.api.DockerImage;
@@ -38,7 +36,6 @@ import org.netbeans.modules.docker.api.DockerInstance;
 import org.netbeans.modules.docker.ui.output.StatusOutputListener;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Cancellable;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.FoldHandle;
 import org.openide.windows.IOColorLines;
@@ -140,7 +137,7 @@ public class BuildTask implements Runnable {
         final FutureTask<DockerImage> task = facade.createBuildTask(buildContext,
                 dockerfile, buildargs, repository, tag, pull, noCache, new ListenerImpl(io), new StatusOutputListener(io));
         hook.onStart(task);
-        ProgressHandle handle = ProgressHandleFactory.createHandle(Bundle.MSG_Building(buildContext), new Cancellable() {
+        ProgressHandle handle = ProgressHandle.createHandle(Bundle.MSG_Building(buildContext), new Cancellable() {
             @Override
             public boolean cancel() {
                 return task.cancel(true);

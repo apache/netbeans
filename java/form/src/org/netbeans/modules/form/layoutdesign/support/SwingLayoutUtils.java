@@ -132,7 +132,7 @@ public class SwingLayoutUtils {
                 if (lc != null) {
                     if (lc.isLinkSized(dimension)) {
                         String cid = lc.getId();
-                        Integer id = new Integer(lc.getLinkSizeId(dimension));
+                        Integer id = lc.getLinkSizeId(dimension);
                         List<String> l = linkSizeGroup.get(id);
                         if (l == null) {
                             l = new ArrayList<String>();

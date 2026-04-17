@@ -68,7 +68,7 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.java.source.support.CancellableTreePathScanner;
 import org.netbeans.api.java.source.support.ReferencesCount;
 import org.netbeans.api.java.source.ui.ElementIcons;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.editor.java.Utilities;
 import org.netbeans.modules.java.editor.base.imports.UnusedImports;
 import org.netbeans.modules.java.editor.codegen.GeneratorUtils;
@@ -144,7 +144,7 @@ public class JavaFixAllImports {
         if (javaSource == null) {
             StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(JavaFixAllImports.class, "MSG_CannotFixImports"));
         } else {
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                 public void run() {
                     try {
@@ -202,7 +202,7 @@ public class JavaFixAllImports {
         }
     }
 
-    private static void performFixImports(WorkingCopy wc, ImportData data, CandidateDescription[] selections, boolean removeUnusedImports) throws IOException {
+    public static void performFixImports(WorkingCopy wc, ImportData data, CandidateDescription[] selections, boolean removeUnusedImports) throws IOException {
         //do imports:
         Set<Element> toImport = new HashSet<Element>();
         Map<Name, Element> useFQNsFor = new HashMap<Name, Element>();
@@ -263,7 +263,7 @@ public class JavaFixAllImports {
         }
     }
 
-    private static ImportData computeImports(CompilationInfo info) {
+    public static ImportData computeImports(CompilationInfo info) {
         ComputeImports imps = new ComputeImports(info);
         Pair<Map<String, List<Element>>, Map<String, List<Element>>> candidates = imps.computeCandidates();
 
@@ -351,7 +351,7 @@ public class JavaFixAllImports {
         return data;
     }
 
-    static final class ImportData {
+    public static final class ImportData {
         public final String[] simpleNames;
         public final CandidateDescription[][] variants;
         public final CandidateDescription[] defaults;
@@ -440,7 +440,7 @@ public class JavaFixAllImports {
         d.dispose();
     }
 
-    static final class CandidateDescription {
+    public static final class CandidateDescription {
         public final String displayName;
         public final Icon icon;
         public final ElementHandle<Element> toImport;

@@ -12,14 +12,14 @@ class |>CLASS,GLOBAL:Point<| {
      * @param {Point} b 
      */
     |>CUSTOM2:static<| |>METHOD:distance<|(a, b) {
-        const dx = a.|>FIELD:x<| - b.|>FIELD:x<|;
-        const dy = a.|>FIELD:y<| - b.|>FIELD:y<|;
+        |>CUSTOM2:const<| dx = a.|>FIELD:x<| - b.|>FIELD:x<|;
+        |>CUSTOM2:const<| dy = a.|>FIELD:y<| - b.|>FIELD:y<|;
 
         return |>GLOBAL:Math<|.sqrt(dx*dx + dy*dy);
     }
 }
   
-const p1 = new |>GLOBAL:Point<|(5, 5);
-const p2 = new |>GLOBAL:Point<|(10, 10);
+|>CUSTOM2:const<| p1 = new |>GLOBAL:Point<|(5, 5);
+|>CUSTOM2:const<| p2 = new |>GLOBAL:Point<|(10, 10);
 
 |>GLOBAL:console<|.log(|>GLOBAL:Point<|.distance(p1, p2)); 

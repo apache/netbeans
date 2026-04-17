@@ -41,38 +41,38 @@ public class CursorEditor extends PropertyEditorSupport  implements
                                                          ExPropertyEditor, XMLPropertyEditor, 
                                                          org.netbeans.modules.form.NamedPropertyEditor {
 
-    private static Map<String,Integer> CURSOR_TYPES = new HashMap<String,Integer>();
-    private static Map<Integer,String> CURSOR_CONSTANTS = new HashMap<Integer,String>();
+    private static final Map<String, Integer> CURSOR_TYPES = new HashMap<>();
+    private static final Map<Integer, String> CURSOR_CONSTANTS = new HashMap<>();
     static {
-        CURSOR_TYPES.put(new Cursor(Cursor.CROSSHAIR_CURSOR).getName(), new Integer(Cursor.CROSSHAIR_CURSOR));
-        CURSOR_TYPES.put(new Cursor(Cursor.DEFAULT_CURSOR).getName(), new Integer(Cursor.DEFAULT_CURSOR));
-        CURSOR_TYPES.put(new Cursor(Cursor.E_RESIZE_CURSOR).getName(), new Integer(Cursor.E_RESIZE_CURSOR));
-        CURSOR_TYPES.put(new Cursor(Cursor.HAND_CURSOR).getName(), new Integer(Cursor.HAND_CURSOR));
-        CURSOR_TYPES.put(new Cursor(Cursor.MOVE_CURSOR).getName(), new Integer(Cursor.MOVE_CURSOR));
-        CURSOR_TYPES.put(new Cursor(Cursor.N_RESIZE_CURSOR).getName(), new Integer(Cursor.N_RESIZE_CURSOR));
-        CURSOR_TYPES.put(new Cursor(Cursor.NE_RESIZE_CURSOR).getName(), new Integer(Cursor.NE_RESIZE_CURSOR));
-        CURSOR_TYPES.put(new Cursor(Cursor.NW_RESIZE_CURSOR).getName(), new Integer(Cursor.NW_RESIZE_CURSOR));
-        CURSOR_TYPES.put(new Cursor(Cursor.S_RESIZE_CURSOR).getName(), new Integer(Cursor.S_RESIZE_CURSOR));
-        CURSOR_TYPES.put(new Cursor(Cursor.SE_RESIZE_CURSOR).getName(), new Integer(Cursor.SE_RESIZE_CURSOR));
-        CURSOR_TYPES.put(new Cursor(Cursor.SW_RESIZE_CURSOR).getName(), new Integer(Cursor.SW_RESIZE_CURSOR));
-        CURSOR_TYPES.put(new Cursor(Cursor.TEXT_CURSOR).getName(), new Integer(Cursor.TEXT_CURSOR));
-        CURSOR_TYPES.put(new Cursor(Cursor.W_RESIZE_CURSOR).getName(), new Integer(Cursor.W_RESIZE_CURSOR));
-        CURSOR_TYPES.put(new Cursor(Cursor.WAIT_CURSOR).getName(), new Integer(Cursor.WAIT_CURSOR));
+        CURSOR_TYPES.put(new Cursor(Cursor.CROSSHAIR_CURSOR).getName(), Cursor.CROSSHAIR_CURSOR);
+        CURSOR_TYPES.put(new Cursor(Cursor.DEFAULT_CURSOR).getName(), Cursor.DEFAULT_CURSOR);
+        CURSOR_TYPES.put(new Cursor(Cursor.E_RESIZE_CURSOR).getName(), Cursor.E_RESIZE_CURSOR);
+        CURSOR_TYPES.put(new Cursor(Cursor.HAND_CURSOR).getName(), Cursor.HAND_CURSOR);
+        CURSOR_TYPES.put(new Cursor(Cursor.MOVE_CURSOR).getName(), Cursor.MOVE_CURSOR);
+        CURSOR_TYPES.put(new Cursor(Cursor.N_RESIZE_CURSOR).getName(), Cursor.N_RESIZE_CURSOR);
+        CURSOR_TYPES.put(new Cursor(Cursor.NE_RESIZE_CURSOR).getName(), Cursor.NE_RESIZE_CURSOR);
+        CURSOR_TYPES.put(new Cursor(Cursor.NW_RESIZE_CURSOR).getName(), Cursor.NW_RESIZE_CURSOR);
+        CURSOR_TYPES.put(new Cursor(Cursor.S_RESIZE_CURSOR).getName(), Cursor.S_RESIZE_CURSOR);
+        CURSOR_TYPES.put(new Cursor(Cursor.SE_RESIZE_CURSOR).getName(), Cursor.SE_RESIZE_CURSOR);
+        CURSOR_TYPES.put(new Cursor(Cursor.SW_RESIZE_CURSOR).getName(), Cursor.SW_RESIZE_CURSOR);
+        CURSOR_TYPES.put(new Cursor(Cursor.TEXT_CURSOR).getName(), Cursor.TEXT_CURSOR);
+        CURSOR_TYPES.put(new Cursor(Cursor.W_RESIZE_CURSOR).getName(), Cursor.W_RESIZE_CURSOR);
+        CURSOR_TYPES.put(new Cursor(Cursor.WAIT_CURSOR).getName(), Cursor.WAIT_CURSOR);
 
-        CURSOR_CONSTANTS.put(new Integer(Cursor.CROSSHAIR_CURSOR), "java.awt.Cursor.CROSSHAIR_CURSOR"); // NOI18N
-        CURSOR_CONSTANTS.put(new Integer(Cursor.DEFAULT_CURSOR), "java.awt.Cursor.DEFAULT_CURSOR"); // NOI18N
-        CURSOR_CONSTANTS.put(new Integer(Cursor.E_RESIZE_CURSOR), "java.awt.Cursor.E_RESIZE_CURSOR"); // NOI18N
-        CURSOR_CONSTANTS.put(new Integer(Cursor.HAND_CURSOR), "java.awt.Cursor.HAND_CURSOR"); // NOI18N
-        CURSOR_CONSTANTS.put(new Integer(Cursor.MOVE_CURSOR), "java.awt.Cursor.MOVE_CURSOR"); // NOI18N
-        CURSOR_CONSTANTS.put(new Integer(Cursor.N_RESIZE_CURSOR), "java.awt.Cursor.N_RESIZE_CURSOR"); // NOI18N
-        CURSOR_CONSTANTS.put(new Integer(Cursor.NE_RESIZE_CURSOR), "java.awt.Cursor.NE_RESIZE_CURSOR"); // NOI18N
-        CURSOR_CONSTANTS.put(new Integer(Cursor.NW_RESIZE_CURSOR), "java.awt.Cursor.NW_RESIZE_CURSOR"); // NOI18N
-        CURSOR_CONSTANTS.put(new Integer(Cursor.S_RESIZE_CURSOR), "java.awt.Cursor.S_RESIZE_CURSOR"); // NOI18N
-        CURSOR_CONSTANTS.put(new Integer(Cursor.SE_RESIZE_CURSOR), "java.awt.Cursor.SE_RESIZE_CURSOR"); // NOI18N
-        CURSOR_CONSTANTS.put(new Integer(Cursor.SW_RESIZE_CURSOR), "java.awt.Cursor.SW_RESIZE_CURSOR"); // NOI18N
-        CURSOR_CONSTANTS.put(new Integer(Cursor.TEXT_CURSOR), "java.awt.Cursor.TEXT_CURSOR"); // NOI18N
-        CURSOR_CONSTANTS.put(new Integer(Cursor.W_RESIZE_CURSOR), "java.awt.Cursor.W_RESIZE_CURSOR"); // NOI18N
-        CURSOR_CONSTANTS.put(new Integer(Cursor.WAIT_CURSOR), "java.awt.Cursor.WAIT_CURSOR"); // NOI18N
+        CURSOR_CONSTANTS.put(Cursor.CROSSHAIR_CURSOR, "java.awt.Cursor.CROSSHAIR_CURSOR"); // NOI18N
+        CURSOR_CONSTANTS.put(Cursor.DEFAULT_CURSOR, "java.awt.Cursor.DEFAULT_CURSOR"); // NOI18N
+        CURSOR_CONSTANTS.put(Cursor.E_RESIZE_CURSOR, "java.awt.Cursor.E_RESIZE_CURSOR"); // NOI18N
+        CURSOR_CONSTANTS.put(Cursor.HAND_CURSOR, "java.awt.Cursor.HAND_CURSOR"); // NOI18N
+        CURSOR_CONSTANTS.put(Cursor.MOVE_CURSOR, "java.awt.Cursor.MOVE_CURSOR"); // NOI18N
+        CURSOR_CONSTANTS.put(Cursor.N_RESIZE_CURSOR, "java.awt.Cursor.N_RESIZE_CURSOR"); // NOI18N
+        CURSOR_CONSTANTS.put(Cursor.NE_RESIZE_CURSOR, "java.awt.Cursor.NE_RESIZE_CURSOR"); // NOI18N
+        CURSOR_CONSTANTS.put(Cursor.NW_RESIZE_CURSOR, "java.awt.Cursor.NW_RESIZE_CURSOR"); // NOI18N
+        CURSOR_CONSTANTS.put(Cursor.S_RESIZE_CURSOR, "java.awt.Cursor.S_RESIZE_CURSOR"); // NOI18N
+        CURSOR_CONSTANTS.put(Cursor.SE_RESIZE_CURSOR, "java.awt.Cursor.SE_RESIZE_CURSOR"); // NOI18N
+        CURSOR_CONSTANTS.put(Cursor.SW_RESIZE_CURSOR, "java.awt.Cursor.SW_RESIZE_CURSOR"); // NOI18N
+        CURSOR_CONSTANTS.put(Cursor.TEXT_CURSOR, "java.awt.Cursor.TEXT_CURSOR"); // NOI18N
+        CURSOR_CONSTANTS.put(Cursor.W_RESIZE_CURSOR, "java.awt.Cursor.W_RESIZE_CURSOR"); // NOI18N
+        CURSOR_CONSTANTS.put(Cursor.WAIT_CURSOR, "java.awt.Cursor.WAIT_CURSOR"); // NOI18N
     }
 
     private Cursor current;
@@ -118,7 +118,7 @@ public class CursorEditor extends PropertyEditorSupport  implements
     public void setAsText(String string) {
         Object o = CURSOR_TYPES.get(string);
         if (o != null) {
-            int type =((Integer) o).intValue();
+            int type = (Integer) o;
             setValue(new Cursor(type));
         }
     }
@@ -145,7 +145,7 @@ public class CursorEditor extends PropertyEditorSupport  implements
     @Override
     public String getJavaInitializationString() {
         if (current == null) return null; // no code to generate
-        String cursorName = CURSOR_CONSTANTS.get(new Integer(current.getType()));
+        String cursorName = CURSOR_CONSTANTS.get(current.getType());
         if (cursorName != null)
             return "new java.awt.Cursor("+cursorName+")"; // NOI18N
         return "new java.awt.Cursor("+current.getType()+")"; // NOI18N

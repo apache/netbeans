@@ -79,6 +79,11 @@ public final class ModelRunConfig extends BeanRunConfig {
             }
             setProperty(key, value);
         }
+        for (Map.Entry<String,String> entry : model.getOptions().entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            setOption(key, value);
+        }
         setGoals(model.getGoals());
         setExecutionDirectory(ActionToGoalUtils.resolveProjectExecutionBasedir(mod, proj));
         setRecursive(mod.isRecursive());

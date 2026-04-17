@@ -22,11 +22,13 @@ package org.netbeans.modules.javascript.v8debug.breakpoints;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,7 +53,6 @@ import org.netbeans.modules.web.common.sourcemap.SourceMapsTranslator.Location;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -64,7 +65,7 @@ public class BreakpointsHandler implements V8Debugger.Listener {
     private final V8Debugger dbg;
     private final Map<JSLineBreakpoint, SubmittedBreakpoint> submittedBreakpoints = new HashMap<>();
     private final Map<Long, SubmittedBreakpoint> breakpointsById = new HashMap<>();
-    private final Set<JSLineBreakpoint> removeAfterSubmit = new WeakSet<>();
+    private final Set<JSLineBreakpoint> removeAfterSubmit = Collections.newSetFromMap(new WeakHashMap<>());
     private final List<ActiveBreakpointListener> abListeners = new CopyOnWriteArrayList<ActiveBreakpointListener>();
     private volatile JSLineBreakpoint activeBreakpoint;
     private final List<BreakpointsActiveListener> acListeners = new CopyOnWriteArrayList<>();

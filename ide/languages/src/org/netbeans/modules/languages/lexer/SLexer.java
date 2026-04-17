@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import org.netbeans.api.languages.CharInput;
-import org.netbeans.api.languages.ASTToken;
 import org.netbeans.api.lexer.PartType;
 import org.netbeans.api.languages.ParseException;
 import org.netbeans.api.lexer.Token;
@@ -170,7 +169,7 @@ public class SLexer implements Lexer<STokenId>, Parser.Cookie {
     }
 
     public void setState (int state) {
-        this.state = new Integer (state);
+        this.state = state;
     }
 
     public void setProperties (Feature tokenProperties) {
@@ -327,8 +326,8 @@ public class SLexer implements Lexer<STokenId>, Parser.Cookie {
         
         public Object getValue (Token token, Object key) {
             if ("type".equals (key)) return type;
-            if ("startSkipLength".equals (key)) return new Integer (startSkipLength);
-            if ("endSkipLength".equals (key)) return new Integer (endSkipLength);
+            if ("startSkipLength".equals (key)) return startSkipLength;
+            if ("endSkipLength".equals (key)) return endSkipLength;
             return null;
         }
 

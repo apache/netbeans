@@ -136,6 +136,26 @@ public interface ProjectReloadImplementation<D> {
      * SPI to API utility methods.
      */
     public final class ProjectStateData<D> {
+        /**
+         * Indicates that the state does not support timestamps. This value is completely
+         * ignored.
+         */
+        public static final long TIME_UNSUPPORTED = -1;
+        
+        /**
+         * Data should be loaded whenever preceding stages change during load. Some other
+         * condition must make the current data invalid or inconsistent to initiate the
+         * reload.
+         */
+        public static final long TIME_RECHECK_ON_CHANGE = -2;
+        
+        /**
+         * Attempt to reload the state on each project load. Some other
+         * condition must make the current data invalid or inconsistent to initiate the
+         * reload.
+         */
+        public static final long TIME_RELOAD = -3;
+        
         private static final Logger LOG = ProjectReloadInternal.LOG;
         
         private final Collection<FileObject> files;
@@ -204,6 +224,8 @@ public interface ProjectReloadImplementation<D> {
         }
 
         /**
+         * Returns the timestamp of the metadata. Negative values have special meaning, see 
+         * {@link #TIME_UNSUPPORTED}, {@link #TIME_RECHECK_ON_CHANGE} and {@link #TIME_RELOAD}.
          * @return timestamp of project's metadata.
          */
         public long getTimestamp() {
@@ -433,7 +455,7 @@ public interface ProjectReloadImplementation<D> {
      * Creates a {@link ProjectStateData} instance.
      */
     public static final class ProjectStateBuilder<D> {
-        private long time = -1;
+        private long time = ProjectStateData.TIME_UNSUPPORTED;
         private boolean valid = true;
         private boolean consistent = true;
         private Quality q;

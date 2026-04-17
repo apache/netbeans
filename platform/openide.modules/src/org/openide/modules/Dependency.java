@@ -24,10 +24,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
-import org.openide.util.BaseUtilities;
 
 /** A dependency a module can have. Since version 7.10 this class is
  * {@link Serializable}.
@@ -115,6 +115,7 @@ public final class Dependency implements Serializable {
 
     /** Implementation version of the Java VM. */
     public static final String VM_IMPL = System.getProperty("java.vm.version"); // NOI18N
+
     private final int type;
     private final int comparison;
     private final String name;
@@ -179,7 +180,13 @@ public final class Dependency implements Serializable {
     private static final Pattern FQN = Pattern.compile(
         "(?:\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)(?:[.]\\p{javaJavaIdentifierPart}+)*" // NOI18N
     ); 
-    
+
+    // internally used via reflection. See org.netbeans.DepUtil
+    @SuppressWarnings("unused")
+    static Dependency create(String name, String version, int type, int comparison) {
+        return new Dependency(type, name, comparison, version);
+    }
+
     /** Parse dependencies from tags. Since version 7.32 it can parse
     * code names that contain numbers like 
     * <code>org.apache.servicemix.specs.jsr303_api_1.0.0</code>.
@@ -390,8 +397,7 @@ public final class Dependency implements Serializable {
 
         Dependency d = (Dependency) o;
 
-        return (type == d.type) && (comparison == d.comparison) && name.equals(d.name) &&
-        BaseUtilities.compareObjects(version, d.version);
+        return (type == d.type) && (comparison == d.comparison) && name.equals(d.name) && Objects.equals(version, d.version);
     }
 
     /** Overridden to hash by contents. */
@@ -522,15 +528,18 @@ public final class Dependency implements Serializable {
             //System.err.println("Key for " + d + " is " + this);
         }
 
+        @Override
         public int hashCode() {
             return name.hashCode();
         }
 
+        @Override
         public boolean equals(Object o) {
             return (o instanceof DependencyKey) && ((DependencyKey) o).name.equals(name) &&
             (((DependencyKey) o).type == type);
         }
 
+        @Override
         public String toString() {
             return "DependencyKey[" + name + "," + type + "]"; // NOI18N
         }

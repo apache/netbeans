@@ -20,23 +20,14 @@
 
 -->
 <licenseinfo>
-    <!-- These are generated files by the antlr compiler.
     <fileset>
-        <file>src/org/netbeans/modules/rust/grammar/antlr4/RustLexer.interp</file>
-        <file>src/org/netbeans/modules/rust/grammar/antlr4/RustParser.interp</file>
-        <file>src/org/netbeans/modules/rust/grammar/antlr4/RustParser.tokens</file>
-        <file>src/org/netbeans/modules/rust/grammar/antlr4/RustLexer.tokens</file>
-        <license ref="Apache-2.0-ASF" />
-        <comment type="COMMENT_UNSUPPORTED" />
-    </fileset>
-    -->
-    <fileset>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/structure-macro.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/structure-enum.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/structure-struct.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/structure-impl.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/structure-function.png</file>
-        <file>src/org/netbeans/modules/rust/grammar/structure/resources/structure-module.png</file>
+        <file>src/org/netbeans/modules/rust/grammar/structure/resources/enum.png</file>
+        <file>src/org/netbeans/modules/rust/grammar/structure/resources/function.png</file>
+        <file>src/org/netbeans/modules/rust/grammar/structure/resources/interface.png</file>
+        <file>src/org/netbeans/modules/rust/grammar/structure/resources/module.png</file>
+        <file>src/org/netbeans/modules/rust/grammar/structure/resources/snippet.png</file>
+        <file>src/org/netbeans/modules/rust/grammar/structure/resources/struct.png</file>
+        <file>src/org/netbeans/modules/rust/grammar/structure/resources/trait.png</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

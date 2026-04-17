@@ -1,0 +1,8 @@
+Code completion result for source line:
+new Example()::|$publicStaticField; // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticMethod()            [STATIC]   Example
+VARIABLE   string $publicStaticField       [STATIC]   Example
+CONSTANT   IMPLICIT_PUBLIC_CONST "implici  [PUBLIC]   Example
+CONSTANT   PUBLIC_CONST "public const"     [PUBLIC]   Example
+CONSTANT   class \Example                  [PUBLIC]   Magic Constant

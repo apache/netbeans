@@ -9,6 +9,7 @@ CLASS      TypedPropertiesClass            [PUBLIC]   Foo
 KEYWORD    array                                      null
 KEYWORD    bool                                       null
 KEYWORD    false                                      null
+KEYWORD    final                                      null
 KEYWORD    float                                      null
 KEYWORD    int                                        null
 KEYWORD    iterable                                   null

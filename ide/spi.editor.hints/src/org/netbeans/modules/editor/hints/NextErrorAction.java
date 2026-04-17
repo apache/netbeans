@@ -32,6 +32,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.editor.EditorRegistry;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 
@@ -118,7 +119,7 @@ public class NextErrorAction extends AbstractAction implements PropertyChangeLis
     private int findNextUnused(JTextComponent comp, int offset) {
         try {
             BaseDocument doc = Utilities.getDocument(comp);
-            int lineStart = Utilities.getRowStart(doc, offset);
+            int lineStart = LineDocumentUtils.getLineStartOffset(doc, offset);
             // "unused-browseable" in java.editor/.../ColoringManager and csl.api/.../ColoringManager
             HighlightsSequence s = HighlightingManager.getInstance(comp).getBottomHighlights().getHighlights(lineStart, Integer.MAX_VALUE);
             int lastUnusedEndOffset = -1;

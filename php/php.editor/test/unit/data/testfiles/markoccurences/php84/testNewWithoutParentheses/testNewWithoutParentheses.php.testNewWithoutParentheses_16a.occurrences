@@ -1,0 +1,2 @@
+    private static string $|>MARK_OCCURRENCES:private^StaticField<| = "private static field";
+        $example = new Example()::$|>MARK_OCCURRENCES:privateStaticField<|;

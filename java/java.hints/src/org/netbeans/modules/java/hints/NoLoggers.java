@@ -26,16 +26,17 @@ import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.EnumSet;
 import java.util.prefs.Preferences;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -45,9 +46,11 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.JComponent;
+
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.api.java.source.WorkingCopy;
+import org.netbeans.modules.java.editor.codegen.LoggerGenerator;
 import org.netbeans.modules.java.hints.NoLoggers.NoLoggersCustomizer;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.java.hints.CustomizerProvider;
@@ -86,6 +89,16 @@ public final class NoLoggers {
             return null;
         }
 
+        // "sysLoggerTypeElement" may be null if pre Java9; so not a problem.
+        TypeElement sysLoggerTypeElement = ctx.getInfo().getElements().getTypeElement("java.lang.System.Logger"); // NOI18N
+        TypeMirror sysLoggerTypeElementAsType = null;
+        if (sysLoggerTypeElement != null) {
+            sysLoggerTypeElementAsType = sysLoggerTypeElement.asType();
+            if (sysLoggerTypeElementAsType == null || sysLoggerTypeElementAsType.getKind() != TypeKind.DECLARED) {
+                return null;
+            }
+        }
+
         List<TypeMirror> customLoggersList = new ArrayList<>();
         if (isCustomEnabled(ctx.getPreferences())) {
             List<String> customLoggerClasses = getCustomLoggers(ctx.getPreferences());
@@ -111,7 +124,8 @@ public final class NoLoggers {
                 continue;
             }
 
-            if (f.asType().equals(loggerTypeElementAsType)) {
+            if (f.asType().equals(loggerTypeElementAsType)
+                    || f.asType().equals(sysLoggerTypeElementAsType)) {
                 loggerFields.add(f);
             } else if (customLoggersList.contains(f.asType())) {
                 loggerFields.add(f);
@@ -179,17 +193,20 @@ public final class NoLoggers {
                 return;
             }
 
+            boolean useSystemLogger = LoggerGenerator.isUseSystemLogger(wc);
+
             // find free field name
+            String baseLoggerFieldName = LoggerGenerator.getBaseLoggerName();
             String loggerFieldName = null;
             List<VariableElement> fields = ElementFilter.fieldsIn(cls.getEnclosedElements());
-            if (!contains(fields, "LOG")) { //NOI18N
-                loggerFieldName = "LOG"; //NOI18N
+            if (!contains(fields, baseLoggerFieldName)) { //NOI18N
+                loggerFieldName = baseLoggerFieldName; //NOI18N
             } else {
                 if (!contains(fields, "LOGGER")) { //NOI18N
                     loggerFieldName = "LOGGER"; //NOI18N
                 } else {
                     for(int i = 1; i < Integer.MAX_VALUE; i++) {
-                        String n = "LOG" + i; //NOI18N
+                        String n = baseLoggerFieldName + i; //NOI18N
                         if (!contains(fields, n)) {
                             loggerFieldName = n;
                             break;
@@ -207,15 +224,18 @@ public final class NoLoggers {
             ModifiersTree mt = m.Modifiers(mods);
 
             // logger type
-            TypeElement loggerTypeElement = wc.getElements().getTypeElement("java.util.logging.Logger"); // NOI18N
-            if (loggerTypeElement == null) {
+            TypeElement loggerTypeElement = wc.getElements().getTypeElement(
+                    useSystemLogger ? "java.lang.System.Logger" : "java.util.logging.Logger"); // NOI18N
+            TypeElement loggerFactoryTypeElement = !useSystemLogger ? loggerTypeElement : wc.getElements().getTypeElement("java.lang.System");
+            if (loggerTypeElement == null || loggerFactoryTypeElement == null) {
                 // TODO: report to the user
                 return;
             }
             ExpressionTree loggerClassQualIdent = m.QualIdent(loggerTypeElement);
+            ExpressionTree loggerFactoryClassQualIdent = m.QualIdent(loggerFactoryTypeElement);
 
             // initializer
-            MemberSelectTree getLogger = m.MemberSelect(loggerClassQualIdent, "getLogger"); //NOI18N
+            MemberSelectTree getLogger = m.MemberSelect(loggerFactoryClassQualIdent, "getLogger"); //NOI18N
             ExpressionTree initializer = m.MethodInvocation(
                 Collections.<ExpressionTree>emptyList(),
                 getLogger,

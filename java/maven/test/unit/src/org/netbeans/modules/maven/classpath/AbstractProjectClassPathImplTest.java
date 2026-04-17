@@ -62,7 +62,8 @@ public class AbstractProjectClassPathImplTest extends NbTestCase {
         Artifact a = EmbedderFactory.getProjectEmbedder().createArtifact("nbtest.grp", "art", "1.10-20210520.222429-1", "jar");
         assertNull(AbstractProjectClassPathImpl.getFile(a));
         try {
-            EmbedderFactory.getProjectEmbedder().resolve(a, Collections.emptyList(), EmbedderFactory.getProjectEmbedder().getLocalRepository());
+            EmbedderFactory.getProjectEmbedder().resolveArtifact(a, Collections.emptyList(), EmbedderFactory.getProjectEmbedder().getLocalRepository());
+            fail();
         } catch (ArtifactNotFoundException ex) {
             // the downloaded artifact was not found, expected as only -SNAPSHOT is installed.
         }

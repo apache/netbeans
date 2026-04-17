@@ -28,7 +28,7 @@
            <public-packages/>
            <class-path-extension>
                <runtime-relative-path>com-google-guava.jar</runtime-relative-path>
-               <binary-origin>external/guava-33.2.1-jre.jar</binary-origin>
+               <binary-origin>external/guava-33.4.6-jre.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

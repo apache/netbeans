@@ -33,7 +33,6 @@ import org.netbeans.junit.NbTestSuite;
 import org.openide.actions.SaveAllAction;
 
 
-/////////////////////
 public class BeansTemplates extends JellyTestCase {
     
     private static final String NAME_JAVA_BEAN          = "MyBean";

@@ -158,14 +158,10 @@ public class BrowserDisplayer extends JButton
 	textAttribs.removeAttribute(StyleConstants.FontSize);
 	textAttribs.removeAttribute(StyleConstants.Bold);
 	textAttribs.removeAttribute(StyleConstants.Italic);
-	textAttribs.addAttribute(StyleConstants.FontFamily,
-				 font.getName());
-	textAttribs.addAttribute(StyleConstants.FontSize,
-				 new Integer(font.getSize()));
-	textAttribs.addAttribute(StyleConstants.Bold,
-				 Boolean.valueOf(font.isBold()));
-	textAttribs.addAttribute(StyleConstants.Italic,
-				 Boolean.valueOf(font.isItalic()));
+	textAttribs.addAttribute(StyleConstants.FontFamily, font.getName());
+	textAttribs.addAttribute(StyleConstants.FontSize, font.getSize());
+	textAttribs.addAttribute(StyleConstants.Bold, font.isBold());
+	textAttribs.addAttribute(StyleConstants.Italic, font.isItalic());
     }
     
     /**
@@ -338,8 +334,7 @@ public class BrowserDisplayer extends JButton
 	    return;
 	}
 	textAttribs.removeAttribute(StyleConstants.FontSize);
-	textAttribs.addAttribute(StyleConstants.FontSize,
-				 new Integer(newsize));
+	textAttribs.addAttribute(StyleConstants.FontSize, Integer.valueOf(newsize));
 	setFont(getAttributeSetFont(textAttribs));
 	Font font = getFont();
     }

@@ -157,16 +157,22 @@ if [ -z "$jdkhome" ] ; then
                 jdkhome="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
             fi
             ;;
-            *) javac=`which javac`
-            if [ -z "$javac" ] ; then
-                java=`which java`
-                if [ ! -z "$java" ] ; then
-                    java=`resolve_symlink "$java"`
-                    jdkhome=`dirname $java`"/.."
-                fi
+            *)
+            if [ ! -z "${JAVA_HOME}" ]; then
+                jdkhome="${JAVA_HOME}"
             else
-                javac=`resolve_symlink "$javac"`
-                jdkhome=`dirname $javac`"/.."
+                # Doesn't work with jenv-style shims
+                javac=`which javac`
+                if [ -z "$javac" ] ; then
+                    java=`which java`
+                    if [ ! -z "$java" ] ; then
+                        java=`resolve_symlink "$java"`
+                        jdkhome=`dirname $java`"/.."
+                    fi
+                else
+                    javac=`resolve_symlink "$javac"`
+                    jdkhome=`dirname $javac`"/.."
+                fi
             fi
             ;;
         esac
@@ -192,7 +198,7 @@ fi
 # rename old heap dump to .old
 mv "${userdir}/var/log/heapdump.hprof" "${userdir}/var/log/heapdump.hprof.old" > /dev/null 2>&1
 
-jargs_without_clusters="$jargs -Djava.security.manager=allow"
+jargs_without_clusters="$jargs"
 jargs="-Dnetbeans.dirs=\"${clusters}\" $jargs_without_clusters"
 
 if [ -z "$cachedirspecified" ]; then

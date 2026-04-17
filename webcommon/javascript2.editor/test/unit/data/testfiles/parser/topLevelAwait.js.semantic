@@ -19,4 +19,4 @@
 
 import |>GLOBAL:dummy<| |>CUSTOM2:from<| './dummy.mjs';
 
-const demo = |>CUSTOM2:await<| |>GLOBAL:dummy<|();
+|>CUSTOM2:const<| demo = |>CUSTOM2:await<| |>GLOBAL:dummy<|();

@@ -37,6 +37,18 @@ public class DeprecatedEnumCaseSemanticAnalysisTest extends DeprecatedSemanticAn
         checkSemantic("testfiles/semantic/deprecatedEnumCase/deprecatedEnumCase.php");
     }
 
+    public void testDeprecatedAttributeInGlobal() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedEnumCase/deprecatedAttributeInGlobal.php");
+    }
+
+    public void testDeprecatedAttributeInNamespace() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedEnumCase/deprecatedAttributeInNamespace.php");
+    }
+
+    public void testDeprecatedAttributeInNamespaceWithUse() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedEnumCase/deprecatedAttributeInNamespaceWithUse.php");
+    }
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
         return Collections.singletonMap(

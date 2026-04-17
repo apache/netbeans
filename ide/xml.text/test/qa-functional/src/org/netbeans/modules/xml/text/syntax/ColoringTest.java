@@ -80,7 +80,7 @@ public class ColoringTest extends XTest {
         super(testName);
     }
     
-    // TESTS ///////////////////////////////////////////////////////////////////
+    // TESTS
     
     public void testXMLColoring() throws Exception {
         dumpTokens("XMLColoring", "xml");
@@ -94,7 +94,7 @@ public class ColoringTest extends XTest {
         dumpTokens("CSSColoring", "css");
     }
     
-    // LIBS ////////////////////////////////////////////////////////////////////
+    // LIBS
     
     public void dumpTokens(String fileName, String ext) throws Exception {
         String pkgName = getClass().getPackage().getName();
@@ -112,7 +112,7 @@ public class ColoringTest extends XTest {
         compareReferenceFiles();
     }
     
-    // MAIN ////////////////////////////////////////////////////////////////////
+    // MAIN
     
     /**
      * Performs this testsuite.

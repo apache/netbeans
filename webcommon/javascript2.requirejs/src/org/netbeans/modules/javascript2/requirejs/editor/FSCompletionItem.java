@@ -20,10 +20,8 @@ package org.netbeans.modules.javascript2.requirejs.editor;
 
 import java.beans.BeanInfo;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.swing.ImageIcon;
 import org.netbeans.modules.csl.api.CompletionProposal;
@@ -35,6 +33,7 @@ import org.netbeans.modules.csl.api.OffsetRange;
 import org.netbeans.modules.csl.spi.ParserResult;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -54,7 +53,7 @@ public class FSCompletionItem implements CompletionProposal {
         this.element = new FSElementHandle(file);
         DataObject od = DataObject.find(file);
 
-        icon = new ImageIcon(od.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
+        icon = ImageUtilities.icon2ImageIcon(ImageUtilities.image2Icon(od.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16)));
 
         this.anchor = anchor;
         this.addExtension = addExtension;

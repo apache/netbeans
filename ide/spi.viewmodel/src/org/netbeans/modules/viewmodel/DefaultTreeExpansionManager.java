@@ -19,13 +19,13 @@
 
 package org.netbeans.modules.viewmodel;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
 import org.netbeans.spi.viewmodel.Models;
-import org.openide.util.WeakSet;
 
 /**
  * Ugly class, that takes care that the expansion state is always managed for the object under the given node.
@@ -88,7 +88,7 @@ public class DefaultTreeExpansionManager {
         try {
             Set<Object> expanded = expandedNodes.get(currentChildren);
             if (expanded == null) {
-                expanded = new WeakSet<Object>();
+                expanded = Collections.newSetFromMap(new WeakHashMap<>());
                 expandedNodes.put(currentChildren, expanded);
             }
             expanded.add(child);

@@ -46,7 +46,7 @@ public class OnStop implements Runnable {
             }
         }
         for (RepositoryIndexerImplementation rii : Lookup.getDefault().lookupAll(RepositoryIndexerImplementation.class)) {
-            if (rii instanceof NexusRepositoryIndexerImpl impl) {
+            if (rii instanceof NexusRepositoryIndexManager impl) {
                 impl.shutdownAll();
             }
         }

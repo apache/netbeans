@@ -18,10 +18,8 @@
  */
 package org.netbeans.modules.refactoring.java;
 
-import java.awt.Image;
 import java.beans.BeanInfo;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import org.netbeans.modules.refactoring.java.spi.JavaWhereUsedFilters;
 import org.netbeans.modules.refactoring.java.ui.tree.ElementGripFactory;
 import org.netbeans.modules.refactoring.spi.FiltersManager;
@@ -64,14 +62,12 @@ public class WhereUsedBinaryElement extends SimpleRefactoringElementImplementati
     public Lookup getLookup() {
         Icon icon = null;
         try {
-            ImageIcon imageIcon = new ImageIcon(DataObject.find(fo).getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
+            icon = ImageUtilities.image2Icon(DataObject.find(fo).getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
             Boolean inTestFile = ElementGripFactory.getDefault().inTestFile(fo);
             if (Boolean.TRUE == inTestFile) {
-                Image mergeImages = ImageUtilities.mergeImages(imageIcon.getImage(),
-                        ImageUtilities.loadImageIcon("org/netbeans/modules/refactoring/java/resources/found_item_test.png", false).getImage(), 4, 4);
-                imageIcon = new ImageIcon(mergeImages);
+                icon = ImageUtilities.mergeIcons(icon,
+                        ImageUtilities.loadIcon("org/netbeans/modules/refactoring/java/resources/found_item_test.png"), 4, 4);
             }
-            icon = imageIcon;
         } catch (DataObjectNotFoundException ex) {
             // ignore
         }

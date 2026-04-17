@@ -29,17 +29,11 @@ package org.netbeans.modules.payara.tooling.admin;
 @RunnerRestClass(runner=RunnerRestDisable.class)
 public class CommandDisable extends CommandTargetName {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for disable command. */
     private static final String COMMAND = "disable";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server disable command entity.
      * <p/>

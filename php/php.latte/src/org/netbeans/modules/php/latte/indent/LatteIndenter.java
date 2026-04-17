@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
-import org.netbeans.editor.Utilities;
 import org.netbeans.modules.editor.indent.spi.Context;
 import org.netbeans.modules.php.latte.LatteSyntax;
 import org.netbeans.modules.php.latte.lexer.LatteMarkupTokenId;
@@ -154,7 +154,7 @@ public class LatteIndenter extends AbstractIndenter<LatteTopTokenId> {
                 } else if (start == ts.offset()) {
                     if (end < commentEndOffset) {
                         // if comment ends on next line put formatter to IN_COMMENT state
-                        int lineStart = Utilities.getRowStart(getDocument(), ts.offset());
+                        int lineStart = LineDocumentUtils.getLineStartOffset(getDocument(), ts.offset());
                         preservedLineIndentation = start - lineStart;
                     }
                 } else if (end == commentEndOffset) {

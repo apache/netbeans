@@ -30,17 +30,16 @@ import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.editor.document.DocumentServices;
 import org.netbeans.modules.editor.document.TextSearchUtils;
 import org.netbeans.modules.editor.document.implspi.CharClassifier;
-import org.netbeans.modules.editor.lib2.AcceptorFactory;
 import org.netbeans.spi.editor.document.DocumentFactory;
 import org.openide.util.Lookup;
 
 /**
  * Line and word related utility methods.
- * <br/>
+ * <p>
  * All the methods working with the document assume that the document is locked against
  * a parallel modification e.g. by including the call within
  * {@link Document#render(java.lang.Runnable)}.
- * <br/>
+ * <p>
  * The utilities were moved from the former Editor Library 2's Utilities
  * and work with {@link LineDocument} only. The methods work only with document
  * data. Utilities that connect document with the UI elements (Swing) can be
@@ -51,8 +50,6 @@ import org.openide.util.Lookup;
 
 public final class LineDocumentUtils {
 
-    private static final String WRONG_POSITION_LOCALE = "wrong_position"; // NOI18N
-
     private LineDocumentUtils() {
         // instantiation has no sense
     }
@@ -62,14 +59,46 @@ public final class LineDocumentUtils {
      * @param doc non-null document to operate on
      * @param offset position in document where to start searching
      * @return offset of character right above newline prior the given offset or zero.
+     * @deprecated Use {@link #getLineStartOffset} instead
      */
+    @Deprecated
     public static int getLineStart(@NonNull LineDocument doc, int offset) {
         return doc.getParagraphElement(offset).getStartOffset();
     }
 
-    public static int getLineEnd(@NonNull LineDocument doc, int offset)
-    throws BadLocationException
-    {
+    /**
+     * Get end offset of a (newline character separated) line.
+     * @param doc non-null document to operate on
+     * @param offset position in document where to start searching
+     * @return offset of character right above newline prior the given offset or zero.
+     * @throws javax.swing.text.BadLocationException If offset is out of bounds
+     * @deprecated Use {@link #getLineEndOffset} instead
+     */
+    @Deprecated
+    public static int getLineEnd(@NonNull LineDocument doc, int offset) throws BadLocationException {
+        return getLineEndOffset(doc, offset);
+    }
+
+    /**
+     * Get start offset of a (newline character separated) line.
+     * @param doc non-null document to operate on
+     * @param offset position in document where to start searching
+     * @return offset of character right above newline prior the given offset or zero.
+     * @throws javax.swing.text.BadLocationException If offset is out of bounds
+     */
+    public static int getLineStartOffset(@NonNull LineDocument doc, int offset) throws BadLocationException {
+        checkOffsetValid(doc, offset);
+        return doc.getParagraphElement(offset).getStartOffset();
+    }
+
+    /**
+     * Get end offset of a (newline character separated) line.
+     * @param doc non-null document to operate on
+     * @param offset position in document where to start searching
+     * @return offset of character right above newline prior the given offset or zero.
+     * @throws javax.swing.text.BadLocationException If offset is out of bounds
+     */
+    public static int getLineEndOffset(@NonNull LineDocument doc, int offset) throws BadLocationException {
         checkOffsetValid(doc, offset);
         return doc.getParagraphElement(offset).getEndOffset() - 1;
     }
@@ -408,7 +437,7 @@ public final class LineDocumentUtils {
     /**
      * Locates the appropriate service for the document. May return {@code null}
      * if the interface/service is not supported by the document.
-     * <p/>
+     * <p>
      * For example, if a code needs to perform an atomic action on the document,
      * it can do so as follows:
      * <code><pre>
@@ -501,13 +530,13 @@ public final class LineDocumentUtils {
             if (useStub) {
                 lkp = DocumentServices.getInstance().getStubLookup(d);
                 serv = lkp.lookup(documentService);
-                d.putProperty(documentService, new V<Object>(serv));
+                d.putProperty(documentService, new V<>(serv));
                 if (serv == null) {
                     throw new IllegalArgumentException();
                 }
             }
         } else {
-            d.putProperty(documentService, serv == null ? NOT_FOUND : serv);
+            d.putProperty(documentService, serv);
         }
         @SuppressWarnings("unchecked")
         T res = (T) serv;

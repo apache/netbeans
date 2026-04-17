@@ -400,7 +400,7 @@ No.
         </question>
 -->
 <answer id="exec-property">
-    <api name="netbeans.dnd.enabled" group="systemproperty" category="private" type="export" url="">
+    <api name="netbeans.dnd.enabled" group="systemproperty" category="private" type="export">
     Checks by Drag &amp; Drop support for views. True is regard as default
     (no matter what jdk's version). False value disallows Drag &amp; Drop in
     all views.
@@ -445,11 +445,11 @@ and to Actions API to allow use Explorer API as standalone library.
 <answer id="format-clipboard">
 The module servers as a bridge between nodes and the clipboard. It takes what 
 Nodes provide 
-(<a href="@org-openide-nodes@/org/openide/nodes/Node.html#clipboardCopy--">Node.clipboardCopy</a>,
- <a href="@org-openide-nodes@/org/openide/nodes/Node.html#clipboardCut--">Node.clipboardCut</a>) and
+(<a href="@org-openide-nodes@/org/openide/nodes/Node.html#clipboardCopy()">Node.clipboardCopy</a>,
+ <a href="@org-openide-nodes@/org/openide/nodes/Node.html#clipboardCut()">Node.clipboardCut</a>) and
 inserts them into clipboard (as part of Copy/Cut action) and also retrive the
 content of clipboard and pases it to 
- <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getPasteTypes-java.awt.datatransfer.Transferable-">Node.getPasteTypes(Transferable)</a>)
+ <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getPasteTypes(java.awt.datatransfer.Transferable)">Node.getPasteTypes(Transferable)</a>)
 during paste action.
 </answer>
 

@@ -46,7 +46,6 @@ import org.openide.util.NbBundle;
  *
  */
 public class NbiUpdateProvider implements UpdateProvider {
-    /////////////////////////////////////////////////////////////////////////////////
     // Static
     private static UpdateProvider instance;
     
@@ -58,14 +57,13 @@ public class NbiUpdateProvider implements UpdateProvider {
         return instance;
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     private final Logger logger = Logger.getLogger(LOGGER_NAME);
     
     private List<Product> products;
     private Map<String, UpdateItem> updateItems;
     
-    // contructor ///////////////////////////////////////////////////////////////////
+    // contructor
     public NbiUpdateProvider() {
         logger.setLevel(Level.FINEST);
         
@@ -262,7 +260,6 @@ public class NbiUpdateProvider implements UpdateProvider {
         return true;
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Inner Classes
     private static class UpdateProviderFinishHandler implements FinishHandler {
         public static final UpdateProviderFinishHandler INSTANCE =
@@ -285,7 +282,6 @@ public class NbiUpdateProvider implements UpdateProvider {
         }
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     public static final String LOGGER_NAME =
             "org.netbeans.installer.infra.autoupdate"; // NOI18N

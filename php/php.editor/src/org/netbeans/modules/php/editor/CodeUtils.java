@@ -93,6 +93,7 @@ public final class CodeUtils {
     public static final String NEW_LINE = "\n"; // NOI18N
     public static final String THIS_VARIABLE = "$this"; // NOI18N
     public static final String NS_SEPARATOR = "\\"; // NOI18N
+    public static final String PIPE_OPERATOR = "|>"; // NOI18N
 
     public static final Pattern WHITE_SPACES_PATTERN = Pattern.compile("\\s+"); // NOI18N
     public static final Pattern SPLIT_TYPES_PATTERN = Pattern.compile("[()|&]+"); // NOI18N
@@ -330,6 +331,9 @@ public final class CodeUtils {
             return extractQualifiedName((UnionType) typeName);
         } else if (typeName instanceof IntersectionType) {
             return extractQualifiedName((IntersectionType) typeName);
+        } else if (typeName instanceof ClassInstanceCreation) {
+            // PHP 8.4 new without parentheses new A()->method();
+            return null;
         }
         assert false : typeName.getClass();
         return null;
@@ -897,5 +901,10 @@ public final class CodeUtils {
             }
         }
         return false;
+    }
+
+    public static boolean isTypeDeclaration(ASTNode node) {
+        return node instanceof TypeDeclaration
+                || ((node instanceof ClassInstanceCreation) && ((ClassInstanceCreation) node).isAnonymous());
     }
 }

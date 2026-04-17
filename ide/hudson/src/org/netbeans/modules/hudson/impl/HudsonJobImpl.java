@@ -26,7 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.hudson.api.HudsonJob;
 import org.netbeans.modules.hudson.api.HudsonJobBuild;
 import org.netbeans.modules.hudson.api.HudsonView;
@@ -121,7 +120,7 @@ public class HudsonJobImpl implements HudsonJob, OpenableInBrowser {
     
     @Messages({"# {0} - job name", "MSG_Starting=Starting {0}"})
     @Override public void start() {
-        ProgressHandle handle = ProgressHandleFactory.createHandle(
+        ProgressHandle handle = ProgressHandle.createHandle(
                 MSG_Starting(this.getName()));
         handle.start();
         try {

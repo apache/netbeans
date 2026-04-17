@@ -742,7 +742,6 @@ public class Method1Test extends GeneratorTestMDRCompat {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * @param args the command line arguments
      */

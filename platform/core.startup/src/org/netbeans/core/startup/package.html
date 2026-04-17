@@ -35,23 +35,23 @@
   within limits.
   <p>In this package the remainder of the system is implemented, but
   this is still broken into pieces to make it easier to work with.
-  <p>First {@link org.netbeans.core.modules.Module} is the concrete version of <code>ModuleInfo</code>, with additional
+  <p>First {@link org.netbeans.Module} is the concrete version of <code>ModuleInfo</code>, with additional
   information such as the full manifest contents, the live classloader in
   use, and some details of where it came from and its behavioral parameters.
-  <p>{@link org.netbeans.core.modules.ModuleManager} is the class responsible for keeping track of the set of
+  <p>{@link org.netbeans.ModuleManager} is the class responsible for keeping track of the set of
   modules and their interdependencies, and ultimately controls which modules
   can or cannot be installed and why.
-  <p>{@link org.netbeans.core.modules.ModuleInstaller} is the interface used by the manager to physically load
+  <p>{@link org.netbeans.ModuleInstaller} is the interface used by the manager to physically load
   the contents of the module into the IDE.
-  <p>{@link org.netbeans.core.modules.Events} permits major events to be logged
+  <p>{@link org.netbeans.Events} permits major events to be logged
   asynchronously for subsequent formatting and display.
   <p>Private helper classes include <code>ChangeFirer</code> to fire module manager
   changes, and <code>Util</code> for module-related utility functions.
   <code>MultiURLClassLoader</code> is an optimized classloader used for modules
   that is able to handle multiple parents, dynamic parent addition and removal,
   and streamlining of the package search algorithm based on features of the Modules API.
-  Also the exceptions {@link org.netbeans.core.modules.DuplicateException} and
-  {@link org.netbeans.core.modules.InvalidException} are thrown when creating or
+  Also the exceptions {@link org.netbeans.DuplicateException} and
+  {@link org.netbeans.InvalidException} are thrown when creating or
   working with modules.
   <p>This layer is largely independent of the workings of the IDE; it uses some
   Open APIs but only those which can be used in a standalone context. So it makes
@@ -61,33 +61,33 @@
   end users who are not module developers should be handled elsewhere are localized.)
   <p>The other layer is more dependent on the rest of the IDE core, and the details
   of the Modules API.
-  <p>{@link org.netbeans.core.modules.NbInstaller <code>NbInstaller</code>} really implements the loading of modules: registering layers,
+  <p>{@link org.netbeans.core.startup.NbInstaller NbInstaller} really implements the loading of modules: registering layers,
   registering the existence of help sets, loading the beans forming manifest
   sections and making them available, and running <code>ModuleInstall</code> methods.
-  <p>{@link org.netbeans.core.modules.ManifestSection} is used by <code>NbInstaller</code> to
+  <p>{@link org.netbeans.core.startup.ManifestSection} is used by <code>NbInstaller</code> to
   represent one section in a module manifest during installation, and may be used in other
   parts of the core (e.g. if sections are registered via lookup for interpretation elsewhere).
-  <p>{@link org.netbeans.core.modules.ModuleList} keeps track of the set of installed modules on disk, and is the point
+  <p>{@link org.netbeans.core.startup.ModuleList} keeps track of the set of installed modules on disk, and is the point
   of contact for reading and writing the list of installed modules, any serialized
   <code>ModuleInstall</code> instances, and autoscanning the modules folder.
-  <p>{@link org.netbeans.core.modules.ModuleHistory} tracks the origin of a module, whether it was installed before
+  <p>{@link org.netbeans.core.startup.ModuleHistory} tracks the origin of a module, whether it was installed before
   and where, and what version it last was. This information is supplied by <code>ModuleList</code>
   based on its knowledge of the settings on disk, and used by <code>NbInstaller</code> to invoke
   the correct <code>ModuleInstall</code> methods.
-  <p>{@link org.netbeans.core.modules.NbEvents <code>NbEvents</code>} performs NetBeans-specific logging of module system
+  <p>{@link org.netbeans.core.startup.NbEvents NbEvents} performs NetBeans-specific logging of module system
   events, such as displaying friendly messages in the splash screen, status bar, or console.
   It can also be a point of contact for performance measurements.
-  <p>{@link org.netbeans.core.modules.ModuleSystem} is a high-level controller for the whole
+  <p>{@link org.netbeans.core.startup.ModuleSystem} is a high-level controller for the whole
   module system. Core initialization classes needing to start some process in the module system,
   such as "install newly found modules", should use a method call on this class, which will delegate
   the details to other module-system objects.
-  <p>{@link org.netbeans.core.modules.TestModuleDeployer} is a service available via lookup
+  <p>{@link org.netbeans.core.startup.TestModuleDeployer} is a service available via lookup
   which deploys test modules; accessible separately with a thin API for use by modules
   such as the API Support.
-  <p>{@link org.netbeans.core.stratup.AutomaticDependencies} is used to parse XML files constrained by <a href="http://www.netbeans.org/dtds/module-auto-deps-1_0.dtd"><samp>module-auto-deps-1_0.dtd</samp></a>
+  <p>{@link org.netbeans.core.startup.AutomaticDependencies} is used to parse XML files constrained by <a href="http://www.netbeans.org/dtds/module-auto-deps-1_0.dtd"><samp>module-auto-deps-1_0.dtd</samp></a>
   and automatically update dependencies used by old modules as a result. This is very
   useful for maintaining backward compatibility across major refactorings.
-  <p>Also of interest: {@link org.netbeans.core.ui.ModuleBean} provides a Swing-safe UI
+  <p>Also of interest: {@code org.netbeans.core.ui.ModuleBean} provides a Swing-safe UI
   wrapper for <code>Module</code> and <code>ModuleManager</code>, used by the <b>Modules</b> node.
   <p>Those interested in using the independent parts of the module system as a standalone JAR
   should run: <pre>ant -f core/build.xml lib-modules</pre>

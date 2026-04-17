@@ -43,7 +43,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.servlet.ServletContext;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.web.jsf.api.editor.JsfFacesComponentsProvider;
 import org.netbeans.modules.web.jsf.editor.JsfSupportImpl;
 import org.netbeans.modules.web.jsf.editor.facelets.mojarra.ConfigManager;
@@ -262,7 +261,7 @@ public class FaceletsLibrarySupport {
 
     //handle progress
     private Map<String, Library> findLibraries() {
-        ProgressHandle progress = ProgressHandleFactory.createHandle(
+        ProgressHandle progress = ProgressHandle.createHandle(
                 NbBundle.getMessage(FaceletsLibrarySupport.class, "MSG_ParsingFaceletsLibraries")); //NOI18N
         progress.start();
         progress.switchToIndeterminate();
@@ -404,7 +403,13 @@ public class FaceletsLibrarySupport {
 
             Map<String, Library> libsMap = new HashMap<>();
             for (Library lib : processor.compiler.libraries) {
-                lib.getValidNamespaces().forEach(namespace -> libsMap.put(namespace, lib));
+                for (String namespace : lib.getValidNamespaces()) {
+                    Library currentLibrary = libsMap.get(namespace);
+                    // replace the current library only if the new one supports more namespaces
+                    if (currentLibrary == null || currentLibrary.getValidNamespaces().size() < lib.getValidNamespaces().size()) {
+                        libsMap.put(namespace, lib);
+                    }
+                }
             }
 
             //4. in case of JSF2.2 include pseudo-libraries (http://java.sun.com/jsf/passthrough, http://java.sun.com/jsf)

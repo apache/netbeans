@@ -27,7 +27,7 @@ import javax.swing.JButton;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.NonNull;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.java.api.common.project.ui.customizer.CustomizerProvider3;
 import org.netbeans.modules.javafx2.project.JFXProjectProperties;
@@ -231,7 +231,7 @@ public class JSEDeploymentPanel extends javax.swing.JPanel {
                      CustomizerProvider3 canceller = project.getLookup().lookup(CustomizerProvider3.class);
                      if(canceller != null) {
                          canceller.cancelCustomizer();
-                         ProgressUtils.showProgressDialogAndRun(new Runnable() {
+                         BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
                              @Override
                              public void run() {
                                  try {

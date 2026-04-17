@@ -137,7 +137,7 @@ class FruchtermanReingoldLayout<I extends GraphNodeImplementation> extends Scene
 //        System.out.println("scene bounds are =" + bounds);
         temp = bounds.getWidth() / 1000;
 //        forceConstant = 0.75 * Math.sqrt(bounds.getHeight() * bounds.getWidth() / nds);
-        forceConstant = 0.25 * Math.sqrt(bounds.getHeight() * bounds.getWidth() / nds);
+        forceConstant = 1.75 * Math.sqrt(bounds.getHeight() * bounds.getWidth() / nds);
 //        System.out.println("force constant2=" + forceConstant);
         performLayout(false);
     }
@@ -150,7 +150,7 @@ class FruchtermanReingoldLayout<I extends GraphNodeImplementation> extends Scene
         bounds = new Rectangle(magicSizeConstant  + (magicSizeMultiplier * nds), 
                                magicSizeConstant  + (magicSizeMultiplier * nds)); //g.getMaximumBounds();
         temp = bounds.getWidth() / 10;
-        forceConstant = 0.75 * Math.sqrt(bounds.getHeight() * bounds.getWidth() / nds);
+        forceConstant = 1.75 * Math.sqrt(bounds.getHeight() * bounds.getWidth() / nds);
         
         GraphNode<I> rn = scene.getRootGraphNode();
         NodeWidget rw = getWidget(rn);
@@ -382,7 +382,8 @@ class FruchtermanReingoldLayout<I extends GraphNodeImplementation> extends Scene
         r = 30;
         theta = 0;
         w.setFixed(false);
-        while (true) {
+        // 48 - ~3 times round?
+        for (int i = 0; i < 48; i++) {
             AffineTransform tr = AffineTransform.getRotateInstance(theta);
             Point2D d2point = tr.transform(new Point2D.Double(0, r), null);
             Point point = new Point((int)d2point.getX() + masterPoint.x, (int)d2point.getY() + masterPoint.y);
@@ -396,10 +397,9 @@ class FruchtermanReingoldLayout<I extends GraphNodeImplementation> extends Scene
             if (theta > (Math.PI * 2 - Math.PI / 10)) {
                 r = r + 30;
                 theta = theta - Math.PI * 2;
-                thetaStep = thetaStep * 3 / 4; 
+                thetaStep = thetaStep * 3 / 4;
             }
         }
-        
     }
 
     private NodeWidget getWidget(GraphNode n) {

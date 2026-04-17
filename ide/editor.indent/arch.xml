@@ -124,9 +124,9 @@
 API Usecases
 </h1>
 
-<h3>
+<h2>
 Fix indentation of a single or multiple lines of a document.
-</h3>
+</h2>
 <p>
 Altghough there are formatting actions already there may be clients
 wishing to explicitly fix indentation of e.g. a newly inserted code into a Swing document.
@@ -152,9 +152,9 @@ try {
 }
 </pre>
 
-<h3>
+<h2>
 Code beautification of a selected area of a document.
-</h3>
+</h2>
 <p>
 Code beautification should not only fix line indentation but it may also perform
 extra changes to code according to formatting rules. For example add newlines

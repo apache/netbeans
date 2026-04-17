@@ -559,8 +559,8 @@ public final class LibrariesNode extends AbstractNode {
     static synchronized Icon getFolderIcon (boolean opened) {
         if (openedFolderIconCache == null) {
             Node n = DataFolder.findFolder(FileUtil.getConfigRoot()).getNodeDelegate();
-            openedFolderIconCache = new ImageIcon(n.getOpenedIcon(BeanInfo.ICON_COLOR_16x16));
-            folderIconCache = new ImageIcon(n.getIcon(BeanInfo.ICON_COLOR_16x16));
+            openedFolderIconCache = ImageUtilities.image2Icon(n.getOpenedIcon(BeanInfo.ICON_COLOR_16x16));
+            folderIconCache = ImageUtilities.image2Icon(n.getIcon(BeanInfo.ICON_COLOR_16x16));
         }
         if (opened) {
             return openedFolderIconCache;
@@ -1763,7 +1763,7 @@ public final class LibrariesNode extends AbstractNode {
             }
             chooser.enableVariableBasedSelection(true);
             chooser.setFileHidingEnabled(false);
-            FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
+            chooser.setCurrentDirectory(null);
             chooser.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
             chooser.setMultiSelectionEnabled( true );
             chooser.setDialogTitle( NbBundle.getMessage( LibrariesNode.class, "LBL_AddJar_DialogTitle" ) ); // NOI18N

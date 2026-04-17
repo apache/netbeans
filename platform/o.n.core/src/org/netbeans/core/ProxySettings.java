@@ -49,6 +49,8 @@ public class ProxySettings {
     public static final String USE_PROXY_ALL_PROTOCOLS = "useProxyAllProtocols";    // NOI18N
     public static final String DIRECT = "DIRECT";   // NOI18N
     public static final String PAC = "PAC";     // NOI18N
+    public static final String PAC_SCRIPT_TIMEOUT = "pacScriptTimeout"; // NOI18N
+    public static final int DEFAULT_TIMEOUT = 10000;
     
     public static final String SYSTEM_PROXY_HTTP_HOST = "systemProxyHttpHost";      // NOI18N
     public static final String SYSTEM_PROXY_HTTP_PORT = "systemProxyHttpPort";      // NOI18N
@@ -141,6 +143,10 @@ public class ProxySettings {
         return type;
     }
     
+    public static int getPacScriptTimeout() {
+        return getPreferences ()
+                .getInt(PAC_SCRIPT_TIMEOUT, DEFAULT_TIMEOUT);
+    }
     
     public static String getSystemHttpHost() {
         return getPreferences().get(SYSTEM_PROXY_HTTP_HOST, "");

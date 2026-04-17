@@ -27,6 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 import org.netbeans.api.debugger.jpda.CallStackFrame;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
@@ -45,7 +46,6 @@ import org.netbeans.spi.viewmodel.TreeExpansionModelFilter;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
 import org.openide.util.Exceptions;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 /**
  * Assure that the thread we stop in is automatically expanded.
@@ -59,7 +59,7 @@ public class DebuggingTruffleTreeExpansionModelFilter implements TreeExpansionMo
     private final JPDADebugger debugger;
     private final DVSupport dvSupport;
     private volatile Reference<JPDAThread> suspendedTruffleThread = NO_THREAD;
-    private final Set<Object> collapsedExplicitly = new WeakSet<>();
+    private final Set<Object> collapsedExplicitly = Collections.newSetFromMap(new WeakHashMap<>());
     private final Set<ModelListener> listeners = Collections.synchronizedSet(new HashSet<ModelListener>());
 
     public DebuggingTruffleTreeExpansionModelFilter(ContextProvider context) {

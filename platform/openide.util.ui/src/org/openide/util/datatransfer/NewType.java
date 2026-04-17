@@ -24,7 +24,7 @@ import org.openide.util.NbBundle;
 import java.io.IOException;
 
 
-/** Describes a type that can be created anew. Used by <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getNewTypes--">Node.getNewTypes</a>.
+/** Describes a type that can be created anew. Used by <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getNewTypes()">Node.getNewTypes</a>.
 *
 * @author Jaroslav Tulach
 */

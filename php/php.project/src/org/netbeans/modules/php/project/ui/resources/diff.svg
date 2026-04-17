@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #5b7b95;
+      }
+
+      .st1 {
+        fill: #649141;
+      }
+
+      .st2 {
+        fill: #cbe5b9;
+      }
+
+      .st3 {
+        opacity: .33;
+      }
+
+      .st4 {
+        fill: #ebf6fd;
+      }
+    </style>
+  </defs>
+  <polygon class="st2" points="6 14 8.5 11.5 5.5 8.5 8.5 5.5 5.5 2.5 7 1 7.5 .5 1.5 .5 1.5 14.5 5.5 14.5 6 14"/>
+  <polygon class="st4" points="9.5 .5 7.5 2.5 10.5 5.5 7.5 8.5 10.5 11.5 7.5 14.5 15.5 14.5 15.5 .5 9.5 .5"/>
+  <polygon class="st0" points="10 0 9 1 15 1 15 14 8 14 7 15 16 15 16 0 10 0"/>
+  <g class="st3">
+    <polygon points="10 11 10.5 11.5 10 12 13 12 13 11 10 11"/>
+    <polygon points="8 9 9 10 13 10 13 9 8 9"/>
+    <polygon points="9 7 8 8 13 8 13 7 9 7"/>
+    <polygon points="10 5 10.5 5.5 10 6 13 6 13 5 10 5"/>
+    <polygon points="8 3 9 4 13 4 13 3 8 3"/>
+  </g>
+  <g class="st3">
+    <polygon points="8.5 11.5 8 11 4 11 4 12 8 12 8.5 11.5"/>
+    <polygon points="6 9 4 9 4 10 7 10 6 9"/>
+    <polygon points="7 7 4 7 4 8 6 8 7 7"/>
+    <polygon points="8.5 5.5 8 5 4 5 4 6 8 6 8.5 5.5"/>
+    <polygon points="6 3 4 3 4 4 7 4 6 3"/>
+  </g>
+  <polygon class="st1" points="5.5 14.5 6 14 2 14 2 1 7 1 7.5 .5 8 0 1 0 1 15 5 15 5.5 14.5"/>
+  <description>Apache NetBeans Logo
+  </description>
+</svg>

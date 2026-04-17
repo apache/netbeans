@@ -51,7 +51,6 @@ import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.DatabaseException;
 import org.netbeans.api.db.sql.support.SQLIdentifiers.Quoter;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.db.mysql.Database;
 import org.netbeans.modules.db.mysql.DatabaseServer;
 import org.netbeans.modules.db.mysql.DatabaseUser;
@@ -529,7 +528,7 @@ public final class MySQLDatabaseServer implements DatabaseServer, PropertyChange
 
                 checkConfiguration();
 
-                ProgressHandle progress = ProgressHandleFactory.createHandle(
+                ProgressHandle progress = ProgressHandle.createHandle(
                     Utils.getMessage("MSG_ConnectingToServer"));
 
                 try {
@@ -1077,7 +1076,7 @@ public final class MySQLDatabaseServer implements DatabaseServer, PropertyChange
 
         @Override
         public void execute() throws Exception {
-            ProgressHandle handle = ProgressHandleFactory.createHandle(Utils.getMessage("LBL_StoppingMySQLServer"), this);
+            ProgressHandle handle = ProgressHandle.createHandle(Utils.getMessage("LBL_StoppingMySQLServer"), this);
             try {
                 handle.start();
                 handle.switchToIndeterminate();

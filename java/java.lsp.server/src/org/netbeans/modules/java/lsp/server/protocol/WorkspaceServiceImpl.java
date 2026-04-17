@@ -43,9 +43,9 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -150,7 +150,6 @@ import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
@@ -401,11 +400,15 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                     LOG.log(Level.INFO, "Project {2}: {0} test roots opened in {1}ms", new Object[] { testRoots.size(), (System.currentTimeMillis() - t), file});
                     BiFunction<FileObject, Collection<TestMethodController.TestMethod>, Collection<TestSuiteInfo>> f = (fo, methods) -> {
                         String url = Utils.toUri(fo);
+                        Project owner = FileOwnerQuery.getOwner(fo);
+                        String moduleName = owner != null ? ProjectUtils.getInformation(owner).getDisplayName(): null;
+                        List<String> paths = getModuleTestPaths(owner);
+                        String modulePath = firstModulePath(paths, moduleName);
                         Map<String, TestSuiteInfo> suite2infos = new LinkedHashMap<>();
                         for (TestMethodController.TestMethod testMethod : methods) {
                             TestSuiteInfo suite = suite2infos.computeIfAbsent(testMethod.getTestClassName(), name -> {
                                 Position pos = testMethod.getTestClassPosition() != null ? Utils.createPosition(fo, testMethod.getTestClassPosition().getOffset()) : null;
-                                return new TestSuiteInfo(name, url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
+                                return new TestSuiteInfo(name, moduleName, modulePath, url, pos != null ? new Range(pos, pos) : null, TestSuiteInfo.State.Loaded, new ArrayList<>());
                             });
                             String id = testMethod.getTestClassName() + ':' + testMethod.method().getMethodName();
                             Position startPos = testMethod.start() != null ? Utils.createPosition(fo, testMethod.start().getOffset()) : null;
@@ -803,6 +806,33 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 }
         }
         throw new UnsupportedOperationException("Command not supported: " + params.getCommand());
+    }
+    
+    private String firstModulePath(List<String> paths, String moduleName) {
+        if (paths == null || paths.isEmpty()) {
+            return null;
+        } else if (paths.size() > 1) {
+            LOG.log(Level.WARNING, "Mutliple test roots are not yet supported for module {0}", moduleName);
+        }
+        return paths.iterator().next();
+    }
+    
+    private static List<String> getModuleTestPaths(Project project) {        
+        if (project == null) {
+            return null;
+        }
+        SourceGroup[] sourceGroups = ProjectUtils.getSources(project).getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
+        Set<String> paths = new LinkedHashSet<>();
+        for (SourceGroup sourceGroup : sourceGroups) {
+            URL[] urls = UnitTestForSourceQuery.findUnitTests(sourceGroup.getRootFolder());
+            for (URL u : urls) {
+                FileObject f = URLMapper.findFileObject(u);
+                if (f != null) {
+                    paths.add(f.getPath());
+                }
+            }
+        }
+        return paths.isEmpty() ? null : new ArrayList<>(paths);
     }
     
     private class ProjectInfoWorker {
@@ -1344,67 +1374,78 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
 
     @Override
     public void didChangeConfiguration(DidChangeConfigurationParams params) {
-        String fullConfigPrefix = client.getNbCodeCapabilities().getConfigurationPrefix();
-        String configPrefix = fullConfigPrefix.substring(0, fullConfigPrefix.length() - 1);
-        server.openedProjects().thenAccept(projects -> {
-            // PENDING: invent a pluggable mechanism for this, this does not scale and the typecast to serviceImpl is ugly
-            ((TextDocumentServiceImpl)server.getTextDocumentService()).updateJavaHintPreferences(((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject(NETBEANS_JAVA_HINTS));
-            ((TextDocumentServiceImpl)server.getTextDocumentService()).updateProjectJDKHome(((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("project").getAsJsonPrimitive("jdkhome"));
-            if (projects != null && projects.length > 0) {
-                updateJavaFormatPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("format"));
-                updateJavaImportPreferences(projects[0].getProjectDirectory(), ((JsonObject) params.getSettings()).getAsJsonObject(configPrefix).getAsJsonObject("java").getAsJsonObject("imports"));
-            }
-        });
-        String fullAltConfigPrefix = client.getNbCodeCapabilities().getAltConfigurationPrefix();
-        String altConfigPrefix = fullAltConfigPrefix.substring(0, fullAltConfigPrefix.length() - 1);
-        boolean modified = false;
-        String newVMOptions = "";
-        String newWorkingDirectory = null;
-        JsonObject javaPlus = ((JsonObject) params.getSettings()).getAsJsonObject(altConfigPrefix);
-        if (javaPlus != null) {
-            JsonObject runConfig = javaPlus.getAsJsonObject("runConfig");
+        client.getClientConfigurationManager().handleConfigurationChange((JsonObject)params.getSettings());
+    }
+
+    private BiConsumer<String, JsonElement> getRunConfigChangeListener() {
+        return (config, newValue) -> {
+            boolean modified = false;
+            String newVMOptions = "";
+            String newWorkingDirectory = null;
+            JsonObject runConfig = newValue.isJsonObject() ? newValue.getAsJsonObject() : null;
             if (runConfig != null) {
                 newVMOptions = runConfig.getAsJsonPrimitive("vmOptions").getAsString();
                 JsonPrimitive cwd = runConfig.getAsJsonPrimitive("cwd");
                 newWorkingDirectory = cwd != null ? cwd.getAsString() : null;
             }
-        }
-        for (SingleFileOptionsQueryImpl query : Lookup.getDefault().lookupAll(SingleFileOptionsQueryImpl.class)) {
-            modified |= query.setConfiguration(workspace, newVMOptions, newWorkingDirectory);
-        }
-        if (modified) {
-            ((TextDocumentServiceImpl)server.getTextDocumentService()).reRunDiagnostics();
-        }
+            for (SingleFileOptionsQueryImpl query : Lookup.getDefault().lookupAll(SingleFileOptionsQueryImpl.class)) {
+                modified |= query.setConfiguration(workspace, newVMOptions, newWorkingDirectory);
+            }
+            if (modified) {
+                ((TextDocumentServiceImpl) server.getTextDocumentService()).reRunDiagnostics();
+            }
+        };
+    }
+    
+    void registerConfigChangeListeners() {
+        String fullConfigPrefix = client.getNbCodeCapabilities().getConfigurationPrefix();
+        String fullAltConfigPrefix = client.getNbCodeCapabilities().getAltConfigurationPrefix();
+        ClientConfigurationManager confManager = client.getClientConfigurationManager();
+
+        BiConsumer<String, JsonElement> formatPrefsListener = (config, newValue)
+                -> server.openedProjects().thenAccept(projects -> {
+                    if (projects != null && projects.length > 0) {
+                        updateJavaFormatPreferences(projects[0].getProjectDirectory(), newValue.getAsJsonObject());
+                    }
+                });
+
+        BiConsumer<String, JsonElement> importPrefsListener = (config, newValue)
+                -> server.openedProjects().thenAccept(projects -> {
+                    if (projects != null && projects.length > 0) {
+                        updateJavaImportPreferences(projects[0].getProjectDirectory(), newValue.getAsJsonObject());
+                    }
+                });
+
+        // PENDING: The typecast to serviceImpl is ugly
+        BiConsumer<String, JsonElement> hintPrefsListener = (config, newValue)
+                -> ((TextDocumentServiceImpl) server.getTextDocumentService()).updateJavaHintPreferences(newValue.getAsJsonObject());
+
+        BiConsumer<String, JsonElement> projectJdkHomeListener = (config, newValue)
+                -> ((TextDocumentServiceImpl) server.getTextDocumentService()).updateProjectJDKHome(newValue.getAsJsonPrimitive());
+        
+        
+        
+        confManager.registerConfigChangeListener(fullConfigPrefix + "hints", hintPrefsListener);
+        confManager.registerConfigChangeListener(fullConfigPrefix + "project.jdkhome", projectJdkHomeListener);
+        confManager.registerConfigChangeListener(fullConfigPrefix + "format", formatPrefsListener);
+        confManager.registerConfigChangeListener(fullConfigPrefix + "java.imports", importPrefsListener);
+        confManager.registerConfigChangeListener(fullAltConfigPrefix + "runConfig", getRunConfigChangeListener());
     }
 
     void updateJavaFormatPreferences(FileObject fo, JsonObject configuration) {
         if (configuration != null && client.getNbCodeCapabilities().wantsJavaSupport()) {
-            NbPreferences.Provider provider = Lookup.getDefault().lookup(NbPreferences.Provider.class);
-            Preferences prefs = provider != null ? provider.preferencesRoot().node("de/funfried/netbeans/plugins/externalcodeformatter") : null;
-            JsonPrimitive formatterPrimitive = configuration.getAsJsonPrimitive("codeFormatter");
-            String formatter = formatterPrimitive != null ? formatterPrimitive.getAsString() : null;
-            JsonPrimitive pathPrimitive = configuration.getAsJsonPrimitive("settingsPath");
-            String path = pathPrimitive != null ? pathPrimitive.getAsString() : null;
-            if (formatter == null || "NetBeans".equals(formatter)) {
-                if (prefs != null) {
-                    prefs.put("enabledFormatter.JAVA", "netbeans-formatter");
+            JsonElement pathElement = configuration.get("settingsPath");
+            String path = pathElement != null && pathElement.isJsonPrimitive() ? pathElement.getAsString() : null;
+            Path p = path != null ? Paths.get(path) : null;
+            File file = p != null ? p.toFile() : null;
+            try {
+                if (file != null && file.exists() && file.canRead() && file.getName().endsWith(".zip")) {
+                    OptionsExportModel.get().doImport(file);
+                } else {
+                    OptionsExportModel.get().clean();
                 }
-                Path p = path != null ? Paths.get(path) : null;
-                File file = p != null ? p.toFile() : null;
-                try {
-                    if (file != null && file.exists() && file.canRead() && file.getName().endsWith(".zip")) {
-                        OptionsExportModel.get().doImport(file);
-                    } else {
-                        OptionsExportModel.get().clean();
-                    }
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            } else if (prefs != null) {
-                prefs.put("enabledFormatter.JAVA", formatter.toLowerCase(Locale.ENGLISH).concat("-java-formatter"));
-                if (path != null) {
-                    prefs.put(formatter.toLowerCase(Locale.ENGLISH).concat("FormatterLocation"), path);
-                }
+            } catch (IOException ex) {
+                Exceptions.printStackTrace(ex);
             }
         }
     }

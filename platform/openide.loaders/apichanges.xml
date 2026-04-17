@@ -129,7 +129,7 @@ is the proper place.
           <description>
               <p>
                   Creation of TargetFolder can be deferred by using
-                  <a href="@org-openide-loaders@/org/openide/loaders/TemplateWizard.html#setTargetFolderLazy-java.util.function.Supplier-">
+                  <a href="@org-openide-loaders@/org/openide/loaders/TemplateWizard.html#setTargetFolderLazy(java.util.function.Supplier)">
                   TemplateWizard.setTargetFolderLazy(Supplier&lt;DataFolder&gt;)
                   </a>.
               </p>
@@ -274,7 +274,7 @@ is the proper place.
           <compatibility addition="yes"/>
           <description>
              <p>Layer declaration of a menu can influence what client properties
-                 the actual <a href="@JDK@/javax/swing/JMenu.html">JMenu</a> 
+                 the actual <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/JMenu.html">JMenu</a> 
                  instances will have. More 
                  <a href="architecture-summary.html#layer-Menu">details</a>.
               </p>
@@ -381,10 +381,10 @@ is the proper place.
           <description>
               <p>
                   New way to subclass <code>MultiDataObject</code>: override
-                  <a href="@TOP@/org/openide/loaders/MultiDataObject.html#associateLookup--">
+                  <a href="@TOP@/org/openide/loaders/MultiDataObject.html#associateLookup()">
                   int associateLookup()
                   </a> to return <code>1</code>. In constructor call
-                  <a href="@TOP@/org/openide/loaders/MultiDataObject.html#registerEditor-java.lang.String-boolean-">
+                  <a href="@TOP@/org/openide/loaders/MultiDataObject.html#registerEditor(java.lang.String,boolean)">
                   registerEditor("your/mimetype", ...)</a> to get default
                   editor support. No need to override any other methods to get
                   well performing <code>MultiDataObject</code>.
@@ -634,7 +634,7 @@ is the proper place.
         <p>
             There is new method to register new DataObject types without
             the need to write own DataLoader. Use
-            <a href="@TOP@/org/openide/loaders/DataLoaderPool.html#factory-java.lang.Class-java.lang.String-java.awt.Image-">
+            <a href="@TOP@/org/openide/loaders/DataLoaderPool.html#factory(java.lang.Class,java.lang.String,java.awt.Image)">
                 DataLoaderPool.factory</a> method.
         </p>
         </description>
@@ -686,7 +686,7 @@ is the proper place.
         <p>
             When <a href="@TOP@/org/openide/loaders/TemplateWizard.html">TemplateWizard</a> invokes 
             <a href="@TOP@/org/openide/loaders/DataObject.html">DataObject</a>.createFromTemplate,
-            it passes as argument all its <a href="@org-openide-dialogs@/org/openide/WizardDescriptor.html#getProperties--">properties</a>
+            it passes as argument all its <a href="@org-openide-dialogs@/org/openide/WizardDescriptor.html#getProperties()">properties</a>
             to it with <code>wizard.</code> as a prefix. That way they are available to
             underlying <a href="@TOP@/architecture-summary.html#loaders-script">scripting and templating
             engines</a>.
@@ -807,14 +807,14 @@ is the proper place.
         <p>
             Since now, each DataNode constructed without using own lookup,
             shall have <code>FileObject</code>(s) associated with its
-            <a href="@TOP@/org/openide/loaders/DataObject.html#files--">DataObject</a> 
+            <a href="@TOP@/org/openide/loaders/DataObject.html#files()">DataObject</a> 
             available in its own lookup.
             Also a 
             <a href="@TOP@/org/openide/loaders/DataObject.html">DataObject</a> 
             has been retrofitted to implement a 
             <a href="@org-openide-util-lookup@/org/openide/util/Lookup.Provider.html">Lookup.Provider</a>
             interface and thus have its
-            <a href="@TOP@/org/openide/loaders/DataObject.html#getLookup--">getLookup</a> 
+            <a href="@TOP@/org/openide/loaders/DataObject.html#getLookup()">getLookup</a> 
             method that can be used instead of the old <code>getCookie</code> one.
         </p>
         </description>
@@ -1179,7 +1179,6 @@ is the proper place.
 -->
     <head>
       <title>Change History for the Loaders API</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>
 

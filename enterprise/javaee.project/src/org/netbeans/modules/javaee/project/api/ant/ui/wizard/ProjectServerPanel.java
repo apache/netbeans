@@ -611,7 +611,7 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                 Set<String> jdks = j2eePlatform.getSupportedJavaPlatformVersions();
                 // make sure that chosen source level is suported by server:
                 if (jdks != null && !jdks.contains(sourceLevel)) { // workaround for #212146 when jdks == null
-                    if ("21".equals(sourceLevel) && jdks.contains("11")) {
+                    if ("17".equals(sourceLevel) && jdks.contains("11")) {
                         sourceLevel = "11";
                     } else if ("11".equals(sourceLevel) && jdks.contains("1.8")) {
                         sourceLevel = "1.8";
@@ -634,8 +634,8 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                 String warningType = warningPanel.getWarningType();
                 if (warningType != null) {
                     switch (warningType) {
-                        case J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_21:
-                            sourceLevel = "21"; //NOI18N
+                        case J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_17:
+                            sourceLevel = "17"; //NOI18N
                             break;
                         case J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_11:
                             sourceLevel = "11"; //NOI18N

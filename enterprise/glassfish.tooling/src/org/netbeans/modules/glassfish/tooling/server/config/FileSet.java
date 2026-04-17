@@ -28,10 +28,7 @@ import java.util.Map;
  */
 public class FileSet {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Paths retrieved from XML elements. */
     private final List<String> paths;
 
@@ -44,10 +41,7 @@ public class FileSet {
     /** Links retrieved from XML elements. */
     private final List<String> lookups;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Library content for GlassFish libraries
      * configuration.
@@ -80,10 +74,7 @@ public class FileSet {
         this(paths, null, filesets, null);
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get paths retrieved from XML elements.
      * <p/>

@@ -1,0 +1,9 @@
+Code completion result for source line:
+$this->publicProtectedSet->|publicBarMethod(); // test: only public Bar (child class)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicBarMethod()               [PUBLIC]   Bar
+METHOD     publicStaticBarMethod()         [STATIC]   Bar
+VARIABLE   int iPublicPrivateSetBarField   [PUBLIC]   Bar
+VARIABLE   int iPublicProtectedSetBarFiel  [PUBLIC]   Bar
+VARIABLE   int iPublicPublicSetBarField    [PUBLIC]   Bar
+VARIABLE   int publicBarField              [PUBLIC]   Bar

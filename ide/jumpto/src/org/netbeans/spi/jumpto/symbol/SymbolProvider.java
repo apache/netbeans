@@ -184,7 +184,7 @@ public interface SymbolProvider {
     }
 
     /**
-     * Represents a collection of <tt>SymbolDescriptor</tt>s that match
+     * Represents a collection of <code>SymbolDescriptor</code>s that match
      * the given search criteria. Moreover, it can contain message
      * for the user, such as an incomplete search result.
      *

@@ -35,7 +35,6 @@ public class MozillaBrowser extends ExtWebBrowser {
     /** Creates new ExtWebBrowser */
     public MozillaBrowser() {
         super(PrivateBrowserFamilyId.MOZILLA);
-        ddeServer = ExtWebBrowser.MOZILLA;
     }
 
     /** Determines whether the browser should be visible or not
@@ -48,7 +47,7 @@ public class MozillaBrowser extends ExtWebBrowser {
             try {
                 detectedPath = NbDdeBrowserImpl.getBrowserPath("MOZILLA");      // NOI18N
             } catch (NbBrowserException e) {
-                ExtWebBrowser.getEM().log(Level.FINEST, "Cannot detect Mozilla : {0}", e);      // NOI18N
+                ExtWebBrowser.getEM().log(Level.FINEST, "Cannot detect Mozilla", e);      // NOI18N
             }
             if ((detectedPath != null) && (detectedPath.trim().length() > 0)) {
                 return Boolean.FALSE;
@@ -105,10 +104,11 @@ public class MozillaBrowser extends ExtWebBrowser {
         if (Utilities.isWindows()) {
             params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
             try {
-                prg = NbDdeBrowserImpl.getBrowserPath(getDDEServer());
-                return new NbProcessDescriptor (prg, params);
+                prg = NbDdeBrowserImpl.getBrowserPath(ExtWebBrowser.MOZILLA);
+                return new NbProcessDescriptor(prg, params);
             } catch (NbBrowserException e) {
-                    prg = "C:\\Program Files\\Mozilla.org\\Mozilla\\mozilla.exe";     // NOI18N
+                ExtWebBrowser.getEM().log(Level.FINE, "Failed to load open command", e);   // NOI18N
+                prg = "C:\\Program Files\\Mozilla.org\\Mozilla\\mozilla.exe";     // NOI18N
             } catch (UnsatisfiedLinkError e) {
                 prg = "iexplore";                                     // NOI18N
             }

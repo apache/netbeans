@@ -47,8 +47,6 @@ public class PutTransaction extends HttpServlet {
 
     private static FileObject currDir = null;
     private static boolean debug = false;
-     
-    private ServletConfig servletConfig = null;
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) 
 	throws ServletException, IOException {
@@ -174,8 +172,6 @@ public class PutTransaction extends HttpServlet {
      *
      */
     public void init(ServletConfig servletConfig) { 
-
-	this.servletConfig = servletConfig;
 	if(debug) log("init");  //NOI18N
     }
     

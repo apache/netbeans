@@ -1,0 +1,5 @@
+Code completion result for source line:
+}->|publicMethod5()::publicStaticTestMethod5();
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicMethod5()                 [PUBLIC]   {}
+METHOD     publicStaticMethod5()           [STATIC]   {}

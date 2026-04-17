@@ -24,14 +24,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import org.netbeans.api.options.OptionsDisplayer;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.cordova.platforms.spi.BuildPerformer;
 import org.netbeans.modules.cordova.platforms.spi.Device;
 import org.netbeans.modules.web.browser.api.WebBrowser;
 import org.netbeans.modules.web.browser.spi.ProjectBrowserProvider;
 import org.netbeans.spi.project.ActionProvider;
+
 import static org.netbeans.spi.project.ActionProvider.COMMAND_BUILD;
+
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -45,7 +47,7 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 
 /**
- *
+ * Cordova Action Provider. Invokes cordova build.
  * @author Jan Becicka
  */
 @NbBundle.Messages({
@@ -60,10 +62,6 @@ import org.openide.util.Utilities;
     "ERR_NO_Cordova=NetBeans cannot find cordova or git on your PATH. Please install cordova and git.\n" +
             "NetBeans might require restart for changes to take effect.\n"
 })
-/**
- * Cordova Action Provider. Invokes cordova build.
- * @author Jan Becicka
- */
 public class AndroidActionProvider implements ActionProvider {
 
     private final Project p;
@@ -146,7 +144,7 @@ public class AndroidActionProvider implements ActionProvider {
                 return;
             }
         } else if (COMMAND_RUN.equals(command) || COMMAND_RUN_SINGLE.equals(command)) {
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     String checkDevices = checkDevices(p);                    

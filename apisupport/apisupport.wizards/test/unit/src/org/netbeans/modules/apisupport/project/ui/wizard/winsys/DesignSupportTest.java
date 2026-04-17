@@ -19,6 +19,7 @@
 package org.netbeans.modules.apisupport.project.ui.wizard.winsys;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
@@ -37,9 +38,10 @@ public class DesignSupportTest extends NbTestCase {
     protected void setUp() throws IOException {
         FileSystem ms = FileUtil.createMemoryFileSystem();
         fo = ms.getRoot().createData("my.wsmode");
-        OutputStream os = fo.getOutputStream();
-        FileUtil.copy(DesignSupportTest.class.getResourceAsStream("testWsmode.xml"), os);
-        os.close();
+        try (InputStream is = DesignSupportTest.class.getResourceAsStream("testWsmode.xml");
+             OutputStream os = fo.getOutputStream()) {
+            is.transferTo(os);
+        }
     }
     public void testReadingOfAMode() throws Exception {
         String read = DesignSupport.readMode(fo);

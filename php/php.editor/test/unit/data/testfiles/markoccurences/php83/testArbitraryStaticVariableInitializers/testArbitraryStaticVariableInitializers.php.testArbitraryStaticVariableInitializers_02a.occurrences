@@ -1,0 +1,2 @@
+    private int $|>MARK_OCCURRENCES:fie^ld<| = 1;
+        static $example3 = $this->|>MARK_OCCURRENCES:field<|;

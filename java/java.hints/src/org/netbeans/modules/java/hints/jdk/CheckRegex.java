@@ -22,7 +22,6 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.StatementTree;
@@ -30,8 +29,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.tree.JCTree.JCBlock;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import java.util.List;
 import javax.lang.model.element.Name;
 import javax.swing.SwingUtilities;
@@ -126,11 +123,11 @@ public class CheckRegex {
         Tree statement = tp.getLeaf();
         BlockTree bt = null;
         while (originalString == null && tp != null) {
-            if (tp.getLeaf() instanceof JCBlock) {
+            if (tp.getLeaf() instanceof BlockTree blockTree) {
                 originalString = identifierBlockSearch(tp.getLeaf(), name, statement, bt);
-                bt = (BlockTree) tp.getLeaf();
-            } else if (tp.getLeaf() instanceof JCClassDecl) {
-                originalString = identifierClassSearch(tp.getLeaf(), name);
+                bt = blockTree;
+            } else if (tp.getLeaf() instanceof ClassTree ct) {
+                originalString = identifierClassSearch(ct, name);
             }
             tp = tp.getParentPath();
         }
@@ -151,20 +148,14 @@ public class CheckRegex {
                 if (st.equals(blocktree)) {
                     return res;
                 }
-                if (st instanceof VariableTree) {
-                    VariableTree vt = (VariableTree) st;
+                if (st instanceof VariableTree vt) {
                     if (vt.getType().toString().equalsIgnoreCase("String") && vt.getName().equals(name)) {  // NOI18N
                         LiteralTree lt = (LiteralTree) vt.getInitializer();
                         res = (String) lt.getValue();
                     }
-                } else if (st instanceof ExpressionStatementTree) {
-                    ExpressionStatementTree est = (ExpressionStatementTree) st;
-                    ExpressionTree et = est.getExpression();
-                    if (et instanceof AssignmentTree) {
-                        AssignmentTree at = (AssignmentTree) et;
-                        if (at.getVariable().toString().equals(name.toString())) {
-                            res = (String) ((LiteralTree) ((AssignmentTree) est.getExpression()).getExpression()).getValue();
-                        }
+                } else if (st instanceof ExpressionStatementTree est && est.getExpression() instanceof AssignmentTree at) {
+                    if (at.getVariable().toString().equals(name.toString())) {
+                        res = (String) ((LiteralTree) at.getExpression()).getValue();
                     }
                 }
             }
@@ -175,27 +166,20 @@ public class CheckRegex {
     }
 
     @CheckForNull
-    private static String identifierClassSearch(Tree leaf, Name name) {
+    private static String identifierClassSearch(ClassTree ct, Name name) {
         String res = null;
         try {
-            ClassTree ct = (ClassTree) leaf;
             List<? extends Tree> members = ct.getMembers();
             for (int i = 0; i < members.size(); i++) {
                 Tree t = members.get(i);
-                if (t instanceof VariableTree) {
-                    VariableTree vt = (VariableTree) t;
+                if (t instanceof VariableTree vt) {
                     if (vt.getType().toString().equalsIgnoreCase("String") && vt.getName().equals(name)) {  // NOI18N
                         LiteralTree lt = (LiteralTree) vt.getInitializer();
                         res = lt != null ? (String) lt.getValue() : null;
                     }
-                } else if (t instanceof ExpressionStatementTree) {
-                    ExpressionStatementTree est = (ExpressionStatementTree) t;
-                    ExpressionTree et = est.getExpression();
-                    if (et instanceof AssignmentTree) {
-                        AssignmentTree at = (AssignmentTree) et;
-                        if (at.getVariable().toString().equals(name.toString())) {
-                            res = (String) ((LiteralTree) ((AssignmentTree) est.getExpression()).getExpression()).getValue();
-                        }
+                } else if (t instanceof ExpressionStatementTree est && est.getExpression() instanceof AssignmentTree at) {
+                    if (at.getVariable().toString().equals(name.toString())) {
+                        res = (String) ((LiteralTree) at.getExpression()).getValue();
                     }
                 }
             }
@@ -221,14 +205,11 @@ public class CheckRegex {
 
         @Override
         protected void performRewrite(TransformationContext tc) throws Exception {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    CheckRegexTopComponent win = CheckRegexTopComponent.findInstance();
-                    win.open();
-                    win.requestActive();
-                    win.setData(origString);
-                }
+            SwingUtilities.invokeLater(() -> {
+                CheckRegexTopComponent win = CheckRegexTopComponent.findInstance();
+                win.open();
+                win.requestActive();
+                win.setData(origString);
             });
         }
 

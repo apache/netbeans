@@ -57,7 +57,7 @@ import javax.swing.border.*;
 
 * <TABLE>
 * <caption>properties of SplittedPanel</caption>
-* <TR><TH WIDTH=15%>Property<TH WIDTH=15%>Property Type<TH>Description
+* <TR><TH style="width:15%" >Property<TH style="width:15%" >Property Type<TH>Description
 * <TR><TD> SplitType            <TD> int       <TD> The type of the splitting - HORIZONTAL, VERTICAL or NONE
 * <TR><TD> SplitPosition        <TD> int       <TD> The position of the split point - either absolute position or number of percents
 *                                                   according to the "Absolute" property settings, could be one of FIRST_PREFERRED or
@@ -94,13 +94,13 @@ public class SplittedPanel extends JComponent implements Accessible {
     public static final int HORIZONTAL = 2;
 
     /** constraints constant for adding a splitter */
-    public static final Object ADD_SPLITTER = new Integer(0);
+    public static final Object ADD_SPLITTER = 0;
 
     /** constraints constant for adding a component to the first (left/top) pane */
-    public static final Object ADD_FIRST = new Integer(1);
+    public static final Object ADD_FIRST = 1;
 
     /** constraints constant for adding a component to the second (right/bottom) pane */
-    public static final Object ADD_SECOND = new Integer(2);
+    public static final Object ADD_SECOND = 2;
 
     /** constraints constant for adding a component to the left(top) pane (an alias for the ADD_FIRST constant) */
     public static final Object ADD_LEFT = ADD_FIRST;
@@ -141,10 +141,7 @@ public class SplittedPanel extends JComponent implements Accessible {
     private Boolean popupMenuEnabled;
     private boolean drawBumps;
 
-    ///////////////////////
     // Private variables //
-    ///////////////////////
-
     /** the first (left/top) component */
     private Component firstComponent = null;
 
@@ -439,10 +436,7 @@ public class SplittedPanel extends JComponent implements Accessible {
         return panesSwapped;
     }
 
-    ///////////////////////////////
     // Property accessor methods //
-    ///////////////////////////////
-
     /** Getter method for the SplitType property.
     * @return Current SplitType value.
     */
@@ -713,10 +707,7 @@ public class SplittedPanel extends JComponent implements Accessible {
         updatePopupMenu();
     }
 
-    /////////////////////
     // Event Listeners //
-    /////////////////////
-
     /** Adds specified listener to the current set of SplitChangeListeners */
     public void addSplitChangeListener(SplitChangeListener l) {
         if (listeners == null) {
@@ -813,10 +804,7 @@ public class SplittedPanel extends JComponent implements Accessible {
         init();
     }
 
-    ///////////////////
     // Inner Classes //
-    ///////////////////
-
     /** A listener interface for tracking split point changes */
     public static interface SplitChangeListener {
         /** Called when a split point changes

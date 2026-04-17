@@ -1196,7 +1196,9 @@ final class ViewBuilder {
         
         // For accurate span force computation of text layouts
         Rectangle2D.Double docViewRect = docView.getAllocationCopy();
-        if (docView.op.isAccurateSpan()) { // All pViews should already have children
+        /* In the firstReplaceValid case, we need to process firstReplace even if !isAccurateSpan,
+        to get the repaint described further below. */
+        if (docView.op.isAccurateSpan() || firstReplaceValid) { // All pViews should already have children
             int pIndex = docReplace.index;
             int endIndex = docReplace.addEndIndex();
             if (firstReplaceValid) { // Include pView of firstReplace too
@@ -1212,6 +1214,10 @@ final class ViewBuilder {
                     break;
                 }
                 pView.checkLayoutUpdate(pIndex, ViewUtils.shapeAsRect(pAlloc));
+                if (!docView.op.isAccurateSpan()) {
+                    // In this case we just needed the repaint of firstReplace via checkLayoutUpdate.
+                    break;
+                }
             }
         }
         

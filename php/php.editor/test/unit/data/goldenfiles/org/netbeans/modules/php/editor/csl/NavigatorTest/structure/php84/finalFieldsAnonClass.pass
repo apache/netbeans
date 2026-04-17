@@ -1,0 +1,64 @@
+|-#anon#finalFieldsAnonClass_php#1 [827, 5854] : ESCAPED{{}}
+|--$final [868, 873] : ESCAPED{$final}<font color="#999999">:ESCAPED{string}</font>
+|--$finalStatic [932, 943] : ESCAPED{$finalStatic}<font color="#999999">:ESCAPED{string}</font>
+|--$staticFinal [987, 998] : ESCAPED{$staticFinal}<font color="#999999">:ESCAPED{string}</font>
+|--$finalAbstract [1068, 1081] : ESCAPED{$finalAbstract}<font color="#999999">:ESCAPED{string}</font>
+|--$abstractFinal [1202, 1215] : ESCAPED{$abstractFinal}<font color="#999999">:ESCAPED{string}</font>
+|--$finalReadonly [1294, 1307] : ESCAPED{$finalReadonly}<font color="#999999">:ESCAPED{string}</font>
+|--$readonlyFinal [1336, 1349] : ESCAPED{$readonlyFinal}<font color="#999999">:ESCAPED{string}</font>
+|--$readonlyFinal2 [1371, 1385] : ESCAPED{$readonlyFinal2}
+|--$finalPublic [1440, 1451] : ESCAPED{$finalPublic}
+|--$finalPublic2 [1499, 1511] : ESCAPED{$finalPublic2}<font color="#999999">:ESCAPED{string}</font>
+|--$publicFinal [1559, 1570] : ESCAPED{$publicFinal}<font color="#999999">:ESCAPED{string}</font>
+|--$finalPrivate [1619, 1631] : ESCAPED{$finalPrivate}<font color="#999999">:ESCAPED{string}</font>
+|--$privateFinal [1689, 1701] : ESCAPED{$privateFinal}<font color="#999999">:ESCAPED{string}</font>
+|--$finalProtected [1761, 1775] : ESCAPED{$finalProtected}<font color="#999999">:ESCAPED{string}</font>
+|--$protectedFinal [1826, 1840] : ESCAPED{$protectedFinal}<font color="#999999">:ESCAPED{string}</font>
+|--$finalPublicSet [1923, 1937] : ESCAPED{$finalPublicSet}<font color="#999999">:ESCAPED{string}</font>
+|--$finalPublicSet2 [1994, 2009] : ESCAPED{$finalPublicSet2}<font color="#999999">:ESCAPED{string}</font>
+|--$finalPublicSet3 [2059, 2074] : ESCAPED{$finalPublicSet3}
+|--$finalPrivateSet [2245, 2260] : ESCAPED{$finalPrivateSet}<font color="#999999">:ESCAPED{string}</font>
+|--$finalPrivateSet2 [2318, 2334] : ESCAPED{$finalPrivateSet2}<font color="#999999">:ESCAPED{string}</font>
+|--$finalProtectedSet [2394, 2411] : ESCAPED{$finalProtectedSet}<font color="#999999">:ESCAPED{string}</font>
+|--$finalProtectedSet2 [2471, 2489] : ESCAPED{$finalProtectedSet2}<font color="#999999">:ESCAPED{string}</font>
+|--$finalStaticReadonly1 [2575, 2595] : ESCAPED{$finalStaticReadonly1}
+|--$finalStaticReadonly2 [2640, 2660] : ESCAPED{$finalStaticReadonly2}<font color="#999999">:ESCAPED{string}</font>
+|--$finalAbstractStatic1 [2730, 2750] : ESCAPED{$finalAbstractStatic1}
+|--$finalAbstractStatic2 [2792, 2812] : ESCAPED{$finalAbstractStatic2}<font color="#999999">:ESCAPED{int}</font>
+|--$finalStaticPublic1 [2882, 2900] : ESCAPED{$finalStaticPublic1}
+|--$finalStaticPublic2 [2934, 2952] : ESCAPED{$finalStaticPublic2}<font color="#999999">:ESCAPED{string}</font>
+|--$finalStaticPublicSet1 [3022, 3043] : ESCAPED{$finalStaticPublicSet1}
+|--$finalStaticPublicSet2 [3091, 3112] : ESCAPED{$finalStaticPublicSet2}<font color="#999999">:ESCAPED{string}</font>
+|--$finalAbstractReadonly1 [3188, 3210] : ESCAPED{$finalAbstractReadonly1}
+|--$finalAbstractReadonly2 [3254, 3276] : ESCAPED{$finalAbstractReadonly2}<font color="#999999">:ESCAPED{int}</font>
+|--$finalPublicPublicSet [3359, 3379] : ESCAPED{$finalPublicPublicSet}
+|--$finalPublicPublicSet1 [3447, 3468] : ESCAPED{$finalPublicPublicSet1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPublicPublicSet2 [3500, 3521] : ESCAPED{$finalPublicPublicSet2}
+|--$finalPublicPrivateSet1 [3574, 3596] : ESCAPED{$finalPublicPrivateSet1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPublicProtectedSet1 [3642, 3666] : ESCAPED{$finalPublicProtectedSet1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPrivatePublicSet1 [3710, 3732] : ESCAPED{$finalPrivatePublicSet1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPrivatePrivateSet1 [3846, 3869] : ESCAPED{$finalPrivatePrivateSet1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPrivateProtectedSet1 [3925, 3950] : ESCAPED{$finalPrivateProtectedSet1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalProtectedPublicSet1 [4005, 4029] : ESCAPED{$finalProtectedPublicSet1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalProtectedPrivateSet1 [4085, 4110] : ESCAPED{$finalProtectedPrivateSet1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalProtectedProtectedSet1 [4168, 4195] : ESCAPED{$finalProtectedProtectedSet1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPublicSetPublic1 [4239, 4260] : ESCAPED{$finalPublicSetPublic1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPublicSetPublic2 [4292, 4313] : ESCAPED{$finalPublicSetPublic2}
+|--$finalPublicSetPrivate1 [4366, 4388] : ESCAPED{$finalPublicSetPrivate1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPublicSetProtected1 [4443, 4467] : ESCAPED{$finalPublicSetProtected1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPrivateSetPublic1 [4520, 4542] : ESCAPED{$finalPrivateSetPublic1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPrivateSetPrivate1 [4587, 4610] : ESCAPED{$finalPrivateSetPrivate1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPrivateSetProtected1 [4666, 4691] : ESCAPED{$finalPrivateSetProtected1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalProtectedSetPublic1 [4737, 4761] : ESCAPED{$finalProtectedSetPublic1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalProtectedSetPrivate1 [4808, 4833] : ESCAPED{$finalProtectedSetPrivate1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalProtectedSetProtected1 [4891, 4918] : ESCAPED{$finalProtectedSetProtected1}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPublicPublicSetReadonlyError [5014, 5047] : ESCAPED{$finalPublicPublicSetReadonlyError}
+|--$finalPublicPublicSetReadonly [5108, 5136] : ESCAPED{$finalPublicPublicSetReadonly}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPublicProtectedSetReadonly [5191, 5222] : ESCAPED{$finalPublicProtectedSetReadonly}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPublicPrivateSetReadonly [5275, 5304] : ESCAPED{$finalPublicPrivateSetReadonly}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalProtectedPublicSetReadonly [5359, 5390] : ESCAPED{$finalProtectedPublicSetReadonly}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalProtectedProtectedSetReadonly [5457, 5491] : ESCAPED{$finalProtectedProtectedSetReadonly}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalProtectedPrivateSetReadonly [5547, 5579] : ESCAPED{$finalProtectedPrivateSetReadonly}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPrivatePublicSetReadonly [5632, 5661] : ESCAPED{$finalPrivatePublicSetReadonly}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPrivateProtectedSetReadonly [5726, 5758] : ESCAPED{$finalPrivateProtectedSetReadonly}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>
+|--$finalPrivatePrivateSetReadonly [5821, 5851] : ESCAPED{$finalPrivatePrivateSetReadonly}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{int}</font>

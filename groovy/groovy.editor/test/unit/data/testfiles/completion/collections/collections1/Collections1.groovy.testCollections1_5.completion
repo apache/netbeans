@@ -47,6 +47,7 @@ METHOD     contains(Object)                [PUBLIC]   boolean
 METHOD     containsAll(Collection)         [PUBLIC]   boolean
 METHOD     containsAll(Object[])                      boolean
 METHOD     containsWithinBounds(Object)    [PUBLIC]   boolean
+METHOD     copyOf(Collection<? extends E>  [STATIC,   List<E>
 METHOD     count(Closure)                             Number
 METHOD     count(Object)                              Number
 METHOD     countBy(Closure)                           Map
@@ -148,6 +149,18 @@ METHOD     minus(Object)                              List
 METHOD     multiply(Number)                           List
 METHOD     notify()                        [PUBLIC]   void
 METHOD     notifyAll()                     [PUBLIC]   void
+METHOD     of()                            [STATIC,   List<E>
+METHOD     of(E)                           [STATIC,   List<E>
+METHOD     of(E, E)                        [STATIC,   List<E>
+METHOD     of(E, E, E)                     [STATIC,   List<E>
+METHOD     of(E, E, E, E)                  [STATIC,   List<E>
+METHOD     of(E, E, E, E, E)               [STATIC,   List<E>
+METHOD     of(E, E, E, E, E, E)            [STATIC,   List<E>
+METHOD     of(E, E, E, E, E, E, E)         [STATIC,   List<E>
+METHOD     of(E, E, E, E, E, E, E, E)      [STATIC,   List<E>
+METHOD     of(E, E, E, E, E, E, E, E, E)   [STATIC,   List<E>
+METHOD     of(E, E, E, E, E, E, E, E, E,   [STATIC,   List<E>
+METHOD     of(E...)                        [STATIC,   List<E>
 METHOD     parallelStream()                [PUBLIC]   Stream<E>
 METHOD     permutations()                             Set
 METHOD     permutations(Closure)                      List
@@ -230,6 +243,7 @@ METHOD     takeRight(int)                             List
 METHOD     takeWhile(Closure)                         List
 METHOD     tap(Closure)                               Object
 METHOD     toArray()                       [PUBLIC]   Object[]
+METHOD     toArray(IntFunction<T[]>)       [PUBLIC]   T[]
 METHOD     toArray(T[])                    [PUBLIC]   T[]
 METHOD     toList()                                   List
 METHOD     toListString()                             String

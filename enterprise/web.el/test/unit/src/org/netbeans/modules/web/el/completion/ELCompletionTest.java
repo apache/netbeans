@@ -41,6 +41,15 @@ public class ELCompletionTest extends ELTestBaseForTestProject {
             "replaceAll", "replaceFirst", "split", "startsWith", "subSequence", "substring", "toCharArray",
             "toLowerCase", "toString", "toUpperCase", "trim", "bytes");
 
+    private static final List<String> STRING_METHODS_JDK17 = Arrays.asList(
+            "charAt", "chars", "codePointAt", "codePointBefore", "codePointCount", "codePoints", "compareTo",
+            "compareToIgnoreCase", "concat", "contains", "contentEquals", "describeConstable", "endsWith", "equals",
+            "equalsIgnoreCase", "formatted", "getBytes", "getChars", "getClass", "hashCode", "indent", "indexOf",
+            "intern", "isBlank", "isEmpty", "lastIndexOf", "length", "lines", "matches", "notify",
+            "notifyAll", "offsetByCodePoints", "regionMatches", "repeat", "replace", "replaceAll",
+            "replaceFirst", "resolveConstantDesc", "split", "startsWith", "strip", "stripIndent",
+            "stripLeading", "stripTrailing", "subSequence", "substring", "toCharArray", "toLowerCase",
+            "toString", "toUpperCase", "transform", "translateEscapes", "trim", "wait");
 
     public ELCompletionTest(String name) {
         super(name);
@@ -207,7 +216,7 @@ public class ELCompletionTest extends ELTestBaseForTestProject {
     }
 
     public void testIssue241160_1() throws Exception {
-        checkCompletion("projects/testWebProject/web/completion/issue241160.xhtml", "#{cc.attrs.muj.^}", false);
+        checkCompletion("projects/testWebProject/web/completion/issue241160.xhtml", "#{cc.attrs.muj.^}", false, STRING_METHODS_JDK17);
     }
 
     public void testIssue241160_2() throws Exception {

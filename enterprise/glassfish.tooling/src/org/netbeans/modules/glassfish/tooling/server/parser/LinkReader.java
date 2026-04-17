@@ -30,18 +30,12 @@ import org.xml.sax.SAXException;
  */
 public class LinkReader extends TreeParser.NodeListener {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Links retrieved from XML elements. */
     private List<String> links = new LinkedList<>();
 
 
-    ////////////////////////////////////////////////////////////////////////////
     // Tree parser methods                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Process attributes from current XML element.
      * <p/>
@@ -55,10 +49,7 @@ public class LinkReader extends TreeParser.NodeListener {
         links.add(attributes.getValue("url"));
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get links retrieved from XML elements.
      * <p/>
@@ -68,10 +59,7 @@ public class LinkReader extends TreeParser.NodeListener {
         return links;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader.
      */

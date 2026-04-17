@@ -121,4 +121,7 @@ public class FoldingTest extends PHPTestBase {
         checkFolds("testfiles/parser/php81/enumerations_01.php");
     }
 
+    public void testFoldingHeredocNowdoc() throws Exception {
+        checkFolds("testfiles/parser/foldingHeredocNowdoc.php");
+    }
 }

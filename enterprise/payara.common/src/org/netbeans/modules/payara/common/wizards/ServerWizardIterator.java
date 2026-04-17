@@ -396,13 +396,19 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
     /**
      * Set values for remote domain.
      * <p/>
-     * Domains directory shall be <code>null</code> for remote domains.
+     * For remote domains, sets the domain name and determines the domains directory path based on the environment.
+     * If running in a WSL (Windows Subsystem for Linux) environment, the domains directory is set to
+     * <code>payaraRoot/domains</code>; otherwise, the domains directory is set to <code>null</code>.
      * <p/>
      * @param domainName Domain name to set.
      */
     public void setRemoteDomain(final String domainName) {
-        this.domainsDir = null;
         this.domainName = domainName;
+        if (isWSL()) {
+            this.domainsDir = this.payaraRoot + File.separator + "domains";
+        } else {
+            this.domainsDir = null;
+        }
     }
 
     // expose for qa-functional tests
@@ -547,11 +553,11 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         if ("localhost".equals(hn)) {
             hn = "127.0.0.1";
         }
-        PayaraInstance instance = PayaraInstance.create((String) wizard.getProperty("ServInstWizard_displayName"),   // NOI18N
-                installRoot, payaraRoot, null, domainName,
-                getHttpPort(), getAdminPort(), userName, password, 
+        PayaraInstance instance = PayaraInstance.create((String) wizard.getProperty("ServInstWizard_displayName"), // NOI18N
+                installRoot, payaraRoot, wsl ? domainsDir : null, domainName,
+                getHttpPort(), getAdminPort(), userName, password,
                 wsl, docker, hostPath, containerPath, targetValue,
-                formatUri(hn, getAdminPort(), getTargetValue(),null, domainName), 
+                formatUri(hn, getAdminPort(), getTargetValue(), null, domainName),
                 instanceProvider);
         result.add(instance.getCommonInstance());
     }

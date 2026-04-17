@@ -25,10 +25,12 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -38,7 +40,6 @@ import org.openide.util.Lookup;
 import org.openide.util.LookupListener;
 import org.openide.util.Mutex;
 import org.openide.util.Utilities;
-import org.openide.util.WeakSet;
 
 
 /** Listener on a global context.
@@ -105,7 +106,7 @@ class GlobalManager extends Object implements LookupListener {
         synchronized (CACHE) {
             Set<GeneralAction.BaseDelAction> existing = listeners.get(key);
             if (existing == null) {
-                existing = new WeakSet<GeneralAction.BaseDelAction>();
+                existing = Collections.newSetFromMap(new WeakHashMap<>());
                 listeners.put(key, existing);
             }
             existing.add(a);

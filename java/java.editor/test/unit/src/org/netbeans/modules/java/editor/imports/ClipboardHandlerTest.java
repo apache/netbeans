@@ -18,9 +18,11 @@
  */
 package org.netbeans.modules.java.editor.imports;
 
+import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.Exchanger;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -34,6 +36,7 @@ import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.editor.imports.ClipboardHandler.ImportsWrapper;
 import org.netbeans.modules.java.source.BootClassPathUtil;
 import org.netbeans.modules.java.source.parsing.JavacParser;
 import org.openide.cookies.EditorCookie;
@@ -119,6 +122,111 @@ public class ClipboardHandlerTest extends NbTestCase {
                      "11");
     }
 
+    public void testSwitchSimpleEnumNames1() throws Exception {
+        doCopy("""
+               package test;
+               import static test.E.A;
+               public class Test {
+                   private void test(E e) {
+                       |switch (e) {
+                           case A:
+                           case B:
+                           case C:
+                               System.err.println(A);
+                               break;
+                       }|
+                   }
+               }
+               enum E {
+                   A, B, C;
+               }
+               """,
+               "21");
+        ImportsWrapper wrapper = (ImportsWrapper) Toolkit.getDefaultToolkit().getSystemClipboard().getData(ClipboardHandler.IMPORT_FLAVOR);
+        Map<String, String> simple2ImportFQN = wrapper.getSimple2ImportFQN();
+        assertEquals(Map.of("A", "test.E.A", "System", "java.lang.System"),
+                     simple2ImportFQN);
+    }
+
+    public void testSwitchSimpleEnumNames2() throws Exception {
+        doCopy("""
+               package test;
+               import static test.E.A;
+               public class Test {
+                   private int test(E e) {
+                       return |switch (e) {
+                           case A, B, C -> {
+                               System.err.println(A);
+                               yield 0;
+                           }
+                       }|
+                   }
+               }
+               enum E {
+                   A, B, C;
+               }
+               """,
+               "21");
+        ImportsWrapper wrapper = (ImportsWrapper) Toolkit.getDefaultToolkit().getSystemClipboard().getData(ClipboardHandler.IMPORT_FLAVOR);
+        Map<String, String> simple2ImportFQN = wrapper.getSimple2ImportFQN();
+        assertEquals(Map.of("A", "test.E.A", "System", "java.lang.System"),
+                     simple2ImportFQN);
+    }
+
+    public void testSwitchSimpleEnumNames3() throws Exception {
+        doCopy("""
+               package test;
+               import static test.E.*;
+               public class Test {
+                   private int test(Object o) {
+                       return |switch (o) {
+                           case A:
+                           case B:
+                           case C:
+                               System.err.println(A);
+                               yield 0;
+                           default: yield 0;
+                       }|
+                   }
+               }
+               enum E {
+                   A, B, C;
+               }
+               """,
+               "21");
+        ImportsWrapper wrapper = (ImportsWrapper) Toolkit.getDefaultToolkit().getSystemClipboard().getData(ClipboardHandler.IMPORT_FLAVOR);
+        Map<String, String> simple2ImportFQN = wrapper.getSimple2ImportFQN();
+        assertEquals(Map.of("A", "test.E.A", "B", "test.E.B", "C", "test.E.C", "System", "java.lang.System"),
+                     simple2ImportFQN);
+    }
+
+    public void testSwitchSimpleEnumNames4() throws Exception {
+        doCopy("""
+               package test;
+               import static test.E.A;
+               public class Test {
+                   private int test(Undef o) {
+                       return |switch (o) {
+                           case A:
+                           case B:
+                           case C:
+                               System.err.println(A);
+                               yield 0;
+                           default: yield 0;
+                       }|
+                   }
+               }
+               enum E {
+                   A, B, C;
+               }
+               """,
+               "21");
+        ImportsWrapper wrapper = (ImportsWrapper) Toolkit.getDefaultToolkit().getSystemClipboard().getData(ClipboardHandler.IMPORT_FLAVOR);
+        Map<String, String> simple2ImportFQN = wrapper.getSimple2ImportFQN();
+        assertEquals(Map.of("A", "test.E.A", "System", "java.lang.System"),
+                     simple2ImportFQN);
+    }
+
     private void copyAndPaste(String from, final String to, String golden) throws Exception {
         copyAndPaste(from, to, golden, null);
     }
@@ -128,36 +236,14 @@ public class ClipboardHandlerTest extends NbTestCase {
 
         assertTrue(pastePos >= 0);
 
-        String[] split = from.split(Pattern.quote("|"));
-
-        assertEquals(3, split.length);
-
-        final String cleanFrom = split[0] + split[1] + split[2];
-
-        final int start = split[0].length();
-        final int end = start + split[1].length();
-
-        FileObject wd = SourceUtilsTestUtil.makeScratchDir(this);
-        final FileObject src = wd.createFolder("src");
-        FileObject build = wd.createFolder("build");
-        FileObject cache = wd.createFolder("cache");
-
-        SourceUtilsTestUtil.prepareTest(src, build, cache);
-        SourceUtilsTestUtil.compileRecursively(src);
-
+        FileObject src = doCopy(from, sourceLevel);
         final JEditorPane[] target = new JEditorPane[1];
         final Exception[] fromAWT = new Exception[1];
-        
-        final JEditorPane source = paneFor(src, "test/Test.java", cleanFrom, sourceLevel);
+
         target[0] = paneFor(src, "test/Target.java", to.replaceAll(Pattern.quote("^"), ""), sourceLevel);
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override public void run() {
                 try {
-                    source.setSelectionStart(start);
-                    source.setSelectionEnd(end);
-
-                    source.copy();
-
                     target[0].setCaretPosition(pastePos);
 
                     target[0].paste();
@@ -177,6 +263,45 @@ public class ClipboardHandlerTest extends NbTestCase {
             }
         });
         assertEquals(golden, actual[0]);
+    }
+
+    private FileObject doCopy(String from, String sourceLevel) throws Exception {
+        String[] split = from.split(Pattern.quote("|"));
+
+        assertEquals(3, split.length);
+
+        final String cleanFrom = split[0] + split[1] + split[2];
+
+        final int start = split[0].length();
+        final int end = start + split[1].length();
+
+        FileObject wd = SourceUtilsTestUtil.makeScratchDir(this);
+        final FileObject src = wd.createFolder("src");
+        FileObject build = wd.createFolder("build");
+        FileObject cache = wd.createFolder("cache");
+
+        SourceUtilsTestUtil.prepareTest(src, build, cache);
+        SourceUtilsTestUtil.compileRecursively(src);
+
+        final Exception[] fromAWT = new Exception[1];
+        
+        final JEditorPane source = paneFor(src, "test/Test.java", cleanFrom, sourceLevel);
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override public void run() {
+                try {
+                    source.setSelectionStart(start);
+                    source.setSelectionEnd(end);
+
+                    source.copy();
+                } catch (Exception ex) {
+                    fromAWT[0] = ex;
+                }
+            }
+        });
+
+        if (fromAWT[0] != null) throw fromAWT[0];
+
+        return src;
     }
 
     private JEditorPane paneFor(FileObject src, String fileName, String code, String sourceLevel) throws Exception, DataObjectNotFoundException, IOException {

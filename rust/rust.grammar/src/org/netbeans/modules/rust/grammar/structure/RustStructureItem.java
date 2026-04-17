@@ -42,20 +42,21 @@ public final class RustStructureItem implements StructureItem {
         switch (node.getKind()) {
             case CRATE:
             case ENUM:
-                return "org/netbeans/modules/rust/grammar/structure/resources/structure-enum.png"; // NOI18N
+                return "org/netbeans/modules/rust/grammar/structure/resources/enum.png"; // NOI18N
             case FUNCTION:
-                return "org/netbeans/modules/rust/grammar/structure/resources/structure-function.png"; // NOI18N
+                return "org/netbeans/modules/rust/grammar/structure/resources/function.png"; // NOI18N
             case STRUCT:
-                return "org/netbeans/modules/rust/grammar/structure/resources/structure-struct.png"; // NOI18N
+                return "org/netbeans/modules/rust/grammar/structure/resources/struct.png"; // NOI18N
             case IMPL:
+                return "org/netbeans/modules/rust/grammar/structure/resources/trait.png"; // NOI18N
             case TRAIT:
-                return "org/netbeans/modules/rust/grammar/structure/resources/structure-impl.png"; // NOI18N
+                return "org/netbeans/modules/rust/grammar/structure/resources/interface.png"; // NOI18N
             case MACRO:
-                return "org/netbeans/modules/rust/grammar/structure/resources/structure-macro.png"; // NOI18N
+                return "org/netbeans/modules/rust/grammar/structure/resources/snippet.png"; // NOI18N
             case MODULE:
-                return "org/netbeans/modules/rust/grammar/structure/resources/structure-module.png"; // NOI18N
+                return "org/netbeans/modules/rust/grammar/structure/resources/module.png"; // NOI18N
             default:
-                return "org/netbeans/modules/rust/grammar/structure/resources/structure-struct.png"; // NOI18N
+                return "org/netbeans/modules/rust/grammar/structure/resources/structure.png"; // NOI18N
         }
     }
 
@@ -71,7 +72,7 @@ public final class RustStructureItem implements StructureItem {
 
     @Override
     public ImageIcon getCustomIcon() {
-        return new ImageIcon(ImageUtilities.loadImage(getIconBase(node)));
+        return ImageUtilities.loadImageIcon(getIconBase(node), false);
     }
 
     @Override

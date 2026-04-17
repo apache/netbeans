@@ -28,17 +28,11 @@ import org.netbeans.modules.payara.tooling.utils.OsUtils;
  */
 public class AsadminTool extends PayaraTool implements ToolConfig {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Asadmin tool JAR path (relative under Payara home). */
     private final String jar;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of Payara asadmin tool.
      * <p/>
@@ -50,10 +44,7 @@ public class AsadminTool extends PayaraTool implements ToolConfig {
         this.jar = OsUtils.joinPaths(lib, jar);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get asadmin tool JAR path (relative under Payara home)
      * <p/>

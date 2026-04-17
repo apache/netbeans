@@ -19,6 +19,7 @@
 package org.netbeans.modules.web.beans.analysis;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +41,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import org.openide.util.Exceptions;
 
 
 /**
@@ -81,8 +83,9 @@ public abstract class BaseAnalisysTestCase extends JavaSourceTestCase {
         
     };
 
-    public BaseAnalisysTestCase( String testName ) {
+    public BaseAnalisysTestCase(String testName, boolean jakartaVariant) {
         super(testName);
+        this.jakartaVariant = jakartaVariant;
     }
     
     /* (non-Javadoc)
@@ -91,13 +94,14 @@ public abstract class BaseAnalisysTestCase extends JavaSourceTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        myUtilities = new CdiTestUtilities(srcFO, jakartaVariant);
+        myUtilities.initAnnotations();
+        tempDir = myUtilities.setupJakartaMarker();
         GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, 
                 new ClassPath[] { ClassPath.getClassPath(srcFO, ClassPath.SOURCE) });
         GlobalPathRegistry.getDefault().register(ClassPath.BOOT, 
                 new ClassPath[] { bootCP });
         myClassPathInfo = ClasspathInfo.create(srcFO);
-        myUtilities = new CdiTestUtilities( srcFO );
-        myUtilities.initAnnotations();
     }
 
     /* (non-Javadoc)
@@ -105,6 +109,11 @@ public abstract class BaseAnalisysTestCase extends JavaSourceTestCase {
      */
     @Override
     protected void tearDown() {
+        try {
+            myUtilities.deleteTree(tempDir);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
     
     protected void runAnalysis( FileObject fileObject , 
@@ -341,6 +350,8 @@ public abstract class BaseAnalisysTestCase extends JavaSourceTestCase {
     
     private ClasspathInfo myClassPathInfo;
     private CdiTestUtilities myUtilities;
+    private final boolean jakartaVariant;
+    private Path tempDir;
     
     protected static interface ResultProcessor {
         void process ( TestProblems result );

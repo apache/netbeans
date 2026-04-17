@@ -1,10 +1,9 @@
 <html><body><font size='+0'><b><a href='*0'>test.&#x200B;Test</a></b></font><pre>public void <b>testLinkTag</b>()</pre><p>A simple program
 
- <div id="snippet1" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet1">Copy</a></div>
-<pre><code> class HelloWorld {
-     public static void main(String... args) {
-         <a href='*1'>S</a><a href='*1'>y</a><a href='*1'>s</a><a href='*1'>t</a><a href='*1'>e</a><a href='*1'>m</a><a href='*1'>.</a><a href='*1'>o</a><a href='*1'>u</a><a href='*1'>t</a>.println("Hello World!");  
- }
- }
- 
+<div id="snippet1" style="font-size: 10px; border: 1px solid black; margin-top: 2px; margin-bottom: 2px"><div align=right><a href="copy.snippet1">Copy</a></div>
+<pre><code>class HelloWorld {
+    public static void main(String... args) {
+        <a href='*1'>S</a><a href='*1'>y</a><a href='*1'>s</a><a href='*1'>t</a><a href='*1'>e</a><a href='*1'>m</a><a href='*1'>.</a><a href='*1'>o</a><a href='*1'>u</a><a href='*1'>t</a>.println("Hello World!");  
+}
+}
 </code></pre></div><p>

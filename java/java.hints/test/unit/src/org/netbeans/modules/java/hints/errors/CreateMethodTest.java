@@ -450,6 +450,36 @@ public class CreateMethodTest extends ErrorHintsTestBase {
                             -1);
     }
 
+    public void testLambdaReturnType() throws Exception {
+        sourceLevel = "1.8";
+        performFixTest("test/Test.java",
+                       """
+                       package test;
+                       import java.util.*;
+                       import java.util.function.*;
+                       public class Test {
+                           private Function<String,  List<Number>> t() {
+                               return x -> undef(x);
+                           }
+                       }
+                       """,
+                       -1,
+                       "CreateMethodFix:undef(java.lang.String x)java.util.List<java.lang.Number>:test.Test",
+                       """
+                       package test;
+                       import java.util.*;
+                       import java.util.function.*;
+                       public class Test {
+                           private Function<String,  List<Number>> t() {
+                               return x -> undef(x);
+                           }
+                           private List<Number> undef(String x) {
+                               throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+                           }
+                       }
+                       """.replaceAll("[ \n\t\r]+", " "));
+    }
+
     @Override
     protected List<Fix> computeFixes(CompilationInfo info, String diagnosticCode, int pos, TreePath path) throws Exception {
         List<Fix> fixes = new CreateElement().analyze(info, diagnosticCode, pos);

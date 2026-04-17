@@ -167,7 +167,6 @@ public class PanelProjectLocationVisual extends SettingsPanel implements Documen
         String command = evt.getActionCommand();        
         if ( "BROWSE".equals( command ) ) { // NOI18N                
             JFileChooser chooser = new JFileChooser ();
-            FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
             chooser.setDialogTitle(NbBundle.getMessage(PanelSourceFolders.class,"LBL_NWP1_SelectProjectLocation"));
             chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
             String path = this.projectLocationTextField.getText();
@@ -291,14 +290,14 @@ public class PanelProjectLocationVisual extends SettingsPanel implements Documen
                 String formatter = NbBundle.getMessage(PanelSourceFolders.class,"TXT_JavaApplication");
                 while ((projectName=validFreeProjectName(projectLocation, formatter, baseCount))==null)
                     baseCount++;                
-                settings.putProperty (NewJ2SEProjectWizardIterator.PROP_NAME_INDEX, new Integer(baseCount));
+                settings.putProperty (NewJ2SEProjectWizardIterator.PROP_NAME_INDEX, baseCount);
                 break;
             default:
                 baseCount = WizardSettings.getNewLibraryCount() + 1;
                 formatter = NbBundle.getMessage(PanelSourceFolders.class,"TXT_JavaLibrary");
                 while ((projectName=validFreeProjectName(projectLocation, formatter, baseCount))==null)
                     baseCount++;                
-                settings.putProperty (NewJ2SEProjectWizardIterator.PROP_NAME_INDEX, new Integer(baseCount));
+                settings.putProperty (NewJ2SEProjectWizardIterator.PROP_NAME_INDEX, baseCount);
             }            
         }
         this.projectNameTextField.setText (projectName);                
@@ -324,7 +323,6 @@ public class PanelProjectLocationVisual extends SettingsPanel implements Documen
     
     private static JFileChooser createChooser() {
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
         chooser.setAcceptAllFileFilterUsed( false );
         chooser.setName( "Select Project Directory" ); // XXX // NOI18N
@@ -332,7 +330,7 @@ public class PanelProjectLocationVisual extends SettingsPanel implements Documen
     }
     
     private String validFreeProjectName (final File parentFolder, final String formater, final int index) {
-        String name = MessageFormat.format (formater, new Object[]{new Integer (index)});                
+        String name = MessageFormat.format (formater, index);                
         File file = new File (parentFolder, name);
         return file.exists() ? null : name;
     }

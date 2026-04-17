@@ -46,7 +46,6 @@ public class IExplorerBrowser extends ExtWebBrowser {
     /** Creates new ExtWebBrowser */
     public IExplorerBrowser() {
         super(PrivateBrowserFamilyId.IE);
-        ddeServer = ExtWebBrowser.IEXPLORE;
     }
 
     /** Getter for browser name
@@ -90,8 +89,9 @@ public class IExplorerBrowser extends ExtWebBrowser {
 
         params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";
         try {
-            b = NbDdeBrowserImpl.getBrowserPath(getDDEServer ());
+            b = NbDdeBrowserImpl.getBrowserPath(ExtWebBrowser.IEXPLORE);
         } catch (NbBrowserException e) {
+            ExtWebBrowser.getEM().log(Level.FINE, "Failed to find path to internet explorer browser", e);   // NOI18N
             b = "C:\\Program Files\\Internet Explorer\\iexplore.exe";     // NOI18N
         } catch (UnsatisfiedLinkError e) {
             // someone is customizing this on non-Win platform

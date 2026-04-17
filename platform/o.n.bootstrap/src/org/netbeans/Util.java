@@ -25,6 +25,8 @@ import java.util.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.openide.util.*;
 import org.openide.modules.*;
 
@@ -217,6 +219,12 @@ public final class Util {
             // Satisfied sample class.
             return true;
         }
+    }
+
+    static List<Class<?>> getStack() {
+        return StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE).walk(
+                stream -> stream.map(frame -> frame.getDeclaringClass())
+                                .collect(Collectors.toList()));
     }
 
     /** 
@@ -449,7 +457,7 @@ public final class Util {
     static final class ModuleLookup extends Lookup {
         ModuleLookup() {}
         private final Set<Module> modules = new HashSet<Module>(100);
-        private final Set<ModuleResult> results = new WeakSet<ModuleResult>(10);
+        private final Set<ModuleResult> results = Collections.newSetFromMap(new WeakHashMap<>(10));
         /** Add a module to the set. */
         public void add(Module m) {
             synchronized (modules) {

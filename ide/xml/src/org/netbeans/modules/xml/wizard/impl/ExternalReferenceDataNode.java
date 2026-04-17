@@ -206,7 +206,7 @@ public class ExternalReferenceDataNode extends FilterNode {
         }
         boolean old = this.selected;
         this.selected = selected;
-        firePropertyChange(PROP_SELECTED, new Boolean(old), new Boolean(selected));
+        firePropertyChange(PROP_SELECTED, old, selected);
     }
     
     public String getNamespace() {

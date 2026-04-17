@@ -49,4 +49,28 @@ public abstract class OccurrencesFinder<T extends Parser.Result> extends ParserR
      * {@link #run}.
      */
     public abstract @NonNull Map<OffsetRange, ColoringAttributes> getOccurrences();
+
+    /**
+     * Control occurrence highlight visibility.
+     *
+     * @return {@code false} to disable occurrence highlighting. Default value
+     * is {@code true}.
+     *
+     * @since 2.88.0
+     */
+    public boolean isMarkOccurrencesEnabled() {
+        return true;
+    }
+
+    /**
+     * Control retaining highlights when carret is moved off a highlightable
+     * element. If {@code true} highlights will be retained if carret is moved
+     * off a highlightable element, if {@code false} the highlights will be
+     * removed.
+     *
+     * @since 2.88.0
+     */
+    public boolean isKeepMarks() {
+        return true;
+    }
 }

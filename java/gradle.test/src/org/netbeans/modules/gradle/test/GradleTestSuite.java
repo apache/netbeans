@@ -65,13 +65,22 @@ public final class GradleTestSuite extends TestSuite {
 
     static String suiteName(OperationDescriptor op) {
         assert op != null;
-
-        if (op instanceof JvmTestOperationDescriptor) {
-            JvmTestOperationDescriptor desc = (JvmTestOperationDescriptor)op;
-            return desc.getSuiteName() != null ? desc.getSuiteName() : desc.getClassName();
-        } else {
-            return op.getDisplayName() != null ? op.getDisplayName() : op.getName();
+        String nbSuite = null;
+        if (op instanceof JvmTestOperationDescriptor desc) {
+            // In the NetBeans wording a testsuite is the class grouping multiple
+            // methods (testcase). In the gradle wording a suite can be nested, for
+            // example the hieararchy can be:
+            // - Gradle Test Executor <Number> started
+            // - Test class <Class> started
+            // - @ParameterizedTest method name
+            // So prefer `getClassName()` over `getSuiteName()`, and neither are
+            // guaranteed to be non-null.
+            nbSuite = desc.getClassName() != null ? desc.getClassName() : desc.getSuiteName();
         }
+        if (nbSuite == null) {
+            nbSuite = op.getDisplayName() != null ? op.getDisplayName() : op.getName();
+        }
+        return nbSuite;
     }
 
 }

@@ -4,11 +4,11 @@ HINT:Class "ClassMethods" contains abstract methods and must be declared abstrac
 FIX:Add modifier: abstract
     abstract private function classAbstractPrivate();
                               --------------------
-HINT:Abstract method "classAbstractPrivate" can not be declared private
+HINT:Abstract method "classAbstractPrivate" cannot be declared private
 FIX:Remove modifier: private
     public abstract function classWithBody() {
                              -------------
-HINT:Abstract method "classWithBody" can not contain body
+HINT:Abstract method "classWithBody" cannot contain body
 FIX:Remove body of the method: classWithBody
     private function ifacePrivateMethod();
                      ------------------

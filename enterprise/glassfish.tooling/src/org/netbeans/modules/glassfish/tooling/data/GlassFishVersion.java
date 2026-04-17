@@ -35,10 +35,7 @@ import org.openide.util.Parameters;
  */
 public enum GlassFishVersion {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Enum values                                                            //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish v1. */
     GF_1        ((short) 1, (short) 0, (short) 0, (short) 0, GlassFishVersion.GF_1_STR),
     /** GlassFish v2. */
@@ -129,12 +126,31 @@ public enum GlassFishVersion {
     GF_7_0_14       ((short) 7, (short) 0, (short) 14, (short) 0, GlassFishVersion.GF_7_0_14_STR),
     /** GlassFish 7.0.15 */
     GF_7_0_15       ((short) 7, (short) 0, (short) 15, (short) 0, GlassFishVersion.GF_7_0_15_STR),
+    /** GlassFish 7.0.16 */
+    GF_7_0_16       ((short) 7, (short) 0, (short) 16, (short) 0, GlassFishVersion.GF_7_0_16_STR),
+    /** GlassFish 7.0.17 */
+    GF_7_0_17       ((short) 7, (short) 0, (short) 17, (short) 0, GlassFishVersion.GF_7_0_17_STR),
+    /** GlassFish 7.0.18 */
+    GF_7_0_18       ((short) 7, (short) 0, (short) 18, (short) 0, GlassFishVersion.GF_7_0_18_STR),
+    /** GlassFish 7.0.19 */
+    GF_7_0_19       ((short) 7, (short) 0, (short) 19, (short) 0, GlassFishVersion.GF_7_0_19_STR),
+    /** GlassFish 7.0.20 */
+    GF_7_0_20       ((short) 7, (short) 0, (short) 20, (short) 0, GlassFishVersion.GF_7_0_20_STR),
+    /** GlassFish 7.0.21 */
+    GF_7_0_21       ((short) 7, (short) 0, (short) 21, (short) 0, GlassFishVersion.GF_7_0_21_STR),
+    /** GlassFish 7.0.22 */
+    GF_7_0_22       ((short) 7, (short) 0, (short) 22, (short) 0, GlassFishVersion.GF_7_0_22_STR),
+    /** GlassFish 7.0.23 */
+    GF_7_0_23       ((short) 7, (short) 0, (short) 23, (short) 0, GlassFishVersion.GF_7_0_23_STR),
+    /** GlassFish 7.0.24 */
+    GF_7_0_24       ((short) 7, (short) 0, (short) 24, (short) 0, GlassFishVersion.GF_7_0_24_STR),
+    /** GlassFish 7.0.25 */
+    GF_7_0_25       ((short) 7, (short) 0, (short) 25, (short) 0, GlassFishVersion.GF_7_0_25_STR),
+    /** GlassFish 7.1.0 */
+    GF_7_1_0       ((short) 7, (short) 1, (short) 0, (short) 0, GlassFishVersion.GF_7_1_0_STR),
     /** GlassFish 8.0.0 */
     GF_8_0_0       ((short) 8, (short) 0, (short) 0, (short) 0, GlassFishVersion.GF_8_0_0_STR);
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish version enumeration length. */
     public static final int length = GlassFishVersion.values().length;
 
@@ -361,6 +377,61 @@ public enum GlassFishVersion {
     /** Additional {@code String} representations of GF_7_0_15 value. */
     static final String GF_7_0_15_STR_NEXT[] = {"7.0.15", "7.0.15.0"};
 
+    /** A {@code String} representation of GF_7_0_16 value. */
+    static final String GF_7_0_16_STR = "7.0.16";
+    /** Additional {@code String} representations of GF_7_0_16 value. */
+    static final String GF_7_0_16_STR_NEXT[] = {"7.0.16", "7.0.16.0"};
+
+    /** A {@code String} representation of GF_7_0_17 value. */
+    static final String GF_7_0_17_STR = "7.0.17";
+    /** Additional {@code String} representations of GF_7_0_17 value. */
+    static final String GF_7_0_17_STR_NEXT[] = {"7.0.17", "7.0.17.0"};
+
+    /** A {@code String} representation of GF_7_0_18 value. */
+    static final String GF_7_0_18_STR = "7.0.18";
+    /** Additional {@code String} representations of GF_7_0_18 value. */
+    static final String GF_7_0_18_STR_NEXT[] = {"7.0.18", "7.0.18.0"};
+
+    /** A {@code String} representation of GF_7_0_19 value. */
+    static final String GF_7_0_19_STR = "7.0.19";
+    /** Additional {@code String} representations of GF_7_0_19 value. */
+    static final String GF_7_0_19_STR_NEXT[] = {"7.0.19", "7.0.19.0"};
+
+    /** A {@code String} representation of GF_7_0_20 value. */
+    static final String GF_7_0_20_STR = "7.0.20";
+    /** Additional {@code String} representations of GF_7_0_20 value. */
+    static final String GF_7_0_20_STR_NEXT[] = {"7.0.20", "7.0.20.0"};
+
+    /** A {@code String} representation of GF_7_0_21 value. */
+    static final String GF_7_0_21_STR = "7.0.21";
+    /** Additional {@code String} representations of GF_7_0_21 value. */
+    static final String GF_7_0_21_STR_NEXT[] = {"7.0.21", "7.0.21.0"};
+
+    /** A {@code String} representation of GF_7_0_22 value. */
+    static final String GF_7_0_22_STR = "7.0.22";
+    /** Additional {@code String} representations of GF_7_0_22 value. */
+    static final String GF_7_0_22_STR_NEXT[] = {"7.0.22", "7.0.22.0"};
+
+    /** A {@code String} representation of GF_7_0_23 value. */
+    static final String GF_7_0_23_STR = "7.0.23";
+    /** Additional {@code String} representations of GF_7_0_23 value. */
+    static final String GF_7_0_23_STR_NEXT[] = {"7.0.23", "7.0.23.0"};
+
+    /** A {@code String} representation of GF_7_0_24 value. */
+    static final String GF_7_0_24_STR = "7.0.24";
+    /** Additional {@code String} representations of GF_7_0_24 value. */
+    static final String GF_7_0_24_STR_NEXT[] = {"7.0.24", "7.0.24.0"};
+    
+    /** A {@code String} representation of GF_7_0_25 value. */
+    static final String GF_7_0_25_STR = "7.0.25";
+    /** Additional {@code String} representations of GF_7_0_25 value. */
+    static final String GF_7_0_25_STR_NEXT[] = {"7.0.25", "7.0.25.0"};
+    
+    /** A {@code String} representation of GF_7_1_0 value. */
+    static final String GF_7_1_0_STR = "7.1.0";
+    /** Additional {@code String} representations of GF_7_1_0 value. */
+    static final String GF_7_1_0_STR_NEXT[] = {"7.1.0", "7.1.0.0"};
+
     /** A {@code String} representation of GF_8_0_0 value. */
     static final String GF_8_0_0_STR = "8.0.0";
     /** Additional {@code String} representations of GF_8_0_0 value. */
@@ -418,13 +489,21 @@ public enum GlassFishVersion {
         initStringValuesMapFromArray(GF_7_0_13, GF_7_0_13_STR_NEXT);
         initStringValuesMapFromArray(GF_7_0_14, GF_7_0_14_STR_NEXT);
         initStringValuesMapFromArray(GF_7_0_15, GF_7_0_15_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_16, GF_7_0_16_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_17, GF_7_0_17_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_18, GF_7_0_18_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_19, GF_7_0_19_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_20, GF_7_0_20_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_21, GF_7_0_21_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_22, GF_7_0_22_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_23, GF_7_0_23_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_24, GF_7_0_24_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_0_25, GF_7_0_25_STR_NEXT);
+        initStringValuesMapFromArray(GF_7_1_0, GF_7_1_0_STR_NEXT);
         initStringValuesMapFromArray(GF_8_0_0, GF_8_0_0_STR_NEXT);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Helper method to initialize backward String conversion <code>Map</code> with
      * additional values using additional string values arrays.
@@ -509,10 +588,7 @@ public enum GlassFishVersion {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Major version number. */
     private final short major;
 
@@ -527,10 +603,7 @@ public enum GlassFishVersion {
 
     private final String value;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server version.
      * <p/>
@@ -548,10 +621,7 @@ public enum GlassFishVersion {
         this.value = value;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get major version number.
      * <p/>
@@ -588,10 +658,7 @@ public enum GlassFishVersion {
         return build;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Compare major and minor parts of version number <code>String</code>s.
      * <p/>

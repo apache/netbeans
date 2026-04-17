@@ -1,0 +1,4 @@
+    public static string $|>MARK_OCCURRENCES:publicStaticField<| = "public static field";
+        $example = new Example()::$|>MARK_OCCURRENCES:publicStaticField<|;
+new Example()::$|>MARK_OCCURRENCES:publicS^taticField<|; // test
+new Example()->returnThis()::$|>MARK_OCCURRENCES:publicStaticField<|; // test

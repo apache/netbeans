@@ -96,7 +96,7 @@ public class JSObjectsTest extends GeneralJavaScript {
         CompletionInfo completion = getCompletion();
         CompletionJListOperator cjo = completion.listItself;
         checkCompletionItems(cjo, result);
-        completion.listItself.hideAll();
+        CompletionJListOperator.hideAll();
     }
 
     public void testLiteralArray() {

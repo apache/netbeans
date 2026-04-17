@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.164.0
+#Version 2.171.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -276,6 +276,8 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
+hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
+hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS public java.awt.Container
 cons public init()
@@ -360,6 +362,8 @@ meth public void transferFocusDownCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.awt.Component
+hfds EMPTY_ARRAY,INCLUDE_SELF,SEARCH_HEAVYWEIGHTS,component,containerListener,containerSerializedDataVersion,descendUnconditionallyWhenValidating,descendantsCount,dispatcher,eventLog,focusCycleRoot,focusTraversalPolicy,focusTraversalPolicyProvider,isJavaAwtSmartInvalidate,layoutMgr,listeningBoundsChildren,listeningChildren,log,mixingLog,modalAppContext,modalComp,numOfHWComponents,numOfLWComponents,preserveBackgroundColor,printing,printingThreads,serialPersistentFields,serialVersionUID
+hcls DropTargetEventTargetFilter,EventTargetFilter,MouseEventTargetFilter,WakingRunnable
 
 CLSS public abstract interface java.awt.MenuContainer
 meth public abstract boolean postEvent(java.awt.Event)
@@ -405,6 +409,7 @@ meth public void setPreferred(boolean)
 meth public void setShortDescription(java.lang.String)
 meth public void setValue(java.lang.String,java.lang.Object)
 supr java.lang.Object
+hfds TRANSIENT,classRef,displayName,expert,hidden,name,preferred,shortDescription,table
 
 CLSS public abstract interface !annotation java.beans.JavaBean
  anno 0 java.lang.annotation.Documented()
@@ -448,6 +453,7 @@ meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+hfds name,ordinal
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -528,6 +534,7 @@ meth public void putValue(java.lang.String,java.lang.Object)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setEnabled(boolean)
 supr java.lang.Object
+hfds RECONFIGURE_ON_NULL,arrayTable
 
 CLSS public abstract interface javax.swing.Action
 fld public final static java.lang.String ACCELERATOR_KEY = "AcceleratorKey"
@@ -747,6 +754,8 @@ meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
+hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaHint,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,lcdRenderingHint,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
+hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public javax.swing.JPanel
  anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="A generic lightweight container.")
@@ -766,6 +775,7 @@ meth public void setUI(javax.swing.plaf.PanelUI)
  anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the Component's LookAndFeel.", java.lang.String[] enumerationValues=[])
 meth public void updateUI()
 supr javax.swing.JComponent
+hfds uiClassID
 
 CLSS public javax.swing.JTable
  anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="A component which displays data in a two dimensional grid.")
@@ -1014,6 +1024,8 @@ meth public void tableChanged(javax.swing.event.TableModelEvent)
 meth public void updateUI()
 meth public void valueChanged(javax.swing.event.ListSelectionEvent)
 supr javax.swing.JComponent
+hfds autoCreateRowSorter,columnSelectionAdjusting,dragEnabled,dropLocation,dropMode,editorRemover,fillsViewportHeight,ignoreSortChange,isRowHeightSet,printError,rowModel,rowSelectionAdjusting,sortManager,sorterChanged,surrendersFocusOnKeystroke,uiClassID,updateInProgress,updateSelectionOnSort
+hcls BooleanEditor,BooleanRenderer,CellEditorRemover,DateRenderer,DoubleRenderer,GenericEditor,IconRenderer,ModelChange,NumberEditor,NumberRenderer,Resizable2,Resizable3,SortManager,ThreadSafePrintable
 
 CLSS public abstract interface javax.swing.Scrollable
 meth public abstract boolean getScrollableTracksViewportHeight()
@@ -1267,6 +1279,9 @@ meth public java.lang.String toString()
 meth public java.net.URI getEarAppDirectory()
 meth public java.net.URI getWebAppDirectory()
 meth public java.net.URI[] getResources(boolean)
+meth public java.util.concurrent.CompletableFuture<org.apache.maven.project.MavenProject> getFreshProject()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public long getLoadTimestamp()
 meth public org.apache.maven.model.Model getRawModel() throws org.apache.maven.model.building.ModelBuildingException
 meth public org.apache.maven.project.MavenProject getEvaluatedProject(org.netbeans.api.project.ProjectActionContext)
  anno 0 org.netbeans.api.annotations.common.NonNull()
@@ -1761,6 +1776,8 @@ meth public abstract java.lang.String getExecutionName()
 meth public abstract java.lang.String getTaskDisplayName()
 meth public abstract java.util.List<java.lang.String> getActivatedProfiles()
 meth public abstract java.util.List<java.lang.String> getGoals()
+meth public abstract java.util.Map<? extends java.lang.String,? extends java.lang.String> getOptions()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public abstract java.util.Map<? extends java.lang.String,? extends java.lang.String> getProperties()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public abstract java.util.Map<? extends java.lang.String,?> getInternalProperties()
@@ -1770,6 +1787,8 @@ meth public abstract org.netbeans.api.project.Project getProject()
 meth public abstract org.netbeans.modules.maven.api.execute.RunConfig getPreExecution()
 meth public abstract org.netbeans.modules.maven.api.execute.RunConfig$ReactorStyle getReactorStyle()
 meth public abstract org.openide.filesystems.FileObject getSelectedFileObject()
+meth public abstract void addOptions(java.util.Map<java.lang.String,java.lang.String>)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public abstract void addProperties(java.util.Map<java.lang.String,java.lang.String>)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public abstract void setActivatedProfiles(java.util.List<java.lang.String>)
@@ -1778,6 +1797,9 @@ meth public abstract void setInternalProperty(java.lang.String,java.lang.Object)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
 meth public abstract void setOffline(java.lang.Boolean)
+meth public abstract void setOption(java.lang.String,java.lang.String)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NullAllowed()
 meth public abstract void setPreExecution(org.netbeans.modules.maven.api.execute.RunConfig)
 meth public abstract void setProperty(java.lang.String,java.lang.String)
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -1961,6 +1983,7 @@ cons protected init(org.netbeans.api.project.Project,org.netbeans.api.progress.P
 fld protected final static java.lang.String PRJ_EXECUTE = "project-execute"
 fld protected final static java.lang.String SESSION_EXECUTE = "session-execute"
 fld protected java.util.HashMap<java.lang.String,java.util.Set<org.netbeans.modules.maven.api.output.OutputProcessor>> processors
+fld protected java.util.HashMap<java.lang.String,java.util.concurrent.atomic.AtomicInteger> id2count
 fld protected java.util.Set<org.netbeans.modules.maven.api.output.NotifyFinishOutputProcessor> toFinishProcessors
 fld protected java.util.Set<org.netbeans.modules.maven.api.output.OutputProcessor> currentProcessors
 fld protected org.netbeans.modules.maven.api.output.OutputVisitor visitor
@@ -2063,21 +2086,25 @@ meth public final void setShowError(boolean)
 meth public final void setTaskDisplayName(java.lang.String)
 meth public final void setUpdateSnapshots(boolean)
 meth public java.lang.String getActionName()
+meth public java.util.Map<? extends java.lang.String,? extends java.lang.String> getOptions()
 meth public org.netbeans.modules.maven.api.execute.RunConfig getPreExecution()
 meth public org.openide.filesystems.FileObject getSelectedFileObject()
 meth public org.openide.util.Lookup getActionContext()
+meth public void addOptions(java.util.Map<java.lang.String,java.lang.String>)
 meth public void reassignMavenProjectFromParent()
 meth public void setActionContext(org.openide.util.Lookup)
 meth public void setActionName(java.lang.String)
 meth public void setFileObject(org.openide.filesystems.FileObject)
+meth public void setOption(java.lang.String,java.lang.String)
 meth public void setPreExecution(org.netbeans.modules.maven.api.execute.RunConfig)
 supr java.lang.Object
-hfds actionContext,actionName,activate,executionDirectory,executionName,goals,interactive,internalProperties,mp,offline,parent,preexecution,project,projectDirectory,properties,reactor,recursive,selectedFO,showDebug,showError,taskName,updateSnapshots
+hfds actionContext,actionName,activate,executionDirectory,executionName,goals,interactive,internalProperties,mp,offline,options,parent,preexecution,project,projectDirectory,properties,reactor,recursive,selectedFO,showDebug,showError,taskName,updateSnapshots
 
 CLSS public org.netbeans.modules.maven.execute.CommandLineOutputHandler
 cons public init(org.openide.windows.InputOutput,org.netbeans.api.project.Project,org.netbeans.api.progress.ProgressHandle,org.netbeans.modules.maven.api.execute.RunConfig,boolean)
 fld public final static java.util.regex.Pattern reactorSummaryLine
 fld public final static java.util.regex.Pattern startPatternM2
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="")
 fld public final static java.util.regex.Pattern startPatternM3
 innr public static ContextImpl
 meth protected final void checkSleepiness()
@@ -2085,8 +2112,8 @@ meth protected org.openide.windows.InputOutput getIO()
 meth public org.netbeans.modules.maven.execute.cmd.ExecutionEventObject$Tree getExecutionTree()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 supr org.netbeans.modules.maven.execute.AbstractOutputHandler
-hfds END_TO_START_Mappings,LOG,PROCESSOR,SEC_MOJO_EXEC,addMojoFold,addProjectFold,contextImpl,currentProject,currentTag,currentTreeNode,executionTree,firstFailure,foldsBroken,forkCount,handle,inStackTrace,inp,inputOutput,linePattern,mavenSomethingPlugin,mavencoreurls,outTask,parser,projectCount,reactorFailure,reactorSize,somethingMavenPlugin,stackTraceElement,state,stdOut
-hcls FindByEvents,FindByName,Input,Output,ProgressState
+hfds END_TO_START_Mappings,LOG,PROCESSOR,SEC_MOJO_EXEC,addMojoFold,addProjectFold,contextImpl,currentProject,currentTag,currentTreeNode,executionTree,firstFailure,foldsBroken,handle,inStackTrace,inp,inputOutput,linePattern,mavenSomethingPlugin,mavencoreurls,outTask,parser,projectCount,reactorFailure,reactorSize,somethingMavenPlugin,stackTraceElement,stdOut
+hcls FindByEvents,FindByName,Input,Output
 
 CLSS public static org.netbeans.modules.maven.execute.CommandLineOutputHandler$ContextImpl
  outer org.netbeans.modules.maven.execute.CommandLineOutputHandler
@@ -2116,7 +2143,7 @@ meth public java.lang.String convert(java.lang.String,org.openide.util.Lookup)
 meth public java.util.Map<java.lang.String,java.lang.String> createReplacements(java.lang.String,org.openide.util.Lookup)
 meth public static java.util.Map<java.lang.String,java.lang.String> readVariables()
 supr java.lang.Object
-hfds ABSOLUTE_PATH,ARTIFACTID,CLASSNAME,CLASSNAME_EXT,CLASSPATHSCOPE,GROUPID,PACK_CLASSNAME,VARIABLE_PREFIX,project
+hfds ABSOLUTE_PATH,ARTIFACTID,CLASSNAME,CLASSNAME_EXT,CLASSPATHSCOPE,GROUPID,PACK_CLASSNAME,PROJECTS,VARIABLE_PREFIX,project
 
 CLSS public org.netbeans.modules.maven.execute.MavenCommandLineExecutor
 cons public init(org.netbeans.modules.maven.api.execute.RunConfig,org.openide.windows.InputOutput,org.netbeans.modules.maven.execute.AbstractMavenExecutor$TabContext)
@@ -2125,7 +2152,7 @@ meth public boolean cancel()
 meth public static org.openide.execution.ExecutorTask executeMaven(org.netbeans.modules.maven.api.execute.RunConfig,org.openide.windows.InputOutput,org.netbeans.modules.maven.execute.AbstractMavenExecutor$TabContext)
 meth public void run()
 supr org.netbeans.modules.maven.execute.AbstractMavenExecutor
-hfds ENV_JAVAHOME,ENV_PREFIX,ICON_MAVEN_PROJECT,INTERNAL_PREFIX,KEY_UUID,LOGGER,NETBEANS_MAVEN_COMMAND_LINE,RP,UPDATE_INDEX_RP,VER18,preProcess,preProcessUUID,process,processUUID
+hfds ENV_JAVAHOME,ENV_PREFIX,ICON_MAVEN_PROJECT,INTERNAL_PREFIX,KEY_UUID,LOGGER,NETBEANS_MAVEN_COMMAND_LINE,RP,UPDATE_INDEX_RP,VER18,preProcess,preProcessUUID,process,processUUID,trace
 hcls WrapperShellConstructor
 
 CLSS public static org.netbeans.modules.maven.execute.MavenCommandLineExecutor$ExecuteMaven
@@ -2133,6 +2160,12 @@ CLSS public static org.netbeans.modules.maven.execute.MavenCommandLineExecutor$E
 cons public init()
 meth public org.openide.execution.ExecutorTask execute(org.netbeans.modules.maven.api.execute.RunConfig,org.openide.windows.InputOutput,org.netbeans.modules.maven.execute.AbstractMavenExecutor$TabContext)
 supr java.lang.Object
+
+CLSS public org.netbeans.modules.maven.execute.MavenCommandLineOptions
+cons public init()
+meth public static boolean optionRequiresValue(java.lang.String)
+supr java.lang.Object
+hfds OPTIONS_WITH_VALUES
 
 CLSS public abstract interface org.netbeans.modules.maven.execute.MavenExecutor
 intf java.lang.Runnable
@@ -2263,7 +2296,9 @@ hfds actions,modelEncoding,packaging,profiles
 CLSS public org.netbeans.modules.maven.execute.model.NetbeansActionMapping
 cons public init()
 intf java.io.Serializable
+meth public boolean equals(java.lang.Object)
 meth public boolean isRecursive()
+meth public int hashCode()
 meth public java.lang.String getActionName()
 meth public java.lang.String getBasedir()
 meth public java.lang.String getDisplayName()
@@ -2273,13 +2308,16 @@ meth public java.lang.String getReactor()
 meth public java.util.List<java.lang.String> getActivatedProfiles()
 meth public java.util.List<java.lang.String> getGoals()
 meth public java.util.List<java.lang.String> getPackagings()
+meth public java.util.Map<java.lang.String,java.lang.String> getOptions()
 meth public java.util.Map<java.lang.String,java.lang.String> getProperties()
 meth public void addActivatedProfile(java.lang.String)
 meth public void addGoal(java.lang.String)
+meth public void addOption(java.lang.String,java.lang.String)
 meth public void addPackaging(java.lang.String)
 meth public void addProperty(java.lang.String,java.lang.String)
 meth public void removeActivatedProfile(java.lang.String)
 meth public void removeGoal(java.lang.String)
+meth public void removeOption(java.lang.String)
 meth public void removePackaging(java.lang.String)
 meth public void setActionName(java.lang.String)
 meth public void setActivatedProfiles(java.util.List<java.lang.String>)
@@ -2287,13 +2325,14 @@ meth public void setBasedir(java.lang.String)
 meth public void setDisplayName(java.lang.String)
 meth public void setGoals(java.util.List<java.lang.String>)
 meth public void setModelEncoding(java.lang.String)
+meth public void setOptions(java.util.Map<java.lang.String,java.lang.String>)
 meth public void setPackagings(java.util.List<java.lang.String>)
 meth public void setPreAction(java.lang.String)
 meth public void setProperties(java.util.Map<java.lang.String,java.lang.String>)
 meth public void setReactor(java.lang.String)
 meth public void setRecursive(boolean)
 supr java.lang.Object
-hfds actionName,activatedProfiles,basedir,displayName,goals,modelEncoding,packagings,preAction,properties,reactor,recursive
+hfds actionName,activatedProfiles,basedir,displayName,goals,modelEncoding,options,packagings,preAction,properties,reactor,recursive
 
 CLSS public org.netbeans.modules.maven.execute.model.NetbeansActionProfile
 cons public init()

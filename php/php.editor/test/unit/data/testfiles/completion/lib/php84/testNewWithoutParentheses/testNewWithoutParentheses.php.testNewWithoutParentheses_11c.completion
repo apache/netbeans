@@ -1,0 +1,8 @@
+Code completion result for source line:
+$example = new Example()->test::|PUBLIC_TEST_CONST;
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticTestMethod()        [STATIC]   Test
+VARIABLE   string $publicStaticTestField   [STATIC]   Test
+CONSTANT   IMPLICIT_PUBLIC_TEST_CONST "im  [PUBLIC]   Test
+CONSTANT   PUBLIC_TEST_CONST "public test  [PUBLIC]   Test
+CONSTANT   class \Test                     [PUBLIC]   Magic Constant

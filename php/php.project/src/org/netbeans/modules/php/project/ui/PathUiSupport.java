@@ -190,8 +190,8 @@ public final class PathUiSupport {
                 = "org/netbeans/modules/php/project/ui/resources/brokenProjectBadge.gif"; //NOI18N
 
         private static final ImageIcon ICON_BROKEN_BADGE = ImageUtilities.loadImageIcon(RESOURCE_ICON_BROKEN_BADGE, false);
-        private static ImageIcon ICON_FOLDER = null;
-        private static ImageIcon ICON_BROKEN_FOLDER = null;
+        private static Icon ICON_FOLDER = null;
+        private static Icon ICON_BROKEN_FOLDER = null;
 
         private final DefaultListCellRenderer delegate = new DefaultListCellRenderer();
         private final PropertyEvaluator evaluator;
@@ -253,8 +253,7 @@ public final class PathUiSupport {
                 default:
                     if (item.isBroken()) {
                         if (ICON_BROKEN_FOLDER == null) {
-                            ICON_BROKEN_FOLDER = new ImageIcon(ImageUtilities.mergeImages(getFolderIcon().getImage(),
-                                    ICON_BROKEN_BADGE.getImage(), 7, 7));
+                            ICON_BROKEN_FOLDER = ImageUtilities.mergeIcons(getFolderIcon(), ICON_BROKEN_BADGE, 7, 7);
                         }
                         return ICON_BROKEN_FOLDER;
                     }
@@ -280,10 +279,10 @@ public final class PathUiSupport {
             return null;
         }
 
-        private static ImageIcon getFolderIcon() {
+        private static Icon getFolderIcon() {
             if (ICON_FOLDER == null) {
                 DataFolder dataFolder = DataFolder.findFolder(FileUtil.getConfigRoot());
-                ICON_FOLDER = new ImageIcon(dataFolder.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
+                ICON_FOLDER = ImageUtilities.image2Icon(dataFolder.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
             }
             return ICON_FOLDER;
         }

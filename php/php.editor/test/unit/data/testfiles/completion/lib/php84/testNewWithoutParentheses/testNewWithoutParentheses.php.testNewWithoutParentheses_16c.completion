@@ -1,0 +1,6 @@
+Code completion result for source line:
+new Example()->test?->|publicTestField; // test
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+METHOD     publicStaticTestMethod()        [STATIC]   Test
+METHOD     publicTestMethod()              [PUBLIC]   Test
+VARIABLE   int publicTestField             [PUBLIC]   Test

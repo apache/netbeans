@@ -470,29 +470,29 @@ public class Document extends NodeImpl implements Node, org.w3c.dom.Document {
      * <th>Value</th>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Node.nodeName</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>
+     * <td rowspan='1' colspan='1'><code>Node.nodeName</code></td>
+     * <td rowspan='1' colspan='1'>
      *   <code>qualifiedName</code></td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Node.namespaceURI</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>
+     * <td rowspan='1' colspan='1'><code>Node.namespaceURI</code></td>
+     * <td rowspan='1' colspan='1'>
      *   <code>namespaceURI</code></td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Node.prefix</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>prefix, extracted 
+     * <td rowspan='1' colspan='1'><code>Node.prefix</code></td>
+     * <td rowspan='1' colspan='1'>prefix, extracted 
      *   from <code>qualifiedName</code>, or <code>null</code> if there is 
      *   no prefix</td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Node.localName</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>local name, extracted from 
+     * <td rowspan='1' colspan='1'><code>Node.localName</code></td>
+     * <td rowspan='1' colspan='1'>local name, extracted from 
      *   <code>qualifiedName</code></td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Element.tagName</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>
+     * <td rowspan='1' colspan='1'><code>Element.tagName</code></td>
+     * <td rowspan='1' colspan='1'>
      *   <code>qualifiedName</code></td>
      * </tr>
      * </table>
@@ -558,34 +558,34 @@ public class Document extends NodeImpl implements Node, org.w3c.dom.Document {
      * <th>Value</th>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Node.nodeName</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>qualifiedName</td>
+     * <td rowspan='1' colspan='1'><code>Node.nodeName</code></td>
+     * <td rowspan='1' colspan='1'>qualifiedName</td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'>
+     * <td rowspan='1' colspan='1'>
      *   <code>Node.namespaceURI</code></td>
-     * <td valign='top' rowspan='1' colspan='1'><code>namespaceURI</code></td>
+     * <td rowspan='1' colspan='1'><code>namespaceURI</code></td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'>
+     * <td rowspan='1' colspan='1'>
      *   <code>Node.prefix</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>prefix, extracted from 
+     * <td rowspan='1' colspan='1'>prefix, extracted from 
      *   <code>qualifiedName</code>, or <code>null</code> if there is no 
      *   prefix</td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Node.localName</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>local name, extracted from 
+     * <td rowspan='1' colspan='1'><code>Node.localName</code></td>
+     * <td rowspan='1' colspan='1'>local name, extracted from 
      *   <code>qualifiedName</code></td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Attr.name</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>
+     * <td rowspan='1' colspan='1'><code>Attr.name</code></td>
+     * <td rowspan='1' colspan='1'>
      *   <code>qualifiedName</code></td>
      * </tr>
      * <tr>
-     * <td valign='top' rowspan='1' colspan='1'><code>Node.nodeValue</code></td>
-     * <td valign='top' rowspan='1' colspan='1'>the empty 
+     * <td rowspan='1' colspan='1'><code>Node.nodeValue</code></td>
+     * <td rowspan='1' colspan='1'>the empty 
      *   string</td>
      * </tr>
      * </table>

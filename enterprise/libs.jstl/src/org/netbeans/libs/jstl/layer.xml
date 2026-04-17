@@ -29,6 +29,9 @@
       <file name="jstl.xml" url="jstl.xml">
         <attr name="displayName" bundlevalue="org/netbeans/libs/jstl/Bundle#jstl"/>
       </file>
+      <file name="jstl-jakarta.xml" url="jstl-jakarta.xml">
+        <attr name="displayName" bundlevalue="org/netbeans/libs/jstl/Bundle#jstl-jakarta"/>
+      </file>
     </folder>
   </folder>
 </filesystem>

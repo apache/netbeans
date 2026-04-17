@@ -19,28 +19,21 @@
     under the License.
 
 -->
-<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
   <defs>
     <style>
-      .cls-1 {
-        fill: #000;
-      }
-
-      .cls-1, .cls-2 {
-        stroke-width: 0px;
-      }
-
-      .cls-3 {
-        opacity: .33;
-      }
-
-      .cls-2 {
+      .st0 {
         fill: #e4958e;
+      }
+
+      .st1 {
+        opacity: .33;
       }
     </style>
   </defs>
-  <circle class="cls-2" cx="8" cy="8" r="6"/>
-  <g class="cls-3">
-    <path class="cls-1" d="M8,3c2.757,0,5,2.243,5,5s-2.243,5-5,5-5-2.243-5-5,2.243-5,5-5M8,2c-3.314,0-6,2.686-6,6s2.686,6,6,6,6-2.686,6-6-2.686-6-6-6h0Z"/>
+  <circle class="st0" cx="8" cy="8" r="6"/>
+  <g class="st1">
+    <path d="M8,3c2.757,0,5,2.243,5,5s-2.243,5-5,5-5-2.243-5-5,2.243-5,5-5M8,2c-3.314,0-6,2.686-6,6s2.686,6,6,6,6-2.686,6-6-2.686-6-6-6h0Z"/>
   </g>
 </svg>

@@ -364,6 +364,13 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
+    public void visit(ClassInstanceCreationVariable node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "ClassInstanceCreationVariable");
+        printNode.addChild(node.getName());
+        printNode.print(this);
+    }
+
+    @Override
     public void visit(ClassName className) {
         XMLPrintNode printNode = new XMLPrintNode(className, "ClassName");
         printNode.addChild(className.getName());
@@ -383,6 +390,15 @@ public class PrintASTVisitor implements Visitor {
 	buffer.append(" commentType='").append(comment.getCommentType()).append("'/>").append(NEW_LINE);
     }
 
+    @Override
+    public void visit(CompositionExpression node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "CompositionExpression",
+                new String[]{"operator", node.getOperator().name()});
+        printNode.addChild(node.getLeft());
+        printNode.addChild(node.getRight());
+        printNode.print(this);
+    }
+    
     @Override
     public void visit(ConditionalExpression node) {
         XMLPrintNode printNode = new XMLPrintNode(node, "ConditionalExpression");

@@ -200,6 +200,7 @@ public class HandlerButtonListener implements ActionListener{
                                         classTree.getTypeParameters(),
                                         classTree.getExtendsClause(),
                                         classTree.getImplementsClause(),
+                                        classTree.getPermitsClause(),
                                         classTree.getMembers());
                                 workingCopy.rewrite(classTree, modifiedClass);
                             }

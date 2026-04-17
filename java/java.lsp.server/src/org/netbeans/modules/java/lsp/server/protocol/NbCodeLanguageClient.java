@@ -138,6 +138,12 @@ public interface NbCodeLanguageClient extends LanguageClient {
      * @return code capabilities.
      */
     public NbCodeClientCapabilities getNbCodeCapabilities();
+    
+    /**
+     * Returns client configuration manager 
+     * @return ClientConfigurationManager
+     */
+    public ClientConfigurationManager getClientConfigurationManager();
 
     public default boolean isRequestDispatcherThread() {
         return Boolean.TRUE.equals(Server.DISPATCHERS.get());
@@ -153,5 +159,17 @@ public interface NbCodeLanguageClient extends LanguageClient {
     
     @JsonRequest("window/documentSave")
     public CompletableFuture<Boolean> requestDocumentSave(@NonNull SaveDocumentRequestParams documentUri);
+    
+    @JsonRequest("output/write")
+    public CompletableFuture<Void> writeOutput(OutputMessage message);
+    
+    @JsonRequest("output/show")
+    public CompletableFuture<Void> showOutput(String outputName);
+    
+    @JsonRequest("output/close")
+    public CompletableFuture<Void> closeOutput(String outputName);
+
+    @JsonRequest("output/reset")
+    public CompletableFuture<Void> resetOutput(String outputName);
     
 }

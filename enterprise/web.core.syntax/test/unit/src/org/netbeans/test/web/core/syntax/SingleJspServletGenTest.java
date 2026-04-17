@@ -172,7 +172,7 @@ public class SingleJspServletGenTest extends TestBase2 {
     }
     
     private Map<String, ClassPath> createClassPaths() throws Exception {
-        Map<String, ClassPath> cps = new HashMap<String, ClassPath>();
+        Map<String, ClassPath> cps = new HashMap<>();
         ClassPath cp = createServletAPIClassPath();
         cps.put(ClassPath.COMPILE, cp);
         return cps;

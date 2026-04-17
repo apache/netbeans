@@ -27,10 +27,7 @@ package org.netbeans.modules.glassfish.tooling.data;
 @Deprecated
 public class IdeContext {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs IDE context object and sets IDE accessors.
      * <p/>

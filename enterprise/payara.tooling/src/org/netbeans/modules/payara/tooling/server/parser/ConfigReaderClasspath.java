@@ -29,10 +29,7 @@ import org.netbeans.modules.payara.tooling.server.parser.TreeParser.Path;
  */
 public class ConfigReaderClasspath extends ConfigReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // XML reader methods                                                     //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Provide paths to listen on.
      * <p/>

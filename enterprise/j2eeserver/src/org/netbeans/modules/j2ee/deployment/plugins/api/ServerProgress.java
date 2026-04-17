@@ -43,7 +43,7 @@ import javax.enterprise.deploy.spi.exceptions.OperationUnsupportedException;
  * startDeploymentManager, stopDeploymentManager and startDebugging.  
  * Plugin will update caller on progress of the operation through
  * method calls to set status.
- * <P>
+ *
  * @author  nn136682
  */
 

@@ -305,7 +305,7 @@ public final class RecentFiles {
             }
             i = dObj == null
                     ? null
-                    : new ImageIcon(dObj.getNodeDelegate().getIcon(
+                    : ImageUtilities.image2Icon(dObj.getNodeDelegate().getIcon(
                     BeanInfo.ICON_COLOR_16x16));
         }
         return i;

@@ -37,7 +37,7 @@ import org.gradle.api.logging.Logger;
 import org.gradle.api.logging.Logging;
 import org.gradle.api.reflect.HasPublicType;
 import org.gradle.plugin.use.PluginId;
-import org.gradle.util.VersionNumber;
+import org.gradle.util.GradleVersion;
 import org.netbeans.modules.gradle.tooling.NbProjectInfoBuilder.ExceptionCallable;
 import org.netbeans.modules.gradle.tooling.NbProjectInfoBuilder.ValueAndType;
 
@@ -53,11 +53,11 @@ public class GradleInternalAdapter {
     private static final Logger LOG =  Logging.getLogger(NbProjectInfoBuilder.class);
 
     private final Project project;
-    private final VersionNumber gradleVersion;
+    private final GradleVersion gradleVersion;
     /**
-     * Accummulates error messages, so that just one problem is logger a given type of error.
+     * Accumulates error messages, so that just one problem is logger a given type of error.
      */
-    private Set<String> reportedIncompatibilities = new HashSet<>();
+    private final Set<String> reportedIncompatibilities = new HashSet<>();
     
     protected NbProjectInfoModel model;
     
@@ -70,7 +70,7 @@ public class GradleInternalAdapter {
 
     public GradleInternalAdapter(Project project) {
         this.project = project;
-        this.gradleVersion = VersionNumber.parse(project.getGradle().getGradleVersion());
+        this.gradleVersion = GradleVersion.version(project.getGradle().getGradleVersion());
     }
     
     boolean initPlugins() {
@@ -92,7 +92,7 @@ public class GradleInternalAdapter {
     }
     
     protected boolean isFixedValue(String description, ValueSupplier.ExecutionTimeValue etv) {
-        return etv.isFixedValue();
+        return etv.hasFixedValue();
     }
     
     public boolean isMutableType(Object potentialValue) {
@@ -143,7 +143,7 @@ public class GradleInternalAdapter {
     }        
     
     private <T, E extends Throwable> T sinceGradleOrDefault(String version, NbProjectInfoBuilder.ExceptionCallable<T, E> c, Supplier<T> def) {
-        if (gradleVersion.compareTo(VersionNumber.parse(version)) >= 0) {
+        if (gradleVersion.compareTo(GradleVersion.version(version)) >= 0) {
             try {
                 return c.call();
             } catch (RuntimeException | Error e) {
@@ -192,17 +192,17 @@ public class GradleInternalAdapter {
         }
     }
 
-    public static class Gradle76 extends GradleInternalAdapter {
+    public static class GradlePre76 extends GradleInternalAdapter {
         private static Optional<Method> refHasValue;
 
-        public Gradle76(Project project) {
+        public GradlePre76(Project project) {
             super(project);
         }
         
         @Override
         protected boolean isFixedValue(String description, ValueSupplier.ExecutionTimeValue etv) {
             if (refHasValue == null) {
-                refHasValue = safeCall(() -> ValueSupplier.ExecutionTimeValue.class.getMethod("hasFixedValue"), "Gradle 7.6+ ExecutionTimeValue");
+                refHasValue = safeCall(() -> ValueSupplier.ExecutionTimeValue.class.getMethod("isFixedValue"), "Gradle <7.6 ExecutionTimeValue");
             }
             if (refHasValue.isPresent()) {
                 return safeCall(() -> (Boolean)refHasValue.get().invoke(etv), description).orElse(false);

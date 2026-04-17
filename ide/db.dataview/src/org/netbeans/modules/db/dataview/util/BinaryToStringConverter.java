@@ -66,8 +66,9 @@ public class BinaryToStringConverter {
             // if user wants to see ASCII chars as characters,
             // see if this is one that should be displayed that way
             if (showAscii) {
-                if (printable.indexOf((char) value) > -1) {
-                    s = new Character((char) value) + "          ".substring(10 - (convConst.width - 1)); // NOI18N
+                char c = (char) value;
+                if (printable.indexOf(c) > -1) {
+                    s = Character.toString(c) + "          ".substring(10 - (convConst.width - 1)); // NOI18N
                 }
             }
 

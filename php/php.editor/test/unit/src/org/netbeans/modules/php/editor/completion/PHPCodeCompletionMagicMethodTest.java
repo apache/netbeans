@@ -94,6 +94,11 @@ public class PHPCodeCompletionMagicMethodTest extends PHPCodeCompletionTestBase 
                 new DefaultFilter(PhpVersion.PHP_83, "__toString"), true);
     }
 
+    public void testMagicMethodOverride_01_PHP83() throws Exception {
+        checkCompletionCustomTemplateResult(getTestPath("Override"), "    __^",
+                new DefaultFilter(PhpVersion.PHP_83, "__"), true);
+    }
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
         return Collections.singletonMap(

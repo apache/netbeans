@@ -133,7 +133,7 @@
         </compatibility>
         <description>
             <p>
-                <a href="@TOP@/org/openide/modules/Dependency.html#create-int-java.lang.String-">Dependency.create</a>
+                <a href="@TOP@/org/openide/modules/Dependency.html#create(int,java.lang.String)">Dependency.create</a>
                 now allows code name base where dot is followed by number
                 (like <em>org.apache.servicemix.specs.jsr303_api_1.0.0</em>).
                 This increases the inter-operability with OSGi bundles
@@ -159,8 +159,8 @@
             <p>
                 Each module provides by default a token composed from its
                 code name base and fixed prefix:
-                <code>"cnb." + <a href="@TOP@/org/openide/modules/ModuleInfo.html#getCodeNameBase--">getCodeNameBase()</a></code>
-                from its <a href="@TOP@/org/openide/modules/ModuleInfo.html#getProvides--">getProvides()</a>
+                <code>"cnb." + <a href="@TOP@/org/openide/modules/ModuleInfo.html#getCodeNameBase()">getCodeNameBase()</a></code>
+                from its <a href="@TOP@/org/openide/modules/ModuleInfo.html#getProvides()">getProvides()</a>
                 method.
             </p>
         </description>
@@ -451,7 +451,7 @@ javax.xml.ws</pre>
         <compatibility binary="compatible" source="compatible" semantic="compatible" deprecation="no" addition="no" deletion="no" modification="no"/>
         <description>
             Rewritten to use Java5 features, especially generics.
-            Affects internal code and <a href="@TOP@org/openide/modules/Dependency.html#create-int-java.lang.String-">one public signature</a>.
+            Affects internal code and <a href="@TOP@org/openide/modules/Dependency.html#create(int,java.lang.String)">one public signature</a>.
         </description>
         <class package="org.openide.modules" name="Dependency"/>
     </change>
@@ -1297,7 +1297,6 @@ OpenIDE-Module-Requires: org.openide.compiler.CompilationEngine,
   <htmlcontents>
     <head>
       <title>Change History for the Modules API</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>
 

@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.web.beans.impl.model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.LinkedList;
@@ -41,10 +42,10 @@ abstract class AbstractObjectProvider<T extends AbstractObjectProvider.Refreshab
     implements ObjectProvider<T> 
 {
     
-    AbstractObjectProvider(String annotation , AnnotationModelHelper helper)
+    AbstractObjectProvider(List<String> annotation , AnnotationModelHelper helper)
     {
         myHelper = helper;
-        myAnnotationName = annotation;
+        myAnnotationName = List.copyOf(annotation);
     }
 
     /* (non-Javadoc)
@@ -53,17 +54,18 @@ abstract class AbstractObjectProvider<T extends AbstractObjectProvider.Refreshab
     @Override
     public List<T> createInitialObjects() throws InterruptedException {
         final List<T> result = new LinkedList<T>();
-        getHelper().getAnnotationScanner().findAnnotations(
-                getAnnotation(), 
-                EnumSet.of(ElementKind.CLASS, ElementKind.INTERFACE), 
-                new AnnotationHandler() {
-                        @Override
-                        public void handleAnnotation(TypeElement type, 
-                                Element element, AnnotationMirror annotation) 
-                        {
-                            result.add(createTypeElement(type));
-                        }
-        });
+        for (String annotation : myAnnotationName) {
+            getHelper().getAnnotationScanner().findAnnotations(
+                    annotation,
+                    EnumSet.of(ElementKind.CLASS, ElementKind.INTERFACE),
+                    new AnnotationHandler() {
+                @Override
+                public void handleAnnotation(TypeElement type,
+                        Element element, AnnotationMirror annotation) {
+                    result.add(createTypeElement(type));
+                }
+            });
+        }
         return result;
     }
 
@@ -72,11 +74,12 @@ abstract class AbstractObjectProvider<T extends AbstractObjectProvider.Refreshab
      */
     @Override
     public List<T> createObjects( TypeElement type ) {
-        if ((type.getKind() == ElementKind.CLASS || type.getKind() == ElementKind.INTERFACE)
-                && getHelper().hasAnnotation(type.getAnnotationMirrors(), 
-                getAnnotation())) 
-        {
-            return Collections.singletonList(createTypeElement(type));
+        for (String annotation : myAnnotationName) {
+            if ((type.getKind() == ElementKind.CLASS || type.getKind() == ElementKind.INTERFACE)
+                    && getHelper().hasAnnotation(type.getAnnotationMirrors(),
+                            annotation)) {
+                return Collections.singletonList(createTypeElement(type));
+            }
         }
         return Collections.emptyList();
     }
@@ -126,15 +129,16 @@ abstract class AbstractObjectProvider<T extends AbstractObjectProvider.Refreshab
         return myHelper;
     }
     
-    protected String getAnnotation(){
+    protected List<String> getAnnotation(){
         return myAnnotationName;
     }
     
     public static List<Element> getNamedMembers( AnnotationModelHelper helper )
     {
-         List<Element> namedMembers = getAnnotatedMembers(
-                 FieldInjectionPointLogic.NAMED_QUALIFIER_ANNOTATION, helper);
-         return namedMembers;
+        List<Element> namedMembers = new ArrayList<>();
+        namedMembers.addAll(getAnnotatedMembers(FieldInjectionPointLogic.NAMED_QUALIFIER_ANNOTATION_JAKARTA, helper));
+        namedMembers.addAll(getAnnotatedMembers(FieldInjectionPointLogic.NAMED_QUALIFIER_ANNOTATION, helper));
+        return namedMembers;
     }
     
     static interface Refreshable {
@@ -142,6 +146,6 @@ abstract class AbstractObjectProvider<T extends AbstractObjectProvider.Refreshab
     }
     
     private AnnotationModelHelper myHelper;
-    private String myAnnotationName;
+    private List<String> myAnnotationName;
 
 }

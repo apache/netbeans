@@ -743,7 +743,7 @@ public class RADVisualComponent extends RADComponent {
         public void setAsText(String str) {
             if (!setValueFromString(str)) { // not one of the known constants
                 try {
-                    setValue(new Integer(Integer.parseInt(str)));
+                    setValue(Integer.valueOf(str));
                 } catch (NumberFormatException ex) {
                 }
             }

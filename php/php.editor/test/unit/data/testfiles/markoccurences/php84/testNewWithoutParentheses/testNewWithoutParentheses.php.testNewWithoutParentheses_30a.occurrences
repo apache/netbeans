@@ -1,0 +1,2 @@
+    public string $|>MARK_OCCURRENCES:publicF^ield<| = 'public field'; // anon6
+}::publicStaticMethod()->publicMethod()->|>MARK_OCCURRENCES:publicField<|;

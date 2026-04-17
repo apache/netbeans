@@ -29,10 +29,7 @@ import java.util.List;
  */
 public class OsUtils {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** System lines separator. */
     public static final String LINES_SEPARATOR
             = System.getProperty("line.separator");
@@ -67,10 +64,7 @@ public class OsUtils {
     /** Executable file suffix (nothing on UNIX, .exe on windows, etc.). */
     public static final String  EXEC_SUFFIX = IS_WIN ? ".exe" : "";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Check if OS where this JDK is running is windows.
      * <p/>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="8" height="8" version="1.1" viewBox="0 0 8 8">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #6d6d6d;
+      }
+
+      .st1 {
+        fill: none;
+        stroke: #8d8d8d;
+        stroke-miterlimit: 10;
+        stroke-width: .5px;
+      }
+
+      .st2 {
+        fill: #ececec;
+      }
+    </style>
+  </defs>
+  <g>
+    <polygon class="st2" points="1.5 7.5 1.5 .5 5.855 .5 7.5 2.129 7.5 7.5 1.5 7.5"/>
+    <path class="st0" d="M5.65,1l1.35,1.337v4.663H2V1h3.65M6.062,0H1v8h7V1.92l-1.938-1.92h0Z"/>
+  </g>
+  <polyline class="st1" points="5.5 1 5.5 2.5 7 2.5"/>
+</svg>

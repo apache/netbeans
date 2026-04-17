@@ -1119,7 +1119,7 @@ public class PersistenceUnitPanel extends SectionInnerPanel {
     
     private void libraryComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_libraryComboBoxActionPerformed
         //        setProvider();
-        ////        setSelectedLibrary();
+        // //        setSelectedLibrary();
         //        setTableGeneration();
     }//GEN-LAST:event_libraryComboBoxActionPerformed
 

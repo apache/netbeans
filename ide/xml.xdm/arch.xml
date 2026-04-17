@@ -127,7 +127,6 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
    The typical client of XDM would be a tool author supporting an XML language 
 who wants to provide a custom client API. A concrete example of this is the XML 
 Schema model. The XML Schema model starts by subclassing AbstractXDMModel and
@@ -176,7 +175,6 @@ The XDM model can be used in standalone mode.
         model.add(employee,customer,0);
 	<br/>
 </code>
-  </p>
  </answer>
 
 
@@ -383,7 +381,9 @@ document fidelity, undo/redo, and the ability to sync with the underlying source
         </question>
 -->
  <answer id="deploy-dependencies">
-   <defaultanswer generate="here"/>
+  <p>
+            default anwser deploy-dependencies XXX non existing
+  </p>
  </answer>
 
 

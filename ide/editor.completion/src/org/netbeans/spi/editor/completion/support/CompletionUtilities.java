@@ -89,21 +89,20 @@ public final class CompletionUtilities {
      *  rendering area. It may be null which means no right text will be displayed.
      * @return &gt;=0 preferred rendering width of the item.
      */
-    public static int getPreferredWidth(String leftHtmlText, String rightHtmlText,
-    Graphics g, Font defaultFont) {
-        int width = BEFORE_ICON_GAP + ICON_WIDTH + AFTER_ICON_GAP + AFTER_RIGHT_TEXT_GAP;
-        if (leftHtmlText != null && leftHtmlText.length() > 0) {
-            width += (int)PatchedHtmlRenderer.renderHTML(leftHtmlText, g, 0, 0, Integer.MAX_VALUE, 0,
+    public static int getPreferredWidth(String leftHtmlText, String rightHtmlText, Graphics g, Font defaultFont) {
+        double width = BEFORE_ICON_GAP + ICON_WIDTH + AFTER_ICON_GAP + AFTER_RIGHT_TEXT_GAP;
+        if (leftHtmlText != null && !leftHtmlText.isEmpty()) {
+            width += PatchedHtmlRenderer.renderHTML(leftHtmlText, g, 0, 0, Integer.MAX_VALUE, 0,
                     defaultFont, Color.black, PatchedHtmlRenderer.STYLE_CLIP, false, true);
         }
-        if (rightHtmlText != null && rightHtmlText.length() > 0) {
+        if (rightHtmlText != null && !rightHtmlText.isEmpty()) {
             if (leftHtmlText != null) {
                 width += BEFORE_RIGHT_TEXT_GAP;
             }
-            width += (int)PatchedHtmlRenderer.renderHTML(rightHtmlText, g, 0, 0, Integer.MAX_VALUE, 0,
+            width += PatchedHtmlRenderer.renderHTML(rightHtmlText, g, 0, 0, Integer.MAX_VALUE, 0,
                     defaultFont, Color.black, PatchedHtmlRenderer.STYLE_CLIP, false, true);
         }
-        return width;
+        return (int) Math.ceil(width);
     }
     
     /**
@@ -144,12 +143,11 @@ public final class CompletionUtilities {
      *  to be black for all parts of the rendered strings.
      */
     public static void renderHtml(ImageIcon icon, String leftHtmlText, String rightHtmlText,
-    Graphics g, Font defaultFont, Color defaultColor,
-    int width, int height, boolean selected) {
+            Graphics g, Font defaultFont, Color defaultColor,
+            int width, int height, boolean selected)
+    {
         if (icon != null) {
-            // The image of the ImageIcon should already be loaded
-            // so no ImageObserver should be necessary
-            g.drawImage(icon.getImage(), BEFORE_ICON_GAP, (height - icon.getIconHeight()) /2, null);
+            icon.paintIcon(null, g, BEFORE_ICON_GAP, (height - icon.getIconHeight())  /2);
         }
         int iconWidth = BEFORE_ICON_GAP + (icon != null ? icon.getIconWidth() : ICON_WIDTH) + AFTER_ICON_GAP;
         int rightTextX = width - AFTER_RIGHT_TEXT_GAP;

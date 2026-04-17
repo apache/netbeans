@@ -108,32 +108,6 @@ public class MapFormat extends Format {
         return temp.format(pattern);
     }
 
-    // unused so removed --jglick
-
-    /**
-    * Search for comments and quotation marks.
-    * Prepares internal structures.
-    * @param pattern String to be parsed.
-    * @param lmark Left mark of to-be-skipped block.
-    * @param rmark Right mark of to-be-skipped block or null if does not exist (// comment).
-    private void process(String pattern, String lmark, String rmark)
-    {
-        int idx = 0;
-        while (true) {
-            int ridx = -1, lidx = pattern.indexOf(lmark,idx);
-            if (lidx >= 0) {
-                if (rmark != null) {
-                    ridx = pattern.indexOf(rmark,lidx + lmark.length());
-                } else ridx = pattern.length();
-            } else break;
-            if (ridx >= 0) {
-                skipped.put(new Range(lidx, ridx-lidx));
-                if (rmark != null) idx = ridx+rmark.length();
-                else break;
-            } else break;
-        }
-    }
-    */
     /** Returns the value for given key. Subclass may define its own beahvior of
     * this method. For example, if key is not defined, subclass can return &lt;not defined&gt;
     * string.
@@ -280,7 +254,7 @@ public class MapFormat extends Format {
                     throw new IllegalArgumentException(
                         MessageFormat.format(
                             NbBundle.getBundle(MapFormat.class).getString("MSG_FMT_ObjectForKey"),
-                            new Object[] { new Integer(key) }
+                            Integer.valueOf(key)
                         )
                     );
                 } else {
@@ -421,106 +395,4 @@ public class MapFormat extends Format {
         argmap = map;
     }
 
-    // commented out because unused --jglick
-
-    /**
-    * Range of expression in string.
-    * Used internally to store information about quotation marks and comments
-    * in formatted string.
-    *
-    * @author   Slavek Psenicka
-    * @version  1.0, March 11. 1999
-    *
-    class Range extends Object
-    {
-        /** Offset of expression *
-        private int offset;
-
-        /** Length of expression *
-        private int length;
-
-        /** Constructor *
-        public Range(int off, int len)
-        {
-            offset = off;
-            length = len;
-        }
-
-        /** Returns offset *
-        public int getOffset()
-        {
-            return offset;
-        }
-
-        /** Returns length of expression *
-        public int getLength()
-        {
-            return length;
-        }
-
-        /** Returns final position of expression *
-        public int getEnd()
-        {
-            return offset+length;
-        }
-
-        public String toString()
-        {
-            return "("+offset+", "+length+")"; // NOI18N
-        }
-    }
-
-    /**
-    * List of ranges.
-    * Used internally to store information about quotation marks and comments
-    * in formatted string.
-    *
-    * @author   Slavek Psenicka
-    * @version  1.0, March 11. 1999
-    *
-    class RangeList
-    {
-        /** Map with Ranges *
-        private HashMap hmap;
-
-        /** Constructor *
-        public RangeList()
-        {
-            hmap = new HashMap();
-        }
-
-        /** Returns true if offset is enclosed by any Range object in list *
-        public boolean containsOffset(int offset)
-        {
-            return (getRangeContainingOffset(offset) != null);
-        }
-
-        /** Returns enclosing Range object in list for given offset *
-        public Range getRangeContainingOffset(int offset)
-        {
-            if (hmap.size() == 0) return null;
-            int offit = offset;
-            while (offit-- >= 0) {
-                Integer off = new Integer(offit);
-                if (hmap.containsKey(off)) {
-                    Range ran = (Range)hmap.get(off);
-                    if (ran.getEnd() - offset > 0) return ran;
-                }
-            }
-
-            return null;
-        }
-
-        /** Puts new range into list *
-        public void put(Range range)
-        {
-            hmap.put(new Integer(range.getOffset()), range);
-        }
-
-        public String toString()
-        {
-            return hmap.toString();
-        }
-    }
-     */
 }

@@ -46,7 +46,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class ProgrammaticTest extends CommonTestCase {
 
     public ProgrammaticTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
     
     public void testProgrammatic() throws IOException{

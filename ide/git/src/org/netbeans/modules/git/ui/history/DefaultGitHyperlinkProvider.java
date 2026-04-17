@@ -107,18 +107,27 @@ public class DefaultGitHyperlinkProvider extends VCSHyperlinkProvider {
             if (origin != null) {
                 for (String str : origin.getUris()) {
                     GitURI uri = new GitURI(str);
-                    String path = uri.getPath().substring(0, uri.getPath().length() - 4); // remove .git postfix
-                    if (!path.startsWith("/")) {
-                        path = "/" + path;
+                    String host = uri.getHost();
+                    if (host == null) {
+                        continue;
                     }
-                    String page = null;
-                    if (uri.getHost().equals("github.com")) {
-                        page = "/pull/" + id; // url works for issues too
-                    } else if (uri.getHost().contains("gitlab")) {
-                        page = "/-/issues/" + id; // does gitlab auto link merge_requests ?
-                    }
+                    String page = switch (host) {
+                        case "github.com" -> "/pull/" + id; // for issues and PRs
+                        case "codeberg.org" -> "/pulls/" + id; // for issues and PRs
+                        default -> {
+                            if (host.contains("gitlab")) {
+                                yield "/-/issues/" + id; // does gitlab auto link merge_requests ?
+                            } else {
+                                yield null;
+                            }
+                        }
+                    };
                     if (page != null) {
-                        URI link = URI.create("https://" + uri.getHost() + path + page);
+                        String path = uri.getPath().substring(0, uri.getPath().length() - 4); // remove .git postfix
+                        if (!path.startsWith("/")) {
+                            path = "/" + path;
+                        }
+                        URI link = URI.create("https://" + host + path + page);
                         Desktop.getDesktop().browse(link);
                         return;
                     }

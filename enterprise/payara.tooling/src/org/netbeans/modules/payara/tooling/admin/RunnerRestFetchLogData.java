@@ -44,10 +44,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class RunnerRestFetchLogData extends RunnerRest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Extracts query string from passed View Log command entity.
      * <p.>
@@ -65,10 +62,7 @@ public class RunnerRestFetchLogData extends RunnerRest {
         
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Payara log lines.
      * <p/>
@@ -99,10 +93,7 @@ public class RunnerRestFetchLogData extends RunnerRest {
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     ResultLog result;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     // TODO: Make this "/management/domain/" command v3 only after
     //       NetBeans 7.3 release.
     /**
@@ -117,10 +108,7 @@ public class RunnerRestFetchLogData extends RunnerRest {
         super(server, command, "/management/domain/", query(command));
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create <code>ResultLog</code> object corresponding
      * to server log command execution value to be returned.

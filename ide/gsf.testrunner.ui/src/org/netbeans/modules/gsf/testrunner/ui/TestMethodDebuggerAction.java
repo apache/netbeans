@@ -20,9 +20,7 @@ package org.netbeans.modules.gsf.testrunner.ui;
 
 import java.util.Collection;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodDebuggerProvider;
-import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodRunnerProvider;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -31,7 +29,6 @@ import org.openide.awt.StatusDisplayer;
 import org.openide.nodes.Node;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
-import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.TaskListener;
@@ -88,7 +85,7 @@ public class TestMethodDebuggerAction extends NodeAction {
                 }
             }
         });
-        final ProgressHandle ph = ProgressHandleFactory.createHandle(Bundle.Search_For_Provider(), debugMethodTask);
+        final ProgressHandle ph = ProgressHandle.createHandle(Bundle.Search_For_Provider(), debugMethodTask);
         debugMethodTask.addTaskListener(new TaskListener() {
             @Override
             public void taskFinished(org.openide.util.Task task) {

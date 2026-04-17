@@ -38,7 +38,6 @@ import org.netbeans.spi.viewmodel.UnknownTypeException;
 import org.openide.ErrorManager;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 
 
 

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.33
+#Version 9.39
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -47,20 +47,28 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public abstract java.io.InputStream
 cons public init()
 intf java.io.Closeable
 meth public abstract int read() throws java.io.IOException
 meth public boolean markSupported()
+meth public byte[] readAllBytes() throws java.io.IOException
+meth public byte[] readNBytes(int) throws java.io.IOException
 meth public int available() throws java.io.IOException
 meth public int read(byte[]) throws java.io.IOException
 meth public int read(byte[],int,int) throws java.io.IOException
+meth public int readNBytes(byte[],int,int) throws java.io.IOException
 meth public long skip(long) throws java.io.IOException
+meth public long transferTo(java.io.OutputStream) throws java.io.IOException
+meth public static java.io.InputStream nullInputStream()
 meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
+meth public void skipNBytes(long) throws java.io.IOException
 supr java.lang.Object
+hfds DEFAULT_BUFFER_SIZE,MAX_BUFFER_SIZE,MAX_SKIP_BUFFER_SIZE
 
 CLSS public abstract interface java.io.ObjectInput
 intf java.io.DataInput
@@ -90,7 +98,9 @@ meth public boolean readBoolean() throws java.io.IOException
 meth public byte readByte() throws java.io.IOException
 meth public char readChar() throws java.io.IOException
 meth public double readDouble() throws java.io.IOException
+meth public final java.io.ObjectInputFilter getObjectInputFilter()
 meth public final java.lang.Object readObject() throws java.io.IOException,java.lang.ClassNotFoundException
+meth public final void setObjectInputFilter(java.io.ObjectInputFilter)
 meth public float readFloat() throws java.io.IOException
 meth public int available() throws java.io.IOException
 meth public int read() throws java.io.IOException
@@ -102,7 +112,7 @@ meth public int skipBytes(int) throws java.io.IOException
 meth public java.io.ObjectInputStream$GetField readFields() throws java.io.IOException,java.lang.ClassNotFoundException
 meth public java.lang.Object readUnshared() throws java.io.IOException,java.lang.ClassNotFoundException
 meth public java.lang.String readLine() throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String readUTF() throws java.io.IOException
 meth public long readLong() throws java.io.IOException
 meth public short readShort() throws java.io.IOException
@@ -112,6 +122,8 @@ meth public void readFully(byte[]) throws java.io.IOException
 meth public void readFully(byte[],int,int) throws java.io.IOException
 meth public void registerValidation(java.io.ObjectInputValidation,int) throws java.io.InvalidObjectException,java.io.NotActiveException
 supr java.io.InputStream
+hfds NULL_HANDLE,UNSAFE,bin,closed,curContext,defaultDataEnd,depth,enableOverride,enableResolve,handles,passHandle,primClasses,serialFilter,streamFilterSet,totalObjectRefs,unsharedMarker,vlist
+hcls BlockDataInputStream,Caches,FieldValues,FilterValues,HandleTable,Logging,PeekInputStream,ValidationList
 
 CLSS public abstract interface java.io.ObjectOutput
 intf java.io.DataOutput
@@ -161,6 +173,8 @@ meth public void writeShort(int) throws java.io.IOException
 meth public void writeUTF(java.lang.String) throws java.io.IOException
 meth public void writeUnshared(java.lang.Object) throws java.io.IOException
 supr java.io.OutputStream
+hfds bout,curContext,curPut,debugInfoStack,depth,enableOverride,enableReplace,extendedDebugInfo,handles,primVals,protocol,subs
+hcls BlockDataOutputStream,Caches,DebugTraceInfoStack,HandleTable,PutFieldImpl,ReplaceTable
 
 CLSS public abstract interface java.io.ObjectStreamConstants
 fld public final static byte SC_BLOCK_DATA = 8
@@ -188,6 +202,7 @@ fld public final static byte TC_STRING = 116
 fld public final static int PROTOCOL_VERSION_1 = 1
 fld public final static int PROTOCOL_VERSION_2 = 2
 fld public final static int baseWireHandle = 8257536
+fld public final static java.io.SerializablePermission SERIAL_FILTER_PERMISSION
 fld public final static java.io.SerializablePermission SUBCLASS_IMPLEMENTATION_PERMISSION
 fld public final static java.io.SerializablePermission SUBSTITUTION_PERMISSION
 fld public final static short STREAM_MAGIC = -21267
@@ -198,6 +213,7 @@ cons public init()
 intf java.io.Closeable
 intf java.io.Flushable
 meth public abstract void write(int) throws java.io.IOException
+meth public static java.io.OutputStream nullOutputStream()
 meth public void close() throws java.io.IOException
 meth public void flush() throws java.io.IOException
 meth public void write(byte[]) throws java.io.IOException
@@ -214,8 +230,10 @@ CLSS public abstract interface java.lang.Cloneable
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -224,6 +242,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -240,6 +259,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -261,6 +281,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -283,6 +304,8 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -322,6 +345,8 @@ meth public java.lang.Object clone()
 meth public java.lang.Object parseObject(java.lang.String) throws java.text.ParseException
 meth public java.text.AttributedCharacterIterator formatToCharacterIterator(java.lang.Object)
 supr java.lang.Object
+hfds serialVersionUID
+hcls FieldDelegate
 
 CLSS public abstract java.util.AbstractCollection<%0 extends java.lang.Object>
 cons protected init()
@@ -364,6 +389,7 @@ meth public {java.util.AbstractMap%1} get(java.lang.Object)
 meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.AbstractMap%1})
 meth public {java.util.AbstractMap%1} remove(java.lang.Object)
 supr java.lang.Object
+hfds keySet,values
 
 CLSS public abstract java.util.AbstractSet<%0 extends java.lang.Object>
 cons protected init()
@@ -375,6 +401,7 @@ supr java.util.AbstractCollection<{java.util.AbstractSet%0}>
 
 CLSS public abstract interface java.util.Collection<%0 extends java.lang.Object>
 intf java.lang.Iterable<{java.util.Collection%0}>
+meth public <%0 extends java.lang.Object> {%%0}[] toArray(java.util.function.IntFunction<{%%0}[]>)
 meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
 meth public abstract boolean add({java.util.Collection%0})
 meth public abstract boolean addAll(java.util.Collection<? extends {java.util.Collection%0}>)
@@ -404,9 +431,12 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
+hfds serialVersionUID
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry
+meth public !varargs static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> ofEntries(java.util.Map$Entry<? extends {%%0},? extends {%%1}>[])
+ anno 0 java.lang.SafeVarargs()
 meth public abstract boolean containsKey(java.lang.Object)
 meth public abstract boolean containsValue(java.lang.Object)
 meth public abstract boolean equals(java.lang.Object)
@@ -423,6 +453,19 @@ meth public abstract {java.util.Map%1} put({java.util.Map%0},{java.util.Map%1})
 meth public abstract {java.util.Map%1} remove(java.lang.Object)
 meth public boolean remove(java.lang.Object,java.lang.Object)
 meth public boolean replace({java.util.Map%0},{java.util.Map%1},{java.util.Map%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map$Entry<{%%0},{%%1}> entry({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> copyOf(java.util.Map<? extends {%%0},? extends {%%1}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
 meth public void forEach(java.util.function.BiConsumer<? super {java.util.Map%0},? super {java.util.Map%1}>)
 meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
 meth public {java.util.Map%1} compute({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
@@ -435,6 +478,8 @@ meth public {java.util.Map%1} replace({java.util.Map%0},{java.util.Map%1})
 
 CLSS public abstract interface java.util.Set<%0 extends java.lang.Object>
 intf java.util.Collection<{java.util.Set%0}>
+meth public !varargs static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0}[])
+ anno 0 java.lang.SafeVarargs()
 meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
 meth public abstract boolean add({java.util.Set%0})
 meth public abstract boolean addAll(java.util.Collection<? extends {java.util.Set%0}>)
@@ -451,6 +496,18 @@ meth public abstract java.lang.Object[] toArray()
 meth public abstract java.util.Iterator<{java.util.Set%0}> iterator()
 meth public abstract void clear()
 meth public java.util.Spliterator<{java.util.Set%0}> spliterator()
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> copyOf(java.util.Collection<? extends {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of()
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
 
 CLSS public abstract interface java.util.concurrent.Executor
 meth public abstract void execute(java.lang.Runnable)
@@ -480,7 +537,7 @@ meth public abstract java.util.concurrent.ScheduledFuture<?> scheduleWithFixedDe
 CLSS public abstract org.openide.util.BaseUtilities
 fld public final static int OS_AIX = 64
 fld public final static int OS_DEC = 1024
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int OS_FREEBSD = 131072
 fld public final static int OS_HP = 32
 fld public final static int OS_IRIX = 128
@@ -493,14 +550,14 @@ fld public final static int OS_SOLARIS = 8
 fld public final static int OS_SUNOS = 256
 fld public final static int OS_TRU64 = 512
 fld public final static int OS_UNIX_MASK = 1709048
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int OS_UNIX_OTHER = 524288
 fld public final static int OS_VMS = 16384
 fld public final static int OS_WIN2000 = 8192
 fld public final static int OS_WIN95 = 2
 fld public final static int OS_WIN98 = 4
 fld public final static int OS_WINDOWS_MASK = 303111
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int OS_WINNT = 1
 fld public final static int OS_WINVISTA = 262144
 fld public final static int OS_WIN_OTHER = 32768
@@ -648,7 +705,7 @@ supr java.lang.Object
 CLSS public final static org.openide.util.Lookup$Template<%0 extends java.lang.Object>
  outer org.openide.util.Lookup
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.Class<{org.openide.util.Lookup$Template%0}>)
 cons public init(java.lang.Class<{org.openide.util.Lookup$Template%0}>,java.lang.String,{org.openide.util.Lookup$Template%0})
 meth public boolean equals(java.lang.Object)
@@ -743,7 +800,7 @@ hfds ex,serialVersionUID
 
 CLSS public org.openide.util.NbBundle
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr public abstract interface static !annotation Messages
 innr public abstract interface static ClassLoaderFinder
 meth public !varargs static java.lang.String getMessage(java.lang.Class<?>,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object,java.lang.Object[])
@@ -758,11 +815,11 @@ meth public static java.lang.String getMessage(java.lang.Class<?>,java.lang.Stri
 meth public static java.lang.String getMessage(java.lang.Class<?>,java.lang.String,java.lang.Object,java.lang.Object,java.lang.Object)
 meth public static java.lang.String getMessage(java.lang.Class<?>,java.lang.String,java.lang.Object[])
 meth public static java.net.URL getLocalizedFile(java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.net.URL getLocalizedFile(java.lang.String,java.lang.String,java.util.Locale)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.net.URL getLocalizedFile(java.lang.String,java.lang.String,java.util.Locale,java.lang.ClassLoader)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.util.Iterator<java.lang.String> getLocalizingSuffixes()
 meth public static java.util.ResourceBundle getBundle(java.lang.Class<?>)
 meth public static java.util.ResourceBundle getBundle(java.lang.String)
@@ -770,16 +827,16 @@ meth public static java.util.ResourceBundle getBundle(java.lang.String,java.util
 meth public static java.util.ResourceBundle getBundle(java.lang.String,java.util.Locale,java.lang.ClassLoader)
 meth public static void setBranding(java.lang.String)
 meth public static void setClassLoaderFinder(org.openide.util.NbBundle$ClassLoaderFinder)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds LOG,USE_DEBUG_LOADER,brandingToken,bundleCache,localizedFileCache,utfThenIsoCharset,utfThenIsoCharsetOnlyUTF8
 hcls AttributesMap,DebugLoader,LocaleIterator,MergedBundle,PBundle,UtfThenIsoCharset
 
 CLSS public abstract interface static org.openide.util.NbBundle$ClassLoaderFinder
  outer org.openide.util.NbBundle
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.lang.ClassLoader find()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public abstract interface static !annotation org.openide.util.NbBundle$Messages
  outer org.openide.util.NbBundle
@@ -870,13 +927,13 @@ meth public org.openide.util.RequestProcessor$Task post(java.lang.Runnable,int)
 meth public org.openide.util.RequestProcessor$Task post(java.lang.Runnable,int,int)
 meth public static org.openide.util.RequestProcessor getDefault()
 meth public static org.openide.util.RequestProcessor$Task createRequest(java.lang.Runnable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openide.util.RequestProcessor$Task postRequest(java.lang.Runnable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openide.util.RequestProcessor$Task postRequest(java.lang.Runnable,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openide.util.RequestProcessor$Task postRequest(java.lang.Runnable,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void execute(java.lang.Runnable)
 meth public void shutdown()
 meth public void stop()
@@ -965,6 +1022,7 @@ meth public static javax.swing.event.DocumentListener document(javax.swing.event
 supr java.lang.Object
 
 CLSS public org.openide.util.WeakSet<%0 extends java.lang.Object>
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="")
 cons public init()
 cons public init(int)
 cons public init(int,float)
@@ -995,7 +1053,7 @@ hcls SharedKeyWeakHashMap
 
 CLSS public org.openide.util.io.FoldingIOException
 cons public init(java.lang.Throwable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getLocalizedMessage()
 meth public java.lang.String toString()
 meth public void printStackTrace()
@@ -1090,7 +1148,7 @@ meth public abstract void writeAccess(java.lang.Runnable)
 CLSS public abstract org.openide.xml.EntityCatalog
 cons protected init()
 fld public final static java.lang.String PUBLIC_ID = "-//NetBeans//Entity Mapping Registration 1.0//EN"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 intf org.xml.sax.EntityResolver
 meth public static org.openide.xml.EntityCatalog getDefault()
 supr java.lang.Object

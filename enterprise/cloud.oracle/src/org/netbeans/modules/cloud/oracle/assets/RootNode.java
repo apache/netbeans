@@ -39,7 +39,7 @@ public class RootNode {
     
     private static Node instance = null;
 
-    static synchronized Node instance() {
+    public static synchronized Node instance() {
         if (instance == null) {
             instance = new AbstractNode(
                 Children.create(new AssetsChildren(OCIManager.getDefault().getActiveSession()), true));

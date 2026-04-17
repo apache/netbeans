@@ -61,11 +61,13 @@ CLASS      MutableMetaClass                           null
 CLASS      NavigableMap                               null
 CLASS      NavigableSet                               null
 CLASS      ObjectInput                                null
+CLASS      ObjectInputFilter                          null
 CLASS      ObjectInputValidation                      null
 CLASS      ObjectOutput                               null
 CLASS      ObjectStreamConstants                      null
 CLASS      Observer                                   null
 CLASS      PrimitiveIterator                          null
+CLASS      ProcessHandle                              null
 CLASS      PropertyAccessInterceptor                  null
 CLASS      ProtocolFamily                             null
 CLASS      Queue                                      null

@@ -59,7 +59,7 @@ import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.ui.ElementOpen;
 import org.netbeans.api.java.source.ui.ScanDialog;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -318,11 +318,11 @@ public final class JavaUtils {
                 ScanDialog.runWhenScanFinished(new Runnable() {
                     @Override
                     public void run() {
-                        ProgressUtils.runOffEventDispatchThread(classFinder, Bundle.JavaUtils_title_class_searching(), cancel, false);
+                        BaseProgressUtils.runOffEventDispatchThread(classFinder, Bundle.JavaUtils_title_class_searching(), cancel, false);
                     }
                 }, Bundle.JavaUtils_title_class_searching());
             } else {
-                ProgressUtils.runOffEventDispatchThread(classFinder, Bundle.JavaUtils_title_class_searching(), cancel, false);
+                BaseProgressUtils.runOffEventDispatchThread(classFinder, Bundle.JavaUtils_title_class_searching(), cancel, false);
             }
         }
     }

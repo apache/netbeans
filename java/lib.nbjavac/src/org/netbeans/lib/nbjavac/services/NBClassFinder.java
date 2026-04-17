@@ -35,6 +35,7 @@ import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Names;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -107,7 +108,7 @@ public class NBClassFinder extends ClassFinder {
                             Constructor<CompletionFailure> constr = CompletionFailure.class.getDeclaredConstructor(Symbol.class, Supplier.class, dcfhClass);
                             Object dcfh = dcfhClass.getDeclaredMethod("instance", Context.class).invoke(null, context);
                             throw constr.newInstance(sym, (Supplier<JCDiagnostic>) () -> {
-                                return diagFactory.create(log.currentSource(), new SimpleDiagnosticPosition(0), DiagnosticInfo.of(DiagnosticType.ERROR, "compiler", "cant.resolve", "package", "java.lang"));
+                                return diagFactory.create(log.currentSource(), new SimpleDiagnosticPosition(0), DiagnosticInfo.of(DiagnosticType.ERROR, Set.of(), "compiler", "cant.resolve", "package", "java.lang"));
                             }, dcfh);
                         } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | InstantiationException ex) {
                             Logger.getLogger(NBClassFinder.class.getName()).log(Level.FINE, null, ex);

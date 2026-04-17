@@ -299,20 +299,6 @@ public class JSFConfigUtilities {
         return navigationRule;
     }
     
-    /** Returns the navigation rule, where the FromViewID is the parameter. If the rule doesn't exist
-     * then returns null.
-     */
-    //    public static NavigationRule findNavigationRule(FacesConfig config, String fromView){
-    //        if (fromView != null){
-    //            FacesConfig config = getConfigModel(data.getPrimaryFile(), true).getRootComponent();
-    //            NavigationRule [] rules = config.getNavigationRule();
-    //            for (int i = 0; i < rules.length; i++)
-    //                if (fromView.equals(rules[i].getFromViewId()))
-    //                    return rules[i];
-    //        }
-    //        return null;
-    //    }
-    
     /** Returns WebPages for the project, where the fo is located.
      */
     public static SourceGroup[] getDocBaseGroups(FileObject fileObject) throws java.io.IOException {

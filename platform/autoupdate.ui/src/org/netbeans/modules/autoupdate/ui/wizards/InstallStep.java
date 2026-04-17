@@ -327,12 +327,12 @@ class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescriptor> 
         validator = null;
         JLabel detailLabel = null;
         try {
-            ProgressHandle handle = ProgressHandleFactory.createHandle (getBundle ("InstallStep_Download_DownloadingPlugins"));
+            ProgressHandle handle = ProgressHandle.createHandle (getBundle ("InstallStep_Download_DownloadingPlugins"));
             JComponent progressComponent = ProgressHandleFactory.createProgressComponent (handle);
             JLabel mainLabel = ProgressHandleFactory.createMainLabelComponent (handle);
             detailLabel = ProgressHandleFactory.createDetailLabelComponent (handle);
             if (runInBackground ()) {
-                systemHandle = ProgressHandleFactory.createHandle (getBundle ("InstallStep_Download_DownloadingPlugins"),
+                systemHandle = ProgressHandle.createHandle (getBundle ("InstallStep_Download_DownloadingPlugins"),
                         new Cancellable () {
                             @Override
                             public boolean cancel () {
@@ -341,7 +341,7 @@ class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescriptor> 
                         });
                 handle = systemHandle;
             } else {
-                spareHandle = ProgressHandleFactory.createHandle (getBundle ("InstallStep_Download_DownloadingPlugins"),
+                spareHandle = ProgressHandle.createHandle (getBundle ("InstallStep_Download_DownloadingPlugins"),
                         new Cancellable () {
                             @Override
                             public boolean cancel () {
@@ -444,12 +444,12 @@ class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescriptor> 
             return null;
         }
         component.setHeadAndContent (getBundle (HEAD_VERIFY), getBundle (CONTENT_VERIFY));
-        ProgressHandle handle = ProgressHandleFactory.createHandle (getBundle ("InstallStep_Validate_ValidatingPlugins"));
+        ProgressHandle handle = ProgressHandle.createHandle (getBundle ("InstallStep_Validate_ValidatingPlugins"));
         JComponent progressComponent = ProgressHandleFactory.createProgressComponent (handle);
         JLabel mainLabel = ProgressHandleFactory.createMainLabelComponent (handle);
         JLabel detailLabel = ProgressHandleFactory.createDetailLabelComponent (handle);
         if (runInBackground ()) {
-            systemHandle = ProgressHandleFactory.createHandle (getBundle ("InstallStep_Validate_ValidatingPlugins"),
+            systemHandle = ProgressHandle.createHandle (getBundle ("InstallStep_Validate_ValidatingPlugins"),
                         new Cancellable () {
                             @Override
                             public boolean cancel () {
@@ -459,7 +459,7 @@ class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescriptor> 
                         });
             handle = systemHandle;
         } else {
-            spareHandle = ProgressHandleFactory.createHandle (getBundle ("InstallStep_Validate_ValidatingPlugins"),
+            spareHandle = ProgressHandle.createHandle (getBundle ("InstallStep_Validate_ValidatingPlugins"),
                     new Cancellable () {
                         @Override
                         public boolean cancel () {
@@ -653,15 +653,15 @@ class InstallStep implements WizardDescriptor.FinishablePanel<WizardDescriptor> 
         component.setHeadAndContent (getBundle (HEAD_INSTALL), getBundle (CONTENT_INSTALL));
         model.modifyOptionsForDisabledCancel (wd);
         
-        ProgressHandle handle = ProgressHandleFactory.createHandle (getBundle ("InstallStep_Install_InstallingPlugins"));
+        ProgressHandle handle = ProgressHandle.createHandle (getBundle ("InstallStep_Install_InstallingPlugins"));
         JComponent progressComponent = ProgressHandleFactory.createProgressComponent (handle);
         JLabel mainLabel = ProgressHandleFactory.createMainLabelComponent (handle);
         JLabel detailLabel = ProgressHandleFactory.createDetailLabelComponent (handle);
         if (runInBackground ()) {
-            systemHandle = ProgressHandleFactory.createHandle (getBundle ("InstallStep_Install_InstallingPlugins"));
+            systemHandle = ProgressHandle.createHandle (getBundle ("InstallStep_Install_InstallingPlugins"));
             handle = systemHandle;
         } else {
-            spareHandle = ProgressHandleFactory.createHandle (getBundle ("InstallStep_Install_InstallingPlugins"));
+            spareHandle = ProgressHandle.createHandle (getBundle ("InstallStep_Install_InstallingPlugins"));
             totalUnits = model.getInstallContainer ().listAll ().size ();
             processedUnits = 0;
             if (indeterminateProgress) {

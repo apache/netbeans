@@ -87,7 +87,7 @@ public final class WebKitDebuggingSupport {
             //stop old session
             stopDebuggingNow(false);
         }
-        ProgressHandle handle = ProgressHandleFactory.createHandle(getProgressLabel(device), new Cancellable() {
+        ProgressHandle handle = ProgressHandle.createHandle(getProgressLabel(device), new Cancellable() {
             @Override
             public boolean cancel() {
                 stopDebugging(true);

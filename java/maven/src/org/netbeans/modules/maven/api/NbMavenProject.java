@@ -73,11 +73,11 @@ import org.openide.util.Utilities;
 /**
  * an instance resides in project lookup, allows to get notified on project and 
  * relative path changes.
- * <p/>
+ * <p>
  * <b>From version 2.148</b> plugin-specific services can be registered using {@link ProjectServiceProvider} 
  * annotation in subfolders of the project Lookup registration area whose names follow a Plugin group and 
  * artifact ID. 
- * <p/>
+ * </p>
  * <div class="nonnormative">
  * {@snippet file="org/netbeans/modules/maven/NbMavenProjectImplTest.java" region="ProjectServiceProvider.pluginSpecific"}
  * Shows a service, that will become available from project Lookup whenever the project uses {@code org.netbeans.modules.maven:test.plugin}

@@ -22,7 +22,6 @@
 
 package org.netbeans.modules.jumpto.file;
 
-import java.awt.Image;
 import java.beans.BeanInfo;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -93,10 +92,12 @@ public class FileDescription extends FileDescriptor {
         Icon res = icon;
         if (res == null) {
             final DataObject od = getDataObject();
-            final Image img = od == null ? // #187973
-                UNKNOWN_PROJECT_ICON.getImage() :
-                od.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16);
-            res = icon = new ImageIcon(img);
+            if (od == null) { // #187973
+                res = UNKNOWN_PROJECT_ICON;
+            } else {
+                res = ImageUtilities.image2Icon(od.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
+            }
+            icon = res;
         }
         return res;
     }

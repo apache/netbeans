@@ -2054,6 +2054,10 @@ public class AstTest extends CslTestBase {
         checkAstResult("testfiles/ecmascript6/parser/ES6/generator/static-generator-method.js");
     }
 
+    public void testGeneratorClassMethod() throws Exception {
+        checkAstResult("testfiles/ecmascript6/parser/ES6/generator/generator-class-method.js");
+    }
+
     public void testDakutenHandakuten() throws Exception {
         checkAstResult("testfiles/ecmascript6/parser/ES6/identifier/dakuten_handakuten.js");
     }

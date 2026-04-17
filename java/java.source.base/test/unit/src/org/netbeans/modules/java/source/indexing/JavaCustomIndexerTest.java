@@ -62,7 +62,7 @@ public class JavaCustomIndexerTest extends NbTestCase {
             InputStream is = getClass().getResourceAsStream("/test2/NoCompileTestData.class")
         ) {
             assertNotNull("test2/NoCompileTestData found", is);
-            FileUtil.copy(is, os);
+            is.transferTo(os);
         }
 
         binQuery2.root = classesRoot.toURL();

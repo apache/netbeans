@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
 import junit.framework.*;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.AnnotationDesc;
 import org.netbeans.editor.AnnotationType;
 import org.netbeans.editor.AnnotationType.Severity;
@@ -70,7 +71,7 @@ public class AnnotationTestUtilities extends TestCase {
 
         public int getLine() {
             try {
-                return Utilities.getLineOffset(doc, getOffset());
+                return LineDocumentUtils.getLineIndex(doc, getOffset());
             } catch (BadLocationException e) {
                 IllegalStateException exc = new IllegalStateException();
                 
@@ -107,7 +108,7 @@ public class AnnotationTestUtilities extends TestCase {
 
         public int getLine() {
             try {
-                return Utilities.getLineOffset(doc, getOffset());
+                return LineDocumentUtils.getLineIndex(doc, getOffset());
             } catch (BadLocationException e) {
                 IllegalStateException exc = new IllegalStateException();
                 

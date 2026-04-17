@@ -34,7 +34,7 @@ public class MainTest extends NbTestCase {
         super(testName);
     }
 
-/////  Disabled as schema/DTD/XML was not donated
+//  Disabled as schema/DTD/XML was not donated
 //    public void testPurchaseOrder() throws IOException, Schema2BeansException, InterruptedException {
 //        generalTest("TestPurchaseOrder", true, true, true);
 //    }
@@ -114,7 +114,7 @@ public class MainTest extends NbTestCase {
         generalTest("TestEmpty");
     }
 
-/////  Disabled as schema/DTD/XML was not donated
+//  Disabled as schema/DTD/XML was not donated
 //    public void testNamespace() throws IOException, Schema2BeansException, InterruptedException {
 //        GenBeans.Config config = new GenBeans.Config();
 //        config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
@@ -149,7 +149,7 @@ public class MainTest extends NbTestCase {
         generalTest("TestExtension2", true, config);
     }
 
-/////  Disabled as schema/DTD/XML was not donated
+//  Disabled as schema/DTD/XML was not donated
 //    public void testWebApp() throws IOException, Schema2BeansException, InterruptedException {
 //        GenBeans.Config config = new GenBeans.Config();
 //        config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
@@ -159,7 +159,7 @@ public class MainTest extends NbTestCase {
 //        generalTest("TestWebApp", true, config);
 //    }
 
-/////  Disabled as schema/DTD/XML was not donated
+//  Disabled as schema/DTD/XML was not donated
 //    public void testWebAppDelegator() throws IOException, Schema2BeansException, InterruptedException {
 //        GenBeans.Config config = new GenBeans.Config();
 //        config.buyPremium();
@@ -168,7 +168,7 @@ public class MainTest extends NbTestCase {
 //        generalTest("TestWebAppDelegator", true, config);
 //    }
 
-/////  Disabled as schema/DTD/XML was not donated
+//  Disabled as schema/DTD/XML was not donated
 //    public void testWebAppDelegatorBaseBean() throws IOException, Schema2BeansException, InterruptedException {
 //        GenBeans.Config config = new GenBeans.Config();
 //        config.buyPremium();
@@ -177,7 +177,7 @@ public class MainTest extends NbTestCase {
 //        generalTest("TestWebAppDelegatorBaseBean", true, config);
 //    }
 
-/////  Disabled as schema/DTD/XML was not donated
+//  Disabled as schema/DTD/XML was not donated
 //    public void testFinalWebApp() throws IOException, Schema2BeansException, InterruptedException {
 //        GenBeans.Config config = new GenBeans.Config();
 //        config.setOutputType(GenBeans.Config.OUTPUT_JAVABEANS);
@@ -220,7 +220,7 @@ public class MainTest extends NbTestCase {
         generalTest("TestGroupUnbounded", true, config);
     }
 
-/////  Disabled as schema/DTD/XML was not donated
+// ///  Disabled as schema/DTD/XML was not donated
 //    public void testApplication1_4() throws IOException, Schema2BeansException, InterruptedException {
 //        generalTest("TestApplication1_4", true, true, true);
 //    }
@@ -248,7 +248,7 @@ public class MainTest extends NbTestCase {
         generalTest("TestMergeExtendBaseBean", false, config);
     }
 
-/////  Disabled as schema/DTD/XML was not donated
+// ///  Disabled as schema/DTD/XML was not donated
 //    public void testBeanWrapper() throws IOException, Schema2BeansException, InterruptedException {
 //        String testName = "TestBeanWrapper";
 //        try {

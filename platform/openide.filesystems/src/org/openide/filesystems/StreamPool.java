@@ -264,7 +264,7 @@ final class StreamPool extends Object {
 
     private Set<InputStream> iStream() {
         if (iStreams == null) {
-            iStreams = new WeakSet<InputStream>();
+            iStreams = Collections.newSetFromMap(new WeakHashMap<>());
         }
 
         return iStreams;
@@ -272,7 +272,7 @@ final class StreamPool extends Object {
 
     private Set<OutputStream> oStream() {
         if (oStreams == null) {
-            oStreams = new WeakSet<OutputStream>();
+            oStreams = Collections.newSetFromMap(new WeakHashMap<>());
         }
 
         return oStreams;

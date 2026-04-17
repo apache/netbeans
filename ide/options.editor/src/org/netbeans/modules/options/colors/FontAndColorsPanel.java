@@ -270,11 +270,11 @@ public class FontAndColorsPanel extends JPanel implements ActionListener {
                 loc ("CTL_Create_New_Profile_Message"),                // NOI18N
                 loc ("CTL_Create_New_Profile_Title")                   // NOI18N
             );
-            il.setInputText (currentProfile);
+            il.setInputText(currentProfile + "_copy");  // NOI18N
             DialogDisplayer.getDefault ().notify (il);
             if (il.getValue () == NotifyDescriptor.OK_OPTION) {
-                String newScheme = il.getInputText ();                
-                for (int i = 0; i < cbProfile.getItemCount(); i++)                 
+                String newScheme = il.getInputText();
+                for (int i = 0; i < cbProfile.getItemCount(); i++) {
                     if (newScheme.equals (cbProfile.getItemAt(i))) {
                         Message md = new Message (
                             loc ("CTL_Duplicate_Profile_Name"),        // NOI18N
@@ -283,15 +283,14 @@ public class FontAndColorsPanel extends JPanel implements ActionListener {
                         DialogDisplayer.getDefault ().notify (md);
                         return;
                     }
-                setCurrentProfile (newScheme);
+                }     
+                setCurrentProfile(newScheme);
                 listen = false;
-                cbProfile.addItem (il.getInputText ());
-                cbProfile.setSelectedItem (il.getInputText ());
+                cbProfile.addItem(newScheme);
+                cbProfile.setSelectedItem(newScheme);
                 listen = true;
             }
-            return;
-        }
-        if (e.getSource () == bDelete) {
+        } else if (e.getSource () == bDelete) {
             deleteCurrentProfile ();
         }
     }

@@ -22,9 +22,7 @@ package org.netbeans.modules.refactoring.spi.ui;
 import java.awt.Component;
 import javax.swing.Action;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
-import org.netbeans.modules.refactoring.spi.ui.RefactoringUI;
 import org.netbeans.modules.refactoring.spi.impl.RefactoringPanel;
-import org.netbeans.modules.refactoring.spi.impl.RefactoringPanelContainer;
 import org.openide.windows.TopComponent;
 
 /**
@@ -81,16 +79,10 @@ public final class UI {
      */ 
     public static boolean setComponentForRefactoringPreview(Component component) {
         RefactoringPanel refactoringPanel = RefactoringPanel.getCurrentRefactoringPanel();
-        if (refactoringPanel == null) 
+        if (refactoringPanel == null) {
             return false;
-        if (component == null) {
-            if (refactoringPanel.splitPane.getRightComponent() == null)
-                return false;
+        } else {
+            return refactoringPanel.setPreviewComponent(component);
         }
-        refactoringPanel.storeDividerLocation();
-        refactoringPanel.splitPane.setRightComponent(component);
-        refactoringPanel.restoreDeviderLocation();
-        return true;
-        
     }
 }

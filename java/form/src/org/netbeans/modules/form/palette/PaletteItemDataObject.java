@@ -22,6 +22,8 @@ package org.netbeans.modules.form.palette;
 import java.util.*;
 import java.io.*;
 import java.beans.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
 import org.openide.util.ImageUtilities;
@@ -423,10 +425,9 @@ public class PaletteItemDataObject extends MultiDataObject implements CookieSet.
             {
                 if (icon32URL != null) { // explicit icon specified in file
                     try {
-                        return java.awt.Toolkit.getDefaultToolkit().getImage(
-                                                 new java.net.URL(icon32URL));
+                        return ImageUtilities.loadImage(new URI(icon32URL));
                     }
-                    catch (java.net.MalformedURLException ex) {} // ignore
+                    catch (URISyntaxException ex) {} // ignore
                 }
                 else if (getPrimaryFile().getAttribute("SystemFileSystem.icon32") != null) // NOI18N
                     return super.getIcon(type);
@@ -434,10 +435,9 @@ public class PaletteItemDataObject extends MultiDataObject implements CookieSet.
             else { // get small icon in other cases
                 if (icon16URL != null) { // explicit icon specified in file
                     try {
-                        return java.awt.Toolkit.getDefaultToolkit().getImage(
-                                                 new java.net.URL(icon16URL));
+                        return ImageUtilities.loadImage(new URI(icon16URL));
                     }
-                    catch (java.net.MalformedURLException ex) {} // ignore
+                    catch (URISyntaxException ex) {} // ignore
                 }
                 else if (getPrimaryFile().getAttribute("SystemFileSystem.icon") != null) // NOI18N
                     return super.getIcon(type);

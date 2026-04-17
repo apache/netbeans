@@ -79,6 +79,7 @@
     <fontcolor name="mod-struct-declaration" default="identifier"/>
     <fontcolor name="mod-enum-declaration" default="identifier"/>
     <fontcolor name="mod-class-declaration" default="identifier"/>
+    <!-- TODO is mod-record-declaration needed here? -->
     <fontcolor name="mod-typeAlias-declaration" default="identifier"/>
     <fontcolor name="mod-typeParameter-declaration" default="identifier"/>
     <fontcolor name="mod-field-declaration" default="field"/>

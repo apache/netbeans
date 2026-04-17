@@ -19,37 +19,34 @@
     under the License.
 
 -->
-<svg id="New_Vector" data-name="New Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
   <defs>
     <style>
-      .cls-1 {
-        fill: #cee1fb;
-      }
-
-      .cls-1, .cls-2, .cls-3 {
-        stroke-width: 0px;
-      }
-
-      .cls-2 {
+      .st0 {
         fill: #727272;
       }
 
-      .cls-3 {
+      .st1 {
+        fill: #cee1fb;
+      }
+
+      .st2 {
         fill: #4c80c7;
       }
     </style>
   </defs>
   <g>
-    <rect class="cls-2" x="12" y="4" width="4" height="1"/>
-    <rect class="cls-2" x="12" y="6" width="4" height="1"/>
-    <rect class="cls-2" x="12" y="8" width="4" height="1"/>
-    <rect class="cls-2" x="12" y="10" width="4" height="1"/>
-    <rect class="cls-2" x="2" y="12" width="14" height="1"/>
-    <rect class="cls-2" x="2" y="14" width="14" height="1"/>
-    <rect class="cls-2" x="12" y="2" width="4" height="1"/>
+    <rect class="st0" x="12" y="4" width="4" height="1"/>
+    <rect class="st0" x="12" y="6" width="4" height="1"/>
+    <rect class="st0" x="12" y="8" width="4" height="1"/>
+    <rect class="st0" x="12" y="10" width="4" height="1"/>
+    <rect class="st0" x="2" y="12" width="14" height="1"/>
+    <rect class="st0" x="2" y="14" width="14" height="1"/>
+    <rect class="st0" x="12" y="2" width="4" height="1"/>
   </g>
   <g>
-    <polygon class="cls-1" points="5.5 9.5 5.5 7.5 .5 7.5 .5 3.5 5.5 3.5 5.5 1.5 6.776 1.5 10.331 5.5 6.776 9.5 5.5 9.5"/>
-    <path class="cls-3" d="M6.551,2l3.111,3.5-3.111,3.5h-.551v-2H1v-3h5v-2h.551M7,1h-2v2H0v5h5v2h2l4-4.5L7,1h0Z"/>
+    <polygon class="st1" points="5.5 9.5 5.5 7.5 .5 7.5 .5 3.5 5.5 3.5 5.5 1.5 6.776 1.5 10.331 5.5 6.776 9.5 5.5 9.5"/>
+    <path class="st2" d="M6.551,2l3.111,3.5-3.111,3.5h-.551v-2H1v-3h5v-2h.551M7,1h-2v2H0v5h5v2h2l4-4.5L7,1h0Z"/>
   </g>
 </svg>

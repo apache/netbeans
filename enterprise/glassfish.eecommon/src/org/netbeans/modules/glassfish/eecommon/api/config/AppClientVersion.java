@@ -88,9 +88,6 @@ public final class AppClientVersion extends J2EEBaseVersion {
         "11.0", 11000,	// NOI18N
         "11.0", 11000	// NOI18N
         );
-    /** -----------------------------------------------------------------------
-     *  Implementation
-     */
 
     /** Creates a new instance of AppClientVersion 
      */

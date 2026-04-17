@@ -193,12 +193,12 @@ public class Utilities {
     * @param doc document to operate on
     * @param offset position in document where to start searching
     * @return position of the start of the row or -1 for invalid position
-    * @deprecated use {@link LineDocumentUtils}
+    * @deprecated use {@link LineDocumentUtils#getLineStartOffset}
     */
     @Deprecated
     public static int getRowStart(BaseDocument doc, int offset)
     throws BadLocationException {
-        return LineDocumentUtils.getLineStart(doc, offset);
+        return LineDocumentUtils.getLineStartOffset(doc, offset);
     }
 
     /** Get the starting position of the row while providing relative count
@@ -238,7 +238,9 @@ public class Utilities {
     * @param offset position in document anywhere on the line
     * @return position of the first non-white char on the line or -1
     *   if there's no non-white character on that line.
+    * @deprecated use {@link LineDocumentUtils#getLineFirstNonWhitespace}
     */
+    @Deprecated
     public static int getRowFirstNonWhite(BaseDocument doc, int offset)
     throws BadLocationException {
         return LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
@@ -267,7 +269,7 @@ public class Utilities {
     */
     public static int getRowIndent(BaseDocument doc, int offset)
     throws BadLocationException {
-        offset = getRowFirstNonWhite(doc, offset);
+        offset = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
         if (offset == -1) {
             return -1;
         }
@@ -276,7 +278,7 @@ public class Utilities {
 
     /** Get indentation on the current line. If this line is white then
     * go either up or down an return indentation of the first non-white row.
-    * The <tt>getRowFirstNonWhite()</tt> is used to find the indentation
+    * The <code>getRowFirstNonWhite()</code> is used to find the indentation
     * on particular line.
     * @param doc document to operate on
     * @param offset position in document anywhere on the line
@@ -287,13 +289,13 @@ public class Utilities {
     */
     public static int getRowIndent(BaseDocument doc, int offset, boolean downDir)
     throws BadLocationException {
-        int p = getRowFirstNonWhite(doc, offset);
+        int p = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
         if (p == -1) {
             p = getFirstNonWhiteRow(doc, offset, downDir);
             if (p == -1) {
                 return -1; // non-white line not found
             }
-            p = getRowFirstNonWhite(doc, p);
+            p = LineDocumentUtils.getLineFirstNonWhitespace(doc, p);
             if (p == -1) {
                 return -1; // non-white line not found
             }
@@ -328,7 +330,7 @@ public class Utilities {
     @Deprecated
     public static int getRowEnd(BaseDocument doc, int offset)
     throws BadLocationException {
-        return LineDocumentUtils.getLineEnd(doc, offset);
+        return LineDocumentUtils.getLineEndOffset(doc, offset);
     }
     
     private static int findBestSpan(JTextComponent c, int lineBegin, int lineEnd, int x)
@@ -439,7 +441,7 @@ public class Utilities {
     @Deprecated
     public static int getNextWord(JTextComponent c, int offset)
     throws BadLocationException {
-        int nextWordOffset = getNextWord((BaseDocument)c.getDocument(), offset);
+        int nextWordOffset = LineDocumentUtils.getNextWordStart((BaseDocument)c.getDocument(), offset);
         int nextVisualPosition = -1;
         if (nextWordOffset > 0){
             nextVisualPosition = c.getUI().getNextVisualPositionFrom(c,
@@ -457,7 +459,7 @@ public class Utilities {
     @Deprecated
     public static int getPreviousWord(JTextComponent c, int offset)
     throws BadLocationException {
-        int prevWordOffset = getPreviousWord((BaseDocument)c.getDocument(), offset);
+        int prevWordOffset = LineDocumentUtils.getPreviousWordStart((BaseDocument)c.getDocument(), offset);
         int nextVisualPosition = c.getUI().getNextVisualPositionFrom(c,
                               prevWordOffset, Position.Bias.Forward, javax.swing.SwingConstants.WEST, null);
         if (nextVisualPosition == 0 && prevWordOffset == 0){
@@ -964,8 +966,8 @@ public class Utilities {
      */
     public static void reformatLine(BaseDocument doc, int pos)
     throws BadLocationException {
-        int lineStart = getRowStart(doc, pos);
-        int lineEnd = getRowEnd(doc, pos);
+        int lineStart = LineDocumentUtils.getLineStartOffset(doc, pos);
+        int lineEnd = LineDocumentUtils.getLineEndOffset(doc, pos);
         reformat(doc, lineStart, lineEnd);
     }
 
@@ -1113,7 +1115,7 @@ public class Utilities {
 
         if (offset >= 0) {
             try {
-                int line = getLineOffset(doc, offset) + 1;
+                int line = LineDocumentUtils.getLineIndex(doc, offset) + 1;
                 int col = getVisualColumn(doc, offset) + 1;
                 ret = String.valueOf(line) + separator + String.valueOf(col); // NOI18N
             } catch (BadLocationException e) {
@@ -1199,7 +1201,7 @@ public class Utilities {
 
     /** Helper method to obtain instance of editor kit from existing JTextComponent.
     * If the kit of the component is not an instance
-    * of the <tt>org.netbeans.editor.BaseKit</tt> the method returns null.
+    * of the <code>org.netbeans.editor.BaseKit</code> the method returns null.
     * The method doesn't require any document locking.
     * @param target JTextComponent for which the editor kit should be obtained
     * @return BaseKit instance or null
@@ -1238,7 +1240,7 @@ public class Utilities {
 
     /** Helper method to obtain instance of BaseDocument from JTextComponent.
     * If the document of the component is not an instance
-    * of the <tt>org.netbeans.editor.BaseDocument</tt> the method returns null.
+    * of the <code>org.netbeans.editor.BaseDocument</code> the method returns null.
     * The method doesn't require any document locking.
     * @param target JTextComponent for which the document should be obtained
     * @return BaseDocument instance or null
@@ -1249,8 +1251,8 @@ public class Utilities {
     }
 
     /** Get the syntax-support class that belongs to the document of the given
-    * component. Besides using directly this method, the <tt>SyntaxSupport</tt>
-    * can be obtained by calling <tt>doc.getSyntaxSupport()</tt>.
+    * component. Besides using directly this method, the <code>SyntaxSupport</code>
+    * can be obtained by calling <code>doc.getSyntaxSupport()</code>.
     * The method can return null in case the document is not
     * an instance of the BaseDocument.
     * The method doesn't require any document locking.

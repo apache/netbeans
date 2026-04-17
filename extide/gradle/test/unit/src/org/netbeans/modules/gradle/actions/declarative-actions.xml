@@ -20,7 +20,8 @@
 
 -->
 <!DOCTYPE actions SYSTEM "action-mapping.dtd">
-<!-- @start region="configuration-declaration-xml" -->
+<!-- // @start region="configuration-declaration-xml" 
+-->
 <actions>
     <profiles>
         <profile id="provided-config" displayName="Example Provided Config">
@@ -47,8 +48,12 @@
             </actions>
         </profile>
     </profiles>
-    <!-- @end region="configuration-declaration-xml" -->
+    <!-- // @end region="configuration-declaration-xml" 
+    -->
 
+    <action name="test.parallel">
+        <args>--parallel --rerun-tasks ${taskWithProjects}</args>
+    </action>
     <apply-for plugins="java">
         <action name="test.single">
             <args>cleanTest test --tests "${selectedClass}"</args>

@@ -1,3 +1,5 @@
 <style type="text/css">
-    .error {color:red;}
+    .error {
+        color:red;
+    }
 </style>

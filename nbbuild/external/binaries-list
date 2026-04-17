@@ -15,7 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 8D4F73654DAAE212850ADC3B0C02E5E056974B48 org.apache.rat:apache-rat:0.15
-507505D294C8995C974501EC0F64604DE88AF411 org.apidesign.javadoc:codesnippet-doclet:1.0
 F581B42DDBBDEC18BE04308366C9B5CA11735775 jakarta.tck:sigtest-maven-plugin:2.3
 C9AD4A0850AB676C5C64461A05CA524CDFFF59F1 com.googlecode.json-simple:json-simple:1.1.1
 3A4E4ECCF553036BB0DDBA675486D574B62A01D8 org.apache.netbeans.modules.jackpot30:tool:12.3

@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -56,7 +55,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Logger;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -75,12 +73,17 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
 
-import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.SwitchTree;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.Trees;
 import java.awt.Component;
 import java.util.Set;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.editor.EditorActionRegistration;
 import org.netbeans.api.editor.EditorActionRegistrations;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -117,7 +120,6 @@ public class ClipboardHandler {
         c.setTransferHandler(new ImportingTransferHandler(c.getTransferHandler()));
     }
 
-    private static final Logger LOG = Logger.getLogger(ClipboardHandler.class.getName());
     private static final RequestProcessor WORKER = new RequestProcessor(ClipboardHandler.class.getName(), 3, false, false);
     
     private static void doImport(JavaSource js, final Document doc, final int caret, final Map<String, String> simple2ImportFQN, final List<Position[]> inSpans, AtomicBoolean cancel) {
@@ -132,12 +134,7 @@ public class ClipboardHandler {
                     Scope scope = copy.getTrees().getScope(context);
                     Scope cutScope = copy.getTrees().getScope(new TreePath(context.getCompilationUnit()));
                     List<Position[]> spans = new ArrayList<Position[]>(inSpans);
-
-                    spans.sort(new Comparator<Position[]>() {
-                        @Override public int compare(Position[] o1, Position[] o2) {
-                            return o1[0].getOffset() - o2[0].getOffset();
-                        }
-                    });
+                    spans.sort((o1, o2) -> o1[0].getOffset() - o2[0].getOffset());
 
                     Map<String, String> imported = new HashMap<String, String>();
 
@@ -179,16 +176,12 @@ public class ClipboardHandler {
                             doc.remove(e.getKey()[0].getOffset(), e.getKey()[1].getOffset() - e.getKey()[0].getOffset());
                             doc.insertString(e.getKey()[0].getOffset(), e.getValue(), null);
                         }
-                    } catch (BadLocationException ex) {
-                        Exceptions.printStackTrace(ex);
-                    } catch (IOException ex) {
+                    } catch (BadLocationException | IOException ex) {
                         Exceptions.printStackTrace(ex);
                     }
                 }
             });
-        } catch (BadLocationException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (IOException ex) {
+        } catch (BadLocationException | IOException ex) {
             Exceptions.printStackTrace(ex);
         }
     }
@@ -252,10 +245,6 @@ public class ClipboardHandler {
                 SourcePositions[] sps = new SourcePositions[1];
 
                 OUTER: for (Entry<String, String> e : simple2FQNs.entrySet()) {
-                    // skip default static imports
-                    if ("java.lang.StringTemplate.STR".equals(e.getValue())) {
-                        continue;
-                    }
                     Element el = fqn2element(cc.getElements(), e.getValue());
                     if (el == null) {
                         continue;
@@ -381,11 +370,7 @@ public class ClipboardHandler {
                 method.setAccessible(true);
 
                 return (Transferable)method.invoke(delegate, new Object[] {c});
-            } catch (NoSuchMethodException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalAccessException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (java.lang.reflect.InvocationTargetException ex) {
+            } catch (ReflectiveOperationException ex) {
                 Exceptions.printStackTrace(ex);
             }
             return null;
@@ -404,11 +389,7 @@ public class ClipboardHandler {
                     new Class[] {javax.swing.JComponent.class, Transferable.class, int.class});
                 method.setAccessible(true);
                 method.invoke(delegate, new Object[] {source, data, action});
-            } catch (NoSuchMethodException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (IllegalAccessException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (java.lang.reflect.InvocationTargetException ex) {
+            } catch (ReflectiveOperationException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
@@ -419,10 +400,9 @@ public class ClipboardHandler {
             ImportsWrapper iw = null;
             boolean copiedFromString = false;
 
-            if (comp instanceof JTextComponent) {
-                copiedFromString = insideToken((JTextComponent)comp, JavaTokenId.STRING_LITERAL, JavaTokenId.CHAR_LITERAL);
-                if (comp.getClientProperty(NO_IMPORTS) == null && (js = JavaSource.forDocument(((JTextComponent) comp).getDocument())) != null) {
-                    final JTextComponent tc = (JTextComponent) comp;
+            if (comp instanceof JTextComponent tc) {
+                copiedFromString = insideToken(tc, JavaTokenId.STRING_LITERAL, JavaTokenId.CHAR_LITERAL);
+                if (comp.getClientProperty(NO_IMPORTS) == null && (js = JavaSource.forDocument(tc.getDocument())) != null) {
                     final int start = tc.getSelectionStart();
                     final int end = tc.getSelectionEnd();
                     final Map<String, String> simple2ImportFQN = new HashMap<String, String>();
@@ -432,25 +412,50 @@ public class ClipboardHandler {
                         @Override public void run(final CompilationController parameter) throws Exception {
                             parameter.toPhase(JavaSource.Phase.RESOLVED);
 
+                            Trees trees = parameter.getTrees();
+
                             new ErrorAwareTreePathScanner<Void, Void>() {
                                 private final Set<Element> declaredInCopiedText = new HashSet<>();
                                 @Override public Void visitIdentifier(IdentifierTree node, Void p) {
-                                    int s = (int) parameter.getTrees().getSourcePositions().getStartPosition(parameter.getCompilationUnit(), node);
-                                    int e = (int) parameter.getTrees().getSourcePositions().getEndPosition(parameter.getCompilationUnit(), node);
-                                    javax.lang.model.element.Element el = parameter.getTrees().getElement(getCurrentPath());
+                                    int s = (int) trees.getSourcePositions().getStartPosition(parameter.getCompilationUnit(), node);
+                                    int e = (int) trees.getSourcePositions().getEndPosition(parameter.getCompilationUnit(), node);
+                                    javax.lang.model.element.Element el = trees.getElement(getCurrentPath());
 
                                     if (s >= start && e >= start && e <= end && el != null && !declaredInCopiedText.contains(el)) {
                                         if (el.getKind().isClass() || el.getKind().isInterface()) {
-                                            TreePath parentPath = getCurrentPath().getParentPath();
-                                            if (parentPath == null || parentPath.getLeaf().getKind() != Tree.Kind.NEW_CLASS
-                                                    || ((NewClassTree)parentPath.getLeaf()).getEnclosingExpression() == null
-                                                    || ((NewClassTree)parentPath.getLeaf()).getIdentifier() != node) {
-                                                simple2ImportFQN.put(el.getSimpleName().toString(), ((TypeElement) el).getQualifiedName().toString());
-                                                spans.add(new int[] {s - start, e - start});
+                                            if (el.asType().getKind() != TypeKind.ERROR) {
+                                                TreePath parentPath = getCurrentPath().getParentPath();
+                                                if (parentPath == null || parentPath.getLeaf().getKind() != Tree.Kind.NEW_CLASS
+                                                        || ((NewClassTree)parentPath.getLeaf()).getEnclosingExpression() == null
+                                                        || ((NewClassTree)parentPath.getLeaf()).getIdentifier() != node) {
+                                                    simple2ImportFQN.put(el.getSimpleName().toString(), ((TypeElement) el).getQualifiedName().toString());
+                                                    spans.add(new int[] {s - start, e - start});
+                                                }
                                             }
                                         } else if ((el.getKind() == ElementKind.ENUM_CONSTANT)) {
                                             TreePath parentPath = getCurrentPath().getParentPath();
-                                            if (parentPath.getLeaf().getKind() != Tree.Kind.CASE || ((CaseTree)parentPath.getLeaf()).getExpression() != node) {
+                                            boolean shouldImport = true;
+                                            if (parentPath.getLeaf().getKind() == Tree.Kind.CONSTANT_CASE_LABEL) {
+                                                TreePath swtch = parentPath;
+                                                while (swtch != null &&
+                                                       swtch.getLeaf().getKind() != Kind.SWITCH &&
+                                                       swtch.getLeaf().getKind() != Kind.SWITCH_EXPRESSION) {
+                                                    swtch = swtch.getParentPath();
+                                                }
+                                                TypeMirror selectorType;
+                                                if (swtch != null) {
+                                                    selectorType = switch (swtch.getLeaf().getKind()) {
+                                                        case SWITCH -> trees.getTypeMirror(new TreePath(swtch, ((SwitchTree) swtch.getLeaf()).getExpression()));
+                                                        case SWITCH_EXPRESSION -> trees.getTypeMirror(new TreePath(swtch, ((SwitchExpressionTree) swtch.getLeaf()).getExpression()));
+                                                        default -> null;
+                                                    };
+                                                } else {
+                                                    selectorType = null;
+                                                }
+                                                Element selectorElement = selectorType != null ? parameter.getTypes().asElement(selectorType) : null;
+                                                shouldImport = selectorElement == null || selectorElement.getKind() != ElementKind.ENUM;
+                                            }
+                                            if (shouldImport) {
                                                 simple2ImportFQN.put(el.getSimpleName().toString(), ((TypeElement) el.getEnclosingElement()).getQualifiedName().toString() + '.' + el.getSimpleName().toString());
                                                 spans.add(new int[] {s - start, e - start});
                                             }
@@ -472,8 +477,8 @@ public class ClipboardHandler {
                                     return super.visitMethod(node, p);
                                 }
                                 private void handleDeclaration() {
-                                    int s = (int) parameter.getTrees().getSourcePositions().getStartPosition(parameter.getCompilationUnit(), getCurrentPath().getLeaf());
-                                    int e = (int) parameter.getTrees().getSourcePositions().getEndPosition(parameter.getCompilationUnit(), getCurrentPath().getLeaf());
+                                    int s = (int) trees.getSourcePositions().getStartPosition(parameter.getCompilationUnit(), getCurrentPath().getLeaf());
+                                    int e = (int) trees.getSourcePositions().getEndPosition(parameter.getCompilationUnit(), getCurrentPath().getLeaf());
                                     javax.lang.model.element.Element el = parameter.getTrees().getElement(getCurrentPath());
 
                                     if (el != null && ((start <= s && s <= end) || (start <= e && e <= end))) {
@@ -610,11 +615,7 @@ public class ClipboardHandler {
                             }
                         });
                     }
-                } catch (BadLocationException ex) {
-                    Exceptions.printStackTrace(ex);
-                } catch (UnsupportedFlavorException ex) {
-                    Exceptions.printStackTrace(ex);
-                } catch (IOException ex) {
+                } catch (BadLocationException | UnsupportedFlavorException | IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }
 
@@ -690,8 +691,7 @@ public class ClipboardHandler {
                             } catch (BadLocationException ex) {
                                 Exceptions.printStackTrace(ex);
                             }
-                            if (data instanceof String) {
-                                String s = (String) data;
+                            if (data instanceof String s) {
                                 s = s.replace("\"\"\"","\\\"\"\""); //NOI18N
                                 StringBuilder sb = new StringBuilder("");
                                 for (int i = 0; i < indent; i++) {
@@ -701,8 +701,8 @@ public class ClipboardHandler {
                                 s = s.replace("\r\n","\n"); //NOI18N
                                 s = s.replace("\n",System.lineSeparator() + emptySpaces); //NOI18N
                                 data = s;
-                            } else if (data instanceof Reader) {
-                                BufferedReader br = new BufferedReader((Reader)data);
+                            } else if (data instanceof Reader reader) {
+                                BufferedReader br = new BufferedReader(reader);
                                 StringBuilder sb = new StringBuilder();
                                 String line;
 
@@ -749,7 +749,7 @@ public class ClipboardHandler {
 
     private static final Object NO_IMPORTS = new Object();
     private static final Object RUN_SYNCHRONOUSLY = new Object();
-    private static final DataFlavor IMPORT_FLAVOR = new DataFlavor(ImportsWrapper.class, NbBundle.getMessage(ClipboardHandler.class, "MSG_ClipboardImportFlavor"));
+            static final DataFlavor IMPORT_FLAVOR = new DataFlavor(ImportsWrapper.class, NbBundle.getMessage(ClipboardHandler.class, "MSG_ClipboardImportFlavor"));
     private static final DataFlavor COPY_FROM_STRING_FLAVOR = new DataFlavor(Boolean.class, NbBundle.getMessage(ClipboardHandler.class, "MSG_ClipboardCopyFromStringFlavor"));
 
     private static final class WrappedTransferable implements Transferable {
@@ -806,6 +806,10 @@ public class ClipboardHandler {
             this.sourceFO = sourceFO;
             this.simple2ImportFQN = simple2ImportFQN;
             this.identifiers = identifiers;
+        }
+
+        public Map<String, String> getSimple2ImportFQN() {
+            return simple2ImportFQN;
         }
     }
 

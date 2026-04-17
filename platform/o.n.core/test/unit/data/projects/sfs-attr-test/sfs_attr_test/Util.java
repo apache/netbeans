@@ -29,6 +29,7 @@ import org.openide.util.Utilities;
 public abstract class Util {
     private Util() {}
 
+    // Called by reflection via registration in platform/o.n.core/test/unit/data/projects/sfs-attr-test/sfs_attr_test/layer.xml
     private static Image mergeIcons(FileObject fo) throws IOException {
         int count = ((Integer)fo.getAttribute("iconCount")).intValue();
         if (count < 2) throw new IOException();

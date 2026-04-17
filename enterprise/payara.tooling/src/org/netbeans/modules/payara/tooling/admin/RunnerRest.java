@@ -43,10 +43,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class RunnerRest extends Runner {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Parser for returned response. Default response is XML. */
     RestResponseParser parser = ResponseParserFactory.getRestParser(getResponseType());
 
@@ -64,10 +61,7 @@ public class RunnerRest extends Runner {
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     protected ResultString result;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * REST interface.
@@ -152,10 +146,7 @@ public class RunnerRest extends Runner {
         }
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
    /**
      * Create <code>ResultString</code> object corresponding
      * to <code>String</code>command execution value to be returned.
@@ -269,10 +260,7 @@ public class RunnerRest extends Runner {
         return report.isSuccess();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Prepare headers for HTTP connection.
      * <p/>

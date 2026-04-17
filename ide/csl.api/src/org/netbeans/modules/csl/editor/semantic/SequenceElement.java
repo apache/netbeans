@@ -19,85 +19,20 @@
 
 package org.netbeans.modules.csl.editor.semantic;
 
+import java.util.Comparator;
+import javax.swing.text.Position;
 import org.netbeans.modules.csl.core.Language;
 import org.netbeans.modules.csl.api.ColoringAttributes.Coloring;
-import org.netbeans.modules.csl.api.OffsetRange;
 
 /**
  * Each SequeneceElement represents a OffsetRange/Coloring/Language tuple that
- * is managed for semantic highlighting purposes. They are comparable since they
- * are maintained in a TreeSet (sorted by the OffsetRanges). This sorted treeset
- * is used to manage the various subsequences etc. needed by the highlight sequences.
- * There is a special subclass of ElementSequence, ComparisonItem, which is used
- * as comparison bounds (keys) passed into the TreeSet when generating subsequences.
+ * is managed for semantic highlighting purposes.
  *
  * @author Tor Norbye
  */
-class SequenceElement implements Comparable<SequenceElement> {
-    public final Language language;
-    public OffsetRange range;
-    public final Coloring coloring;
-    
-    private SequenceElement() {
-        this(null, null, null);
-    }
+record SequenceElement(Language language, Position start, Position end, Coloring coloring) {
 
-    public SequenceElement(Language language, OffsetRange range, Coloring coloring) {
-        this.language = language;
-        this.range = range;
-        this.coloring = coloring;
-    }
-    
-    public int compareTo(SequenceElement o) {
-        if (o instanceof ComparisonItem) {
-            return -1 * ((ComparisonItem) o).compareTo(this);
-        } else {
-            assert o.range != null;
-            return range.compareTo(o.range);
-        }
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof SequenceElement)) {
-            return false;
-        }
-        SequenceElement other = (SequenceElement)obj;
-
-        return range.equals(other.range);
-    }
-
-    @Override
-    public int hashCode() {
-        return range.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "SequenceElement(range=" + range + ", lang=" + language + ", color=" + coloring + ")"; //NOI18N
-    }
-    
-    // This class is used only for key comparison when creating subsets
-    static class ComparisonItem extends SequenceElement {
-        private int offset;
-        
-        ComparisonItem(int offset) {
-            this.offset = offset;
-        }
-
-        @Override
-        public int compareTo(SequenceElement o) {
-            if (o instanceof ComparisonItem) {
-                return offset - ((ComparisonItem)o).offset;
-            } else {
-                if (offset < o.range.getStart()) {
-                    return -1;
-                } else if (offset >= o.range.getEnd()) { // forward biased
-                    return 1;
-                } else {
-                    return 0;
-                }
-            }
-        }
-    }
+    public static final Comparator<? super SequenceElement> POSITION_ORDER =
+            (e1, e2) -> e1.start.getOffset() != e2.start.getOffset() ? e1.start.getOffset() - e2.start.getOffset()
+                : e1.end.getOffset() - e2.end.getOffset();
 }

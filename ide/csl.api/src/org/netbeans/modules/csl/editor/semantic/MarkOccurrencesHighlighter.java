@@ -19,13 +19,14 @@
 package org.netbeans.modules.csl.editor.semantic;
 
 import java.awt.Color;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -63,8 +64,8 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
     private final CancelSupportImplementation cancel = SchedulerTaskCancelSupportImpl.create(this);
     private final Language language;
     private final Snapshot snapshot;
-    private int version;
-    static Coloring MO = ColoringAttributes.add(ColoringAttributes.empty(), ColoringAttributes.MARK_OCCURRENCES);
+
+    static final Coloring MO = ColoringAttributes.add(ColoringAttributes.empty(), ColoringAttributes.MARK_OCCURRENCES);
     
     /** Creates a new instance of SemanticHighlighter */
     MarkOccurrencesHighlighter(Language language, Snapshot snapshot) {
@@ -78,6 +79,7 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
 //        return snapshot.getSource().getDocument(false);
 //    }
 //
+    @Override
     public void run(ParserResult info, SchedulerEvent event) {
         SpiSupportAccessor.getInstance().setCancelSupport(cancel);
         try {
@@ -106,42 +108,50 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
                 return;
             }
 
-            List<OffsetRange> bag = processImpl(info, doc, caretPosition);
-            if(bag == null) {
-                //the occurrences finder haven't found anything, just ignore the result
-                //and keep the previous occurrences
-                return ;
-            }
+            List<OffsetRange> bag = Collections.emptyList();
 
-            if (cancel.isCancelled()) {
-                return;
+            if (snapshotOffset >= 0) {
+                bag = processImpl(info, doc, caretPosition);
             }
 
             GsfSemanticLayer layer = GsfSemanticLayer.getLayer(MarkOccurrencesHighlighter.class, doc);
-            SortedSet seqs = new TreeSet<SequenceElement>();
+            SortedSet<SequenceElement> seqs = new TreeSet<>(SequenceElement.POSITION_ORDER);
 
-            if (bag.size() > 0) {
-                for (OffsetRange range : bag) {
-                    if (range != OffsetRange.NONE) {
-                        SequenceElement s = new SequenceElement(language, range, MO);
-                        seqs.add(s);
-                    }
+            for (OffsetRange range : bag) {
+                if (range != OffsetRange.NONE) {
+                    try {
+                        seqs.add(new SequenceElement(language, doc.createPosition(range.getStart()), doc.createPosition(range.getEnd()), MO));
+                    } catch (BadLocationException ex) {}
                 }
             }
 
-            layer.setColorings(seqs, version++);
+            boolean updateHighlights = false;
+            if (seqs.isEmpty()) {
+                OccurrencesFinder finder = language.getOccurrencesFinder();
+                if (finder == null || !finder.isMarkOccurrencesEnabled() || !finder.isKeepMarks()) {
+                    updateHighlights = true;
+                }
+            } else {
+                updateHighlights = true;
+            }
 
-            OccurrencesMarkProvider.get(doc).setOccurrences(OccurrencesMarkProvider.createMarks(doc, bag, ES_COLOR, NbBundle.getMessage(MarkOccurrencesHighlighter.class, "LBL_ES_TOOLTIP")));
+            if (updateHighlights) {
+                // Update both editor highlighs and sidebar marks
+                layer.setColorings(seqs);
+                OccurrencesMarkProvider.get(doc).setOccurrences(OccurrencesMarkProvider.createMarks(doc, bag, ES_COLOR, NbBundle.getMessage(MarkOccurrencesHighlighter.class, "LBL_ES_TOOLTIP")));
+            }
         } finally {
             SpiSupportAccessor.getInstance().removeCancelSupport(cancel);
         }
     }
-    
+
     @NonNull
     List<OffsetRange> processImpl(ParserResult info, Document doc, int caretPosition) {
         OccurrencesFinder finder = language.getOccurrencesFinder();
-        assert finder != null;
-        
+        if (finder == null || !finder.isMarkOccurrencesEnabled()) {
+            return List.of();
+        }
+
         finder.setCaretPosition(caretPosition);
         try {
             finder.run(info, null);
@@ -155,7 +165,15 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
 
         Map<OffsetRange, ColoringAttributes> highlights = finder.getOccurrences();
 
-        return highlights == null ? null : new ArrayList<OffsetRange>(highlights.keySet());
+        // Many implementatios of the OccurencesFinder don't follow the contract,
+        // that getOccurrences must not return null. Instead of blowing up with
+        // a NullPointer exception, log that problem and continue execution.
+        if (highlights == null) {
+            LOG.log(Level.WARNING, "org.netbeans.modules.csl.api.OccurrencesFinder.getOccurrences() non-null contract violation by {0}", language.getMimeType());
+            highlights = Map.of();
+        }
+
+        return List.copyOf(highlights.keySet());
     }
     
     @Override

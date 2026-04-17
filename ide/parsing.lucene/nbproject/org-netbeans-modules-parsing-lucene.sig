@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.61.0
+#Version 3.0.0
 
 CLSS public java.io.IOException
 cons public init()
@@ -7,6 +7,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public abstract interface java.io.Serializable
 
@@ -15,8 +16,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -25,9 +28,11 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -36,11 +41,13 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -72,6 +79,11 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface org.netbeans.modules.parsing.lucene.spi.ScanSuspendImplementation
 meth public abstract void resume()
@@ -166,13 +178,13 @@ innr public abstract interface static Transactional
 innr public abstract interface static WithTermFrequencies
 innr public final static !enum Status
 innr public final static IndexClosedException
-meth public abstract !varargs <%0 extends java.lang.Object, %1 extends java.lang.Object> void queryDocTerms(java.util.Map<? super {%%1},java.util.Set<{%%0}>>,org.netbeans.modules.parsing.lucene.support.Convertor<? super org.apache.lucene.document.Document,{%%1}>,org.netbeans.modules.parsing.lucene.support.Convertor<? super org.apache.lucene.index.Term,{%%0}>,org.apache.lucene.document.FieldSelector,java.util.concurrent.atomic.AtomicBoolean,org.apache.lucene.search.Query[]) throws java.io.IOException,java.lang.InterruptedException
+meth public abstract !varargs <%0 extends java.lang.Object, %1 extends java.lang.Object> void queryDocTerms(java.util.Map<? super {%%1},java.util.Set<{%%0}>>,org.netbeans.modules.parsing.lucene.support.Convertor<? super org.apache.lucene.document.Document,{%%1}>,org.netbeans.modules.parsing.lucene.support.Convertor<? super org.apache.lucene.util.BytesRef,{%%0}>,java.util.Set<java.lang.String>,java.util.concurrent.atomic.AtomicBoolean,org.apache.lucene.search.Query[]) throws java.io.IOException,java.lang.InterruptedException
  anno 2 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NonNull()
  anno 4 org.netbeans.api.annotations.common.NullAllowed()
  anno 5 org.netbeans.api.annotations.common.NullAllowed()
  anno 6 org.netbeans.api.annotations.common.NonNull()
-meth public abstract !varargs <%0 extends java.lang.Object> void query(java.util.Collection<? super {%%0}>,org.netbeans.modules.parsing.lucene.support.Convertor<? super org.apache.lucene.document.Document,{%%0}>,org.apache.lucene.document.FieldSelector,java.util.concurrent.atomic.AtomicBoolean,org.apache.lucene.search.Query[]) throws java.io.IOException,java.lang.InterruptedException
+meth public abstract !varargs <%0 extends java.lang.Object> void query(java.util.Collection<? super {%%0}>,org.netbeans.modules.parsing.lucene.support.Convertor<? super org.apache.lucene.document.Document,{%%0}>,java.util.Set<java.lang.String>,java.util.concurrent.atomic.AtomicBoolean,org.apache.lucene.search.Query[]) throws java.io.IOException,java.lang.InterruptedException
  anno 2 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NullAllowed()
  anno 4 org.netbeans.api.annotations.common.NullAllowed()
@@ -182,11 +194,12 @@ meth public abstract <%0 extends java.lang.Object, %1 extends java.lang.Object> 
  anno 2 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NonNull()
  anno 4 org.netbeans.api.annotations.common.NonNull()
-meth public abstract <%0 extends java.lang.Object> void queryTerms(java.util.Collection<? super {%%0}>,org.apache.lucene.index.Term,org.netbeans.modules.parsing.lucene.support.StoppableConvertor<org.apache.lucene.index.Term,{%%0}>,java.util.concurrent.atomic.AtomicBoolean) throws java.io.IOException,java.lang.InterruptedException
+meth public abstract <%0 extends java.lang.Object> void queryTerms(java.util.Collection<? super {%%0}>,java.lang.String,java.lang.String,org.netbeans.modules.parsing.lucene.support.Convertor<org.apache.lucene.util.BytesRef,{%%0}>,java.util.concurrent.atomic.AtomicBoolean) throws java.io.IOException,java.lang.InterruptedException
  anno 1 org.netbeans.api.annotations.common.NonNull()
- anno 2 org.netbeans.api.annotations.common.NullAllowed()
- anno 3 org.netbeans.api.annotations.common.NonNull()
- anno 4 org.netbeans.api.annotations.common.NullAllowed()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+ anno 5 org.netbeans.api.annotations.common.NullAllowed()
 meth public abstract org.netbeans.modules.parsing.lucene.support.Index$Status getStatus(boolean) throws java.io.IOException
 meth public abstract void clear() throws java.io.IOException
 meth public abstract void close() throws java.io.IOException
@@ -221,16 +234,17 @@ CLSS public abstract interface static org.netbeans.modules.parsing.lucene.suppor
  outer org.netbeans.modules.parsing.lucene.support.Index
 innr public final static TermFreq
 intf org.netbeans.modules.parsing.lucene.support.Index
-meth public abstract <%0 extends java.lang.Object> void queryTermFrequencies(java.util.Collection<? super {%%0}>,org.apache.lucene.index.Term,org.netbeans.modules.parsing.lucene.support.StoppableConvertor<org.netbeans.modules.parsing.lucene.support.Index$WithTermFrequencies$TermFreq,{%%0}>,java.util.concurrent.atomic.AtomicBoolean) throws java.io.IOException,java.lang.InterruptedException
+meth public abstract <%0 extends java.lang.Object> void queryTermFrequencies(java.util.Collection<? super {%%0}>,java.lang.String,java.lang.String,org.netbeans.modules.parsing.lucene.support.Convertor<org.netbeans.modules.parsing.lucene.support.Index$WithTermFrequencies$TermFreq,{%%0}>,java.util.concurrent.atomic.AtomicBoolean) throws java.io.IOException,java.lang.InterruptedException
  anno 1 org.netbeans.api.annotations.common.NonNull()
- anno 2 org.netbeans.api.annotations.common.NullAllowed()
- anno 3 org.netbeans.api.annotations.common.NonNull()
- anno 4 org.netbeans.api.annotations.common.NullAllowed()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
+ anno 4 org.netbeans.api.annotations.common.NonNull()
+ anno 5 org.netbeans.api.annotations.common.NullAllowed()
 
 CLSS public final static org.netbeans.modules.parsing.lucene.support.Index$WithTermFrequencies$TermFreq
  outer org.netbeans.modules.parsing.lucene.support.Index$WithTermFrequencies
 meth public int getFreq()
-meth public org.apache.lucene.index.Term getTerm()
+meth public org.apache.lucene.util.BytesRef getTerm()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
 hfds freq,term
@@ -252,9 +266,9 @@ CLSS public final org.netbeans.modules.parsing.lucene.support.IndexManager
 innr public abstract interface static Action
 meth public static <%0 extends java.lang.Object> {%%0} priorityAccess(org.netbeans.modules.parsing.lucene.support.IndexManager$Action<{%%0}>) throws java.io.IOException,java.lang.InterruptedException
 meth public static <%0 extends java.lang.Object> {%%0} readAccess(org.netbeans.modules.parsing.lucene.support.IndexManager$Action<{%%0}>) throws java.io.IOException,java.lang.InterruptedException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static <%0 extends java.lang.Object> {%%0} writeAccess(org.netbeans.modules.parsing.lucene.support.IndexManager$Action<{%%0}>) throws java.io.IOException,java.lang.InterruptedException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean holdsWriteLock()
 meth public static java.util.Map<java.io.File,org.netbeans.modules.parsing.lucene.support.Index> getOpenIndexes()
  anno 0 org.netbeans.api.annotations.common.NonNull()
@@ -329,7 +343,7 @@ CLSS public final org.netbeans.modules.parsing.lucene.support.Queries
 fld public final static java.lang.String OPTION_CAMEL_CASE_PART = "camelCasePart"
 fld public final static java.lang.String OPTION_CAMEL_CASE_SEPARATOR = "camelCaseSeparator"
 innr public final static !enum QueryKind
-meth public !varargs static org.apache.lucene.document.FieldSelector createFieldSelector(java.lang.String[])
+meth public !varargs static java.util.Set<java.lang.String> createFieldSelector(java.lang.String[])
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static boolean isCamelCase(java.lang.String,java.lang.String,java.lang.String)
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -368,7 +382,7 @@ meth public static org.apache.lucene.search.Query createTermCollectingQuery(java
  anno 5 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
 hfds CAMEL_CASE_FORMAT,DEFAULT_CAMEL_CASE_PART_CASE_INSENSITIVE,DEFAULT_CAMEL_CASE_PART_CASE_SENSITIVE,DEFAULT_CAMEL_CASE_PATTERN,DEFAULT_CAMEL_CASE_SEPARATOR,cache
-hcls AbstractTCFilter,FieldSelectorImpl,HasFieldFilter,PrefixFilter,QueryFactory,RegexpFilter,RegexpTermEnum,StandardQueryFactory,TCBooleanQuery,TCFilter,TCFilteredQuery,TCQueryFactory,TermFilter
+hcls QueryFactory,StandardQueryFactory
 
 CLSS public final static !enum org.netbeans.modules.parsing.lucene.support.Queries$QueryKind
  outer org.netbeans.modules.parsing.lucene.support.Queries
@@ -382,13 +396,4 @@ fld public final static org.netbeans.modules.parsing.lucene.support.Queries$Quer
 meth public static org.netbeans.modules.parsing.lucene.support.Queries$QueryKind valueOf(java.lang.String)
 meth public static org.netbeans.modules.parsing.lucene.support.Queries$QueryKind[] values()
 supr java.lang.Enum<org.netbeans.modules.parsing.lucene.support.Queries$QueryKind>
-
-CLSS public abstract interface org.netbeans.modules.parsing.lucene.support.StoppableConvertor<%0 extends java.lang.Object, %1 extends java.lang.Object>
-innr public final static Stop
-meth public abstract {org.netbeans.modules.parsing.lucene.support.StoppableConvertor%1} convert({org.netbeans.modules.parsing.lucene.support.StoppableConvertor%0}) throws org.netbeans.modules.parsing.lucene.support.StoppableConvertor$Stop
-
-CLSS public final static org.netbeans.modules.parsing.lucene.support.StoppableConvertor$Stop
- outer org.netbeans.modules.parsing.lucene.support.StoppableConvertor
-cons public init()
-supr java.lang.Exception
 

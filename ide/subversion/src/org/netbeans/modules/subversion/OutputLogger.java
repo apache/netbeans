@@ -300,16 +300,10 @@ public class OutputLogger implements ISVNNotifyListener {
         }
 
         @Override
-        public void outputLineSelected(OutputEvent ev) { }
-
-        @Override
         public void outputLineAction(OutputEvent ev) {
             Subversion.LOG.log(Level.FINE, "Opeining file [{0}]", f);           // NOI18N
             new OpenInEditorAction(new File[] {f}).actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, f.getAbsolutePath()));
         }
-
-        @Override
-        public void outputLineCleared(OutputEvent ev) { }
 
     }
 

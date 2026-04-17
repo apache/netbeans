@@ -155,10 +155,9 @@ class TypeBindingFilter extends Filter<TypeElement> {
         }
         Element injectionPoint = getInjectionPoint();
         AssignabilityType assignType = AssignabilityType.PLAIN;
-        if ( injectionPoint != null && AnnotationObjectProvider.
-                hasAnnotation(injectionPoint, 
-                        FieldInjectionPointLogic.DELEGATE_ANNOTATION, 
-                        getImplementation().getHelper()))
+        if (injectionPoint != null
+                && (AnnotationObjectProvider.hasAnnotation(injectionPoint, FieldInjectionPointLogic.DELEGATE_ANNOTATION, getImplementation().getHelper())
+                || AnnotationObjectProvider.hasAnnotation(injectionPoint, FieldInjectionPointLogic.DELEGATE_ANNOTATION_JAKARTA, getImplementation().getHelper())))
         {
             assignType = AssignabilityType.DECORATOR;
         }

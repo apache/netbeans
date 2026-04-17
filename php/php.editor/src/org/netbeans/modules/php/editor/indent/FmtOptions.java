@@ -171,6 +171,7 @@ public final class FmtOptions {
     public static final String SPACE_WITHIN_ARRAY_BRACKETS = "spaceWithinArrayBrackets"; //NOI18N
     public static final String SPACE_WITHIN_ATTRIBUTE_BRACKETS = "spaceWithinAttributeBrackets"; //NOI18N
     public static final String SPACE_WITHIN_ATTRIBUTE_DECL_PARENS = "spaceWithinAttributeDeclParens"; //NOI18N
+    public static final String SPACE_WITHIN_OTHER_PARENS = "spaceWithinOtherParens"; //NOI18N
     public static final String SPACE_BEFORE_COMMA = "spaceBeforeComma"; //NOI18N
     public static final String SPACE_AFTER_COMMA = "spaceAfterComma"; //NOI18N
     public static final String SPACE_BEFORE_SEMI = "spaceBeforeSemi"; //NOI18N
@@ -370,6 +371,7 @@ public final class FmtOptions {
             {SPACE_WITHIN_ARRAY_BRACKETS, FALSE},
             {SPACE_WITHIN_ATTRIBUTE_BRACKETS, FALSE},
             {SPACE_WITHIN_ATTRIBUTE_DECL_PARENS, FALSE},
+            {SPACE_WITHIN_OTHER_PARENS, FALSE},
             {SPACE_BEFORE_COMMA, FALSE},
             {SPACE_AFTER_COMMA, TRUE},
             {SPACE_BEFORE_SEMI, FALSE},

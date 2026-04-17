@@ -40,7 +40,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class NamedTest extends CommonTestCase {
 
     public NamedTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
 
     public void testPlainNamed() throws IOException {

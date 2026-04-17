@@ -58,8 +58,6 @@ import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.DebuggerManagerAdapter;
 import org.netbeans.api.debugger.Session;
 import org.netbeans.api.debugger.jpda.DebuggerStartException;
-import org.netbeans.api.debugger.jpda.Field;
-import org.netbeans.api.debugger.jpda.JPDAClassType;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.project.Project;
@@ -529,11 +527,7 @@ public final class ShellLaunchManager {
     public static List<String> buildLocalJVMAgentArgs(JavaPlatform platform, ShellAgent agent, Function<String, String> propertyEvaluator) {
         InetSocketAddress isa = agent.getHandshakeAddress();
         
-        File agentJar = InstalledFileLocator.getDefault().locate(
-                ShellProjectUtils.isModularJDK(platform) ?
-                    "modules/ext/nb-mod-jshell-probe.jar": 
-                    "modules/ext/nb-custom-jshell-probe.jar",
-                "org.netbeans.lib.jshell.agent", false);
+        File agentJar = InstalledFileLocator.getDefault().locate("modules/ext/nb-custom-jshell-probe.jar", "org.netbeans.lib.jshell.agent", false);
         String policy = propertyEvaluator.apply(PropertyNames.JSHELL_CLASS_LOADING);
         if (policy == null) {
             policy = RunOptionsModel.LoaderPolicy.SYSTEM.toString().toLowerCase();

@@ -32,7 +32,7 @@ public class WebBeansAnalysisTest extends BaseAnalisysTestCase {
     
     
     public WebBeansAnalysisTest(String testName) {
-        super(testName);
+        super(testName, false);
     }
     
     /* (non-Javadoc)
@@ -543,7 +543,7 @@ public class WebBeansAnalysisTest extends BaseAnalisysTestCase {
     
     public void testSessionBean() throws IOException {
         getUtilities().initEnterprise();
-        
+
         TestUtilities.copyStringToFileObject(srcFO, "foo/Scope1.java",
                 "package foo; " +
                 " import javax.inject.Scope; "+
@@ -556,7 +556,7 @@ public class WebBeansAnalysisTest extends BaseAnalisysTestCase {
                 " @Scope "+
                 " public @interface Scope1 { "+
                 "}");
-        
+
         FileObject errorFile = TestUtilities.copyStringToFileObject(srcFO, "foo/Clazz.java",
                 "package foo; " +
                 "import javax.ejb.Singleton; "+
@@ -564,7 +564,17 @@ public class WebBeansAnalysisTest extends BaseAnalisysTestCase {
                 " @Singleton "+
                 " public class Clazz { "+
                 "}");
-        
+        ResultProcessor processor = new ResultProcessor (){
+
+            @Override
+            public void process( TestProblems result ) {
+                checkTypeElement(result, "foo.Clazz");
+            }
+
+        };
+        runAnalysis(errorFile , processor);
+        errorFile.delete();
+
         FileObject errorFile1 = TestUtilities.copyStringToFileObject(srcFO, "foo/Clazz1.java",
                 "package foo; " +
                 "import javax.ejb.Stateless; "+
@@ -572,7 +582,17 @@ public class WebBeansAnalysisTest extends BaseAnalisysTestCase {
                 " @Stateless "+
                 " public class Clazz1 { "+
                 "}");
-        
+        processor = new ResultProcessor (){
+
+            @Override
+            public void process( TestProblems result ) {
+                checkTypeElement(result, "foo.Clazz1");
+            }
+
+        };
+        runAnalysis(errorFile1 , processor);
+        errorFile1.delete();
+
         FileObject goodFile = TestUtilities.copyStringToFileObject(srcFO, "foo/Clazz2.java",
                 "package foo; " +
                 "import javax.enterprise.context.ApplicationScoped; "+
@@ -581,36 +601,17 @@ public class WebBeansAnalysisTest extends BaseAnalisysTestCase {
                 " @ApplicationScoped "+
                 " public class Clazz2  { "+
                 "}");
-        
+        runAnalysis( goodFile, NO_ERRORS_PROCESSOR );
+        goodFile.delete();
+
         FileObject goodFile1 = TestUtilities.copyStringToFileObject(srcFO, "foo/Clazz3.java",
                 "package foo; " +
                 "import javax.ejb.Stateless; "+
                 " @Stateless "+
                 " public class Clazz3  { "+
                 "}");
-        
-        ResultProcessor processor = new ResultProcessor (){
-
-            @Override
-            public void process( TestProblems result ) {
-                checkTypeElement(result, "foo.Clazz");
-            }
-            
-        };
-        runAnalysis(errorFile , processor);
-        
-        processor = new ResultProcessor (){
-
-            @Override
-            public void process( TestProblems result ) {
-                checkTypeElement(result, "foo.Clazz1");
-            }
-            
-        };
-        runAnalysis(errorFile1 , processor);
-        
-        runAnalysis( goodFile, NO_ERRORS_PROCESSOR );
         runAnalysis( goodFile1, NO_ERRORS_PROCESSOR );
+        goodFile1.delete();
     }
     
     //=======================================================================

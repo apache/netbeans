@@ -401,9 +401,9 @@ the test uses reflection to retrieve the <code>ProjectManager.mutex()</code> ins
 <answer id="format-clipboard">
 Nodes provide default implementation of clipboard operations on nodes. This
 can be extendeded by specific implementation of nodes by overloading:
-<a href="@TOP@/org/openide/nodes/Node.html#clipboardCopy--">Node.clipboardCopy()</a>, 
-<a href="@TOP@/org/openide/nodes/Node.html#clipboardCut--">Node.cliboardCut()</a>, 
-<a href="@TOP@/org/openide/nodes/Node.html#getPasteTypes-java.awt.datatransfer.Transferable-">Node.getPasteTypes()</a>
+<a href="@TOP@/org/openide/nodes/Node.html#clipboardCopy()">Node.clipboardCopy()</a>, 
+<a href="@TOP@/org/openide/nodes/Node.html#clipboardCut()">Node.cliboardCut()</a>, 
+<a href="@TOP@/org/openide/nodes/Node.html#getPasteTypes(java.awt.datatransfer.Transferable)">Node.getPasteTypes()</a>
 Default Transferables for nodes can be obtained using.
 <a href="@TOP@/org/openide/nodes/NodeTransfer.html">NodeTransfer</a> class
 
@@ -424,8 +424,8 @@ provides own DataFlavor transfering indices.
 <answer id="format-dnd">
 Nodes provide default implementation of d'n'd operations on nodes. This
 can be extendeded by specific implementation of nodes by overloading:
-<a href="@TOP@/org/openide/nodes/Node.html#drag--">Node.drag()</a>
-<a href="@TOP@/org/openide/nodes/Node.html#getDropType-java.awt.datatransfer.Transferable-int-int-">Node.getDropTye()</a>
+<a href="@TOP@/org/openide/nodes/Node.html#drag()">Node.drag()</a>
+<a href="@TOP@/org/openide/nodes/Node.html#getDropType(java.awt.datatransfer.Transferable,int,int)">Node.getDropTye()</a>
 
 Default Transferables for nodes can be obtained using.
 <a href="@TOP@/org/openide/nodes/NodeTransfer.html">NodeTransfer</a> class

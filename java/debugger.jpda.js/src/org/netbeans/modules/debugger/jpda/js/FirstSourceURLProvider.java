@@ -46,7 +46,10 @@ public class FirstSourceURLProvider extends SourcePathProvider {
     
     private static final String[] NO_SOURCE_ROOTS = new String[]{};
     
-    private static final String pathPrefix = "jdk/nashorn/internal/scripts/";   // NOI18N
+    // prefix for Nashorn built in JDK
+    private static final String pathPrefixJdk = "jdk/nashorn/internal/scripts/";   // NOI18N
+    // prefix for external Nashorn
+    private static final String pathPrefixExt = "org/openjdk/nashorn/internal/scripts/";   // NOI18N
     
     private final ContextProvider contextProvider;
     private SourcePathProvider sourcePath;
@@ -56,11 +59,25 @@ public class FirstSourceURLProvider extends SourcePathProvider {
     public FirstSourceURLProvider(ContextProvider contextProvider) {
         this.contextProvider = contextProvider;
     }
+    
+    /**
+     * Returns relative path Nashorn scripts. Either from JDK or from External
+     * @param relativePath
+     * @return relative path or null if does match
+     */
+    private String getRelativePath(String relativePath) {
+        if (relativePath.startsWith(pathPrefixJdk)) {
+            return relativePath.substring(pathPrefixJdk.length());
+        } else if (relativePath.startsWith(pathPrefixExt)) {
+            return relativePath.substring(pathPrefixExt.length());
+        }
+        return null;
+    }
 
     @Override
     public String getURL(String relativePath, boolean global) {
-        if (relativePath.startsWith(pathPrefix)) {
-            relativePath = relativePath.substring(pathPrefix.length());
+        String foundRelativePath = getRelativePath(relativePath);
+        if (foundRelativePath != null) {
             synchronized (rootDirsLock) {
                 if (rootDirs == null) {
                     sourcePath = getSourcePathProvider();
@@ -68,7 +85,7 @@ public class FirstSourceURLProvider extends SourcePathProvider {
                     rootDirs = computeModuleRoots();
                 }
                 for (FileObject root : rootDirs) {
-                    FileObject fo = root.getFileObject(relativePath);
+                    FileObject fo = root.getFileObject(foundRelativePath);
                     if (fo != null) {
                         return fo.toURL().toExternalForm();
                     }
@@ -78,9 +95,17 @@ public class FirstSourceURLProvider extends SourcePathProvider {
         return null;
     }
     
+    /**
+     * @param clazz
+     * @return true if and only if the clazz belongs to Nashorh script (JDK or External)
+     */
+    private boolean isNashornScript(JPDAClassType clazz) {
+        return clazz.getName().startsWith(JSUtils.NASHORN_SCRIPT_JDK) || clazz.getName().startsWith(JSUtils.NASHORN_SCRIPT_EXT);
+    }
+    
     public String getURL(JPDAClassType clazz, String stratum) {
         if (!(stratum == null || JSUtils.JS_STRATUM.equals(stratum)) ||
-            !clazz.getName().startsWith(JSUtils.NASHORN_SCRIPT)) {
+            !isNashornScript(clazz)) {
             return null;
         }
         Source source = Source.getSource(clazz);

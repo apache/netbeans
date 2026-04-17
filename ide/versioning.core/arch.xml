@@ -116,7 +116,6 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
        Main and Popup Menu usecases come from the UI spec available here:         
        <a href="https://netbeans.apache.org/projects/ui/versioningspecification">Versioning UI spec</a>
         <usecase id="1" name="Main Menu Itegration">
@@ -132,7 +131,6 @@
          To enable automated versioning (adds, removes, moves, delets), a SCM system needs to integrate at the lowest level
          into the IDE's filesystem layer. Refactoring is the most critical filesystem client here.  
         </usecase>
-     </p>
  </answer>
 
 

@@ -35,20 +35,14 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
 @RunnerRestClass(runner = RunnerRestStopDAS.class)
 public class CommandStopDAS extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for version command. */
     private static final String COMMAND = "stop-domain";
 
     /** Error message for administration command execution exception .*/
     private static final String ERROR_MESSAGE = "DAS stop failed.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Stops running DAS server.
      * <p/>
@@ -70,10 +64,7 @@ public class CommandStopDAS extends Command {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server version command entity.
      */

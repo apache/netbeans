@@ -103,15 +103,6 @@ public class Actions {
      */
     private static Icon nonNullIcon(Icon i) {
         return null;
-
-        /*if (i != null) {
-            return i;
-        } else {
-            if (BLANK_ICON == null) {
-                BLANK_ICON = new ImageIcon(Utilities.loadImage("org/openide/resources/actions/empty.gif", true)); // NOI18N
-            }
-            return BLANK_ICON;
-        }*/
     }
 
     /** Method that finds the keydescription assigned to this action.
@@ -950,13 +941,6 @@ public class Actions {
         * @return label for this menu item (or <code>null</code> for a separator)
         */
         public String getLabel(int index);
-
-        /** Gets shortcut for specific index
-        * @index of the submenu item
-        * @return menushortcut for this menu item
-        */
-
-        //    public MenuShortcut getMenuShortcut(int index);
 
         /** Get context help for the specified item.
         * This can be used to associate help with individual items.

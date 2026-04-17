@@ -1,0 +1,26 @@
+Code completion result for source line:
+range1.a|
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+METHOD     add(E)                          [PUBLIC]   boolean
+METHOD     add(int, E)                     [PUBLIC]   void
+METHOD     addAll(Collection<? extends E>  [PUBLIC]   boolean
+METHOD     addAll(Iterable)                           boolean
+METHOD     addAll(Iterator)                           boolean
+METHOD     addAll(Object[])                           boolean
+METHOD     addAll(int, Collection<? exten  [PUBLIC]   boolean
+METHOD     addAll(int, Object)                        boolean
+METHOD     addFirst(E)                     [PUBLIC]   void
+METHOD     addLast(E)                      [PUBLIC]   void
+METHOD     addShutdownHook(Closure)                   void
+METHOD     any()                                      boolean
+METHOD     any(Closure)                               boolean
+METHOD     asBoolean()                                boolean
+METHOD     asCollection()                             Collection
+METHOD     asImmutable()                              List
+METHOD     asList()                                   List
+METHOD     asSynchronized()                           List
+METHOD     asType(Class)                              Object
+METHOD     asUnmodifiable()                           List
+METHOD     average()                                  Object
+METHOD     average(Closure)                           Object

@@ -22,11 +22,10 @@
 <html>
 <head>
 <title>Customizing how Properties are displayed</title>
-<link rel="Stylesheet" href="../../../../prose.css" type="text/css" title="NetBeans Open APIs Style">
 </head>
   <body>
   <h1>Customizing how Properties are displayed</h1>
-<H2><A name="custom_property_editors"> Customizing property editors </a></H2>
+<h2 id="custom_property_editors"> Customizing property editors </h2>
 The core implementation provides a set of property editors for common types
 of properties. These editors implement the <EM> org.openide.explorer.propertysheet.ExPropertyEditor </EM>
 interface. It allows passing custom values to the property editor instances.
@@ -34,7 +33,7 @@ This can be useful for customizing the property editors appearance.
 <P>
 You may want to customize the property editor behavior in different situations:
 
-<H3><A name="new_bean"> When creating a new bean </a></H3>
+<h3 id="new_bean"> When creating a new bean </h3>
 The properties can be passed to BeanInfo. They are propagated through
 BeanNode to the property editor. For example if you have a java.io.File property
 in your bean you can use this in the BeanInfo:
@@ -50,7 +49,7 @@ properties[PROPERTY_testFile].setValue("files", Boolean.FALSE);
 // (the property editor will not allow selecting files)
 </PRE>
 
-<H3><A name="new_node"> When creating a new node </a></H3>
+<h3 id="new_node"> When creating a new node </h3>
 You can directly pass the custom parameters to the properties. One 
 example is when overriding method createSheet - you can use the property there.
 Or anywhere where you have access to the org.openide.nodes.Node.Property 
@@ -89,18 +88,18 @@ is an example from NetBeans sources, though this module is now obsolete.</p>
 <p class="nonnormative"><a href="http://www.netbeans.org/source/browse/~checkout~/core/src/org/netbeans/core/ui/MountIterator.java"><code>MountIterator</code></a>
 is an example from NetBeans sources.</p>
 -->
-<H3><A name="disabling_ok"> When do you want to disable/enable OK when displaying custom property editor </a></H3>
+<h3 id="disabling_ok"> When do you want to disable/enable OK when displaying custom property editor </h3>
 If you provide your own property editor implementation which supplies a GUI custom editor, that
 component will be displayed in a separate window with OK and Cancel buttons.
-Implement <a href="../propertysheet/ExPropertyEditor.html">ExPropertyEditor</a> on
+Implement {@link org.openide.explorer.propertysheet.ExPropertyEditor ExPropertyEditor} on
 your PropertyEditor.  In your implementation of ExPropertyEditor.attachEnv(),
-cache the instance of <a href="../propertysheet/PropertyEnv.html">PropertyEnv</a>
+cache the instance of {@link org.openide.explorer.propertysheet.PropertyEnv PropertyEnv }
 that is passed to it.  To enable the OK button, call 
 <code>env.setState(PropertyEnv.STATE_VALID)</code>.  To disable it, call
 <code>env.setState(PropertyEnv.STATE_INVALID)</code>.
 
 
-<H3><A name="core_editors_custom_parameters"> Custom parameters in core editors </a></H3>
+<h3 id="core_editors_custom_parameters"> Custom parameters in core editors </h3>
 <p>
 Following table presents all property editors in core that can be
 used with the mechanism of passing named properties. If you pass a
@@ -108,7 +107,8 @@ property that is not supported in the editor (or if you pass wrong argument
 type) the custom parameter is ignored.
 </p>
 
-    <TABLE border="1" summary="custom parameter list">
+    <TABLE border="1">
+        <caption>custom parameter list</caption>
         <TR>
             <TH> Property type
             </TH>
@@ -214,7 +214,7 @@ type) the custom parameter is ignored.
             When it is set the property editor will use htmlDisplayValue as a
             string to be shown to the user. Given HTML is interpreted as
             described in 
-            <a href="@org-openide-awt@/org/openide/awt/HtmlRenderer.html"><code>HtmlRenderer</code></a>.
+            {@link org.openide.awt.HtmlRenderer HtmlRenderer}.
             So it gives a possibility to show property values e.g. in red,
             bold, ... font. Be aware that due to the performance reason, the
             given <em>html</em> longer than 511 bytes will not be interpretted
@@ -270,7 +270,8 @@ implementation. They can be used with any property, they are not
 bound to one editor.
 </p>
 
-    <TABLE border="1" summary="general parameters">
+    <TABLE border="1">
+        <caption>general parameters</caption>
         <TR>
             <TH>
                 Affected part
@@ -395,25 +396,22 @@ bound to one editor.
         </TR>
     </TABLE>
 
-<h3><a name="other-prop-eds">Other available property editors</a></h3>
+<h3 id="other-prop-eds">Other available property editors</h3>
 
 NetBeans includes a number of
 
-<a href="@JDK@/java/beans/PropertyEditor.html">property editors</a>
+{@link java.beans.PropertyEditor property editors}
 
 in its default property editor
 
-<a href="@JDK@/java/beans/PropertyEditorManager.html">search path</a>.
+{] java.beans.PropertyEditorManager search path}.
 
 Module authors will sometimes want to make use of the fact that
 such an editor exists when creating JavaBean-related code; most
 commonly, this means that
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.Property.html#getPropertyEditor--">node properties</a>
-<!-- deprecated
-and
-<a href="@org-openide-options@/org/openide/options/SystemOption.html">system options</a>
--->
+{@link org.openide.nodes.Node.Property#getPropertyEditor() node properties}
+
 may declare a property to be of a certain type without explicitly
 specifying a property editor for it, and rely on the search path to
 provide a usable property editor so that the UI will function
@@ -444,40 +442,40 @@ property editors which may be used via the default search path:
 
 <ul>
 
-<li><a href="@JDK@/java/lang/Boolean.html"><code>java.lang.Boolean</code></a>
+<li>{@link java.lang.Boolean java.lang.Boolean }
 
-<li><a href="@JDK@/java/awt/Color.html"><code>java.awt.Color</code></a>
+<li>{@link java.awt.Color java.awt.Color }
 
-<li><a href="@JDK@/java/awt/Dimension.html"><code>java.awt.Dimension</code></a>
+<li>{@link java.awt.Dimension java.awt.Dimension }
 
-<li><a href="@JDK@/java/awt/Font.html"><code>java.awt.Font</code></a>
+<li>{@link java.awt.Font java.awt.Font }
 
-<li><a href="@JDK@/java/awt/Insets.html"><code>java.awt.Insets</code></a>
+<li>{@link java.awt.Insets java.awt.Insets }
 
-<li><a href="@JDK@/java/lang/Integer.html"><code>java.lang.Integer</code></a>
+<li>{@link java.lang.Integer java.lang.Integer }
 
-<li><a href="@JDK@/java/awt/Point.html"><code>java.awt.Point</code></a>
+<li>{@link java.awt.Point java.awt.Point }
 
-<li><a href="@JDK@/java/awt/Rectangle.html"><code>java.awt.Rectangle</code></a>
+<li>{@link java.awt.Rectangle java.awt.Rectangle }
 
-<li><a href="@JDK@/java/io/File.html"><code>java.io.File</code></a>
+<li>{@link java.io.File java.io.File }
 
-<li><a href="@JDK@/java/lang/Class.html"><code>java.lang.Class</code></a>
+<li>{@link java.lang.Class java.lang.Class }
 
-<li><a href="@JDK@/java/lang/String.html"><code>java.lang.String</code></a>
+<li>{@link java.lang.String java.lang.String }
 
-<li><a href="@JDK@/java/net/URL.html"><code>java.net.URL</code></a>
+<li>{@link java.net.URL java.net.URL }
 
-<li><a href="@JDK@/java/util/Date.html"><code>java.util.Date</code></a>
+<li>{@link java.util.Date java.util.Date }
 
-<li><a href="@JDK@/java/util/Properties.html"><code>java.util.Properties</code></a>
+<li>{@link java.util.Properties java.util.Properties }
 
-<li><a href="@JDK@/javax/swing/ListModel.html"><code>javax.swing.ListModel</code></a>
+<li>{@link javax.swing.ListModel javax.swing.ListModel }
 
-<li><a href="@JDK@/javax/swing/table/TableModel.html"><code>javax.swing.table.TableModel</code></a>
+<li>{@link javax.swing.table.TableModel javax.swing.table.TableModel }
 
 <li>all primitive wrapper types, such as
-<a href="@JDK@/java/lang/Integer.html"><code>java.lang.Integer</code></a></li>
+{@link java.lang.Integer java.lang.Integer }</li>
 
 </ul>
 
@@ -495,23 +493,23 @@ available in the package
 but these are all deprecated; modules are encouraged to
 instead rely solely on the default editor search path, and to add needed configuration
 
-<a href="@JDK@/java/beans/FeatureDescriptor.html#setValue-java.lang.String-java.lang.Object-">parameters</a>
+{@link java.beans.FeatureDescriptor#setValue(java.lang.String,java.lang.Object) parameters }
 
 to their
 
-<a href="@org-openide-nodes@/org/openide/nodes/Node.Property.html"><code>Node.Property</code></a>s
+{@link org.openide.nodes.Node.Property Node.Property}s
 
 or
 
-<a href="@JDK@/java/beans/PropertyDescriptor.html"><code>PropertyDescriptor</code></a>s
+{@link java.beans.PropertyDescriptor PropertyDescriptor}s
 
 so as to be accessible from
 
-<a href="../propertysheet/PropertyEnv.html#getFeatureDescriptor--"><code>PropertyEnv</code></a>
+{@link org.openide.explorer.propertysheet.PropertyEnv#getFeatureDescriptor() PropertyEnv }
 
 as used by
 
-<a href="../propertysheet/ExPropertyEditor.html">smart</a>
+{@link org.openide.explorer.propertysheet.ExPropertyEditor smart}
 
 property editors.</p>
   

@@ -46,7 +46,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.util.Parameters;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -54,7 +53,7 @@ import org.openide.util.WeakSet;
  */
 class OpenedEditors implements PropertyChangeListener {
 
-    private Set<JTextComponent> visibleEditors = new WeakSet<JTextComponent>();
+    private Set<JTextComponent> visibleEditors = Collections.newSetFromMap(new WeakHashMap<>());
     private Map<JTextComponent, DataObject> visibleEditors2Files = new WeakHashMap<JTextComponent, DataObject>();
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
 

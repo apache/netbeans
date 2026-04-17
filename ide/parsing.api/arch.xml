@@ -747,7 +747,7 @@
  <answer id="exec-property">
   <api category="devel" group="logger" name="org.netbeans.ui.indexing" type="export">
     Since version 1.47 the <code>RepositorUpdater</code> cooperates with <!-- XXX link to @org-netbeans-modules-uihandler@/overview-summary.html not OK from a stable API -->UI Gestures Collector
-    by sending following messages to the <code>org.netbeans.ui.indexing</code> <a href="@JDK@/java/util/logging/Logger.html">logger</a>:
+    by sending following messages to the <code>org.netbeans.ui.indexing</code> <a href="@JDK@@JDKMODULE_JAVA_LOGGING@/java/util/logging/Logger.html">logger</a>:
     <ul>
         <li><b>INDEXING_STARTED</b> - message about a start of indexing (up to date check). Arguments:
             <ul>

@@ -20,10 +20,11 @@ package org.netbeans.modules.java.lsp.server.singlesourcefile;
 
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.WeakHashMap;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -54,19 +55,37 @@ public abstract class SingleFileOptionsQueryImpl implements SingleFileOptionsQue
             if (workspaceFolder != null) {
                 return getResult(workspace, workspaceFolder);
             } else {
-                Set<Workspace> workspaces;
+                List<Workspace> workspaces;
 
                 synchronized (this) {
-                    workspaces = workspace2Settings.keySet();
+                    workspaces = new ArrayList<>(workspace2Settings.keySet());
                 }
 
+                int count = 0;
                 for (Workspace w : workspaces) {
+                    if (w == null)
+                        continue;   // Since a WeakHashMap is in use, it is possible to receive a null value.
                     FileObject folder = findWorkspaceFolder(w, file);
                     if (folder != null) {
                         return getResult(w, folder);
                     }
+                    if (count++ == 0 && workspace == null)
+                        workspace = w;
                 }
 
+                if (count == 1) {
+                    // Since this is a single source file, associate it with the single open workspace,
+                    // even when it is not a descendant of one of the root folders.
+                    FileObject folder;
+                    if (file.isFolder()) {
+                        folder = file;
+                    } else {
+                        folder = file.getParent();
+                        if (folder == null)
+                            folder = file;
+                    }
+                    return getResult(workspace, folder);
+                }
                 return null;
             }
         }

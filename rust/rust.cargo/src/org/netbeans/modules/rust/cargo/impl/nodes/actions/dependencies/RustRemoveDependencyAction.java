@@ -42,6 +42,7 @@ public class RustRemoveDependencyAction extends AbstractAction {
     private final RustPackage rustPackage;
     private final RustProjectDependenciesNode.DependencyType dependencyType;
 
+    @SuppressWarnings({"this-escape"})
     public RustRemoveDependencyAction(CargoTOML cargotoml, RustPackage rustPackage, RustProjectDependenciesNode.DependencyType dependencyType) {
         super(CargoCommand.CARGO_REMOVE.getDisplayName());
         putValue(Action.SHORT_DESCRIPTION, CargoCommand.CARGO_REMOVE.getDescription());

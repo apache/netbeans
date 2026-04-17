@@ -44,10 +44,11 @@ import org.openide.util.lookup.ServiceProvider;
  * recognizes them and allows to configure vm, application arguments and main class name for the goal. It is a responsibility
  * of action mapping to remap the properties used by exec:exec to goal-specific properties, if it uses different naming. See the
  * following example:
+ * </span>
  * <div class="nonnormative">
  * {@snippet file="org/netbeans/modules/maven/runjar/example-rungoals-config.xml" region="register-run-goals"}
  * </div>
- * </span>
+ * 
  * @author  Milos Kleint
  */
 public interface MavenActionsProvider {

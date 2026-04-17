@@ -18,12 +18,7 @@
  */
 package org.netbeans.modules.java.hints.errors;
 
-import com.sun.source.util.TreePath;
-import java.util.List;
-import java.util.Set;
-import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
-import org.netbeans.spi.editor.hints.Fix;
 import org.openide.util.NbBundle;
 
 /**
@@ -33,7 +28,7 @@ import org.openide.util.NbBundle;
 public class AccessErrorTest extends ErrorHintsTestBase  {
     
     public AccessErrorTest(String name) {
-        super(name);
+        super(name, AccessError.class);
     }
     
     public void testSimple() throws Exception {
@@ -59,21 +54,6 @@ public class AccessErrorTest extends ErrorHintsTestBase  {
                         "class Acc {\n" +
                         "    static int i;\n" +
                         "}\n").replaceAll("[\\s]+", " "));
-    }
-
-    @Override
-    protected List<Fix> computeFixes(CompilationInfo info, int pos, TreePath path) throws Exception {
-        return new AccessError().run(info, null, pos, path, null);
-    }
-
-    @Override
-    protected String toDebugString(CompilationInfo info, Fix f) {
-        return f.getText();
-    }
-
-    @Override
-    protected Set<String> getSupportedErrorKeys() {
-        return new AccessError().getCodes();
     }
 
     static {

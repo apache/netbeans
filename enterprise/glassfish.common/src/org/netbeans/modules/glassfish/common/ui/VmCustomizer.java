@@ -39,9 +39,6 @@ import org.openide.util.Utilities;
 
 public class VmCustomizer extends javax.swing.JPanel {
 
-    ////////////////////////////////////////////////////////////////////////////
-    // Inner classes methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
 
     /**
      * Action to invoke Java SE platforms customizer.
@@ -148,7 +145,7 @@ public class VmCustomizer extends javax.swing.JPanel {
      */
     private void setAddressValue(String number) {
         try {
-        addressValue.setValue(new Integer(number));
+            addressValue.setValue(Integer.valueOf(number));
         } catch (NumberFormatException nfe) {
             addressValue.setValue(0);
         }
@@ -164,7 +161,7 @@ public class VmCustomizer extends javax.swing.JPanel {
      * <code>addressValue</code> field.
      */
     private void setAddressValue(Integer number) {
-        addressValue.setValue(number != null ? number : new Integer(0));
+        addressValue.setValue(number != null ? number : Integer.valueOf(0));
     }
 
     private void persistFields() {

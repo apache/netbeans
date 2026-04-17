@@ -337,6 +337,7 @@ public final class ExtractSuperclassRefactoringPlugin extends JavaRefactoringPlu
                         newTypeParams,
                         superClass,
                         implementsList,
+                        Collections.emptyList(),
                         Collections.<Tree>emptyList());
                 newClassTree = GeneratorUtilities.get(workingCopy).insertClassMembers(newClassTree, members);
 
@@ -382,6 +383,7 @@ public final class ExtractSuperclassRefactoringPlugin extends JavaRefactoringPlu
                         classTree.getTypeParameters(),
                         superClassTree,
                         newImpls,
+                        classTree.getPermitsClause(),
                         newMembers);
 
                 rewrite(classTree, nc);

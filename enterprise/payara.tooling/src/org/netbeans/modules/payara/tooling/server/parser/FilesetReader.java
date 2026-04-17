@@ -32,10 +32,7 @@ import org.xml.sax.SAXException;
  */
 public class FilesetReader extends TreeParser.NodeListener {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** File sets retrieved from XML elements. */
     private Map<String, List<String>> filesets
             = new HashMap<String, List<String>>();
@@ -43,10 +40,7 @@ public class FilesetReader extends TreeParser.NodeListener {
     /** File set being actually processed. */
     private List<String> actualFileset = null;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Tree parser methods                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Process attributes from current XML element.
      * <p/>
@@ -77,10 +71,7 @@ public class FilesetReader extends TreeParser.NodeListener {
         actualFileset.add(attributes.getValue("name"));
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get file sets retrieved from XML elements.
      * <p/>
@@ -90,10 +81,7 @@ public class FilesetReader extends TreeParser.NodeListener {
         return filesets;
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Reset this XML element reader.
      */

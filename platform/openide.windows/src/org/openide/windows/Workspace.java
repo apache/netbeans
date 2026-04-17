@@ -36,7 +36,7 @@ import java.util.Set;
  * stores the content of the workspace (it is responsibility of window manager).
  *
  * <p>
- * <b><font color="red"><em>Important note: Do not provide implementation of this interface unless you are window system provider!</em></font></b>
+ * <b><span style="color:red"><em>Important note: Do not provide implementation of this interface unless you are window system provider!</em></span></b>
  *
  * @author Jaroslav Tulach
  * @deprecated Do not use any more. Use {@link WindowManager} methods directly,

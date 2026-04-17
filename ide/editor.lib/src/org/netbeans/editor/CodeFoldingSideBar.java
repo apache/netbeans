@@ -55,6 +55,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.View;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.fold.Fold;
 import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.editor.fold.FoldHierarchyEvent;
@@ -409,8 +410,8 @@ public class CodeFoldingSideBar extends JComponent implements Accessible {
                 return Collections.<PaintInfo>emptyList();
             }
             
-            startPos = Utilities.getRowStart(bdoc, startPos);
-            endPos = Utilities.getRowEnd(bdoc, endPos);
+            startPos = LineDocumentUtils.getLineStartOffset(bdoc, startPos);
+            endPos = LineDocumentUtils.getLineEndOffset(bdoc, endPos);
             
             FoldHierarchy hierarchy = FoldHierarchy.get(component);
             hierarchy.lock();
@@ -497,8 +498,8 @@ public class CodeFoldingSideBar extends JComponent implements Accessible {
             return false;
         }
 
-        int lineStartOffset1 = Utilities.getRowStart(doc, f.getStartOffset());
-        int lineStartOffset2 = Utilities.getRowStart(doc, f.getEndOffset());
+        int lineStartOffset1 = LineDocumentUtils.getLineStartOffset(doc, f.getStartOffset());
+        int lineStartOffset2 = LineDocumentUtils.getLineStartOffset(doc, f.getEndOffset());
         int y1 = btui.getYFromPos(lineStartOffset1);
         int h = btui.getEditorUI().getLineHeight();
         int y2 = btui.getYFromPos(lineStartOffset2);
@@ -642,8 +643,8 @@ public class CodeFoldingSideBar extends JComponent implements Accessible {
             return false;
         }
 
-        int lineStartOffset1 = Utilities.getRowStart(doc, f.getStartOffset());
-        int lineStartOffset2 = Utilities.getRowStart(doc, f.getEndOffset());
+        int lineStartOffset1 = LineDocumentUtils.getLineStartOffset(doc, f.getStartOffset());
+        int lineStartOffset2 = LineDocumentUtils.getLineStartOffset(doc, f.getEndOffset());
         int h = btui.getEditorUI().getLineHeight();
 
         boolean activeMark = false;

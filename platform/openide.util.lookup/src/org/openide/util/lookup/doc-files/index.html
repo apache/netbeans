@@ -22,10 +22,9 @@
 <HTML>
 <HEAD>
 <TITLE>Lookup Library</TITLE>
-<link rel="Stylesheet" href="@TOP@/prose.css" type="text/css" title="NetBeans Open APIs Style">
 </HEAD>
 <BODY>
-
+<H1>Lookup library HomePage</H1>
 <P>
 
 This is the home page of the <em>lookup library</em> implementation, which
@@ -56,21 +55,21 @@ The most simple and most often used method for allowing other implementations
 to be plugged in is the <em>system property</em> pattern:
 
 <pre>
-    <font class="keyword">public</font> <font class="type">Toolkit</font> <font class="function-name">getDefaultToolkit</font> () {
-        java.awt.<font class="type">Toolkit</font> <font class="variable-name">t</font> = <font class="constant">null</font>;
-        <font class="type">String</font> <font class="variable-name">classname</font> = System.getProperty (<font class="string">"java.awt.Toolkit"</font>);
-        <font class="keyword">if</font> (classname != <font class="constant">null</font>) {
-            <font class="keyword">try</font> {
-                <font class="type">Class</font> <font class="variable-name">c</font> = Class.forName (classname);
-                t = (java.awt.<font class="type">Toolkit</font>)c.newInstance ();
-            } <font class="keyword">catch</font> (<font class="type">Exception</font> <font class="variable-name">ex</font>) {
-                System.out.println (<font class="string">"Cannot initialize toolkit: "</font> + classname);
+    <span class="keyword">public</span> <span class="type">Toolkit</span> <span class="function-name">getDefaultToolkit</span> () {
+        java.awt.<span class="type">Toolkit</span> <span class="variable-name">t</span> = <span class="constant">null</span>;
+        <span class="type">String</span> <span class="variable-name">classname</span> = System.getProperty (<span class="string">"java.awt.Toolkit"</span>);
+        <span class="keyword">if</span> (classname != <span class="constant">null</span>) {
+            <span class="keyword">try</span> {
+                <span class="type">Class</span> <span class="variable-name">c</span> = Class.forName (classname);
+                t = (java.awt.<span class="type">Toolkit</span>)c.newInstance ();
+            } <span class="keyword">catch</span> (<span class="type">Exception</span> <span class="variable-name">ex</span>) {
+                System.out.println (<span class="string">"Cannot initialize toolkit: "</span> + classname);
                 ex.printStackTrace ();
             }
         }
-        <font class="comment">// fallback </font>
-        <font class="keyword">if</font> (t == <font class="constant">null</font>) {
-            t = <font class="keyword">new</font> <font class="type">GenericAWTToolkit</font> ();
+        <span class="comment">// fallback </span>
+        <span class="keyword">if</span> (t == <span class="constant">null</span>) {
+            t = <span class="keyword">new</span> <span class="type">GenericAWTToolkit</span> ();
         }
     }
 </pre>
@@ -102,9 +101,9 @@ more error prone than the <em>property pattern</EM>.  And this is exactly the
 place where the <em>lookup library</em> can help. It provides an implementation of
 the search algorithm with an easy interface. Just write:
 <pre>
-    <font class="keyword">import</font> <font class="type">java.awt.Toolkit</font>;
-    <font class="keyword">import</font> <font class="type">org.openide.util.Lookup;</font>;
-    <font class="type">Toolkit</font> <font class="variable-name">t</font> = (<font class="type">Toolkit</font>)Lookup.getDefault().<a href="@TOP@org/openide/util/Lookup.html#lookup-java.lang.Class-">lookup</a>(Toolkit.<font class="keyword">class</font>);
+    <span class="keyword">import</span> <span class="type">java.awt.Toolkit</span>;
+    <span class="keyword">import</span> <span class="type">org.openide.util.Lookup;</span>;
+    <span class="type">Toolkit</span> <span class="variable-name">t</span> = (<span class="type">Toolkit</span>)Lookup.getDefault().<a href="@TOP@org/openide/util/Lookup.html#lookup(java.lang.Class)">lookup</a>(Toolkit.<span class="keyword">class</span>);
 </PRE>
 and if the JAR with <code>MyToolkit</CODE> is in the class path, the simple call 
 above will do the rest.
@@ -136,9 +135,9 @@ of the new object will be or you (more importantly) want to be able to add (or
 change) roles of the object dynamically. So why not to introduce following
 method to the object's interface:
 <pre>
-<font class="keyword">public class </FONT> <font class="type">MorphingObject</FONT> {
-    <font class="keyword">public</FONT> <font class="type"><a href="@TOP@org/openide/util/Lookup.html">Lookup</A></FONT> getLookup() {
-        <font class="keyword">return</FONT> <font class="variable-name">myLookup;</FONT>
+<span class="keyword">public class </span> <span class="type">MorphingObject</span> {
+    <span class="keyword">public</span> <span class="type"><a href="@TOP@org/openide/util/Lookup.html">Lookup</A></span> getLookup() {
+        <span class="keyword">return</span> <span class="variable-name">myLookup;</span>
     }
     ...
 }
@@ -147,12 +146,12 @@ By exposing the method getLookup you can attach different functionality to the
 MorphingObject at runtime and whoever gets a reference to your object can ask it
 whether the object supports a given interface like this:
 <pre>
-<font class="type">MorphingObject</FONT> <font class="variable-name">morph</FONT> = ...
-<font class="type">AnInterface</font> <font class="variable-name">impl</font> = (<font
-class="type">AnInterface</font>)morph.getLookup().<a
-href="@TOP@org/openide/util/Lookup.html#lookup-java.lang.Class-">lookup</a>(AnInterface.<font class="keyword">class</font>);
-<font class="keyword">if</font> (impl == <font class="constant">null</font>) {
-    <font class="keyword">return;</font><font class="comment">/* AnInterface not supported now! */</font>
+<span class="type">MorphingObject</span> <span class="variable-name">morph</span> = ...
+<span class="type">AnInterface</span> <span class="variable-name">impl</span> = (<span
+class="type">AnInterface</span>)morph.getLookup().<a
+href="@TOP@org/openide/util/Lookup.html#lookup(java.lang.Class)">lookup</a>(AnInterface.<span class="keyword">class</span>);
+<span class="keyword">if</span> (impl == <span class="constant">null</span>) {
+    <span class="keyword">return;</span><span class="comment">/* AnInterface not supported now! */</span>
 }
 impl.useIt();
 </PRE>
@@ -177,7 +176,7 @@ Specifying the query, getting the result and listenning on changes.</LI>
 implementaion code and registering it with lookup. Includes also writing own
 lookup implementation.</LI>
   <LI>Download <A HREF="https://netbeans.apache.org/download/index.html">NetBeans platform</A> which
-contains <code>org-openide-util.jar</code></LI>
+contains <code>org-openide-util.jar</code>
     <A HREF="https://github.com/apache/netbeans/tree/master/platform/openide.util.lookup/src/org/openide/util/lookup">
     implementation package (org.openide.util.lookup) </A>
     + classes Lookup, LookupEvent, LookupListener in

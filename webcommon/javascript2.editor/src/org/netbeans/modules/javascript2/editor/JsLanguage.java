@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.javascript2.editor;
 
+import org.netbeans.api.lexer.Language;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.netbeans.modules.csl.api.*;
@@ -69,7 +70,7 @@ public class JsLanguage extends DefaultLanguageConfig {
     }
 
     @Override
-    public org.netbeans.api.lexer.Language getLexerLanguage() {
+    public Language<JsTokenId> getLexerLanguage() {
         // has to be done here since JS hasn't its own project, also see issue #165915
         // It was moved here from the JsLanguage initialization since the the language is called much earlier than the
         // JavaScipt is really needed. Calling it in the #getLexerLanguage() should ensure to be the CP registration
@@ -92,6 +93,7 @@ public class JsLanguage extends DefaultLanguageConfig {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean hasStructureScanner() {
         return true;
     }
@@ -167,9 +169,9 @@ public class JsLanguage extends DefaultLanguageConfig {
                 // due to CC filtering of DOC annotations - see GsfCompletionProvider#getCompletableLanguage()
                 || c == '@' //NOI18N
                 || c == '#' //NOI18N
-                //// see issue #214978 - it goes to the CodeTemplateCompletionProvider#query(), it would probably deserve
-                ////  new API in the next release or are we wrongly embedding the jQuery? For now this fix doesn't look to
-                ////  make troubles to another areas.
+                // see issue #214978 - it goes to the CodeTemplateCompletionProvider#query(), it would probably deserve
+                //  new API in the next release or are we wrongly embedding the jQuery? For now this fix doesn't look to
+                //  make troubles to another areas.
                 // || c == ':' || c == '.'; //NOI18N
                 ;
     }

@@ -1,0 +1,114 @@
+<testresult testFile='newWithoutParenthesesError_07.php'>
+    <scanner>
+        <token id='T_VARIABLE' start='159' end='164'>
+            <text>$anon</text>
+        </token>
+        <token id='T_EQUAL' start='165' end='166'>
+            <text>=</text>
+        </token>
+        <token id='T_NEW' start='167' end='170'>
+            <text>new</text>
+        </token>
+        <token id='T_CLASS' start='171' end='176'>
+            <text>class</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='176' end='177'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='177' end='178'>
+            <text>)</text>
+        </token>
+        <token id='T_IMPLEMENTS' start='179' end='189'>
+            <text>implements</text>
+        </token>
+        <token id='T_STRING' start='190' end='191'>
+            <text>I</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='192' end='193'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='198' end='204'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='205' end='208'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='209' end='215'>
+            <text>$field</text>
+        </token>
+        <token id='T_EQUAL' start='216' end='217'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='218' end='219'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='219' end='220'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='221' end='222'>
+            <text>}</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='222' end='224'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_SEMICOLON' start='224' end='225'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='226' end='226'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='226'>
+        <Comments>
+            <Comment start='6' end='158' commentType='singleLine'/>
+            <Comment start='6' end='158' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='159' end='225'>
+                <Assignment start='159' end='224' operator='EQUAL'>
+                    <Variable start='159' end='164' isDollared='true'>
+                        <Identifier start='160' end='164' name='anon'/>
+                    </Variable>
+                    <StaticConstantAccess start='167' end='224' isDynamicName='false'>
+                        <ClassInstanceCreationVariable start='167' end='222'>
+                            <ClassInstanceCreation start='167' end='222' anonymous='true'>
+                                <Parameters>
+                                </Parameters>
+                                <Superclass>
+                                </Superclass>
+                                <Interfaces>
+                                    <NamespaceName start='190' end='191' isCurrent='false' isGlobal='false'>
+                                        <Identifier start='190' end='191' name='I'/>
+                                    </NamespaceName>
+                                </Interfaces>
+                                <Block start='192' end='222' isCurly='true'>
+                                    <FieldsDeclaration start='198' end='220' modifier='public'>
+                                        <FieldType>
+                                            <NamespaceName start='205' end='208' isCurrent='false' isGlobal='false'>
+                                                <Identifier start='205' end='208' name='int'/>
+                                            </NamespaceName>
+                                        </FieldType>
+                                        <VariableNames>
+                                            <Variable start='209' end='215' isDollared='true'>
+                                                <Identifier start='210' end='215' name='field'/>
+                                            </Variable>
+                                        </VariableNames>
+                                        <InitialValues>
+                                            <Scalar start='218' end='219' type='INT' value='1'/>
+                                        </InitialValues>
+                                    </FieldsDeclaration>
+                                </Block>
+                            </ClassInstanceCreation>
+                        </ClassInstanceCreationVariable>
+                        <Constant>
+                            <Identifier start='224' end='224' name=''/>
+                        </Constant>
+                        <Member>
+                            <Identifier start='224' end='224' name=''/>
+                        </Member>
+                    </StaticConstantAccess>
+                </Assignment>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

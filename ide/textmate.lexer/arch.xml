@@ -114,7 +114,6 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
       <usecase id="register-grammar" name="Register grammar">
           To register a new TextMate grammar, add it as a file into the system filesystem,
           under "Editors/&lt;mime-type&gt;/", and make sure it has an attribute "textmate-grammar"
@@ -139,7 +138,7 @@
     {@literal @}GrammarRegistration(mimeType="text/x-kotlin", grammar="path/to/Kotlin.tmLanguage.json")
           </pre>
       </usecase>
-      <a name="usecase-injection-grammar">
+      <a id="usecase-injection-grammar">
       <usecase id="register-injection-grammar" name="Register injection grammar">
           Injection grammars let existing grammars to be extended. An injection grammar is
           a regular TextMate grammar that is injected into a specific scope within
@@ -160,7 +159,7 @@
           </pre>
       </usecase>
       </a>
-      <a name="usecase-injection-grammar-java-api">
+      <a id="usecase-injection-grammar-java-api">
       <usecase id="register-injection-grammar-using-java-api" name="Register injection grammar using Java API">
           To register a new injection grammar using Java API, add the GrammarInjectionRegistration
           annotation to an appropriate package-info file, or an appropriate Java class.
@@ -170,7 +169,6 @@
           </pre>
       </usecase>
       </a>
-  </p>
  </answer>
 
 

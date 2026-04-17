@@ -117,7 +117,6 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
       <usecase id="tabdecorator" name="Tab Decorator">
           <p>To customize the rendering of (some) editor tabs one needs subclass
               <code>TabDecorator</code> class and register it in the global <code>Lookup</code>.</p>
@@ -162,7 +161,6 @@ public class MyTabDisplayer extends TabDisplayer {
 }
           </pre>
       </usecase>
-  </p>
  </answer>
 
 

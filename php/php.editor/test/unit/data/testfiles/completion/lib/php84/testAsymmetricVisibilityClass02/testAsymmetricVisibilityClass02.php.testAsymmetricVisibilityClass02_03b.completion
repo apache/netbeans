@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->publicPrivateS|et; // test: only public and protected (child class)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   Bar publicPrivateSet            [PUBLIC]   ParentClass
+VARIABLE   Bar publicPrivateSetTrait       [PUBLIC]   TestTrait

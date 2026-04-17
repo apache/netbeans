@@ -1,0 +1,9 @@
+|-MyTrait [13, 107] : ESCAPED{MyTrait}
+|--doSomething [45, 56] : ESCAPED{doSomething}ESCAPED{(}ESCAPED{)}
+|--doNothing [81, 105] : ESCAPED{doNothing}ESCAPED{(}ESCAPED{)}
+|-MysClass [115, 510] : ESCAPED{MysClass}
+|--getObject [146, 508] : ESCAPED{getObject}ESCAPED{(}ESCAPED{)}
+|-#anon#gh8527_php#2 [183, 501] : ESCAPED{{}}
+|--getMyTraitAwareObject [222, 491] : ESCAPED{getMyTraitAwareObject}ESCAPED{(}ESCAPED{)}
+|-#anon#gh8527_php#1 [287, 476] : ESCAPED{{}}<font color="#999999">#ESCAPED{MyTrait}</font>
+|--doSomething [400, 458] : ESCAPED{doSomething}ESCAPED{(}ESCAPED{)}

@@ -77,6 +77,8 @@ import org.netbeans.modules.java.lsp.server.input.QuickPickItem;
 import org.netbeans.modules.java.lsp.server.input.ShowInputBoxParams;
 import org.netbeans.modules.java.lsp.server.input.ShowMutliStepInputParams;
 import org.netbeans.modules.java.lsp.server.input.ShowQuickPickParams;
+import org.netbeans.modules.java.lsp.server.protocol.ClientConfigurationManager;
+import org.netbeans.modules.java.lsp.server.protocol.OutputMessage;
 import org.netbeans.modules.java.lsp.server.protocol.SaveDocumentRequestParams;
 import org.netbeans.modules.java.lsp.server.protocol.SetTextEditorDecorationParams;
 import org.netbeans.modules.java.lsp.server.protocol.ShowStatusMessageParams;
@@ -100,14 +102,6 @@ public class ProjectViewTest extends NbTestCase {
     private final Gson gson = new Gson();
     private Socket clientSocket;
     private Thread serverThread;
-    
-    static {
-        // TODO remove ASAP from MicronautGradleArtifactsImplTest and ProjectViewTest
-        // investigate "javax.net.ssl.SSLHandshakeException: Received fatal alert: handshake_failure"
-        // during gradle download "at org.netbeans.modules.gradle.spi.newproject.TemplateOperation$InitStep.execute(TemplateOperation.java:317)"
-        // this looks like a misconfigured webserver to me
-        System.setProperty("https.protocols", "TLSv1.2");
-    }
 
     public ProjectViewTest(String name) {
         super(name);
@@ -149,6 +143,7 @@ public class ProjectViewTest extends NbTestCase {
         Semaphore nodeChanges = new Semaphore(0);
         NbCodeClientCapabilities caps = new NbCodeClientCapabilities();
         List<MessageParams> loggedMessages = new ArrayList<>();
+        ClientConfigurationManager confManager = new ClientConfigurationManager(this);
 
         @Override
         public CompletableFuture<Void> createProgress(WorkDoneProgressCreateParams params) {
@@ -284,6 +279,31 @@ public class ProjectViewTest extends NbTestCase {
         @Override
         public CompletableFuture<Boolean> requestDocumentSave(SaveDocumentRequestParams documentUris) {
             return CompletableFuture.completedFuture(false);
+        }
+
+        @Override
+        public CompletableFuture<Void> writeOutput(OutputMessage message) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Void> showOutput(String outputName) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletableFuture<Void> closeOutput(String outputName) {
+            return CompletableFuture.completedFuture(null);
+        }
+        
+        @Override
+        public CompletableFuture<Void> resetOutput(String outputName) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public ClientConfigurationManager getClientConfigurationManager() {
+            return confManager;
         }
     }
 

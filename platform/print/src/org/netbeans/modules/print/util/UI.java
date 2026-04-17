@@ -65,6 +65,7 @@ import org.openide.NotifyDescriptor;
 import org.openide.awt.Mnemonics;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.windows.TopComponent;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -269,11 +270,11 @@ public final class UI {
         DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(message, type));
     }
 
-    public static ImageIcon icon(Class clazz, String name) {
+    public static Icon icon(Class clazz, String name) {
         if (name == null) {
             return null;
         }
-        return new ImageIcon(clazz.getResource("image/" + name + ".gif")); // NOI18N
+        return ImageUtilities.loadIcon("org/netbeans/modules/print/util/image/" + name + ".gif"); // NOI18N
     }
 
     public static Node getSelectedNode() {

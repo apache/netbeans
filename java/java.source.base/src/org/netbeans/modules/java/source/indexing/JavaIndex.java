@@ -58,7 +58,7 @@ import org.openide.util.BaseUtilities;
 public final class JavaIndex {
 
     public static final String NAME = "java"; //NOI18N
-    public static final int VERSION = 15;
+    public static final int VERSION = 16;
     public static final String ATTR_MODULE_NAME = "moduleName"; //NOI18N
     public static final Logger LOG = Logger.getLogger(JavaIndex.class.getName());
     private static final String CLASSES = "classes"; //NOI18N

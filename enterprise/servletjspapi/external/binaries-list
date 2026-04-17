@@ -15,7 +15,10 @@
 # specific language governing permissions and limitations
 # under the License.
 
+A8DE3741B91BA7427306104979AB2F084E831438 jakarta.servlet.jsp:jakarta.servlet.jsp-api:4.0.0
+1169A246913FE3823782AF7943E7A103634867C5 jakarta.servlet:jakarta.servlet-api:6.1.0
+C7C4A2EB1E40E0FF45AB5E2E52BD77D8C7A75176 jakarta.el:jakarta.el-api:6.0.1
 EE48550ECE1AF1E0D8BD4877DBC6DA5C29C5496B jakarta.servlet.jsp:jakarta.servlet.jsp-api:2.3.6
 B8A1142E04838FE54194049C6E7A18DAE8F9B960 jakarta.servlet:jakarta.servlet-api:4.0.4
-230AA160D4A4BFEB6CF5D301B98E46BCCB713DE2 org.glassfish.main.appclient:gf-client-module:5.1.0
 F311AB94BB1D4380690A53D737226A6B879DD4F1 jakarta.el:jakarta.el-api:3.0.3
+1E77F50E244682173C27F661287629ADB83FE2D2 org.glassfish.main.appclient:gf-client-module:7.0.25

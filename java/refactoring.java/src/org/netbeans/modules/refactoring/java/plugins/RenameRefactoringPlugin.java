@@ -367,23 +367,8 @@ public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
         if (treePathHandle == null && docTreePathHandle == null) {
             return null;
         }
-        switch (p) {
-            case PRECHECK:
-            case FASTCHECKPARAMETERS:
-                return JavaSource.forFileObject(docTreePathHandle != null? docTreePathHandle.getTreePathHandle().getFileObject()
-                                                                         : treePathHandle.getFileObject());
-            case PREPARE:
-            case CHECKPARAMETERS:
-                if(treePathHandle != null && treePathHandle.getKind() == Tree.Kind.LABELED_STATEMENT) {
-                    return JavaSource.forFileObject(treePathHandle.getFileObject());
-                }
-                ClasspathInfo cpInfo = getClasspathInfo(refactoring);
-                JavaSource source = JavaSource.create(cpInfo, docTreePathHandle != null? docTreePathHandle.getTreePathHandle().getFileObject()
-                                                                         : treePathHandle.getFileObject());
-                return source;
-                
-        }
-        throw new IllegalStateException();
+        return JavaSource.forFileObject(docTreePathHandle != null? docTreePathHandle.getTreePathHandle().getFileObject()
+                                                                 : treePathHandle.getFileObject());
     }
 
     @Override
@@ -408,16 +393,10 @@ public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
                 JavaSource source = getJavaSource(Phase.PREPARE);
                 
                 try {
-                    source.runUserActionTask(new CancellableTask<CompilationController>() {
-                        
-                        @Override
-                        public void cancel() {
-                            throw new UnsupportedOperationException("Not supported yet."); // NOI18N
-                        }
-                        
+                    source.runUserActionTask(new Task<CompilationController>() {
                         @Override
                         public void run(CompilationController info) throws Exception {
-                            final ClassIndex idx = info.getClasspathInfo().getClassIndex();
+                            final ClassIndex idx = getClasspathInfo(refactoring).getClassIndex();
                             info.toPhase(JavaSource.Phase.RESOLVED);
                             Element el = docTreePathHandle != null? ((DocTrees)info.getTrees()).getElement(docTreePathHandle.resolve(info))
                                                        : treePathHandle.resolveElement(info);
@@ -631,7 +610,7 @@ public class RenameRefactoringPlugin extends JavaRefactoringPlugin {
         Set<FileObject> a = getRelevantFiles();
         fireProgressListenerStart(AbstractRefactoring.PREPARE, a.size());
         TransformTask transform = new TransformTask(new RenameTransformer(treePathHandle, docTreePathHandle, refactoring, allMethods, recordLinkedDeclarations, refactoring.isSearchInComments()), treePathHandle != null && treePathHandle.getKind() == Tree.Kind.LABELED_STATEMENT ? null : treePathHandle);
-        Problem problem = createAndAddElements(a, transform, elements, refactoring,getClasspathInfo(refactoring));
+        Problem problem = createAndAddElements(a, transform, elements, null);
         fireProgressListenerStop();
         return problem;
     }

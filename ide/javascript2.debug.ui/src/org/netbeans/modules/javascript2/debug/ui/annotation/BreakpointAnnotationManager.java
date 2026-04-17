@@ -24,11 +24,13 @@ import java.beans.PropertyChangeListener;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.api.debugger.Breakpoint;
@@ -44,7 +46,6 @@ import org.openide.text.Line;
 import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 /**
  *
@@ -70,7 +71,7 @@ class BreakpointAnnotationManager implements PropertyChangeListener {
     private static final Logger logger = Logger.getLogger(BreakpointAnnotationManager.class.getName());
     
     private final Map<JSLineBreakpoint, Annotation> breakpointAnnotations = new HashMap<>();
-    private final Set<FileObject> annotatedFiles = new WeakSet<>();
+    private final Set<FileObject> annotatedFiles = Collections.newSetFromMap(new WeakHashMap<>());
     private Set<PropertyChangeListener> dataObjectListeners;
     private final RequestProcessor annotationProcessor = new RequestProcessor("Annotation Refresh", 1);
     private volatile Boolean active = null;

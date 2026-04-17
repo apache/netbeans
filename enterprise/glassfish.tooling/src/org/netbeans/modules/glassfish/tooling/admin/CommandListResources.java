@@ -34,10 +34,7 @@ import org.netbeans.modules.glassfish.tooling.logging.Logger;
 @RunnerRestClass(runner=RunnerRestListResources.class)
 public class CommandListResources extends CommandTarget {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(CommandListResources.class);
 
@@ -49,10 +46,7 @@ public class CommandListResources extends CommandTarget {
      *  HTTP command. */
     private static final String COMMAND_SUFFIX = "s";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Add resource to target server.
      * <p/>
@@ -94,10 +88,7 @@ public class CommandListResources extends CommandTarget {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server list JDBC resources
      * command entity.

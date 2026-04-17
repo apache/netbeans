@@ -333,6 +333,7 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
+                <friend>org.netbeans.modules.svg</friend>
                 <friend>org.netbeans.modules.xml.schema</friend>
                 <friend>org.netbeans.modules.xml.tax</friend>
                 <friend>org.netbeans.modules.xml.tools</friend>

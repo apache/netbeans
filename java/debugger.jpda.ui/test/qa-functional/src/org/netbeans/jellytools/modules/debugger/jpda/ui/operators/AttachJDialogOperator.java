@@ -59,15 +59,12 @@ public class AttachJDialogOperator extends JDialogOperator {
         return _cboDebugger;
     }
 
-///////////////////////////////////////////////////////////////////////////////    
     public JComboBoxOperator cboConnector() {
         if (_cboConnector==null) {
             _cboConnector = new JComboBoxOperator(this,1);
         }
         return _cboConnector;
     }
-///////////////////////////////////////////////////////////////////////////////
-    
     /** Tries to find null JTextField in this dialog.
      * @return JTextFieldOperator
      */
@@ -147,7 +144,6 @@ public class AttachJDialogOperator extends JDialogOperator {
         cboDebugger().selectItem(item);
     }
 
-///////////////////////////////////////////////////////////////////////////////
     public void selectConnector(String item) {
         cboConnector().selectItem(item);
     }
@@ -155,7 +151,6 @@ public class AttachJDialogOperator extends JDialogOperator {
     public void selectConnector(int item) {
         cboConnector().selectItem(1);
     }
-///////////////////////////////////////////////////////////////////////////////
     /** types text for cboDebugger
      * @param text String text
      */

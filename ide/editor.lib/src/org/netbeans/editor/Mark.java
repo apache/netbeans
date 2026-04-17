@@ -62,7 +62,7 @@ public class Mark {
     * @param backwardBias whether the inserts performed right at the position
     *   of this mark will go after this mark i.e. this mark will not move
     *   forward when inserting right at its position. This flag corresponds
-    *   to <tt>Position.Bias.Backward</tt>.
+    *   to <code>Position.Bias.Backward</code>.
     */
     public Mark(boolean backwardBias) {
         this(backwardBias ? Position.Bias.Backward : Position.Bias.Forward);

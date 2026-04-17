@@ -531,13 +531,13 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
         for (int i=0; i < lines.size(); i++) {
             int ival = lines.get(i);
             if (line < ival) {
-                lines.add(i, new Integer(line));
+                lines.add(i, line);
                 return;
             }
             else if (line == ival)
                 return;
         }
-        lines.add(new Integer(line));
+        lines.add(line);
     }
     
     /**
@@ -1262,7 +1262,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
 
             if (otherValuesAllowed)
                 try {
-                    setValue(new Integer(Integer.parseInt(str)));
+                    setValue(Integer.valueOf(str));
                 } 
                 catch (NumberFormatException e) {} // ignore
         }
@@ -1286,9 +1286,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
             tags = new String[] {
                 getBundle().getString("VALUE_relative") // NOI18N
             };
-            values = new Integer[] {
-                new Integer(GridBagConstraints.RELATIVE)
-            };
+            values = new Integer[] {GridBagConstraints.RELATIVE};
             javaInitStrings = new String[] {
                 "java.awt.GridBagConstraints.RELATIVE" // NOI18N
             };
@@ -1304,8 +1302,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
                 getBundle().getString("VALUE_remainder") // NOI18N
             };
             values = new Integer[] {
-                new Integer(GridBagConstraints.RELATIVE),
-                new Integer(GridBagConstraints.REMAINDER)
+                GridBagConstraints.RELATIVE, GridBagConstraints.REMAINDER
             };
             javaInitStrings = new String[] {
                 "java.awt.GridBagConstraints.RELATIVE", // NOI18N
@@ -1324,10 +1321,7 @@ public class GridBagLayoutSupport extends AbstractLayoutSupport {
                 getBundle().getString("VALUE_fill_both") // NOI18N
             };
             values = new Integer[] {
-                new Integer(GridBagConstraints.NONE),
-                new Integer(GridBagConstraints.HORIZONTAL),
-                new Integer(GridBagConstraints.VERTICAL),
-                new Integer(GridBagConstraints.BOTH)
+                GridBagConstraints.NONE, GridBagConstraints.HORIZONTAL, GridBagConstraints.VERTICAL, GridBagConstraints.BOTH
             };
             javaInitStrings = new String[] {
                 "java.awt.GridBagConstraints.NONE", // NOI18N

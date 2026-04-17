@@ -58,6 +58,7 @@ import javax.swing.text.Element;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.StyleConstants;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.AttributesUtilities;
@@ -713,7 +714,7 @@ public class BraceMatchingSidebarComponent extends JComponent implements
                     contentHeight += lineHeight;
                     
                     int startAfterRelated = Utilities.getRowStart(bdoc, rel.getEnd().getOffset(), 1);
-                    int startAtContext = Utilities.getRowStart(bdoc, yFrom);
+                    int startAtContext = LineDocumentUtils.getLineStartOffset(bdoc, yFrom);
                     // measure the indent so the view can align the ellipsis 
                     int indent = Utilities.getRowIndent(bdoc, startAfterRelated);
                     // suppress the ellipsis if just a single line should be cut 

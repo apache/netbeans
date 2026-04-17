@@ -28,7 +28,9 @@
                     <file name="org-netbeans-modules-spellchecker-bindings-htmlxml-HtmlXmlTokenListProvider.instance" />
                 </folder>
                 <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance"/>
+                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance">
+                        <attr name="position" intvalue="600"/>
+                    </file>
                 </folder>
             </folder>
             <folder name="xhtml">
@@ -36,7 +38,9 @@
                     <file name="org-netbeans-modules-spellchecker-bindings-htmlxml-HtmlXmlTokenListProvider.instance" />
                 </folder>
                 <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance"/>
+                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance">
+                        <attr name="position" intvalue="600"/>
+                    </file>
                 </folder>
             </folder>
             <folder name="x-php5">
@@ -44,7 +48,11 @@
                     <file name="org-netbeans-modules-spellchecker-bindings-htmlxml-HtmlXmlTokenListProvider.instance" />
                 </folder>
                 <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance"/>
+                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance">
+                        <!-- none of the php completion providers have currently a position
+                        <attr name="position" intvalue="600"/>
+                        -->
+                    </file>
                 </folder>
             </folder>
             <folder name="x-jsp">
@@ -52,7 +60,11 @@
                     <file name="org-netbeans-modules-spellchecker-bindings-htmlxml-HtmlXmlTokenListProvider.instance" />
                 </folder>
                 <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance"/>
+                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance">
+                        <!-- none of the enterprise completion providers have currently a position
+                        <attr name="position" intvalue="600"/>
+                        -->
+                    </file>
                 </folder>
             </folder>
             <folder name="x-tag">
@@ -60,7 +72,11 @@
                     <file name="org-netbeans-modules-spellchecker-bindings-htmlxml-HtmlXmlTokenListProvider.instance" />
                 </folder>
                 <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance"/>
+                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance">
+                        <!-- none of the other completion providers have currently a position
+                        <attr name="position" intvalue="600"/>
+                        -->
+                    </file>
                 </folder>
             </folder>
             <folder name="x-gsp">
@@ -68,7 +84,11 @@
                     <file name="org-netbeans-modules-spellchecker-bindings-htmlxml-HtmlXmlTokenListProvider.instance" />
                 </folder>
                 <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance"/>
+                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance">
+                        <!-- none of the other completion providers have currently a position
+                        <attr name="position" intvalue="600"/>
+                        -->
+                    </file>
                 </folder>
             </folder>
             <folder name="xml">
@@ -76,7 +96,9 @@
                     <file name="org-netbeans-modules-spellchecker-bindings-htmlxml-HtmlXmlTokenListProvider.instance" />
                 </folder>
                 <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance"/>
+                    <file name="org-netbeans-modules-spellchecker-completion-WordCompletion.instance">
+                        <attr name="position" intvalue="600"/>
+                    </file>
                 </folder>
             </folder>
         </folder>

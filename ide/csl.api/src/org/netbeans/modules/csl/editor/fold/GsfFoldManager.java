@@ -37,6 +37,7 @@ import java.util.prefs.Preferences;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.fold.Fold;
 import org.netbeans.spi.editor.fold.FoldInfo;
 import org.netbeans.api.editor.fold.FoldTemplate;
@@ -469,7 +470,7 @@ public class GsfFoldManager implements FoldManager {
 
                             try {
                                 // Start the fold at the END of the line
-                                startOffset = org.netbeans.editor.Utilities.getRowEnd((BaseDocument) doc, startOffset);
+                                startOffset = LineDocumentUtils.getLineEndOffset((BaseDocument) doc, startOffset);
                                 if (startOffset >= endOffset) {
                                     return;
                                 }

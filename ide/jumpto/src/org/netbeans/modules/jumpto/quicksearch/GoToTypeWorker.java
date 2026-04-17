@@ -135,11 +135,7 @@ public class GoToTypeWorker implements Runnable {
             try {
                 tp.cleanup();
             } catch (Throwable t) {
-                if (t instanceof ThreadDeath) {
-                    throw (ThreadDeath) t;
-                } else {
-                    Exceptions.printStackTrace(t);
-                }
+                Exceptions.printStackTrace(t);
             }
         }
     }

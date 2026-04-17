@@ -103,8 +103,8 @@ public class PFENodeWidget extends VMDNodeWidget {
 //                        return;
 //                    }
                     if (!page.isDataNode()) {
-////                        // XXX Revise
-////                        EventQueue.invokeLater(new Runnable() {
+// //                        // XXX Revise
+// //                        EventQueue.invokeLater(new Runnable() {
 //
 //                            public void run() {
                                 if (getScene() != null) {
@@ -153,18 +153,18 @@ public class PFENodeWidget extends VMDNodeWidget {
                             LOG.finest("    PFE: Ending Redraw: " + java.util.Calendar.getInstance().getTime());
 //                        }
 //                        });
-////                    } catch (InterruptedException ex) {
-////                        Exceptions.printStackTrace(ex);
-////                    } catch (InvocationTargetException ex) {
-////                        if (getScene() == null) {
-////                            /* It is okay suppress this exception because it is expected if the scene is deleted (closed)
-////                             * before the page has finished loading.
-////                             */
-////                            LOG.finer("Scene is has been closed before page has finished loading.:" + ex);
-////                        } else {
-////                            Exceptions.printStackTrace(ex);
-////                        }
-////                    }
+// //                    } catch (InterruptedException ex) {
+// //                        Exceptions.printStackTrace(ex);
+// //                    } catch (InvocationTargetException ex) {
+// //                        if (getScene() == null) {
+// //                            /* It is okay suppress this exception because it is expected if the scene is deleted (closed)
+// //                             * before the page has finished loading.
+// //                             */
+// //                            LOG.finer("Scene is has been closed before page has finished loading.:" + ex);
+// //                        } else {
+// //                            Exceptions.printStackTrace(ex);
+// //                        }
+// //                    }
                 }
             });
         }

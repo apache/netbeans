@@ -228,7 +228,7 @@ public class ValidationManager {
 
             String implFile = 
                 System.getProperty("impl.file");                            //NOI18N
-            ///System.out.println(implFile);
+            //System.out.println(implFile);
 
             //User specified impl file overrides the default imple file
             //default impl file -- Constants.IMPL_FILE
@@ -309,12 +309,12 @@ public class ValidationManager {
                         failures.addAll(validator.validate(elementName,
                                 elementDtdName, validatee));
                     } else {
-                        ///String format = BundleReader.getValue(
-                        ///    "MSG_No_definition_for");                //NOI18N
-                        ///Object[] arguments = 
-                        ///    new Object[]{"Validator", xpath};        //NOI18N
-                        ///System.out.println(
-                        ///    MessageFormat.format(format, arguments));
+                        //String format = BundleReader.getValue(
+                        //    "MSG_No_definition_for");                //NOI18N
+                        //Object[] arguments = 
+                        //    new Object[]{"Validator", xpath};        //NOI18N
+                        //System.out.println(
+                        //    MessageFormat.format(format, arguments));
                     }
                 }
            }
@@ -346,12 +346,12 @@ public class ValidationManager {
             failures.addAll(validator.validateIndividualProperty(
                 property, absoluteDtdName, fieldName));
         } else {
-            ///String format = BundleReader.getValue(
-            ///    "MSG_No_definition_for");                            //NOI18N
-            ///Object[] arguments = 
-            ///    new Object[]{"Validator", xpath};                    //NOI18N
-            ///System.out.println(
-            ///    MessageFormat.format(format, arguments));
+            //String format = BundleReader.getValue(
+            //    "MSG_No_definition_for");                            //NOI18N
+            //Object[] arguments = 
+            //    new Object[]{"Validator", xpath};                    //NOI18N
+            //System.out.println(
+            //    MessageFormat.format(format, arguments));
         }
 
         return failures;
@@ -413,8 +413,8 @@ public class ValidationManager {
                     (Object [])validatee.getElements(elementName);
                 String name = validatee.getIndexedXPath() +
                     Constants.XPATH_DELIMITER + elementDtdName;
-                ///String name = validatee.getXPath() +
-                    ///Constants.XPATH_DELIMITER + elementDtdName;
+                //String name = validatee.getXPath() +
+                    //Constants.XPATH_DELIMITER + elementDtdName;
                 failures.addAll(constraint.match(elements, name));
                 break;
             }
@@ -427,8 +427,8 @@ public class ValidationManager {
                 Object element = validatee.getElement(elementName);
                 String name = validatee.getIndexedXPath() +
                     Constants.XPATH_DELIMITER + elementDtdName;
-                ///String name = validatee.getXPath() +
-                    ///Constants.XPATH_DELIMITER + elementDtdName;
+                //String name = validatee.getXPath() +
+                    //Constants.XPATH_DELIMITER + elementDtdName;
                 failures.addAll(constraint.match(element, name));
             }
             break;
@@ -496,19 +496,19 @@ public class ValidationManager {
             beanName = utils.getParentName(element.getName(),
                 Constants.XPATH_DELIMITER_CHAR);
             validator = (Validator) xpathToValidator.get(beanName);
-            ///String format = 
-            ///    BundleReader.getValue("Name_Value_Pair_Format");     //NOI18N
-            ///Object[] arguments;
+            //String format = 
+            //    BundleReader.getValue("Name_Value_Pair_Format");     //NOI18N
+            //Object[] arguments;
             if(null == validator) {
                 validator = new Validator();
                 xpathToValidator.put(beanName,  validator);
-                ///format =
-                ///    BundleReader.getValue("Name_Value_Pair_Format"); //NOI18N
-                ///arguments = 
-                ///    new Object[]{"Bean Name", beanName};             //NOI18N
-                ///System.out.println(MessageFormat.format(format, arguments));
-                ///arguments = new Object[]{"Validator", validator};    //NOI18N
-                ///System.out.println(MessageFormat.format(format, arguments));
+                //format =
+                //    BundleReader.getValue("Name_Value_Pair_Format"); //NOI18N
+                //arguments = 
+                //    new Object[]{"Bean Name", beanName};             //NOI18N
+                //System.out.println(MessageFormat.format(format, arguments));
+                //arguments = new Object[]{"Validator", validator};    //NOI18N
+                //System.out.println(MessageFormat.format(format, arguments));
             }
 
             int noOfChecks = element.sizeCheck();
@@ -518,14 +518,14 @@ public class ValidationManager {
                 constraint = getConstraint(check);
                 if(null != constraint){
                     validator.addElementConstraint(elementName, constraint);
-                    ///arguments = 
-                    ///    new Object[]{"Element Name", elementName};      //NOI18N
-                    ///System.out.println(MessageFormat.format(format, arguments));         
-                    ///arguments = new Object[]{"Check", check.getName()}; //NOI18N
-                    ///System.out.println(MessageFormat.format(format, arguments));
-                    ///arguments = new Object[]{"Constraint", constraint}; //NOI18N
-                    ///System.out.println(MessageFormat.format(format, arguments));
-                    ///constraint.print();
+                    //arguments = 
+                    //    new Object[]{"Element Name", elementName};      //NOI18N
+                    //System.out.println(MessageFormat.format(format, arguments));         
+                    //arguments = new Object[]{"Check", check.getName()}; //NOI18N
+                    //System.out.println(MessageFormat.format(format, arguments));
+                    //arguments = new Object[]{"Constraint", constraint}; //NOI18N
+                    //System.out.println(MessageFormat.format(format, arguments));
+                    //constraint.print();
                 }
             }
         }
@@ -627,7 +627,7 @@ public class ValidationManager {
         
         String constraintsFile =                     
             System.getProperty("constraints.file");                     //NOI18N
-        ///System.out.println(consFile);
+        //System.out.println(consFile);
         if(constraintsFile != null){
             customConstraints = getConstraints(constraintsFile);
         }
@@ -643,9 +643,9 @@ public class ValidationManager {
                 CheckInfo checkInfoClone = null;
                 for(int i=0; i<count; i++){
                     checkInfo = defaultConstraints.getCheckInfo(i);
-                    ///String str = checkInfo.dumpBeanNode();
+                    //String str = checkInfo.dumpBeanNode();
                     checkInfoClone = (CheckInfo) checkInfo.clone();
-                    ///System.out.println(checkInfoClone.dumpBeanNode());
+                    //System.out.println(checkInfoClone.dumpBeanNode());
                     customConstraints.addCheckInfo(checkInfoClone);
                 }
                 constraints =  customConstraints;

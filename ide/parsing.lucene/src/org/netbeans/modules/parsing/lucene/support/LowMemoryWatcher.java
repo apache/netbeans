@@ -39,7 +39,7 @@ public final class LowMemoryWatcher {
 
     private static final Logger LOG = Logger.getLogger(LowMemoryWatcher.class.getName());
     private static final long LOGGER_RATE = Integer.getInteger(
-            String.format("%s.logger_rate",LowMemoryWatcher.class.getName()),   //NOI18N
+            "%s.logger_rate".formatted(LowMemoryWatcher.class.getName()),   //NOI18N
             1000);   //1s
 
 

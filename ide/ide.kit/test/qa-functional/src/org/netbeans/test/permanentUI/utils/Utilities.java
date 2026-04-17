@@ -298,8 +298,8 @@ public class Utilities {
 //                for(int i = 0; nextLine.charAt(i)==' ';i++){
 //                    nextLine = nextLine.substring(4);
 //                    nextLine = 
-////                    nextLine.replaceFirst("    ", "+-");
-////                    System.out.println("replacing");
+// //                    nextLine.replaceFirst("    ", "+-");
+// //                    System.out.println("replacing");
 //                }
                 textLines.add(nextLine);
             }

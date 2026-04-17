@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.2
+#Version 1.8
 
 CLSS public java.lang.Object
 cons public init()
@@ -18,6 +18,7 @@ meth public java.lang.String toString()
 
 CLSS public final org.netbeans.modules.java.file.launcher.api.SourceLauncher
 cons public init()
+meth public static boolean isIndexedSourceLauncherFile(org.openide.filesystems.FileObject)
 meth public static boolean isSourceLauncherFile(org.openide.filesystems.FileObject)
 meth public static java.lang.String joinCommandLines(java.lang.Iterable<? extends java.lang.String>)
 supr java.lang.Object
@@ -30,8 +31,10 @@ meth public abstract org.netbeans.modules.java.file.launcher.spi.SingleFileOptio
 CLSS public abstract interface static org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation$Result
  outer org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation
 meth public abstract java.lang.String getOptions()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
 meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
+meth public boolean registerRoot()
 meth public java.net.URI getWorkDirectory()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 

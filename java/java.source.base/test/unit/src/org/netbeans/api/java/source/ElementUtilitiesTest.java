@@ -26,20 +26,29 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.ModuleElement;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 import org.netbeans.api.java.source.JavaSourceTest.SourceLevelQueryImpl;
 import org.netbeans.junit.NbTestCase;
 import org.openide.filesystems.FileObject;
@@ -55,6 +64,8 @@ import static junit.framework.TestCase.assertNotNull;
  */
 public class ElementUtilitiesTest extends NbTestCase {
 
+    private static final FileObject[] EMPTY_PATH = new FileObject[0];
+
     public ElementUtilitiesTest(String name) {
         super(name);
     }
@@ -66,10 +77,11 @@ public class ElementUtilitiesTest extends NbTestCase {
         SourceUtilsTestUtil.prepareTest(new String[0], new Object[0]);
     }
     
+    private FileObject[] modulePathElements = EMPTY_PATH;
     private FileObject sourceRoot;
     private FileObject testFO;
         
-    private void prepareTest() throws Exception {
+    private void prepareTest(FileDescription... fileNameAndContent) throws Exception {
         File work = getWorkDir();
         FileObject workFO = FileUtil.toFileObject(work);
         
@@ -79,11 +91,42 @@ public class ElementUtilitiesTest extends NbTestCase {
         FileObject buildRoot  = workFO.createFolder("build");
         FileObject cache = workFO.createFolder("cache");
         
-        SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cache);
+        SourceUtilsTestUtil.prepareTest(sourceRoot, buildRoot, cache, EMPTY_PATH, modulePathElements);
         
-        testFO = sourceRoot.createData("Test.java");
+        if (fileNameAndContent.length > 0) {
+            testFO = writeFiles(sourceRoot, fileNameAndContent);
+        } else {
+            testFO = sourceRoot.createData("Test.java");
+        }
     }
-    
+
+    private FileObject writeFiles(FileObject src,
+                                  FileDescription... fileNameAndContent) throws Exception {
+        FileObject firstFile = null;
+
+        for (FileDescription fileDescription : fileNameAndContent) {
+            FileObject f = writeFile(src,
+                                     fileDescription.path(),
+                                     fileDescription.content());
+
+            if (firstFile == null) {
+                firstFile = f;
+            }
+        }
+
+        return firstFile;
+    }
+
+    private FileObject writeFile(FileObject root,
+                                 String path,
+                                 String content) throws Exception {
+        FileObject file = FileUtil.createData(root, path);
+
+        TestUtilities.copyStringToFile(FileUtil.toFile(file), content);
+
+        return file;
+    }
+
     public void testGetImplementationOfAndOverriden() throws Exception {
         prepareTest();
         SourceUtilsTestUtil.setSourceLevel(testFO, "8");
@@ -804,4 +847,146 @@ public class ElementUtilitiesTest extends NbTestCase {
         }, true);
     }
 
+    public void testTransitivelyExportedPackages() throws Exception {
+        File work = getWorkDir();
+        FileObject workFO = FileUtil.toFileObject(work);
+
+        assertNotNull(workFO);
+
+        FileObject module1 = workFO.createFolder("module1");
+        FileObject module1Src = module1.createFolder("src");
+        FileObject module1Classes = module1.createFolder("classes");
+
+        writeFiles(module1Src,
+                   new FileDescription("module-info.java",
+                                       """
+                                       module module1 {
+                                           exports api1a;
+                                           exports api1b to test;
+                                           exports api1c to another;
+                                       }
+                                       """),
+                   new FileDescription("api1a/Api1a.java",
+                                       """
+                                       package api1a;
+                                       public class Api1a {
+                                       }
+                                       """),
+                   new FileDescription("api1b/Api1b.java",
+                                       """
+                                       package api1b;
+                                       public class Api1b {
+                                       }
+                                       """),
+                   new FileDescription("api1c/Api1c.java",
+                                       """
+                                       package api1c;
+                                       public class Api1c {
+                                       }
+                                       """),
+                   new FileDescription("impl1/Impl1.java",
+                                       """
+                                       package impl1;
+                                       public class Impl1 {
+                                       }
+                                       """));
+        compile(module1Src, module1Classes, "24");
+
+        FileObject module2 = workFO.createFolder("module2");
+        FileObject module2Src = module2.createFolder("src");
+        FileObject module2Classes = module2.createFolder("classes");
+
+        writeFiles(module2Src,
+                   new FileDescription("module-info.java",
+                                       """
+                                       module module2 {
+                                           requires transitive module1;
+                                           exports api2a;
+                                           exports api2b to test;
+                                           exports api2c to another;
+                                       }
+                                       """),
+                   new FileDescription("api2a/Api2a.java",
+                                       """
+                                       package api2a;
+                                       public class Api2a {
+                                       }
+                                       """),
+                   new FileDescription("api2b/Api2b.java",
+                                       """
+                                       package api2b;
+                                       public class Api2b {
+                                       }
+                                       """),
+                   new FileDescription("api2c/Api2c.java",
+                                       """
+                                       package api2c;
+                                       public class Api2c {
+                                       }
+                                       """),
+                   new FileDescription("impl2/Impl2.java",
+                                       """
+                                       package impl2;
+                                       public class Impl2 {
+                                       }
+                                       """));
+        compile(module2Src, module2Classes, "24", "--module-path", FileUtil.toFile(module1Classes).getAbsolutePath());
+
+        modulePathElements = new FileObject[] {
+            module1Classes,
+            module2Classes
+        };
+
+        prepareTest(new FileDescription("module-info.java",
+                                        """
+                                        module test {
+                                            requires module2;
+                                        }
+                                        """));
+
+        SourceUtilsTestUtil.setSourceLevel(testFO, "24");
+        SourceLevelQueryImpl.sourceLevel = "24";
+        JavaSource javaSource = JavaSource.forFileObject(testFO);
+        javaSource.runUserActionTask(new Task<CompilationController>() {
+            public void run(CompilationController controller) throws IOException {
+                controller.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
+                ModuleElement m2 = controller.getElements()
+                                             .getModuleElement("module2");
+                Set<String> packages =
+                        controller.getElementUtilities()
+                                  .transitivelyExportedPackages(m2)
+                                  .stream()
+                                  .map(pack -> pack.getQualifiedName().toString())
+                                  .collect(Collectors.toSet());
+                assertEquals(Set.of("api1b", "api1a", "api2b", "api2a"),
+                             packages);
+            }
+        }, true);
+    }
+
+    private void compile(FileObject src, FileObject classes, String sourceLevel, String... extraOpts) throws IOException {
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        try (StandardJavaFileManager fm = compiler.getStandardFileManager(null, null, null)) {
+            List<File> sources = new ArrayList<>();
+
+            for (Enumeration<? extends FileObject> en = src.getChildren(true); en.hasMoreElements(); ) {
+                FileObject c = en.nextElement();
+
+                if (c.isData() && "text/x-java".equals(c.getMIMEType())) {
+                    sources.add(FileUtil.toFile(c));
+                }
+            }
+
+            Iterable<? extends JavaFileObject> sourceFileObjects = fm.getJavaFileObjectsFromFiles(sources);
+            List<String> options = new ArrayList<>();
+
+            options.addAll(List.of("--release", sourceLevel, "-d"));
+            options.addAll(List.of(FileUtil.toFile(classes).getAbsolutePath()));
+            options.addAll(List.of(extraOpts));
+
+            assertTrue(compiler.getTask(null, fm, null, options, null, sourceFileObjects).call());
+        }
+    }
+
+    private record FileDescription(String path, String content) {}
 }

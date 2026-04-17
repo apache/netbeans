@@ -20,6 +20,7 @@ package org.netbeans.modules.xml.text.indent;
 
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.Token;
@@ -142,7 +143,7 @@ public class LineBreakHook implements TypedBreakInterceptor {
 
         int insertPos = context.getCaretOffset();
         int caretPos = context.getComponent().getCaretPosition();
-        int lineStartPos = Utilities.getRowStart(doc, insertPos);
+        int lineStartPos = LineDocumentUtils.getLineStartOffset(doc, insertPos);
 
         TokenHierarchy h = TokenHierarchy.get(doc);
         TokenSequence seq = h.tokenSequence();
@@ -150,10 +151,10 @@ public class LineBreakHook implements TypedBreakInterceptor {
         seq.move(context.getCaretOffset());
         int openOffset = followsOpeningTag(seq);
         
-        int nonWhiteBefore = Utilities.getFirstNonWhiteBwd(doc, insertPos, lineStartPos);
+        int nonWhiteBefore = LineDocumentUtils.getPreviousNonWhitespace(doc, insertPos, lineStartPos);
 
-        int lineEndPos = Utilities.getRowEnd(doc, caretPos);
-        int nonWhiteAfter = Utilities.getFirstNonWhiteFwd(doc, caretPos, lineEndPos);
+        int lineEndPos = LineDocumentUtils.getLineEndOffset(doc, caretPos);
+        int nonWhiteAfter = LineDocumentUtils.getNextNonWhitespace(doc, caretPos, lineEndPos);
 
         // there is a opening tag preceding on the line && something following the insertion point
         if (nonWhiteBefore != -1 && nonWhiteAfter != -1 && openOffset >= 0) {
@@ -163,7 +164,7 @@ public class LineBreakHook implements TypedBreakInterceptor {
             // now we need to position the caret at the END of the line immediately 
             // preceding the closing tag. Assuming it's already indented
             if (precedesClosingTag(seq)) {
-                int startClosingLine = Utilities.getRowStart(doc, nonWhiteAfter);
+                int startClosingLine = LineDocumentUtils.getLineStartOffset(doc, nonWhiteAfter);
                 int nextLineStart = Utilities.getRowStart(doc, insertPos, 1);
                 if (nextLineStart >= startClosingLine - 1) {
                     insertBlankBetweenTabs(context, openOffset);
@@ -181,7 +182,7 @@ public class LineBreakHook implements TypedBreakInterceptor {
         int desiredIndent;
 
         if (openOffset != Integer.MIN_VALUE) {
-            desiredIndent = IndentUtils.lineIndent(doc, Utilities.getRowStart(doc, Math.abs(openOffset)));
+            desiredIndent = IndentUtils.lineIndent(doc, LineDocumentUtils.getLineStartOffset(doc, Math.abs(openOffset)));
             if (openOffset >= 0) {
                 desiredIndent += IndentUtils.indentLevelSize(doc);
             }

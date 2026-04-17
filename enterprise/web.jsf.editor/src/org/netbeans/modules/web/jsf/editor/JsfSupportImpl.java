@@ -149,7 +149,6 @@ public class JsfSupportImpl implements JsfSupport {
     private ClassPath sourceClassPath, compileClasspath, executeClassPath, bootClassPath;
     private JsfIndex index;
     private MetadataModel<org.netbeans.modules.web.beans.api.model.WebBeansModel> webBeansModel;
-    private MetadataModel<org.netbeans.modules.jakarta.web.beans.api.model.WebBeansModel> webBeansModelJakarta;
     private Lookup lookup;
 
     private JsfSupportImpl(Project project, WebModule wm, ClassPath sourceClassPath, ClassPath compileClassPath, ClassPath executeClassPath, ClassPath bootClassPath) {
@@ -172,17 +171,10 @@ public class JsfSupportImpl implements JsfSupport {
             }
         });
 
-        JsfVersion jsfVersion = getJsfVersion();
-        
         //TODO do it lazy so it creates the web beans model lazily once looked up
         InstanceContent ic = new InstanceContent();
-        if(jsfVersion.isAtLeast(JsfVersion.JSF_3_0)){
-            webBeansModelJakarta = new org.netbeans.modules.jakarta.web.beans.MetaModelSupport(project).getMetaModel();
-            ic.add(webBeansModelJakarta);
-        } else {
-            webBeansModel = new org.netbeans.modules.web.beans.MetaModelSupport(project).getMetaModel();
-            ic.add(webBeansModel);
-        }
+        webBeansModel = new org.netbeans.modules.web.beans.MetaModelSupport(project).getMetaModel();
+        ic.add(webBeansModel);
         
         //init lookup
         this.lookup = new AbstractLookup(ic);
@@ -262,10 +254,6 @@ public class JsfSupportImpl implements JsfSupport {
 	return webBeansModel;
     }
     
-    public synchronized MetadataModel<org.netbeans.modules.jakarta.web.beans.api.model.WebBeansModel> getJakartaWebBeansModel() {
-        return webBeansModelJakarta;
-    }
-
     @Override
     public JsfVersion getJsfVersion() {
         if (wm != null) {

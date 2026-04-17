@@ -83,7 +83,7 @@ final class SearchTask implements Runnable, Cancellable {
         try {
             makeResultViewBusy(true);
             searchListener.searchStarted();
-            Mutex.EVENT.writeAccess(resultViewPanel::requestFocusInWindow);
+            Mutex.EVENT.writeAccess((Runnable) resultViewPanel::requestFocusInWindow);
             searchComposition.start(searchListener);
         } catch (RuntimeException e) {
             searchListener.generalError(e);

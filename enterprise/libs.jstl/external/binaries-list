@@ -15,4 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 34A035507F0270F1C6B7722D728BD7B5A9BBAC4C jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:1.2.7
+3993114CD341AFA42B2C2841C88EF653FA7EF3EE jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.2
 F5A092DE3B2B087C14CA4B8D6F2C77A1F6802828 org.glassfish.web:jakarta.servlet.jsp.jstl:1.2.6
+078909A1354585B2A7A2D3B4E348FCEFF8B6D180 org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1

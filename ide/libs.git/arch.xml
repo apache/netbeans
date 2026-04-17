@@ -119,7 +119,7 @@
  <answer id="arch-usecases">
   <usecase id="1" name="Get Git client">
    Before you can run preferred Git commands, you must get an instance of <a href="@TOP@/org/netbeans/libs/git/GitClient.html">GitClient</a> bound to a specific repository.<br/>
-   Instances of <code>GitClient</code> are provided by <a href="@TOP@/org/netbeans/libs/git/GitRepository.html#createClient--">GitRepository</a>.
+   Instances of <code>GitClient</code> are provided by <a href="@TOP@/org/netbeans/libs/git/GitRepository.html#createClient()">GitRepository</a>.
    <code>GitRepository</code> represents a concrete local Git repository and is always bound to a specific folder.
    <p></p>
    The correct way to achieve this is to call <code><a href="@TOP@/org/netbeans/libs/git/GitRepository.html">GitRepository</a>.getInstance(repositoryRoot).createClient()</code>.
@@ -131,7 +131,7 @@
    You are able to control a Git command's work and listen for warning and error messages and informative messages indicating start and finish of the command via
    <a href="@TOP@/org/netbeans/libs/git/progress/ProgressMonitor.html">ProgressMonitor</a>. Every method of <code>GitClient</code> mapped to a Git command accepts an instance of
    <code>ProgressMonitor</code> as a parameter. Through an instance of this class you can cancel a command, an implementation of such a command periodically calls
-   <a href="@TOP@/org/netbeans/libs/git/progress/ProgressMonitor.html#isCanceled--">isCanceled</a> and interrupts its work if the method returns <code>true</code>.<br/>
+   <a href="@TOP@/org/netbeans/libs/git/progress/ProgressMonitor.html#isCanceled()">isCanceled</a> and interrupts its work if the method returns <code>true</code>.<br/>
    Its basic implementation at <a href="@TOP@/org/netbeans/libs/git/progress/ProgressMonitor.DefaultProgressMonitor.html">ProgressMonitor.DefaultProgressMonitor</a> supports canceling commands
    while implementing other methods as no-op.
   </usecase>
@@ -144,7 +144,7 @@
    <p>
    Package <a href="@TOP@/org/netbeans/libs/git/progress/package-summary.html">org.netbeans.libs.git.progress</a> offers
    a set of listeners extending the <a href="@TOP@/org/netbeans/libs/git/progress/NotificationListener.html">NotificationListener</a> interface which you can attach to an instance of
-   <code>GitClient</code> via <a href="@TOP@/org/netbeans/libs/git/GitClient.html#addNotificationListener-org.netbeans.libs.git.progress.NotificationListener-">addNotificationListener()</a>
+   <code>GitClient</code> via <a href="@TOP@/org/netbeans/libs/git/GitClient.html#addNotificationListener(org.netbeans.libs.git.progress.NotificationListener)">addNotificationListener()</a>
    and through which you can closely monitor building of the result.
    </p>
   </usecase>
@@ -876,7 +876,7 @@
 -->
  <answer id="perf-mem">
   <p>
-   Repository metadata is cached as long as someone holds a reference to the repository root folder (<a href="@JDK@/java/io/File.html">java.io.File</a>).
+   Repository metadata is cached as long as someone holds a reference to the repository root folder (<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/io/File.html">java.io.File</a>).
    The underlying JGit library caches:
   </p>
   <ul>

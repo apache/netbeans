@@ -19,6 +19,7 @@
 package org.netbeans.modules.web.beans.model;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,6 +40,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 import org.netbeans.modules.web.beans.api.model.WebBeansModelFactory;
 import org.netbeans.modules.web.beans.impl.model.results.ResultImpl;
 import org.netbeans.modules.web.beans.testutilities.CdiTestUtilities;
+import org.openide.util.Exceptions;
 
 
 /**
@@ -47,20 +49,31 @@ import org.netbeans.modules.web.beans.testutilities.CdiTestUtilities;
  */
 public class CommonTestCase extends JavaSourceTestCase {
 
-    public CommonTestCase( String testName ) {
+    private final boolean jakartaVariant;
+
+    public CommonTestCase(String testName, boolean jakartaVariant) {
         super(testName);
+        this.jakartaVariant = jakartaVariant;
     }
     
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        myUtilities = new CdiTestUtilities(srcFO);
+        myUtilities = new CdiTestUtilities(srcFO, jakartaVariant);
         myUtilities.initAnnotations();
-        /*URL url = FileUtil.getArchiveRoot(javax.faces.component.FacesComponent.class.getProtectionDomain().
-                getCodeSource().getLocation());
-        addCompileRoots( Collections.singletonList( url ));*/
+        tempDir = myUtilities.setupJakartaMarker();
+        addCompileRoots(Arrays.asList(tempDir.toUri().toURL()));
     }
-    
+
+    @Override
+    protected void tearDown() {
+        try {
+            myUtilities.deleteTree(tempDir);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+    }
+
     public MetadataModel<WebBeansModel> createBeansModel() throws IOException, InterruptedException {
         IndexingManager.getDefault().refreshIndexAndWait(srcFO.getURL(), null);
         return myUtilities.createBeansModel();
@@ -213,4 +226,5 @@ public class CommonTestCase extends JavaSourceTestCase {
     }
 
     private CdiTestUtilities myUtilities;
+    private Path tempDir;
 }

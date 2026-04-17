@@ -19,11 +19,7 @@
 
 package org.netbeans.modules.ant.grammar;
 
-import java.awt.Color;
 import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.editor.settings.FontColorSettings;
@@ -38,18 +34,16 @@ import org.netbeans.spi.editor.highlighting.ZOrder;
 public class AntHighlightsLayerFactory implements HighlightsLayerFactory {
 
     public @Override HighlightsLayer[] createLayers(final Context context) {
-        AttributeSet _attrs = MimeLookup.getLookup("text/x-jsp").lookup(FontColorSettings.class).getTokenFontColors("expression-language"); // NOI18N
-        final AttributeSet attrs;
-        if (_attrs == null) {
-            // Fallback from web.core.syntax/src/org/netbeans/modules/web/core/syntax/resources/fontsColors.xml:
-            SimpleAttributeSet _sattrs = new SimpleAttributeSet();
-            _sattrs.addAttribute(StyleConstants.Background, new Color(0xe3f2e1));
-            attrs = _sattrs;
-        } else {
-            attrs = _attrs;
-        }
-        return new HighlightsLayer[] {HighlightsLayer.create("ant", ZOrder.SYNTAX_RACK.forPosition(10), true,
-                new AntHighlightsContainer((AbstractDocument) context.getDocument(), attrs))}; // NOI18N
+        HighlightsLayer highlighter = HighlightsLayer.create(
+            "ant",  // NOI18N
+            ZOrder.SYNTAX_RACK.forPosition(10), 
+            true, 
+            new AntHighlightsContainer(
+                (AbstractDocument) context.getDocument(),
+                MimeLookup.getLookup("text/x-jsp").lookup(FontColorSettings.class).getTokenFontColors("expression-language") // NOI18N
+            )
+        );
+        return new HighlightsLayer[] { highlighter };
     }
 
 }

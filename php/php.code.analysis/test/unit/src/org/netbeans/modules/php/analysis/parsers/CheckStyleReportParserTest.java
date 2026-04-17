@@ -112,6 +112,27 @@ public class CheckStyleReportParserTest extends NbTestCase {
         assertEquals("Function count() should return int but returns array&lt;string&gt;.", result.getDescription());
     }
 
+    public void testParseWithHtmlErrorIdentifiers() throws Exception {
+        FileObject root = getDataDir("phpstan/PHPStanSupport");
+        FileObject workDir = root;
+        List<Result> results = CheckStyleReportParser.parse(getLogFile("phpstan-log-with-error-identifiers.xml"), root, workDir);
+        assertNotNull(results);
+
+        assertEquals(2, results.size());
+
+        Result result = results.get(0);
+        assertEquals(FileUtil.toFile(root.getFileObject("HelloWorld.php")).getAbsolutePath(), result.getFilePath());
+        assertEquals(8, result.getLine());
+        assertEquals("error: nullCoalesce.expr: Expression on left side of ?? is not nullable.", result.getCategory());
+        assertEquals("nullCoalesce.expr: Expression on left side of ?? is not nullable.", result.getDescription());
+
+        result = results.get(1);
+        assertEquals(FileUtil.toFile(root.getFileObject("HelloWorld.php")).getAbsolutePath(), result.getFilePath());
+        assertEquals(13, result.getLine());
+        assertEquals("error: return.missing: Method HelloWorld::readLength() should return float but return statement is missing.", result.getCategory());
+        assertEquals("return.missing: Method HelloWorld::readLength() should return float but return statement is missing.", result.getDescription());
+    }
+
     public void testPsalmParse() throws Exception {
         FileObject root = getDataDir("psalm/PsalmSupport");
         FileObject workDir = root;

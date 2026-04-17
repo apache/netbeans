@@ -41,6 +41,18 @@ public class DeprecatedConstSemanticAnalysisTest extends DeprecatedSemanticAnaly
         checkSemantic("testfiles/semantic/deprecatedConst/deprecatedConst.php");
     }
 
+    public void testDeprecatedAttributeInGlobal() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedConst/deprecatedAttributeInGlobal.php");
+    }
+
+    public void testDeprecatedAttributeInNamespace() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedConst/deprecatedAttributeInNamespace.php");
+    }
+
+    public void testDeprecatedAttributeInNamespaceWithUse() throws Exception {
+        checkSemantic("testfiles/semantic/deprecatedConst/deprecatedAttributeInNamespaceWithUse.php");
+    }
+
     @Override
     protected Map<String, ClassPath> createClassPathsForTest() {
         return Collections.singletonMap(

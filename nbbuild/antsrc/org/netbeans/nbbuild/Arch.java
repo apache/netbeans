@@ -115,6 +115,14 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
     public void setFooter(String s) {
         footer = s;
     }
+    private String header="";
+    public void setHeader(String s) {
+        header = s;
+    }
+    private boolean deprecatedmenu=false;
+    public void setDeprecatedMenu(boolean b) {
+        deprecatedmenu = b;
+    }
     private File xsl = null;
     public void setXSL (File xsl) {
         this.xsl = xsl;
@@ -416,8 +424,8 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
                         para.appendChild(q.createTextNode("The default answer to this question is:"));
                         para.appendChild(q.createComment("If you do not want default answer to be generated you can use <defaultanswer generate='none' /> here"));
                         para.appendChild(q.createElement("br"));
-                        para.appendChild(res.getNode());
-                        n.appendChild(para);
+                        n.appendChild(para); // append default warning answer block
+                        n.appendChild(res.getNode()); // append answer not nested
                     }
                 }
             }
@@ -480,6 +488,8 @@ public class Arch extends Task implements ErrorHandler, EntityResolver, URIResol
                 if (footer != null) {
                     t.setParameter("arch.footer", footer);
                 }
+                t.setParameter("javadoc-header", header);
+                t.setParameter("deprecated", deprecatedmenu);
                 t.setParameter("arch.answers.date", DateFormat.getDateInstance().format(new Date(questionsFile.lastModified())));
                 
                 String archTarget = output.toString();

@@ -47,10 +47,13 @@ public class JsDeletedTextInterceptorTest extends JsTestBase {
         super(testName);
     }
 
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        @SuppressWarnings("unchecked")
+        OptionsUtils options = OptionsUtils.forLanguage(getPreferredLanguage().getLexerLanguage());
+        options.setTestDisablePreferencesTracking();
+        options.setTestCompletionSmartQuotes(OptionsUtils.AUTO_COMPLETION_SMART_QUOTES_DEFAULT);
         MimeLookup.getLookup(JsTokenId.JAVASCRIPT_MIME_TYPE).lookup(Preferences.class).clear();
     }
     
@@ -194,15 +197,15 @@ public class JsDeletedTextInterceptorTest extends JsTestBase {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void testDisabledSmartQuotes1() throws Exception {
-        MimeLookup.getLookup(JsTokenId.JAVASCRIPT_MIME_TYPE).lookup(Preferences.class)
-                .putBoolean(OptionsUtils.AUTO_COMPLETION_SMART_QUOTES, false);
+        OptionsUtils.forLanguage(getPreferredLanguage().getLexerLanguage()).setTestCompletionSmartQuotes(false);
         deleteChar("x = \"^\"", "x = ^\"");
     }
 
+    @SuppressWarnings("unchecked")
     public void testDisabledSmartQuotes2() throws Exception {
-        MimeLookup.getLookup(JsTokenId.JAVASCRIPT_MIME_TYPE).lookup(Preferences.class)
-                .putBoolean(OptionsUtils.AUTO_COMPLETION_SMART_QUOTES, false);
+        OptionsUtils.forLanguage(getPreferredLanguage().getLexerLanguage()).setTestCompletionSmartQuotes(false);
         deleteChar("x = `^`", "x = ^`");
     }
 

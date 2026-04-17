@@ -33,6 +33,7 @@ import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.text.Line;
 import org.openide.text.NbDocument;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 
 /**Copied from refactoring.java, and simplified.
  *
@@ -65,8 +66,7 @@ public class FileTreeElement implements TreeElement, Openable {
     @Override
     public Icon getIcon() {
         try {
-            ImageIcon imageIcon = new ImageIcon(DataObject.find(fo).getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
-            return imageIcon;
+            return ImageUtilities.image2Icon(DataObject.find(fo).getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16));
         } catch (DataObjectNotFoundException ex) {
             return null;
         }

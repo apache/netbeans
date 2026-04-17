@@ -151,7 +151,7 @@ public class AbstractObjectVariable extends AbstractVariable implements ObjectVa
                 this.genericType = getTypeDescription(new PushbackReader(new StringReader(genericSignature), 1));
             }
         } catch (IOException e) {
-            /// invalid signature
+            // invalid signature
         }
     }
 

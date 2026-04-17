@@ -61,19 +61,8 @@ final class JarBundleFile extends BundleFile implements BundleContent {
     private static final String META_INF = "META-INF/";
     private static final Name MULTI_RELEASE = new Name("Multi-Release");
     private static final int BASE_VERSION = 8;
-    private static final int RUNTIME_VERSION;
+    private static final int RUNTIME_VERSION = Runtime.version().feature();
     private static Map<Long,File> usedIds;
-
-    static {
-        int version;
-        try {
-            Object runtimeVersion = Runtime.class.getMethod("version").invoke(null);
-            version = (int) runtimeVersion.getClass().getMethod("major").invoke(runtimeVersion);
-        } catch (ReflectiveOperationException ex) {
-            version = BASE_VERSION;
-        }
-        RUNTIME_VERSION = version;
-    }
 
     private BundleFile delegate;
 
@@ -100,7 +89,7 @@ final class JarBundleFile extends BundleFile implements BundleContent {
         assert assertOn = true;
         if (assertOn) {
             if (usedIds == null) {
-                usedIds =  new HashMap<Long, File>();
+                usedIds =  new HashMap<>();
             }
             File prev = usedIds.put(id, base);
             if (prev != null && !prev.equals(base)) {

@@ -65,7 +65,7 @@ import org.openide.util.NbBundle;
  *
  * @author sp153251
  */
-@MimeRegistration(mimeType = "text/x-java", service = CompletionProvider.class, position = 400)///,//NOI18N
+@MimeRegistration(mimeType = "text/x-java", service = CompletionProvider.class, position = 400) //NOI18N
 public class JPACodeCompletionProvider implements CompletionProvider {
 
     @Override

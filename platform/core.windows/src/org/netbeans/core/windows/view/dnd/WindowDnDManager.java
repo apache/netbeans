@@ -36,7 +36,6 @@ import org.netbeans.core.windows.view.*;
 import org.netbeans.core.windows.view.ui.*;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
-import org.openide.util.WeakSet;
 import org.openide.windows.TopComponent;
 
 
@@ -73,7 +72,7 @@ implements DropTargetGlassPane.Observer, DropTargetGlassPane.Informer {
     private final Map<JRootPane,Component> root2glass = new HashMap<JRootPane, Component>();
     
     /** Set of floating frame types, i.e. separate windows. */
-    private final Set<Component> floatingFrames = new WeakSet<Component>(4);
+    private final Set<Component> floatingFrames = Collections.newSetFromMap(new WeakHashMap<>(4));
     
     /** Used to hack the last Drop target to clear its indication. */ 
     private Reference<DropTargetGlassPane> lastTargetWRef = new WeakReference<DropTargetGlassPane>(null);

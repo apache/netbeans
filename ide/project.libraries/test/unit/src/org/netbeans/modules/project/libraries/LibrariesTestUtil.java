@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.WeakHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.NonNull;
@@ -61,7 +62,6 @@ import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
-import org.openide.util.WeakSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -159,7 +159,7 @@ public class LibrariesTestUtil {
 
         final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
         public final Map<Area,List<TestLibrary>> libs = new HashMap<Area,List<TestLibrary>>();
-        final Set<LP> lps = new WeakSet<LP>();
+        final Set<LP> lps = Collections.newSetFromMap(new WeakHashMap<>());
         final Set<Area> open = new HashSet<Area>();
 
         public void addPropertyChangeListener(PropertyChangeListener listener) {

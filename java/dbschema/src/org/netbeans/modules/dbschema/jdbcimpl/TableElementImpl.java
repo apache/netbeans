@@ -174,25 +174,25 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                     while (rs.next()) {
                         if (bridge != null) {
                             rset = bridge.getDriverSpecification().getRow();
-                            Object type = rset.get(new Integer(5));
+                            String type = rset.get(5);
                             if (type != null) {
-                                sqlType = (new Integer(rset.get(new Integer(5)))).intValue();
+                                sqlType = Integer.parseInt(type);
                             } else {
                                 sqlType = 0; //java.sql.Types.NULL
                             }
                             // #192609: IllegalArgumentException: aType == null
                             if ("PostgreSQL".equalsIgnoreCase(dmd.getDatabaseProductName())) { // NOI18N
                                 if (Types.DISTINCT == sqlType) {
-                                    sqlType = (new Integer(rset.get(new Integer(22)))).intValue();
+                                    sqlType = Integer.parseInt(rset.get(22));
                                 }
                             }
-                            sqlTypeName = rset.get(new Integer(6));
-                            colName = rset.get(new Integer(4));
-                            colNull = rset.get(new Integer(11));
-                            colSize = rset.get(new Integer(7));
-                            colDec = rset.get(new Integer(9));
+                            sqlTypeName = rset.get(6);
+                            colName = rset.get(4);
+                            colNull = rset.get(11);
+                            colSize = rset.get(7);
+                            colDec = rset.get(9);
                             
-                            strAutoIncrement = rset.get(new Integer(23));
+                            strAutoIncrement = rset.get(23);
                             rset.clear();
                         } else {
                             sqlType = rs.getInt("DATA_TYPE"); //NOI18N
@@ -234,7 +234,7 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                         //workaround for i-net Oranxo driver
                         //value in int range is expected by JDBC API but 4294967296 is returned
                         try {
-                            colSize = new Integer(colSize).toString();
+                            colSize = Integer.valueOf(colSize).toString();
                         } catch (NumberFormatException exc) {
                             colSize = Integer.toString(Integer.MAX_VALUE);
                         }
@@ -324,9 +324,9 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                                 continue;
                             }
                             rset = bridge.getDriverSpecification().getRow();
-                            name = rset.get(new Integer(6));
-                            columnName = rset.get(new Integer(9));
-                            uniqueStr  = rset.get(new Integer(4));
+                            name = rset.get(6);
+                            columnName = rset.get(9);
+                            uniqueStr  = rset.get(4);
                             if (uniqueStr == null || uniqueStr.equals("0") || uniqueStr.equalsIgnoreCase("false") || uniqueStr.equalsIgnoreCase("f"))
                                 unq = false;
                             else
@@ -469,15 +469,15 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                     rset = bridge.getDriverSpecification().getRow();
                     
                     //test references between two schemas
-                    c1 = rset.get(new Integer(1));
-                    s1 = rset.get(new Integer(2));
-                    c2 = rset.get(new Integer(5));
-                    s2 = rset.get(new Integer(6));                    
+                    c1 = rset.get(1);
+                    s1 = rset.get(2);
+                    c2 = rset.get(5);
+                    s2 = rset.get(6);                    
                             
-                    name = rset.get(new Integer(12));
-                    fkColName = rset.get(new Integer(8));
-                    pkTableName = rset.get(new Integer(3));
-                    pkColName = rset.get(new Integer(4));
+                    name = rset.get(12);
+                    fkColName = rset.get(8);
+                    pkTableName = rset.get(3);
+                    pkColName = rset.get(4);
                     rset.clear();
                 } else {
                     //test references between two schemas
@@ -563,8 +563,8 @@ public class TableElementImpl extends DBElementImpl implements TableElement.Impl
                 while (rs.next()) {
                     if (bridge != null) {
                         rset = bridge.getDriverSpecification().getRow();
-                        keySeq = rset.get(new Integer(5));
-                        colName = rset.get(new Integer(4));
+                        keySeq = rset.get(5);
+                        colName = rset.get(4);
                         rset.clear();
                     } else {
                         keySeq = rs.getObject("KEY_SEQ"); //NOI18N

@@ -135,8 +135,8 @@ public class Client {
                 .findFirst();
     }
 
-    public synchronized PkgInfo getPkgInfo(String ephemeralId, Semver javaVersion) {
-        return getDisco().getPkgInfoByEphemeralId(ephemeralId, javaVersion);
+    public synchronized PkgInfo getPkgInfoByPkgId(String id, Semver javaVersion) {
+        return getDisco().getPkgInfoByPkgId(id, javaVersion);
     }
 
     public synchronized Future<?> downloadPkg(PkgInfo pkgInfo, String absolutePath) throws InterruptedException {

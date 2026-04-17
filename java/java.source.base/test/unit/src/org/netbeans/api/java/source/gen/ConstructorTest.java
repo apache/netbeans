@@ -354,7 +354,6 @@ public class ConstructorTest extends GeneratorTestBase {
         assertEquals(golden, res);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * @param args the command line arguments
      */

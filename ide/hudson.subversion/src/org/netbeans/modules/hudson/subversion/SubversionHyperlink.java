@@ -143,7 +143,7 @@ class SubversionHyperlink implements OutputListener {
             InputStream is = new URL(repo + "/!svn/ver/" + rev + path).openStream(); // NOI18N
             try {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                FileUtil.copy(is, baos);
+                is.transferTo(baos);
                 r = new StringReader(baos.toString());
             } finally {
                 is.close();

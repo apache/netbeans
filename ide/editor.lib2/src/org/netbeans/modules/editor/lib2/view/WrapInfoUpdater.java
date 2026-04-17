@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.View;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.modules.editor.lib2.EditorPreferencesDefaults;
 
 
 /**
@@ -104,9 +105,11 @@ final class WrapInfoUpdater {
         TextLayout lineContinuationTextLayout = docView.op.getLineContinuationCharTextLayout();
         final float lineContTextLayoutAdvance =
             lineContinuationTextLayout == null ? 0f : lineContinuationTextLayout.getAdvance();
-        // Make reasonable minimum width so that the number of visual lines does not double suddenly
-        // when user would minimize the width too much. Also have enough space for line continuation mark
-        availableWidth = Math.max(visibleWidth - lineContTextLayoutAdvance,
+        /* Keep a reasonable minimum width so that the number of visual lines does not double suddenly
+        if the user reduces the width too much. Also have enough space for a line continuation mark, and
+        enough to avoid the caret disappearing entirely off the paintable edge at the end of a line. */
+        availableWidth = Math.max(visibleWidth - lineContTextLayoutAdvance
+                - EditorPreferencesDefaults.defaultThickCaretWidth,
                 docView.op.getDefaultCharWidth() * 4);
         logMsgBuilder = LOG.isLoggable(Level.FINE) ? new StringBuilder(100) : null;
         if (logMsgBuilder != null) {

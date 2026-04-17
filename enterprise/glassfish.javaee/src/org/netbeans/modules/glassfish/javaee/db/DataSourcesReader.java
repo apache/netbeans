@@ -37,10 +37,7 @@ import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
  */
 public class DataSourcesReader {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * GlassFish server <code>resource</code> property type.
      */
@@ -119,10 +116,7 @@ public class DataSourcesReader {
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish server JDBC data sources properties search pattern. */
     public static final String DATA_SOURCES_PATTERN = "resources.*";
 
@@ -139,17 +133,11 @@ public class DataSourcesReader {
     static final String DEFAULT_DATA_SOURCE_EE7
             = "java:comp/DefaultDataSource";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** GlassFish server to read data sources from. */
     private final GlassFishServer server;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of GlassFish server data sources reader.
      * <p/>
@@ -159,10 +147,7 @@ public class DataSourcesReader {
         this.server = server;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Retrieve data sources from GlassFish server.
      * <p/>

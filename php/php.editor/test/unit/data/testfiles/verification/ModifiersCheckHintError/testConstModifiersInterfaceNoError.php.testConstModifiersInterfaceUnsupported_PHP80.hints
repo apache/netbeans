@@ -1,0 +1,48 @@
+    final const FINAL_IPUBLIC_CONST = 1; // OK as of PHP 8.1 class
+                -------------------
+HINT:Constant "FINAL_IPUBLIC_CONST" cannot be declared final
+FIX:Remove modifier: final
+    final public const FINAL_PUBLIC_CONST = 1; // OK as of PHP 8.1 class
+                       ------------------
+HINT:Constant "FINAL_PUBLIC_CONST" cannot be declared final
+FIX:Remove modifier: final
+    public final const FINAL_PUBLIC_CONST2 = 1; // OK as of PHP 8.1 class
+                       -------------------
+HINT:Constant "FINAL_PUBLIC_CONST2" cannot be declared final
+FIX:Remove modifier: final
+    final const int FINAL_IPUBLIC_CONST_TYPE = 1; // OK as of PHP 8.1 class
+                    ------------------------
+HINT:Constant "FINAL_IPUBLIC_CONST_TYPE" cannot be declared final
+FIX:Remove modifier: final
+    final public const int FINAL_PUBLIC_CONST_TYPE = 1; // OK as of PHP 8.1 class
+                           -----------------------
+HINT:Constant "FINAL_PUBLIC_CONST_TYPE" cannot be declared final
+FIX:Remove modifier: final
+    public final const int FINAL_PUBLIC_CONST_TYPE2 = 1; // OK as of PHP 8.1 class
+                           ------------------------
+HINT:Constant "FINAL_PUBLIC_CONST_TYPE2" cannot be declared final
+FIX:Remove modifier: final
+    final const ATTR_FINAL_IPUBLIC_CONST = 1; // OK as of PHP 8.1 class
+                ------------------------
+HINT:Constant "ATTR_FINAL_IPUBLIC_CONST" cannot be declared final
+FIX:Remove modifier: final
+    final public const ATTR_FINAL_PUBLIC_CONST = 1; // OK as of PHP 8.1 class
+                       -----------------------
+HINT:Constant "ATTR_FINAL_PUBLIC_CONST" cannot be declared final
+FIX:Remove modifier: final
+    public final const ATTR_FINAL_PUBLIC_CONST2 = 1; // OK as of PHP 8.1 class
+                       ------------------------
+HINT:Constant "ATTR_FINAL_PUBLIC_CONST2" cannot be declared final
+FIX:Remove modifier: final
+    final const int ATTR_FINAL_IPUBLIC_CONST_TYPE = 1; // OK as of PHP 8.1 class
+                    -----------------------------
+HINT:Constant "ATTR_FINAL_IPUBLIC_CONST_TYPE" cannot be declared final
+FIX:Remove modifier: final
+    final public const int ATTR_FINAL_PUBLIC_CONST_TYPE = 1; // OK as of PHP 8.1 class
+                           ----------------------------
+HINT:Constant "ATTR_FINAL_PUBLIC_CONST_TYPE" cannot be declared final
+FIX:Remove modifier: final
+    public final const int ATTR_FINAL_PUBLIC_CONST_TYPE2 = 1; // OK as of PHP 8.1 class
+                           -----------------------------
+HINT:Constant "ATTR_FINAL_PUBLIC_CONST_TYPE2" cannot be declared final
+FIX:Remove modifier: final

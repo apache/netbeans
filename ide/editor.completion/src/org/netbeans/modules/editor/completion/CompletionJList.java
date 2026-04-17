@@ -45,7 +45,7 @@ public class CompletionJList extends JList {
 
     private static final int DARKER_COLOR_COMPONENT = 5;
     private static final int SUB_MENU_ICON_GAP = 1;
-    private static final ImageIcon subMenuIcon = ImageUtilities.loadImageIcon("org/netbeans/modules/editor/completion/resources/suggestion.png", false); // NOI18N
+    private static final Icon subMenuIcon = ImageUtilities.loadIcon("org/netbeans/modules/editor/completion/resources/suggestion.png", false); // NOI18N
 
     private final RenderComponent renderComponent;
     
@@ -345,7 +345,7 @@ public class CompletionJList extends JList {
             item.render(g, CompletionJList.this.getFont(), getForeground(), bgColor,
                     itemRenderWidth, getHeight(), selected);
             if (selected && item instanceof CompositeCompletionItem && !((CompositeCompletionItem)item).getSubItems().isEmpty()) {
-                g.drawImage(subMenuIcon.getImage(), itemRenderWidth - subMenuIcon.getIconWidth() - SUB_MENU_ICON_GAP, (height - subMenuIcon.getIconHeight()) / 2, null);
+                subMenuIcon.paintIcon(null, g, itemRenderWidth - subMenuIcon.getIconWidth() - SUB_MENU_ICON_GAP, (height - subMenuIcon.getIconHeight()) / 2);
             }
             
             if (separator) {

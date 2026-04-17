@@ -47,6 +47,7 @@ import org.openide.util.test.TestFileUtils;
  *
  * @author sdedic
  */
+@SuppressWarnings("unchecked")
 public class ProvidedConfigurationsTest extends NbTestCase {
 
     public ProvidedConfigurationsTest(String name) {
@@ -144,7 +145,7 @@ public class ProvidedConfigurationsTest extends NbTestCase {
         RunConfig cfg = ActionToGoalUtils.createRunConfig("run", pimpl, Lookup.EMPTY);
         assertEquals(Arrays.asList(
                 "process-classes",
-                "org.codehaus.mojo:exec-maven-plugin:3.1.0:exec"), cfg.getGoals());
+                "org.codehaus.mojo:exec-maven-plugin:3.5.1:exec"), cfg.getGoals());
         
         ProjectConfigurationProvider<MavenConfiguration> pcp = p.getLookup().lookup(ProjectConfigurationProvider.class);
         MavenConfiguration c = pcp.getConfigurations().stream().filter(x -> "Micronaut: dev mode".equals(x.getDisplayName())).findAny().get();

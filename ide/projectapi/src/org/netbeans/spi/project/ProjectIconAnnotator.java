@@ -54,7 +54,7 @@ import org.netbeans.api.project.ProjectInformation;
  * @author petrdvorak
  * @since 1.33
  * @see ProjectInformation#getIcon
- * @see <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/LogicalViewProvider.html#createLogicalView--"><code>LogicalViewProvider.createLogicalView</code></a>
+ * @see <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/LogicalViewProvider.html#createLogicalView()"><code>LogicalViewProvider.createLogicalView</code></a>
  */
 public interface ProjectIconAnnotator {
 

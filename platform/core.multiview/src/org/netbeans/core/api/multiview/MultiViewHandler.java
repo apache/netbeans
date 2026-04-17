@@ -57,15 +57,6 @@ public final class MultiViewHandler {
     }
     
     /**
-     * returns the MultiViewElement for the given Description if previously created,
-     * otherwise null.
-     */
-// SHOULD NOT BE USED, ONLY IN EMERGENCY CASE!    
-//    public MultiViewPerspectiveComponent getElementForPerspective(MultiViewPerspective desc) {
-//        return del.getElementForDescription(desc);
-//    }
-    
-    /**
      * Requests focus for the <code>MultiViewPerspective</code> passed as parameter, if necessary
      * will switch from previously selected <code>MultiViewPerspective</code>
      * @param desc the new active selection

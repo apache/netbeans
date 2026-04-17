@@ -291,7 +291,7 @@ public abstract class SystemAction extends SharedClassObject implements Action, 
     * If e.g. myIcon.gif is accompanied with myIcon_pressed.gif, myIcon_disabled.gif
     * and/or myIcon_rollover.gif these images are used to call methods on JButton.setPressedIcon(),
     * JButton.setDisabledIcon() and/or JButton.setRolloverIcon() with appropriate images.
-    * Please check <a href="@org-openide-awt@/org/openide/awt/Actions.html#connect-javax.swing.AbstractButton-javax.swing.Action-">Actions.connect</a> for
+    * Please check <a href="@org-openide-awt@/org/openide/awt/Actions.html#connect(javax.swing.AbstractButton,javax.swing.Action)">Actions.connect</a> for
     * additional info how this is achieved (using special "iconBase" key for getValue).
     * As of APIs version 3.24, this path will be used for a localized search automatically.
     * If you do not want an icon, do <em>not</em> override this to return a blank icon. Leave it null,

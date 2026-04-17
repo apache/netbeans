@@ -41,7 +41,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class SpecializesTest extends CommonTestCase {
 
     public SpecializesTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
     
     public void testSimpleTypeSpecializes() throws IOException, InterruptedException{

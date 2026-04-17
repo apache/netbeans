@@ -64,6 +64,7 @@ import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
 import org.netbeans.api.editor.document.CustomUndoDocument;
 import org.netbeans.api.editor.document.LineDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.SimpleValueNames;
@@ -615,7 +616,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 // XXX: formatting cleanup
 //    /**
 //     * @deprecated Please use Editor Indentation API instead, for details see
-//     *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
+//     *   <a href="@org-netbeans-modules-editor-indent@/index.html">Editor Indentation</a>.
 //     */
 //    public Formatter getLegacyFormatter() {
 //        if (formatter == null) {
@@ -631,7 +632,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 //     * Gets the formatter for this document.
 //     *
 //     * @deprecated Please use Editor Indentation API instead, for details see
-//     *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
+//     *   <a href="@org-netbeans-modules-editor-indent@/index.html">Editor Indentation</a>.
 //     */
 //    public Formatter getFormatter() {
 //        Formatter f = getLegacyFormatter();
@@ -641,7 +642,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /**
      * @deprecated Please use Lexer instead, for details see
-     *   <a href="@org-netbeans-modules-lexer@/overview-summary.html">Lexer</a>.
+     *   <a href="@org-netbeans-modules-lexer@/index.html">Lexer</a>.
      */
     @Deprecated
     public SyntaxSupport getSyntaxSupport() {
@@ -888,8 +889,8 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     public void checkTrailingSpaces(int offset) {
         try {
-            int lineNum = Utilities.getLineOffset(this, offset);
-            int lastEditedLine = lastPositionEditedByTyping != null ? Utilities.getLineOffset(this, lastPositionEditedByTyping.getOffset()) : -1;
+            int lineNum = LineDocumentUtils.getLineIndex(this, offset);
+            int lastEditedLine = lastPositionEditedByTyping != null ? LineDocumentUtils.getLineIndex(this, lastPositionEditedByTyping.getOffset()) : -1;
             if (lastEditedLine != -1 && lastEditedLine != lineNum) {
                 // clear trailing spaces in the last edited line
                 Element root = getDefaultRootElement();
@@ -1076,7 +1077,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /** This method is called automatically before the document
     * insertion occurs and can be used to revoke the insertion before it occurs
-    * by throwing the <tt>BadLocationException</tt>.
+    * by throwing the <code>BadLocationException</code>.
     * @param offset position where the insertion will be done
     * @param text string to be inserted
     * @param a attributes of the inserted text
@@ -1087,7 +1088,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
 
     /** This method is called automatically before the document
     * removal occurs and can be used to revoke the removal before it occurs
-    * by throwing the <tt>BadLocationException</tt>.
+    * by throwing the <code>BadLocationException</code>.
     * @param offset position where the insertion will be done
     * @param len length of the removal
     */
@@ -1565,7 +1566,7 @@ public class BaseDocument extends AbstractDocument implements AtomicLockDocument
      *
      * @see #getTabSize()
      * @deprecated Please use Editor Indentation API instead, for details see
-     *   <a href="@org-netbeans-modules-editor-indent@/overview-summary.html">Editor Indentation</a>.
+     *   <a href="@org-netbeans-modules-editor-indent@/index.html">Editor Indentation</a>.
      */
     @Deprecated
     public int getShiftWidth() {

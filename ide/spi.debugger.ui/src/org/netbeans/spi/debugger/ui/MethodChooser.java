@@ -42,6 +42,7 @@ import javax.swing.text.Caret;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.StyleConstants;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.BaseCaret;
@@ -215,8 +216,8 @@ public class MethodChooser {
             maxOffs = Math.max(segments[x].getEndOffset(), maxOffs);
         }
         try {
-            startLine = Utilities.getLineOffset((BaseDocument)doc, minOffs) + 1;
-            endLine = Utilities.getLineOffset((BaseDocument)doc, maxOffs) + 1;
+            startLine = LineDocumentUtils.getLineIndex((BaseDocument)doc, minOffs) + 1;
+            endLine = LineDocumentUtils.getLineIndex((BaseDocument)doc, maxOffs) + 1;
         } catch (BadLocationException e) {
         }
         if (SwingUtilities.isEventDispatchThread()) {
@@ -681,7 +682,7 @@ public class MethodChooser {
                 }
             }
             try {
-                int line = Utilities.getLineOffset((BaseDocument) doc, position) + 1;
+                int line = LineDocumentUtils.getLineIndex((BaseDocument) doc, position) + 1;
                 if (line < startLine || line > endLine) {
                     releaseUI(false);
                     return;

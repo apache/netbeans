@@ -38,7 +38,6 @@ public class ChromeBrowser extends ExtWebBrowser implements PropertyChangeListen
     /** Creates new ExtWebBrowser */
     public ChromeBrowser() {
         super(PrivateBrowserFamilyId.CHROME);
-        ddeServer = ExtWebBrowser.CHROME;
     }
     
     public static Boolean isHidden () {
@@ -49,7 +48,7 @@ public class ChromeBrowser extends ExtWebBrowser implements PropertyChangeListen
                     detectedPath = NbDdeBrowserImpl.getBrowserPath("chrome");       // NOI18N
                 }
             } catch (NbBrowserException e) {
-                ExtWebBrowser.getEM().log(Level.FINEST, "Cannot detect chrome : " + e);   // NOI18N
+                ExtWebBrowser.getEM().log(Level.FINEST, "Cannot detect chrome", e);   // NOI18N
             }
             if ((detectedPath != null) && (detectedPath.trim().length() > 0)) {
                 return Boolean.FALSE;
@@ -111,7 +110,6 @@ public class ChromeBrowser extends ExtWebBrowser implements PropertyChangeListen
             params += "{" + ExtWebBrowser.UnixBrowserFormat.TAG_URL + "}";  // NOI18N
             File file = getLocalAppPath();
             if ( file.exists() && file.canExecute() ){
-                setDDEServer(ExtWebBrowser.CHROME);
                 return new NbProcessDescriptor (file.getPath(), params);
             }
             /*
@@ -125,20 +123,15 @@ public class ChromeBrowser extends ExtWebBrowser implements PropertyChangeListen
                 try {
                     b = NbDdeBrowserImpl.getBrowserPath("chrome"); // NOI18N
                     if ((b != null) && (b.trim().length() > 0)) {
-                        setDDEServer(ExtWebBrowser.CHROME);
                         return new NbProcessDescriptor(b, params);
                     }
                 } catch (NbBrowserException e) {
-                    if (ExtWebBrowser.getEM().isLoggable(Level.FINE)) {
-                        ExtWebBrowser.getEM().log(Level.FINE, "Cannot get Path for Chrome: " + e);   // NOI18N
-                    }
+                    ExtWebBrowser.getEM().log(Level.FINE, "Cannot get Path for Chrome", e);   // NOI18N
                     File chrome = new File("C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"); // NOI18N
                     if (!chrome.isFile()) {
                         chrome = new File("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"); // NOI18N
                     }
-                    if (chrome.isFile()
-                            && chrome.canExecute()) {
-                        setDDEServer(ExtWebBrowser.CHROME);
+                    if (chrome.isFile() && chrome.canExecute()) {
                         return new NbProcessDescriptor(chrome.getPath(), params);
                     }
                 }

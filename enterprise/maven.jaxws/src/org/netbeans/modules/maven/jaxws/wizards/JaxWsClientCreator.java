@@ -36,7 +36,7 @@ import org.netbeans.modules.websvc.api.support.ClientCreator;
 import java.io.IOException;
 
 import java.util.Collections;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.Project;
 
 import org.netbeans.modules.maven.jaxws.MavenJAXWSSupportImpl;
@@ -188,7 +188,7 @@ public class JaxWsClientCreator implements ClientCreator {
             }
         };
         AtomicBoolean isCancelled = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(runnable, NbBundle.getMessage(
+        BaseProgressUtils.runOffEventDispatchThread(runnable, NbBundle.getMessage(
                 JaxWsClientCreator.class, "LBL_RetrieveWSDL"), isCancelled, false);    // NOI18N
         
         if ( isCancelled.get() ){

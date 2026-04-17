@@ -722,7 +722,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 "/**\n" +
                 " *aa\n" +
                 " */\n" +
-                "@Annotation()\n" +
+                "@Annotation\n" +
                 "public class Test {\n" +
                 "}\n";
         JavaSource testSource = JavaSource.forFileObject(FileUtil.toFileObject(testFile));
@@ -1231,7 +1231,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 "\n" +
                 "import java.io.*;\n" +
                 "\n" +
-                "@Annotation()\n" +
+                "@Annotation\n" +
                 "public class Test {\n" +
                 "    void alois() {\n" +
                 "    }\n" +
@@ -1275,7 +1275,7 @@ public class ModifiersTest extends GeneratorTestMDRCompat {
                 "\n" +
                 "import java.io.*;\n" +
                 "\n" +
-                "@Annotation()\n" +
+                "@Annotation\n" +
                 "public class Test {\n" +
                 "    void alois() {\n" +
                 "    }\n" +

@@ -35,10 +35,10 @@ import com.oracle.js.parser.ir.visitor.NodeVisitor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -88,10 +88,11 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
 
     public JsSemanticAnalyzer() {
         this.cancelled = false;
-        this.semanticHighlights = null;
+        this.semanticHighlights = Collections.emptyMap();
     }
 
     @Override
+    @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public Map<OffsetRange, Set<ColoringAttributes>> getHighlights() {
         return semanticHighlights;
     }
@@ -116,26 +117,20 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
         highlights = processSemanticKeywords(result, highlights);
         highlights = processNumbers(result, highlights);
 
-        if (highlights != null && !highlights.isEmpty()) {
-            semanticHighlights = highlights;
-        } else {
-            semanticHighlights = null;
-        }
+        assert highlights != null;
+
+        semanticHighlights = highlights;
     }
 
+    @SuppressWarnings("AssignmentToMethodParameter")
     private Map<OffsetRange, Set<ColoringAttributes>> count (JsParserResult result, JsObject parent, Map<OffsetRange, Set<ColoringAttributes>> highlights, Set<String> processedObjects) {
         if (ModelUtils.wasProcessed(parent, processedObjects)) {
             return highlights;
         }
-        for (Iterator<? extends JsObject> it = parent.getProperties().values().iterator(); it.hasNext();) {
-            JsObject object = it.next();
+        for (JsObject object : parent.getProperties().values()) {
             if (object.getDeclarationName() != null) {
                 switch (object.getJSKind()) {
-                    case CONSTRUCTOR:
-                    case METHOD:
-                    case FUNCTION:
-                    case GENERATOR:
-                    case ARROW_FUNCTION:
+                    case CONSTRUCTOR, METHOD, FUNCTION, GENERATOR, ARROW_FUNCTION -> {
                         if(object.isDeclared() && !object.isAnonymous() && !object.getDeclarationName().getOffsetRange().isEmpty()) {
                             EnumSet<ColoringAttributes> coloring = ColoringAttributes.METHOD_SET;
                             if (object.getModifiers().contains(Modifier.PRIVATE)) {
@@ -152,7 +147,7 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                             addColoring(result, highlights, object.getDeclarationName().getOffsetRange(), coloring);
                         }
                         for(JsObject param: ((JsFunction)object).getParameters()) {
-                            if (!(object instanceof JsReference && !((JsReference)object).getOriginal().isAnonymous())) {
+                            if (!(object instanceof JsReference jr && !jr.getOriginal().isAnonymous())) {
                                 count(result, param, highlights, processedObjects);
                             }
                             if (!hasSourceOccurences(result, param)) {
@@ -163,27 +158,24 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                                 }
                             }
                         }
-                        break;
-                    case PROPERTY_GETTER:
-                    case PROPERTY_SETTER:
+                    }
+                    case PROPERTY_GETTER, PROPERTY_SETTER -> {
                         int offset = LexUtilities.getLexerOffset(result, object.getDeclarationName().getOffsetRange().getStart());
                         TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsTokenSequence(result.getSnapshot(), offset);
                         if (ts != null) {
                             ts.move(offset);
                             if (ts.moveNext() && ts.movePrevious()) {
-                                Token token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.WHITESPACE, JsTokenId.BLOCK_COMMENT, JsTokenId.DOC_COMMENT));
+                                Token<? extends JsTokenId> token = LexUtilities.findPrevious(ts, Arrays.asList(JsTokenId.WHITESPACE, JsTokenId.BLOCK_COMMENT, JsTokenId.DOC_COMMENT));
                                 if ((token.id() == JsTokenId.IDENTIFIER || token.id() == JsTokenId.PRIVATE_IDENTIFIER) && token.length() == 3) {
                                     highlights.put(new OffsetRange(ts.offset(), ts.offset() + token.length()), ColoringAttributes.METHOD_SET);
                                 }
                             }
                             highlights.put(LexUtilities.getLexerOffsets(result, object.getDeclarationName().getOffsetRange()), ColoringAttributes.FIELD_SET);
                         }
-                        break;
-                    case OBJECT:
-                    case OBJECT_LITERAL:
-                    case CLASS:
+                    }
+                    case OBJECT, OBJECT_LITERAL, CLASS -> {
                         if(!"UNKNOWN".equals(object.getName())) {
-                             if (parent.getParent() == null && !GLOBAL_TYPES.contains(object.getName())) {
+                            if (parent.getParent() == null && !GLOBAL_TYPES.contains(object.getName())) {
                                 addColoring(result, highlights, object.getDeclarationName().getOffsetRange(), GLOBAL_DEFINITION);
                                 for (Occurrence occurence : object.getOccurrences()) {
                                     addColoring(result, highlights, occurence.getOffsetRange(), ColoringAttributes.GLOBAL_SET);
@@ -196,18 +188,19 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                                 } else {
                                     highlights.put(LexUtilities.getLexerOffsets(result, object.getDeclarationName().getOffsetRange()), ColoringAttributes.CLASS_SET);
                                     TokenSequence<? extends JsTokenId> cts = LexUtilities.getJsTokenSequence(result.getSnapshot(), object.getDeclarationName().getOffsetRange().getStart());
-                                    for (Occurrence occurrence: object.getOccurrences()) {
-                                        cts.move(occurrence.getOffsetRange().getStart());
-                                        if (cts.moveNext() && cts.token().id() == JsTokenId.STRING && !occurrence.getOffsetRange().equals(object.getDeclarationName().getOffsetRange())) {
-                                            highlights.put(LexUtilities.getLexerOffsets(result, occurrence.getOffsetRange()), ColoringAttributes.CLASS_SET);
+                                    if (cts != null) {
+                                        for (Occurrence occurrence : object.getOccurrences()) {
+                                            cts.move(occurrence.getOffsetRange().getStart());
+                                            if (cts.moveNext() && cts.token().id() == JsTokenId.STRING && !occurrence.getOffsetRange().equals(object.getDeclarationName().getOffsetRange())) {
+                                                highlights.put(LexUtilities.getLexerOffsets(result, occurrence.getOffsetRange()), ColoringAttributes.CLASS_SET);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                        break;
-                    case PROPERTY:
-                    case FIELD:
+                    }
+                    case PROPERTY, FIELD -> {
                         if(object.isDeclared()) {
                             addColoring(result, highlights, object.getDeclarationName().getOffsetRange(), ColoringAttributes.FIELD_SET);
                             for(Occurrence occurence: object.getOccurrences()) {
@@ -216,20 +209,22 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                         } else {
                             // we need to check whether the fiels is not used in aa["bb"], then bb color with black
                             TokenSequence<? extends JsTokenId> cts = LexUtilities.getJsTokenSequence(result.getSnapshot(), object.getOffset());
-                            cts.move(object.getOffsetRange().getStart());
-                            if (cts.moveNext() && cts.token().id() == JsTokenId.STRING) {
-                                addColoring(result, highlights, object.getOffsetRange(), ColoringAttributes.FIELD_SET);
-                            }
-                            for (Occurrence occurrence : object.getOccurrences()) {
-                                cts.move(occurrence.getOffsetRange().getStart());
+                            if (cts != null) {
+                                cts.move(object.getOffsetRange().getStart());
                                 if (cts.moveNext() && cts.token().id() == JsTokenId.STRING) {
-                                    addColoring(result, highlights, occurrence.getOffsetRange(), ColoringAttributes.FIELD_SET);
+                                    addColoring(result, highlights, object.getOffsetRange(), ColoringAttributes.FIELD_SET);
                                 }
+                                for (Occurrence occurrence : object.getOccurrences()) {
+                                    cts.move(occurrence.getOffsetRange().getStart());
+                                    if (cts.moveNext() && cts.token().id() == JsTokenId.STRING) {
+                                        addColoring(result, highlights, occurrence.getOffsetRange(), ColoringAttributes.FIELD_SET);
+                                    }
 
+                                }
                             }
                         }
-                        break;
-                    case VARIABLE:
+                    }
+                    case VARIABLE -> {
                         if (parent.getParent() == null && !GLOBAL_TYPES.contains(object.getName())) {
                             addColoring(result, highlights, object.getDeclarationName().getOffsetRange(), ColoringAttributes.GLOBAL_SET);
                             for(Occurrence occurence: object.getOccurrences()) {
@@ -270,13 +265,14 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                                 }
                             }
                         }
+                    }
                 }
             }
             if (isCancelled()) {
-                highlights = null;
+                highlights = Collections.emptyMap();
                 break;
             }
-            if (!(object instanceof JsReference && ModelUtils.isDescendant(object, ((JsReference)object).getOriginal()))) {
+            if (!(object instanceof JsReference jr && ModelUtils.isDescendant(object, jr.getOriginal()))) {
                 highlights = count(result, object, highlights, processedObjects);
             }
         }
@@ -292,7 +288,7 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
             return highlights;
         }
 
-        NodeVisitor visitor = new NodeVisitor(new LexicalContext()) {
+        NodeVisitor<LexicalContext> visitor = new NodeVisitor<LexicalContext>(new LexicalContext()) {
 
             @Override
             public boolean enterFunctionNode(FunctionNode functionNode) {
@@ -397,11 +393,11 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
 
             @Override
             public boolean enterVarNode(VarNode varNode) {
-                if (varNode.isLet()) {
+                if (varNode.isLet() || varNode.isConst()) {
                     TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsPositionedSequence(result.getSnapshot(), varNode.getStart() - 1);
                     if (ts != null) {
                         Token<? extends JsTokenId> token = LexUtilities.findPreviousNonWsNonComment(ts);
-                        if (token != null && token.id() == JsTokenId.RESERVED_LET) {
+                        if (token != null && (token.id() == JsTokenId.RESERVED_LET || token.id() == JsTokenId.KEYWORD_CONST)) {
                             highlights.put(LexUtilities.getLexerOffsets(result,
                                     new OffsetRange(ts.offset(), ts.offset() + token.length())), SEMANTIC_KEYWORD);
                         }
@@ -445,7 +441,7 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
 
             private void handleProperty(PropertyNode p, boolean classElement) {
                 int offset = -1;
-                if ((p.getValue() instanceof FunctionNode) && ((FunctionNode) p.getValue()).isAsync()) {
+                if ((p.getValue() instanceof FunctionNode fn) && fn.isAsync()) {
                     TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsPositionedSequence(result.getSnapshot(), p.getStart() - 1);
                     if (ts != null) {
                         Token<? extends JsTokenId> token = LexUtilities.findPreviousNonWsNonComment(ts);
@@ -473,6 +469,7 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
         return highlights;
     }
 
+    @SuppressWarnings("NestedAssignment")
     private Map<OffsetRange, Set<ColoringAttributes>> processNumbers(JsParserResult result, Map<OffsetRange, Set<ColoringAttributes>> highlights) {
         TokenSequence<? extends JsTokenId> ts = LexUtilities.getJsTokenSequence(result.getSnapshot(), 0);
         if (ts != null) {
@@ -551,10 +548,7 @@ public class JsSemanticAnalyzer extends SemanticAnalyzer<JsParserResult> {
                 return true;
             }
         }
-        if (globalJsHintInlines.contains(range)) {
-            return true;
-        }
-        return false;
+        return globalJsHintInlines.contains(range);
     }
 
 }

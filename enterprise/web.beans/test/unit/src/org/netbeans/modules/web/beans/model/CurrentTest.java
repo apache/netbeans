@@ -44,7 +44,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class CurrentTest extends CommonTestCase {
 
     public CurrentTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
     
     public void testDefault() throws IOException, InterruptedException{

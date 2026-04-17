@@ -46,6 +46,7 @@ import org.openide.awt.Mnemonics;
 import org.openide.cookies.SaveCookie;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
 
@@ -333,7 +334,7 @@ public final class ExitDialog extends JPanel implements ActionListener {
 
             Node node = obj.getNodeDelegate();
 
-            ImageIcon icon = new ImageIcon(node.getIcon(BeanInfo.ICON_COLOR_16x16));
+            Icon icon = ImageUtilities.image2Icon(node.getIcon(BeanInfo.ICON_COLOR_16x16));
             super.setIcon(icon);
 
             setText(node.getDisplayName());

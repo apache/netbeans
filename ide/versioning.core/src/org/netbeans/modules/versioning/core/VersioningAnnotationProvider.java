@@ -47,13 +47,13 @@ import org.openide.util.RequestProcessor;
 
 /**
  * Plugs into IDE filesystem and delegates annotation work to registered versioning systems.
- * 
+ *
  * @author Maros Sandor
  */
 public class VersioningAnnotationProvider {
-    
+
     private static final VersioningAnnotationProvider instance = new VersioningAnnotationProvider();
-    
+
     private static final Logger LOG = Logger.getLogger(VersioningAnnotationProvider.class.getName());
     private static final int CACHE_INITIAL_SIZE = 500;
     private static final long CACHE_ITEM_MAX_AGE = getMaxAge();
@@ -62,11 +62,11 @@ public class VersioningAnnotationProvider {
 
     private VersioningAnnotationProvider() {
     }
-    
+
     public static VersioningAnnotationProvider getDefault() {
         return instance;
     }
-    
+
     private VersioningSystem getOwner(VCSFileProxy file, Boolean isFile) {
         return file == null ? null : VersioningManager.getInstance().getOwner(file, isFile);
     }
@@ -92,7 +92,7 @@ public class VersioningAnnotationProvider {
         return annotatedName == null ? htmlEncode(name) : annotatedName;
     }
 
-    public Action[] actions(Set files) {
+    public Action[] actions(Set<? extends FileObject> files) {
         if (files.isEmpty()) return new Action[0];
 
         if(!VersioningManager.isInitialized()) {
@@ -101,13 +101,13 @@ public class VersioningAnnotationProvider {
                 SystemAction.get(InitLHSystemAction.class)
             };
         }
-        
-        List<Action> actions = new ArrayList<Action>();
+
+        List<Action> actions = new ArrayList<>();
         LocalHistoryActions localHistoryAction = null;
 
         // group all given files by owner
-        Map<VersioningSystem, List<VCSFileProxy>> owners = new HashMap<VersioningSystem, java.util.List<VCSFileProxy>>(3);
-        for (FileObject fo : (Set<FileObject>) files) {
+        Map<VersioningSystem, List<VCSFileProxy>> owners = new HashMap<>(3);
+        for (FileObject fo : files) {
             VCSFileProxy file = VCSFileProxy.createFileProxy(fo);
             if (file != null) {
 
@@ -123,7 +123,7 @@ public class VersioningAnnotationProvider {
                 if(owner != null) {
                     List<VCSFileProxy> fileList = owners.get(owner);
                     if(fileList == null) {
-                        fileList = new ArrayList<VCSFileProxy>();
+                        fileList = new ArrayList<>();
                     }
                     fileList.add(file);
                     owners.put(owner, fileList);
@@ -131,13 +131,13 @@ public class VersioningAnnotationProvider {
             }
         }
 
-        VersioningSystem vs = null;
-        if(owners.keySet().size() == 1) {
+        VersioningSystem vs;
+        if(owners.size() == 1) {
             vs = owners.keySet().iterator().next();
         } else {
-            return actions.toArray(new Action [0]);
-        } 
-        
+            return actions.toArray(Action[]::new);
+        }
+
         VCSAnnotator an = null;
         if (vs != null) {
             an = vs.getVCSAnnotator();
@@ -148,15 +148,15 @@ public class VersioningAnnotationProvider {
             actions.add(action);
         }
 
-        return actions.toArray(new Action [0]);
+        return actions.toArray(Action[]::new);
     }
-    
-    public static class VersioningSystemActions extends AbstractVersioningSystemActions {               
+
+    public static class VersioningSystemActions extends AbstractVersioningSystemActions {
     }
 
     public static class LocalHistoryActions extends AbstractVersioningSystemActions {
     }
-    
+
     public static class InitLHSystemAction extends InitVersioningSystemAction {
         public InitLHSystemAction() {
             super();
@@ -166,14 +166,14 @@ public class VersioningAnnotationProvider {
             return NbBundle.getMessage(VersioningAnnotationProvider.class, "CTL_MenuItem_LocalHistory");
         }
     }
-    
+
     public static class InitVersioningSystemAction extends SystemAction implements Presenter.Popup {
 
         @Override
         public void actionPerformed(ActionEvent ae) { }
         @Override
         public JMenuItem getPopupPresenter() {
-            return NoVCSMenuItem.createInitializingMenu(getName());            
+            return NoVCSMenuItem.createInitializingMenu(getName());
         }
         @Override
         public String getName() {
@@ -184,9 +184,9 @@ public class VersioningAnnotationProvider {
             return null;
         }
     }
-    
+
     public abstract static class AbstractVersioningSystemActions extends SystemAction implements ContextAwareAction {
-        
+
         private VersioningSystem system;
 
         @Override
@@ -213,7 +213,7 @@ public class VersioningAnnotationProvider {
             this.system = system;
         }
     }
-    
+
     private static class RealVersioningSystemActions extends AbstractAction implements Presenter.Popup {
 
         private final VersioningSystem system;
@@ -234,10 +234,10 @@ public class VersioningAnnotationProvider {
         public JMenuItem getPopupPresenter() {
             return new VersioningSystemMenuItem();
         }
-        
+
         @NbBundle.Messages("LBL_PopupMenu_Initializing=Initializing...")
         private class VersioningSystemMenuItem extends JMenu {
-        
+
             private boolean popupContructed;
 
             public VersioningSystemMenuItem() {
@@ -251,33 +251,27 @@ public class VersioningAnnotationProvider {
                     JMenuItem item = new JMenuItem(Bundle.LBL_PopupMenu_Initializing());
                     item.setEnabled(false);
                     add(item);
-                    Utils.postParallel(new Runnable() {
-                        @Override
-                        public void run () {
-                            VCSContext context = Utils.contextForLookup(lkp);
-                            final Action [] actions = system.getVCSAnnotator().getActions(context, VCSAnnotator.ActionDestination.PopupMenu);
-                            EventQueue.invokeLater(new Runnable() {
-                                @Override
-                                public void run () {
-                                    JPopupMenu popup = getPopupMenu();
-                                    boolean display = popup.isVisible();
-                                    popup.setVisible(false);
-                                    removeAll();
-                                    if (isShowing()) {
-                                        for (int i = 0; i < actions.length; i++) {
-                                            Action action = actions[i];
-                                            if (action == null) {
-                                                addSeparator();
-                                            } else {
-                                                JMenuItem item = Utils.toMenuItem(action);
-                                                add(item);
-                                            }
-                                        }
-                                        popup.setVisible(display);
+                    Utils.postParallel(() -> {
+                        VCSContext context = Utils.contextForLookup(lkp);
+                        Action [] actions = system.getVCSAnnotator().getActions(context, VCSAnnotator.ActionDestination.PopupMenu);
+                        EventQueue.invokeLater(() -> {
+                            JPopupMenu popup = getPopupMenu();
+                            boolean display = popup.isVisible();
+                            popup.setVisible(false);
+                            removeAll();
+                            if (isShowing()) {
+                                for (int i = 0; i < actions.length; i++) {
+                                    Action action1 = actions[i];
+                                    if (action1 == null) {
+                                        addSeparator();
+                                    } else {
+                                        JMenuItem item1 = Utils.toMenuItem(action1);
+                                        add(item1);
                                     }
                                 }
-                            });
-                        }
+                                popup.setVisible(display);
+                            }
+                        });
                     });
                 }
                 super.setSelected(selected);
@@ -290,7 +284,7 @@ public class VersioningAnnotationProvider {
             instance.refreshAnnotations(null);
         }
     }
-                   
+
     /**
      * Refreshes annotations for all given files and all parent folders of those files.
      *
@@ -301,88 +295,94 @@ public class VersioningAnnotationProvider {
     }
 
     void refreshAnnotations(Set<VCSFileProxy> files, boolean removeFromCache) {
-        if (files == null) {            
+
+        if (files == null) {
             LOG.log(Level.FINE, "refreshing all annotations"); //NOI18N
             refreshAllAnnotationsTask.schedule(2000);
             return;
         }
-        
-        if (removeFromCache) {
-            LOG.log(Level.FINE, "refreshing annotations for {0}", files); //NOI18N
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.log(Level.FINEST, "refreshing annotations called from:", new Exception()); //NOI18N
-            }
-        }
-        
-        for (VCSFileProxy file : files) {
-            // try to limit the number of normalizeFile calls:
-            // let's find the closest existent FO, then list it's parents with FileObject.getParent();
-            FileObject fo = file.toFileObject();
-            if (fo == null) {
-                fo = getExistingParent(file);
-            } else {
-                // file exists, plan it to refresh
-                addToMap(filesToRefresh, fo, removeFromCache);
-                fo = fo.getParent();
-            }
+
+        final RequestProcessor.Task refreshAnnotationsTask = rp.create(() -> {
 
             if (removeFromCache) {
-                // fo is the closest existing parent
-                for (FileObject parent = fo; parent != null; parent = parent.getParent()) {
-                    // plan parent to refresh
-                    addToMap(parentsToRefresh, parent, removeFromCache);
+                LOG.log(Level.FINE, "refreshing annotations for {0}", files); //NOI18N
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.log(Level.FINEST, "refreshing annotations called from:", new Exception()); //NOI18N
                 }
             }
-        }
-        
-        fireFileStatusChangedTask.schedule(2000);
+
+            for (VCSFileProxy file : files) {
+                // try to limit the number of normalizeFile calls:
+                // let's find the closest existent FO, then list it's parents with FileObject.getParent();
+                FileObject fo = file.toFileObject();
+                if (fo == null) {
+                    fo = getExistingParent(file);
+                } else {
+                    // file exists, plan it to refresh
+                    addToMap(filesToRefresh, fo, removeFromCache);
+                    fo = fo.getParent();
+                }
+
+                if (removeFromCache) {
+                    // fo is the closest existing parent
+                    for (FileObject parent = fo; parent != null; parent = parent.getParent()) {
+                        // plan parent to refresh
+                        addToMap(parentsToRefresh, parent, removeFromCache);
+                    }
+                }
+            }
+
+            fireFileStatusChangedTask.schedule(2000);
+        });
+
+        refreshAnnotationsTask.schedule(0);
     }
-    
+
     /**
-     * Stores all files which have to be refreshed 
+     * Stores all files which have to be refreshed
      */
-    private final Map<FileSystem, Set<FileObject>> filesToRefresh = new HashMap<FileSystem, Set<FileObject>>();
-    
+    private final Map<FileSystem, Set<FileObject>> filesToRefresh = new HashMap<>();
+
     /**
-     * Stores all parents from files which have to be refreshed 
+     * Stores all parents from files which have to be refreshed
      */
-    private final Map<FileSystem, Set<FileObject>> parentsToRefresh = new HashMap<FileSystem, Set<FileObject>>();        
-    
+    private final Map<FileSystem, Set<FileObject>> parentsToRefresh = new HashMap<>();
+
     private RequestProcessor rp = new RequestProcessor("Versioning fire FileStatusChanged", 1, true);
-    
+
     /**
      * Refreshes all annotations and clears the maps holding all files and their parents which have to be refreshed
      */
-    private RequestProcessor.Task refreshAllAnnotationsTask = rp.create(new Runnable() {        
+    private RequestProcessor.Task refreshAllAnnotationsTask = rp.create(new Runnable() {
         @Override
-        public void run() {            
+        public void run() {
             clearMap(filesToRefresh);
             clearMap(parentsToRefresh);
             labelCache.removeAll();
             iconCache.removeAll();
-            
+
             VersioningManager.deliverStatusEvent(new VCSAnnotationEvent(true, true));
         }
-    });    
-    
+    });
+
     /**
      * Refreshes all files stored in filesToRefresh and parentsToRefresh
-     */ 
-    private RequestProcessor.Task fireFileStatusChangedTask = rp.create(new Runnable() {        
+     */
+    private RequestProcessor.Task fireFileStatusChangedTask = rp.create(new Runnable() {
         @Override
         public void run() {
-            
+
             // createInitializingMenu and fire for all files which have to be refreshed
-            List<VCSAnnotationEvent> fileEvents = new ArrayList<VCSAnnotationEvent>(); 
-            List<VCSAnnotationEvent> folderEvents = new ArrayList<VCSAnnotationEvent>(); 
+            List<VCSAnnotationEvent> fileEvents = new ArrayList<>();
+            List<VCSAnnotationEvent> folderEvents = new ArrayList<>();
 
             synchronized(filesToRefresh) {
                 if (filesToRefresh.isEmpty()) {
                     return;
                 }
                 for (Map.Entry<FileSystem, Set<FileObject>> e : filesToRefresh.entrySet()) {
-                    Set<FileObject> files = new HashSet<FileObject>();
-                    Set<FileObject> folders = new HashSet<FileObject>();
+                    Set<FileObject> files = new HashSet<>();
+                    Set<FileObject> folders = new HashSet<>();
                     Set<FileObject> set = e.getValue();
                     for(FileObject fo : set) {
                         if(fo.isFolder()) {
@@ -390,50 +390,50 @@ public class VersioningAnnotationProvider {
                         } else {
                             files.add(fo);
                         }
-                    }        
+                    }
                     set.clear();
-                    e.setValue(new HashSet<FileObject>());
-                    if(files.size() > 0) {
+                    e.setValue(new HashSet<>());
+                    if(!files.isEmpty()) {
                         fileEvents.add(new VCSAnnotationEvent(files, true, true));
                     }
-                    if(folders.size() > 0) {
+                    if(!folders.isEmpty()) {
                         folderEvents.add(new VCSAnnotationEvent(folders, true,  true));
                     }
-                }        
-            }    
+                }
+            }
 
             fireFileStatusEvents(fileEvents);
             fireFileStatusEvents(folderEvents);
 
             // createInitializingMenu and fire events for all parent from each file which has to be refreshed
-            List<VCSAnnotationEvent> parentEvents = new ArrayList<VCSAnnotationEvent>(); 
+            List<VCSAnnotationEvent> parentEvents = new ArrayList<>();
             synchronized(parentsToRefresh) {
                 for (Map.Entry<FileSystem, Set<FileObject>> e : parentsToRefresh.entrySet()) {
                     Set<FileObject> set = e.getValue();
-                    Set<FileObject> files = new HashSet<FileObject>(set);
-                    parentEvents.add(new VCSAnnotationEvent(files, true, false));                                        
-                    e.setValue(new HashSet<FileObject>()); 
-                    set.clear();                    
-                }                                
-            }       
-            fireFileStatusEvents(parentEvents);            
-        }    
-        
+                    Set<FileObject> files = new HashSet<>(set);
+                    parentEvents.add(new VCSAnnotationEvent(files, true, false));
+                    e.setValue(new HashSet<>());
+                    set.clear();
+                }
+            }
+            fireFileStatusEvents(parentEvents);
+        }
+
         private void fireFileStatusEvents(Collection<VCSAnnotationEvent> events) {
             for(VCSAnnotationEvent event : events) {
                 VersioningManager.deliverStatusEvent(event);
             }
-        }          
-    });    
-    
+        }
+    });
+
     private void clearMap(Map<FileSystem, Set<FileObject>> map)  {
         synchronized(map) {
-            if(map.size() > 0) {                
+            if(!map.isEmpty()) {
                 map.clear();
             }
-        }                    
+        }
     }
-    
+
     private void addToMap(Map<FileSystem, Set<FileObject>> map, FileObject fo, boolean removeFromCache) {
         if(fo == null) {
             return;
@@ -444,14 +444,10 @@ public class VersioningAnnotationProvider {
         } catch (FileStateInvalidException e) {
             // ignore files in invalid filesystems
             return;
-        }        
-        synchronized (map) {                        
-            Set<FileObject> set = map.get(fs);
-            if(set == null) {
-                set = new HashSet<FileObject>();
-                map.put(fs, set);
-            }
-            set.add(fo);
+        }
+        synchronized (map) {
+            map.computeIfAbsent(fs, k -> new HashSet<>())
+               .add(fo);
             if (removeFromCache) {
                 if (LOG.isLoggable(Level.FINER)) {
                     // TODO: remove after fix
@@ -477,8 +473,8 @@ public class VersioningAnnotationProvider {
         return fo;
     }
 
-    private final Cache<Image, String> iconCache = new Cache<Image, String>(Cache.ANNOTATION_TYPE_ICON);
-    private final Cache<String, String> labelCache = new Cache<String, String>(Cache.ANNOTATION_TYPE_LABEL);
+    private final Cache<Image, String> iconCache = new Cache<>(Cache.ANNOTATION_TYPE_ICON);
+    private final Cache<String, String> labelCache = new Cache<>(Cache.ANNOTATION_TYPE_LABEL);
 
     /**
      * Keeps cached annotations
@@ -490,17 +486,17 @@ public class VersioningAnnotationProvider {
         private final Object writeLock = new Object();
         private final Object LOCK_VALUES = new Object();
         private int peekCount;
-        private LinkedHashMap<ItemKey<T, KEY>, Item<T>> cachedValues = new LinkedHashMap<ItemKey<T, KEY>, Item<T>>(CACHE_INITIAL_SIZE);
-        private WeakHashMap<FileObject, Set<ItemKey<T, KEY>>> index = new WeakHashMap<FileObject, Set<ItemKey <T, KEY>>>(CACHE_INITIAL_SIZE);
+        private LinkedHashMap<ItemKey<T, KEY>, Item<T>> cachedValues = new LinkedHashMap<>(CACHE_INITIAL_SIZE);
+        private WeakHashMap<FileObject, Set<ItemKey<T, KEY>>> index = new WeakHashMap<>(CACHE_INITIAL_SIZE);
         private final LinkedHashSet<ItemKey<T, KEY>> filesToAnnotate;
         private final RequestProcessor.Task annotationRefreshTask;
         private final String type;
-        private HashSet<FileObject> refreshedFiles = new HashSet<FileObject>();
+        private HashSet<FileObject> refreshedFiles = new HashSet<>();
         private boolean allCleared;
 
         Cache(String type) {
             this.annotationRefreshTask = new RequestProcessor("VersioningAnnotator.annotationRefresh", 1, false, false).create(new AnnotationRefreshTask()); //NOI18N
-            this.filesToAnnotate = new LinkedHashSet<ItemKey<T, KEY>>();
+            this.filesToAnnotate = new LinkedHashSet<>();
             assert ANNOTATION_TYPE_ICON.equals(type) || ANNOTATION_TYPE_LABEL.equals(type);
             this.type = type;
         }
@@ -557,18 +553,14 @@ public class VersioningAnnotationProvider {
                     LOG.log(Level.FINEST, "{0}.setValue(): inserting for {1}:{2}", new Object[]{type, key.getFiles(), value}); //NOI18N
                 }
                 synchronized (LOCK_VALUES) {
-                    cachedValues.put(key, new Item(value));
+                    cachedValues.put(key, new Item<>(value));
                     peekCount = Math.max(peekCount, cachedValues.size() + 1);
                 }
                 // reference to the key must be added to index for every file in the set
                 // so the key can be quickly found when refresh annotations event comes
                 for (FileObject fo : files) {
-                    Set<ItemKey<T, KEY>> sets = index.get(fo);
-                    if (sets == null) {
-                        sets = new HashSet<ItemKey<T, KEY>>();
-                        index.put(fo, sets);
-                    }
-                    sets.add(key);
+                    index.computeIfAbsent(fo, k -> new HashSet<>())
+                         .add(key);
                 }
                 removeOldValues();
             }
@@ -626,6 +618,7 @@ public class VersioningAnnotationProvider {
             return retval;
         }
 
+        @SuppressWarnings("unchecked")
         private T annotate(VCSAnnotator annotator, T initialValue, VCSContext context) {
             if (ANNOTATION_TYPE_LABEL.equals(type)) {
                 return (T) annotator.annotateName((String) initialValue, context);
@@ -637,7 +630,7 @@ public class VersioningAnnotationProvider {
                 return null;
             }
         }
-        
+
         private T annotate (T initialValue, Set<? extends FileObject> files) {
             long ft = System.currentTimeMillis();
             if (LOG.isLoggable(Level.FINEST)) {
@@ -690,7 +683,8 @@ public class VersioningAnnotationProvider {
                             cachedValues.remove(key);
                         }
                     }
-                    ItemKey<T, KEY>[] keysArray = keys.toArray(new ItemKey[0]);
+                    @SuppressWarnings("unchecked")
+                    ItemKey<T, KEY>[] keysArray = keys.toArray(ItemKey[]::new);
                     for (ItemKey<T, KEY> key : keysArray) {
                         if (LOG.isLoggable(Level.FINEST)) {
                             // TODO: remove after fix
@@ -735,8 +729,8 @@ public class VersioningAnnotationProvider {
             if (peekCount > CACHE_INITIAL_SIZE && peekCount > cachedValues.size() * 4) {
                 LOG.log(Level.FINER, "{0}.shrinkMaps(): last peek was {1}", new Object[] { type, peekCount }); //NOI18N
                 synchronized (LOCK_VALUES) {
-                    cachedValues = new LinkedHashMap<ItemKey<T, KEY>, Item<T>>(cachedValues);
-                    index = new WeakHashMap<FileObject, Set<ItemKey<T, KEY>>>(index);
+                    cachedValues = new LinkedHashMap<>(cachedValues);
+                    index = new WeakHashMap<>(index);
                     peekCount = cachedValues.size();
                 }
             }
@@ -769,9 +763,9 @@ public class VersioningAnnotationProvider {
                     T newValue = annotate(initialValue, files);
                     boolean isNonRecursive = files instanceof NonRecursiveFolder;
                     files = new HashSet<FileObject>(files);
-                    boolean fireEvent = setValue(new ItemKey<T, KEY>(files, refreshCandidate.keyPart, isNonRecursive, initialValue), newValue);
+                    boolean fireEvent = setValue(new ItemKey<>(files, refreshCandidate.keyPart, isNonRecursive, initialValue), newValue);
                     if (fireEvent) {
-                        Set<VCSFileProxy> filesToRefresh = new HashSet<VCSFileProxy>(files.size());
+                        Set<VCSFileProxy> filesToRefresh = new HashSet<>(files.size());
                         for (FileObject fo : files) {
                             VCSFileProxy proxy = VCSFileProxy.createFileProxy(fo);
                             if(proxy != null) {
@@ -790,7 +784,7 @@ public class VersioningAnnotationProvider {
 
         private void clearEvents() {
             synchronized (writeLock) {
-                refreshedFiles = new HashSet<FileObject>();
+                refreshedFiles = new HashSet<>();
                 allCleared = false;
             }
         }
@@ -886,9 +880,7 @@ public class VersioningAnnotationProvider {
         return cacheItemAge;
     }
 
-    private static final java.util.regex.Pattern lessThan = java.util.regex.Pattern.compile("<"); //NOI18N
-    private String htmlEncode (String name) {
-        if (name.indexOf('<') == -1) return name;
-        return lessThan.matcher(name).replaceAll("&lt;");               //NOI18N
+    private String htmlEncode(String name) {
+        return name.replace("<", "&lt;");
     }
 }

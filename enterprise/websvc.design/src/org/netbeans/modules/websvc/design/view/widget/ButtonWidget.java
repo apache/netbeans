@@ -36,7 +36,7 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.Action;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.SelectProvider;
@@ -47,6 +47,7 @@ import org.netbeans.api.visual.model.ObjectScene;
 import org.netbeans.api.visual.model.ObjectState;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.api.visual.widget.Widget;
+import org.openide.util.ImageUtilities;
 
 /**
  * @author Ajit Bhate
@@ -261,7 +262,7 @@ public class ButtonWidget extends ImageLabelWidget implements PropertyChangeList
     
     private static Image getActionIcon(Action action) {
         Object icon = action.getValue(Action.SMALL_ICON);
-        return (icon instanceof ImageIcon ? ((ImageIcon)icon).getImage(): null);
+        return (icon instanceof Icon ? ImageUtilities.icon2Image((Icon)icon): null);
     }
 
     private static String getActionTooltip(Action action) {

@@ -47,3 +47,4 @@ class |>CLASS,GLOBAL:Test<| {
     }
 }
 
+|>CUSTOM2:const<| test2 = 7;

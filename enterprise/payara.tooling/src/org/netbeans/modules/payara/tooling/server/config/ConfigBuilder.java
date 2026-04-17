@@ -48,10 +48,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraVersion;
  */
 public class ConfigBuilder {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Build <code>List</code> of <code>PayaraLibrary</code> objects
      * representing libraries found in particular Payara server installation.
@@ -129,10 +126,7 @@ public class ConfigBuilder {
         return result;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Library builder configuration. */
     private final Config config;
 
@@ -161,10 +155,7 @@ public class ConfigBuilder {
     /* GuarderBy(this)*/
     private PayaraPlatformVersionAPI version;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-    
     /**
      * Creates an instance of Payara library builder.
      * <p/>

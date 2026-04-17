@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.gradle.loaders;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -124,7 +125,11 @@ public abstract class AbstractProjectLoader {
             }
         }
         for (String s : problems) {
-            reps.add(GradleProject.createGradleReport(gf.getBuildScript().toPath(), s));
+            File p = gf.getBuildScript();
+            if (p == null) {
+                p = gf.getSettingsScript();
+            }
+            reps.add(GradleProject.createGradleReport(p == null ? null : p.toPath(), s));
         }
         return new GradleProject(info.getQuality(), reps, results.values());
 

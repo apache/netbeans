@@ -53,10 +53,7 @@ import org.openide.util.NbBundle;
  */
 public class Retriever implements Runnable {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Inner classes                                                          //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Trusted certificates manager.
      * >p/>
@@ -98,10 +95,7 @@ public class Retriever implements Runnable {
         public void clearCancelState();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Local logger. */
     private static final Logger LOGGER
             = PayaraLogger.get(Retriever.class);
@@ -136,10 +130,7 @@ public class Retriever implements Runnable {
         NbBundle.getMessage(Retriever.class, "STATUS_InvalidWsdl")  //NOI18N
     };
     
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Handle HTTPS connection.
      * <p/>
@@ -157,10 +148,7 @@ public class Retriever implements Runnable {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-    
     private final Updater updater;
     private final String locationUrl;
     private final String targetUrlPrefix;
@@ -168,10 +156,7 @@ public class Retriever implements Runnable {
     private final File targetInstallDir;
     private final String topLevelPrefix;
     
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-    
     public Retriever(File installDir, String locationUrl, String urlPrefix, 
             String defaultTargetUrl, Updater updater, String topLevelPrefix) {
         this.targetInstallDir = installDir;
@@ -181,10 +166,7 @@ public class Retriever implements Runnable {
         this.updater = updater;
         this.topLevelPrefix = topLevelPrefix;
     }
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     // Thread support for downloading...
     public void stopRetrieval() {
         shutdown = true;

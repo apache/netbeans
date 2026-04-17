@@ -1,10 +1,1 @@
-[[47,56]-Syntax error
- unexpected:	protected
- after:	public
- expected:	identifier, variable, function, const, array, callable, define, ?, &, static, abstract, final, (, readonly] 47-56:Syntax error
- unexpected:	protected
- after:	public
- expected:	identifier, variable, function, const, array, callable, define, ?, &, static, abstract, final, (, readonly
-[[66,67]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	}] 66-67:POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	}
+

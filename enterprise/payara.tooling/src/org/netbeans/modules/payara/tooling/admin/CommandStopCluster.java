@@ -35,20 +35,14 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
 @RunnerRestClass(runner=RunnerRestStopCluster.class)
 public class CommandStopCluster extends CommandTarget {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for stop-cluster command. */
     private static final String COMMAND = "stop-cluster";
 
     /** Error message for administration command execution exception .*/
     private static final String ERROR_MESSAGE = "Cluster stop failed.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Stops cluster.
      * <p/>
@@ -71,10 +65,7 @@ public class CommandStopCluster extends CommandTarget {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server stop-cluster command entity.
      * <p/>

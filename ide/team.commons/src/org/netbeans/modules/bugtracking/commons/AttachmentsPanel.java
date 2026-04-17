@@ -53,7 +53,6 @@ import static javax.swing.Action.NAME;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -64,7 +63,6 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.team.ide.spi.IDEServices;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -720,7 +718,7 @@ public class AttachmentsPanel extends JPanel {
             // XXX
             String progressFormat = NbBundle.getMessage(OpenAttachmentAction.class, "Attachment.open.progress");    //NOI18N
             String progressMessage = MessageFormat.format(progressFormat, getFilename());
-            final ProgressHandle handle = ProgressHandleFactory.createHandle(progressMessage);
+            final ProgressHandle handle = ProgressHandle.createHandle(progressMessage);
             handle.start();
             handle.switchToIndeterminate();
             Support.getInstance().getParallelRP().post(new Runnable() {
@@ -758,7 +756,7 @@ public class AttachmentsPanel extends JPanel {
         public void openInStackAnalyzer() {
             String progressFormat = NbBundle.getMessage(OpenAttachmentAction.class, "Attachment.open.progress");    //NOI18N
             String progressMessage = MessageFormat.format(progressFormat, getFilename());
-            final ProgressHandle handle = ProgressHandleFactory.createHandle(progressMessage);
+            final ProgressHandle handle = ProgressHandle.createHandle(progressMessage);
             handle.start();
             handle.switchToIndeterminate();
             Support.getInstance().getParallelRP().post(new Runnable() {
@@ -773,11 +771,11 @@ public class AttachmentsPanel extends JPanel {
                         if(file.length() > 1024 * 1024) {
                             long size = file.length();
                             Object[] arr = {
-                                getFilename(),                                
-                                new Long (size), // bytes
-                                new Long (size / 1024 + 1), // kilobytes
-                                new Long (size / (1024 * 1024)), // megabytes
-                                new Long (size / (1024 * 1024 * 1024)), // gigabytes
+                                getFilename(),
+                                Long.valueOf(size), // bytes
+                                Long.valueOf(size / 1024 + 1), // kilobytes
+                                Long.valueOf(size / (1024 * 1024)), // megabytes
+                                Long.valueOf(size / (1024 * 1024 * 1024)) // gigabytes
                             };
                             DialogDescriptor c = new DialogDescriptor(
                                     NbBundle.getMessage(AttachmentPanel.class, "MSG_ObjectIsTooBig", arr), 
@@ -863,7 +861,7 @@ public class AttachmentsPanel extends JPanel {
                                             SaveAttachmentAction.class,
                                             "Attachment.saveToFile.progress"); //NOI18N
                 String progressMessage = MessageFormat.format(progressFormat, getFilename());
-                final ProgressHandle handle = ProgressHandleFactory.createHandle(progressMessage);
+                final ProgressHandle handle = ProgressHandle.createHandle(progressMessage);
                 handle.start();
                 handle.switchToIndeterminate();
                 Support.getInstance().getParallelRP().post(new Runnable() {
@@ -884,7 +882,7 @@ public class AttachmentsPanel extends JPanel {
         private void applyPatch() {
             String progressFormat = NbBundle.getMessage(AttachmentsPanel.class,"Attachment.applyPatch.progress"); //NOI18N
             String progressMessage = MessageFormat.format(progressFormat, getFilename());
-            final ProgressHandle handle = ProgressHandleFactory.createHandle(progressMessage);
+            final ProgressHandle handle = ProgressHandle.createHandle(progressMessage);
             handle.start();
             handle.switchToIndeterminate();
             Support.getInstance().getParallelRP().post(

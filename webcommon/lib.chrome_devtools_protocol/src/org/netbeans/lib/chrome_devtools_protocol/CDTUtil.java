@@ -46,4 +46,24 @@ public abstract class CDTUtil {
             return uri;
         }
     }
+
+    /**
+     * Java created file URIs in the style "file:/PATH" by default, but Node
+     * only accepts the form "file:///PATH";
+     *
+     * @param uri
+     * @return
+     */
+    public static String toNodeUrl(String uri) {
+        try {
+            URI parsedUri = new URI(uri);
+            if("file".equals(parsedUri.getScheme())) {
+                return toNodeUrl(parsedUri).toString();
+            } else {
+                return uri;
+            }
+        } catch (URISyntaxException ex) {
+            return uri;
+        }
+    }
 }

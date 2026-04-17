@@ -78,8 +78,8 @@ public class JaxWsRootNode extends AbstractNode {
     private Icon getFolderIcon (boolean opened) {
         if (openedFolderIconCache == null) {
             Node n = DataFolder.findFolder(FileUtil.getConfigRoot()).getNodeDelegate();
-            openedFolderIconCache = new ImageIcon(n.getOpenedIcon(BeanInfo.ICON_COLOR_16x16));
-            folderIconCache = new ImageIcon(n.getIcon(BeanInfo.ICON_COLOR_16x16));
+            openedFolderIconCache = ImageUtilities.image2Icon(n.getOpenedIcon(BeanInfo.ICON_COLOR_16x16));
+            folderIconCache = ImageUtilities.image2Icon(n.getIcon(BeanInfo.ICON_COLOR_16x16));
         }
         if (opened) {
             return openedFolderIconCache;

@@ -26,9 +26,30 @@ import org.netbeans.modules.diff.builtin.provider.BuiltInDiffProvider;
 import java.util.prefs.Preferences;
 import java.util.*;
 import java.awt.Color;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.UIManager;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.SimpleValueNames;
+import org.netbeans.modules.diff.tree.ExclusionPattern;
+import org.netbeans.modules.diff.tree.ExclusionPattern.ExclusionType;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Module settings for Diff module.
@@ -36,7 +57,9 @@ import org.netbeans.api.editor.settings.SimpleValueNames;
  * @author Maros Sandor
  */
 public class DiffModuleConfig {
-                                                                                             
+
+    private static final Logger LOG = Logger.getLogger(DiffModuleConfig.class.getName());
+
     private static final String PREF_IGNORE_LEADINGTRAILING_WHITESPACE = "ignoreWhitespace"; // NOI18N
     private static final String PREF_IGNORE_INNER_WHITESPACE = "ignoreInnerWhitespace"; // NOI18N
     private static final String PREF_IGNORE_CASE = "ignoreCase"; // NOI18N
@@ -48,9 +71,18 @@ public class DiffModuleConfig {
     private static final String PREF_MERGE_NOTAPPLIED_COLOR = "merge.notappliedColor"; // NOI18N
     private static final String PREF_SIDEBAR_DELETED_COLOR = "sidebar.deletedColor"; //NOI18N
     private static final String PREF_SIDEBAR_CHANGED_COLOR = "sidebar.changedColor"; //NOI18N
-    
+    private static final String PREF_TREE_EXCLUSION_LIST = "tree.exclusionList"; //NOI18N
+
+    private static final String DEFAULT_EXCLUSION_LIST = "<exclusionList version='1'></exclusionList>"; // NOI18N
+    private static final String ELE_EXCLUSION_LIST = "exclusionList"; //NOI18N
+    private static final String ELE_EXCLUSION_PATTERN = "exclusionPattern"; //NOI18N
+    private static final String ATTR_TYPE = "type"; //NOI18N
+    private static final String ATTR_VERSION = "version"; //NOI18N
+    private static final String ATTR_VALUE_VERSION_1 = "1"; //NOI18N
+    private static final String ATTR_VALUE_DEFAULT = ATTR_VALUE_VERSION_1; //NOI18N
+
     private static final DiffModuleConfig INSTANCE = new DiffModuleConfig();
-    
+
     private final Color defaultAddedColor;
     private final Color defaultChangedColor;
     private final Color defaultDeletedColor;
@@ -59,6 +91,7 @@ public class DiffModuleConfig {
     private final Color defaultUnresolvedColor;
     private final Color defaultSidebarDeletedColor;
     private final Color defaultSidebarChangedColor;
+    private final DocumentBuilder documentBuilder;
 
     public static DiffModuleConfig getDefault() {
         return INSTANCE;
@@ -104,6 +137,14 @@ public class DiffModuleConfig {
         if( null == c )
             c = new Color(233, 241, 255);
         defaultSidebarChangedColor = c;
+
+        DocumentBuilder dbPrep = null;
+        try {
+            dbPrep = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        } catch (ParserConfigurationException ex) {
+            LOG.log(Level.WARNING, "Failed to build document builder", ex);
+        }
+        this.documentBuilder = dbPrep;
     }
     
     public Color getAddedColor() {
@@ -242,7 +283,64 @@ public class DiffModuleConfig {
         options.ignoreCase = getPreferences().getBoolean(PREF_IGNORE_CASE, false);
         return options;
     }
-        
+
+    public List<ExclusionPattern> getTreeExclusionList() {
+        List<ExclusionPattern> result = new ArrayList<>();
+        try {
+            String encodedList = getPreferences().get(PREF_TREE_EXCLUSION_LIST, null);
+            if(encodedList == null) {
+                return List.of();
+            }
+            Document doc = documentBuilder.parse(new InputSource(new StringReader(encodedList)));
+            String version = doc.getDocumentElement().getAttribute(ATTR_VERSION);
+            switch(version) {
+                case "1":
+                    NodeList pathPatterns = doc.getDocumentElement().getElementsByTagName(ELE_EXCLUSION_PATTERN);
+                    for(int i = 0; i < pathPatterns.getLength(); i++) {
+                        Element pathPattern = (Element) pathPatterns.item(i);
+                        ExclusionPattern pattern = new ExclusionPattern();
+                        pattern.setPattern(pathPattern.getTextContent());
+                        String type = pathPattern.getAttribute("TYPE");
+                        if (!type.isEmpty()) {
+                            pattern.setType(ExclusionType.valueOf(type));
+                        }
+                        result.add(pattern);
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unkown exclusion list version");
+            }
+        } catch (SAXException | IOException | IllegalArgumentException ex) {
+            LOG.log(Level.WARNING, "Failed to parse TreeExclusionList");
+        }
+        return result;
+    }
+
+    public void setTreeExclusionList(List<ExclusionPattern> patterns) {
+        if(patterns == null || patterns.isEmpty()) {
+            getPreferences().remove(PREF_TREE_EXCLUSION_LIST);
+            return;
+        }
+        try {
+            Document doc = documentBuilder.newDocument();
+            Element exclusionList = doc.createElement(ELE_EXCLUSION_LIST);
+            exclusionList.setAttribute(ATTR_VERSION, ATTR_VALUE_DEFAULT);
+            doc.appendChild(exclusionList);
+            for(ExclusionPattern p: patterns) {
+                Element pattern = doc.createElement(ELE_EXCLUSION_PATTERN);
+                pattern.setAttribute(ATTR_TYPE, p.getType().name());
+                pattern.setTextContent(p.getPattern());
+                exclusionList.appendChild(pattern);
+            }
+            Transformer tf = TransformerFactory.newInstance().newTransformer();
+            StringWriter result = new StringWriter();
+            tf.transform(new DOMSource(doc), new StreamResult(result));
+            getPreferences().put(PREF_TREE_EXCLUSION_LIST, result.toString());
+        } catch (TransformerException ex) {
+            LOG.log(Level.WARNING, "Failed to create TreeExclusionList");
+        }
+    }
+
     private BuiltInDiffProvider getBuiltinProvider() {
         Collection<? extends DiffProvider> diffs = Lookup.getDefault().lookupAll(DiffProvider.class);
         for (DiffProvider diff : diffs) {

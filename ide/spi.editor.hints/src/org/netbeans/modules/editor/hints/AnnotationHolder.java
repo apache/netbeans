@@ -62,12 +62,12 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
 import org.netbeans.api.editor.EditorRegistry;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.AttributesUtilities;
 import org.netbeans.api.editor.settings.EditorStyleConstants;
 import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.editor.BaseDocument;
-import org.netbeans.editor.Utilities;
 import org.netbeans.lib.editor.util.swing.DocumentListenerPriority;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.spi.editor.highlighting.HighlightAttributeValue;
@@ -407,7 +407,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
 
     public synchronized void insertUpdate(DocumentEvent e) {
         try {
-            int offset = Utilities.getRowStart(doc, e.getOffset());
+            int offset = LineDocumentUtils.getLineStartOffset(doc, e.getOffset());
 
             Set<Position> modifiedLines = new HashSet<Position>();
 
@@ -421,7 +421,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
             if (line == null)
                 return ;
 
-            int endOffset = Utilities.getRowEnd(doc, e.getOffset() + e.getLength());
+            int endOffset = LineDocumentUtils.getLineEndOffset(doc, e.getOffset() + e.getLength());
 
             if (endOffset < line.getOffset())
                 return;
@@ -431,7 +431,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
             //make sure the highlights are removed even for multi-line inserts:
             try {
                 int rowStart = e.getOffset();
-                int rowEnd = Utilities.getRowEnd(doc, e.getOffset() + e.getLength());
+                int rowEnd = LineDocumentUtils.getLineEndOffset(doc, e.getOffset() + e.getLength());
 
                 getBag(doc).removeHighlights(rowStart, rowEnd, false);
             } catch (BadLocationException ex) {
@@ -453,7 +453,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
         try {
             Position current = null;
             int index = -1;
-            int startOffset = Utilities.getRowStart(doc, e.getOffset());
+            int startOffset = LineDocumentUtils.getLineStartOffset(doc, e.getOffset());
 
             while (current == null) {
                 index = findPositionGE(startOffset);
@@ -472,7 +472,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
                 return;
             }
 
-            int endOffset = Utilities.getRowEnd(doc, e.getOffset());
+            int endOffset = LineDocumentUtils.getLineEndOffset(doc, e.getOffset());
 
             if (endOffset < current.getOffset())
                 return;
@@ -625,8 +625,8 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
                         if (start < 0) start = 0;
                         if (end < 0) end = 0;
 
-                        int startLine = Utilities.getRowStart(doc, start);
-                        int endLine = Utilities.getRowEnd(doc, end) + 1;
+                        int startLine = LineDocumentUtils.getLineStartOffset(doc, start);
+                        int endLine = LineDocumentUtils.getLineEndOffset(doc, end) + 1;
 
                         int index = findPositionGE(startLine);
 
@@ -850,9 +850,9 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
     static void updateHighlightsOnLine(OffsetsBag bag, BaseDocument doc, Position line, List<ErrorDescription> errorDescriptions) throws IOException {
         try {
             int rowStart = line.getOffset();
-            int rowEnd = Utilities.getRowEnd(doc, rowStart);
-            int rowHighlightStart = Utilities.getRowFirstNonWhite(doc, rowStart);
-            int rowHighlightEnd = Utilities.getRowLastNonWhite(doc, rowStart) + 1;
+            int rowEnd = LineDocumentUtils.getLineEndOffset(doc, rowStart);
+            int rowHighlightStart = LineDocumentUtils.getLineFirstNonWhitespace(doc, rowStart);
+            int rowHighlightEnd = LineDocumentUtils.getLineLastNonWhitespace(doc, rowStart) + 1;
 
             if (rowStart <= rowEnd) {
                 bag.removeHighlights(rowStart, rowEnd, false);
@@ -1200,7 +1200,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
     private synchronized Position getPosition(int lineNumber, boolean create) throws BadLocationException {
         try {
             while (true) {
-                int lineStart = Utilities.getRowStartFromLineOffset(doc, lineNumber);
+                int lineStart = LineDocumentUtils.getLineStartFromIndex(doc, lineNumber);
                 if (lineStart < 0) {
                     Element lineRoot = doc.getDefaultRootElement();
                     int lineElementCount = lineRoot.getElementCount();
@@ -1294,7 +1294,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
                         return ;
                     }
 
-                    Position pos = getPosition(Utilities.getLineOffset(doc, offset), true);
+                    Position pos = getPosition(LineDocumentUtils.getLineIndex(doc, offset), true);
 
                     List<ErrorDescription> errsForCurrentLine = getErrorsForLine(pos, true);
 
@@ -1324,7 +1324,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
 
     public synchronized List<ErrorDescription> getErrorsGE(int offset) {
         try {
-            int index = findPositionGE(Utilities.getRowStart(doc, offset));
+            int index = findPositionGE(LineDocumentUtils.getLineStartOffset(doc, offset));
             if (index < 0) return Collections.emptyList();
 
             while (index < knownPositions.size()) {
@@ -1384,7 +1384,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
         doc.render(new Runnable() {
             public void run() {
                 try {
-                    result[0] = Utilities.getLineOffset(doc, offset.getOffset());
+                    result[0] = LineDocumentUtils.getLineIndex(doc, offset.getOffset());
                 } catch (BadLocationException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -1467,7 +1467,7 @@ public final class AnnotationHolder implements ChangeListener, DocumentListener 
                             return ;
                         }
                         
-                        int lineNumber = Utilities.getLineOffset((BaseDocument) document, startOffset);
+                        int lineNumber = LineDocumentUtils.getLineIndex((BaseDocument) document, startOffset);
 
                         if (lineNumber < 0) {
                             return;

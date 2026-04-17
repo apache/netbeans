@@ -64,7 +64,6 @@ import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.model.JavacTypes;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.parser.Tokens.Comment.CommentStyle;
-import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DCTree.DCReference;
 import com.sun.tools.javac.tree.DocTreeMaker;
 import com.sun.tools.javac.tree.JCTree;
@@ -83,7 +82,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.lang.model.element.*;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeKind;
@@ -243,14 +241,17 @@ public class TreeFactory {
     }
     
     public CaseTree Case(List<? extends ExpressionTree> expressions, List<? extends StatementTree> statements) {
-        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions.stream().map(e -> ConstantCaseLabel(e)).collect(Collectors.toList()), null, statements);
+        return CaseMultiplePatterns(expressions.stream().map(this::ConstantCaseLabel).toList(), null, statements);
     }
     
     public CaseTree Case(List<? extends ExpressionTree> expressions, Tree body) {
-        return CaseMultiplePatterns(expressions.isEmpty() ? Collections.singletonList(DefaultCaseLabel()) : expressions.stream().map(e -> ConstantCaseLabel(e)).collect(Collectors.toList()), null, body);
+        return CaseMultiplePatterns(expressions.stream().map(this::ConstantCaseLabel).toList(), null, body);
     }
     
     public CaseTree CaseMultiplePatterns(List<? extends CaseLabelTree> expressions, ExpressionTree guard, Tree body) {
+        if (expressions.isEmpty()) {
+            expressions = Collections.singletonList(DefaultCaseLabel());
+        }
         ListBuffer<JCStatement> lb = new ListBuffer<>();
         lb.append(body instanceof ExpressionTree ? (JCStatement) Yield((ExpressionTree) body) : (JCStatement) body);
         ListBuffer<JCCaseLabel> exprs = new ListBuffer<>();
@@ -258,10 +259,12 @@ public class TreeFactory {
             exprs.append((JCCaseLabel)t);
         return make.at(NOPOS).Case(CaseKind.RULE, exprs.toList(), (JCExpression) guard, lb.toList(), (JCTree) body);
     }
-    
 
     public CaseTree CaseMultiplePatterns(List<? extends CaseLabelTree> expressions, ExpressionTree guard, List<? extends StatementTree> statements) {
-        ListBuffer<JCStatement> lb = new ListBuffer<JCStatement>();
+        if (expressions.isEmpty()) {
+            expressions = Collections.singletonList(DefaultCaseLabel());
+        }
+        ListBuffer<JCStatement> lb = new ListBuffer<>();
         for (StatementTree t : statements)
             lb.append((JCStatement)t);
         ListBuffer<JCCaseLabel> exprs = new ListBuffer<>();
@@ -279,6 +282,7 @@ public class TreeFactory {
                      List<? extends TypeParameterTree> typeParameters,
                      Tree extendsClause,
                      List<? extends Tree> implementsClauses,
+                     List<? extends Tree> permitsClauses,
                      List<? extends Tree> memberDecls) 
     {
         ListBuffer<JCTypeParameter> typarams = new ListBuffer<JCTypeParameter>();
@@ -287,6 +291,9 @@ public class TreeFactory {
         ListBuffer<JCExpression> impls = new ListBuffer<JCExpression>();
         for (Tree t : implementsClauses)
             impls.append((JCExpression)t);
+        ListBuffer<JCExpression> permits = new ListBuffer<JCExpression>();
+        for (Tree t : permitsClauses)
+            permits.append((JCExpression)t);
         ListBuffer<JCTree> defs = new ListBuffer<JCTree>();
         for (Tree t : memberDecls)
             defs.append((JCTree)t);
@@ -295,6 +302,7 @@ public class TreeFactory {
                              typarams.toList(),
                              (JCExpression)extendsClause,
                              impls.toList(),
+                             permits.toList(),
                              defs.toList());
         
     }
@@ -303,17 +311,18 @@ public class TreeFactory {
                      CharSequence simpleName,
                      List<? extends TypeParameterTree> typeParameters,
                      List<? extends Tree> extendsClauses,
+                     List<? extends Tree> permitsClauses,
                      List<? extends Tree> memberDecls) 
     {
         long flags = getBitFlags(modifiers.getFlags()) | Flags.INTERFACE;
-        return Class(flags, (com.sun.tools.javac.util.List<JCAnnotation>) modifiers.getAnnotations(), simpleName, typeParameters, null, extendsClauses, memberDecls);
+        return Class(flags, (com.sun.tools.javac.util.List<JCAnnotation>) modifiers.getAnnotations(), simpleName, typeParameters, null, extendsClauses, permitsClauses, memberDecls);
     }
 
     public ClassTree AnnotationType(ModifiersTree modifiers, 
              CharSequence simpleName,
              List<? extends Tree> memberDecls) {
         long flags = getBitFlags(modifiers.getFlags()) | Flags.ANNOTATION;
-        return Class(flags, (com.sun.tools.javac.util.List<JCAnnotation>) modifiers.getAnnotations(), simpleName, Collections.<TypeParameterTree>emptyList(), null, Collections.<ExpressionTree>emptyList(), memberDecls);
+        return Class(flags, (com.sun.tools.javac.util.List<JCAnnotation>) modifiers.getAnnotations(), simpleName, Collections.<TypeParameterTree>emptyList(), null, Collections.<ExpressionTree>emptyList(), Collections.emptyList(), memberDecls);
     }
     
     public ClassTree Enum(ModifiersTree modifiers, 
@@ -321,7 +330,7 @@ public class TreeFactory {
              List<? extends Tree> implementsClauses,
              List<? extends Tree> memberDecls) {
         long flags = getBitFlags(modifiers.getFlags()) | Flags.ENUM;
-        return Class(flags, (com.sun.tools.javac.util.List<JCAnnotation>) modifiers.getAnnotations(), simpleName, Collections.<TypeParameterTree>emptyList(), null, implementsClauses, memberDecls);
+        return Class(flags, (com.sun.tools.javac.util.List<JCAnnotation>) modifiers.getAnnotations(), simpleName, Collections.<TypeParameterTree>emptyList(), null, implementsClauses, Collections.emptyList(), memberDecls);
     }
     
     public CompilationUnitTree CompilationUnit(PackageTree packageDecl,
@@ -488,6 +497,10 @@ public class TreeFactory {
         return make.at(NOPOS).Import((JCFieldAccess)qualid, importStatic);
     }
     
+    public ImportTree ImportModule(Tree moduleName) {
+        return make.at(NOPOS).ModuleImport((JCExpression) moduleName);
+    }
+
     public InstanceOfTree InstanceOf(ExpressionTree expression, Tree type) {
         return make.at(NOPOS).TypeTest((JCExpression)expression, (JCTree)type);
     }
@@ -650,6 +663,8 @@ public class TreeFactory {
                 case NATIVE: flags |= Flags.NATIVE; break;
                 case STRICTFP: flags |= Flags.STRICTFP; break;
                 case DEFAULT: flags |= Flags.DEFAULT; break;
+                case SEALED: flags |= Flags.SEALED; break;
+                case NON_SEALED: flags |= Flags.NON_SEALED; break;
                 default:
                     throw new AssertionError("Unknown Modifier: " + mod); //NOI18N
             }
@@ -979,7 +994,7 @@ public class TreeFactory {
         return make.at(NOPOS).Wildcard(tbk, (JCExpression)type);
     }
     
-    ////////////////////////////////////// makers modification suggested by Tom
+    // makers modification suggested by Tom
     
     // AnnotationTree
     public AnnotationTree addAnnotationAttrValue(AnnotationTree annotation, ExpressionTree attrValue) {
@@ -1105,6 +1120,7 @@ public class TreeFactory {
             clazz.getTypeParameters(),
             clazz.getExtendsClause(),
             (List<ExpressionTree>) clazz.getImplementsClause(),
+            clazz.getPermitsClause(),
             c(clazz.getMembers(), index, member, op)
         );
         return copy;
@@ -1133,6 +1149,7 @@ public class TreeFactory {
             c(clazz.getTypeParameters(), index, typeParameter, op),
             clazz.getExtendsClause(),
             (List<ExpressionTree>) clazz.getImplementsClause(),
+            clazz.getPermitsClause(),
             clazz.getMembers()
         );
         return copy;
@@ -1161,6 +1178,7 @@ public class TreeFactory {
             clazz.getTypeParameters(),
             clazz.getExtendsClause(),
             c((List<ExpressionTree>) clazz.getImplementsClause(), index, implementsClause, op), // todo: cast!
+            clazz.getPermitsClause(),
             clazz.getMembers()
         );
         return copy;
@@ -1754,6 +1772,7 @@ public class TreeFactory {
                      List<? extends TypeParameterTree> typeParameters,
                      Tree extendsClause,
                      List<? extends Tree> implementsClauses,
+                     List<? extends Tree> permitsClauses,
                      List<? extends Tree> memberDecls) {
         ListBuffer<JCTypeParameter> typarams = new ListBuffer<JCTypeParameter>();
         for (TypeParameterTree t : typeParameters)
@@ -1761,6 +1780,9 @@ public class TreeFactory {
         ListBuffer<JCExpression> impls = new ListBuffer<JCExpression>();
         for (Tree t : implementsClauses)
             impls.append((JCExpression)t);
+        ListBuffer<JCExpression> permits = new ListBuffer<JCExpression>();
+        for (Tree t : permitsClauses)
+            permits.append((JCExpression)t);
         ListBuffer<JCTree> defs = new ListBuffer<JCTree>();
         for (Tree t : memberDecls)
             defs.append((JCTree)t);
@@ -1769,12 +1791,13 @@ public class TreeFactory {
                              typarams.toList(),
                              (JCExpression)extendsClause,
                              impls.toList(),
+                             permits.toList(),
                              defs.toList());
         
     }
     
     private long getBitFlags(Set<Modifier> modifiers) {
-        int flags  = 0;
+        long flags  = 0;
         for (Modifier modifier : modifiers) {
             switch (modifier) {
                 case PUBLIC:       flags |= PUBLIC; break;
@@ -1788,8 +1811,10 @@ public class TreeFactory {
                 case SYNCHRONIZED: flags |= SYNCHRONIZED; break;
                 case NATIVE:       flags |= NATIVE; break;
                 case STRICTFP:     flags |= STRICTFP; break;
+                case SEALED:       flags |= SEALED; break;
+                case NON_SEALED:   flags |= NON_SEALED; break;
                 default:
-                    break;
+                    throw new IllegalStateException("Unknown modifier: " + modifier);
             }
         }
         return flags;
@@ -1811,15 +1836,17 @@ public class TreeFactory {
     }
     
     public DocCommentTree DocComment(List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
-        DCDocComment temp = docMake.at(NOPOS).newDocCommentTree(fullBody, tags);
-        return DocComment(temp.getFirstSentence(), temp.getBody(), temp.getBlockTags());
+        return DocComment(HTML_JAVADOC_COMMENT, fullBody, tags);
     }
 
     public DocCommentTree MarkdownDocComment(List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
-        DCDocComment temp = docMake.at(NOPOS).newDocCommentTree(fullBody, tags);
-        return MarkdownDocComment(temp.getFirstSentence(), temp.getBody(), temp.getBlockTags());
+        return DocComment(MARKDOWN_JAVADOC_COMMENT, fullBody, tags);
     }
     
+    private DocCommentTree DocComment(Comment comment, List<? extends DocTree> fullBody, List<? extends DocTree> tags) {
+        return docMake.at(NOPOS).newDocCommentTree(comment, fullBody, tags, Collections.emptyList(), Collections.emptyList());
+    }
+
     public DocTree Snippet(List<? extends DocTree> attributes, TextTree text){
         try {
             return (DocTree) docMake.getClass().getMethod("newSnippetTree", List.class, TextTree.class).invoke(docMake.at(NOPOS), attributes, text);
@@ -2050,5 +2077,11 @@ public class TreeFactory {
         public boolean isDeprecated() {
             return false;
         }
+
+        @Override
+        public Comment stripIndent() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+        
     }
 }

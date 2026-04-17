@@ -175,7 +175,7 @@ public class SerialDataConvertorTest extends NbTestCase {
         SerialDataConvertorTest.waitUntilIsSaved (ido);
         assertEquals(newName, ido.getNodeDelegate().getDisplayName());
         
-        /// simulates recretaion of instance e.g. after IDE restart
+        // simulates recretaion of instance e.g. after IDE restart
         fo = FileUtil.copyFile(fo, fo.getParent(),"copiedPeer", fo.getExt());
         fo.setAttribute("SystemFileSystem.localizingBundle", "org.netbeans.modules.settings.convertors.data.Bundle");        
         ido = (InstanceDataObject)DataObject.find(fo);
@@ -621,7 +621,7 @@ public class SerialDataConvertorTest extends NbTestCase {
                 try {
                     l = corrupted.lock();
                     os = corrupted.getOutputStream(l);
-                    FileUtil.copy(valid.getInputStream(), os);
+                    valid.getInputStream().transferTo(os);
                     os.flush();
                 } finally {
                     if (os != null) try { os.close(); } catch (IOException ex) {}

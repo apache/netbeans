@@ -46,8 +46,6 @@ public abstract class PanelView extends javax.swing.JPanel {
     /** not null if popup menu enabled */
     transient boolean sectionHeaderClicked;
     transient PopupAdapter popupListener;
-    /** the most important listener  */
-    //transient NodeSelectedListener nodeListener = null;
     
     /** Explorer manager, valid when this view is showing */
     private transient ExplorerManager manager;

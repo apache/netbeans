@@ -49,6 +49,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.datatransfer.PasteType;
+
 import static org.netbeans.modules.refactoring.java.ui.Bundle.*;
 
 
@@ -185,7 +186,7 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
             if (!fo.isFolder()) {
                 return false;
             }
-            if (!JavaRefactoringUtils.isOnSourceClasspath(fo)) {
+            if (!JavaRefactoringUtils.isOnSourceClasspath(fo) || RefactoringUtils.isIndexedSourceLauncherFile(fo)) {
                 return false;
             }
         }
@@ -331,7 +332,7 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
             if (!fo.isFolder()) {
                 return false;
             }
-            if (!JavaRefactoringUtils.isOnSourceClasspath(fo)) {
+            if (!JavaRefactoringUtils.isOnSourceClasspath(fo) || RefactoringUtils.isIndexedSourceLauncherFile(fo)) {
                 return false;
             }
             
@@ -343,7 +344,8 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
                 if (dob==null) {
                     return false;
                 }
-                if (!JavaRefactoringUtils.isOnSourceClasspath(dob.getPrimaryFile())) {
+                if (!JavaRefactoringUtils.isOnSourceClasspath(dob.getPrimaryFile())
+                        || RefactoringUtils.isIndexedSourceLauncherFile(dob.getPrimaryFile())) {
                     return false;
                 }
                 if (dob instanceof DataFolder) {
@@ -380,7 +382,9 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
                         return false;
                     } else {
                         //Ctrl-X
-                        if (!JavaRefactoringUtils.isOnSourceClasspath(dob.getPrimaryFile()) || RefactoringUtils.isClasspathRoot(dob.getPrimaryFile())) {
+                        if (!JavaRefactoringUtils.isOnSourceClasspath(dob.getPrimaryFile())
+                                || RefactoringUtils.isClasspathRoot(dob.getPrimaryFile())
+                                || RefactoringUtils.isIndexedSourceLauncherFile(dob.getPrimaryFile())) {
                             return false;
                         } else {
                             LinkedList<DataFolder> folders = new LinkedList<DataFolder>();
@@ -399,7 +403,8 @@ public class RefactoringActionsProvider extends ActionsImplementationProvider{
                         }
                     }
                 }
-                if (!JavaRefactoringUtils.isOnSourceClasspath(dob.getPrimaryFile())) {
+                if (!JavaRefactoringUtils.isOnSourceClasspath(dob.getPrimaryFile())
+                        || RefactoringUtils.isIndexedSourceLauncherFile(dob.getPrimaryFile())) {
                     return false;
                 }
                 if (RefactoringUtils.isJavaFile(dob.getPrimaryFile())) {

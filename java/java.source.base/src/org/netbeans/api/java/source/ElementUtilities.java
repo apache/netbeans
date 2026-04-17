@@ -61,12 +61,16 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.ModuleElement;
+import javax.lang.model.element.ModuleElement.ExportsDirective;
+import javax.lang.model.element.ModuleElement.RequiresDirective;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.RecordComponentElement;
@@ -88,6 +92,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.java.source.builder.ElementsService;
 import org.netbeans.modules.java.source.base.SourceLevelUtils;
+import org.openide.util.Pair;
 import org.openide.util.Parameters;
 
 /**
@@ -489,7 +494,7 @@ public final class ElementUtilities {
         for (CompilationUnitTree unit : Collections.singletonList(info.getCompilationUnit())) {
             TreePath path = new TreePath(unit);
             Scope scope = trees.getScope(path);
-            while (scope instanceof JavacScope && !((JavacScope)scope).isStarImportScope()) {
+            while (scope instanceof JavacScope && ((JavacScope)scope).getScopeType() == ORDINARY_SCOPE_TYPE) {
                 for (Element local : scope.getLocalElements()) {
                     if (local.getKind().isClass() || local.getKind().isInterface()) {
                         if (acceptor.accept(local, null)) {
@@ -519,6 +524,21 @@ public final class ElementUtilities {
             }
         }
         return membersList;
+    }
+
+    private static final Object ORDINARY_SCOPE_TYPE;
+    private static final Logger LOG = Logger.getLogger(ElementUtilities.class.getName());
+
+    static {
+        Object ordinary = null;
+
+        try {
+            ordinary = Enum.valueOf((Class<Enum>) Class.forName("com.sun.tools.javac.api.JavacScope$ScopeType"), "ORDINARY");
+        } catch (ClassNotFoundException ex) {
+            LOG.log(Level.FINE, null, ex);
+        }
+
+        ORDINARY_SCOPE_TYPE = ordinary;
     }
 
     /**Filter {@link Element}s
@@ -1064,6 +1084,51 @@ public final class ElementUtilities {
                             .filter(info.getElements()::isCanonicalConstructor)
                             .findAny()
                             .orElseGet(fallback);
+    }
+
+    /**Returns a set of packages that are exported to the current module, including
+     * those visible through transitive dependencies.
+     *
+     * @param module the module for which the transitively exported packages should be computed.
+     * @return the set of packages from the given module and its transitive dependencies
+     *         that are exported to the current module
+     * @since 2.79
+     */
+    public @NonNull Set<PackageElement> transitivelyExportedPackages(@NonNull ModuleElement module) {
+        Parameters.notNull("module", module);
+        ModuleElement currentModule = info.getModule();
+        List<ModuleElement> todo = new ArrayList<>();
+        Set<ModuleElement> seen = new HashSet<>();
+        Set<PackageElement> exported = new HashSet<>();
+
+        todo.add(module);
+
+        while (!todo.isEmpty()) {
+            ModuleElement currentlyProcessing = todo.remove(todo.size() - 1);
+
+            if (!seen.add(currentlyProcessing)) {
+                continue;
+            }
+
+            for (ExportsDirective exports : ElementFilter.exportsIn(currentlyProcessing.getDirectives())) {
+                if (exports.getTargetModules() != null &&
+                    !exports.getTargetModules().contains(currentModule)) {
+                    continue;
+                }
+
+                exported.add(exports.getPackage());
+            }
+
+            for (RequiresDirective requires : ElementFilter.requiresIn(currentlyProcessing.getDirectives())) {
+                if (!requires.isTransitive()) {
+                    continue;
+                }
+
+                todo.add(requires.getDependency());
+            }
+        }
+
+        return exported;
     }
 
     // private implementation --------------------------------------------------

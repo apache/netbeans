@@ -63,7 +63,6 @@ import org.netbeans.installer.wizard.ui.WizardUi;
  *
  */
 public class NbPanel extends DestinationPanel {
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     private JdkLocationPanel jdkLocationPanel;
     private boolean hasNestedJre = false;
@@ -216,7 +215,6 @@ public class NbPanel extends DestinationPanel {
         return jdkLocationPanel;
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Inner Classes
     public static class NbDestinationPanelUi extends DestinationPanelUi {
         protected NbPanel panel;
@@ -263,7 +261,7 @@ public class NbPanel extends DestinationPanel {
             initComponents();
         }
         
-        // protected ////////////////////////////////////////////////////////////////
+        // protected
         @Override
         protected void initialize() {
             jdkLocationLabel.setText(
@@ -361,9 +359,9 @@ public class NbPanel extends DestinationPanel {
         }
 
 
-        // private //////////////////////////////////////////////////////////////////
+        // private
         private void initComponents() {
-            // selectedLocationField ////////////////////////////////////////////////
+            // selectedLocationField
             jdkLocationField = new NbiTextField();
             jdkLocationField.getDocument().addDocumentListener(
                     new DocumentListener() {
@@ -383,7 +381,7 @@ public class NbPanel extends DestinationPanel {
                 }
             });
             
-            // jdkLocationComboBox //////////////////////////////////////////////////
+            // jdkLocationComboBox
             final LocationValidator validator = new LocationValidator() {
                 @Override
                 public void validate(String location) {
@@ -423,11 +421,11 @@ public class NbPanel extends DestinationPanel {
                 }
             });
             
-            // jdkLocationLabel /////////////////////////////////////////////////////
+            // jdkLocationLabel
             jdkLocationLabel = new NbiLabel();
             jdkLocationLabel.setLabelFor(jdkLocationComboBox);
             
-            // browseButton /////////////////////////////////////////////////////////
+            // browseButton
             browseButton = new NbiButton();
             browseButton.addActionListener(new ActionListener() {
                 @Override
@@ -436,15 +434,15 @@ public class NbPanel extends DestinationPanel {
                 }
             });
             
-            // statusLabel //////////////////////////////////////////////////////////
+            // statusLabel
             statusLabel = new NbiTextPane();            
             
-            // fileChooser //////////////////////////////////////////////////////////
+            // fileChooser
             fileChooser = new NbiDirectoryChooser();
             
             // don't show JDK panel when JRE is nested in bin/jre
             if(!panel.hasNestedJre()){
-                // this /////////////////////////////////////////////////////////////////
+                // this
                 add(jdkLocationLabel, new GridBagConstraints(
                         0, 2,                             // x, y
                         2, 1,                             // width, height
@@ -520,7 +518,6 @@ public class NbPanel extends DestinationPanel {
         }
     }
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     public static final String JDK_LOCATION_LABEL_TEXT_PROPERTY =
             "jdk.location.label.text"; // NOI18N

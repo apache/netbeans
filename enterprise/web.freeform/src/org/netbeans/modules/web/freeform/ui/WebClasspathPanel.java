@@ -305,20 +305,17 @@ public class WebClasspathPanel extends javax.swing.JPanel implements HelpCtx.Pro
 
     private void addClasspathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addClasspathActionPerformed
         FileChooser chooser = new FileChooser(this.projectFolder, null);
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
+        chooser.setCurrentDirectory(null);
         chooser.setFileSelectionMode (JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setMultiSelectionEnabled(true);
         if (lastChosenFile != null) {
             chooser.setSelectedFile(lastChosenFile);
-        }
-        else {
-            if (projectFolder!= null) {
-                File files[] = projectFolder.listFiles();
-                if (files != null && files.length > 0) {
-                    chooser.setSelectedFile(files[0]);
-                } else {
-                    chooser.setSelectedFile(projectFolder);
-                }
+        } else if (projectFolder!= null) {
+            File[] files = projectFolder.listFiles();
+            if (files != null && files.length > 0) {
+                chooser.setSelectedFile(files[0]);
+            } else {
+                chooser.setSelectedFile(projectFolder);
             }
         }
         chooser.setDialogTitle(NbBundle.getMessage(WebClasspathPanel.class, "LBL_Browse_Classpath"));

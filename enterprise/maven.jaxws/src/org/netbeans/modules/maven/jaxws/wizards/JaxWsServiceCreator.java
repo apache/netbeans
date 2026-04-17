@@ -63,7 +63,6 @@ import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.j2ee.api.ejbjar.EjbReference;
 import org.netbeans.modules.j2ee.core.api.support.classpath.ContainerClassPathModifier;
 import org.netbeans.modules.maven.jaxws.MavenJAXWSSupportImpl;
@@ -137,7 +136,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
         serviceType = ((Integer) wiz.getProperty(WizardProperties.WEB_SERVICE_TYPE));
 
         // Use Progress API to display generator messages.
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(JaxWsServiceCreator.class, "TXT_WebServiceGeneration")); //NOI18N
+        final ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(JaxWsServiceCreator.class, "TXT_WebServiceGeneration")); //NOI18N
         handle.start(100);
 
         Runnable r = new Runnable() {
@@ -168,7 +167,7 @@ public class JaxWsServiceCreator implements ServiceCreator {
 
         //initProjectInfo(project);
 
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(JaxWsServiceCreator.class, "TXT_WebServiceGeneration")); //NOI18N
+        final ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(JaxWsServiceCreator.class, "TXT_WebServiceGeneration")); //NOI18N
 
         Runnable r = new Runnable() {
 

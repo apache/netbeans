@@ -447,7 +447,7 @@ public class TableModelEditor implements PropertyEditor, XMLPropertyEditor,
         if (Boolean.class.isAssignableFrom(type) || Boolean.TYPE.equals(type))
             return Boolean.valueOf(encoded);
         if (Character.class.isAssignableFrom(type) || Character.TYPE.equals(type))
-            return new Character(encoded.charAt(0));
+            return encoded.charAt(0);
         if (String.class.isAssignableFrom(type))
             return encoded;
 

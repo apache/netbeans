@@ -17,11 +17,6 @@
  * under the License.
  */
 
-/**
- * Methods for accessing schema2beans objects in a bean-independent way.
- *
- * @author  Milan Kuchtiak
- */
 package org.netbeans.modules.j2ee.dd.impl.webservices;
 
 import java.lang.reflect.*;

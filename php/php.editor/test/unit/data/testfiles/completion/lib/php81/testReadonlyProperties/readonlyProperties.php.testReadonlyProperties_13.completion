@@ -3,3 +3,4 @@ publ|ic readonly int|string $promotedPublicReadonly = 0,
 (QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
 ------------------------------------
 KEYWORD    public                                     null
+KEYWORD    public(set)                                null

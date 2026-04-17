@@ -80,6 +80,8 @@ public class DatabaseExplorerUIsTest extends TestBase {
         initConnections();
         JComboBox combo = connect();
 
+        forceFlush(); // The next assert would occasionally fail unless this delay is added.
+
         assertTrue("Wrong number of items in the combobox", combo.getItemCount() == 3);
 
         assertSame(dbconn2, combo.getItemAt(0));
@@ -89,6 +91,8 @@ public class DatabaseExplorerUIsTest extends TestBase {
     public void testComboboxChangingConnections() throws Exception {
         initConnections();
         JComboBox combo = connect();
+
+        forceFlush(); // The next assert would occasionally fail unless this delay is added.
 
         assertEquals("Wrong number of items in the combobox", 3, combo.getItemCount());
 

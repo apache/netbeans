@@ -1,0 +1,6 @@
+Code completion result for source line:
+$promoted->iPubli|cPrivateSet; // test: only public fields (promoted)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   Foo iPublicPublicSet            [PUBLIC]   AsymmetricVisibilityPromoted
+VARIABLE   string|int iPublicPrivateSet    [PUBLIC]   AsymmetricVisibilityPromoted
+VARIABLE   string|int iPublicProtectedSet  [PUBLIC]   AsymmetricVisibilityPromoted

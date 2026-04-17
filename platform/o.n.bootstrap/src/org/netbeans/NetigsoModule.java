@@ -19,9 +19,9 @@
 
 package org.netbeans;
 
+import java.io.DataInput;
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInput;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openide.util.Enumerations;
 import org.openide.util.Exceptions;
 
 /** Special module for representing OSGi bundles 
@@ -51,7 +50,7 @@ final class NetigsoModule extends Module {
     }
 
     @Override
-    ModuleData createData(ObjectInput in, Manifest mf) throws IOException {
+    ModuleData createData(DataInput in, Manifest mf) throws IOException {
         if (in != null) {
             return new ModuleData(in);
         } else {

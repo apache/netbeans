@@ -1,0 +1,85 @@
+<testresult testFile='newWithoutParenthesesError_01.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='828'>
+            <text>Example</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='829' end='830'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='835' end='840'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='841' end='849'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_EQUAL' start='850' end='851'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='852' end='862'>
+            <text>&apos;constant&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='862' end='863'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='864' end='865'>
+            <text>}</text>
+        </token>
+        <token id='T_ECHO' start='867' end='871'>
+            <text>echo</text>
+        </token>
+        <token id='T_NEW' start='872' end='875'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='876' end='883'>
+            <text>Example</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='883' end='885'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='885' end='893'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_SEMICOLON' start='893' end='894'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='895' end='895'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='895'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='865' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='828' name='Example'/>
+                </ClassName>
+                <SuperClassName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='829' end='865' isCurly='true'>
+                    <ClassConstantDeclaration start='835' end='863' modifier='public'>
+                        <Names>
+                            <Identifier start='841' end='849' name='CONSTANT'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='852' end='862' type='STRING' value='&apos;constant&apos;'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                </Block>
+            </ClassDeclaration>
+            <ASTError start='867' end='885'/>
+            <ExpressionStatement start='885' end='894'>
+                <NamespaceName start='885' end='893' isCurrent='false' isGlobal='false'>
+                    <Identifier start='885' end='893' name='CONSTANT'/>
+                </NamespaceName>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

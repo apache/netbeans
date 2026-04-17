@@ -19,7 +19,8 @@
     under the License.
 
 -->
-<!-- @start region="exampleActionMapping" -->
+<!-- // @start region="exampleActionMapping" 
+-->
 <actions>
     <apply-for plugins="application">
         <action name="run">
@@ -31,4 +32,5 @@
         </action>
     </apply-for>
 </actions>
-<!-- @end region="exampleActionMapping" -->
+<!-- // @end region="exampleActionMapping" 
+-->

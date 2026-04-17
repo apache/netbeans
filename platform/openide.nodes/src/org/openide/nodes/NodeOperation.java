@@ -89,7 +89,7 @@ public abstract class NodeOperation {
      * @param property The property to be edited (its property editor to be used).
      * @param beans The objects the property belongs to. Typically one item
      *   array with the Node of the property. The meaning is the same as in
-     *   <a href="@org-openide-explorer@/org/openide/explorer/propertysheet/PropertyEnv.html#getBeans--">PropertyEnv#getBeans()</a>.
+     *   <a href="@org-openide-explorer@/org/openide/explorer/propertysheet/PropertyEnv.html#getBeans()">PropertyEnv#getBeans()</a>.
      * @since 7.24
      */
     public void showCustomEditorDialog(Node.Property<?> property, Object... beans) {

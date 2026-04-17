@@ -48,10 +48,8 @@ import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.j2ee.persistence.wizard.jpacontroller.JpaControllerUtil;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.jsf.JSFUtils;
-import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.palette.JSFPaletteUtilities;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
-import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.filesystems.FileObject;
@@ -454,7 +452,7 @@ public abstract class FromEntityBase {
             } else if ("Byte".equals(idType.toString()) || "java.lang.Byte".equals(idType.toString())) {
                 return "Byte.valueOf("+param+")";
             } else if ("Character".equals(idType.toString()) || "java.lang.Character".equals(idType.toString())) {
-                return "new Character("+param+".charAt(0))";
+                return "Character.valueOf("+param+".charAt(0))";
             } else if ("Double".equals(idType.toString()) || "java.lang.Double".equals(idType.toString())) {
                 return "Double.valueOf("+param+")";
             } else if ("Float".equals(idType.toString()) || "java.lang.Float".equals(idType.toString())) {

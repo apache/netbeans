@@ -30,10 +30,7 @@ import org.testng.annotations.Test;
 @Test(groups = {"unit-tests"})
 public class TaskStateTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test that <code>toString</code> handles all <code>enum</code> values.
      */

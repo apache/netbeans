@@ -43,10 +43,16 @@ METHOD     getMetaPropertyValues()                    List
 METHOD     getMethod(String, Class<?>...)  [PUBLIC]   Method
 METHOD     getMethods()                    [PUBLIC]   Method[]
 METHOD     getModifiers()                  [PUBLIC]   int
+METHOD     getModule()                     [PUBLIC]   Module
 METHOD     getName()                       [PUBLIC]   String
+METHOD     getNestHost()                   [PUBLIC]   Class<?>
+METHOD     getNestMembers()                [PUBLIC]   Class<?>[]
 METHOD     getPackage()                    [PUBLIC]   Package
+METHOD     getPackageName()                [PUBLIC]   String
+METHOD     getPermittedSubclasses()        [PUBLIC]   Class<?>[]
 METHOD     getProperties()                            Map
 METHOD     getProtectionDomain()           [PUBLIC]   ProtectionDomain
+METHOD     getRecordComponents()           [PUBLIC]   RecordComponent[]
 METHOD     getResource(String)             [PUBLIC]   URL
 METHOD     getResourceAsStream(String)     [PUBLIC]   InputStream
 METHOD     getSigners()                    [PUBLIC]   Object[]

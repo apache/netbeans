@@ -46,6 +46,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.css.lib.api.properties.FixedTextGrammarElement;
@@ -872,7 +873,7 @@ public class RuleEditorNode extends AbstractNode {
                                 @Override
                                 public void run() {
                                     try {
-                                        int lineOffset = 1 + Utilities.getLineOffset((BaseDocument) doc, doc_from);
+                                        int lineOffset = 1 + LineDocumentUtils.getLineIndex((BaseDocument) doc, doc_from);
                                         sb.append(':');
                                         sb.append(lineOffset);
                                     } catch (BadLocationException ex) {

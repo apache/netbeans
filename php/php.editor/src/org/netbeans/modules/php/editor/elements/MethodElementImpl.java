@@ -238,7 +238,7 @@ public final class MethodElementImpl extends PhpElementImpl implements MethodEle
                 BaseFunctionElementSupport.ParametersImpl.create(info.getParameters()),
                 BaseFunctionElementSupport.ReturnTypesImpl.create(
                     TypeResolverImpl.parseTypes(VariousUtils.getReturnType(fileQuery.getResult().getProgram(), node.getFunction())), node.getFunction().getReturnType()),
-                VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node.getFunction()));
+                VariousUtils.isDeprecated(fileQuery.getResult().getModel().getFileScope(), fileQuery.getResult().getProgram(), node.getFunction()));
     }
 
     private static boolean matchesQuery(final NameKind query, MethodSignatureParser signParser) {

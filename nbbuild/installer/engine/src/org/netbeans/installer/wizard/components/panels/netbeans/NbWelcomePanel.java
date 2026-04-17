@@ -83,7 +83,6 @@ import org.netbeans.installer.wizard.ui.WizardUi;
  *
  */
 public class NbWelcomePanel extends ErrorMessagePanel {
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     private Registry bundledRegistry;
     private Registry defaultRegistry;
@@ -377,7 +376,7 @@ public class NbWelcomePanel extends ErrorMessagePanel {
         registriesFiltered = true;
     }
     
-    // private //////////////////////////////////////////////////////////////////////
+    // private
     private boolean canExecute() {
         return bundledRegistry.getNodes().size() > 1;
     }
@@ -479,7 +478,6 @@ public class NbWelcomePanel extends ErrorMessagePanel {
         }
         return null;
     }
-    /////////////////////////////////////////////////////////////////////////////////
     // Inner Classes
     public static class NbWelcomePanelUi extends ErrorMessagePanelUi {
         protected NbWelcomePanel component;
@@ -541,7 +539,7 @@ public class NbWelcomePanel extends ErrorMessagePanel {
             return null; // the welcome page does not have a title
         }
         
-        // protected ////////////////////////////////////////////////////////////////
+        // protected
         @Override
         protected void initializeContainer() {
             super.initializeContainer();
@@ -613,7 +611,6 @@ public class NbWelcomePanel extends ErrorMessagePanel {
                             javafxsdk.getDisplayName()));
                 }
             }
-            /////////////////////////////////
             detailsTextPane.setContentType(
                     panel.getProperty(TEXT_PANE_CONTENT_TYPE_PROPERTY));
             
@@ -801,12 +798,12 @@ public class NbWelcomePanel extends ErrorMessagePanel {
             return null;
         }
         
-        // private //////////////////////////////////////////////////////////////////
+        // private
         private void initComponents() {
-            // textPane /////////////////////////////////////////////////////////////
+            // textPane
             textPane = new NbiTextPane();
             
-            // textScrollPane /////////////////////////////////////////////////////////////
+            // textScrollPane
             textScrollPane = new NbiTextPane();
             textScrollPane.setOpaque(true);
             textScrollPane.setBackground(Color.WHITE);
@@ -815,13 +812,13 @@ public class NbWelcomePanel extends ErrorMessagePanel {
             detailsTextPane.setOpaque(true);
             detailsTextPane.setBackground(Color.WHITE);
             
-            // scrollPane ////////////////////////////////////////////////////
+            // scrollPane
             scrollPane = new NbiScrollPane(textScrollPane);
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             scrollPane.setViewportBorder(new EmptyBorder(new Insets(0, 0, 0, 0)));
             scrollPane.setBorder(new EmptyBorder(new Insets(0, 0, 0, 0)));
             
-            // customizeButton //////////////////////////////////////////////////////
+            // customizeButton
             customizeButton = new NbiButton();
             customizeButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
@@ -829,7 +826,7 @@ public class NbWelcomePanel extends ErrorMessagePanel {
                 }
             });
             
-            // installationSizeLabel ////////////////////////////////////////////////
+            // installationSizeLabel
             installationSizeLabel = new NbiLabel();
             
             
@@ -876,7 +873,7 @@ public class NbWelcomePanel extends ErrorMessagePanel {
             leftImagePanel.setSize(new Dimension(width,height));
             
             leftImagePanel.setOpaque(false);
-            // this /////////////////////////////////////////////////////////////////
+            // this
             int dy = 0;
             add(leftImagePanel, new GridBagConstraints(
                     0, 0,                             // x, y
@@ -1047,7 +1044,7 @@ public class NbWelcomePanel extends ErrorMessagePanel {
                     new Insets(4, 11, 4, 0),          // padding
                     0, 0));                            // ??? (padx, pady)
             
-            // platform-specific tweak //////////////////////////////////////////////
+            // platform-specific tweak
             if (SystemUtils.isMacOS()) {
                 customizeButton.setOpaque(false);
             }
@@ -1215,7 +1212,6 @@ public class NbWelcomePanel extends ErrorMessagePanel {
     }
 
 
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     public static final String DEFAULT_TITLE =
             ResourceUtils.getString(NbWelcomePanel.class,

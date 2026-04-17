@@ -35,6 +35,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.swing.Icon;
 import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
@@ -64,6 +65,7 @@ import org.eclipse.lsp4j.WorkDoneProgressReport;
 import org.eclipse.lsp4j.jsonrpc.Endpoint;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.LanguageClient;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.progress.*;
 import org.netbeans.modules.lsp.client.LSPBindings;
 import org.netbeans.modules.lsp.client.Utils;
@@ -77,10 +79,15 @@ import org.netbeans.spi.editor.hints.Severity;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.NotifyDescriptor.QuickPick.Item;
+import org.openide.awt.NotificationDisplayer;
+import org.openide.awt.NotificationDisplayer.Category;
+import org.openide.awt.NotificationDisplayer.Priority;
+import org.openide.awt.StatusDisplayer;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.RequestProcessor;
 
 /**
@@ -91,6 +98,11 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
 
     private static final Logger LOG = Logger.getLogger(LanguageClientImpl.class.getName());
     private static final RequestProcessor WORKER = new RequestProcessor(LanguageClientImpl.class.getName(), 1, false, false);
+
+    @StaticResource
+    private static final String ERROR_ICON = "org/netbeans/modules/lsp/client/resources/error_16.png";
+    @StaticResource
+    private static final String WARNING_ICON = "org/netbeans/modules/lsp/client/resources/warning_16.png";
 
     private LSPBindings bindings;
     private boolean allowCodeActions;
@@ -155,24 +167,26 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
         });
     }
 
-    @Override
+   @Override
     public void publishDiagnostics(PublishDiagnosticsParams pdp) {
-        try {
-            FileObject file = URLMapper.findFileObject(new URI(pdp.getUri()).toURL());
-            EditorCookie ec = file != null ? file.getLookup().lookup(EditorCookie.class) : null;
-            Document doc = ec != null ? ec.getDocument() : null;
-            if (doc == null) {
-                return ; //ignore...
+        WORKER.execute(() -> {
+            try {
+                FileObject file = URLMapper.findFileObject(new URI(pdp.getUri()).toURL());
+                EditorCookie ec = file != null ? file.getLookup().lookup(EditorCookie.class) : null;
+                Document doc = ec != null ? ec.getDocument() : null;
+                if (doc == null) {
+                    return; //ignore...
+                }
+                assert file != null;
+                List<ErrorDescription> diags = pdp.getDiagnostics().stream().map(d -> {
+                    LazyFixList fixList = allowCodeActions ? new DiagnosticFixList(doc, pdp.getUri(), d) : ErrorDescriptionFactory.lazyListForFixes(Collections.emptyList());
+                    return ErrorDescriptionFactory.createErrorDescription(severityMap.get(d.getSeverity()), d.getMessage(), fixList, file, Utils.getOffset(doc, d.getRange().getStart()), Utils.getOffset(doc, d.getRange().getEnd()));
+                }).collect(Collectors.toList());
+                HintsController.setErrors(doc, LanguageClientImpl.class.getName(), diags);
+            } catch (URISyntaxException | MalformedURLException ex) {
+                LOG.log(Level.FINE, null, ex);
             }
-            assert file != null;
-            List<ErrorDescription> diags = pdp.getDiagnostics().stream().map(d -> {
-                LazyFixList fixList = allowCodeActions ? new DiagnosticFixList(doc, pdp.getUri(), d) : ErrorDescriptionFactory.lazyListForFixes(Collections.emptyList());
-                return ErrorDescriptionFactory.createErrorDescription(severityMap.get(d.getSeverity()), d.getMessage(), fixList, file, Utils.getOffset(doc, d.getRange().getStart()), Utils.getOffset(doc, d.getRange().getEnd()));
-            }).collect(Collectors.toList());
-            HintsController.setErrors(doc, LanguageClientImpl.class.getName(), diags);
-        } catch (URISyntaxException | MalformedURLException ex) {
-            LOG.log(Level.FINE, null, ex);
-        }
+        });
     }
 
     private static final Map<DiagnosticSeverity, Severity> severityMap = new EnumMap<>(DiagnosticSeverity.class);
@@ -191,29 +205,30 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
     }
 
     @Override
-    public void showMessage(MessageParams arg0) {
-        int messageType;
+    public void showMessage(MessageParams params) {
+        MessageType type = Optional.ofNullable(params.getType()).orElse(MessageType.Log);
+        Icon icon;
+        Category category;
 
-        switch (Optional.ofNullable(arg0.getType()).orElse(MessageType.Log)) {
+        switch (type) {
             default:
             case Log:
+                LOG.log(Level.FINE, params.getMessage());
+                return ;
             case Info:
-                messageType = NotifyDescriptor.INFORMATION_MESSAGE;
-                break;
+                StatusDisplayer.getDefault().setStatusText(params.getMessage());
+                return ;
             case Warning:
-                messageType = NotifyDescriptor.WARNING_MESSAGE;
+                icon = ImageUtilities.loadImageIcon(WARNING_ICON, false);
+                category = Category.WARNING;
                 break;
             case Error:
-                messageType = NotifyDescriptor.ERROR_MESSAGE;
+                icon = ImageUtilities.loadImageIcon(ERROR_ICON, false);
+                category = Category.ERROR;
                 break;
         }
 
-        NotifyDescriptor nd = new NotifyDescriptor.Message(
-                arg0.getMessage(),
-                messageType
-        );
-
-        DialogDisplayer.getDefault().notifyLater(nd);
+        NotificationDisplayer.getDefault().notify(params.getMessage(), icon, params.getMessage(), null, Priority.NORMAL, category);
     }
 
     @Override
@@ -296,6 +311,12 @@ public class LanguageClientImpl implements LanguageClient, Endpoint {
     @Override
     public void notify(String method, Object parameter) {
         LOG.log(Level.WARNING, "Received unhandled notification: {0}: {1}", new Object[] {method, parameter});
+    }
+
+    @Override
+    public CompletableFuture<Void> refreshDiagnostics() {
+        bindings.getOpenedFiles().forEach(LSPBindings::scheduleBackgroundTasks);
+        return CompletableFuture.completedFuture(null);
     }
 
     private final class DiagnosticFixList implements LazyFixList {

@@ -255,7 +255,7 @@ final class ModesSubModel {
     public void setSlideInSize(String side, TopComponent tc, int size) {
         if( null != tc && null != side ) {
             String tcId = WindowManagerImpl.getInstance().findTopComponentID(tc);
-            slideInSizes.put( side+tcId, new Integer(size) );
+            slideInSizes.put(side+tcId, size);
         }
     }
     
@@ -348,7 +348,6 @@ final class ModesSubModel {
             + "\n" + editorSplitSubModel; // NOI18N
     }
 
-    /////////////////////////////////////////////
     // used when creating snapshot of this model.
     public ModeStructureSnapshot.ElementSnapshot createSplitSnapshot() {
         return editorSplitSubModel.createSplitSnapshot();
@@ -403,10 +402,6 @@ final class ModesSubModel {
         }
     }
     
-    ////////////////////////////////////////////
-
-    
-    //////////////////////////////
     // Controller updates >>
     
     public ModeImpl getModeForOriginator(ModelElement originator) {
@@ -420,7 +415,6 @@ final class ModesSubModel {
     }
     
     // Controller updates <<
-    ///////////////////////////////
 
 }
 

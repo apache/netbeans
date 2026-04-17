@@ -24,7 +24,7 @@ import org.netbeans.api.editor.EditorActionRegistration;
 
 @EditorActionRegistration(name="toggle-inline-hints",
                           menuPath="View",
-                          menuPosition=899,
+                          menuPosition=897,
                           preferencesKey=ShowInlineHintsAction.KEY_LINES,
                           preferencesDefault=ShowInlineHintsAction.DEF_LINES)
 public class ShowInlineHintsAction extends AbstractAction {

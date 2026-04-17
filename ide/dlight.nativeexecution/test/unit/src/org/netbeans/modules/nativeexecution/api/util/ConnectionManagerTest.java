@@ -22,14 +22,13 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import junit.framework.Test;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Test;
 import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.nativeexecution.ConcurrentTasksSupport;
 import org.netbeans.modules.nativeexecution.ConcurrentTasksSupport.Counters;
 import org.netbeans.modules.nativeexecution.test.NativeExecutionBaseTestCase;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
+import org.netbeans.modules.nativeexecution.api.ExecutionEnvironmentFactory;
 import org.netbeans.modules.nativeexecution.test.ForAllEnvironments;
 import org.netbeans.modules.nativeexecution.test.NativeExecutionBaseTestSuite;
 import org.netbeans.modules.nativeexecution.test.NativeExecutionTestSupport;
@@ -50,26 +49,22 @@ public class ConnectionManagerTest extends NativeExecutionBaseTestCase {
         super(name, testExecutionEnvironment);
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Override
-    public void setUp() throws Exception {
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-    }
-
-    public static Test suite() {
+    public static junit.framework.Test suite() {
         return new NativeExecutionBaseTestSuite(ConnectionManagerTest.class);
     }
+    
+    @Test
+    public void testDeleteConnection() throws Exception {
+        ExecutionEnvironment env = ExecutionEnvironmentFactory.createNew("test","127.0.0.1");
+        ConnectionManager.getInstance().updateRecentConnectionsList(env);
+        List<ExecutionEnvironment> ret = ConnectionManager.getInstance().getRecentConnections();
+        assertTrue(!ret.isEmpty());
+        ConnectionManager.getInstance().deleteConnectionFromRecentConnections(env);
+        List<ExecutionEnvironment> ret2 = ConnectionManager.getInstance().getRecentConnections();
+        assertTrue(ret2.isEmpty());
+    }
 
+    @Test
     public void testGetRecentConnections() throws Exception {
         String section = "remote.platforms";
         ExecutionEnvironment[] envs = NativeExecutionTestSupport.getTestExecutionEnvironmentsFromSection(section);
@@ -90,6 +85,7 @@ public class ConnectionManagerTest extends NativeExecutionBaseTestCase {
 
     @RandomlyFails
     @ForAllEnvironments(section = "remote.platforms")
+    @Test
     public void testConnectDisconnect() throws Exception {
         final ExecutionEnvironment execEnv = getTestExecutionEnvironment();
         assert (execEnv != null);
@@ -122,6 +118,7 @@ public class ConnectionManagerTest extends NativeExecutionBaseTestCase {
         System.out.println(getName() + " finished");
     }
 
+    @Test
     public void testGetConnectToAction() throws Exception {
         final int threadsNum = 10;
         RcFile rcFile = NativeExecutionTestSupport.getRcFile();

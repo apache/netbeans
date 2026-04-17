@@ -155,7 +155,7 @@ public class TestUtil {
                         if (!f.getNameExt().equals("module-info.class")) {
                             out.putNextEntry(new ZipEntry(FileUtil.getRelativePath(root, f)));
                             try (InputStream in = f.getInputStream()) {
-                                FileUtil.copy(in, out);
+                                in.transferTo(out);
                             }
                         }
                     }

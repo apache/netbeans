@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -53,7 +54,6 @@ import org.openide.cookies.EditorCookie.Observable;
 import org.openide.loaders.DataObject;
 import org.openide.util.Exceptions;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 
 
 /**
@@ -78,7 +78,7 @@ public final class BookmarkList {
 
     private static final String PROP_BOOKMARKS = "bookmarks"; //NOI18N
 
-    private static Set<Observable> observedObservables = new WeakSet<Observable> ();
+    private static Set<Observable> observedObservables = Collections.newSetFromMap(new WeakHashMap<>());
 
     /**
      * Document for which the bookmark list was created.

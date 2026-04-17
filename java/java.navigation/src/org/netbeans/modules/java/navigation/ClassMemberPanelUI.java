@@ -173,7 +173,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
         manager.addPropertyChangeListener(this);
         
         // Tree view of the elements
-        elementView = createBeanTreeView();        
+        elementView = createBeanTreeView();
         add(elementView, BorderLayout.CENTER);
                
         // filters
@@ -424,9 +424,7 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
                     done();
                     boolean scrollOnExpand = getScrollOnExpand();
                     setScrollOnExpand( false );
-                    elementView.setAutoWaitCursor(false);
                     elementView.expandAll();
-                    elementView.setAutoWaitCursor(true);
                     setScrollOnExpand( scrollOnExpand );
 
                     if (PERF_LOG.isLoggable(Level.FINE)) {
@@ -525,7 +523,9 @@ public class ClassMemberPanelUI extends javax.swing.JPanel
     }
     
     private MyBeanTreeView createBeanTreeView() {
-        return new MyBeanTreeView();
+        MyBeanTreeView ret = new MyBeanTreeView();
+        ret.setAutoWaitCursor(false);
+        return ret;
     }
 
     private void scheduleJavadocRefresh(final int time) {

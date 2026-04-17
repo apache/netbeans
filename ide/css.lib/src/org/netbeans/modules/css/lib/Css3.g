@@ -104,7 +104,7 @@ package org.netbeans.modules.css.lib;
     private boolean tokenNameEquals(String tokenImage) {
         return tokenImage.equalsIgnoreCase(input.LT(1).getText());
     }
-    
+
     private boolean tokenNameEquals2(String tokenImage) {
         return tokenImage.equalsIgnoreCase(input.LT(2).getText());
     }
@@ -440,15 +440,38 @@ mediaQueryList
  ;
 
 mediaQuery
- :
-    (mediaQueryOperator ws? )?  mediaType ((ws? key_and)=> ws? key_and ws? mediaExpression )*
-    | mediaExpression ((ws? key_and)=> ws? key_and ws? mediaExpression )*
+    :
+    mediaCondition
+    | (mediaQueryOperator ws? )?  mediaType ((ws? key_and) => ws? key_and ws? mediaConditionWithoutOr)?
     | {isLessSource()}? cp_variable
  ;
 
 mediaQueryOperator
- 	: key_only | NOT
- 	;
+    :
+    key_only | NOT
+;
+
+mediaCondition
+    :
+    (NOT ws?) mediaInParens //media-not
+    | mediaInParens  (ws? (
+        ws? key_and ws? mediaInParens //media-and
+        | ws? key_or ws? mediaInParens //media-or
+          ) 
+      )*
+    | LPAREN ws* RPAREN
+;
+
+mediaConditionWithoutOr
+    :
+    (NOT ws?) mediaInParens //media-not
+    | mediaInParens (ws? key_and ws? mediaInParens)* //media-and
+    | (HASH) => {isCssPreprocessorSource()}? sass_interpolation_expression_var
+;
+
+mediaInParens:
+   LPAREN ws? (mediaCondition | mediaExpression) ws? RPAREN
+;
 
 mediaType
  : IDENT | GEN | {isCssPreprocessorSource()}? sass_interpolation_expression_var
@@ -456,19 +479,33 @@ mediaType
 
 mediaExpression
     :
-    (LPAREN) => (LPAREN ws? mediaFeature mediaFeatureValue? ws? RPAREN)
+    mediaFeature (ws? (COLON | mediaComparisonOperator) ws? mediaFeatureValue)?
+    | mediaFeatureRangeContext
     | (HASH) => {isCssPreprocessorSource()}? sass_interpolation_expression_var
     ;
 
-mediaFeatureValue
-    :
-    ws? COLON ws?
-    (
-        {isCssPreprocessorSource()}? cp_expression
-        |
-        expression
-    )
+mediaComparisonOperator
+    : 
+    OPEQ | LESS | LESS_OR_EQ | GREATER | GREATER_OR_EQ
+    ;    
+
+mediaRangeExplicitValue
+    : LENGTH | EMS |  REM | RESOLUTION | EXS | DIMENSION
     ;
+
+mediaFeatureValue 
+   :
+   mediaRangeExplicitValue 
+   | {isCssPreprocessorSource()}? cp_expression
+   | expression
+;
+
+mediaFeatureRangeContext
+    :
+    (mediaFeatureValue ws? (LESS | LESS_OR_EQ) ) => mediaFeatureValue ws? (LESS | LESS_OR_EQ)  ws? mediaFeature (ws? (LESS | LESS_OR_EQ) ws? mediaFeatureValue)?
+    | (mediaFeatureValue ws? (GREATER | GREATER_OR_EQ) ) => mediaFeatureValue ws? (GREATER | GREATER_OR_EQ)  ws? mediaFeature (ws? (GREATER | GREATER_OR_EQ) ws? mediaFeatureValue)?
+    | mediaFeatureValue ws? OPEQ ws? mediaFeature
+;
 
 mediaFeature
  : IDENT | GEN | {isCssPreprocessorSource()}? ( cp_variable | sass_interpolation_expression_var )
@@ -713,7 +750,7 @@ atRuleId
 	;
 
 generic_at_rule
-    : AT_IDENT ws ((LBRACE) => braceBlock2 | (componentValue) => componentValue) ((ws (LBRACE | (componentValue) => componentValue)) => (ws ((LBRACE) => braceBlock2 | (componentValue) => componentValue)))*;
+    : {! tokenNameEquals("@charset")}? AT_IDENT (( ~ (SEMI | LBRACE)) => componentValue )* ((LBRACE) => braceBlock2 | SEMI);
 
 moz_document
 	:
@@ -731,7 +768,7 @@ moz_document_function
 //http://developer.apple.com/library/safari/#documentation/appleapplications/reference/SafariCSSRef/Articles/OtherStandardCSS3Features.html#//apple_ref/doc/uid/TP40007601-SW1
 webkitKeyframes
 	:
-	WEBKIT_KEYFRAMES_SYM ws? atRuleId ws?
+	( WEBKIT_KEYFRAMES_SYM | KEYFRAMES_SYM | {tokenNameEquals("@-moz-keyframes")}? AT_IDENT | {tokenNameEquals("@-o-keyframes")}? AT_IDENT ) ws? atRuleId ws?
 	LBRACE ws?
 		( webkitKeyframesBlock ws? )*
 	RBRACE
@@ -1041,7 +1078,9 @@ slAttributeValue
         ;
 
 pseudo
-    : ( COLON | DCOLON )
+    : (( COLON | DCOLON ) {tokenNameEquals("host")}? IDENT (ws? LPAREN))=> ( COLON | DCOLON ) IDENT ( ws? LPAREN ws? ( selector ws?)? RPAREN )?
+    | (( COLON | DCOLON ) {tokenNameEquals("slotted")}? IDENT (ws? LPAREN))=> ( COLON | DCOLON ) IDENT ( ws? LPAREN ws? ( selector ws?)? RPAREN )
+    | ( COLON | DCOLON )
              (
                 (
                     ( IDENT | GEN )
@@ -1261,7 +1300,7 @@ cp_variable_declaration
 cp_variable
     :
         //every token which might possibly begin with the at sign
-        {isLessSource()}? ( AT_IDENT | IMPORT_SYM | PAGE_SYM | MEDIA_SYM | NAMESPACE_SYM | CHARSET_SYM | COUNTER_STYLE_SYM | FONT_FACE_SYM | TOPLEFTCORNER_SYM | TOPLEFT_SYM | TOPCENTER_SYM | TOPRIGHT_SYM | TOPRIGHTCORNER_SYM | BOTTOMLEFTCORNER_SYM | BOTTOMLEFT_SYM | BOTTOMCENTER_SYM | BOTTOMRIGHT_SYM | BOTTOMRIGHTCORNER_SYM | LEFTTOP_SYM | LEFTMIDDLE_SYM | LEFTBOTTOM_SYM | RIGHTTOP_SYM | RIGHTMIDDLE_SYM | RIGHTBOTTOM_SYM | MOZ_DOCUMENT_SYM | WEBKIT_KEYFRAMES_SYM | SASS_CONTENT | SASS_MIXIN | SASS_INCLUDE | SASS_EXTEND | SASS_DEBUG | SASS_WARN | SASS_IF | SASS_ELSE | SASS_FOR | SASS_FUNCTION | SASS_RETURN | SASS_EACH | SASS_WHILE | SASS_AT_ROOT | SASS_USE | SASS_FORWARD )
+        {isLessSource()}? ( AT_IDENT | IMPORT_SYM | PAGE_SYM | MEDIA_SYM | NAMESPACE_SYM | CHARSET_SYM | COUNTER_STYLE_SYM | FONT_FACE_SYM | TOPLEFTCORNER_SYM | TOPLEFT_SYM | TOPCENTER_SYM | TOPRIGHT_SYM | TOPRIGHTCORNER_SYM | BOTTOMLEFTCORNER_SYM | BOTTOMLEFT_SYM | BOTTOMCENTER_SYM | BOTTOMRIGHT_SYM | BOTTOMRIGHTCORNER_SYM | LEFTTOP_SYM | LEFTMIDDLE_SYM | LEFTBOTTOM_SYM | RIGHTTOP_SYM | RIGHTMIDDLE_SYM | RIGHTBOTTOM_SYM | MOZ_DOCUMENT_SYM | WEBKIT_KEYFRAMES_SYM | SASS_CONTENT | SASS_MIXIN | SASS_INCLUDE | SASS_EXTEND | SASS_DEBUG | SASS_WARN | SASS_IF | SASS_ELSE | SASS_FOR | SASS_FUNCTION | SASS_RETURN | SASS_EACH | SASS_WHILE | SASS_AT_ROOT | SASS_USE | SASS_FORWARD | KEYFRAMES_SYM )
         |
         {isScssSource()}? ( SASS_VAR | IDENT DOT SASS_VAR )
     ;
@@ -2003,6 +2042,7 @@ FONT_FACE_SYM       : '@FONT-FACE';
 SUPPORTS_SYM        : '@SUPPORTS';
 LAYER_SYM           : '@LAYER';
 CONTAINER_SYM       : '@CONTAINER';
+KEYFRAMES_SYM       : '@KEYFRAMES';
 
 TOPLEFTCORNER_SYM     :'@TOP-LEFT-CORNER';
 TOPLEFT_SYM           :'@TOP-LEFT';

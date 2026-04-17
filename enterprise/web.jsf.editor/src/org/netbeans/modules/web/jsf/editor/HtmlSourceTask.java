@@ -18,12 +18,15 @@
  */
 package org.netbeans.modules.web.jsf.editor;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 import javax.swing.text.Document;
+
 import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.api.lexer.InputAttributes;
 import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
@@ -34,20 +37,25 @@ import org.netbeans.modules.parsing.spi.SchedulerEvent;
 import org.netbeans.modules.parsing.spi.SchedulerTask;
 import org.netbeans.modules.parsing.spi.ParserResultTask;
 import org.netbeans.modules.parsing.spi.TaskFactory;
+import org.netbeans.modules.web.jsfapi.api.Attribute;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
 import org.netbeans.modules.web.jsfapi.api.Library;
 import org.netbeans.modules.web.jsfapi.api.LibraryComponent;
-import org.netbeans.modules.web.jsfapi.api.NamespaceUtils;
+import org.netbeans.modules.web.jsfapi.api.LibraryInfo;
 import org.netbeans.modules.web.jsfapi.api.Tag;
 
 /**
- * 
+ *
  * @author Marek Fukala
  */
 public final class HtmlSourceTask extends ParserResultTask<HtmlParserResult> {
 
     private static final String CSS_CLASS_MAP_PROPERTY_KEY = "cssClassTagAttrMap"; //semi api - defined in HtmlLexer
-    private static final String STYLE_CLASS_ATTR_NAME = "styleClass"; //NOI18N
+    private static final String CLASS = "Class"; //NOI18N
+    private static final String CLASSES = "Classes"; //NOI18N
+    private static final EnumSet<DefaultLibraryInfo> LIBRARIES_TO_SKIP = EnumSet.of(DefaultLibraryInfo.FACELETS, DefaultLibraryInfo.JSF,
+            DefaultLibraryInfo.COMPOSITE, DefaultLibraryInfo.JSF_CORE, DefaultLibraryInfo.JSTL_CORE, DefaultLibraryInfo.JSTL_CORE_FUNCTIONS,
+            DefaultLibraryInfo.PASSTHROUGH);
 
     public static class Factory extends TaskFactory {
 
@@ -105,45 +113,43 @@ public final class HtmlSourceTask extends ParserResultTask<HtmlParserResult> {
         }
 
         //enable css class embedding in default facelets libraries tags
-        //TODO this should be done in some more generic way but so far I haven't
-        //found a way how to get an info if a tag's attribute represents css class or not.
-        //It seems that almost only html library contains such tags, we should
-        //probably create some metadata also for third party libraries
+        Map<String, Collection<String>> cssClassTagAttrMap = new HashMap<>();
+        
+        //lets build a map of tags containing attributes whose values are
+        //supposed to represent a css class. The map is then put into the document's
+        //input attributes and then html lexer takes this information into account
+        //when lexing the html code
+        for (Map.Entry<String, String> entry : result.getNamespaces().entrySet()) {
+            String prefix = entry.getValue();
+            if (prefix == null) {
+                continue;
+            }
+            String namespace = entry.getKey();
+            LibraryInfo libraryInfo = DefaultLibraryInfo.forNamespace(namespace);
+            if (libraryInfo instanceof DefaultLibraryInfo dli && LIBRARIES_TO_SKIP.contains(dli)) {
+                continue;
+            }
 
-        //check if the default html library is defined
-        String prefix = NamespaceUtils.getForNs(result.getNamespaces(), DefaultLibraryInfo.HTML.getNamespace());
-        if (prefix != null) {
-            //html lib declared, lets build a map of tags containing attributes whose values are
-            //supposed to represent a css class. The map is then put into the document's
-            //input attributes and then html lexer takes this information into account
-            //when lexing the html code
-            Map<String, Collection<String>> cssClassTagAttrMap = new HashMap<>();
-            Library lib = sup.getLibrary(DefaultLibraryInfo.HTML.getNamespace());
+            Library lib = sup.getLibrary(namespace);
             if (lib != null) {
                 Collection<? extends LibraryComponent> components = lib.getComponents();
                 for (LibraryComponent comp : components) {
                     Tag tag = comp.getTag();
-                    //hacking datatable's attributes embedding - waiting for Tomasz' tag metadata API
-                    if ("dataTable".equals(tag.getName())) { //NOI18N
-                        cssClassTagAttrMap.put(prefix + ":" + tag.getName(),
-                                Arrays.asList(new String[]{STYLE_CLASS_ATTR_NAME,
-                                    "headerClass", "footerClass", "rowClasses", "columnClasses", "captionClass"})); //NOI18N
-                    } else {
-                        if (tag.getAttribute(STYLE_CLASS_ATTR_NAME) != null) {
-                            cssClassTagAttrMap.put(prefix + ":" + tag.getName(), Collections.singletonList(STYLE_CLASS_ATTR_NAME));
-                        }
+                    if (tag == null) {
+                        continue;
+                    }
+                    List<String> cssClassAttributes = tag.getAttributes().stream()
+                            .map(Attribute::getName)
+                            .filter(name -> name.endsWith(CLASS) || name.endsWith(CLASSES))
+                            .toList();
+                    if (!cssClassAttributes.isEmpty()) {
+                        cssClassTagAttrMap.put(prefix + ":" + tag.getName(), cssClassAttributes);
                     }
                 }
             }
-
-            inputAttributes.setValue(HTMLTokenId.language(), CSS_CLASS_MAP_PROPERTY_KEY, cssClassTagAttrMap, true);
-
-        } else {
-            //remove the map, the html library is not declared (anymore)
-            inputAttributes.setValue(HTMLTokenId.language(), CSS_CLASS_MAP_PROPERTY_KEY, null, true);
         }
 
+        inputAttributes.setValue(HTMLTokenId.language(), CSS_CLASS_MAP_PROPERTY_KEY, cssClassTagAttrMap, true);
 
     }
 }
-

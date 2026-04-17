@@ -31,6 +31,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
 import org.apache.tools.ant.module.api.IntrospectedInfo;
@@ -122,7 +123,27 @@ public class AntSettings {
     }
 
     public static synchronized void setCustomDefs(IntrospectedInfo ii) {
-        IntrospectedInfoSerializer.instance.store(prefs().node(PROP_CUSTOM_DEFS), ii);
+        Preferences prefs = prefs();
+        Preferences node = prefs.node(PROP_CUSTOM_DEFS);
+        try {
+            IntrospectedInfoSerializer.instance.store(node, ii);
+        } catch (IllegalArgumentException iae) {
+            // recreate node in case of corrupted files. Once Preferences are loaded,
+            // keys which contain code point U+0000 can't be used anymore (clear() will also fail)
+            if (iae.getMessage().contains("U+0000")) {
+                LOG.log(Level.WARNING, "recreating {0} preferences node due to code point U+0000", PROP_CUSTOM_DEFS);
+                try {
+                    node.removeNode();
+                    prefs.flush();
+                    node = prefs.node(PROP_CUSTOM_DEFS);
+                    IntrospectedInfoSerializer.instance.store(node, ii);
+                } catch (BackingStoreException bse) {
+                    throw new RuntimeException("can't write to preferences", bse);
+                }
+            } else {
+                throw iae;
+            }
+        }
         customDefs = ii;
     }
 

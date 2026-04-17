@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        opacity: .67;
+      }
+
+      .st0, .st1 {
+        fill: #fff;
+      }
+
+      .st2 {
+        fill: #e9f7ff;
+      }
+
+      .st3 {
+        fill: #7a8896;
+      }
+
+      .st4 {
+        fill: #62707c;
+      }
+
+      .st5 {
+        fill: #3eadff;
+      }
+
+      .st6 {
+        opacity: .33;
+      }
+    </style>
+  </defs>
+  <rect class="st1" x="1" width="15" height="7"/>
+  <g class="st6">
+    <path d="M15,1v5H2V1h13M16,0H1v7h15V0h0Z"/>
+  </g>
+  <rect class="st5" x="1.014" width="14.986" height="3"/>
+  <rect class="st0" x="13" y="1" width="1" height="1"/>
+  <g>
+    <rect class="st2" x="1.5" y="8.5" width="5" height="2"/>
+    <path class="st4" d="M6,9v1H2v-1h4M7,8H1v3h6v-3h0Z"/>
+  </g>
+  <g>
+    <rect class="st2" x="10.5" y="8.5" width="5" height="2"/>
+    <path class="st4" d="M15,9v1h-4v-1h4M16,8h-6v3h6v-3h0Z"/>
+  </g>
+  <g>
+    <rect class="st2" x="5.5" y="12.5" width="6" height="2"/>
+    <path class="st4" d="M11,13v1h-5v-1h5M12,12h-7v3h7v-3h0Z"/>
+  </g>
+  <rect class="st3" x="8" y="7" width="1" height="5"/>
+  <rect class="st3" x="7" y="9" width="3" height="1"/>
+  <description>Apache NetBeans Logo
+  </description>
+</svg>

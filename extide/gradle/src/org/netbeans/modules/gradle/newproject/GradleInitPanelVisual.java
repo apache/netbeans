@@ -185,7 +185,6 @@ public class GradleInitPanelVisual extends javax.swing.JPanel {
     private void btBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBrowseActionPerformed
         if ("BROWSE".equals(evt.getActionCommand())) { //NOI18N
             JFileChooser chooser = new JFileChooser();
-            chooser.setCurrentDirectory(null);
             chooser.setDialogTitle(Bundle.TIT_Select_Project_Location());
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             String path = tfLocation.getText();

@@ -168,7 +168,7 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
     static void search(String className, Indexer indexer, Collection<IndexingContext> contexts, List<? super ClassUsage> results) throws IOException {
         String searchString = crc32base32(className.replace('.', '/'));
         Query refClassQuery = indexer.constructQuery(FLD_NB_DEPENDENCY_CLASS.getOntology(), new StringSearchExpression(searchString));
-        TopScoreDocCollector collector = TopScoreDocCollector.create(NexusRepositoryIndexerImpl.MAX_RESULT_COUNT, Integer.MAX_VALUE);
+        TopScoreDocCollector collector = TopScoreDocCollector.create(NexusRepositoryIndexManager.MAX_RESULT_COUNT, Integer.MAX_VALUE);
         for (IndexingContext context : contexts) {
             IndexSearcher searcher = context.acquireIndexSearcher();
             try {
@@ -185,7 +185,7 @@ class ClassDependencyIndexCreator extends AbstractIndexCreator {
                         ArtifactInfo ai = IndexUtils.constructArtifactInfo(d, context);
                         if (ai != null) {
                             ai.setRepository(context.getRepositoryId());
-                            List<NBVersionInfo> version = NexusRepositoryIndexerImpl.convertToNBVersionInfo(List.of(ai));
+                            List<NBVersionInfo> version = NexusRepositoryQueries.convertToNBVersionInfo(List.of(ai));
                             if (!version.isEmpty()) {
                                 results.add(new ClassUsage(version.get(0), refClasses));
                             }

@@ -32,10 +32,7 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
  */
 public class RunnerHttpCreateConnectorConnectionPool extends RunnerHttp {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Create JDBC connection pool command <code>poolname</code>
      *  parameter name. */
     private static final String POOL_NAME_PARAM = "poolname";
@@ -53,10 +50,7 @@ public class RunnerHttpCreateConnectorConnectionPool extends RunnerHttp {
      *  parameter name. */
     private static final String PROPERTY_PARAM = "property";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Builds create JDBC connection pool query string for given command.
      * <p/>
@@ -116,10 +110,7 @@ public class RunnerHttpCreateConnectorConnectionPool extends RunnerHttp {
         return sb.toString();
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.

@@ -832,7 +832,7 @@ public class NodeTableModel extends AbstractTableModel {
          * @param visibleIndex New value of property visibleIndex.
          */
         public void setVisibleIndex(int visibleIndex) {
-            property.setValue(ATTR_ORDER_NUMBER, new Integer(visibleIndex));
+            property.setValue(ATTR_ORDER_NUMBER, visibleIndex);
         }
     }
 }

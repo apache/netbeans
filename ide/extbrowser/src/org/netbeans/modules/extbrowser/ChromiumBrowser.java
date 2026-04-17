@@ -36,7 +36,6 @@ public class ChromiumBrowser extends ExtWebBrowser implements PropertyChangeList
     /** Creates new ExtWebBrowser */
     public ChromiumBrowser() {
         super(PrivateBrowserFamilyId.CHROMIUM);
-        ddeServer = ExtWebBrowser.CHROMIUM;
     }
 
     public static Boolean isHidden () {

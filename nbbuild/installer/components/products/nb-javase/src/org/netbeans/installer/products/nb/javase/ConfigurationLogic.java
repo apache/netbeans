@@ -40,7 +40,6 @@ import org.netbeans.installer.wizard.components.panels.JdkLocationPanel;
  * @author Kirill Sorokin
  */
 public class ConfigurationLogic extends NbClusterConfigurationLogic {
-    /////////////////////////////////////////////////////////////////////////////////
     // Constants
     private static final String JAVA_CLUSTER = 
             "{java-cluster}"; // NOI18N
@@ -55,7 +54,6 @@ public class ConfigurationLogic extends NbClusterConfigurationLogic {
     private static final String JUNIT_ACCEPTED_PROPERTY =
             "junit.accepted"; // NOI18N
     
-    /////////////////////////////////////////////////////////////////////////////////
     // Instance
     public ConfigurationLogic() throws InitializationException {
         super(new String[]{

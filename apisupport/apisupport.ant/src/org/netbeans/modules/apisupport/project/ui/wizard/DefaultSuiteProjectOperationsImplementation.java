@@ -19,10 +19,8 @@
 
 package org.netbeans.modules.apisupport.project.ui.wizard;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
-import java.awt.GridBagConstraints;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,8 +41,6 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -53,7 +49,6 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -199,7 +194,7 @@ public final class DefaultSuiteProjectOperationsImplementation {
         final Map<NbModuleProject,List<FileObject>> subModulesDataFiles = getSubModulesDataFiles(subModules);
         
         
-        final ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(DefaultSuiteProjectOperationsImplementation.class, "LBL_Delete_Project_Caption"));
+        final ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(DefaultSuiteProjectOperationsImplementation.class, "LBL_Delete_Project_Caption"));
         final DefaultSuiteProjectDeletePanel deletePanel = new DefaultSuiteProjectDeletePanel(handle, displayName, FileUtil.getFileDisplayName(projectFolder), !subModulesDataFiles.isEmpty(), !subModules.isEmpty());
         
         String caption = NbBundle.getMessage(DefaultSuiteProjectOperationsImplementation.class, "LBL_Delete_Project_Caption");

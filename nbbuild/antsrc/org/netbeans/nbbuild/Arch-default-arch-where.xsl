@@ -25,11 +25,9 @@
 
     <!-- print out <api /> dependencies on all needed netbeans subprojects -->
     <xsl:template match="/" >
-        <p>
             The sources for the module are in the
             <a href="https://gitbox.apache.org/repos/asf?p=netbeans.git">Apache Git repositories</a> 
             or in the <a href="https://github.com/apache/netbeans">GitHub repositories</a>.
-        </p>
     </xsl:template>    
-        </xsl:stylesheet> 
+</xsl:stylesheet> 
 

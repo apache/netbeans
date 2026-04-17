@@ -32,6 +32,7 @@ import java.util.prefs.Preferences;
 import javax.swing.text.Document;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.EditorKit;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.SimpleValueNames;
@@ -388,8 +389,8 @@ public class Formatter {
                 public void run () {
                     try {
                         // Determine first white char before dotPos
-                        int rsPos = Utilities.getRowStart(doc, dotPos);
-                        int startPos = Utilities.getFirstNonWhiteBwd(doc, dotPos, rsPos);
+                        int rsPos = LineDocumentUtils.getLineStartOffset(doc, dotPos);
+                        int startPos = LineDocumentUtils.getPreviousNonWhitespace(doc, dotPos, rsPos);
                         startPos = (startPos >= 0) ? (startPos + 1) : rsPos;
 
                         int startCol = Utilities.getVisualColumn(doc, startPos);
@@ -430,11 +431,11 @@ public class Formatter {
                 public void run () {
                     try {
                         int indent = newIndent < 0 ? 0 : newIndent;
-                        int firstNW = Utilities.getRowFirstNonWhite(doc, pos);
+                        int firstNW = LineDocumentUtils.getLineFirstNonWhitespace(doc, pos);
                         if (firstNW == -1) { // valid first non-blank
-                            firstNW = Utilities.getRowEnd(doc, pos);
+                            firstNW = LineDocumentUtils.getLineEndOffset(doc, pos);
                         }
-                        int replacePos = Utilities.getRowStart(doc, pos);
+                        int replacePos = LineDocumentUtils.getLineStartOffset(doc, pos);
                         int removeLen = firstNW - replacePos;
                         CharSequence removeText = DocumentUtilities.getText(doc, replacePos, removeLen);
                         String newIndentText = getIndentString(doc, indent);
@@ -494,15 +495,15 @@ public class Formatter {
                 public void run () {
                     try {
                         int indentDelta = shiftCnt * doc.getShiftWidth();
-                        int end = (endPos > 0 && Utilities.getRowStart(doc, endPos) == endPos) ?
+                        int end = (endPos > 0 && LineDocumentUtils.getLineStartOffset(doc, endPos) == endPos) ?
                             endPos - 1 : endPos;
 
-                        int pos = Utilities.getRowStart(doc, startPos );
-                        for (int lineCnt = Utilities.getRowCount(doc, startPos, end);
+                        int pos = LineDocumentUtils.getLineStartOffset(doc, startPos );
+                        for (int lineCnt = LineDocumentUtils.getLineCount(doc, startPos, end);
                                 lineCnt > 0; lineCnt--
                             ) {
                             int indent = Utilities.getRowIndent(doc, pos);
-                            if (Utilities.isRowWhite(doc, pos)) {
+                            if (LineDocumentUtils.isLineWhitespace(doc, pos)) {
                                 indent = -indentDelta; // zero indentation for white line
                             }
                             changeRowIndent(doc, pos, Math.max(indent + indentDelta, 0));
@@ -530,7 +531,7 @@ public class Formatter {
                 ind = -ind;
             }
 
-            if (Utilities.isRowWhite(doc, dotPos)) {
+            if (LineDocumentUtils.isLineWhitespace(doc, dotPos)) {
                 ind += Utilities.getVisualColumn(doc, dotPos);
             } else {
                 ind += Utilities.getRowIndent(doc, dotPos);

@@ -30,10 +30,7 @@ import org.netbeans.modules.payara.tooling.utils.ServerUtils;
  */
 public class PayaraServerEntity implements PayaraServer {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Payara server name in IDE. Used as key attribute. */
     private String name;
 
@@ -104,10 +101,7 @@ public class PayaraServerEntity implements PayaraServer {
     /** Payara server administration interface type. */
     private PayaraAdminInterface adminInterface;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs empty class instance. No default values are set.
      */
@@ -156,10 +150,7 @@ public class PayaraServerEntity implements PayaraServer {
         this.serverHome = serverHome;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get Payara server name.
      * <p/>

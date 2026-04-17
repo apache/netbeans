@@ -433,7 +433,6 @@ public class CustomizerSources extends javax.swing.JPanel implements HelpCtx.Pro
     
     private void jButtonBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBrowseActionPerformed
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         File fileName = new File(jTextFieldConfigFilesFolder.getText());
         File configFiles = fileName.isAbsolute() ? fileName : new File(projectFld, fileName.getPath());

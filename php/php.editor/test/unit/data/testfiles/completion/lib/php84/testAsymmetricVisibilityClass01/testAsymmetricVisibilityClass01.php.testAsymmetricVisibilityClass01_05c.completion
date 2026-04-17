@@ -1,0 +1,5 @@
+Code completion result for source line:
+protected private(set) readon|ly int $protectedPrivateSet; // prop
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+------------------------------------
+KEYWORD    readonly                                   null

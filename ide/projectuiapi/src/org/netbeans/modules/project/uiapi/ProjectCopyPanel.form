@@ -25,7 +25,7 @@
   <AccessibilityProperties>
     <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
       <ResourceString bundle="org/netbeans/modules/project/uiapi/Bundle.properties" key="ACSD_Copy_Move_Panel" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;, {arguments})">
-        <Argument index="0" javacode="new Integer(isMove ? 1 : 0)"/>
+        <Argument index="0" javacode="Integer.valueOf(isMove ? 1 : 0)"/>
       </ResourceString>
     </Property>
   </AccessibilityProperties>
@@ -35,6 +35,7 @@
     <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="true"/>
     <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
@@ -47,7 +48,7 @@
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/netbeans/modules/project/uiapi/Bundle.properties" key="LBL_Copy_Move_Dialog_Text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;, {arguments})">
-            <Argument index="0" javacode="new Integer(isMove ? 1 : 0)"/>
+            <Argument index="0" javacode="Integer.valueOf(isMove ? 1 : 0)"/>
             <Argument index="1" javacode="ProjectUtils.getInformation(project).getDisplayName()"/>
           </ResourceString>
         </Property>
@@ -161,8 +162,8 @@
     </Component>
     <Component class="javax.swing.JTextField" name="projectFolder">
       <Properties>
-        <Property name="columns" type="int" value="30"/>
         <Property name="editable" type="boolean" value="false"/>
+        <Property name="columns" type="int" value="30"/>
       </Properties>
       <AccessibilityProperties>
         <Property name="AccessibleContext.accessibleName" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
@@ -233,7 +234,7 @@
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="org/netbeans/modules/project/uiapi/Bundle.properties" key="LBL_Copying_Moving" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;, {arguments})">
-                    <Argument index="0" javacode="isMove ? new Integer(1) : new Integer(0)"/>
+                    <Argument index="0" javacode="isMove ? Integer.valueOf(1) : Integer.valueOf(0)"/>
                   </ResourceString>
                 </Property>
               </Properties>
@@ -261,8 +262,8 @@
     </Container>
     <Component class="javax.swing.JTextArea" name="warningTextArea">
       <Properties>
-        <Property name="columns" type="int" value="20"/>
         <Property name="editable" type="boolean" value="false"/>
+        <Property name="columns" type="int" value="20"/>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
           <Connection code="UIManager.getColor(&quot;nb.errorForeground&quot;)" type="code"/>
         </Property>

@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 <#if isJSF40?? || isJSF41??>
     xmlns:cc="jakarta.faces.composite">
-<#else if isJSF22?? || isJSF30??>
+<#elseif isJSF22?? || isJSF30??>
     xmlns:cc="http://xmlns.jcp.org/jsf/composite">
 <#else>
     xmlns:cc="http://java.sun.com/jsf/composite">

@@ -23,7 +23,6 @@ import java.io.*;
 import java.beans.*;
 import java.lang.reflect.*;
 import java.util.*;
-import java.text.*;
 import org.w3c.dom.*;
 
 /**
@@ -695,7 +694,7 @@ public class JavaBeansUtil {
         if (typeName == "java.lang.Short" || typeName == "short")
             return Short.valueOf(value);
         if (typeName == "java.lang.Character" || typeName == "char")
-            return new Character(value.charAt(0));
+            return Character.valueOf(value.charAt(0));
         if (typeName == "java.net.URL") {
             try {
                 return new java.net.URL(value);
@@ -946,8 +945,6 @@ public class JavaBeansUtil {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////
-
     /**
      * Create a bean with dummy values.
      * If a bean property write method fails or the constructor to the bean
@@ -1072,7 +1069,7 @@ public class JavaBeansUtil {
         else if (typeName == "java.lang.Short" || typeName == "short")
             return Short.valueOf("1");
         else if (typeName == "java.lang.Character" || typeName == "char")
-            return new Character('C');
+            return Character.valueOf('C');
         else if (typeName == "java.math.BigDecimal")
             return new java.math.BigDecimal("1.0");
         else if (typeName == "java.math.BigInteger")

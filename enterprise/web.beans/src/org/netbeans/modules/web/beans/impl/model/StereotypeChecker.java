@@ -19,6 +19,7 @@
 package org.netbeans.modules.web.beans.impl.model;
 
 import java.lang.annotation.ElementType;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +31,9 @@ import org.netbeans.modules.j2ee.metadata.model.api.support.annotation.Annotatio
 import org.netbeans.modules.web.beans.analysis.analyzer.annotation.StereotypeVerifier;
 import org.netbeans.modules.web.beans.analysis.analyzer.annotation.TargetVerifier;
 
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.STEREOTYPE_FQN;
+import static org.netbeans.modules.web.beans.analysis.analyzer.AnnotationUtil.STEREOTYPE_FQN_JAKARTA;
+
 
 /**
  * @author ads
@@ -37,7 +41,9 @@ import org.netbeans.modules.web.beans.analysis.analyzer.annotation.TargetVerifie
  */
 public class StereotypeChecker extends RuntimeAnnotationChecker {
     
-    static final String STEREOTYPE = "javax.enterprise.inject.Stereotype";  //NOI18N
+    private static final List<String> ANNOTATIONS = List.of(
+            STEREOTYPE_FQN, STEREOTYPE_FQN_JAKARTA
+    );
     
     public StereotypeChecker(AnnotationHelper helper ){
         init(null, helper);
@@ -84,8 +90,8 @@ public class StereotypeChecker extends RuntimeAnnotationChecker {
      * @see org.netbeans.modules.web.beans.impl.model.RuntimeAnnotationChecker#getAnnotation()
      */
     @Override
-    protected String getAnnotation() {
-        return STEREOTYPE;
+    protected List<String> getAnnotation() {
+        return ANNOTATIONS;
     }
 
     /* (non-Javadoc)

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.104
+#Version 2.110
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -15,6 +15,7 @@ meth public void addFlavorListener(java.awt.datatransfer.FlavorListener)
 meth public void removeFlavorListener(java.awt.datatransfer.FlavorListener)
 meth public void setContents(java.awt.datatransfer.Transferable,java.awt.datatransfer.ClipboardOwner)
 supr java.lang.Object
+hfds currentDataFlavors,flavorListeners,name
 
 CLSS public abstract interface java.awt.datatransfer.FlavorListener
 intf java.util.EventListener
@@ -30,14 +31,16 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public abstract interface java.io.Serializable
 
 CLSS public abstract java.lang.ClassLoader
 cons protected init()
 cons protected init(java.lang.ClassLoader)
+cons protected init(java.lang.String,java.lang.ClassLoader)
 meth protected final java.lang.Class<?> defineClass(byte[],int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="1.1")
 meth protected final java.lang.Class<?> defineClass(java.lang.String,byte[],int,int)
 meth protected final java.lang.Class<?> defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
 meth protected final java.lang.Class<?> defineClass(java.lang.String,java.nio.ByteBuffer,java.security.ProtectionDomain)
@@ -46,21 +49,31 @@ meth protected final java.lang.Class<?> findSystemClass(java.lang.String) throws
 meth protected final void resolveClass(java.lang.Class<?>)
 meth protected final void setSigners(java.lang.Class<?>,java.lang.Object[])
 meth protected java.lang.Class<?> findClass(java.lang.String) throws java.lang.ClassNotFoundException
+meth protected java.lang.Class<?> findClass(java.lang.String,java.lang.String)
 meth protected java.lang.Class<?> loadClass(java.lang.String,boolean) throws java.lang.ClassNotFoundException
 meth protected java.lang.Object getClassLoadingLock(java.lang.String)
 meth protected java.lang.Package definePackage(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.net.URL)
 meth protected java.lang.Package getPackage(java.lang.String)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth protected java.lang.Package[] getPackages()
 meth protected java.lang.String findLibrary(java.lang.String)
 meth protected java.net.URL findResource(java.lang.String)
+meth protected java.net.URL findResource(java.lang.String,java.lang.String) throws java.io.IOException
 meth protected java.util.Enumeration<java.net.URL> findResources(java.lang.String) throws java.io.IOException
 meth protected static boolean registerAsParallelCapable()
+meth public final boolean isRegisteredAsParallelCapable()
 meth public final java.lang.ClassLoader getParent()
+meth public final java.lang.Module getUnnamedModule()
+meth public final java.lang.Package getDefinedPackage(java.lang.String)
+meth public final java.lang.Package[] getDefinedPackages()
 meth public java.io.InputStream getResourceAsStream(java.lang.String)
 meth public java.lang.Class<?> loadClass(java.lang.String) throws java.lang.ClassNotFoundException
+meth public java.lang.String getName()
 meth public java.net.URL getResource(java.lang.String)
 meth public java.util.Enumeration<java.net.URL> getResources(java.lang.String) throws java.io.IOException
+meth public java.util.stream.Stream<java.net.URL> resources(java.lang.String)
 meth public static java.io.InputStream getSystemResourceAsStream(java.lang.String)
+meth public static java.lang.ClassLoader getPlatformClassLoader()
 meth public static java.lang.ClassLoader getSystemClassLoader()
 meth public static java.net.URL getSystemResource(java.lang.String)
 meth public static java.util.Enumeration<java.net.URL> getSystemResources(java.lang.String) throws java.io.IOException
@@ -69,6 +82,8 @@ meth public void setClassAssertionStatus(java.lang.String,boolean)
 meth public void setDefaultAssertionStatus(boolean)
 meth public void setPackageAssertionStatus(java.lang.String,boolean)
 supr java.lang.Object
+hfds assertionLock,classAssertionStatus,classLoaderValueMap,classes,defaultAssertionStatus,defaultDomain,libraries,name,nameAndId,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,unnamedModule
+hcls ParallelLoaders
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -77,11 +92,13 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -91,65 +108,6 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
-
-CLSS public java.lang.SecurityManager
-cons public init()
-fld protected boolean inCheck
- anno 0 java.lang.Deprecated()
-meth protected boolean inClass(java.lang.String)
- anno 0 java.lang.Deprecated()
-meth protected boolean inClassLoader()
- anno 0 java.lang.Deprecated()
-meth protected int classDepth(java.lang.String)
- anno 0 java.lang.Deprecated()
-meth protected int classLoaderDepth()
- anno 0 java.lang.Deprecated()
-meth protected java.lang.Class<?> currentLoadedClass()
- anno 0 java.lang.Deprecated()
-meth protected java.lang.ClassLoader currentClassLoader()
- anno 0 java.lang.Deprecated()
-meth protected java.lang.Class[] getClassContext()
-meth public boolean checkTopLevelWindow(java.lang.Object)
- anno 0 java.lang.Deprecated()
-meth public boolean getInCheck()
- anno 0 java.lang.Deprecated()
-meth public java.lang.Object getSecurityContext()
-meth public java.lang.ThreadGroup getThreadGroup()
-meth public void checkAccept(java.lang.String,int)
-meth public void checkAccess(java.lang.Thread)
-meth public void checkAccess(java.lang.ThreadGroup)
-meth public void checkAwtEventQueueAccess()
- anno 0 java.lang.Deprecated()
-meth public void checkConnect(java.lang.String,int)
-meth public void checkConnect(java.lang.String,int,java.lang.Object)
-meth public void checkCreateClassLoader()
-meth public void checkDelete(java.lang.String)
-meth public void checkExec(java.lang.String)
-meth public void checkExit(int)
-meth public void checkLink(java.lang.String)
-meth public void checkListen(int)
-meth public void checkMemberAccess(java.lang.Class<?>,int)
- anno 0 java.lang.Deprecated()
-meth public void checkMulticast(java.net.InetAddress)
-meth public void checkMulticast(java.net.InetAddress,byte)
- anno 0 java.lang.Deprecated()
-meth public void checkPackageAccess(java.lang.String)
-meth public void checkPackageDefinition(java.lang.String)
-meth public void checkPermission(java.security.Permission)
-meth public void checkPermission(java.security.Permission,java.lang.Object)
-meth public void checkPrintJobAccess()
-meth public void checkPropertiesAccess()
-meth public void checkPropertyAccess(java.lang.String)
-meth public void checkRead(java.io.FileDescriptor)
-meth public void checkRead(java.lang.String)
-meth public void checkRead(java.lang.String,java.lang.Object)
-meth public void checkSecurityAccess(java.lang.String)
-meth public void checkSetFactory()
-meth public void checkSystemClipboardAccess()
- anno 0 java.lang.Deprecated()
-meth public void checkWrite(java.io.FileDescriptor)
-meth public void checkWrite(java.lang.String)
-supr java.lang.Object
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -172,6 +130,8 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.net.URLStreamHandlerFactory
 meth public abstract java.net.URLStreamHandler createURLStreamHandler(java.lang.String)
@@ -395,7 +355,7 @@ fld public final static java.lang.String PROP_MODULES = "modules"
 meth public boolean hasToEnableCompatModules(java.util.Set<org.netbeans.Module>)
 meth public boolean isOrWillEnable(org.netbeans.Module)
 meth public boolean shouldDelegateResource(org.netbeans.Module,org.netbeans.Module,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean shouldDelegateResource(org.netbeans.Module,org.netbeans.Module,java.lang.String,java.lang.ClassLoader)
 meth public boolean shutDown()
 meth public boolean shutDown(java.lang.Runnable)
@@ -414,12 +374,12 @@ meth public java.util.Collection<org.netbeans.Module> getAttachedFragments(org.n
 meth public java.util.List<org.netbeans.Module> simulateDisable(java.util.Set<org.netbeans.Module>)
 meth public java.util.List<org.netbeans.Module> simulateEnable(java.util.Set<org.netbeans.Module>)
 meth public java.util.Set<org.netbeans.Module> getModuleInterdependencies(org.netbeans.Module,boolean,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Set<org.netbeans.Module> getModuleInterdependencies(org.netbeans.Module,boolean,boolean,boolean)
 meth public java.util.Set<org.netbeans.Module> getModules()
 meth public java.util.concurrent.Future<java.lang.Boolean> shutDownAsync(java.lang.Runnable)
 meth public org.netbeans.Module create(java.io.File,java.lang.Object,boolean,boolean) throws java.io.IOException,org.netbeans.DuplicateException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.Module create(java.io.File,java.lang.Object,boolean,boolean,boolean) throws java.io.IOException,org.netbeans.DuplicateException
 meth public org.netbeans.Module createBundle(java.io.File,java.lang.Object,boolean,boolean,boolean,int) throws java.io.IOException,org.netbeans.DuplicateException
 meth public org.netbeans.Module createFixed(java.util.jar.Manifest,java.lang.Object,java.lang.ClassLoader) throws org.netbeans.DuplicateException,org.netbeans.InvalidException
@@ -450,13 +410,20 @@ meth public void flavorsChanged(java.awt.datatransfer.FlavorEvent)
 meth public void resultChanged(org.openide.util.LookupEvent)
 meth public void setContents(java.awt.datatransfer.Transferable,java.awt.datatransfer.ClipboardOwner)
 supr org.openide.util.datatransfer.ExClipboard
-hfds FIRING,RP,anyWindowIsActivated,convertors,getContentsTask,last,lastWindowActivated,lastWindowDeactivated,lastWindowDeactivatedSource,log,result,setContentsTask,slowSystemClipboard,systemClipboard
+hfds FIRING,RP,anyWindowIsActivated,convertors,getContentsTask,last,log,result,setContentsTask,slowSystemClipboard,systemClipboard
 hcls GetContents,LoggableTransferable,SetContents
 
 CLSS public org.netbeans.NbExecJavaStartTry
 cons public init()
 meth public static void main(java.lang.String[])
 supr java.lang.Object
+
+CLSS public org.netbeans.NbExit
+cons public init()
+meth public static boolean isExiting()
+meth public static void exit(int)
+supr java.lang.Object
+hfds officialExit
 
 CLSS public abstract org.netbeans.NetigsoFramework
 cons protected init()
@@ -533,30 +500,6 @@ CLSS public abstract interface static org.netbeans.Stamps$Updater
  outer org.netbeans.Stamps
 meth public abstract void cacheReady()
 meth public abstract void flushCaches(java.io.DataOutputStream) throws java.io.IOException
-
-CLSS public org.netbeans.TopSecurityManager
-cons public init()
-meth public boolean checkTopLevelWindow(java.lang.Object)
-meth public final void checkPropertyAccess(java.lang.String)
-meth public static void exit(int)
-meth public static void install()
-meth public static void makeSwingUseSpecialClipboard(java.awt.datatransfer.Clipboard)
-meth public static void register(java.lang.SecurityManager)
-meth public static void unregister(java.lang.SecurityManager)
-meth public void checkConnect(java.lang.String,int)
-meth public void checkConnect(java.lang.String,int,java.lang.Object)
-meth public void checkDelete(java.lang.String)
-meth public void checkExit(int)
-meth public void checkMemberAccess(java.lang.Class<?>,int)
-meth public void checkPermission(java.security.Permission)
-meth public void checkPermission(java.security.Permission,java.lang.Object)
-meth public void checkRead(java.io.FileDescriptor)
-meth public void checkRead(java.lang.String)
-meth public void checkWrite(java.io.FileDescriptor)
-meth public void checkWrite(java.lang.String)
-supr java.lang.SecurityManager
-hfds CLIPBOARD_FORBIDDEN,LOG,URLClass,accessControllerClass,allPermission,awtPermissionClass,callerWhiteList,check,classLoaderClass,delegates,fsSecManager,officialExit,runtimePermissionClass,urlField,warnedClassesNDE,warnedClassesNH,warnedSunMisc
-hcls PrivilegedCheck
 
 CLSS public final org.netbeans.Util
 fld public final static java.util.logging.Logger err

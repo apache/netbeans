@@ -26,10 +26,12 @@ import java.beans.PropertyChangeSupport;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.ImageObserver;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openide.util.ImageUtilities;
 
 /** Definition of the annotation type. Annotation type is defined by attributes like
  * highlight color, foreground color, glyph icon, etc. Each annotation added to document
@@ -156,7 +158,12 @@ public class AnnotationType {
      */
     public Image getGlyphImage() {
         if (img == null) {
-            img = Toolkit.getDefaultToolkit().createImage(getGlyph());
+            try {
+                img = ImageUtilities.loadImage(getGlyph().toURI());
+            } catch (URISyntaxException e) {
+                LOG.log(Level.WARNING, "getGlyph() returned invalid URI", e);
+                return null;
+            }
             final boolean waiting[] = new boolean [1];
             waiting[0] = true;
             if (!Toolkit.getDefaultToolkit().prepareImage(img, -1, -1, new ImageObserver() {

@@ -1,0 +1,14 @@
+{|>FIELD:"menu"<|: {
+  |>FIELD:"id"<|: 2e10,
+  |>FIELD:"value"<|: "File",
+  |>FIELD:"x"<| : 1.5,
+  |>FIELD:"y"<| : 2.5e-5,
+  |>FIELD:"q"<| : -7,
+  |>FIELD:"popup"<|: {
+    |>FIELD:"menuitem"<|: ["",
+      {|>FIELD:"value"<|: "New", |>FIELD:"onclick"<|: "CreateNewDoc()"},
+      {|>FIELD:"value"<|: "Open", |>FIELD:"onclick"<|: "OpenDoc()"},
+      {|>FIELD:"value"<|: "Close", |>FIELD:"onclick"<|: "CloseDoc()"}
+    ]
+  }
+}}

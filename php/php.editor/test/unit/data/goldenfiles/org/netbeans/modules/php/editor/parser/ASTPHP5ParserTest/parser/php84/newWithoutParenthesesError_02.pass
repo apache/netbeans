@@ -1,0 +1,80 @@
+<testresult testFile='newWithoutParenthesesError_02.php'>
+    <scanner>
+        <token id='T_CLASS' start='815' end='820'>
+            <text>class</text>
+        </token>
+        <token id='T_STRING' start='821' end='828'>
+            <text>Example</text>
+        </token>
+        <token id='T_EXTENDS' start='829' end='836'>
+            <text>extends</text>
+        </token>
+        <token id='T_STRING' start='837' end='848'>
+            <text>ArrayObject</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='849' end='850'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='850' end='851'>
+            <text>}</text>
+        </token>
+        <token id='T_ECHO' start='853' end='857'>
+            <text>echo</text>
+        </token>
+        <token id='T_NEW' start='858' end='861'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='862' end='869'>
+            <text>Example</text>
+        </token>
+        <token id='T_OPEN_RECT' start='869' end='870'>
+            <text>[</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='870' end='876'>
+            <text>&apos;test&apos;</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='876' end='877'>
+            <text>]</text>
+        </token>
+        <token id='T_SEMICOLON' start='877' end='878'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='879' end='879'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='879'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+        </Comments>
+        <Statements>
+            <ClassDeclaration start='815' end='851' modifier='NONE'>
+                <ClassName>
+                    <Identifier start='821' end='828' name='Example'/>
+                </ClassName>
+                <SuperClassName>
+                    <NamespaceName start='837' end='848' isCurrent='false' isGlobal='false'>
+                        <Identifier start='837' end='848' name='ArrayObject'/>
+                    </NamespaceName>
+                </SuperClassName>
+                <Interfaces>
+                </Interfaces>
+                <Block start='849' end='851' isCurly='true'>
+                </Block>
+            </ClassDeclaration>
+            <ASTError start='853' end='869'/>
+            <ExpressionStatement start='869' end='878'>
+                <ArrayCreation start='869' end='877' type='NEW'>
+                    <ArrayElement start='870' end='876'>
+                        <Key>
+                        </Key>
+                        <Value>
+                            <Scalar start='870' end='876' type='STRING' value='&apos;test&apos;'/>
+                        </Value>
+                    </ArrayElement>
+                </ArrayCreation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

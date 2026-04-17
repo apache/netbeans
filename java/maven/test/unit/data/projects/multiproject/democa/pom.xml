@@ -25,18 +25,8 @@
     <parent>
         <groupId>io.micronaut.platform</groupId>
         <artifactId>micronaut-parent</artifactId>
-        <version>4.0.3-oracle-00001</version>
+        <version>4.0.3</version>
     </parent>
-    <repositories>
-        <repository>
-          <id>central</id>
-          <url>https://repo.maven.apache.org/maven2</url>
-        </repository>
-        <repository>
-          <id>gcn</id>
-          <url>https://maven.oracle.com/public</url>
-        </repository>
-    </repositories>
     <artifactId>democa-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <groupId>com.exampleca</groupId>

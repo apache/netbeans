@@ -21,12 +21,13 @@ package org.openide.util.actions;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Logger;
 import org.openide.util.Utilities;
-import org.openide.util.WeakSet;
 
-/** Not preferred anymore, use <a href="@org-openide-awt@/org/openide/awt/Actions.html#alwaysEnabled-java.awt.event.ActionListener-java.lang.String-java.lang.String-boolean-">Actions.alwaysEnabled</a>
+/** Not preferred anymore, use <a href="@org-openide-awt@/org/openide/awt/Actions.html#alwaysEnabled(java.awt.event.ActionListener,java.lang.String,java.lang.String,boolean)">Actions.alwaysEnabled</a>
 * instead. To migrate your
 * <a href="@org-openide-modules@/org/openide/modules/doc-files/api.html#how-layer">
 * layer definition</a> use:
@@ -54,7 +55,7 @@ public abstract class CallableSystemAction extends SystemAction implements Prese
      * Set of action classes for which we have already issued a warning that
      * {@link #asynchronous} was not overridden to return false.
      */
-    private static final Set<Class> warnedAsynchronousActions = new WeakSet<Class>(); 
+    private static final Set<Class> warnedAsynchronousActions = Collections.newSetFromMap(new WeakHashMap<>()); 
     private static final boolean DEFAULT_ASYNCH = !Boolean.getBoolean(
             "org.openide.util.actions.CallableSystemAction.synchronousByDefault"
         );

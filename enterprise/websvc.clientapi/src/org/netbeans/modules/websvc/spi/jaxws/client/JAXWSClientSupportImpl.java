@@ -29,11 +29,8 @@ import org.openide.filesystems.FileObject;
 import org.openide.nodes.Node;
 
 /**
- *
+ * SPI for JAXWSClientSupport
  * @author Peter Williams, Milan Kuchtiak
- */
-
-/** SPI for JAXWSClientSupport
  */
 public interface JAXWSClientSupportImpl {
 

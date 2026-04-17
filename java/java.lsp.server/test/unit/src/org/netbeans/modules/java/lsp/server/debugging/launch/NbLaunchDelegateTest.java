@@ -25,6 +25,7 @@ import static org.junit.Assert.*;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.spi.project.ActionProvider;
+import org.netbeans.spi.project.NestedClass;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.SingleMethod;
@@ -43,7 +44,7 @@ public class NbLaunchDelegateTest {
     @Test
     public void testFileObjectsLookup() throws Exception {
         FileObject fo = FileUtil.createMemoryFileSystem().getRoot().createData("test.txt");
-        Lookup lkp = NbLaunchDelegate.createTargetLookup(null, null, fo);
+        Lookup lkp = NbLaunchDelegate.createTargetLookup(null, null, null, fo, null);
         assertEquals(fo, lkp.lookup(FileObject.class));
 
         DataObject obj = lkp.lookup(DataObject.class);
@@ -56,8 +57,10 @@ public class NbLaunchDelegateTest {
     @Test
     public void testFileObjectsLookupWithSingleMethod() throws Exception {
         FileObject fo = FileUtil.createMemoryFileSystem().getRoot().createData("test-with-method.txt");
-        SingleMethod m = new SingleMethod(fo, "main");
-        Lookup lkp = NbLaunchDelegate.createTargetLookup(null, m, fo);
+        NestedClass nc = new NestedClass("ChildClass", "ParentClass", fo);
+        SingleMethod m = new SingleMethod("main", nc);
+
+        Lookup lkp = NbLaunchDelegate.createTargetLookup(null, m, nc, fo, null);
         assertEquals(fo, lkp.lookup(FileObject.class));
 
         DataObject obj = lkp.lookup(DataObject.class);
@@ -76,7 +79,7 @@ public class NbLaunchDelegateTest {
         assertNotNull("Project dir recognized", prj);
 
         SingleMethod m = new SingleMethod(xml, "main");
-        Lookup lkp = NbLaunchDelegate.createTargetLookup(prj, null, null);
+        Lookup lkp = NbLaunchDelegate.createTargetLookup(prj, null, null, null, null);
         assertNull("No file object", lkp.lookup(FileObject.class));
         DataObject obj = lkp.lookup(DataObject.class);
         assertNull("No DataObject ", obj);
@@ -91,8 +94,9 @@ public class NbLaunchDelegateTest {
         Project prj = ProjectManager.getDefault().findProject(dir);
         assertNotNull("Project dir recognized", prj);
 
-        SingleMethod m = new SingleMethod(xml, "main");
-        Lookup lkp = NbLaunchDelegate.createTargetLookup(prj, m, xml);
+        NestedClass nc = new NestedClass("ChildClass", "ParentClass", xml);
+        SingleMethod m = new SingleMethod("main", nc);
+        Lookup lkp = NbLaunchDelegate.createTargetLookup(prj, m, nc, xml, null);
         assertEquals("File object is available", xml, lkp.lookup(FileObject.class));
         DataObject obj = lkp.lookup(DataObject.class);
         assertNotNull("DataObject is available", obj);
@@ -108,7 +112,7 @@ public class NbLaunchDelegateTest {
         Project prj = ProjectManager.getDefault().findProject(dir);
         assertNotNull("Project dir recognized", prj);
 
-        Lookup lkp = NbLaunchDelegate.createTargetLookup(prj, null, xml);
+        Lookup lkp = NbLaunchDelegate.createTargetLookup(prj, null, null, xml, null);
         assertEquals("File object is available", xml, lkp.lookup(FileObject.class));
         DataObject obj = lkp.lookup(DataObject.class);
         assertNotNull("DataObject is available", obj);

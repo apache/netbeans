@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="24" height="24" version="1.1" viewBox="0 0 24 24">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #eeba75;
+      }
+
+      .st1 {
+        fill: #fff;
+      }
+
+      .st2 {
+        opacity: .5;
+      }
+
+      .st3 {
+        opacity: .33;
+      }
+
+      .st4 {
+        fill: #b2fc84;
+      }
+    </style>
+  </defs>
+  <description>Apache NetBeans Logo
+  </description>
+  <g>
+    <polygon class="st0" points="2 23 22 23 22 7.3 19.143 3 4.857 3 2 7.3 2 23"/>
+    <g class="st3">
+      <path d="M18.607,4l2.393,3.602v14.398H3V7.602l2.393-3.602h13.213M19.143,3H4.857l-2.857,4.3v15.7h20V7.3l-2.857-4.3h0Z"/>
+    </g>
+  </g>
+  <g class="st2">
+    <polygon class="st1" points="22 7.3 19.143 3 4.857 3 2 7.3 3 7.602 21 7.602 22 7.3"/>
+  </g>
+  <g>
+    <polygon class="st4" points="10 6 7 6 7 3 3 3 3 6 0 6 0 10 3 10 3 13 7 13 7 10 10 10 10 6"/>
+    <g class="st3">
+      <path d="M6,4v3h3v2h-3v3h-2v-3H1v-2h3v-3h2M7,3H3v3H0v4h3v3h4v-3h3v-4h-3v-3h0Z"/>
+    </g>
+  </g>
+</svg>

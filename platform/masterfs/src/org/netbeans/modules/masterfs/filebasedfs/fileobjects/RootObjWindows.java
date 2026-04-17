@@ -39,14 +39,17 @@ public final class RootObjWindows extends FileObject {
     public RootObjWindows() {
     }
 
+    @Override
     public final String getName() {
         return "";//NOI18N
     }
 
+    @Override
     public final String getExt() {
         return "";//NOI18N
     }
 
+    @Override
     public final FileSystem getFileSystem() throws FileStateInvalidException {
         return FileBasedFileSystem.getInstance();
     }
@@ -57,22 +60,27 @@ public final class RootObjWindows extends FileObject {
     }
 
     
+    @Override
     public final FileObject getParent() {
         return null;
     }
 
+    @Override
     public final boolean isFolder() {
         return true;
     }
 
+    @Override
     public final boolean isData() {
         return !isFolder();
     }
 
+    @Override
     public final Date lastModified() {
         return new Date(0);
     }
 
+    @Override
     public final boolean isRoot() {
         return true;
     }
@@ -83,69 +91,83 @@ public final class RootObjWindows extends FileObject {
     *
     * @return true if the file object is valid
     */
+    @Override
     public final boolean isValid() {
         return true;
     }
 
+    @Override
     public final void rename(final FileLock lock, final String name, final String ext) throws IOException {
         //throw new IOException(getPath());
         FSException.io("EXC_CannotRenameRoot", getFileSystem().getDisplayName()); // NOI18N        
     }
 
+    @Override
     public final void delete(final FileLock lock) throws IOException {
         //throw new IOException(getPath());
         FSException.io("EXC_CannotDeleteRoot", getFileSystem().getDisplayName()); // NOI18N        
     }
 
+    @Override
     public final Object getAttribute(final String attrName) {        
         return null;
     }
 
+    @Override
     public final void setAttribute(final String attrName, final Object value) throws IOException {  
         throw new FileStateInvalidException(); // NOI18N        
     }
 
+    @Override
     public final Enumeration<String> getAttributes() {
         return Enumerations.empty();
     }
 
+    @Override
     public final void addFileChangeListener(final FileChangeListener fcl) {
         //TODO: adding new FileBasedFS into allInstances should lead to firing event
     }
 
+    @Override
     public final void removeFileChangeListener(final FileChangeListener fcl) {
         //TODO: adding new FileBasedFS into allInstances should lead to firing event
     }
 
+    @Override
     public final long getSize() {
         return 0;
     }
 
+    @Override
     public final InputStream getInputStream() throws FileNotFoundException {
         throw new FileNotFoundException(); // NOI18N        
     }
 
+    @Override
     public final OutputStream getOutputStream(final FileLock lock) throws IOException {
         throw new FileNotFoundException(); // NOI18N 
     }
 
+    @Override
     public final FileLock lock() throws IOException {
         throw new FileStateInvalidException(); // NOI18N        
     }
 
+    @Override
     public final void setImportant(final boolean b) {
     }
 
+    @Override
     public final FileObject[] getChildren() {
         Collection<? extends FileObjectFactory> all = FileBasedFileSystem.factories().values();
-        ArrayList<FileObject> rootChildren = new ArrayList<FileObject>();         
+        ArrayList<FileObject> rootChildren = new ArrayList<>();         
         for (FileObjectFactory fs : all) {
             BaseFileObj root = fs.getRoot();
             if (root != null) { // #252580
                 rootChildren.add(root);
             }
         }
-        return rootChildren.toArray(new FileObject[0]);
+        return rootChildren.toArray(FileObject[]::new);
     }
 
     @Override
@@ -182,14 +204,17 @@ public final class RootObjWindows extends FileObject {
     }
 
     
+    @Override
     public final FileObject createFolder(final String name) throws IOException {
         throw new FileStateInvalidException(); // NOI18N        
     }
 
+    @Override
     public final FileObject createData(final String name, final String ext) throws IOException {
         throw new FileStateInvalidException(); // NOI18N        
     }
 
+    @Override
     public final boolean isReadOnly() {
         return true;
     }

@@ -46,10 +46,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.source.Comment.Style;
@@ -873,5 +876,68 @@ public class TreeUtilitiesTest extends NbTestCase {
         IdentifierTree it = (IdentifierTree) tp.getLeaf();
 
         assertEquals("System", it.getName().toString());
+    }
+
+    public void testAttributeTreeCrashes() throws Exception {
+        this.sourceLevel = "21";
+
+        String code = """
+                      package test;
+                      public class Test {
+                          private void test(Runnable r) {
+                              test(() -> {
+                                  |
+                              });
+                          }
+                      }
+                      """;
+
+        prepareTest("Test", code.replace("|", ""));
+
+        int pos = code.indexOf("|");
+        TreePath tp = info.getTreeUtilities().pathFor(pos);
+        Scope scope = info.getTrees().getScope(tp);
+        StatementTree tree = info.getTreeUtilities().parseStatement("{ return super.test(p); }", new SourcePositions[1]);
+        info.getTreeUtilities().attributeTree(tree, scope);
+    }
+
+    public void testParseType() throws Exception {
+        this.sourceLevel = "21";
+
+        String code = """
+                      package test;
+                      public class Test {
+                          static class Param<T extends CharSequence> {}
+                          private void test(Runnable r) {
+                              record Local<T extends CharSequence>(T t) {}
+                              int ma|rk;
+                          }
+                      }
+                      """;
+
+        prepareTest("Test", code.replace("|", ""));
+
+        int pos = code.indexOf("|");
+        TreePath tp = info.getTreeUtilities().pathFor(pos);
+        Scope scope = info.getTrees().getScope(tp);
+        Function<TypeMirror, String> type2String =
+                type -> type.getKind() + ":" + type.toString();
+        TypeElement topLevel = info.getTopLevelElements().get(0);
+        assertEquals("DECLARED:test.Test.Param<java.lang.String>",
+                     type2String.apply(info.getTreeUtilities().parseType("Param<String>", topLevel)));
+        assertEquals("DECLARED:test.Test.Param<java.lang.String>",
+                     type2String.apply(info.getTreeUtilities().parseType("Param<String>", scope)));
+        assertEquals("DECLARED:test.Test.Param<java.lang.Integer>",
+                     type2String.apply(info.getTreeUtilities().parseType("Param<Integer>", topLevel)));
+        assertEquals("DECLARED:test.Test.Param<java.lang.Integer>",
+                     type2String.apply(info.getTreeUtilities().parseType("Param<Integer>", scope)));
+        assertEquals("ERROR:Local<java.lang.String>",
+                     type2String.apply(info.getTreeUtilities().parseType("Local<String>", topLevel)));
+        assertEquals("DECLARED:Local<java.lang.String>",
+                     type2String.apply(info.getTreeUtilities().parseType("Local<String>", scope)));
+        assertEquals("ERROR:Local<java.lang.Integer>",
+                     type2String.apply(info.getTreeUtilities().parseType("Local<Integer>", topLevel)));
+        assertEquals("DECLARED:Local<java.lang.Integer>",
+                     type2String.apply(info.getTreeUtilities().parseType("Local<Integer>", scope)));
     }
 }

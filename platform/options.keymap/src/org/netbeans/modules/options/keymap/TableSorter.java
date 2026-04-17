@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
@@ -41,6 +40,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import org.openide.util.ImageUtilities;
 
 /**
  * TableSorter is a decorator for TableModels; adding sorting
@@ -223,9 +223,9 @@ public class TableSorter extends AbstractTableModel {
             return null;
         }
         if (directive.direction == DESCENDING) {
-            return new ImageIcon(getClass().getResource("/org/netbeans/modules/options/keymap/columnsSortedDesc.png"));	// NOI18N
+            return ImageUtilities.loadIcon("org/netbeans/modules/options/keymap/columnsSortedDesc.png");	// NOI18N
         } else {
-            return new ImageIcon(getClass().getResource("/org/netbeans/modules/options/keymap/columnsSortedAsc.png"));	// NOI18N
+            return ImageUtilities.loadIcon("org/netbeans/modules/options/keymap/columnsSortedAsc.png");	// NOI18N
         }
     }
 

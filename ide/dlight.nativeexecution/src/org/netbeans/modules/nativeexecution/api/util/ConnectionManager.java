@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -183,6 +184,38 @@ public final class ConnectionManager {
         // No need to lock - use thread-safe collection
         connectionListeners.remove(listener);
     }
+    
+    /**
+     * Remove a connection from list of recent connections. Any stored settings will be removed
+     * @param execEnv environment 
+     */
+    public void deleteConnectionFromRecentConnections(ExecutionEnvironment execEnv) {
+      synchronized (recentConnections) {
+          recentConnections.remove(execEnv);
+          forget(execEnv);
+          storeRecentConnectionsList(true);
+      }
+    }
+    
+    
+    /**
+     * Add a connection to a recent connection list.
+     * @param execEnv environment 
+     * @return true if a connection was added to a list
+     */
+    public boolean addConnectionToRecentConnections(ExecutionEnvironment execEnv) {
+      if (execEnv.isLocal()) {
+          return false;
+      }
+      synchronized (recentConnections) {
+          if (recentConnections.contains(execEnv)) {
+              return false;
+          }
+          recentConnections.add(0, execEnv);
+          storeRecentConnectionsList(false);
+          return true;
+      }
+    }    
 
     public List<ExecutionEnvironment> getRecentConnections() {
         synchronized (recentConnections) {
@@ -194,13 +227,24 @@ public final class ConnectionManager {
         synchronized (recentConnections) {
             recentConnections.remove(execEnv);
             recentConnections.add(0, execEnv);
-            storeRecentConnectionsList();
+            storeRecentConnectionsList(false);
         }
     }
 
-    /*package-local for test purposes*/ void storeRecentConnectionsList() {
+    /**
+     * Store recent connection list. 
+     * @param clear true if settings is cleared before stored
+     */
+    /*package-local for test purposes*/ void storeRecentConnectionsList(boolean clear) {
         Preferences prefs = NbPreferences.forModule(ConnectionManager.class);
         synchronized (recentConnections) {
+            if (clear) {
+                try {
+                    prefs.clear();
+                } catch (BackingStoreException ex) {
+                    log.log(Level.WARNING,"Cannot clear ConnectionManager preferences", ex);
+                }
+            }
             for (int i = 0; i < recentConnections.size(); i++) {
                 prefs.put(getConnectoinsHistoryKey(i), ExecutionEnvironmentFactory.toUniqueID(recentConnections.get(i)));
             }
@@ -302,6 +346,7 @@ public final class ConnectionManager {
                 if (checkHostInfo) {
                     return HostInfoUtils.isHostInfoAvailable(execEnv);
                 } else {
+                    updateRecentConnectionsList(execEnv);
                     return true;
                 }
             } else {

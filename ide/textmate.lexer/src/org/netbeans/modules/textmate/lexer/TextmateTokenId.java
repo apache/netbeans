@@ -18,10 +18,9 @@
  */
 package org.netbeans.modules.textmate.lexer;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,6 +32,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.tm4e.core.grammar.IGrammar;
+import org.eclipse.tm4e.core.registry.IGrammarSource;
 import org.eclipse.tm4e.core.registry.IRegistryOptions;
 import org.eclipse.tm4e.core.registry.Registry;
 import org.netbeans.api.editor.mimelookup.MimePath;
@@ -160,19 +160,13 @@ public enum TextmateTokenId implements TokenId {
             this.mimeType = mimeType;
             IRegistryOptions opts = new IRegistryOptions() {
                 @Override
-                public String getFilePath(String scopeName) {
+                public IGrammarSource getGrammarSource(String scopeName) {
                     synchronized (LanguageHierarchyImpl.class) {
                         FileObject file = scope2File.get(scopeName);
-                        return file != null ? file.getNameExt() : null;
+                        return file != null ? new FileObjectGrammarSource(file) : null;
                     }
                 }
-                @Override
-                public InputStream getInputStream(String scopeName) throws IOException {
-                    synchronized (LanguageHierarchyImpl.class) {
-                        FileObject file = scope2File.get(scopeName);
-                        return file != null ? file.getInputStream(): null;
-                    }
-                }
+
                 @Override
                 public Collection<String> getInjections(String scopeName) {
                     synchronized (LanguageHierarchyImpl.class) {

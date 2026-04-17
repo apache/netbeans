@@ -42,7 +42,7 @@ public interface CharSeq {
 
     /**
      * Returns the character at the specified index.  An index ranges from zero
-     * to <tt>length() - 1</tt>.  The first character of the sequence is at
+     * to <code>length() - 1</code>.  The first character of the sequence is at
      * index zero, the next at index one, and so on, as for array
      * indexing.
      *
@@ -51,8 +51,8 @@ public interface CharSeq {
      * @return  the specified character
      *
      * @throws  IndexOutOfBoundsException
-     *          if the <tt>index</tt> argument is negative or not less than
-     *          <tt>length()</tt>
+     *          if the <code>index</code> argument is negative or not less than
+     *          <code>length()</code>
      */
     char charAt(int index);
     

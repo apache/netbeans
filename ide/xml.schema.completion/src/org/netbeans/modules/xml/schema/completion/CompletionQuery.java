@@ -381,8 +381,8 @@ public class CompletionQuery extends AsyncCompletionQuery {
     private FileObject primaryFile;
     private CompletionContextImpl context;
     
-    private static final ImageIcon LOADING_ICON = new ImageIcon(ImageUtilities.loadImage(
-            "org/netbeans/modules/xml/schema/completion/resources/element.png")); // NOI18N
+    private static final ImageIcon LOADING_ICON = ImageUtilities.loadImageIcon(
+            "org/netbeans/modules/xml/schema/completion/resources/element.png", false); // NOI18N
 
     private static final class FinishDownloadItem implements CompletionItem {
         @Override

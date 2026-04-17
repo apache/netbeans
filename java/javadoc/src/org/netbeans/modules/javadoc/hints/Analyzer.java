@@ -51,7 +51,6 @@ import com.sun.source.doctree.VersionTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.DocSourcePositions;
 import com.sun.source.util.DocTreePath;
@@ -59,7 +58,6 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.TreePath;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
@@ -69,7 +67,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -77,7 +74,6 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.TypeVariable;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -93,7 +89,6 @@ import org.netbeans.modules.html.editor.lib.api.model.HtmlModelFactory;
 import org.netbeans.modules.html.editor.lib.api.model.HtmlTag;
 import org.netbeans.modules.html.editor.lib.api.model.HtmlTagType;
 import static org.netbeans.modules.javadoc.hints.Bundle.*;
-import static org.netbeans.modules.javadoc.hints.JavadocUtilities.resolveSourceVersion;
 import org.netbeans.spi.editor.hints.ErrorDescription;
 import org.netbeans.spi.java.hints.ErrorDescriptionFactory;
 import org.netbeans.spi.java.hints.HintContext;
@@ -118,8 +113,9 @@ import org.openide.util.NbBundle.Messages;
  * @author Jan Pokorsky
  * @author Ralph Benjamin Ruijs
  */
-    @NbBundle.Messages({"MISSING_RETURN_DESC=Missing @return tag.",
-                        "# {0} - @param name", "MISSING_PARAM_DESC=Missing @param tag for {0}"})
+@NbBundle.Messages({"MISSING_RETURN_DESC=Missing @return tag.",
+                    "# {0} - @param name",
+                    "MISSING_PARAM_DESC=Missing @param tag for {0}"})
 final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
 
     private static final HtmlModel model = HtmlModelFactory.getModel(HtmlVersion.XHTML5);
@@ -127,12 +123,11 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
     private final CompilationInfo javac;
     private final FileObject file;
     private final TreePath currentPath;
-    private final SourceVersion sourceVersion;
     private final Access access;
 
-    private Deque<StartElementTree> tagStack = new LinkedList<>();
-    private Set<Element> foundParams = new HashSet<>();
-    private Set<TypeMirror> foundThrows = new HashSet<>();
+    private final Deque<StartElementTree> tagStack = new LinkedList<>();
+    private final Set<Element> foundParams = new HashSet<>();
+    private final Set<TypeMirror> foundThrows = new HashSet<>();
     private TypeMirror returnType = null;
     private boolean returnTypeFound = false;
     private boolean foundInheritDoc = false;
@@ -143,7 +138,6 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
         this.javac = javac;
         this.file = javac.getFileObject();
         this.currentPath = currentPath;
-        this.sourceVersion = resolveSourceVersion(javac.getFileObject());
         this.access = access;
         this.ctx = ctx;
     }
@@ -814,7 +808,7 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
         return t.getTagClass() == HtmlTagType.HTML ? t : null;
     }
 
-    private static final Set<String> NON_VOID_TAGS = new HashSet<>(Arrays.asList("menuitem", "noscript", "script", "style"));
+    private static final Set<String> NON_VOID_TAGS = Set.of("menuitem", "noscript", "script", "style");
 
     private boolean isVoid(HtmlTag tag) {
         return tag.isEmpty() && !NON_VOID_TAGS.contains(tag.getName());

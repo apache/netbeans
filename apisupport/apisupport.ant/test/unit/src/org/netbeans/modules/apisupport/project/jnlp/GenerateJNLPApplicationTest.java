@@ -456,7 +456,7 @@ public class GenerateJNLPApplicationTest extends TestBase {
 //
 //        List l = Arrays.asList(p.getSupportedActions());
 //        assertTrue("We support build-jnlp: " + l, l.contains("build-jnlp"));
-///*
+// /*
 //        WeakReference<?> ref = new WeakReference<Object>(suite);
 //        suite = null;
 //        assertGC("Project can go away", ref);

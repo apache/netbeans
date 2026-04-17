@@ -492,10 +492,6 @@ public class JSTestDriverSupport {
             this.line = line;
             this.column = column;
         }
-        
-        @Override
-        public void outputLineSelected(OutputEvent ev) {
-        }
 
         @Override
         public void outputLineAction(OutputEvent ev) {
@@ -520,10 +516,6 @@ public class JSTestDriverSupport {
                 return result.getLineSet().getCurrent(line-1);
             }
             return null;
-        }
-
-        @Override
-        public void outputLineCleared(OutputEvent ev) {
         }
         
         public boolean isValidHyperlink() {

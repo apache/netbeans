@@ -1,0 +1,28 @@
+    public readonly function readonlyAnonClassMethod(): void {}
+                             -----------------------
+HINT:Method "readonlyAnonClassMethod" cannot be declared readonly
+FIX:Remove modifier: readonly
+    public(set) function publicSetAnonClassMethod(): void {}
+                         ------------------------
+HINT:Method "publicSetAnonClassMethod" cannot be declared public(set)
+FIX:Remove modifier: public(set)
+    private(set) function privateSetAnonClassMethod(): void {}
+                          -------------------------
+HINT:Method "privateSetAnonClassMethod" cannot be declared private(set)
+FIX:Remove modifier: private(set)
+    protected(set) function protectedSetAnonClassMethod(): void {}
+                            ---------------------------
+HINT:Method "protectedSetAnonClassMethod" cannot be declared protected(set)
+FIX:Remove modifier: protected(set)
+    public public(set) function publicPublicSetAnonClassMethod(): void {}
+                                ------------------------------
+HINT:Method "publicPublicSetAnonClassMethod" cannot be declared public(set)
+FIX:Remove modifier: public(set)
+    public private(set) static function publicPrivateSetAnonClassMethod(): void {}
+                                        -------------------------------
+HINT:Method "publicPrivateSetAnonClassMethod" cannot be declared private(set)
+FIX:Remove modifier: private(set)
+    public protected(set) function publicProtectedSetAnonClassMethod(): void {}
+                                   ---------------------------------
+HINT:Method "publicProtectedSetAnonClassMethod" cannot be declared protected(set)
+FIX:Remove modifier: protected(set)

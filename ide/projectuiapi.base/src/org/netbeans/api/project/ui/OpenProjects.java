@@ -158,7 +158,7 @@ public final class OpenProjects {
      * {@link org.openide.WizardDescriptor.InstantiatingIterator#instantiate}
      * should return the project directory.
      * This should also not be used to provide a GUI to open subprojects;
-     * <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/support/CommonProjectActions.html#openSubprojectsAction--">CommonProjectActions#openSubprojectsAction</a> should be used instead.
+     * <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/support/CommonProjectActions.html#openSubprojectsAction()">CommonProjectActions#openSubprojectsAction</a> should be used instead.
      * </p>
      * @param projects to be opened. If some of the projects are already opened
      * these projects are ignored. If the list contain duplicates, the duplicated
@@ -184,7 +184,7 @@ public final class OpenProjects {
      * {@link org.openide.WizardDescriptor.InstantiatingIterator#instantiate}
      * should return the project directory.
      * This should also not be used to provide a GUI to open subprojects;
-     * <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/support/CommonProjectActions.html#openSubprojectsAction--">CommonProjectActions#openSubprojectsAction</a> should be used instead.
+     * <a href="@org-netbeans-modules-projectuiapi@/org/netbeans/spi/project/ui/support/CommonProjectActions.html#openSubprojectsAction()">CommonProjectActions#openSubprojectsAction</a> should be used instead.
      * </p>
      * @param projects to be opened. If some of the projects are already opened
      * these projects are ignored. If the list contain duplicates, the duplicated

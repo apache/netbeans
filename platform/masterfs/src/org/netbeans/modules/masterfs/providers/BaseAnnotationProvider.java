@@ -36,7 +36,7 @@ import org.openide.util.Lookup;
  */
 public abstract class BaseAnnotationProvider {
     /** listeners */
-    private List<FileStatusListener> fsStatusListener = new ArrayList<FileStatusListener>();
+    private final List<FileStatusListener> fsStatusListener = new ArrayList<>();
     /** lock for modification of listeners */
     private static final Object LOCK = new Object();
     
@@ -70,8 +70,8 @@ public abstract class BaseAnnotationProvider {
      * HtmlStatus but plain Status.
      * 
      * @see <a href="@org-openide-awt@/org/openide/awt/HtmlRenderer.html">org.openide.awt.HtmlRenderer</a>
-     * @see <a href="@org-openide-loaders@/org/openide/loaders/DataNode.html#getHtmlDisplayName--"><code>DataNode.getHtmlDisplayName()</code></a>
-     * @see <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getHtmlDisplayName--">org.openide.nodes.Node#getHtmlDisplayName</a>
+     * @see <a href="@org-openide-loaders@/org/openide/loaders/DataNode.html#getHtmlDisplayName()"><code>DataNode.getHtmlDisplayName()</code></a>
+     * @see <a href="@org-openide-nodes@/org/openide/nodes/Node.html#getHtmlDisplayName()">org.openide.nodes.Node#getHtmlDisplayName</a>
      **/
     public abstract String annotateNameHtml(String name, Set<? extends FileObject> files);
 
@@ -120,7 +120,7 @@ public abstract class BaseAnnotationProvider {
     * @param event The event to be fired
     */
     protected final void fireFileStatusChanged(FileStatusEvent event) {
-        List<FileStatusListener> listeners = new ArrayList<FileStatusListener>();
+        List<FileStatusListener> listeners = new ArrayList<>();
         synchronized (LOCK) {
             listeners.addAll(fsStatusListener);
         }

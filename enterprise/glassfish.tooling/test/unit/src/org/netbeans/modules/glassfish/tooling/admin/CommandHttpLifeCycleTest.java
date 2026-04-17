@@ -35,16 +35,11 @@ import org.testng.annotations.Test;
  */
 public class CommandHttpLifeCycleTest extends CommandHttpTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     private static final String CLUSTER_NAME = "ToolingCluster";
     private static final String INSTANCE_NAME = "ToolingInstance";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
 /*
  * TODO: Not yes implemented:
  * http://localhost:4848/__asadmin/list-nodes

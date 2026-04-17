@@ -854,49 +854,5 @@ public abstract class FileSystem implements Serializable {
             }
             return "Cannot load " + name + " for " + fo + " defined by " + by; // NOI18N
         }
-
-        /*
-        public Image annotateIcon(Image im, int type, Set<? extends FileObject> files) {
-            for (FileObject fo : files) {
-                Image img = annotateIcon(fo, type);
-                if (img != null) {
-                    return img;
-                }
-            }
-            return im;
-        }
-
-        private Image annotateIcon(FileObject fo, int type) {
-            String attr = null;
-            if (type == BeanInfo.ICON_COLOR_16x16) {
-                attr = "SystemFileSystem.icon"; // NOI18N
-            } else if (type == BeanInfo.ICON_COLOR_32x32) {
-                attr = "SystemFileSystem.icon32"; // NOI18N
-            }
-            if (attr != null) {
-                Object value = fo.getAttribute(attr);
-                if (value != null) {
-                    if (value instanceof URL) {
-                        return Toolkit.getDefaultToolkit().getImage((URL) value);
-                    } else if (value instanceof Image) {
-                        // #18832
-                        return (Image) value;
-                    } else {
-                        LOG.warning("Attribute " + attr + " on " + fo + " expected to be a URL or Image; was: " + value);
-                    }
-                }
-            }
-            String base = (String) fo.getAttribute("iconBase"); // NOI18N
-            if (base != null) {
-                if (type == BeanInfo.ICON_COLOR_16x16) {
-                    return ImageUtilities.loadImage(base, true);
-                } else if (type == BeanInfo.ICON_COLOR_32x32) {
-                    return ImageUtilities.loadImage(insertBeforeSuffix(base, "_32"), true); // NOI18N
-                }
-            }
-            return null;
-        }
-            */
-
     };
 }

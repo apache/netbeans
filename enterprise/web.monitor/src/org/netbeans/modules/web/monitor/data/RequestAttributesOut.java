@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  * RequestAttributesOut.java
  *
  * Matches the DTD element RequestAttributesOut

@@ -32,10 +32,7 @@ import org.netbeans.modules.glassfish.tooling.data.GlassFishServer;
 @RunnerRestClass(runner=RunnerRestCreateJDBCConnectionPool.class)
 public class CommandCreateJDBCConnectionPool extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for create JDBC connection pool command. */
     private static final String COMMAND = "create-jdbc-connection-pool";
 
@@ -43,10 +40,7 @@ public class CommandCreateJDBCConnectionPool extends Command {
     private static final String ERROR_MESSAGE
             = "Create JDBC connection pool failed.";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * create JDBC connection pool.
      * <p/>
@@ -110,10 +104,7 @@ public class CommandCreateJDBCConnectionPool extends Command {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Connection pool unique name (and ID). */
     final String connectionPoolId;
 
@@ -179,10 +170,7 @@ public class CommandCreateJDBCConnectionPool extends Command {
      * </table> */
     final Map<String, String> properties;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish server create JDBC connection pool
      * command entity.

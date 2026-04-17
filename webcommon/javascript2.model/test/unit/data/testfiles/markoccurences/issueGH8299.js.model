@@ -1,0 +1,19 @@
+FUNCTION issueGH8299 [ANONYMOUS: false, DECLARED: true - issueGH8299, MODIFIERS: PUBLIC, FILE]
+# RETURN TYPES
+undefined, RESOLVED: true
+# PROPERTIES
+testX : FUNCTION testX [ANONYMOUS: false, DECLARED: true - testX, MODIFIERS: PUBLIC, FUNCTION]
+      # RETURN TYPES
+      undefined, RESOLVED: true
+      # PARAMETERS
+      OBJECT a [ANONYMOUS: false, DECLARED: true - a, MODIFIERS: PUBLIC, PARAMETER]
+      # PROPERTIES
+      arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+      block-40  : OBJECT block-40 [ANONYMOUS: false, DECLARED: false - block-40, MODIFIERS: PUBLIC, BLOCK]
+                # PROPERTIES
+                issueGH8299testX#L#6 : FUNCTION issueGH8299testX#L#6 [ANONYMOUS: true, DECLARED: true - issueGH8299testX#L#6, MODIFIERS: PRIVATE, METHOD]
+                                     # RETURN TYPES
+                                     undefined, RESOLVED: true
+                                     # PROPERTIES
+                                     arguments : OBJECT arguments [ANONYMOUS: false, DECLARED: false - arguments, MODIFIERS: PRIVATE, VARIABLE]
+                x                    : OBJECT x [ANONYMOUS: false, DECLARED: true - x, MODIFIERS: PRIVATE, CONSTANT]

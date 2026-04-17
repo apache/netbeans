@@ -215,7 +215,8 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
     @Override
     public Tree visitClass(ClassTree tree, Void p) {
         ClassTree n = make.Class(tree.getModifiers(), tree.getSimpleName(), tree.getTypeParameters(),
-                                     tree.getExtendsClause(), tree.getImplementsClause(), tree.getMembers());
+                                     tree.getExtendsClause(), tree.getImplementsClause(),
+                                     tree.getPermitsClause(), tree.getMembers());
         model.setElement(n, model.getElement(tree));
         model.setType(n, model.getType(tree));
         comments.copyComments(tree, n);

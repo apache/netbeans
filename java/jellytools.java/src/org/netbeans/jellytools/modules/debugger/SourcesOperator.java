@@ -70,8 +70,6 @@ public class SourcesOperator extends TopComponentOperator {
         return new TreeTableOperator(this);
     }
     
-    /********************************** Actions ****************************/
-
     /** Returns true if source root is used for debugging and false otherwise.
      * @param source source root
      * @return true if source root is used for debugging; false otherwise

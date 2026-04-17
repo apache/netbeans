@@ -41,7 +41,7 @@ public final class AquaLFCustoms extends LFCustoms {
         Integer cus = (Integer) UIManager.get("customFontSize"); //NOI18N
         Object[] result;
         if (cus != null) {
-            int uiFontSize = cus.intValue();
+            int uiFontSize = cus;
             Font controlFont = new GuaranteedValue (new String[] {"controlFont", "Tree.font", "Label.font"},
                                                 new FontUIResource("Dialog", Font.PLAIN, uiFontSize)).getFont(); //NOI18N
             result = new Object[] {
@@ -141,13 +141,13 @@ public final class AquaLFCustoms extends LFCustoms {
                     
             TAB_ACTIVE_SELECTION_FOREGROUND, new GuaranteedValue ("textText", Color.BLACK),
 
-            "NbSplitPane.dividerSize", new Integer(3),
+            "NbSplitPane.dividerSize", 3,
             "NbSplitPane.background", new Color(101,101,101),
             "nb.desktop.splitpane.border", BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(49,49,49)),
             "nb.desktop.view.insets", new Insets(0, 0, 0, 0),
 
-            SPLIT_PANE_DIVIDER_SIZE_VERTICAL, new Integer(3),
-            SPLIT_PANE_DIVIDER_SIZE_HORIZONTAL, new Integer(3),
+            SPLIT_PANE_DIVIDER_SIZE_VERTICAL, 3,
+            SPLIT_PANE_DIVIDER_SIZE_HORIZONTAL, 3,
 
             "NbExplorerView.quicksearch.border", new Color(64,64,64),
             "NbExplorerView.quicksearch.background.top", new Color(197,197,197),

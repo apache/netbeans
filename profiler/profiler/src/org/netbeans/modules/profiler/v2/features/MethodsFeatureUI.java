@@ -167,17 +167,17 @@ abstract class MethodsFeatureUI extends FeatureUI {
 //            protected ProfilerClient getProfilerClient() {
 //                return MethodsFeatureUI.this.getProfilerClient();
 //            }
-////            protected boolean isSampling() {
-////                return MethodsFeatureUI.this.getProfilerClient().getCurrentInstrType() == ProfilerClient.INSTR_NONE_SAMPLING;
-////            }
-////            protected void requestResults() throws ClientUtils.TargetAppOrVMTerminated {
-////                MethodsFeatureUI.this.getProfilerClient().forceObtainedResultsDump(true);
-////            }
-////            protected CPUResultsSnapshot getResults() throws ClientUtils.TargetAppOrVMTerminated, CPUResultsSnapshot.NoDataAvailableException {
-////                ProfilerClient client = MethodsFeatureUI.this.getProfilerClient();
-////                return client.getStatus().getInstrMethodClasses() == null ?
-////                       null : client.getCPUProfilingResultsSnapshot(false);
-////            }
+// //            protected boolean isSampling() {
+// //                return MethodsFeatureUI.this.getProfilerClient().getCurrentInstrType() == ProfilerClient.INSTR_NONE_SAMPLING;
+// //            }
+// //            protected void requestResults() throws ClientUtils.TargetAppOrVMTerminated {
+// //                MethodsFeatureUI.this.getProfilerClient().forceObtainedResultsDump(true);
+// //            }
+// //            protected CPUResultsSnapshot getResults() throws ClientUtils.TargetAppOrVMTerminated, CPUResultsSnapshot.NoDataAvailableException {
+// //                ProfilerClient client = MethodsFeatureUI.this.getProfilerClient();
+// //                return client.getStatus().getInstrMethodClasses() == null ?
+// //                       null : client.getCPUProfilingResultsSnapshot(false);
+// //            }
             protected boolean showSourceSupported() {
                 return GoToSource.isAvailable();
             }

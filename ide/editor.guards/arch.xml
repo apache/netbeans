@@ -50,7 +50,7 @@
  <answer id="arch-overall">
   <p>
    <api group="java" name="GuardedSectionsAPI" type="export" category="official">
-   The Guarded Sections module is supposed to operate over the Swing's <a href="@JDK@/javax/swing/text/StyledDocument.html"><code>StyledDocument</code></a>.
+   The Guarded Sections module is supposed to operate over the Swing's <a href="@JDK@@JDKMODULE_JAVA_DESKTOP@/javax/swing/text/StyledDocument.html"><code>StyledDocument</code></a>.
    It allows clients to manipulate named guarded sections that prevents user to
    modify the content. So if you like to create, modify or delete guarded sections the <a href="@org-netbeans-modules-editor-guards@/org/netbeans/api/editor/guards/GuardedSectionManager.html">
    <code>GuardedSectionManager</code></a> is the best place where to start.
@@ -125,7 +125,6 @@
         </question>
 -->
  <answer id="arch-usecases">
-  <p>
    <usecase name="Add new section" id="AddingNewSection">
        In order to add a new section after the existing section, which seems to be most frequent, use:
        <pre>
@@ -198,7 +197,6 @@
         OpenIDE-Module-Requires: org.netbeans.api.editor.guards.Java
        </pre>
    </usecase>
-  </p>
  </answer>
 
 

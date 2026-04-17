@@ -17,7 +17,7 @@
  * under the License.
  */
 
-/**
+/*
  * EditPanelCookies.java
  *
  *
@@ -25,10 +25,6 @@
  *
  * @author Ana von Klopp
  * @version
- */
-
-/**
- * Contains the Cookie sub-panel for the EditPanel
  */
 
 package org.netbeans.modules.web.monitor.client;
@@ -52,6 +48,10 @@ import org.openide.NotifyDescriptor;
 import org.netbeans.modules.web.monitor.data.*;
 import org.openide.awt.Mnemonics;
 
+
+/**
+ * Contains the Cookie sub-panel for the EditPanel
+ */
 class EditPanelCookies extends DataDisplay {
 
     private static final boolean debug = false;

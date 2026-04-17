@@ -24,7 +24,6 @@ import java.lang.reflect.Field;
 
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.diff.PatchAction;
-import org.openide.filesystems.FileUtil;
 
 /**
  * 
@@ -203,13 +202,9 @@ public class PatchUtilsTest extends NbTestCase {
     }
 
     private File createFile(File file) throws IOException {
-        final FileInputStream fileInputStream = new FileInputStream(new File(dataDir, "goldenFileBefore"));
-        final FileOutputStream fileOutputStream = new FileOutputStream(file);
-        try {
-            FileUtil.copy(fileInputStream, fileOutputStream);
-        } finally {
-            fileInputStream.close();
-            fileOutputStream.close();
+        try (FileInputStream fis = new FileInputStream(new File(dataDir, "goldenFileBefore"));
+             FileOutputStream fos = new FileOutputStream(file)) {
+            fis.transferTo(fos);
         }
         return file;
     }

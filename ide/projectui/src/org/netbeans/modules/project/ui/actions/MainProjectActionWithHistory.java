@@ -19,11 +19,7 @@
 package org.netbeans.modules.project.ui.actions;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -32,7 +28,6 @@ import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
-import javax.swing.MenuElement;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import org.netbeans.spi.project.ui.support.BuildExecutionSupport;
@@ -71,25 +66,19 @@ public class MainProjectActionWithHistory extends MainProjectAction implements P
             final JMenuItem item = new JMenuItem(org.openide.awt.Actions.cutAmpersand((String) getValue("menuText")));
             item.setEnabled(isEnabled());
 
-            addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    String propName = evt.getPropertyName();
-                    if ("enabled".equals(propName)) {
-                        item.setEnabled((Boolean) evt.getNewValue());
-                    } else if ("menuText".equals(propName)) {
-                        item.setText(org.openide.awt.Actions.cutAmpersand((String) evt.getNewValue()));
-                    }
+            addPropertyChangeListener(evt -> {
+                String prop = evt.getPropertyName();
+                if (prop == null) {
+                    return;
+                }
+                switch (prop) {
+                    case "enabled" -> item.setEnabled((Boolean) evt.getNewValue());
+                    case "menuText" -> item.setText(org.openide.awt.Actions.cutAmpersand((String) evt.getNewValue()));
                 }
             });
 
             menu.add(item);
-            item.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    MainProjectActionWithHistory.this.actionPerformed(e);
-                }
-            });
+            item.addActionListener(MainProjectActionWithHistory.this::actionPerformed);
            
             org.openide.awt.Actions.connect(button, this);
             menu.addPopupMenuListener(this);
@@ -116,17 +105,9 @@ public class MainProjectActionWithHistory extends MainProjectAction implements P
                 JMenuItem item = new JMenuItem(bai.getDisplayName());
                 item.putClientProperty("aaa", "aaa");
                 menu.add(item);
-                item.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        RequestProcessor.getDefault().post(new Runnable() {
-                            @Override
-                            public void run() {
-                                bai.repeatExecution();
-                            }
-                        });
-                    }
-                });
+                item.addActionListener(evt -> 
+                    RequestProcessor.getDefault().post(bai::repeatExecution)
+                );
             }
         }
     }

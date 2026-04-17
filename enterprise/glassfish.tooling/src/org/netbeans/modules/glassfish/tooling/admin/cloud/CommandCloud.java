@@ -29,17 +29,11 @@ import org.netbeans.modules.glassfish.tooling.admin.Command;
  */
 public class CommandCloud extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Cloud account identifier. */
     final String account;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of GlassFish cloud administration command entity
      * with specified cloud account and command.
@@ -52,10 +46,7 @@ public class CommandCloud extends Command {
         this.account = account;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and Setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Returns cloud account identifier of this command.
      * <p/>

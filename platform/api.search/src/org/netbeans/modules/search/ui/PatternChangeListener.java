@@ -25,11 +25,8 @@ import javax.swing.text.Document;
 import org.openide.ErrorManager;
 
 /**
- *
- * @author jhavlin
- */
-/**
  * Listener to changes of pattern combo boxes.
+ * @author jhavlin
  */
 public abstract class PatternChangeListener implements DocumentListener {
 

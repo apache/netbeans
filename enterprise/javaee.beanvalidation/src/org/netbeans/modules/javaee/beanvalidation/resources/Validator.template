@@ -7,8 +7,13 @@
 package ${package};
 </#if>
 
+<#if jakartaPackage?? && jakartaPackage==true>
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
+<#else>
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+</#if>
 
 /**
  *

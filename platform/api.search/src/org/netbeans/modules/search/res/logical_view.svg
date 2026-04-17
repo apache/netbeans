@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #394960;
+      }
+
+      .st1 {
+        fill: #e9f7ff;
+      }
+
+      .st2 {
+        fill: #7a8896;
+      }
+
+      .st3 {
+        fill: #62707c;
+      }
+    </style>
+  </defs>
+  <g>
+    <g>
+      <rect class="st1" x=".5" y=".5" width="6" height="6"/>
+      <path class="st3" d="M6,1v5H1V1h5M7,0H0v7h7V0h0Z"/>
+    </g>
+    <rect class="st0" x="2" y="3" width="3" height="1"/>
+  </g>
+  <g>
+    <g>
+      <rect class="st1" x="5.5" y="4.5" width="6" height="6"/>
+      <path class="st3" d="M11,5v5h-5v-5h5M12,4h-7v7h7V4h0Z"/>
+    </g>
+    <rect class="st0" x="7" y="7" width="3" height="1"/>
+  </g>
+  <g>
+    <g>
+      <rect class="st1" x="9.5" y="8.5" width="6" height="6"/>
+      <path class="st3" d="M15,9v5h-5v-5h5M16,8h-7v7h7v-7h0Z"/>
+    </g>
+    <rect class="st0" x="11" y="11" width="3" height="1"/>
+  </g>
+  <polygon class="st2" points="2 13 2 10 5 10 5 9 2 9 2 7 1 7 1 9 1 10 1 13 1 14 2 14 9 14 9 13 2 13"/>
+</svg>

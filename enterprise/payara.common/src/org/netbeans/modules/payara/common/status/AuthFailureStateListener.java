@@ -41,20 +41,14 @@ import org.netbeans.modules.payara.tooling.data.PayaraStatusTask;
  */
 public class AuthFailureStateListener extends BasicStateListener {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Minimal delay between displaying pop up windows [ms].
      *  <p/>
      *  Currently it shall not open pop up again sooner than after 
      *  30 seconds. */
     private static final long POPUP_DELAY = 30000;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Pop up processing lock to avoid displaying pop up window more
      *  than once.
      *  <p/>
@@ -68,10 +62,7 @@ public class AuthFailureStateListener extends BasicStateListener {
     /** Allow to display pop up window for GF v4. */
     private final boolean allowPopup;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command calls authorization
      * failures handler.
@@ -83,10 +74,7 @@ public class AuthFailureStateListener extends BasicStateListener {
         this.allowPopup = allowPopup;
     }
     
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Callback to notify about current server status after every check
      * when enabled.

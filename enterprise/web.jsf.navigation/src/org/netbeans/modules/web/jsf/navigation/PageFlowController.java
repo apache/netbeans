@@ -50,7 +50,7 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.web.api.webmodule.WebModule;
 import org.netbeans.modules.web.jsf.api.facesmodel.JSFConfigComponent;
 import org.openide.DialogDescriptor;
@@ -119,7 +119,7 @@ public class PageFlowController {
             // with the page flow editor, and this is probably not the best place for this code.
             // but in any case this should be a pretty safe fix).
             AtomicBoolean canceled = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                 @Override
                 public void run() {

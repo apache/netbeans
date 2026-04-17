@@ -31,6 +31,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.DoWhileLoopTree;
+import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -584,7 +585,7 @@ public class JavaFixUtilities {
                     }
                 }
 
-                rewriteFromTo.put(original = parent.getLeaf(), wc.getTreeMaker().Class(ct.getModifiers(), ct.getSimpleName(), ct.getTypeParameters(), ct.getExtendsClause(), ct.getImplementsClause(), newMembers));
+                rewriteFromTo.put(original = parent.getLeaf(), wc.getTreeMaker().Class(ct.getModifiers(), ct.getSimpleName(), ct.getTypeParameters(), ct.getExtendsClause(), ct.getImplementsClause(), ct.getPermitsClause(), newMembers));
             } else if (tp.getLeaf().getKind() == Kind.BLOCK && parametersMulti.containsKey("$$1$") && parsed.getKind() != Kind.BLOCK && StatementTree.class.isAssignableFrom(parsed.getKind().asInterface())) {
                 List<StatementTree> newStatements = new LinkedList<>();
 
@@ -956,9 +957,10 @@ public class JavaFixUtilities {
 
             List<? extends TypeParameterTree> typeParams = resolveMultiParameters(node.getTypeParameters());
             List<? extends Tree> implementsClauses = resolveMultiParameters(node.getImplementsClause());
+            List<? extends Tree> permitsClauses = resolveMultiParameters(node.getPermitsClause());
             List<? extends Tree> members = resolveMultiParameters(Utilities.filterHidden(getCurrentPath(), node.getMembers()));
             Tree extend = resolveOptionalValue(node.getExtendsClause());
-            ClassTree nue = make.Class(node.getModifiers(), newName, typeParams, extend, implementsClauses, members);
+            ClassTree nue = make.Class(node.getModifiers(), newName, typeParams, extend, implementsClauses, permitsClauses, members);
             
             rewrite(node, nue);
             
@@ -1697,7 +1699,7 @@ public class JavaFixUtilities {
                     if (classTree.getTypeParameters().contains(leaf)) {
                         nueClassTree = make.removeClassTypeParameter(classTree, (TypeParameterTree) leaf);
                     } else if (classTree.getExtendsClause() == leaf) {
-                        nueClassTree = make.Class(classTree.getModifiers(), classTree.getSimpleName(), classTree.getTypeParameters(), null, classTree.getImplementsClause(), classTree.getMembers());
+                        nueClassTree = make.setExtends(classTree, null);
                     } else if (classTree.getImplementsClause().contains(leaf)) {
                         nueClassTree = make.removeClassImplementsClause(classTree, leaf);
                     } else if (classTree.getMembers().contains(leaf)) {
@@ -1834,6 +1836,21 @@ public class JavaFixUtilities {
         }
 
         private static boolean canSafelyRemove(CompilationInfo info, TreePath tp) {
+            if (tp.getParentPath() != null) {
+                //cannot remove from some parent trees:
+                switch (tp.getParentPath().getLeaf().getKind()) {
+                    case BINDING_PATTERN -> {
+                        return false;
+                    }
+                    case ENHANCED_FOR_LOOP -> {
+                        EnhancedForLoopTree loop = (EnhancedForLoopTree) tp.getParentPath().getLeaf();
+
+                        if (loop.getVariable() == tp.getLeaf()) {
+                            return false;
+                        }
+                    }
+                }
+            }
             AtomicBoolean ret = new AtomicBoolean(true);
             Element el = info.getTrees().getElement(tp);
             if (el != null) {

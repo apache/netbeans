@@ -68,7 +68,7 @@ public final class  UiUtils {
     
     /** Gets correct icon for given ElementKind.
      * @param modifiers Can be null for empty modifiers collection
-     * @deprecated Use <a href="@org-netbeans-modules-java-sourceui@/org/netbeans/api/java/source/ui/ElementIcons.html#getElementIcon-javax.lang.model.element.ElementKind-java.util.Collection-">ElementIcons#getElementIcon(javax.lang.model.element.ElementKind, java.util.Collection)</a>
+     * @deprecated Use <a href="@org-netbeans-modules-java-sourceui@/org/netbeans/api/java/source/ui/ElementIcons.html#getElementIcon(javax.lang.model.element.ElementKind,java.util.Collection)">ElementIcons#getElementIcon(javax.lang.model.element.ElementKind, java.util.Collection)</a>
      *             of the <a href="@org-netbeans-modules-java-sourceui@">org.netbeans.modules.java.sourceui module</a>
      */
     @Deprecated
@@ -78,7 +78,7 @@ public final class  UiUtils {
 
     /**
      *
-     * @deprecated Use <a href="@org-netbeans-modules-java-sourceui@/org/netbeans/api/java/source/ui/ElementIcons.html#getElementIcon-javax.lang.model.element.ElementKind-java.util.Collection-">ElementIcons#getElementIcon(javax.lang.model.element.ElementKind, java.util.Collection)</a>
+     * @deprecated Use <a href="@org-netbeans-modules-java-sourceui@/org/netbeans/api/java/source/ui/ElementIcons.html#getElementIcon(javax.lang.model.element.ElementKind,java.util.Collection)">ElementIcons#getElementIcon(javax.lang.model.element.ElementKind, java.util.Collection)</a>
      *             of the <a href="@org-netbeans-modules-java-sourceui@">org.netbeans.modules.java.sourceui module</a>
      */
     @Deprecated
@@ -94,7 +94,7 @@ public final class  UiUtils {
      * @param el    declaration to open
      * @return true if and only if the declaration was correctly opened,
      *                false otherwise
-     * @deprecated Use <a href="@org-netbeans-modules-java-sourceui@/org/netbeans/api/java/source/ui/ElementOpen.html#open-org.netbeans.api.java.source.ClasspathInfo-javax.lang.model.element.Element-">org.netbeans.api.java.source.ui.ElementOpen#open(org.netbeans.api.java.source.ClasspathInfo, org.netbeans.api.java.source.ElementHandle</a>
+     * @deprecated Use <a href="@org-netbeans-modules-java-sourceui@/org/netbeans/api/java/source/ui/ElementOpen.html#open(org.netbeans.api.java.source.ClasspathInfo,javax.lang.model.element.Element)">org.netbeans.api.java.source.ui.ElementOpen#open(org.netbeans.api.java.source.ClasspathInfo, org.netbeans.api.java.source.ElementHandle</a>
      *             of the <a href="@org-netbeans-modules-java-sourceui@">org.netbeans.modules.java.sourceui module</a>
      */
     @Deprecated
@@ -110,7 +110,7 @@ public final class  UiUtils {
 
     /**
      *
-     * @deprecated Use <a href="@org-netbeans-modules-java-sourceui@/org/netbeans/api/java/source/ui/ElementOpen.html#open-org.openide.filesystems.FileObject-org.netbeans.api.java.source.ElementHandle-">org.netbeans.api.java.source.ui.ElementOpen#open(org.openide.filesystems.FileObject, org.netbeans.api.java.source.ElementHandle)</a>
+     * @deprecated Use <a href="@org-netbeans-modules-java-sourceui@/org/netbeans/api/java/source/ui/ElementOpen.html#open(org.openide.filesystems.FileObject,org.netbeans.api.java.source.ElementHandle)">org.netbeans.api.java.source.ui.ElementOpen#open(org.openide.filesystems.FileObject, org.netbeans.api.java.source.ElementHandle)</a>
      *             of the <a href="@org-netbeans-modules-java-sourceui@">org.netbeans.modules.java.sourceui module</a>
      */
     @Deprecated
@@ -167,7 +167,7 @@ public final class  UiUtils {
     /**
      * example of formatString:
      * "method " + PrintPart.NAME + PrintPart.PARAMETERS + " has return type " + PrintPart.TYPE
-     * @deprecated Use <a href="@org-netbeans-modules-java-sourceui@/org/netbeans/api/java/source/ui/ElementHeaders.html#getHeader-com.sun.source.util.TreePath-org.netbeans.api.java.source.CompilationInfo-java.lang.String-">org.netbeans.api.java.source.ui.ElementHeaders#getHeader(com.sun.source.util.TreePath, org.netbeans.api.java.source.CompilationInfo, java.lang.String)</a>
+     * @deprecated Use <a href="@org-netbeans-modules-java-sourceui@/org/netbeans/api/java/source/ui/ElementHeaders.html#getHeader(com.sun.source.util.TreePath,org.netbeans.api.java.source.CompilationInfo,java.lang.String)">org.netbeans.api.java.source.ui.ElementHeaders#getHeader(com.sun.source.util.TreePath, org.netbeans.api.java.source.CompilationInfo, java.lang.String)</a>
      *             of the <a href="@org-netbeans-modules-java-sourceui@">org.netbeans.modules.java.sourceui module</a>
      */
     @Deprecated
@@ -183,7 +183,7 @@ public final class  UiUtils {
     /**
      * example of formatString:
      * "method " + PrintPart.NAME + PrintPart.PARAMETERS + " has return type " + PrintPart.TYPE
-     * @deprecated Use <a href="@org-netbeans-modules-java-sourceui@/org/netbeans/api/java/source/ui/ElementHeaders.html#getHeader-javax.lang.model.element.Element-org.netbeans.api.java.source.CompilationInfo-java.lang.String-">org.netbeans.api.java.source.ui.ElementHeaders#getHeader(javax.lang.model.element.Element, org.netbeans.api.java.source.CompilationInfo, java.lang.String)</a>
+     * @deprecated Use <a href="@org-netbeans-modules-java-sourceui@/org/netbeans/api/java/source/ui/ElementHeaders.html#getHeader(javax.lang.model.element.Element,org.netbeans.api.java.source.CompilationInfo,java.lang.String)">org.netbeans.api.java.source.ui.ElementHeaders#getHeader(javax.lang.model.element.Element, org.netbeans.api.java.source.CompilationInfo, java.lang.String)</a>
      *             of the <a href="@org-netbeans-modules-java-sourceui@">org.netbeans.modules.java.sourceui module</a>
      */
     @Deprecated
@@ -240,7 +240,7 @@ public final class  UiUtils {
     }
     
     /** Computes distance between strings
-     * @deprecated Use <a href="@org-netbeans-modules-java-sourceui@/org/netbeans/api/java/source/ui/ElementHeaders.html#getDistance-java.lang.String-java.lang.String-">org.netbeans.api.java.source.ui.ElementHeaders#getDistance(java.lang.String, java.lang.String)</a>
+     * @deprecated Use <a href="@org-netbeans-modules-java-sourceui@/org/netbeans/api/java/source/ui/ElementHeaders.html#getDistance(java.lang.String,java.lang.String)">org.netbeans.api.java.source.ui.ElementHeaders#getDistance(java.lang.String, java.lang.String)</a>
      *             of the <a href="@org-netbeans-modules-java-sourceui@">org.netbeans.modules.java.sourceui module</a>
      */
     @Deprecated

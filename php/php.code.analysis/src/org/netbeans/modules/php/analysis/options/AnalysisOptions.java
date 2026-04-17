@@ -58,7 +58,7 @@ public final class AnalysisOptions {
     private static final String PHPSTAN_CONFIGURATION = "phpstan.configuration"; // NOI18N
     private static final String PHPSTAN_MEMORY_LIMIT = "phpstan.memory.limit"; // NOI18N
     public static final int PHPSTAN_MIN_LEVEL = Integer.getInteger("nb.phpstan.min.level", 0); // NOI18N
-    public static final int PHPSTAN_MAX_LEVEL = Integer.getInteger("nb.phpstan.max.level", 9); // NOI18N
+    public static final int PHPSTAN_MAX_LEVEL = Integer.getInteger("nb.phpstan.max.level", 10); // NOI18N
     // Psalm - PHP Static Analysis Tool
     private static final String PSALM_PATH = "psalm.path"; // NOI18N
     private static final String PSALM_LEVEL = "psalm.level"; // NOI18N

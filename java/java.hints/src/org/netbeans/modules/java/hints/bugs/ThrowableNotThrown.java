@@ -19,16 +19,22 @@
 package org.netbeans.modules.java.hints.bugs;
 
 import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.BindingPatternTree;
+import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.PatternCaseLabelTree;
+import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import java.util.Collection;
-import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
@@ -89,13 +95,6 @@ public class ThrowableNotThrown {
         }
         return null;
     }
-    
-    private static final EnumSet<ElementKind> LOCAL_VARIABLES = EnumSet.of(
-            ElementKind.LOCAL_VARIABLE,
-            ElementKind.PARAMETER,
-            ElementKind.RESOURCE_VARIABLE,
-            ElementKind.EXCEPTION_PARAMETER
-    );
     
     private static TreePath findEnclosingMethodPath(TreePath path) {
         TreePath enclosingMethodPath = path;
@@ -303,7 +302,7 @@ public class ThrowableNotThrown {
                         Element el = info.getTrees().getElement(new TreePath(excPath, var));
                         if (el == null || el.getKind() == ElementKind.FIELD) {
                             return true;
-                        } else if (LOCAL_VARIABLES.contains(el.getKind())) {
+                        } else if (Flow.LOCAL_VARIABLES.contains(el.getKind())) {
                             varAssignments.add(as.getExpression());
                         }
                         process = true;
@@ -359,10 +358,40 @@ public class ThrowableNotThrown {
                         break;
                     }
 
+                    case SWITCH: {
+                        SwitchTree st = (SwitchTree) leaf;
+
+                        if (st.getExpression() == prevLeaf) {
+                            collectCaseBindings(st.getCases());
+                        }
+
+                        break;
+                    }
+                    case SWITCH_EXPRESSION: {
+                        SwitchExpressionTree st = (SwitchExpressionTree) leaf;
+
+                        if (st.getExpression() == prevLeaf) {
+                            collectCaseBindings(st.getCases());
+                            process = true;
+                        }
+                        break;
+                    }
                 }
                 prevLeaf = excPath.getLeaf();
             } while (process);
             return varAssignments.isEmpty() ? Boolean.FALSE : null;
+        }
+
+        private void collectCaseBindings(List<? extends CaseTree> cases) {
+            //all binding patterns should be considered as new target variables for the selector value:
+            cases.stream()
+                 .flatMap(cse -> cse.getLabels().stream())
+                 .filter(label -> label.getKind() == Kind.PATTERN_CASE_LABEL)
+                 .map(label -> ((PatternCaseLabelTree) label).getPattern())
+                 .filter(pattern -> pattern.getKind() == Kind.BINDING_PATTERN)
+                 .map(pattern -> ((BindingPatternTree) pattern).getVariable())
+                 .filter(var -> !var.getName().isEmpty())
+                 .forEach(varAssignments::add);
         }
     }
 }

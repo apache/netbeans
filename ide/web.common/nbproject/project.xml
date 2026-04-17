@@ -143,6 +143,7 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.editor.lib</code-name-base>
+                        <compile-dependency/>
                         <test/>
                     </test-dependency>
                     <test-dependency>
@@ -236,6 +237,7 @@
                 <friend>org.netbeans.modules.javascript2.nodejs</friend>
                 <friend>org.netbeans.modules.javascript2.requirejs</friend>
                 <friend>org.netbeans.modules.languages.apacheconf</friend>
+                <friend>org.netbeans.modules.languages.env</friend>
                 <friend>org.netbeans.modules.languages.ini</friend>
                 <friend>org.netbeans.modules.languages.neon</friend>
                 <friend>org.netbeans.modules.maven</friend>

@@ -126,7 +126,7 @@ public final class ActionUtils {
      *               or null to not check suffixes
      * @param strict if true, all files in the selection have to be accepted
      * @return a nonempty selection of disk files, or null
-     * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/spi/project/ActionProvider.html#isActionEnabled-java.lang.String-org.openide.util.Lookup-"><code>ActionProvider.isActionEnabled(...)</code></a>
+     * @see org.netbeans.spi.project.ActionProvider#isActionEnabled(java.lang.String,org.openide.util.Lookup) ActionProvider.isActionEnabled(...)
      */
     public static FileObject[] findSelectedFiles(Lookup context, FileObject dir, String suffix, boolean strict) {
         if (dir != null && !dir.isFolder()) {

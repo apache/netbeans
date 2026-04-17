@@ -79,6 +79,23 @@
         </goals>
     </action>
     <action>
+        <actionName>test.parallel</actionName>
+        <packagings>
+            <packaging>*</packaging>
+        </packagings>
+        <options>
+            <threads>0.5C</threads>
+            <projects>${projects}</projects>
+            <also-make></also-make>
+        </options>
+        <goals>
+            <goal>test</goal>
+        </goals>
+        <properties>
+            <parallel>classes</parallel>
+        </properties>
+    </action>
+    <action>
         <actionName>test.single</actionName>
         <packagings>
             <packaging>*</packaging>
@@ -116,7 +133,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.5.1:exec</goal>
         </goals>
         <properties>
             <exec.vmArgs></exec.vmArgs>
@@ -133,7 +150,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.5.1:exec</goal>
         </goals>
         <properties>
             <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
@@ -151,7 +168,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.5.1:exec</goal>
         </goals>
         <properties>
             <exec.vmArgs></exec.vmArgs>
@@ -169,7 +186,7 @@
         </packagings>
         <goals>
             <goal>process-test-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.5.1:exec</goal>
         </goals>
         <properties>
             <exec.vmArgs>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
@@ -238,7 +255,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.5.1:exec</goal>
         </goals>
         <properties>
             <exec.vmArgs></exec.vmArgs>
@@ -255,7 +272,7 @@
         </packagings>
         <goals>
             <goal>process-classes</goal>
-            <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
+            <goal>org.codehaus.mojo:exec-maven-plugin:3.5.1:exec</goal>
         </goals>
         <properties>
             <exec.vmArgs></exec.vmArgs>

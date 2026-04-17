@@ -90,43 +90,36 @@
       </api>
   </p>
   <p>
-      <api group="property" name="wizardMessage" type="export" category="friend">
-            <p>
+      <api group="property" name="wizardMessage" type="export" category="friend">            
             By adding <code>wizardMessage</code> attribute you tell the
             <q>Add Server...</q> or <q>Add Cloud...</q> action to display this message as an
             option, if no servers are yet registered. If user agrees, your
             action will be called then to enable some server providers.
-            </p>
-            <p>
+            <br/>
             The action then receives command <q>noui</q>,
             to know that it shall only enable given functionality, but there
             is no need to show user anything.
-            </p>
       </api>
-      <api group="layer" name="ServersNodeActionsAttributes" type="export" category="friend">
-            <p>
+  </p>
+  <p>  
+      <api group="layer" name="ServersNodeActionsAttributes" type="export" category="friend">            
             By adding additional attributes to files in <code>Servers/Actions</code> or <code>Cloud/Actions</code>
             folder you can influence behaviour of the <q>Servers</q> and <q>Cloud</q> node.
-            </p>
-            <p>
+            <br/>
             By adding <code>property-something</code> attribute you identify
             an action that will be called as soon as the node is expanded and
             <code>System.getProperty("something")</code> is non-null.
-            </p>
-            <p>
+            <br/>
             By adding <code>config-something</code> attribute you identify
             an action that will be called as soon as the node is expanded and
             <code>FileUtil.getConfigFile("something")</code> is non-null.
-            </p>
-            <p>
+            <br/>
             In all of these cases, the action receives command <q>noui</q>,
             to know that it shall only enable given functionality, but there
             is no need to show user anything.
-            </p>
-            <p>
+            <br/>
             These attribute based APIs shall be seen as temporary and subject
             to replacement. Please notify us as soon as you start to use them.
-            </p>
       </api>
   </p>
  </answer>
@@ -861,7 +854,7 @@
  <answer id="lookup-lookup">
   <p>
    Yes.
-   <a href="@org-openide-util-lookup@/org/openide/util/lookup/Lookups.html#forPath-java.lang.String-">Lookups.forPath--</a>.
+   <a href="@org-openide-util-lookup@/org/openide/util/lookup/Lookups.html#forPath(java.lang.String)">Lookups.forPath--</a>.
    The module search for all classes implementing
    <a href="@TOP@org/netbeans/spi/server/ServerInstanceProvider.html">ServerInstanceProvider</a>
    and

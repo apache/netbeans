@@ -175,7 +175,7 @@ public class JBManagerNode extends AbstractNode implements Node.Cookie {
                 NbBundle.getMessage(JBManagerNode.class, "HINT_PORT")   // NOI18N
                 ) {
             public Object getValue() {
-                return new Integer(ip.getProperty(JBPluginProperties.PROPERTY_PORT));
+                return Integer.valueOf(ip.getProperty(JBPluginProperties.PROPERTY_PORT));
             }
         };
         properties.put(property);

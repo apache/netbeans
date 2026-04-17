@@ -28,8 +28,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -37,11 +35,9 @@ import javax.swing.ButtonModel;
 import javax.swing.Icon;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
-import static javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.KeyStroke;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -56,11 +52,15 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.jumpto.SearchHistory;
+import org.netbeans.modules.jumpto.common.ItemRenderer;
 import org.netbeans.modules.jumpto.common.UiUtils;
+import org.netbeans.modules.jumpto.settings.GoToSettings;
 import org.netbeans.spi.jumpto.type.TypeDescriptor;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
+
+import static javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT;
 
 /**
  *
@@ -68,14 +68,14 @@ import org.openide.util.Pair;
  */
 public class GoToPanel extends javax.swing.JPanel {
             
-    private static Icon WAIT_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/jumpto/resources/wait.gif", false); // NOI18N
-    private static Icon WARN_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/jumpto/resources/warning.png", false); // NOI18N
+    private static final Icon WAIT_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/jumpto/resources/wait.gif", false); // NOI18N
+    private static final Icon WARN_ICON = ImageUtilities.loadImageIcon("org/netbeans/modules/jumpto/resources/warning.png", false); // NOI18N
         
     private static final int BRIGHTER_COLOR_COMPONENT = 10;
-    private ContentProvider contentProvider;
+    private final ContentProvider contentProvider;
     private boolean containsScrollPane;
     JLabel messageLabel;
-    private Iterable<? extends TypeDescriptor> selectedTypes = Collections.emptyList();
+    private Iterable<? extends TypeDescriptor> selectedTypes = List.of();
     private String oldMessage;
     
     // Time when the serach stared (for debugging purposes)
@@ -117,15 +117,20 @@ public class GoToPanel extends javax.swing.JPanel {
         // matchesScrollPane1.setBackground( bgColorBrighter );
         matchesList.setCellRenderer( contentProvider.getListCellRenderer(
                 matchesList,
-                caseSensitive.getModel()));
+                caseSensitive.getModel()
+        ));
         contentProvider.setListModel( this, null );
         
         PatternListener pl = new PatternListener( this );
         nameField.getDocument().addDocumentListener(pl);
+
         caseSensitive.setSelected(UiOptions.GoToTypeDialog.getCaseSensitive());
         caseSensitive.addItemListener(pl);
-        matchesList.addListSelectionListener(pl);                       
+        prefereOpen.setSelected(GoToSettings.getDefault().isSortingPreferOpenProjects());
+        prefereOpen.addItemListener(pl);
 
+        matchesList.addListSelectionListener(pl);
+        
         searchHistory = new SearchHistory(GoToPanel.class, nameField);
     }
 
@@ -135,12 +140,12 @@ public class GoToPanel extends javax.swing.JPanel {
         super.removeNotify();
     }
 
-    /** Sets the model from different therad
+    /** Sets the model from different thread
      */
-    boolean setModel( final ListModel model) {
+    boolean setModel(ListModel<TypeDescriptor> model) {
         assert SwingUtilities.isEventDispatchThread();
         matchesList.setModel(model);
-        if (model.getSize() > 0 || getText() == null || getText().trim().length() == 0 ) {
+        if (model.getSize() > 0 || getText() == null || getText().isBlank()) {
             matchesList.setSelectedIndex(0);
             setListPanelContent(null,false);
             if ( time != -1 ) {
@@ -160,25 +165,19 @@ public class GoToPanel extends javax.swing.JPanel {
 
     /** Sets the initial text to find in case the user did not start typing yet. */
     public void setInitialText( final String text ) {
-        SwingUtilities.invokeLater( new Runnable() {
-            public void run() {
-                String textInField = nameField.getText();
-                if ( textInField == null || textInField.trim().length() == 0 ) {
-                    nameField.setText(text);
-                    nameField.setCaretPosition(text.length());
-                    nameField.setSelectionStart(0);
-                    nameField.setSelectionEnd(text.length());
-                }
+        SwingUtilities.invokeLater(() -> {
+            String textInField = nameField.getText();
+            if (textInField == null || textInField.isBlank()) {
+                nameField.setText(text);
+                nameField.setCaretPosition(text.length());
+                nameField.setSelectionStart(0);
+                nameField.setSelectionEnd(text.length());
             }
         });
     }
     
     public void setSelectedTypes() {
-        final List<TypeDescriptor> types = new LinkedList<TypeDescriptor>();
-        for (Object td : matchesList.getSelectedValues()) {
-            types.add((TypeDescriptor)td);
-        }
-        selectedTypes = Collections.unmodifiableCollection(types);
+        selectedTypes = List.copyOf(matchesList.getSelectedValuesList());
     }
     
     public Iterable<? extends TypeDescriptor> getSelectedTypes() {
@@ -190,8 +189,8 @@ public class GoToPanel extends javax.swing.JPanel {
             jLabelWarning.setIcon(WARN_ICON);
             jLabelWarning.setBorder(BorderFactory.createEmptyBorder(3, 1, 1, 1));
         } else {
-                jLabelWarning.setIcon(null);
-                jLabelWarning.setBorder(null);
+            jLabelWarning.setIcon(null);
+            jLabelWarning.setBorder(null);
         }
         jLabelWarning.setText(warningMessage);
     }
@@ -218,9 +217,10 @@ public class GoToPanel extends javax.swing.JPanel {
         jLabelList = new javax.swing.JLabel();
         listPanel = new javax.swing.JPanel();
         matchesScrollPane1 = new javax.swing.JScrollPane();
-        matchesList = new javax.swing.JList();
+        matchesList = new javax.swing.JList<>();
         jLabelWarning = new javax.swing.JLabel();
         caseSensitive = new javax.swing.JCheckBox();
+        prefereOpen = new javax.swing.JCheckBox();
         jLabelLocation = new javax.swing.JLabel();
         jTextFieldLocation = new javax.swing.JTextField();
 
@@ -242,11 +242,7 @@ public class GoToPanel extends javax.swing.JPanel {
 
         nameField.setFont(new java.awt.Font("Monospaced", 0, getFontSize()));
         nameField.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        nameField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nameFieldActionPerformed(evt);
-            }
-        });
+        nameField.addActionListener(this::nameFieldActionPerformed);
         nameField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 nameFieldKeyPressed(evt);
@@ -305,14 +301,22 @@ public class GoToPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(caseSensitive, org.openide.util.NbBundle.getMessage(GoToPanel.class, "TXT_GoToType_CaseSensitive")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 4, 0);
         add(caseSensitive, gridBagConstraints);
         caseSensitive.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(GoToPanel.class, "GoToPanel.caseSensitive.AccessibleContext.accessibleDescription")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(prefereOpen, org.openide.util.NbBundle.getMessage(GoToPanel.class, "TXT_GoToType_PreferOpenProjects")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 4, 0);
+        add(prefereOpen, gridBagConstraints);
+        prefereOpen.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(GoToPanel.class, "GoToPanel.prefereOpen.AccessibleContext.accessibleDescription")); // NOI18N
+
         jLabelLocation.setText(org.openide.util.NbBundle.getMessage(GoToPanel.class, "LBL_GoToType_LocationJLabel")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 4, 0);
@@ -352,15 +356,12 @@ public class GoToPanel extends javax.swing.JPanel {
         } else {
             //handling http://netbeans.org/bugzilla/show_bug.cgi?id=203512
             Object o = nameField.getInputMap().get(KeyStroke.getKeyStrokeForEvent(evt));
-            if (o instanceof String) {
-                String action = (String) o;
-                if ("paste-from-clipboard".equals(action)) {
-                    String selectedTxt = nameField.getSelectedText();
-                    String txt = nameField.getText();
-                    if (selectedTxt != null && txt != null) {
-                        if (selectedTxt.length() == txt.length()) {
-                            pastedFromClipboard = true;
-                        }
+            if (o instanceof String action && "paste-from-clipboard".equals(action)) {
+                String selectedTxt = nameField.getSelectedText();
+                String txt = nameField.getText();
+                if (selectedTxt != null && txt != null) {
+                    if (selectedTxt.length() == txt.length()) {
+                        pastedFromClipboard = true;
                     }
                 }
             }
@@ -383,9 +384,10 @@ public class GoToPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelWarning;
     private javax.swing.JTextField jTextFieldLocation;
     private javax.swing.JPanel listPanel;
-    private javax.swing.JList matchesList;
+    private javax.swing.JList<TypeDescriptor> matchesList;
     private javax.swing.JScrollPane matchesScrollPane1;
     javax.swing.JTextField nameField;
+    private javax.swing.JCheckBox prefereOpen;
     // End of variables declaration//GEN-END:variables
 
     private String getText() {
@@ -402,8 +404,12 @@ public class GoToPanel extends javax.swing.JPanel {
         return this.jLabelList.getFont().getSize();
     }
     
-    public boolean isCaseSensitive () {
+    public boolean isCaseSensitive() {
         return this.caseSensitive.isSelected();
+    }
+    
+    public boolean isPreferOpenProjects() {
+        return this.prefereOpen.isSelected();
     }
 
     void updateMessage(@NullAllowed final String message) {
@@ -441,16 +447,14 @@ public class GoToPanel extends javax.swing.JPanel {
     }
     
     @CheckForNull
-    private Pair<String,JComponent> listActionFor(KeyEvent ev) {
+    private Pair<String, JComponent> listActionFor(KeyEvent ev) {
         InputMap map = matchesList.getInputMap();
-        Object o = map.get(KeyStroke.getKeyStrokeForEvent(ev));
-        if (o instanceof String) {
-            return Pair.<String,JComponent>of((String)o, matchesList);
+        if (map.get(KeyStroke.getKeyStrokeForEvent(ev)) instanceof String str) {
+            return Pair.of(str, matchesList);
         }
         map = matchesScrollPane1.getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-        o = map.get(KeyStroke.getKeyStrokeForEvent(ev));
-        if (o instanceof String) {
-            return Pair.<String,JComponent>of((String)o, matchesScrollPane1);
+        if (map.get(KeyStroke.getKeyStrokeForEvent(ev)) instanceof String str) {
+            return Pair.of(str, matchesScrollPane1);
         }
         return null;
     }
@@ -506,17 +510,15 @@ public class GoToPanel extends javax.swing.JPanel {
         PatternListener( GoToPanel dialog ) {
             this.dialog = dialog;
         }
-        
-        PatternListener( DocumentEvent e, GoToPanel dialog ) {
-            this.dialog = dialog;
-        }
-        
+
         // DocumentListener ----------------------------------------------------
         
+        @Override
         public void changedUpdate( DocumentEvent e ) {            
             update();
         }
 
+        @Override
         public void removeUpdate( DocumentEvent e ) {
             // handling http://netbeans.org/bugzilla/show_bug.cgi?id=203512
             if (dialog.pastedFromClipboard) {
@@ -526,35 +528,46 @@ public class GoToPanel extends javax.swing.JPanel {
             }
         }
 
+        @Override
         public void insertUpdate( DocumentEvent e ) {
             update();
         }
         
         // Item Listener -------------------------------------------------------
         
+        @Override
         public void itemStateChanged (final ItemEvent e) {
             UiOptions.GoToTypeDialog.setCaseSensitive(dialog.isCaseSensitive());
-            update();
+            boolean restart = false;
+            if (GoToSettings.getDefault().isSortingPreferOpenProjects() != dialog.isPreferOpenProjects()) {
+                GoToSettings.getDefault().setSortingPreferOpenProjects(dialog.isPreferOpenProjects());
+                restart = true;  // todo comparator should be able to handle this without restart
+            }
+            update(restart);
         }
         
         // ListSelectionListener -----------------------------------------------
         
         @Override
         public void valueChanged(@NonNull final ListSelectionEvent ev) {
-            // got "Not computed yet" text sometimes
-            final Object obj = dialog.matchesList.getSelectedValue();
-            if (obj instanceof TypeDescriptor) {
-                final TypeDescriptor selectedValue = (TypeDescriptor) obj;
-                final String fileName = selectedValue.getFileDisplayPath();
-                dialog.jTextFieldLocation.setText(fileName);
+            TypeDescriptor selected = dialog.matchesList.getSelectedValue();
+            if (selected != null) {
+                dialog.jTextFieldLocation.setText(selected.getFileDisplayPath());
             } else {
                 dialog.jTextFieldLocation.setText("");      //NOI18N
             }
         }
-
+        
         private void update() {
+            this.update(false);
+        }
+
+        private void update(boolean restart) {
             dialog.time = System.currentTimeMillis();
             final String text = dialog.getText();
+            if (restart) {
+                dialog.contentProvider.setListModel(dialog, null);
+            }            
             if (dialog.contentProvider.setListModel(dialog, text)) {
                 dialog.updateMessage(NbBundle.getMessage(GoToPanel.class, "TXT_Searching"));
             }
@@ -565,8 +578,8 @@ public class GoToPanel extends javax.swing.JPanel {
     public static interface ContentProvider {
 
         @NonNull
-        public ListCellRenderer getListCellRenderer(
-                @NonNull JList list,
+        public ItemRenderer<TypeDescriptor> getListCellRenderer(
+                @NonNull JList<TypeDescriptor> list,
                 @NonNull ButtonModel caseSensitive);
 
         public boolean setListModel( GoToPanel panel, String text );

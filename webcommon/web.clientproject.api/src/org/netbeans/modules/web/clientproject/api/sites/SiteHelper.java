@@ -145,9 +145,8 @@ public final class SiteHelper {
     @NbBundle.Messages("SiteHelper.error.emptyZip=ZIP file with site template is either empty or its download failed.")
     private static void unzipProjectTemplateFile(FileObject targetDir, InputStream source, String rootFolder, String... ignoredFiles) throws IOException {
         boolean firstItem = true;
-        try {
+        try (ZipInputStream str = new ZipInputStream(source)) {
             int stripLen = rootFolder != null ? rootFolder.length() : 0;
-            ZipInputStream str = new ZipInputStream(source);
             ZipEntry entry;
             Set<String> ignored = Collections.emptySet();
             if (ignoredFiles != null && ignoredFiles.length > 0) {
@@ -191,7 +190,6 @@ public final class SiteHelper {
                 }
             }
         } finally {
-            source.close();
             if (firstItem) {
                 DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(Bundle.SiteHelper_error_emptyZip()));
             }
@@ -199,18 +197,14 @@ public final class SiteHelper {
     }
 
     private static void writeFile(ZipInputStream str, FileObject fo) throws IOException {
-        OutputStream out = fo.getOutputStream();
-        try {
-            FileUtil.copy(str, out);
-        } finally {
-            out.close();
+        try (OutputStream out = fo.getOutputStream()) {
+            str.transferTo(out);
         }
     }
 
     private static String getZipRootFolder(InputStream source) throws IOException {
         String folder = null;
-        try {
-            ZipInputStream str = new ZipInputStream(source);
+        try (ZipInputStream str = new ZipInputStream(source)) {
             ZipEntry entry;
             boolean first = true;
             while ((entry = str.getNextEntry()) != null) {
@@ -238,8 +232,6 @@ public final class SiteHelper {
                     }
                 }
             }
-        } finally {
-            source.close();
         }
         return folder;
     }

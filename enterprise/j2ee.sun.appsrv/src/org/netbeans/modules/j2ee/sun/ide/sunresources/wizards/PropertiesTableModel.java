@@ -100,5 +100,5 @@ public class PropertiesTableModel extends javax.swing.table.AbstractTableModel {
         fireTableDataChanged();
     }
     
-////    private boolean changed = false;
+//    private boolean changed = false;
 }

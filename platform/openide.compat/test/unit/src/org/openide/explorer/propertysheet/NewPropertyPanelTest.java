@@ -383,7 +383,7 @@ public class NewPropertyPanelTest extends NbTestCase {
     
     
     public void disabled_testClientProperties() throws Exception {
-        tagsPanel.putClientProperty("radioButtonMax", new Integer(100));
+        tagsPanel.putClientProperty("radioButtonMax", 100);
         sleep();
         sleep();
         requestFocus(tagsPanel);
@@ -411,7 +411,7 @@ public class NewPropertyPanelTest extends NbTestCase {
 
         requestFocus (focusButton);
         
-        tagsPanel.putClientProperty("radioButtonMax", new Integer(100));
+        tagsPanel.putClientProperty("radioButtonMax", 100);
         sleep();
         tagsPanel.putClientProperty("useLabels", Boolean.TRUE);
         

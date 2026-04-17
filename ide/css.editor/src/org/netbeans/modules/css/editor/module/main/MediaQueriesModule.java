@@ -152,7 +152,11 @@ public class MediaQueriesModule extends CssEditorModule {
                 //no prefix
                 proposals.addAll(getMediaTypes(context));
                 break;
-                
+
+            case mediaCondition:
+                proposals.addAll(getMediaFeatures(context));
+                break;
+
             case mediaFeature:
                 //in media feature (max-width,...)
                 proposals.addAll(getMediaFeatures(context));

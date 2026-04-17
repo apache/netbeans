@@ -1,0 +1,5 @@
+Code completion result for source line:
+$this->publicProtec|tedSet->publicBarMethod(); // test: only public Bar (child class)
+(QueryType=COMPLETION, prefixSearch=true, caseSensitive=true)
+VARIABLE   Bar publicProtectedSet          [PUBLIC]   ParentClass
+VARIABLE   Bar publicProtectedSetTrait     [PUBLIC]   TestTrait

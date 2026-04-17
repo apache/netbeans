@@ -40,26 +40,26 @@ public class JFXProjectProfilingSupportProvider extends J2SEProjectProfilingSupp
         super(p);
     }
 
-////    @Override
-////    public boolean checkProjectCanBeProfiled(FileObject profiledClassFile) {
-////        if (profiledClassFile == null && isFXProject()) {
-////            Project p = getProject();
-////            final PropertyEvaluator pp = getProjectProperties(p);
-////            String profiledClass = pp.getProperty("main.class"); // NOI18N
-////
-////            if ((profiledClass == null) || "".equals(profiledClass)) {
-////                return false;
-////            }
-////            return true;
-////        }
-////        return super.checkProjectCanBeProfiled(profiledClassFile);
-////    }
+//    @Override
+//    public boolean checkProjectCanBeProfiled(FileObject profiledClassFile) {
+//        if (profiledClassFile == null && isFXProject()) {
+//            Project p = getProject();
+//            final PropertyEvaluator pp = getProjectProperties(p);
+//            String profiledClass = pp.getProperty("main.class"); // NOI18N
+//
+//            if ((profiledClass == null) || "".equals(profiledClass)) {
+//                return false;
+//            }
+//            return true;
+//        }
+//        return super.checkProjectCanBeProfiled(profiledClassFile);
+//    }
 
     @Override
     protected void setMainClass(final PropertyEvaluator pp, SessionSettings ss) {
         String jdkVersion=getProjectJavaPlatform().getPlatformJDKVersion();        
         String fxMainClassProp=pp.getProperty("javafx.main.class"); // NOI18N
-////        if (mainClassSetManually == null) {
+//        if (mainClassSetManually == null) {
             String mainClass;
             if ((jdkVersion!=null)&&((jdkVersion.equals("jdk18"))||(jdkVersion.equals("jdk19"))) && (fxMainClassProp!=null)) { // NOI18N
                 mainClass=fxMainClassProp;
@@ -67,23 +67,23 @@ public class JFXProjectProfilingSupportProvider extends J2SEProjectProfilingSupp
                 mainClass=pp.getProperty("main.class"); // NOI18N
             }
             ss.setMainClass((mainClass != null) ? mainClass : ""); // NOI18N
-////        } else {
-////            ss.setMainClass(mainClassSetManually);
-////        }
+//        } else {
+//            ss.setMainClass(mainClassSetManually);
+//        }
     }
     
-////    private boolean isFXProject() {
-////        final PropertyEvaluator ep = getProjectProperties(getProject());
-////        if (ep == null) {
-////            return false;
-////        }
-////        return isTrue(ep.getProperty(JAVAFX_ENABLED));
-////    }
+//    private boolean isFXProject() {
+//        final PropertyEvaluator ep = getProjectProperties(getProject());
+//        if (ep == null) {
+//            return false;
+//        }
+//        return isTrue(ep.getProperty(JAVAFX_ENABLED));
+//    }
 
-////    private static boolean isTrue(final String value) {
-////        return value != null
-////                && (value.equalsIgnoreCase("true") || //NOI18N
-////                value.equalsIgnoreCase("yes") || //NOI18N
-////                value.equalsIgnoreCase("on"));     //NOI18N
-////    }
+//    private static boolean isTrue(final String value) {
+//        return value != null
+//                && (value.equalsIgnoreCase("true") || //NOI18N
+//                value.equalsIgnoreCase("yes") || //NOI18N
+//                value.equalsIgnoreCase("on"));     //NOI18N
+//    }
 }

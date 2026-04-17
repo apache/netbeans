@@ -46,7 +46,7 @@ import org.netbeans.modules.web.beans.api.model.WebBeansModel;
 public class InterceptorResolutionTest extends CommonTestCase {
 
     public InterceptorResolutionTest( String testName ) {
-        super(testName);
+        super(testName, false);
     }
 
     public void testSimpleInterceptorCase() throws IOException{
@@ -219,7 +219,7 @@ public class InterceptorResolutionTest extends CommonTestCase {
                 "package foo; " +
                 "@IBinding1 "+
                 "public class One {" +
-                " void @IBinding2 method1(){} "+
+                " @IBinding2 void method1(){} "+
                 "}" );
         
         TestUtilities.copyStringToFileObject(srcFO, "foo/Iceptor1.java",
@@ -277,7 +277,7 @@ public class InterceptorResolutionTest extends CommonTestCase {
                 "import javax.interceptor.*; "+
                 "@Interceptors({DeclaredIceptor1.class, DeclaredIceptor2.class}) "+
                 "public class One {" +
-                " void @IBinding1 @Interceptors({DeclaredIceptor3.class}) method(){} "+
+                " @IBinding1 @Interceptors({DeclaredIceptor3.class}) void method(){} "+
                 "}" );
         
         TestUtilities.copyStringToFileObject(srcFO, "foo/Iceptor1.java",
@@ -394,7 +394,7 @@ public class InterceptorResolutionTest extends CommonTestCase {
                 "package foo; " +
                 "@IBinding3 "+
                 "public class One {" +
-                " void @IBinding2 method1(){} "+
+                " @IBinding2 void method1(){} "+
                 " @Stereotype2 @IBinding1(\"c\") void method2(){} "+
                 "}" );
         
@@ -402,7 +402,7 @@ public class InterceptorResolutionTest extends CommonTestCase {
                 "package foo; " +
                 "@Stereotype1 "+
                 "public class Two {" +
-                " void @IBinding1(\"b\") method(){} "+
+                " @IBinding1(\"b\") void method(){} "+
                 "}" );
         
         TestUtilities.copyStringToFileObject(srcFO, "foo/Iceptor1.java",

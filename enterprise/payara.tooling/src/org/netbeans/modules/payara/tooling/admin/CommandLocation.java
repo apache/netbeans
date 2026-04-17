@@ -42,10 +42,7 @@ import org.openide.util.BaseUtilities;
 @RunnerRestClass(runner=RunnerRestLocation.class)
 public class CommandLocation extends Command {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Command string for location command. */
     private static final String COMMAND = "__locations";
 
@@ -55,10 +52,7 @@ public class CommandLocation extends Command {
     /** Result key to retrieve <code>Basic-Root</code> value. */
     public static final String BASIC_ROOT_RESULT_KEY = "Base-Root_value";
 
-    ////////////////////////////////////////////////////////////////////////////
     // Static methods                                                         //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Verifies if domain directory returned by location command result matches
      * domain directory of provided Payara server entity.
@@ -93,10 +87,7 @@ public class CommandLocation extends Command {
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of Payara server location command entity.
      */

@@ -1419,6 +1419,9 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
         private String getOverrideAttribute() {
             MethodElement method = (MethodElement) getBaseFunctionElement();
+            if (method.isConstructor()) {
+                return CodeUtils.EMPTY_STRING;
+            }
             TypeElement type = method.getType();
             if (!isMagic()
                     && (!type.isTrait() || ElementUtils.isAbstractTraitMethod(method))
@@ -2133,7 +2136,7 @@ public abstract class PHPCompletionItem implements CompletionProposal {
 
         private static ImageIcon icon() {
             if (interfaceIcon == null) {
-                interfaceIcon = new ImageIcon(ImageUtilities.loadImage(PHP_INTERFACE_ICON));
+                interfaceIcon = ImageUtilities.loadImageIcon(PHP_INTERFACE_ICON, false);
             }
             return interfaceIcon;
         }

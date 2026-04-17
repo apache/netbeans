@@ -28,7 +28,7 @@
            <public-packages/>
            <class-path-extension>
                <runtime-relative-path>net-java-html-sound.jar</runtime-relative-path>
-               <binary-origin>external/net.java.html.sound-1.8.1.jar</binary-origin>
+               <binary-origin>external/net.java.html.sound-1.8.2.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -20,9 +20,12 @@ package org.netbeans.modules.bugtracking.tasks.actions;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JCheckBoxMenuItem;
@@ -62,7 +65,6 @@ import org.openide.NotifyDescriptor;
 import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 import org.openide.util.actions.Presenter;
 
 /**
@@ -94,12 +96,14 @@ public class Actions {
     //<editor-fold defaultstate="collapsed" desc="default actions">
     public static class RefreshAction extends AbstractAction {
 
-        private final WeakSet<Refreshable> nodes;
+        private final Set<Refreshable> nodes;
 
         private RefreshAction(List<Refreshable> nodes) {
             super(NbBundle.getMessage(Actions.class, "CTL_Refresh"));
             putValue(ACCELERATOR_KEY, REFRESH_KEY);
-            this.nodes = new WeakSet<Refreshable>(nodes);
+            Set<Refreshable> set = Collections.newSetFromMap(new WeakHashMap<>());
+            set.addAll(nodes);
+            this.nodes = set;
         }
 
         @Override

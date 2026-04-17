@@ -53,6 +53,7 @@
                 <file name="settings.xml" url="settings.template.xml">
                     <attr name="javax.script.ScriptEngine" stringvalue="freemarker"/>
                     <attr name="template.openFile" boolvalue="false"/>
+                    <attr name="position" intvalue="110"/>
                 </file>
             </folder>
         </folder>
@@ -180,6 +181,12 @@
                 <folder name="org.sonatype.nexus.maven.staging.deploy.DeployLifecycleParticipant">
                     <attr name="ignoreOnModelLoad" boolvalue="true"/>
                 </folder>
+                <folder name="eu.maveniverse.maven.njord.extension3.NjordSessionLifecycleParticipant">
+                    <attr name="ignoreOnModelLoad" boolvalue="true"/>
+                </folder>
+                <folder name="eu.maveniverse.maven.shared.extension.RuntimeRequirementEnforcerLifecycleParticipant">
+                    <attr name="ignoreOnModelLoad" boolvalue="true"/>
+                </folder>
             </folder>
             <file name="nbactions.xml" url="nbactions.xml"/>
             <folder name="RunGoals">
@@ -198,7 +205,7 @@
     <folder name="OptionsExport">
         <folder name="Java">
             <file name="Maven">
-                <attr name="include" stringvalue="config/(Preferences/org/netbeans/modules/maven([.]properties|/(?!externalOwners[.]properties).*)|Projects/org-netbeans-modules-maven/nbactions[.]xml)"/>
+                <attr name="include" stringvalue="config/(Preferences/org/netbeans/modules/maven([.]properties|/(?!externalOwners[.]properties).*)|Projects/org-netbeans-modules-maven/nbactions[.]xml|Actions/Maven/.*)"/>
                 <attr name="displayName" bundlevalue="org.netbeans.modules.maven.Bundle#options-export-displayName"/>
             </file>
         </folder>

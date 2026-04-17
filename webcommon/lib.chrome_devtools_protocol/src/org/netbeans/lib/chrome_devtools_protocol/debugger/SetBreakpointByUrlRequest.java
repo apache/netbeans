@@ -18,12 +18,11 @@
  */
 package org.netbeans.lib.chrome_devtools_protocol.debugger;
 
-import java.net.URI;
 import java.util.Objects;
 
 public final class SetBreakpointByUrlRequest {
     private int lineNumber;
-    private URI url;
+    private String url;
     private String urlRegex;
     private String scriptHash;
     private Integer columnNumber;
@@ -49,14 +48,14 @@ public final class SetBreakpointByUrlRequest {
     /**
      * URL of the resources to set breakpoint on.
      */
-    public URI getUrl() {
+    public String getUrl() {
         return url;
     }
 
     /**
      * URL of the resources to set breakpoint on.
      */
-    public void setUrl(URI url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 

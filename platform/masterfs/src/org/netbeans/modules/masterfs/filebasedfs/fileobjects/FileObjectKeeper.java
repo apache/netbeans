@@ -65,7 +65,7 @@ final class FileObjectKeeper implements FileChangeListener {
 
     public synchronized void addRecursiveListener(FileChangeListener fcl) {
         if (listeners == null) {
-            listeners = new CopyOnWriteArraySet<FileChangeListener>();
+            listeners = new CopyOnWriteArraySet<>();
         }
         LOG.log(Level.FINEST, "addRecursiveListener for {0} isEmpty: {1}", new Object[]{root, listeners.isEmpty()});
         if (listeners.isEmpty()) {
@@ -80,10 +80,7 @@ final class FileObjectKeeper implements FileChangeListener {
             }
             try {
                 listenToAll(stop, filter);
-            } catch (Error e) {
-                LOG.log(Level.WARNING, null, e);
-                throw e;
-            } catch (RuntimeException e) {
+            } catch (Error | RuntimeException e) {
                 LOG.log(Level.WARNING, null, e);
                 throw e;
             }
@@ -100,10 +97,7 @@ final class FileObjectKeeper implements FileChangeListener {
         if (listeners.isEmpty()) {
             try {
                 listenNoMore();
-            } catch (Error e) {
-                LOG.log(Level.WARNING, null, e);
-                throw e;
-            } catch (RuntimeException e) {
+            } catch (Error | RuntimeException e) {
                 LOG.log(Level.WARNING, null, e);
                 throw e;
             }
@@ -122,7 +116,7 @@ final class FileObjectKeeper implements FileChangeListener {
          }
 
          File file = Watcher.wrap(root.getFileName().getFile(), root);
-         List<File> arr = new ArrayList<File>();
+         List<File> arr = new ArrayList<>();
          long ts = root.getProvidedExtensions().refreshRecursively(file, previous, arr);
          try {
              for (File f : arr) {
@@ -176,8 +170,7 @@ final class FileObjectKeeper implements FileChangeListener {
         Set<FolderObj> k;
         if (add) {
             fo.addFileChangeListener(this);
-            if (fo instanceof FolderObj) {
-                FolderObj folder = (FolderObj)fo;
+            if (fo instanceof FolderObj folder) {
                 folder.getKeeper(children);
                 folder.getChildren();
                 assert Thread.holdsLock(FileObjectKeeper.this);
@@ -196,7 +189,7 @@ final class FileObjectKeeper implements FileChangeListener {
     private void listenToAll(Callable<?> stop, FileFilter filter) {
         assert Thread.holdsLock(FileObjectKeeper.this);
         assert kept == null : "Already listening to " + kept + " now requested for " + root;
-        kept = new HashSet<FolderObj>();
+        kept = new HashSet<>();
         listenToAllRecursion(root, null, stop, filter, 0);
     }
 
@@ -224,7 +217,7 @@ final class FileObjectKeeper implements FileChangeListener {
                     new Object[] {RECURSION_LIMIT, obj});
             return true;
         }
-        List<File> it = new ArrayList<File>();
+        List<File> it = new ArrayList<>();
         listenTo(obj, true, it);
         FileObjectFactory factory = knownFactory;
         for (File f : it) {
@@ -237,8 +230,7 @@ final class FileObjectKeeper implements FileChangeListener {
             }
             FileObject fo = factory.getValidFileObject(f, Caller.Others, true);
             LOG.log(Level.FINEST, "listenToAll, check {0} for stop {1}", new Object[] { fo, stop });
-            if (fo instanceof FolderObj) {
-                FolderObj child = (FolderObj) fo;
+            if (fo instanceof FolderObj child) {
                 if (filter != null && !filter.accept(child.getFileName().getFile())) {
                     continue;
                 }
@@ -279,8 +271,7 @@ final class FileObjectKeeper implements FileChangeListener {
     public void fileFolderCreated(FileEvent fe) {
         Collection<FileChangeListener> arr = listeners;
         final FileObject folder = fe.getFile();
-        if (folder instanceof FolderObj) {
-            FolderObj obj = (FolderObj)folder;
+        if (folder instanceof FolderObj obj) {
             synchronized (this) {
                 fileFolderCreatedRecursion(obj, null);
             }
@@ -307,7 +298,7 @@ final class FileObjectKeeper implements FileChangeListener {
      */
     private void fileFolderCreatedRecursion(FolderObj obj,
             FileObjectFactory knownFactory) {
-        List<File> it = new ArrayList<File>();
+        List<File> it = new ArrayList<>();
         listenTo(obj, true, it);
         FileObjectFactory factory = knownFactory;
         for (File f : it) {
@@ -315,8 +306,8 @@ final class FileObjectKeeper implements FileChangeListener {
                 factory = FileObjectFactory.getInstance(f);
             }
             FileObject fo = factory.getValidFileObject(f, Caller.Others, true);
-            if (fo instanceof FolderObj) {
-                fileFolderCreatedRecursion((FolderObj) fo, factory);
+            if (fo instanceof FolderObj folderObj) {
+                fileFolderCreatedRecursion(folderObj, factory);
             }
         }
     }
@@ -352,8 +343,7 @@ final class FileObjectKeeper implements FileChangeListener {
             return;
         }
 
-        if (f instanceof FolderObj) {
-            FolderObj obj = (FolderObj)f;
+        if (f instanceof FolderObj obj) {
             synchronized (this) {
                 assert Thread.holdsLock(FileObjectKeeper.this);
                 if (kept != null) {

@@ -206,7 +206,10 @@ public class GlobalIsNotDefined extends JsAstRule {
 
 
         @Override
-        @NbBundle.Messages({"AddGlobalJsHint_Description=Generate JsHint global directive for variable {0}"})
+        @NbBundle.Messages({
+            "# {0} - name of variable",
+            "AddGlobalJsHint_Description=Generate JsHint global directive for variable {0}"
+        })
         public String getDescription() {
             return Bundle.AddGlobalJsHint_Description(this.name);
         }

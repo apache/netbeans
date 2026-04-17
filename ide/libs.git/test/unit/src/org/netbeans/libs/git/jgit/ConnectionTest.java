@@ -24,10 +24,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileBasedConfig;
-import org.eclipse.jgit.util.FS;
 import org.eclipse.jgit.util.SystemReader;
 import org.netbeans.junit.Filter;
 import org.netbeans.libs.git.GitClient;
@@ -284,7 +281,7 @@ public class ConnectionTest extends AbstractGitTestCase {
     
     public void testSshConnectionGITSSH_Issue213394 () throws Exception {
         SystemReader sr = SystemReader.getInstance();
-        SystemReader.setInstance(new DelegatingSystemReader(sr) {
+        SystemReader.setInstance(new SystemReader.Delegate(sr) {
 
             @Override
             public String getenv (String string) {
@@ -404,51 +401,4 @@ public class ConnectionTest extends AbstractGitTestCase {
         
     }
 
-    private static class DelegatingSystemReader extends SystemReader {
-        private final SystemReader instance;
-
-        public DelegatingSystemReader (SystemReader sr) {
-            this.instance = sr;
-        }
-
-        @Override
-        public String getHostname () {
-            return instance.getHostname();
-        }
-
-        @Override
-        public String getenv (String string) {
-            return instance.getenv(string);
-        }
-
-        @Override
-        public String getProperty (String string) {
-            return instance.getProperty(string);
-        }
-
-        @Override
-        public FileBasedConfig openUserConfig (Config config, FS fs) {
-            return instance.openUserConfig(config, fs);
-        }
-
-        @Override
-        public FileBasedConfig openSystemConfig (Config config, FS fs) {
-            return instance.openSystemConfig(config, fs);
-        }
-
-        @Override
-        public long getCurrentTime () {
-            return instance.getCurrentTime();
-        }
-
-        @Override
-        public int getTimezone (long l) {
-            return instance.getTimezone(l);
-        }
-
-        @Override
-        public FileBasedConfig openJGitConfig(Config config, FS fs) {
-            return instance.openJGitConfig(config, fs);
-        }
-    }
 }

@@ -680,30 +680,8 @@ public class ProjectRunnerImpl implements JavaRunnerImplementation {
     }
 
     private static void copyFile(URLConnection source, FileObject target) throws IOException {
-        InputStream ins = null;
-        OutputStream out = null;
-
-        try {
-            ins = source.getInputStream();
-            out = target.getOutputStream();
-
-            FileUtil.copy(ins, out);
-        } finally {
-            if (ins != null) {
-                try {
-                    ins.close();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
+        try (InputStream ins = source.getInputStream(); OutputStream out = target.getOutputStream()) {
+            ins.transferTo(out);
         }
     }
 

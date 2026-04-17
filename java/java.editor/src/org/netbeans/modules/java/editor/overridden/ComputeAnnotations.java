@@ -22,11 +22,11 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -98,7 +98,7 @@ public class ComputeAnnotations extends JavaParserResultTask<Result> {
     }
 
     List<IsOverriddenAnnotation> computeAnnotations(CompilationInfo info, StyledDocument doc) {
-        List<IsOverriddenAnnotation> annotations = new LinkedList<IsOverriddenAnnotation>();
+        List<IsOverriddenAnnotation> annotations = new LinkedList<>();
 
         createAnnotations(info, doc, new ComputeOverriding(cancel).process(info), false, annotations);
         createAnnotations(info, doc, new ComputeOverriders(cancel).process(info, null, null, false), true, annotations);
@@ -140,7 +140,7 @@ public class ComputeAnnotations extends JavaParserResultTask<Result> {
                     if (kb != null)
                         dn += NbBundle.getMessage(ComputeAnnotations.class, "LBL_shortcut_promotion", kb, choice); //NOI18N
                 } else {
-                    StringBuffer tooltip = new StringBuffer();
+                    StringBuilder tooltip = new StringBuilder();
                     boolean wasOverrides = false;
 
                     boolean newline = false;
@@ -171,22 +171,14 @@ public class ComputeAnnotations extends JavaParserResultTask<Result> {
                         dn += NbBundle.getMessage(ComputeAnnotations.class, "LBL_shortcut_promotion", kb, 3); //NOI18N
                 }
 
-                int[] elementNameSpan;
-                
-                switch (t.getKind()) {
-                    case ANNOTATION_TYPE:
-                    case CLASS:
-                    case ENUM:
-                    case INTERFACE:
-                        elementNameSpan = info.getTreeUtilities().findNameSpan((ClassTree) t);
-                        break;
-                    case METHOD:
-                        elementNameSpan = info.getTreeUtilities().findNameSpan((MethodTree) t);
-                        break;
-                    default:
-                        elementNameSpan = new int[] {(int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), t), -1};
-                        break;
-                }
+                int[] elementNameSpan = switch (t.getKind()) {
+                    case ANNOTATION_TYPE, CLASS, ENUM, INTERFACE ->
+                        info.getTreeUtilities().findNameSpan((ClassTree) t);
+                    case METHOD ->
+                        info.getTreeUtilities().findNameSpan((MethodTree) t);
+                    default ->
+                        new int[]{(int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), t), -1};
+                };
                 
                 if (elementNameSpan == null) continue;
                 
@@ -220,6 +212,7 @@ public class ComputeAnnotations extends JavaParserResultTask<Result> {
     private static Position getPosition(final StyledDocument doc, final int offset) {
         class Impl implements Runnable {
             private Position pos;
+            @Override
             public void run() {
                 if (offset < 0 || offset >= doc.getLength())
                     return ;
@@ -255,7 +248,7 @@ public class ComputeAnnotations extends JavaParserResultTask<Result> {
 
         @Override
         public Collection<? extends SchedulerTask> create(Snapshot snapshot) {
-            return Collections.singleton(new ComputeAnnotations());
+            return Set.of(new ComputeAnnotations());
         }
         
     }

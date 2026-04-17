@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.xml.schema.completion;
 
-import javax.swing.ImageIcon;
 import javax.swing.text.JTextComponent;
 import org.netbeans.api.lexer.TokenId;
 import org.netbeans.api.lexer.TokenSequence;
@@ -26,6 +25,7 @@ import org.netbeans.api.xml.lexer.XMLTokenId;
 import org.netbeans.modules.xml.axi.AXIComponent;
 import org.netbeans.modules.xml.schema.completion.CompletionPaintComponent.ValuePaintComponent;
 import org.netbeans.modules.xml.schema.completion.spi.CompletionContext;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -38,8 +38,7 @@ public class ValueResultItem extends CompletionResultItem {
     public ValueResultItem(AXIComponent forComponent, String value, CompletionContext context) {
         super(forComponent, context);
         this.itemText = value;
-        this.icon = new ImageIcon(CompletionResultItem.class.
-                getResource(ICON_LOCATION + ICON_VALUE));
+        this.icon = ImageUtilities.loadIcon(ICON_LOCATION + ICON_VALUE);
     }
 
     @Override

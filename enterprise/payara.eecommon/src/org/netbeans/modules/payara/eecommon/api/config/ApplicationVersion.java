@@ -89,10 +89,6 @@ public final class ApplicationVersion extends J2EEBaseVersion {
         "11.0", 11000	// NOI18N
         );
 
-    /** -----------------------------------------------------------------------
-     *  Implementation
-     */
-
     /** Creates a new instance of ApplicationVersion 
      */
     private ApplicationVersion(String version, int nv, String specVersion, int nsv) {

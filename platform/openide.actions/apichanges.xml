@@ -52,7 +52,7 @@
           layer, don't use the deprecated manifest style.
       </description>
       <class package="org.openide.actions" name="ToolsAction"/>
-      <issue number="180979 "/>
+      <issue number="180979"/>
 </change>
 <change>
       <api name="actions"/>
@@ -204,7 +204,6 @@
 <htmlcontents>
 <head>
 <title>Change History for the Actions API</title>
-<link rel="stylesheet" href="prose.css" type="text/css"/>
 </head>
 <body>
 <p class="overviewlink">

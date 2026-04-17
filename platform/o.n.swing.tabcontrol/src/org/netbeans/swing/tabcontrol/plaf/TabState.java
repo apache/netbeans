@@ -422,20 +422,20 @@ public abstract class TabState {
     }
     
     private boolean isAlarmTab (int tab) {
-        return attentionToggle && alarmTabs.contains(new Integer(tab));
+        return attentionToggle && alarmTabs.contains(tab);
     }
     
-    private final HashSet<Integer> alarmTabs = new HashSet<Integer>(6);
+    private final HashSet<Integer> alarmTabs = new HashSet<>(6);
     
     /** Add a tab to the list of those which should "flash" or otherwise give
      * some notification to the user to get their attention */
     public final void addAlarmTab (int alarmTab) {
-        Integer in = new Integer(alarmTab);
+        Integer in = alarmTab;
         boolean added = alarmTabs.contains(in);
         boolean wasEmpty = alarmTabs.isEmpty();
         if (!added) {
-            alarmTabs.add (new Integer(alarmTab));
-            repaintTab (alarmTab);
+            alarmTabs.add(alarmTab);
+            repaintTab(alarmTab);
         }
         if (wasEmpty) {
             startAlarmTimer();
@@ -465,11 +465,10 @@ public abstract class TabState {
     /** Remove a tab to the list of those which should "flash" or otherwise give
      * some notification to the user to get their attention */
     public final void removeAlarmTab (int alarmTab) {
-        Integer in = new Integer(alarmTab);
+        Integer in = alarmTab;
         boolean contained = alarmTabs.contains(in);
         if (contained) {
             alarmTabs.remove(in);
-            boolean empty = alarmTabs.isEmpty();
             boolean wasAttentionToggled = attentionToggle;
             if (alarmTabs.isEmpty()) {
                 stopAlarmTimer();
@@ -505,8 +504,8 @@ public abstract class TabState {
                         stopAlarmTimer();
                     }
                     attentionToggle = !attentionToggle;
-                    for (Iterator i=alarmTabs.iterator(); i.hasNext();) {
-                        repaintTab (((Integer) i.next()).intValue());
+                    for (Iterator<Integer> i = alarmTabs.iterator(); i.hasNext();) {
+                        repaintTab(i.next());
                     }
                 }
             };
@@ -547,13 +546,13 @@ public abstract class TabState {
         if (!(hasAlarmTabs() || hasHighlightTabs())) {
             return;
         }
-        for (Iterator i=alarmTabs.iterator(); i.hasNext();) {
-            if (((Integer) i.next()).intValue() >= max) {
+        for (Iterator<Integer> i=alarmTabs.iterator(); i.hasNext();) {
+            if (i.next() >= max) {
                 i.remove();
             }
         }
-        for (Iterator i=highlightTabs.iterator(); i.hasNext();) {
-            if (((Integer) i.next()).intValue() >= max) {
+        for (Iterator<Integer> i=highlightTabs.iterator(); i.hasNext();) {
+            if (i.next() >= max) {
                 i.remove();
             }
         }
@@ -960,7 +959,7 @@ public abstract class TabState {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer(50);
+        StringBuilder sb = new StringBuilder(50);
         sb.append("TabState [lastTab=");
         sb.append(tabToString(prev));
         sb.append(" currTab=");
@@ -1123,7 +1122,7 @@ public abstract class TabState {
             NOT_ONSCREEN, LEFTMOST, RIGHTMOST, CLOSE_BUTTON_ARMED,
             BEFORE_SELECTED, AFTER_SELECTED, MOUSE_IN_TABS_AREA,
             MOUSE_PRESSED_IN_CLOSE_BUTTON};
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < vals.length; i++) {
             if ((st & vals[i]) != 0) {
                 if (sb.length() > 0) {
@@ -1166,7 +1165,7 @@ public abstract class TabState {
             REPAINT_ALL_TABS_ON_SELECTION_CHANGE,
             REPAINT_ON_CLOSE_BUTTON_PRESSED,
         };
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i=0; i < vals.length; i++) {
             if ((policy & vals[i]) != 0) {
                 sb.append (names[i]);

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #5d5f61;
+      }
+
+      .st1 {
+        fill: #137f00;
+      }
+
+      .st2 {
+        fill: #939393;
+      }
+
+      .st3 {
+        fill: url(#linear-gradient);
+      }
+
+      .st4 {
+        fill: #b0db86;
+      }
+
+      .st5 {
+        fill: #e8e8e8;
+      }
+
+      .st6 {
+        fill: #fdfdfd;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="7" y1="2.5" x2="7" y2="11.5" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#747576"/>
+      <stop offset="1" stop-color="#424446"/>
+    </linearGradient>
+  </defs>
+  <g>
+    <rect class="st5" x=".5" y=".5" width="13" height="13"/>
+    <path class="st2" d="M13,1v12H1V1h12M14,0H0v14h14V0h0Z"/>
+  </g>
+  <g>
+    <rect class="st3" x="2.5" y="2.5" width="9" height="9" rx=".5" ry=".5"/>
+    <path class="st0" d="M11,3v8H3V3h8M11,2H3c-.552,0-1,.448-1,1v8c0,.552.448,1,1,1h8c.552,0,1-.448,1-1V3c0-.552-.448-1-1-1h0Z"/>
+  </g>
+  <rect class="st6" x="6" y="5" width="2" height="1"/>
+  <polygon class="st6" points="5.207 4.5 3.707 3 3 3 3 3.707 3.793 4.5 3 5.293 3 6 3.707 6 5.207 4.5"/>
+  <g>
+    <polygon class="st4" points="9.5 15.5 9.5 5.5 10.793 5.5 15.793 10.5 10.793 15.5 9.5 15.5"/>
+    <path class="st1" d="M10.586,6l4.5,4.5-4.5,4.5h-.586V6h.586M11,5h-2v11h2l5.5-5.5-5.5-5.5h0Z"/>
+  </g>
+  <description>Apache NetBeans Logo
+  </description>
+</svg>

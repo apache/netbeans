@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,7 +52,6 @@ import org.openide.util.ChangeSupport;
 import org.openide.util.Mutex;
 import org.openide.util.NbCollections;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakSet;
 
 /**
  * Manages the loaded property files for {@link AntProjectHelper}.
@@ -148,7 +148,7 @@ final class ProjectProperties {
         private Throwable reloadedStackTrace;
         private final ChangeSupport cs = new ChangeSupport(this);
         /** Atomic actions in use to save XML files. */
-        private final Set<AtomicAction> saveActions = new WeakSet<AtomicAction>();
+        private final Set<AtomicAction> saveActions = Collections.newSetFromMap(new WeakHashMap<>());
         private final AtomicBoolean fileListenerSet = new AtomicBoolean(false);
         
         //#239999 - preventing properties file from saving, when no changes are done

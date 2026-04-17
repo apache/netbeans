@@ -43,7 +43,7 @@
 -->
 <answer id="arch-what">
 The  
-<api name="DialogsAPI" category="official" type="export" url="@org-openide-dialogs@/org/openide/package-summary.html#package.description" group="java" />
+<api name="DialogsAPI" category="official" type="export" url="@org-openide-dialogs@/org/openide/package-summary.html#package-description" group="java" />
 allows creating a user notification, a dialog's description
 and also permits it to be displayed. The wizard framework allows create a sequence
 of panels which leads a user through the steps to complete any task.
@@ -67,7 +67,7 @@ of frequently asked questions and their answers:
   </em>
   <p>
   <b>A:</b> You can change the format of your wizard's title by 
-  <a href="@TOP@org/openide/WizardDescriptor.html#setTitleFormat-java.text.MessageFormat-">WizardDescriptor.setTitleFormat(MessageFormat format)</a>
+  <a href="@TOP@org/openide/WizardDescriptor.html#setTitleFormat(java.text.MessageFormat)">WizardDescriptor.setTitleFormat(MessageFormat format)</a>
   and rid of 'wizard' word in the default wizard's title.  
   </p>
 </usecase>

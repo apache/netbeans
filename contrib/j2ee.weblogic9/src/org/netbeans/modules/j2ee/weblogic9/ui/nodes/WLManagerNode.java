@@ -253,7 +253,7 @@ public class WLManagerNode extends AbstractNode implements Node.Cookie {
                    ) {
                        public Object getValue() {
                            String debuggerPort = deploymentManager.getInstanceProperties().getProperty(WLPluginProperties.DEBUGGER_PORT_ATTR);
-                           return new Integer(debuggerPort);
+                           return Integer.valueOf(debuggerPort);
                        }
 
                        public void setValue(Object value) {

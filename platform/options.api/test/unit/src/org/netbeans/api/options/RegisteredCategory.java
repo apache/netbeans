@@ -56,8 +56,7 @@ public final class RegisteredCategory extends OptionsCategory {
     @Override
     public Icon getIcon() {
         if (icon == null) {
-            Image image = ImageUtilities.loadImage("org/netbeans/modules/options/resources/advanced.png");
-            icon = new ImageIcon(image);
+            icon = ImageUtilities.loadIcon("org/netbeans/modules/options/resources/advanced.png");
         }
         return icon;
     }

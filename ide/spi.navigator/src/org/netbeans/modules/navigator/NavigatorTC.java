@@ -21,15 +21,18 @@ package org.netbeans.modules.navigator;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -125,6 +128,7 @@ public final class NavigatorTC extends TopComponent implements NavigatorDisplaye
             holderPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, 
                     UIManager.getColor("NbSplitPane.background")));//NOI18N
         }
+        panelSelector.setRenderer(new NavigatorPanelRenderer());
     }
 
     @Override
@@ -251,7 +255,7 @@ public final class NavigatorTC extends TopComponent implements NavigatorDisplaye
             holderPanel.setVisible(panelsCount != 1 || (select instanceof NavigatorPanelWithToolbar && ((NavigatorPanelWithToolbar)select).getToolbarComponent() != null));
             boolean selectFound = false;
             for (NavigatorPanel curPanel : panels) {
-                panelSelector.addItem(curPanel.getDisplayName());
+                panelSelector.addItem(curPanel);
                 if (curPanel == select) {
                     selectFound = true;
                 }
@@ -424,5 +428,13 @@ public final class NavigatorTC extends TopComponent implements NavigatorDisplaye
 
     
     
-    
+    private static final class NavigatorPanelRenderer extends DefaultListCellRenderer {
+        @Override
+        public Component getListCellRendererComponent(JList<?> jlist, Object o, int i, boolean bln, boolean bln1) {
+            if (o instanceof NavigatorPanel panel) {
+                o = panel.getDisplayName();
+            }
+            return super.getListCellRendererComponent(jlist, o, i, bln, bln1);
+        }
+    }
 }

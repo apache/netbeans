@@ -184,7 +184,7 @@ public final class CallStackAnnotationListener extends DebuggerManagerAdapter
                 return ;
             }
             topFrameShown = false;
-            EditorUtils.showFrameLine(dbg, cf, true);
+            annotationProcessor.execute(() -> EditorUtils.showFrameLine(dbg, cf, true));
         }
 
         @Override

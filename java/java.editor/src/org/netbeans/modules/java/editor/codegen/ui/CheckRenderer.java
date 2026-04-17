@@ -29,7 +29,6 @@ import java.beans.BeanInfo;
 import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -39,6 +38,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.tree.TreeCellRenderer;
 import org.openide.explorer.view.Visualizer;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 
 /**
  * @author Petr Hrebejk
@@ -99,7 +99,7 @@ class CheckRenderer extends JPanel implements TreeCellRenderer {
         }
 
         label.setText( n.getHtmlDisplayName() );
-        label.setIcon( new ImageIcon( n.getIcon(BeanInfo.ICON_COLOR_16x16) ) ); // XXX Ask description directly
+        label.setIcon( ImageUtilities.image2Icon( n.getIcon(BeanInfo.ICON_COLOR_16x16) ) ); // XXX Ask description directly
 
         panel.add(check, BorderLayout.WEST );
         panel.add(label, BorderLayout.CENTER );

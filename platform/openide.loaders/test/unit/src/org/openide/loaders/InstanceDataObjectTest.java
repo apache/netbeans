@@ -1069,7 +1069,7 @@ public class InstanceDataObjectTest extends NbTestCase {
         try {
             outputStream = fo.getOutputStream(fLock);
             inputStream = primaryFile.getInputStream();
-            FileUtil.copy(inputStream, outputStream);            
+            inputStream.transferTo(outputStream);            
         } finally {
             if (fLock != null) fLock.releaseLock();  
             if (inputStream != null) inputStream.close();

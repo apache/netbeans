@@ -25,17 +25,11 @@ package org.netbeans.modules.glassfish.tooling.server.config;
  */
 public abstract class GlassFishTool {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Tools library directory (relative under GlassFish home). */
     private final String lib;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Creates an instance of GlassFish tool.
      * <p/>
@@ -45,10 +39,7 @@ public abstract class GlassFishTool {
         this.lib = lib;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters and setters                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Get tools library directory (relative under GlassFish home).
      * <p/>

@@ -54,7 +54,6 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
-import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.CodeCompletionHandler2;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
 import org.netbeans.modules.csl.api.CompletionProposal;
@@ -72,10 +71,12 @@ import org.netbeans.modules.web.el.ELTypeUtilities;
 import org.netbeans.modules.web.el.ELVariableResolvers;
 import org.netbeans.modules.web.el.NodeUtil;
 import org.netbeans.modules.web.el.ResourceBundles;
+import org.netbeans.modules.web.el.ResourceBundles.Location;
 import org.netbeans.modules.web.el.refactoring.RefactoringUtil;
 import org.netbeans.modules.web.el.spi.ELPlugin;
 import org.netbeans.modules.web.el.spi.ELVariableResolver.VariableInfo;
 import org.netbeans.modules.web.el.spi.Function;
+import org.netbeans.modules.web.el.spi.ResolverContext;
 import org.netbeans.modules.web.el.spi.ResourceBundle;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -176,7 +177,7 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
                         // seems to be something like "sessionScope.^", so complete beans from the scope
                         proposeBeansFromScope(ccontext, context, prefixMatcher, element, node, proposals);
                     } else if (ELTypeUtilities.isResourceBundleVar(ccontext, node)) {
-                        proposeBundleKeysInDotNotation(context, prefixMatcher, element, node, proposals);
+                        proposeBundleKeysInDotNotation(ccontext, context, prefixMatcher, element, node, proposals);
                     } else if (resolved == null) {
                         if (target instanceof AstDotSuffix == false && node instanceof AstFunction == false) {
                             proposeFunctions(ccontext, context, prefixMatcher, element, proposals);
@@ -539,7 +540,7 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
             if (!prefix.matches(property.name)) {
                 continue;
             }
-            ELRawObjectPropertyCompletionItem item = new ELRawObjectPropertyCompletionItem(property.name);
+            ELRawObjectPropertyCompletionItem item = new ELRawObjectPropertyCompletionItem(property.name, property.clazz);
             item.setAnchorOffset(context.getCaretOffset() - prefix.length());
             item.setSmart(true);
             proposals.add(item);
@@ -603,11 +604,17 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
         if (!resourceBundles.canHaveBundles()) {
             return;
         }
-        for (Map.Entry<String, String> entry : resourceBundles.getEntries(bundleKey).entrySet()) {
+        ResolverContext resolverContext = new ResolverContext();
+        FileObject bundleFile = null;
+        List<Location> bundleLocations = resourceBundles.getLocationsForBundleIdent(resolverContext, bundleKey);
+        if (!bundleLocations.isEmpty()) {
+            bundleFile = bundleLocations.get(0).getFile();
+        }
+        for (Map.Entry<String, String> entry : resourceBundles.getEntries(resolverContext, bundleKey).entrySet()) {
             if (!prefix.matches(entry.getKey())) {
                 continue;
             }
-            ELResourceBundleKeyCompletionItem item = new ELResourceBundleKeyCompletionItem(entry.getKey(), entry.getValue(), elElement);
+            ELResourceBundleKeyCompletionItem item = new ELResourceBundleKeyCompletionItem(entry.getKey(), entry.getValue(), elElement, bundleFile);
             item.setSmart(true);
             item.setAnchorOffset(context.getCaretOffset() - prefix.length());
             proposals.add(item);
@@ -615,7 +622,8 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
     }
     
     // "msg.key" notation
-    private void proposeBundleKeysInDotNotation(CodeCompletionContext context,
+    private void proposeBundleKeysInDotNotation(CompilationContext ccontext,
+            CodeCompletionContext context,
             PrefixMatcher prefix, 
             ELElement elElement, 
             Node baseObjectNode,
@@ -626,11 +634,16 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
         if (!resourceBundles.canHaveBundles()) {
             return;
         }
-        for (Map.Entry<String, String> entry : resourceBundles.getEntries(bundleKey).entrySet()) {
+        FileObject bundleFile = null;
+        List<Location> bundleLocations = resourceBundles.getLocationsForBundleIdent(ccontext.context(), bundleKey);
+        if (!bundleLocations.isEmpty()) {
+            bundleFile = bundleLocations.get(0).getFile();
+        }
+        for (Map.Entry<String, String> entry : resourceBundles.getEntries(ccontext.context(), bundleKey).entrySet()) {
             if (!prefix.matches(entry.getKey())) {
                 continue;
             }
-            ELResourceBundleKeyCompletionItem item = new ELResourceBundleKeyCompletionItem(entry.getKey(), entry.getValue(), elElement);
+            ELResourceBundleKeyCompletionItem item = new ELResourceBundleKeyCompletionItem(entry.getKey(), entry.getValue(), elElement, bundleFile);
             item.setSmart(true);
             item.setAnchorOffset(context.getCaretOffset() - prefix.length());
             proposals.add(item);

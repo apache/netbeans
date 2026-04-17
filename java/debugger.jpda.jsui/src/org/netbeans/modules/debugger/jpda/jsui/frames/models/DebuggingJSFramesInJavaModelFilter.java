@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
@@ -42,7 +43,6 @@ import org.netbeans.spi.viewmodel.UnknownTypeException;
 import org.openide.awt.Actions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
-import org.openide.util.WeakSet;
 import org.openide.util.actions.Presenter;
 
 /**
@@ -57,7 +57,7 @@ public class DebuggingJSFramesInJavaModelFilter implements TreeModelFilter, Node
     static final Preferences preferences = NbPreferences.forModule(DebuggingJSFramesInJavaModelFilter.class);
     static final String PREF_DISPLAY_JS_STACKS = "displayJSStacks";     // NOI18N
     
-    private final Set<DebuggingView.DVThread> threadsWithJSStacks = Collections.synchronizedSet(new WeakSet<DebuggingView.DVThread>());
+    private final Set<DebuggingView.DVThread> threadsWithJSStacks = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     // By default, filter frames to display just JS frames, where appropriate
     private volatile boolean displayJSStacks = preferences.getBoolean(PREF_DISPLAY_JS_STACKS, true);
     private final DisplayJSStacksAction displayJSStacksAction = new DisplayJSStacksAction();

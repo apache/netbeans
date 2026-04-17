@@ -40,7 +40,7 @@ import org.openide.modules.PatchedPublic;
  * @author Miloslav Metelka
  * @version 1.00
  * @deprecated Use <code>EditorRegistry</code> from 
- *   <a href="@org-netbeans-modules-editor-lib2@/overview-summary.html">Editor Library 2</a> instead.
+ *   <a href="@org-netbeans-modules-editor-lib2@/index.html">Editor Library 2</a> instead.
  */
 @Deprecated
 public class Registry {

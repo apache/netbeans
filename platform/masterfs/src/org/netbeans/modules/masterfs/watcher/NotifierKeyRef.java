@@ -55,7 +55,7 @@ class NotifierKeyRef<KEY> extends WeakReference<FileObject> {
             return true;
         }
         try {
-            NotifierKeyRef kr = (NotifierKeyRef) obj;
+            NotifierKeyRef<?> kr = (NotifierKeyRef) obj;
             FileObject mine = get();
             FileObject theirs = kr.get();
             if (mine == null) {

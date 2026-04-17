@@ -37,7 +37,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.text.Document;
 import org.netbeans.core.output2.options.OutputOptions;
 import org.openide.util.Exceptions;
@@ -173,21 +172,6 @@ public class Controller {
         nameUpdater.add(tab);
     }
 
-    private static boolean htmlTabsBroken() {
-        String version = System.getProperty("java.version");
-        for (int i = 14; i < 18; i++) {
-            if (version.startsWith("1.6.0_" + i)) {
-                return true;
-            }
-        }
-        if( version.startsWith("1.6.0") && "Aqua".equals( UIManager.getLookAndFeel().getID() ) )
-            return true;
-        return false;
-    }
-
-    // workaround for JDK bug (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6670274)
-    // NB issue #113388
-    private static final boolean DONT_USE_HTML = htmlTabsBroken();
     private CoalescedNameUpdater nameUpdater = null;
     /**
      * Calls to methods invoked on NbIO done on the EQ are invoked synchronously
@@ -241,7 +225,7 @@ public class Controller {
                     escaped = io.getName();
                 }
                 String name = io.isStreamClosed() ?  io.getName() + " " : //NOI18N
-                    (DONT_USE_HTML ? io.getName() + " * " : "<html><b>" + escaped + " </b>&nbsp;</html>"); //NOI18N
+                    ("<html><b>" + escaped + " </b>&nbsp;</html>"); //NOI18N
 
                 if (LOG) {
                     log("  set name to " + name);

@@ -227,7 +227,7 @@ public final class PHPDOCCodeCompletion {
 
     public static class PHPDOCCodeCompletionItem implements CompletionProposal {
         private static final String PHP_ANNOTATION_ICON = "org/netbeans/modules/php/editor/resources/annotation.png"; //NOI18N
-        private static final ImageIcon ANNOTATION_ICON = new ImageIcon(ImageUtilities.loadImage(PHP_ANNOTATION_ICON));
+        private static final ImageIcon ANNOTATION_ICON = ImageUtilities.loadImageIcon(PHP_ANNOTATION_ICON, false);
         private final AnnotationCompletionTag tag;
         private final int anchorOffset;
         private final PHPDOCTagElement elem;

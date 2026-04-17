@@ -34,6 +34,11 @@ while [ -h "$PRG" ]; do
 done
 
 progdir=`dirname "$PRG"`
+old=`pwd`
+cd "$progdir"/..
+basedir=`pwd`
+cd "$old"
+
 APPNAME=`basename "$PRG"`
 if [ -z "$APP_DOCK_NAME" ] ; then
   APP_DOCK_NAME="$APPNAME"
@@ -52,8 +57,11 @@ case "`uname`" in
         ;;
 esac
 
-if [ -f "$progdir/../etc/$APPNAME".conf ] ; then
-    . "$progdir/../etc/$APPNAME".conf
+# $HOME can be used as it is present on mac OS and linux
+BASEDIR=$basedir
+
+if [ -f "$basedir/etc/$APPNAME".conf ] ; then
+    . "$basedir/etc/$APPNAME".conf
 fi
 
 # XXX does not correctly deal with spaces in non-userdir params

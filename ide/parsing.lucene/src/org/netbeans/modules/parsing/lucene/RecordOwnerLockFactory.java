@@ -20,12 +20,14 @@ package org.netbeans.modules.parsing.lucene;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.Lock;
 import org.apache.lucene.store.LockFactory;
 import org.apache.lucene.store.LockObtainFailedException;
@@ -40,143 +42,90 @@ import org.openide.util.Exceptions;
 //@ThreadSafe
 class RecordOwnerLockFactory extends LockFactory {
 
-    private final Map<String,/*@GuardedBy("locks")*/RecordOwnerLock> locks =
-        new HashMap<>();
+    private final Set<DirectoryLockPair> lockHolder = ConcurrentHashMap.newKeySet();
 
     RecordOwnerLockFactory() throws IOException {
         super();
     }
 
     @Override
-    public Lock makeLock(String lockName) {
-        synchronized (locks) {
-            RecordOwnerLock res = locks.get(lockName);
-            if (res == null) {
-                res = new RecordOwnerLock();
-                locks.put(lockName, res);
-            }
-            return res;
+    public Lock obtainLock(Directory directory, String lock) throws IOException {
+        DirectoryLockPair dlp = new DirectoryLockPair(directory, lock);
+        if(! lockHolder.add(dlp)) {
+            throw new LockObtainFailedException("Pair already locked: " + dlp);
         }
-    }
-
-    @Override
-    public void clearLock(String lockName) throws IOException {
-        synchronized (locks) {
-            final RecordOwnerLock lock = locks.remove(lockName);
-            if (lock != null) {
-                lock.release();
-            }
-        }
+        return new RecordOwnerLock(dlp);
     }
 
     boolean hasLocks() {
-        synchronized (locks) {
-            boolean res = false;
-            for (RecordOwnerLock lock : locks.values()) {
-                res|=lock.isLocked();
-            }
-            return res;
-        }
+        return ! lockHolder.isEmpty();
     }
 
-    Collection<? extends Lock> forceClearLocks() {
-        synchronized (locks) {
-            final Queue<RecordOwnerLock> locked = new ArrayDeque<>();
-            for (Iterator<RecordOwnerLock> it = locks.values().iterator();
-                it.hasNext();) {
-                RecordOwnerLock lock = it.next();
-                if (lock.isLocked()) {
-                    it.remove();
-                    locked.offer(lock);
-                }
-            }
-            return locked;
+    Set<DirectoryLockPair> forceClearLocks() {
+        Set<DirectoryLockPair> oldLocked;
+        synchronized (lockHolder) {
+            oldLocked = new HashSet<>(lockHolder);
+            lockHolder.clear();
         }
+        return oldLocked;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append(getClass().getSimpleName());
-        sb.append('['); //NOI18N
-        synchronized (locks) {
-            boolean first = true;
-            for (Map.Entry<String,RecordOwnerLock> e : locks.entrySet()) {
-                if (!first) {
-                    sb.append('\n');    //NOI18N
-                } else {
-                    first = false;
-                }
-                sb.append("name: ").append(e.getKey()).append("->").append(e.getValue());   //NOI18N
-            }
-        }
-        sb.append("]\n"); //NOI18N
+        // avoid calling directory.toString() from here since it may also call
+        // factory.toString() which would result in infinite recursion
+        sb.append(
+                lockHolder.stream()
+                        .map(e -> e.directory.getClass().getSimpleName() + "@" +  e.directory.hashCode() + "{" + e.lock + "}")  //NOI18N
+                        .collect(Collectors.joining(", ", "[", "]"))  //NOI18N
+        );
         return sb.toString();
     }
 
 
     private final class RecordOwnerLock extends Lock {
 
-        //@GuardedBy("locks")
-        private Thread owner;
-        //@GuardedBy("locks")
-        private Exception caller;
+        private final Thread owner;
+        private final Exception caller;
+        private final DirectoryLockPair lockedPair;
 
-        private RecordOwnerLock() {
-        }
-
-        @Override
-        public boolean obtain() {
-            synchronized (RecordOwnerLockFactory.this.locks) {
-                if (this.owner == null) {
-                    this.owner = Thread.currentThread();
-                    this.caller = new Exception();
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-
-        @Override
-        public boolean obtain(long lockWaitTimeout) throws LockObtainFailedException, IOException {
-            try {
-                return super.obtain(lockWaitTimeout);
-            } catch (LockObtainFailedException e) {
-                throw annotateException(
-                    e,
-                    (File) null,
-                    Thread.getAllStackTraces(),
-                    RecordOwnerLockFactory.this);
-            }
-        }
-
-        @Override
-        public void release() {
-            synchronized (RecordOwnerLockFactory.this.locks) {
-                this.owner = null;
+        private RecordOwnerLock(DirectoryLockPair lockedPair) {
+            this.lockedPair = lockedPair;
+            this.owner = Thread.currentThread();
+            if (Logger.getLogger(RecordOwnerLockFactory.class.getName()).isLoggable(Level.INFO)) { // TODO reduce to FINE?
+                this.caller = new Exception();
+            } else {
                 this.caller = null;
             }
         }
 
         @Override
-        public boolean isLocked() {
-            synchronized (RecordOwnerLockFactory.this.locks) {
-                return this.owner != null;
-            }
+        public String toString() {
+            final StringBuilder sb = new StringBuilder();
+            sb.append(this.getClass().getSimpleName());
+            sb.append("owned by: ");    //NOI18N
+            sb.append(owner);
+            sb.append('(').append(owner == null ? -1 : owner.getId()).append("); ");  //NOI18N
+            sb.append("created from:\n");
+            stackTrace(caller == null ? new StackTraceElement[0] : caller.getStackTrace(), sb);
+            return sb.toString();
         }
 
         @Override
-        public String toString() {
-            synchronized (RecordOwnerLockFactory.this.locks) {
+        public void close() throws IOException {
+            lockHolder.remove(this.lockedPair);
+        }
+
+        @Override
+        public void ensureValid() throws IOException {
+            if (!lockHolder.contains(lockedPair)) {
                 final StringBuilder sb = new StringBuilder();
-                sb.append(this.getClass().getSimpleName());
-                sb.append("owned by:[");    //NOI18N
-                sb.append(owner);
-                sb.append('(').append(owner == null ? -1 : owner.getId()).append(')');  //NOI18N
-                sb.append("created from:\n");
-                stackTrace(caller == null ? new StackTraceElement[0] : caller.getStackTrace(), sb);
-                return sb.toString();
+                sb.append(this.lockedPair);
+                sb.append(toString());
+                sb.append(" not valid anymore");
+                throw new IOException(sb.toString());
             }
         }
     }
@@ -235,4 +184,6 @@ class RecordOwnerLockFactory extends LockFactory {
             sb.append('\t').append(se).append('\n');    //NOI18N
         }
     }
+
+    record DirectoryLockPair(Directory directory, String lock) {}
 }

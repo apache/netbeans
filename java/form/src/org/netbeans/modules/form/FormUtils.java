@@ -330,10 +330,6 @@ public class FormUtils
         { "javax.swing.JSpinner", CLASS_AND_SWING_SUBCLASSES,
                 "foreground", PROP_HIDDEN,
                 "background", PROP_HIDDEN },
-        { "java.applet.Applet", CLASS_AND_SUBCLASSES,
-                "appletContext", PROP_HIDDEN,
-                "codeBase", PROP_HIDDEN,
-                "documentBase", PROP_HIDDEN },
         { "javax.swing.JFileChooser", CLASS_EXACTLY,
                 "acceptAllFileFilter", PROP_HIDDEN,
                 "choosableFileFilters", PROP_HIDDEN },
@@ -1957,7 +1953,7 @@ public class FormUtils
         Container p = c.getParent();
         Rectangle bounds = c.getBounds();
 
-        if (p == null || p instanceof Window || p instanceof java.applet.Applet) {
+        if (p == null || p instanceof Window) {
             visibleRect.setBounds(0, 0, bounds.width, bounds.height);
         } else {
             computeVisibleRect(p, visibleRect);

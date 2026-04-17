@@ -29,7 +29,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.JTree;
@@ -66,11 +65,10 @@ public class ClassPathListCellRenderer extends DefaultListCellRenderer {
     private static final Pattern FOREIGN_PLAIN_FILE_REFERENCE = Pattern.compile("\\$\\{file\\.reference\\.([^${}]+)\\}"); // NOI18N
     private static final Pattern UNKNOWN_FILE_REFERENCE = Pattern.compile("\\$\\{([^${}]+)\\}"); // NOI18N
 
-    private static ImageIcon ICON_FOLDER = null;
-
-    private static ImageIcon ICON_BROKEN_JAR;
-    private static ImageIcon ICON_BROKEN_LIBRARY;
-    private static ImageIcon ICON_BROKEN_ARTIFACT;
+    private static Icon ICON_FOLDER = null;
+    private static Icon ICON_BROKEN_JAR;
+    private static Icon ICON_BROKEN_LIBRARY;
+    private static Icon ICON_BROKEN_ARTIFACT;
 
     private PropertyEvaluator evaluator;
     private FileObject projectFolder;
@@ -199,7 +197,7 @@ public class ClassPathListCellRenderer extends DefaultListCellRenderer {
             case ClassPathSupport.Item.TYPE_LIBRARY:
                 if ( item.isBroken() ) {
                     if ( ICON_BROKEN_LIBRARY == null ) {
-                        ICON_BROKEN_LIBRARY = new ImageIcon( ImageUtilities.mergeImages( ProjectProperties.ICON_LIBRARY.getImage(), ProjectProperties.ICON_BROKEN_BADGE.getImage(), 7, 7 ) );
+                        ICON_BROKEN_LIBRARY = ImageUtilities.mergeIcons( ProjectProperties.ICON_LIBRARY, ProjectProperties.ICON_BROKEN_BADGE, 7, 7 );
                     }
                     return ICON_BROKEN_LIBRARY;
                 }
@@ -209,7 +207,7 @@ public class ClassPathListCellRenderer extends DefaultListCellRenderer {
             case ClassPathSupport.Item.TYPE_ARTIFACT:
                 if ( item.isBroken() ) {
                     if ( ICON_BROKEN_ARTIFACT == null ) {
-                        ICON_BROKEN_ARTIFACT = new ImageIcon( ImageUtilities.mergeImages( ProjectProperties.ICON_ARTIFACT.getImage(), ProjectProperties.ICON_BROKEN_BADGE.getImage(), 7, 7 ) );
+                        ICON_BROKEN_ARTIFACT = ImageUtilities.mergeIcons(ProjectProperties.ICON_ARTIFACT, ProjectProperties.ICON_BROKEN_BADGE, 7, 7 );
                     }
                     return ICON_BROKEN_ARTIFACT;
                 }
@@ -224,18 +222,18 @@ public class ClassPathListCellRenderer extends DefaultListCellRenderer {
             case ClassPathSupport.Item.TYPE_JAR:
                 if ( item.isBroken() ) {
                     if ( ICON_BROKEN_JAR == null ) {
-                        ICON_BROKEN_JAR = new ImageIcon( ImageUtilities.mergeImages( ProjectProperties.ICON_JAR.getImage(), ProjectProperties.ICON_BROKEN_BADGE.getImage(), 7, 7 ) );
+                        ICON_BROKEN_JAR = ImageUtilities.mergeIcons(ProjectProperties.ICON_JAR, ProjectProperties.ICON_BROKEN_BADGE, 7, 7);
                     }
                     return ICON_BROKEN_JAR;
                 }
                 else {
                     File file = item.getResolvedFile();
-                    ImageIcon icn = file.isDirectory() ? getFolderIcon() : ProjectProperties.ICON_JAR;
+                    Icon icn = file.isDirectory() ? getFolderIcon() : ProjectProperties.ICON_JAR;
                     if (item.getSourceFilePath() != null) {
-                        icn =  new ImageIcon( ImageUtilities.mergeImages( icn.getImage(), ProjectProperties.ICON_SOURCE_BADGE.getImage(), 8, 8 ));
+                        icn = ImageUtilities.mergeIcons(icn, ProjectProperties.ICON_SOURCE_BADGE, 8, 8 );
                     }
                     if (item.getJavadocFilePath() != null) {
-                        icn =  new ImageIcon( ImageUtilities.mergeImages( icn.getImage(), ProjectProperties.ICON_JAVADOC_BADGE.getImage(), 8, 0 ));
+                        icn = ImageUtilities.mergeIcons(icn, ProjectProperties.ICON_JAVADOC_BADGE, 8, 0 );
                     }
                     return icn;
                 }
@@ -274,13 +272,11 @@ public class ClassPathListCellRenderer extends DefaultListCellRenderer {
         return null;
     }
 
-    private static ImageIcon getFolderIcon() {
-
+    private static Icon getFolderIcon() {
         if ( ICON_FOLDER == null ) {
             DataFolder dataFolder = DataFolder.findFolder( FileUtil.getConfigRoot() );
-            ICON_FOLDER = new ImageIcon( dataFolder.getNodeDelegate().getIcon( BeanInfo.ICON_COLOR_16x16 ) );
+            ICON_FOLDER = ImageUtilities.image2Icon(dataFolder.getNodeDelegate().getIcon( BeanInfo.ICON_COLOR_16x16 ) );
         }
-
         return ICON_FOLDER;
     }
 

@@ -39,7 +39,7 @@ import org.openide.filesystems.FileObject;
  * </p>
  * @see org.netbeans.api.java.queries.SourceLevelQuery
  * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/FileOwnerQuery.html">FileOwnerQuery</a>
- * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup--">Project#getLookup</a>
+ * @see <a href="@org-netbeans-modules-projectapi@/org/netbeans/api/project/Project.html#getLookup()">Project#getLookup</a>
  * @see org.netbeans.api.java.classpath.ClassPath#BOOT
  * @author Tomas Zezula
  * @since 1.30

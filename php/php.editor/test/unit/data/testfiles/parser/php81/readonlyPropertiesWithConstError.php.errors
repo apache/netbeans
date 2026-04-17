@@ -1,13 +1,1 @@
-[[856,861]-Syntax error
- unexpected:	const
- after:	readonly
- expected:	identifier, variable, array, callable, define, ?, &, private, protected, public, (] 856-861:Syntax error
- unexpected:	const
- after:	readonly
- expected:	identifier, variable, array, callable, define, ?, &, private, protected, public, (
-[[862,872]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	variable '$withConst'] 862-872:POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	variable '$withConst'
-[[884,885]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	}] 884-885:POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	}
+

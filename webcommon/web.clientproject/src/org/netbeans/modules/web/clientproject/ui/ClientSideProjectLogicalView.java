@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -90,7 +91,6 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
-import org.openide.util.WeakSet;
 import org.openide.util.actions.SystemAction;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -872,7 +872,7 @@ public class ClientSideProjectLogicalView implements LogicalViewProvider {
 
     private static class FolderFilterChildren extends FilterNode.Children implements ChangeListener {
 
-        private final Set<File> ignoreList = new WeakSet<File>();
+        private final Set<File> ignoreList = Collections.newSetFromMap(new WeakHashMap<>());
         private final ClientSideProject project;
 
 

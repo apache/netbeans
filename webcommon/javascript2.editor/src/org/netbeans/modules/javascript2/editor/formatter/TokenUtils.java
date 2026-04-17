@@ -94,16 +94,16 @@ final class TokenUtils {
         return null;
     }
 
-    public Token getPreviousNonEmptyToken(int offset) {
+    public Token<? extends JsTokenId> getPreviousNonEmptyToken(int offset) {
         ts.move(offset);
 
         if (!ts.moveNext() && !ts.movePrevious()) {
             return null;
         }
 
-        Token ret = null;
+        Token<? extends JsTokenId> ret = null;
         while (ts.movePrevious()) {
-            Token token = ts.token();
+            Token<? extends JsTokenId> token = ts.token();
             if ((token.id() != JsTokenId.BLOCK_COMMENT && token.id() != JsTokenId.DOC_COMMENT
                 && token.id() != JsTokenId.LINE_COMMENT && token.id() != JsTokenId.EOL
                 && token.id() != JsTokenId.WHITESPACE)) {
@@ -114,16 +114,16 @@ final class TokenUtils {
         return ret;
     }
 
-    public Token getNextNonEmptyToken(int offset) {
+    public Token<? extends JsTokenId> getNextNonEmptyToken(int offset) {
         ts.move(offset);
 
         if (!ts.moveNext() && !ts.movePrevious()) {
             return null;
         }
 
-        Token ret = null;
+        Token<? extends JsTokenId> ret = null;
         while (ts.moveNext()) {
-            Token token = ts.token();
+            Token<? extends JsTokenId> token = ts.token();
             if ((token.id() != JsTokenId.BLOCK_COMMENT && token.id() != JsTokenId.DOC_COMMENT
                 && token.id() != JsTokenId.LINE_COMMENT && token.id() != JsTokenId.EOL
                 && token.id() != JsTokenId.WHITESPACE)) {
@@ -146,9 +146,9 @@ final class TokenUtils {
                 return ret;
             }
 
-            Token token = null;
+            Token<? extends JsTokenId> token = null;
             while (ts.movePrevious() && ts.offset() >= stop) {
-                Token current = ts.token();
+                Token<? extends JsTokenId> current = ts.token();
                 if (current.id() != JsTokenId.WHITESPACE) {
                     token = current;
                     break;

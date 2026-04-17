@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 2.8.0
+#Version 2.15.0
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -49,6 +50,7 @@ supr java.lang.Object
 hcls ContextHolder
 
 CLSS public abstract org.netbeans.modules.java.lsp.server.ui.AbstractJavaPlatformProviderOverride
+cons protected init(java.lang.String)
 cons public init()
 intf org.netbeans.modules.java.platform.implspi.JavaPlatformProvider
 meth public org.netbeans.api.java.platform.JavaPlatform getDefaultPlatform()
@@ -111,8 +113,9 @@ supr java.lang.Object
 
 CLSS public final static org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider$LspIO
  outer org.netbeans.modules.java.lsp.server.ui.AbstractLspInputOutputProvider
+meth protected org.netbeans.modules.java.lsp.server.protocol.NbCodeLanguageClient getClient()
 supr java.lang.Object
-hfds ctx,err,in,lookup,name,out
+hfds client,ctx,err,in,lookup,name,out
 hcls LspWriter
 
 CLSS public abstract org.netbeans.modules.java.lsp.server.ui.AbstractLspStatusDisplayer

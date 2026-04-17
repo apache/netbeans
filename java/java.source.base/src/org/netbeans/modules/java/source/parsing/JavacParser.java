@@ -1034,9 +1034,12 @@ public class JavacParser extends Parser {
             options.add("-proc:none"); // NOI18N, Disable annotation processors
         }
         if (compilerOptions != null) {
-            for (String compilerOption : validateCompilerOptions(compilerOptions.getArguments(), validatedSourceLevel)) {
-                options.add(compilerOption);
-            }
+            options.addAll(
+                validateCompilerOptions(
+                    compilerOptions.getArguments(),
+                    useRelease != null ? com.sun.tools.javac.code.Source.lookup(useRelease) : validatedSourceLevel
+                )
+            );
         }
         if (!additionalModules.isEmpty()) {
             options.add("--add-modules");       //NOI18N
@@ -1098,8 +1101,12 @@ public class JavacParser extends Parser {
         if (validatedSourceLevel.equals(sourceLevel)) {
             return null;
         }
-        if (sourceLevel.compareTo(com.sun.tools.javac.code.Source.JDK7) <= 0) {
-            sourceLevel = com.sun.tools.javac.code.Source.JDK7;
+        if (!sourceLevel.isSupported()) {
+            for (com.sun.tools.javac.code.Source searchForSupported : com.sun.tools.javac.code.Source.values()) {
+                if (searchForSupported.isSupported()) {
+                    sourceLevel = searchForSupported;
+                }
+            }
         }
         return sourceLevel.isSupported() ? sourceLevel.requiredTarget().multiReleaseValue() : null;
     }

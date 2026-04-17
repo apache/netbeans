@@ -1,0 +1,12 @@
+    public public function publicPublicMethodError(): void;
+                           -----------------------
+HINT:Multiple public modifiers are not allowed
+FIX:Remove modifier: public
+    public private function publicPrivateMethodError(): void;
+                            ------------------------
+HINT:Interface method "publicPrivateMethodError" can not be declared private
+FIX:Remove modifier: private
+    protected private function protectedPrivateMethodError(): void;
+                               ---------------------------
+HINT:Interface method "protectedPrivateMethodError" can not be declared private
+FIX:Remove modifier: private

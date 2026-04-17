@@ -260,7 +260,7 @@ public class BasicInfoVisualPanel extends NewTemplateVisualPanel
     
     // stolen (then adjusted) from j2seproject
     private String validFreeModuleName(String formater, int index) {
-        String name = MessageFormat.format(formater, new Object[]{ new Integer(index) });
+        String name = MessageFormat.format(formater, index);
         File file = new File(getLocationValue(), name);
         return file.exists() ? null : name;
     }

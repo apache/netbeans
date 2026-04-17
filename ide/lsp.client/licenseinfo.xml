@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<licenseinfo>
+    <fileset>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/attribute.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/class.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/color.gif</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/constant.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/constructor.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/empty.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/enummember.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/enum.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/event.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/field.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/file.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/folder.gif</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/function.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/interface.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/keyword.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/method.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/module.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/operator.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/property.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/reference.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/snippet.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/struct.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/text.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/typeparameter.gif</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/unit.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/value.png</file>
+        <file>src/org/netbeans/modules/lsp/client/bindings/icons/variable.gif</file>
+        <file>src/org/netbeans/modules/lsp/client/resources/error_16.png</file>
+        <file>src/org/netbeans/modules/lsp/client/resources/warning_16.png</file>
+        <license ref="Apache-2.0-ASF" />
+        <comment type="COMMENT_UNSUPPORTED" />
+    </fileset>
+</licenseinfo>

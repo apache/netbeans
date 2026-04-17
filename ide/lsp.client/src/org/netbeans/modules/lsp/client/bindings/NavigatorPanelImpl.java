@@ -26,13 +26,16 @@ import java.util.logging.Level;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.eclipse.lsp4j.DocumentSymbol;
+import org.eclipse.lsp4j.DocumentSymbolOptions;
 import org.eclipse.lsp4j.DocumentSymbolParams;
+import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.netbeans.modules.lsp.client.LSPBindings;
-import org.netbeans.modules.lsp.client.LSPBindings.BackgroundTask;
+import org.netbeans.modules.lsp.client.LSPBindings.SimpleBackgroundTask;
 import org.netbeans.modules.lsp.client.Utils;
 import org.openide.filesystems.FileObject;
 import org.openide.nodes.AbstractNode;
@@ -43,10 +46,13 @@ import org.openide.nodes.Node;
  *
  * @author lahvac
  */
-public class NavigatorPanelImpl extends AbstractNavigatorPanel<Either<SymbolInformation, DocumentSymbol>> implements BackgroundTask {
-    static final NavigatorPanelImpl INSTANCE = new NavigatorPanelImpl();
+public class NavigatorPanelImpl extends AbstractNavigatorPanel<Either<SymbolInformation, DocumentSymbol>> implements SimpleBackgroundTask {
 
-    public NavigatorPanelImpl() {
+    private final LSPBindings bindings;
+
+    public NavigatorPanelImpl(LSPBindings bindings) {
+        this.bindings = bindings;
+        setDisplayName(bindings);
     }
 
     @Override
@@ -60,13 +66,15 @@ public class NavigatorPanelImpl extends AbstractNavigatorPanel<Either<SymbolInfo
     }
 
     @Override
-    public void run(LSPBindings bindings, FileObject file) {
+    public void run(FileObject file) {
         if (isCurrentFile(file)) {
+            setDisplayName(bindings);
+
             try {
                 String uri = Utils.toURI(file);
                 List<Either<SymbolInformation, DocumentSymbol>> symbols = bindings.getTextDocumentService().documentSymbol(new DocumentSymbolParams(new TextDocumentIdentifier(uri))).get();
 
-                setKeys(symbols);
+                setKeys(symbols == null ? List.of() : symbols);
                 expandAll();
             } catch (ExecutionException ex) {
                 LOG.log(Level.FINE, null, ex);
@@ -83,6 +91,23 @@ public class NavigatorPanelImpl extends AbstractNavigatorPanel<Either<SymbolInfo
     @Override
     protected Node[] createNodes(FileObject currentFile, Either<SymbolInformation, DocumentSymbol> sym) {
         return new Node[] {new NodeImpl(Utils.toURI(currentFile), sym)};
+    }
+
+    private void setDisplayName(LSPBindings bindings) {
+        InitializeResult initResult = bindings.getInitResult();
+        ServerCapabilities capa = initResult.getCapabilities();
+        Either<Boolean, DocumentSymbolOptions> symbolProvider = capa != null ? capa.getDocumentSymbolProvider() : null;
+        String displayName;
+
+        if (symbolProvider != null && symbolProvider.isRight()) {
+            displayName = symbolProvider.getRight().getLabel();
+        } else if (initResult.getServerInfo() != null) {
+            displayName = initResult.getServerInfo().getName();
+        } else {
+            displayName = null;
+        }
+
+        setDisplayName(displayName);
     }
 
     private static final class NodeImpl extends AbstractNode {
@@ -138,6 +163,7 @@ public class NavigatorPanelImpl extends AbstractNavigatorPanel<Either<SymbolInfo
                 this.open = createOpenAction(symbol.getLeft().getLocation().getUri(), symbol.getLeft().getLocation().getRange());
             } else {
                 setDisplayName(symbol.getRight().getName());
+                setShortDescription(symbol.getRight().getDetail());
                 setIconBaseWithExtension(Icons.getSymbolIconBase(symbol.getRight().getKind()));
                 this.open = createOpenAction(currentFileUri, symbol.getRight().getRange());
             }
@@ -146,6 +172,7 @@ public class NavigatorPanelImpl extends AbstractNavigatorPanel<Either<SymbolInfo
         public NodeImpl(String currentFileUri, DocumentSymbol symbol) {
             super(createChildren(currentFileUri, symbol));
             setDisplayName(symbol.getName());
+            setShortDescription(symbol.getDetail());
             setIconBaseWithExtension(Icons.getSymbolIconBase(symbol.getKind()));
             this.open = createOpenAction(currentFileUri, symbol.getRange());
         }

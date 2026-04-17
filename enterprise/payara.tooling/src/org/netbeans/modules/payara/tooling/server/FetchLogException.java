@@ -29,10 +29,7 @@ import org.netbeans.modules.payara.tooling.PayaraIdeException;
  */
 public class FetchLogException extends PayaraIdeException {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of <code>FetchLogException</code> without
      * detail message.

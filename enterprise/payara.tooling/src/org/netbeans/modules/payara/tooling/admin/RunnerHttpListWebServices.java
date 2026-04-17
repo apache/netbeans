@@ -31,10 +31,7 @@ import org.netbeans.modules.payara.tooling.data.PayaraServer;
  */
 public class RunnerHttpListWebServices extends RunnerHttp {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Payara administration command result containing server resources.
      * <p/>
@@ -46,10 +43,7 @@ public class RunnerHttpListWebServices extends RunnerHttp {
     @SuppressWarnings("FieldNameHidesFieldInSuperclass")
     ResultList<String> result;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Constructs an instance of administration command executor using
      * HTTP interface.
@@ -62,10 +56,7 @@ public class RunnerHttpListWebServices extends RunnerHttp {
         super(server, command);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Implemented Abstract Methods                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Create <code>ResultList</code> object corresponding
      * to server log command execution value to be returned.

@@ -149,7 +149,7 @@ public class PanelBodyContainer extends javax.swing.JPanel {
     private Timer delay;
     private ProgressHandle handle;
     private void addProgressLine (final long estimatedTime) {
-        handle = ProgressHandleFactory.createHandle ("PanelBodyContainer_ProgressLine"); // NOI18N
+        handle = ProgressHandle.createHandle ("PanelBodyContainer_ProgressLine"); // NOI18N
         JLabel title;
         if (bodyPanel instanceof LicenseApprovalPanel) {
             title = new JLabel (NbBundle.getMessage (PanelBodyContainer.class, "PanelBodyContainer_PleaseWaitForLicense")); // NOI18N

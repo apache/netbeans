@@ -50,10 +50,7 @@ import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
  */
 public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparable<PayaraPlatformVersionAPI> {
     
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     private static final Logger LOGGER = Logger.getLogger(PayaraPlatformVersion.class.getName());
 
     /**
@@ -215,9 +212,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
         }
         return version;
     }
-    ////////////////////////////////////////////////////////////////////////////
     // Instance attributes                                                    //
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * Major version number.
      */
@@ -246,9 +241,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
 
     private final String value;
 
-    ////////////////////////////////////////////////////////////////////////////
     // Constructors                                                           //
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * Constructs an instance of Payara server version.
      * <p/>
@@ -270,9 +263,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
         this.directUrl = repository + String.format(DOWNLOAD_URL, value, value);
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Getters                                                                //
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * Get major version number.
      *
@@ -358,9 +349,7 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
         return major >= 6;
     }
 
-    ////////////////////////////////////////////////////////////////////////////
     // Methods                                                                //
-    ////////////////////////////////////////////////////////////////////////////
     /**
      * Compare major and minor parts of version number <code>String</code>s.
      * <p/>

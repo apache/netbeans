@@ -271,7 +271,7 @@ public class StoreTest extends LHTestCase {
 //        // check that nothing changed
 //        File storefile = store.getStoreFile(file, ts, false);        
 //        assertFile(file, store, ts, storefile.lastModified(), 1, 1, "data", TOUCHED);
-////        assertFile(fileSym, store, ts, storefile.lastModified(), 2, 1, "data", TOUCHED);
+// //        assertFile(fileSym, store, ts, storefile.lastModified(), 2, 1, "data", TOUCHED);
 //
 //        // change file with new ts
 //        ts = System.currentTimeMillis();
@@ -473,7 +473,7 @@ public class StoreTest extends LHTestCase {
 //        assertNull(entriesMap.get("folderCreatedAfterRevert").getStoreFile());
 //
 //        String strStore = read(entriesMap.get("fileChangedAfterRevert").getStoreFileInputStream(), 1024);
-////        String strFile = read(new FileInputStream(entriesMap.get("fileChangedAfterRevert").getFile()), 1024);
+// //        String strFile = read(new FileInputStream(entriesMap.get("fileChangedAfterRevert").getFile()), 1024);
 //        assertNotSame("BEFORE change", strStore);
 //    }
 

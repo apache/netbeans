@@ -19,9 +19,11 @@
 package org.netbeans.modules.java.hints.errors;
 
 import com.sun.source.util.TreePath;
+
 import java.util.List;
 import java.util.Set;
 import java.util.prefs.Preferences;
+
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.errors.ErrorFixesFakeHint.FixKind;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
@@ -55,6 +57,61 @@ public class MagicSurroundWithTryCatchFixTest extends ErrorHintsTestBase {
                        "package test; public class Test {public void test() { System.out.println(\"\"); |new java.io.FileInputStream(\"\");}}",
                        "FixImpl",
                        "package test; import java.io.FileNotFoundException; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test() { try { System.out.println(\"\"); new java.io.FileInputStream(\"\"); } catch (FileNotFoundException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex); } }}");
+    }
+
+    // For pre Java 9 there is no System.Logger.
+    public void testLogStatementSystemLogger_Java8() throws Exception {
+        Preferences prefs = ErrorFixesFakeHint.getPreferences(null, FixKind.SURROUND_WITH_TRY_CATCH);
+        boolean orig = ErrorFixesFakeHint.isUseSystemLogger(prefs);
+
+        try {
+            ErrorFixesFakeHint.setUseSystemLogger(prefs, true);
+            performFixTest("test/Test.java",
+                       "package test; public class Test {public void test() { System.out.println(\"\"); |new java.io.FileInputStream(\"\");}}",
+                       "FixImpl",
+                       "package test; import java.io.FileNotFoundException; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test() { try { System.out.println(\"\"); new java.io.FileInputStream(\"\"); } catch (FileNotFoundException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex); } }}");
+        } finally {
+            ErrorFixesFakeHint.setUseSystemLogger(prefs, orig);
+        }
+    }
+
+    public void testLogStatementUseExistingLogger() throws Exception {
+            performFixTest("test/Test.java",
+                       "package test; import java.util.logging.Logger; public class Test {private static final Logger LOG; public void test() { System.out.println(\"\"); |new java.io.FileInputStream(\"\");}}",
+                       "FixImpl",
+                       "package test;import java.io.FileNotFoundException; import java.util.logging.Level; import java.util.logging.Logger; public class Test {private static final Logger LOG; public void test() { try { System.out.println(\"\"); new java.io.FileInputStream(\"\"); } catch (FileNotFoundException ex) { LOG.log(Level.SEVERE, null, ex); } }}");
+    }
+
+    public void testLogStatementSystemLogger() throws Exception {
+        sourceLevel = "9";
+        Preferences prefs = ErrorFixesFakeHint.getPreferences(null, FixKind.SURROUND_WITH_TRY_CATCH);
+        boolean orig = ErrorFixesFakeHint.isUseSystemLogger(prefs);
+
+        try {
+            ErrorFixesFakeHint.setUseSystemLogger(prefs, true);
+            performFixTest("test/Test.java",
+                       "package test; public class Test {public void test() { System.out.println(\"\"); |new java.io.FileInputStream(\"\");}}",
+                       "FixImpl",
+                       "package test; import java.io.FileNotFoundException; public class Test {public void test() { try { System.out.println(\"\"); new java.io.FileInputStream(\"\"); } catch (FileNotFoundException ex) { System.getLogger(Test.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex); } }}");
+        } finally {
+            ErrorFixesFakeHint.setUseSystemLogger(prefs, orig);
+        }
+    }
+
+    public void testLogStatementSystemLoggerUseExistingLogger() throws Exception {
+        sourceLevel = "9";
+        Preferences prefs = ErrorFixesFakeHint.getPreferences(null, FixKind.SURROUND_WITH_TRY_CATCH);
+        boolean orig = ErrorFixesFakeHint.isUseSystemLogger(prefs);
+
+        try {
+            ErrorFixesFakeHint.setUseSystemLogger(prefs, true);
+            performFixTest("test/Test.java",
+                       "package test; public class Test {private static final System.Logger LOG; public void test() { System.out.println(\"\"); |new java.io.FileInputStream(\"\");}}",
+                       "FixImpl",
+                       "package test; import java.io.FileNotFoundException; public class Test {private static final System.Logger LOG; public void test() { try { System.out.println(\"\"); new java.io.FileInputStream(\"\"); } catch (FileNotFoundException ex) { LOG.log(System.Logger.Level.ERROR, (String) null, ex); } }}");
+        } finally {
+            ErrorFixesFakeHint.setUseSystemLogger(prefs, orig);
+        }
     }
 
     public void testLogStatementExceptions() throws Exception {

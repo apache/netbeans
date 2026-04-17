@@ -359,6 +359,22 @@
                     </folder>
                 </folder>
             </folder>
+            <folder name="MarkOccurrences">
+                <folder name="text">
+                    <folder name="javascript">
+                        <file name="MarkOccurences.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.javascript2.editor.options.ui.MarkOccurencesOptionsPanelController"/>
+                        </file>
+                    </folder>
+                    <folder name="x-json">
+                        <file name="MarkOccurences.instance">
+                            <attr name="instanceOf" stringvalue="org.netbeans.spi.options.OptionsPanelController"/>
+                            <attr name="instanceCreate" newvalue="org.netbeans.modules.javascript2.editor.options.ui.json.MarkOccurencesOptionsPanelController"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
         </folder>
     </folder>
 

@@ -38,17 +38,11 @@ import org.testng.annotations.Test;
  */
 public class CommandAsadminTest extends CommandTest {
 
-    ////////////////////////////////////////////////////////////////////////////
     // Class attributes                                                       //
-    ////////////////////////////////////////////////////////////////////////////
-
     /** Logger instance for this class. */
     private static final Logger LOGGER = new Logger(CommandAsadminTest.class);
 
-    ////////////////////////////////////////////////////////////////////////////
     // Test methods                                                           //
-    ////////////////////////////////////////////////////////////////////////////
-
     /**
      * Test change administrator's password command execution using
      * local asadmin interface on Payara.

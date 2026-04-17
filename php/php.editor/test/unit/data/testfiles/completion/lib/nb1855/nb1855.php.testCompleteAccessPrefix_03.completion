@@ -13,3 +13,4 @@ CONSTANT   PRIVATE_CONSTANT "private cons  [PRIVATE]  Class1855
 ------------------------------------
 KEYWORD    print '';                                  Language Construct
 KEYWORD    private                                    null
+KEYWORD    private(set)                               null

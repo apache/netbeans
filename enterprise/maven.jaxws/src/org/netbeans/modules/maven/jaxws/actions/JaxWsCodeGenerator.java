@@ -314,7 +314,7 @@ public class JaxWsCodeGenerator {
 //        boolean inJsp = InvokeOperationCookie.TARGET_SOURCE_JSP == targetSourceType;
 //        Node portNode = operationNode.getParentNode();
 //        Node serviceNode = portNode.getParentNode();
-////        addProjectReference(serviceNode, sourceNode);
+// //        addProjectReference(serviceNode, sourceNode);
 //        final Document document;
 //        int position = -1;
 //        if (inJsp) {

@@ -20,24 +20,19 @@ package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-import org.eclipse.lsp4j.ConfigurationItem;
-import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.netbeans.api.java.queries.CompilerOptionsQuery;
@@ -166,15 +161,13 @@ public class LspServerTelemetryManager {
             if (client == null) {
                 return false;
             }
-            AtomicBoolean isEnablePreviewSet = new AtomicBoolean(false);
-            ConfigurationItem conf = new ConfigurationItem();
-            conf.setSection(client.getNbCodeCapabilities().getAltConfigurationPrefix() + "runConfig.vmOptions");
-            client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenAccept(c -> {
-                String config = ((JsonPrimitive) ((List<Object>) c).get(0)).getAsString();
-                isEnablePreviewSet.set(config.contains(this.ENABLE_PREVIEW));
+            boolean[] isEnablePreviewSet = {false};
+            client.getClientConfigurationManager().getConfigurationUsingAltPrefix("runConfig.vmOptions").thenAccept(c -> {
+                isEnablePreviewSet[0] = c != null && !c.getAsJsonArray().isEmpty()
+                                && c.getAsJsonArray().get(0).getAsString().contains(ENABLE_PREVIEW);
             });
             
-            return isEnablePreviewSet.get();
+            return isEnablePreviewSet[0];
         }
         
         Result result = CompilerOptionsQuery.getOptions(source);

@@ -269,7 +269,7 @@ public class ImportModulePanel extends javax.swing.JPanel {
         if (basePosition != -1) {
             EditList edits = new EditList(document);
             try {
-                int rowEnd = importInPreviousLine ? LineDocumentUtils.getLineStart(document, position) : LineDocumentUtils.getLineEnd(document, basePosition);
+                int rowEnd = importInPreviousLine ? LineDocumentUtils.getLineStartOffset(document, position) : LineDocumentUtils.getLineEndOffset(document, basePosition);
                 if (importInPreviousLine) {
                     importCode += "\n"; //NOI18N
                 } else {
@@ -331,7 +331,7 @@ public class ImportModulePanel extends javax.swing.JPanel {
                 }
                 // TODO - depend on gsf directly and get icons from there!
                 //setIcon( ElementIcons.getElementIcon( td.kind, null ) );
-                setIcon(new ImageIcon(ImageUtilities.loadImage("org/netbeans/modules/php/editor/resources/interface.png"))); // NOI18N
+                setIcon(ImageUtilities.loadIcon("org/netbeans/modules/php/editor/resources/interface.png")); // NOI18N
             } else {
                 setText(value.toString());
             }

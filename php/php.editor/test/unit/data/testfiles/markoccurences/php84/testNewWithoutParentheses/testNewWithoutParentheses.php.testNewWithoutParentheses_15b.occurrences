@@ -1,0 +1,3 @@
+    protected static string $|>MARK_OCCURRENCES:protectedStaticField<| = "protected static field";
+        $example = new Example()::$|>MARK_OCCURRENCES:protecte^dStaticField<|;
+        $example = new Example()->returnThis()::$|>MARK_OCCURRENCES:protectedStaticField<|;

@@ -301,7 +301,7 @@ public class QueryBuilderPane extends JSplitPane {
         }
     }
 
-    /**
+    /*
      * Enable / Disable the graph scrolled pane and its children.
      * We store the state to avoid the expensive recursive call to
      * setEnableContainer.

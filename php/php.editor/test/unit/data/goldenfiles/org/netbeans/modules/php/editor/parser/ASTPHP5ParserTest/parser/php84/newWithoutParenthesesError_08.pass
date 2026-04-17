@@ -1,0 +1,96 @@
+<testresult testFile='newWithoutParenthesesError_08.php'>
+    <scanner>
+        <token id='T_STRING' start='159' end='163'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='163' end='164'>
+            <text>(</text>
+        </token>
+        <token id='T_NEW' start='164' end='167'>
+            <text>new</text>
+        </token>
+        <token id='T_CLASS' start='168' end='173'>
+            <text>class</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='174' end='175'>
+            <text>{</text>
+        </token>
+        <token id='T_CONST' start='175' end='180'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='181' end='189'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_EQUAL' start='190' end='191'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='192' end='202'>
+            <text>&apos;constant&apos;</text>
+        </token>
+        <token id='T_SEMICOLON' start='202' end='203'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='203' end='204'>
+            <text>}</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='204' end='206'>
+            <text>::</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='206' end='207'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='207' end='208'>
+            <text>;</text>
+        </token>
+        <token id='EOF' start='209' end='209'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='209'>
+        <Comments>
+            <Comment start='6' end='158' commentType='singleLine'/>
+            <Comment start='6' end='158' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <ExpressionStatement start='159' end='208'>
+                <FunctionInvocation start='159' end='207'>
+                    <FucntionName start='159' end='163'>
+                        <NamespaceName start='159' end='163' isCurrent='false' isGlobal='false'>
+                            <Identifier start='159' end='163' name='test'/>
+                        </NamespaceName>
+                    </FucntionName>
+                    <Parameters>
+                        <StaticConstantAccess start='164' end='206' isDynamicName='false'>
+                            <ClassInstanceCreationVariable start='164' end='204'>
+                                <ClassInstanceCreation start='164' end='204' anonymous='true'>
+                                    <Parameters>
+                                    </Parameters>
+                                    <Superclass>
+                                    </Superclass>
+                                    <Interfaces>
+                                    </Interfaces>
+                                    <Block start='174' end='204' isCurly='true'>
+                                        <ClassConstantDeclaration start='175' end='203' modifier='public'>
+                                            <Names>
+                                                <Identifier start='181' end='189' name='CONSTANT'/>
+                                            </Names>
+                                            <Initializers>
+                                                <Scalar start='192' end='202' type='STRING' value='&apos;constant&apos;'/>
+                                            </Initializers>
+                                        </ClassConstantDeclaration>
+                                    </Block>
+                                </ClassInstanceCreation>
+                            </ClassInstanceCreationVariable>
+                            <Constant>
+                                <Identifier start='206' end='206' name=''/>
+                            </Constant>
+                            <Member>
+                                <Identifier start='206' end='206' name=''/>
+                            </Member>
+                        </StaticConstantAccess>
+                    </Parameters>
+                </FunctionInvocation>
+            </ExpressionStatement>
+        </Statements>
+    </Program>
+</testresult>

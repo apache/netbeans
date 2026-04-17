@@ -49,9 +49,18 @@ public final class PhpUnitPreferences {
     private static final String ASK_FOR_TEST_GROUPS = "test.groups.ask"; // NOI18N
     private static final String TEST_GROUPS = "test.groups"; // NOI18N
     private static final String TEST_GROUPS_DELIMITER = ","; // NOI18N
+    private static final String PHPUNIT_USE_RELATIVE_PATHS = "relativePath.enabled"; // NOI18N
 
 
     private PhpUnitPreferences() {
+    }
+
+    public static void setRelativePathEnabled(PhpModule phpModule, boolean relativePathEnabled) {
+        getPreferences(phpModule).putBoolean(PHPUNIT_USE_RELATIVE_PATHS, relativePathEnabled);
+    }
+
+    public static boolean isRelativePathEnabled(PhpModule phpModule) {
+        return getPreferences(phpModule).getBoolean(PHPUNIT_USE_RELATIVE_PATHS, false);
     }
 
     public static boolean isBootstrapEnabled(PhpModule phpModule) {

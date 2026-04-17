@@ -150,11 +150,7 @@ public final class XMLPropertiesConvertorTest extends NbTestCase {
         assertEquals("Saver was not marked as dirty.", SaverImpl.DIRTY, s.state);
     }
     
-    //////////////////////////////////////////////////////////
     // Tests on SFS
-    //////////////////////////////////////////////////////////
-    
-    
     /** Checks whether the instance is the same.
      */
     public void testSame() throws Exception {
@@ -480,7 +476,7 @@ public final class XMLPropertiesConvertorTest extends NbTestCase {
                 try {
                     l = corrupted.lock();
                     os = corrupted.getOutputStream(l);
-                    FileUtil.copy(valid.getInputStream(), os);
+                    valid.getInputStream().transferTo(os);
                     os.flush();
                 } finally {
                     if (os != null) try { os.close(); } catch (IOException ex) {}

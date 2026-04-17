@@ -46,7 +46,7 @@ public class DebuggingTableModel implements TableModel {
                 if (JPDAThread.STATE_ZOMBIE == dvt.getKey().getState()) {
                     return null;
                 } else {
-                    return new Boolean(dvt.isSuspended());
+                    return dvt.isSuspended();
                 }
             }
             return null;

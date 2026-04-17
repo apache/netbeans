@@ -18,14 +18,13 @@
  */
 package org.netbeans.modules.javascript.cdtdebug;
 
-import java.net.URI;
 import java.util.Objects;
 import org.netbeans.lib.chrome_devtools_protocol.debugger.ScriptFailedToParse;
 import org.netbeans.lib.chrome_devtools_protocol.debugger.ScriptParsed;
 
 public class CDTScript {
     private final String scriptId;
-    private final URI url;
+    private final String url;
     private final int startLine;
     private final int startColumn;
     private final int endLine;
@@ -59,7 +58,7 @@ public class CDTScript {
         return scriptId;
     }
 
-    public URI getUrl() {
+    public String getUrl() {
         return url;
     }
 

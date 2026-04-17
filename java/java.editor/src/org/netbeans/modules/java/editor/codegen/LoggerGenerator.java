@@ -18,6 +18,16 @@
  */
 package org.netbeans.modules.java.editor.codegen;
 
+import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +35,10 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.Preferences;
 
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -37,18 +50,9 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.swing.text.JTextComponent;
 
-import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.MemberSelectTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.ModifiersTree;
-import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreePath;
-
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CompilationController;
+import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.ModificationResult;
 import org.netbeans.api.java.source.Task;
@@ -58,9 +62,12 @@ import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.modules.java.completion.Utilities;
 import org.netbeans.modules.java.editor.codegen.ui.ElementNode;
 import org.netbeans.spi.editor.codegen.CodeGenerator;
+import org.netbeans.spi.editor.hints.settings.FileHintPreferences;
+import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -94,24 +101,29 @@ public class LoggerGenerator implements CodeGenerator {
             if (typeElement == null || !typeElement.getKind().isClass()) {
                 return ret;
             }
+            boolean isSystemLogger = isUseSystemLogger(controller);
+            String loggerFQN = isSystemLogger ? "java.lang.System.Logger" : Logger.class.getName();
             for (VariableElement ve : ElementFilter.fieldsIn(typeElement.getEnclosedElements())) {
                 TypeMirror type = ve.asType();
-                if (type.getKind() == TypeKind.DECLARED && ((TypeElement)((DeclaredType)type).asElement()).getQualifiedName().contentEquals(Logger.class.getName())) {
+                if (type.getKind() == TypeKind.DECLARED && ((TypeElement)((DeclaredType)type).asElement()).getQualifiedName().contentEquals(loggerFQN)) {
                     return ret;
                 }
             }
             List<ElementNode.Description> descriptions = new ArrayList<>();
-            ret.add(new LoggerGenerator(component, ElementNode.Description.create(controller, typeElement, descriptions, false, false)));
+            ret.add(new LoggerGenerator(component, ElementNode.Description.create(controller, typeElement, descriptions, false, false), isSystemLogger));
             return ret;
         }
     }
+
     private final JTextComponent component;
     private final ElementNode.Description description;
+    private final boolean isSystemLogger;
 
     /** Creates a new instance of ToStringGenerator */
-    private LoggerGenerator(JTextComponent component, ElementNode.Description description) {
+    private LoggerGenerator(JTextComponent component, ElementNode.Description description, boolean isSystemLogger) {
         this.component = component;
         this.description = description;
+        this.isSystemLogger = isSystemLogger;
     }
 
     @Override
@@ -139,8 +151,8 @@ public class LoggerGenerator implements CodeGenerator {
                             ClassTree cls = (ClassTree) path.getLeaf();
                             CodeStyle cs = CodeStyle.getDefault(component.getDocument());
                             Set<Modifier> mods = EnumSet.of(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL);
-                            List<String> names = Utilities.varNamesSuggestions(null, ElementKind.FIELD, mods, "LOG", null, copy.getTypes(), copy.getElements(), e.getEnclosedElements(), cs);
-                            VariableTree var = createLoggerField(copy.getTreeMaker(), cls, names.size() > 0 ? names.get(0) : "LOG", mods); //NOI18N
+                            List<String> names = Utilities.varNamesSuggestions(null, ElementKind.FIELD, mods, getBaseLoggerName(), null, copy.getTypes(), copy.getElements(), e.getEnclosedElements(), cs);
+                            VariableTree var = createLoggerField(copy.getTreeMaker(), cls, names.size() > 0 ? names.get(0) : getBaseLoggerName(), mods, isSystemLogger); //NOI18N
                             copy.rewrite(cls, GeneratorUtils.insertClassMembers(copy, cls, Collections.singletonList(var), caretOffset));
                         }
                     }
@@ -152,15 +164,64 @@ public class LoggerGenerator implements CodeGenerator {
         }
     }
 
+    public static String getBaseLoggerName() {
+        // Preparation for a potential future configurability of the logger's field name.
+        return "LOG";
+    }
+
+    /** if info is null return the default, not project, setting. */
+    public static boolean isUseSystemLogger(CompilationInfo info) {
+        if (info != null && info.getSourceVersion().compareTo(SourceVersion.RELEASE_9) < 0)
+            return false;
+
+        FileObject fo = info != null ? info.getFileObject() : null;
+        String keyHack = "surround-try-catch-java-lang-System-Logger";
+        boolean v = true;   // default 
+        try {
+            Preferences root = null;
+            String nodeHack = "org.netbeans.modules.java.hints.errors.ErrorFixesFakeHintSURROUND_WITH_TRY_CATCH";
+            if (fo == null) {
+                // Can't get the project value, get the default.
+                nodeHack = "org/netbeans/modules/java/hints/default/" + nodeHack;
+                root = NbPreferences.root();
+            } else {
+                // Project value.
+                root = FileHintPreferences.getFilePreferences(fo, "text/x-java");
+            }
+            Preferences tryCatch = null;
+            if (root.nodeExists(nodeHack)) {
+                tryCatch = root.node(nodeHack);
+            }
+
+            if (tryCatch != null) {
+                v = tryCatch.getBoolean(keyHack, v);
+            }
+        } catch(BackingStoreException ex) {
+        }
+        return v;
+    }
+
+    /** Use the default logger. */
     public static VariableTree createLoggerField(TreeMaker make, ClassTree cls, CharSequence name, Set<Modifier> mods) {
+        return createLoggerField(make, cls, name, mods, isUseSystemLogger(null));
+    }
+
+    /** Use the project's default logger. */
+    public static VariableTree createLoggerField(TreeMaker make, ClassTree cls, CharSequence name, Set<Modifier> mods, CompilationInfo info) {
+        return createLoggerField(make, cls, name, mods, isUseSystemLogger(info));
+    }
+
+    private static VariableTree createLoggerField(TreeMaker make, ClassTree cls, CharSequence name, Set<Modifier> mods, boolean useSystemLogger) {
         ModifiersTree modifiers = make.Modifiers(mods, Collections.<AnnotationTree>emptyList());
         final List<ExpressionTree> none = Collections.<ExpressionTree>emptyList();
         IdentifierTree className = make.Identifier(cls.getSimpleName());
         MemberSelectTree classType = make.MemberSelect(className, "class"); // NOI18N
         MemberSelectTree getName  = make.MemberSelect(classType, "getName"); // NOI18N
         MethodInvocationTree initClass = make.MethodInvocation(none, getName, none);
-        final ExpressionTree logger = make.QualIdent(Logger.class.getName());
-        MemberSelectTree getLogger = make.MemberSelect(logger, "getLogger"); // NOI18N
+        final ExpressionTree logger = make.QualIdent(useSystemLogger ? "java.lang.System.Logger" : Logger.class.getName());
+        final ExpressionTree loggerProvider = useSystemLogger ? make.QualIdent("java.lang.System") : logger;
+
+        MemberSelectTree getLogger = make.MemberSelect(loggerProvider, "getLogger"); // NOI18N
         MethodInvocationTree initField = make.MethodInvocation(none, getLogger, Collections.nCopies(1, initClass));
         return make.Variable(modifiers, name, logger, initField); // NOI18N
     }

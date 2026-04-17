@@ -22,7 +22,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -49,10 +48,7 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 import javax.swing.UIManager;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
@@ -79,6 +75,9 @@ import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
@@ -94,11 +93,8 @@ import org.openide.windows.WindowManager;
 public final class BookmarksView extends TopComponent
 implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Provider
 {
-    
     private static final String HELP_ID = "bookmarks_window_csh"; // NOI18N
 
-    private static final int PREVIEW_PANE_REFRESH_DELAY = 300;
-    
     /**
      * Invoked from layer.
      * @return bookmarks view instance.
@@ -106,7 +102,7 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
     public static TopComponent create() {
         return new BookmarksView();
     }
-    
+
     public static BookmarksView openView() {
         BookmarksView bookmarksView = (BookmarksView) WindowManager.getDefault().findTopComponent("bookmarks"); // NOI18N
         if (bookmarksView == null) {
@@ -116,14 +112,13 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
         bookmarksView.requestActive();
         return bookmarksView;
     }
-    
+
+    private static final ActionListener OPEN_ACTION  = (ActionEvent e) -> {
+        openView();
+    };
+
     public static ActionListener openAction() {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openView();
-            }
-        };
+        return OPEN_ACTION;
     }
 
     private final transient BookmarksNodeTree nodeTree;
@@ -134,22 +129,23 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
     private transient BeanTreeView treeView;
     private transient JPanel previewPanel;
 
-    private transient boolean dividerLocationSet;
-    
+    private transient boolean dividerLocationUpdating;
+
     private transient JToggleButton bookmarksTreeButton;
     private transient JToggleButton bookmarksTableButton;
-    
-    private transient Timer previewRefreshTimer;
+    private transient JToggleButton showPreviewButton;
+
     private transient BookmarkInfo displayedBookmarkInfo;
-    
-    private transient boolean initialSelectionDone;
-    
+
+    private transient boolean initialTreeSelectionDone;
+
     private static final String PREFS_NODE = "BookmarksProperties"; //NOI18N
     private static final Preferences prefs = NbPreferences.forModule(BookmarksView.class).node(PREFS_NODE);
     private static final String TREE_VIEW_VISIBLE_PREF = "treeViewVisible"; //NOI18N
-    private static final String TREE_VIEW_VISIBLE_PREF_TRUE = "true"; //NOI18N
-    private static final String TREE_VIEW_VISIBLE_PREF_FALSE = "false";  //NOI18N
-    
+    private static final String PREVIEW_VISIBLE_PREF = "previewVisible"; //NOI18N
+    private static final String DIVIDER_LOCATION_PREF = "dividerLocation"; //NOI18N
+
+    @SuppressWarnings("LeakingThisInConstructor")
     BookmarksView() {
 //        getActionMap().put("rename", SystemAction.get(RenameAction.class));
         nodeTree = new BookmarksNodeTree();
@@ -171,7 +167,7 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
         });
         setIcon(ImageUtilities.loadImage("org/netbeans/modules/editor/bookmarks/resources/bookmark_16.png")); // NOI18N
     }
-    
+
     @Override
     public ExplorerManager getExplorerManager() {
         return explorerManager;
@@ -196,12 +192,12 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
     public int getPersistenceType() {
         return PERSISTENCE_ALWAYS;
     }
-    
+
     @Override
     public String getToolTipText () {
         return NbBundle.getMessage (BookmarksView.class, "LBL_BookmarksViewToolTip");// NOI18N
     }
-    
+
     private void initLayoutAndComponents() {
         if (previewPanel == null) { // Not inited yet
             setLayout(new GridBagLayout());
@@ -216,15 +212,19 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
             gridBagConstraints.weightx = 0.0;
             gridBagConstraints.weighty = 0.0;
             add(createLeftToolBar(), gridBagConstraints);
-            
+
             splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
             splitPane.setContinuousLayout(true);
+            splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, pce -> {
+                if(splitPane.getLeftComponent() != null && splitPane.getRightComponent() != null && ! dividerLocationUpdating) {
+                    prefs.putInt(DIVIDER_LOCATION_PREF, splitPane.getDividerLocation());
+                }
+            });
 
             previewPanel = new JPanel();
             previewPanel.setLayout(new GridLayout(1, 1));
             fixScrollPaneinSplitPaneJDKIssue(previewPanel);
-            splitPane.setRightComponent(previewPanel);
-            
+
             gridBagConstraints = new GridBagConstraints();
             gridBagConstraints.gridx = 1;
             gridBagConstraints.gridy = 0;
@@ -237,13 +237,8 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
             add(splitPane, gridBagConstraints);
 
             // Make treeView visible
-            if (TREE_VIEW_VISIBLE_PREF_FALSE.equals(prefs.get(TREE_VIEW_VISIBLE_PREF, TREE_VIEW_VISIBLE_PREF_TRUE))) {
-                treeViewShowing = true;
-                setTreeViewVisible(false);
-            } else {
-                setTreeViewVisible(true);
-            }
-            
+            setTreeViewVisible(prefs.getBoolean(TREE_VIEW_VISIBLE_PREF, true));
+
             BookmarkManager lockedBookmarkManager = BookmarkManager.getLocked();
             try {
                 lockedBookmarkManager.addBookmarkManagerListener(
@@ -251,21 +246,35 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
             } finally {
                 lockedBookmarkManager.unlock();
             }
+
+            updateSplitPane();
         }
     }
 
     @Override
     public void bookmarksChanged(final BookmarkManagerEvent evt) {
         updateTreeRootContext(evt);
+        if (!initialTreeSelectionDone) {
+            SwingUtilities.invokeLater(() -> {
+                doInitialSelection();
+            });
+        }
     }
-    
+
     private void setTreeViewVisible(boolean treeViewVisible) {
+        prefs.putBoolean(TREE_VIEW_VISIBLE_PREF, treeViewVisible);
         if (treeViewVisible != this.treeViewShowing) {
             this.treeViewShowing = treeViewVisible;
-            prefs.put(TREE_VIEW_VISIBLE_PREF, treeViewVisible ? TREE_VIEW_VISIBLE_PREF_TRUE : TREE_VIEW_VISIBLE_PREF_FALSE);
-            TreeOrTableContainer container;
-            boolean create;
-            if (treeViewVisible) {
+            updateSplitPane();
+        }
+    }
+
+    private void updateSplitPane() {
+        TreeOrTableContainer container;
+        boolean create;
+        dividerLocationUpdating = true;
+        try {
+            if (treeViewShowing) {
                 create = (treeView == null);
                 if (create) {
                     container = new TreeOrTableContainer();
@@ -292,19 +301,28 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
                     container = (TreeOrTableContainer) tableView.getParent();
                 }
             }
-            int dividerLocation = splitPane.getDividerLocation();
             splitPane.setLeftComponent(container);
-            splitPane.setDividerLocation(dividerLocation);
-            if (!treeViewVisible && create) {
-                splitPane.validate(); // Have to validate to properly update column sizes
+            if (!treeViewShowing && create) {
+                // Ensure layout is done and we get sane widths when setting up
+                // columns
+                splitPane.getParent().doLayout();
+                splitPane.validate();
                 updateTableColumnSizes();
             }
-            bookmarksTreeButton.setSelected(treeViewVisible);
-            bookmarksTableButton.setSelected(!treeViewVisible);
+            if (showPreviewButton.isSelected()) {
+                splitPane.setRightComponent(previewPanel);
+                splitPane.setDividerLocation(prefs.getInt(DIVIDER_LOCATION_PREF, 400));
+            } else {
+                splitPane.setRightComponent(null);
+            }
+            bookmarksTreeButton.setSelected(treeViewShowing);
+            bookmarksTableButton.setSelected(!treeViewShowing);
             requestFocusTreeOrTable();
+        } finally {
+            dividerLocationUpdating = false;
         }
     }
-    
+
     private void updateTreeRootContext(BookmarkManagerEvent evt) {
         boolean structureChange = (evt == null) || evt.isStructureChange();
         if (structureChange) {
@@ -316,17 +334,12 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
             notifyTableEntriesChanged(evt);
         }
     }
-    
+
     private void updateNodeTree() {
         nodeTree.updateNodeTree();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                rebuildTableEntries();
-            }
-        });
+        SwingUtilities.invokeLater(this::rebuildTableEntries);
     }
-    
+
     private void rebuildTableEntries() {
         if (tableView != null) {
             BookmarksTable table = tableView.getTable();
@@ -338,7 +351,7 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
             }
         }
     }
-    
+
     private void notifyTableEntriesChanged(BookmarkManagerEvent evt) {
         if (tableView != null) {
             BookmarksTable table = tableView.getTable();
@@ -350,7 +363,7 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
             }
         }
     }
-    
+
     private void initTableView() {
         fixScrollPaneinSplitPaneJDKIssue(tableView);
         // ETable defines "enter" action => change its meaning
@@ -372,14 +385,13 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
                 }
             }
         });
-        tableView.getTable().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                schedulePaneRefresh();
+        tableView.getTable().getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && !tableView.getTable().getSelectionModel().isSelectionEmpty()) {
+                checkShowPreview();
             }
         });
     }
-    
+
     private void updateTableColumnSizes() {
         ETable table = tableView.getTable();
         Font font = tableView.getFont();
@@ -430,7 +442,7 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
         requestFocusTreeOrTable();
         return isFocusable();
     }
-    
+
     void refreshView() {
         updateTreeRootContext(null);
         requestFocusTreeOrTable();
@@ -448,7 +460,7 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
         ExplorerUtils.activateActions(explorerManager, false);
         super.componentDeactivated();
     }
-    
+
     @Override
     protected void componentShowing() {
         // Ensure all bookmarks from all projects loaded
@@ -463,24 +475,6 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
         super.componentShowing();
     }
 
-    @Override
-    protected void componentHidden() {
-        super.componentHidden();
-    }
-    
-    private void schedulePaneRefresh() {
-        if (previewRefreshTimer == null) {
-            previewRefreshTimer = new Timer(PREVIEW_PANE_REFRESH_DELAY, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    checkShowPreview();
-                }
-            });
-            previewRefreshTimer.setRepeats(false);
-        }
-        previewRefreshTimer.restart();
-    }
-    
     void checkShowPreview() {
         BookmarkInfo selectedBookmark = null;
         if (treeViewShowing) {
@@ -492,7 +486,7 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
         } else {
             selectedBookmark = getTableSelectedBookmark();
         }
-        
+
         if (selectedBookmark != null) {
             final BookmarkInfo bookmark = selectedBookmark;
             if (bookmark != displayedBookmarkInfo) {
@@ -505,20 +499,14 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
                             Document doc = ec.getDocument();
                             if (doc == null) {
                                 // Open document on background
-                                RequestProcessor.getDefault().post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            final Document d = ec.openDocument();
-                                            SwingUtilities.invokeLater(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    showPreview(fo, d, bookmark);
-                                                }
-                                            });
-                                        } catch (IOException ex) {
-                                            Exceptions.printStackTrace(ex);
-                                        }
+                                RequestProcessor.getDefault().post(() -> {
+                                    try {
+                                        final Document d = ec.openDocument();
+                                        SwingUtilities.invokeLater(() -> {
+                                            showPreview(fo, d, bookmark);
+                                        });
+                                    } catch (IOException ex) {
+                                        Exceptions.printStackTrace(ex);
                                     }
                                 });
                             } else { // doc != null
@@ -532,7 +520,7 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
             }
         }
     }
-    
+
     void showPreview(FileObject fo, Document doc, BookmarkInfo bookmarkInfo) {
         if (bookmarkInfo != displayedBookmarkInfo) {
             int lineIndex = bookmarkInfo.getCurrentLineIndex();
@@ -556,12 +544,12 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
                 int offset = BookmarkUtils.lineIndex2Offset(doc, lineIndex);
                 pane.setCaretPosition(offset);
                 displayedBookmarkInfo = bookmarkInfo;
-                
+
                 previewPanel.revalidate();
             }
         }
     }
-    
+
     Node getTreeSelectedNode() {
         Node selectedNode = null;
         if (treeViewShowing) {
@@ -581,51 +569,47 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
         }
         return null;
     }
-    
-    private void doInitialSelection() { // Perform initial selection
-        if (!initialSelectionDone) {
+
+    /// Perform initial tree expansion and selection
+    private void doInitialSelection() {
+        if (!initialTreeSelectionDone) {
             if (treeViewShowing) {
-                FileObject selectedFileObject;
                 Node selectedNode = getTreeSelectedNode();
                 if (selectedNode instanceof BookmarkNode) {
-                    initialSelectionDone = true;
-                } else if ((selectedFileObject = org.openide.util.Utilities.
-                        actionsGlobalContext().lookup(FileObject.class)) != null)
-                {
-                    BookmarkManager lockedBookmarkManager = BookmarkManager.getLocked();
-                    try {
-                        ProjectBookmarks projectBookmarks = lockedBookmarkManager.
-                                getProjectBookmarks(selectedFileObject);
-                        Node bNode = nodeTree.findFirstBookmarkNode(
-                                projectBookmarks, selectedFileObject);
-                        if (bNode != null) {
-                            initialSelectionDone = true;
-                            selectedFileObject = null;
-                            try {
-                                explorerManager.setSelectedNodes(new Node[] { bNode });
-                            } catch (PropertyVetoException ex) {
-                                Exceptions.printStackTrace(ex);
+                    initialTreeSelectionDone = true;
+                } else {
+                    FileObject selectedFileObject = org.openide.util.Utilities.actionsGlobalContext().lookup(FileObject.class);
+                    if (selectedFileObject != null) {
+                        BookmarkManager lockedBookmarkManager = BookmarkManager.getLocked();
+                        try {
+                            ProjectBookmarks projectBookmarks = lockedBookmarkManager.getProjectBookmarks(selectedFileObject);
+                            Node bNode = nodeTree.findFirstBookmarkNode(projectBookmarks, selectedFileObject);
+                            if (bNode != null) {
+                                initialTreeSelectionDone = true;
+                                try {
+                                    explorerManager.setSelectedNodes(new Node[]{bNode});
+                                } catch (PropertyVetoException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
                             }
+                        } finally {
+                            lockedBookmarkManager.unlock();
                         }
-                    } finally {
-                        lockedBookmarkManager.unlock();
+                    } else {
+                        Lookup.Result<FileObject> result = org.openide.util.Utilities.actionsGlobalContext().lookupResult(FileObject.class);
+                        LookupListener onFirstFocus = new LookupListener() {
+                            @Override public void resultChanged(LookupEvent ev) {
+                                result.removeLookupListener(this);
+                                doInitialSelection();
+                            }
+                        };
+                        result.addLookupListener(onFirstFocus);
                     }
                 }
             }
         }
     }
-    
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        if (!dividerLocationSet && splitPane != null && treeView != null) {
-            dividerLocationSet = true;
-            // setDividerLocation() only works when layout is finished
-            splitPane.setDividerLocation(0.5d);
-            splitPane.setResizeWeight(0.5d); // Resize in the same proportions
-        }
-    }
-    
+
     private JToolBar createLeftToolBar() {
         JToolBar toolBar = new JToolBar();
         toolBar.setOrientation(SwingConstants.VERTICAL);
@@ -635,30 +619,22 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
         if( "Aqua".equals(UIManager.getLookAndFeel().getID()) ) { //NOI18N
             toolBar.setBackground(UIManager.getColor("NbExplorerView.background")); //NOI18N
         }
-        
+
         JButton refreshButton = new JButton(
                 ImageUtilities.loadImageIcon("org/netbeans/modules/editor/bookmarks/resources/refresh.png", false));
         refreshButton.setToolTipText(NbBundle.getMessage(BookmarksView.class, "LBL_toolBarRefreshButtonToolTip"));
-        refreshButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                refreshView();
-            }
-        });
+        refreshButton.addActionListener((ActionEvent e) -> refreshView());
         toolBar.add(refreshButton);
 
         toolBar.addSeparator();
         bookmarksTreeButton = new JToggleButton(
                 ImageUtilities.loadImageIcon("org/netbeans/modules/editor/bookmarks/resources/bookmarksTree.png", false));
         bookmarksTreeButton.setToolTipText(NbBundle.getMessage(BookmarksView.class, "LBL_toolBarTreeViewButtonToolTip"));
-        bookmarksTreeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!treeViewShowing) {
-                    setTreeViewVisible(true);
-                } else {
-                    bookmarksTableButton.doClick();
-                }
+        bookmarksTreeButton.addActionListener((ActionEvent e) -> {
+            if (!treeViewShowing) {
+                setTreeViewVisible(true);
+            } else {
+                bookmarksTableButton.doClick();
             }
         });
         toolBar.add(bookmarksTreeButton);
@@ -666,22 +642,29 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
         bookmarksTableButton = new JToggleButton(
                 ImageUtilities.loadImageIcon("org/netbeans/modules/editor/bookmarks/resources/bookmarksTable.png", false));
         bookmarksTableButton.setToolTipText(NbBundle.getMessage(BookmarksView.class, "LBL_toolBarTableViewButtonToolTip"));
-        bookmarksTableButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (treeViewShowing) {
-                    setTreeViewVisible(false);
-                } else {
-                    bookmarksTreeButton.doClick();
-                }
+        bookmarksTableButton.addActionListener((ActionEvent e) -> {
+            if (treeViewShowing) {
+                setTreeViewVisible(false);
+            } else {
+                bookmarksTreeButton.doClick();
             }
         });
         toolBar.add(bookmarksTableButton);
         toolBar.addSeparator();
-        
+
+    	showPreviewButton = new JToggleButton(
+                ImageUtilities.loadImageIcon("org/netbeans/modules/editor/bookmarks/resources/preview.png", false));
+        showPreviewButton.setToolTipText(NbBundle.getMessage(BookmarksView.class, "LBL_toolBarShowPreviewButtonToolTip"));
+        showPreviewButton.setSelected(prefs.getBoolean(PREVIEW_VISIBLE_PREF, true));
+        showPreviewButton.addActionListener((ActionEvent e) -> {
+            prefs.putBoolean(PREVIEW_VISIBLE_PREF, showPreviewButton.isSelected());
+            updateSplitPane();
+        });
+        toolBar.add(showPreviewButton);
+
         return toolBar;
     }
-    
+
     private static void fixScrollPaneinSplitPaneJDKIssue(Component c) {
         c.setMinimumSize(new Dimension(10, 10)); // Workaround for JSplitPane-containing-JScrollPane JDK bug
     }
@@ -689,12 +672,13 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if ("selectedNodes".equals(evt.getPropertyName())) { //NOI18N
-            schedulePaneRefresh();
+            checkShowPreview();
         }
     }
-    
+
     private final class TreeOrTableContainer extends JPanel {
-        
+
+        @SuppressWarnings("LeakingThisInConstructor")
         TreeOrTableContainer() {
             // Use GridLayout since BorderLayout does not behave well inside JSplitPane's left component
             // - it centers the contained component
@@ -710,7 +694,7 @@ implements BookmarkManagerListener, PropertyChangeListener, ExplorerManager.Prov
         BookmarksTableView() {
             setViewportView(new BookmarksTable());
         }
-        
+
         BookmarksTable getTable() {
             return (BookmarksTable) getViewport().getView();
         }

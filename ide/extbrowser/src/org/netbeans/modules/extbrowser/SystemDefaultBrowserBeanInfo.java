@@ -44,23 +44,11 @@ public class SystemDefaultBrowserBeanInfo extends SimpleBeanInfo {
         try {
             properties = new PropertyDescriptor [] {
                                 new PropertyDescriptor(ExtWebBrowser.PROP_BROWSER_EXECUTABLE, SystemDefaultBrowser.class, "getBrowserExecutable", null), // NOI18N
-                                new PropertyDescriptor(ExtWebBrowser.PROP_DDE_ACTIVATE_TIMEOUT, SystemDefaultBrowser.class),
-                                new PropertyDescriptor(ExtWebBrowser.PROP_DDE_OPENURL_TIMEOUT, SystemDefaultBrowser.class)
                              };
 
             properties[0].setDisplayName (NbBundle.getMessage (SystemDefaultBrowserBeanInfo.class, "PROP_browserExecutable"));
             properties[0].setShortDescription (NbBundle.getMessage (SystemDefaultBrowserBeanInfo.class, "HINT_browserExecutable"));
             properties[0].setPreferred(true);
-
-            properties[1].setDisplayName (NbBundle.getMessage (SystemDefaultBrowserBeanInfo.class, "PROP_DDE_ACTIVATE_TIMEOUT"));
-            properties[1].setShortDescription (NbBundle.getMessage (SystemDefaultBrowserBeanInfo.class, "HINT_DDE_ACTIVATE_TIMEOUT"));
-            properties[1].setExpert(true);
-            properties[1].setHidden(true);
-
-            properties[2].setDisplayName (NbBundle.getMessage (SystemDefaultBrowserBeanInfo.class, "PROP_DDE_OPENURL_TIMEOUT"));
-            properties[2].setShortDescription (NbBundle.getMessage (SystemDefaultBrowserBeanInfo.class, "HINT_DDE_OPENURL_TIMEOUT"));
-            properties[2].setExpert(true);
-            properties[2].setHidden(true);
 
         } catch (IntrospectionException ie) {
             Exceptions.printStackTrace(ie);

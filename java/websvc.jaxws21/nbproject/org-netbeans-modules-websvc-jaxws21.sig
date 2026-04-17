@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.57
+#Version 1.63
 
 CLSS public abstract com.sun.codemodel.CodeWriter
 cons public init()
@@ -29,7 +29,7 @@ meth public abstract java.util.ResourceBundle getResourceBundle(java.util.Locale
 
 CLSS public com.sun.istack.localization.LocalizableMessageFactory
 cons public init(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String,com.sun.istack.localization.LocalizableMessageFactory$ResourceBundleSupplier)
 innr public abstract interface static ResourceBundleSupplier
 meth public !varargs com.sun.istack.localization.Localizable getMessage(java.lang.String,java.lang.Object[])
@@ -954,7 +954,7 @@ meth public java.util.List<java.lang.String> getJavacOptions(java.util.List<java
 meth public static java.net.URL fileToURL(java.io.File)
 meth public static java.net.URL[] pathToURLs(java.lang.String)
 meth public void addGeneratedFile(java.io.File)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addGeneratedFile(javax.tools.FileObject)
 meth public void deleteGeneratedFiles()
 meth public void parseArguments(java.lang.String[]) throws com.sun.tools.ws.wscompile.BadCommandLineException
@@ -2139,7 +2139,7 @@ CLSS public final static com.sun.xml.ws.util.Pool$TubePool
 cons public init(com.sun.xml.ws.api.pipe.Tube)
 meth protected com.sun.xml.ws.api.pipe.Tube create()
 meth public final com.sun.xml.ws.api.pipe.Tube takeMaster()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr com.sun.xml.ws.util.Pool<com.sun.xml.ws.api.pipe.Tube>
 hfds master
 
@@ -2272,7 +2272,7 @@ supr java.lang.Object
 
 CLSS public abstract com.sun.xml.ws.util.exception.JAXWSExceptionBase
 cons protected !varargs init(java.lang.String,java.lang.Object[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons protected init(com.sun.istack.localization.Localizable)
 cons protected init(com.sun.istack.localization.Localizable,java.lang.Throwable)
 cons protected init(java.lang.String)
@@ -2318,6 +2318,7 @@ meth public void write(byte[]) throws java.io.IOException
 meth public void write(byte[],int,int) throws java.io.IOException
 meth public void write(int) throws java.io.IOException
 supr java.io.OutputStream
+hfds closeLock,closed
 
 CLSS public abstract interface java.io.Flushable
 meth public abstract void flush() throws java.io.IOException
@@ -2327,20 +2328,28 @@ cons public init()
 intf java.io.Closeable
 meth public abstract int read() throws java.io.IOException
 meth public boolean markSupported()
+meth public byte[] readAllBytes() throws java.io.IOException
+meth public byte[] readNBytes(int) throws java.io.IOException
 meth public int available() throws java.io.IOException
 meth public int read(byte[]) throws java.io.IOException
 meth public int read(byte[],int,int) throws java.io.IOException
+meth public int readNBytes(byte[],int,int) throws java.io.IOException
 meth public long skip(long) throws java.io.IOException
+meth public long transferTo(java.io.OutputStream) throws java.io.IOException
+meth public static java.io.InputStream nullInputStream()
 meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
+meth public void skipNBytes(long) throws java.io.IOException
 supr java.lang.Object
+hfds DEFAULT_BUFFER_SIZE,MAX_BUFFER_SIZE,MAX_SKIP_BUFFER_SIZE
 
 CLSS public abstract java.io.OutputStream
 cons public init()
 intf java.io.Closeable
 intf java.io.Flushable
 meth public abstract void write(int) throws java.io.IOException
+meth public static java.io.OutputStream nullOutputStream()
 meth public void close() throws java.io.IOException
 meth public void flush() throws java.io.IOException
 meth public void write(byte[]) throws java.io.IOException
@@ -2355,8 +2364,9 @@ meth public abstract void close() throws java.lang.Exception
 CLSS public abstract java.lang.ClassLoader
 cons protected init()
 cons protected init(java.lang.ClassLoader)
+cons protected init(java.lang.String,java.lang.ClassLoader)
 meth protected final java.lang.Class<?> defineClass(byte[],int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="1.1")
 meth protected final java.lang.Class<?> defineClass(java.lang.String,byte[],int,int)
 meth protected final java.lang.Class<?> defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
 meth protected final java.lang.Class<?> defineClass(java.lang.String,java.nio.ByteBuffer,java.security.ProtectionDomain)
@@ -2365,21 +2375,31 @@ meth protected final java.lang.Class<?> findSystemClass(java.lang.String) throws
 meth protected final void resolveClass(java.lang.Class<?>)
 meth protected final void setSigners(java.lang.Class<?>,java.lang.Object[])
 meth protected java.lang.Class<?> findClass(java.lang.String) throws java.lang.ClassNotFoundException
+meth protected java.lang.Class<?> findClass(java.lang.String,java.lang.String)
 meth protected java.lang.Class<?> loadClass(java.lang.String,boolean) throws java.lang.ClassNotFoundException
 meth protected java.lang.Object getClassLoadingLock(java.lang.String)
 meth protected java.lang.Package definePackage(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.net.URL)
 meth protected java.lang.Package getPackage(java.lang.String)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth protected java.lang.Package[] getPackages()
 meth protected java.lang.String findLibrary(java.lang.String)
 meth protected java.net.URL findResource(java.lang.String)
+meth protected java.net.URL findResource(java.lang.String,java.lang.String) throws java.io.IOException
 meth protected java.util.Enumeration<java.net.URL> findResources(java.lang.String) throws java.io.IOException
 meth protected static boolean registerAsParallelCapable()
+meth public final boolean isRegisteredAsParallelCapable()
 meth public final java.lang.ClassLoader getParent()
+meth public final java.lang.Module getUnnamedModule()
+meth public final java.lang.Package getDefinedPackage(java.lang.String)
+meth public final java.lang.Package[] getDefinedPackages()
 meth public java.io.InputStream getResourceAsStream(java.lang.String)
 meth public java.lang.Class<?> loadClass(java.lang.String) throws java.lang.ClassNotFoundException
+meth public java.lang.String getName()
 meth public java.net.URL getResource(java.lang.String)
 meth public java.util.Enumeration<java.net.URL> getResources(java.lang.String) throws java.io.IOException
+meth public java.util.stream.Stream<java.net.URL> resources(java.lang.String)
 meth public static java.io.InputStream getSystemResourceAsStream(java.lang.String)
+meth public static java.lang.ClassLoader getPlatformClassLoader()
 meth public static java.lang.ClassLoader getSystemClassLoader()
 meth public static java.net.URL getSystemResource(java.lang.String)
 meth public static java.util.Enumeration<java.net.URL> getSystemResources(java.lang.String) throws java.io.IOException
@@ -2388,14 +2408,18 @@ meth public void setClassAssertionStatus(java.lang.String,boolean)
 meth public void setDefaultAssertionStatus(boolean)
 meth public void setPackageAssertionStatus(java.lang.String,boolean)
 supr java.lang.Object
+hfds assertionLock,classAssertionStatus,classLoaderValueMap,classes,defaultAssertionStatus,defaultDomain,libraries,name,nameAndId,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,unnamedModule
+hcls ParallelLoaders
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -2404,9 +2428,11 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
+hfds name,ordinal
 
 CLSS public java.lang.Error
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -2415,6 +2441,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -2423,6 +2450,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
+hfds serialVersionUID
 
 CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
 meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
@@ -2433,6 +2461,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -2450,6 +2479,7 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
+hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -2472,14 +2502,22 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
+hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
+hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public java.security.SecureClassLoader
 cons protected init()
 cons protected init(java.lang.ClassLoader)
+cons protected init(java.lang.String,java.lang.ClassLoader)
 meth protected final java.lang.Class<?> defineClass(java.lang.String,byte[],int,int,java.security.CodeSource)
 meth protected final java.lang.Class<?> defineClass(java.lang.String,java.nio.ByteBuffer,java.security.CodeSource)
 meth protected java.security.PermissionCollection getPermissions(java.security.CodeSource)
 supr java.lang.ClassLoader
+hfds pdcache
+hcls CodeSourceKey,DebugHolder
 
 CLSS public abstract interface java.util.concurrent.Future<%0 extends java.lang.Object>
 meth public abstract boolean cancel(boolean)
@@ -2497,7 +2535,7 @@ meth public abstract java.lang.String getName()
 CLSS public abstract interface javax.xml.namespace.NamespaceContext
 meth public abstract java.lang.String getNamespaceURI(java.lang.String)
 meth public abstract java.lang.String getPrefix(java.lang.String)
-meth public abstract java.util.Iterator getPrefixes(java.lang.String)
+meth public abstract java.util.Iterator<java.lang.String> getPrefixes(java.lang.String)
 
 CLSS public javax.xml.ws.WebServiceException
 cons public init()
@@ -2518,6 +2556,7 @@ meth public abstract void skippedEntity(java.lang.String) throws org.xml.sax.SAX
 meth public abstract void startDocument() throws org.xml.sax.SAXException
 meth public abstract void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
 meth public abstract void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void declaration(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 
 CLSS public abstract interface org.xml.sax.DTDHandler
 meth public abstract void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
@@ -2594,4 +2633,5 @@ meth public void startPrefixMapping(java.lang.String,java.lang.String) throws or
 meth public void unparsedEntityDecl(java.lang.String,java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 meth public void warning(org.xml.sax.SAXParseException) throws org.xml.sax.SAXException
 supr java.lang.Object
+hfds contentHandler,dtdHandler,entityResolver,errorHandler,locator,parent
 

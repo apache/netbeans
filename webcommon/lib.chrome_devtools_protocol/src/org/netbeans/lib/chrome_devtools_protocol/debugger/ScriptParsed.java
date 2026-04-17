@@ -27,7 +27,7 @@ import org.netbeans.lib.chrome_devtools_protocol.runtime.StackTrace;
  */
 public final class ScriptParsed {
     private String scriptId;
-    private URI url;
+    private String url;
     private int startLine;
     private int startColumn;
     private int endLine;
@@ -66,14 +66,14 @@ public final class ScriptParsed {
     /**
      * URL or name of the script parsed (if any).
      */
-    public URI getUrl() {
+    public String getUrl() {
         return url;
     }
 
     /**
      * URL or name of the script parsed (if any).
      */
-    public void setUrl(URI url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 

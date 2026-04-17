@@ -38,7 +38,6 @@ import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractButton;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.SwingConstants;
@@ -83,6 +82,7 @@ import org.netbeans.spi.viewmodel.TreeModel;
 import org.netbeans.spi.viewmodel.TreeModelFilter;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
 import org.openide.util.Exceptions;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.RequestProcessor;
@@ -770,7 +770,7 @@ public class ViewModelListener extends DebuggerManagerAdapter {
 
     private javax.swing.JButton createSessionsSwitchButton() {
         final javax.swing.JButton b = VariablesViewButtons.createButton(
-                new ImageIcon(viewIcon),
+                ImageUtilities.image2Icon(viewIcon),
                 NbBundle.getMessage(ViewModelListener.class, "Tooltip_SelectSrc"));
         b.addActionListener(new ActionListener() {
             @Override

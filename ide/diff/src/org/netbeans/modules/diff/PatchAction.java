@@ -242,7 +242,7 @@ public class PatchAction extends NodeAction {
                 break;
             }
         }
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, patchDir);
+        chooser.setCurrentDirectory(patchDir);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         String title = NbBundle.getMessage(PatchAction.class,
             (fo.isData()) ? "TITLE_SelectPatchForFile"

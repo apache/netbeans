@@ -362,29 +362,6 @@ public final class TabbedSlideAdapter extends Tabbed {
     public DragAndDropFeedbackVisualizer getDragAndDropFeedbackVisualizer( int tabIndex ) {
         slideBar.getSelectionModel().setSelectedIndex(tabIndex);
         return new DragAndDropFeedbackVisualizer( this, tabIndex );
-//        TabData dt = slideBar.getModel().getTab(tabIndex);
-//        if (dt.getComponent() instanceof TopComponent) {
-//            DefaultTabDataModel tempModel = new DefaultTabDataModel( new TabData[] { dt } );
-//            TabbedContainer temp = new TabbedContainer( tempModel, TabbedContainer.TYPE_VIEW );
-//JWindow w = new JWindow();
-//w.setBounds(-2000, -2000, 300, 300);
-//w.getContentPane().add( temp );     
-//w.setVisible(true);       
-////temp.setSize( 300,300 );
-////temp.setLocation( -10000,-10000);
-////temp.setVisible(true);
-////temp.invalidate();
-////temp.revalidate();
-////temp.repaint();
-////            temp.updateUI();
-////temp.getSelectionModel().setSelectedIndex(0);
-//            
-//    Window drag = temp.createDragWindow(0);
-////    w.dispose();
-//return drag;
-//        }
-//        
-//        return null;
     }
     
     /** Add action for disabling slide */

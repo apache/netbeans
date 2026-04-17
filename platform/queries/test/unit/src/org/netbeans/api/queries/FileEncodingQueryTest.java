@@ -158,12 +158,8 @@ public class FileEncodingQueryTest extends NbTestCase {
         
         Charset encoding = FileEncodingQuery.getEncoding(fo);
         InputStream ins = fo.getInputStream();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        FileUtil.copy(ins, baos);
+        byte[] arr = ins.readAllBytes();
         ins.close();
-        byte[] arr = baos.toByteArray();
-        baos.close();
-        baos = null;
         
         final Reader in = new InputStreamReader (new ByteArrayInputStream(arr),encoding);
         final ByteArrayOutputStream outbs = new ByteArrayOutputStream();

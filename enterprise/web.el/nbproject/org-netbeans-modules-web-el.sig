@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.83
+#Version 1.84
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -18,6 +20,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -26,6 +29,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -36,6 +40,9 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public abstract interface org.netbeans.modules.csl.api.GsfLanguage
 meth public abstract boolean isIdentifierChar(char)
 meth public abstract java.lang.String getDisplayName()
@@ -45,11 +52,11 @@ meth public abstract java.lang.String getLineCommentPrefix()
 meth public abstract java.lang.String getPreferredExtension()
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public abstract java.util.Set<java.lang.String> getBinaryLibraryPathIds()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.Set<java.lang.String> getLibraryPathIds()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.Set<java.lang.String> getSourcePathIds()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.netbeans.api.lexer.Language getLexerLanguage()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 
@@ -62,10 +69,10 @@ meth public boolean hasFormatter()
 meth public boolean hasHintsProvider()
 meth public boolean hasOccurrencesFinder()
 meth public boolean hasStructureScanner()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isIdentifierChar(char)
 meth public boolean isUsingCustomEditorKit()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String getLineCommentPrefix()
 meth public java.lang.String getPreferredExtension()
 meth public java.util.Set<java.lang.String> getBinaryLibraryPathIds()
@@ -111,7 +118,7 @@ meth public abstract void addChangeListener(javax.swing.event.ChangeListener)
 meth public abstract void parse(org.netbeans.modules.parsing.api.Snapshot,org.netbeans.modules.parsing.api.Task,org.netbeans.modules.parsing.spi.SourceModificationEvent) throws org.netbeans.modules.parsing.spi.ParseException
 meth public abstract void removeChangeListener(javax.swing.event.ChangeListener)
 meth public void cancel()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void cancel(org.netbeans.modules.parsing.spi.Parser$CancelReason,org.netbeans.modules.parsing.spi.SourceModificationEvent)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NullAllowed()
@@ -363,27 +370,38 @@ innr public static Location
 meth public boolean canHaveBundles()
 meth public boolean isResourceBundleIdentifier(java.lang.String,org.netbeans.modules.web.el.spi.ResolverContext)
 meth public boolean isValidKey(java.lang.String,java.lang.String)
+meth public boolean isValidKey(org.netbeans.modules.web.el.spi.ResolverContext,java.lang.String,java.lang.String)
 meth public java.lang.String findResourceBundleIdentifier(org.netbeans.modules.web.el.AstPath)
+meth public java.lang.String findResourceBundleIdentifier(org.netbeans.modules.web.el.spi.ResolverContext,org.netbeans.modules.web.el.AstPath)
 meth public java.lang.String getValue(java.lang.String,java.lang.String)
+meth public java.lang.String getValue(org.netbeans.modules.web.el.spi.ResolverContext,java.lang.String,java.lang.String)
+meth public java.lang.String getValueWithVarName(java.lang.String,java.lang.String)
+meth public java.lang.String getValueWithVarName(org.netbeans.modules.web.el.spi.ResolverContext,java.lang.String,java.lang.String)
 meth public java.util.List<org.netbeans.modules.web.el.ResourceBundles$Location> getLocationsForBundleIdent(java.lang.String)
+meth public java.util.List<org.netbeans.modules.web.el.ResourceBundles$Location> getLocationsForBundleIdent(org.netbeans.modules.web.el.spi.ResolverContext,java.lang.String)
 meth public java.util.List<org.netbeans.modules.web.el.ResourceBundles$Location> getLocationsForBundleKey(java.lang.String,java.lang.String)
+meth public java.util.List<org.netbeans.modules.web.el.ResourceBundles$Location> getLocationsForBundleKey(org.netbeans.modules.web.el.spi.ResolverContext,java.lang.String,java.lang.String)
 meth public java.util.List<org.netbeans.modules.web.el.spi.ResourceBundle> getBundles(org.netbeans.modules.web.el.spi.ResolverContext)
 meth public java.util.List<org.openide.util.Pair<com.sun.el.parser.AstIdentifier,com.sun.el.parser.Node>> collectKeys(com.sun.el.parser.Node)
 meth public java.util.List<org.openide.util.Pair<com.sun.el.parser.AstIdentifier,com.sun.el.parser.Node>> collectKeys(com.sun.el.parser.Node,org.netbeans.modules.web.el.spi.ResolverContext)
 meth public java.util.Map<java.lang.String,java.lang.String> getEntries(java.lang.String)
+meth public java.util.Map<java.lang.String,java.lang.String> getEntries(org.netbeans.modules.web.el.spi.ResolverContext,java.lang.String)
 meth public static org.netbeans.modules.web.el.ResourceBundles create(org.netbeans.modules.web.api.webmodule.WebModule,org.netbeans.api.project.Project)
 meth public static org.netbeans.modules.web.el.ResourceBundles get(org.openide.filesystems.FileObject)
 supr java.lang.Object
 hfds FILE_CHANGE_LISTENER,LOGGER,bundlesMap,currentBundlesHashCode,project,webModule
-hcls ResourceBundleInfo
+hcls LinkableResourceBundle,ResourceBundleInfo
 
 CLSS public static org.netbeans.modules.web.el.ResourceBundles$Location
  outer org.netbeans.modules.web.el.ResourceBundles
 cons public init(int,org.openide.filesystems.FileObject)
+cons public init(int,org.openide.filesystems.FileObject,int)
+cons public init(org.openide.filesystems.FileObject)
+meth public int getLineNumber()
 meth public int getOffset()
 meth public org.openide.filesystems.FileObject getFile()
 supr java.lang.Object
-hfds file,offset
+hfds file,lineNumber,offset
 
 CLSS public abstract org.netbeans.modules.web.el.spi.ELPlugin
 cons public init()
@@ -470,6 +488,7 @@ CLSS public final org.netbeans.modules.web.el.spi.ResourceBundle
 cons public init(java.lang.String,java.lang.String,java.util.List<org.openide.filesystems.FileObject>)
 meth public java.lang.String getBaseName()
 meth public java.lang.String getVar()
+meth public java.lang.String toString()
 meth public java.util.List<org.openide.filesystems.FileObject> getFiles()
 supr java.lang.Object
 hfds baseName,files,var

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.110
+#Version 2.111
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -15,7 +15,6 @@ meth public void addFlavorListener(java.awt.datatransfer.FlavorListener)
 meth public void removeFlavorListener(java.awt.datatransfer.FlavorListener)
 meth public void setContents(java.awt.datatransfer.Transferable,java.awt.datatransfer.ClipboardOwner)
 supr java.lang.Object
-hfds currentDataFlavors,flavorListeners,name
 
 CLSS public abstract interface java.awt.datatransfer.FlavorListener
 intf java.util.EventListener
@@ -31,7 +30,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public abstract interface java.io.Serializable
 
@@ -82,8 +80,6 @@ meth public void setClassAssertionStatus(java.lang.String,boolean)
 meth public void setDefaultAssertionStatus(boolean)
 meth public void setPackageAssertionStatus(java.lang.String,boolean)
 supr java.lang.Object
-hfds assertionLock,classAssertionStatus,classLoaderValueMap,classes,defaultAssertionStatus,defaultDomain,libraries,name,nameAndId,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,unnamedModule
-hcls ParallelLoaders
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -92,7 +88,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -130,8 +125,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.net.URLStreamHandlerFactory
 meth public abstract java.net.URLStreamHandler createURLStreamHandler(java.lang.String)
@@ -167,6 +160,12 @@ meth public java.io.OutputStream getOutputStream()
 meth public java.lang.String[] getArguments()
 supr java.lang.Object
 hfds args,argsBackup,closed,currentDir,err,is,os
+
+CLSS public final org.netbeans.DepUtil
+meth public static org.openide.modules.Dependency read(java.io.DataInput) throws java.io.IOException
+meth public static void write(org.openide.modules.Dependency,java.io.DataOutput) throws java.io.IOException
+supr java.lang.Object
+hfds create
 
 CLSS public final org.netbeans.DuplicateException
 meth public org.netbeans.Module getNewModule()

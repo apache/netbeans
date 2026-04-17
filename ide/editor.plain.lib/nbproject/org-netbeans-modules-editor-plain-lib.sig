@@ -1,16 +1,19 @@
 #Signature file v4.1
-#Version 1.64
+#Version 1.65
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -101,14 +104,14 @@ supr java.lang.Object
 hfds EMPTY_CHILDREN,allContextPaths,children,contextPath,lastContextPathPair,namePrefix,pathCache,tokenCategories,tokenCategoryList,tokenIDList,tokenIDs
 
 CLSS public org.netbeans.editor.ext.plain.PlainSyntax
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 meth protected org.netbeans.editor.TokenID parseToken()
 supr org.netbeans.editor.Syntax
 hfds ISI_TEXT
 
 CLSS public org.netbeans.editor.ext.plain.PlainTokenContext
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static int EOL_ID = 2
 fld public final static int TEXT_ID = 1
 fld public final static org.netbeans.editor.BaseImageTokenID EOL

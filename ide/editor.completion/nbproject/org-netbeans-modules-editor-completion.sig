@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.76.0
+#Version 1.77.0
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -11,6 +11,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -105,7 +106,7 @@ meth public void setDocumentation(org.netbeans.spi.editor.completion.CompletionD
 meth public void setHasAdditionalItems(boolean)
 meth public void setHasAdditionalItemsText(java.lang.String)
 meth public void setTitle(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setToolTip(javax.swing.JToolTip)
 meth public void setWaitText(java.lang.String)
 supr java.lang.Object

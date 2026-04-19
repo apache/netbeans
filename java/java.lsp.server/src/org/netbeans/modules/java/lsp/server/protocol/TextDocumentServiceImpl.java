@@ -2121,7 +2121,6 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         synchronized (pendingDiagnostics) {
             Runnable currentlyRunning = pendingDiagnostics.remove(uri);
             if (currentlyRunning != null) {
-                //todo: the cancelling does not seem to work????
                 currentlyRunning.run();
             }
 
@@ -2249,7 +2248,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     doc.addDocumentListener(l);
                     l.checkCancel();
                     errors = errorProviders.stream().flatMap(provider -> {
-                        List<? extends org.netbeans.api.lsp.Diagnostic> errorsOrNull = provider.computeErrors(context);
+                        List<? extends org.netbeans.api.lsp.Diagnostic> errorsOrNull;
+                        if (!context.isCancelled()) {
+                            errorsOrNull = provider.computeErrors(context);
+                        } else {
+                            errorsOrNull = null;
+                        }
                         if (errorsOrNull == null) {
                             errorsOrNull = Collections.emptyList();
                         }
@@ -2257,6 +2261,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     }).collect(Collectors.toList());
                 } finally {
                     doc.removeDocumentListener(l);
+                }
+                if (context.isCancelled()) {
+                    return result;
                 }
             } else {
                 errors = null;

@@ -102,18 +102,17 @@ public class PriorityQueueRun {
                     }
                 });
 
-                if (thisTask.result.isCancelled()) {
-                    //nothing to do anymore:
-                    return ;
-                }
-
                 Object result = null;
                 Throwable exception = null;
 
-                try {
-                    result = thisTask.task.compute(thisTask.data, thisTaskCheck);
-                } catch (Throwable t) {
-                    exception = t;
+                if (!thisTask.result.isCancelled()) {
+                    try {
+                        result = thisTask.task.compute(thisTask.data, thisTaskCheck);
+                    } catch (Throwable t) {
+                        exception = t;
+                    }
+                } else {
+                    //the CompletableFuture is already canceled, no need to compute anything
                 }
 
                 synchronized (PriorityQueueRun.this) {

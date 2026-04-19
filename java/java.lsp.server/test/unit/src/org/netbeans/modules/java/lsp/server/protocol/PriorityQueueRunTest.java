@@ -89,4 +89,35 @@ public class PriorityQueueRunTest extends NbTestCase {
         assertEquals(List.of(priorityResultValue, normalResultValue), resultsInOrder);
     }
 
+    public void testCancelBeforeRun() throws Exception {
+        CountDownLatch highPriorityIsWaiting = new CountDownLatch(1);
+        CountDownLatch highPriorityCanContinue = new CountDownLatch(1);
+
+        PriorityQueueRun.getInstance()
+                        .runTask(Priority.NORMAL,
+                                 (data, check) -> {
+                                     highPriorityIsWaiting.countDown();
+                                     highPriorityCanContinue.await();
+                                     return "";
+                                 }, "");
+
+        PriorityQueueRun.getInstance()
+                        .runTask(Priority.LOW,
+                                 (data, check) -> {
+                                     return "";
+                                 }, "")
+                        .cancel(true);
+
+        CompletableFuture<String> realResult =
+                PriorityQueueRun.getInstance()
+                                .runTask(Priority.BELOW_LOW,
+                                        (data, check) -> {
+                                            return "real result";
+                                        }, "");
+
+        highPriorityIsWaiting.await();
+        highPriorityCanContinue.countDown();
+        assertEquals("real result", realResult.get());
+    }
+
 }

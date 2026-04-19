@@ -44,6 +44,20 @@ public class PriorityQueueRun {
     private Priority currentPriority;
     private CancelCheck currentTaskCheck;
 
+    /**
+     * Get the outcome of the given cancellable task on background, using the given
+     * priority. Unless the returned {@code CompletableFuture} is
+     * {@link CompletableFuture#cancel(boolean) }-ed, the result will always be computed,
+     * but the provided {@code task} may (re-)run multiple times, and be cancelled multiple
+     * times. The tasks should account for a re-run after a cancellation.
+     *
+     * @param <P> the type of the data parameter of the {@code task}
+     * @param <R> the result of the {@code task}
+     * @param priority the priority with which the task should run
+     * @param task the task to run - may be run multiple times, until a non-cancelled run is achieved
+     * @param data the arbitrary data to pass to the task
+     * @return a CompletableFuture the will hold the result
+     */
     public <P, R> CompletableFuture<R> runTask(Priority priority, CancellableTask<P, R> task, P data) {
         CompletableFuture<R> result = new CompletableFuture<>();
 
@@ -57,6 +71,22 @@ public class PriorityQueueRun {
         return result;
     }
 
+    /**
+     * Get the outcome of the given cancellable task on background, using the given
+     * priority. Unless the returned {@code CompletableFuture} is
+     * {@link CompletableFuture#cancel(boolean) }-ed, the result will always be computed,
+     * but the provided {@code task} may (re-)run multiple times, and be cancelled multiple
+     * times. The tasks should account for a re-run after a cancellation.
+     * The {@code task} will be schedule no sooner than after the {@code delay} elapses.
+     *
+     * @param <P> the type of the data parameter of the {@code task}
+     * @param <R> the result of the {@code task}
+     * @param priority the priority with which the task should run
+     * @param task the task to run - may be run multiple times, until a non-cancelled run is achieved
+     * @param data the arbitrary data to pass to the task
+     * @param delay the minimal time to wait before scheduling the task
+     * @return a CompletableFuture the will hold the result
+     */
     public <P, R> CompletableFuture<R> runTask(Priority priority, CancellableTask<P, R> task, P data, int delay) {
         CompletableFuture<R> result = new CompletableFuture<>();
         DELAY.post(() -> {

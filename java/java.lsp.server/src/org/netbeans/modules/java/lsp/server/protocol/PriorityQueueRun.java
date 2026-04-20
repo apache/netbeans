@@ -228,8 +228,13 @@ public class PriorityQueueRun {
     }
 
     public void testsWaitQueueEmpty() {
-        synchronized (this) {
-            while (priority2Tasks.values().stream().anyMatch(l -> !l.isEmpty())) {
+        while (true) {
+            WORKER.post(() -> {}).waitFinished();
+
+            synchronized (this) {
+                if (priority2Tasks.values().stream().anyMatch(l -> l.isEmpty())) {
+                    return ;
+                }
                 try {
                     this.wait(10);
                 } catch (InterruptedException ex) {

@@ -513,6 +513,7 @@ public class ServerTest extends NbTestCase {
         InitializeResult result = server.initialize(new InitializeParams()).get();
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(toURI(src), "java", 0, code)));
         assertDiags(diags, "Error:0:31-0:35");//errors
+        assertDiags(diags, "Error:0:31-0:35", "Warning:0:24-0:25");//warnings
         
         clearDiagnostics();
         Files.move(src.toPath(), src.toPath().resolveSibling("Test2.java"));

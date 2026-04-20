@@ -311,7 +311,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static final String NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS = "java.onSave.organizeImports";// NOI18N
     private static final String NETBEANS_CODE_COMPLETION_COMMIT_CHARS = "java.completion.commit.chars";// NOI18N
     private static final String URL = "url";// NOI18N
-    private static final String INDEX = "index";// NOI18N
+    private static final String ID = "id";// NOI18N
     
     private static final RequestProcessor BACKGROUND_TASKS = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
     private static final RequestProcessor WORKER = new RequestProcessor(TextDocumentServiceImpl.class.getName(), 1, false, false);
@@ -368,7 +368,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     private final AtomicInteger javadocTimeout = new AtomicInteger(-1);
-    private List<Completion> lastCompletions = null; //TODO: asynchronous access - clock!
+    private List<Completion> lastCompletions = null; //TODO: maybe id -> completion again?
 
     private static final int INITIAL_COMPLETION_SAMPLING_DELAY = 1000;
     private static final int DEFAULT_COMPLETION_WARNING_LENGTH = 10_000;
@@ -630,16 +630,17 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<CompletionItem> resolveCompletionItem(CompletionItem ci) {
-        JsonObject rawData = (JsonObject) ci.getData();
-        if (rawData != null) {
-            CompletionData data = new Gson().fromJson(rawData, CompletionData.class);
-            Completion completion = lastCompletions.get(data.index);
-            if (completion != null) {
-                FileObject file = fromURI(data.uri);
-                if (file != null) {
-                    CompletableFuture<CompletionItem> result = new CompletableFuture<>();
-                    WORKER.post(() -> {
+    public CompletableFuture<CompletionItem> resolveCompletionItem(CompletionItem input) {
+        List<Completion> currentCompletions = lastCompletions;
+        return PriorityQueueRun.getInstance()
+                               .runTask(Priority.HIGHER, (ci, cancel) -> {
+            JsonObject rawData = (JsonObject) ci.getData();
+            if (rawData != null) {
+                CompletionData data = new Gson().fromJson(rawData, CompletionData.class);
+                Completion completion = currentCompletions.get(data.index);
+                if (completion != null) {
+                    FileObject file = fromURI(data.uri);
+                    if (file != null) {
                         Preferences prefs = CodeStylePreferences.get(file, "text/x-java").getPreferences();
                         String point = prefs.get("classMemberInsertionPoint", null);
                         try {
@@ -687,13 +688,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                 prefs.remove("classMemberInsertionPoint");
                             }
                         }
-                        result.complete(ci);
-                    });
-                    return result;
+                    }
                 }
             }
-        }
-        return CompletableFuture.completedFuture(ci);
+            return ci;
+        }, input);
     }
 
     public static String html2MD(String html) {
@@ -702,83 +701,92 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<Hover> hover(HoverParams params) {
+    public CompletableFuture<Hover> hover(HoverParams p) {
         // shortcut: if the projects are not yet initialized, return empty:
         if (server.openedProjects().getNow(null) == null) {
             return CompletableFuture.completedFuture(null);
         }
-        String uri = params.getTextDocument().getUri();
-        FileObject file = fromURI(uri);
-        Document rawDoc = server.getOpenedDocuments().getDocument(uri);
-        if (file == null || !(rawDoc instanceof StyledDocument)) {
-            return CompletableFuture.completedFuture(null);
-        }
-        StyledDocument doc = (StyledDocument) rawDoc;
-        return org.netbeans.api.lsp.Hover.getContent(doc, Utils.getOffset(doc, params.getPosition())).thenApply(content -> {
-            if (content != null) {
-                MarkupContent markup = new MarkupContent();
-                markup.setKind("markdown");
-                markup.setValue(html2MD(content));
-                return new Hover(markup);
+        return PriorityQueueRun.getInstance()
+                               .runTask(Priority.HIGH, (params, cancel) -> {
+            String uri = params.getTextDocument().getUri();
+            FileObject file = fromURI(uri);
+            Document rawDoc = server.getOpenedDocuments().getDocument(uri);
+            if (file == null || !(rawDoc instanceof StyledDocument)) {
+                return null;
             }
-            return null;
-        });
-    }
-
-    @Override
-    public CompletableFuture<SignatureHelp> signatureHelp(SignatureHelpParams params) {
-        // shortcut: if the projects are not yet initialized, return empty:
-        if (server.openedProjects().getNow(null) == null) {
-            return CompletableFuture.completedFuture(null);
-        }
-        String uri = params.getTextDocument().getUri();
-        FileObject file = fromURI(uri);
-        Document rawDoc = server.getOpenedDocuments().getDocument(uri);
-        if (file == null || !(rawDoc instanceof StyledDocument)) {
-            return CompletableFuture.completedFuture(null);
-        }
-        StyledDocument doc = (StyledDocument) rawDoc;
-        List<SignatureInformation> signatures = new ArrayList<>();
-        AtomicInteger activeSignature = new AtomicInteger(-1);
-        AtomicInteger activeParameter = new AtomicInteger(-1);
-        org.netbeans.api.lsp.SignatureInformation.collect(doc, Utils.getOffset(doc, params.getPosition()), null, signature -> {
-            SignatureInformation signatureInformation = new SignatureInformation(signature.getLabel());
-            List<ParameterInformation> parameters = new ArrayList<>(signature.getParameters().size());
-            for (int i = 0; i < signature.getParameters().size(); i++) {
-                org.netbeans.api.lsp.SignatureInformation.ParameterInformation parameter = signature.getParameters().get(i);
-                ParameterInformation parameterInformation = new ParameterInformation(parameter.getLabel());
-                if (parameter.getDocumentation() != null) {
+            StyledDocument doc = (StyledDocument) rawDoc;
+            CompletableFuture<Hover> future = org.netbeans.api.lsp.Hover.getContent(doc, Utils.getOffset(doc, params.getPosition())).thenApply(content -> {
+                if (content != null) {
                     MarkupContent markup = new MarkupContent();
                     markup.setKind("markdown");
-                    markup.setValue(html2MD(parameter.getDocumentation()));
-                    parameterInformation.setDocumentation(markup);
+                    markup.setValue(html2MD(content));
+                    return new Hover(markup);
                 }
-                parameters.add(parameterInformation);
-                if (signatureInformation.getActiveParameter() == null && parameter.isActive()) {
-                    signatureInformation.setActiveParameter(i);
-                }
-            }
-            if (signature.getDocumentation() != null) {
-                MarkupContent markup = new MarkupContent();
-                markup.setKind("markdown");
-                markup.setValue(html2MD(signature.getDocumentation()));
-                signatureInformation.setDocumentation(markup);
-            }
-            signatureInformation.setParameters(parameters);
-            if (activeSignature.get() < 0 && signature.isActive()) {
-                activeSignature.set(signatures.size());
-                if (signatureInformation.getActiveParameter() != null) {
-                    activeParameter.set(signatureInformation.getActiveParameter());
-                }
-            }
-            signatures.add(signatureInformation);
-        });
-        return CompletableFuture.completedFuture(signatures.isEmpty() ? null : new SignatureHelp(signatures, activeSignature.get(), activeParameter.get()));
+                return null;
+            });
+            cancel.registerCancel(() -> future.cancel(true));
+            return future.get();
+        }, p);
     }
 
     @Override
-    public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(DefinitionParams params) {
-        try {
+    public CompletableFuture<SignatureHelp> signatureHelp(SignatureHelpParams p) {
+        // shortcut: if the projects are not yet initialized, return empty:
+        if (server.openedProjects().getNow(null) == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+        return PriorityQueueRun.getInstance()
+                               .runTask(Priority.HIGHER, (params, cancel) -> {
+            String uri = params.getTextDocument().getUri();
+            FileObject file = fromURI(uri);
+            Document rawDoc = server.getOpenedDocuments().getDocument(uri);
+            if (file == null || !(rawDoc instanceof StyledDocument)) {
+                return null;
+            }
+            StyledDocument doc = (StyledDocument) rawDoc;
+            List<SignatureInformation> signatures = new ArrayList<>();
+            AtomicInteger activeSignature = new AtomicInteger(-1);
+            AtomicInteger activeParameter = new AtomicInteger(-1);
+            org.netbeans.api.lsp.SignatureInformation.collect(doc, Utils.getOffset(doc, params.getPosition()), null, signature -> {
+                SignatureInformation signatureInformation = new SignatureInformation(signature.getLabel());
+                List<ParameterInformation> parameters = new ArrayList<>(signature.getParameters().size());
+                for (int i = 0; i < signature.getParameters().size(); i++) {
+                    org.netbeans.api.lsp.SignatureInformation.ParameterInformation parameter = signature.getParameters().get(i);
+                    ParameterInformation parameterInformation = new ParameterInformation(parameter.getLabel());
+                    if (parameter.getDocumentation() != null) {
+                        MarkupContent markup = new MarkupContent();
+                        markup.setKind("markdown");
+                        markup.setValue(html2MD(parameter.getDocumentation()));
+                        parameterInformation.setDocumentation(markup);
+                    }
+                    parameters.add(parameterInformation);
+                    if (signatureInformation.getActiveParameter() == null && parameter.isActive()) {
+                        signatureInformation.setActiveParameter(i);
+                    }
+                }
+                if (signature.getDocumentation() != null) {
+                    MarkupContent markup = new MarkupContent();
+                    markup.setKind("markdown");
+                    markup.setValue(html2MD(signature.getDocumentation()));
+                    signatureInformation.setDocumentation(markup);
+                }
+                signatureInformation.setParameters(parameters);
+                if (activeSignature.get() < 0 && signature.isActive()) {
+                    activeSignature.set(signatures.size());
+                    if (signatureInformation.getActiveParameter() != null) {
+                        activeParameter.set(signatureInformation.getActiveParameter());
+                    }
+                }
+                signatures.add(signatureInformation);
+            });
+            return signatures.isEmpty() ? null : new SignatureHelp(signatures, activeSignature.get(), activeParameter.get());
+        }, p);
+    }
+
+    @Override
+    public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(DefinitionParams p) {
+        return PriorityQueueRun.getInstance()
+                               .runTask(Priority.HIGH, (params, cancel) -> {
             String uri = params.getTextDocument().getUri();
             Document rawDoc = server.getOpenedDocuments().getDocument(uri);
             if (rawDoc instanceof StyledDocument) {
@@ -786,23 +794,24 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 FileObject file = Utils.fromUri(uri);
                 if (file != null) {
                     int offset = Utils.getOffset(doc, params.getPosition());
-                    return HyperlinkLocation.resolve(doc, offset).thenApply(locs -> {
+                    CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> future = HyperlinkLocation.resolve(doc, offset).thenApply(locs -> {
                         return Either.forLeft(locs.stream().map(location -> {
                             FileObject fo = location.getFileObject();
                             return new Location(Utils.toUri(fo), new Range(Utils.createPosition(fo, location.getStartOffset()), Utils.createPosition(fo, location.getEndOffset())));
                         }).collect(Collectors.toList()));
                     });
+                    cancel.registerCancel(() -> future.cancel(true));
+                    return future.get();
                 }
             }
-        } catch (MalformedURLException ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-        }
-        return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
+            return Either.forLeft(Collections.emptyList());
+        }, p);
     }
 
     @Override
-    public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> typeDefinition(TypeDefinitionParams params) {
-        try {
+    public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> typeDefinition(TypeDefinitionParams p) {
+        return PriorityQueueRun.getInstance()
+                               .runTask(Priority.HIGH, (params, cancel) -> {
             String uri = params.getTextDocument().getUri();
             Document rawDoc = server.getOpenedDocuments().getDocument(uri);
             if (rawDoc instanceof StyledDocument) {
@@ -810,18 +819,18 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 FileObject file = Utils.fromUri(uri);
                 if (file != null) {
                     int offset = Utils.getOffset(doc, params.getPosition());
-                    return HyperlinkLocation.resolveTypeDefinition(doc, offset).thenApply(locs -> {
+                    CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> future = HyperlinkLocation.resolveTypeDefinition(doc, offset).thenApply(locs -> {
                         return Either.forLeft(locs.stream().map(location -> {
                             FileObject fo = location.getFileObject();
                             return new Location(Utils.toUri(fo), new Range(Utils.createPosition(fo, location.getStartOffset()), Utils.createPosition(fo, location.getEndOffset())));
                         }).collect(Collectors.toList()));
                     });
+                    cancel.registerCancel(() -> future.cancel(true));
+                    return future.get();
                 }
             }
-        } catch (MalformedURLException ex) {
-            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-        }
-        return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
+            return Either.forLeft(Collections.emptyList());
+        }, p);
     }
 
     @Override
@@ -985,75 +994,80 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(DocumentHighlightParams params) {
-        class MOHighligther extends MarkOccurrencesHighlighterBase {
-            @Override
-            protected void process(CompilationInfo arg0, Document arg1, SchedulerEvent arg2) {
-                throw new UnsupportedOperationException("Should not be called.");
-            }
-            @Override
-            public List<int[]> processImpl(CompilationInfo info, Preferences node, Document doc, int caretPosition) {
-                return super.processImpl(info, node, doc, caretPosition);
-            }
-        }
-
-        Preferences node = MarkOccurencesSettings.getCurrentNode();
-
-        JavaSource js = getJavaSource(params.getTextDocument().getUri());
-        List<DocumentHighlight> result = new ArrayList<>();
-        if (js == null) {
-            return CompletableFuture.completedFuture(result);
-        }
-        try {
-            js.runUserActionTask(cc -> {
-                cc.toPhase(JavaSource.Phase.RESOLVED);
-                Document rawDoc = cc.getSnapshot().getSource().getDocument(true);
-                if (rawDoc instanceof StyledDocument) {
-                    StyledDocument doc = (StyledDocument)rawDoc;
-                    int offset = Utils.getOffset(doc, params.getPosition());
-                    List<int[]> spans = new MOHighligther().processImpl(cc, node, doc, offset);
-                    if (spans != null) {
-                        for (int[] span : spans) {
-                            result.add(new DocumentHighlight(new Range(Utils.createPosition(cc.getCompilationUnit(), span[0]),
-                                                                       Utils.createPosition(cc.getCompilationUnit(), span[1]))));
-                        }
-                    }
+    public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(DocumentHighlightParams p) {
+        return PriorityQueueRun.getInstance()
+                               .runTask(Priority.NORMAL, (params, cancel) -> {
+            class MOHighligther extends MarkOccurrencesHighlighterBase {
+                @Override
+                protected void process(CompilationInfo arg0, Document arg1, SchedulerEvent arg2) {
+                    throw new UnsupportedOperationException("Should not be called.");
                 }
-            }, true);
-        } catch (IOException ex) {
-            //TODO: include stack trace:
-            client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
-        }
-        return CompletableFuture.completedFuture(result);
-    }
+                @Override
+                public List<int[]> processImpl(CompilationInfo info, Preferences node, Document doc, int caretPosition) {
+                    return super.processImpl(info, node, doc, caretPosition);
+                }
+            }
 
-    @Override
-    public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams params) {
-        final CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> resultFuture = new CompletableFuture<>();
-        
-        BACKGROUND_TASKS.post(() -> {
-            List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
-            String uri = params.getTextDocument().getUri();
-            FileObject file = fromURI(uri);
-            Document rawDoc = server.getOpenedDocuments().getDocument(uri);
-            if (file != null && rawDoc instanceof StyledDocument) {
-                StyledDocument doc = (StyledDocument)rawDoc;
-                Collection<? extends StructureProvider> structureProviders = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookupAll(StructureProvider.class);
-                for (StructureProvider structureProvider : structureProviders) {
-                    List<StructureElement> structureElements = structureProvider.getStructure(doc);
-                    if (!structureElements.isEmpty()) {
-                        for (StructureElement structureElement : structureElements) {
-                            DocumentSymbol ds = structureElement2DocumentSymbol(doc, structureElement);
-                            if (ds != null) {
-                                result.add(Either.forRight(ds));
+            Preferences node = MarkOccurencesSettings.getCurrentNode();
+
+            JavaSource js = getJavaSource(params.getTextDocument().getUri());
+            List<DocumentHighlight> result = new ArrayList<>();
+            if (js == null) {
+                return result;
+            }
+            try {
+                js.runUserActionTask(cc -> {
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    Document rawDoc = cc.getSnapshot().getSource().getDocument(true);
+                    if (rawDoc instanceof StyledDocument) {
+                        StyledDocument doc = (StyledDocument)rawDoc;
+                        int offset = Utils.getOffset(doc, params.getPosition());
+                        List<int[]> spans = new MOHighligther().processImpl(cc, node, doc, offset);
+                        if (spans != null) {
+                            for (int[] span : spans) {
+                                result.add(new DocumentHighlight(new Range(Utils.createPosition(cc.getCompilationUnit(), span[0]),
+                                                                           Utils.createPosition(cc.getCompilationUnit(), span[1]))));
                             }
                         }
                     }
-                }
+                }, true);
+            } catch (IOException ex) {
+                //TODO: include stack trace:
+                client.logMessage(new MessageParams(MessageType.Error, ex.getMessage()));
             }
-            resultFuture.complete(result);
-        });
-        return resultFuture;
+            return result;
+       }, p);
+    }
+
+    @Override
+    public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(DocumentSymbolParams p) {
+        return PriorityQueueRun.getInstance()
+                               .runTask(Priority.NORMAL, (params, cancel) -> {
+                                   //TODO: no way to cancel a running structure task at currently
+                                   List<Either<SymbolInformation, DocumentSymbol>> result = new ArrayList<>();
+                                   String uri = params.getTextDocument().getUri();
+                                   FileObject file = fromURI(uri);
+                                   Document rawDoc = server.getOpenedDocuments().getDocument(uri);
+                                   if (file != null && rawDoc instanceof StyledDocument) {
+                                       StyledDocument doc = (StyledDocument)rawDoc;
+                                       Collection<? extends StructureProvider> structureProviders = MimeLookup.getLookup(DocumentUtilities.getMimeType(doc)).lookupAll(StructureProvider.class);
+                                       for (StructureProvider structureProvider : structureProviders) {
+                                           if (cancel.isCancelled()) {
+                                               continue;
+                                           }
+                                           List<StructureElement> structureElements = structureProvider.getStructure(doc);
+                                           if (!structureElements.isEmpty()) {
+                                               for (StructureElement structureElement : structureElements) {
+                                                   DocumentSymbol ds = structureElement2DocumentSymbol(doc, structureElement);
+                                                   if (ds != null) {
+                                                       result.add(Either.forRight(ds));
+                                                   }
+                                               }
+                                           }
+                                       }
+                                   }
+                                   return result;
+                               }, p);
     }
 
     static DocumentSymbol structureElement2DocumentSymbol (StyledDocument doc, StructureElement el) {
@@ -1081,116 +1095,133 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return ds;
     }
 
-    private List<LazyCodeAction> lastCodeActions = null;
+    private Map<Integer, LazyCodeAction> id2CodeAction = null;
+    private final AtomicInteger idGenerator = new AtomicInteger(0);
+
     
     @Override
-    public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
-        lastCodeActions = new ArrayList<>();
-        AtomicInteger index = new AtomicInteger(0);
-
-        // shortcut: if the projects are not yet initialized, return empty:
+    public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams p) {
         if (server.openedProjects().getNow(null) == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
-        String uri = params.getTextDocument().getUri();
-        Document rawDoc = server.getOpenedDocuments().getDocument(uri);
-        if (!(rawDoc instanceof StyledDocument)) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-        StyledDocument doc = (StyledDocument)rawDoc;
 
-        List<Either<Command, CodeAction>> result = new ArrayList<>();
-        Range range = params.getRange();
-        int startOffset = Utils.getOffset(doc, range.getStart());
-        int endOffset = Utils.getOffset(doc, range.getEnd());
-        Predicate<String> codeActionKindPermitted = Utils.codeActionKindFilter(params.getContext().getOnly());
-        if ((startOffset == endOffset || !params.getContext().getDiagnostics().isEmpty()) &&
-            (codeActionKindPermitted.test(CodeActionKind.QuickFix) || codeActionKindPermitted.test(CodeActionKind.RefactorRewrite))) {
-            final javax.swing.text.Element elem = NbDocument.findLineRootElement(doc);
-            int lineStartOffset = elem.getStartOffset();
-            int lineEndOffset = elem.getEndOffset();
+        Map<Integer, LazyCodeAction> currentId2CodeAction = Collections.synchronizedMap(new HashMap<>());
 
-            ArrayList<Diagnostic> diagnostics = new ArrayList<>(params.getContext().getDiagnostics());
-            if (diagnostics.isEmpty()) {
-                diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc), null, null)); //TODO: cancel
+        id2CodeAction = currentId2CodeAction;
+
+        return PriorityQueueRun.getInstance()
+                               .runTask(Priority.NORMAL, (params, cancel) -> {
+            // shortcut: if the projects are not yet initialized, return empty:
+            String uri = params.getTextDocument().getUri();
+            Document rawDoc = server.getOpenedDocuments().getDocument(uri);
+            if (!(rawDoc instanceof StyledDocument)) {
+                return List.of();
             }
+            StyledDocument doc = (StyledDocument)rawDoc;
 
-            Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
-            for (String key : VALID_ERROR_KEYS) {
-                Map<String, org.netbeans.api.lsp.Diagnostic> diags = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors-valid-" + key);
-                if (diags != null) {
-                    id2Errors.putAll(diags);
+            List<Either<Command, CodeAction>> result = new ArrayList<>();
+            Range range = params.getRange();
+            int startOffset = Utils.getOffset(doc, range.getStart());
+            int endOffset = Utils.getOffset(doc, range.getEnd());
+            Predicate<String> codeActionKindPermitted = Utils.codeActionKindFilter(params.getContext().getOnly());
+            if ((startOffset == endOffset || !params.getContext().getDiagnostics().isEmpty()) &&
+                (codeActionKindPermitted.test(CodeActionKind.QuickFix) || codeActionKindPermitted.test(CodeActionKind.RefactorRewrite))) {
+                final javax.swing.text.Element elem = NbDocument.findLineRootElement(doc);
+                int lineStartOffset = elem.getStartOffset();
+                int lineEndOffset = elem.getEndOffset();
+
+                ArrayList<Diagnostic> diagnostics = new ArrayList<>(params.getContext().getDiagnostics());
+                if (diagnostics.isEmpty()) {
+                    diagnostics.addAll(computeDiags(params.getTextDocument().getUri(), startOffset, ErrorProvider.Kind.HINTS, documentVersion(doc), null, cancel));
                 }
-            }
-            if (!id2Errors.isEmpty()) {
-                for (Entry<String, org.netbeans.api.lsp.Diagnostic> entry : id2Errors.entrySet()) {
-                    org.netbeans.api.lsp.Diagnostic err = entry.getValue();
-                    if (err.getDescription() == null || err.getDescription().isEmpty()) {
-                        continue;
+
+                if (cancel.isCancelled()) {
+                    return result;
+                }
+
+                Map<String, org.netbeans.api.lsp.Diagnostic> id2Errors = new HashMap<>();
+                for (String key : VALID_ERROR_KEYS) {
+                    Map<String, org.netbeans.api.lsp.Diagnostic> diags = (Map<String, org.netbeans.api.lsp.Diagnostic>) doc.getProperty("lsp-errors-valid-" + key);
+                    if (diags != null) {
+                        id2Errors.putAll(diags);
                     }
-                    if (err.getSeverity() == org.netbeans.api.lsp.Diagnostic.Severity.Error) {
-                        if (err.getEndPosition().getOffset() < startOffset || err.getStartPosition().getOffset() > endOffset) {
+                }
+                if (!id2Errors.isEmpty()) {
+                    for (Entry<String, org.netbeans.api.lsp.Diagnostic> entry : id2Errors.entrySet()) {
+                        org.netbeans.api.lsp.Diagnostic err = entry.getValue();
+                        if (err.getDescription() == null || err.getDescription().isEmpty()) {
                             continue;
                         }
-                    } else {
-                        if (err.getEndPosition().getOffset() < lineStartOffset || err.getStartPosition().getOffset() > lineEndOffset) {
-                            continue;
-                        }
-			int lineStart = NbDocument.findLineNumber(doc, startOffset);
-                        int errStartLine = NbDocument.findLineNumber(doc, err.getStartPosition().getOffset());
-                        if(errStartLine != lineStart){
-                            continue;
-                        }
-                    }
-                    Optional<Diagnostic> diag = diagnostics.stream().filter(d -> entry.getKey().equals(d.getCode().getLeft())).findFirst();
-                    org.netbeans.api.lsp.Diagnostic.LazyCodeActions actions = err.getActions();
-                    if (actions != null) {
-                        for (org.netbeans.api.lsp.CodeAction inputAction : actions.computeCodeActions(ex -> client.logMessage(new MessageParams(MessageType.Error, ex.getMessage())))) {
-                            CodeAction action = new CodeAction(inputAction.getTitle());
-                            if (diag.isPresent()) {
-                                action.setDiagnostics(Collections.singletonList(diag.get()));
-                            }
-                            String codeActionKind = kind(err.getSeverity());
-                            if (!codeActionKindPermitted.test(codeActionKind)) {
+                        if (err.getSeverity() == org.netbeans.api.lsp.Diagnostic.Severity.Error) {
+                            if (err.getEndPosition().getOffset() < startOffset || err.getStartPosition().getOffset() > endOffset) {
                                 continue;
                             }
-                            action.setKind(codeActionKind);
-                            if (inputAction.getCommand() != null) {
-                                List<Object> commandParams = new ArrayList<>();
-
-                                commandParams.add(params.getTextDocument().getUri());
-
-                                if (inputAction.getCommand().getArguments() != null) {
-                                    commandParams.addAll(inputAction.getCommand().getArguments());
+                        } else {
+                            if (err.getEndPosition().getOffset() < lineStartOffset || err.getStartPosition().getOffset() > lineEndOffset) {
+                                continue;
+                            }
+                            int lineStart = NbDocument.findLineNumber(doc, startOffset);
+                            int errStartLine = NbDocument.findLineNumber(doc, err.getStartPosition().getOffset());
+                            if(errStartLine != lineStart){
+                                continue;
+                            }
+                        }
+                        Optional<Diagnostic> diag = diagnostics.stream().filter(d -> entry.getKey().equals(d.getCode().getLeft())).findFirst();
+                        org.netbeans.api.lsp.Diagnostic.LazyCodeActions actions = err.getActions();
+                        if (actions != null) {
+                            for (org.netbeans.api.lsp.CodeAction inputAction : actions.computeCodeActions(ex -> client.logMessage(new MessageParams(MessageType.Error, ex.getMessage())))) {
+                                if (cancel.isCancelled()) {
+                                    return result;
                                 }
 
-                                action.setCommand(new Command(inputAction.getCommand().getTitle(), Utils.encodeCommand(inputAction.getCommand().getCommand(), client.getNbCodeCapabilities()), commandParams));
+                                CodeAction action = new CodeAction(inputAction.getTitle());
+                                if (diag.isPresent()) {
+                                    action.setDiagnostics(Collections.singletonList(diag.get()));
+                                }
+                                String codeActionKind = kind(err.getSeverity());
+                                if (!codeActionKindPermitted.test(codeActionKind)) {
+                                    continue;
+                                }
+                                action.setKind(codeActionKind);
+                                if (inputAction.getCommand() != null) {
+                                    List<Object> commandParams = new ArrayList<>();
+
+                                    commandParams.add(params.getTextDocument().getUri());
+
+                                    if (inputAction.getCommand().getArguments() != null) {
+                                        commandParams.addAll(inputAction.getCommand().getArguments());
+                                    }
+
+                                    action.setCommand(new Command(inputAction.getCommand().getTitle(), Utils.encodeCommand(inputAction.getCommand().getCommand(), client.getNbCodeCapabilities()), commandParams));
+                                }
+                                if (inputAction instanceof LazyCodeAction && ((LazyCodeAction) inputAction).getLazyEdit() != null) {
+                                    int id = idGenerator.getAndIncrement();
+                                    currentId2CodeAction.put(id, (LazyCodeAction) inputAction);
+                                    Map<String, Object> data = new HashMap<>();
+                                    data.put(URL, uri);
+                                    data.put(ID, id);
+                                    action.setData(data);
+                                } else if (inputAction.getEdit() != null) {
+                                    action.setEdit(Utils.workspaceEditFromApi(inputAction.getEdit(), uri, client));
+                                }
+                                result.add(Either.forRight(action));
                             }
-                            if (inputAction instanceof LazyCodeAction && ((LazyCodeAction) inputAction).getLazyEdit() != null) {
-                                lastCodeActions.add((LazyCodeAction) inputAction);
-                                Map<String, Object> data = new HashMap<>();
-                                data.put(URL, uri);
-                                data.put(INDEX, index.getAndIncrement());
-                                action.setData(data);
-                            } else if (inputAction.getEdit() != null) {
-                                action.setEdit(Utils.workspaceEditFromApi(inputAction.getEdit(), uri, client));
-                            }
-                            result.add(Either.forRight(action));
                         }
                     }
                 }
             }
-        }
 
-        final CompletableFuture<List<Either<Command, CodeAction>>> resultFuture = new CompletableFuture<>();
-        Source source = Source.create(doc);
-        BACKGROUND_TASKS.post(() -> {
+            Source source = Source.create(doc);
             try {
                 ParserManager.parse(Collections.singleton(source), new UserTask() {
                     @Override
                     public void run(ResultIterator resultIterator) throws Exception {
                         //code generators:
                         for (CodeActionsProvider codeGenerator : Lookup.getDefault().lookupAll(CodeActionsProvider.class)) {
+                            if (cancel.isCancelled()) {
+                                return ;
+                            }
+
                             Set<String> supportedCodeActionKinds = codeGenerator.getSupportedCodeActionKinds();
                             if (supportedCodeActionKinds != null &&
                                 supportedCodeActionKinds.stream()
@@ -1217,15 +1248,17 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 }
                 client.logMessage(new MessageParams(MessageType.Error, w.toString()));
             } finally {
-                resultFuture.complete(result);
+                return result;
             }
-        });
-        return resultFuture;
+        }, p);
     }
 
     @Override
     public CompletableFuture<CodeAction> resolveCodeAction(CodeAction unresolved) {
+        //note: not simply possible to rewrite to PriorityQueueRun, as FixImportsCodeAction will attempt to show a dialog
+        Map<Integer, LazyCodeAction> currentId2CodeAction = id2CodeAction;
         CompletableFuture<CodeAction> future = new CompletableFuture<>();
+
         BACKGROUND_TASKS.post(() -> {
             JsonObject data = (JsonObject) unresolved.getData();
             if (data != null) {
@@ -1243,8 +1276,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             return;
                         }
                     }
-                } else if (data.has(URL) && data.has(INDEX)) {
-                    LazyCodeAction inputAction = lastCodeActions.get(data.getAsJsonPrimitive(INDEX).getAsInt());
+                } else if (data.has(URL) && data.has(ID)) {
+                    LazyCodeAction inputAction = currentId2CodeAction.get(data.getAsJsonPrimitive(ID).getAsInt());
                     if (inputAction != null) {
                         try {
                             unresolved.setEdit(Utils.workspaceEditFromApi(inputAction.getLazyEdit().get(), data.getAsJsonPrimitive(URL).getAsString(), client));
@@ -2863,86 +2896,103 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<List<InlayHint>> inlayHint(InlayHintParams params) {
-        String uri = params.getTextDocument().getUri();
-        
-        return client.getClientConfigurationManager().getConfiguration(NETBEANS_INLAY_HINT, uri).thenCompose(c -> {
-            FileObject file;
-            try {
-                file = Utils.fromUri(uri);
-            } catch (MalformedURLException ex) {
-                return CompletableFuture.failedFuture(ex);
-            }
-            Set<String> enabled = null;
-            if (c != null && c.isJsonArray()) {
-                enabled = new HashSet<>();
+    public CompletableFuture<List<InlayHint>> inlayHint(InlayHintParams p) {
+        return PriorityQueueRun.getInstance()
+                               .runTask(Priority.NORMAL, (params, cancel) -> {
+            String uri = params.getTextDocument().getUri();
 
-                JsonArray actualSettings = c.getAsJsonArray();
-
-                for (JsonElement el : actualSettings) {
-                    enabled.add(el.getAsJsonPrimitive().getAsString());
+            CompletableFuture<List<InlayHint>> outterResult = client.getClientConfigurationManager().getConfiguration(NETBEANS_INLAY_HINT, uri).thenCompose(c -> {
+                FileObject file;
+                try {
+                    file = Utils.fromUri(uri);
+                } catch (MalformedURLException ex) {
+                    return CompletableFuture.failedFuture(ex);
                 }
-            }
-            org.netbeans.api.lsp.Range range = new org.netbeans.api.lsp.Range(Utils.getOffset(file, params.getRange().getStart()),
-                                                                              Utils.getOffset(file, params.getRange().getEnd()));
-            CompletableFuture<List<InlayHint>> result = CompletableFuture.completedFuture(List.of());
-            for (InlayHintsProvider p : MimeLookup.getLookup(FileUtil.getMIMEType(file)).lookupAll(InlayHintsProvider.class)) {
-                Set<String> currentTypes = new HashSet<>(p.supportedHintTypes());
+                Set<String> enabled = null;
+                if (c != null && c.isJsonArray()) {
+                    enabled = new HashSet<>();
 
-                if (enabled != null) {
-                    currentTypes.retainAll(enabled);
+                    JsonArray actualSettings = c.getAsJsonArray();
+
+                    for (JsonElement el : actualSettings) {
+                        enabled.add(el.getAsJsonPrimitive().getAsString());
+                    }
                 }
+                org.netbeans.api.lsp.Range range = new org.netbeans.api.lsp.Range(Utils.getOffset(file, params.getRange().getStart()),
+                        Utils.getOffset(file, params.getRange().getEnd()));
+                CompletableFuture<List<InlayHint>> result = CompletableFuture.completedFuture(List.of());
+                for (InlayHintsProvider provider : MimeLookup.getLookup(FileUtil.getMIMEType(file)).lookupAll(InlayHintsProvider.class)) {
+                    if (cancel.isCancelled()) {
+                        break;
+                    }
 
-                if (!currentTypes.isEmpty()) {
-                    InlayHintsProvider.Context ctx = new InlayHintsProvider.Context(file, range, currentTypes);
-                    result = result.thenCombine(p.inlayHints(ctx).thenApply(lspHints -> {
-                        List<InlayHint> hints = new ArrayList<>();
+                    Set<String> currentTypes = new HashSet<>(provider.supportedHintTypes());
 
-                        for (org.netbeans.api.lsp.InlayHint h : lspHints) {
-                            hints.add(new InlayHint(Utils.createPosition(file, h.getPosition().getOffset()), Either.forRight(List.of(new InlayHintLabelPart(h.getText())))));
-                        }
+                    if (enabled != null) {
+                        currentTypes.retainAll(enabled);
+                    }
 
-                        return hints;
-                    }), (l1, l2) -> {
-                        List<InlayHint> combined = new ArrayList<>();
+                    if (!currentTypes.isEmpty()) {
+                        InlayHintsProvider.Context ctx = new InlayHintsProvider.Context(file, range, currentTypes);
+                        result = result.thenCombine(provider.inlayHints(ctx).thenApply(lspHints -> {
+                            List<InlayHint> hints = new ArrayList<>();
 
-                        combined.addAll(l1);
-                        combined.addAll(l2);
+                            for (org.netbeans.api.lsp.InlayHint h : lspHints) {
+                                hints.add(new InlayHint(Utils.createPosition(file, h.getPosition().getOffset()), Either.forRight(List.of(new InlayHintLabelPart(h.getText())))));
+                            }
 
-                        return combined;
-                    });
+                            return hints;
+                        }), (l1, l2) -> {
+                            List<InlayHint> combined = new ArrayList<>();
+
+                            combined.addAll(l1);
+                            combined.addAll(l2);
+
+                            return combined;
+                        });
+                    }
                 }
-            }
-            return result;
-        });
+                return result;
+            });
+            cancel.registerCancel(() -> outterResult.cancel(true));
+            return outterResult.get();
+        }, p);
     }
 
     @Override
-    public CompletableFuture<List<InlineValue>> inlineValue(InlineValueParams params) {
-        String uri = params.getTextDocument().getUri();
-        FileObject file = fromURI(uri);
-        if (file == null) {
-            return CompletableFuture.completedFuture(null);
-        }
-        CompletableFuture<List<InlineValue>> result = new CompletableFuture<>();
-        result.complete(List.of());
-        Document rawDoc = server.getOpenedDocuments().getDocument(uri);
-        if (!(rawDoc instanceof StyledDocument)) {
-            return CompletableFuture.completedFuture(Collections.emptyList());
-        }
-        StyledDocument doc = (StyledDocument)rawDoc;
-        int currentExecutionPosition = Utils.getOffset(doc, params.getContext().getStoppedLocation().getEnd());
-        for (InlineValuesProvider provider : MimeLookup.getLookup(file.getMIMEType()).lookupAll(InlineValuesProvider.class)) {
-            result = result.thenCombine(provider.inlineValues(file, currentExecutionPosition), (l1, l2) -> {
-                List<InlineValue> res = new ArrayList<>(l1.size() + l2.size());
-                res.addAll(l1);
-                for (org.netbeans.api.lsp.InlineValue val : l2) {
-                    res.add(new InlineValue(new InlineValueEvaluatableExpression(new Range(Utils.createPosition(file, val.getRange().getStartOffset()), Utils.createPosition(file, val.getRange().getEndOffset())), val.getExpression())));
+    public CompletableFuture<List<InlineValue>> inlineValue(InlineValueParams p) {
+        return PriorityQueueRun.getInstance()
+                               .runTask(Priority.NORMAL, (params, cancel) -> {
+            String uri = params.getTextDocument().getUri();
+            FileObject file = fromURI(uri);
+            if (file == null) {
+                return List.of();
+            }
+            CompletableFuture<List<InlineValue>> result = new CompletableFuture<>();
+            result.complete(List.of());
+            Document rawDoc = server.getOpenedDocuments().getDocument(uri);
+            if (!(rawDoc instanceof StyledDocument)) {
+                return List.of();
+            }
+            StyledDocument doc = (StyledDocument)rawDoc;
+            int currentExecutionPosition = Utils.getOffset(doc, params.getContext().getStoppedLocation().getEnd());
+            for (InlineValuesProvider provider : MimeLookup.getLookup(file.getMIMEType()).lookupAll(InlineValuesProvider.class)) {
+                if (cancel.isCancelled()) {
+                    return List.of();
                 }
-                return res;
-            });
-        }
-        return result;
+                result = result.thenCombine(provider.inlineValues(file, currentExecutionPosition), (l1, l2) -> {
+                    List<InlineValue> res = new ArrayList<>(l1.size() + l2.size());
+                    res.addAll(l1);
+                    for (org.netbeans.api.lsp.InlineValue val : l2) {
+                        res.add(new InlineValue(new InlineValueEvaluatableExpression(new Range(Utils.createPosition(file, val.getRange().getStartOffset()), Utils.createPosition(file, val.getRange().getEndOffset())), val.getExpression())));
+                    }
+                    return res;
+                });
+            }
+            CompletableFuture<List<InlineValue>> resultFin = result;
+            cancel.registerCancel(() -> resultFin.cancel(true));
+            return result.get();
+        }, p);
     }
 
 }

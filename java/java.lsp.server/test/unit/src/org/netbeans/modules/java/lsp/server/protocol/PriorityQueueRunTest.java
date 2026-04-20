@@ -20,10 +20,12 @@ package org.netbeans.modules.java.lsp.server.protocol;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.lsp.server.protocol.PriorityQueueRun.Priority;
 import org.openide.util.Exceptions;
@@ -118,6 +120,43 @@ public class PriorityQueueRunTest extends NbTestCase {
         highPriorityIsWaiting.await();
         highPriorityCanContinue.countDown();
         assertEquals("real result", realResult.get());
+    }
+
+    public void testCancelPatternNestCompletableFuture() throws Exception {
+        CountDownLatch lowPriorityIsRunning = new CountDownLatch(1);
+        CountDownLatch lowPriorityCanContinue = new CountDownLatch(1);
+        AtomicInteger cancelCount = new AtomicInteger();
+
+        CompletableFuture<Integer> lowPriorityResult =
+                PriorityQueueRun.getInstance()
+                                .runTask(Priority.LOW,
+                                        (data, check) -> {
+                                            lowPriorityIsRunning.countDown();
+                                            lowPriorityCanContinue.await();
+                                            CompletableFuture<Integer> result = new CompletableFuture<>();
+                                            check.registerCancel(() -> result.cancel(true));
+                                            try {
+                                                result.complete(1);
+                                                return result.get();
+                                            } catch (CancellationException ex) {
+                                                cancelCount.incrementAndGet();
+                                                throw ex;
+                                            }
+                                        }, "");
+
+        lowPriorityIsRunning.await();
+
+        CompletableFuture<String> normalPriorityResult =
+                PriorityQueueRun.getInstance()
+                                .runTask(Priority.NORMAL,
+                                         (data, check) -> {
+                                             return "OK";
+                                         }, "");
+
+        lowPriorityCanContinue.countDown();
+
+        assertEquals("OK", normalPriorityResult.get());
+        assertEquals(1, (int) lowPriorityResult.get());
     }
 
 }

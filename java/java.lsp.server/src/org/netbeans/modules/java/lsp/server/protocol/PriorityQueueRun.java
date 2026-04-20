@@ -19,8 +19,11 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.CancellationException;
@@ -41,6 +44,7 @@ public class PriorityQueueRun {
     }
 
     private final SortedMap<Priority, List<TaskDescription<?, ?>>> priority2Tasks = new TreeMap<>((p1, p2) -> -p1.compareTo(p2));
+    private final Set<RequestProcessor.Task> pendingDelayedTasks = Collections.synchronizedSet(Collections.newSetFromMap(new IdentityHashMap<>()));
     private Priority currentPriority;
     private CancelCheck currentTaskCheck;
 
@@ -89,7 +93,9 @@ public class PriorityQueueRun {
      */
     public <P, R> CompletableFuture<R> runTask(Priority priority, CancellableTask<P, R> task, P data, int delay) {
         CompletableFuture<R> result = new CompletableFuture<>();
-        DELAY.post(() -> {
+        RequestProcessor.Task[] delayedTask = new RequestProcessor.Task[1];
+        delayedTask[0] = DELAY.create(() -> {
+            pendingDelayedTasks.remove(delayedTask[0]);
             if (result.isCancelled()) {
                 return ; //already cancelled
             }
@@ -99,7 +105,10 @@ public class PriorityQueueRun {
 
                 scheduleNext();
             }
-        }, delay);
+        });
+
+        pendingDelayedTasks.add(delayedTask[0]);
+        delayedTask[0].schedule(delay);
 
         return result;
     }
@@ -134,10 +143,13 @@ public class PriorityQueueRun {
 
                 Object result = null;
                 Throwable exception = null;
+                AtomicBoolean delegatedCancel = new AtomicBoolean();
 
                 if (!thisTask.result.isCancelled()) {
                     try {
                         result = thisTask.task.compute(thisTask.data, thisTaskCheck);
+                    } catch (CancellationException ex) {
+                        delegatedCancel.set(true);
                     } catch (Throwable t) {
                         exception = t;
                     }
@@ -152,7 +164,7 @@ public class PriorityQueueRun {
                     if (!thisTask.result.isCancelled()) {
                         if (exception != null) {
                             thisTask.result.completeExceptionally(exception);
-                        } else if (thisTaskCheck.isCancelled()) {
+                        } else if (thisTaskCheck.isCancelled() || delegatedCancel.get()) {
                             priority2Tasks.computeIfAbsent(thisPriority, __ -> new ArrayList<>())
                                           .add(0, thisTask);
                         } else {
@@ -227,12 +239,23 @@ public class PriorityQueueRun {
         HIGHER;
     }
 
+    /**
+     * For tests: wait until all tasks are finished.
+     */
     public void testsWaitQueueEmpty() {
         while (true) {
+            while (!pendingDelayedTasks.isEmpty()) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+
             WORKER.post(() -> {}).waitFinished();
 
             synchronized (this) {
-                if (priority2Tasks.values().stream().anyMatch(l -> l.isEmpty())) {
+                if (priority2Tasks.values().stream().allMatch(l -> l.isEmpty())) {
                     return ;
                 }
                 try {

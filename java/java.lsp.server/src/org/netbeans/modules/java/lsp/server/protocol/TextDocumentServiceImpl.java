@@ -1022,7 +1022,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     if (rawDoc instanceof StyledDocument) {
                         StyledDocument doc = (StyledDocument)rawDoc;
                         int offset = Utils.getOffset(doc, params.getPosition());
-                        List<int[]> spans = new MOHighligther().processImpl(cc, node, doc, offset);
+                        MOHighligther highlighter = new MOHighligther();
+
+                        cancel.registerCancel(highlighter::cancel);
+
+                        List<int[]> spans = highlighter.processImpl(cc, node, doc, offset);
                         if (spans != null) {
                             for (int[] span : spans) {
                                 result.add(new DocumentHighlight(new Range(Utils.createPosition(cc.getCompilationUnit(), span[0]),

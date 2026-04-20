@@ -662,9 +662,18 @@ public class ServerTest extends NbTestCase {
         assertTrue(hook.didCloseCompleted.tryAcquire(400, TimeUnit.MILLISECONDS));
         Reference<StyledDocument> refDoc = new WeakReference<>(d3);
         d3 = null;
+
+        //wait until all background tasks are finished:
         PriorityQueueRun.getInstance().testsWaitQueueEmpty();
-        assertGC("Document should be collected", refDoc);
-        assertNull(cake.getDocument());
+
+        StyledDocument doc = cake.getDocument();
+        if (doc != null) {
+            //document might be reopened by background tasks called after close:
+            refDoc = new WeakReference<>(doc);
+            doc = null;
+            assertGC("Document should be collected", refDoc);
+            assertNull(cake.getDocument());
+        }
 
         // open again
         server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(tdi));

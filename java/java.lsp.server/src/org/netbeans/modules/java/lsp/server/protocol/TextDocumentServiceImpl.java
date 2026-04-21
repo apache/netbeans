@@ -79,6 +79,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.IntFunction;
+import java.util.function.LongSupplier;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -326,6 +327,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
      */
     private final Map<String, Runnable> pendingDiagnostics = new HashMap<>();
     private final LspServerState server;
+    private final LongSupplier idGenerator = new LongSupplier() {
+        private final AtomicLong counter = new AtomicLong(0);
+        @Override
+        public long getAsLong() {
+            return counter.getAndIncrement();
+        }
+    };
     private NbCodeLanguageClient client;
 
     TextDocumentServiceImpl(LspServerState server) {
@@ -368,7 +376,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     private final AtomicInteger javadocTimeout = new AtomicInteger(-1);
-    private List<Completion> lastCompletions = null; //TODO: maybe id -> completion again?
+    private Map<Long, Completion> lastCompletions = Map.of();
 
     private static final int INITIAL_COMPLETION_SAMPLING_DELAY = 1000;
     private static final int DEFAULT_COMPLETION_WARNING_LENGTH = 10_000;
@@ -406,25 +414,34 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             }
         }, INITIAL_COMPLETION_SAMPLING_DELAY);
 
-        List<Completion> currentCompletions = Collections.synchronizedList(new ArrayList<>());
+        Map<Long, Completion> currentCompletions = Collections.synchronizedMap(new HashMap<>());
 
-        lastCompletions = currentCompletions;
-
-        AtomicInteger index = new AtomicInteger(0);
         final CompletionList completionList = new CompletionList();
         // shortcut: if the projects are not yet initialized, return empty:
         if (server.openedProjects().getNow(null) == null) {
+            synchronized (this) {
+                lastCompletions = currentCompletions;
+            }
+
             return CompletableFuture.completedFuture(Either.forRight(completionList));
         }
         try {
             String uri = p.getTextDocument().getUri();
             FileObject file = fromURI(uri);
             if (file == null) {
+                synchronized (this) {
+                    lastCompletions = currentCompletions;
+                }
+
                 return CompletableFuture.completedFuture(Either.forRight(completionList));
             }
             EditorCookie ec = file.getLookup().lookup(EditorCookie.class);
             Document rawDoc = ec.openDocument();
             if (!(rawDoc instanceof StyledDocument)) {
+                synchronized (this) {
+                    lastCompletions = currentCompletions;
+                }
+
                 return CompletableFuture.completedFuture(Either.forRight(completionList));
             }
             StyledDocument doc = (StyledDocument)rawDoc;
@@ -512,8 +529,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                             if (codeCompletionCommitChars.get() != null) {
                                 item.setCommitCharacters(codeCompletionCommitChars.get());
                             }
-                            currentCompletions.add(completion);
-                            item.setData(new CompletionData(uri, index.getAndIncrement()));
+                            long id = idGenerator.getAsLong();
+                            currentCompletions.put(id, completion);
+                            item.setData(new CompletionData(uri, id));
                             items.add(item);
                         });
                         if (!isComplete) {
@@ -558,6 +576,11 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
                     }
                     completionList.setItems(items);
+
+                    synchronized (this) {
+                        lastCompletions = currentCompletions;
+                    }
+
                     return Either.forRight(completionList);
                 }, p));
         } catch (IOException ex) {
@@ -567,12 +590,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     public static final class CompletionData {
         public String uri;
-        public int index;
+        public long index;
 
         public CompletionData() {
         }
 
-        public CompletionData(String uri, int index) {
+        public CompletionData(String uri, long index) {
             this.uri = uri;
             this.index = index;
         }
@@ -631,7 +654,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<CompletionItem> resolveCompletionItem(CompletionItem input) {
-        List<Completion> currentCompletions = lastCompletions;
+        Map<Long, Completion> currentCompletions = lastCompletions;
         return PriorityQueueRun.getInstance()
                                .runTask(Priority.HIGHER, (ci, cancel) -> {
             JsonObject rawData = (JsonObject) ci.getData();
@@ -1099,19 +1122,15 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         return ds;
     }
 
-    private Map<Integer, LazyCodeAction> id2CodeAction = null;
-    private final AtomicInteger idGenerator = new AtomicInteger(0);
+    private Map<Long, LazyCodeAction> id2CodeAction = null;
 
-    
     @Override
     public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams p) {
         if (server.openedProjects().getNow(null) == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
 
-        Map<Integer, LazyCodeAction> currentId2CodeAction = Collections.synchronizedMap(new HashMap<>());
-
-        id2CodeAction = currentId2CodeAction;
+        Map<Long, LazyCodeAction> currentId2CodeAction = Collections.synchronizedMap(new HashMap<>());
 
         return PriorityQueueRun.getInstance()
                                .runTask(Priority.NORMAL, (params, cancel) -> {
@@ -1199,7 +1218,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                                     action.setCommand(new Command(inputAction.getCommand().getTitle(), Utils.encodeCommand(inputAction.getCommand().getCommand(), client.getNbCodeCapabilities()), commandParams));
                                 }
                                 if (inputAction instanceof LazyCodeAction && ((LazyCodeAction) inputAction).getLazyEdit() != null) {
-                                    int id = idGenerator.getAndIncrement();
+                                    long id = idGenerator.getAsLong();
                                     currentId2CodeAction.put(id, (LazyCodeAction) inputAction);
                                     Map<String, Object> data = new HashMap<>();
                                     data.put(URL, uri);
@@ -1251,16 +1270,25 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                   ex.printStackTrace(pw);
                 }
                 client.logMessage(new MessageParams(MessageType.Error, w.toString()));
-            } finally {
-                return result;
             }
+
+            synchronized (this) {
+                id2CodeAction = currentId2CodeAction;
+            }
+
+            return result;
         }, p);
     }
 
     @Override
     public CompletableFuture<CodeAction> resolveCodeAction(CodeAction unresolved) {
         //note: not simply possible to rewrite to PriorityQueueRun, as FixImportsCodeAction will attempt to show a dialog
-        Map<Integer, LazyCodeAction> currentId2CodeAction = id2CodeAction;
+        Map<Long, LazyCodeAction> currentId2CodeAction;
+
+        synchronized (this) {
+            currentId2CodeAction = id2CodeAction;
+        }
+
         CompletableFuture<CodeAction> future = new CompletableFuture<>();
 
         BACKGROUND_TASKS.post(() -> {
@@ -1281,7 +1309,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
                     }
                 } else if (data.has(URL) && data.has(ID)) {
-                    LazyCodeAction inputAction = currentId2CodeAction.get(data.getAsJsonPrimitive(ID).getAsInt());
+                    LazyCodeAction inputAction = currentId2CodeAction.get(data.getAsJsonPrimitive(ID).getAsLong());
                     if (inputAction != null) {
                         try {
                             unresolved.setEdit(Utils.workspaceEditFromApi(inputAction.getLazyEdit().get(), data.getAsJsonPrimitive(URL).getAsString(), client));

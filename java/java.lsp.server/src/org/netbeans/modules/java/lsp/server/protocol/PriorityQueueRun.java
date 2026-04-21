@@ -256,7 +256,7 @@ public class PriorityQueueRun {
 
             synchronized (this) {
                 if (priority2Tasks.values().stream().allMatch(l -> l.isEmpty())) {
-                    return ;
+                    break ;
                 }
                 try {
                     this.wait(10);

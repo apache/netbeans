@@ -657,7 +657,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
 
     @Override
     public CompletableFuture<CompletionItem> resolveCompletionItem(CompletionItem input) {
-        Map<Long, Completion> currentCompletions = lastCompletions;
+        Map<Long, Completion> currentCompletions;
+
+        synchronized (this) {
+            currentCompletions = lastCompletions;
+        }
+
         return PriorityQueueRun.getInstance()
                                .runTask(Priority.HIGHER, (ci, cancel) -> {
             JsonObject rawData = (JsonObject) ci.getData();

@@ -252,6 +252,7 @@ public class PriorityQueueRun {
                 }
             }
 
+            DELAY.post(() -> {}).waitFinished();
             WORKER.post(() -> {}).waitFinished();
 
             synchronized (this) {
@@ -265,5 +266,8 @@ public class PriorityQueueRun {
                 }
             }
         }
+
+        //ensure any last task is finished:
+        WORKER.post(() -> {}).waitFinished();
     }
 }

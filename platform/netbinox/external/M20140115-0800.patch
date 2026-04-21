@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 diff --git a/bundles/org.eclipse.osgi/core/framework/org/eclipse/osgi/framework/internal/core/Framework.java b/bundles/org.eclipse.osgi/core/framework/org/eclipse/osgi/framework/internal/core/Framework.java
-index 617db7f..1851f4a 100644
+index 617db7f49..1851f4ade 100644
 --- a/bundles/org.eclipse.osgi/core/framework/org/eclipse/osgi/framework/internal/core/Framework.java
 +++ b/bundles/org.eclipse.osgi/core/framework/org/eclipse/osgi/framework/internal/core/Framework.java
 @@ -563,11 +563,19 @@ public class Framework implements EventPublisher, Runnable {
@@ -42,3 +42,16 @@ index 617db7f..1851f4a 100644
  		return result;
  	}
  
+diff --git a/bundles/org.eclipse.osgi/resolver/src/org/eclipse/osgi/internal/resolver/StateBuilder.java b/bundles/org.eclipse.osgi/resolver/src/org/eclipse/osgi/internal/resolver/StateBuilder.java
+index b6964980a..d9d2f996d 100644
+--- a/bundles/org.eclipse.osgi/resolver/src/org/eclipse/osgi/internal/resolver/StateBuilder.java
++++ b/bundles/org.eclipse.osgi/resolver/src/org/eclipse/osgi/internal/resolver/StateBuilder.java
+@@ -819,7 +819,7 @@ public class StateBuilder {
+ 					throw new BundleException(message + " : " + NLS.bind(StateMsg.HEADER_PACKAGE_DUPLICATES, packageNames[j]), BundleException.MANIFEST_ERROR); //$NON-NLS-1$
+ 				}
+ 				// check for java.*
+-				if (!jreBundle && packageNames[j].startsWith("java.")) { //$NON-NLS-1$
++				if (false && !jreBundle && packageNames[j].startsWith("java.")) { //$NON-NLS-1$
+ 					String message = NLS.bind(Msg.MANIFEST_INVALID_HEADER_EXCEPTION, headerKey, elements[i].toString());
+ 					throw new BundleException(message + " : " + NLS.bind(StateMsg.HEADER_PACKAGE_JAVA, packageNames[j]), BundleException.MANIFEST_ERROR); //$NON-NLS-1$
+ 				}

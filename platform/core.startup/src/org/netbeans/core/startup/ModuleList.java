@@ -24,13 +24,12 @@ import java.beans.PropertyChangeListener;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.CharArrayWriter;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PushbackInputStream;
@@ -67,6 +66,7 @@ import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileSystem.AtomicAction;
 import org.openide.filesystems.FileUtil;
+import org.netbeans.DepUtil;
 import org.openide.modules.Dependency;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.SpecificationVersion;
@@ -111,7 +111,7 @@ final class ModuleList implements Stamps.Updater {
     /** to fire events with */
     private final Events ev;
     /** map from code name (base)s to statuses of modules on disk */
-    private final Map<String,DiskStatus> statuses = new HashMap<String,DiskStatus>(100);
+    private final Map<String, DiskStatus> statuses = new HashMap<>(100);
     /** whether the initial round has been triggered or not */
     private boolean triggered = false;
     /** listener for changes in modules, etc.; see comment on class Listener */
@@ -197,8 +197,7 @@ final class ModuleList implements Stamps.Updater {
                 for (File candidate : jars) {
                     int candidateMajor = -1;
                     SpecificationVersion candidateSpec = null;
-                    JarFile jf = new JarFile(candidate);
-                    try {
+                    try (JarFile jf = new JarFile(candidate)) {
                         java.util.jar.Attributes attr = jf.getManifest().getMainAttributes();
                         String codename = attr.getValue("OpenIDE-Module");
                         if (codename != null) {
@@ -211,8 +210,6 @@ final class ModuleList implements Stamps.Updater {
                         if (sv != null) {
                             candidateSpec = new SpecificationVersion(sv);
                         }
-                    } finally {
-                        jf.close();
                     }
                     if (newest == null || candidateMajor > major || (spec != null && candidateSpec != null && candidateSpec.compareTo(spec) > 0)) {
                         newest = candidate;
@@ -434,7 +431,10 @@ final class ModuleList implements Stamps.Updater {
     
     /** Just checks that all the right stuff is there.
      */
-    private void sanityCheckStatus(Map<String,Object> m) throws IOException {
+    private static void sanityCheckStatus(Map<String, Object> m) throws IOException {
+        if (m.isEmpty()) {
+            throw new IOException("Must define properties"); // NOI18N
+        }
         String jar = (String) m.get("jar"); // NOI18N
         if (jar == null) {
             throw new IOException("Must define jar param"); // NOI18N
@@ -612,7 +612,7 @@ final class ModuleList implements Stamps.Updater {
         }
     }
 
-    final Map<String,Map<String,Object>> readCache() {
+    final Map<String, Map<String, Object>> readCache() {
         InputStream is = Stamps.getModulesJARs().asStream("all-modules.dat"); // NOI18N
         if (is == null) {
             // schedule write for later
@@ -620,35 +620,62 @@ final class ModuleList implements Stamps.Updater {
             return null;
         }
         LOG.log(Level.FINEST, "Reading cache all-modules.dat");
-        try {
-            ObjectInputStream ois = new ObjectInputStream(is);
-
-            Map<String,Map<String,Object>> ret = new HashMap<String, Map<String, Object>>(1333);
-            while (is.available() > 0) {
-                Map<String, Object> prop = readStatus(ois, false);
-                if (prop == null) {
-                    LOG.log(Level.CONFIG, "Cache is invalid all-modules.dat");
-                    return null;
-                }
-                Set<?> deps;
-                try {
-                    deps = (Set<?>) ois.readObject();
-                } catch (ClassNotFoundException ex) {
-                    throw new IOException(ex);
-                }
-                prop.put("deps", deps);
-                String cnb = (String)prop.get("name"); // NOI18N
-                ret.put(cnb, prop);
+        try (DataInputStream dis = new DataInputStream(is)) {
+            Map<String, Map<String, Object>> cache = new HashMap<>(1333);
+            while (dis.available() > 0) {
+                Map<String, Object> props = readProps(dis);
+                props.put("deps", readDeps(dis));
+                cache.put((String) props.get("name"), props);
             }
-
-
-            is.close();
-            return ret;
+            return cache;
         } catch (IOException ex) {
             LOG.log(Level.INFO, "Cannot read cache", ex);
             writeCache();
             return null;
         }
+    }
+
+    private static Set<Dependency> readDeps(DataInputStream is) throws IOException {
+        int depCount = is.readInt();
+        if (depCount < 0) {
+            throw new IOException("negative count");
+        } else if (depCount == 0) {
+            return Set.of();
+        }
+        Set<Dependency> deps = new HashSet<>((int) Math.ceil(depCount / 0.75));
+        for (int i = 0; i < depCount; i++) {
+            deps.add(DepUtil.read(is));
+        }
+        return deps;
+    }
+
+    /// @see #computeProperties(org.netbeans.Module) 
+    private static Map<String, Object> readProps(DataInputStream is) throws IOException {
+        int propCount = is.readByte();
+        if (propCount < 0) {
+            throw new IOException("negative count");
+        }
+        Map<String, Object> props = new HashMap<>((int) Math.ceil(propCount / 0.75));
+        for (int i = 0; i < propCount; i++) {
+            String entry = is.readUTF();
+            int split = entry.indexOf('='); // ok, since keys don't contain '='
+            String key = entry.substring(0, split);
+            String value = entry.substring(split + 1, entry.length());
+            // must match computeProperties()
+            try {
+                Object val = switch (key) {
+                    case "name", "jar" -> value;
+                    case "enabled", "autoload", "eager", "reloadable" -> Boolean.valueOf(value);
+                    case "startlevel" -> Integer.valueOf(value);
+                    default -> throw new IOException("unknown key " + key);
+                };
+                props.put(key, val);
+            } catch (IllegalArgumentException ex) {
+                throw new IOException("unexpected value", ex);
+            }
+        }
+        sanityCheckStatus(props);
+        return props;
     }
 
     final void writeCache() {
@@ -661,14 +688,23 @@ final class ModuleList implements Stamps.Updater {
 
     @Override
     public void flushCaches(DataOutputStream os) throws IOException {
-        ObjectOutputStream oss = new ObjectOutputStream(os);
         for (Module m : mgr.getModules()) {
             if (m.isFixed()) {
                 continue;
             }
-            Map<String, Object> prop = computeProperties(m);
-            writeStatus(prop, oss);
-            oss.writeObject(m.getDependencies());
+            // props
+            Map<String, Object> props = computeProperties(m);
+            os.writeByte(props.size());
+            for (Entry<String, Object> prop : props.entrySet()) {
+                os.writeUTF(prop.getKey() + "=" + prop.getValue());
+            }
+
+            // deps
+            Set<Dependency> deps = m.getDependencies();
+            os.writeInt(deps.size());
+            for (Dependency dep : deps) {
+                DepUtil.write(dep, os);
+            }
         }
     }
     
@@ -694,7 +730,7 @@ final class ModuleList implements Stamps.Updater {
 
         // Use TreeMap to sort the keys by name; since the module status files might
         // be version-controlled we want to avoid gratuitous format changes.
-        for (Map.Entry<String, Object> entry: new TreeMap<String, Object>(m).entrySet()) {
+        for (Map.Entry<String, Object> entry : new TreeMap<>(m).entrySet()) {
             String name = entry.getKey();
             if (
                 name.equals("name") || // NOI18N
@@ -749,11 +785,8 @@ final class ModuleList implements Stamps.Updater {
                 LOG.fine("ModuleList: (re)writing " + nue.file);
                 FileLock lock = nue.file.lock();
                 try {
-                    OutputStream os = nue.file.getOutputStream(lock);
-                    try {
+                    try (OutputStream os = nue.file.getOutputStream(lock)) {
                         writeStatus(nue.diskProps, os);
-                    } finally {
-                        os.close();
                     }
                 } finally {
                     lock.releaseLock();
@@ -944,12 +977,14 @@ final class ModuleList implements Stamps.Updater {
         }
     }
     
-    /** Compute what properties we would want to store in XML
+    /** 
+     * Compute what properties we would want to store in XML (or the startup cache)
      * for this module. I.e. 'name', 'reloadable', etc.
+     * @see #readProps(java.io.DataInputStream) 
      */
-    private Map<String,Object> computeProperties(Module m) {
+    private Map<String, Object> computeProperties(Module m) {
         if (m.isFixed() || ! m.isValid()) throw new IllegalArgumentException("fixed or invalid: " + m); // NOI18N
-        Map<String,Object> p = new HashMap<String,Object>();
+        Map<String, Object> p = new HashMap<>(8);
         p.put("name", m.getCodeNameBase()); // NOI18N
         if (!m.isAutoload() && !m.isEager()) {
             p.put("enabled", m.isEnabled()); // NOI18N
@@ -960,8 +995,7 @@ final class ModuleList implements Stamps.Updater {
         if (m.getStartLevel() > 0) {
             p.put("startlevel", m.getStartLevel()); // NOI18N
         }
-        if (m.getHistory() instanceof ModuleHistory) {
-            ModuleHistory hist = (ModuleHistory) m.getHistory();
+        if (m.getHistory() instanceof ModuleHistory hist) {
             p.put("jar", hist.getJar()); // NOI18N
         }
         return p;
@@ -990,6 +1024,7 @@ final class ModuleList implements Stamps.Updater {
         // Property change coming from ModuleManager or some known Module.
         
         private boolean listening = true;
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (! triggered) throw new IllegalStateException("Property change before trigger()"); // NOI18N
             // REMEMBER this is inside *read* mutex, it is forbidden to even attempt
@@ -1036,15 +1071,19 @@ final class ModuleList implements Stamps.Updater {
         
         // SAX stuff.
         
+        @Override
         public void warning(SAXParseException e) throws SAXException {
             LOG.log(Level.WARNING, null, e);
         }
+        @Override
         public void error(SAXParseException e) throws SAXException {
             throw e;
         }
+        @Override
         public void fatalError(SAXParseException e) throws SAXException {
             throw e;
         }
+        @Override
         public InputSource resolveEntity(String pubid, String sysid) throws SAXException, IOException {
             if (pubid.equals(PUBLIC_ID)) {
                 if (VALIDATE_XML) {
@@ -1062,6 +1101,7 @@ final class ModuleList implements Stamps.Updater {
         
         // Changes in Modules/ folder.
         
+        @Override
         public void fileDeleted(FileEvent ev) {
             if (isOurs(ev)) {
                 if (LOG.isLoggable(Level.FINE)) {
@@ -1073,6 +1113,7 @@ final class ModuleList implements Stamps.Updater {
             fileDeleted0(fo.getName(), fo.getExt()/*, ev.getTime()*/);
         }
         
+        @Override
         public void fileDataCreated(FileEvent ev) {
             if (isOurs(ev)) {
                 if (LOG.isLoggable(Level.FINE)) {
@@ -1084,6 +1125,7 @@ final class ModuleList implements Stamps.Updater {
             fileCreated0(fo.getName(), fo.getExt()/*, ev.getTime()*/);
         }
         
+        @Override
         public void fileRenamed(FileRenameEvent ev) {
             if (isOurs(ev)) {
                 throw new IllegalStateException("I don't rename anything! " + ev); // NOI18N
@@ -1124,6 +1166,7 @@ final class ModuleList implements Stamps.Updater {
             } // else ignore
         }
         
+        @Override
         public void fileChanged(FileEvent ev) {
             if (isOurs(ev)) {
                 if (LOG.isLoggable(Level.FINE)) {
@@ -1150,9 +1193,11 @@ final class ModuleList implements Stamps.Updater {
             } // else ignore
         }
         
+        @Override
         public void fileFolderCreated(FileEvent ev) {
             // ignore
         }
+        @Override
         public void fileAttributeChanged(FileAttributeEvent ev) {
             // ignore
         }
@@ -1549,7 +1594,7 @@ final class ModuleList implements Stamps.Updater {
             Map<String, Map<String, Object>> cache = readCache();
             String[] names;
             if (cache != null) {
-                names = cache.keySet().toArray(new String[cache.size()]);
+                names = cache.keySet().toArray(String[]::new);
             } else {
                 FileObject[] children = folder.getChildren();
                 List<String> arr = new ArrayList<String>(children.length);
@@ -1572,7 +1617,7 @@ final class ModuleList implements Stamps.Updater {
                         LOG.fine("Strange file encountered in modules folder: " + f);
                     }
                 }
-                names = arr.toArray(new String[0]);
+                names = arr.toArray(String[]::new);
             }
             ev.log(Events.MODULES_FILE_SCANNED, names.length);
             XMLReader reader = null;
@@ -1635,12 +1680,12 @@ final class ModuleList implements Stamps.Updater {
                     }
                     ModuleHistory history = new ModuleHistory(jar, "loaded from " + f); // NOI18N
                     Boolean reloadableB = (Boolean) props.get("reloadable"); // NOI18N
-                    boolean reloadable = reloadableB != null ? reloadableB.booleanValue() : false;
-                    boolean enabled = enabledB != null ? enabledB.booleanValue() : false;
+                    boolean reloadable = reloadableB != null ? reloadableB : false;
+                    boolean enabled = enabledB != null ? enabledB : false;
                     Boolean autoloadB = (Boolean) props.get("autoload"); // NOI18N
-                    boolean autoload = autoloadB != null ? autoloadB.booleanValue() : false;
+                    boolean autoload = autoloadB != null ? autoloadB : false;
                     Boolean eagerB = (Boolean) props.get("eager"); // NOI18N
-                    boolean eager = eagerB != null ? eagerB.booleanValue() : false;
+                    boolean eager = eagerB != null ? eagerB : false;
                     NbInstaller.register(name, props.get("deps")); // NOI18N
                     Integer startLevel = (Integer)props.get("startlevel"); // NOI18N
                     Module m = createModule(jarFile, history, reloadable, autoload, eager, startLevel);

@@ -19,8 +19,10 @@
 
 package org.netbeans.core.startup;
 
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -246,6 +248,7 @@ public final class Main extends Object {
     if (CLIOptions.isGui ()) {
         try {
             java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
+            configureAWTAppClassName();
         } catch (java.lang.InternalError exc) {
             String s = NbBundle.getMessage(Main.class, "EXC_GraphicsStartFails1", exc.getMessage());
             System.out.println(s);
@@ -343,7 +346,7 @@ public final class Main extends Object {
             Logger.getLogger(Main.class.getName()).log(Level.WARNING, "Failed to delete {0}", f);
         }
     }
-  
+
     /** Loads a class from available class loaders. */
     private static Class<?> getKlass(String cls) {
         try {
@@ -358,6 +361,24 @@ public final class Main extends Object {
             return Class.forName(cls, false, loader);
         } catch (ClassNotFoundException e) {
             throw new NoClassDefFoundError(e.getLocalizedMessage());
+        }
+    }
+
+    // moved from MainWindow::init to handle splash, etc.
+    private static void configureAWTAppClassName() {
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Class<?> xtoolkit = toolkit.getClass();
+        if (xtoolkit.getName().equals("sun.awt.X11.XToolkit")) { //NOI18N
+            // TODO those add --add-opens=java.desktop/sun.awt.X11=ALL-UNNAMED
+
+            //#183739 / JDK-6528430 - provide proper app name on Linux
+            try {
+                final Field awtAppClassName = xtoolkit.getDeclaredField("awtAppClassName"); //NOI18N
+                awtAppClassName.setAccessible(true);
+                awtAppClassName.set(null, NbBundle.getMessage(Main.class, "AWT_AppClassName", "").strip()); //NOI18N
+            } catch (Exception x) {
+                Logger.getLogger(Main.class.getName()).log(Level.FINE, "can't change X11 application name", x);
+            }
         }
     }
 

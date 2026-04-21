@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.26
+#Version 2.27
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -1238,6 +1238,7 @@ CLSS public final org.netbeans.modules.payara.tooling.data.JDKVersion
 meth public boolean equals(java.lang.Object)
 meth public boolean ge(org.netbeans.modules.payara.tooling.data.JDKVersion)
 meth public boolean gt(org.netbeans.modules.payara.tooling.data.JDKVersion)
+meth public boolean isOptionSupported(org.netbeans.modules.payara.tooling.server.parser.JvmConfigReader$JvmOption,java.lang.String)
 meth public boolean le(org.netbeans.modules.payara.tooling.data.JDKVersion)
 meth public boolean lt(org.netbeans.modules.payara.tooling.data.JDKVersion)
 meth public int hashCode()
@@ -1248,8 +1249,6 @@ meth public java.util.Optional<java.lang.Short> getUpdate()
 meth public java.util.Optional<java.lang.String> getVM()
 meth public java.util.Optional<java.lang.String> getVendor()
 meth public short getMajor()
-meth public static boolean isCorrectJDK(java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>)
-meth public static boolean isCorrectJDK(org.netbeans.modules.payara.tooling.data.JDKVersion,java.util.Optional<java.lang.String>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>,java.util.Optional<org.netbeans.modules.payara.tooling.data.JDKVersion>)
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion getDefaultPlatformVersion()
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String)
 meth public static org.netbeans.modules.payara.tooling.data.JDKVersion toValue(java.lang.String,java.lang.String)

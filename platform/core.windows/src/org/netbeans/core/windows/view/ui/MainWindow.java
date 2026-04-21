@@ -23,7 +23,6 @@ package org.netbeans.core.windows.view.ui;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
@@ -116,21 +115,6 @@ public final class MainWindow {
        if (mainMenuBar == null) {
            mainMenuBar = createMenuBar();
            ToolbarPool.getDefault().waitFinished();
-
-           Toolkit toolkit = Toolkit.getDefaultToolkit();
-           Class<?> xtoolkit = toolkit.getClass();
-           if (xtoolkit.getName().equals("sun.awt.X11.XToolkit")) { //NOI18N
-               // TODO those add --add-opens=java.desktop/sun.awt.X11=ALL-UNNAMED
-
-               //#183739 / JDK-6528430 - provide proper app name on Linux
-               try {
-                    final Field awtAppClassName = xtoolkit.getDeclaredField("awtAppClassName"); //NOI18N
-                    awtAppClassName.setAccessible(true);
-                    awtAppClassName.set(null, NbBundle.getMessage(MainWindow.class, "CTL_MainWindow_Title_No_Project", "").strip()); //NOI18N
-               } catch (Exception x) {
-                   LOGGER.log(Level.FINE, "can't change X11 application name", x);
-               }
-           }
        }
 
        logLookAndFeelUsage();

@@ -112,9 +112,6 @@ env:
   # 'Gradle' or 'Maven' will activate lsp tests too due to test dependencies on project API (ProjectViewTest, LspBrokenReferencesImplTest, ...)
   test_lsp: ${{ contains(github.event.pull_request.labels.*.name, 'LSP') || contains(github.event.pull_request.labels.*.name, 'Gradle') || contains(github.event.pull_request.labels.*.name, 'Maven') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
-  # 'GraalVM' label for tests requirering GraalVM
-  test_graalvm: ${{ contains(github.event.pull_request.labels.*.name, 'GraalVM') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
-
   # 'Ant', 'Gradle', 'Maven' and 'MX' labels trigger the build-tools job
   test_build_tools: ${{ contains(github.event.pull_request.labels.*.name, 'Ant') || contains(github.event.pull_request.labels.*.name, 'Gradle') || contains(github.event.pull_request.labels.*.name, 'Maven') || contains(github.event.pull_request.labels.*.name, 'MX') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
 
@@ -1349,6 +1346,9 @@ jobs:
       - name: java.module.graph
         run: ant $OPTS -f java/java.module.graph test
 
+      - name: java/nashorn.execution
+        run: ant $OPTS -f java/nashorn.execution test
+
       - name: java.navigation
         run: ant $OPTS -f java/java.navigation test
 
@@ -2543,66 +2543,6 @@ jobs:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
 
 
-  graalvm-test:
-    name: GraalVM ${{ matrix.graal }} Tests
-    # equals env.test_graalvm == 'true'
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'GraalVM') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
-    needs: base-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    strategy:
-      matrix:
-        graal: [ '21.0.2' ]
-      fail-fast: false
-
-    steps:
-      - name: Setup Xvfb
-        run: |
-          echo "DISPLAY=:99.0" >> $GITHUB_ENV
-          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-
-      - name: Download Build
-        uses: actions/download-artifact@v8
-        with:
-          name: build.tar.zst 
-
-      - name: Extract
-        run: tar --zstd -xf build.tar.zst
-
-      - name: Setup GraalVM ${{ matrix.graal }}
-        run: |
-          URL=https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-${{ matrix.graal }}/graalvm-community-jdk-${{ matrix.graal }}_linux-x64_bin.tar.gz
-          curl -L $URL | tar -xz
-          GRAALVM=$(realpath graalvm-community-openjdk-*)
-          echo "JAVA_HOME=$GRAALVM" >> $GITHUB_ENV
-
-      - name: platform/core.network
-        run: ant $OPTS -f platform/core.network test
-
-      - name: platform/api.scripting
-        run: ant $OPTS -f platform/api.scripting test
-
-      - name: ide/libs.graalsdk
-        run: ant $OPTS -f ide/libs.graalsdk test
-
-      - name: webcommon/libs.graaljs
-        run: ant $OPTS -f webcommon/libs.graaljs test
-
-      - name: profiler/profiler.oql
-        run: ant $OPTS -f profiler/profiler.oql test
-
-      - name: java/nashorn.execution
-        run: ant $OPTS -f java/nashorn.execution test
-
-      - name: java/debugger.jpda.truffle
-        run: .github/retry.sh ant $OPTS -f java/debugger.jpda.truffle test
-
-      - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
-        if: failure()
-        with:
-          paths: "./*/*/build/test/*/results/TEST-*.xml"
-
 # cleanup job depends on everything so that it is forced to run last even if a long job fails early.
 # 'paperwork' is left out intentionally, since it doesn't run unit tests (hopefully doesn't need restarts)
 # and shouldn't prevent cleanup on validation failure - which might be common during dev time
@@ -2630,7 +2570,6 @@ jobs:
       - versioning-test
       - lsp-test
       - mysql-db-test
-      - graalvm-test
 
     # cleanup if the primary build job succeeded and
     #  * nothing else failed (allows manual restarts)

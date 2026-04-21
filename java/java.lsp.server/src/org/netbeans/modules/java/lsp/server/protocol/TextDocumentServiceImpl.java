@@ -448,7 +448,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
             List<String> configValues = List.of(NETBEANS_JAVADOC_LOAD_TIMEOUT, NETBEANS_COMPLETION_WARNING_TIME, NETBEANS_CODE_COMPLETION_COMMIT_CHARS);
             return client.getClientConfigurationManager().getConfigurations(configValues, uri).thenCompose(c ->
                 PriorityQueueRun.getInstance()
-                                .runTask(Priority.HIGHER, (params, cancel) -> {
+                                .<CompletionParams, Either<List<CompletionItem>, CompletionList>>runTask(Priority.HIGHER, (params, cancel) -> {
                     if (c != null && !c.isEmpty()) {
                         if (c.get(0).isJsonPrimitive()) {
                             JsonPrimitive javadocTimeSetting = c.get(0).getAsJsonPrimitive();
@@ -577,12 +577,15 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                     }
                     completionList.setItems(items);
 
-                    synchronized (this) {
-                        lastCompletions = currentCompletions;
-                    }
-
                     return Either.forRight(completionList);
-                }, p));
+                }, p)).whenComplete((res, exc) -> {
+                    if (exc == null) {
+                        synchronized (this) {
+                            lastCompletions = currentCompletions;
+                        }
+
+                    }
+                });
         } catch (IOException ex) {
             throw new IllegalStateException(ex);
         }
@@ -1133,7 +1136,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         Map<Long, LazyCodeAction> currentId2CodeAction = Collections.synchronizedMap(new HashMap<>());
 
         return PriorityQueueRun.getInstance()
-                               .runTask(Priority.NORMAL, (params, cancel) -> {
+                               .<CodeActionParams, List<Either<Command, CodeAction>>>runTask(Priority.NORMAL, (params, cancel) -> {
             // shortcut: if the projects are not yet initialized, return empty:
             String uri = params.getTextDocument().getUri();
             Document rawDoc = server.getOpenedDocuments().getDocument(uri);
@@ -1272,12 +1275,14 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 client.logMessage(new MessageParams(MessageType.Error, w.toString()));
             }
 
-            synchronized (this) {
-                id2CodeAction = currentId2CodeAction;
-            }
-
             return result;
-        }, p);
+        }, p).whenComplete((res, exc) -> {
+            if (exc == null) {
+                synchronized (this) {
+                    id2CodeAction = currentId2CodeAction;
+                }
+            }
+        });
     }
 
     @Override

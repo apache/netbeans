@@ -270,7 +270,7 @@ public class EjbJarProject implements Project, FileChangeListener {
         eval = createEvaluator();
         aux = helper.createAuxiliaryConfiguration();
         refHelper = new ReferenceHelper(helper, aux, helper.getStandardPropertyEvaluator());
-        buildExtender = AntBuildExtenderFactory.createAntExtender(new EjbExtenderImplementation());
+        buildExtender = AntBuildExtenderFactory.createAntExtender(new EjbExtenderImplementation(), refHelper);
         genFilesHelper = new GeneratedFilesHelper(helper, buildExtender);
         UpdateImplementation updateProject = new UpdateProjectImpl(this, helper, aux, genFilesHelper);
         this.updateHelper = new UpdateHelper(updateProject, helper);
@@ -436,7 +436,7 @@ public class EjbJarProject implements Project, FileChangeListener {
                         getTestSourceRoots(),
                         Roots.propertyBased(new String[]{EjbJarProjectProperties.META_INF}, new String[]{NbBundle.getMessage(EjbJarLogicalViewProvider.class, "LBL_Node_DocBase")}, false, null, null),
                         Roots.nonSourceRoots(ProjectProperties.BUILD_DIR, EjbJarProjectProperties.DIST_DIR)),
-                QuerySupport.createSharabilityQuery(helper, evaluator(), getSourceRoots(), getTestSourceRoots(),
+                QuerySupport.createSharabilityQuery2(helper, evaluator(), getSourceRoots(), getTestSourceRoots(),
                         EjbJarProjectProperties.META_INF),
                 QuerySupport.createFileBuiltQuery(helper, evaluator(), getSourceRoots(), getTestSourceRoots()),
                 encodingQuery,
@@ -465,7 +465,10 @@ public class EjbJarProject implements Project, FileChangeListener {
                 QuerySupport.createBinaryForSourceQueryImplementation(getSourceRoots(), getTestSourceRoots(), helper, eval),
                 new JavaEEProjectSettingsImpl(this),
                 BrokenReferencesSupport.createReferenceProblemsProvider(helper, refHelper, eval, lvp.getBreakableProperties(), lvp.getPlatformProperties()),
-                BrokenReferencesSupport.createPlatformVersionProblemProvider(helper, eval, PlatformUpdatedCallBackImpl.create(EjbJarProjectType.PROJECT_CONFIGURATION_NAMESPACE, updateHelper), JavaPlatform.getDefault().getSpecification().getName(), ProjectProperties.PLATFORM_ACTIVE, ProjectProperties.JAVAC_SOURCE, ProjectProperties.JAVAC_TARGET),
+                BrokenReferencesSupport.createPlatformVersionProblemProvider(helper, eval, 
+                        PlatformUpdatedCallBackImpl.create(EjbJarProjectType.PROJECT_CONFIGURATION_NAMESPACE, updateHelper), 
+                        JavaPlatform.getDefault().getSpecification().getName(), ProjectProperties.PLATFORM_ACTIVE, 
+                        ProjectProperties.JAVAC_SOURCE, ProjectProperties.JAVAC_TARGET),
                 UILookupMergerSupport.createProjectProblemsProviderMerger(),
                 // TODO: AB: maybe add "this" to the lookup. You should not cast a Project to EjbJarProject, but use the lookup instead.
             });
@@ -490,14 +493,18 @@ public class EjbJarProject implements Project, FileChangeListener {
      */    
     public synchronized SourceRoots getSourceRoots() {        
         if (this.sourceRoots == null) { //Local caching, no project metadata access
-            this.sourceRoots = SourceRoots.create(this.updateHelper, evaluator(), getReferenceHelper(), EjbJarProjectType.PROJECT_CONFIGURATION_NAMESPACE, "source-roots", false, "src.{0}{1}.dir"); //NOI18N
+            this.sourceRoots = SourceRoots.create(
+                    this.updateHelper, evaluator(), getReferenceHelper(), 
+                    EjbJarProjectType.PROJECT_CONFIGURATION_NAMESPACE, "source-roots", false, "src.{0}{1}.dir"); //NOI18N
         }
         return this.sourceRoots;
     }
     
     public synchronized SourceRoots getTestSourceRoots() {
         if (this.testRoots == null) { //Local caching, no project metadata access
-            this.testRoots = SourceRoots.create(this.updateHelper, evaluator(), getReferenceHelper(), EjbJarProjectType.PROJECT_CONFIGURATION_NAMESPACE, "test-roots", true, "test.{0}{1}.dir"); //NOI18N
+            this.testRoots = SourceRoots.create(
+                    this.updateHelper, evaluator(), getReferenceHelper(), 
+                    EjbJarProjectType.PROJECT_CONFIGURATION_NAMESPACE, "test-roots", true, "test.{0}{1}.dir"); //NOI18N
         }
         return this.testRoots;
     }
@@ -661,7 +668,7 @@ public class EjbJarProject implements Project, FileChangeListener {
                                 Map<String, String> roots = J2EEProjectProperties.extractPlatformLibrariesRoot(platform);
                                 String classpath = J2EEProjectProperties.toClasspathString(platform.getClasspathEntries(), roots);
                                 ep.setProperty(EjbJarProjectProperties.J2EE_PLATFORM_CLASSPATH, classpath);
-                            helper.putProperties(AntProjectHelper.PRIVATE_PROPERTIES_PATH, ep);
+                                helper.putProperties(AntProjectHelper.PRIVATE_PROPERTIES_PATH, ep);
                             try {
                                 ProjectManager.getDefault().saveProject(EjbJarProject.this);
                             } catch (IOException e) {
@@ -729,9 +736,7 @@ public class EjbJarProject implements Project, FileChangeListener {
                     genFilesHelper.generateBuildScriptFromStylesheet(
                             GeneratedFilesHelper.BUILD_IMPL_XML_PATH,
                             EjbJarProject.class.getResource("resources/build-impl.xsl"));
-                } catch (IOException e) {
-                    Exceptions.printStackTrace(e);
-                } catch (IllegalStateException e) {
+                } catch (IOException | IllegalStateException e) {
                     Exceptions.printStackTrace(e);
                 }
             } else {
@@ -785,7 +790,7 @@ public class EjbJarProject implements Project, FileChangeListener {
                 if (lf != null && lf.isFolder()) {
                     libFolder = lf;
                     FileObject[] children = libFolder.getChildren ();
-                    List<URL> libs = new LinkedList<URL>();
+                    List<URL> libs = new LinkedList<>();
                     for (int i = 0; i < children.length; i++) {
                         if (FileUtil.isArchiveFile(children[i])) {
                             libs.add(FileUtil.getArchiveRoot(children[i].toURL()));
@@ -819,7 +824,8 @@ public class EjbJarProject implements Project, FileChangeListener {
                 
                 String servInstID = getProperty(AntProjectHelper.PRIVATE_PROPERTIES_PATH, EjbJarProjectProperties.J2EE_SERVER_INSTANCE);
                 String serverType = null;
-                J2eePlatform platform = Deployment.getDefault().getJ2eePlatform(servInstID);
+                J2eePlatform platform = Deployment.getDefault().getServerInstance(servInstID).getJ2eePlatform();
+                
                 if (platform != null) {
                     // updates j2ee.platform.cp & wscompile.cp & reg. j2ee platform listener
                     EjbJarProjectProperties.setServerInstance(EjbJarProject.this, EjbJarProject.this.helper, servInstID);
@@ -831,7 +837,7 @@ public class EjbJarProject implements Project, FileChangeListener {
                         String instanceID = J2EEProjectProperties.getMatchingInstance(serverType, Type.EJB, EjbJarProject.this.getAPIEjbJar().getJ2eeProfile());
                         if (instanceID != null) {
                             EjbJarProjectProperties.setServerInstance(EjbJarProject.this, EjbJarProject.this.helper, instanceID);
-                            platform = Deployment.getDefault().getJ2eePlatform(instanceID);
+                            platform = Deployment.getDefault().getServerInstance(instanceID).getJ2eePlatform();
                         }
                     }
                     if (platform == null) {
@@ -840,7 +846,7 @@ public class EjbJarProject implements Project, FileChangeListener {
                 }
                 // UI Logging
                 Utils.logUI(NbBundle.getBundle(EjbJarProject.class), "UI_EJB_PROJECT_OPENED", // NOI18N
-                        new Object[] {(serverType != null ? serverType : Deployment.getDefault().getServerID(servInstID)), servInstID});
+                        new Object[] {(serverType != null ? serverType : Deployment.getDefault().getServerInstance(servInstID).getServerID()), servInstID});
 
                 String serverName = "";  // NOI18N
                 try {
@@ -853,7 +859,7 @@ public class EjbJarProject implements Project, FileChangeListener {
                 }
                 Profile profile = EjbJarProject.this.getEjbModule().getJ2eeProfile();
                 Utils.logUsage(EjbJarProject.class, "USG_PROJECT_OPEN_EJB", new Object[] { serverName, profile }); // NOI18N
-            } catch (IOException e) {
+            } catch (IOException | InstanceRemovedException e) {
                 LOGGER.log(Level.INFO, null, e);
             }
             
@@ -935,14 +941,27 @@ public class EjbJarProject implements Project, FileChangeListener {
             if (!props.containsKey("build.generated.sources.dir")) { // NOI18N
                 props.setProperty("build.generated.sources.dir", "${build.dir}/generated-sources"); // NOI18N
             }
-            
-            if (!props.containsKey(ProjectProperties.ANNOTATION_PROCESSING_ENABLED))props.setProperty(ProjectProperties.ANNOTATION_PROCESSING_ENABLED, "true"); //NOI18N
-            if (!props.containsKey(ProjectProperties.ANNOTATION_PROCESSING_ENABLED_IN_EDITOR))props.setProperty(ProjectProperties.ANNOTATION_PROCESSING_ENABLED_IN_EDITOR, "true"); //NOI18N
-            if (!props.containsKey(ProjectProperties.ANNOTATION_PROCESSING_RUN_ALL_PROCESSORS))props.setProperty(ProjectProperties.ANNOTATION_PROCESSING_RUN_ALL_PROCESSORS, "true"); //NOI18N
-            if (!props.containsKey(ProjectProperties.ANNOTATION_PROCESSING_PROCESSORS_LIST))props.setProperty(ProjectProperties.ANNOTATION_PROCESSING_PROCESSORS_LIST, ""); //NOI18N
-            if (!props.containsKey(ProjectProperties.ANNOTATION_PROCESSING_SOURCE_OUTPUT))props.setProperty(ProjectProperties.ANNOTATION_PROCESSING_SOURCE_OUTPUT, "${build.generated.sources.dir}/ap-source-output"); //NOI18N
-            if (!props.containsKey(ProjectProperties.JAVAC_PROCESSORPATH))props.setProperty(ProjectProperties.JAVAC_PROCESSORPATH,"${" + ProjectProperties.JAVAC_CLASSPATH + "}"); //NOI18N
-            if (!props.containsKey("javac.test.processorpath"))props.setProperty("javac.test.processorpath", "${" + ProjectProperties.JAVAC_TEST_CLASSPATH + "}"); // NOI18N
+            if (!props.containsKey(ProjectProperties.ANNOTATION_PROCESSING_ENABLED)) {
+                props.setProperty(ProjectProperties.ANNOTATION_PROCESSING_ENABLED, "true"); //NOI18N
+            }
+            if (!props.containsKey(ProjectProperties.ANNOTATION_PROCESSING_ENABLED_IN_EDITOR)) {
+                props.setProperty(ProjectProperties.ANNOTATION_PROCESSING_ENABLED_IN_EDITOR, "true"); //NOI18N
+            }
+            if (!props.containsKey(ProjectProperties.ANNOTATION_PROCESSING_RUN_ALL_PROCESSORS)) {
+                props.setProperty(ProjectProperties.ANNOTATION_PROCESSING_RUN_ALL_PROCESSORS, "true"); //NOI18N
+            }
+            if (!props.containsKey(ProjectProperties.ANNOTATION_PROCESSING_PROCESSORS_LIST)) {
+                props.setProperty(ProjectProperties.ANNOTATION_PROCESSING_PROCESSORS_LIST, ""); //NOI18N
+            }
+            if (!props.containsKey(ProjectProperties.ANNOTATION_PROCESSING_SOURCE_OUTPUT)) {
+                props.setProperty(ProjectProperties.ANNOTATION_PROCESSING_SOURCE_OUTPUT, "${build.generated.sources.dir}/ap-source-output"); //NOI18N
+            }
+            if (!props.containsKey(ProjectProperties.JAVAC_PROCESSORPATH)) {
+                props.setProperty(ProjectProperties.JAVAC_PROCESSORPATH,"${" + ProjectProperties.JAVAC_CLASSPATH + "}"); //NOI18N
+            }
+            if (!props.containsKey("javac.test.processorpath")) {
+                props.setProperty("javac.test.processorpath", "${" + ProjectProperties.JAVAC_TEST_CLASSPATH + "}"); // NOI18N
+            }
 
             updateHelper.putProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH, props);            
             
@@ -994,15 +1013,15 @@ public class EjbJarProject implements Project, FileChangeListener {
             /*EjbJarProjectProperties wpp = getEjbJarProjectProperties();
             String servInstID = (String)wpp.get(EjbJarProjectProperties.J2EE_SERVER_INSTANCE);*/
             String servInstID = getProperty(AntProjectHelper.PRIVATE_PROPERTIES_PATH, EjbJarProjectProperties.J2EE_SERVER_INSTANCE);
-            J2eePlatform platform = Deployment.getDefault().getJ2eePlatform(servInstID);
-            if (platform != null) {
-                unregisterJ2eePlatformListener(platform);
-            }
             
             // Probably unnecessary, but just in case:
             try {
+                J2eePlatform platform = Deployment.getDefault().getServerInstance(servInstID).getJ2eePlatform();
+                if (platform != null) {
+                    unregisterJ2eePlatformListener(platform);
+                }
                 ProjectManager.getDefault().saveProject(EjbJarProject.this);
-            } catch (IOException e) {
+            } catch (IOException | InstanceRemovedException e) {
                 Exceptions.printStackTrace(e);
             }
             
@@ -1036,7 +1055,9 @@ public class EjbJarProject implements Project, FileChangeListener {
             return new AntArtifact[] {
                 helper.createSimpleAntArtifact(JavaProjectConstants.ARTIFACT_TYPE_JAR, "dist.jar", helper.getStandardPropertyEvaluator(), "dist", "clean"), // NOI18N
                 helper.createSimpleAntArtifact(EjbProjectConstants.ARTIFACT_TYPE_EJBJAR, "dist.jar", helper.getStandardPropertyEvaluator(), "dist", "clean"), // NOI18N
-                helper.createSimpleAntArtifact(EjbProjectConstants.ARTIFACT_TYPE_J2EE_MODULE_IN_EAR_ARCHIVE, "dist.ear.jar", helper.getStandardPropertyEvaluator(), "dist-ear", "clean-ear") // NOI18N
+                helper.createSimpleAntArtifact(
+                        EjbProjectConstants.ARTIFACT_TYPE_J2EE_MODULE_IN_EAR_ARCHIVE, 
+                        "dist.ear.jar", helper.getStandardPropertyEvaluator(), "dist-ear", "clean-ear") // NOI18N
             };
         }
     }
@@ -1081,7 +1102,7 @@ public class EjbJarProject implements Project, FileChangeListener {
         
         private String buildClasses = null;
 
-        private final List<ArtifactListener> listeners = new CopyOnWriteArrayList<ArtifactListener>();
+        private final List<ArtifactListener> listeners = new CopyOnWriteArrayList<>();
 
         /** Creates a new instance of CopyOnSaveSupport */
         public CopyOnSaveSupport() {
@@ -1197,14 +1218,14 @@ public class EjbJarProject implements Project, FileChangeListener {
                 }
 
                 FileObject fo = fe.getFile();
-                FileObject metaBase = getEjbModule().resolveMetaInf(metaBaseValue);
-                if (metaBase != null && FileUtil.isParentOf(metaBase, fo)) {
+                FileObject _metaBase = getEjbModule().resolveMetaInf(metaBaseValue);
+                if (_metaBase != null && FileUtil.isParentOf(_metaBase, fo)) {
                     // inside docbase
                     handleCopyFileToDestDir(fo);
                     FileObject parent = fo.getParent();
                     String path;
-                    if (FileUtil.isParentOf(metaBase, parent)) {
-                        path = META_INF_FOLDER + "/" + FileUtil.getRelativePath(metaBase, fo.getParent()) +
+                    if (FileUtil.isParentOf(_metaBase, parent)) {
+                        path = META_INF_FOLDER + "/" + FileUtil.getRelativePath(_metaBase, fo.getParent()) +
                             "/" + fe.getName() + "." + fe.getExt();
                     } else {
                         path = META_INF_FOLDER + "/" + fe.getName() + "." + fe.getExt();
@@ -1227,10 +1248,10 @@ public class EjbJarProject implements Project, FileChangeListener {
                 }
 
                 FileObject fo = fe.getFile();
-                FileObject metaBase = getEjbModule().resolveMetaInf(metaBaseValue);
-                if (metaBase != null && FileUtil.isParentOf(metaBase, fo)) {
+                FileObject _metaBase = getEjbModule().resolveMetaInf(metaBaseValue);
+                if (_metaBase != null && FileUtil.isParentOf(_metaBase, fo)) {
                     // inside docbase
-                    String path = META_INF_FOLDER + "/" + FileUtil.getRelativePath(metaBase, fo); // NOI18N
+                    String path = META_INF_FOLDER + "/" + FileUtil.getRelativePath(_metaBase, fo); // NOI18N
                     if (!isSynchronizationAppropriate(path)) {
                         return;
                     }
@@ -1289,40 +1310,27 @@ public class EjbJarProject implements Project, FileChangeListener {
                 return;
             }
 
-            FileObject metaBase = getEjbModule().resolveMetaInf(metaBaseValue);
-            if (metaBase != null && FileUtil.isParentOf(metaBase, fo)) {
+            FileObject _metaBase = getEjbModule().resolveMetaInf(metaBaseValue);
+            if (_metaBase != null && FileUtil.isParentOf(_metaBase, fo)) {
                 // inside docbase
-                String path = META_INF_FOLDER + "/" + FileUtil.getRelativePath(metaBase, fo); // NOI18N
+                String path = META_INF_FOLDER + "/" + FileUtil.getRelativePath(_metaBase, fo); // NOI18N
                 if (!isSynchronizationAppropriate(path)) {
                     return;
                 }
                 FileObject ejbBuildBase = buildClasses == null ? null : helper.resolveFileObject(buildClasses);
                 if (ejbBuildBase != null) {
                     // project was built
-                    if (FileUtil.isParentOf(metaBase, ejbBuildBase) || FileUtil.isParentOf(ejbBuildBase, metaBase)) {
+                    if (FileUtil.isParentOf(_metaBase, ejbBuildBase) || FileUtil.isParentOf(ejbBuildBase, _metaBase)) {
                         //cannot copy into self
                         return;
                     }
                     FileObject destFile = ensureDestinationFileExists(ejbBuildBase, path, fo.isFolder());
                     if (!fo.isFolder()) {
-                        InputStream is = null;
-                        OutputStream os = null;
-                        FileLock fl = null;
-                        try {
-                            is = fo.getInputStream();
-                            fl = destFile.lock();
-                            os = destFile.getOutputStream(fl);
-                            FileUtil.copy(is, os);
+                        try (InputStream is = fo.getInputStream();
+                                FileLock fl = destFile.lock();
+                                OutputStream os = destFile.getOutputStream(fl)) {
+                            is.transferTo(os);
                         } finally {
-                            if (is != null) {
-                                is.close();
-                            }
-                            if (os != null) {
-                                os.close();
-                            }
-                            if (fl != null) {
-                                fl.releaseLock();
-                            }
                             File file = FileUtil.toFile(destFile);
                             if (file != null) {
                                 fireArtifactChange(Collections.singleton(ArtifactListener.Artifact.forFile(file)));
@@ -1379,7 +1387,7 @@ public class EjbJarProject implements Project, FileChangeListener {
             ClassPathSupport cs = new ClassPathSupport(evaluator(), getReferenceHelper(), helper,
                 getUpdateHelper(), new ClassPathSupportCallbackImpl(helper));
 
-            List<ArtifactCopyOnSaveSupport.Item> result = new ArrayList<ArtifactCopyOnSaveSupport.Item>();
+            List<ArtifactCopyOnSaveSupport.Item> result = new ArrayList<>();
             for (ClassPathSupport.Item item : cs.itemsList(
                     helper.getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH).getProperty(ProjectProperties.JAVAC_CLASSPATH),
                     ClassPathSupportCallbackImpl.ELEMENT_INCLUDED_LIBRARIES)) {
@@ -1552,7 +1560,7 @@ public class EjbJarProject implements Project, FileChangeListener {
         @Override
         public String[] getPrivilegedTemplates() {
             checkEnvironment();
-            List<String> privileged = new ArrayList<String>();
+            List<String> privileged = new ArrayList<>();
             if (isArchive) {
                 privileged.addAll(Arrays.asList(PRIVILEGED_NAMES_ARCHIVE));
             } else if (isEE5) {
@@ -1563,14 +1571,14 @@ public class EjbJarProject implements Project, FileChangeListener {
             } else {
                 privileged.addAll(Arrays.asList(PRIVILEGED_NAMES));
             } 
-            return privileged.toArray(new String[0]);
+            return privileged.toArray(String[]::new);
         }
         
         private void checkEnvironment() {
             if (!checked) {
-                Profile version=Profile.fromPropertiesString(evaluator().getProperty(EjbJarProjectProperties.J2EE_PLATFORM));
-                isEE5 = Profile.JAVA_EE_5==version;
-                isEE6Plus = version.isAtLeast(Profile.JAVA_EE_6_WEB);
+                Profile version = Profile.fromPropertiesString(evaluator().getProperty(EjbJarProjectProperties.J2EE_PLATFORM));
+                isEE5 = (Profile.JAVA_EE_5 == version);
+                isEE6Plus = (null != version) ? version.isAtLeast(Profile.JAVA_EE_6_WEB) : false;
                 final Object srcType = helper.getAntProjectHelper().
                         getStandardPropertyEvaluator().getProperty(EjbJarProjectProperties.JAVA_SOURCE_BASED);
                 if ("false".equals(srcType)) {

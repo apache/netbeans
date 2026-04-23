@@ -21,19 +21,12 @@ package org.netbeans.modules.languages.env.hints;
 import org.netbeans.modules.csl.api.HintsProvider;
 import org.netbeans.modules.languages.env.EnvFileResolver;
 import org.netbeans.spi.options.OptionsPanelController;
-import org.openide.util.NbBundle;
 
 public class HintsControllerFactory {
 
     public HintsControllerFactory() {
     }
 
-    @OptionsPanelController.SubRegistration(
-            id = "EnvFileHints",
-            location = "Editor/Hints",
-            displayName = "#HintsControllerFactory.name"
-    )
-    @NbBundle.Messages("HintsControllerFactory.name=Env File Hints")
     public static OptionsPanelController createOptions() {
         HintsProvider.HintsManager manager = HintsProvider.HintsManager.getManagerForMimeType(EnvFileResolver.MIME_TYPE);
         assert manager != null;

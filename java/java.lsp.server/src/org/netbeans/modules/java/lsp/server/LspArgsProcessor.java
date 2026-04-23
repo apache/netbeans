@@ -37,7 +37,7 @@ public final class LspArgsProcessor implements ArgsProcessor {
     @Messages("DESC_StartJavaLanguageServer=Starts the Java Language Server")
     public String lsPort;
 
-    @Arg(longName="start-java-debug-adapter-server")
+    @Arg(longName="start-java-debug-adapter-server", defaultValue = "")
     @Description(shortDescription="#DESC_StartJavaDebugAdapterServer")
     @Messages("DESC_StartJavaDebugAdapterServer=Starts the Java Debug Adapter Server")
     public String debugPort;

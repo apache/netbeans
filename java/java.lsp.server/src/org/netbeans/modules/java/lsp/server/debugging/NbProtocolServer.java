@@ -457,6 +457,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
             scope.setName(localScope.getName());
             scope.setVariablesReference(localScopeId);
             scope.setExpensive(false);
+            scope.setPresentationHint("locals");
             result.add(scope);
         }
         ScopesResponse response = new ScopesResponse();
@@ -683,15 +684,15 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                         if (seenCodeOnLine.contains(line) && !addedLine.contains(line)) {
                             BreakpointLocation l = new BreakpointLocation();
 
-                            l.setLine(line + 1); //XXX: +1 may need to be configuration
+                            l.setLine(context.getClientLine(line + 1));
                             l.setColumn(null);
                             locations.add(l);
                             addedLine.add(line);
                         }
 
                         BreakpointLocation l = new BreakpointLocation();
-                        l.setLine(line + 1); //XXX: +1 may need to be configuration
-                        l.setColumn(pos.getCharacter() + 1); //dtto
+                        l.setLine(context.getClientLine(line + 1));
+                        l.setColumn(context.getClientColumn(pos.getCharacter() + 1));
                         locations.add(l);
 
                         boolean wasInLambda = inLambda;

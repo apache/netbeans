@@ -49,6 +49,7 @@ public final class DebugAdapterContext {
     private boolean clientLinesStartAt1 = true;
     private boolean clientColumnsStartAt1 = true;
     private final boolean debuggerLinesStartAt1 = true;
+    private final boolean debuggerColumnsStartAt1 = true;
     private boolean clientPathsAreUri = false;
     private final boolean debuggerPathsAreUri = true;
     private boolean supportsRunInTerminalRequest = false;
@@ -124,6 +125,28 @@ public final class DebugAdapterContext {
             return clientLine + 1;
         } else {
             return clientLine - 1;
+        }
+    }
+
+    public int getClientColumn(int debuggerColum) {
+        if (clientColumnsStartAt1 == debuggerColumnsStartAt1) {
+            return debuggerColum;
+        }
+        if (clientColumnsStartAt1) {
+            return debuggerColum + 1;
+        } else {
+            return debuggerColum - 1;
+        }
+    }
+
+    public int getDebuggerColumn(int clientColumn) {
+        if (clientColumnsStartAt1 == debuggerColumnsStartAt1) {
+            return clientColumn;
+        }
+        if (debuggerColumnsStartAt1) {
+            return clientColumn + 1;
+        } else {
+            return clientColumn - 1;
         }
     }
 

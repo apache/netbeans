@@ -509,14 +509,10 @@ public class WebBeansModelProviderImpl extends DecoratorInterceptorLogic {
         if ( element instanceof TypeElement ){
             String name = element.getSimpleName().toString();
             if ( name.length() >0 ){
-                // XXX we may use Introspector.decapitalize
-                String withoutPrefix = name.substring(1);
-                // #249438
-                if (!withoutPrefix.isEmpty() && Character.isUpperCase(withoutPrefix.charAt(0))) {
-                    return name;
-                } else {
-                    return Character.toLowerCase(name.charAt(0)) + withoutPrefix;
-                }
+                // According to the CDI spec:
+                // The default name for a managed bean is the unqualified class name of the bean class,
+                // after converting the first character to lower case.
+                return Character.toLowerCase(name.charAt(0)) + name.substring(1);
             }
             else {
                 return name;

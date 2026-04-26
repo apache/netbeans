@@ -26,6 +26,15 @@
             <code-name-base>org.netbeans.modules.maven.indexer</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>o.n.jdk.fallback</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0-1</release-version>
+                        <specification-version>0.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>com.google.gson</code-name-base>
                     <run-dependency/>
                 </dependency>

@@ -18,16 +18,20 @@
  */
 package org.netbeans.modules.web.common.spi;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Parameters;
 
 /**
- * Clients uses this class to obtain a  web root for a file within a web-like project.
+ * Clients uses this class to obtain a web root for a file within a web-like project.
  *
  * @author marekfukala
  */
@@ -52,7 +56,7 @@ public final class ProjectWebRootQuery {
             ProjectWebRootProvider provider = project.getLookup().lookup(ProjectWebRootProvider.class);
             if (provider != null) {
                 FileObject root = provider.getWebRoot(file);
-                if(root == null) {
+                if (root == null) {
                     return null;
                 }
 
@@ -67,6 +71,7 @@ public final class ProjectWebRootQuery {
      *
      * @param project a project which you want to get web roots for
      * @return collection of web roots of the given project, can be empty but never {@code null}
+     *
      * @since 1.57
      */
     @NonNull
@@ -74,7 +79,14 @@ public final class ProjectWebRootQuery {
         Parameters.notNull("project", project); // NOI18N
         ProjectWebRootProvider provider = project.getLookup().lookup(ProjectWebRootProvider.class);
         if (provider == null) {
-            return Collections.emptyList();
+            List<FileObject> objects = new ArrayList<>();
+            Sources sources = ProjectUtils.getSources(project);
+            for (SourceGroup group : sources.getSourceGroups("java")) {
+                FileObject root = group.getRootFolder();
+                objects.add(root);
+            }
+            objects.add(project.getProjectDirectory());
+            return objects;
         }
         Collection<FileObject> webRoots = provider.getWebRoots();
         assert webRoots != null : "WebRoots cannot be null in " + provider.getClass().getName();

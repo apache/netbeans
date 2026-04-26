@@ -18,6 +18,8 @@
  */
 package org.netbeans.modules.java.lsp.server.debugging.breakpoints;
 
+import com.sun.source.tree.LambdaExpressionTree;
+import com.sun.source.util.TreePathScanner;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -30,6 +32,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.eclipse.lsp4j.Position;
 
 import org.eclipse.lsp4j.debug.BreakpointEventArguments;
 import org.eclipse.lsp4j.debug.Source;
@@ -38,11 +41,12 @@ import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.jpda.JPDABreakpoint;
 import org.netbeans.api.debugger.jpda.LineBreakpoint;
+import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.modules.debugger.jpda.truffle.breakpoints.TruffleLineBreakpoint;
+import org.netbeans.modules.java.lsp.server.Utils;
 import org.netbeans.modules.java.lsp.server.debugging.DebugAdapterContext;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.URLMapper;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -56,13 +60,14 @@ public final class NbBreakpoint {
     private final Source source;
     private final String sourceURL;
     private int line;
+    private Integer column;
     private int hitCount;
     private String condition;
     private String logMessage;
     private final Map<Object, Object> properties = new HashMap<>();
     private Breakpoint breakpoint; // Either JPDA's LineBreakpoint, or TruffleLineBreakpoint
 
-    public NbBreakpoint(Source source, String sourceURL, int line, int hitCount, String condition, String logMessage, DebugAdapterContext context) {
+    public NbBreakpoint(Source source, String sourceURL, int line, Integer column, int hitCount, String condition, String logMessage, DebugAdapterContext context) {
         this.source = source;
         Integer ref = source.getSourceReference();
         if (ref != null && ref != 0) {
@@ -75,6 +80,7 @@ public final class NbBreakpoint {
         }
         this.sourceURL = sourceURL;
         this.line = line;
+        this.column = column;
         this.hitCount = hitCount;
         this.condition = condition;
         this.logMessage = logMessage;
@@ -87,6 +93,10 @@ public final class NbBreakpoint {
 
     public int getLineNumber() {
         return line;
+    }
+
+    public Integer getColumn() {
+        return column;
     }
 
     public int getHitCount() {
@@ -143,6 +153,9 @@ public final class NbBreakpoint {
                 b.setPrintText(message);
                 b.setSuspend(JPDABreakpoint.SUSPEND_NONE);
             }
+            if (column != null) {
+                b.setLambdaIndex(getLambdaIndex(line, column));
+            }
             breakpoint = b;
         } else {
             URL url;
@@ -176,6 +189,37 @@ public final class NbBreakpoint {
         return CompletableFuture.completedFuture(this);
     }
 
+    private int[] getLambdaIndex(int line, int column) {
+        try {
+            FileObject file = Utils.fromUri(sourceURL);
+            JavaSource js = JavaSource.forFileObject(file);
+            int[] index = new int[] { LineBreakpoint.LAMBDA_INDEX_STOP_OUTSIDE };
+            js.runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.PARSED);
+                //TODO: span only!
+                new TreePathScanner<Void, Void>() {
+                    int idx = 0;
+                    public Void visitLambdaExpression(LambdaExpressionTree tree, Void v) {
+                        int startPos = (int) cc.getTrees().getSourcePositions().getStartPosition(getCurrentPath().getCompilationUnit(), tree);
+                        Position pos = Utils.createPosition(cc.getCompilationUnit().getLineMap(), startPos);
+                        if (line == pos.getLine() + 1) {
+                            if (column == pos.getCharacter() + 1) {
+                                index[0] = idx;
+                            } else {
+                                idx++;
+                            }
+                        }
+                        return super.visitLambdaExpression(tree, v);
+                    }
+                }.scan(cc.getCompilationUnit(), null);
+            }, true);
+            return index;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return new int[0];
+    }
     private static final String lsp2NBLogMessage(String message) {
         return message.replaceAll("\\{([^\\}]+)\\}", "{=$1}");      // NOI18N
     }

@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import junit.framework.Test;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
@@ -39,11 +40,13 @@ import org.netbeans.junit.NbTestCase;
  */
 public class ExpressionLambdaBreakpointTest extends NbTestCase {
 
-    private static final String TEST_APP_PATH = System.getProperty ("test.dir.src") + 
+    private static final String TEST_APP_PATH = System.getProperty ("test.dir.src") +
         "org/netbeans/api/debugger/jpda/testapps/ExpressionLambdaBreakpointApp.java";
-    
+    private static final String TEST_MULTI_LINE_APP_PATH = System.getProperty ("test.dir.src") +
+        "org/netbeans/api/debugger/jpda/testapps/ExpressionLambdaBreakpointMultiLineApp.java";
+
     private JPDASupport support;
-    
+
     public ExpressionLambdaBreakpointTest (String s) {
         super (s);
     }
@@ -51,11 +54,14 @@ public class ExpressionLambdaBreakpointTest extends NbTestCase {
     public static Test suite() {
         return JPDASupport.createTestSuite(ExpressionLambdaBreakpointTest.class);
     }
-    
-    public void testLambdaBreakpoints() throws Exception {
+
+    public void testLambdaBreakpointsStopAll() throws Exception {
         try {
             Utils.BreakPositions bp = Utils.getBreakPositions(TEST_APP_PATH);
             LineBreakpoint[] lb = bp.getBreakpoints().toArray(new LineBreakpoint[0]);
+
+            lb[0].setLambdaIndex(new int[0]); //stop on all locations
+
             DebuggerManager dm = DebuggerManager.getDebuggerManager ();
             for (int i = 0; i < lb.length; i++) {
                 dm.addBreakpoint (lb[i]);
@@ -69,31 +75,36 @@ public class ExpressionLambdaBreakpointTest extends NbTestCase {
             support = JPDASupport.attach (
                 "org.netbeans.api.debugger.jpda.testapps.ExpressionLambdaBreakpointApp"
             );
-            
+
             JPDADebugger debugger = support.getDebugger();
             int lambdaBpLineHitCount = 6; //total list vaues + 1
             for (int j = 0; j < lambdaBpLineHitCount; j++) {
                 support.waitState (JPDADebugger.STATE_STOPPED);  // j-th breakpoint hit
                 assertEquals (
-                    "Debugger stopped at wrong line for breakpoint", 
-                    lb[0].getLineNumber (), 
+                    "Debugger stopped at wrong line for breakpoint",
+                    lb[0].getLineNumber (),
                     debugger.getCurrentCallStackFrame ().getLineNumber (null)
                 );
-                
+
                 if (j == 0) {
                     support.stepOver();
                     assertEquals (
-                    "Debugger stopped at wrong line for breakpoint", 
-                    lb[0].getLineNumber ()+ 1, 
+                    "Debugger stopped at wrong line for breakpoint",
+                    lb[0].getLineNumber ()+ 1,
                     debugger.getCurrentCallStackFrame ().getLineNumber (null)
                 );
                 }
                 support.doContinue();
             }
-            
-            
+
             support.waitState (JPDADebugger.STATE_STOPPED);
-            
+
+            assertEquals (
+                "Debugger stopped at wrong line for breakpoint",
+                lb[1].getLineNumber (),
+                debugger.getCurrentCallStackFrame ().getLineNumber (null)
+            );
+
             for (int i = 0; i < tb.length; i++) {
                 tb[i].checkResult ();
             }
@@ -102,7 +113,198 @@ public class ExpressionLambdaBreakpointTest extends NbTestCase {
             }
             Map<String, Variable> variablesByName = getVariablesByName(debugger.getCurrentCallStackFrame ().getLocalVariables());
             assertTrue("Wrong computation value of lambda expression filter",checkMirrorValues(variablesByName, new Object[]{"a","b","c"}));
-            
+
+            support.doContinue ();
+            support.waitState (JPDADebugger.STATE_DISCONNECTED);
+        } finally {
+            if (support != null) support.doFinish ();
+        }
+    }
+
+    public void testLambdaBreakpointsStopAtLambda() throws Exception {
+        try {
+            Utils.BreakPositions bp = Utils.getBreakPositions(TEST_APP_PATH);
+            LineBreakpoint[] lb = bp.getBreakpoints().toArray(new LineBreakpoint[0]);
+
+            lb[0].setLambdaIndex(new int[] {0}); //stop inside lambda
+
+            DebuggerManager dm = DebuggerManager.getDebuggerManager ();
+            for (int i = 0; i < lb.length; i++) {
+                dm.addBreakpoint (lb[i]);
+            }
+
+            TestBreakpointListener[] tb = new TestBreakpointListener[lb.length];
+            for (int i = 0; i < lb.length; i++) {
+                tb[i] = new TestBreakpointListener (lb[i]);
+                lb[i].addJPDABreakpointListener (tb[i]);
+            }
+            support = JPDASupport.attach (
+                "org.netbeans.api.debugger.jpda.testapps.ExpressionLambdaBreakpointApp"
+            );
+
+            JPDADebugger debugger = support.getDebugger();
+            Object[] expectedValues = new Object[]{"a", "", "b", "", "c"};
+            for (int j = 0; j < expectedValues.length; j++) {
+                support.waitState (JPDADebugger.STATE_STOPPED);  // j-th breakpoint hit
+                assertEquals (
+                    "Debugger stopped at wrong line for breakpoint",
+                    lb[0].getLineNumber (),
+                    debugger.getCurrentCallStackFrame ().getLineNumber (null)
+                );
+
+                Map<String, Variable> variablesByName = getVariablesByName(debugger.getCurrentCallStackFrame ().getLocalVariables());
+                //check we are really in the lambda
+                assertEquals("Wrong value of lambda parameter (stop count: " + j + ")", "\"" + expectedValues[j] + "\"", variablesByName.get("s").getValue());
+
+                support.doContinue();
+            }
+
+            support.waitState (JPDADebugger.STATE_STOPPED);
+
+            assertEquals (
+                "Debugger stopped at wrong line for breakpoint",
+                lb[1].getLineNumber (),
+                debugger.getCurrentCallStackFrame ().getLineNumber (null)
+            );
+
+            for (int i = 0; i < tb.length; i++) {
+                tb[i].checkResult ();
+            }
+            for (int i = 0; i < tb.length; i++) {
+                dm.removeBreakpoint (lb[i]);
+            }
+
+            support.doContinue ();
+            support.waitState (JPDADebugger.STATE_DISCONNECTED);
+        } finally {
+            if (support != null) support.doFinish ();
+        }
+    }
+
+    public void testLambdaBreakpointsStopOutsideOfLambda() throws Exception {
+        try {
+            Utils.BreakPositions bp = Utils.getBreakPositions(TEST_APP_PATH);
+            LineBreakpoint[] lb = bp.getBreakpoints().toArray(new LineBreakpoint[0]);
+
+            lb[0].setLambdaIndex(new int[] {LineBreakpoint.LAMBDA_INDEX_STOP_OUTSIDE}); //stop outside lambda
+
+            DebuggerManager dm = DebuggerManager.getDebuggerManager ();
+            for (int i = 0; i < lb.length; i++) {
+                dm.addBreakpoint (lb[i]);
+            }
+
+            TestBreakpointListener[] tb = new TestBreakpointListener[lb.length];
+            for (int i = 0; i < lb.length; i++) {
+                tb[i] = new TestBreakpointListener (lb[i]);
+                lb[i].addJPDABreakpointListener (tb[i]);
+            }
+            support = JPDASupport.attach (
+                "org.netbeans.api.debugger.jpda.testapps.ExpressionLambdaBreakpointApp"
+            );
+
+            JPDADebugger debugger = support.getDebugger();
+
+            support.waitState (JPDADebugger.STATE_STOPPED);  // j-th breakpoint hit
+            assertEquals (
+                "Debugger stopped at wrong line for breakpoint",
+                lb[0].getLineNumber (),
+                debugger.getCurrentCallStackFrame ().getLineNumber (null)
+            );
+
+            Map<String, Variable> variablesByName = getVariablesByName(debugger.getCurrentCallStackFrame ().getLocalVariables());
+
+            assertEquals(String.valueOf(variablesByName), Set.of("args"), variablesByName.keySet());
+
+            support.doContinue();
+
+            support.waitState (JPDADebugger.STATE_STOPPED);
+
+            assertEquals (
+                "Debugger stopped at wrong line for breakpoint",
+                lb[1].getLineNumber (),
+                debugger.getCurrentCallStackFrame ().getLineNumber (null)
+            );
+
+            for (int i = 0; i < tb.length; i++) {
+                tb[i].checkResult ();
+            }
+            for (int i = 0; i < tb.length; i++) {
+                dm.removeBreakpoint (lb[i]);
+            }
+
+            support.doContinue ();
+            support.waitState (JPDADebugger.STATE_DISCONNECTED);
+        } finally {
+            if (support != null) support.doFinish ();
+        }
+    }
+
+    public void testMultiLineLambdaBreakpoints() throws Exception {
+        try {
+            Utils.BreakPositions bp = Utils.getBreakPositions(TEST_MULTI_LINE_APP_PATH);
+            LineBreakpoint[] lb = bp.getBreakpoints().toArray(new LineBreakpoint[0]);
+
+            lb[0].setLambdaIndex(new int[] {LineBreakpoint.LAMBDA_INDEX_STOP_OUTSIDE, 0}); //stop outside lambda
+
+            DebuggerManager dm = DebuggerManager.getDebuggerManager ();
+            for (int i = 0; i < lb.length; i++) {
+                dm.addBreakpoint (lb[i]);
+            }
+
+            TestBreakpointListener[] tb = new TestBreakpointListener[lb.length];
+            for (int i = 0; i < lb.length; i++) {
+                tb[i] = new TestBreakpointListener (lb[i]);
+                lb[i].addJPDABreakpointListener (tb[i]);
+            }
+            support = JPDASupport.attach (
+                "org.netbeans.api.debugger.jpda.testapps.ExpressionLambdaBreakpointMultiLineApp"
+            );
+
+            JPDADebugger debugger = support.getDebugger();
+
+            support.waitState (JPDADebugger.STATE_STOPPED);
+            assertEquals (
+                "Debugger stopped at wrong line for breakpoint",
+                lb[0].getLineNumber (),
+                debugger.getCurrentCallStackFrame ().getLineNumber (null)
+            );
+
+            Map<String, Variable> variablesByName = getVariablesByName(debugger.getCurrentCallStackFrame ().getLocalVariables());
+
+            assertEquals(String.valueOf(variablesByName), Set.of("args"), variablesByName.keySet());
+
+            support.doContinue();
+
+            for (int i = 0; i < 5; i++) {
+                support.waitState (JPDADebugger.STATE_STOPPED);
+                assertEquals (
+                    "Debugger stopped at wrong line for breakpoint",
+                    lb[0].getLineNumber (),
+                    debugger.getCurrentCallStackFrame ().getLineNumber (null)
+                );
+
+                Map<String, Variable> lambdaVariablesByName = getVariablesByName(debugger.getCurrentCallStackFrame ().getLocalVariables());
+
+                assertEquals(String.valueOf(lambdaVariablesByName), Set.of("l1"), lambdaVariablesByName.keySet());
+
+                support.doContinue();
+            }
+
+            support.waitState (JPDADebugger.STATE_STOPPED);
+
+            assertEquals (
+                "Debugger stopped at wrong line for breakpoint",
+                lb[1].getLineNumber (),
+                debugger.getCurrentCallStackFrame ().getLineNumber (null)
+            );
+
+            for (int i = 0; i < tb.length; i++) {
+                tb[i].checkResult ();
+            }
+            for (int i = 0; i < tb.length; i++) {
+                dm.removeBreakpoint (lb[i]);
+            }
+
             support.doContinue ();
             support.waitState (JPDADebugger.STATE_DISCONNECTED);
         } finally {
@@ -118,7 +320,7 @@ public class ExpressionLambdaBreakpointTest extends NbTestCase {
         }
         return map;
     }
-    
+
     private boolean checkMirrorValues(Map<String, Variable>  mirrorValues, Object[] actualValues){
         String variableNameKey = "nonEmptyListCollection";
         if(mirrorValues.containsKey(variableNameKey)){
@@ -128,6 +330,7 @@ public class ExpressionLambdaBreakpointTest extends NbTestCase {
         }
         return false;
     }
+
     private class TestBreakpointListener implements JPDABreakpointListener {
 
         private LineBreakpoint  lineBreakpoint;
@@ -141,7 +344,7 @@ public class ExpressionLambdaBreakpointTest extends NbTestCase {
         }
 
         public TestBreakpointListener (
-            LineBreakpoint lineBreakpoint, 
+            LineBreakpoint lineBreakpoint,
             int conditionResult
         ) {
             this.lineBreakpoint = lineBreakpoint;
@@ -162,21 +365,21 @@ public class ExpressionLambdaBreakpointTest extends NbTestCase {
         private void checkEvent (JPDABreakpointEvent event) {
             this.event = event;
             assertEquals (
-                "Breakpoint event: Wrong source breakpoint", 
-                lineBreakpoint, 
+                "Breakpoint event: Wrong source breakpoint",
+                lineBreakpoint,
                 event.getSource ()
             );
             assertNotNull (
-                "Breakpoint event: Context thread is null", 
+                "Breakpoint event: Context thread is null",
                 event.getThread ()
             );
 
             int result = event.getConditionResult ();
-            if ( result == JPDABreakpointEvent.CONDITION_FAILED && 
+            if ( result == JPDABreakpointEvent.CONDITION_FAILED &&
                  conditionResult != JPDABreakpointEvent.CONDITION_FAILED
             )
                 failure = new AssertionError (event.getConditionException ());
-            else 
+            else
             if (result != conditionResult)
                 failure = new AssertionError (
                     "Unexpected breakpoint condition result: " + result
@@ -197,7 +400,7 @@ public class ExpressionLambdaBreakpointTest extends NbTestCase {
             }
             if (failure != null) throw failure;
         }
-        
+
     }
-    
+
 }

@@ -19,9 +19,11 @@
 
 package org.netbeans.modules.debugger.jpda.ui.models;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Vector;
 import java.util.WeakHashMap;
+import java.util.stream.Collectors;
 import org.netbeans.api.debugger.Breakpoint;
 import org.netbeans.api.debugger.Breakpoint.VALIDITY;
 import org.netbeans.api.debugger.DebuggerManager;
@@ -107,12 +109,26 @@ public class BreakpointsNodeModel implements NodeModel {
             }
             return bold (
                 b,
-                NbBundle.getMessage (
-                        BreakpointsNodeModel.class,
-                        "CTL_Line_Breakpoint",
-                        EditorContextBridge.getFileName (b),
-                        line
-                    )
+                b.getLambdaIndex().length > 0 ?
+                    NbBundle.getMessage (
+                            BreakpointsNodeModel.class,
+                            "CTL_Line_Lambda_Breakpoint",
+                            EditorContextBridge.getFileName (b),
+                            line,
+                            Arrays.stream(b.getLambdaIndex())
+                                  .mapToObj(i -> switch (i) {
+                                      case LineBreakpoint.LAMBDA_INDEX_STOP_OUTSIDE -> NbBundle.getMessage(BreakpointsNodeModel.class, "CTL_Line_Lambda_Breakpoint_Outside");
+                                      default -> NbBundle.getMessage(BreakpointsNodeModel.class, "CTL_Line_Lambda_Breakpoint_OnLambda", i + 1);
+                                  })
+                                  .collect(Collectors.joining(", "))
+                        )
+                :
+                    NbBundle.getMessage (
+                            BreakpointsNodeModel.class,
+                            "CTL_Line_Breakpoint",
+                            EditorContextBridge.getFileName (b),
+                            line
+                        )
             );
         } else
         if (o instanceof ThreadBreakpoint) {

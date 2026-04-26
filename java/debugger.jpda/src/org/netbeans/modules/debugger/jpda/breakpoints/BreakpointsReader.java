@@ -24,6 +24,7 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -108,6 +109,7 @@ public class BreakpointsReader implements Properties.Reader, PropertyChangeListe
             LineBreakpoint lb = LineBreakpoint.create ("", 0);
             lb.setURL(properties.getString (LineBreakpoint.PROP_URL, null));
             lb.setLineNumber(properties.getInt (LineBreakpoint.PROP_LINE_NUMBER, 1));
+            lb.setLambdaIndex(Arrays.stream(properties.getArray(LineBreakpoint.PROP_LAMBDA_INDEX, new Object[0])).mapToInt(v -> (Integer) v).toArray());
             lb.setCondition (
                 properties.getString (LineBreakpoint.PROP_CONDITION, "")
             );
@@ -369,6 +371,10 @@ public class BreakpointsReader implements Properties.Reader, PropertyChangeListe
             properties.setInt (
                 LineBreakpoint.PROP_LINE_NUMBER, 
                 lb.getLineNumber ()
+            );
+            properties.setArray(
+                LineBreakpoint.PROP_LAMBDA_INDEX,
+                Arrays.stream(lb.getLambdaIndex()).mapToObj(v -> v).toArray()
             );
             properties.setString (
                 LineBreakpoint.PROP_CONDITION, 

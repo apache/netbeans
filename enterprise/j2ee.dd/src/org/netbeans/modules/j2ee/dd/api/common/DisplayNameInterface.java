@@ -18,6 +18,9 @@
  */
 
 package org.netbeans.modules.j2ee.dd.api.common;
+
+import java.util.Map;
+
 /**
  * Super interface for all DD elements having the display-name property/properties.
  *
@@ -50,7 +53,7 @@ public interface DisplayNameInterface {
      *
      * @param displayNames Map of display names in the form of [locale,display-name]
      */
-    public void setAllDisplayNames(java.util.Map displayNames) throws VersionNotSupportedException;
+    public void setAllDisplayNames(Map displayNames) throws VersionNotSupportedException;
     
     /**
      * Returns the display-name element value for particular locale.<br>
@@ -73,7 +76,7 @@ public interface DisplayNameInterface {
      *
      * @return map of all display-names in the form of [locale:display-name]
      */
-    public java.util.Map getAllDisplayNames();
+    public Map getAllDisplayNames();
     
     /**
      * Removes the display-name element for particular locale.

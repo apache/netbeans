@@ -91,6 +91,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private final MavenOptionController controller;
     private final TextValueCompleter completer;
     private final ActionListener   listItemChangedListener;
+    private final ActionListener   settingsXmlChangedListener;
     private final List<String>       userDefinedMavenRuntimes = new ArrayList<>();
     private final List<String>       userDefinedMavenRuntimesStored = new ArrayList<>();
     private final List<String>       predefinedRuntimes = new ArrayList<>();
@@ -98,6 +99,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private final DefaultComboBoxModel jdkHomeDataModel = new DefaultComboBoxModel();
     private String             mavenRuntimeHome = null;
     private int                lastSelected = -1;
+    private int                lastSelectedSettingsXml = 0;
     private static final RequestProcessor RP = new RequestProcessor(SettingsPanel.class);
 
     private static class ComboBoxRenderer extends DefaultListCellRenderer {
@@ -173,6 +175,16 @@ public class SettingsPanel extends javax.swing.JPanel {
             }
             listDataChanged();
             lastSelected = selected;
+        };
+
+        settingsXmlChangedListener = (ActionEvent e) -> {
+            if (MAVEN_RUNTIME_Browse().equals(comMavenUserSettingsXml.getSelectedItem())) {
+                comMavenUserSettingsXml.setSelectedIndex(lastSelectedSettingsXml);
+                SwingUtilities.invokeLater(SettingsPanel.this::browseUserSettingsXml);
+                return;
+            }
+            lastSelectedSettingsXml = comMavenUserSettingsXml.getSelectedIndex();
+            fireChanged();
         };
 
         comIndex.setSelectedIndex(0);
@@ -395,6 +407,8 @@ public class SettingsPanel extends javax.swing.JPanel {
         cbPreferWrapper = new javax.swing.JCheckBox();
         cbNetworkProxy = new javax.swing.JComboBox<>();
         lbNetworkSettings = new javax.swing.JLabel();
+        comMavenUserSettingsXml = new javax.swing.JComboBox();
+        lblMavenUserSettingsXml = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         lstCategory = new javax.swing.JList();
         lblCategory = new javax.swing.JLabel();
@@ -453,7 +467,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             .addGroup(pnlAppearanceLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(appearancePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(354, Short.MAX_VALUE))
+                .addContainerGap(397, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlAppearance, "appearance");
@@ -530,7 +544,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             .addGroup(pnlDependenciesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(dependenciesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(277, Short.MAX_VALUE))
+                .addContainerGap(320, Short.MAX_VALUE))
         );
 
         pnlCards.add(pnlDependencies, "dependencies");
@@ -642,7 +656,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addComponent(comIndex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnIndex))
                 .addGap(18, 18, 18)
-                .addComponent(permissionsTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                .addComponent(permissionsTableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(descriptionLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -721,6 +735,9 @@ public class SettingsPanel extends javax.swing.JPanel {
         lbNetworkSettings.setLabelFor(cbNetworkProxy);
         org.openide.awt.Mnemonics.setLocalizedText(lbNetworkSettings, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lbNetworkSettings.text")); // NOI18N
 
+        lblCommandLine.setLabelFor(comMavenHome);
+        org.openide.awt.Mnemonics.setLocalizedText(lblMavenUserSettingsXml, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.lblMavenUserSettingsXml.text")); // NOI18N
+
         javax.swing.GroupLayout pnlExecutionLayout = new javax.swing.GroupLayout(pnlExecution);
         pnlExecution.setLayout(pnlExecutionLayout);
         pnlExecutionLayout.setHorizontalGroup(
@@ -762,7 +779,7 @@ public class SettingsPanel extends javax.swing.JPanel {
                                 .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(pnlExecutionLayout.createSequentialGroup()
                                         .addComponent(cbPreferWrapper)
-                                        .addGap(0, 0, Short.MAX_VALUE))
+                                        .addGap(0, 137, Short.MAX_VALUE))
                                     .addComponent(comMavenHome, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(pnlExecutionLayout.createSequentialGroup()
                                         .addComponent(comJdkHome, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -779,6 +796,12 @@ public class SettingsPanel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnOptions)))
                         .addContainerGap())))
+            .addGroup(pnlExecutionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblMavenUserSettingsXml)
+                .addGap(4, 4, 4)
+                .addComponent(comMavenUserSettingsXml, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(84, 84, 84))
         );
         pnlExecutionLayout.setVerticalGroup(
             pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -807,6 +830,10 @@ public class SettingsPanel extends javax.swing.JPanel {
                     .addGroup(pnlExecutionLayout.createSequentialGroup()
                         .addComponent(lbNetworkSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(3, 3, 3)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlExecutionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblMavenUserSettingsXml)
+                    .addComponent(comMavenUserSettingsXml, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(cbSkipTests)
                 .addGap(18, 18, 18)
@@ -978,6 +1005,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox comJdkHome;
     private javax.swing.JButton comManageJdks;
     private javax.swing.JComboBox comMavenHome;
+    private javax.swing.JComboBox comMavenUserSettingsXml;
     private javax.swing.JComboBox comSource;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -991,6 +1019,7 @@ public class SettingsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblIndexFilter;
     private javax.swing.JLabel lblJavadoc;
     private javax.swing.JLabel lblJdkHome;
+    private javax.swing.JLabel lblMavenUserSettingsXml;
     private javax.swing.JLabel lblOptions;
     private javax.swing.JLabel lblOutputTab;
     private javax.swing.JLabel lblSource;
@@ -1065,10 +1094,45 @@ public class SettingsPanel extends javax.swing.JPanel {
         }
     }
     
+    private String getSelectedUserSettingsXml() {
+        Object selected = comMavenUserSettingsXml.getSelectedItem();
+        if (selected == null || MAVEN_RUNTIME_Browse().equals(selected)) {
+            return MavenSettings.getDefault().getUserSettingsXml();
+        }
+        return selected.toString();
+    }
+
+    @Messages("TIT_SelectSettingsXml=Select Maven User Settings XML File")
+    private void browseUserSettingsXml() {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle(TIT_SelectSettingsXml());
+        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("XML Files", "xml")); //NOI18N
+        File defaultDir = EmbedderFactory.getDefaultUserSettingsXmlFile().getParentFile();
+        if (defaultDir.exists()) {
+            chooser.setCurrentDirectory(defaultDir);
+        }
+        if (JFileChooser.APPROVE_OPTION == chooser.showOpenDialog(this)) {
+            String newPath = FileUtil.normalizeFile(chooser.getSelectedFile()).getAbsolutePath();
+            DefaultComboBoxModel model = (DefaultComboBoxModel) comMavenUserSettingsXml.getModel();
+            boolean found = false;
+            for (int i = 0; i < model.getSize() - 1; i++) {
+                if (newPath.equals(model.getElementAt(i))) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                model.insertElementAt(newPath, model.getSize() - 1);
+            }
+            comMavenUserSettingsXml.setSelectedItem(newPath);
+        }
+    }
+
     @Messages({
-        "MAVEN_RUNTIME_Bundled=Bundled", 
+        "MAVEN_RUNTIME_Bundled=Bundled",
         "# {0} - external maven",
-        "MAVEN_RUNTIME_External={0}", 
+        "MAVEN_RUNTIME_External={0}",
         "MAVEN_RUNTIME_Browse=Browse..."})
     public void setValues() {
         txtOptions.setText(MavenSettings.getDefault().getDefaultOptions());
@@ -1197,7 +1261,21 @@ public class SettingsPanel extends javax.swing.JPanel {
         }
         
          cbNetworkProxy.setSelectedItem(MavenSettings.getDefault().getNetworkProxy());
-        
+
+        comMavenUserSettingsXml.removeActionListener(settingsXmlChangedListener);
+        String defaultSettingsPath = EmbedderFactory.getDefaultUserSettingsXmlFile().getAbsolutePath();
+        String storedSettingsXml = MavenSettings.getDefault().getUserSettingsXml();
+        DefaultComboBoxModel settingsXmlModel = new DefaultComboBoxModel();
+        settingsXmlModel.addElement(defaultSettingsPath);
+        if (!storedSettingsXml.equals(defaultSettingsPath)) {
+            settingsXmlModel.addElement(storedSettingsXml);
+        }
+        settingsXmlModel.addElement(MAVEN_RUNTIME_Browse());
+        comMavenUserSettingsXml.setModel(settingsXmlModel);
+        comMavenUserSettingsXml.setSelectedItem(storedSettingsXml);
+        lastSelectedSettingsXml = comMavenUserSettingsXml.getSelectedIndex();
+        comMavenUserSettingsXml.addActionListener(settingsXmlChangedListener);
+
         changed = false;  //#163955 - do not fire change events on load
     }
     
@@ -1242,6 +1320,7 @@ public class SettingsPanel extends javax.swing.JPanel {
         MavenSettings.getDefault().setCollapseSuccessFolds(cbCollapseSuccessFolds.isSelected());
         MavenSettings.getDefault().setOutputTabShowConfig(cbOutputTabShowConfig.isSelected());
         MavenSettings.getDefault().setPreferMavenWrapper(cbPreferWrapper.isSelected());
+        MavenSettings.getDefault().setUserSettingsXml(getSelectedUserSettingsXml());
         MavenSettings.OutputTabName name = rbOutputTabName.isSelected() ? MavenSettings.OutputTabName.PROJECT_NAME : MavenSettings.OutputTabName.PROJECT_ID;
         MavenSettings.getDefault().setOutputTabName(name);
         
@@ -1327,6 +1406,7 @@ public class SettingsPanel extends javax.swing.JPanel {
             }
         }
         isChanged |= MavenSettings.getDefault().getNetworkProxy() != cbNetworkProxy.getSelectedItem();
+        isChanged |= !MavenSettings.getDefault().getUserSettingsXml().equals(getSelectedUserSettingsXml());
         changed = isChanged;
     }
 

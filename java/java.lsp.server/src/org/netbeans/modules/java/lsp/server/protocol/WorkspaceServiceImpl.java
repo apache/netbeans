@@ -150,6 +150,7 @@ import org.openide.modules.Places;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
@@ -166,6 +167,8 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
     private static final RequestProcessor WORKER = new RequestProcessor(WorkspaceServiceImpl.class.getName(), 1, false, false);
     private static final RequestProcessor PROJECT_WORKER = new RequestProcessor(WorkspaceServiceImpl.class.getName(), 5, false, false);
     private static final String NETBEANS_JAVA_HINTS = "hints";
+    private static final String MAVEN_PREFERENCES_NODE = "org/netbeans/modules/maven"; // NOI18N
+    private static final String MAVEN_USER_SETTINGS_XML = "userSettingsXml"; // NOI18N
 
     private final Gson gson = new Gson();
     private final LspServerState server;
@@ -1424,12 +1427,31 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
                 -> ((TextDocumentServiceImpl) server.getTextDocumentService()).updateProjectJDKHome(newValue.getAsJsonPrimitive());
         
         
-        
+        BiConsumer<String, JsonElement> mavenUserSettingsListener = (config, newValue)
+                -> updateMavenUserSettingsPreferences(newValue != null && newValue.isJsonPrimitive() ? newValue.getAsJsonPrimitive() : null);
+
         confManager.registerConfigChangeListener(fullConfigPrefix + "hints", hintPrefsListener);
         confManager.registerConfigChangeListener(fullConfigPrefix + "project.jdkhome", projectJdkHomeListener);
         confManager.registerConfigChangeListener(fullConfigPrefix + "format", formatPrefsListener);
         confManager.registerConfigChangeListener(fullConfigPrefix + "java.imports", importPrefsListener);
+        confManager.registerConfigChangeListener(fullConfigPrefix + "maven.userSettings", mavenUserSettingsListener);
         confManager.registerConfigChangeListener(fullAltConfigPrefix + "runConfig", getRunConfigChangeListener());
+    }
+
+    void updateMavenUserSettingsPreferences(JsonPrimitive configuration) {
+        String userSettingsPath = configuration != null ? configuration.getAsString().trim() : "";
+        Preferences mavenPrefs = NbPreferences.root().node(MAVEN_PREFERENCES_NODE);
+        String current = mavenPrefs.get(MAVEN_USER_SETTINGS_XML, null);
+        if (userSettingsPath.isEmpty()) {
+            if (current != null) {
+                mavenPrefs.remove(MAVEN_USER_SETTINGS_XML);
+            }
+        } else {
+            String normalized = FileUtil.normalizeFile(new File(userSettingsPath)).getAbsolutePath();
+            if (!normalized.equals(current)) {
+                mavenPrefs.put(MAVEN_USER_SETTINGS_XML, normalized);
+            }
+        }
     }
 
     void updateJavaFormatPreferences(FileObject fo, JsonObject configuration) {

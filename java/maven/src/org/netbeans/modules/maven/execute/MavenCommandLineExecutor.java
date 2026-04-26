@@ -531,6 +531,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         if (config.isUpdateSnapshots()) {
             toRet.add("--update-snapshots");//NOI18N
         }
+        String userSettingsXml = MavenSettings.getDefault().getUserSettingsXml();
+        if (!userSettingsXml.equals(EmbedderFactory.getDefaultUserSettingsXmlFile().getAbsolutePath())) {
+            toRet.add("--settings");
+            toRet.add(userSettingsXml);
+        }
         if (config.getReactorStyle() != RunConfig.ReactorStyle.NONE) {
             File basedir = config.getExecutionDirectory();
             MavenProject mp = NbMavenProject.getPartialProject(config.getMavenProject());

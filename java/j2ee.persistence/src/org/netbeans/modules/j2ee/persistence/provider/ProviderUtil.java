@@ -89,6 +89,8 @@ public class ProviderUtil {
     public static final Provider OPENJPA_PROVIDER2_0 = new OpenJPAProvider(Persistence.VERSION_2_0);
     public static final Provider OPENJPA_PROVIDER2_1 = new OpenJPAProvider(Persistence.VERSION_2_1);
     public static final Provider OPENJPA_PROVIDER2_2 = new OpenJPAProvider(Persistence.VERSION_2_2);
+    public static final Provider OPENJPA_PROVIDER3_0 = new OpenJPAProvider(Persistence.VERSION_3_0);
+    public static final Provider OPENJPA_PROVIDER3_1 = new OpenJPAProvider(Persistence.VERSION_3_1);
     public static final Provider DEFAULT_PROVIDER = new DefaultProvider();
     public static final Provider DEFAULT_PROVIDER2_0 = new DefaultProvider(Persistence.VERSION_2_0);
     public static final Provider DEFAULT_PROVIDER2_1 = new DefaultProvider(Persistence.VERSION_2_1);
@@ -1042,9 +1044,11 @@ public class ProviderUtil {
                     DATANUCLEUS_PROVIDER3_1,
                     ECLIPSELINK_PROVIDER3_1,
                     HIBERNATE_PROVIDER3_1,
+                    OPENJPA_PROVIDER3_1,
                     DATANUCLEUS_PROVIDER3_0,
                     ECLIPSELINK_PROVIDER3_0,
                     HIBERNATE_PROVIDER3_0,
+                    OPENJPA_PROVIDER3_0,
                     DATANUCLEUS_PROVIDER2_2, 
                     ECLIPSELINK_PROVIDER2_2, 
                     HIBERNATE_PROVIDER2_2, 

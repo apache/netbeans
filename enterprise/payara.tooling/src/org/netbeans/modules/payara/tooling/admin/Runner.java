@@ -902,7 +902,7 @@ public abstract class Runner implements Callable<Result> {
                     retries = 0;
                 } catch (ConnectException ce) {
                     return handleStateChange(TaskState.FAILED,
-                            TaskEvent.EXCEPTION,
+                            TaskEvent.CONNECTION_FAILED,
                             stateChangeArgs(ce.getLocalizedMessage()));
                 } catch (IOException ex) {
                     if (retries <= 0) {

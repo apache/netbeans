@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.93.0
+#Version 1.95.0
 
 CLSS public abstract interface com.sun.source.doctree.DocTreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.doctree.DocTreeVisitor%0} visitAttribute(com.sun.source.doctree.AttributeTree,{com.sun.source.doctree.DocTreeVisitor%1})
@@ -641,6 +641,7 @@ hfds candidateSuperTypes,javaClassHandle,superType
 hcls TypeMirrorComparator
 
 CLSS public final !enum org.netbeans.modules.refactoring.java.api.WhereUsedQueryConstants
+fld public final static org.netbeans.modules.refactoring.java.api.WhereUsedQueryConstants FIND_DIRECT_REFERENCES
 fld public final static org.netbeans.modules.refactoring.java.api.WhereUsedQueryConstants FIND_DIRECT_SUBCLASSES
 fld public final static org.netbeans.modules.refactoring.java.api.WhereUsedQueryConstants FIND_OVERRIDING_METHODS
 fld public final static org.netbeans.modules.refactoring.java.api.WhereUsedQueryConstants FIND_SUBCLASSES
@@ -667,6 +668,11 @@ supr java.lang.Object
 CLSS public final org.netbeans.modules.refactoring.java.api.ui.JavaScopeBuilder
 cons public init()
 meth public static org.netbeans.modules.refactoring.api.Scope open(java.lang.String,org.netbeans.modules.refactoring.api.Scope)
+supr java.lang.Object
+
+CLSS public final org.netbeans.modules.refactoring.java.api.ui.JavaWhereUsedSupport
+meth public static int getDirectReferenceCount(org.netbeans.api.java.source.TreePathHandle,org.netbeans.modules.refactoring.api.Scope,java.util.concurrent.atomic.AtomicBoolean) throws java.io.IOException
+meth public static void openDirectReferenceResults(org.netbeans.api.java.source.TreePathHandle,org.netbeans.modules.refactoring.api.Scope)
 supr java.lang.Object
 
 CLSS public final org.netbeans.modules.refactoring.java.spi.DiffElement

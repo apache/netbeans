@@ -34,6 +34,7 @@ import org.netbeans.modules.nativeexecution.support.NativeTaskExecutorService;
  * This is a very light-weigth version of ExecutionService from org.netbeans.api.extexecution
  * @author ak119685
  */
+@SuppressWarnings("deprecation") // org.netbeans.api.extexecution.input.LineProcessor is API
 public final class NativeProcessExecutionService {
 
     private final ExecutionTask task;
@@ -79,16 +80,13 @@ public final class NativeProcessExecutionService {
             this.descr = descr;
         }
 
+        @Override
         public synchronized Integer call() throws Exception {
             if (process != null) {
                 throw new IllegalThreadStateException("Already started!"); // NOI18N
             }
 
             int result = -1;
-
-            InputStream is = null;
-            BufferedReader br = null;
-            Future<Boolean> errorProcessingDone = null;
 
             try {
                 if (outProcessor != null) {
@@ -101,32 +99,26 @@ public final class NativeProcessExecutionService {
 
                 process = npb.call();
 
-                errorProcessingDone = NativeTaskExecutorService.submit(new Callable<Boolean>() {
-                    @Override
-                    public Boolean call() throws Exception {
-                        InputStream is = process.getErrorStream();
-                        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                        String line;
-                        while ((line = br.readLine()) != null) {
-                            if (errProcessor != null) {
-                                errProcessor.processLine(line);
-                            } else {
-                                ProcessUtils.logError(Level.FINE, log, process);
-                            }
+                Future<Boolean> errorProcessingDone = NativeTaskExecutorService.submit(() -> {
+                    InputStream is = process.getErrorStream();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                    for (String line = br.readLine(); line != null; line = br.readLine()) {
+                        if (errProcessor != null) {
+                            errProcessor.processLine(line);
+                        } else {
+                            ProcessUtils.logError(Level.FINE, log, process);
                         }
-                        return true;
                     }
+                    return true;
                 }, "reading process err"); //NOI18N
 
-                is = process.getInputStream();
+                InputStream is = process.getInputStream();
 
                 if (is != null) {
                     // LATER: shouldn't it use ProcessUtils.getReader?
-                    br = new BufferedReader(new InputStreamReader(is));
-                    String line;
 
-                    try {
-                        while ((line = br.readLine()) != null) {
+                    try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+                        for (String line = br.readLine(); line != null; line = br.readLine()) {
                             if (outProcessor != null) {
                                 outProcessor.processLine(line);
                             }
@@ -136,6 +128,7 @@ public final class NativeProcessExecutionService {
                         Thread.interrupted();
                     }
                 }
+
                 errorProcessingDone.get(); // just to wait until error processing is done
             } catch (Throwable th) {
                 log.log(Level.FINE, descr, th.getMessage());
@@ -146,10 +139,6 @@ public final class NativeProcessExecutionService {
                     }
                 } catch (Throwable th) {
                     log.log(Level.FINE, descr, th.getMessage());
-                }
-
-                if (br != null) {
-                    br.close();
                 }
 
                 if (process != null) {

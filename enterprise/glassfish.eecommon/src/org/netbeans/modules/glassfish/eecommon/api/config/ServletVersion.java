@@ -88,6 +88,13 @@ public final class ServletVersion extends J2EEBaseVersion {
         "6.1", 6100,	// NOI18N
         "11.0", 11000	// NOI18N
         );
+    
+    /** Represents servlet version 6.2
+     */
+    public static final ServletVersion SERVLET_6_2 = new ServletVersion(
+        "6.2", 6200,	// NOI18N
+        "12.0", 12000	// NOI18N
+        );
 
     /** Creates a new instance of ServletVersion 
      */
@@ -126,6 +133,10 @@ public final class ServletVersion extends J2EEBaseVersion {
             result = SERVLET_5_0;
         } else if(SERVLET_6_0.toString().equals(version)) {
             result = SERVLET_6_0;
+        } else if(SERVLET_6_1.toString().equals(version)) {
+            result = SERVLET_6_1;
+        } else if(SERVLET_6_2.toString().equals(version)) {
+            result = SERVLET_6_2;
         }
 
         return result;

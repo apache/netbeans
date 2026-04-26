@@ -38,26 +38,37 @@ class JpaSupportImpl implements JpaSupportImplementation {
     @Override
     public JpaProvider getDefaultProvider() {
         String defaultProvider = platformImpl.getDefaultJpaProvider();
-        boolean jpa2 = platformImpl.isJpa2Available();
-        return JpaProviderFactory.createJpaProvider(defaultProvider, true, true, jpa2, false, false, false, false, false);
+        final boolean isDefault = true, isJpa10 = true;
+        boolean isJpa20 = platformImpl.isJpa2Available();
+        final boolean isJpa21 = false, isJpa22 = false, isJpa30 = false, isJpa31 = false, isJpa32 = false, isJpa40 = false;
+        return JpaProviderFactory.createJpaProvider(defaultProvider, isDefault, 
+                isJpa10, isJpa20, isJpa21, isJpa22, isJpa30, isJpa31, isJpa32, isJpa40);
     }
 
     @Override
     public Set<JpaProvider> getProviders() {
         String defaultProvider = platformImpl.getDefaultJpaProvider();
-        boolean jpa2 = platformImpl.isJpa2Available();
-        Set<JpaProvider> providers = new HashSet<JpaProvider>();
+        final boolean isJpa10 = true;
+        boolean isJpa20 = platformImpl.isJpa2Available();
+        final boolean isJpa21 = false, isJpa22 = false, isJpa30 = false, isJpa31 = false, isJpa32 = false, isJpa40 = false;
+        Set<JpaProvider> providers = new HashSet<>(8);
         if (platformImpl.containsPersistenceProvider(JBJ2eePlatformFactory.HIBERNATE_JPA_PROVIDER)) {
-            providers.add(JpaProviderFactory.createJpaProvider(JBJ2eePlatformFactory.HIBERNATE_JPA_PROVIDER, 
-                    JBJ2eePlatformFactory.HIBERNATE_JPA_PROVIDER.equals(defaultProvider), true, jpa2, false, false, false, false, false));
+            providers.add(JpaProviderFactory.createJpaProvider(
+                    JBJ2eePlatformFactory.HIBERNATE_JPA_PROVIDER, 
+                    JBJ2eePlatformFactory.HIBERNATE_JPA_PROVIDER.equals(defaultProvider),
+                    isJpa10, isJpa20, isJpa21, isJpa22, isJpa30, isJpa31, isJpa32, isJpa40));
         }
         if (platformImpl.containsPersistenceProvider(JBJ2eePlatformFactory.TOPLINK_JPA_PROVIDER)) {
-            providers.add(JpaProviderFactory.createJpaProvider(JBJ2eePlatformFactory.TOPLINK_JPA_PROVIDER, 
-                    JBJ2eePlatformFactory.TOPLINK_JPA_PROVIDER.equals(defaultProvider), true, false, false, false, false, false, false));
+            providers.add(JpaProviderFactory.createJpaProvider(
+                    JBJ2eePlatformFactory.TOPLINK_JPA_PROVIDER, 
+                    JBJ2eePlatformFactory.TOPLINK_JPA_PROVIDER.equals(defaultProvider), 
+                    isJpa10, isJpa20, isJpa21, isJpa22, isJpa30, isJpa31, isJpa32, isJpa40));
         }
         if (platformImpl.containsPersistenceProvider(JBJ2eePlatformFactory.KODO_JPA_PROVIDER)) {
-            providers.add(JpaProviderFactory.createJpaProvider(JBJ2eePlatformFactory.KODO_JPA_PROVIDER, 
-                    JBJ2eePlatformFactory.KODO_JPA_PROVIDER.equals(defaultProvider), true, false, false, false, false, false, false));
+            providers.add(JpaProviderFactory.createJpaProvider(
+                    JBJ2eePlatformFactory.KODO_JPA_PROVIDER, 
+                    JBJ2eePlatformFactory.KODO_JPA_PROVIDER.equals(defaultProvider), 
+                    isJpa10, isJpa20, isJpa21, isJpa22, isJpa30, isJpa31, isJpa32, isJpa40));
         }
         return providers;
     }

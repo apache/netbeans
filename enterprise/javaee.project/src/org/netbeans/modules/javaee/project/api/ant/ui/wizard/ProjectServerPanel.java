@@ -611,7 +611,9 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                 Set<String> jdks = j2eePlatform.getSupportedJavaPlatformVersions();
                 // make sure that chosen source level is suported by server:
                 if (jdks != null && !jdks.contains(sourceLevel)) { // workaround for #212146 when jdks == null
-                    if ("17".equals(sourceLevel) && jdks.contains("11")) {
+                    if ("21".equals(sourceLevel) && jdks.contains("17")) {
+                        sourceLevel = "17";
+                    } else if ("17".equals(sourceLevel) && jdks.contains("11")) {
                         sourceLevel = "11";
                     } else if ("11".equals(sourceLevel) && jdks.contains("1.8")) {
                         sourceLevel = "1.8";
@@ -634,6 +636,9 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                 String warningType = warningPanel.getWarningType();
                 if (warningType != null) {
                     switch (warningType) {
+                        case J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_21:
+                            sourceLevel = "21"; //NOI18N
+                            break;
                         case J2eeVersionWarningPanel.WARN_SET_SOURCE_LEVEL_17:
                             sourceLevel = "17"; //NOI18N
                             break;
@@ -915,7 +920,7 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                 }
             } else {
                 // suppose highest
-                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAVA_EE_8_FULL));
+                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAKARTA_EE_8_FULL));
             }
         }
     }
@@ -949,6 +954,8 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                 j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAVA_EE_7_FULL));
             } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_4_0).equals(version)) {
                 j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAKARTA_EE_9_FULL));
+            } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.ejb.EjbJar.VERSION_4_1).equals(version)) {
+                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAKARTA_EE_12_FULL));
             }
         } catch (IOException e) {
             String message = NbBundle.getMessage(ProjectServerPanel.class, "MSG_EjbJarXmlCorrupted"); // NOI18N
@@ -988,6 +995,8 @@ private void serverLibraryCheckboxActionPerformed(java.awt.event.ActionEvent evt
                 j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAKARTA_EE_10_FULL));
             } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_11_0).equals(version)) {
                 j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAKARTA_EE_11_FULL));
+            } else if(new BigDecimal(org.netbeans.modules.j2ee.dd.api.client.AppClient.VERSION_12_0).equals(version)) {
+                j2eeSpecComboBox.setSelectedItem(new ProfileItem(Profile.JAKARTA_EE_12_FULL));
             }
         } catch (IOException e) {
             String message = NbBundle.getMessage(ProjectServerPanel.class, "MSG_AppClientXmlCorrupted"); // NOI18N

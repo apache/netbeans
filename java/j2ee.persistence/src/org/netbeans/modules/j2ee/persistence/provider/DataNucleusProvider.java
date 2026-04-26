@@ -28,11 +28,6 @@ import static org.netbeans.modules.j2ee.persistence.dd.common.PersistenceUnit.JA
 import org.openide.util.NbBundle;
 
 /**
- *
- * @author pblaha
- */
-
-/**
  * This class represents DataNucleus provider.
  *
  * @author pblaha
@@ -111,13 +106,13 @@ class DataNucleusProvider extends Provider{
     }
 
     @Override
-    public Map getUnresolvedVendorSpecificProperties() {
+    public Map<String, String> getUnresolvedVendorSpecificProperties() {
         return Collections.emptyMap();
     }
 
     @Override
-    public Map getDefaultVendorSpecificProperties() {
-        Map<String,String> properties = new HashMap<>();
+    public Map<String, String> getDefaultVendorSpecificProperties() {
+        Map<String, String> properties = new HashMap<>(4);
         properties.put("datanucleus.transaction.nontx.read", "true"); //NOI18N
         properties.put("datanucleus.transaction.nontx.write", "true"); //NOI18N
         properties.put("datanucleus.ConnectionURL", "appengine"); //NOI18N

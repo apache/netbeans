@@ -70,7 +70,7 @@ import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
 
 /**
- * Basic Java/Jakarta EE server configuration API support for V2-V8 plugins.
+ * Basic Java/Jakarta EE server configuration API support for V2-V9 plugins.
  * <p/>
  * @author Peter Williams, Tomas Kraus
  */
@@ -489,7 +489,8 @@ public abstract class GlassfishConfiguration implements
         "gfv6ee9",
         "gfv610ee9",
         "gfv700ee10",
-        "gfv800ee11"
+        "gfv800ee11",
+        "gfv900ee12"
     };
 
     protected ASDDVersion getTargetAppServerVersion() {
@@ -542,7 +543,13 @@ public abstract class GlassfishConfiguration implements
         boolean geGF6 = false;
         boolean geGF7 = false;
         boolean geGF8 = false;
-        if(schemaFolder.exists()){
+        boolean geGF9 = false;
+        if(schemaFolder.exists()) {
+            if(new File(schemaFolder, "jakartaee12.xsd").exists() &&
+                    new File(dtdFolder, "glassfish-web-app_3_0-1.dtd").exists()){
+              geGF9 = true;
+              return ASDDVersion.GLASSFISH_9;
+            }
             if(new File(schemaFolder, "jakartaee11.xsd").exists() &&
                     new File(dtdFolder, "glassfish-web-app_3_0-1.dtd").exists()){
               geGF8 = true;
@@ -564,7 +571,7 @@ public abstract class GlassfishConfiguration implements
               return ASDDVersion.GLASSFISH_5_1;
             }
         }
-        if (!geGF5 && !geGF6 && !geGF7 && !geGF8 && dtdFolder.exists()) {
+        if (!geGF5 && !geGF6 && !geGF7 && !geGF8 && !geGF9 && dtdFolder.exists()) {
             if (new File(dtdFolder, "glassfish-web-app_3_0-1.dtd").exists()) {
                 return ASDDVersion.SUN_APPSERVER_10_1;
             }

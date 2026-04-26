@@ -38,20 +38,30 @@ class JpaSupportImpl implements JpaSupportImplementation {
     @Override
     public JpaProvider getDefaultProvider() {
         String defaultProvider = platformImpl.getDefaultJpaProvider();
-        return JpaProviderFactory.createJpaProvider(defaultProvider, true, true,
-                platformImpl.isJpa2Available(), platformImpl.isJpa21Available(), false, false, false, false);
+        final boolean isDefault = true, isJpa10 = true;
+        final boolean isJpa20 = platformImpl.isJpa2Available();
+        final boolean isJpa21 = platformImpl.isJpa21Available();
+        final boolean isJpa22 = false, isJpa30 = false, isJpa31 = false, isJpa32 = false, isJpa40 = false;
+        return JpaProviderFactory.createJpaProvider(defaultProvider, isDefault, 
+                isJpa10, isJpa20, isJpa21, isJpa22, isJpa30, isJpa31, isJpa32, isJpa40);
     }
 
     @Override
     public Set<JpaProvider> getProviders() {
         String defaultProvider = platformImpl.getDefaultJpaProvider();
-        Set<JpaProvider> providers = new HashSet<JpaProvider>();
-        providers.add(JpaProviderFactory.createJpaProvider(WLJ2eePlatformFactory.OPENJPA_JPA_PROVIDER,
-                WLJ2eePlatformFactory.OPENJPA_JPA_PROVIDER.equals(defaultProvider), true, false, false, false, false, false, false));
+        final boolean isJpa10 = true;
+        final boolean isJpa20 = platformImpl.isJpa2Available();
+        final boolean isJpa21 = platformImpl.isJpa21Available();
+        final boolean isJpa22 = false, isJpa30 = false, isJpa31 = false, isJpa32 = false, isJpa40 = false;
+        Set<JpaProvider> providers = new HashSet<>(4);
+        providers.add(JpaProviderFactory.createJpaProvider(
+                WLJ2eePlatformFactory.OPENJPA_JPA_PROVIDER,
+                WLJ2eePlatformFactory.OPENJPA_JPA_PROVIDER.equals(defaultProvider), 
+                isJpa10, isJpa20, isJpa21, isJpa22, isJpa30, isJpa31, isJpa32, isJpa40));
         providers.add(JpaProviderFactory.createJpaProvider(
                 WLJ2eePlatformFactory.ECLIPSELINK_JPA_PROVIDER,
                 WLJ2eePlatformFactory.ECLIPSELINK_JPA_PROVIDER.equals(defaultProvider), 
-                true, platformImpl.isJpa2Available(), platformImpl.isJpa21Available(), false, false, false, false));
+                isJpa10, isJpa20, isJpa21, isJpa22, isJpa30, isJpa31, isJpa32, isJpa40));
         return providers;
     }
 

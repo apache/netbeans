@@ -94,6 +94,7 @@ public final class PersistenceProviderSupplierImpl implements PersistenceProvide
                 if (jpa != null) {
                     String version = ProviderUtil.getVersion(provider);
                     if (version == null
+                            || (version.equals(Persistence.VERSION_4_0) && jpa.isJpa40Supported())
                             || (version.equals(Persistence.VERSION_3_2) && jpa.isJpa32Supported())
                             || (version.equals(Persistence.VERSION_3_1) && jpa.isJpa31Supported())
                             || (version.equals(Persistence.VERSION_3_0) && jpa.isJpa30Supported())
@@ -129,7 +130,8 @@ public final class PersistenceProviderSupplierImpl implements PersistenceProvide
                         || version.equals(Persistence.VERSION_2_2) 
                         || version.equals(Persistence.VERSION_3_0) 
                         || version.equals(Persistence.VERSION_3_1)
-                        || version.equals(Persistence.VERSION_3_2)) {
+                        || version.equals(Persistence.VERSION_3_2)
+                        || version.equals(Persistence.VERSION_4_0)) {
                     providers.add(each);
                 }
             }

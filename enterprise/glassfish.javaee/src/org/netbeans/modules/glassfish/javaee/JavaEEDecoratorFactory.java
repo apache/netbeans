@@ -231,7 +231,7 @@ public class JavaEEDecoratorFactory implements DecoratorFactory {
         @Override public String getCmdPropertyName() { return "jndi_name"; }
     };
     
-    private static final Map<String, Decorator> decoratorMap = new HashMap<String, Decorator>();
+    private static final Map<String, Decorator> decoratorMap = new HashMap<>(32);
     
     static {
         // !PW XXX need to put in correct strings, then define as static 

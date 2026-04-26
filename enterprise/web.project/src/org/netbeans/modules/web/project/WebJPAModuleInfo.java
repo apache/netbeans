@@ -20,6 +20,7 @@
 package org.netbeans.modules.web.project;
 
 import org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment;
+import org.netbeans.modules.j2ee.deployment.devmodules.api.InstanceRemovedException;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.J2eePlatform;
 import org.netbeans.modules.j2ee.deployment.devmodules.spi.J2eeModuleProvider;
 import org.netbeans.modules.j2ee.persistence.dd.common.Persistence;
@@ -56,21 +57,27 @@ class WebJPAModuleInfo implements JPAModuleInfo{
     @Override
     public Boolean isJPAVersionSupported(String version) {
         J2eeModuleProvider j2eeModuleProvider = project.getLookup().lookup(J2eeModuleProvider.class);
-        J2eePlatform platform  = Deployment.getDefault().getJ2eePlatform(j2eeModuleProvider.getServerInstanceID());
-        
-        if (platform == null) {
-            return null;
-        }
-        JpaSupport support = JpaSupport.getInstance(platform);
-        JpaProvider provider = support.getDefaultProvider();
-        if (provider != null) {
-            return (Persistence.VERSION_3_2.equals(version) && provider.isJpa32Supported())
-                    || (Persistence.VERSION_3_1.equals(version) && provider.isJpa31Supported())
-                    || (Persistence.VERSION_3_0.equals(version) && provider.isJpa30Supported())
-                    || (Persistence.VERSION_2_2.equals(version) && provider.isJpa22Supported())
-                    || (Persistence.VERSION_2_1.equals(version) && provider.isJpa21Supported())
-                    || (Persistence.VERSION_2_0.equals(version) && provider.isJpa2Supported())
-                    || (Persistence.VERSION_1_0.equals(version) && provider.isJpa1Supported());
+        String serverInstanceID = j2eeModuleProvider.getServerInstanceID();
+        try {
+            J2eePlatform platform  = Deployment.getDefault().getServerInstance(serverInstanceID).getJ2eePlatform();
+
+            if (platform == null) {
+                return null;
+            }
+            JpaSupport support = JpaSupport.getInstance(platform);
+            JpaProvider provider = support.getDefaultProvider();
+            if (provider != null) {
+                return (Persistence.VERSION_4_0.equals(version) && provider.isJpa40Supported())
+                        || (Persistence.VERSION_3_2.equals(version) && provider.isJpa32Supported())
+                        || (Persistence.VERSION_3_1.equals(version) && provider.isJpa31Supported())
+                        || (Persistence.VERSION_3_0.equals(version) && provider.isJpa30Supported())
+                        || (Persistence.VERSION_2_2.equals(version) && provider.isJpa22Supported())
+                        || (Persistence.VERSION_2_1.equals(version) && provider.isJpa21Supported())
+                        || (Persistence.VERSION_2_0.equals(version) && provider.isJpa2Supported())
+                        || (Persistence.VERSION_1_0.equals(version) && provider.isJpa1Supported());
+            }
+        } catch (InstanceRemovedException ex) {
+            //noop
         }
         return null;
     }

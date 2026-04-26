@@ -154,8 +154,8 @@ public class JSFConfigurationPanelVisual extends javax.swing.JPanel implements H
     private static final List<Library> JSF_LIBRARIES_CACHE = new CopyOnWriteArrayList<>();
 
     /** Maps used for faster seek of JSF/Jakarta Faces registered libraries. */
-    private static final Map<Boolean, String> JSF_SEEKING_MAP = new LinkedHashMap<>(2);
-    private static final Map<Boolean, String> JSF_SEEKING_MAP_JAKARTA = new LinkedHashMap<>(2);
+    private static final Map<Boolean, String> JSF_SEEKING_MAP = new LinkedHashMap<>(4);
+    private static final Map<Boolean, String> JSF_SEEKING_MAP_JAKARTA = new LinkedHashMap<>(4);
 
     static {
         JSF_SEEKING_MAP.put(false, JSFUtils.EJB_STATELESS);
@@ -1811,17 +1811,20 @@ private void serverLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//G
                 public void run() {
                     setServerLibraryModel(serverJsfLibraries);
                     if (serverJsfLibraries.isEmpty()) {
-                        Library preferredLibrary;
-                        if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_11_WEB)) {
-                            preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_4_1_NAME);
-                        } else if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
-                            preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_4_0_NAME);
-                        } else if (getProfile() != null && getProfile().isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
-                            preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_3_0_NAME);
-                        } else if (getProfile() != null && getProfile().isAtLeast(Profile.JAVA_EE_5)) {
-                            preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_2_0_NAME);
-                        } else {
-                            preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_1_2_NAME);
+                        Library preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_1_2_NAME);
+                        Profile profile = getProfile();
+                        if (null != profile) {
+                            if (profile.isAtLeast(Profile.JAKARTA_EE_12_WEB)) {
+                                preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_5_0_NAME);
+                            } else if (profile.isAtLeast(Profile.JAKARTA_EE_11_WEB)) {
+                                preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_4_1_NAME);
+                            } else if (profile.isAtLeast(Profile.JAKARTA_EE_10_WEB)) {
+                                preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_4_0_NAME);
+                            } else if (profile.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+                                preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_3_0_NAME);
+                            } else if (profile.isAtLeast(Profile.JAVA_EE_5)) {
+                                preferredLibrary = LibraryManager.getDefault().getLibrary(JSFUtils.DEFAULT_JSF_2_0_NAME);
+                            }
                         }
 
                         if (preferredLibrary != null) {

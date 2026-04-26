@@ -71,6 +71,7 @@ public class JSFUtils {
     public static final String DEFAULT_JSF_3_0_NAME = "jsf30";    //NOI18N
     public static final String DEFAULT_JSF_4_0_NAME = "jsf40";    //NOI18N
     public static final String DEFAULT_JSF_4_1_NAME = "jsf41";    //NOI18N
+    public static final String DEFAULT_JSF_5_0_NAME = "jsf50";    //NOI18N
 
     // the name of jstl library
     public static final String DEFAULT_JSTL_1_1_NAME = "jstl11";  //NOI18N
@@ -88,6 +89,7 @@ public class JSFUtils {
     public static final String JSF_3_0__API_SPECIFIC_CLASS = "jakarta.faces.push.PushContext"; //NOI18N
     public static final String JSF_4_0__API_SPECIFIC_CLASS = "jakarta.faces.lifecycle.ClientWindowScoped"; //NOI18N
     public static final String JSF_4_1__API_SPECIFIC_CLASS = "jakarta.faces.convert.UUIDConverter"; //NOI18N
+    public static final String JSF_5_0__API_SPECIFIC_CLASS = "jakarta.faces.CurrentThreadToServletContext"; //NOI18N
     public static final String MYFACES_SPECIFIC_CLASS = "org.apache.myfaces.webapp.StartupServletContextListener"; //NOI18N
 
     //constants for web.xml (Java EE)

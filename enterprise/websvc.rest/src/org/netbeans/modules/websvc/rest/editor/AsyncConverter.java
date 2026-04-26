@@ -124,13 +124,16 @@ abstract class AsyncConverter {
                 TypeMirror type = param.asType();
                 if ( type instanceof DeclaredType ){
                     Element paramElement = ((DeclaredType)type).asElement();
-                    if ( paramElement instanceof TypeElement ){
-                        hasAsyncType = ((TypeElement)paramElement).getQualifiedName().
-                                contentEquals("javax.ws.rs.container.AsyncResponse");   // NOI18N
+                    if ( paramElement instanceof TypeElement ) {
+                        javax.lang.model.element.Name name = ((TypeElement)paramElement).getQualifiedName();
+                        hasAsyncType = name.contentEquals("javax.ws.rs.container.AsyncResponse") //NOI18N
+                                || name.contentEquals("jakarta.ws.rs.container.AsyncResponse"); //NOI18N
                     }
                 }
+                
                 if( hasAsyncType && hasAnnotation(param,
-                        "javax.ws.rs.container.Suspended")){ // NOI18N
+                        "javax.ws.rs.container.Suspended", // NOI18N
+                        "jakarta.ws.rs.container.Suspended") ) { // NOI18N
                     return true;
                 }
             }
@@ -331,8 +334,11 @@ abstract class AsyncConverter {
     }
 
     private boolean isEjb(Element element){
-        return hasAnnotation(element, "javax.ejb.Stateless",
-                "javax.ejb.Singleton");// NOI18N
+        return hasAnnotation(element, 
+                "javax.ejb.Stateless", 
+                "javax.ejb.Singleton", 
+                "jakarta.ejb.Stateless", 
+                "jakarta.ejb.Singleton"); // NOI18N
     }
 
     private ClassTree createAsyncMethod( TreeMaker maker,

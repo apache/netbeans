@@ -60,6 +60,10 @@ public interface Application extends org.netbeans.modules.j2ee.dd.api.common.Roo
          * application.xml DD version for Jakarta EE 11
          */
         public static final String VERSION_11 = "11"; //NOI18N
+        /**
+         * application.xml DD version for Jakarta EE 12
+         */
+        public static final String VERSION_12 = "12"; //NOI18N
         public static final int STATE_VALID=0;
         public static final int STATE_INVALID_PARSABLE=1;
         public static final int STATE_INVALID_UNPARSABLE=2;

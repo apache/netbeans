@@ -114,6 +114,7 @@ public class CustomizerRunWeb extends BaseRunCustomizer {
         WEB_PROFILES.add(Profile.JAKARTA_EE_9_1_WEB);
         WEB_PROFILES.add(Profile.JAKARTA_EE_10_WEB);
         WEB_PROFILES.add(Profile.JAKARTA_EE_11_WEB);
+        WEB_PROFILES.add(Profile.JAKARTA_EE_12_WEB);
 
         FULL_PROFILES = new TreeSet<>(Profile.UI_COMPARATOR);
         FULL_PROFILES.add(Profile.JAVA_EE_5);
@@ -125,10 +126,11 @@ public class CustomizerRunWeb extends BaseRunCustomizer {
         FULL_PROFILES.add(Profile.JAKARTA_EE_9_1_FULL);
         FULL_PROFILES.add(Profile.JAKARTA_EE_10_FULL);
         FULL_PROFILES.add(Profile.JAKARTA_EE_11_FULL);
+        FULL_PROFILES.add(Profile.JAKARTA_EE_12_FULL);
     }
 
     @Messages({
-        "WARNING_ChangingJavaEEVersion=<html>You are changing Java EE version. <b>Please be aware about "
+        "WARNING_ChangingJavaEEVersion=<html>You are changing Java/Jakarta EE version. <b>Please be aware about "
             + "possible consequences</b>. Your project might not be deployable anymore if the selected "
             + "server doesn't support choosen version.<br><br>Also note that changing this value doesn't "
             + "make any changes in your project configuration (pom.xml will still reffer to the original "

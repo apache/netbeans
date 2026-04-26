@@ -35,6 +35,7 @@ public class DDWebFragment60DataLoader extends DDDataLoader {
 
     public static final String REQUIRED_MIME_60 = "text/x-dd-servlet-fragment6.0"; // NOI18N
     public static final String REQUIRED_MIME_61 = "text/x-dd-servlet-fragment6.1"; // NOI18N
+    public static final String REQUIRED_MIME_62 = "text/x-dd-servlet-fragment6.2"; // NOI18N
 
     public DDWebFragment60DataLoader() {
         super("org.netbeans.modules.j2ee.ddloaders.web.DDFragmentDataObject");  // NOI18N
@@ -47,7 +48,7 @@ public class DDWebFragment60DataLoader extends DDDataLoader {
 
     @Override
     protected String[] getSupportedMimeTypes() {
-        return new String[]{REQUIRED_MIME_60, REQUIRED_MIME_61};
+        return new String[]{REQUIRED_MIME_60, REQUIRED_MIME_61, REQUIRED_MIME_62};
     }
 
     @Override

@@ -52,7 +52,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Parameters;
-import org.openide.util.RequestProcessor;
 import org.openide.util.WeakListeners;
 
 /**
@@ -61,9 +60,10 @@ import org.openide.util.WeakListeners;
  */
 public final class JsfVersionUtils {
 
-    private static final LinkedHashMap<JsfVersion, String> SPECIFIC_CLASS_NAMES = new LinkedHashMap<>();
+    private static final LinkedHashMap<JsfVersion, String> SPECIFIC_CLASS_NAMES = new LinkedHashMap<>(16);
 
     static {
+        SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_5_0, JSFUtils.JSF_5_0__API_SPECIFIC_CLASS);
         SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_4_1, JSFUtils.JSF_4_1__API_SPECIFIC_CLASS);
         SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_4_0, JSFUtils.JSF_4_0__API_SPECIFIC_CLASS);
         SPECIFIC_CLASS_NAMES.put(JsfVersion.JSF_3_0, JSFUtils.JSF_3_0__API_SPECIFIC_CLASS);
@@ -198,7 +198,9 @@ public final class JsfVersionUtils {
     public static JsfVersion forServerLibrary(@NonNull ServerLibrary lib) {
         Parameters.notNull("serverLibrary", lib); //NOI18N
         if ("JavaServer Faces".equals(lib.getSpecificationTitle())) { // NOI18N
-            if (Version.fromJsr277NotationWithFallback("4.1").equals(lib.getSpecificationVersion())) { //NOI18N
+            if (Version.fromJsr277NotationWithFallback("5.0").equals(lib.getSpecificationVersion())) { //NOI18N
+                return JsfVersion.JSF_5_0;
+            } else if (Version.fromJsr277NotationWithFallback("4.1").equals(lib.getSpecificationVersion())) { //NOI18N
                 return JsfVersion.JSF_4_1;
             } else if (Version.fromJsr277NotationWithFallback("4.0").equals(lib.getSpecificationVersion())) { //NOI18N
                 return JsfVersion.JSF_4_0;

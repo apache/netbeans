@@ -348,6 +348,16 @@ public class PayaraPlatformVersion implements PayaraPlatformVersionAPI, Comparab
     public boolean isEE10Supported() {
         return major >= 6;
     }
+    
+    @Override
+    public boolean isEE11Supported() {
+        return major >= 7;
+    }
+    
+    @Override
+    public boolean isEE12Supported() {
+        return major >= 8;
+    }
 
     // Methods                                                                //
     /**

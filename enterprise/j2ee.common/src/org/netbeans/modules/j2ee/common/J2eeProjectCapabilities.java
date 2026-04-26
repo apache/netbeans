@@ -182,6 +182,34 @@ public final class J2eeProjectCapabilities {
     }
     
     /**
+     * EJB 4.1 functionality is supported in EjbJar and Web project which is targeting
+     * full platform profile for Jakarta EE 12.
+     *
+     * @return {@code true} if the project is targeting full Jakarta EE 12 or newer platform
+     * @since 1.76
+     */
+    public boolean isEjb41Supported() {
+        J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
+        boolean ee12 = ejbJarProfile != null && ejbJarProfile.isFullProfile() && 
+                ejbJarProfile.isAtLeast(Profile.JAKARTA_EE_12_FULL);
+        return ee12 && (J2eeModule.Type.EJB.equals(moduleType) || J2eeModule.Type.WAR.equals(moduleType));
+    }
+    
+    /**
+     * EJB 4.1 Lite functionality is supported in Web projects targeting  
+     * Jakarta EE 12 web profile, and wherever full EJB 4.1 is supported.
+     *
+     * @return {@code true} if the project is targeting full or web profile Jakarta EE 12 or newer platform
+     * @since 1.76
+     */
+    public boolean isEjb41LiteSupported() {
+        J2eeModule.Type moduleType = provider.getJ2eeModule().getType();
+        boolean ee12 = ejbJarProfile != null && 
+                ejbJarProfile.isAtLeast(Profile.JAKARTA_EE_12_WEB);
+        return isEjb41Supported() || (J2eeModule.Type.WAR.equals(moduleType) && ee12);
+    }
+    
+    /**
      * Is CDI 1.0 supported in this project?
      * @return {@code true} if the project targets EE6 profile, {@code false} otherwise
      * @since 1.113
@@ -261,6 +289,18 @@ public final class J2eeProjectCapabilities {
                 || Profile.JAKARTA_EE_11_WEB.equals(webProfile)
                 || Profile.JAKARTA_EE_11_FULL.equals(carProfile);
     }
+    
+    /**
+     * Is CDI 5.0 supported in this project?
+     *
+     * @return {@code true} if the project targets Jakarta EE 12 profile,
+     * {@code false} otherwise
+     */
+    public boolean isCdi50Supported() {
+        return Profile.JAKARTA_EE_12_FULL.equals(ejbJarProfile)
+                || Profile.JAKARTA_EE_12_WEB.equals(webProfile)
+                || Profile.JAKARTA_EE_12_FULL.equals(carProfile);
+    }
 
     /**
      * Returns <code>true</code> if the server used by project supports EJB lite.
@@ -286,7 +326,7 @@ public final class J2eeProjectCapabilities {
             return false;
         }
 
-        Set<Profile> profiles = new HashSet<Profile>(platform.getSupportedProfiles(provider.getJ2eeModule().getType()));
+        Set<Profile> profiles = new HashSet<>(platform.getSupportedProfiles(provider.getJ2eeModule().getType()));
         profiles.remove(Profile.J2EE_13);
         profiles.remove(Profile.J2EE_14);
         if (profiles.isEmpty()) {

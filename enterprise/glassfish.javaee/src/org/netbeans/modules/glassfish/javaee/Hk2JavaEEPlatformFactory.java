@@ -67,6 +67,9 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
     
     /** GlassFish V8 JakartaEE platform lookup key. */
     private static final String V8_LOOKUP_KEY = "J2EE/DeploymentPlugins/gfv800ee11/Lookup";
+    
+    /** GlassFish V9 JakartaEE platform lookup key. */
+    private static final String V9_LOOKUP_KEY = "J2EE/DeploymentPlugins/gfv900ee12/Lookup";
 
     /** GlassFish JavaEE platform factory singleton object. */
     private static volatile Hk2JavaEEPlatformFactory instance;
@@ -99,7 +102,10 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
      */
     private static String getDisplayName(final GlassFishVersion version) {
         final int ord = version.ordinal();
-        if(ord >= GlassFishVersion.GF_8_0_0.ordinal()) {
+        if(ord >= GlassFishVersion.GF_9_0_0.ordinal()) {
+            return NbBundle.getMessage(
+                    Hk2JavaEEPlatformFactory.class, "MSG_V900ServerPlatform");
+        } else if(ord >= GlassFishVersion.GF_8_0_0.ordinal()) {
             return NbBundle.getMessage(
                     Hk2JavaEEPlatformFactory.class, "MSG_V800ServerPlatform");
         } else if(ord >= GlassFishVersion.GF_7_0_0.ordinal()) {
@@ -145,7 +151,10 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
      */
     private static String getLibraryName(final GlassFishVersion version) {
         final int ord = version.ordinal();
-        if (ord >= GlassFishVersion.GF_8_0_0.ordinal()) {
+        if (ord >= GlassFishVersion.GF_9_0_0.ordinal()) {
+            return NbBundle.getMessage(
+                    Hk2JavaEEPlatformFactory.class, "LBL_V900ServerLibraries");
+        } else if (ord >= GlassFishVersion.GF_8_0_0.ordinal()) {
             return NbBundle.getMessage(
                     Hk2JavaEEPlatformFactory.class, "LBL_V800ServerLibraries");
         } else if (ord >= GlassFishVersion.GF_7_0_0.ordinal()) {
@@ -191,7 +200,9 @@ public class Hk2JavaEEPlatformFactory extends J2eePlatformFactory {
      */
     private static String getLookupKey(final GlassFishVersion version) {
         final int ord = version.ordinal();
-        if (ord >= GlassFishVersion.GF_8_0_0.ordinal()){
+        if (ord >= GlassFishVersion.GF_9_0_0.ordinal()){
+            return V9_LOOKUP_KEY;
+        } else if (ord >= GlassFishVersion.GF_8_0_0.ordinal()){
             return V8_LOOKUP_KEY;
         } else if (ord >= GlassFishVersion.GF_7_0_0.ordinal()){
             return V7_LOOKUP_KEY;

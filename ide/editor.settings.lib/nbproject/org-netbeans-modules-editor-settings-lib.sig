@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.82.0
+#Version 1.83.0
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -115,6 +116,7 @@ meth public abstract void skippedEntity(java.lang.String) throws org.xml.sax.SAX
 meth public abstract void startDocument() throws org.xml.sax.SAXException
 meth public abstract void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
 meth public abstract void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void declaration(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 
 CLSS public abstract interface org.xml.sax.DTDHandler
 meth public abstract void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException

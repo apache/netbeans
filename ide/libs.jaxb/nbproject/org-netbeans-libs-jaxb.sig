@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.62
+#Version 1.63
 
 CLSS public final com.sun.codemodel.ClassType
 fld public final static com.sun.codemodel.ClassType ANNOTATION_TYPE_DECL

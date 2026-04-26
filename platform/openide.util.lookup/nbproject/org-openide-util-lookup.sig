@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 8.65
+#Version 8.66
 
 CLSS public abstract interface java.io.Serializable
 
@@ -53,7 +53,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public abstract javax.annotation.processing.AbstractProcessor
 cons protected init()
@@ -67,7 +66,6 @@ meth public java.util.Set<java.lang.String> getSupportedOptions()
 meth public javax.lang.model.SourceVersion getSupportedSourceVersion()
 meth public void init(javax.annotation.processing.ProcessingEnvironment)
 supr java.lang.Object
-hfds initialized
 
 CLSS public abstract interface javax.annotation.processing.Processor
 meth public abstract boolean process(java.util.Set<? extends javax.lang.model.element.TypeElement>,javax.annotation.processing.RoundEnvironment)

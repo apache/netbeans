@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.48.0
+#Version 2.49.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -18,6 +18,7 @@ intf java.lang.Comparable<{java.lang.Enum%0}>
 intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="18")
 meth public final boolean equals(java.lang.Object)
 meth public final int compareTo({java.lang.Enum%0})
 meth public final int hashCode()
@@ -28,13 +29,12 @@ meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -1863,18 +1863,18 @@ hcls HeredocInfo
 
 CLSS public abstract interface org.netbeans.modules.php.editor.parser.ASTPHP5Symbols
 fld public final static int EOF = 0
-fld public final static int T_ABSTRACT = 145
-fld public final static int T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG = 167
+fld public final static int T_ABSTRACT = 146
+fld public final static int T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG = 168
 fld public final static int T_AND_EQUAL = 97
 fld public final static int T_ARRAY = 59
-fld public final static int T_ARRAY_CAST = 133
+fld public final static int T_ARRAY_CAST = 134
 fld public final static int T_AS = 25
-fld public final static int T_AT = 137
-fld public final static int T_ATTRIBUTE = 165
-fld public final static int T_BACKQUATE = 155
+fld public final static int T_AT = 138
+fld public final static int T_ATTRIBUTE = 166
+fld public final static int T_BACKQUATE = 156
 fld public final static int T_BOOLEAN_AND = 105
 fld public final static int T_BOOLEAN_OR = 104
-fld public final static int T_BOOL_CAST = 135
+fld public final static int T_BOOL_CAST = 136
 fld public final static int T_BREAK = 31
 fld public final static int T_CALLABLE = 60
 fld public final static int T_CASE = 29
@@ -1882,10 +1882,10 @@ fld public final static int T_CATCH = 41
 fld public final static int T_CLASS = 51
 fld public final static int T_CLASS_C = 61
 fld public final static int T_CLONE = 24
-fld public final static int T_CLOSE_PARENTHESE = 151
-fld public final static int T_CLOSE_RECT = 139
-fld public final static int T_COALESCE = 163
-fld public final static int T_COALESCE_EQUAL = 164
+fld public final static int T_CLOSE_PARENTHESE = 152
+fld public final static int T_CLOSE_RECT = 140
+fld public final static int T_COALESCE = 164
+fld public final static int T_COALESCE_EQUAL = 165
 fld public final static int T_COMMA = 85
 fld public final static int T_CONCAT_EQUAL = 95
 fld public final static int T_CONST = 36
@@ -1894,40 +1894,40 @@ fld public final static int T_CONTINUE = 32
 fld public final static int T_CURLY_CLOSE = 72
 fld public final static int T_CURLY_OPEN = 71
 fld public final static int T_CURLY_OPEN_WITH_DOLAR = 70
-fld public final static int T_DEC = 129
+fld public final static int T_DEC = 130
 fld public final static int T_DECLARE = 21
 fld public final static int T_DEFAULT = 30
 fld public final static int T_DEFINE = 79
 fld public final static int T_DIR = 76
-fld public final static int T_DIV = 123
+fld public final static int T_DIV = 124
 fld public final static int T_DIV_EQUAL = 94
 fld public final static int T_DNUMBER = 5
 fld public final static int T_DO = 14
-fld public final static int T_DOLLAR = 153
+fld public final static int T_DOLLAR = 154
 fld public final static int T_DOLLAR_OPEN_CURLY_BRACES = 69
 fld public final static int T_DOUBLE_ARROW = 57
-fld public final static int T_DOUBLE_CAST = 131
+fld public final static int T_DOUBLE_CAST = 132
 fld public final static int T_ECHO = 13
-fld public final static int T_ELLIPSIS = 162
-fld public final static int T_ELSE = 143
-fld public final static int T_ELSEIF = 142
+fld public final static int T_ELLIPSIS = 163
+fld public final static int T_ELSE = 144
+fld public final static int T_ELSEIF = 143
 fld public final static int T_EMPTY = 49
 fld public final static int T_ENCAPSED_AND_WHITESPACE = 11
 fld public final static int T_ENDDECLARE = 22
 fld public final static int T_ENDFOR = 18
 fld public final static int T_ENDFOREACH = 20
-fld public final static int T_ENDIF = 141
+fld public final static int T_ENDIF = 142
 fld public final static int T_ENDSWITCH = 27
 fld public final static int T_ENDWHILE = 16
 fld public final static int T_END_HEREDOC = 68
-fld public final static int T_END_NOWDOC = 157
-fld public final static int T_ENUM = 168
+fld public final static int T_END_NOWDOC = 158
+fld public final static int T_ENUM = 169
 fld public final static int T_EQUAL = 90
 fld public final static int T_EVAL = 82
 fld public final static int T_EXIT = 2
 fld public final static int T_EXTENDS = 53
 fld public final static int T_FILE = 66
-fld public final static int T_FINAL = 146
+fld public final static int T_FINAL = 147
 fld public final static int T_FINALLY = 43
 fld public final static int T_FN = 34
 fld public final static int T_FOR = 17
@@ -1939,23 +1939,23 @@ fld public final static int T_GOTO = 33
 fld public final static int T_HALT_COMPILER = 50
 fld public final static int T_IF = 3
 fld public final static int T_IMPLEMENTS = 54
-fld public final static int T_INC = 128
+fld public final static int T_INC = 129
 fld public final static int T_INCLUDE = 80
 fld public final static int T_INCLUDE_ONCE = 81
 fld public final static int T_INLINE_HTML = 10
 fld public final static int T_INSTANCEOF = 23
-fld public final static int T_INSTEADOF = 159
+fld public final static int T_INSTEADOF = 160
 fld public final static int T_INTERFACE = 52
-fld public final static int T_INT_CAST = 130
+fld public final static int T_INT_CAST = 131
 fld public final static int T_ISSET = 48
-fld public final static int T_IS_EQUAL = 109
-fld public final static int T_IS_GREATER_OR_EQUAL = 114
-fld public final static int T_IS_IDENTICAL = 111
-fld public final static int T_IS_NOT_EQUAL = 110
-fld public final static int T_IS_NOT_IDENTICAL = 112
-fld public final static int T_IS_SMALLER_OR_EQUAL = 113
-fld public final static int T_KOVA = 107
-fld public final static int T_LGREATER = 117
+fld public final static int T_IS_EQUAL = 110
+fld public final static int T_IS_GREATER_OR_EQUAL = 115
+fld public final static int T_IS_IDENTICAL = 112
+fld public final static int T_IS_NOT_EQUAL = 111
+fld public final static int T_IS_NOT_IDENTICAL = 113
+fld public final static int T_IS_SMALLER_OR_EQUAL = 114
+fld public final static int T_KOVA = 108
+fld public final static int T_LGREATER = 118
 fld public final static int T_LINE = 65
 fld public final static int T_LIST = 58
 fld public final static int T_LNUMBER = 4
@@ -1964,70 +1964,71 @@ fld public final static int T_LOGICAL_OR = 86
 fld public final static int T_LOGICAL_XOR = 87
 fld public final static int T_MATCH = 28
 fld public final static int T_METHOD_C = 63
-fld public final static int T_MINUS = 121
+fld public final static int T_MINUS = 122
 fld public final static int T_MINUS_EQUAL = 92
 fld public final static int T_MOD_EQUAL = 96
 fld public final static int T_MUL_EQUAL = 93
 fld public final static int T_NAMESPACE = 74
-fld public final static int T_NAME_FULLY_QUALIFIED = 171
-fld public final static int T_NAME_QUALIFIED = 170
-fld public final static int T_NAME_RELATIVE = 169
-fld public final static int T_NEKUDA = 127
-fld public final static int T_NEKUDOTAIM = 152
-fld public final static int T_NEW = 140
-fld public final static int T_NOT = 125
+fld public final static int T_NAME_FULLY_QUALIFIED = 172
+fld public final static int T_NAME_QUALIFIED = 171
+fld public final static int T_NAME_RELATIVE = 170
+fld public final static int T_NEKUDA = 128
+fld public final static int T_NEKUDOTAIM = 153
+fld public final static int T_NEW = 141
+fld public final static int T_NOT = 126
 fld public final static int T_NS_C = 75
 fld public final static int T_NS_SEPARATOR = 77
 fld public final static int T_NULLSAFE_OBJECT_OPERATOR = 56
 fld public final static int T_NUM_STRING = 9
-fld public final static int T_OBJECT_CAST = 134
+fld public final static int T_OBJECT_CAST = 135
 fld public final static int T_OBJECT_OPERATOR = 55
-fld public final static int T_OPEN_PARENTHESE = 150
-fld public final static int T_OPEN_RECT = 138
-fld public final static int T_OR = 106
+fld public final static int T_OPEN_PARENTHESE = 151
+fld public final static int T_OPEN_RECT = 139
+fld public final static int T_OR = 107
 fld public final static int T_OR_EQUAL = 98
 fld public final static int T_PAAMAYIM_NEKUDOTAYIM = 73
-fld public final static int T_PLUS = 120
+fld public final static int T_PIPE = 106
+fld public final static int T_PLUS = 121
 fld public final static int T_PLUS_EQUAL = 91
-fld public final static int T_POW = 160
-fld public final static int T_POW_EQUAL = 161
-fld public final static int T_PRECENT = 124
+fld public final static int T_POW = 161
+fld public final static int T_POW_EQUAL = 162
+fld public final static int T_PRECENT = 125
 fld public final static int T_PRINT = 89
-fld public final static int T_PRIVATE = 147
-fld public final static int T_PRIVATE_SET = 174
-fld public final static int T_PROTECTED = 148
-fld public final static int T_PROTECTED_SET = 173
-fld public final static int T_PUBLIC = 149
-fld public final static int T_PUBLIC_SET = 172
-fld public final static int T_QUATE = 154
+fld public final static int T_PRIVATE = 148
+fld public final static int T_PRIVATE_SET = 175
+fld public final static int T_PROTECTED = 149
+fld public final static int T_PROTECTED_SET = 174
+fld public final static int T_PUBLIC = 150
+fld public final static int T_PUBLIC_SET = 173
+fld public final static int T_QUATE = 155
 fld public final static int T_QUESTION_MARK = 102
-fld public final static int T_READONLY = 166
-fld public final static int T_REFERENCE = 108
+fld public final static int T_READONLY = 167
+fld public final static int T_REFERENCE = 109
 fld public final static int T_REQUIRE = 83
 fld public final static int T_REQUIRE_ONCE = 84
 fld public final static int T_RETURN = 37
-fld public final static int T_RGREATER = 116
+fld public final static int T_RGREATER = 117
 fld public final static int T_SEMICOLON = 103
-fld public final static int T_SL = 118
+fld public final static int T_SL = 119
 fld public final static int T_SL_EQUAL = 100
-fld public final static int T_SPACESHIP = 115
-fld public final static int T_SR = 119
+fld public final static int T_SPACESHIP = 116
+fld public final static int T_SR = 120
 fld public final static int T_SR_EQUAL = 101
 fld public final static int T_START_HEREDOC = 67
-fld public final static int T_START_NOWDOC = 156
-fld public final static int T_STATIC = 144
+fld public final static int T_START_NOWDOC = 157
+fld public final static int T_STATIC = 145
 fld public final static int T_STRING = 6
-fld public final static int T_STRING_CAST = 132
+fld public final static int T_STRING_CAST = 133
 fld public final static int T_STRING_VARNAME = 7
 fld public final static int T_SWITCH = 26
 fld public final static int T_THROW = 42
-fld public final static int T_TILDA = 126
-fld public final static int T_TIMES = 122
-fld public final static int T_TRAIT = 158
+fld public final static int T_TILDA = 127
+fld public final static int T_TIMES = 123
+fld public final static int T_TRAIT = 159
 fld public final static int T_TRAIT_C = 62
 fld public final static int T_TRY = 40
 fld public final static int T_UNSET = 47
-fld public final static int T_UNSET_CAST = 136
+fld public final static int T_UNSET_CAST = 137
 fld public final static int T_USE = 44
 fld public final static int T_VAR = 46
 fld public final static int T_VARIABLE = 8
@@ -2738,6 +2739,26 @@ meth public static org.netbeans.modules.php.editor.parser.astnodes.Comment$Type 
 meth public static org.netbeans.modules.php.editor.parser.astnodes.Comment$Type[] values()
 supr java.lang.Enum<org.netbeans.modules.php.editor.parser.astnodes.Comment$Type>
 hfds text
+
+CLSS public org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression
+cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.Expression,org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression$OperatorType,org.netbeans.modules.php.editor.parser.astnodes.Expression)
+innr public final static !enum OperatorType
+meth public java.lang.String toString()
+meth public org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression$OperatorType getOperator()
+meth public org.netbeans.modules.php.editor.parser.astnodes.Expression getLeft()
+meth public org.netbeans.modules.php.editor.parser.astnodes.Expression getRight()
+meth public void accept(org.netbeans.modules.php.editor.parser.astnodes.Visitor)
+supr org.netbeans.modules.php.editor.parser.astnodes.Expression
+hfds left,operator,right
+
+CLSS public final static !enum org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression$OperatorType
+ outer org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression
+fld public final static org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression$OperatorType PIPE
+meth public java.lang.String toString()
+meth public static org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression$OperatorType valueOf(java.lang.String)
+meth public static org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression$OperatorType[] values()
+supr java.lang.Enum<org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression$OperatorType>
+hfds operatorSign
 
 CLSS public org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression
 cons public init(int,int,org.netbeans.modules.php.editor.parser.astnodes.Expression,org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression$OperatorType,org.netbeans.modules.php.editor.parser.astnodes.Expression,org.netbeans.modules.php.editor.parser.astnodes.Expression)
@@ -3816,6 +3837,7 @@ meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassName)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.CloneExpression)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.Comment)
+meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration)
 meth public abstract void visit(org.netbeans.modules.php.editor.parser.astnodes.ConstantVariable)
@@ -4065,6 +4087,7 @@ meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassInst
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ClassName)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.CloneExpression)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.Comment)
+meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration)
 meth public void visit(org.netbeans.modules.php.editor.parser.astnodes.ConstantVariable)

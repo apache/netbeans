@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.41
+#Version 9.42
 
 CLSS public java.io.IOException
 cons public init()
@@ -7,7 +7,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public abstract interface java.io.Serializable
 
@@ -21,7 +20,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -59,8 +57,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -97,7 +93,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public abstract org.openide.filesystem.spi.FileChooserBuilderProvider
 cons public init()
@@ -278,7 +273,7 @@ meth public org.openide.filesystems.FileChooserBuilder setSelectionApprover(org.
 meth public org.openide.filesystems.FileChooserBuilder setTitle(java.lang.String)
 meth public static org.openide.filesystems.FileChooserBuilder create(org.openide.filesystems.FileSystem)
 supr java.lang.Object
-hfds DONT_STORE_DIRECTORIES,PREVENT_SYMLINK_TRAVERSAL,aDescription,approveText,approver,badger,controlButtonsShown,dirKey,dirsOnly,failoverDir,fileHiding,filesOnly,filter,filters,force,title,useAcceptAllFileFilter
+hfds DONT_STORE_DIRECTORIES,aDescription,approveText,approver,badger,controlButtonsShown,dirKey,dirsOnly,failoverDir,fileHiding,filesOnly,filter,filters,force,title,useAcceptAllFileFilter
 hcls BadgeIconProvider,CustomFileView,IconProvider,MergedIcon,SavedDirFileChooser
 
 CLSS public abstract interface static org.openide.filesystems.FileChooserBuilder$BadgeProvider
@@ -558,12 +553,13 @@ meth public static void addRecursiveListener(org.openide.filesystems.FileChangeL
 meth public static void addRecursiveListener(org.openide.filesystems.FileChangeListener,java.io.File,java.io.FileFilter,java.util.concurrent.Callable<java.lang.Boolean>)
 meth public static void addRecursiveListener(org.openide.filesystems.FileChangeListener,java.io.File,java.util.concurrent.Callable<java.lang.Boolean>)
 meth public static void copy(java.io.InputStream,java.io.OutputStream) throws java.io.IOException
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void copyAttributes(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject) throws java.io.IOException
 meth public static void copyAttributes(org.openide.filesystems.FileObject,org.openide.filesystems.FileObject,java.util.function.BiFunction<java.lang.String,java.lang.Object,java.lang.Object>) throws java.io.IOException
 meth public static void extractJar(org.openide.filesystems.FileObject,java.io.InputStream) throws java.io.IOException
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void preventFileChooserSymlinkTraversal(javax.swing.JFileChooser,java.io.File)
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="")
 meth public static void refreshAll()
 meth public static void removeFileChangeListener(org.openide.filesystems.FileChangeListener)
 meth public static void removeFileChangeListener(org.openide.filesystems.FileChangeListener,java.io.File)

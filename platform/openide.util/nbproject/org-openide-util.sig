@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.39
+#Version 9.40
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -47,7 +47,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public abstract java.io.InputStream
 cons public init()
@@ -68,7 +67,6 @@ meth public void mark(int)
 meth public void reset() throws java.io.IOException
 meth public void skipNBytes(long) throws java.io.IOException
 supr java.lang.Object
-hfds DEFAULT_BUFFER_SIZE,MAX_BUFFER_SIZE,MAX_SKIP_BUFFER_SIZE
 
 CLSS public abstract interface java.io.ObjectInput
 intf java.io.DataInput
@@ -122,8 +120,6 @@ meth public void readFully(byte[]) throws java.io.IOException
 meth public void readFully(byte[],int,int) throws java.io.IOException
 meth public void registerValidation(java.io.ObjectInputValidation,int) throws java.io.InvalidObjectException,java.io.NotActiveException
 supr java.io.InputStream
-hfds NULL_HANDLE,UNSAFE,bin,closed,curContext,defaultDataEnd,depth,enableOverride,enableResolve,handles,passHandle,primClasses,serialFilter,streamFilterSet,totalObjectRefs,unsharedMarker,vlist
-hcls BlockDataInputStream,Caches,FieldValues,FilterValues,HandleTable,Logging,PeekInputStream,ValidationList
 
 CLSS public abstract interface java.io.ObjectOutput
 intf java.io.DataOutput
@@ -173,8 +169,6 @@ meth public void writeShort(int) throws java.io.IOException
 meth public void writeUTF(java.lang.String) throws java.io.IOException
 meth public void writeUnshared(java.lang.Object) throws java.io.IOException
 supr java.io.OutputStream
-hfds bout,curContext,curPut,debugInfoStack,depth,enableOverride,enableReplace,extendedDebugInfo,handles,primVals,protocol,subs
-hcls BlockDataOutputStream,Caches,DebugTraceInfoStack,HandleTable,PutFieldImpl,ReplaceTable
 
 CLSS public abstract interface java.io.ObjectStreamConstants
 fld public final static byte SC_BLOCK_DATA = 8
@@ -242,7 +236,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -259,7 +252,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -281,7 +274,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -304,8 +296,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -345,8 +335,6 @@ meth public java.lang.Object clone()
 meth public java.lang.Object parseObject(java.lang.String) throws java.text.ParseException
 meth public java.text.AttributedCharacterIterator formatToCharacterIterator(java.lang.Object)
 supr java.lang.Object
-hfds serialVersionUID
-hcls FieldDelegate
 
 CLSS public abstract java.util.AbstractCollection<%0 extends java.lang.Object>
 cons protected init()
@@ -389,7 +377,6 @@ meth public {java.util.AbstractMap%1} get(java.lang.Object)
 meth public {java.util.AbstractMap%1} put({java.util.AbstractMap%0},{java.util.AbstractMap%1})
 meth public {java.util.AbstractMap%1} remove(java.lang.Object)
 supr java.lang.Object
-hfds keySet,values
 
 CLSS public abstract java.util.AbstractSet<%0 extends java.lang.Object>
 cons protected init()
@@ -431,7 +418,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry
@@ -513,6 +499,7 @@ CLSS public abstract interface java.util.concurrent.Executor
 meth public abstract void execute(java.lang.Runnable)
 
 CLSS public abstract interface java.util.concurrent.ExecutorService
+intf java.lang.AutoCloseable
 intf java.util.concurrent.Executor
 meth public abstract <%0 extends java.lang.Object> java.util.List<java.util.concurrent.Future<{%%0}>> invokeAll(java.util.Collection<? extends java.util.concurrent.Callable<{%%0}>>) throws java.lang.InterruptedException
 meth public abstract <%0 extends java.lang.Object> java.util.List<java.util.concurrent.Future<{%%0}>> invokeAll(java.util.Collection<? extends java.util.concurrent.Callable<{%%0}>>,long,java.util.concurrent.TimeUnit) throws java.lang.InterruptedException
@@ -526,6 +513,7 @@ meth public abstract boolean isTerminated()
 meth public abstract java.util.List<java.lang.Runnable> shutdownNow()
 meth public abstract java.util.concurrent.Future<?> submit(java.lang.Runnable)
 meth public abstract void shutdown()
+meth public void close()
 
 CLSS public abstract interface java.util.concurrent.ScheduledExecutorService
 intf java.util.concurrent.ExecutorService
@@ -938,8 +926,8 @@ meth public void execute(java.lang.Runnable)
 meth public void shutdown()
 meth public void stop()
 supr java.lang.Object
-hfds DEFAULT,SLOW,TOP_GROUP,UNLIMITED,counter,enableStackTraces,finishAwaitingTasks,inParallel,interruptThread,logger,name,processorLock,processors,queue,stopped,throughput,warnParallel
-hcls CreatedItem,FastItem,FixedDelayTask,FixedRateTask,Item,Processor,RPFutureTask,RunnableWrapper,ScheduledRPFutureTask,SlowItem,TaskFutureWrapper,TickTac,TopLevelThreadGroup,WaitableCallable
+hfds DEFAULT,SLOW,UNLIMITED,counter,enableStackTraces,finishAwaitingTasks,inParallel,interruptThread,logger,name,processorLock,processors,queue,stopped,throughput,warnParallel
+hcls CreatedItem,FastItem,FixedDelayTask,FixedRateTask,Item,Processor,RPFutureTask,RunnableWrapper,ScheduledRPFutureTask,SlowItem,TaskFutureWrapper,TickTac,WaitableCallable
 
 CLSS public final org.openide.util.RequestProcessor$Task
  outer org.openide.util.RequestProcessor

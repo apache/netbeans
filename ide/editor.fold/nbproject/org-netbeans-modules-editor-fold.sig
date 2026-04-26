@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.76
+#Version 1.77
 
 CLSS public abstract interface java.io.Serializable
 
@@ -7,6 +7,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -133,7 +134,7 @@ hfds displayText,guardedEnd,guardedStart
 
 CLSS public final org.netbeans.api.editor.fold.FoldType
 cons public init(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.netbeans.api.editor.fold.FoldType CODE_BLOCK
 fld public final static org.netbeans.api.editor.fold.FoldType COMMENT
 fld public final static org.netbeans.api.editor.fold.FoldType DOCUMENTATION
@@ -145,7 +146,7 @@ fld public final static org.netbeans.api.editor.fold.FoldType TAG
 fld public final static org.netbeans.api.editor.fold.FoldType USER
 innr public abstract interface static Domain
 meth public boolean accepts(org.netbeans.api.editor.fold.FoldType)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean isKindOf(org.netbeans.api.editor.fold.FoldType)
 meth public java.lang.String code()
 meth public java.lang.String getLabel()
@@ -263,7 +264,7 @@ meth public java.util.Iterator<org.netbeans.api.editor.fold.Fold> foldIterator()
 meth public java.util.Map<org.netbeans.spi.editor.fold.FoldInfo,org.netbeans.api.editor.fold.Fold> update(java.util.Collection<org.netbeans.spi.editor.fold.FoldInfo>,java.util.Collection<org.netbeans.api.editor.fold.Fold>,java.util.Collection<org.netbeans.spi.editor.fold.FoldInfo>) throws javax.swing.text.BadLocationException
 meth public org.netbeans.api.editor.fold.Fold addToHierarchy(org.netbeans.api.editor.fold.FoldType,int,int,java.lang.Boolean,org.netbeans.api.editor.fold.FoldTemplate,java.lang.String,java.lang.Object,org.netbeans.spi.editor.fold.FoldHierarchyTransaction) throws javax.swing.text.BadLocationException
 meth public org.netbeans.api.editor.fold.Fold addToHierarchy(org.netbeans.api.editor.fold.FoldType,java.lang.String,boolean,int,int,int,int,java.lang.Object,org.netbeans.spi.editor.fold.FoldHierarchyTransaction) throws javax.swing.text.BadLocationException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.api.editor.fold.FoldHierarchy getHierarchy()
 meth public org.netbeans.spi.editor.fold.FoldHierarchyTransaction openTransaction()
 meth public static boolean isBoundsValid(int,int,int,int)

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.63
+#Version 3.64
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -19,6 +19,8 @@ meth public int read() throws java.io.IOException
 meth public int read(char[]) throws java.io.IOException
 meth public int read(java.nio.CharBuffer) throws java.io.IOException
 meth public long skip(long) throws java.io.IOException
+meth public long transferTo(java.io.Writer) throws java.io.IOException
+meth public static java.io.Reader nullReader()
 meth public void mark(int) throws java.io.IOException
 meth public void reset() throws java.io.IOException
 supr java.lang.Object
@@ -34,13 +36,17 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -49,6 +55,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -65,6 +72,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -126,6 +134,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
+
 CLSS public abstract interface java.util.Iterator<%0 extends java.lang.Object>
 meth public abstract boolean hasNext()
 meth public abstract {java.util.Iterator%0} next()
@@ -179,10 +190,10 @@ meth public abstract org.netbeans.modules.html.editor.lib.api.model.HtmlModel mo
 CLSS public abstract interface org.netbeans.modules.html.editor.lib.api.HtmlParser
 meth public abstract boolean canParse(org.netbeans.modules.html.editor.lib.api.HtmlVersion)
 meth public abstract java.lang.String getName()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract org.netbeans.modules.html.editor.lib.api.HtmlParseResult parse(org.netbeans.modules.html.editor.lib.api.HtmlSource,org.netbeans.modules.html.editor.lib.api.HtmlVersion,org.openide.util.Lookup) throws org.netbeans.modules.html.editor.lib.api.ParseException
 meth public abstract org.netbeans.modules.html.editor.lib.api.model.HtmlModel getModel(org.netbeans.modules.html.editor.lib.api.HtmlVersion)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public final org.netbeans.modules.html.editor.lib.api.HtmlParserFactory
 cons public init()
@@ -285,7 +296,7 @@ meth public abstract org.netbeans.modules.html.editor.lib.api.elements.Node reso
 meth public abstract org.openide.filesystems.FileObject getFileObject()
 
 CLSS public final org.netbeans.modules.html.editor.lib.api.SyntaxAnalyzer
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr public final static !enum Behaviour
 meth public java.util.Iterator<org.netbeans.modules.html.editor.lib.api.elements.Element> elementsIterator()
 meth public org.netbeans.modules.html.editor.lib.api.HtmlSource source()
@@ -320,7 +331,7 @@ meth public java.lang.String getPublicID()
 meth public java.util.Collection<org.netbeans.modules.html.editor.lib.api.ParseResult> getAllParseResults() throws org.netbeans.modules.html.editor.lib.api.ParseException
 meth public java.util.Iterator<org.netbeans.modules.html.editor.lib.api.elements.Element> getElementsIterator()
 meth public java.util.Map<java.lang.String,java.lang.String> getDeclaredNamespaces()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Map<java.lang.String,java.util.Collection<java.lang.String>> getAllDeclaredNamespaces()
 meth public java.util.Set<java.lang.String> getAllDeclaredPrefixes()
 meth public org.netbeans.modules.html.editor.lib.api.HtmlParseResult parseHtml() throws org.netbeans.modules.html.editor.lib.api.ParseException
@@ -331,7 +342,7 @@ meth public org.netbeans.modules.html.editor.lib.api.ParseResult parseEmbeddedCo
 meth public org.netbeans.modules.html.editor.lib.api.ParseResult parsePlain()
 meth public org.netbeans.modules.html.editor.lib.api.ParseResult parseUndeclaredEmbeddedCode() throws org.netbeans.modules.html.editor.lib.api.ParseException
 meth public org.netbeans.modules.html.editor.lib.api.SyntaxAnalyzerElements getElements()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.modules.html.editor.lib.api.elements.Declaration getDoctypeDeclaration()
 meth public org.netbeans.modules.html.editor.lib.api.model.HtmlModel getHtmlModel()
 supr java.lang.Object
@@ -522,7 +533,7 @@ meth public abstract java.util.Map<java.lang.String,java.util.List<java.lang.Str
 
 CLSS public abstract interface org.netbeans.modules.html.editor.lib.api.model.HtmlModel
 meth public abstract java.lang.String getModelId()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.Collection<? extends org.netbeans.modules.html.editor.lib.api.model.NamedCharRef> getNamedCharacterReferences()
 meth public abstract java.util.Collection<org.netbeans.modules.html.editor.lib.api.model.HtmlTag> getAllTags()
 meth public abstract org.netbeans.modules.html.editor.lib.api.model.HtmlTag getTag(java.lang.String)

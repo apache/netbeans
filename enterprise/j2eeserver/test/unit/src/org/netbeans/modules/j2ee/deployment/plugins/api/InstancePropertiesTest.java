@@ -146,17 +146,11 @@ public class InstancePropertiesTest extends ServerRegistryTestBase {
                     InputStream is = new ByteArrayInputStream(
                             ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                             + "<netbeans-deployment></netbeans-deployment>").getBytes(StandardCharsets.UTF_8));
-                    try {
-                        OutputStream os = fo.getOutputStream();
-                        try {
-                            FileUtil.copy(is, os);
-                        } finally {
-                            os.close();
+                    try (is) {
+                        try (OutputStream os = fo.getOutputStream()) {
+                            is.transferTo(os);
                         }
-                    } finally {
-                        is.close();
                     }
-
                     fo = folder.createData("Factory", "instance");
                     fo.setAttribute("instanceClass",
                             "org.netbeans.modules.j2ee.deployment.plugins.api.InstancepropertiesTest.MockDF");

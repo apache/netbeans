@@ -46,32 +46,21 @@ public class ServerStringConverter extends org.netbeans.spi.settings.DOMConverto
     private static final String SYSTEM_ID = "nbres:/org/netbeans/modules/j2ee/deployment/impl/server-string.dtd"; // NOI18N
     
     public static boolean writeServerInstance(ServerString instance, String destDir, String destFile) {
-        FileLock lock = null;
-        Writer writer = null;
         try {
             FileObject dir = FileUtil.getConfigFile(destDir);
             FileObject fo = FileUtil.createData(dir, destFile);
-            lock = fo.lock();
-            writer = new OutputStreamWriter(fo.getOutputStream(lock), StandardCharsets.UTF_8);
-            create().write(writer, instance);
-            return true;
-            
+            try (FileLock lock = fo.lock();
+                    Writer writer = new OutputStreamWriter(fo.getOutputStream(lock), StandardCharsets.UTF_8)) {
+                create().write(writer, instance);
+                return true;
+            }
         } catch(Exception ioe) {
             Logger.getLogger("global").log(Level.WARNING, null, ioe);
             return false;
         }
-        finally {
-            try {
-            if (lock != null) lock.releaseLock();
-            if (writer != null) writer.close();
-            } catch (Exception e) {
-                Logger.getLogger("global").log(Level.WARNING, null, e);
-            }
-        }
     }
 
     public static ServerString readServerInstance(String fromDir, String fromFile) {
-        Reader reader = null;
         try {
             FileObject dir = FileUtil.getConfigFile(fromDir);
             if (dir == null) {
@@ -81,15 +70,13 @@ public class ServerStringConverter extends org.netbeans.spi.settings.DOMConverto
             if (fo == null)
                 return null;
             
-            reader = new InputStreamReader(fo.getInputStream(), StandardCharsets.UTF_8);
-            return (ServerString) create().read(reader);
+            try (Reader reader = new InputStreamReader(fo.getInputStream(), StandardCharsets.UTF_8)) {
+                ServerString serverString = (ServerString) create().read(reader);
+                return serverString;
+            }
         } catch(Exception ioe) {
             Logger.getLogger("global").log(Level.WARNING, null, ioe);
             return null;
-        } finally {
-            try {  if (reader != null) reader.close(); } catch(Exception e) {
-                Logger.getLogger("global").log(Level.WARNING, null, e);
-            }
         }
     }
     

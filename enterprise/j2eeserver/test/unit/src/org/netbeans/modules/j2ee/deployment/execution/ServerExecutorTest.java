@@ -59,31 +59,22 @@ public class ServerExecutorTest extends NbTestCase {
     }
             
     public static boolean writeTargetModule(String destFile, TargetModule.List tml) {
-        FileLock lock = null;
-        Writer writer = null;
         try {
-            if (tml == null)
+            if (tml == null) {
                 return true;
-            
+            }
             FileObject fo = FileUtil.createData(getWorkFileSystem().getRoot(), destFile+".xml");
-            lock = fo.lock();
-            writer = new OutputStreamWriter(fo.getOutputStream(lock));
-            TargetModuleConverter.create().write(writer, tml);
-            return true;
-            
+            try (FileLock lock = fo.lock();
+                    Writer writer = new OutputStreamWriter(fo.getOutputStream(lock))) {
+                TargetModuleConverter.create().write(writer, tml);
+                return true;
+            }
         } catch(Exception ioe) {
             throw new RuntimeException(ioe);
-        }
-        finally {
-            try {
-            if (lock != null) lock.releaseLock();
-            if (writer != null) writer.close();
-            } catch (Exception e) {}
         }
     }
 
     public static TargetModule.List readTargetModule(String fromFile) {
-        Reader reader = null;
         try {
             FileObject dir = getWorkFileSystem().getRoot();
             FileObject fo = dir.getFileObject (fromFile, "xml");
@@ -91,14 +82,11 @@ public class ServerExecutorTest extends NbTestCase {
                 System.out.println(Thread.currentThread()+ " readTargetModule: Can't get FO for "+fromFile+".xml from "+dir.getPath());
                 return null;
             }
-            reader = new InputStreamReader(fo.getInputStream());
-            return (TargetModule.List) TargetModuleConverter.create().read(reader);
+            try (Reader reader = new InputStreamReader(fo.getInputStream())) {
+                return (TargetModule.List) TargetModuleConverter.create().read(reader);
+            }
         } catch(Exception ioe) {
             throw new RuntimeException(ioe);
-        } finally {
-            try {
-            if (reader != null) reader.close();
-            } catch (Exception e) {}
         }
     }
 }

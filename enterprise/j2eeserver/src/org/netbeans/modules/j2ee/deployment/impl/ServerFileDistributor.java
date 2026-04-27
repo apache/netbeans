@@ -425,9 +425,7 @@ public class ServerFileDistributor extends ServerProgress {
 
         FileObject destFolder;
         OutputStream destStream = null;
-        InputStream sourceStream = null;
         File dest = FileUtil.toFile(destRoot);
-
         Date ldDate = new Date(lastDeployTime);
         try {
             // double check that the target does not exist... 107526
@@ -464,7 +462,6 @@ public class ServerFileDistributor extends ServerProgress {
                 // we need to rewrite the content of the file here... thanks,
                 //   to windows file locking.
                 destStream = targetFO.getOutputStream();
-
             }
             mc.record(dest, relativePath);
 
@@ -477,8 +474,9 @@ public class ServerFileDistributor extends ServerProgress {
                     FileUtil.copyFile(sourceFO, destFolder, sourceFO.getName());
                 } else {
                     // this is where we need to push the content into the file....
-                    sourceStream = sourceFO.getInputStream();
-                    FileUtil.copy(sourceStream, destStream);
+                    try (InputStream sourceStream = sourceFO.getInputStream()) {
+                        sourceStream.transferTo(destStream);
+                    }
                 }
             } catch (FileNotFoundException ex) {
                 // this may happen when the source file disappears
@@ -486,13 +484,6 @@ public class ServerFileDistributor extends ServerProgress {
                 LOGGER.log(Level.INFO, null, ex);
             }
         } finally {
-            if (null != sourceStream) {
-                try {
-                    sourceStream.close();
-                } catch (IOException ioe) {
-                    LOGGER.log(Level.WARNING, null, ioe);
-                }
-            }
             if (null != destStream) {
                 try {
                     destStream.close();

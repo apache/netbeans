@@ -19,9 +19,13 @@
 package org.netbeans.modules.debugger.jpda.truffle;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.logging.Level;
 import junit.framework.Test;
 import junit.framework.TestCase;
+import org.netbeans.api.debugger.jpda.DebuggerStartException;
 import org.netbeans.api.debugger.jpda.JPDADebugger;
 import org.netbeans.api.debugger.jpda.JPDASupport;
 import org.netbeans.api.debugger.jpda.JPDAThread;
@@ -38,6 +42,10 @@ import org.openide.filesystems.FileUtil;
 import org.openide.util.Utilities;
 
 public abstract class JPDATestCase extends NbTestCase {
+
+    private static final Map<String, String> LAUNCHER_TO_MAIN_CLASS = Map.of(
+        "js", "com.oracle.truffle.js.shell.JSLauncher"
+    );
 
     protected final File sourceRoot = new File(System.getProperty("test.dir.src"));
 
@@ -80,10 +88,10 @@ public abstract class JPDATestCase extends NbTestCase {
     }
 
     protected final void runScriptUnderJPDA(String launcher, String scriptPath, ThrowableConsumer<JPDASupport> supportConsumer) throws Exception {
-        assertTrue("'"+launcher+"' launcher not available", JPDASupport.isLauncherAvailable(launcher));
+        assertTrue("does not have launcher - main class mapping", LAUNCHER_TO_MAIN_CLASS.containsKey(launcher));
         // Translate script path from source dir to target dir:
         scriptPath = getBinariesPath(scriptPath);
-        JPDASupport support = JPDASupport.attachScript(launcher, scriptPath);
+        JPDASupport support = attachScript(launcher, scriptPath);
         run(support, supportConsumer, false);
     }
 
@@ -131,6 +139,15 @@ public abstract class JPDATestCase extends NbTestCase {
             }
         }
         return null;
+    }
+
+    public static JPDASupport attachScript(String launcher, String path) throws IOException, DebuggerStartException {
+        return JPDASupport.attach(LAUNCHER_TO_MAIN_CLASS.get(launcher),
+                                  new String[] {path},
+                                  Arrays.stream(System.getProperty("java.class.path")
+                                        .split(File.pathSeparator))
+                                        .map(loc -> new File(loc))
+                                        .toArray(File[]::new));
     }
 
     @FunctionalInterface

@@ -205,7 +205,7 @@
     <folder name="OptionsExport">
         <folder name="Java">
             <file name="Maven">
-                <attr name="include" stringvalue="config/(Preferences/org/netbeans/modules/maven([.]properties|/(?!externalOwners[.]properties).*)|Projects/org-netbeans-modules-maven/nbactions[.]xml)"/>
+                <attr name="include" stringvalue="config/(Preferences/org/netbeans/modules/maven([.]properties|/(?!externalOwners[.]properties).*)|Projects/org-netbeans-modules-maven/nbactions[.]xml|Actions/Maven/.*)"/>
                 <attr name="displayName" bundlevalue="org.netbeans.modules.maven.Bundle#options-export-displayName"/>
             </file>
         </folder>

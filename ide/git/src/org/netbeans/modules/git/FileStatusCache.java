@@ -57,6 +57,7 @@ import org.openide.util.Utilities;
 public class FileStatusCache {
 
     public static final String PROP_FILE_STATUS_CHANGED = "status.changed"; // NOI18N
+    public static final String PROP_FILES_STATUS_CHANGED = "status.changed.batch"; // NOI18N
 
     private final CacheIndex conflictedFiles, modifiedFiles, ignoredFiles;
     private static final Logger LOG = Logger.getLogger("org.netbeans.modules.git.status.cache"); //NOI18N
@@ -562,6 +563,7 @@ public class FileStatusCache {
                 boolean fireEvent = true;
                 current = getInfo(file);
                 fi = checkForIgnore(fi, current, file);
+                boolean upToDateOnFirstLoad = current == null && fi.getStatus().equals(EnumSet.of(Status.UPTODATE));
                 if (equivalent(fi, current)) {
                     // no need to fire an event
                     if (Utilities.isWindows() || Utilities.isMac()) {
@@ -570,6 +572,10 @@ public class FileStatusCache {
                     } else {
                         continue;
                     }
+                } else if (upToDateOnFirstLoad) {
+                    // file is up-to-date and not yet in cache: UPTODATE is the implicit default,
+                    // no cache update or event needed
+                    continue;
                 }
                 boolean addToIndex = updateCachedValue(fi, file);
                 indexUpdates.add(new IndexUpdateItem(file, fi, addToIndex));
@@ -579,8 +585,8 @@ public class FileStatusCache {
             }
             updateIndexBatch(indexUpdates);
         }
-        for (ChangedEvent event : events) {
-            fireFileStatusChanged(event);
+        if (!events.isEmpty()) {
+            listenerSupport.firePropertyChange(PROP_FILES_STATUS_CHANGED, null, events);
         }
     }
 

@@ -408,6 +408,14 @@ class VersioningPanelController implements ActionListener, PropertyChangeListene
             if (affectsView((FileStatusCache.ChangedEvent) evt.getNewValue())) {
                 applyChange(changedEvent);
             }
+        } else if (FileStatusCache.PROP_FILES_STATUS_CHANGED.equals(evt.getPropertyName())) {
+            @SuppressWarnings("unchecked")
+            List<FileStatusCache.ChangedEvent> changedEvents = (List<FileStatusCache.ChangedEvent>) evt.getNewValue();
+            for (FileStatusCache.ChangedEvent changedEvent : changedEvents) {
+                if (affectsView(changedEvent)) {
+                    applyChange(changedEvent);
+                }
+            }
         }
     }
 

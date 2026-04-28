@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -47,7 +48,9 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.treewalk.*;
+import org.eclipse.jgit.treewalk.EmptyTreeIterator;
+import org.eclipse.jgit.treewalk.FileTreeIterator;
+import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.NotTreeFilter;
 import org.eclipse.jgit.treewalk.filter.OrTreeFilter;
@@ -189,7 +192,7 @@ public class StatusCommand extends GitCommand {
                             Collection<TreeFilter> subTreeFilters = getSubtreeFilters(pathFilters, path);
                             if (!subTreeFilters.isEmpty()) {
                                 // caller requested a status for a file under an ignored folder
-                                treeWalk.setFilter(AndTreeFilter.create(treeWalk.getFilter(), OrTreeFilter.create(NotTreeFilter.create(PathFilter.create(path)), 
+                                treeWalk.setFilter(AndTreeFilter.create(treeWalk.getFilter(), OrTreeFilter.create(NotTreeFilter.create(PathFilter.create(path)),
                                         subTreeFilters.size() > 1 ? OrTreeFilter.create(subTreeFilters) : subTreeFilters.iterator().next())));
                                 treeWalk.enterSubtree();
                             }
@@ -217,11 +220,11 @@ public class StatusCommand extends GitCommand {
                             } else {
                                 statusIndexWC = GitStatus.Status.STATUS_ADDED;
                             }
-                        } else if (!isExistingSymlink(mIndex, mWorking) && (differ(mIndex, mWorking, checkExecutable) 
+                        } else if (!isExistingSymlink(mIndex, mWorking) && (differ(mIndex, mWorking, checkExecutable)
                                 || (mWorking != 0 && mWorking != FileMode.TREE.getBits() && fti.isModified(indexEntry, true, od)))
                                 || GitStatus.Status.STATUS_MODIFIED == getGitlinkStatus(
-                                        mWorking, treeWalk.getObjectId(T_WORKSPACE),
-                                        mIndex, treeWalk.getObjectId(T_INDEX))) {
+                                        mWorking, () -> treeWalk.getObjectId(T_WORKSPACE),
+                                        mIndex, () -> treeWalk.getObjectId(T_INDEX))) {
                             statusIndexWC = GitStatus.Status.STATUS_MODIFIED;
                         } else {
                             statusIndexWC = GitStatus.Status.STATUS_NORMAL;
@@ -237,8 +240,8 @@ public class StatusCommand extends GitCommand {
                                     && (statusIndexWC != GitStatus.Status.STATUS_NORMAL || statusHeadIndex != GitStatus.Status.STATUS_NORMAL)
                                     && !treeWalk.getObjectId(T_COMMIT).equals(fti.getEntryObjectId())))
                                 || GitStatus.Status.STATUS_MODIFIED == getGitlinkStatus(
-                                        mHead, treeWalk.getObjectId(T_WORKSPACE),
-                                        mHead, treeWalk.getObjectId(T_COMMIT))) {
+                                        mHead, () -> treeWalk.getObjectId(T_WORKSPACE),
+                                        mHead, () -> treeWalk.getObjectId(T_COMMIT))) {
                             statusHeadWC = GitStatus.Status.STATUS_MODIFIED;
                         } else {
                             statusHeadWC = GitStatus.Status.STATUS_NORMAL;
@@ -444,13 +447,13 @@ public class StatusCommand extends GitCommand {
         }
     }
 
-    private GitStatus.Status getGitlinkStatus (int mode1, ObjectId id1, int mode2, ObjectId id2) {
+    private GitStatus.Status getGitlinkStatus (int mode1, Supplier<ObjectId> id1, int mode2, Supplier<ObjectId> id2) {
         if (mode1 == FileMode.TYPE_GITLINK || mode2 == FileMode.TYPE_GITLINK) {
             if (mode1 == FileMode.TYPE_MISSING) {
                 return GitStatus.Status.STATUS_REMOVED;
             } else if (mode2 == FileMode.TYPE_MISSING) {
                 return GitStatus.Status.STATUS_ADDED;
-            } else if (!id1.equals(id2)) {
+            } else if (!id1.get().equals(id2.get())) {
                 return GitStatus.Status.STATUS_MODIFIED;
             }
         }

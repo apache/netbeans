@@ -42,14 +42,30 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="microVersionLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="hotDeployLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="devModeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="deployWarLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="explodedLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoDeployLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="liveReloadLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="keepStateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="trimLogLabel" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="microVersionCombobox" pref="212" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
-                      <Component id="hotDeployCheckBox" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="explodedCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="deployWarCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="liveReloadCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="autoDeployCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="trimLogCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="keepStateCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="devModeCheckBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="hotDeployCheckBox" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="microVersionCombobox" pref="272" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -68,7 +84,42 @@
                   <Component id="hotDeployLabel" min="-2" max="-2" attributes="0"/>
                   <Component id="hotDeployCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="85" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="devModeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="devModeCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="deployWarLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="deployWarCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="explodedLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="explodedCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="autoDeployLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="autoDeployCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="liveReloadLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="liveReloadCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="keepStateLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="keepStateCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="trimLogLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="trimLogCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -99,6 +150,107 @@
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.hotDeployCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="devModeLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.devModeLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="devModeCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.devModeCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="devModeCheckBoxActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="explodedCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.explodedCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="explodedLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.explodedLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="deployWarLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.deployWarLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="deployWarCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.deployWarCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="autoDeployLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.autoDeployLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="liveReloadCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.liveReloadCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="liveReloadLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.liveReloadLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="autoDeployCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.autoDeployCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="trimLogLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.trimLogLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="keepStateCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.keepStateCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="keepStateLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.keepStateLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="trimLogCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/fish/payara/micro/project/Bundle.properties" key="MicroPropertiesPanel.trimLogCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

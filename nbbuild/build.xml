@@ -370,6 +370,7 @@ metabuild.hash=${metabuild.hash}</echo>
         keystore="${jnlp.signjar.keystore}"
         storepass="${jnlp.signjar.password}"
         dname="${jnlp.signjar.vendor}"
+        keyalg="DSA"
     />
   </target>
 
@@ -385,12 +386,7 @@ metabuild.hash=${metabuild.hash}</echo>
       <mkdir dir="${jnlp.dest.dir}" />
       <makeurl property="jnlp.codebase" file="${jnlp.dest.dir}"/> <!-- fallback value unless otherwise configured -->
       <property name="jnlp.fail.on.error" value="true"/>
-      <pathconvert property="jnlp.modules.fullpath">
-          <path>
-              <dirset dir="${nb_all}" includes="${config.jnlp.stable}"/>
-          </path>
-          <mapper type="identity"/>
-      </pathconvert>
+      <resolvelist name="alljnlpmodules" path="jnlp.modules.fullpath" dir="${nb_all}" list="${nb.clusters.list}" modules="${config.jnlp.stable}"/>
       <sortsuitemodules unsortedmodules="${jnlp.modules.fullpath}" sortedmodulesproperty="jnlp.modules.sorted"/>
       <subant-junit target="jnlp" failonerror="${jnlp.fail.on.error}" report="${nb.build.dir}/build-all-jnlp.xml">
           <buildpath path="${jnlp.modules.sorted}"/>

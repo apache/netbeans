@@ -196,7 +196,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
 
     private GitProgressSupport statusRefreshSupport;
     private PreferenceChangeListener prefList;
-    
+
     private final Revision revisionOriginalLeft;
     private final Revision revisionOriginalRight;
     private Revision revisionLeft;
@@ -211,7 +211,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
     private int popupViewIndex;
     private int requestedRightLine = -1;
     private int requestedLeftLine = -1;
-    
+
     private static final int VIEW_MODE_TABLE = 1;
     private static final int VIEW_MODE_TREE = 2;
     private int currentSetupDiffLengthChanged;
@@ -270,7 +270,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         prepareTask = RP.create(dpt);
         prepareTask.schedule(0);
     }
-    
+
     private MultiDiffPanelController (VCSContext context, Revision revisionLeft, Revision revisionRight, boolean fixedRevisions) {
         this.context = context;
         this.revisionLeft = revisionOriginalLeft = revisionLeft;
@@ -315,7 +315,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         panel.splitPane.setTopComponent(getActiveFileComponent().getComponent());
         panel.splitPane.setDividerLocation(gg);
     }
-    
+
     private void refreshSelectionCombos () {
         if (!fixedRevisions && GitUtils.getRepositoryRoots(context).size() == 1) {
             panel.cmbDiffTreeFirst.setEnabled(false);
@@ -432,7 +432,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         cancelBackgroundTasks();
         setups.clear();
         editorCookies.clear();
-        
+
         if (list != null) {
             Git.getInstance().getFileStatusCache().removePropertyChangeListener(list);
         }
@@ -569,7 +569,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
             panel.treeButton.setVisible(false);
         }
     }
-    
+
     private JComponent getInfoPanelLoading () {
         if (infoPanelLoadingFromRepo == null) {
             infoPanelLoadingFromRepo = new NoContentPanel(NbBundle.getMessage(MultiDiffPanel.class, "MSG_DiffPanel_NoContent"));
@@ -812,11 +812,11 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
                                         public void run () {
                                             multiTextDiffSupport = null;
                                         }
-                                        
+
                                     });
                                 }
                             }
-                            
+
                             private String findEncoding () {
                                 for (File f : actionRoots.getValue()) {
                                     FileObject fo = FileUtil.toFileObject(f);
@@ -861,7 +861,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
                                 actionRoots.getKey(), Bundle.MSG_DiffPanel_multiTextualDiff_preparing());
                     }
                 }
-                
+
             });
             displayDiffView();
         }
@@ -891,7 +891,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         ctx = GitUtils.getContextForFiles(filterExcluded(selectedFiles));
         return GitUtils.getActionRoots(ctx);
     }
-    
+
     private File[] filterExcluded (File[] files) {
         List<File> filtered = new ArrayList<>(files.length);
         for (File f : files) {
@@ -903,7 +903,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         }
         return filtered.toArray(new File[0]);
     }
-    
+
     private boolean showingFileComponent() {
         return getActiveFileComponent() != null;
     }
@@ -1064,7 +1064,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         }
         return diffMode;
     }
-    
+
     private Revision getSelectedRevision (JComboBox cmbDiffTree) {
         Object selectedItem = cmbDiffTree.getSelectedItem();
         Revision selection = null;
@@ -1123,14 +1123,24 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
         if (FileStatusCache.PROP_FILE_STATUS_CHANGED.equals(evt.getPropertyName())) {
             FileStatusCache.ChangedEvent changedEvent = (FileStatusCache.ChangedEvent) evt.getNewValue();
             if (LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE, "File status for file {0} changed from {1} to {2}", new Object[] { 
-                    changedEvent.getFile(), 
+                LOG.log(Level.FINE, "File status for file {0} changed from {1} to {2}", new Object[] {
+                    changedEvent.getFile(),
                     changedEvent.getOldInfo(),
                     changedEvent.getNewInfo() } );
             }
-            if (revisionLeft == Revision.HEAD // remove when we're able to refresh single file changes for Local vs. any revision 
+            if (revisionLeft == Revision.HEAD // remove when we're able to refresh single file changes for Local vs. any revision
                     && revisionRight == Revision.LOCAL && affectsView(changedEvent)) {
                 applyChange(changedEvent);
+            }
+        } else if (FileStatusCache.PROP_FILES_STATUS_CHANGED.equals(evt.getPropertyName())) {
+            if (revisionLeft == Revision.HEAD && revisionRight == Revision.LOCAL) {
+                @SuppressWarnings("unchecked")
+                List<FileStatusCache.ChangedEvent> changedEvents = (List<FileStatusCache.ChangedEvent>) evt.getNewValue();
+                for (FileStatusCache.ChangedEvent changedEvent : changedEvents) {
+                    if (affectsView(changedEvent)) {
+                        applyChange(changedEvent);
+                    }
+                }
             }
         } else if (DiffController.PROP_DIFFERENCES.equals(evt.getPropertyName())) {
             // something has changed
@@ -1537,7 +1547,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
      * Eliminates unnecessary cache.listFiles call as well as the whole node creation process ()
      */
     private final class ApplyChangesTask implements Runnable, Cancellable {
-        
+
         private volatile boolean canceled;
 
         @Override
@@ -1651,7 +1661,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
             return true;
         }
     }
-    
+
     private class RefreshComboTask implements Runnable {
 
         @Override
@@ -1663,7 +1673,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
             if (revisionOriginalLeft != Revision.HEAD) {
                 modelLeft.add(Revision.HEAD);
             }
-            modelRight.add(revisionOriginalRight);            
+            modelRight.add(revisionOriginalRight);
             if (revisionOriginalRight != Revision.LOCAL) {
                 modelRight.add(Revision.LOCAL);
             }
@@ -1767,7 +1777,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
                 GitClientExceptionHandler.notifyException(exception, true);
             }
         }
-        
+
         private DiffNode[] prepareSetupsToRefresh () {
             return Mutex.EVENT.readAccess(new Mutex.Action<DiffNode[]>() {
                 @Override
@@ -1810,7 +1820,7 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
             }
         }
     }// </editor-fold>
-    
+
     @NbBundle.Messages({
         "MSG_Revision_Select_Tooltip=Select a revision from the picker"
     })

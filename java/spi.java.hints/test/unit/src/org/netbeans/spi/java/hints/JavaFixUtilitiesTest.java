@@ -39,6 +39,7 @@ import javax.lang.model.util.ElementFilter;
 import org.netbeans.modules.java.hints.spiimpl.TestBase;
 import org.netbeans.modules.java.hints.spiimpl.hints.HintsInvoker;
 import org.netbeans.modules.java.hints.providers.spi.Trigger.PatternDescription;
+import org.netbeans.modules.java.hints.spiimpl.SyntheticFix;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
 import org.netbeans.modules.java.hints.spiimpl.pm.PatternCompilerUtilities;
 import org.netbeans.modules.java.source.parsing.JavacParser;
@@ -507,6 +508,102 @@ public class JavaFixUtilitiesTest extends TestBase {
                            "        System.err.println(\"a\");\n" +
                            "    }\n" +
 		           "}\n");
+    }
+
+    public void testRemovedFromForEach1() throws Exception {
+        performRemoveFromParentTest("""
+                                    package test;
+                                    import java.io.InputStream;
+                                    public class Test {
+                                        private void t(String[] args) throws Exception {
+                                            for (String a : args)
+                                                System.err.println();
+                                        }
+                                    }
+                                    """,
+                                    "System.err.println();",
+                                    """
+                                    package test;
+                                    import java.io.InputStream;
+                                    public class Test {
+                                        private void t(String[] args) throws Exception {
+                                            for (String a : args) {
+                                            }
+                                        }
+                                    }
+                                    """,
+                                    true);
+    }
+
+    public void testRemovedFromForEach2() throws Exception {
+        performRemoveFromParentTest("""
+                                    package test;
+                                    import java.io.InputStream;
+                                    public class Test {
+                                        private void t(String[] args) throws Exception {
+                                            for (String a : args)
+                                                System.err.println();
+                                        }
+                                    }
+                                    """,
+                                    "System.err.println();",
+                                    """
+                                    package test;
+                                    import java.io.InputStream;
+                                    public class Test {
+                                        private void t(String[] args) throws Exception {
+                                            for (String a : args) {
+                                            }
+                                        }
+                                    }
+                                    """,
+                                    true);
+    }
+
+    public void testRemovedFromForEach3() throws Exception {
+        performRemoveFromParentTest("""
+                                    package test;
+                                    import java.io.InputStream;
+                                    public class Test {
+                                        private void t(String[] args) throws Exception {
+                                            for (String a : args)
+                                                System.err.println();
+                                        }
+                                    }
+                                    """,
+                                    "String a",
+                                    null,
+                                    true);
+    }
+
+    public void testRemovedFromForEach4() throws Exception {
+        performRemoveFromParentTest("""
+                                    package test;
+                                    import java.util.List;
+                                    public class Test {
+                                        private void t() throws Exception {
+                                            for (String a : List.of("")
+                                                System.err.println();
+                                        }
+                                    }
+                                    """,
+                                    "java.util.List.of($args)",
+                                    null,
+                                    true);
+    }
+
+    public void testRemoveBindingPattern1() throws Exception {
+        performRemoveFromParentTest("""
+                                    package test;
+                                    public class Test {
+                                        private void t(Object o) throws Exception {
+                                            if (o instanceof String str) {}
+                                        }
+                                    }
+                                    """,
+                                    "String str",
+                                    null,
+                                    true);
     }
 
     public void testUnresolvableTarget() throws Exception {
@@ -1396,13 +1493,19 @@ public class JavaFixUtilitiesTest extends TestBase {
     }
 
     public void performRemoveFromParentTest(String code, String rule, String golden) throws Exception {
+        performRemoveFromParentTest(code, rule, golden, false);
+    }
+
+    public void performRemoveFromParentTest(String code, String rule, String golden, boolean safelyRemove) throws Exception {
 	prepareTest("test/Test.java", code);
 
         HintDescription hd = HintDescriptionFactory.create()
                                                    .setTrigger(PatternDescription.create(rule, Collections.<String, String>emptyMap()))
                                                    .setWorker(new HintDescription.Worker() {
             @Override public Collection<? extends ErrorDescription> createErrors(HintContext ctx) {
-                return Collections.singletonList(ErrorDescriptionFactory.forName(ctx, ctx.getPath(), "", JavaFixUtilities.removeFromParent(ctx, "", ctx.getPath())));
+                Fix fix = safelyRemove ? JavaFixUtilities.safelyRemoveFromParent(ctx, "", ctx.getPath())
+                                       : JavaFixUtilities.removeFromParent(ctx, "", ctx.getPath());
+                return Collections.singletonList(ErrorDescriptionFactory.forName(ctx, ctx.getPath(), "", fix));
             }
         }).produce();
 
@@ -1410,11 +1513,22 @@ public class JavaFixUtilitiesTest extends TestBase {
 
         assertEquals(computeHints.toString(), 1, computeHints.size());
 
-        Fix fix = computeHints.get(0).getFixes().getFixes().get(0);
+        List<Fix> fixes = computeHints.get(0).getFixes().getFixes();
 
-	fix.implement();
+        assertEquals(String.valueOf(fixes), 1, fixes.size());
 
-        assertEquals(golden, doc.getText(0, doc.getLength()));
+        if (golden != null) {
+            Fix fix = fixes.get(0);
+
+            fix.implement();
+
+            assertEquals(golden, doc.getText(0, doc.getLength()));
+        } else {
+            Fix fix = fixes.get(0);
+
+            assertTrue(String.valueOf(fixes),
+                       fix instanceof SyntheticFix);
+        }
     }
  
     static {

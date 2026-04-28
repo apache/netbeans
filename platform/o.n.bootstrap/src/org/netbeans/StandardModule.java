@@ -24,10 +24,10 @@ package org.netbeans;
 // INTERACTIONS SHOULD GO ELSEWHERE.
 // (NbBundle.getLocalizedValue is OK here.)
 
+import java.io.DataInput;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInput;
 import java.security.AllPermission;
 import java.security.CodeSource;
 import java.security.PermissionCollection;
@@ -93,7 +93,7 @@ class StandardModule extends Module {
     }
 
     @Override
-    ModuleData createData(ObjectInput in, Manifest mf) throws IOException {
+    ModuleData createData(DataInput in, Manifest mf) throws IOException {
         if (in != null) {
             return new StandardModuleData(in);
         } else {
@@ -132,6 +132,7 @@ class StandardModule extends Module {
      * explicitly suppressed from this list; should only be used for
      * documented localizable attributes such as OpenIDE-Module-Name etc.
      */
+    @Override
     public Object getLocalizedAttribute(String attr) {
         String locb = getManifest().getMainAttributes().getValue("OpenIDE-Module-Localizing-Bundle"); // NOI18N
         boolean usingLoader = false;
@@ -164,11 +165,8 @@ class StandardModule extends Module {
                     try {
                         // check if the jar file still exists (see issue 82480)
                         if (jar != null && jar.isFile ()) {
-                            JarFile jarFile = new JarFile(jar, false);
-                            try {
+                            try (JarFile jarFile = new JarFile(jar, false)) {
                                 loadLocalizedProps(jarFile, getManifest());
-                            } finally {
-                                jarFile.close();
                             }
                         } else {
                             Util.err.log(Level.FINE, "Cannot get localized attr {0} from module {1} (missing or deleted JAR file: {2})", new Object[] {attr, getCodeNameBase(), jar});
@@ -203,6 +201,7 @@ class StandardModule extends Module {
         }
     }
     
+    @Override
     public boolean isFixed() {
         return false;
     }
@@ -252,13 +251,10 @@ class StandardModule extends Module {
                 jarBeingOpened = physicalJar; // might be null
                 ensurePhysicalJar();
                 jarBeingOpened = physicalJar; // might have changed
-                JarFile jarFile = new JarFile(physicalJar, false);
-                try {
+                try (JarFile jarFile = new JarFile(physicalJar, false)) {
                     Manifest m = jarFile.getManifest();
                     if (m == null) throw new IOException("No manifest found in " + physicalJar); // NOI18N
                     manifest = m;
-                } finally {
-                    jarFile.close();
                 }
             } else {
                 jarBeingOpened = jar;
@@ -346,11 +342,8 @@ class StandardModule extends Module {
                 // May not be present in base JAR: might only be in e.g. default locale variant.
                 if (bundleFile != null) {
                     localizedProps = new Properties();
-                    InputStream is = jarFile.getInputStream(bundleFile);
-                    try {
+                    try (InputStream is = jarFile.getInputStream(bundleFile)) {
                         localizedProps.load(is);
-                    } finally {
-                        is.close();
                     }
                 }
             }
@@ -373,23 +366,17 @@ class StandardModule extends Module {
                     File localeJar = pair.file;
                     String suffix = pair.suffix;
                     String rsrc = name + suffix + ext;
-                    JarFile localeJarFile = new JarFile(localeJar, false);
-                    try {
+                    try (JarFile localeJarFile = new JarFile(localeJar, false)) {
                         ZipEntry bundleFile = localeJarFile.getEntry(rsrc);
                         // Need not exist in all locale variants.
                         if (bundleFile != null) {
                             if (localizedProps == null) {
                                 localizedProps = new Properties();
                             } // else append and overwrite base-locale values
-                            InputStream is = localeJarFile.getInputStream(bundleFile);
-                            try {
+                            try (InputStream is = localeJarFile.getInputStream(bundleFile)) {
                                 localizedProps.load(is);
-                            } finally {
-                                is.close();
                             }
                         }
-                    } finally {
-                        localeJarFile.close();
                     }
                 }
             }
@@ -437,6 +424,7 @@ class StandardModule extends Module {
      * Must be called from within a write mutex.
      * @param r whether the module should be considered reloadable
      */
+    @Override
     public void setReloadable(boolean r) {
         getManager().assertWritable();
         if (reloadable != r) {
@@ -449,6 +437,7 @@ class StandardModule extends Module {
      * If an exception is thrown, the module is considered
      * to be in an invalid state.
      */
+    @Override
     public void reload() throws IOException {
         // Probably unnecessary but just in case:
         destroyPhysicalJar();
@@ -468,6 +457,7 @@ class StandardModule extends Module {
     /** Turn on the classloader. Passed a list of parent modules to use.
      * The parents should already have had their classloaders initialized.
      */
+    @Override
     protected void classLoaderUp(Set<Module> parents) throws IOException {
         if (Util.err.isLoggable(Level.FINE)) {
             Util.err.fine("classLoaderUp on " + this + " with parents " + parents);
@@ -533,7 +523,7 @@ class StandardModule extends Module {
                 classloader = createNewClassLoader(classp, loaders);
             } catch (IllegalArgumentException iae) {
                 // Should not happen, but just in case.
-                throw (IOException) new IOException(iae.toString()).initCause(iae);
+                throw new IOException(iae);
             }
         }
     }
@@ -551,13 +541,15 @@ class StandardModule extends Module {
     }
 
     /** Turn off the classloader and release all resources. */
+    @Override
     protected void classLoaderDown() {
-        if (classloader instanceof ProxyClassLoader) {
-            ((ProxyClassLoader)classloader).destroy();
+        if (classloader instanceof ProxyClassLoader pcl) {
+            pcl.destroy();
         }
         classloader = null;
     }
     /** Should be called after turning off the classloader of one or more modules &amp; GC'ing. */
+    @Override
     protected void cleanup() {
         if (isEnabled()) throw new IllegalStateException("cleanup on enabled module: " + this); // NOI18N
         if (classloader != null) throw new IllegalStateException("cleanup on module with classloader: " + this); // NOI18N
@@ -566,6 +558,7 @@ class StandardModule extends Module {
     }
     
     /** Notify the module that it is being deleted. */
+    @Override
     public void destroy() {
         moduleJARs.remove(jar);
     }
@@ -609,6 +602,7 @@ class StandardModule extends Module {
             super(classp, parents, false, StandardModule.this);
         }
         
+        @Override
         public Module getModule() {
             return StandardModule.this;
         }
@@ -681,8 +675,8 @@ class StandardModule extends Module {
                 return false;
             }
             Module other;
-            if (parent instanceof Util.ModuleProvider) {
-                other = ((Util.ModuleProvider)parent).getModule();
+            if (parent instanceof Util.ModuleProvider mp) {
+                other = mp.getModule();
             } else {
                 other = null;
             }

@@ -21,6 +21,7 @@ package org.netbeans.libs.git.jgit.commands;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.Map;
 import org.eclipse.jgit.api.Git;
@@ -57,6 +58,15 @@ public class LogTest extends AbstractGitTestCase {
         super.setUp();
         workDir = getWorkingDirectory();
         repository = getRepository(getLocalGitRepository());
+    }
+
+    // doc promises 24, but the actual number was observed to be lower since 7.5
+    // this is a tripwire test to detect changes
+    public void testMaxApplicationFlagCount() throws Exception {
+        Field field = RevWalk.class.getDeclaredField("RESERVED_FLAGS");
+        field.setAccessible(true);
+        int available = 32 - (int) field.get(null);
+        assertEquals(LogCommand.MAX_REVWALK_FLAGS, available); // if this fails, adjust the value
     }
 
     public void testLogRevision () throws Exception {

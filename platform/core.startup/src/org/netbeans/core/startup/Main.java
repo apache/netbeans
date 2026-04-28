@@ -19,9 +19,10 @@
 
 package org.netbeans.core.startup;
 
-import java.beans.Introspector;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -89,7 +90,7 @@ public final class Main extends Object {
           return;
       }
       
-      Class uiClass = CLIOptions.uiClass;
+      Class<?> uiClass = CLIOptions.uiClass;
       // try again loading L&F class, this time with full module system.
       if (CLIOptions.uiClassName != null && CLIOptions.uiClass == null) {
           // try again
@@ -163,7 +164,7 @@ public final class Main extends Object {
                 SystemFileSystem.registerMutex(moduleSystem.getManager().mutex());
             } catch (IOException ioe) {
                 // System will be screwed up.
-                throw (IllegalStateException) new IllegalStateException("Module system cannot be created").initCause(ioe); // NOI18N
+                throw new IllegalStateException("Module system cannot be created", ioe); // NOI18N
             }
             StartLog.logProgress ("ModuleSystem created"); // NOI18N
         }
@@ -247,6 +248,7 @@ public final class Main extends Object {
     if (CLIOptions.isGui ()) {
         try {
             java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
+            configureAWTAppClassName();
         } catch (java.lang.InternalError exc) {
             String s = NbBundle.getMessage(Main.class, "EXC_GraphicsStartFails1", exc.getMessage());
             System.out.println(s);
@@ -316,7 +318,6 @@ public final class Main extends Object {
         level.run();
     }
 
-    Splash.getInstance().setRunning(false);
     Splash.getInstance().dispose();
     StartLog.logProgress ("Splash hidden"); // NOI18N
     StartLog.logEnd ("Preparation"); // NOI18N
@@ -345,9 +346,9 @@ public final class Main extends Object {
             Logger.getLogger(Main.class.getName()).log(Level.WARNING, "Failed to delete {0}", f);
         }
     }
-  
+
     /** Loads a class from available class loaders. */
-    private static final Class getKlass(String cls) {
+    private static Class<?> getKlass(String cls) {
         try {
             ClassLoader loader;
             ModuleSystem ms = moduleSystem;
@@ -360,6 +361,24 @@ public final class Main extends Object {
             return Class.forName(cls, false, loader);
         } catch (ClassNotFoundException e) {
             throw new NoClassDefFoundError(e.getLocalizedMessage());
+        }
+    }
+
+    // moved from MainWindow::init to handle splash, etc.
+    private static void configureAWTAppClassName() {
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Class<?> xtoolkit = toolkit.getClass();
+        if (xtoolkit.getName().equals("sun.awt.X11.XToolkit")) { //NOI18N
+            // TODO those add --add-opens=java.desktop/sun.awt.X11=ALL-UNNAMED
+
+            //#183739 / JDK-6528430 - provide proper app name on Linux
+            try {
+                final Field awtAppClassName = xtoolkit.getDeclaredField("awtAppClassName"); //NOI18N
+                awtAppClassName.setAccessible(true);
+                awtAppClassName.set(null, NbBundle.getMessage(Main.class, "AWT_AppClassName", "").strip()); //NOI18N
+            } catch (Exception x) {
+                Logger.getLogger(Main.class.getName()).log(Level.FINE, "can't change X11 application name", x);
+            }
         }
     }
 
@@ -380,7 +399,7 @@ public final class Main extends Object {
                 return classname != null && !installed.exists ();
             }
             
-            
+            @Override
             public void run() {
                 // This module is included in our distro somewhere... may or may not be turned on.
                 // Whatever - try running some classes from it anyway.
@@ -400,15 +419,11 @@ public final class Main extends Object {
                     } else {
                         LOG.log(Level.WARNING, null, ex);
                     }
-                } catch (Exception e) {
+                } catch (Exception | LinkageError e) {
                     // If exceptions are thrown, notify them - something is broken.
-                    LOG.log(Level.WARNING, null, e);
-                } catch (LinkageError e) {
-                    // These too...
                     LOG.log(Level.WARNING, null, e);
                 }
             }
-            
             
             public boolean canContinue () {
                 if (shouldDoAnImport ()) {
@@ -439,7 +454,6 @@ public final class Main extends Object {
                 }
             }
         }
-        
         
         ImportHandler handler = new ImportHandler ();
         
@@ -493,11 +507,8 @@ public final class Main extends Object {
                     } else {
                         LOG.log(Level.WARNING, null, ex);
                     }
-                } catch (Exception ex) {
+                } catch (Exception | LinkageError ex) {
                     // If exceptions are thrown, notify them - something is broken.
-                    LOG.log(Level.WARNING, null, ex);
-                } catch (LinkageError ex) {
-                    // These too...
                     LOG.log(Level.WARNING, null, ex);
                 }
             }

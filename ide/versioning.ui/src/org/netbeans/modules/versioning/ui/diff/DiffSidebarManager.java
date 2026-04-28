@@ -45,7 +45,7 @@ import org.openide.util.NbPreferences;
 
 /**
  * Central place of diff integration into editor and errorstripe.
- * 
+ *
  * @author Maros Sandor
  */
 public class DiffSidebarManager implements PreferenceChangeListener, PropertyChangeListener {
@@ -58,14 +58,14 @@ public class DiffSidebarManager implements PreferenceChangeListener, PropertyCha
      * Temporary top folder for diffsidebar in a single session
      */
     private static File tempDir;
-    
+
     /**
      * Request processor for long running tasks.
      */
     private static final RequestProcessor blockingRequestProcessor = new RequestProcessor("Diffsidebar long tasks", 1, false, false);
     static final Logger LOG = Logger.getLogger(DiffSidebarManager.class.getName());
     private static final boolean LOG_STACKTRACE = Boolean.getBoolean("versioning.diffsidebar.refresh.logstacktrace"); //NOI18N
-    
+
     public static synchronized DiffSidebarManager getInstance() {
         if (instance == null) {
             instance = new DiffSidebarManager();
@@ -82,37 +82,40 @@ public class DiffSidebarManager implements PreferenceChangeListener, PropertyCha
     private final Map<DiffSidebar, Object> sideBars = new WeakHashMap<DiffSidebar, Object>();
 
     private DiffSidebarManager() {
-        sidebarEnabled = getPreferences().getBoolean(SIDEBAR_ENABLED, true); 
+        sidebarEnabled = getPreferences().getBoolean(SIDEBAR_ENABLED, true);
         getPreferences().addPreferenceChangeListener(this);
     }
 
     public void refreshSidebars(final Set<VCSFileProxy> proxies) {
-        // pushing the change ... we may as well listen for changes in versioning manager
-        Set<FileObject> fileObjects = null;
-        if (proxies != null) {
-            fileObjects = new HashSet<FileObject>(proxies.size());
-            for (VCSFileProxy file : proxies) {
-                fileObjects.add(file.toFileObject());
+
+        createDiffSidebarTask(() -> {
+            // pushing the change ... we may as well listen for changes in versioning manager
+            Set<FileObject> fileObjects = null;
+            if (proxies != null) {
+                fileObjects = new HashSet<FileObject>(proxies.size());
+                for (VCSFileProxy file : proxies) {
+                    fileObjects.add(file.toFileObject());
+                }
+                fileObjects.remove(null);
             }
-            fileObjects.remove(null);
-        }
-        if (LOG_STACKTRACE && (fileObjects == null || !fileObjects.isEmpty())) {
-            LOG.log(Level.INFO, "Refreshing: " + fileObjects, new Exception());
-        }
-        final Set<FileObject> fileObjectsToRefresh = fileObjects;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                synchronized (sideBars) {
-                    for (DiffSidebar bar : sideBars.keySet()) {
-                        if (matches(bar, fileObjectsToRefresh)) {
-                            bar.refresh();
+            if (LOG_STACKTRACE && (fileObjects == null || !fileObjects.isEmpty())) {
+                LOG.log(Level.INFO, "Refreshing: " + fileObjects, new Exception());
+            }
+            final Set<FileObject> fileObjectsToRefresh = fileObjects;
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    synchronized (sideBars) {
+                        for (DiffSidebar bar : sideBars.keySet()) {
+                            if (matches(bar, fileObjectsToRefresh)) {
+                                bar.refresh();
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }).schedule(0);
     }
-        
+
     private boolean matches(DiffSidebar sidebar, Set<FileObject> fileObjects) {
         if (fileObjects == null) return true;
         for (FileObject fileObject : fileObjects) {
@@ -123,10 +126,10 @@ public class DiffSidebarManager implements PreferenceChangeListener, PropertyCha
 
     Preferences getPreferences() {
         return NbPreferences.forModule(DiffSidebarManager.class);
-    }    
+    }
     /**
-     * Creates a new task needed by a diff sidebar to update its structures (compute diff). 
-     * 
+     * Creates a new task needed by a diff sidebar to update its structures (compute diff).
+     *
      * @param runnable a runnable task
      * @return RP task
      */
@@ -155,7 +158,7 @@ public class DiffSidebarManager implements PreferenceChangeListener, PropertyCha
                     return null;
                 }
                 LOG.log(Level.FINE, "requested sidebar for {0}", file.getPath());
-    
+
                 sideBar = new DiffSidebar(target, file);
                 sideBars.put(sideBar, null);
                 sideBar.setSidebarVisible(sidebarEnabled);

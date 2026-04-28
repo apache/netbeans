@@ -112,11 +112,10 @@ public class NamedTest extends CommonTestCase {
                             String name = model.getName(element);
                             assertEquals("iface", name);
                         }
-                        // #249438
                         else if ("foo.CApital".equals(fqn)) {
                             iface = element;
                             String name = model.getName(element);
-                            assertEquals("CApital", name);
+                            assertEquals("cApital", name);
                         }
                     }
                     else if ( element instanceof VariableElement ){

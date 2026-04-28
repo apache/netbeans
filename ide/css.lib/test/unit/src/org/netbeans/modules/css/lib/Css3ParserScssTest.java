@@ -2057,4 +2057,122 @@ public class Css3ParserScssTest extends CssTestBase {
         assertParses("@media (width <= 1200px) {}");
         assertParses("@media (30em <= width <= #{$widthValue}) {}");
     }
+
+    // https://github.com/apache/netbeans/issues/8686
+    public void testBemModifierWithDimension() {
+        // BEM modifier starting with digits — &--32x15 is tokenized as LESS_AND(&--) + DIMENSION(32x15)
+        assertParses(".o-ratio {\n"
+                + "  aspect-ratio: 1 / 1;\n"
+                + "\n"
+                + "  &--32x15 {\n"
+                + "    aspect-ratio: 32 / 15;\n"
+                + "  }\n"
+                + "}\n");
+        assertParses(".block {\n"
+                + "  &--16x9 { aspect-ratio: 16 / 9; }\n"
+                + "  &--4x { aspect-ratio: 4 / 3; }\n"
+                + "  &--4foo { aspect-ratio: 4 / 3; }\n"
+                + "}\n");
+    }
+
+    // @use 'module' as * — wildcard namespace import
+    public void testScssUseAsWildcard() {
+        assertParses("@use '../tools/tools.icons' as *;\n"
+                + ".c-social-media-icons { a { color: inherit; } }\n");
+        assertParses("@use 'sass:math' as *;\n");
+        assertParses("@use 'sass-math' as *;\n");
+        // @forward as * is the same pattern
+        assertParses("@forward 'module' as *;\n");
+        // normal 'as name' still works
+        assertParses("@use '../tools/tools' as tools;\n"
+                + ".x { @include tools.media((max-width: 400px)) { color: red; } }\n");
+    }
+
+    // SCSS namespace variable inside url() — url(settings.$path-images + 'file.png')
+    public void testScssNamespacedVarInUrl() {
+        // simple IDENT inside url (standard CSS url)
+        assertParses(".x { background: url(img); }\n");
+        // SASS_VAR + single-quoted string concat (no namespace) — should work
+        assertParses(".x { background: url($path + 'file.png'); }\n");
+        // namespace var alone (URI lexer handles this)
+        assertParses(".x { background: url(settings.$img); }\n");
+        // namespace var + double-quoted string (URI lexer handles `"`)
+        assertParses(".x { background: url(settings.$path + \"file.png\"); }\n");
+        // namespace var + single-quoted string (URI lexer FAILS, parsed as function) — THIS IS THE BUG
+        assertParses(".x { background: url(settings.$path + 'file.png'); }\n");
+        // full real-world example with hyphenated var
+        assertParses(".x {\n"
+                + "  background: url(settings.$path-images + 'arrows.png') 0 0 no-repeat;\n"
+                + "}\n");
+    }
+
+    // https://github.com/apache/netbeans/issues/8686 (namespace mixin part)
+    public void testScssNamespacedMixinCall() {
+        // @use 'tools' as tools; then @include tools.media(...) — DOT is SCSS namespace separator
+        assertParses(".x {\n"
+                + "  @include tools.media((max-width: 750px)) {\n"
+                + "    columns: 1;\n"
+                + "  }\n"
+                + "}\n");
+        // namespaced mixin without block
+        assertParses(".x { @include tools.rem(14px); }\n");
+        // multi-segment namespace (e.g. @use 'a/b' as a-b)
+        assertParses(".x { @include ns.mixin(); }\n");
+        // exact code pattern from the reported file
+        assertParses(".ls-text-block {\n"
+                + "  &-main-text {\n"
+                + "    &.has-two-columns {\n"
+                + "      columns: 2;\n"
+                + "      column-gap: 2rem;\n"
+                + "      @include tools.media(\n"
+                + "        (\n"
+                + "          max-width: tools.em(750px),\n"
+                + "        )\n"
+                + "      ) {\n"
+                + "        columns: 1;\n"
+                + "      }\n"
+                + "    }\n"
+                + "  }\n"
+                + "}\n");
+    }
+
+    // https://github.com/apache/netbeans/issues/8636
+    public void testNestedContainerQuery() {
+        // @container nested inside SCSS rules
+        assertParses("h2 {\n"
+                + "  span {\n"
+                + "    @container (width < 458px) {\n"
+                + "      display: none;\n"
+                + "    }\n"
+                + "  }\n"
+                + "}\n");
+        // single nesting level
+        assertParses(".foo {\n"
+                + "  @container (width < 600px) {\n"
+                + "    display: block;\n"
+                + "  }\n"
+                + "}\n");
+        // with container name
+        assertParses(".foo {\n"
+                + "  @container sidebar (width < 600px) {\n"
+                + "    font-size: 1rem;\n"
+                + "  }\n"
+                + "}\n");
+    }
+
+    // https://github.com/apache/netbeans/issues/5799
+    public void testMixinCallWithBracketedList() {
+        // bracketed list as mixin argument
+        assertParses("div {\n"
+                + "  @include test($parameter: [one, two]);\n"
+                + "}\n");
+        // multiple values in bracketed list
+        assertParses("div {\n"
+                + "  @include test($parameter: [one, two, three]);\n"
+                + "}\n");
+        // bracketed list without named parameter
+        assertParses("div {\n"
+                + "  @include test([one, two]);\n"
+                + "}\n");
+    }
 }

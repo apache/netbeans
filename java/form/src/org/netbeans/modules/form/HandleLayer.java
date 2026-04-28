@@ -1231,15 +1231,26 @@ public class HandleLayer extends JPanel implements MouseListener, MouseMotionLis
             }
         }
         Component[] clicked = getDeepestComponentsAt(formDesigner.getComponentLayer(), p);
-        if (clicked != null && clicked.length > 0 && clicked[0] instanceof JTabbedPane) {
-            JTabbedPane tabbedPane = (JTabbedPane)clicked[0];
-            p = convertPointToComponent(p, tabbedPane);
-            for (int i=0,n=tabbedPane.getTabCount(); i < n; i++) {
-                Rectangle rect = tabbedPane.getBoundsAt(i);
-                if (rect != null && rect.contains(p)) {
-                    tabbedPane.setSelectedIndex(i);
-                    break;
+        if (clicked != null && clicked.length > 0) {
+            Point pointInComponent = convertPointToComponent(p, clicked[0]);
+            if (clicked[0] instanceof JTabbedPane tabbedPane) {
+                for (int i = 0, n = tabbedPane.getTabCount(); i < n; i++) {
+                    Rectangle rect = tabbedPane.getBoundsAt(i);
+                    if (rect != null && rect.contains(pointInComponent)) {
+                        tabbedPane.setSelectedIndex(i);
+                        break;
+                    }
                 }
+            } else if (clicked[0] instanceof JScrollBar scrollbar) {
+                double position;
+                if (scrollbar.getOrientation() == JScrollBar.VERTICAL) {
+                    double offset = scrollbar.getVisibleAmount() * (((double) scrollbar.getHeight()) / scrollbar.getMaximum());
+                    position = ((double) pointInComponent.y - (offset / 2)) / (scrollbar.getHeight() - offset);
+                } else {
+                    double offset = scrollbar.getVisibleAmount() * (((double) scrollbar.getWidth()) / scrollbar.getMaximum());
+                    position = ((double) pointInComponent.x - (offset / 2)) / (scrollbar.getWidth() - offset);
+                }
+                scrollbar.setValue((int) (scrollbar.getMaximum() * position));
             }
         }
     }

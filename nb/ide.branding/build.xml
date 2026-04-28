@@ -42,6 +42,7 @@ Contributor(s): Vincent Brabant, Maxym Mykhalchuk
     </copy>
     <replace file="${build.dir}/branding/core.startup/src/org/netbeans/core/startup/Bundle_nb.properties" value="defaultvalue" propertyFile="${nb_all}/nbbuild/build/netbeansrelease.properties">
         <replacefilter token="@@metabuild.ComputedSplashVersion@@" property="metabuild.ComputedSplashVersion"/>
+        <replacefilter token="@@metabuild.ComputedTitleVersion@@" property="metabuild.ComputedTitleVersion"/>
     </replace>
     <locjar warnMissingDir="true"
       basedir="${build.dir}/branding/core.startup/src"

@@ -1533,12 +1533,22 @@ public class Utilities {
 
         @Override
         public long getStartPosition(CompilationUnitTree cut, Tree tree) {
-            return delegate.getStartPosition(cut, tree) + offset;
+            return getStartPosition(tree);
+        }
+
+        @Override
+        public long getStartPosition(Tree tree) {
+            return delegate.getStartPosition(tree) + offset;
         }
 
         @Override
         public long getEndPosition(CompilationUnitTree cut, Tree tree) {
-            return delegate.getEndPosition(cut, tree) + offset;
+            return getEndPosition(tree);
+        }
+
+        @Override
+        public long getEndPosition(Tree tree) {
+            return delegate.getEndPosition(tree) + offset;
         }
 
     }
@@ -1600,11 +1610,21 @@ public class Utilities {
 
         @Override
         public long getStartPosition(CompilationUnitTree file, Tree tree) {
+            return getStartPosition(tree);
+        }
+
+        @Override
+        public long getStartPosition(Tree tree) {
             return parser.getStartPos((JCTree)tree);
         }
 
         @Override
         public long getEndPosition(CompilationUnitTree file, Tree tree) {
+            return getEndPosition(tree);
+        }
+
+        @Override
+        public long getEndPosition(Tree tree) {
             return parser.getEndPos((JCTree)tree);
         }
     }

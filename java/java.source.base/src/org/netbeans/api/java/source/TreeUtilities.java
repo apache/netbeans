@@ -844,11 +844,20 @@ public final class TreeUtilities {
 
         @Override
         public long getStartPosition(CompilationUnitTree file, Tree tree) {
+            return getStartPosition(tree);
+        }
+
+        @Override
+        public long getStartPosition(Tree tree) {
             return parser.getStartPos((JCTree)tree) - offset;
         }
 
         @Override
         public long getEndPosition(CompilationUnitTree file, Tree tree) {
+            return getEndPosition(tree);
+        }
+        @Override
+        public long getEndPosition(Tree tree) {
             return parser.getEndPos((JCTree)tree) - offset;
         }
     }

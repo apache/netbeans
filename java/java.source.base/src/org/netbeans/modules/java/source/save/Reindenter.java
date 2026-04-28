@@ -276,12 +276,19 @@ public class Reindenter implements IndentTask {
                     sp = new SourcePositions() {
                         @Override
                         public long getStartPosition(CompilationUnitTree file, Tree tree) {
-                            return currentEmbeddingStartOffset + psp[0].getStartPosition(file, tree) - 1;
+                            return getStartPosition(tree);
                         }
-
+                        @Override
+                        public long getStartPosition(Tree tree) {
+                            return currentEmbeddingStartOffset + psp[0].getStartPosition(tree) - 1;
+                        }
                         @Override
                         public long getEndPosition(CompilationUnitTree file, Tree tree) {
-                            return currentEmbeddingStartOffset + psp[0].getEndPosition(file, tree) - 1;
+                            return getEndPosition(tree);
+                        }
+                        @Override
+                        public long getEndPosition(Tree tree) {
+                            return currentEmbeddingStartOffset + psp[0].getEndPosition(tree) - 1;
                         }
                     };
                 }

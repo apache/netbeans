@@ -14,5 +14,5 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-X file:${nb_all}/nb-javac/make/langtools/netbeans/nb-javac/dist/nb-javac-jdk-27+14-api.jar nb-javac-jdk-26+27-api.jar
-X file:${nb_all}/nb-javac/make/langtools/netbeans/nb-javac/dist/nb-javac-jdk-27+14-impl.jar nb-javac-jdk-26+27.jar
+X file:${nb_all}/nb-javac/make/langtools/netbeans/nb-javac/dist/nb-javac-jdk-27+19-api.jar nb-javac-jdk-26+27-api.jar
+X file:${nb_all}/nb-javac/make/langtools/netbeans/nb-javac/dist/nb-javac-jdk-27+19-impl.jar nb-javac-jdk-26+27.jar

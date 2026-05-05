@@ -109,7 +109,8 @@ public class BaseFunctionElementSupport  {
                     Collection<TypeResolver> returns1 = getReturnTypes();
                     // we can also write the union type in phpdoc e.g. @return int|float
                     // check whether the union type is the actual declared return type to avoid adding the union type for phpdoc
-                    if (returns1.size() == 1 || isReturnUnionType() || isReturnIntersectionType()) {
+                    // I also prevent the return type from being generated in the PHPDoc when it is a constructor.
+                    if (!element.getName().equals(MethodElement.CONSTRUCTOR_NAME) && (returns1.size() == 1 || isReturnUnionType() || isReturnIntersectionType())) {
                         String returnType = asString(PrintAs.ReturnTypes, element, typeNameResolver, phpVersion);
                         if (StringUtils.hasText(returnType)) {
                             boolean isNullableType = CodeUtils.isNullableType(returnType);

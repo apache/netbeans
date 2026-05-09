@@ -147,6 +147,10 @@ public class GlassFishVersionTest {
                 GlassFishVersion.GF_7_1_0_STR_NEXT);
         verifyToValueFromAdditionalArray(GlassFishVersion.GF_8_0_0,
                 GlassFishVersion.GF_8_0_0_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_8_0_1,
+                GlassFishVersion.GF_8_0_1_STR_NEXT);
+        verifyToValueFromAdditionalArray(GlassFishVersion.GF_8_0_2,
+                GlassFishVersion.GF_8_0_2_STR_NEXT);
         verifyToValueFromAdditionalArray(GlassFishVersion.GF_9_0_0,
                 GlassFishVersion.GF_9_0_0_STR_NEXT);
     }
@@ -184,6 +188,7 @@ public class GlassFishVersionTest {
             GlassFishVersion.GF_7_0_22, GlassFishVersion.GF_7_0_23,
             GlassFishVersion.GF_7_0_24, GlassFishVersion.GF_7_0_25,
             GlassFishVersion.GF_7_1_0, GlassFishVersion.GF_8_0_0,
+            GlassFishVersion.GF_8_0_2, GlassFishVersion.GF_8_0_2,
             GlassFishVersion.GF_9_0_0
         };
         String strings[] = {
@@ -200,7 +205,8 @@ public class GlassFishVersionTest {
             "7.0.14.0", "7.0.15.0", "7.0.16.0", "7.0.17.0",
             "7.0.18.0", "7.0.19.0", "7.0.20.0", "7.0.21.0",
             "7.0.22.0", "7.0.23.0", "7.0.24.0", "7.0.25.0",
-            "7.1.0.0", "8.0.0.0", "9.0.0.0"
+            "7.1.0.0", "8.0.0.0", "8.0.1.0", "8.0.2.0",
+            "9.0.0.0"
         };
         for (int i = 0; i < versions.length; i++) {
             GlassFishVersion version = GlassFishVersion.toValue(strings[i]);

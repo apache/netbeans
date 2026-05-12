@@ -969,13 +969,15 @@ public class JsFormatVisitor extends NodeVisitor<LexicalContext> {
 
     @Override
     public boolean enterClassElement(ClassElement propertyNode) {
-        FormatToken colon = tokenUtils.getNextToken(getFinish(propertyNode.getKey()),
-                JsTokenId.OPERATOR_COLON, getFinish(propertyNode));
-        if (colon != null) {
-            TokenUtils.appendToken(colon, FormatToken.forFormat(FormatToken.Kind.AFTER_PROPERTY_OPERATOR));
-            FormatToken before = colon.previous();
-            if (before != null) {
-                TokenUtils.appendTokenAfterLastVirtual(before, FormatToken.forFormat(FormatToken.Kind.BEFORE_PROPERTY_OPERATOR));
+        if (propertyNode.getKey() != null) {
+            FormatToken colon = tokenUtils.getNextToken(getFinish(propertyNode.getKey()),
+                    JsTokenId.OPERATOR_COLON, getFinish(propertyNode));
+            if (colon != null) {
+                TokenUtils.appendToken(colon, FormatToken.forFormat(FormatToken.Kind.AFTER_PROPERTY_OPERATOR));
+                FormatToken before = colon.previous();
+                if (before != null) {
+                    TokenUtils.appendTokenAfterLastVirtual(before, FormatToken.forFormat(FormatToken.Kind.BEFORE_PROPERTY_OPERATOR));
+                }
             }
         }
         return super.enterPropertyNode(propertyNode);

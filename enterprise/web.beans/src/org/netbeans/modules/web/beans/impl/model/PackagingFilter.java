@@ -19,7 +19,9 @@
 package org.netbeans.modules.web.beans.impl.model;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.lang.model.element.Element;
@@ -42,12 +44,15 @@ import org.openide.filesystems.FileUtil;
  *
  */
 class PackagingFilter {
-    
+
+    private final WebBeansModelImplementation myModel;
+
     PackagingFilter(WebBeansModelImplementation model){
         myModel = model;
     }
-    
+
     void filter(Collection<? extends Element> collection, AtomicBoolean cancel ){
+        FilterContext context = new FilterContext();
         for (Iterator<? extends Element> iterator = collection.iterator(); 
             iterator.hasNext(); ) 
         {
@@ -55,29 +60,30 @@ class PackagingFilter {
                 break;
             }
             Element element = iterator.next();
-            if ( remove(element, cancel)){
+            if ( remove(element, context, cancel)){
                 iterator.remove();
             }
         }
     }
-    
+
     void filterTypes(Collection<? extends DeclaredType> collection, AtomicBoolean cancel ){
+        FilterContext context = new FilterContext();
         for (Iterator<? extends DeclaredType> iterator = collection.iterator(); 
             iterator.hasNext(); ) 
         {
             DeclaredType type = iterator.next();
             Element element = getModel().getHelper().getCompilationController().
                 getTypes().asElement( type );
-            if ( element != null && remove(element, cancel)){
+            if ( element != null && remove(element, context, cancel)){
                 iterator.remove();
             }
         }
     }
-    
-    private boolean remove( Element element, AtomicBoolean cancel  ){
+
+    private boolean remove( Element element, FilterContext context, AtomicBoolean cancel  ){
         TypeElement typeElement;
-        if ( element instanceof TypeElement ){
-            typeElement = (TypeElement) element;
+        if ( element instanceof TypeElement te){
+            typeElement = te;
         }
         else {
             typeElement = getModel().getHelper().getCompilationController().
@@ -86,15 +92,13 @@ class PackagingFilter {
         if ( typeElement == null || cancel.get()){
             return false;
         }
-        
-        FileObject file = SourceUtils.getFile(ElementHandle.create(typeElement), 
-                ClasspathInfo.create(getModel().getModelUnit().getBootPath() , 
-                        ClassPath.EMPTY, getModel().getModelUnit().getSourcePath()));
-        
+
+        FileObject file = SourceUtils.getFile(ElementHandle.create(typeElement), context.getCpInfo());
+
         if ( file != null || cancel.get()){
             return false;
         }
-        
+
         PackageElement pack = getModel().getHelper().getCompilationController().
             getElements().getPackageOf( typeElement );
         if ( pack == null || cancel.get()){
@@ -116,7 +120,7 @@ class PackagingFilter {
         if ( className == null || cancel.get()){
             return false;
         }
-        
+
         String path = packageName.replace('.', '/')+'/'+className+".class"; // NOI18N
         ClassPath classPath = getModel().getModelUnit().getCompilePath();
         FileObject resource = classPath.findResource( path );
@@ -125,25 +129,41 @@ class PackagingFilter {
             if ( root == null || cancel.get()){
                 return false;
             }
-            if ( FileUtil.isArchiveFile( root ) && !cancel.get()){
-                FileObject archiveFile = FileUtil.getArchiveFile(root);
-                String ext = archiveFile.getExt();
-                if ( "war".equalsIgnoreCase( ext)){                        // NOI18N
-                    return root.getFileObject("WEB-INF/beans.xml") == null; // NOI18N
+            return !context.hasBeansXml.computeIfAbsent(root, fo -> {
+                if (FileUtil.isArchiveFile(fo) && !cancel.get()) {
+                    FileObject archiveFile = FileUtil.getArchiveFile(fo);
+                    String ext = archiveFile.getExt();
+                    if ("war".equalsIgnoreCase(ext)) {                        // NOI18N
+                        return root.getFileObject("WEB-INF/beans.xml") != null; // NOI18N
+                    }
                 }
-            }
-            return !hasMetaBeans(root);
+                return hasMetaBeans(fo);
+            });
+            
         }
         return false;
     }
-    
+
     private boolean hasMetaBeans(FileObject root ){
         return root.getFileObject("META-INF/beans.xml") != null;            // NOI18N
     }
-    
+
     private WebBeansModelImplementation getModel(){
         return myModel;
     }
 
-    private WebBeansModelImplementation myModel;
+    private class FilterContext {
+
+        final Map<FileObject, Boolean> hasBeansXml = new HashMap<>();
+        private ClasspathInfo cpInfo;
+
+        ClasspathInfo getCpInfo() {
+            if (cpInfo == null) {
+                cpInfo = ClasspathInfo.create(getModel().getModelUnit().getBootPath(),
+                        ClassPath.EMPTY, getModel().getModelUnit().getSourcePath());
+            }
+            return cpInfo;
+        }
+    }
+
 }

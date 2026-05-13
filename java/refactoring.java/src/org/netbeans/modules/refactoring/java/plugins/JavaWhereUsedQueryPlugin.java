@@ -117,7 +117,7 @@ public class JavaWhereUsedQueryPlugin extends JavaRefactoringPlugin implements F
             final TreePathHandle tph, final ClasspathInfo cpInfo,
             final boolean isFindSubclasses, final boolean isFindDirectSubclassesOnly,
             final boolean isFindOverridingMethods, final boolean isSearchOverloadedMethods,
-            final boolean isFindUsages, final boolean isIncludeDependencies, final boolean isSearchInComments, final Set<NonRecursiveFolder> folders,
+            final boolean isFindUsages, final boolean isDirectReferencesOnly, final boolean isIncludeDependencies, final boolean isSearchInComments, final Set<NonRecursiveFolder> folders,
             final AtomicBoolean cancel) {
         final ClassIndex idx = cpInfo.getClassIndex();
         final Set<FileObject> sourceSet = new TreeSet<>(new FileComparator());
@@ -226,22 +226,24 @@ public class JavaWhereUsedQueryPlugin extends JavaRefactoringPlugin implements F
                         sourceSet.addAll(getImplementorsRecursive(idx, cpInfo, enclosingTypeElement, cancel));
                     }
                     if (isFindUsages) {
-                        //get method references for method and for all it's overriders
-                        Set<ElementHandle<TypeElement>> s = RefactoringUtils.getImplementorsAsHandles(idx, cpInfo, (TypeElement) method.getEnclosingElement(), cancel);
-                        for (ElementHandle<TypeElement> eh : s) {
-                            if (cancel != null && cancel.get()) {
-                                sourceSet.clear();
-                                return;
-                            }
-                            TypeElement te = eh.resolve(info);
-                            if (te == null) {
-                                continue;
-                            }
-                            for (Element e : te.getEnclosedElements()) {
-                                if (RefactoringUtils.isExecutableElement(e)) {
-                                    for (ExecutableElement executableElement : methods) {
-                                        if (info.getElements().overrides((ExecutableElement) e, executableElement, te)) {
-                                            sourceSet.addAll(idx.getResources(ElementHandle.create(te), EnumSet.of(ClassIndex.SearchKind.METHOD_REFERENCES), searchScopeType, resourceType));
+                        if (!isDirectReferencesOnly) {
+                            //get method references for method and for all it's overriders
+                            Set<ElementHandle<TypeElement>> s = RefactoringUtils.getImplementorsAsHandles(idx, cpInfo, (TypeElement) method.getEnclosingElement(), cancel);
+                            for (ElementHandle<TypeElement> eh : s) {
+                                if (cancel != null && cancel.get()) {
+                                    sourceSet.clear();
+                                    return;
+                                }
+                                TypeElement te = eh.resolve(info);
+                                if (te == null) {
+                                    continue;
+                                }
+                                for (Element e : te.getEnclosedElements()) {
+                                    if (RefactoringUtils.isExecutableElement(e)) {
+                                        for (ExecutableElement executableElement : methods) {
+                                            if (info.getElements().overrides((ExecutableElement) e, executableElement, te)) {
+                                                sourceSet.addAll(idx.getResources(ElementHandle.create(te), EnumSet.of(ClassIndex.SearchKind.METHOD_REFERENCES), searchScopeType, resourceType));
+                                            }
                                         }
                                     }
                                 }
@@ -346,7 +348,7 @@ public class JavaWhereUsedQueryPlugin extends JavaRefactoringPlugin implements F
                 } else {
                     cpath = RefactoringUtils.getClasspathInfoFor(customScope.isDependencies(), customScope.getSourceRoots().toArray(new FileObject[0]));
                 }
-                Set<FileObject> a = getRelevantFiles(refactoring.getRefactoringSource().lookup(TreePathHandle.class), cpath, isFindSubclasses(), isFindDirectSubclassesOnly(), isFindOverridingMethods(), isSearchOverloadedMethods(), isFindUsages(), customScope.isDependencies(), isSearchInComments(), null, cancelRequested);
+                Set<FileObject> a = getRelevantFiles(refactoring.getRefactoringSource().lookup(TreePathHandle.class), cpath, isFindSubclasses(), isFindDirectSubclassesOnly(), isFindOverridingMethods(), isSearchOverloadedMethods(), isFindUsages(), isDirectReferencesOnly(), customScope.isDependencies(), isSearchInComments(), null, cancelRequested);
                 
                 fireProgressListenerStep(a.size());
                 try {
@@ -380,7 +382,7 @@ public class JavaWhereUsedQueryPlugin extends JavaRefactoringPlugin implements F
                     } else {
                         cpath = RefactoringUtils.getClasspathInfoFor(customScope.isDependencies(), sourceRoot1);
                     }
-                    Set<FileObject> a = getRelevantFiles(refactoring.getRefactoringSource().lookup(TreePathHandle.class), cpath, isFindSubclasses(), isFindDirectSubclassesOnly(), isFindOverridingMethods(), isSearchOverloadedMethods(), isFindUsages(), customScope.isDependencies(), isSearchInComments(), packages1, cancelRequested);
+                    Set<FileObject> a = getRelevantFiles(refactoring.getRefactoringSource().lookup(TreePathHandle.class), cpath, isFindSubclasses(), isFindDirectSubclassesOnly(), isFindOverridingMethods(), isSearchOverloadedMethods(), isFindUsages(), isDirectReferencesOnly(), customScope.isDependencies(), isSearchInComments(), packages1, cancelRequested);
                  
                     fireProgressListenerStep(a.size());
                     try {
@@ -391,7 +393,7 @@ public class JavaWhereUsedQueryPlugin extends JavaRefactoringPlugin implements F
                 }
             }
         } else {
-            Set<FileObject> a = getRelevantFiles(refactoring.getRefactoringSource().lookup(TreePathHandle.class), cp, isFindSubclasses(), isFindDirectSubclassesOnly(), isFindOverridingMethods(), isSearchOverloadedMethods(), isFindUsages(), false, isSearchInComments(), null, cancelRequested);
+            Set<FileObject> a = getRelevantFiles(refactoring.getRefactoringSource().lookup(TreePathHandle.class), cp, isFindSubclasses(), isFindDirectSubclassesOnly(), isFindOverridingMethods(), isSearchOverloadedMethods(), isFindUsages(), isDirectReferencesOnly(), false, isSearchInComments(), null, cancelRequested);
             fireProgressListenerStep(a.size());
             try {
                 queryFiles(a, findTask, cp);
@@ -468,6 +470,9 @@ public class JavaWhereUsedQueryPlugin extends JavaRefactoringPlugin implements F
     }
     private boolean isSearchFromBaseClass() {
         return refactoring.getBooleanValue(WhereUsedQueryConstants.SEARCH_FROM_BASECLASS);
+    }
+    private boolean isDirectReferencesOnly() {
+        return refactoring.getBooleanValue(WhereUsedQueryConstants.FIND_DIRECT_REFERENCES);
     }
 
     @Override
@@ -599,7 +604,7 @@ public class JavaWhereUsedQueryPlugin extends JavaRefactoringPlugin implements F
             AtomicBoolean inImport = new AtomicBoolean();
             if (isFindUsages()) {
                 Collection<WhereUsedElement> foundElements;
-                FindUsagesVisitor findVisitor = new FindUsagesVisitor(compiler, cancelled, isSearchInComments(), isSearchOverloadedMethods(), fromTest, fromPlatform, fromDependency, inImport);
+                FindUsagesVisitor findVisitor = new FindUsagesVisitor(compiler, cancelled, isSearchInComments(), isSearchOverloadedMethods(), isDirectReferencesOnly(), fromTest, fromPlatform, fromDependency, inImport);
                 findVisitor.scan(cu, element);
                 foundElements = findVisitor.getElements();
                 boolean usagesInComments = findVisitor.usagesInComments();

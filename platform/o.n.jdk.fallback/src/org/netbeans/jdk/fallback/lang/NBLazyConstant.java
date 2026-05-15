@@ -49,11 +49,11 @@ public final class NBLazyConstant {
                 log.log(Level.INFO, "using fallback");
             } else if (Runtime.version().feature() >= 26) {
                 Class<?> entryPoint = Class.forName("java.lang.LazyConstant");
-                mh = MethodHandles.lookup().findStatic(entryPoint, "of", MethodType.methodType(entryPoint, Supplier.class))
-                                           .asType(MethodType.methodType(Supplier.class, Supplier.class));
+                mh = MethodHandles.publicLookup().findStatic(entryPoint, "of", MethodType.methodType(entryPoint, Supplier.class))
+                                                 .asType(MethodType.methodType(Supplier.class, Supplier.class));
             } else if (Runtime.version().feature() == 25) {
                 Class<?> entryPoint = Class.forName("java.lang.StableValue");
-                mh = MethodHandles.lookup().findStatic(entryPoint, "supplier", MethodType.methodType(Supplier.class, Supplier.class));
+                mh = MethodHandles.publicLookup().findStatic(entryPoint, "supplier", MethodType.methodType(Supplier.class, Supplier.class));
             }
             // dryrun - just to be sure
             if (mh != null) {

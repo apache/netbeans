@@ -41,6 +41,7 @@
             <!-- internal API-->
             <friend-packages>
                 <friend>org.netbeans.modules.maven.indexer</friend>
+                <friend>org.openide.util</friend>
                 <package>org.netbeans.jdk.fallback.lang</package>
             </friend-packages>
         </data>

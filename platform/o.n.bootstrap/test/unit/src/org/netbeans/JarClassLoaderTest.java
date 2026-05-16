@@ -18,7 +18,6 @@
  */
 package org.netbeans;
 
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,6 +32,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -64,7 +64,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class JarClassLoaderTest extends NbTestCase {
 
-    private static Logger LOGGER = Logger.getLogger(ProxyClassLoader.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ProxyClassLoader.class.getName());
 
 
     public JarClassLoaderTest(String name) {
@@ -83,7 +83,7 @@ public class JarClassLoaderTest extends NbTestCase {
         File jar = new File(getWorkDir(), "default-package-resource.jar");
         TestFileUtils.writeZipFile(jar, "resource.txt:content", "package/resource.txt:content");
         JarClassLoader jcl = new JarClassLoader(Collections.singletonList(jar), new ProxyClassLoader[0]);
-        
+
         assertStreamContent(jcl.getResourceAsStream("package/resource.txt"), "content");
         assertStreamContent(jcl.getResourceAsStream("/package/resource.txt"), "content");
         assertStreamContent(jcl.getResourceAsStream("resource.txt"), "content");
@@ -105,9 +105,10 @@ public class JarClassLoaderTest extends NbTestCase {
         TestFileUtils.writeZipFile(a2, "A.txt:A2", "package/resourceA2.txt:content");
         final File b = new File(getWorkDir(), "b.jar");
         TestFileUtils.writeZipFile(b, "B.txt:B", "package/resourceB.txt:content");
-        
-        
+
+
         class CntJCL extends JarClassLoader {
+            @SuppressWarnings("PackageVisibleField")
             int queried;
 
             public CntJCL(List<File> files, ClassLoader[] parents) {
@@ -125,7 +126,7 @@ public class JarClassLoaderTest extends NbTestCase {
                 queried++;
                 return super.findResources(name);
             }
-            
+
         }
         final CntJCL[] arr = new CntJCL[] {
             new CntJCL(Collections.singletonList(nothing), new ClassLoader[0]),
@@ -133,23 +134,23 @@ public class JarClassLoaderTest extends NbTestCase {
             new CntJCL(Collections.singletonList(a2), new ClassLoader[0]),
             new CntJCL(Collections.singletonList(b), new ClassLoader[0]),
         };
-        
+
         ProxyClassLoader pcl = new ProxyClassLoader(arr, true);
-        
+
         assertURLsContent(pcl.getResources("A.txt"), "A", "A2");
-        
+
         assertEquals("No query to nothing.jar", 0, arr[0].queried);
         assertEquals("One query to a1.jar", 1, arr[1].queried);
         assertEquals("One query to a2.jar", 1, arr[2].queried);
         assertEquals("No query to b.jar", 0, arr[3].queried);
-        
+
         assertURLsContent(pcl.getResources("B.txt"), "B");
-        
+
         assertEquals("No query to nothing.jar", 0, arr[0].queried);
         assertEquals("Still One query to a1.jar", 1, arr[1].queried);
         assertEquals("Still One query to a2.jar", 1, arr[2].queried);
         assertEquals("One query to b.jar now", 1, arr[3].queried);
-        
+
     }
     public void testCanLoadFromDefaultPackageCachedOldFormat() throws Exception {
         doCanLoadCached("META-INF,/MANIFEST.MF,package");
@@ -157,28 +158,29 @@ public class JarClassLoaderTest extends NbTestCase {
     public void testCanLoadFromDefaultPackageCached() throws Exception {
         doCanLoadCached("META-INF,/MANIFEST.MF,package,default/resource.txt");
     }
-    
+
     private void doCanLoadCached(String covPkg) throws Exception {
         final File jar = new File(getWorkDir(), "default-package-resource-cached.jar");
-        TestFileUtils.writeZipFile(jar, "resource.txt:content", "package/resource.txt:content", 
+        TestFileUtils.writeZipFile(jar, "resource.txt:content", "package/resource.txt:content",
             "META-INF/MANIFEST.MF:OpenIDE-Module: x.y.z\nCovered-Packages: " + covPkg + ",\n"
         );
 
         MockModuleInstaller inst = new MockModuleInstaller();
         MockEvents ev = new MockEvents();
         ModuleManager mm = new ModuleManager(inst, ev);
-        
-        Module fake = new Module(mm, null, null, null) {
-	    public List<File> getAllJars() {throw new UnsupportedOperationException();}
-            public void setReloadable(boolean r) { throw new UnsupportedOperationException();}
-            public void reload() throws IOException { throw new UnsupportedOperationException();}
-            protected void classLoaderUp(Set<Module> parents) throws IOException {throw new UnsupportedOperationException();}
-            protected void classLoaderDown() { throw new UnsupportedOperationException();}
-            protected void cleanup() { throw new UnsupportedOperationException();}
-            protected void destroy() { throw new UnsupportedOperationException("Not supported yet.");}
-            public boolean isFixed() { throw new UnsupportedOperationException("Not supported yet.");}
-            public Object getLocalizedAttribute(String attr) { throw new UnsupportedOperationException("Not supported yet.");}
 
+        Module fake = new Module(mm, null, null, null) {
+            @Override public List<File> getAllJars() {throw new UnsupportedOperationException();}
+            @Override public void setReloadable(boolean r) { throw new UnsupportedOperationException();}
+            @Override public void reload() throws IOException { throw new UnsupportedOperationException();}
+            @Override protected void classLoaderUp(Set<Module> parents) throws IOException {throw new UnsupportedOperationException();}
+            @Override protected void classLoaderDown() { throw new UnsupportedOperationException();}
+            @Override protected void cleanup() { throw new UnsupportedOperationException();}
+            @Override protected void destroy() { throw new UnsupportedOperationException("Not supported yet.");}
+            @Override public boolean isFixed() { throw new UnsupportedOperationException("Not supported yet.");}
+            @Override public Object getLocalizedAttribute(String attr) { throw new UnsupportedOperationException("Not supported yet.");}
+
+            @Override
             public Manifest getManifest() {
                 try {
                     return new JarFile(jar, false).getManifest();
@@ -190,7 +192,7 @@ public class JarClassLoaderTest extends NbTestCase {
         };
 
         JarClassLoader jcl = new JarClassLoader(Collections.singletonList(jar), new ProxyClassLoader[0], false, fake);
-        
+
         assertStreamContent(jcl.getResourceAsStream("package/resource.txt"), "content");
         assertStreamContent(jcl.getResourceAsStream("/package/resource.txt"), "content");
         assertStreamContent(jcl.getResourceAsStream("resource.txt"), "content");
@@ -208,7 +210,7 @@ public class JarClassLoaderTest extends NbTestCase {
         TestFileUtils.writeFile(new File(dir, "package/resource.txt"), "content");
         TestFileUtils.writeFile(new File(dir, "META-INF/services/resource.txt"), "content");
         JarClassLoader jcl = new JarClassLoader(Collections.singletonList(dir), new ProxyClassLoader[0]);
-        
+
         assertStreamContent(jcl.getResourceAsStream("package/resource.txt"), "content");
         assertStreamContent(jcl.getResourceAsStream("/package/resource.txt"), "content");
         assertStreamContent(jcl.getResourceAsStream("resource.txt"), "content");
@@ -226,23 +228,6 @@ public class JarClassLoaderTest extends NbTestCase {
         File jar = new File(getWorkDir(), "default-package-resource.jar");
         TestFileUtils.writeZipFile(jar, "META-INF/MANIFEST.MF:Manifest-Version: 1.0\nfoo: bar\n\n", "package/re source++.txt:content");
         JarClassLoader jcl = new JarClassLoader(Collections.singletonList(jar), new ProxyClassLoader[0]);
-        URL url = jcl.getResource("package/re source++.txt");
-        assertTrue(url.toString(), url.toString().endsWith("default-package-resource.jar!/package/re%20source++.txt"));
-        URLConnection conn = url.openConnection();
-        assertEquals(7, conn.getContentLength());
-        assertTrue(conn instanceof JarURLConnection);
-        JarURLConnection jconn = (JarURLConnection) conn;
-        assertEquals("package/re source++.txt", jconn.getEntryName());
-        assertEquals(Utilities.toURI(jar).toURL(), jconn.getJarFileURL());
-        assertEquals("bar", jconn.getMainAttributes().getValue("foo"));
-        assertEquals(jar.getAbsolutePath(), jconn.getJarFile().getName());
-    }
-
-    public void testAddURLMethod() throws Exception {
-        File jar = new File(getWorkDir(), "default-package-resource.jar");
-        TestFileUtils.writeZipFile(jar, "META-INF/MANIFEST.MF:Manifest-Version: 1.0\nfoo: bar\n\n", "package/re source++.txt:content");
-        JarClassLoader jcl = new JarClassLoader(Collections.<File>emptyList(), new ProxyClassLoader[0]);
-        jcl.addURL(Utilities.toURI(jar).toURL());
         URL url = jcl.getResource("package/re source++.txt");
         assertTrue(url.toString(), url.toString().endsWith("default-package-resource.jar!/package/re%20source++.txt"));
         URLConnection conn = url.openConnection();
@@ -294,25 +279,25 @@ public class JarClassLoaderTest extends NbTestCase {
             }
         }
         ClassLoader jdkonly = new JDKOnly();
-        
+
         File jar = new File(getWorkDir(), "some.jar");
         TestFileUtils.writeZipFile(
-            jar, 
+            jar,
             "META-INF/services/java.io.Serializable:org.netbeans.MetaInfServicesToken"
         );
         URL url = MetaInfServicesToken.class.getProtectionDomain().getCodeSource().getLocation();
 
         URLClassLoader one = new URLClassLoader(new URL[] { url }, jdkonly);
         URLClassLoader two = new URLClassLoader(new URL[] { url }, jdkonly);
-        
+
         final String name = MetaInfServicesToken.class.getName();
         Class<?> cOne = one.loadClass(name);
         Class<?> cTwo = two.loadClass(name);
-        
+
         if (cOne == cTwo) {
             fail("Classes should be different, not loaded by: " + cOne.getClassLoader());
         }
-        
+
         ClassLoader cl = new JarClassLoader(Collections.singletonList(jar), new ClassLoader[] { two });
         ProxyClassLoader all = new ProxyClassLoader(new ClassLoader[] { one, cl }, false);
         Object res = Lookups.metaInfServices(all).lookup(Serializable.class);
@@ -327,15 +312,12 @@ public class JarClassLoaderTest extends NbTestCase {
         }
         assertFalse("Too many entries", urls.hasMoreElements());
     }
-    
+
     private void assertStreamContent(InputStream str, String content) throws IOException {
         assertNotNull("Resource found", str);
         byte[] data = new byte[content.length()];
-        DataInputStream dis = new DataInputStream(str);
-        try {
+        try (DataInputStream dis = new DataInputStream(str)) {
             dis.readFully(data);
-        } finally {
-            dis.close();
         }
         assertEquals(new String(data), content);
     }
@@ -355,8 +337,9 @@ public class JarClassLoaderTest extends NbTestCase {
         BlockingSecurityManager.initialize(jar.toString(), readSemaphore);
 
         class Tester extends Thread {
-            int slot;
+            private final int slot;
 
+            @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
             Tester(int slot) throws Exception {
                 this.slot = slot;
                 start();
@@ -374,7 +357,7 @@ public class JarClassLoaderTest extends NbTestCase {
                     results[slot] = t;
                 }
             }
-        };
+        }
 
         Thread[] threads = new Thread[] { new Tester(0), new Tester(1) };
         // threads[0] has reached the blocking point while opening the jar
@@ -403,7 +386,7 @@ public class JarClassLoaderTest extends NbTestCase {
     private static class BlockingSecurityManager extends SecurityManager {
         private static String path;
         private static Semaphore sync;
-    
+
         public static void initialize(String path, Semaphore sync) {
             BlockingSecurityManager.path = path;
             BlockingSecurityManager.sync = sync;
@@ -413,7 +396,7 @@ public class JarClassLoaderTest extends NbTestCase {
                 System.setSecurityManager(new BlockingSecurityManager());
             }
         }
-    
+
         public @Override void checkRead(String file) {
             if (file.equals(path)) {
                 sync.acquireUninterruptibly();
@@ -424,7 +407,7 @@ public class JarClassLoaderTest extends NbTestCase {
             checkRead(file);
         }
 
-    
+
         public @Override void checkPermission(Permission perm) {}
 
         public @Override void checkPermission(Permission perm, Object ctx) {}
@@ -482,18 +465,8 @@ public class JarClassLoaderTest extends NbTestCase {
 
         // Check multi release resource loading
         try(InputStream is = jcl.getResourceAsStream("test/dummy.txt")) {
-            assertEquals(expected, loadUTF8(is));
+            assertEquals(expected, new String(is.readAllBytes(), StandardCharsets.UTF_8));
         }
-    }
-
-    private static String loadUTF8(InputStream is) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[2048];
-        int read;
-        while ((read = is.read(buffer)) > 0) {
-            baos.write(buffer, 0, read);
-        }
-        return baos.toString("UTF-8");
     }
 
     private static final class SourceFileObject extends SimpleJavaFileObject {

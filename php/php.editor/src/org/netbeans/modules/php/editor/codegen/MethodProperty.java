@@ -69,7 +69,7 @@ public final class MethodProperty extends Property {
         final String nameAndParams = method.asString(PrintAs.NameAndParamsDeclaration, TypeNameResolverImpl.forNull(), phpVersion);
         final String returnTypeString = method.asString(PrintAs.ReturnTypes, TypeNameResolverImpl.forNull(), phpVersion);
         final String[] split = nameAndParams.split("\\(");
-        if (returnTypes.isEmpty() || returnTypeString.isEmpty()) {
+        if (returnTypes.isEmpty() || returnTypeString.isEmpty() || method.isConstructor()) {
             return String.format("<html><b>%s</b>(%s</html>", split[0], split[1]); // NOI18N
         }
         return String.format("<html><b>%s</b>(%s : %s</html>", split[0], split[1], returnTypeString); // NOI18N

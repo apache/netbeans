@@ -700,13 +700,24 @@ public class JarClassLoader extends ProxyClassLoader {
                             }
                             continue;
                         }
-                        if (itm.startsWith("META-INF/")) {
+                        if (itm.startsWith("META-INF/versions/")) {
+                            int endOfVersion = itm.indexOf("/", 18) + 1;
+                            if (endOfVersion > 0 && endOfVersion < itm.length() && endOfVersion < slash) {
+                                String pkg = itm.substring(endOfVersion, slash).replace('/', '.');
+                                if (known.add(pkg)) {
+                                    save.append(pkg).append(',');
+                                }
+                            }
+                            continue;
+                        } else if (itm.startsWith("META-INF/")) {
                             String res = itm.substring(8); // "/services/pkg.Service"
                             if (known.add(res)) save.append(res).append(',');
                             continue;
                         }
-                        String pkg = slash > 0 ? itm.substring(0, slash).replace('/','.') : "";
-                        if (known.add(pkg)) save.append(pkg).append(',');
+                        String pkg = slash > 0 ? itm.substring(0, slash).replace('/', '.') : "";
+                        if (known.add(pkg)) {
+                            save.append(pkg).append(',');
+                        }
                     }
                 }
             } catch (ZipException | FileNotFoundException x) { // Unix

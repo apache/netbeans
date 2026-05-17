@@ -416,38 +416,7 @@ public class JarClassLoaderTest extends NbTestCase {
     public void testMultiReleaseJar() throws Exception {
         clearWorkDir();
 
-        // Prepare multi-release jar file
-        File classes = new File(getWorkDir(), "classes");
-        classes.mkdirs();
-        ToolProvider.getSystemJavaCompiler()
-                    .getTask(null, null, d -> { throw new IllegalStateException(d.toString()); }, Arrays.asList("-d", classes.getAbsolutePath(), "-proc:none"), null,
-                             Arrays.asList(new SourceFileObject("test/Impl.java", "package test; public class Impl { public static String get() { return \"base\"; } }"),
-                                           new SourceFileObject("api/API.java", "package api; public class API { public static String run() { return test.Impl.get(); } }")))
-                    .call();
-        File classes9 = new File(new File(new File(classes, "META-INF"), "versions"), "9");
-        classes9.mkdirs();
-        ToolProvider.getSystemJavaCompiler()
-                    .getTask(null, null, d -> { throw new IllegalStateException(d.toString()); }, Arrays.asList("-d", classes9.getAbsolutePath(), "-classpath", classes.getAbsolutePath(), "-proc:none"), null,
-                             Arrays.asList(new SourceFileObject("test/Impl.java", "package test; public class Impl { public static String get() { return \"9\"; } }")))
-                    .call();
-        Map<String, byte[]> jarContent = new LinkedHashMap<>();
-        jarContent.put("META-INF/MANIFEST.MF", "Manifest-Version: 1.0\nMulti-Release: true\n\n".getBytes());
-        Path classesPath = classes.toPath();
-        Files.walk(classesPath)
-             .filter(p -> Files.isRegularFile(p))
-             .forEach(p -> {
-                  try {
-                      jarContent.put(classesPath.relativize(p).toString(), TestFileUtils.readFileBin(p.toFile()));
-                  } catch (IOException ex) {
-                      throw new IllegalStateException(ex);
-                  }
-             });
-        jarContent.put("test/dummy.txt", "base".getBytes(UTF_8));
-        jarContent.put("META-INF/versions/9/test/dummy.txt", "9".getBytes(UTF_8));
-        File jar = new File(getWorkDir(), "multi-release.jar");
-        try (OutputStream out = new FileOutputStream(jar)) {
-            TestFileUtils.writeZipFile(out, jarContent);
-        }
+        File jar = prepareMultireleaseTestJar();
 
         // Check multi release class loading
         JarClassLoader jcl = new JarClassLoader(Arrays.asList(jar), new ProxyClassLoader[0]);
@@ -467,6 +436,70 @@ public class JarClassLoaderTest extends NbTestCase {
         try(InputStream is = jcl.getResourceAsStream("test/dummy.txt")) {
             assertEquals(expected, new String(is.readAllBytes(), StandardCharsets.UTF_8));
         }
+    }
+
+    public void testLoadClassPackageOnlyVersioned() throws IOException, URISyntaxException, ClassNotFoundException {
+    	clearWorkDir();
+
+    	File jar = prepareMultireleaseTestJar();
+
+        // try to load a class that is in a package, that is only present in
+        // a package that only exists the versioned tree of the JAR.
+        // META-INF/versions/<version>
+        JarClassLoader jcl = new JarClassLoader(Arrays.asList(jar), new ProxyClassLoader[0]);
+        Class<?> loadedClass = jcl.loadClass("internal.Demo");
+        assertNotNull(loadedClass);
+    }
+
+    public File prepareMultireleaseTestJar() throws URISyntaxException, IOException {
+        // Prepare multi-release jar file
+        File classes = new File(getWorkDir(), "classes");
+        classes.mkdirs();
+        ToolProvider.getSystemJavaCompiler()
+                .getTask(
+                        null,
+                        null,
+                        d -> { throw new IllegalStateException(d.toString()); },
+                        Arrays.asList("-d", classes.getAbsolutePath(), "-proc:none"),
+                        null,
+                        Arrays.asList(
+                                new SourceFileObject("test/Impl.java", "package test; public class Impl { public static String get() { return \"base\"; } }"),
+                                new SourceFileObject("api/API.java", "package api; public class API { public static String run() { return test.Impl.get(); } }")
+                        ))
+                .call();
+        File classes9 = new File(new File(new File(classes, "META-INF"), "versions"), "9");
+        classes9.mkdirs();
+        ToolProvider.getSystemJavaCompiler()
+                .getTask(
+                        null,
+                        null,
+                        d -> { throw new IllegalStateException(d.toString()); },
+                        Arrays.asList("-d", classes9.getAbsolutePath(), "-classpath", classes.getAbsolutePath(), "-proc:none"),
+                        null,
+                        Arrays.asList(
+                                new SourceFileObject("test/Impl.java", "package test; public class Impl { public static String get() { return \"9\"; } }"),
+                                new SourceFileObject("internal/Demo.java", "package internal; public class Demo { public static String get() { return \"9\"; } }")
+                        ))
+                .call();
+        Map<String, byte[]> jarContent = new LinkedHashMap<>();
+        jarContent.put("META-INF/MANIFEST.MF", "Manifest-Version: 1.0\nMulti-Release: true\n\n".getBytes());
+        Path classesPath = classes.toPath();
+        Files.walk(classesPath)
+                .filter(p -> Files.isRegularFile(p))
+                .forEach(p -> {
+                    try {
+                        jarContent.put(classesPath.relativize(p).toString(), TestFileUtils.readFileBin(p.toFile()));
+                    } catch (IOException ex) {
+                        throw new IllegalStateException(ex);
+                    }
+                });
+        jarContent.put("test/dummy.txt", "base".getBytes(UTF_8));
+        jarContent.put("META-INF/versions/9/test/dummy.txt", "9".getBytes(UTF_8));
+        File jar = new File(getWorkDir(), "multi-release.jar");
+        try (OutputStream out = new FileOutputStream(jar)) {
+            TestFileUtils.writeZipFile(out, jarContent);
+        }
+        return jar;
     }
 
     private static final class SourceFileObject extends SimpleJavaFileObject {

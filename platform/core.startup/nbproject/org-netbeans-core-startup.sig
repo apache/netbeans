@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.94.0
+#Version 1.95.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -336,6 +336,7 @@ meth public static java.awt.Image loadContent(boolean)
 meth public static org.netbeans.core.startup.Splash getInstance()
 meth public static void configureDefaultRenderingHints(java.awt.Graphics2D)
 meth public static void showAboutDialog(java.awt.Frame,javax.swing.JComponent)
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="")
 meth public void addToMaxSteps(int)
 meth public void cacheReady()
 meth public void dispose()
@@ -344,8 +345,8 @@ meth public void increment(int)
 meth public void print(java.lang.String)
 meth public void setRunning(boolean)
 supr java.lang.Object
-hfds ICON_1024,ICON_16,ICON_256,ICON_32,ICON_48,ICON_512,USE_LAUNCHER_SPLASH,comp,frame,noBar,painter,splash,splashScreen
-hcls SplashComponent,SplashDialog,SplashPainter,SplashRunner,TextBox
+hfds USE_LAUNCHER_SPLASH,comp,frame,noBar,painter,progress,splash
+hcls Progress,SplashComponent,SplashDialog,SplashPainter,TextBox
 
 CLSS public org.netbeans.core.startup.StartLog
 cons public init()

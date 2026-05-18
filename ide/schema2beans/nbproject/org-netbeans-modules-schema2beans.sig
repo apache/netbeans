@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.78
+#Version 1.79
 
 CLSS public abstract interface java.beans.BeanInfo
 fld public final static int ICON_COLOR_16x16 = 1
@@ -42,8 +42,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -52,6 +54,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -68,6 +71,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -133,6 +137,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface java.util.EventListener
 
@@ -1142,16 +1149,16 @@ meth public static boolean shouldEscape(char)
 meth public static boolean shouldEscape(java.lang.String)
 meth public static org.xml.sax.Locator findLocationXPath(org.xml.sax.InputSource,java.lang.String) throws java.io.IOException,org.xml.sax.SAXException
 meth public static void printXML(java.io.Writer,char,boolean) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void printXML(java.io.Writer,java.lang.String) throws java.io.IOException
 meth public static void printXML(java.io.Writer,java.lang.String,boolean) throws java.io.IOException
 meth public static void printXML(java.lang.StringBuffer,char,boolean)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void printXML(java.lang.StringBuffer,java.lang.String)
 meth public static void printXML(java.lang.StringBuffer,java.lang.String,boolean)
 meth public static void reindent(org.w3c.dom.Document,java.lang.String)
 meth public static void writeXML(java.io.Writer,char,boolean) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void writeXML(java.io.Writer,java.lang.String) throws java.io.IOException
 meth public static void writeXML(java.io.Writer,java.lang.String,boolean) throws java.io.IOException
 supr java.lang.Object

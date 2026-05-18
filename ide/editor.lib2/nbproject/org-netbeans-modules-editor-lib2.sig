@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.51.0
+#Version 2.52.0
 
 CLSS public abstract interface java.awt.event.ActionListener
 intf java.util.EventListener
@@ -13,6 +13,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -99,6 +100,7 @@ meth public abstract void addPropertyChangeListener(java.beans.PropertyChangeLis
 meth public abstract void putValue(java.lang.String,java.lang.Object)
 meth public abstract void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public abstract void setEnabled(boolean)
+meth public boolean accept(java.lang.Object)
 
 CLSS public abstract interface javax.swing.text.Caret
 meth public abstract boolean isSelectionVisible()
@@ -129,7 +131,7 @@ supr java.lang.Object
 
 CLSS public abstract static javax.swing.text.NavigationFilter$FilterBypass
  outer javax.swing.text.NavigationFilter
-cons public init()
+cons protected init()
 meth public abstract javax.swing.text.Caret getCaret()
 meth public abstract void moveDot(int,javax.swing.text.Position$Bias)
 meth public abstract void setDot(int,javax.swing.text.Position$Bias)

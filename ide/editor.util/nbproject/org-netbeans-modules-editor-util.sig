@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.96
+#Version 1.97
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract char charAt(int)
 meth public abstract int length()
 meth public abstract java.lang.CharSequence subSequence(int,int)
 meth public abstract java.lang.String toString()
+meth public boolean isEmpty()
 meth public java.util.stream.IntStream chars()
 meth public java.util.stream.IntStream codePoints()
+meth public static int compare(java.lang.CharSequence,java.lang.CharSequence)
 
 CLSS public abstract interface java.lang.Cloneable
 
@@ -28,6 +30,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -107,6 +110,7 @@ supr java.util.AbstractCollection<{java.util.AbstractList%0}>
 
 CLSS public abstract interface java.util.Collection<%0 extends java.lang.Object>
 intf java.lang.Iterable<{java.util.Collection%0}>
+meth public <%0 extends java.lang.Object> {%%0}[] toArray(java.util.function.IntFunction<{%%0}[]>)
 meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
 meth public abstract boolean add({java.util.Collection%0})
 meth public abstract boolean addAll(java.util.Collection<? extends {java.util.Collection%0}>)
@@ -150,6 +154,8 @@ meth public static <%0 extends java.lang.Object> java.util.Comparator<{%%0}> nul
 
 CLSS public abstract interface java.util.List<%0 extends java.lang.Object>
 intf java.util.Collection<{java.util.List%0}>
+meth public !varargs static <%0 extends java.lang.Object> java.util.List<{%%0}> of({%%0}[])
+ anno 0 java.lang.SafeVarargs()
 meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
 meth public abstract boolean add({java.util.List%0})
 meth public abstract boolean addAll(int,java.util.Collection<? extends {java.util.List%0}>)
@@ -176,11 +182,25 @@ meth public abstract {java.util.List%0} get(int)
 meth public abstract {java.util.List%0} remove(int)
 meth public abstract {java.util.List%0} set(int,{java.util.List%0})
 meth public java.util.Spliterator<{java.util.List%0}> spliterator()
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> copyOf(java.util.Collection<? extends {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> of()
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> of({%%0})
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> of({%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> of({%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> of({%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.List<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
 meth public void replaceAll(java.util.function.UnaryOperator<{java.util.List%0}>)
 meth public void sort(java.util.Comparator<? super {java.util.List%0}>)
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry
+meth public !varargs static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> ofEntries(java.util.Map$Entry<? extends {%%0},? extends {%%1}>[])
+ anno 0 java.lang.SafeVarargs()
 meth public abstract boolean containsKey(java.lang.Object)
 meth public abstract boolean containsValue(java.lang.Object)
 meth public abstract boolean equals(java.lang.Object)
@@ -197,6 +217,19 @@ meth public abstract {java.util.Map%1} put({java.util.Map%0},{java.util.Map%1})
 meth public abstract {java.util.Map%1} remove(java.lang.Object)
 meth public boolean remove(java.lang.Object,java.lang.Object)
 meth public boolean replace({java.util.Map%0},{java.util.Map%1},{java.util.Map%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map$Entry<{%%0},{%%1}> entry({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> copyOf(java.util.Map<? extends {%%0},? extends {%%1}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
 meth public void forEach(java.util.function.BiConsumer<? super {java.util.Map%0},? super {java.util.Map%1}>)
 meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
 meth public {java.util.Map%1} compute({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
@@ -218,6 +251,7 @@ meth public static <%0 extends java.lang.Comparable<? super {%%0}>, %1 extends j
 meth public static <%0 extends java.lang.Object, %1 extends java.lang.Comparable<? super {%%1}>> java.util.Comparator<java.util.Map$Entry<{%%0},{%%1}>> comparingByValue()
 meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Comparator<java.util.Map$Entry<{%%0},{%%1}>> comparingByKey(java.util.Comparator<? super {%%0}>)
 meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Comparator<java.util.Map$Entry<{%%0},{%%1}>> comparingByValue(java.util.Comparator<? super {%%1}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map$Entry<{%%0},{%%1}> copyOf(java.util.Map$Entry<? extends {%%0},? extends {%%1}>)
 
 CLSS public abstract interface java.util.RandomAccess
 
@@ -370,7 +404,7 @@ meth protected java.lang.CharSequence backingSequence()
 meth public char charAt(int)
 meth public int length()
 meth public static void checkIndexesValid(java.lang.CharSequence,int,int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.netbeans.lib.editor.util.AbstractCharSequence
 hfds backingSequence,length,start
 
@@ -510,7 +544,7 @@ meth public void clear()
 meth public void copyElements(int,int,java.lang.Object[],int)
 meth public void copyElements(int,int,java.util.Collection<{org.netbeans.lib.editor.util.GapList%0}>)
 meth public void copyItems(int,int,java.lang.Object[],int)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void ensureCapacity(int)
 meth public void remove(int,int)
 meth public void swap(int,int)
@@ -626,7 +660,7 @@ CLSS public final org.netbeans.lib.editor.util.swing.DocumentUtilities
 meth public static boolean addPriorityDocumentListener(javax.swing.text.Document,javax.swing.event.DocumentListener,org.netbeans.lib.editor.util.swing.DocumentListenerPriority)
 meth public static boolean isReadLocked(javax.swing.text.Document)
 meth public static boolean isTypingModification(javax.swing.event.DocumentEvent)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static boolean isTypingModification(javax.swing.text.Document)
 meth public static boolean isWriteLocked(javax.swing.text.Document)
 meth public static boolean putEventPropertyIfSupported(javax.swing.event.DocumentEvent,java.lang.Object,java.lang.Object)

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.65.0
+#Version 1.66.0
 
 CLSS public com.ibm.icu.impl.Assert
 cons public init()
@@ -7775,13 +7775,19 @@ cons public init()
 intf java.io.Closeable
 meth public abstract int read() throws java.io.IOException
 meth public boolean markSupported()
+meth public byte[] readAllBytes() throws java.io.IOException
+meth public byte[] readNBytes(int) throws java.io.IOException
 meth public int available() throws java.io.IOException
 meth public int read(byte[]) throws java.io.IOException
 meth public int read(byte[],int,int) throws java.io.IOException
+meth public int readNBytes(byte[],int,int) throws java.io.IOException
 meth public long skip(long) throws java.io.IOException
+meth public long transferTo(java.io.OutputStream) throws java.io.IOException
+meth public static java.io.InputStream nullInputStream()
 meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
+meth public void skipNBytes(long) throws java.io.IOException
 supr java.lang.Object
 
 CLSS public abstract java.io.Reader
@@ -7798,6 +7804,8 @@ meth public int read() throws java.io.IOException
 meth public int read(char[]) throws java.io.IOException
 meth public int read(java.nio.CharBuffer) throws java.io.IOException
 meth public long skip(long) throws java.io.IOException
+meth public long transferTo(java.io.Writer) throws java.io.IOException
+meth public static java.io.Reader nullReader()
 meth public void mark(int) throws java.io.IOException
 meth public void reset() throws java.io.IOException
 supr java.lang.Object
@@ -7814,6 +7822,7 @@ meth public abstract void close() throws java.lang.Exception
 
 CLSS public final java.lang.Character
 cons public init(char)
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="9")
 fld public final static byte COMBINING_SPACING_MARK = 8
 fld public final static byte CONNECTOR_PUNCTUATION = 23
 fld public final static byte CONTROL = 15
@@ -7826,16 +7835,20 @@ fld public final static byte DIRECTIONALITY_COMMON_NUMBER_SEPARATOR = 7
 fld public final static byte DIRECTIONALITY_EUROPEAN_NUMBER = 3
 fld public final static byte DIRECTIONALITY_EUROPEAN_NUMBER_SEPARATOR = 4
 fld public final static byte DIRECTIONALITY_EUROPEAN_NUMBER_TERMINATOR = 5
+fld public final static byte DIRECTIONALITY_FIRST_STRONG_ISOLATE = 21
 fld public final static byte DIRECTIONALITY_LEFT_TO_RIGHT = 0
 fld public final static byte DIRECTIONALITY_LEFT_TO_RIGHT_EMBEDDING = 14
+fld public final static byte DIRECTIONALITY_LEFT_TO_RIGHT_ISOLATE = 19
 fld public final static byte DIRECTIONALITY_LEFT_TO_RIGHT_OVERRIDE = 15
 fld public final static byte DIRECTIONALITY_NONSPACING_MARK = 8
 fld public final static byte DIRECTIONALITY_OTHER_NEUTRALS = 13
 fld public final static byte DIRECTIONALITY_PARAGRAPH_SEPARATOR = 10
 fld public final static byte DIRECTIONALITY_POP_DIRECTIONAL_FORMAT = 18
+fld public final static byte DIRECTIONALITY_POP_DIRECTIONAL_ISOLATE = 22
 fld public final static byte DIRECTIONALITY_RIGHT_TO_LEFT = 1
 fld public final static byte DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC = 2
 fld public final static byte DIRECTIONALITY_RIGHT_TO_LEFT_EMBEDDING = 16
+fld public final static byte DIRECTIONALITY_RIGHT_TO_LEFT_ISOLATE = 20
 fld public final static byte DIRECTIONALITY_RIGHT_TO_LEFT_OVERRIDE = 17
 fld public final static byte DIRECTIONALITY_SEGMENT_SEPARATOR = 11
 fld public final static byte DIRECTIONALITY_UNDEFINED = -1
@@ -7885,11 +7898,13 @@ innr public final static UnicodeBlock
 innr public static Subset
 intf java.io.Serializable
 intf java.lang.Comparable<java.lang.Character>
+intf java.lang.constant.Constable
 meth public boolean equals(java.lang.Object)
 meth public char charValue()
 meth public int compareTo(java.lang.Character)
 meth public int hashCode()
 meth public java.lang.String toString()
+meth public java.util.Optional<java.lang.constant.DynamicConstantDesc<java.lang.Character>> describeConstable()
 meth public static boolean isAlphabetic(int)
 meth public static boolean isBmpCodePoint(int)
 meth public static boolean isDefined(char)
@@ -7907,9 +7922,9 @@ meth public static boolean isJavaIdentifierPart(int)
 meth public static boolean isJavaIdentifierStart(char)
 meth public static boolean isJavaIdentifierStart(int)
 meth public static boolean isJavaLetter(char)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="1.1")
 meth public static boolean isJavaLetterOrDigit(char)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="1.1")
 meth public static boolean isLetter(char)
 meth public static boolean isLetter(int)
 meth public static boolean isLetterOrDigit(char)
@@ -7920,7 +7935,7 @@ meth public static boolean isLowerCase(int)
 meth public static boolean isMirrored(char)
 meth public static boolean isMirrored(int)
 meth public static boolean isSpace(char)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="1.1")
 meth public static boolean isSpaceChar(char)
 meth public static boolean isSpaceChar(int)
 meth public static boolean isSupplementaryCodePoint(int)
@@ -7956,6 +7971,7 @@ meth public static int codePointBefore(char[],int,int)
 meth public static int codePointBefore(java.lang.CharSequence,int)
 meth public static int codePointCount(char[],int,int)
 meth public static int codePointCount(java.lang.CharSequence,int,int)
+meth public static int codePointOf(java.lang.String)
 meth public static int compare(char,char)
 meth public static int digit(char,int)
 meth public static int digit(int,int)
@@ -7974,6 +7990,7 @@ meth public static int toUpperCase(int)
 meth public static java.lang.Character valueOf(char)
 meth public static java.lang.String getName(int)
 meth public static java.lang.String toString(char)
+meth public static java.lang.String toString(int)
 supr java.lang.Object
 
 CLSS public static java.lang.Character$Subset
@@ -7991,8 +8008,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -8001,6 +8020,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -8046,6 +8066,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -8114,6 +8135,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface java.text.AttributedCharacterIterator
 innr public static Attribute
@@ -8203,6 +8227,7 @@ meth public static <%0 extends java.lang.Object> java.util.Comparator<{%%0}> nul
 CLSS public abstract interface java.util.Enumeration<%0 extends java.lang.Object>
 meth public abstract boolean hasMoreElements()
 meth public abstract {java.util.Enumeration%0} nextElement()
+meth public java.util.Iterator<{java.util.Enumeration%0}> asIterator()
 
 CLSS public abstract interface java.util.EventListener
 
@@ -8241,8 +8266,10 @@ meth public final static void clearCache(java.lang.ClassLoader)
 meth public java.lang.String getBaseBundleName()
 meth public java.util.Locale getLocale()
 meth public java.util.Set<java.lang.String> keySet()
+meth public static java.util.ResourceBundle getBundle(java.lang.String,java.lang.Module)
 meth public static java.util.ResourceBundle getBundle(java.lang.String,java.util.Locale,java.lang.ClassLoader)
 meth public static java.util.ResourceBundle getBundle(java.lang.String,java.util.Locale,java.lang.ClassLoader,java.util.ResourceBundle$Control)
+meth public static java.util.ResourceBundle getBundle(java.lang.String,java.util.Locale,java.lang.Module)
 supr java.lang.Object
 
 CLSS public abstract java.util.TimeZone
@@ -8280,8 +8307,9 @@ CLSS public java.util.logging.Logger
 cons protected init(java.lang.String,java.lang.String)
 fld public final static java.lang.String GLOBAL_LOGGER_NAME = "global"
 fld public final static java.util.logging.Logger global
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public !varargs void logrb(java.util.logging.Level,java.lang.String,java.lang.String,java.util.ResourceBundle,java.lang.String,java.lang.Object[])
+meth public !varargs void logrb(java.util.logging.Level,java.util.ResourceBundle,java.lang.String,java.lang.Object[])
 meth public boolean getUseParentHandlers()
 meth public boolean isLoggable(java.util.logging.Level)
 meth public final static java.util.logging.Logger getGlobal()
@@ -8326,14 +8354,15 @@ meth public void logp(java.util.logging.Level,java.lang.String,java.lang.String,
 meth public void logp(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.Throwable,java.util.function.Supplier<java.lang.String>)
 meth public void logp(java.util.logging.Level,java.lang.String,java.lang.String,java.util.function.Supplier<java.lang.String>)
 meth public void logrb(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void logrb(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.Object)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void logrb(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.Object[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void logrb(java.util.logging.Level,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.Throwable)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void logrb(java.util.logging.Level,java.lang.String,java.lang.String,java.util.ResourceBundle,java.lang.String,java.lang.Throwable)
+meth public void logrb(java.util.logging.Level,java.util.ResourceBundle,java.lang.String,java.lang.Throwable)
 meth public void removeHandler(java.util.logging.Handler)
 meth public void setFilter(java.util.logging.Filter)
 meth public void setLevel(java.util.logging.Level)
@@ -10372,6 +10401,7 @@ meth public abstract void skippedEntity(java.lang.String) throws org.xml.sax.SAX
 meth public abstract void startDocument() throws org.xml.sax.SAXException
 meth public abstract void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
 meth public abstract void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void declaration(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 
 CLSS public abstract interface org.xml.sax.Locator
 meth public abstract int getColumnNumber()

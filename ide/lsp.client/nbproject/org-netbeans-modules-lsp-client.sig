@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.33.0
+#Version 1.34.0
 
 CLSS public java.lang.Object
 cons public init()
@@ -74,6 +74,9 @@ meth public void lineBreakpoint(java.net.URI,int,java.lang.String)
 supr java.lang.Object
 hfds lineBreakpoints
 
+CLSS public abstract interface org.netbeans.modules.lsp.client.spi.LanguageIdResolver
+meth public abstract java.lang.String resolveLanguageId(org.openide.filesystems.FileObject)
+
 CLSS public abstract interface org.netbeans.modules.lsp.client.spi.LanguageServerProvider
 innr public final static LanguageServerDescription
 meth public abstract org.netbeans.modules.lsp.client.spi.LanguageServerProvider$LanguageServerDescription startServer(org.openide.util.Lookup)
@@ -87,8 +90,14 @@ meth public static org.netbeans.modules.lsp.client.spi.LanguageServerProvider$La
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NullAllowed()
+meth public static org.netbeans.modules.lsp.client.spi.LanguageServerProvider$LanguageServerDescription create(java.io.InputStream,java.io.OutputStream,java.lang.Process,org.openide.util.Lookup)
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+ anno 2 org.netbeans.api.annotations.common.NonNull()
+ anno 3 org.netbeans.api.annotations.common.NullAllowed()
+ anno 4 org.netbeans.api.annotations.common.NullAllowed()
 supr java.lang.Object
-hfds bindings,in,out,process,server
+hfds bindings,in,lookup,out,process,server
 
 CLSS public abstract interface org.netbeans.modules.lsp.client.spi.MultiMimeLanguageServerProvider
 intf org.netbeans.modules.lsp.client.spi.LanguageServerProvider

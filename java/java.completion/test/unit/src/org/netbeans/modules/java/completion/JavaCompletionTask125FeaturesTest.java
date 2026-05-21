@@ -19,7 +19,13 @@
 
 package org.netbeans.modules.java.completion;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.event.ChangeListener;
 import org.netbeans.modules.java.source.parsing.JavacParser;
+import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
+import org.openide.filesystems.FileObject;
+import org.openide.util.lookup.ServiceProvider;
 
 public class JavaCompletionTask125FeaturesTest extends CompletionTestBase {
 
@@ -41,7 +47,59 @@ public class JavaCompletionTask125FeaturesTest extends CompletionTestBase {
         performTest("CompactSourceFile", 883, null, "compactSourceFilesInsideClass.pass", SOURCE_LEVEL);
     }
 
+    public void testImportModuleKeyword() throws Exception {
+        performTest("Import", 823, "import ", "staticAndModuleKeywordAndAllPackages.pass", SOURCE_LEVEL);
+    }
+
+    public void testImportModuleNoModuleName() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--limit-modules=java.base,jdk.compiler,jdk.javadoc,jdk.jartool");
+        performTest("Import", 823, "import module ", "importModuleListFull.pass", SOURCE_LEVEL);
+    }
+
+    public void testImportModulePrefix1() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--limit-modules=java.base,jdk.compiler,jdk.javadoc,jdk.jartool");
+        performTest("Import", 823, "import module jd", "importModuleListFullJDKPrefix.pass", SOURCE_LEVEL);
+    }
+
+    public void testImportModulePrefix2() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--limit-modules=java.base,jdk.compiler,jdk.javadoc,jdk.jartool");
+        performTest("Import", 823, "import module jdk.", "importModuleListFullJDKPrefix.pass", SOURCE_LEVEL);
+    }
+
+    public void testImportModulePrefix3() throws Exception {
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.add("--limit-modules=java.base,jdk.compiler,jdk.javadoc,jdk.jartool");
+        performTest("Import", 823, "import module jdk.j", "importModuleListFullJDKJPrefix.pass", SOURCE_LEVEL);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        TestCompilerOptionsQueryImplementation.EXTRA_OPTIONS.clear();
+    }
+
     static {
         JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+    }
+
+    @ServiceProvider(service = CompilerOptionsQueryImplementation.class, position = 100)
+    public static class TestCompilerOptionsQueryImplementation implements CompilerOptionsQueryImplementation {
+
+        private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
+
+        @Override
+        public CompilerOptionsQueryImplementation.Result getOptions(FileObject file) {
+            return new CompilerOptionsQueryImplementation.Result() {
+                @Override
+                public List<? extends String> getArguments() {
+                    return EXTRA_OPTIONS;
+                }
+
+                @Override
+                public void addChangeListener(ChangeListener listener) {}
+
+                @Override
+                public void removeChangeListener(ChangeListener listener) {}
+            };
+        }
     }
 }

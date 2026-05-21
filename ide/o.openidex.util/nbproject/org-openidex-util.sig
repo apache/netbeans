@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.78
+#Version 3.79
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,13 +8,16 @@ CLSS public abstract interface java.lang.Cloneable
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -52,7 +55,7 @@ intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public abstract org.openide.ServiceType
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 fld public final static java.lang.String PROP_NAME = "name"
 innr public abstract static Registry
@@ -61,11 +64,11 @@ intf java.io.Serializable
 intf org.openide.util.HelpCtx$Provider
 meth protected final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected java.lang.String displayName()
 meth public abstract org.openide.util.HelpCtx getHelpCtx()
 meth public final org.openide.ServiceType createClone()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public final void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public java.lang.String getName()
@@ -75,10 +78,10 @@ hfds err,name,serialVersionUID,supp
 
 CLSS public final org.openide.util.HelpCtx
 cons public init(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 cons public init(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.util.HelpCtx DEFAULT_HELP
 innr public abstract interface static Displayer
 innr public abstract interface static Provider
@@ -164,16 +167,16 @@ hfds registry
 CLSS public final org.openidex.search.SearchHistory
 fld public final static java.lang.String ADD_TO_HISTORY = "add-to-history"
 fld public final static java.lang.String LAST_SELECTED = "last-selected"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.List<org.openidex.search.SearchPattern> getSearchPatterns()
 meth public org.openidex.search.SearchPattern getLastSelected()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static org.openidex.search.SearchHistory getDefault()
 meth public void add(org.openidex.search.SearchPattern)
 meth public void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public void setLastSelected(org.openidex.search.SearchPattern)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds INSTANCE,MAX_SEARCH_PATTERNS_ITEMS,PREFS_NODE,PROP_SEARCH_PATTERN_PREFIX,pcs,prefs,searchPatternsList
 
@@ -225,7 +228,7 @@ meth public java.lang.Object clone()
 meth public org.openide.nodes.Node[] getDetails(java.lang.Object)
 meth public org.openide.nodes.Node[] getDetails(org.openide.nodes.Node)
 meth public static java.util.Enumeration<? extends org.openidex.search.SearchType> enumerateSearchTypes()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr org.openide.ServiceType
 hfds searchTypeClasses,serialVersionUID,valid
 

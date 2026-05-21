@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.3
+#Version 2.4
 
 CLSS public final com.github.weisj.jsvg.SVGDocument
 supr java.lang.Object
@@ -1514,7 +1514,6 @@ meth public void setRect(double,double,double,double)
 meth public void setRect(float,float,float,float)
 meth public void setRect(java.awt.geom.Rectangle2D)
 supr java.awt.geom.Rectangle2D
-hfds serialVersionUID
 
 CLSS public abstract java.awt.geom.RectangularShape
 cons protected init()
@@ -1621,7 +1620,6 @@ meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()

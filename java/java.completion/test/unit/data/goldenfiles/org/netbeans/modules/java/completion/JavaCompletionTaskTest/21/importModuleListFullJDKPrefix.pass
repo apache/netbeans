@@ -1,0 +1,5 @@
+jdk.compiler
+jdk.internal.opt
+jdk.jartool
+jdk.javadoc
+jdk.zipfs

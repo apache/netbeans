@@ -540,7 +540,7 @@ public final class WebProject implements Project {
     private static final PropertyProvider UPDATE_PROPERTIES;
 
     static {
-        Map<String, String> defs = new HashMap<String, String>();
+        Map<String, String> defs = new HashMap<>(16);
 
         defs.put(ProjectProperties.ANNOTATION_PROCESSING_ENABLED, "true"); //NOI18N
         defs.put(ProjectProperties.ANNOTATION_PROCESSING_ENABLED_IN_EDITOR, "true"); //NOI18N
@@ -1520,6 +1520,7 @@ public final class WebProject implements Project {
         private boolean isEE5 = false;
         private boolean serverSupportsEJB31 = false;
         private boolean serverSupportsEJB40 = false;
+        private boolean serverSupportsEJB41 = false;
 
         @Override
         public String[] getRecommendedTypes() {
@@ -1529,7 +1530,7 @@ public final class WebProject implements Project {
             } else if (projectCap.isEjb31LiteSupported() || projectCap.isEjb40LiteSupported()) {
                 Set<String> set = new HashSet<>(Arrays.asList(TYPES));
                 if (projectCap.isEjb31Supported() || projectCap.isEjb40Supported() 
-                        || serverSupportsEJB31 || serverSupportsEJB40) {
+                        || serverSupportsEJB31 || serverSupportsEJB40 || serverSupportsEJB41) {
                     set.addAll(Arrays.asList(TYPES_EJB31));
                 }
 
@@ -1554,7 +1555,7 @@ public final class WebProject implements Project {
                 if (projectCap.isEjb31LiteSupported()) {
                     set.addAll(getPrivilegedTemplatesEE5());
                     if (projectCap.isEjb31Supported() || projectCap.isEjb40Supported() 
-                            || serverSupportsEJB31 || serverSupportsEJB40) {
+                            || serverSupportsEJB31 || serverSupportsEJB40 || serverSupportsEJB41) {
                         set.addAll(Arrays.asList(PRIVILEGED_NAMES_EE6_FULL));
                     }
 
@@ -1585,7 +1586,10 @@ public final class WebProject implements Project {
                 
                 for (Profile _profile : ProjectUtil.getSupportedProfiles(project)) {
                     if (_profile.isFullProfile()) {
-                        if (_profile.isAtLeast(Profile.JAKARTA_EE_9_FULL)) {
+                        if (_profile.isAtLeast(Profile.JAKARTA_EE_12_FULL)) {
+                            serverSupportsEJB41 = true;
+                            break;
+                        } else if (_profile.isAtLeast(Profile.JAKARTA_EE_9_FULL)) {
                             serverSupportsEJB40 = true;
                             break;
                         } else if (_profile.isAtLeast(Profile.JAVA_EE_6_FULL)) {
@@ -1995,24 +1999,11 @@ public final class WebProject implements Project {
                     }
                     FileObject destFile = ensureDestinationFileExists(webBuildBase, path, fo.isFolder());
                     if (!fo.isFolder()) {
-                        InputStream is = null;
-                        OutputStream os = null;
-                        FileLock fl = null;
-                        try {
-                            is = fo.getInputStream();
-                            fl = destFile.lock();
-                            os = destFile.getOutputStream(fl);
+                        try (InputStream is = fo.getInputStream();
+                                FileLock fl = destFile.lock();
+                                OutputStream os = destFile.getOutputStream(fl)) {
                             FileUtil.copy(is, os);
                         } finally {
-                            if (is != null) {
-                                is.close();
-                            }
-                            if (os != null) {
-                                os.close();
-                            }
-                            if (fl != null) {
-                                fl.releaseLock();
-                            }
                             File file = FileUtil.toFile(destFile);
                             if (file != null) {
                                 fireArtifactChange(Collections.singleton(ArtifactListener.Artifact.forFile(file)));
@@ -2150,9 +2141,7 @@ public final class WebProject implements Project {
 
         private boolean containsTLD(File f) {
             if (f.exists() && f.isFile() && f.canRead()) {
-                ZipFile zip = null;
-                try {
-                    zip = new ZipFile(f);
+                try (ZipFile zip = new ZipFile(f)) {
                     for (Enumeration entries = zip.entries(); entries.hasMoreElements();) {
                         String zipEntryName = ((ZipEntry) entries.nextElement()).getName();
                         if (TLD_PATTERN.matcher(zipEntryName).matches()) {
@@ -2162,14 +2151,6 @@ public final class WebProject implements Project {
                     return false;
                 } catch (IOException ex) {
                     LOGGER.log(Level.INFO, null, ex);
-                } finally {
-                    if (zip != null) {
-                        try {
-                            zip.close();
-                        } catch (IOException ex) {
-                            LOGGER.log(Level.INFO, null, ex);
-                        }
-                    }
                 }
             }
 
@@ -2437,15 +2418,9 @@ public final class WebProject implements Project {
         private void updateLookup(){
             List<Lookup> lookups = new ArrayList<>();
             lookups.add(base);
+            // profile will be null at the beginning
             Profile profile = Profile.fromPropertiesString(project.evaluator().getProperty(WebProjectProperties.J2EE_PLATFORM));
-            if (Profile.JAVA_EE_6_FULL.equals(profile) || Profile.JAVA_EE_6_WEB.equals(profile)
-                    || Profile.JAVA_EE_7_FULL.equals(profile) || Profile.JAVA_EE_7_WEB.equals(profile)
-                    || Profile.JAVA_EE_8_FULL.equals(profile) || Profile.JAVA_EE_8_WEB.equals(profile)
-                    || Profile.JAKARTA_EE_8_FULL.equals(profile) || Profile.JAKARTA_EE_8_WEB.equals(profile)
-                    || Profile.JAKARTA_EE_9_FULL.equals(profile) || Profile.JAKARTA_EE_9_WEB.equals(profile)
-                    || Profile.JAKARTA_EE_9_1_FULL.equals(profile) || Profile.JAKARTA_EE_9_1_WEB.equals(profile)
-                    || Profile.JAKARTA_EE_10_FULL.equals(profile) || Profile.JAKARTA_EE_10_WEB.equals(profile)
-                    || Profile.JAKARTA_EE_11_FULL.equals(profile) || Profile.JAKARTA_EE_11_WEB.equals(profile)) {
+            if (null != profile && profile.isAtLeast(Profile.JAVA_EE_6_WEB)) {
                 lookups.add(ee6);
             }
             if ("true".equals(project.evaluator().getProperty(WebProjectProperties.DISPLAY_BROWSER))) {

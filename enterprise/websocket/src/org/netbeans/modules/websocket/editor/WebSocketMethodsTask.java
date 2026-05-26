@@ -150,7 +150,7 @@ public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
     }
 
     private Map<String, String> suggestWebSocketMethod() {
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> result = new HashMap<>(8);
         result.put("javax.websocket.OnMessage", "onMessage"); // NOI18N
         result.put("javax.websocket.OnOpen", "onOpen"); // NOI18N
         result.put("javax.websocket.OnClose", "onClose"); // NOI18N
@@ -217,7 +217,7 @@ public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
             }
         }
 
-        List<Integer> result = new ArrayList<Integer>(2);
+        List<Integer> result = new ArrayList<>(4);
         result.add(startOffset);
         result.add(endOffset);
         return result;
@@ -274,7 +274,9 @@ public class WebSocketMethodsTask implements CancellableTask<CompilationInfo> {
         }
 
         private boolean isEndpoint(TypeElement clazz) {
-            return hasAnnotation(clazz, "javax.websocket.server.ServerEndpoint"); // NOI18N
+            final String javaxAnnotation = "javax.websocket.server.ServerEndpoint"; // NOI18N
+            final String jakartaAnnotation = "jakarta.websocket.server.ServerEndpoint"; // NOI18N
+            return hasAnnotation(clazz, javaxAnnotation, jakartaAnnotation);
         }
 
         Collection<ErrorDescription> getDescriptions() {

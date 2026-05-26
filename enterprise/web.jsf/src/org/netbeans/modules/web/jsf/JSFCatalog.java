@@ -20,6 +20,7 @@
 
 package org.netbeans.modules.web.jsf;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -28,6 +29,8 @@ import org.netbeans.modules.xml.catalog.spi.*;
 import org.openide.util.NbBundle;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -40,18 +43,20 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
 
     private static final String URL_JSF_1_0 ="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_1_0.dtd"; // NOI18N
     private static final String URL_JSF_1_1 ="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_1_1.dtd"; // NOI18N
-    private static final String URL_JSF_1_2="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_1_2.xsd"; // NOI18N
-    private static final String URL_JSF_2_0="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_0.xsd"; // NOI18N
-    private static final String URL_JSF_2_1="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_1.xsd"; // NOI18N
-    private static final String URL_JSF_2_2="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_2.xsd"; // NOI18N
-    private static final String URL_JSF_2_3="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_3.xsd"; // NOI18N
-    private static final String URL_JSF_3_0="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_3_0.xsd"; // NOI18N
-    private static final String URL_JSF_4_0="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_4_0.xsd"; // NOI18N
-    private static final String URL_JSF_4_1="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_4_1.xsd"; // NOI18N
+    private static final String URL_JSF_1_2 ="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_1_2.xsd"; // NOI18N
+    private static final String URL_JSF_2_0 ="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_0.xsd"; // NOI18N
+    private static final String URL_JSF_2_1 ="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_1.xsd"; // NOI18N
+    private static final String URL_JSF_2_2 ="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_2.xsd"; // NOI18N
+    private static final String URL_JSF_2_3 ="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_2_3.xsd"; // NOI18N
+    private static final String URL_JSF_3_0 ="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_3_0.xsd"; // NOI18N
+    private static final String URL_JSF_4_0 ="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_4_0.xsd"; // NOI18N
+    private static final String URL_JSF_4_1 ="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_4_1.xsd"; // NOI18N
+    private static final String URL_JSF_5_0 ="nbres:/org/netbeans/modules/web/jsf/resources/web-facesconfig_5_0.xsd"; // NOI18N
 
     public static final String JAVAEE_NS = "http://java.sun.com/xml/ns/javaee";  // NOI18N
     public static final String NEW_JAVAEE_NS = "http://xmlns.jcp.org/xml/ns/javaee"; //NOI18N
     public static final String JAKARTAEE_NS = "https://jakarta.ee/xml/ns/jakartaee"; //NOI18N
+    
     private static final String JSF_1_2_XSD="web-facesconfig_1_2.xsd"; // NOI18N
     private static final String JSF_2_0_XSD="web-facesconfig_2_0.xsd"; // NOI18N
     private static final String JSF_2_1_XSD="web-facesconfig_2_1.xsd"; // NOI18N
@@ -60,14 +65,18 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     private static final String JSF_3_0_XSD="web-facesconfig_3_0.xsd"; // NOI18N
     private static final String JSF_4_0_XSD="web-facesconfig_4_0.xsd"; // NOI18N
     private static final String JSF_4_1_XSD="web-facesconfig_4_1.xsd"; // NOI18N
-    private static final String JSF_1_2=JAVAEE_NS+"/"+JSF_1_2_XSD; // NOI18N
-    private static final String JSF_2_0=JAVAEE_NS+"/"+JSF_2_0_XSD; // NOI18N
-    private static final String JSF_2_1=JAVAEE_NS+"/"+JSF_2_1_XSD; // NOI18N
-    private static final String JSF_2_2=NEW_JAVAEE_NS+"/"+JSF_2_2_XSD; // NOI18N
-    private static final String JSF_2_3=NEW_JAVAEE_NS+"/"+JSF_2_3_XSD; // NOI18N
-    private static final String JSF_3_0=JAKARTAEE_NS+"/"+JSF_3_0_XSD; // NOI18N
-    private static final String JSF_4_0=JAKARTAEE_NS+"/"+JSF_4_0_XSD; // NOI18N
-    private static final String JSF_4_1=JAKARTAEE_NS+"/"+JSF_4_1_XSD; // NOI18N
+    private static final String JSF_5_0_XSD="web-facesconfig_5_0.xsd"; // NOI18N
+    
+    public static final String JSF_1_2=JAVAEE_NS+"/"+JSF_1_2_XSD; // NOI18N
+    public static final String JSF_2_0=JAVAEE_NS+"/"+JSF_2_0_XSD; // NOI18N
+    public static final String JSF_2_1=JAVAEE_NS+"/"+JSF_2_1_XSD; // NOI18N
+    public static final String JSF_2_2=NEW_JAVAEE_NS+"/"+JSF_2_2_XSD; // NOI18N
+    public static final String JSF_2_3=NEW_JAVAEE_NS+"/"+JSF_2_3_XSD; // NOI18N
+    public static final String JSF_3_0=JAKARTAEE_NS+"/"+JSF_3_0_XSD; // NOI18N
+    public static final String JSF_4_0=JAKARTAEE_NS+"/"+JSF_4_0_XSD; // NOI18N
+    public static final String JSF_4_1=JAKARTAEE_NS+"/"+JSF_4_1_XSD; // NOI18N
+    public static final String JSF_5_0=JAKARTAEE_NS+"/"+JSF_5_0_XSD; // NOI18N
+    
     public static final String JSF_ID_1_2="SCHEMA:"+JSF_1_2; // NOI18N
     public static final String JSF_ID_2_0="SCHEMA:"+JSF_2_0; // NOI18N
     public static final String JSF_ID_2_1="SCHEMA:"+JSF_2_1; // NOI18N
@@ -76,6 +85,7 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     public static final String JSF_ID_3_0="SCHEMA:"+JSF_3_0; // NOI18N
     public static final String JSF_ID_4_0="SCHEMA:"+JSF_4_0; // NOI18N
     public static final String JSF_ID_4_1="SCHEMA:"+JSF_4_1; // NOI18N
+    public static final String JSF_ID_5_0="SCHEMA:"+JSF_5_0; // NOI18N
 
 
     // faces-config resources
@@ -88,8 +98,10 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     public static final String RES_FACES_CONFIG_3_0 = "faces-config_3_0.xml";
     public static final String RES_FACES_CONFIG_4_0 = "faces-config_4_0.xml";
     public static final String RES_FACES_CONFIG_4_1 = "faces-config_4_1.xml";
+    public static final String RES_FACES_CONFIG_5_0 = "faces-config_5_0.xml";
 
     //facelets
+    private static final String FILE_FACELETS_TAGLIB_SCHEMA_50="web-facelettaglibrary_5_0.xsd"; //NOI18N
     private static final String FILE_FACELETS_TAGLIB_SCHEMA_41="web-facelettaglibrary_4_1.xsd"; //NOI18N
     private static final String FILE_FACELETS_TAGLIB_SCHEMA_40="web-facelettaglibrary_4_0.xsd"; //NOI18N
     private static final String FILE_FACELETS_TAGLIB_SCHEMA_30="web-facelettaglibrary_3_0.xsd"; //NOI18N
@@ -98,6 +110,8 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     private static final String FILE_FACELETS_TAGLIB_SCHEMA_20="web-facelettaglibrary_2_0.xsd"; //NOI18N
     private static final String FILE_FACELETS_TAGLIB_DTD_10="facelet-taglib_1_0.dtd"; //NOI18N
 
+    private static final String URL_FACELETS_TAGLIB_SCHEMA_50 = JAKARTAEE_NS + "/" + FILE_FACELETS_TAGLIB_SCHEMA_50; // NOI18N
+    private static final String ID_FACELETS_TAGLIB_SCHEMA_50 ="SCHEMA:" + URL_FACELETS_TAGLIB_SCHEMA_50;
     private static final String URL_FACELETS_TAGLIB_SCHEMA_41 = JAKARTAEE_NS + "/" + FILE_FACELETS_TAGLIB_SCHEMA_41; // NOI18N
     private static final String ID_FACELETS_TAGLIB_SCHEMA_41 ="SCHEMA:" + URL_FACELETS_TAGLIB_SCHEMA_41;
     private static final String URL_FACELETS_TAGLIB_SCHEMA_40 = JAKARTAEE_NS + "/" + FILE_FACELETS_TAGLIB_SCHEMA_40; // NOI18N
@@ -112,6 +126,7 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     private static final String ID_FACELETS_TAGLIB_SCHEMA_20 ="SCHEMA:" + URL_FACELETS_TAGLIB_SCHEMA_20;
     private static final String ID_FACELETS_TAGLIB_DTD_10 = "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"; //NOI18N
 
+    private static final String RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_50 ="nbres:/org/netbeans/modules/web/jsf/resources/" + FILE_FACELETS_TAGLIB_SCHEMA_50; // NOI18N
     private static final String RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_41 ="nbres:/org/netbeans/modules/web/jsf/resources/" + FILE_FACELETS_TAGLIB_SCHEMA_41; // NOI18N
     private static final String RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_40 ="nbres:/org/netbeans/modules/web/jsf/resources/" + FILE_FACELETS_TAGLIB_SCHEMA_40; // NOI18N
     private static final String RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_30 ="nbres:/org/netbeans/modules/web/jsf/resources/" + FILE_FACELETS_TAGLIB_SCHEMA_30; // NOI18N
@@ -140,6 +155,7 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
         list.add(JSF_ID_3_0);
         list.add(JSF_ID_4_0);
         list.add(JSF_ID_4_1);
+        list.add(JSF_ID_5_0);
         list.add(ID_FACELETS_TAGLIB_DTD_10);
         list.add(ID_FACELETS_TAGLIB_SCHEMA_20);
         list.add(ID_FACELETS_TAGLIB_SCHEMA_22);
@@ -147,6 +163,7 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
         list.add(ID_FACELETS_TAGLIB_SCHEMA_30);
         list.add(ID_FACELETS_TAGLIB_SCHEMA_40);
         list.add(ID_FACELETS_TAGLIB_SCHEMA_41);
+        list.add(ID_FACELETS_TAGLIB_SCHEMA_50);
         return list.listIterator();
     }
 
@@ -179,6 +196,8 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
                 return URL_JSF_4_0;
             case JSF_ID_4_1:
                 return URL_JSF_4_1;
+            case JSF_ID_5_0:
+                return URL_JSF_5_0;
             case ID_FACELETS_TAGLIB_DTD_10:
                 return RESOURCE_URL_FACELETS_TAGLIB_DTD_10;
             case ID_FACELETS_TAGLIB_SCHEMA_20:
@@ -193,6 +212,8 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
                 return RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_40;
             case ID_FACELETS_TAGLIB_SCHEMA_41:
                 return RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_41;
+            case ID_FACELETS_TAGLIB_SCHEMA_50:
+                return RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_50;
             default:
                 return null;
         }
@@ -250,77 +271,90 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     }
 
    /**
-     * Resolves schema definition file for taglib descriptor (spec.1_1, 1_2, 2_0, 2_1, 2_2, 2_3, 3_0, 4_0, 4_1)
+     * Resolves schema definition file for taglib descriptor (spec.1_1, 1_2, 2_0, 2_1, 2_2, 2_3, 3_0, 4_0, 4_1, 5_0)
      * @param publicId publicId for resolved entity (null in our case)
      * @param systemId systemId for resolved entity
-     * @return InputSource for publisId,
+     * @return InputSource for publicId,
      */
-    public org.xml.sax.InputSource resolveEntity(String publicId, String systemId) throws org.xml.sax.SAXException, java.io.IOException {
-       if (JSF_ID_1_0.equals(publicId)) {
-            return new org.xml.sax.InputSource(URL_JSF_1_0);
-        } else if (JSF_ID_1_1.equals(publicId)) {
-            return new org.xml.sax.InputSource(URL_JSF_1_1);
-        } else if(ID_FACELETS_TAGLIB_DTD_10.equals(publicId)) {
-            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_DTD_10);
-        } else if (JSF_1_2.equals(systemId)) {
-            return new org.xml.sax.InputSource(URL_JSF_1_2);
-        } else if (JSF_2_0.equals(systemId)) {
-            return new org.xml.sax.InputSource(URL_JSF_2_0);
-        } else if (JSF_2_1.equals(systemId)) {
-            return new org.xml.sax.InputSource(URL_JSF_2_1);
-        } else if (JSF_2_2.equals(systemId)) {
-            return new org.xml.sax.InputSource(URL_JSF_2_2);
-        } else if (JSF_2_3.equals(systemId)) {
-            return new org.xml.sax.InputSource(URL_JSF_2_3);
-        } else if (JSF_3_0.equals(systemId)) {
-            return new org.xml.sax.InputSource(URL_JSF_3_0);
-        } else if (JSF_4_0.equals(systemId)) {
-            return new org.xml.sax.InputSource(URL_JSF_4_0);
-        } else if (JSF_4_1.equals(systemId)) {
-            return new org.xml.sax.InputSource(URL_JSF_4_1);
-        } else if (URL_FACELETS_TAGLIB_SCHEMA_20.equals(systemId)) {
-            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_20);
-        } else if (URL_FACELETS_TAGLIB_SCHEMA_22.equals(systemId)) {
-            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_22);
-        } else if (URL_FACELETS_TAGLIB_SCHEMA_23.equals(systemId)) {
-            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_23);
-        } else if (URL_FACELETS_TAGLIB_SCHEMA_30.equals(systemId)) {
-            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_30);
-        } else if (URL_FACELETS_TAGLIB_SCHEMA_40.equals(systemId)) {
-            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_40);
-        } else if (URL_FACELETS_TAGLIB_SCHEMA_41.equals(systemId)) {
-            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_41);
-        } else if (systemId!=null && systemId.endsWith(JSF_1_2_XSD)) {
-            return new org.xml.sax.InputSource(URL_JSF_1_2);
-        } else if (systemId!=null && systemId.endsWith(JSF_2_0_XSD)) {
-            return new org.xml.sax.InputSource(URL_JSF_2_0);
-        } else if (systemId!=null && systemId.endsWith(JSF_2_1_XSD)) {
-            return new org.xml.sax.InputSource(URL_JSF_2_1);
-        } else if (systemId!=null && systemId.endsWith(JSF_2_2_XSD)) {
-            return new org.xml.sax.InputSource(URL_JSF_2_2);
-        } else if (systemId!=null && systemId.endsWith(JSF_2_3_XSD)) {
-            return new org.xml.sax.InputSource(URL_JSF_2_3);
-        } else if (systemId!=null && systemId.endsWith(JSF_3_0_XSD)) {
-            return new org.xml.sax.InputSource(URL_JSF_3_0);
-        } else if (systemId!=null && systemId.endsWith(JSF_4_0_XSD)) {
-            return new org.xml.sax.InputSource(URL_JSF_4_0);
-        } else if (systemId!=null && systemId.endsWith(JSF_4_1_XSD)) {
-            return new org.xml.sax.InputSource(URL_JSF_4_1);
-        } else if (systemId!=null && systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_20)) {
-            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_20);
-        } else if (systemId!=null && systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_22)) {
-            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_22);
-        } else if (systemId!=null && systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_23)) {
-            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_23);
-        } else if (systemId!=null && systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_30)) {
-            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_30);
-        } else if (systemId!=null && systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_40)) {
-            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_40);
-        } else if (systemId!=null && systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_41)) {
-            return new org.xml.sax.InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_41);
-        } else {
-            return null;
+    @Override
+    public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+        
+        InputSource schema = null;
+        
+        // Match by publicId
+        if (null != publicId) {
+            switch (publicId) {
+                case JSF_ID_1_0 -> schema = new InputSource(URL_JSF_1_0);
+                case JSF_ID_1_1 -> schema = new InputSource(URL_JSF_1_1);
+                case ID_FACELETS_TAGLIB_DTD_10 -> schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_DTD_10);
+                default -> {}
+            }
         }
+        
+        if (null != schema || null == systemId) {
+            return schema;
+        }
+        
+        // Match by systemId
+        switch (systemId) {
+            case JSF_1_2 -> schema = new InputSource(URL_JSF_1_2);
+            case JSF_2_0 -> schema = new InputSource(URL_JSF_2_0);
+            case JSF_2_1 -> schema = new InputSource(URL_JSF_2_1);
+            case JSF_2_2 -> schema = new InputSource(URL_JSF_2_2);
+            case JSF_2_3 -> schema = new InputSource(URL_JSF_2_3);
+            case JSF_3_0 -> schema = new InputSource(URL_JSF_3_0);
+            case JSF_4_0 -> schema = new InputSource(URL_JSF_4_0);
+            case JSF_4_1 -> schema = new InputSource(URL_JSF_4_1);
+            case JSF_5_0 -> schema = new InputSource(URL_JSF_5_0);
+            case URL_FACELETS_TAGLIB_SCHEMA_20 -> schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_20);
+            case URL_FACELETS_TAGLIB_SCHEMA_22 -> schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_22);
+            case URL_FACELETS_TAGLIB_SCHEMA_23 -> schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_23);
+            case URL_FACELETS_TAGLIB_SCHEMA_30 -> schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_30);
+            case URL_FACELETS_TAGLIB_SCHEMA_40 -> schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_40);
+            case URL_FACELETS_TAGLIB_SCHEMA_41 -> schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_41);
+            case URL_FACELETS_TAGLIB_SCHEMA_50 -> schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_50);
+            default -> {}
+        }
+        
+        if (null != schema) {
+            return schema;
+        }
+        
+        if (systemId.endsWith(JSF_1_2_XSD)) {
+            schema = new InputSource(URL_JSF_1_2);
+        } else if (systemId.endsWith(JSF_2_0_XSD)) {
+            schema = new InputSource(URL_JSF_2_0);
+        } else if (systemId.endsWith(JSF_2_1_XSD)) {
+            schema = new InputSource(URL_JSF_2_1);
+        } else if (systemId.endsWith(JSF_2_2_XSD)) {
+            schema = new InputSource(URL_JSF_2_2);
+        } else if (systemId.endsWith(JSF_2_3_XSD)) {
+            schema = new InputSource(URL_JSF_2_3);
+        } else if (systemId.endsWith(JSF_3_0_XSD)) {
+            schema = new InputSource(URL_JSF_3_0);
+        } else if (systemId.endsWith(JSF_4_0_XSD)) {
+            schema = new InputSource(URL_JSF_4_0);
+        } else if (systemId.endsWith(JSF_4_1_XSD)) {
+            schema = new InputSource(URL_JSF_4_1);
+        } else if (systemId.endsWith(JSF_5_0_XSD)) {
+            schema = new InputSource(URL_JSF_5_0);
+        } else if (systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_20)) {
+            schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_20);
+        } else if (systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_22)) {
+            schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_22);
+        } else if (systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_23)) {
+            schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_23);
+        } else if (systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_30)) {
+            schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_30);
+        } else if (systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_40)) {
+            schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_40);
+        } else if (systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_41)) {
+            schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_41);
+        } else if (systemId.endsWith(FILE_FACELETS_TAGLIB_SCHEMA_50)) {
+            schema = new InputSource(RESOURCE_URL_FACELETS_TAGLIB_SCHEMA_50);
+        }
+        
+        return schema;
     }
 
     /**
@@ -341,42 +375,23 @@ public class JSFCatalog implements CatalogReader, CatalogDescriptor2, org.xml.sa
     public static JsfVersion extractVersion(Document document) {
         // first check the doc type to see if there is one
         DocumentType dt = document.getDoctype();
-        JsfVersion value = JsfVersion.JSF_1_0;
         // This is the default version
+        JsfVersion value = JsfVersion.JSF_2_3;
         if (dt != null) {
             switch (dt.getPublicId()) {
-                case JSF_ID_1_0:
-                    value = JsfVersion.JSF_1_0;
-                    break;
-                case JSF_ID_1_1:
-                    value = JsfVersion.JSF_1_1;
-                    break;
-                case JSF_ID_1_2:
-                    value = JsfVersion.JSF_1_2;
-                    break;
-                case JSF_ID_2_0:
-                    value = JsfVersion.JSF_2_0;
-                    break;
-                case JSF_ID_2_1:
-                    value = JsfVersion.JSF_2_1;
-                    break;
-                case JSF_ID_2_2:
-                    value = JsfVersion.JSF_2_2;
-                    break;
-                case JSF_ID_2_3:
-                    value = JsfVersion.JSF_2_3;
-                    break;
-                case JSF_ID_3_0:
-                    value = JsfVersion.JSF_3_0;
-                    break;
-                case JSF_ID_4_0:
-                    value = JsfVersion.JSF_4_0;
-                    break;
-                case JSF_ID_4_1:
-                    value = JsfVersion.JSF_4_1;
-                    break;
-                default:
-                    break;
+                case JSF_ID_1_0 -> value = JsfVersion.JSF_1_0;
+                case JSF_ID_1_1 -> value = JsfVersion.JSF_1_1;
+                case JSF_ID_1_2 -> value = JsfVersion.JSF_1_2;
+                case JSF_ID_2_0 -> value = JsfVersion.JSF_2_0;
+                case JSF_ID_2_1 -> value = JsfVersion.JSF_2_1;
+                case JSF_ID_2_2 -> value = JsfVersion.JSF_2_2;
+                case JSF_ID_2_3 -> value = JsfVersion.JSF_2_3;
+                case JSF_ID_3_0 -> value = JsfVersion.JSF_3_0;
+                case JSF_ID_4_0 -> value = JsfVersion.JSF_4_0;
+                case JSF_ID_4_1 -> value = JsfVersion.JSF_4_1;
+                case JSF_ID_5_0 -> value = JsfVersion.JSF_5_0;
+                default -> {
+                }
             }
         }
         return value;

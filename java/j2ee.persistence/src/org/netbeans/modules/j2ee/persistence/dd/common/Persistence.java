@@ -27,8 +27,12 @@ import java.beans.PropertyChangeListener;
  */
 public interface Persistence {
 	static public final String VERSION = "Version";	// NOI18N
-	static public final String PERSISTENCE_UNIT = "PersistenceUnit";	// NOI18N
+	static public final String PERSISTENCE_UNIT = "PersistenceUnit"; // NOI18N
         
+        /**
+         * Jakarta EE 12 - JPA 4.0 (Schema v4.0)
+         */
+        public static final String VERSION_4_0="4.0"; //NOI18N
         /**
          * Jakarta EE 11 - JPA 3.2 (Schema v3.2)
          */

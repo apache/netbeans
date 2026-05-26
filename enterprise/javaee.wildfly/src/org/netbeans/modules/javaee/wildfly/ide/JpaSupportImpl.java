@@ -38,25 +38,28 @@ class JpaSupportImpl implements JpaSupportImplementation {
     @Override
     public JpaProvider getDefaultProvider() {
         String defaultProvider = platformImpl.getDefaultJpaProvider();
-        return JpaProviderFactory.createJpaProvider(defaultProvider, true, true, true, true, true, true, true, true);
+        final boolean isDefault = true;
+        final boolean isJpa10 = true, isJpa20 = true, isJpa21 = true, isJpa22 = true;
+        final boolean isJpa30 = true, isJpa31 = true, isJpa32 = true, isJpa40 = true;
+        return JpaProviderFactory.createJpaProvider(defaultProvider, isDefault, 
+                isJpa10, isJpa20, isJpa21, isJpa22, isJpa30, isJpa31, isJpa32, isJpa40);
     }
 
     @Override
     public Set<JpaProvider> getProviders() {
         String defaultProvider = platformImpl.getDefaultJpaProvider();
-        boolean jpa2 = true;
-        Set<JpaProvider> providers = new HashSet<JpaProvider>();
+        Set<JpaProvider> providers = new HashSet<>();
         if (platformImpl.containsPersistenceProvider(WildflyJ2eePlatformFactory.HIBERNATE_JPA_PROVIDER)) {
             providers.add(JpaProviderFactory.createJpaProvider(WildflyJ2eePlatformFactory.HIBERNATE_JPA_PROVIDER, 
-                    WildflyJ2eePlatformFactory.HIBERNATE_JPA_PROVIDER.equals(defaultProvider), true, jpa2, true, true, true, true, true));
+                    WildflyJ2eePlatformFactory.HIBERNATE_JPA_PROVIDER.equals(defaultProvider), true, true, true, true, true, true, true, true));
         }
         if (platformImpl.containsPersistenceProvider(WildflyJ2eePlatformFactory.TOPLINK_JPA_PROVIDER)) {
             providers.add(JpaProviderFactory.createJpaProvider(WildflyJ2eePlatformFactory.TOPLINK_JPA_PROVIDER, 
-                    WildflyJ2eePlatformFactory.TOPLINK_JPA_PROVIDER.equals(defaultProvider), true, false, false, false, false, false, false));
+                    WildflyJ2eePlatformFactory.TOPLINK_JPA_PROVIDER.equals(defaultProvider), true, false, false, false, false, false, false, false));
         }
         if (platformImpl.containsPersistenceProvider(WildflyJ2eePlatformFactory.KODO_JPA_PROVIDER)) {
             providers.add(JpaProviderFactory.createJpaProvider(WildflyJ2eePlatformFactory.KODO_JPA_PROVIDER, 
-                    WildflyJ2eePlatformFactory.KODO_JPA_PROVIDER.equals(defaultProvider), true, false, false, false, false, false, false));
+                    WildflyJ2eePlatformFactory.KODO_JPA_PROVIDER.equals(defaultProvider), true, false, false, false, false, false, false, false));
         }
         return providers;
     }

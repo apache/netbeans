@@ -92,7 +92,13 @@ public enum Profile {
     JAKARTA_EE_11_WEB("11", "web"),
     
     @Messages("JAKARTA_EE_11_FULL.displayName=Jakarta EE 11")
-    JAKARTA_EE_11_FULL("11");
+    JAKARTA_EE_11_FULL("11"),
+    
+    @Messages("JAKARTA_EE_12_WEB.displayName=Jakarta EE 12 Web")
+    JAKARTA_EE_12_WEB("12", "web"),
+    
+    @Messages("JAKARTA_EE_12_FULL.displayName=Jakarta EE 12")
+    JAKARTA_EE_12_FULL("12");
     // !!! ATTENTION: BE AWARE OF THE ENUM ORDER! It controls compatibility and UI position.
 
     public static final Comparator<Profile> UI_COMPARATOR = (Profile o1, Profile o2) -> -(o1.ordinal() - o2.ordinal());

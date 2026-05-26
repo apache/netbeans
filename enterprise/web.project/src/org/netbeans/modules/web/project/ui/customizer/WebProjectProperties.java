@@ -377,6 +377,9 @@ public final class WebProjectProperties {
         Profile profile = Profile.fromPropertiesString(evaluator.getProperty(J2EE_PLATFORM));
         if (profile != null) {
             switch (profile) {
+                case JAKARTA_EE_12_FULL:
+                    minimalSourceLevel = new SpecificationVersion("21");
+                    break;
                 case JAKARTA_EE_11_FULL:
                     minimalSourceLevel = new SpecificationVersion("17");
                     break;

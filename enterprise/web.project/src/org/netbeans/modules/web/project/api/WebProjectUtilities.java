@@ -213,13 +213,11 @@ public class WebProjectUtilities {
         if(confFolderFO != null) {
             String manifestText = readResource(WebProjectUtilities.class.getResourceAsStream(RESOURCE_FOLDER + "MANIFEST.MF")); //NOI18N
             FileObject manifest = FileUtil.createData(confFolderFO, "MANIFEST.MF"); //NOI18N
-            FileLock lock = manifest.lock();
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(manifest.getOutputStream(lock), FileEncodingQuery.getEncoding(manifest)));
-            try {
+            Charset charset = FileEncodingQuery.getEncoding(manifest);
+            try (FileLock lock = manifest.lock();
+                    OutputStreamWriter osw = new OutputStreamWriter(manifest.getOutputStream(lock), charset);
+                    BufferedWriter bw = new BufferedWriter(osw)) {
                 bw.write(manifestText);
-            } finally {
-                bw.close();
-                lock.releaseLock();
             }
         }
         
@@ -894,18 +892,15 @@ public class WebProjectUtilities {
         // read the config from resource first
         StringBuilder sb = new StringBuilder();
         String lineSep = System.getProperty("line.separator"); // NOI18N
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-        try {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             String line = br.readLine();
             while (line != null) {
                 sb.append(line);
                 sb.append(lineSep);
                 line = br.readLine();
             }
-        } finally {
-            br.close();
         }
-
+        
         return sb.toString();
     }
 

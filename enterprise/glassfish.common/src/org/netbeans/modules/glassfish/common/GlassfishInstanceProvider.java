@@ -70,6 +70,7 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
     public static final String JAKARTAEE91_DEPLOYER_FRAGMENT = "deployer:gfv610ee9";
     public static final String JAKARTAEE10_DEPLOYER_FRAGMENT = "deployer:gfv700ee10";
     public static final String JAKARTAEE11_DEPLOYER_FRAGMENT = "deployer:gfv800ee11";
+    public static final String JAKARTAEE12_DEPLOYER_FRAGMENT = "deployer:gfv900ee12";
     public static final String EE6WC_DEPLOYER_FRAGMENT = "deployer:gfv3ee6wc"; // NOI18N
     public static final String PRELUDE_DEPLOYER_FRAGMENT = "deployer:gfv3"; // NOI18N
     private static String EE6_INSTANCES_PATH = "/GlassFishEE6/Instances"; // NOI18N
@@ -80,6 +81,7 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
     private static String JAKARTAEE91_INSTANCES_PATH = "/GlassFishJakartaEE91/Instances"; // NOI18N
     private static String JAKARTAEE10_INSTANCES_PATH = "/GlassFishJakartaEE10/Instances"; // NOI18N
     private static String JAKARTAEE11_INSTANCES_PATH = "/GlassFishJakartaEE11/Instances"; // NOI18N
+    private static String JAKARTAEE12_INSTANCES_PATH = "/GlassFishJakartaEE12/Instances"; // NOI18N
     private static String EE6WC_INSTANCES_PATH = "/GlassFishEE6WC/Instances"; // NOI18N
 
     public static String PRELUDE_DEFAULT_NAME = "GlassFish_v3_Prelude"; //NOI18N
@@ -105,12 +107,12 @@ public final class GlassfishInstanceProvider implements ServerInstanceProvider, 
                                     EE7_DEPLOYER_FRAGMENT, EE8_DEPLOYER_FRAGMENT, 
                                     JAKARTAEE8_DEPLOYER_FRAGMENT, JAKARTAEE9_DEPLOYER_FRAGMENT,
                                     JAKARTAEE91_DEPLOYER_FRAGMENT, JAKARTAEE10_DEPLOYER_FRAGMENT,
-                                    JAKARTAEE11_DEPLOYER_FRAGMENT},
+                                    JAKARTAEE11_DEPLOYER_FRAGMENT, JAKARTAEE12_DEPLOYER_FRAGMENT},
                             new String[]{EE6_INSTANCES_PATH, EE6WC_INSTANCES_PATH, 
                                     EE7_INSTANCES_PATH, EE8_INSTANCES_PATH, 
                                     JAKARTAEE8_INSTANCES_PATH, JAKARTAEE9_INSTANCES_PATH,
                                     JAKARTAEE91_INSTANCES_PATH, JAKARTAEE10_INSTANCES_PATH,
-                                    JAKARTAEE11_INSTANCES_PATH},
+                                    JAKARTAEE11_INSTANCES_PATH, JAKARTAEE12_INSTANCES_PATH},
                             null,
                             true,
                             new String[]{"--nopassword"}, // NOI18N

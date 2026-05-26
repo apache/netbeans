@@ -88,6 +88,13 @@ public final class AppClientVersion extends J2EEBaseVersion {
         "11.0", 11000,	// NOI18N
         "11.0", 11000	// NOI18N
         );
+    
+    /** Represents application-client version 12.0
+     */
+    public static final AppClientVersion APP_CLIENT_12_0 = new AppClientVersion(
+        "12.0", 12000,	// NOI18N
+        "12.0", 12000	// NOI18N
+        );
 
     /** Creates a new instance of AppClientVersion 
      */
@@ -102,6 +109,7 @@ public final class AppClientVersion extends J2EEBaseVersion {
      *     than the version passed in as an argument.
      *  @throws ClassCastException if obj is not a AppClientVersion object.
      */
+    @Override
     public int compareTo(Object obj) {
         AppClientVersion target = (AppClientVersion) obj;
         return numericCompare(target);
@@ -128,6 +136,8 @@ public final class AppClientVersion extends J2EEBaseVersion {
             result = APP_CLIENT_10_0;
         } else if(APP_CLIENT_11_0.toString().equals(version)) {
             result = APP_CLIENT_11_0;
+        } else if(APP_CLIENT_12_0.toString().equals(version)) {
+            result = APP_CLIENT_12_0;
         }
 
         return result;

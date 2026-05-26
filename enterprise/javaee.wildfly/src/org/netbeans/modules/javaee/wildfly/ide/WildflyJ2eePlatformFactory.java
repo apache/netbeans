@@ -112,13 +112,14 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
             WILDFLY_PROFILES.add(Profile.JAVA_EE_8_FULL);
             WILDFLY_PROFILES.add(Profile.JAKARTA_EE_8_FULL);
         }
-        private static final Set<Profile> JAKARTAEE_FULL_PROFILES = new HashSet<>(8);
+        private static final Set<Profile> JAKARTAEE_FULL_PROFILES = new HashSet<>(16);
 
         static {
             JAKARTAEE_FULL_PROFILES.add(Profile.JAKARTA_EE_9_FULL);
             JAKARTAEE_FULL_PROFILES.add(Profile.JAKARTA_EE_9_1_FULL);
             JAKARTAEE_FULL_PROFILES.add(Profile.JAKARTA_EE_10_FULL);
             JAKARTAEE_FULL_PROFILES.add(Profile.JAKARTA_EE_11_FULL);
+            JAKARTAEE_FULL_PROFILES.add(Profile.JAKARTA_EE_12_FULL);
         }
         private static final Set<Profile> EAP6_PROFILES = new HashSet<>(4);
 
@@ -138,15 +139,17 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
             WILDFLY_WEB_PROFILES.add(Profile.JAKARTA_EE_9_1_WEB);
             WILDFLY_WEB_PROFILES.add(Profile.JAKARTA_EE_10_WEB);
             WILDFLY_WEB_PROFILES.add(Profile.JAKARTA_EE_11_WEB);
+            WILDFLY_WEB_PROFILES.add(Profile.JAKARTA_EE_12_WEB);
         }
 
-        private static final Set<Profile> JAKARTAEE_WEB_PROFILES = new HashSet<>(8);
+        private static final Set<Profile> JAKARTAEE_WEB_PROFILES = new HashSet<>(16);
 
         static {
             JAKARTAEE_WEB_PROFILES.add(Profile.JAKARTA_EE_9_WEB);
             JAKARTAEE_WEB_PROFILES.add(Profile.JAKARTA_EE_9_1_WEB);
             JAKARTAEE_WEB_PROFILES.add(Profile.JAKARTA_EE_10_WEB);
             JAKARTAEE_WEB_PROFILES.add(Profile.JAKARTA_EE_11_WEB);
+            JAKARTAEE_WEB_PROFILES.add(Profile.JAKARTA_EE_12_WEB);
         }
         private LibraryImplementation[] libraries;
 
@@ -321,6 +324,9 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
             if ("jpa3.1".equals(toolName)) { // NOI18N
                 return this.properties.isWildfly();
             }
+            if ("jpa4.0".equals(toolName)) { // NOI18N
+                return this.properties.isWildfly();
+            }
 
             if ("hibernatePersistenceProviderIsDefault2.0".equals(toolName)) {
                 return true;
@@ -351,7 +357,9 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
         }
 
         boolean containsPersistenceProvider(String providerName) {
-            return containsService(libraries, "javax.persistence.spi.PersistenceProvider", providerName);
+            final boolean isJavaEEPersistence = containsService(libraries, "javax.persistence.spi.PersistenceProvider", providerName);
+            final boolean isJakartaEEPersistence = containsService(libraries, "jakarta.persistence.spi.PersistenceProvider", providerName);
+            return isJavaEEPersistence || isJakartaEEPersistence;
         }
 
         private static boolean containsService(LibraryImplementation[] libraries, String serviceName, String serviceImplName) {
@@ -517,7 +525,8 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
 
         private class JaxRsStackSupportImpl implements JaxRsStackSupportImplementation {
 
-            private static final String JAX_RS_APPLICATION_CLASS = "javax.ws.rs.core.Application"; //NOI18N
+            private static final String JAX_RS_APPLICATION_CLASS_JAVAEE = "javax.ws.rs.core.Application"; //NOI18N
+            private static final String JAX_RS_APPLICATION_CLASS_JAKARTAEE = "jakarta.ws.rs.core.Application"; //NOI18N
             private final J2eePlatformImplImpl j2eePlatform;
 
             JaxRsStackSupportImpl(J2eePlatformImplImpl j2eePlatform) {
@@ -526,12 +535,12 @@ public class WildflyJ2eePlatformFactory extends J2eePlatformFactory {
 
             @Override
             public boolean addJsr311Api(Project project) {
-                return isBundled(JAX_RS_APPLICATION_CLASS);
+                return isBundled(JAX_RS_APPLICATION_CLASS_JAVAEE) || isBundled(JAX_RS_APPLICATION_CLASS_JAKARTAEE);
             }
 
             @Override
             public boolean extendsJerseyProjectClasspath(Project project) {
-                return isBundled(JAX_RS_APPLICATION_CLASS);
+                return isBundled(JAX_RS_APPLICATION_CLASS_JAVAEE) || isBundled(JAX_RS_APPLICATION_CLASS_JAKARTAEE);
             }
 
             @Override

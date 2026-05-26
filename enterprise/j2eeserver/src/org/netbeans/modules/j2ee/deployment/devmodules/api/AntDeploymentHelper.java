@@ -92,80 +92,34 @@ public final class AntDeploymentHelper {
         }
 
         FileObject fo = FileUtil.createData(FileUtil.normalizeFile(file));
-        FileLock lock = fo.lock();
-        try {
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            InputStream stream = null;
-            try {
+        try (FileLock lock = fo.lock()) {
+            try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
                 if (provider == null) {
-                    InputStream is = ServerInstance.class.getResourceAsStream("resources/default-ant-deploy.xml"); // NOI18N
-                    try {
-                        FileUtil.copy(is, os);
-                    } finally {
-                        is.close();
+                    try (InputStream is = ServerInstance.class.getResourceAsStream("resources/default-ant-deploy.xml")) { // NOI18N
+                        is.transferTo(os);
                     }
                 } else {
                     provider.writeDeploymentScript(os, moduleType);
                 }
 
-                if(file.exists() == true)
-                {
-                    stream = fo.getInputStream();
-//                    ByteArrayInputStream stringStream = new ByteArrayInputStream(os.toString().getBytes());
-                    ByteArrayInputStream stringStream = new ByteArrayInputStream(os.toByteArray());
-                    try
-                    {
-                        if(isEqual(stream, stringStream) == false)
-                        {
-                            stream.close();
+                if(file.exists() == true) {
+                    try (InputStream stream = fo.getInputStream();
+                            ByteArrayInputStream stringStream = new ByteArrayInputStream(os.toByteArray())) {
+                        if(isEqual(stream, stringStream) == false) {
                             stringStream.reset();
-                            OutputStream fileStream = fo.getOutputStream(lock);
-                            try
-                            {
-                                FileUtil.copy(stringStream, fileStream);
-                            }
-                            finally
-                            {
-                                fileStream.close();
+                            try (OutputStream fileStream = fo.getOutputStream(lock)) {
+                                stringStream.transferTo(fileStream);
                             }
                         }
-                        else
-                        {
-                            stream.close();
-                        }
                     }
-                    finally
-                    {
-                        stream.close();
-                        stringStream.close();
-                    }
-
-                }
-                else
-                {
-
-                    OutputStreamWriter writer = null;
-                    try
-                    {
-                        OutputStream fileOS = fo.getOutputStream(lock);
-                        writer = new OutputStreamWriter(fileOS, StandardCharsets.UTF_8);
+                } else {
+                    try (OutputStream fileOS = fo.getOutputStream(lock);
+                            OutputStreamWriter writer = new OutputStreamWriter(fileOS, StandardCharsets.UTF_8)) {
                         String outString = os.toString("UTF-8"); // NOI18N
                         writer.write(outString, 0, outString.length());
                     }
-                    finally
-                    {
-                        if(writer != null)
-                        {
-                            writer.close();
-                        }
-                    }
                 }
-
-            } finally {
-                os.close();
             }
-        } finally {
-            lock.releaseLock();
         }
     }
     

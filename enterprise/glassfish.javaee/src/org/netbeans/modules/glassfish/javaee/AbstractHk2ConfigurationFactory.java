@@ -106,74 +106,57 @@ abstract class AbstractHk2ConfigurationFactory implements ModuleConfigurationFac
         final GlassFishVersion version = instance != null
                 ? instance.getVersion() : null;
         try {
+            
             Hk2DeploymentManager evaluatedDm = null;
-            if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_8_0_0)) {
-                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe11()
-                    .getDisconnectedDeploymentManager(instanceUrl);
-            } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_7_0_0)) {
-                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe10()
-                    .getDisconnectedDeploymentManager(instanceUrl);
-            } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_6_1_0)) {
-                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe91()
-                    .getDisconnectedDeploymentManager(instanceUrl);
-            } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_6)) {
-                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe9()
-                    .getDisconnectedDeploymentManager(instanceUrl);
-            } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_5_1_0)) {
-                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe8()
-                    .getDisconnectedDeploymentManager(instanceUrl);
-            } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_5)) {
-                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createEe8()
-                    .getDisconnectedDeploymentManager(instanceUrl);
-            } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_4)) {
-                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createEe7()
-                    .getDisconnectedDeploymentManager(instanceUrl);
-            } else if(version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_3_1)) {
-                evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createEe6()
-                    .getDisconnectedDeploymentManager(instanceUrl);
+            if (null != version) {
+                if(GlassFishVersion.ge(version, GlassFishVersion.GF_9_0_0)) {
+                    evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe12()
+                        .getDisconnectedDeploymentManager(instanceUrl);
+                } else if(GlassFishVersion.ge(version, GlassFishVersion.GF_8_0_0)) {
+                    evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe11()
+                        .getDisconnectedDeploymentManager(instanceUrl);
+                } else if(GlassFishVersion.ge(version, GlassFishVersion.GF_7_0_0)) {
+                    evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe10()
+                        .getDisconnectedDeploymentManager(instanceUrl);
+                } else if(GlassFishVersion.ge(version, GlassFishVersion.GF_6_1_0)) {
+                    evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe91()
+                        .getDisconnectedDeploymentManager(instanceUrl);
+                } else if(GlassFishVersion.ge(version, GlassFishVersion.GF_6)) {
+                    evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe9()
+                        .getDisconnectedDeploymentManager(instanceUrl);
+                } else if(GlassFishVersion.ge(version, GlassFishVersion.GF_5_1_0)) {
+                    evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createJakartaEe8()
+                        .getDisconnectedDeploymentManager(instanceUrl);
+                } else if(GlassFishVersion.ge(version, GlassFishVersion.GF_5)) {
+                    evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createEe8()
+                        .getDisconnectedDeploymentManager(instanceUrl);
+                } else if(GlassFishVersion.ge(version, GlassFishVersion.GF_4)) {
+                    evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createEe7()
+                        .getDisconnectedDeploymentManager(instanceUrl);
+                } else if(GlassFishVersion.ge(version, GlassFishVersion.GF_3_1)) {
+                    evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createEe6()
+                        .getDisconnectedDeploymentManager(instanceUrl);
+                }
             } else {
                 evaluatedDm = (Hk2DeploymentManager) Hk2DeploymentFactory.createEe8()
                     .getDisconnectedDeploymentManager(instanceUrl);
             }
+            
             final Hk2DeploymentManager dm = hk2dm != null
                     ? hk2dm
                     : evaluatedDm;
-            if (version != null
-                    && GlassFishVersion.ge(version, GlassFishVersion.GF_8_0_0)) {
-                retVal = new ModuleConfigurationImpl(
-                        module, new Hk2Configuration(module, version), dm);
-            } else if (version != null
-                    && GlassFishVersion.ge(version, GlassFishVersion.GF_7_0_0)) {
-                retVal = new ModuleConfigurationImpl(
-                        module, new Hk2Configuration(module, version), dm);
-            } else if (version != null
-                    && GlassFishVersion.ge(version, GlassFishVersion.GF_6_1_0)) {
-                retVal = new ModuleConfigurationImpl(
-                        module, new Hk2Configuration(module, version), dm);
-            } else if (version != null
-                    && GlassFishVersion.ge(version, GlassFishVersion.GF_6)) {
-                retVal = new ModuleConfigurationImpl(
-                        module, new Hk2Configuration(module, version), dm);
-            } else if (version != null
-                    && GlassFishVersion.ge(version, GlassFishVersion.GF_5_1_0)) {
-                retVal = new ModuleConfigurationImpl(
-                        module, new Hk2Configuration(module, version), dm);
-            } else if (version != null
-                    && GlassFishVersion.ge(version, GlassFishVersion.GF_5)) {
-                retVal = new ModuleConfigurationImpl(
-                        module, new Hk2Configuration(module, version), dm);
-            } else if (version != null
-                    && GlassFishVersion.ge(version, GlassFishVersion.GF_4)) {
-                retVal = new ModuleConfigurationImpl(
-                        module, new Hk2Configuration(module, version), dm);
-            } else if (version != null
-                    && GlassFishVersion.ge(version, GlassFishVersion.GF_3_1)) {
-                retVal = new ModuleConfigurationImpl(
-                        module, new Three1Configuration(module, version), dm);
+            if (null != version) {
+                if (GlassFishVersion.ge(version, GlassFishVersion.GF_4)) {
+                    retVal = new ModuleConfigurationImpl(module, new Hk2Configuration(module, version), dm);
+                } else if (GlassFishVersion.ge(version, GlassFishVersion.GF_3_1)) {
+                    retVal = new ModuleConfigurationImpl(module, new Three1Configuration(module, version), dm);
+                } else {
+                    retVal = new ModuleConfigurationImpl(module, new Hk2Configuration(module, version), dm);
+                }
             } else {
-                retVal = new ModuleConfigurationImpl(
-                        module, new Hk2Configuration(module, version), dm);
+                retVal = new ModuleConfigurationImpl(module, new Hk2Configuration(module, version), dm);
             }
+            
         } catch (ConfigurationException ce) {
             throw ce;
         } catch (Exception ex) {

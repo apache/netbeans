@@ -66,7 +66,9 @@ public class DDHelper {
      */
     public static FileObject createWebXml(Profile j2eeProfile, boolean webXmlRequired, FileObject dir) throws IOException {
         String template = null;
-        if ((Profile.JAKARTA_EE_11_FULL == j2eeProfile || Profile.JAKARTA_EE_11_WEB == j2eeProfile) && webXmlRequired) {
+        if ((Profile.JAKARTA_EE_12_FULL == j2eeProfile || Profile.JAKARTA_EE_12_WEB == j2eeProfile) && webXmlRequired) {
+            template = "web-6.2.xml"; //NOI18N
+        } else if ((Profile.JAKARTA_EE_11_FULL == j2eeProfile || Profile.JAKARTA_EE_11_WEB == j2eeProfile) && webXmlRequired) {
             template = "web-6.1.xml"; //NOI18N
         } else if ((Profile.JAKARTA_EE_10_FULL == j2eeProfile || Profile.JAKARTA_EE_10_WEB == j2eeProfile) && webXmlRequired) {
             template = "web-6.0.xml"; //NOI18N
@@ -87,15 +89,16 @@ public class DDHelper {
         } else if (Profile.J2EE_13 == j2eeProfile) {
             template = "web-2.3.xml"; //NOI18N
         }
-        if (template == null)
+        if (template == null) {
             return null;
-
+        }
         MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, "web.xml");
         FileUtil.runAtomicAction(action);
-        if (action.getException() != null)
+        if (action.getException() != null) {
             throw action.getException();
-        else
+        } else {
             return action.getResult();
+        }
     }
 
     /**
@@ -107,30 +110,52 @@ public class DDHelper {
      */
     public static FileObject createWebFragmentXml(Profile j2eeProfile, FileObject dir) throws IOException {
         String template = null;
-        if (Profile.JAKARTA_EE_11_FULL == j2eeProfile || Profile.JAKARTA_EE_11_WEB == j2eeProfile) {
-            template = "web-fragment-6.1.xml"; //NOI18N
-        } else if (Profile.JAKARTA_EE_10_FULL == j2eeProfile || Profile.JAKARTA_EE_10_WEB == j2eeProfile) {
-            template = "web-fragment-6.0.xml"; //NOI18N
-        } else if (Profile.JAKARTA_EE_9_1_FULL == j2eeProfile || Profile.JAKARTA_EE_9_1_WEB == j2eeProfile ||
-                Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile) {
-            template = "web-fragment-5.0.xml"; //NOI18N
-        } else if (Profile.JAKARTA_EE_8_FULL == j2eeProfile || Profile.JAKARTA_EE_8_WEB == j2eeProfile ||
-                Profile.JAVA_EE_8_FULL == j2eeProfile || Profile.JAVA_EE_8_WEB == j2eeProfile) {
-            template = "web-fragment-4.0.xml"; //NOI18N
-        } else if (Profile.JAVA_EE_7_FULL == j2eeProfile || Profile.JAVA_EE_7_WEB == j2eeProfile) {
-            template = "web-fragment-3.1.xml"; //NOI18N
-        } else if (Profile.JAVA_EE_6_FULL == j2eeProfile || Profile.JAVA_EE_6_WEB == j2eeProfile) {
-            template = "web-fragment-3.0.xml"; //NOI18N
+        if (null != j2eeProfile) switch (j2eeProfile) {
+            case JAKARTA_EE_12_FULL:
+            case JAKARTA_EE_12_WEB:
+                template = "web-fragment-6.2.xml"; //NOI18N
+                break;
+            case JAKARTA_EE_11_FULL:
+            case JAKARTA_EE_11_WEB:
+                template = "web-fragment-6.1.xml"; //NOI18N
+                break;
+            case JAKARTA_EE_10_FULL:
+            case JAKARTA_EE_10_WEB:
+                template = "web-fragment-6.0.xml"; //NOI18N
+                break;
+            case JAKARTA_EE_9_1_FULL:
+            case JAKARTA_EE_9_1_WEB:
+            case JAKARTA_EE_9_FULL:
+            case JAKARTA_EE_9_WEB:
+                template = "web-fragment-5.0.xml"; //NOI18N
+                break;
+            case JAKARTA_EE_8_FULL:
+            case JAKARTA_EE_8_WEB:
+            case JAVA_EE_8_FULL:
+            case JAVA_EE_8_WEB:
+                template = "web-fragment-4.0.xml"; //NOI18N
+                break;
+            case JAVA_EE_7_FULL:
+            case JAVA_EE_7_WEB:
+                template = "web-fragment-3.1.xml"; //NOI18N
+                break;
+            case JAVA_EE_6_FULL:
+            case JAVA_EE_6_WEB:
+                template = "web-fragment-3.0.xml"; //NOI18N
+                break;
+            default:
+                break;
         }
-        if (template == null)
+        if (template == null) {
             return null;
-
+        }
         MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, "web-fragment.xml");
         FileUtil.runAtomicAction(action);
-        if (action.getException() != null)
+        if (action.getException() != null) {
             throw action.getException();
-        else
+        } else {
             return action.getResult();
+        }
     }
 
     /**
@@ -146,7 +171,7 @@ public class DDHelper {
     }
 
     /**
-     * Creates beans.xml deployment descriptor.
+     * Creates beans.xml deployment descriptor (CDI).
      * @param j2eeProfile Java EE/Jakarta EE profile to specify which version of beans.xml should be created
      * @param dir Directory where beans.xml should be created
      * @param name name of configuration file to create; should be always "beans" for now
@@ -156,31 +181,53 @@ public class DDHelper {
      */
     public static FileObject createBeansXml(Profile j2eeProfile, FileObject dir, String name) throws IOException {
         String template = null;       
-        if (Profile.JAKARTA_EE_11_FULL == j2eeProfile || Profile.JAKARTA_EE_11_WEB == j2eeProfile) {
-            template = "beans-4.1.xml"; //NOI18N
-        } else if (Profile.JAKARTA_EE_10_FULL == j2eeProfile || Profile.JAKARTA_EE_10_WEB == j2eeProfile) {
-            template = "beans-4.0.xml"; //NOI18N
-        } else if (Profile.JAKARTA_EE_9_1_FULL == j2eeProfile || Profile.JAKARTA_EE_9_1_WEB == j2eeProfile ||
-                Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile) {
-            template = "beans-3.0.xml"; //NOI18N
-        } else if (Profile.JAKARTA_EE_8_FULL == j2eeProfile || Profile.JAKARTA_EE_8_WEB == j2eeProfile ||
-                Profile.JAVA_EE_8_FULL == j2eeProfile || Profile.JAVA_EE_8_WEB == j2eeProfile) {
-            template = "beans-2.0.xml"; //NOI18N
-        } else if (Profile.JAVA_EE_7_FULL == j2eeProfile || Profile.JAVA_EE_7_WEB == j2eeProfile) {
-            template = "beans-1.1.xml"; //NOI18N
-        } else if (Profile.JAVA_EE_6_FULL == j2eeProfile || Profile.JAVA_EE_6_WEB == j2eeProfile) {
-            template = "beans-1.0.xml"; //NOI18N
+        if (null != j2eeProfile) switch (j2eeProfile) {
+            case JAKARTA_EE_12_FULL:
+            case JAKARTA_EE_12_WEB:
+                template = "beans-5.0.xml"; //NOI18N
+                break;
+            case JAKARTA_EE_11_FULL:
+            case JAKARTA_EE_11_WEB:
+                template = "beans-4.1.xml"; //NOI18N
+                break;
+            case JAKARTA_EE_10_FULL:
+            case JAKARTA_EE_10_WEB:
+                template = "beans-4.0.xml"; //NOI18N
+                break;
+            case JAKARTA_EE_9_1_FULL:
+            case JAKARTA_EE_9_1_WEB:
+            case JAKARTA_EE_9_FULL:
+            case JAKARTA_EE_9_WEB:
+                template = "beans-3.0.xml"; //NOI18N
+                break;
+            case JAKARTA_EE_8_FULL:
+            case JAKARTA_EE_8_WEB:
+            case JAVA_EE_8_FULL:
+            case JAVA_EE_8_WEB:
+                template = "beans-2.0.xml"; //NOI18N
+                break;
+            case JAVA_EE_7_FULL:
+            case JAVA_EE_7_WEB:
+                template = "beans-1.1.xml"; //NOI18N
+                break;
+            case JAVA_EE_6_FULL:
+            case JAVA_EE_6_WEB:
+                template = "beans-1.0.xml"; //NOI18N
+                break;
+            default:
+                break;
         }
 
-        if (template == null)
+        if (template == null) {
             return null;
-
+        }
         MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, name+".xml");
         FileUtil.runAtomicAction(action);
-        if (action.getException() != null)
+        if (action.getException() != null) {
             throw action.getException();
-        else
+        } else {
             return action.getResult();
+        }
     }
 
     /**
@@ -206,29 +253,50 @@ public class DDHelper {
      */
     public static FileObject createValidationXml(Profile j2eeProfile, FileObject dir, String name) throws IOException {
         String template = null;
-        if (Profile.JAVA_EE_6_FULL == j2eeProfile || Profile.JAVA_EE_6_WEB == j2eeProfile) {
-            template = "validation.xml"; //NOI18N
-        } else if (Profile.JAVA_EE_7_FULL == j2eeProfile || Profile.JAVA_EE_7_WEB == j2eeProfile) {
-            template = "validation-1.1.xml"; //NOI18N
-        } else if (Profile.JAVA_EE_8_FULL == j2eeProfile || Profile.JAVA_EE_8_WEB == j2eeProfile
-                || Profile.JAKARTA_EE_8_FULL == j2eeProfile || Profile.JAKARTA_EE_8_WEB == j2eeProfile) {
-            template = "validation-2.0.xml"; //NOI18N
-        } else if (Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile
-                || Profile.JAKARTA_EE_9_1_FULL == j2eeProfile || Profile.JAKARTA_EE_9_1_WEB == j2eeProfile
-                || Profile.JAKARTA_EE_10_FULL == j2eeProfile || Profile.JAKARTA_EE_10_WEB == j2eeProfile) {
-            template = "validation-3.0.xml"; //NOI18N
-        } else if (Profile.JAKARTA_EE_11_FULL == j2eeProfile || Profile.JAKARTA_EE_11_WEB == j2eeProfile) {
-            template = "validation-3.1.xml"; //NOI18N
+        if (null != j2eeProfile) switch (j2eeProfile) {
+            case JAVA_EE_6_FULL:
+            case JAVA_EE_6_WEB:
+                template = "validation.xml"; //NOI18N
+                break;
+            case JAVA_EE_7_FULL:
+            case JAVA_EE_7_WEB:
+                template = "validation-1.1.xml"; //NOI18N
+                break;
+            case JAVA_EE_8_FULL:
+            case JAVA_EE_8_WEB:
+            case JAKARTA_EE_8_FULL:
+            case JAKARTA_EE_8_WEB:
+                template = "validation-2.0.xml"; //NOI18N
+                break;
+            case JAKARTA_EE_9_FULL:
+            case JAKARTA_EE_9_WEB:
+            case JAKARTA_EE_9_1_FULL:
+            case JAKARTA_EE_9_1_WEB:
+            case JAKARTA_EE_10_FULL:
+            case JAKARTA_EE_10_WEB:
+                template = "validation-3.0.xml"; //NOI18N
+                break;
+            case JAKARTA_EE_11_FULL:
+            case JAKARTA_EE_11_WEB:
+                template = "validation-3.1.xml"; //NOI18N
+                break;
+            case JAKARTA_EE_12_FULL:
+            case JAKARTA_EE_12_WEB:
+                template = "validation-4.0.xml"; //NOI18N
+                break;
+            default:
+                break;
         }
         if (template == null)
             return null;
 
         MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, name+".xml");
         FileUtil.runAtomicAction(action);
-        if (action.getException() != null)
+        if (action.getException() != null) {
             throw action.getException();
-        else
+        } else {
             return action.getResult();
+        }
     }
 
     /**
@@ -254,29 +322,50 @@ public class DDHelper {
      */
     public static FileObject createConstraintXml(Profile j2eeProfile, FileObject dir, String name) throws IOException {
         String template = null;
-        if (Profile.JAVA_EE_6_FULL == j2eeProfile || Profile.JAVA_EE_6_WEB == j2eeProfile) {
-            template = "constraint.xml"; //NOI18N
-        } else if (Profile.JAVA_EE_7_FULL == j2eeProfile || Profile.JAVA_EE_7_WEB == j2eeProfile) {
-            template = "constraint-1.1.xml"; //NOI18N
-        } else if (Profile.JAVA_EE_8_FULL == j2eeProfile || Profile.JAVA_EE_8_WEB == j2eeProfile
-                || Profile.JAKARTA_EE_8_FULL == j2eeProfile || Profile.JAKARTA_EE_8_WEB == j2eeProfile) {
-            template = "constraint-2.0.xml"; //NOI18N
-        } else if (Profile.JAKARTA_EE_9_FULL == j2eeProfile || Profile.JAKARTA_EE_9_WEB == j2eeProfile
-                || Profile.JAKARTA_EE_9_1_FULL == j2eeProfile || Profile.JAKARTA_EE_9_1_WEB == j2eeProfile
-                || Profile.JAKARTA_EE_10_FULL == j2eeProfile || Profile.JAKARTA_EE_10_WEB == j2eeProfile) {
-            template = "constraint-3.0.xml"; //NOI18N
-        } else if (Profile.JAKARTA_EE_11_FULL == j2eeProfile || Profile.JAKARTA_EE_11_WEB == j2eeProfile) {
-            template = "constraint-3.1.xml"; //NOI18N
+        if (null != j2eeProfile) switch (j2eeProfile) {
+            case JAVA_EE_6_FULL:
+            case JAVA_EE_6_WEB:
+                template = "constraint.xml"; //NOI18N
+                break;
+            case JAVA_EE_7_FULL:
+            case JAVA_EE_7_WEB:
+                template = "constraint-1.1.xml"; //NOI18N
+                break;
+            case JAVA_EE_8_FULL:
+            case JAVA_EE_8_WEB:
+            case JAKARTA_EE_8_FULL:
+            case JAKARTA_EE_8_WEB:
+                template = "constraint-2.0.xml"; //NOI18N
+                break;
+            case JAKARTA_EE_9_FULL:
+            case JAKARTA_EE_9_WEB:
+            case JAKARTA_EE_9_1_FULL:
+            case JAKARTA_EE_9_1_WEB:
+            case JAKARTA_EE_10_FULL:
+            case JAKARTA_EE_10_WEB:
+                template = "constraint-3.0.xml"; //NOI18N
+                break;
+            case JAKARTA_EE_11_FULL:
+            case JAKARTA_EE_11_WEB:
+                template = "constraint-3.1.xml"; //NOI18N
+                break;
+            case JAKARTA_EE_12_FULL:
+            case JAKARTA_EE_12_WEB:
+                template = "constraint-4.0.xml"; //NOI18N
+                break;
+            default:
+                break;
         }
-        if (template == null)
+        if (template == null) {
             return null;
-
+        }
         MakeFileCopy action = new MakeFileCopy(RESOURCE_FOLDER + template, dir, name+".xml");
         FileUtil.runAtomicAction(action);
-        if (action.getException() != null)
+        if (action.getException() != null) {
             throw action.getException();
-        else
+        } else {
             return action.getResult();
+        }
     }
 
     /**
@@ -295,7 +384,9 @@ public class DDHelper {
             boolean forceCreation) throws IOException {
         String template = null;
         
-        if (profile != null && profile.equals(Profile.JAKARTA_EE_11_FULL) && forceCreation) {
+        if (profile != null && profile.equals(Profile.JAKARTA_EE_12_FULL) && forceCreation) {
+            template = "ear-12.xml"; // NOI18N
+        } else if (profile != null && profile.equals(Profile.JAKARTA_EE_11_FULL) && forceCreation) {
             template = "ear-11.xml"; // NOI18N
         } else if (profile != null && profile.equals(Profile.JAKARTA_EE_10_FULL) && forceCreation) {
             template = "ear-10.xml"; // NOI18N

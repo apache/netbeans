@@ -139,6 +139,7 @@ hfds elManager,factory
 
 CLSS public abstract jakarta.el.ELResolver
 cons public init()
+innr public static StandaloneIdentifierMarker
 meth public <%0 extends java.lang.Object> {%%0} convertToType(jakarta.el.ELContext,java.lang.Object,java.lang.Class<{%%0}>)
 meth public abstract boolean isReadOnly(jakarta.el.ELContext,java.lang.Object,java.lang.Object)
 meth public abstract java.lang.Class<?> getCommonPropertyType(jakarta.el.ELContext,java.lang.Object)
@@ -146,6 +147,10 @@ meth public abstract java.lang.Class<?> getType(jakarta.el.ELContext,java.lang.O
 meth public abstract java.lang.Object getValue(jakarta.el.ELContext,java.lang.Object,java.lang.Object)
 meth public abstract void setValue(jakarta.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Object)
 meth public java.lang.Object invoke(jakarta.el.ELContext,java.lang.Object,java.lang.Object,java.lang.Class<?>[],java.lang.Object[])
+supr java.lang.Object
+
+CLSS public static jakarta.el.ELResolver$StandaloneIdentifierMarker
+ outer jakarta.el.ELResolver
 supr java.lang.Object
 
 CLSS public abstract jakarta.el.EvaluationListener
@@ -1223,6 +1228,7 @@ fld public final static int SC_BAD_REQUEST = 400
 fld public final static int SC_CONFLICT = 409
 fld public final static int SC_CONTINUE = 100
 fld public final static int SC_CREATED = 201
+fld public final static int SC_EARLY_HINTS = 103
 fld public final static int SC_EXPECTATION_FAILED = 417
 fld public final static int SC_FORBIDDEN = 403
 fld public final static int SC_FOUND = 302
@@ -1274,6 +1280,7 @@ meth public abstract void addCookie(jakarta.servlet.http.Cookie)
 meth public abstract void addDateHeader(java.lang.String,long)
 meth public abstract void addHeader(java.lang.String,java.lang.String)
 meth public abstract void addIntHeader(java.lang.String,int)
+meth public abstract void sendEarlyHints()
 meth public abstract void sendError(int) throws java.io.IOException
 meth public abstract void sendError(int,java.lang.String) throws java.io.IOException
 meth public abstract void sendRedirect(java.lang.String,int,boolean) throws java.io.IOException
@@ -1302,6 +1309,7 @@ meth public void addCookie(jakarta.servlet.http.Cookie)
 meth public void addDateHeader(java.lang.String,long)
 meth public void addHeader(java.lang.String,java.lang.String)
 meth public void addIntHeader(java.lang.String,int)
+meth public void sendEarlyHints()
 meth public void sendError(int) throws java.io.IOException
 meth public void sendError(int,java.lang.String) throws java.io.IOException
 meth public void sendRedirect(java.lang.String) throws java.io.IOException

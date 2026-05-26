@@ -459,17 +459,20 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
         } else {
             version = Persistence.VERSION_1_0;
         }
-        if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) {// we have persistence unit with specific version, should use it
+        // we have persistence unit with specific version, should use it
+        if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_4_0.PersistenceUnit) {
+            version =  Persistence.VERSION_4_0;
+        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_2.PersistenceUnit) {
             version =  Persistence.VERSION_3_2;
-        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {// we have persistence unit with specific version, should use it
+        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_1.PersistenceUnit) {
             version = Persistence.VERSION_3_1;
-        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) {// we have persistence unit with specific version, should use it
+        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_3_0.PersistenceUnit) {
             version = Persistence.VERSION_3_0;
-        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) {// we have persistence unit with specific version, should use it
+        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_2.PersistenceUnit) {
             version = Persistence.VERSION_2_2;
-        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {// we have persistence unit with specific version, should use it
+        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_1.PersistenceUnit) {
             version = Persistence.VERSION_2_1;
-        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) {// we have persistence unit with specific version, should use it
+        } else if (persistenceUnit instanceof org.netbeans.modules.j2ee.persistence.dd.persistence.model_2_0.PersistenceUnit) {
             version = Persistence.VERSION_2_0;
         }
         return version;
@@ -478,13 +481,13 @@ public abstract class EntityManagerGenerationStrategySupport implements EntityMa
     protected String getEntityManagerFqn() {
         String version = getPersistenceVersion();
             switch(version) {
-            case Persistence.VERSION_1_0:
-            case Persistence.VERSION_2_0:
-            case Persistence.VERSION_2_1:
-            case Persistence.VERSION_2_2:
-                return ENTITY_MANAGER_FQN;
-            default:
-                return ENTITY_MANAGER_JAKARTA_FQN;
+                case Persistence.VERSION_1_0:
+                case Persistence.VERSION_2_0:
+                case Persistence.VERSION_2_1:
+                case Persistence.VERSION_2_2:
+                    return ENTITY_MANAGER_FQN;
+                default:
+                    return ENTITY_MANAGER_JAKARTA_FQN;
         }
     }
 

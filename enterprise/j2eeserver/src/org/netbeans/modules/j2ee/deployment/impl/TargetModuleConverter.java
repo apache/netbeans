@@ -34,9 +34,6 @@ import org.openide.util.NbBundle;
 import java.util.List;
 import java.util.Collections;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -164,18 +161,9 @@ public class TargetModuleConverter extends DOMConvertor {
             }
             final FileObject fo = FileUtil.createData(targetDirFO, tmFileName);
 
-            FileLock lock = fo.lock();
-            try {
-                Writer writer = new OutputStreamWriter(fo.getOutputStream(lock), CHARSET);
-                try {
-                    create().write(writer, new TargetModule.List(instance));
-                } finally {
-                    writer.close();
-                }
-            } finally {
-                if (lock != null) {
-                    lock.releaseLock();
-                }
+            try (FileLock lock = fo.lock();
+                    Writer writer = new OutputStreamWriter(fo.getOutputStream(lock), CHARSET);) {
+                create().write(writer, new TargetModule.List(instance));
             }
             return true;
         } catch (IOException ex) {
@@ -193,15 +181,12 @@ public class TargetModuleConverter extends DOMConvertor {
                 if (dir != null) {
                     final FileObject fo = dir.getFileObject(tmFileName);
                     if (fo != null) {
-                        Reader reader = new InputStreamReader(fo.getInputStream(), CHARSET);
-                        try {
+                        try (Reader reader = new InputStreamReader(fo.getInputStream(), CHARSET)) {
                             TargetModule.List tml = (TargetModule.List) create().read(reader);
                             if (tml == null || tml.getTargetModules().length < 1) {
                                 return null;
                             }
                             return tml.getTargetModules()[0];
-                        } finally {
-                            reader.close();
                         }
                     }
                 }
@@ -229,18 +214,13 @@ public class TargetModuleConverter extends DOMConvertor {
                     while (fos.hasMoreElements()) {
                         final FileObject fo = (FileObject) fos.nextElement();
                         final AtomicInteger exceptions = new AtomicInteger();
-                        try {
-                            Reader reader = new InputStreamReader(fo.getInputStream(), CHARSET);
-                            try {
-                                TargetModule.List tml = (TargetModule.List) create().read(reader);
-                                if (tml != null && tml.getTargetModules().length > 0) {
-                                    TargetModule tm = tml.getTargetModules()[0];
-                                    if (contextRoot.equals(tm.getContextRoot())) {
-                                        result.add(tm);
-                                    }
+                        try (Reader reader = new InputStreamReader(fo.getInputStream(), CHARSET)) {
+                            TargetModule.List tml = (TargetModule.List) create().read(reader);
+                            if (tml != null && tml.getTargetModules().length > 0) {
+                                TargetModule tm = tml.getTargetModules()[0];
+                                if (contextRoot.equals(tm.getContextRoot())) {
+                                    result.add(tm);
                                 }
-                            } finally {
-                                reader.close();
                             }
                         } catch (IOException ioe) {
                             if (exceptions.getAndIncrement() < 1) {
@@ -271,13 +251,8 @@ public class TargetModuleConverter extends DOMConvertor {
                 if (dir != null) {
                     final FileObject fo = dir.getFileObject(tmFileName);
                     if (fo != null) {
-                        FileLock lock = fo.lock();
-                        try {
+                        try (FileLock lock = fo.lock()) {
                             fo.delete(lock);
-                        } finally {
-                            if (lock != null) {
-                                lock.releaseLock();
-                            }
                         }
                     }
                 }

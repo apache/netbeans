@@ -64,7 +64,7 @@ public final class DDProvider {
     
     private DDProvider() {
         //ddMap=new java.util.WeakHashMap(5);
-        ddMap = new HashMap<>(5);
+        ddMap = new HashMap<>(8);
     }
     
     /**
@@ -234,22 +234,27 @@ public final class DDProvider {
     private static Application createApplication(DDParse parse) {
         Application jar = null;
         String version = parse.getVersion();
-        if (Application.VERSION_1_4.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.application.model_1_4.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
-        } else if (Application.VERSION_5.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.application.model_5.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
-        } else if (Application.VERSION_6.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.application.model_6.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
-        } else if (Application.VERSION_7.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.application.model_7.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
-        } else if (Application.VERSION_8.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.application.model_8.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
-        } else if (Application.VERSION_9.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.application.model_9.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
-        } else if (Application.VERSION_10.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.application.model_10.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
-        } else if (Application.VERSION_11.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.application.model_11.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+        if (null != version) switch (version) {
+            case Application.VERSION_1_4:
+                return new org.netbeans.modules.j2ee.dd.impl.application.model_1_4.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+            case Application.VERSION_5:
+                return new org.netbeans.modules.j2ee.dd.impl.application.model_5.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+            case Application.VERSION_6:
+                return new org.netbeans.modules.j2ee.dd.impl.application.model_6.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+            case Application.VERSION_7:
+                return new org.netbeans.modules.j2ee.dd.impl.application.model_7.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+            case Application.VERSION_8:
+                return new org.netbeans.modules.j2ee.dd.impl.application.model_8.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+            case Application.VERSION_9:
+                return new org.netbeans.modules.j2ee.dd.impl.application.model_9.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+            case Application.VERSION_10:
+                return new org.netbeans.modules.j2ee.dd.impl.application.model_10.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+            case Application.VERSION_11:
+                return new org.netbeans.modules.j2ee.dd.impl.application.model_11.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+            case Application.VERSION_12:
+                return new org.netbeans.modules.j2ee.dd.impl.application.model_12.Application(parse.getDocument(), Common.USE_DEFAULT_VALUES);
+            default:
+                break;
         }
         return jar;
     }
@@ -264,25 +269,31 @@ public final class DDProvider {
         }        
         @Override
         public InputSource resolveEntity (String publicId, String systemId) {
-            if ("http://java.sun.com/xml/ns/j2ee/application_1_4.xsd".equals(systemId)) {
-                return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application_1_4.xsd"); //NOI18N
-            } else if ("http://java.sun.com/xml/ns/javaee/application_5.xsd".equals(systemId)) {
-                return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_5.xsd"); //NOI18N
-            } else if ("http://java.sun.com/xml/ns/javaee/application_6.xsd".equals(systemId)) {
-                return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_6.xsd"); //NOI18N
-            } else if ("http://xmlns.jcp.org/xml/ns/javaee/application_7.xsd".equals(systemId)) {
-                return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_7.xsd"); //NOI18N
-            } else if ("http://xmlns.jcp.org/xml/ns/javaee/application_8.xsd".equals(systemId)) {
-                return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_8.xsd"); //NOI18N
-            } else if ("https://jakarta.ee/xml/ns/jakartaee/application_9.xsd".equals(systemId)) {
-                return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_9.xsd"); //NOI18N
-            } else if ("https://jakarta.ee/xml/ns/jakartaee/application_10.xsd".equals(systemId)) {
-                return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_10.xsd"); //NOI18N
-            } else if ("https://jakarta.ee/xml/ns/jakartaee/application_11.xsd".equals(systemId)) {
-                return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_11.xsd"); //NOI18N
-            } else {
+            if (null == systemId) {
                 // use the default behaviour
                 return null;
+            } else switch (systemId) {
+                case "http://java.sun.com/xml/ns/j2ee/application_1_4.xsd":
+                    return new InputSource("nbres:/org/netbeans/modules/j2ee/dd/impl/resources/application_1_4.xsd"); //NOI18N
+                case "http://java.sun.com/xml/ns/javaee/application_5.xsd":
+                    return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_5.xsd"); //NOI18N
+                case "http://java.sun.com/xml/ns/javaee/application_6.xsd":
+                    return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_6.xsd"); //NOI18N
+                case "http://xmlns.jcp.org/xml/ns/javaee/application_7.xsd":
+                    return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_7.xsd"); //NOI18N
+                case "http://xmlns.jcp.org/xml/ns/javaee/application_8.xsd":
+                    return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_8.xsd"); //NOI18N
+                case "https://jakarta.ee/xml/ns/jakartaee/application_9.xsd":
+                    return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_9.xsd"); //NOI18N
+                case "https://jakarta.ee/xml/ns/jakartaee/application_10.xsd":
+                    return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_10.xsd"); //NOI18N
+                case "https://jakarta.ee/xml/ns/jakartaee/application_11.xsd":
+                    return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_11.xsd"); //NOI18N
+                case "https://jakarta.ee/xml/ns/jakartaee/application_12.xsd":
+                    return new InputSource("nbres:/org/netbeans/modules/javaee/dd/impl/resources/application_12.xsd"); //NOI18N
+                default:
+                    // use the default behaviour
+                    return null;
             }
         }
     }
@@ -382,7 +393,7 @@ public final class DDProvider {
          */
         private void extractVersion () {
             // This is the default version
-            version = Application.VERSION_7;
+            version = Application.VERSION_8;
             
             // first check the doc type to see if there is one
             DocumentType dt = document.getDoctype();
@@ -396,24 +407,39 @@ public final class DDProvider {
                     Node vNode = attrs.getNamedItem("version");//NOI18N
                     if(vNode != null) {
                         String versionValue = vNode.getNodeValue();
-                        if (Application.VERSION_11.equals(versionValue)) {
-                            version = Application.VERSION_11;
-                        } else if (Application.VERSION_10.equals(versionValue)) {
-                            version = Application.VERSION_10;
-                        } else if (Application.VERSION_9.equals(versionValue)) {
-                            version = Application.VERSION_9;
-                        } else if (Application.VERSION_8.equals(versionValue)) {
-                            version = Application.VERSION_8;
-                        } else if (Application.VERSION_7.equals(versionValue)) {
-                            version = Application.VERSION_7;
-                        } else if (Application.VERSION_6.equals(versionValue)) {
-                            version = Application.VERSION_6;
-                        } else if (Application.VERSION_5.equals(versionValue)) {
-                            version = Application.VERSION_5;
-                        } else if (Application.VERSION_1_4.equals(versionValue)) {
-                            version = Application.VERSION_1_4;
-                        } else {
-                            version = Application.VERSION_7; //default
+                        if (null == versionValue) {
+                            version = Application.VERSION_8; //default
+                        } else switch (versionValue) {
+                            case Application.VERSION_12:
+                                version = Application.VERSION_12;
+                                break;
+                            case Application.VERSION_11:
+                                version = Application.VERSION_11;
+                                break;
+                            case Application.VERSION_10:
+                                version = Application.VERSION_10;
+                                break;
+                            case Application.VERSION_9:
+                                version = Application.VERSION_9;
+                                break;
+                            case Application.VERSION_8:
+                                version = Application.VERSION_8;
+                                break;
+                            case Application.VERSION_7:
+                                version = Application.VERSION_7;
+                                break;
+                            case Application.VERSION_6:
+                                version = Application.VERSION_6;
+                                break;
+                            case Application.VERSION_5:
+                                version = Application.VERSION_5;
+                                break;
+                            case Application.VERSION_1_4:
+                                version = Application.VERSION_1_4;
+                                break;
+                            default:
+                                version = Application.VERSION_8; //default
+                                break;
                         }
                     }
                 }

@@ -77,7 +77,9 @@ public class BeansXmlIterator implements TemplateWizard.Iterator {
         Profile profile = null;
         if (project != null) {
             J2eeProjectCapabilities cap = J2eeProjectCapabilities.forProject(project);
-            if (cap != null && cap.isCdi41Supported()) {
+            if (cap != null && cap.isCdi50Supported()) {
+                profile = Profile.JAKARTA_EE_12_FULL;
+            } else if (cap != null && cap.isCdi41Supported()) {
                 profile = Profile.JAKARTA_EE_11_FULL;
             } else if (cap != null && cap.isCdi40Supported()) {
                 profile = Profile.JAKARTA_EE_10_FULL;
@@ -89,7 +91,7 @@ public class BeansXmlIterator implements TemplateWizard.Iterator {
                 profile = Profile.JAVA_EE_7_FULL;
             }
         }
-        FileObject fo = DDHelper.createBeansXml(profile != null ? profile : Profile.JAVA_EE_6_FULL, targetDir, targetName);
+        FileObject fo = DDHelper.createBeansXml(profile != null ? profile : Profile.JAKARTA_EE_8_FULL, targetDir, targetName);
         if (fo != null) {
             if ( project != null ){
                 CdiUtil logger = project.getLookup().lookup( CdiUtil.class );

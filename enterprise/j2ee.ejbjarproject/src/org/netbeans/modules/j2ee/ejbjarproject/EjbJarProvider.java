@@ -307,7 +307,9 @@ public final class EjbJarProvider extends J2eeModuleProvider
             platformVersion = Profile.JAKARTA_EE_8_FULL;
         }
 
-        if (platformVersion.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
+        if (platformVersion.isAtLeast(Profile.JAKARTA_EE_12_WEB)) {
+            return EjbJar.VERSION_4_1;
+        } else if (platformVersion.isAtLeast(Profile.JAKARTA_EE_9_WEB)) {
             return EjbJar.VERSION_4_0;
         } else if (platformVersion.isAtLeast(Profile.JAVA_EE_7_WEB)) {
             return EjbJar.VERSION_3_2;
@@ -405,7 +407,7 @@ public final class EjbJarProvider extends J2eeModuleProvider
     public FileObject[] getSourceRoots() {
         Sources sources = ProjectUtils.getSources(project);
         SourceGroup[] groups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        List<FileObject> roots = new LinkedList<FileObject>();
+        List<FileObject> roots = new LinkedList<>();
         FileObject metaInf = getMetaInf();
         if (metaInf != null) {
             roots.add(metaInf);
@@ -502,7 +504,7 @@ public final class EjbJarProvider extends J2eeModuleProvider
         ClassPath cp = ClassPathFactory.createClassPath(
                     ProjectClassPathSupport.createPropertyBasedClassPathImplementation(
                     FileUtil.toFile(project.getProjectDirectory()), project.evaluator(), new String[]{"javac.classpath"}));
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         for (FileObject fo : cp.getRoots()) {
             if (FileUtil.getArchiveFile(fo) == null) {
                 continue;

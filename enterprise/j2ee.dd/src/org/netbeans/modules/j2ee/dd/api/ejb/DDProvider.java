@@ -61,6 +61,7 @@ public final class DDProvider {
     private static final String EJB_31_DOCTYPE = "http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"; //NOI18N
     private static final String EJB_32_DOCTYPE = "http://xmlns.jcp.org/xml/ns/javaee/ejb-jar_3_2.xsd"; //NOI18N
     private static final String EJB_40_DOCTYPE = "https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_0.xsd"; //NOI18N
+    private static final String EJB_41_DOCTYPE = "https://jakarta.ee/xml/ns/jakartaee/ejb-jar_4_1.xsd"; //NOI18N
     private static final DDProvider ddProvider = new DDProvider();
     private final Map<Object, EjbJarProxy> ddMap;
 
@@ -68,7 +69,7 @@ public final class DDProvider {
      * Creates a new instance of DDProvider.
      */
     private DDProvider() {
-        ddMap = new HashMap<>(5);
+        ddMap = new HashMap<>(8);
     }
 
     /**
@@ -197,18 +198,23 @@ public final class DDProvider {
     }
 
     private static EjbJar createEjbJar(String version, Document document) {
-        if (EjbJar.VERSION_4_0.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.ejb.model_4_0.EjbJar(document, Common.USE_DEFAULT_VALUES);
-        } else if (EjbJar.VERSION_3_2.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.ejb.model_3_2.EjbJar(document, Common.USE_DEFAULT_VALUES);
-        } else if (EjbJar.VERSION_3_1.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.ejb.model_3_1.EjbJar(document, Common.USE_DEFAULT_VALUES);
-        } else if (EjbJar.VERSION_3_0.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.ejb.model_3_0.EjbJar(document, Common.USE_DEFAULT_VALUES);
-        } else if (EjbJar.VERSION_2_1.equals(version)) {
-            return new org.netbeans.modules.j2ee.dd.impl.ejb.model_2_1.EjbJar(document, Common.USE_DEFAULT_VALUES);
-        } else {
+        if (null == version) {
             return null;
+        } else switch (version) {
+            case EjbJar.VERSION_4_1:
+                return new org.netbeans.modules.j2ee.dd.impl.ejb.model_4_1.EjbJar(document, Common.USE_DEFAULT_VALUES);
+            case EjbJar.VERSION_4_0:
+                return new org.netbeans.modules.j2ee.dd.impl.ejb.model_4_0.EjbJar(document, Common.USE_DEFAULT_VALUES);
+            case EjbJar.VERSION_3_2:
+                return new org.netbeans.modules.j2ee.dd.impl.ejb.model_3_2.EjbJar(document, Common.USE_DEFAULT_VALUES);
+            case EjbJar.VERSION_3_1:
+                return new org.netbeans.modules.j2ee.dd.impl.ejb.model_3_1.EjbJar(document, Common.USE_DEFAULT_VALUES);
+            case EjbJar.VERSION_3_0:
+                return new org.netbeans.modules.j2ee.dd.impl.ejb.model_3_0.EjbJar(document, Common.USE_DEFAULT_VALUES);
+            case EjbJar.VERSION_2_1:
+                return new org.netbeans.modules.j2ee.dd.impl.ejb.model_2_1.EjbJar(document, Common.USE_DEFAULT_VALUES);
+            default:
+                return null;
         }
     }
 
@@ -230,16 +236,21 @@ public final class DDProvider {
             }
         }
         if (id != null) {
-            if(EJB_40_DOCTYPE.equals(id)) {
-                return EjbJar.VERSION_4_0;
-            } else if(EJB_32_DOCTYPE.equals(id)) {
-                return EjbJar.VERSION_3_2;
-            } else if (EJB_31_DOCTYPE.equals(id)) {
-                return EjbJar.VERSION_3_1;
-            } else if (EJB_30_DOCTYPE.equals(id)) {
-                return EjbJar.VERSION_3_0;
-            } else if (EJB_21_DOCTYPE.equals(id)) {
-                return EjbJar.VERSION_2_1;
+            switch (id) {
+                case EJB_41_DOCTYPE:
+                    return EjbJar.VERSION_4_1;
+                case EJB_40_DOCTYPE:
+                    return EjbJar.VERSION_4_0;
+                case EJB_32_DOCTYPE:
+                    return EjbJar.VERSION_3_2;
+                case EJB_31_DOCTYPE:
+                    return EjbJar.VERSION_3_1;
+                case EJB_30_DOCTYPE:
+                    return EjbJar.VERSION_3_0;
+                case EJB_21_DOCTYPE:
+                    return EjbJar.VERSION_2_1;
+                default:
+                    break;
             }
         }
         return EjbJar.VERSION_3_2;
@@ -277,18 +288,29 @@ public final class DDProvider {
         @Override
         public InputSource resolveEntity(String publicId, String systemId) {
             String resource;
-            if (EJB_40_DOCTYPE.equals(systemId)) {
-                resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_4_0.xsd"; //NOI18N
-            } else if (EJB_32_DOCTYPE.equals(systemId)) {
-                resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_3_2.xsd"; //NOI18N
-            } else if (EJB_31_DOCTYPE.equals(systemId)) {
-                resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_3_1.xsd"; //NOI18N
-            } else if (EJB_30_DOCTYPE.equals(systemId)) {
-                resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_3_0.xsd"; //NOI18N
-            } else if (EJB_21_DOCTYPE.equals(systemId)) {
-                resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_2_1.xsd"; //NOI18N
-            } else {
+            if (null == systemId) {
                 return null;
+            } else switch (systemId) {
+                case EJB_41_DOCTYPE:
+                    resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_4_1.xsd"; //NOI18N
+                    break;
+                case EJB_40_DOCTYPE:
+                    resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_4_0.xsd"; //NOI18N
+                    break;
+                case EJB_32_DOCTYPE:
+                    resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_3_2.xsd"; //NOI18N
+                    break;
+                case EJB_31_DOCTYPE:
+                    resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_3_1.xsd"; //NOI18N
+                    break;
+                case EJB_30_DOCTYPE:
+                    resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_3_0.xsd"; //NOI18N
+                    break;
+                case EJB_21_DOCTYPE:
+                    resource = "/org/netbeans/modules/j2ee/dd/impl/resources/ejb-jar_2_1.xsd"; //NOI18N
+                    break;
+                default:
+                    return null;
             }
             URL url = this.getClass().getResource(resource);
             return new InputSource(url.toString());

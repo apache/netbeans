@@ -1,9 +1,9 @@
-Name: Java API for Jakarta Servlets, Java API for Jakarta Server Pages
+Name: JakartaEE API 12.0.0 Documentation
+Version: 12.0.0
 License: EPL-v20
-Version: 6.1_3.0
+Description: JakartaEE API 12.0.0 Documentation
+Origin: Generated from jakarta.jakartaee-api-11.0.0-javadoc.jar
 Type: generated
-Description: Java API for Jakarta Servlets, Java API for Jakarta Server Pages, Java API for Jakarta Expression Language
-Origin: Eclipse Foundation (https://projects.eclipse.org/projects/ee4j)
 
 Eclipse Public License - v 2.0
 THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS ECLIPSE PUBLIC LICENSE (“AGREEMENT”). ANY USE, REPRODUCTION OR DISTRIBUTION OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.

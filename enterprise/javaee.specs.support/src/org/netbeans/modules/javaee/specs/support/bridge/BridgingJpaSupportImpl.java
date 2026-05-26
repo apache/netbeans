@@ -55,7 +55,7 @@ public class BridgingJpaSupportImpl implements JpaSupportImplementation {
 
     @Override
     public Set<JpaProvider> getProviders() {
-        Set<JpaProvider> result = new HashSet<JpaProvider>();
+        Set<JpaProvider> result = new HashSet<>();
         boolean check = platform.isToolSupported(JPAModuleInfo.JPACHECKSUPPORTED);
         boolean jpa1 = !check
                 || platform.isToolSupported(JPAModuleInfo.JPAVERSIONPREFIX + Persistence.VERSION_1_0);
@@ -71,6 +71,8 @@ public class BridgingJpaSupportImpl implements JpaSupportImplementation {
                 || platform.isToolSupported(JPAModuleInfo.JPAVERSIONPREFIX + Persistence.VERSION_3_1);
         boolean jpa32 = !check
                 || platform.isToolSupported(JPAModuleInfo.JPAVERSIONPREFIX + Persistence.VERSION_3_2);
+        boolean jpa40 = !check
+                || platform.isToolSupported(JPAModuleInfo.JPAVERSIONPREFIX + Persistence.VERSION_4_0);
         
         for (Map.Entry<Provider, String> entry : getPossibleContainerProviders().entrySet()) {
             Provider provider = entry.getKey();
@@ -78,14 +80,14 @@ public class BridgingJpaSupportImpl implements JpaSupportImplementation {
                 JpaProvider jpaProvider = JpaProviderFactory.createJpaProvider(
                         provider.getProviderClass(), 
                         platform.isToolSupported(entry.getValue()), 
-                        jpa1, jpa2, jpa21, jpa22, jpa30, jpa31, jpa32);
+                        jpa1, jpa2, jpa21, jpa22, jpa30, jpa31, jpa32, jpa40);
                 result.add(jpaProvider);
             }
         }
         return result;
     }
     
-    // TODO: Add missing JPA 3.x providers
+    // TODO: Add missing JPA 4.0 providers
     private static Map<Provider, String> getPossibleContainerProviders() {
         Map<Provider, String> candidates = new HashMap<>();
         candidates.put(ProviderUtil.HIBERNATE_PROVIDER1_0, "hibernatePersistenceProviderIsDefault1.0"); // NOI18N

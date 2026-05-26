@@ -258,13 +258,17 @@ public class EarImpl implements EarImplementation, EarImplementation2,
     @Override
     public String getModuleVersion() {
         Profile prf = getJ2eeProfile();
-        if (prf == Profile.JAKARTA_EE_11_FULL || prf == Profile.JAKARTA_EE_11_FULL) return Application.VERSION_11;
-        if (prf == Profile.JAKARTA_EE_10_FULL || prf == Profile.JAKARTA_EE_10_FULL) return Application.VERSION_10;
-        if (prf == Profile.JAKARTA_EE_9_1_FULL || prf == Profile.JAKARTA_EE_9_FULL) return Application.VERSION_9;
-        if (prf == Profile.JAKARTA_EE_8_FULL || prf == Profile.JAVA_EE_8_FULL) return Application.VERSION_8;
-        if (prf == Profile.JAVA_EE_7_FULL) return Application.VERSION_7;
-        if (prf == Profile.JAVA_EE_6_FULL) return Application.VERSION_6;
-        if (prf == Profile.JAVA_EE_5) return Application.VERSION_5;
+        if (null != prf) return switch (prf) {
+            case JAKARTA_EE_12_FULL -> Application.VERSION_12;
+            case JAKARTA_EE_11_FULL -> Application.VERSION_11;
+            case JAKARTA_EE_10_FULL -> Application.VERSION_10;
+            case JAKARTA_EE_9_1_FULL, JAKARTA_EE_9_FULL -> Application.VERSION_9;
+            case JAKARTA_EE_8_FULL, JAVA_EE_8_FULL -> Application.VERSION_8;
+            case JAVA_EE_7_FULL -> Application.VERSION_7;
+            case JAVA_EE_6_FULL -> Application.VERSION_6;
+            case JAVA_EE_5 -> Application.VERSION_5;
+            default -> Application.VERSION_1_4;
+        };
         return Application.VERSION_1_4;
     }
 
@@ -443,7 +447,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 }
             }
         }
-        return toRet.toArray(new J2eeModule[0]);
+        return toRet.toArray(J2eeModule[]::new);
     }
 
     @Override
@@ -759,7 +763,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                             } else if ("bundleFileName".equals(param.getName())) { //NOI18N
                                 mm.bundleFileName = value;
                             } else if ("excluded".equals(param.getName())) { //NOI18N
-                                mm.excluded = Boolean.valueOf(value);
+                                mm.excluded = Boolean.parseBoolean(value);
                             }
                         }
                     }
@@ -769,7 +773,7 @@ public class EarImpl implements EarImplementation, EarImplementation2,
                 }
             }
         }
-        return toRet.toArray(new MavenModule[0]);
+        return toRet.toArray(MavenModule[]::new);
     }
 
     private static class MavenModule {

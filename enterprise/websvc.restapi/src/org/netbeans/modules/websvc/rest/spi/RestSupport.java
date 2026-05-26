@@ -87,6 +87,7 @@ public abstract class RestSupport {
     public static final String TEST_RESBEANS_CSS2 = "css_master-all.css";//NOI18N
     public static final String REST_SERVLET_ADAPTOR = "ServletAdaptor";//NOI18N
     public static final String JAX_RS_APPLICATION_CLASS = "javax.ws.rs.core.Application"; //NOI18N
+    public static final String JAX_RS_APPLICATION_JAKARTA_CLASS = "jakarta.ws.rs.core.Application"; //NOI18N
     public static final String REST_SERVLET_ADAPTOR_CLASS = "com.sun.jersey.spi.container.servlet.ServletContainer"; //NOI18N
     public static final String REST_SERVLET_ADAPTOR_CLASS_OLD = "com.sun.ws.rest.impl.container.servlet.ServletAdaptor";  //NOI18N
     public static final String REST_SERVLET_ADAPTOR_CLASS_2_0 = "org.glassfish.jersey.servlet.ServletContainer"; //NOI18N
@@ -393,7 +394,10 @@ public abstract class RestSupport {
      * Check to see if there is JTA support.
      */
     public boolean hasJTASupport() {
-        return MiscPrivateUtilities.hasResource(getProject(), "javax/transaction/UserTransaction.class");  // NOI18N
+        final String javaxClazz = "javax/transaction/UserTransaction.class"; // NOI18N
+        final String jakartaClazz = "jakarta/transaction/UserTransaction.class"; // NOI18N
+        return MiscPrivateUtilities.hasResource(getProject(), javaxClazz)
+                || MiscPrivateUtilities.hasResource(getProject(), jakartaClazz);
     }
 
     /**
@@ -497,6 +501,19 @@ public abstract class RestSupport {
         // Fix for BZ#216345: JAVA_EE_6_WEB profile doesn't contain JAX-RS API
         return (isJee6 && MiscPrivateUtilities.supportsTargetProfile(project, Profile.JAVA_EE_6_FULL)) 
                 || (profile != null && profile.isAtLeast(Profile.JAVA_EE_7_WEB));
+    }
+    
+    /**
+     * Is this a Jakarta EE 12 profile project?
+     */
+    public boolean isJakartaEE12() {
+        WebModule webModule = WebModule.getWebModule(project.getProjectDirectory());
+        if ( webModule == null ){
+            return false;
+        }
+        Profile profile = webModule.getJ2eeProfile();
+        return Profile.JAKARTA_EE_12_WEB.equals(profile) ||
+                        Profile.JAKARTA_EE_12_FULL.equals(profile);
     }
 
     /**
@@ -653,7 +670,8 @@ public abstract class RestSupport {
         if (checkServerClasspath) {
             JaxRsStackSupport support = getJaxRsStackSupport();
             if (support != null){
-                return support.isBundled(JAX_RS_APPLICATION_CLASS);
+                return support.isBundled(JAX_RS_APPLICATION_CLASS)
+                        || support.isBundled(JAX_RS_APPLICATION_JAKARTA_CLASS);
             }
         }
         return false;

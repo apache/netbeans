@@ -53,7 +53,8 @@ class JpaSupportImpl implements JpaSupportImplementation {
                     instance.isJpa22(),
                     instance.isJpa30(),
                     instance.isJpa31(),
-                    instance.isJpa32());
+                    instance.isJpa32(),
+                    instance.isJpa40());
     }
 
     @Override
@@ -68,7 +69,8 @@ class JpaSupportImpl implements JpaSupportImplementation {
                 instance.isJpa22(),
                 instance.isJpa30(),
                 instance.isJpa31(),
-                instance.isJpa32()));
+                instance.isJpa32(),
+                instance.isJpa40()));
         // TomEE PluME has Eclipselink and OpenJPA
         if (instance.isTomEEplume()) {
             providers.add(JpaProviderFactory.createJpaProvider(
@@ -80,7 +82,8 @@ class JpaSupportImpl implements JpaSupportImplementation {
                     instance.isJpa22(),
                     instance.isJpa30(),
                     instance.isJpa31(),
-                    instance.isJpa32()));
+                    instance.isJpa32(),
+                    instance.isJpa40()));
         }
         return providers;
     }

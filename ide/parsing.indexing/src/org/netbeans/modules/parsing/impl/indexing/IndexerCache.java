@@ -261,6 +261,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
         "text/x-persistence3.0", //NOI18N
         "text/x-persistence3.1", //NOI18N
         "text/x-persistence3.2", //NOI18N
+        "text/x-persistence4.0", //NOI18N
         "text/x-orm1.0", //NOI18N
         "text/x-orm2.0", //NOI18N
         "text/x-orm2.1", //NOI18N
@@ -268,6 +269,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
         "text/x-orm3.0", //NOI18N
         "text/x-orm3.1", //NOI18N
         "text/x-orm3.2", //NOI18N
+        "text/x-orm4.0", //NOI18N
         "application/xhtml+xml", //NOI18N
         "text/x-maven-pom+xml", //NOI18N
         "text/x-maven-profile+xml", //NOI18N
@@ -286,18 +288,21 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
         "text/x-dd-servlet5.0", //NOI18N
         "text/x-dd-servlet6.0", //NOI18N
         "text/x-dd-servlet6.1", //NOI18N
+        "text/x-dd-servlet6.2", //NOI18N
         "text/x-dd-servlet-fragment3.0", //NOI18N
         "text/x-dd-servlet-fragment3.1", //NOI18N
         "text/x-dd-servlet-fragment4.0", //NOI18N
         "text/x-dd-servlet-fragment5.0", //NOI18N
         "text/x-dd-servlet-fragment6.0", //NOI18N
         "text/x-dd-servlet-fragment6.1", //NOI18N
+        "text/x-dd-servlet-fragment6.2", //NOI18N
         "text/x-dd-ejbjar2.0", //NOI18N
         "text/x-dd-ejbjar2.1", //NOI18N
         "text/x-dd-ejbjar3.0", //NOI18N
         "text/x-dd-ejbjar3.1", //NOI18N
         "text/x-dd-ejbjar3.2", //NOI18N
         "text/x-dd-ejbjar4.0", //NOI18N
+        "text/x-dd-ejbjar4.1", //NOI18N
         "text/x-dd-client1.3", //NOI18N
         "text/x-dd-client1.4", //NOI18N
         "text/x-dd-client5.0", //NOI18N
@@ -307,6 +312,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
         "text/x-dd-client9.0", //NOI18N
         "text/x-dd-client10.0", //NOI18N
         "text/x-dd-client11.0", //NOI18N
+        "text/x-dd-client12.0", //NOI18N
         "text/x-dd-application1.4", //NOI18N
         "text/x-dd-application5.0", //NOI18N
         "text/x-dd-application6.0", //NOI18N
@@ -315,6 +321,7 @@ public abstract class IndexerCache <T extends SourceIndexerFactory> {
         "text/x-dd-application9.0", //NOI18N
         "text/x-dd-application10.0", //NOI18N
         "text/x-dd-application11.0", //NOI18N
+        "text/x-dd-application12.0", //NOI18N
         "text/x-dd-sun-web+xml", //NOI18N
         "text/x-dd-sun-ejb-jar+xml", //NOI18N
         "text/x-dd-sun-application+xml", //NOI18N

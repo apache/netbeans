@@ -308,26 +308,31 @@ public final class ProjectEar extends J2eeApplicationProvider
     public String getModuleVersion () {
         Profile p = Profile.fromPropertiesString(project.evaluator().getProperty(EarProjectProperties.J2EE_PLATFORM));
         if (p == null) {
-            p = Profile.JAVA_EE_7_FULL;
+            p = Profile.JAKARTA_EE_8_FULL;
         }
-        if (Profile.JAKARTA_EE_11_FULL.equals(p)) {
-            return Application.VERSION_11;
-        } else if (Profile.JAKARTA_EE_10_FULL.equals(p)) {
-            return Application.VERSION_10;
-        } else if (Profile.JAKARTA_EE_9_1_FULL.equals(p) || Profile.JAKARTA_EE_9_FULL.equals(p)) {
-            return Application.VERSION_9;
-        } else if (Profile.JAKARTA_EE_8_FULL.equals(p) || Profile.JAVA_EE_8_FULL.equals(p)) {
-            return Application.VERSION_8;
-        } else if (Profile.JAVA_EE_7_FULL.equals(p)) {
-            return Application.VERSION_7;
-        } else if (Profile.JAVA_EE_6_FULL.equals(p)) {
-            return Application.VERSION_6;
-        } else if (Profile.JAVA_EE_5.equals(p)) {
-            return Application.VERSION_5;
-        } else if (Profile.J2EE_14.equals(p)) {
-            return Application.VERSION_1_4;
-        } else {
-            return Application.VERSION_7;
+        switch (p) {
+            case JAKARTA_EE_12_FULL:
+                return Application.VERSION_12;
+            case JAKARTA_EE_11_FULL:
+                return Application.VERSION_11;
+            case JAKARTA_EE_10_FULL:
+                return Application.VERSION_10;
+            case JAKARTA_EE_9_1_FULL:
+            case JAKARTA_EE_9_FULL:
+                return Application.VERSION_9;
+            case JAKARTA_EE_8_FULL:
+            case JAVA_EE_8_FULL:
+                return Application.VERSION_8;
+            case JAVA_EE_7_FULL:
+                return Application.VERSION_7;
+            case JAVA_EE_6_FULL:
+                return Application.VERSION_6;
+            case JAVA_EE_5:
+                return Application.VERSION_5;
+            case J2EE_14:
+                return Application.VERSION_1_4;
+            default:
+                return Application.VERSION_8;
         }
     }
     

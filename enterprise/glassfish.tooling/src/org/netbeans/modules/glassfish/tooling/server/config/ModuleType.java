@@ -64,7 +64,7 @@ public enum ModuleType {
      * conversion.
      */
     private static final Map<String, ModuleType> stringValuesMap
-            = new HashMap<>(2 * values().length);
+            = new HashMap<>(8);
 
     // Initialize backward String conversion Map.
     static {

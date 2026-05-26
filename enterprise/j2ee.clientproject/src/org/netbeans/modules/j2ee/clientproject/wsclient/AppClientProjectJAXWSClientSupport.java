@@ -23,7 +23,6 @@ package org.netbeans.modules.j2ee.clientproject.wsclient;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
@@ -115,6 +114,9 @@ public class AppClientProjectJAXWSClientSupport extends ProjectJAXWSClientSuppor
                 case JAKARTA_EE_11_WEB:
                 case JAKARTA_EE_11_FULL:
                     return JAKARTA_EE_VERSION_11;
+                case JAKARTA_EE_12_WEB:
+                case JAKARTA_EE_12_FULL:
+                    return JAKARTA_EE_VERSION_12;
                 case JAVA_EE_5:
                     return JAVA_EE_VERSION_15;
                 default:

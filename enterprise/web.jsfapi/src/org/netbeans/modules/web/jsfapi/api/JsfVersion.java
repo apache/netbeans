@@ -35,7 +35,8 @@ public enum JsfVersion {
     JSF_2_3("2.3"),
     JSF_3_0("3.0"),
     JSF_4_0("4.0"),
-    JSF_4_1("4.1");
+    JSF_4_1("4.1"),
+    JSF_5_0("5.0");
 
     private final String version;
 
@@ -48,6 +49,14 @@ public enum JsfVersion {
             return "Faces " + version;
         }
         return "JSF " + version;
+    }
+    
+    /**
+     * 
+     * @return String representation
+     */
+    public String getVersion() {
+        return this.version;
     }
 
     /**

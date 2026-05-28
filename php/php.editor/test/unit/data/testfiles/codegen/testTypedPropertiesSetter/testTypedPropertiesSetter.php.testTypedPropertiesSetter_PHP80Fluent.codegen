@@ -1,0 +1,90 @@
+public  function setInstanceArray(array $$instanceArray): static {
+$$this->instanceArray = $instanceArray;
+return $$this;
+}
+
+public  function setInstanceInt(int $$instanceInt): static {
+$$this->instanceInt = $instanceInt;
+return $$this;
+}
+
+public  function setInstanceString(string $$instanceString): static {
+$$this->instanceString = $instanceString;
+return $$this;
+}
+
+public  function setInstanceBool(bool $$instanceBool): static {
+$$this->instanceBool = $instanceBool;
+return $$this;
+}
+
+public  function setInstanceNull($$instanceNull): static {
+$$this->instanceNull = $instanceNull;
+return $$this;
+}
+
+public  function setInstanceNullable(?string $$instanceNullable): static {
+$$this->instanceNullable = $instanceNullable;
+return $$this;
+}
+
+public  function setInstanceArrayNullable(?array $$instanceArrayNullable): static {
+$$this->instanceArrayNullable = $instanceArrayNullable;
+return $$this;
+}
+
+public  function setInstanceClass(Test53 $$instanceClass): static {
+$$this->instanceClass = $instanceClass;
+return $$this;
+}
+
+public static function setStaticInt(int $$staticInt): static {
+self::$$staticInt = $staticInt;
+return self;
+}
+
+public static function setStaticNullable(?int $$staticNullable): static {
+self::$$staticNullable = $staticNullable;
+return self;
+}
+
+public  function setInstanceInt74($$instanceInt74): static {
+$$this->instanceInt74 = $instanceInt74;
+return $$this;
+}
+
+public  function setInstanceString74($$instanceString74): static {
+$$this->instanceString74 = $instanceString74;
+return $$this;
+}
+
+public  function setInstanceBool74($$instanceBool74): static {
+$$this->instanceBool74 = $instanceBool74;
+return $$this;
+}
+
+public  function setInstanceNullable74($$instanceNullable74): static {
+$$this->instanceNullable74 = $instanceNullable74;
+return $$this;
+}
+
+public static function setStaticInt74($$staticInt74): static {
+self::$$staticInt74 = $staticInt74;
+return self;
+}
+
+public static function setStaticString74($$staticString74): static {
+self::$$staticString74 = $staticString74;
+return self;
+}
+
+public static function setStaticBool74($$staticBool74): static {
+self::$$staticBool74 = $staticBool74;
+return self;
+}
+
+public static function setStaticNullable74($$staticNullable74): static {
+self::$$staticNullable74 = $staticNullable74;
+return self;
+}
+

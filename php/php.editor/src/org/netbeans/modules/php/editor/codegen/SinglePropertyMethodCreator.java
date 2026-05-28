@@ -191,6 +191,9 @@ public interface SinglePropertyMethodCreator<T extends Property> {
         }
 
         private String getReturnType() {
+            if (cgsInfo.isFluentSetter() && cgsInfo.getPhpVersion().hasStaticReturnType()) {
+                return String.format(": %s ", Type.STATIC); // NOI18N
+            }
             if (!cgsInfo.isFluentSetter() && cgsInfo.getPhpVersion().hasVoidReturnType()) {
                 return String.format(": %s ", Type.VOID); // NOI18N
             }

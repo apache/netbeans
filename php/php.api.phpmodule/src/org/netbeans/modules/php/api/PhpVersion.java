@@ -246,6 +246,17 @@ public enum PhpVersion {
     }
 
     /**
+     * Check whether this version supports the static return type. (as of PHP 8.0)
+     *
+     * @return {@code true} if this version supports static return type,
+     * {@code false} otherwise
+     * @since check code
+     */
+    public boolean hasStaticReturnType() {
+        return this.compareTo(PhpVersion.PHP_80) >= 0;
+    }
+
+    /**
      * Check whether this version supports the never type.
      *
      * @return {@code true} if this version supports never type, {@code false}

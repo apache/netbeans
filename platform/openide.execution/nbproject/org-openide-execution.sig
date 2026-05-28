@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.34
+#Version 9.35
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -57,8 +57,6 @@ meth public void setClassAssertionStatus(java.lang.String,boolean)
 meth public void setDefaultAssertionStatus(boolean)
 meth public void setPackageAssertionStatus(java.lang.String,boolean)
 supr java.lang.Object
-hfds assertionLock,classAssertionStatus,classLoaderValueMap,classes,defaultAssertionStatus,defaultDomain,libraries,name,nameAndId,nocerts,package2certs,packageAssertionStatus,packages,parallelLockMap,parent,scl,unnamedModule
-hcls ParallelLoaders
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
@@ -138,7 +136,6 @@ meth public static java.net.URLClassLoader newInstance(java.net.URL[])
 meth public static java.net.URLClassLoader newInstance(java.net.URL[],java.lang.ClassLoader)
 meth public void close() throws java.io.IOException
 supr java.security.SecureClassLoader
-hfds acc,closeables,ucp
 
 CLSS public java.security.SecureClassLoader
 cons protected init()
@@ -148,8 +145,6 @@ meth protected final java.lang.Class<?> defineClass(java.lang.String,byte[],int,
 meth protected final java.lang.Class<?> defineClass(java.lang.String,java.nio.ByteBuffer,java.security.CodeSource)
 meth protected java.security.PermissionCollection getPermissions(java.security.CodeSource)
 supr java.lang.ClassLoader
-hfds pdcache
-hcls CodeSourceKey,DebugHolder
 
 CLSS public abstract org.openide.ServiceType
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.44
+#Version 2.45
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -18,6 +20,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -26,6 +29,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -35,6 +39,9 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface java.util.EventListener
 
@@ -462,7 +469,7 @@ hfds name,url
 CLSS public final static org.netbeans.modules.hudson.spi.BuilderConnector$InstanceData
  outer org.netbeans.modules.hudson.spi.BuilderConnector
 cons public init(java.util.Collection<org.netbeans.modules.hudson.spi.BuilderConnector$JobData>,java.util.Collection<org.netbeans.modules.hudson.spi.BuilderConnector$ViewData>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.util.Collection<org.netbeans.modules.hudson.spi.BuilderConnector$JobData>,java.util.Collection<org.netbeans.modules.hudson.spi.BuilderConnector$ViewData>,java.util.Collection<org.netbeans.modules.hudson.spi.BuilderConnector$FolderData>)
 meth public java.util.Collection<org.netbeans.modules.hudson.spi.BuilderConnector$FolderData> getFoldersData()
 meth public java.util.Collection<org.netbeans.modules.hudson.spi.BuilderConnector$JobData> getJobsData()
@@ -652,11 +659,11 @@ CLSS public abstract org.openide.filesystems.FileSystem
 cons public init()
 fld public final static java.lang.String PROP_DISPLAY_NAME = "displayName"
 fld public final static java.lang.String PROP_HIDDEN = "hidden"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String PROP_READ_ONLY = "readOnly"
 fld public final static java.lang.String PROP_ROOT = "root"
 fld public final static java.lang.String PROP_SYSTEM_NAME = "systemName"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String PROP_VALID = "valid"
 innr public abstract interface static AtomicAction
 intf java.io.Serializable
@@ -664,7 +671,7 @@ meth protected final void fireFileStatusChanged(org.openide.filesystems.FileStat
 meth protected final void firePropertyChange(java.lang.String,java.lang.Object,java.lang.Object)
 meth protected final void fireVetoableChange(java.lang.String,java.lang.Object,java.lang.Object) throws java.beans.PropertyVetoException
 meth protected final void setSystemName(java.lang.String) throws java.beans.PropertyVetoException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract boolean isReadOnly()
 meth public abstract java.lang.String getDisplayName()
 meth public abstract org.openide.filesystems.FileObject findResource(java.lang.String)
@@ -672,7 +679,7 @@ meth public abstract org.openide.filesystems.FileObject getRoot()
 meth public final boolean isDefault()
 meth public final boolean isValid()
 meth public final java.lang.String getSystemName()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public final void addFileChangeListener(org.openide.filesystems.FileChangeListener)
 meth public final void addFileStatusListener(org.openide.filesystems.FileStatusListener)
 meth public final void addPropertyChangeListener(java.beans.PropertyChangeListener)
@@ -685,7 +692,7 @@ meth public final void runAtomicAction(org.openide.filesystems.FileSystem$Atomic
 meth public java.lang.String toString()
 meth public org.openide.filesystems.FileObject createTempFile(org.openide.filesystems.FileObject,java.lang.String,java.lang.String,boolean) throws java.io.IOException
 meth public org.openide.filesystems.FileObject find(java.lang.String,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.openide.filesystems.FileObject getTempFolder() throws java.io.IOException
 meth public org.openide.filesystems.StatusDecorator getDecorator()
 meth public org.openide.util.Lookup findExtrasFor(java.util.Set<org.openide.filesystems.FileObject>)

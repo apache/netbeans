@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 6.93
+#Version 6.94
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -276,8 +276,6 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
-hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
-hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS public java.awt.Container
 cons public init()
@@ -362,8 +360,6 @@ meth public void transferFocusDownCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.awt.Component
-hfds EMPTY_ARRAY,INCLUDE_SELF,SEARCH_HEAVYWEIGHTS,component,containerListener,containerSerializedDataVersion,descendUnconditionallyWhenValidating,descendantsCount,dispatcher,eventLog,focusCycleRoot,focusTraversalPolicy,focusTraversalPolicyProvider,isJavaAwtSmartInvalidate,layoutMgr,listeningBoundsChildren,listeningChildren,log,mixingLog,modalAppContext,modalComp,numOfHWComponents,numOfLWComponents,preserveBackgroundColor,printing,printingThreads,serialPersistentFields,serialVersionUID
-hcls DropTargetEventTargetFilter,EventTargetFilter,MouseEventTargetFilter,WakingRunnable
 
 CLSS public abstract interface java.awt.ItemSelectable
 meth public abstract java.lang.Object[] getSelectedObjects()
@@ -639,8 +635,6 @@ meth public void setVerticalTextPosition(int)
  anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The vertical position of the text relative to the icon.", java.lang.String[] enumerationValues=["SwingConstants.TOP", "SwingConstants.CENTER", "SwingConstants.BOTTOM"])
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds action,actionPropertyChangeListener,borderPaintedSet,contentAreaFilled,contentAreaFilledSet,defaultCapable,defaultIcon,defaultMargin,disabledIcon,disabledSelectedIcon,handler,hideActionText,horizontalAlignment,horizontalTextPosition,iconTextGap,iconTextGapSet,margin,mnemonic,mnemonicIndex,multiClickThreshhold,paintBorder,paintFocus,pressedIcon,rolloverEnabled,rolloverEnabledSet,rolloverIcon,rolloverSelectedIcon,selectedIcon,setLayout,text,verticalAlignment,verticalTextPosition
-hcls ButtonActionPropertyChangeListener,Handler
 
 CLSS public abstract javax.swing.AbstractListModel<%0 extends java.lang.Object>
 cons protected init()
@@ -774,8 +768,6 @@ meth public void updateUI()
 meth public {javax.swing.JComboBox%0} getItemAt(int)
 meth public {javax.swing.JComboBox%0} getPrototypeDisplayValue()
 supr javax.swing.JComponent
-hfds action,actionPropertyChangeListener,firingActionEvent,prototypeDisplayValue,selectingItem,uiClassID,updateInProgress
-hcls ComboBoxActionPropertyChangeListener,DefaultKeySelectionManager
 
 CLSS public abstract javax.swing.JComponent
  anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UIClassID", java.lang.String description="")
@@ -974,8 +966,6 @@ meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
-hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaHint,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,lcdRenderingHint,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
-hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public javax.swing.JMenu
  anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="", java.lang.String description="A popup window containing menu items displayed in a menu bar.")
@@ -1055,8 +1045,6 @@ meth public void setSelected(boolean)
  anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=true, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="When the menu is selected, its popup child is shown.", java.lang.String[] enumerationValues=[])
 meth public void updateUI()
 supr javax.swing.JMenuItem
-hfds DEBUG,TRACE,VERBOSE,customMenuLocation,delay,menuChangeListener,menuEvent,popupMenu,uiClassID
-hcls MenuChangeListener
 
 CLSS public javax.swing.JMenuItem
  anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UIClassID", java.lang.String description="An item which can be selected in a menu.")
@@ -1113,8 +1101,6 @@ meth public void setUI(javax.swing.plaf.MenuItemUI)
  anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the LookAndFeel.", java.lang.String[] enumerationValues=[])
 meth public void updateUI()
 supr javax.swing.AbstractButton
-hfds DEBUG,TRACE,VERBOSE,accelerator,isMouseDragged,uiClassID
-hcls MenuItemFocusListener
 
 CLSS public javax.swing.JPanel
  anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="A generic lightweight container.")
@@ -1134,7 +1120,6 @@ meth public void setUI(javax.swing.plaf.PanelUI)
  anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the Component's LookAndFeel.", java.lang.String[] enumerationValues=[])
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds uiClassID
 
 CLSS public javax.swing.JScrollPane
  anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="A specialized container that manages a viewport, optional scrollbars and headers")
@@ -1209,7 +1194,6 @@ meth public void setWheelScrollingEnabled(boolean)
  anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=false, boolean preferred=false, boolean required=false, boolean visualUpdate=false, java.lang.String description="Flag for enabling/disabling mouse wheel scrolling", java.lang.String[] enumerationValues=[])
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds uiClassID,viewportBorder,wheelScrollState
 
 CLSS public abstract interface javax.swing.ListCellRenderer<%0 extends java.lang.Object>
 meth public abstract java.awt.Component getListCellRendererComponent(javax.swing.JList<? extends {javax.swing.ListCellRenderer%0}>,{javax.swing.ListCellRenderer%0},int,boolean,boolean)
@@ -2067,7 +2051,7 @@ meth public void updateUI()
 meth public void validate()
 supr javax.swing.JScrollPane
 hfds LOG,MIN_TREEVIEW_HEIGHT,MIN_TREEVIEW_WIDTH,TIME_TO_COLLAPSE,allowedDragActions,allowedDropActions,autoWaitCursor,defaultActionEnabled,defaultActionListener,dragActive,dragSupport,dropActive,dropSupport,dropTargetPopupAllowed,lastSearchField,manager,managerListener,origSelectionPaths,popupListener,qs,removedNodeWasSelected,searchConstraints,searchPanel,serialVersionUID,treeModel,visHolder,wlpc,wlvc
-hcls CursorR,DummyTransferHandler,ExplorerScrollPaneLayout,ExplorerTree,PopupAdapter,PopupSupport,TreePropertyListener,VisualizerHolder
+hcls DelayedWaitCursor,DummyTransferHandler,ExplorerScrollPaneLayout,ExplorerTree,PopupAdapter,PopupSupport,TreePropertyListener,VisualizerHolder
 
 CLSS public org.openide.explorer.view.Visualizer
 meth public static javax.swing.tree.TreeNode findVisualizer(org.openide.nodes.Node)

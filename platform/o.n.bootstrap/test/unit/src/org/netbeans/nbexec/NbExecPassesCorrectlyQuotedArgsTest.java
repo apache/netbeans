@@ -22,9 +22,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
@@ -70,7 +76,7 @@ public class NbExecPassesCorrectlyQuotedArgsTest extends NbTestCase {
         String str = "1 * * * *";
         run(wd, str);
         
-        String[] args = MainCallback.getArgs(getWorkDir());
+        String[] args = MainCallback.getArgs(wd);
         assertNotNull("args passed in", args);
         List<String> a = Arrays.asList(args);
         if (!a.contains(str)) {
@@ -78,7 +84,85 @@ public class NbExecPassesCorrectlyQuotedArgsTest extends NbTestCase {
         }
     }
     
+    public void testJdkHomePassed() throws Exception {
+        File wd = new File(getWorkDir(), "jdk dir");
+        wd.mkdirs();
+        String origJdkHome = System.getProperty("java.home");
+        Path origJdk = new File(origJdkHome).toPath();
+        String[] linkNames = {
+            "openjdk's jdkhome",
+            "jdk \"latest\"",
+            "current$JAVA_HOME",
+            "link\"'d jdk"
+        };
+        Path[] links = new Path[linkNames.length];
+        for (int i = 0; i < linkNames.length; i++) {
+            links[i] = new File(wd, linkNames[i]).toPath();
+        }
+
+        String[] args = {
+            "1 * * * *",
+            "a b",
+            "c d",
+            "$1",
+            "$2",
+            "$3\"`$2`'$1"
+        };
+
+        for (Path link : links) {
+            try {
+                Path l = Files.createSymbolicLink(link, origJdk);
+                if (link.compareTo(l) != 0) {
+                    fail("link creation mismatch: expected<" + link + "> != actual<" + l + ">");
+                }
+                System.setProperty("java.home", link.toString());
+                String[] nbArgs = {
+                    "--jdkhome",
+                    link.toString()
+                };
+                run(wd, Stream.concat(Arrays.stream(nbArgs), Arrays.stream(args)).collect(Collectors.toList()).toArray(new String[]{}));
+
+                String[] gotArgs = MainCallback.getArgs(wd);
+                assertNotNull("args passed in", gotArgs);
+                for (int in = args.length, jn = gotArgs.length, i = 0, j = Math.max(0, jn - in); i < in ; i++, j++) {
+                    if (j >= jn || !Objects.equals(args[i], gotArgs[j]))
+                        fail("args do not match: expected<" + Arrays.toString(args) + "> != actual<" + Arrays.toString(gotArgs) + ">");
+                }
+            } finally {
+                System.setProperty("java.home", origJdkHome);
+                Files.delete(link);
+            }
+        }
+    }
     
+    public void testJavaOptionsDefinesPassed() throws Exception {
+        File wd = new File(getWorkDir(), "opt's dir");
+        wd.mkdirs();
+
+        String[] options = {
+            "1 * * * *",
+            "a b",
+            "c d",
+            "$1",
+            "$2",
+            "$3\"`$2`'$1"
+        };
+        
+        String[] args = new String[options.length + 1];
+        for (int idx = 0; idx < options.length; idx++) {
+            args[idx] = "-J-D" + MainCallback.PROPERTY_PREFIX_TEST_NBEXEC_OPTIONS + idx + "=" + options[idx];
+        }
+        args[args.length - 1] = "-J-D" + MainCallback.PROPERTY_ENABLE_TEST_NBEXEC_OPTIONS + "=true";
+
+        run(wd, args);
+        Properties gotOptions = MainCallback.getTestPropertyOptions(wd);
+        assertNotNull("args passed in", gotOptions);
+        assertEquals("same number of options received", options.length, gotOptions.size());
+        for (int idx = 0; idx < options.length; idx++) {
+            assertEquals("same option " + idx, options[idx], gotOptions.getProperty(MainCallback.PROPERTY_PREFIX_TEST_NBEXEC_OPTIONS + idx));
+        }
+    }
+
     private void run(File workDir, String... args) throws Exception {
         URL u = Lookup.class.getProtectionDomain().getCodeSource().getLocation();
         File f = Utilities.toFile(u.toURI());
@@ -94,7 +178,7 @@ public class NbExecPassesCorrectlyQuotedArgsTest extends NbTestCase {
         allArgs.addFirst("-J-Dnetbeans.mainclass=" + MainCallback.class.getName());
         allArgs.addFirst(System.getProperty("java.home"));
         allArgs.addFirst("--jdkhome");
-        allArgs.addFirst(getWorkDirPath());
+        allArgs.addFirst(workDir.getAbsolutePath());
         allArgs.addFirst("--userdir");
         allArgs.addFirst(testf.getPath());
         allArgs.addFirst("-cp:p");

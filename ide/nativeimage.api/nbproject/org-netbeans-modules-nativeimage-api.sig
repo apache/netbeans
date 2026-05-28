@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 0.23
+#Version 0.24
 
 CLSS public abstract interface java.io.Serializable
 
@@ -15,6 +15,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -120,9 +121,9 @@ meth public java.util.Map<org.netbeans.modules.nativeimage.api.SourceInfo,java.u
 meth public java.util.Map<org.netbeans.modules.nativeimage.api.SourceInfo,java.util.List<org.netbeans.modules.nativeimage.api.Symbol>> listVariables(java.lang.String,boolean,int)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public java.util.concurrent.CompletableFuture<java.lang.Void> attach(java.lang.String,long,java.lang.String,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.concurrent.CompletableFuture<java.lang.Void> start(java.util.List<java.lang.String>,java.io.File,java.lang.String,java.lang.String,org.netbeans.api.extexecution.ExecutionDescriptor,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.concurrent.CompletableFuture<java.lang.Void> start(org.netbeans.modules.nativeimage.api.debug.StartDebugParameters,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
 meth public java.util.concurrent.CompletableFuture<org.netbeans.modules.nativeimage.api.debug.NIVariable> evaluateAsync(java.lang.String,java.lang.String,org.netbeans.modules.nativeimage.api.debug.NIFrame)
 meth public org.netbeans.api.debugger.Breakpoint addLineBreakpoint(java.lang.Object,org.netbeans.modules.nativeimage.api.debug.NILineBreakpointDescriptor)
@@ -224,9 +225,9 @@ meth public java.util.List<org.netbeans.modules.nativeimage.api.Location> listLo
 meth public java.util.Map<org.netbeans.modules.nativeimage.api.SourceInfo,java.util.List<org.netbeans.modules.nativeimage.api.Symbol>> listFunctions(java.lang.String,boolean,int)
 meth public java.util.Map<org.netbeans.modules.nativeimage.api.SourceInfo,java.util.List<org.netbeans.modules.nativeimage.api.Symbol>> listVariables(java.lang.String,boolean,int)
 meth public java.util.concurrent.CompletableFuture<java.lang.Void> attach(java.lang.String,long,java.lang.String,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.concurrent.CompletableFuture<java.lang.Void> start(java.util.List<java.lang.String>,java.io.File,java.lang.String,java.lang.String,org.netbeans.api.extexecution.ExecutionDescriptor,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.concurrent.CompletableFuture<java.lang.Void> start(org.netbeans.modules.nativeimage.api.debug.StartDebugParameters,java.util.function.Consumer<org.netbeans.api.debugger.DebuggerEngine>)
 
 CLSS public abstract interface org.netbeans.modules.nativeimage.spi.debug.NIDebuggerServiceProvider

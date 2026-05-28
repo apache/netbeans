@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.49
+#Version 1.50
 
 CLSS public abstract interface java.beans.BeanInfo
 fld public final static int ICON_COLOR_16x16 = 1
@@ -42,6 +42,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -65,12 +66,13 @@ meth protected java.net.InetAddress getHostAddress(java.net.URL)
 meth protected java.net.URLConnection openConnection(java.net.URL,java.net.Proxy) throws java.io.IOException
 meth protected void parseURL(java.net.URL,java.lang.String,int,int)
 meth protected void setURL(java.net.URL,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void setURL(java.net.URL,java.lang.String,java.lang.String,int,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 supr java.lang.Object
 
 CLSS public abstract interface java.util.Collection<%0 extends java.lang.Object>
 intf java.lang.Iterable<{java.util.Collection%0}>
+meth public <%0 extends java.lang.Object> {%%0}[] toArray(java.util.function.IntFunction<{%%0}[]>)
 meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
 meth public abstract boolean add({java.util.Collection%0})
 meth public abstract boolean addAll(java.util.Collection<? extends {java.util.Collection%0}>)
@@ -95,6 +97,8 @@ CLSS public abstract interface java.util.EventListener
 
 CLSS public abstract interface java.util.Set<%0 extends java.lang.Object>
 intf java.util.Collection<{java.util.Set%0}>
+meth public !varargs static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0}[])
+ anno 0 java.lang.SafeVarargs()
 meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
 meth public abstract boolean add({java.util.Set%0})
 meth public abstract boolean addAll(java.util.Collection<? extends {java.util.Set%0}>)
@@ -111,6 +115,18 @@ meth public abstract java.lang.Object[] toArray()
 meth public abstract java.util.Iterator<{java.util.Set%0}> iterator()
 meth public abstract void clear()
 meth public java.util.Spliterator<{java.util.Set%0}> spliterator()
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> copyOf(java.util.Collection<? extends {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of()
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
 
 CLSS public abstract org.netbeans.api.debugger.Breakpoint
 cons public init()
@@ -416,7 +432,7 @@ meth public abstract org.openide.filesystems.FileObject[] getFileObjects(java.ne
 meth public static java.net.URL findURL(org.openide.filesystems.FileObject,int)
 meth public static org.openide.filesystems.FileObject findFileObject(java.net.URL)
 meth public static org.openide.filesystems.FileObject[] findFileObjects(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 supr java.lang.Object
 hfds CACHE_JUST_COMPUTING,cache,result,threadCache
 hcls DefaultURLMapper

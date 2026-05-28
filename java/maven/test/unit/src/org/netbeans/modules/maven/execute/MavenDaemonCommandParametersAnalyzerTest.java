@@ -163,6 +163,38 @@ public class MavenDaemonCommandParametersAnalyzerTest {
         assertTrue(checkisMultiThreadedMvnd("-Dmvnd.threads=foo -Dmaven.test.skip=true"));
     }
 
+    // #9337 — compact -T<n> form
+    @Test
+    public void validateMultiThreadedCompactT2() {
+        assertTrue(checkisMultiThreadedMvnd("-T2"));
+    }
+
+    @Test
+    public void validateSingleThreadedCompactT1() {
+        assertFalse(checkisMultiThreadedMvnd("-T1"));
+    }
+
+    @Test
+    public void validateMultiThreadedThreadsEquals() {
+        assertTrue(checkisMultiThreadedMvnd("--threads=2"));
+    }
+
+    @Test
+    public void validateSingleThreadedThreadsEquals1() {
+        assertFalse(checkisMultiThreadedMvnd("--threads=1"));
+    }
+
+    @Test
+    public void validateMultiThreadedCompactT1C() {
+        assertTrue(checkisMultiThreadedMvnd("-T1C"));
+    }
+
+    @Test
+    public void validateDanglingTFlagIsMultiThreadedMvnd() {
+        // mvnd is MT by default; lone -T with no value should not flip to ST
+        assertTrue(checkisMultiThreadedMvnd("-T"));
+    }
+
     private boolean checkisMultiThreadedMvnd(String params) {
         return MavenCommandLineExecutor.isMultiThreadedMvnd(Arrays.asList(params.split(" ")));
     }

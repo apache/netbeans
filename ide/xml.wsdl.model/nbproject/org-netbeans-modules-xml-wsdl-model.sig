@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.64.0
+#Version 1.65.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -8,8 +8,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -18,6 +20,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -26,6 +29,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -35,6 +39,9 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface java.util.EventListener
 
@@ -57,14 +64,14 @@ intf org.netbeans.modules.xml.wsdl.model.WSDLComponent
 intf org.netbeans.modules.xml.xam.Nameable<org.netbeans.modules.xml.wsdl.model.WSDLComponent>
 meth public abstract org.netbeans.modules.xml.xam.Reference<org.netbeans.modules.xml.wsdl.model.Fault> getFault()
 meth public abstract void setFault(org.netbeans.modules.xml.xam.Reference<org.netbeans.modules.xml.wsdl.model.Fault>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public abstract interface org.netbeans.modules.xml.wsdl.model.BindingInput
 intf org.netbeans.modules.xml.wsdl.model.WSDLComponent
 intf org.netbeans.modules.xml.xam.Nameable<org.netbeans.modules.xml.wsdl.model.WSDLComponent>
 meth public abstract org.netbeans.modules.xml.xam.Reference<org.netbeans.modules.xml.wsdl.model.Input> getInput()
 meth public abstract void setInput(org.netbeans.modules.xml.xam.Reference<org.netbeans.modules.xml.wsdl.model.Input>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public abstract interface org.netbeans.modules.xml.wsdl.model.BindingOperation
 fld public final static java.lang.String BINDING_FAULT_PROPERTY = "fault"
@@ -88,7 +95,7 @@ intf org.netbeans.modules.xml.wsdl.model.WSDLComponent
 intf org.netbeans.modules.xml.xam.Nameable<org.netbeans.modules.xml.wsdl.model.WSDLComponent>
 meth public abstract org.netbeans.modules.xml.xam.Reference<org.netbeans.modules.xml.wsdl.model.Output> getOutput()
 meth public abstract void setOutput(org.netbeans.modules.xml.xam.Reference<org.netbeans.modules.xml.wsdl.model.Output>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public abstract interface org.netbeans.modules.xml.wsdl.model.Definitions
 fld public final static java.lang.String BINDING_PROPERTY = "binding"
@@ -1137,7 +1144,7 @@ meth public javax.swing.text.Document getBaseDocument()
 meth public org.netbeans.modules.xml.xam.dom.AbstractDocumentComponent findComponent(org.netbeans.modules.xml.xam.dom.AbstractDocumentComponent,java.util.List<org.w3c.dom.Element>,int)
 meth public org.netbeans.modules.xml.xam.dom.ChangeInfo prepareChangeInfo(java.util.List<? extends org.w3c.dom.Node>,java.util.List<? extends org.w3c.dom.Node>)
 meth public org.netbeans.modules.xml.xam.dom.ChangeInfo prepareChangeInfo(java.util.List<org.w3c.dom.Node>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(int)
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(java.util.List<org.w3c.dom.Element>)
 meth public org.netbeans.modules.xml.xam.dom.DocumentComponent findComponent(org.w3c.dom.Element)

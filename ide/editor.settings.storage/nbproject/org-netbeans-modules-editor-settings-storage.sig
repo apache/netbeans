@@ -1,16 +1,19 @@
 #Signature file v4.1
-#Version 1.83.0
+#Version 1.84.0
 
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -52,9 +55,9 @@ cons public init()
 fld public final static java.lang.String PROP_CURRENT_FONT_COLOR_PROFILE = "currentFontColorProfile"
 fld public final static java.lang.String PROP_CURRENT_KEY_MAP_PROFILE = "currentKeyMapProfile"
 fld public final static java.lang.String PROP_DEFAULT_FONT_COLORS = "defaultFontColors"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String PROP_EDITOR_FONT_COLORS
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String PROP_MIME_TYPES = "mime-types"
 meth public abstract boolean isCustomFontColorProfile(java.lang.String)
 meth public abstract boolean isCustomKeymapProfile(java.lang.String)
@@ -62,9 +65,9 @@ meth public abstract java.lang.String getCurrentFontColorProfile()
 meth public abstract java.lang.String getCurrentKeyMapProfile()
 meth public abstract java.lang.String getLanguageName(java.lang.String)
 meth public abstract java.util.Collection<javax.swing.text.AttributeSet> getDefaultFontColorDefaults(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.Collection<javax.swing.text.AttributeSet> getDefaultFontColors(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract java.util.Map<java.lang.String,javax.swing.text.AttributeSet> getAnnotationDefaults(java.lang.String)
 meth public abstract java.util.Map<java.lang.String,javax.swing.text.AttributeSet> getAnnotations(java.lang.String)
 meth public abstract java.util.Map<java.lang.String,javax.swing.text.AttributeSet> getHighlightingDefaults(java.lang.String)
@@ -83,7 +86,7 @@ meth public abstract void setAnnotations(java.lang.String,java.util.Map<java.lan
 meth public abstract void setCurrentFontColorProfile(java.lang.String)
 meth public abstract void setCurrentKeyMapProfile(java.lang.String)
 meth public abstract void setDefaultFontColors(java.lang.String,java.util.Collection<javax.swing.text.AttributeSet>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract void setHighlightings(java.lang.String,java.util.Map<java.lang.String,javax.swing.text.AttributeSet>)
 meth public static org.netbeans.modules.editor.settings.storage.api.EditorSettings getDefault()
 supr java.lang.Object
@@ -195,7 +198,7 @@ supr java.lang.Object
 hfds apiCategory,javaType,value
 
 CLSS public final org.netbeans.modules.editor.settings.storage.spi.support.StorageSupport
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static java.lang.String getLocalizingBundleMessage(org.openide.filesystems.FileObject,java.lang.String,java.lang.String)
 meth public static java.lang.String keyStrokesToString(java.util.Collection<? extends javax.swing.KeyStroke>,boolean)
 meth public static javax.swing.KeyStroke[] stringToKeyStrokes(java.lang.String,boolean)
@@ -214,6 +217,7 @@ meth public abstract void skippedEntity(java.lang.String) throws org.xml.sax.SAX
 meth public abstract void startDocument() throws org.xml.sax.SAXException
 meth public abstract void startElement(java.lang.String,java.lang.String,java.lang.String,org.xml.sax.Attributes) throws org.xml.sax.SAXException
 meth public abstract void startPrefixMapping(java.lang.String,java.lang.String) throws org.xml.sax.SAXException
+meth public void declaration(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException
 
 CLSS public abstract interface org.xml.sax.DTDHandler
 meth public abstract void notationDecl(java.lang.String,java.lang.String,java.lang.String) throws org.xml.sax.SAXException

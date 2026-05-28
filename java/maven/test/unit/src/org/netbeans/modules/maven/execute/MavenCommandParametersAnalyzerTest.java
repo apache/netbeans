@@ -126,6 +126,42 @@ public class MavenCommandParametersAnalyzerTest {
         assertFalse(isMultiThreadedMaven("-T 1"));
     }
 
+    // #9337 — compact -T<n> form
+    @Test
+    public void validateMultiThreadedCompactT2() {
+        assertTrue(isMultiThreadedMaven("-T2"));
+    }
+
+    @Test
+    public void validateMultiThreadedCompactT10() {
+        assertTrue(isMultiThreadedMaven("-T10 -Dmaven.test.skip=true"));
+    }
+
+    @Test
+    public void validateMultiThreadedCompactT1C() {
+        assertTrue(isMultiThreadedMaven("-T1C"));
+    }
+
+    @Test
+    public void validateSingleThreadedCompactT1() {
+        assertFalse(isMultiThreadedMaven("-T1"));
+    }
+
+    @Test
+    public void validateMultiThreadedThreadsEquals() {
+        assertTrue(isMultiThreadedMaven("--threads=2"));
+    }
+
+    @Test
+    public void validateSingleThreadedThreadsEquals1() {
+        assertFalse(isMultiThreadedMaven("--threads=1"));
+    }
+
+    @Test
+    public void validateDanglingTFlagIsNotMultiThreaded() {
+        assertFalse(isMultiThreadedMaven("-T"));
+    }
+
     private boolean isMultiThreadedMaven(String params) {
         return MavenCommandLineExecutor.isMultiThreadedMaven(Arrays.asList(params.split(" ")));
     }

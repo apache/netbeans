@@ -167,7 +167,7 @@ public class DownloadBinaries extends Task {
                                 MavenCoordinate mc = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
                                 success &= fillInFile(hashAndFile[0], mc.toArtifactFilename(), manifest, () -> mavenFile(mc));
                             } else if (urlMatcher.matches()) {
-                                success &= fillInFile(hashAndFile[0], urlMatcher.group(3), manifest, () -> downloadFromServer(this, new URL(urlMatcher.group(1).replace("${nb_all}", getProject().getProperty("nb_all")))));
+                                success &= fillInFile(hashAndFile[0], urlMatcher.group(3), manifest, () -> downloadFromServer(this, new URL(urlMatcher.group(1))));
                             } else {
                                 success &= fillInFile(hashAndFile[0], hashAndFile[1], manifest, () -> legacyDownload(hashAndFile[0] + "-" + hashAndFile[1]));
                             }
@@ -227,7 +227,7 @@ public class DownloadBinaries extends Task {
             if (!f.exists() || !hash(f).equals(expectedHash)) {
                 log("Creating " + f);
                 String cacheName = expectedHash + "-" + baseName;
-                if (cache != null && !"X".equals(expectedHash)) {
+                if (cache != null) {
                     cache.mkdirs();
                     File cacheFile = new File(cache, cacheName);
                     if (!cacheFile.exists()) {
@@ -248,17 +248,13 @@ public class DownloadBinaries extends Task {
             if(! f.exists()) {
                 return false;
             }
-            if (!"X".equals(expectedHash)) {
-                String actualHash = hash(f);
-                if (!actualHash.equals(expectedHash)) {
-                    log("File " + f + " requested by " + manifest + " to have hash " +
-                            expectedHash + " actually had hash " + actualHash, Project.MSG_WARN);
-                    return false;
-                }
-                log("Have " + f + " with expected hash", Project.MSG_VERBOSE);
-            } else {
-                log("Have " + f + " with, hash check skipped", Project.MSG_VERBOSE);
+            String actualHash = hash(f);
+            if (!actualHash.equals(expectedHash)) {
+                log("File " + f + " requested by " + manifest + " to have hash " +
+                        expectedHash + " actually had hash " + actualHash, Project.MSG_WARN);
+                return false;
             }
+            log("Have " + f + " with expected hash", Project.MSG_VERBOSE);
             return true;
         } else {
             if (f.exists()) {
@@ -281,7 +277,7 @@ public class DownloadBinaries extends Task {
 
             if (expectedHash != null) {
                 String actualHash = hash(new ByteArrayInputStream(downloaded));
-                if (!expectedHash.equals(actualHash) && !"X".equals(expectedHash)) {
+                if (!expectedHash.equals(actualHash)) {
                     this.log("Download of " + cacheName + " produced content with hash "
                         + actualHash + " when " + expectedHash + " was expected",
                         Project.MSG_WARN);

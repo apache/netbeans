@@ -73,6 +73,10 @@ public class WebLogicLayoutTest extends NbTestCase {
         assertTrue(WebLogicLayout.isSupportedVersion(WebLogicLayout.getServerVersion(baseFolder)));
         createJar(file, "Implementation-Version: 8.0.0.0");
         assertFalse(WebLogicLayout.isSupportedVersion(WebLogicLayout.getServerVersion(baseFolder)));
+        createJar(file, "Implementation-Version: 14.1.1.0");
+        assertTrue(WebLogicLayout.isSupportedVersion(WebLogicLayout.getServerVersion(baseFolder)));
+        createJar(file, "Implementation-Version: 15.0.0.0");
+        assertTrue(WebLogicLayout.isSupportedVersion(WebLogicLayout.getServerVersion(baseFolder)));
         createJar(file, "Missing-Implementation-Version: 10.0.0.0");
         assertFalse(WebLogicLayout.isSupportedVersion(WebLogicLayout.getServerVersion(baseFolder)));
     }

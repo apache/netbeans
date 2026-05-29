@@ -586,8 +586,8 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
 
     @Override
     public Tree visitVarType(VarTypeTree tree, Void p) {
-        EmptyStatementTree n = make.EmptyStatement();
-//        model.setType(n, model.getType(tree));
+        VarTypeTree n = make.VarType();
+        model.setType(n, model.getType(tree));
         comments.copyComments(tree, n);
         model.setPos(n, model.getPos(tree));
         return n;

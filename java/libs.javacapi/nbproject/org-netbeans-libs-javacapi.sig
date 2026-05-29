@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 8.56.0
+#Version 8.57.0
 
 CLSS public abstract interface com.sun.source.doctree.AttributeTree
 innr public final static !enum ValueKind
@@ -924,8 +924,12 @@ meth public abstract com.sun.source.tree.ExpressionTree getValue()
 
 CLSS public abstract interface com.sun.source.util.DocSourcePositions
 intf com.sun.source.util.SourcePositions
-meth public abstract long getEndPosition(com.sun.source.tree.CompilationUnitTree,com.sun.source.doctree.DocCommentTree,com.sun.source.doctree.DocTree)
-meth public abstract long getStartPosition(com.sun.source.tree.CompilationUnitTree,com.sun.source.doctree.DocCommentTree,com.sun.source.doctree.DocTree)
+meth public abstract long getEndPosition(com.sun.source.doctree.DocCommentTree,com.sun.source.doctree.DocTree)
+meth public abstract long getStartPosition(com.sun.source.doctree.DocCommentTree,com.sun.source.doctree.DocTree)
+meth public long getEndPosition(com.sun.source.tree.CompilationUnitTree,com.sun.source.doctree.DocCommentTree,com.sun.source.doctree.DocTree)
+ anno 0 java.lang.Deprecated()
+meth public long getStartPosition(com.sun.source.tree.CompilationUnitTree,com.sun.source.doctree.DocCommentTree,com.sun.source.doctree.DocTree)
+ anno 0 java.lang.Deprecated()
 
 CLSS public abstract interface com.sun.source.util.DocTreeFactory
 meth public abstract com.sun.source.doctree.AttributeTree newAttributeTree(javax.lang.model.element.Name,com.sun.source.doctree.AttributeTree$ValueKind,java.util.List<? extends com.sun.source.doctree.DocTree>)
@@ -1222,8 +1226,12 @@ meth public {com.sun.source.util.SimpleTreeVisitor%0} visitYield(com.sun.source.
 supr java.lang.Object
 
 CLSS public abstract interface com.sun.source.util.SourcePositions
-meth public abstract long getEndPosition(com.sun.source.tree.CompilationUnitTree,com.sun.source.tree.Tree)
-meth public abstract long getStartPosition(com.sun.source.tree.CompilationUnitTree,com.sun.source.tree.Tree)
+meth public abstract long getEndPosition(com.sun.source.tree.Tree)
+meth public abstract long getStartPosition(com.sun.source.tree.Tree)
+meth public long getEndPosition(com.sun.source.tree.CompilationUnitTree,com.sun.source.tree.Tree)
+ anno 0 java.lang.Deprecated()
+meth public long getStartPosition(com.sun.source.tree.CompilationUnitTree,com.sun.source.tree.Tree)
+ anno 0 java.lang.Deprecated()
 
 CLSS public final com.sun.source.util.TaskEvent
 cons public init(com.sun.source.util.TaskEvent$Kind)

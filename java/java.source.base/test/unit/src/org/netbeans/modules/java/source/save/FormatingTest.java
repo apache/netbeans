@@ -6200,6 +6200,49 @@ public class FormatingTest extends NbTestCase {
         reformat(doc, content, golden);
     }
 
+    public void testLambdaNesting() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie)testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content =
+                """
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    public static void main(String[] args) {
+                        List<String> lines = Stream.of(args)
+                                .flatMap(s -> s.lines()
+                                .filter(l -> !l.isBlank())
+                                ).toList();
+                    }
+                }
+                """;
+
+        String golden =
+                """
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    public static void main(String[] args) {
+                        List<String> lines = Stream.of(args)
+                                .flatMap(s -> s.lines()
+                                        .filter(l -> !l.isBlank())
+                                ).toList();
+                    }
+                }
+                """;
+        reformat(doc, content, golden);
+        reformat(doc, golden, golden);
+
+
+    }
+
     public void testLambdaParameterWithInferredType() throws Exception {
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");

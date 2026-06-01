@@ -2220,7 +2220,7 @@ public class Reformatter implements ReformatTask {
                     }
                 }
                 try {
-                    wrapOperatorAndTree(cs.wrapLambdaArrow(), -1, cs.spaceAroundLambdaArrow() ? 1 : 0, cs.spaceAroundLambdaArrow() ? 1 : 0, lastIndent, node.getBody());
+                    wrapOperatorAndTree(cs.wrapLambdaArrow(), -1, cs.spaceAroundLambdaArrow() ? 1 : 0, cs.spaceAroundLambdaArrow() ? 1 : 0, -1, node.getBody());
                 } finally {
                     continuationIndent = old;
                     indent = oldIndent;

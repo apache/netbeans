@@ -151,6 +151,9 @@ cause it to fail.
         <condition property="javadoc.limit.modules.line" value="--limit-modules=${limit.modules.option.list}" else="">
             <isset property="limit.modules.option.list" />
         </condition>
+        <condition property="javadoc.limit.modules.line" value="-Xbootclasspath/p:${bootclasspath.prepend}" else="">
+            <isset property="bootclasspath.prepend" />
+        </condition>
     </target>
 
     <target name="javadoc-generate-references" depends="javadoc-init" unless="javadoc.reference.generated" >

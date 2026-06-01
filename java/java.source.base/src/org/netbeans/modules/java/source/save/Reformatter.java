@@ -1363,7 +1363,39 @@ public class Reformatter implements ReformatTask {
                 int oldLastIndent = lastIndent;
                 int lastMaxPreservedBlankLines = maxPreservedBlankLines;
                 maxPreservedBlankLines = cs.getMaximumBlankLinesInDeclarations();
-                classLeftBracePlacement();
+
+                CodeStyle.BracePlacement bracePlacement = cs.getClassDeclBracePlacement();
+                boolean spaceBeforeLeftBrace = cs.spaceBeforeClassDeclLeftBrace();
+                switch (bracePlacement) {
+                    case SAME_LINE:
+                        spaces(spaceBeforeLeftBrace ? 1 : 0, tokens.offset() < startOffset);
+                        accept(LBRACE);
+                        if (tokens.token().id() == RBRACE) {
+                            accept(RBRACE);
+                            indent = oldIndent;
+                            lastIndent = oldLastIndent;
+                            return true;
+                        }
+                        indent = lastIndent + indentSize;
+                        break;
+                    case NEW_LINE:
+                        newline();
+                        accept(LBRACE);
+                        indent = lastIndent + indentSize;
+                        break;
+                    case NEW_LINE_HALF_INDENTED:
+                        int oldLast = lastIndent;
+                        indent = lastIndent + (indentSize >> 1);
+                        newline();
+                        accept(LBRACE);
+                        indent = oldLast + indentSize;
+                        break;
+                    case NEW_LINE_INDENTED:
+                        indent = lastIndent + indentSize;
+                        newline();
+                        accept(LBRACE);
+                        break;
+                }
 
                 continuationIndent = old;
                 try {
@@ -1414,38 +1446,6 @@ public class Reformatter implements ReformatTask {
             return true;
         }
 
-        private void classLeftBracePlacement() {
-            CodeStyle.BracePlacement bracePlacement = cs.getClassDeclBracePlacement();
-            boolean spaceBeforeLeftBrace = cs.spaceBeforeClassDeclLeftBrace();
-            int old = indent = lastIndent;
-            int halfIndent = lastIndent;
-            switch (bracePlacement) {
-                case SAME_LINE:
-                    spaces(spaceBeforeLeftBrace ? 1 : 0, tokens.offset() < startOffset);
-                    accept(LBRACE);
-                    indent = lastIndent + indentSize;
-                    break;
-                case NEW_LINE:
-                    newline();
-                    accept(LBRACE);
-                    indent = lastIndent + indentSize;
-                    break;
-                case NEW_LINE_HALF_INDENTED:
-                    int oldLast = lastIndent;
-                    indent = lastIndent + (indentSize >> 1);
-                    halfIndent = indent;
-                    newline();
-                    accept(LBRACE);
-                    indent = oldLast + indentSize;
-                    break;
-                case NEW_LINE_INDENTED:
-                    indent = lastIndent + indentSize;
-                    halfIndent = indent;
-                    newline();
-                    accept(LBRACE);
-                    break;
-            }
-        }
 
         @Override
         public Boolean visitMethod(MethodTree node, Void p) {

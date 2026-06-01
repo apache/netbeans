@@ -32,6 +32,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -223,7 +224,7 @@ public abstract class NbLaunchDelegate {
                     }
                 }
                 Object contextObject = (singleFile) ? toRun : prj;
-                TestProgressHandler testProgressHandler = ctx.getClient().getNbCodeCapabilities().hasTestResultsSupport() ? new TestProgressHandler(ctx.getClient(), context.getClient(), Utils.toUri(toRun)) : null;
+                TestProgressHandler testProgressHandler = ctx.getClient() != null && ctx.getClient().getNbCodeCapabilities().hasTestResultsSupport() ? new TestProgressHandler(ctx.getClient(), context.getClient(), Utils.toUri(toRun)) : null;
                 Lookup launchCtx = new ProxyLookup(
                         testProgressHandler != null ? Lookups.fixed(contextObject, ioContext, progress, testProgressHandler) : Lookups.fixed(contextObject, ioContext, progress),
                         Lookup.getDefault()
@@ -554,7 +555,8 @@ public abstract class NbLaunchDelegate {
 
         Collection<ActionProvider> providers = findActionProviders(proj);
         for (ActionProvider ap : providers) {
-            if (ap.isActionEnabled(ActionProvider.COMMAND_BUILD, launchCtx)) {
+            if (supportsAction(ap, ActionProvider.COMMAND_BUILD) &&
+                ap.isActionEnabled(ActionProvider.COMMAND_BUILD, launchCtx)) {
                 Lookups.executeWith(launchCtx, () -> {
                     ap.invokeAction(ActionProvider.COMMAND_BUILD, launchCtx);
                 });

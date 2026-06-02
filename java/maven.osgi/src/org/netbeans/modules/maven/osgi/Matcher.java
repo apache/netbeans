@@ -35,7 +35,7 @@ import java.util.regex.PatternSyntaxException;
  *
  */
 class Matcher {
-    
+
     /**
      * Auxiliary class for each of the PATTERNs in the LIST.
      */
@@ -74,9 +74,9 @@ class Matcher {
 
     /**
      * Precompiled PATTERNs on the LIST.
-     */    
+     */
     private final Item[] items;
-    
+
     /**
      * Value to be returned when package is not matched by any of items.
      */
@@ -116,20 +116,16 @@ class Matcher {
         for (int i = 0; i < l; ++i) {
             final char c = value.charAt(i);
             switch (c) {
-                case '.':
-                    sb.append("\\.");
-                    break;
-                case '*':
+                case '.' -> sb.append("\\.");
+                case '*' -> {
                     sb.append(".*");
                     hasWildcards = true;
-                    break;
-                case '?':
+                }
+                case '?' -> {
                     sb.append(".?");
                     hasWildcards = true;
-                    break;
-                default:
-                    sb.append(c);
-                    break;
+                }
+                default -> sb.append(c);
             }
         }
         if (hasWildcards) {
@@ -149,10 +145,10 @@ class Matcher {
             // use a simple equals test.
             return null; // No pattern needed.
         }
-    }    
+    }
 
     Matcher(String pattern) {
-        List<Item> list = new ArrayList<Item>();
+        List<Item> list = new ArrayList<>();
         boolean unmatched = false; // Default for no items.
         if (pattern != null && !pattern.contains("${")) {
             String[] strItems = pattern.split(",");
@@ -182,11 +178,11 @@ class Matcher {
                  }
             }
         }
-        items = list.toArray(new Item[0]);
+        items = list.toArray(Item[]::new);
         unmatchedValue = unmatched;
     }
-    
-    
+
+
     boolean matches(String packageName) {
         for (Item item : items) {
             if (item.matches(packageName)) {

@@ -49,19 +49,20 @@ import static org.netbeans.modules.maven.osgi.Bundle.*;
  * @author mkleint
  */
 @ServiceProviders({
-    @ServiceProvider(service = AccessibilityQueryImplementation.class), 
+    @ServiceProvider(service = AccessibilityQueryImplementation.class),
     @ServiceProvider(service = DependencyTypeIconBadge.class)
 })
 public class OSGiJarAccessibilityQueryImpl implements AccessibilityQueryImplementation, DependencyTypeIconBadge {
     private static final Logger LOG = Logger.getLogger(OSGiJarAccessibilityQueryImpl.class.getName());
     private static final @StaticResource String BADGE = "org/netbeans/modules/maven/osgi/maven_osgi_badge.png";
-    private static final String toolTip = "<img src=\"" + OSGiJarAccessibilityQueryImpl.class.getClassLoader().getResource(BADGE) + "\">&nbsp;" //NOI18N
+    private static final String TOOLTIP = "<img src=\"" + OSGiJarAccessibilityQueryImpl.class.getClassLoader().getResource(BADGE) + "\">&nbsp;" //NOI18N
             + Tooltip_manifest();//NOI18N
 
-    private final WeakHashMap<FileObject, List<ManifestElement>> publicCache = new WeakHashMap<FileObject, List<ManifestElement>>();
-    private final List<ManifestElement> NOT_OSGIJAR = new ArrayList<ManifestElement>();
-    
+    private final WeakHashMap<FileObject, List<ManifestElement>> publicCache = new WeakHashMap<>();
+    private final List<ManifestElement> NOT_OSGIJAR = new ArrayList<>();
+
     @Override
+    @SuppressWarnings("null") // relPath is runtime null checked in addition to assert
     public Boolean isPubliclyAccessible(FileObject pkg) {
         FileObject jarFile = FileUtil.getArchiveFile(pkg);
         boolean notOSGi = true;
@@ -69,14 +70,14 @@ public class OSGiJarAccessibilityQueryImpl implements AccessibilityQueryImplemen
             FileObject jarRoot = FileUtil.getArchiveRoot(jarFile);
             synchronized (publicCache) {
                 List<ManifestElement> pub = publicCache.get(jarRoot);
-                
+
                 if (pub != null) {
                     if (pub == NOT_OSGIJAR) {
                         return null;
                     }
                     String relPath = FileUtil.getRelativePath(jarRoot, pkg);
                     assert relPath != null : "null path for : " + jarRoot + ", " + pkg;
-                    if(relPath == null) {
+                    if (relPath == null) {
                         LOG.log(Level.WARNING, "null path for : {0}, {1}", new Object[]{jarRoot, pkg});
                         return Boolean.FALSE;
                     }
@@ -120,7 +121,7 @@ public class OSGiJarAccessibilityQueryImpl implements AccessibilityQueryImplemen
             }
         }
         return notOSGi ? null : Boolean.FALSE;
-        
+
     }
 
     private Boolean check(List<ManifestElement> pub, String packageName) {
@@ -138,7 +139,7 @@ public class OSGiJarAccessibilityQueryImpl implements AccessibilityQueryImplemen
             FileObject jarRoot = FileUtil.getArchiveRoot(jarFile);
             synchronized (publicCache) {
                 List<ManifestElement> pub = publicCache.get(jarRoot);
-                
+
                 if (pub != null) {
                     if (pub == NOT_OSGIJAR) {
                         return null;
@@ -150,7 +151,6 @@ public class OSGiJarAccessibilityQueryImpl implements AccessibilityQueryImplemen
             if (manifest != null) {
                 try {
                     Manifest mf = new Manifest(manifest.getInputStream());
-                    List<ManifestElement> pub = null;
                     String name = mf.getMainAttributes().getValue(OSGiConstants.BUNDLE_SYMBOLIC_NAME);
                     if (name != null) {
                         return getIcon();
@@ -163,12 +163,12 @@ public class OSGiJarAccessibilityQueryImpl implements AccessibilityQueryImplemen
                 publicCache.put(jarRoot, NOT_OSGIJAR);
             }
         }
-        return null;            
+        return null;
     }
 
     @NbBundle.Messages("Tooltip_manifest=Contains OSGi manifest headers")
     private Image getIcon() {
-        return ImageUtilities.addToolTipToImage(ImageUtilities.loadImage(BADGE), toolTip);
+        return ImageUtilities.addToolTipToImage(ImageUtilities.loadImage(BADGE), TOOLTIP);
     }
 
 }

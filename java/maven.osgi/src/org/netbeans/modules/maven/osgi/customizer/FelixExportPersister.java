@@ -51,10 +51,10 @@ public class FelixExportPersister implements SelectedItemsTablePersister {
     private final Project project;
     private ModelOperation<POMModel> operation;
     private ModelOperation<POMModel> defaultOperation;
-    
+
     private boolean isDefined = false;
 
-    private SortedMap<String, Boolean> defaultValue;
+    private final SortedMap<String, Boolean> defaultValue;
 
     public FelixExportPersister (Project project, ModelHandle2 handle) {
         this.project = project;
@@ -79,17 +79,17 @@ public class FelixExportPersister implements SelectedItemsTablePersister {
             privateInstruction = privates[0];
         }
 
-        Map<Integer, String> instructions = new HashMap<Integer, String>(2);
+        Map<Integer, String> instructions = new HashMap<>(2);
         instructions.put(InstructionsConverter.EXPORT_PACKAGE, exportInstruction);
         instructions.put(InstructionsConverter.PRIVATE_PACKAGE, privateInstruction);
 
         defaultValue = InstructionsConverter.computeExportList(instructions, project);
     }
-    
+
     public boolean isIsDefined() {
         return isDefined;
     }
-    
+
 
     @Override
     public SortedMap<String, Boolean> read() {
@@ -101,9 +101,9 @@ public class FelixExportPersister implements SelectedItemsTablePersister {
         if (operation != null) {
             handle.removePOMModification(operation);
         }
-        
+
         final Map<Integer, String> exportIns = InstructionsConverter.computeExportInstructions(selItems, project);
-        operation = new ModelOperation<POMModel>() {
+        operation = new ModelOperation<>() {
 
             @Override
             public void performOperation(POMModel pomModel) {
@@ -143,7 +143,7 @@ public class FelixExportPersister implements SelectedItemsTablePersister {
                     createPOMExtensibilityElement(new QName(OSGiConstants.PARAM_INSTRUCTIONS));
             config.addExtensibilityElement(instructionsEl);
         }
-        
+
         POMExtensibilityElement exportEl = ModelUtils.getOrCreateChild(instructionsEl, OSGiConstants.EXPORT_PACKAGE, pomModel);
         POMExtensibilityElement privateEl = ModelUtils.getOrCreateChild(instructionsEl, OSGiConstants.PRIVATE_PACKAGE, pomModel);
 
@@ -162,7 +162,7 @@ public class FelixExportPersister implements SelectedItemsTablePersister {
             }
             if (defaultOperation == null) {
                 defaultOperation = new ModelOperation<POMModel>() {
-                    
+
                     @Override
                     public void performOperation(POMModel pomModel) {
                         Build build = pomModel.getProject().getBuild();
@@ -191,7 +191,7 @@ public class FelixExportPersister implements SelectedItemsTablePersister {
                             }
                         }
                     }
-                    
+
                     private POMExtensibilityElement findInstructions(PluginContainer cont) {
                         Plugin felixPlugin = cont.findPluginById(OSGiConstants.GROUPID_FELIX, OSGiConstants.ARTIFACTID_BUNDLE_PLUGIN);
                         if (felixPlugin != null) {
@@ -206,7 +206,7 @@ public class FelixExportPersister implements SelectedItemsTablePersister {
                                 }
                         }
                         return null;
-                    }                    
+                    }
 
                     private void removeExportPrivate(POMExtensibilityElement instructionsEl) {
                         if (instructionsEl != null) {
@@ -221,7 +221,7 @@ public class FelixExportPersister implements SelectedItemsTablePersister {
                         }
                     }
                 };
-                
+
             }
             handle.addPOMModification(defaultOperation);
         } else {

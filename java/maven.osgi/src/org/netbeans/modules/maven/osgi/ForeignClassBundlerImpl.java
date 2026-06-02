@@ -49,25 +49,26 @@ import org.openide.util.RequestProcessor;
 public class ForeignClassBundlerImpl implements ForeignClassBundler, ProjectProblemsProvider { // #179521
     private static final ProjectProblem PROBLEM_REPORT = ProjectProblem.createWarning(PRBL_Name(), PRBL_DESC());
     private static final RequestProcessor RP = new RequestProcessor(ForeignClassBundlerImpl.class);
-    
+
     private final AtomicBoolean hasProblem = new AtomicBoolean(false);
-    
+
     private final Project project;
     private boolean calculated = false;
     private boolean calculatedValue = false;
+    @SuppressWarnings({"this-escape"})
     private final PropertyChangeSupport pchs = new PropertyChangeSupport(this);
 
 
     public ForeignClassBundlerImpl(Project p) {
         project = p;
     }
-    
-    @Override 
+
+    @Override
     public synchronized boolean preferSources() {
         if (calculated) {
             return calculatedValue;
         }
-        calculatedValue = calculateValue(); 
+        calculatedValue = calculateValue();
         calculated = true;
         return calculatedValue;
     }
@@ -119,15 +120,12 @@ public class ForeignClassBundlerImpl implements ForeignClassBundler, ProjectProb
         } finally {
             if (newVal != oldVal) {
                 hasProblem.set(newVal);
-                RP.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        pchs.firePropertyChange(ProjectProblemsProvider.PROP_PROBLEMS, null, null);
-                    }
+                RP.post(() -> {
+                    pchs.firePropertyChange(ProjectProblemsProvider.PROP_PROBLEMS, null, null);
                 });
             }
         }
-        //according to http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html default value is just 
+        //according to http://felix.apache.org/site/apache-felix-maven-bundle-plugin-bnd.html default value is just
         //project's own sources
         return true;
     }
@@ -152,5 +150,5 @@ public class ForeignClassBundlerImpl implements ForeignClassBundler, ProjectProb
         return hasProblem.get() ? Collections.singleton(PROBLEM_REPORT) : Collections.<ProjectProblem>emptySet();
     }
 
-    
+
 }

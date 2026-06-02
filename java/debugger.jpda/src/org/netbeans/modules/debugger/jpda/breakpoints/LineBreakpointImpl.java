@@ -48,6 +48,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -96,7 +97,9 @@ import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.minBy;
@@ -115,6 +118,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
     
     private int                 lineNumber;
     private int                 breakpointLineNumber;
+    private int[]               lambdaIndex;
     private int                 lineNumberForUpdate = -1;
     private final Object        lineLock = new Object();
     private BreakpointsReader   reader;
@@ -143,9 +147,11 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                 lb,
                 getDebugger());
         int lbln = lb.getLineNumber();
+        int[] li = lb.getLambdaIndexes();
         synchronized (lineLock) {
             breakpointLineNumber = lbln;
             lineNumber = theLineNumber;
+            lambdaIndex = li;
         }
    }
 
@@ -323,11 +329,13 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
         String failReason = null;
         ReferenceType noLocRefType = null;
         int lineNumberToSet;
+        int[] lambdaIndexToSet;
         final int origBreakpointLineNumber;
         int newBreakpointLineNumber;
         synchronized (lineLock) {
             lineNumberToSet = lineNumber;
             newBreakpointLineNumber = origBreakpointLineNumber = breakpointLineNumber;
+            lambdaIndexToSet = lambdaIndex;
         }
         String currFailReason = null;
 
@@ -347,6 +355,10 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                 );
                 if (logger.isLoggable(Level.FINE)) {
                     logger.fine("Locations in "+referenceType+" are: "+locations+", reason = '"+reason[0]);//+"', HAVE PARENT = "+haveParent);
+                }
+                locations = filterLocationsByLambdaIndexes(locations, lambdaIndexToSet);
+                if (logger.isLoggable(Level.FINE)) {
+                    logger.fine("Filtered Locations in "+referenceType+" are: "+locations+", reason = '"+reason[0]);//+"', HAVE PARENT = "+haveParent);
                 }
                 if (locations.isEmpty()) {
                     failReason = reason[0];
@@ -695,6 +707,72 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
         }
       }
       return path;
+    }
+
+    private List<Location> filterLocationsByLambdaIndexes(List<Location> locations, int[] lambdaIndexes) {
+        if (lambdaIndexes.length == 0) {
+            return locations;
+        } else {
+            //heuristics based on lambda method names (and ordering)
+            //if the Java compiler produces a classfile not matching the heuristics,
+            //the lambda breakpoints may misbehave:
+            Map<String, List<Location>> lambda2Locations = new LinkedHashMap<>();
+            List<Location> outsideOfLambda = new ArrayList<>();
+
+            for (Location l : locations) {
+                if (l.method().name().startsWith("lambda$")) {
+                    lambda2Locations.computeIfAbsent(l.method().name(), k -> new ArrayList<>()).add(l);
+                } else {
+                    outsideOfLambda.add(l);
+                }
+            }
+
+            List<String> lambdas = new ArrayList<>(lambda2Locations.keySet());
+
+            if (lambdaMethodsInReverseOrder(lambdas)) {
+                Collections.reverse(lambdas);
+            }
+
+            List<Location> result = new ArrayList<>();
+
+            for (int index : lambdaIndexes) {
+                if (index == LineBreakpoint.LAMBDA_INDEX_STOP_OUTSIDE) {
+                    result.addAll(outsideOfLambda);
+                } else if (index >= 0 && index < lambdas.size()) {
+                    result.addAll(lambda2Locations.get(lambdas.get(index)));
+                }
+            }
+
+            return result;
+        }
+    }
+
+    private boolean lambdaMethodsInReverseOrder(List<String> lambdaMethodNames) {
+        //some compilers (javac) produce the lambda methods in reverse order.
+        //try to detect that situation:
+        if (lambdaMethodNames.size() < 2) {
+            //when there are less than two methods, reversing does not matter
+            return false;
+        }
+        int m0Index = lambdaIndex(lambdaMethodNames.get(0));
+        int m1Index = lambdaIndex(lambdaMethodNames.get(1));
+        if (m0Index == (-1) || m1Index == (-1)) {
+            //one of the lambdas is probably a serializable lambda in javac desugaring
+            //reverse:
+            return true;
+        }
+        //javac produces the lambdas in reverse order:
+        return m0Index > m1Index;
+    }
+
+    private int lambdaIndex(String lambdaMethodName) {
+        int dollar = lambdaMethodName.lastIndexOf('$');
+        String index = lambdaMethodName.substring(dollar + 1);
+        try {
+            return Integer.parseInt(index);
+        } catch (NumberFormatException ex) {
+            return -1;
+        }
     }
 
     private int findBreakableLine(String url, final int lineNumber) {

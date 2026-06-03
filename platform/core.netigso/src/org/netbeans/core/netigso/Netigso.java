@@ -293,7 +293,7 @@ implements Cloneable, Stamps.Updater {
                     }
                     if (exported instanceof String) {
                         for (String p : splitExportPackages(exported.toString())) {
-                            pkgs.add(extractBundleName(p));
+                            pkgs.add(p);
                         }
                     }
                 } finally {
@@ -802,8 +802,25 @@ implements Cloneable, Stamps.Updater {
         return patchByteCode(l, className, pd, arr);
     }
 
+    /**
+     * OSGI-Specification declares:
+     *
+     * <pre>
+     * Export-Package  ::= export ( ',' export)*
+     * export          ::= package-names ( ';' parameter )*
+     * package-names   ::= package-name                // See 1.3.2
+     *                   ( ';' package-name )*
+     * </pre>
+     *
+     * @param exportPkg String formatted according to Export-Package
+     * @return list of package-name entries
+     */
+    // Same implementation is used in org.netbeans.core.netigso.Netigso and
+    // org.netbeans.modules.maven.osgi.OSGiJarAccessibilityQueryImpl copied to
+    // not introduce module dependencies. Tests are in Netigso, when updated,
+    // update both places!
     static List<String> splitExportPackages(String exportPkg) {
-        List<String> elements = new ArrayList<>();
+        List<String> exports = new ArrayList<>();
         StringBuilder buffer = new StringBuilder();
         boolean inQuotedString = false;
         for (int i = 0; i < exportPkg.length(); i++) {
@@ -817,7 +834,7 @@ implements Cloneable, Stamps.Updater {
                     if (inQuotedString) {
                         buffer.append(nextChar);
                     } else {
-                        elements.add(buffer.toString());
+                        exports.add(buffer.toString());
                         buffer.setLength(0);
                     }
                 }
@@ -840,9 +857,23 @@ implements Cloneable, Stamps.Updater {
             }
         }
         if(! buffer.isEmpty()){
-            elements.add(buffer.toString());
+            exports.add(buffer.toString());
         }
-        return elements;
+        List<String> packageNames = new ArrayList<>();
+        // Each export statement can hold multiple package names separated by
+        // semicolon, so split on semicolon. package-name and parameter are
+        // discerned based on the presence of a equals character. A package-name
+        // must not contain it, a parameter must.
+        for(String export: exports) {
+            for(String packageCandiate: export.split(";")) {
+                // package-name list ends with first parameter
+                if(packageCandiate.contains("=")) {
+                    break;
+                }
+                packageNames.add(packageCandiate);
+            }
+        }
+        return packageNames;
     }
 
 }

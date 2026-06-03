@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.105
+#Version 1.106
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -1429,6 +1429,7 @@ meth public int getDebugPort()
 meth public int getPort()
 meth public int hashCode()
 meth public java.lang.Process getProcess()
+meth public java.lang.String getAdditionalLauncherJvmOptions()
 meth public java.lang.String getAdminPassword()
 meth public java.lang.String getAdminUser()
 meth public java.lang.String getDeployerUri()
@@ -1661,6 +1662,7 @@ fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLAS
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_7_0_7
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_7_0_8
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_7_0_9
+fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_7_1_0
 fld public final static org.netbeans.modules.glassfish.common.ServerDetails GLASSFISH_SERVER_8_0_0
 meth public boolean isInstalledInDirectory(java.io.File)
 meth public int getVersion()
@@ -1913,10 +1915,12 @@ fld protected javax.swing.JLabel hostLocalLabel
 fld protected javax.swing.JLabel hostRemoteLabel
 fld protected javax.swing.JLabel httpPortLabel
 fld protected javax.swing.JLabel installationLocationLabel
+fld protected javax.swing.JLabel jvmOptionsLabel
 fld protected javax.swing.JLabel passwordLabel
 fld protected javax.swing.JLabel targetLabel
 fld protected javax.swing.JLabel userNameLabel
 fld protected javax.swing.JPasswordField passwordField
+fld protected javax.swing.JTextField additionalLauncherJvmOptionsField
 fld protected javax.swing.JTextField dasPortField
 fld protected javax.swing.JTextField domainField
 fld protected javax.swing.JTextField domainsFolderField
@@ -1931,6 +1935,7 @@ meth protected abstract void initHost()
 meth protected abstract void initPorts()
 meth protected void disableAllFields()
 meth protected void enableFields()
+meth protected void initAdditionalLauncherJvmOptions()
 meth protected void initCheckBoxes()
 meth protected void initCredentials()
 meth protected void initDirectoriesFields()
@@ -1941,6 +1946,7 @@ meth protected void storeCheckBoxes()
 meth protected void storeCredentials()
 meth protected void storeFormFields()
 meth protected void storeHost()
+meth protected void storeJvmOptions()
 meth protected void storePorts()
 meth protected void storeTarget()
 meth protected void updatePasswordVisibility()
@@ -2241,6 +2247,7 @@ fld public final static java.lang.String JDBC_RESOURCE = "jdbc-resource"
 fld public final static java.lang.String JRUBY_CONTAINER = "jruby"
 fld public final static java.lang.String JRUBY_HOME = "jruby.home"
 fld public final static java.lang.String JVM_MODE = "jvmMode"
+fld public final static java.lang.String JVM_OPTIONS_ATTR = "jvmOptions"
 fld public final static java.lang.String LOOPBACK_FLAG = "loopbackOn"
 fld public final static java.lang.String NB73_IMPORT_FIXED = "nb73ImportFixed"
 fld public final static java.lang.String NORMAL_MODE

@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.88
+#Version 1.89
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -82,7 +83,7 @@ supr java.lang.Object
 CLSS public abstract org.netbeans.api.editor.settings.FontColorSettings
 cons public init()
 fld public final static java.lang.String PROP_FONT_COLORS = "fontColors"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract javax.swing.text.AttributeSet getFontColors(java.lang.String)
 meth public abstract javax.swing.text.AttributeSet getTokenFontColors(java.lang.String)
 supr java.lang.Object
@@ -112,9 +113,9 @@ fld public final static java.lang.String BRACE_FIRST_TOOLTIP = "editor-brace-fir
 fld public final static java.lang.String BRACE_SHOW_OUTLINE = "editor-brace-outline"
 fld public final static java.lang.String CARET_BLINK_RATE = "caret-blink-rate"
 fld public final static java.lang.String CARET_COLOR_INSERT_MODE = "caret-color-insert-mode"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String CARET_COLOR_OVERWRITE_MODE = "caret-color-overwrite-mode"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String CARET_ITALIC_INSERT_MODE = "caret-italic-insert-mode"
 fld public final static java.lang.String CARET_ITALIC_OVERWRITE_MODE = "caret-italic-overwrite-mode"
 fld public final static java.lang.String CARET_TYPE_INSERT_MODE = "caret-type-insert-mode"
@@ -145,7 +146,7 @@ fld public final static java.lang.String INDENT_SHIFT_WIDTH = "indent-shift-widt
 fld public final static java.lang.String JAVADOC_AUTO_POPUP = "javadoc-auto-popup"
 fld public final static java.lang.String JAVADOC_AUTO_POPUP_DELAY = "javadoc-auto-popup-delay"
 fld public final static java.lang.String JAVADOC_BG_COLOR = "javadoc-bg-color"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String JAVADOC_POPUP_NEXT_TO_CC = "javadoc-popup-next-to-cc"
 fld public final static java.lang.String JAVADOC_PREFERRED_SIZE = "javadoc-preferred-size"
 fld public final static java.lang.String LINE_HEIGHT_CORRECTION = "line-height-correction"
@@ -165,7 +166,7 @@ fld public final static java.lang.String STATUS_BAR_VISIBLE = "status-bar-visibl
 fld public final static java.lang.String TAB_SIZE = "tab-size"
 fld public final static java.lang.String TEXT_LEFT_MARGIN_WIDTH = "text-left-margin-width"
 fld public final static java.lang.String TEXT_LIMIT_LINE_COLOR = "text-limit-line-color"
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static java.lang.String TEXT_LIMIT_LINE_VISIBLE = "text-limit-line-visible"
 fld public final static java.lang.String TEXT_LIMIT_WIDTH = "text-limit-width"
 fld public final static java.lang.String TEXT_LINE_WRAP = "text-line-wrap"

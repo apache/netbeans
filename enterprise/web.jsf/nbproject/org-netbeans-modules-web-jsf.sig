@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.11.0
+#Version 2.12.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -12,8 +12,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -22,6 +24,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -30,6 +33,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -39,6 +43,9 @@ meth public final void wait(long) throws java.lang.InterruptedException
 meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract interface java.util.EventListener
 
@@ -61,7 +68,7 @@ meth public static org.netbeans.api.project.libraries.Library createMavenDepende
  anno 2 org.netbeans.api.annotations.common.NonNull()
  anno 3 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.api.project.libraries.Library enhanceLibraryWithPomContent(org.netbeans.api.project.libraries.Library,java.util.List<java.net.URI>) throws java.io.IOException
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void enhanceFileBody(org.openide.loaders.DataObject,java.lang.String,java.lang.String)
  anno 1 org.netbeans.api.annotations.common.NonNull()
  anno 2 org.netbeans.api.annotations.common.NonNull()
@@ -1667,7 +1674,7 @@ meth public abstract java.util.Collection<? extends org.netbeans.modules.web.jsf
 meth public abstract org.netbeans.modules.web.jsfapi.api.LibraryComponent getComponent(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.CheckForNull()
 meth public abstract org.netbeans.modules.web.jsfapi.api.LibraryType getType()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 0 org.netbeans.api.annotations.common.NonNull()
 
 CLSS public abstract interface org.netbeans.modules.web.jsfapi.api.LibraryComponent
@@ -1769,10 +1776,10 @@ meth public abstract void fileRenamed(org.openide.filesystems.FileRenameEvent)
 
 CLSS public final org.openide.util.HelpCtx
 cons public init(java.lang.Class<?>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(java.lang.String)
 cons public init(java.net.URL)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 fld public final static org.openide.util.HelpCtx DEFAULT_HELP
 innr public abstract interface static Displayer
 innr public abstract interface static Provider

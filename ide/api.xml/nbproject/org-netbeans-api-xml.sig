@@ -1,10 +1,11 @@
 #Signature file v4.1
-#Version 1.75
+#Version 1.76
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -61,6 +62,7 @@ cons public init()
 cons public init(java.io.InputStream)
 cons public init(java.io.Reader)
 cons public init(java.lang.String)
+meth public boolean isEmpty()
 meth public java.io.InputStream getByteStream()
 meth public java.io.Reader getCharacterStream()
 meth public java.lang.String getEncoding()

@@ -796,7 +796,7 @@
                         outputdir="${build.test.@{test.type}.results.dir}"
                         workingDir="${build.test.@{test.type}.results.dir}"
                         suitename="${code.name.base}"
-                        listener="org.testng.reporters.VerboseReporter"
+                        verbose="5"
                         jvm="${test.nbjdk.java}"
                 >
                     <classfileset dir="${build.test.@{test.type}.classes.dir}" excludes="${test.excludes}" includes="${test.includes}"/>
@@ -899,7 +899,7 @@
                          outputdir="${build.test.@{test.type}.results.dir}"
                          workingDir="${build.test.@{test.type}.results.dir}"
                          suitename="${code.name.base}"
-                         listener="org.testng.reporters.VerboseReporter"
+                         verbose="5"
                          jvm="${test.nbjdk.java}"
                 >
                     <propertyset refid="test.@{test.type}.properties"/>
@@ -928,7 +928,7 @@
                          outputdir="${build.test.@{test.type}.results.dir}"
                          workingDir="${build.test.@{test.type}.results.dir}"
                          suitename="${code.name.base}"
-                         listener="org.testng.reporters.VerboseReporter"
+                         verbose="5"
                          jvm="${test.nbjdk.java}"
                 >
                     <propertyset refid="test.@{test.type}.properties"/>
@@ -1021,7 +1021,7 @@
                     <jvmarg value="-ea"/>
                     <arg line="-mixed"/>
                     <arg line="-d ${build.test.@{test.type}.results.dir}"/>
-                    <arg line="-listener org.testng.reporters.VerboseReporter"/>
+                    <arg line="-verbose 5"/>
                     <arg line="-suitename ${code.name.base}"/>
                     <arg line="-testname ${test.class}"/>
                     <arg line="${testng.args.line}"/>
@@ -1043,7 +1043,7 @@
                          outputdir="${build.test.@{test.type}.results.dir}"
                          workingDir="${build.test.@{test.type}.results.dir}"
                          suitename="${code.name.base}"
-                         listener="org.testng.reporters.VerboseReporter"
+                         verbose="5"
                          jvm="${test.nbjdk.java}"
                 >
                     <propertyset refid="test.@{test.type}.properties"/>
@@ -1135,7 +1135,7 @@
                         outputdir="${build.test.@{test.type}.results.dir}"
                         workingDir="${build.test.@{test.type}.results.dir}"
                         suitename="${code.name.base}"
-                        listener="org.testng.reporters.VerboseReporter"
+                        verbose="5"
                         jvm="${test.nbjdk.java}"
                 >
                     <propertyset refid="test.@{test.type}.properties"/>

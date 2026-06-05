@@ -426,6 +426,9 @@ public class MultiDiffPanelController implements ActionListener, PropertyChangeL
     }
 
     public void componentClosed () {
+        if (fileListComponent != null) {
+            fileListComponent.storeSortingStatus();
+        }
         setSetups(Collections.<File, Setup>emptyMap(), Collections.<File, EditorCookie>emptyMap());
         prevAction.setEnabled(false);
         nextAction.setEnabled(false);

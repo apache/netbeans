@@ -148,7 +148,7 @@ cause it to fail.
                 <equals arg1="${javac.release}" arg2="" trim="true"/>
             </not>
         </condition>
-        <condition property="javadoc.limit.modules.line" value="--limit-modules=${limit.modules.option.list}" else="">
+        <condition property="javadoc.limit.modules.line" value="--limit-modules=${limit.modules.option.list}">
             <isset property="limit.modules.option.list" />
         </condition>
         <condition property="javadoc.limit.modules.line" value="-Xbootclasspath/p:${bootclasspath.prepend}" else="">

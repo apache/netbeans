@@ -20,12 +20,19 @@
 package org.netbeans.nbbuild;
 
 import java.io.File;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
 
 /** Check the behaviour of CheckLinks.
  *
  * @author Jaroslav Tulach
  */
 public class CheckLinksTest extends TestBase {
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+    
     public CheckLinksTest (String name) {
         super (name);
     }
@@ -49,7 +56,8 @@ public class CheckLinksTest extends TestBase {
             "</project>"
         );
         // success
-        execute (f, new String[] { });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
     }
 
     
@@ -73,9 +81,10 @@ public class CheckLinksTest extends TestBase {
             "</project>"
         );
         try {
-            execute (f, new String[] { });
+            buildRule.configureProject(f.getAbsolutePath());
+            buildRule.executeTarget("all");
             fail ("This should fail as the URL is forbidden");
-        } catch (ExecutionError ex) {
+        } catch (BuildException ex) {
             // ok, this should fail on exit code
         }
     }
@@ -95,9 +104,10 @@ public class CheckLinksTest extends TestBase {
             "</project>"
         );
         try {
-            execute(f, new String[] {});
+            buildRule.configureProject(f.getAbsolutePath());
+            buildRule.executeTarget("all");
             fail();
-        } catch (ExecutionError ex) {}
+        } catch (BuildException ex) {}
     }
   
     public void testAnyURLCanBeForbidden () throws Exception {
@@ -120,9 +130,10 @@ public class CheckLinksTest extends TestBase {
             "</project>"
         );
         try {
-            execute (f, new String[] { });
+            buildRule.configureProject(f.getAbsolutePath());
+            buildRule.executeTarget("all");
             fail ("This should fail as the URL is forbidden");
-        } catch (ExecutionError ex) {
+        } catch (BuildException ex) {
             // ok, this should fail on exit code
         }
     }
@@ -148,7 +159,8 @@ public class CheckLinksTest extends TestBase {
             "</project>"
         );
         // passes as .*sex.* is acceptable
-        execute (f, new String[] { });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
     }
     
     
@@ -174,7 +186,8 @@ public class CheckLinksTest extends TestBase {
             "</project>"
         );
         // passes as the forbidden URL is commented out
-        execute (f, new String[] { });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
     }
     
     
@@ -198,7 +211,8 @@ public class CheckLinksTest extends TestBase {
             "</project>"
         );
         // success
-        execute (f, new String[] { });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
     }
     
     
@@ -222,9 +236,10 @@ public class CheckLinksTest extends TestBase {
         );
         // failure
         try {
-            execute (f, new String[] { });
+            buildRule.configureProject(f.getAbsolutePath());
+            buildRule.executeTarget("all");
             fail ("This should fail as the link is broken");
-        } catch (ExecutionError ex) {
+        } catch (BuildException ex) {
             // ok, this should fail on exit code
         }
     }
@@ -250,7 +265,8 @@ public class CheckLinksTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute(f, new String[] {});
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
     }
     
     

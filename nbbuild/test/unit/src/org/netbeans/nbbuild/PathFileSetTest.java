@@ -21,16 +21,14 @@ package org.netbeans.nbbuild;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.selectors.FilenameSelector;
 import org.junit.AfterClass;
@@ -109,7 +107,7 @@ public class PathFileSetTest extends NbTestCase {
     private void executeAndCheckResults(String[] expected) throws BuildException, IOException {
         String[] output = new String[pfs.size()];
         int j = 0;
-        for (Iterator it = pfs.iterator(); it.hasNext(); j++) {
+        for (Iterator<Resource> it = pfs.iterator(); it.hasNext(); j++) {
             FileResource fileResource = (FileResource) it.next();
             String path = fileResource.getFile().getAbsolutePath().replace('\\', '/');
             output[j] = path;

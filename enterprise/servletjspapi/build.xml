@@ -26,89 +26,178 @@
         <condition property="servletjspapi.jarcreated" value="present">
             <and>
                 <available file="external/generated-servlet-jsp-api-4.0_2.3.jar" />
+                <available file="external/generated-servlet-jsp-api-6.1_3.0.jar" />
             </and>
         </condition>
     </target>
 
     <target name="build-init" depends="-check-prepared-jar,projectized.build-init" unless="servletjspapi.jarcreated">
         <property name="jars_location" location="./external"/>
-            <fail message="Set jars_location">
-                <condition>
-                    <not>
-                        <available  file="${jars_location}" type="dir"/>
-                    </not>
-                </condition>
-            </fail>
+        <property name="build_location" location="build/servletjspapi_api_location"/>
+        <property name="build_location_jakarta" location="build/servletjspapi_api_location_jakarta"/>
 
-            <echo message="Creating generated-servlet-jsp-api-4.0_2.3.jar"/>
-            <mkdir dir="servletjspapi_api_location"/>
-            <unzip src="${jars_location}/gf-client-module-5.1.0.jar" dest="servletjspapi_api_location/"/>
-            <unzip src="${jars_location}/jakarta.servlet-api-4.0.4.jar" dest="servletjspapi_api_location/"/>
-            <unzip src="${jars_location}/jakarta.servlet.jsp-api-2.3.6.jar" dest="servletjspapi_api_location/"/>
-            <unzip src="${jars_location}/jakarta.el-api-3.0.3.jar" dest="servletjspapi_api_location/"/>
+        <echo message="Creating generated-servlet-jsp-api-4.0_2.3.jar"/>
+        <mkdir dir="${build_location}"/>
+        <unzip src="${jars_location}/gf-client-module-7.0.25.jar" dest="${build_location}/"/>
+        <unzip src="${jars_location}/jakarta.servlet-api-4.0.4.jar" dest="${build_location}/"/>
+        <unzip src="${jars_location}/jakarta.servlet.jsp-api-2.3.6.jar" dest="${build_location}/"/>
+        <unzip src="${jars_location}/jakarta.el-api-3.0.3.jar" dest="${build_location}/"/>
 
-            <mkdir dir="servletjspapi_api_location/resources/dtds" />
-            <copy todir="servletjspapi_api_location/resources/dtds">
-                <fileset dir="./servletjspapi_api_location/dtds">
-                    <include name="web-app_2_2.dtd"/>
-                    <include name="web-app_2_3.dtd"/>
-                    <include name="web-jsptaglibrary_1_1.dtd"/>
-                    <include name="web-jsptaglibrary_1_2.dtd"/>
-                </fileset>
-            </copy>
+        <mkdir dir="${build_location}/resources/dtds" />
+        <copy todir="${build_location}/resources/dtds">
+            <fileset dir="${build_location}/dtds">
+                <include name="web-app_2_2.dtd"/>
+                <include name="web-app_2_3.dtd"/>
+                <include name="web-jsptaglibrary_1_1.dtd"/>
+                <include name="web-jsptaglibrary_1_2.dtd"/>
+            </fileset>
+        </copy>
 
-            <mkdir dir="servletjspapi_api_location/resources/schemas" />
-            <copy todir="servletjspapi_api_location/resources/schemas">
-                <fileset dir="servletjspapi_api_location/schemas">
-                    <include name="XMLSchema.dtd"/>
-                    <include name="datatypes.dtd"/>
-                    <include name="j2ee_1_4.xsd"/>
-                    <include name="j2ee_web_services_1_1.xsd"/>
-                    <include name="j2ee_web_services_client_1_1.xsd"/>
-                    <include name="javaee_5.xsd"/>
-                    <include name="javaee_6.xsd"/>
-                    <include name="javaee_7.xsd"/>
-                    <include name="javaee_8.xsd"/>
-                    <include name="javaee_web_services_1_2.xsd"/>
-                    <include name="javaee_web_services_1_3.xsd"/>
-                    <include name="javaee_web_services_1_4.xsd"/>
-                    <include name="javaee_web_services_client_1_2.xsd"/>
-                    <include name="javaee_web_services_client_1_3.xsd"/>
-                    <include name="javaee_web_services_client_1_4.xsd"/>
-                    <include name="jsp_2_0.xsd"/>
-                    <include name="jsp_2_1.xsd"/>
-                    <include name="jsp_2_2.xsd"/>
-                    <include name="jsp_2_3.xsd"/>
-                    <include name="web-app_2_4.xsd"/>
-                    <include name="web-app_2_5.xsd"/>
-                    <include name="web-app_3_0.xsd"/>
-                    <include name="web-app_3_1.xsd"/>
-                    <include name="web-app_4_0.xsd"/>
-                    <include name="web-common_3_0.xsd"/>
-                    <include name="web-common_3_1.xsd"/>
-                    <include name="web-common_4_0.xsd"/>
-                    <include name="web-facelettaglibrary_2_0.xsd"/>
-                    <include name="web-facelettaglibrary_2_2.xsd"/>
-                    <include name="web-facelettaglibrary_2_3.xsd"/>
-                    <include name="web-fragment_3_0.xsd"/>
-                    <include name="web-fragment_3_1.xsd"/>
-                    <include name="web-fragment_4_0.xsd"/>
-                    <include name="web-jsptaglibrary_2_0.xsd"/>
-                    <include name="web-jsptaglibrary_2_1.xsd"/>
-                    <include name="web-partialresponse_2_0.xsd"/>
-                    <include name="web-partialresponse_2_2.xsd"/>
-                    <include name="web-partialresponse_2_3.xsd"/>
-                    <include name="xml.xsd"/>
-                    <include name="beans_1_0.xsd"/>
-                    <include name="beans_1_1.xsd"/>
-                    <include name="beans_2_0.xsd"/>
-                </fileset>
-            </copy>
+        <mkdir dir="${build_location}/resources/schemas" />
+        <copy todir="${build_location}/resources/schemas">
+            <fileset dir="${build_location}/schemas">
+                <include name="XMLSchema.dtd"/>
+                <include name="datatypes.dtd"/>
+                <include name="j2ee_1_4.xsd"/>
+                <include name="j2ee_web_services_1_1.xsd"/>
+                <include name="j2ee_web_services_client_1_1.xsd"/>
+                <include name="javaee_5.xsd"/>
+                <include name="javaee_6.xsd"/>
+                <include name="javaee_7.xsd"/>
+                <include name="javaee_8.xsd"/>
+                <include name="javaee_web_services_1_2.xsd"/>
+                <include name="javaee_web_services_1_3.xsd"/>
+                <include name="javaee_web_services_1_4.xsd"/>
+                <include name="javaee_web_services_client_1_2.xsd"/>
+                <include name="javaee_web_services_client_1_3.xsd"/>
+                <include name="javaee_web_services_client_1_4.xsd"/>
+                <include name="jsp_2_0.xsd"/>
+                <include name="jsp_2_1.xsd"/>
+                <include name="jsp_2_2.xsd"/>
+                <include name="jsp_2_3.xsd"/>
+                <include name="web-app_2_4.xsd"/>
+                <include name="web-app_2_5.xsd"/>
+                <include name="web-app_3_0.xsd"/>
+                <include name="web-app_3_1.xsd"/>
+                <include name="web-app_4_0.xsd"/>
+                <include name="web-common_3_0.xsd"/>
+                <include name="web-common_3_1.xsd"/>
+                <include name="web-common_4_0.xsd"/>
+                <include name="web-facelettaglibrary_2_0.xsd"/>
+                <include name="web-facelettaglibrary_2_2.xsd"/>
+                <include name="web-facelettaglibrary_2_3.xsd"/>
+                <include name="web-fragment_3_0.xsd"/>
+                <include name="web-fragment_3_1.xsd"/>
+                <include name="web-fragment_4_0.xsd"/>
+                <include name="web-jsptaglibrary_2_0.xsd"/>
+                <include name="web-jsptaglibrary_2_1.xsd"/>
+                <include name="web-partialresponse_2_0.xsd"/>
+                <include name="web-partialresponse_2_2.xsd"/>
+                <include name="web-partialresponse_2_3.xsd"/>
+                <include name="xml.xsd"/>
+                <include name="beans_1_0.xsd"/>
+                <include name="beans_1_1.xsd"/>
+                <include name="beans_2_0.xsd"/>
+            </fileset>
+        </copy>
 
-            <delete file="./external/generated-servlet-jsp-api-4.0_2.3.jar" />
-            <zip  basedir="servletjspapi_api_location"
-                    includes="javax/servlet/jsp/**, javax/servlet/**, resources/**, javax/el/**"
-                                zipfile="./external/generated-servlet-jsp-api-4.0_2.3.jar" />
-            <delete dir="servletjspapi_api_location" />
+        <delete file="./external/generated-servlet-jsp-api-4.0_2.3.jar" />
+        <zip  basedir="${build_location}"
+                includes="javax/servlet/jsp/**, javax/servlet/**, resources/**, javax/el/**"
+                            zipfile="./external/generated-servlet-jsp-api-4.0_2.3.jar" />
+        <delete dir="${build_location}" />
+
+
+        <echo message="Creating generated-servlet-jsp-api-6.1_3.0.jar"/>
+        <mkdir dir="${build_location_jakarta}"/>
+        <unzip src="${jars_location}/gf-client-module-7.0.25.jar" dest="${build_location_jakarta}/"/>
+        <unzip src="${jars_location}/jakarta.servlet-api-4.0.4.jar" dest="${build_location_jakarta}/"/>
+        <unzip src="${jars_location}/jakarta.servlet.jsp-api-2.3.6.jar" dest="${build_location_jakarta}/"/>
+        <unzip src="${jars_location}/jakarta.el-api-3.0.3.jar" dest="${build_location_jakarta}/"/>
+        <unzip src="${jars_location}/jakarta.servlet-api-6.1.0.jar" dest="${build_location_jakarta}/"/>
+        <unzip src="${jars_location}/jakarta.servlet.jsp-api-4.0.0.jar" dest="${build_location_jakarta}/"/>
+        <unzip src="${jars_location}/jakarta.el-api-6.0.1.jar" dest="${build_location_jakarta}/"/>
+
+        <mkdir dir="${build_location_jakarta}/resources/dtds" />
+        <copy todir="${build_location_jakarta}/resources/dtds">
+            <fileset dir="${build_location_jakarta}/dtds">
+                <include name="web-app_2_2.dtd"/>
+                <include name="web-app_2_3.dtd"/>
+                <include name="web-jsptaglibrary_1_1.dtd"/>
+                <include name="web-jsptaglibrary_1_2.dtd"/>
+            </fileset>
+        </copy>
+
+        <mkdir dir="${build_location_jakarta}/resources/schemas" />
+        <copy todir="${build_location_jakarta}/resources/schemas">
+            <fileset dir="${build_location_jakarta}/schemas">
+                <include name="XMLSchema.dtd"/>
+                <include name="datatypes.dtd"/>
+                <include name="j2ee_1_4.xsd"/>
+                <include name="j2ee_web_services_1_1.xsd"/>
+                <include name="j2ee_web_services_client_1_1.xsd"/>
+                <include name="javaee_5.xsd"/>
+                <include name="javaee_6.xsd"/>
+                <include name="javaee_7.xsd"/>
+                <include name="javaee_8.xsd"/>
+                <include name="jakartaee_10.xsd"/>
+                <include name="jakartaee_9.xsd"/>
+                <include name="javaee_web_services_1_2.xsd"/>
+                <include name="javaee_web_services_1_3.xsd"/>
+                <include name="javaee_web_services_1_4.xsd"/>
+                <include name="jakartaee_web_services_2_0.xsd"/>
+                <include name="javaee_web_services_client_1_2.xsd"/>
+                <include name="javaee_web_services_client_1_3.xsd"/>
+                <include name="javaee_web_services_client_1_4.xsd"/>
+                <include name="jakartaee_web_services_client_2_0.xsd"/>
+                <include name="jsp_2_0.xsd"/>
+                <include name="jsp_2_1.xsd"/>
+                <include name="jsp_2_2.xsd"/>
+                <include name="jsp_2_3.xsd"/>
+                <include name="jsp_3_0.xsd"/>
+                <include name="jsp_3_1.xsd"/>
+                <include name="web-app_2_4.xsd"/>
+                <include name="web-app_2_5.xsd"/>
+                <include name="web-app_3_0.xsd"/>
+                <include name="web-app_3_1.xsd"/>
+                <include name="web-app_4_0.xsd"/>
+                <include name="web-app_5_0.xsd"/>
+                <include name="web-app_6_0.xsd"/>
+                <include name="web-common_3_0.xsd"/>
+                <include name="web-common_3_1.xsd"/>
+                <include name="web-common_4_0.xsd"/>
+                <include name="web-common_5_0.xsd"/>
+                <include name="web-common_6_0.xsd"/>
+                <include name="web-facelettaglibrary_2_0.xsd"/>
+                <include name="web-facelettaglibrary_2_2.xsd"/>
+                <include name="web-facelettaglibrary_2_3.xsd"/>
+                <include name="web-facelettaglibrary_3_0.xsd"/>
+                <include name="web-fragment_3_0.xsd"/>
+                <include name="web-fragment_3_1.xsd"/>
+                <include name="web-fragment_4_0.xsd"/>
+                <include name="web-fragment_5_0.xsd"/>
+                <include name="web-fragment_6_0.xsd"/>
+                <include name="web-jsptaglibrary_2_0.xsd"/>
+                <include name="web-jsptaglibrary_2_1.xsd"/>
+                <include name="web-jsptaglibrary_3_0.xsd"/>
+                <include name="web-partialresponse_2_0.xsd"/>
+                <include name="web-partialresponse_2_2.xsd"/>
+                <include name="web-partialresponse_2_3.xsd"/>
+                <include name="web-partialresponse_3_0.xsd"/>
+                <include name="xml.xsd"/>
+                <include name="beans_1_0.xsd"/>
+                <include name="beans_1_1.xsd"/>
+                <include name="beans_2_0.xsd"/>
+                <include name="beans_3_0.xsd"/>
+                <include name="beans_4_0.xsd"/>
+            </fileset>
+        </copy>
+
+        <delete file="./external/generated-servlet-jsp-api-6.1_3.0.jar" />
+        <!-- jakarta/servlet/jsp/**, jakarta/servlet/**, jakarta/el/** -->
+        <zip  basedir="${build_location_jakarta}"
+              includes="jakarta/servlet/jsp/**, jakarta/servlet/**, jakarta/el/**, resources/**"
+              zipfile="./external/generated-servlet-jsp-api-6.1_3.0.jar" />
+        <delete dir="${build_location_jakarta}" />
     </target>
 </project>

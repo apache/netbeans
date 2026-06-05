@@ -53,11 +53,11 @@
         </action>
 
         <action name="run.single">
-            <args>-PrunClassName=${selectedClass} ${javaExec.workingDir} ${javaExec.environment} run --stacktrace ${javaExec.jvmArgs} ${javaExec.args}</args>
+            <args>-PrunClassName=${selectedClass} -PrunSourceSetNames=${sourceSetNames} ${javaExec.workingDir} ${javaExec.environment} run --stacktrace ${javaExec.jvmArgs} ${javaExec.args}</args>
         </action>
 
         <action name="debug.single">
-            <args>-PrunClassName=${selectedClass} ${javaExec.workingDir} ${javaExec.environment} run --stacktrace --debug-jvm  ${javaExec.jvmArgs} ${javaExec.args}</args>
+            <args>-PrunClassName=${selectedClass} -PrunSourceSetNames=${sourceSetNames} ${javaExec.workingDir} ${javaExec.environment} run --stacktrace --debug-jvm  ${javaExec.jvmArgs} ${javaExec.args}</args>
         </action>
     </apply-for>
 
@@ -91,7 +91,7 @@
             <actions>
                 <apply-for plugins="java">
                     <action name="run.single">
-                        <args>-PrunClassName=${selectedClass} ${javaExec.workingDir} ${javaExec.environment} run --continuous ${javaExec.jvmArgs} ${javaExec.args}</args>
+                        <args>-PrunClassName=${selectedClass} -PrunSourceSetNames=${sourceSetNames} ${javaExec.workingDir} ${javaExec.environment} run --continuous ${javaExec.jvmArgs} ${javaExec.args}</args>
                     </action>
                     <action name="test.single">
                         <args>"${cleanTestTaskName}" "${testTaskName}" --tests "${selectedClass}" --continuous</args>

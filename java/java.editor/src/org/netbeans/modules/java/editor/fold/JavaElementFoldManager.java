@@ -84,7 +84,7 @@ public class JavaElementFoldManager implements FoldManager {
 	     new org.netbeans.api.editor.fold.FoldTemplate(1, 1, "{...}")); // NOI18N
     
     @NbBundle.Messages("FoldType_InnerClasses=Inner Classes")
-    public static final FoldType INNERCLASS_TYPE = FoldType.NESTED.derive("innerclass", "Inner Classes", 
+    public static final FoldType INNERCLASS_TYPE = FoldType.NESTED.derive("innerclass", Bundle.FoldType_InnerClasses(), 
 	     new org.netbeans.api.editor.fold.FoldTemplate(1, 1, "{...}")); // NOI18N
     
     protected static final class FoldTemplate {

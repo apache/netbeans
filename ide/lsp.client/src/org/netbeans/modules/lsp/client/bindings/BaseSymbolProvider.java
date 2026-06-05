@@ -81,13 +81,16 @@ public class BaseSymbolProvider {
                 queries.add(b.getWorkspaceService().symbol(new WorkspaceSymbolParams(searchText)));
             }
 
+            if (queries.isEmpty()) {
+                return;
+            }
+
             NameMatcher matcher = NameMatcherFactory.createNameMatcher(searchText, searchType);
 
             while (!queries.isEmpty()) {
                 if (cancel.get()) {
                     return ;
                 }
-
 
                 try {
                     currentQuery = queries.remove(queries.size() - 1);

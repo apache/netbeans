@@ -43,6 +43,7 @@ import javax.swing.JToolBar;
 import org.netbeans.editor.BaseDocument;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.editor.AnnotationDesc;
@@ -343,7 +344,7 @@ NbDocument.Printable, NbDocument.CustomEditor, NbDocument.CustomToolbar, NbDocum
             }
 
             try {
-                lastKnownLine = Utilities.getLineOffset(doc, offset);
+                lastKnownLine = LineDocumentUtils.getLineIndex(doc, offset);
                 lastKnownOffset = offset;
             } catch (BadLocationException e) {
                 lastKnownOffset = -1;

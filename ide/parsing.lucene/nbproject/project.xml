@@ -39,8 +39,8 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>3</release-version>
-                        <specification-version>3.6</specification-version>
+                        <release-version>9</release-version>
+                        <specification-version>9.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

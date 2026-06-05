@@ -92,7 +92,7 @@ public final class IndentContext {
         int lineEnd = -1;
         if (doc != null) {
             try {
-                lineEnd = LineDocumentUtils.getLineEnd(doc,
+                lineEnd = LineDocumentUtils.getLineEndOffset(doc,
                         context.caretOffset());
             } catch (BadLocationException | IndexOutOfBoundsException ex) {
             }

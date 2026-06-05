@@ -19,7 +19,6 @@
 
 package org.netbeans.modules.masterfs.filebasedfs.fileobjects;
 
-import org.netbeans.modules.masterfs.filebasedfs.FileBasedFileSystem.FSCallable;
 import org.netbeans.modules.masterfs.filebasedfs.Statistics;
 import org.netbeans.modules.masterfs.filebasedfs.children.ChildrenCache;
 import org.netbeans.modules.masterfs.filebasedfs.naming.FileNaming;
@@ -39,7 +38,6 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
@@ -51,7 +49,6 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.masterfs.filebasedfs.FileBasedFileSystem;
@@ -76,8 +73,7 @@ public abstract class BaseFileObj extends FileObject {
     private static final String PATH_SEPARATOR = File.separator;//NOI18N
     private static final char EXT_SEP = '.';//NOI18N
     static final Logger LOG = Logger.getLogger(BaseFileObj.class.getName());
-    static final ThreadLocal<Long> MOVED_FILE_TIMESTAMP //#244286: move in progress
-            = new ThreadLocal<Long>();
+    static final ThreadLocal<Long> MOVED_FILE_TIMESTAMP = new ThreadLocal<>(); //#244286: move in progress
 
     //static fields 
     static final long serialVersionUID = -1244650210876356809L;
@@ -154,14 +150,17 @@ public abstract class BaseFileObj extends FileObject {
         return extension.canWrite(file);
     }
 
+    @Override
     public final boolean isData() {
         return !isFolder();
     }
 
+    @Override
     public final String getName() {
         return FileInfo.getName(getNameExt());
     }
 
+    @Override
     public final String getExt() {
         return FileInfo.getExt(getNameExt());
     }
@@ -169,7 +168,7 @@ public abstract class BaseFileObj extends FileObject {
     @Override
     public final String getPath() {
         FileNaming fileNaming = getFileName();
-        Deque<String> stack = new ArrayDeque<String>();
+        Deque<String> stack = new ArrayDeque<>();
         while (fileNaming != null) {
             stack.addFirst(fileNaming.getName());
             fileNaming = fileNaming.getParent();
@@ -193,14 +192,17 @@ public abstract class BaseFileObj extends FileObject {
         return path.toString();
     }
 
+    @Override
     public final FileSystem getFileSystem() throws FileStateInvalidException {
         return FileBasedFileSystem.getInstance();
     }
 
+    @Override
     public final boolean isRoot() {
         return false;
     }
 
+    @Override
     public final java.util.Date lastModified() {
         final File f = getFileName().getFile();
         final long lastModified = f.lastModified();
@@ -225,8 +227,8 @@ public abstract class BaseFileObj extends FileObject {
             }
             final IOHandler copyHandler = extensions.getCopyHandler(getFileName().getFile(), to);
             if (copyHandler != null) {
-                if (target instanceof FolderObj) {
-                    result = handleMoveCopy((FolderObj)target, name, ext, copyHandler);
+                if (target instanceof FolderObj folderObj) {
+                    result = handleMoveCopy(folderObj, name, ext, copyHandler);
                 } else {
                     copyHandler.handle();
                     refresh(true);
@@ -274,8 +276,8 @@ public abstract class BaseFileObj extends FileObject {
         Watcher.lock(getParent());
         final IOHandler moveHandler = extensions.getMoveHandler(getFileName().getFile(), to);
         if (moveHandler != null) {
-            if (target instanceof FolderObj) {
-                result = move(lock, (FolderObj)target, name, ext,moveHandler);
+            if (target instanceof FolderObj folderObj) {
+                result = move(lock, folderObj, name, ext,moveHandler);
             } else {
                 moveHandler.handle();
                 refresh(true);
@@ -442,7 +444,7 @@ public abstract class BaseFileObj extends FileObject {
             }
             assert allRenamed[0] != null;
             fileName = allRenamed[0];
-            Set<BaseFileObj> toRename = new HashSet<BaseFileObj>(allRenamed.length * 2);
+            Set<BaseFileObj> toRename = new HashSet<>(allRenamed.length * 2);
             toRename.add(this);
             BaseFileObj.attribs.renameAttributes(file.getAbsolutePath().replace('\\', '/'), file2Rename.getAbsolutePath().replace('\\', '/'));//NOI18N
             for (int i = 0; i < allRenamed.length; i++) {
@@ -453,8 +455,7 @@ public abstract class BaseFileObj extends FileObject {
                     toRename.add(obj);
                 }
                 FileObject tmpPar = allRenamed[i].getParent() != null ? fs.getCachedOnly(affected.getParentFile(), false) : null;
-                if (tmpPar instanceof FolderObj) {
-                    FolderObj par = (FolderObj)tmpPar;
+                if (tmpPar instanceof FolderObj par) {
                     ChildrenCache childrenCache = par.getChildrenCache();
                     final Mutex.Privileged mutexPrivileged = (childrenCache != null) ? childrenCache.getMutexPrivileged() : null;
                     if (mutexPrivileged != null) {
@@ -488,18 +489,16 @@ public abstract class BaseFileObj extends FileObject {
     protected void afterRename() {
     }
 
+    @Override
     public final void rename(final FileLock lock, final String name, final String ext) throws IOException {
-        FSCallable<Boolean> c = new FSCallable<Boolean>() {
-            public Boolean call() throws IOException {
-                ProvidedExtensions extensions = getProvidedExtensions();
-                rename(lock, name, ext, extensions.getRenameHandler(getFileName().getFile(), FileInfo.composeName(name, ext)));
-                return true;
-            }
-        };        
-        FileBasedFileSystem.runAsInconsistent(c);
+        FileBasedFileSystem.runAsInconsistent(() -> {
+            ProvidedExtensions extensions = getProvidedExtensions();
+            rename(lock, name, ext, extensions.getRenameHandler(getFileName().getFile(), FileInfo.composeName(name, ext)));
+            return true;
+        });
     }
-    
       
+    @Override
     public Object getAttribute(final String attrName) {
         if (attrName.equals("FileSystem.rootPath")) {
             return "";//NOI18N
@@ -516,12 +515,14 @@ public abstract class BaseFileObj extends FileObject {
         return BaseFileObj.attribs.readAttribute(getFileName().getFile().getAbsolutePath().replace('\\', '/'), attrName);//NOI18N
     }
 
+    @Override
     public final void setAttribute(final String attrName, final Object value) throws java.io.IOException {
         final Object oldValue = BaseFileObj.attribs.readAttribute(getFileName().getFile().getAbsolutePath().replace('\\', '/'), attrName);//NOI18N
         BaseFileObj.attribs.writeAttribute(getFileName().getFile().getAbsolutePath().replace('\\', '/'), attrName, value);//NOI18N
         fireFileAttributeChangedEvent(attrName, oldValue, value);
     }
 
+    @Override
     public final java.util.Enumeration<String> getAttributes() {
         return BaseFileObj.attribs.attributes(getFileName().getFile().getAbsolutePath().replace('\\', '/'));//NOI18N
     }
@@ -566,20 +567,24 @@ public abstract class BaseFileObj extends FileObject {
     }
 
 
+    @Override
     public final long getSize() {
         return getFileName().getFile().length();
     }
 
+    @Override
     public final void setImportant(final boolean b) {
     }
 
 
+    @Override
     public boolean isReadOnly() {
         final File f = getFileName().getFile();
         ProvidedExtensions extension = getProvidedExtensions();
         return !extension.canWrite(f) && FileChangedManager.getInstance().exists(f);
     }
 
+    @Override
     public final FileObject getParent() {
         FileObject retVal = null;
         if (!isRoot()) {
@@ -764,22 +769,20 @@ public abstract class BaseFileObj extends FileObject {
         return fileName;
     }
     
+    @Override
     public final void delete(final FileLock lock) throws IOException {
-        FSCallable<Boolean> c = new FSCallable<Boolean>() {
-            public Boolean call() throws IOException {
-                ProvidedExtensions pe = getProvidedExtensions();
-                pe.beforeDelete(BaseFileObj.this);
-                try {
-                    delete(lock, pe.getDeleteHandler(getFileName().getFile()));
-                } catch (IOException iex) {
-                    getProvidedExtensions().deleteFailure(BaseFileObj.this);
-                    throw iex;
-                }
-                getProvidedExtensions().deleteSuccess(BaseFileObj.this);
-                return true;
-            }            
-        };
-        FileBasedFileSystem.runAsInconsistent(c);
+        FileBasedFileSystem.runAsInconsistent(() -> {
+            ProvidedExtensions pe = getProvidedExtensions();
+            pe.beforeDelete(BaseFileObj.this);
+            try {
+                delete(lock, pe.getDeleteHandler(getFileName().getFile()));
+            } catch (IOException iex) {
+                getProvidedExtensions().deleteFailure(BaseFileObj.this);
+                throw iex;
+            }
+            getProvidedExtensions().deleteSuccess(BaseFileObj.this);
+            return true;
+        });
     }    
 
     public void delete(final FileLock lock, ProvidedExtensions.DeleteHandler deleteHandler) throws IOException {        
@@ -930,16 +933,16 @@ public abstract class BaseFileObj extends FileObject {
     }
 
     private void updateFileName(FileNaming oldName, FileNaming oldRoot, FileNaming newRoot) {
-        Stack<String> names = new Stack<String>();
+        Deque<String> names = new ArrayDeque<>();
 
         while (oldRoot != oldName && oldName != null) {
-            names.add(oldName.getName());
+            names.addLast(oldName.getName());
             oldName = oldName.getParent();
         }
 
         File prev = newRoot.getFile();
         while (!names.isEmpty()) {
-            String n = names.pop();
+            String n = names.removeLast();
             newRoot = NamingFactory.fromFile(newRoot, prev = new File(prev, n), true);
         }
         assert newRoot != null;
@@ -962,56 +965,68 @@ public abstract class BaseFileObj extends FileObject {
  *  
  */    
     private static final class BridgeForAttributes implements AbstractFileSystem.List, AbstractFileSystem.Change, AbstractFileSystem.Info {
+        @Override
         public final Date lastModified(final String name) {
             final File file = new File(name);
             return new Date(file.lastModified());
         }
 
+        @Override
         public final boolean folder(final String name) {
             final File file = new File(name);
             return file.isDirectory();
         }
 
+        @Override
         public final boolean readOnly(final String name) {
             final File file = new File(name);
             return !file.canWrite();
 
         }
 
+        @Override
         public final String mimeType(final String name) {
             return "content/unknown"; // NOI18N;
         }
 
+        @Override
         public final long size(final String name) {
             final File file = new File(name);
             return file.length();
         }
 
+        @Override
         public final InputStream inputStream(final String name) throws FileNotFoundException {
             final File file = new File(name);
             return new FileInputStream(file);
 
         }
 
+        @Override
         public final OutputStream outputStream(final String name) throws IOException {
-            final Path path = Paths.get(name);
+            final Path path = Path.of(name);
             return Files.newOutputStream(path);
         }
 
+        @Override
         public final void lock(final String name) throws IOException {
         }
 
+        @Override
         public final void unlock(final String name) {
         }
 
+        @Override
         public final void markUnimportant(final String name) {
         }
 
+        @Override
         public final String[] children(final String f) {
             final File file = new File(f);
             return file.list();
         }
 
+        @Override
         public final void createFolder(final String name) throws IOException {
             final File file = new File(name);
             if (!file.mkdirs()) {
@@ -1020,6 +1035,7 @@ public abstract class BaseFileObj extends FileObject {
             }
         }
 
+        @Override
         public final void createData(final String name) throws IOException {
             final File file = new File(name);
             if (!file.createNewFile()) {
@@ -1027,6 +1043,7 @@ public abstract class BaseFileObj extends FileObject {
             }
         }
 
+        @Override
         public final void rename(final String oldName, final String newName) throws IOException {
             final File file = new File(oldName);
             final File dest = new File(newName);
@@ -1036,6 +1053,7 @@ public abstract class BaseFileObj extends FileObject {
             }
         }
 
+        @Override
         public final void delete(final String name) throws IOException {
             final File file = new File(name);
             final boolean isDeleted = (file.isFile()) ? deleteFile(file) : deleteFolder(file);

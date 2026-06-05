@@ -178,7 +178,7 @@ public abstract class StreamSource extends Object {
                     copyStreamsCloseAll(new OutputStreamWriter(baos, encoding), r);
                     in = new ByteArrayInputStream(baos.toByteArray());
                 }
-                org.openide.filesystems.FileUtil.copy(in, out = new FileOutputStream(tmp));
+                in.transferTo(out = new FileOutputStream(tmp));
             } finally {
                 if (in != null) in.close();
                 if (out != null) out.close();

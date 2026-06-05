@@ -116,7 +116,7 @@ public class LineBreakpoint extends AbstractBreakpoint {
                                 if (parserResult instanceof PHPParseResult) {
                                     PHPParseResult phpParserResult = (PHPParseResult) parserResult;
                                     int rowStart = LineDocumentUtils.getLineStartFromIndex(baseDocument, myLine.getLineNumber());
-                                    int contentStart = Utilities.getRowFirstNonWhite(baseDocument, rowStart);
+                                    int contentStart = LineDocumentUtils.getLineFirstNonWhitespace(baseDocument, rowStart);
                                     int contentEnd = LineDocumentUtils.getLineLastNonWhitespace(baseDocument, rowStart) + 1;
                                     StatementVisitor statementVisitor = new StatementVisitor(contentStart, contentEnd);
                                     statementVisitor.scan(phpParserResult.getProgram().getStatements());

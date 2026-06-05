@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.php.project.ui.customizer;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -813,7 +812,7 @@ public final class PhpProjectProperties implements ConfigManager.ConfigProvider 
                 } else {
                     charsetName = ProjectPropertiesSupport.getEncoding(project);
                 }
-                FileUtil.copy(new ByteArrayInputStream(changedLicensePathContent.getBytes(charsetName)), out);
+                out.write(changedLicensePathContent.getBytes(charsetName));
             }
         }
 

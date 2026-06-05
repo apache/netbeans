@@ -82,7 +82,6 @@ public class OpenTempl_defaultPackTest extends ExtJellyTestCase {
         return NbModuleSuite.create(
                 NbModuleSuite.createConfiguration(OpenTempl_defaultPackTest.class).addTest(
                 //SWING
-                "testApplet",
                 "testDialog",
                 "testFrame",
                 "testPanel",
@@ -93,7 +92,6 @@ public class OpenTempl_defaultPackTest extends ExtJellyTestCase {
                  "testAppl",
                  "testOkCancel",
                 //AWT
-                "testAWTApplet",
                 "testAWTDialog",
                 "testAWTFrame",
                 "testAWTPanel"
@@ -228,17 +226,6 @@ public class OpenTempl_defaultPackTest extends ExtJellyTestCase {
 
     }
 
-    /** Test case 1.
-     *Create new JApplet template in default package
-     */
-    public void testApplet() throws InterruptedException, IOException, Exception {
-
-
-//        begin();
-        testTemplateMethod("JApplet Form", "Swing GUI Forms", "NewJApplet");
-
-    }
-
     /** Test case 2.
      * Create new JDialog template in default package
      */
@@ -307,16 +294,6 @@ public class OpenTempl_defaultPackTest extends ExtJellyTestCase {
     public void testAWTPanel() throws InterruptedException, IOException {
 
         testTemplateMethod("Panel Form", "AWT GUI Forms", "NewPanel");
-
-    }
-    
-    /**AWT Test case 2.
-     * Create new Dialog template in default package
-     */
-    
-    public void testAWTApplet() throws InterruptedException, IOException, Exception {
-
-        testTemplateMethod("Applet Form", "AWT GUI Forms", "NewApplet");
 
     }
 

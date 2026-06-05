@@ -71,7 +71,7 @@ final class Compile implements DiagnosticListener<JavaFileObject> {
     /** Performs compilation of given HTML page and associated Java code
      */
     public static Compile create(String htmlName, String html, String code) throws IOException {
-        return create(htmlName, html, code, "1.7");
+        return create(htmlName, html, code, "1.8");
     }
     static Compile create(String htmlName, String html, String code, String sourceLevel) throws IOException {
         return new Compile(htmlName, html, code, sourceLevel);
@@ -208,7 +208,7 @@ final class Compile implements DiagnosticListener<JavaFileObject> {
             }
         };
 
-        ToolProvider.getSystemJavaCompiler().getTask(null, jfm, this, Arrays.asList("-source", sourceLevel, "-target", "1.7"), null, Arrays.asList(file)).call();
+        ToolProvider.getSystemJavaCompiler().getTask(null, jfm, this, Arrays.asList("-source", sourceLevel, "-target", sourceLevel), null, Arrays.asList(file)).call();
 
         Map<String, byte[]> result = new HashMap<String, byte[]>();
 

@@ -38,12 +38,12 @@ import org.openide.util.lookup.Lookups;
  */
 public class WhereUsedRefactoringUIImpl implements RefactoringUI {
 
-    private final LSPBindings bindings;
+    private final LSPBindingsCollection servers;
     private final ReferenceParams params;
     private final String name;
 
-    public WhereUsedRefactoringUIImpl(LSPBindings binding, ReferenceParams params, String name) {
-        this.bindings = binding;
+    public WhereUsedRefactoringUIImpl(LSPBindingsCollection servers, ReferenceParams params, String name) {
+        this.servers = servers;
         this.params = params;
         this.name = name;
     }
@@ -98,7 +98,7 @@ public class WhereUsedRefactoringUIImpl implements RefactoringUI {
 
     @Override
     public AbstractRefactoring getRefactoring() {
-        return new WhereUsedQuery(Lookups.fixed(bindings, params));
+        return new WhereUsedQuery(Lookups.fixed(servers, params));
     }
 
     @Override

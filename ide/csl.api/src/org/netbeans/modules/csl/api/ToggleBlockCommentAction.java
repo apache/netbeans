@@ -202,10 +202,10 @@ public class ToggleBlockCommentAction extends BaseAction {
             if (to > 0 && LineDocumentUtils.getLineStart(doc, to) == to) {
                 to--;
             }
-            to = LineDocumentUtils.getLineEnd(doc, to);
+            to = LineDocumentUtils.getLineEndOffset(doc, to);
         } else { // selection not visible
             from = LineDocumentUtils.getLineStart(doc, caret.getDot());
-            to = LineDocumentUtils.getLineEnd(doc, caret.getDot());
+            to = LineDocumentUtils.getLineEndOffset(doc, caret.getDot());
         }
 
         boolean lineSelection = false;
@@ -219,7 +219,7 @@ public class ToggleBlockCommentAction extends BaseAction {
             if (!inComment) {
                 //extend the range to the whole line
                 from = LineDocumentUtils.getNextNonWhitespace(doc, LineDocumentUtils.getLineStart(doc, from));
-                to = LineDocumentUtils.getPreviousNonWhitespace(doc, LineDocumentUtils.getLineEnd(doc, to)) + 1;
+                to = LineDocumentUtils.getPreviousNonWhitespace(doc, LineDocumentUtils.getLineEndOffset(doc, to)) + 1;
                 lineSelection = true;
             } else {
                 // check if the line does not begin with WS+comment start or end with WS+comment end
@@ -502,7 +502,7 @@ public class ToggleBlockCommentAction extends BaseAction {
                 to--;
             }
         } else { // selection not visible
-            to = LineDocumentUtils.getLineEnd(doc, target.getCaretPosition());
+            to = LineDocumentUtils.getLineEndOffset(doc, target.getCaretPosition());
         }
 
         int fromLineStartOffset = LineDocumentUtils.getLineStart(doc, from);
@@ -572,7 +572,7 @@ public class ToggleBlockCommentAction extends BaseAction {
             }
 
             lastLineOffset = Math.max(LineDocumentUtils.getLineStart(doc, block[1]), block[0]);
-            lastLineEndOffset = LineDocumentUtils.getLineEnd(doc, block[1]);
+            lastLineEndOffset = LineDocumentUtils.getLineEndOffset(doc, block[1]);
         }
 
         if (LOG.isLoggable(Level.FINE)) {
@@ -615,7 +615,7 @@ public class ToggleBlockCommentAction extends BaseAction {
                 return false;
             }
 
-            if (LineDocumentUtils.getLineEnd(doc, firstNonWhitePos) - firstNonWhitePos < lineCommentStringLen) {
+            if (LineDocumentUtils.getLineEndOffset(doc, firstNonWhitePos) - firstNonWhitePos < lineCommentStringLen) {
                 return false;
             }
 
@@ -645,7 +645,7 @@ public class ToggleBlockCommentAction extends BaseAction {
 
             // If there is any, check wheter it's the line-comment-chars and remove them
             if (firstNonWhitePos != -1) {
-                if (LineDocumentUtils.getLineEnd(doc, firstNonWhitePos) - firstNonWhitePos >= lineCommentStringLen) {
+                if (LineDocumentUtils.getLineEndOffset(doc, firstNonWhitePos) - firstNonWhitePos >= lineCommentStringLen) {
                     CharSequence maybeLineComment = DocumentUtilities.getText(doc, firstNonWhitePos, lineCommentStringLen);
                     if (CharSequenceUtilities.textEquals(maybeLineComment, lineCommentString)) {
                         doc.remove(firstNonWhitePos, lineCommentStringLen);

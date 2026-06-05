@@ -44,7 +44,7 @@ import org.netbeans.modules.j2ee.api.ejbjar.Car;
 import org.netbeans.modules.websvc.api.support.InvokeOperationCookie;
 import org.openide.util.Lookup;
 import static org.netbeans.api.java.source.JavaSource.Phase;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.editor.BaseDocument;
@@ -523,7 +523,7 @@ public class JaxWsCodeGenerator  {
                 doInsertMethod(document, pos, operationNode);
             }
         };
-        ProgressUtils.showProgressDialogAndRun(runnable, 
+        BaseProgressUtils.showProgressDialogAndRun(runnable, 
                 NbBundle.getMessage(JaxWsCodeGenerator.class, 
                 "MSG_GenerateMethod", operation.getName()));              // NOI18N
     }

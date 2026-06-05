@@ -30,7 +30,7 @@ import org.openide.util.NbBundle;
  */
 public class ConfigRunnable implements Runnable {
 
-    private ProgressHandle progressHandle = ProgressHandleFactory.createHandle(null);
+    private ProgressHandle progressHandle = ProgressHandle.createHandle(null);
     final ProgressPanel progressPanel = new ProgressPanel(
             NbBundle.getMessage(MtomConfiguration.class, "LBL_Wait")); //NOI18N
 

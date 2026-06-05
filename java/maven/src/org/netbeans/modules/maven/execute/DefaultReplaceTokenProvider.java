@@ -102,8 +102,22 @@ public class DefaultReplaceTokenProvider implements ReplaceTokenProvider, Action
         return files.toArray(new FileObject[0]);
     }
 
-    @Override public Map<String, String> createReplacements(String actionName, Lookup lookup) {
+    private static NestedClass extractNestedClassFromLookup(Lookup lookup) {
         NestedClass nestedClass = lookup.lookup(NestedClass.class);
+        if (nestedClass != null) {
+            return nestedClass;
+        }
+
+        SingleMethod sm = lookup.lookup(SingleMethod.class);
+        if (sm != null) {
+            return sm.getNestedClass();
+        }
+
+        return null;
+    }
+
+    @Override public Map<String, String> createReplacements(String actionName, Lookup lookup) {
+        NestedClass nestedClass = extractNestedClassFromLookup(lookup);
         FileObject[] fos = extractFileObjectsfromLookup(lookup);
         List<Project> projects = extractProjectsFromLookup(lookup);
         

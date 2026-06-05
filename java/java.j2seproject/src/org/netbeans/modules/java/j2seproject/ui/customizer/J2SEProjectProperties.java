@@ -20,7 +20,6 @@
 package org.netbeans.modules.java.j2seproject.ui.customizer;
 
 import java.awt.event.ActionListener;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -51,7 +50,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.ButtonModel;
 import javax.swing.ComboBoxModel;
-import javax.swing.DefaultButtonModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JToggleButton;
 import javax.swing.ListCellRenderer;
@@ -469,11 +467,8 @@ public class J2SEProjectProperties {
                 } else {
                     fo = FileUtil.toFileObject(file);
                 }
-                OutputStream out = fo.getOutputStream();
-                try {
-                    FileUtil.copy(new ByteArrayInputStream(CHANGED_LICENSE_PATH_CONTENT.getBytes()), out);
-                } finally {
-                    out.close();
+                try (OutputStream out = fo.getOutputStream()) {
+                    out.write(CHANGED_LICENSE_PATH_CONTENT.getBytes());
                 }
             }
             // Store properties

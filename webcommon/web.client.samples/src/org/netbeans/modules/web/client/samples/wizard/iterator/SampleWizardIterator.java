@@ -89,24 +89,19 @@ public class SampleWizardIterator extends AbstractWizardIterator {
         }
         FileLock lock = fo.lock();
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader( 
-                    new FileInputStream(FileUtil.toFile(fo)), StandardCharsets.UTF_8));
-            String line;
-            StringBuilder sb = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                for (Entry<String, String> entry : map.entrySet()) {
-                    line = line.replace(entry.getKey(), entry.getValue());
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(FileUtil.toFile(fo)), StandardCharsets.UTF_8))) {
+                String line;
+                StringBuilder sb = new StringBuilder();
+                while ((line = reader.readLine()) != null) {
+                    for (Entry<String, String> entry : map.entrySet()) {
+                        line = line.replace(entry.getKey(), entry.getValue());
+                    }
+                    sb.append(line);
+                    sb.append("\n");
                 }
-                sb.append(line);
-                sb.append("\n");
-            }
-            OutputStreamWriter writer = new OutputStreamWriter(
-                    fo.getOutputStream(lock), StandardCharsets.UTF_8);
-            try {
-                writer.write(sb.toString());
-            } finally {
-                writer.close();
-                reader.close();
+                try (OutputStreamWriter writer = new OutputStreamWriter(fo.getOutputStream(lock), StandardCharsets.UTF_8)) {
+                    writer.write(sb.toString());
+                }
             }
         } finally {
             lock.releaseLock();
@@ -114,8 +109,7 @@ public class SampleWizardIterator extends AbstractWizardIterator {
     }
 
     private void unZipFile(InputStream source, FileObject rootFolder) throws IOException {
-        try {
-            ZipInputStream str = new ZipInputStream(source);
+        try (ZipInputStream str = new ZipInputStream(source)) {
             ZipEntry entry;
             while ((entry = str.getNextEntry()) != null) {
                 if (entry.isDirectory()) {
@@ -125,18 +119,13 @@ public class SampleWizardIterator extends AbstractWizardIterator {
                 FileObject fo = FileUtil.createData(rootFolder, entry.getName());
                 FileLock lock = fo.lock();
                 try {
-                    OutputStream out = fo.getOutputStream(lock);
-                    try {
-                        FileUtil.copy(str, out);
-                    } finally {
-                        out.close();
+                    try (OutputStream out = fo.getOutputStream(lock)) {
+                        str.transferTo(out);
                     }
                 } finally {
                     lock.releaseLock();
                 }
             }
-        } finally {
-            source.close();
         }
     }
 }

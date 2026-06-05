@@ -17,10 +17,13 @@
  * under the License.
  */
 
-apply plugin: 'java'
-apply plugin: 'application'
+plugins {
+    id 'application'
+}
 
-mainClassName = 'test.App'
+application {
+    mainClass = 'test.App'
+}
 
 group = 'nbtest'
 version = '0.1'

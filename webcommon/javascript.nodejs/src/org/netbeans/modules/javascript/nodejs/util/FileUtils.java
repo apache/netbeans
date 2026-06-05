@@ -392,7 +392,7 @@ public final class FileUtils {
                         throw new IOException("Cannot create new file " + destPath);
                     }
                     try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(destPath))) {
-                        FileUtil.copy(tarInputStream, outputStream);
+                        tarInputStream.transferTo(outputStream);
                     }
                 }
                 tarEntry = tarInputStream.getNextTarEntry();

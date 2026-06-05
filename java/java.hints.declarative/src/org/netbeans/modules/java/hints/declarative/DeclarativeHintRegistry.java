@@ -106,7 +106,7 @@ public class DeclarativeHintRegistry implements HintProvider, ClassPathBasedHint
     }
 
     public static Collection<? extends HintDescription> join(Map<HintMetadata, Collection<? extends HintDescription>> hints) {
-        List<HintDescription> descs = new LinkedList<>();
+        List<HintDescription> descs = new ArrayList<>();
 
         for (Collection<? extends HintDescription> c : hints.values()) {
             descs.addAll(c);

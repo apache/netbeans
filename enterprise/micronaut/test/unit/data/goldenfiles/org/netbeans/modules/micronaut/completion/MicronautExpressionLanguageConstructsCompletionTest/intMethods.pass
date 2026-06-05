@@ -3,11 +3,13 @@ byteValue() : byte
 compare(int x, int y) : int
 compareTo(Integer anotherInteger) : int
 compareUnsigned(int x, int y) : int
+compress(int i, int mask) : int
 decode(String nm) : Integer
 describeConstable() : Optional<Integer>
 divideUnsigned(int dividend, int divisor) : int
 doubleValue() : double
 equals(Object obj) : boolean
+expand(int i, int mask) : int
 floatValue() : float
 getInteger(String nm) : Integer
 getInteger(String nm, Integer val) : Integer

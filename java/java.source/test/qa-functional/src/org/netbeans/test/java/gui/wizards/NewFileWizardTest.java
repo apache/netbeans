@@ -302,14 +302,7 @@ public class NewFileWizardTest extends JavaTestCase {
         createAndVerify("MyExp" ,"Java Exception",
                 Common.unify(expected),true);
     }
-    
-    
-    public void testCreateJApplet() {
-        String expected = getContentOfGoldenFile();
-        createAndVerify("MyJApplet" , "JApplet",
-                Common.unify(expected),true);
-    }
-    
+
     public void testCreateEmptyFile() {
         String expected = getContentOfGoldenFile();
         createAndVerify("Empty" ,"Empty Java File", 

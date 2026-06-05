@@ -34,11 +34,11 @@ import java.util.logging.Logger;
  * File format of the archive:
  *  [Header]
  *  ([Source entry]|[File entry])*
- * 
+ *
  * Header:
  *   8B [Magic]
  *   8B [timestamp]
- * 
+ *
  * Source entry (describes a data source for following entries):
  *   1B 0x01 type identifier
  *   xB id   utf8 String identifier of the source (file name)
@@ -49,7 +49,7 @@ import java.util.logging.Logger;
  *   4B len  length of the data (or -1 for no such file for source)
  *   xB name utf8 String name of the file
  * lenB data file content
- * 
+ *
  * Utf8 string
  *   2B len  length of the following String in bytes
  * lenB data utf8 encoded string
@@ -58,37 +58,38 @@ import java.util.logging.Logger;
  */
 class Archive implements Stamps.Updater {
     // increment on format change
-    private static final long magic = 6836742066851800321l;
+    private static final long MAGIC = 6836742066851800321l;
     private static final Logger LOG = Logger.getLogger(Archive.class.getName());
-    
+
     private volatile boolean saved;
     private final boolean prepopulated;
-    
+
     private volatile boolean gathering;
     private final Object gatheringLock = new Object();
     // these two collections are guarded either by the gatheringLock
     // or by the "gathering" volatile flag transitions
-    private Map<String,Boolean> requests = new LinkedHashMap<String, Boolean>();
-    private Map<String,ArchiveResources> knownSources = new HashMap<String,ArchiveResources>();
+    private Map<String,Boolean> requests = new LinkedHashMap<>();
+    private Map<String,ArchiveResources> knownSources = new HashMap<>();
 
     private volatile boolean active;
     // These two collections are guarded by the "active" volatile flag transition.
     // They are modified from a single thread only, when "active" flag is false
-    private Map<String,Integer> sources = new HashMap<String,Integer>();
-    private Map<Entry, Entry> entries = new HashMap<Entry,Entry>();
-    
+    private Map<String,Integer> sources = new HashMap<>();
+    private Map<Entry, Entry> entries = new HashMap<>();
+
     public Archive() {
         gathering = false;
         active = false;
         prepopulated = false;
     }
 
-    Archive(boolean prep) {
+    @SuppressWarnings("unused") // used by org.netbeans.core.startup.UpdateAllResourcesTest via reflection
+    private Archive(boolean prep) {
         gathering = false;
         active = false;
         prepopulated = prep;
     }
-    
+
     /** Creates a new instance of Archive that reads data from given cache
      */
     Archive(Stamps cache) {
@@ -104,14 +105,10 @@ class Archive implements Stamps.Updater {
             sources.clear();
             entries.clear();
         }
-        prepopulated = entries.size() > 0;
- 
+        prepopulated = !entries.isEmpty();
+
         active = true;
         gathering = true;
-    }
-
-    final boolean isActive() {
-        return active;
     }
 
     /**
@@ -119,29 +116,30 @@ class Archive implements Stamps.Updater {
      */
     private void parse(ByteBuffer master, long after) throws Exception {
         if (master.remaining() < 16) throw new IllegalStateException("Cache invalid");
-        if (master.getLong() != magic) throw new IllegalStateException("Wrong format");
+        if (master.getLong() != MAGIC) throw new IllegalStateException("Wrong format");
         if (master.getLong() < after) throw new IllegalStateException("Cache outdated");
-        
+
         int srcCounter = 0;
 
         while (master.remaining() > 0) {
             int type = master.get();
             switch (type) {
-                case 1: // source header
+                case 1 -> {
+                    // source header
                     String name = parseString(master);
-                    sources.put(name, srcCounter++);
-                    break;
-                case 2:
+                    sources.put(name, srcCounter);
+                    srcCounter++;
+                }
+                case 2 -> {
                     Entry en = new Entry(master); // shifts the buffer
                     entries.put(en, en);
-                    break;
-                default:
-                    throw new IllegalStateException("Cache invalid");
+                }
+                default -> throw new IllegalStateException("Cache invalid");
             }
         }
         master.rewind();
     }
-    
+
     private static String parseString(ByteBuffer src) {
         int len = src.getChar();
         byte data[] = new byte[len];
@@ -152,13 +150,13 @@ class Archive implements Stamps.Updater {
             throw new InternalError(); // UTF8 must be supported
         }
     }
-    
+
     private static void writeString(DataOutputStream dos, String str) throws UnsupportedEncodingException, IOException {
         byte[] data = str.getBytes("UTF8");
         dos.writeChar(data.length);
         dos.write(data);
     }
-    
+
     @SuppressWarnings("element-type-mismatch")
     public byte[] getData(ArchiveResources source, String name) throws IOException {
         Entry e = null;
@@ -191,13 +189,13 @@ class Archive implements Stamps.Updater {
 
         return e.getContent();
     }
-    
+
     public void stopGathering() {
         synchronized (gatheringLock) {
             gathering = false;
         }
     }
-    
+
     public void stopServing() {
         active = false;
         // thread-safe, the only place using the field after
@@ -205,7 +203,7 @@ class Archive implements Stamps.Updater {
         // and this free happens-after clearing the flag
         entries = null;
     }
-    
+
     public void save(Stamps cache) throws IOException {
         if (saved) {
             return;
@@ -216,42 +214,43 @@ class Archive implements Stamps.Updater {
 
     @Override
     public void flushCaches(DataOutputStream dos) throws IOException {
-        stopGathering();
-        stopServing();
-        
-        assert !gathering;
-        assert !active;
-       
-        if (!prepopulated) { // write header
-            dos.writeLong(magic);
-            dos.writeLong(System.currentTimeMillis());
-        }
-        
-        // no need to really synchronize on this collection, gathering flag
-        // is already cleared
-        for (String s:requests.keySet()) {
-            String[] parts = s.split("(?<=!/)", 2);
-            String name = parts.length == 2 ? parts[1] : "";
-            ArchiveResources src = knownSources.get(parts[0]);
-            assert src != null : "Could not find " + s + " in " + knownSources;
-            byte[] data = src.resource(name);
-            Integer srcId = sources.get(parts[0]);
-            if (srcId == null) {
-                srcId = sources.size();
-                sources.put(parts[0], srcId);
-                dos.write(1);
-                writeString(dos, parts[0]);
+        try (dos) {
+            stopGathering();
+            stopServing();
+
+            assert !gathering;
+            assert !active;
+
+            if (!prepopulated) { // write header
+                dos.writeLong(MAGIC);
+                dos.writeLong(System.currentTimeMillis());
             }
-            
-            dos.write(2);
-            dos.writeChar(srcId);
-            dos.writeInt(data == null ? -1 : data.length); // store a marker to avoid openning
-            writeString(dos, name);
-            if (data != null) {
-                dos.write(data);
+
+            // no need to really synchronize on this collection, gathering flag
+            // is already cleared
+            for (String s:requests.keySet()) {
+                String[] parts = s.split("(?<=!/)", 2);
+                String name = parts.length == 2 ? parts[1] : "";
+                ArchiveResources src = knownSources.get(parts[0]);
+                assert src != null : "Could not find " + s + " in " + knownSources;
+                byte[] data = src.resource(name);
+                Integer srcId = sources.get(parts[0]);
+                if (srcId == null) {
+                    srcId = sources.size();
+                    sources.put(parts[0], srcId);
+                    dos.write(1);
+                    writeString(dos, parts[0]);
+                }
+
+                dos.write(2);
+                dos.writeChar(srcId);
+                dos.writeInt(data == null ? -1 : data.length); // store a marker to avoid openning
+                writeString(dos, name);
+                if (data != null) {
+                    dos.write(data);
+                }
             }
         }
-        dos.close();
 
         if (LOG.isLoggable(Level.FINER)) {
             for (Object r : requests.keySet()) {
@@ -282,11 +281,11 @@ class Archive implements Stamps.Updater {
      *  8    xB name utf8 String name of the file
      *x+8    yB data file content
      */
-    
+
     private static class Entry {
         private final int offset;
         private final ByteBuffer master;
-        
+
         Entry(ByteBuffer m) {
             master = m;
             offset = master.position();
@@ -301,11 +300,11 @@ class Archive implements Stamps.Updater {
             my.position(offset+6);
             return parseString(my);
         }
-        
+
         int getSource() {
             return master.getChar(offset);
         }
-        
+
         byte[] getContent() {
             int fLen = master.getInt(offset+2);
             int nLen = master.getChar(offset+6);
@@ -317,14 +316,17 @@ class Archive implements Stamps.Updater {
             clone.get(content);
             return content;
         }
-        
-        public @Override int hashCode() {
-            ByteBuffer clone = master.duplicate();
-            clone.position(offset+8);
-            clone.limit(offset+8+master.getChar(offset+6));
 
-            int code = 53*master.getChar(offset);
-            while (clone.hasRemaining()) code = code*53 + clone.get();
+        @Override
+        public int hashCode() {
+            ByteBuffer clone = master.duplicate();
+            clone.position(offset + 8);
+            clone.limit(offset + 8 + master.getChar(offset + 6));
+
+            int code = 53 * master.getChar(offset);
+            while (clone.hasRemaining()) {
+                code = code * 53 + clone.get();
+            }
             return code;
         }
 
@@ -332,18 +334,18 @@ class Archive implements Stamps.Updater {
             if (obj instanceof Template) return obj.equals(this);
             return obj == this;
         }
-        
+
         public @Override String toString() {
             return "#" + getSource() + ":" + getName() + "=[" + offset + "]";
         }
     }
-    
+
     // template
     private static class Template {
         private int source;
         private byte[] utf;
-        
-        Template(int src, String name) { 
+
+        Template(int src, String name) {
             try {
                 this.source = src;
                 utf = name.getBytes("UTF8");
@@ -351,23 +353,23 @@ class Archive implements Stamps.Updater {
                 throw new InternalError();
             }
         }
-        
+
         public @Override boolean equals(Object o) {
             if (! (o instanceof Entry)) return false;
             Entry e = (Entry)o;
-            
+
             if (source != e.master.getChar(e.offset)) return false;
             if (utf.length != e.master.getChar(e.offset+6)) return false;
 
             ByteBuffer clone = e.master.duplicate();
             clone.position(((Entry)o).offset+8);
-            
-            
+
+
             for (byte b : utf) if (b != clone.get()) return false;
 
             return true;
         }
-        
+
         public @Override int hashCode() {
             int code = 53*source;
             for (byte b : utf) code = code*53 + b;

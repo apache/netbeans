@@ -33,6 +33,7 @@ import javax.swing.text.*;
 
 import org.netbeans.api.editor.EditorActionNames;
 import org.netbeans.api.editor.EditorActionRegistration;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.fold.FoldHierarchy;
 import org.netbeans.api.editor.fold.FoldUtilities;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
@@ -397,7 +398,7 @@ public class JavaKit extends NbEditorKit {
                     sb.append(':');
                 }
                 try {
-                    sb.append(Utilities.getLineOffset(doc, target.getCaret().getDot()) + 1);
+                    sb.append(LineDocumentUtils.getLineIndex(doc, target.getCaret().getDot()) + 1);
                 } catch (BadLocationException e) {
                 }
                 sb.append(' ');

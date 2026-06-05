@@ -45,6 +45,7 @@ import org.netbeans.modules.glassfish.tooling.TaskEvent;
 import org.netbeans.modules.glassfish.tooling.TaskState;
 import org.netbeans.modules.glassfish.tooling.TaskStateListener;
 import org.netbeans.modules.glassfish.tooling.data.GlassFishServerStatus;
+import org.netbeans.modules.glassfish.tooling.data.GlassFishVersion;
 import org.netbeans.modules.glassfish.tooling.data.StartupArgs;
 import org.netbeans.modules.glassfish.tooling.data.StartupArgsEntity;
 import org.netbeans.modules.glassfish.tooling.server.FetchLogSimple;
@@ -672,6 +673,10 @@ public class StartTask extends BasicTask<TaskState> {
         
         // append other options from startup extenders, e.g. for profiling
         appendStartupExtenderParams(optList);
+        // append module path args required for GlassFish 7.1+
+        appendGlassFish71PlusArgs(optList);
+        // append additional JVM options configured for this instance
+        appendConfiguredJvmOptions(optList);
 
         return new StartupArgsEntity(
                 glassfishArgs,
@@ -730,12 +735,45 @@ public class StartTask extends BasicTask<TaskState> {
     
     private void appendStartupExtenderParams(List<String> optList) {
         for (StartupExtender args : StartupExtender.getExtenders(
-                Lookups.singleton(support.getInstanceProvider().getInstance(instance.getProperty("url"))), 
+                Lookups.singleton(support.getInstanceProvider().getInstance(instance.getProperty("url"))),
                 getMode(instance.getProperty(GlassfishModule.JVM_MODE)))) {
             for (String arg : args.getArguments()) {
                 String[] argSplitted = arg.trim().split("\\s+(?=-)");
                 optList.addAll(Arrays.asList(argSplitted));
             }
+        }
+    }
+
+    /**
+     * Appends module path arguments required for GlassFish 7.1 and later.
+     * <p/>
+     * GlassFish 7.1+ requires {@code --module-path} and {@code --add-modules}
+     * JVM arguments to boot correctly.
+     * <p/>
+     * @param optList JVM options list to append arguments to.
+     */
+    private void appendGlassFish71PlusArgs(List<String> optList) {
+        GlassFishVersion version = instance.getVersion();
+        if (version != null && GlassFishVersion.ge(version, GlassFishVersion.GF_7_1_0)) {
+            String glassfishRoot = instance.getGlassfishRoot();
+            if (glassfishRoot != null) {
+                optList.add("--module-path");
+                optList.add(glassfishRoot + "/lib/bootstrap");
+                optList.add("--add-modules");
+                optList.add("ALL-MODULE-PATH");
+            }
+        }
+    }
+
+    /**
+     * Appends additional JVM options configured for this server instance.
+     * <p/>
+     * @param optList JVM options list to append arguments to.
+     */
+    private void appendConfiguredJvmOptions(List<String> optList) {
+        String jvmOptions = instance.getAdditionalLauncherJvmOptions().trim();
+        if (!jvmOptions.isEmpty()) {
+            optList.addAll(Arrays.asList(Utilities.parseParameters(jvmOptions)));
         }
     }
 

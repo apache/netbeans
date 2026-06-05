@@ -59,7 +59,7 @@ import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import javax.swing.text.StyledDocument;
 import org.netbeans.api.annotations.common.NullAllowed;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.modules.openide.loaders.AskEditorQuestions;
 import org.netbeans.modules.openide.loaders.DataObjectAccessor;
@@ -943,7 +943,7 @@ public class DataEditorSupport extends CloneableEditorSupport {
                     }
                 }
                 Mark m = new Mark(fileObject);
-                ProgressUtils.runOffEventDispatchThread(m, 
+                BaseProgressUtils.runOffEventDispatchThread(m, 
                     NbBundle.getMessage(DataObject.class, "MSG_MarkModified", fileObject.getPath()),
                     m.cancel, false, 1000, 3000
                 );

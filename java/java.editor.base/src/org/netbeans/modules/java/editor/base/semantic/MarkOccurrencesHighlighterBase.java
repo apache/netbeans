@@ -257,7 +257,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
                             List<? extends Tree> superClasses = ((ClassTree) tp.getLeaf()).getImplementsClause();
 
                             if (superClasses != null) {
-                                List<TypeElement> superTypes = new ArrayList<TypeElement>();
+                                List<TypeElement> superTypes = new ArrayList<>();
 
                                 for (Tree superTypeTree : superClasses) {
                                     if (superTypeTree != null) {
@@ -334,7 +334,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
             setLocalUsages(fluq);
 
             try {
-                List<int[]> bag = new ArrayList<int[]>();
+                List<int[]> bag = new ArrayList<>();
                 for (Token t : fluq.findUsages(el, info, doc)) {
                     // type parameter name is represented as ident -> ignore surrounding <> in rename
                     int delta = t.id() == JavadocTokenId.IDENT && t.text().charAt(0) == '<' && t.text().charAt(t.length() - 1) == '>' ? 1 : 0;
@@ -352,7 +352,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
             if (it.isStatic() && tp.getLeaf().getKind() == Kind.MEMBER_SELECT) {
                 MemberSelectTree mst = (MemberSelectTree) tp.getLeaf();
                 if (!"*".contentEquals(mst.getIdentifier())) {
-                    List<int[]> bag = new ArrayList<int[]>();
+                    List<int[]> bag = new ArrayList<>();
                     Token<JavaTokenId> tok = Utilities.getToken(info, doc, tp);
                     if (tok != null)
                         bag.add(new int[] {tok.offset(null), tok.offset(null) + tok.length()});
@@ -443,6 +443,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
         this.localUsages = localUsages;
     }
 
+    @Override
     public final synchronized void cancel() {
         canceled = true;
 
@@ -467,7 +468,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
     }
 
     private List<int[]> detectMethodsForClass(CompilationInfo info, Document document, TreePath clazz, List<TypeElement> superTypes, TypeElement thisType) {
-        List<int[]> highlights = new ArrayList<int[]>();
+        List<int[]> highlights = new ArrayList<>();
         ClassTree clazzTree = (ClassTree) clazz.getLeaf();
         TypeElement jlObject = info.getElements().getTypeElement("java.lang.Object");
 
@@ -501,7 +502,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
     }
 
     private List<int[]> detectBreakOrContinueTarget(CompilationInfo info, Document document, TreePath breakOrContinue, int caretPosition) {
-        List<int[]> result = new ArrayList<int[]>();
+        List<int[]> result = new ArrayList<>();
         Tree target = info.getTreeUtilities().getBreakContinueTargetTree(breakOrContinue);
 
         if (target == null)
@@ -566,7 +567,7 @@ public abstract class MarkOccurrencesHighlighterBase extends JavaParserResultTas
     }
     
     private List<int[]> detectLabel(final CompilationInfo info, final Document document, final TreePath labeledStatement) {
-        final List<int[]> result = new ArrayList<int[]>();
+        final List<int[]> result = new ArrayList<>();
         if (labeledStatement.getLeaf().getKind() == Kind.LABELED_STATEMENT) {
             final Name label = ((LabeledStatementTree)labeledStatement.getLeaf()).getLabel();
             new ErrorAwareTreePathScanner <Void, Void>() {

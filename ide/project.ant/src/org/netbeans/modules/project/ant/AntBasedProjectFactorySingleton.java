@@ -302,13 +302,10 @@ public final class AntBasedProjectFactorySingleton implements ProjectFactory2 {
     }
     private Document loadProjectXml(File projectDiskFile) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        InputStream is = new FileInputStream(projectDiskFile);
-        try {
-            FileUtil.copy(is, baos);
-        } finally {
-            is.close();
+        byte[] data;
+        try (InputStream is = new FileInputStream(projectDiskFile)) {
+            data = is.readAllBytes();
         }
-        byte[] data = baos.toByteArray();
         InputSource src = new InputSource(new ByteArrayInputStream(data));
         src.setSystemId(BaseUtilities.toURI(projectDiskFile).toString());
         try {

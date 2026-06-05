@@ -132,6 +132,7 @@ import org.netbeans.modules.web.common.api.ByteStack;
 WHITESPACE=[ \t\r\n]+
 OPERATOR=("as"|"="|"not"|"+"|"-"|"or"|"b-or"|"b-xor"|"and"|"b-and"|"=="|"!="|">"|"<"|">="|"<="|"in"|"~"|"*"|"/"|"//"|"%"|"is"|".."|"**")
 OPEN_CURLY="{"
+HASH="#"
 PUNCTUATION=("|"|"("|")"|"["|"]"|{OPEN_CURLY}|"}"|"?"|":"|"."|",")
 NUMBER=[0-9]+(\.[0-9]+)?
 NAME=[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
@@ -166,6 +167,9 @@ D_POST_INTERPOLATION={D_NO_INTERPOLATION} "\""
 }
 
 <YYINITIAL, ST_INTERPOLATION> {
+    {HASH} [^{] [^\n\r]* [\r\n]? {
+       return TwigVariableTokenId.T_TWIG_COMMENT;
+    }
     {OPERATOR} {
         return TwigVariableTokenId.T_TWIG_OPERATOR;
     }

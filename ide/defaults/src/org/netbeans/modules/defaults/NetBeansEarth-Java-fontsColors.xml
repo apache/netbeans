@@ -72,6 +72,9 @@
     <fontcolor name="mod-enum-declaration" >
         <font style="bold"/>
     </fontcolor>
+    <fontcolor name="mod-record-declaration" >
+        <font style="bold"/>
+    </fontcolor>
     
     <fontcolor name="mod-field" default="field"/> <!-- "54A054" -->        
     <fontcolor name="mod-local-variable"/>

@@ -165,7 +165,6 @@ is the proper place.
 -->
     <head>
       <title>NetBeans JavaHelp module API Changes by Date</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
       <meta name="CATEGORY" content="OtherDevelopmentDoc"/>
       <meta name="DESCRIPTION" content="A cross-indexed list of all changes made to the NetBeans JavaHelp module APIs."/>
     </head>

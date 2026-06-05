@@ -108,12 +108,8 @@ public final class IssueTopComponent extends TopComponent implements PropertyCha
         
         RepositoryRegistry.getInstance().addPropertyChangeListener(this);
         preparingLabel.setVisible(false);
-        newButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onNewClick();
-            }
-        });
+        newButton.addActionListener(this::onNewClick);
+        newButton.setEnabled(BugtrackingManager.getInstance().hasRegisteredConnectors());
         JComponent findBar = FindSupport.create(this).getFindBar();
         findBar.setVisible(false);
         issuePanel.add(findBar, BorderLayout.PAGE_END);
@@ -344,7 +340,7 @@ public final class IssueTopComponent extends TopComponent implements PropertyCha
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void onNewClick() {
+    private void onNewClick(ActionEvent evt) {
         RepositoryImpl repoImpl = BugtrackingUtil.createRepository();
         if(repoImpl != null) {
             Repository repo = repoImpl.getRepository();

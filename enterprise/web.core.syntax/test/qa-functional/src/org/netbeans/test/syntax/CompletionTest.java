@@ -39,6 +39,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Caret;
 import junit.framework.Test;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.Utilities;
 import org.netbeans.jellytools.JellyTestCase;
 import org.netbeans.jellytools.modules.j2ee.J2eeTestCase;
@@ -404,8 +405,8 @@ public class CompletionTest extends J2eeTestCase {
                 }
             }
             waitTypingFinished(doc);
-            int rowStart = Utilities.getRowStart(doc, step.getOffset() + 1);
-            int rowEnd = Utilities.getRowEnd(doc, step.getOffset() + 1);
+            int rowStart = LineDocumentUtils.getLineStartOffset(doc, step.getOffset() + 1);
+            int rowEnd = LineDocumentUtils.getLineEndOffset(doc, step.getOffset() + 1);
             String fullResult = doc.getText(new int[]{rowStart, rowEnd});
             String result = fullResult.trim();
             int removed_whitespaces = fullResult.length() - result.length();

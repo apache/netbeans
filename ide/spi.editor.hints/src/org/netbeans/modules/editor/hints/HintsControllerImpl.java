@@ -39,6 +39,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.spi.editor.hints.ErrorDescription;
@@ -121,7 +122,7 @@ public final class HintsControllerImpl {
         int lineEndOffset;
         
         if (doc instanceof BaseDocument) {
-            lineEndOffset = Utilities.getRowEnd((BaseDocument) doc, lineStartOffset);
+            lineEndOffset = LineDocumentUtils.getLineEndOffset((BaseDocument) doc, lineStartOffset);
         } else {
             //XXX: performance:
             String lineText = doc.getText(lineStartOffset, doc.getLength() - lineStartOffset);

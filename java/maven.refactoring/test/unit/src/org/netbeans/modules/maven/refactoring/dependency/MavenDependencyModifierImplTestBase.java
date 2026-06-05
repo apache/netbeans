@@ -65,7 +65,7 @@ public class MavenDependencyModifierImplTestBase extends NbTestCase {
                 FileObject fo = src.getFileObject(alternateBuildscript);
                 FileObject target = projectDir.getFileObject("pom.xml");
                 try (InputStream is = fo.getInputStream(); OutputStream os = target.getOutputStream()) {
-                    FileUtil.copy(is, os);
+                    is.transferTo(os);
                 }
                 /*
                 if (target != null) {

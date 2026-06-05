@@ -36,7 +36,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.hudson.api.ConnectionBuilder;
 import org.netbeans.modules.hudson.api.HudsonChangeListener;
 import org.netbeans.modules.hudson.api.HudsonFolder;
@@ -309,7 +308,7 @@ public final class HudsonInstanceImpl implements HudsonInstance, OpenableInBrows
             final boolean showProgress) {
         final AtomicReference<Thread> synchThread = new AtomicReference<Thread>();
         final AtomicReference<ProgressHandle> handle = new AtomicReference<ProgressHandle>();
-        ProgressHandle handleObject = ProgressHandleFactory.createHandle(
+        ProgressHandle handleObject = ProgressHandle.createHandle(
                 Bundle.MSG_Synchronizing(getName()),
                 new Cancellable() {
                     @Override

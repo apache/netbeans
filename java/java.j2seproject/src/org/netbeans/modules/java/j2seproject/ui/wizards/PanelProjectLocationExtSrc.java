@@ -451,7 +451,6 @@ class PanelProjectLocationExtSrc extends SettingsPanel {
     private void browseProjectLocation(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseProjectLocation
         // TODO add your handling code here:
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setDialogTitle(NbBundle.getMessage(PanelSourceFolders.class,"LBL_NWP1_SelectProjectLocation"));
         chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
         String path = this.projectLocation.getText();

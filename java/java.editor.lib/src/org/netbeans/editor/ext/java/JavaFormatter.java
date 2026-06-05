@@ -21,6 +21,7 @@ package org.netbeans.editor.ext.java;
 
 import javax.swing.text.JTextComponent;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.TokenItem;
 import org.netbeans.editor.TokenItem;
 import org.netbeans.editor.BaseDocument;
@@ -61,7 +62,7 @@ public class JavaFormatter extends ExtFormatter {
              */
             if ("e".equals(typedText)) { // NOI18N
                 try {
-                    int fnw = Utilities.getRowFirstNonWhite(doc, dotPos);
+                    int fnw = LineDocumentUtils.getLineFirstNonWhitespace(doc, dotPos);
                     if (fnw >= 0 && fnw + 4 == dotPos
                         && CharSequenceUtilities.textEquals("else", DocumentUtilities.getText(doc, fnw, 4)) // NOI18N
                     ) {
@@ -72,7 +73,7 @@ public class JavaFormatter extends ExtFormatter {
 
             } else if (":".equals(typedText)) { // NOI18N
                 try {
-                    int fnw = Utilities.getRowFirstNonWhite(doc, dotPos);
+                    int fnw = LineDocumentUtils.getLineFirstNonWhitespace(doc, dotPos);
                     if (fnw >= 0 && fnw + 4 <= doc.getLength()
                         && CharSequenceUtilities.textEquals("case", DocumentUtilities.getText(doc, fnw, 4)) // NOI18N
                     ) {

@@ -475,7 +475,7 @@ public class ProjectChooserAccessory extends javax.swing.JPanel
             }
         }
 
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, currDir);
+        chooser.setCurrentDirectory(currDir);
         new ProjectFileView(chooser);
 
         return chooser;

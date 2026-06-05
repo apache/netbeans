@@ -33,6 +33,8 @@ indexOf(String str) : int
 indexOf(int ch) : int
 indexOf(String str, int fromIndex) : int
 indexOf(int ch, int fromIndex) : int
+indexOf(String str, int beginIndex, int endIndex) : int
+indexOf(int ch, int beginIndex, int endIndex) : int
 intern() : String
 isBlank() : boolean
 isEmpty() : boolean
@@ -56,6 +58,7 @@ replaceFirst(String regex, String replacement) : String
 resolveConstantDesc(Lookup lookup) : String
 split(String regex) : String[]
 split(String regex, int limit) : String[]
+splitWithDelimiters(String regex, int limit) : String[]
 startsWith(String prefix) : boolean
 startsWith(String prefix, int toffset) : boolean
 strip() : String

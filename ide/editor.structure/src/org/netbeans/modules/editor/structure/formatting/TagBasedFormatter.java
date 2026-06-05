@@ -28,6 +28,7 @@ import java.util.List;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.TokenItem;
 import org.netbeans.editor.Utilities;
@@ -79,7 +80,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
     }
     
     protected int getIndentForTagParameter(BaseDocument doc, TokenItem tag) throws BadLocationException{
-        int tagStartLine = Utilities.getLineOffset(doc, tag.getOffset());
+        int tagStartLine = LineDocumentUtils.getLineIndex(doc, tag.getOffset());
         TokenItem currentToken = tag.getNext();
         
         /*
@@ -87,12 +88,12 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
          * e.g. <tag   |attr=
          * 
          */
-        while (currentToken != null && isWSTag(currentToken) && tagStartLine == Utilities.getLineOffset(doc, currentToken.getOffset())){
+        while (currentToken != null && isWSTag(currentToken) && tagStartLine == LineDocumentUtils.getLineIndex(doc, currentToken.getOffset())){
             currentToken = currentToken.getNext();
         }
         
-        if (tag != null && !isWSTag(currentToken) && tagStartLine == Utilities.getLineOffset(doc, currentToken.getOffset())){
-            return currentToken.getOffset() - Utilities.getRowIndent(doc, currentToken.getOffset()) - Utilities.getRowStart(doc, currentToken.getOffset());
+        if (tag != null && !isWSTag(currentToken) && tagStartLine == LineDocumentUtils.getLineIndex(doc, currentToken.getOffset())){
+            return currentToken.getOffset() - Utilities.getRowIndent(doc, currentToken.getOffset()) - LineDocumentUtils.getLineStartOffset(doc, currentToken.getOffset());
         }
         
         return getShiftWidth(); // default;
@@ -110,9 +111,9 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
         doc.atomicLock();
         
         try{
-            int lastLine = Utilities.getLineOffset(doc, doc.getLength());
-            int firstRefBlockLine = Utilities.getLineOffset(doc, startOffset);
-            int lastRefBlockLine = Utilities.getLineOffset(doc, endOffset);
+            int lastLine = LineDocumentUtils.getLineIndex(doc, doc.getLength());
+            int firstRefBlockLine = LineDocumentUtils.getLineIndex(doc, startOffset);
+            int lastRefBlockLine = LineDocumentUtils.getLineIndex(doc, endOffset);
             int firstUnformattableLine = -1;
             
             boolean unformattableLines[] = new boolean[lastLine + 1];
@@ -136,7 +137,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
                             break; // incomplete closing tag
                         }
                         
-                        int lastTagLine = Utilities.getLineOffset(doc, tagEndOffset);
+                        int lastTagLine = LineDocumentUtils.getLineIndex(doc, tagEndOffset);
                         
                         if (isOpenTag){
                             
@@ -144,7 +145,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
                             unprocessedOpeningTags.add(tagData);
                             
                             // format lines within tag
-                            int firstTagLine = Utilities.getLineOffset(doc, token.getOffset());
+                            int firstTagLine = LineDocumentUtils.getLineIndex(doc, token.getOffset());
                             
                             if (firstTagLine < lastTagLine){ // performance!
                                 int indentWithinTag = getIndentForTagParameter(doc, token);
@@ -155,7 +156,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
                                 
                                 // if there is only the closing symbol on the last line of tag do not indent it
                                 TokenItem currentToken = token.getNext();
-                                while (Utilities.getLineOffset(doc, currentToken.getOffset()) < lastTagLine
+                                while (LineDocumentUtils.getLineIndex(doc, currentToken.getOffset()) < lastTagLine
                                         || isWSTag(currentToken)){
                                     
                                     currentToken = currentToken.getNext();
@@ -199,7 +200,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
                     boolean wasPreviousTokenUnformattable = isUnformattableToken(token);
                     
                     if (wasPreviousTokenUnformattable && firstUnformattableLine == -1){
-                        firstUnformattableLine = Utilities.getLineOffset(doc, token.getOffset());
+                        firstUnformattableLine = LineDocumentUtils.getLineIndex(doc, token.getOffset());
                     }
                     
                     token = token.getNext();
@@ -209,7 +210,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
                             && (!wasPreviousTokenUnformattable || token == null)){
                         
                         int lastUnformattableLine = token == null ? lastLine :
-                            Utilities.getLineOffset(doc, token.getOffset() - 1);
+                            LineDocumentUtils.getLineIndex(doc, token.getOffset() - 1);
                         
                         for (int i = firstUnformattableLine + 1; i < lastUnformattableLine; i ++){
                             unformattableLines[i] = true;
@@ -242,7 +243,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
             
             // apply line indents
             for (int line = firstRefBlockLine; line <= lastRefBlockLine; line ++){
-                int lineStart = Utilities.getRowStartFromLineOffset(doc, line);
+                int lineStart = LineDocumentUtils.getLineStartFromIndex(doc, line);
                 
                 if (!unformattableLines[line] && initialIndentData.isEligibleToIndent(line)){
                     changeRowIndent(doc, lineStart, initialIndentData.getIndent(line));
@@ -257,13 +258,13 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
     
     protected void enterPressed(JTextComponent txtComponent, int dotPos) throws BadLocationException {
         BaseDocument doc = Utilities.getDocument(txtComponent);
-        int lineNumber = Utilities.getLineOffset(doc, dotPos);
+        int lineNumber = LineDocumentUtils.getLineIndex(doc, dotPos);
         int initialIndent = getInitialIndentFromPreviousLine(doc, lineNumber);
-        int endOfPreviousLine = Utilities.getFirstNonWhiteBwd(doc, dotPos);
+        int endOfPreviousLine = LineDocumentUtils.getPreviousNonWhitespace(doc, dotPos);
         endOfPreviousLine = endOfPreviousLine == -1 ? 0 : endOfPreviousLine;
         
         // workaround for \n passed from code completion to reformatter
-        if (lineNumber == Utilities.getLineOffset(doc, endOfPreviousLine)){
+        if (lineNumber == LineDocumentUtils.getLineIndex(doc, endOfPreviousLine)){
             return;
         }
         
@@ -278,10 +279,10 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
                 if (tknMatchingOpeningTag != null
                         && tknMatchingOpeningTag.getOffset() == tknOpeningTag.getOffset()){
                     
-                    int openingTagLine = Utilities.getLineOffset(doc, tknOpeningTag.getOffset());
-                    int closingTagLine = Utilities.getLineOffset(doc, tknClosingTag.getOffset());
+                    int openingTagLine = LineDocumentUtils.getLineIndex(doc, tknOpeningTag.getOffset());
+                    int closingTagLine = LineDocumentUtils.getLineIndex(doc, tknClosingTag.getOffset());
                     
-                    if (closingTagLine == Utilities.getLineOffset(doc, dotPos)){
+                    if (closingTagLine == LineDocumentUtils.getLineIndex(doc, dotPos)){
                         
                         if (openingTagLine == closingTagLine - 1){
                             /* "smart enter"
@@ -292,7 +293,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
                             doc.insertString(closingTagPos.getOffset(), "\n", null); //NOI18N
                             int newCaretPos = closingTagPos.getOffset() - 1;
                             changeRowIndent(doc, closingTagPos.getOffset() + 1, initialIndent);
-                            newCaretPos = Utilities.getRowEnd(doc, newCaretPos);
+                            newCaretPos = LineDocumentUtils.getLineEndOffset(doc, newCaretPos);
                             txtComponent.setCaretPosition(newCaretPos);
                         } else{
                             /*  <t>
@@ -347,8 +348,8 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
                     TokenItem tknOpeningTag = getMatchingOpeningTag(tknPrecedingToken);
                     
                     if (tknOpeningTag != null){
-                        int openingTagLine = Utilities.getLineOffset(doc, tknOpeningTag.getOffset());
-                        int closingTagSymbolLine = Utilities.getLineOffset(doc, dotPos);
+                        int openingTagLine = LineDocumentUtils.getLineIndex(doc, tknOpeningTag.getOffset());
+                        int closingTagSymbolLine = LineDocumentUtils.getLineIndex(doc, dotPos);
                         
                         if(openingTagLine != closingTagSymbolLine){
                             return new int[]{tknPrecedingToken.getOffset(), dotPos};
@@ -399,8 +400,8 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
         int initialIndent = 0;
         
         if (line > 0){
-            int lineStart = Utilities.getRowStartFromLineOffset(doc, line);
-            int previousNonWhiteLineEnd = Utilities.getFirstNonWhiteBwd(doc, lineStart);
+            int lineStart = LineDocumentUtils.getLineStartFromIndex(doc, line);
+            int previousNonWhiteLineEnd = LineDocumentUtils.getPreviousNonWhitespace(doc, lineStart);
             
             if (previousNonWhiteLineEnd > 0){
                 initialIndent = Utilities.getRowIndent(doc, previousNonWhiteLineEnd);
@@ -415,9 +416,9 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
         // get initial indent from the next line
         int initialIndent = 0;
         
-        int lineStart = Utilities.getRowStartFromLineOffset(doc, line);
-        int lineEnd = Utilities.getRowEnd(doc, lineStart);
-        int nextNonWhiteLineStart = Utilities.getFirstNonWhiteFwd(doc, lineEnd);
+        int lineStart = LineDocumentUtils.getLineStartFromIndex(doc, line);
+        int lineEnd = LineDocumentUtils.getLineEndOffset(doc, lineStart);
+        int nextNonWhiteLineStart = LineDocumentUtils.getNextNonWhitespace(doc, lineEnd);
         
         if (nextNonWhiteLineStart > 0){
             initialIndent = Utilities.getRowIndent(doc, nextNonWhiteLineStart, true);
@@ -441,7 +442,7 @@ public abstract class TagBasedFormatter extends ExtFormatter  {
     }
 
     protected static int getNumberOfLines(BaseDocument doc) throws BadLocationException{
-        return Utilities.getLineOffset(doc, doc.getLength() - 1) + 1;
+        return LineDocumentUtils.getLineIndex(doc, doc.getLength() - 1) + 1;
     }
     
     protected TokenItem getNextClosingTag(BaseDocument doc, int offset) throws BadLocationException{

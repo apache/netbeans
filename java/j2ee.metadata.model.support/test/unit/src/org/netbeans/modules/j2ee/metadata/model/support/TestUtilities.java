@@ -19,8 +19,6 @@
 
 package org.netbeans.modules.j2ee.metadata.model.support;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -55,12 +52,8 @@ public class TestUtilities {
      * @param content the contents to copy.
      */ 
     public static final void copyStringToFileObject(FileObject fo, String contents) throws IOException {
-        OutputStream os = fo.getOutputStream();
-        try {
-            InputStream is = new ByteArrayInputStream(contents.getBytes(StandardCharsets.UTF_8));
-            FileUtil.copy(is, os);
-        } finally {
-            os.close();
+        try (OutputStream os = fo.getOutputStream()) {
+            os.write(contents.getBytes(StandardCharsets.UTF_8));
         }
     }
 
@@ -71,12 +64,8 @@ public class TestUtilities {
      * @param content the contents to copy.
      */ 
     public static final void copyStringToFile(File file, String content) throws IOException {
-        OutputStream os = new FileOutputStream(file);
-        try {
-            InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-            FileUtil.copy(is, os);
-        } finally {
-            os.close();
+        try (OutputStream os = new FileOutputStream(file)) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
         }
     }
 
@@ -87,9 +76,7 @@ public class TestUtilities {
      * @return string representing the contents of the given stream.
      */ 
     public static final String copyStreamToString(InputStream input) throws IOException {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        FileUtil.copy(input, output);
-        return StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(output.toByteArray())).toString();
+        return StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(input.readAllBytes())).toString();
     }
 
     /**
@@ -99,11 +86,8 @@ public class TestUtilities {
      * @return string representing the contents of the given <code>fo</code>.
      */ 
     public static final String copyFileObjectToString(FileObject fo) throws IOException {
-        InputStream stream = fo.getInputStream();
-        try {
+        try (InputStream stream = fo.getInputStream()) {
             return copyStreamToString(stream);
-        } finally {
-            stream.close();
         }
     }
 
@@ -114,11 +98,8 @@ public class TestUtilities {
      * @return string representing the contents of the given <code>file</code>.
      */ 
     public static final String copyFileToString(File file) throws IOException {
-        InputStream stream = new FileInputStream(file);
-        try{
+        try (InputStream stream = new FileInputStream(file)) {
             return copyStreamToString(stream);
-        } finally {
-            stream.close();
         }
     }
 

@@ -137,7 +137,7 @@ public class OverrideEditorActions {
                         if (homeKeyColumnOne) { // to first column
                             dot = lineStartPos;
                         } else { // either to line start or text start
-                            int textStartPos = Utilities.getRowFirstNonWhite(doc, lineStartPos);
+                            int textStartPos = LineDocumentUtils.getLineFirstNonWhitespace(doc, lineStartPos);
                             if (textStartPos < 0) { // no text on the line
                                 textStartPos = Utilities.getRowEnd(target, lineStartPos);
                             }
@@ -271,7 +271,7 @@ public class OverrideEditorActions {
                 return true;
             }
             try {
-                int end = LineDocumentUtils.getLineEnd(ld, input.getPartBegin());
+                int end = LineDocumentUtils.getLineEndOffset(ld, input.getPartBegin());
                 return offset > end;
             } catch (BadLocationException ex) {
                 return true;
@@ -308,7 +308,7 @@ public class OverrideEditorActions {
                 return true;
             }
             try {
-                int end = LineDocumentUtils.getLineEnd(ld, region.getStartOffset());
+                int end = LineDocumentUtils.getLineEndOffset(ld, region.getStartOffset());
                 // delegate for all but the first line
                 return pos > end;
             } catch (BadLocationException ex) {

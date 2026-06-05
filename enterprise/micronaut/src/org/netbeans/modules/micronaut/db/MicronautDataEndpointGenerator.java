@@ -358,7 +358,7 @@ public class MicronautDataEndpointGenerator implements CodeActionProvider, Comma
         return dd;
     }
 
-    @MimeRegistration(mimeType = "text/x-java", service = CodeGenerator.Factory.class)
+    @MimeRegistration(mimeType = "text/x-java", service = CodeGenerator.Factory.class, position = 800)
     public static class Factory implements CodeGenerator.Factory {
 
         @Override

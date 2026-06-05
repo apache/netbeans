@@ -199,7 +199,7 @@ public class ModelTest extends TestCase {
         FileObject fo = FileUtil.toFileObject(templateFile);
         FileInputStream str = new FileInputStream(templateFile);
         StringOutputStream out = new StringOutputStream();
-        FileUtil.copy(str, out);
+        str.transferTo(out);
         String dir = System.getProperty("java.io.tmpdir");
         File sourceFile = new File(dir, templateName);
         ModelSource source = Utilities.createModelSourceForMissingFile(sourceFile, true, out.toString(), "text/xml");

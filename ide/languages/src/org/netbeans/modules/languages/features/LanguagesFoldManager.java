@@ -32,6 +32,7 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.Document;
 import javax.swing.text.BadLocationException;
 import javax.swing.event.DocumentEvent;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 
 import org.netbeans.api.editor.fold.FoldUtilities;
 import org.netbeans.editor.Utilities;
@@ -248,7 +249,7 @@ public class LanguagesFoldManager extends ASTEvaluator implements FoldManager {
                     while(genItr.hasNext()) {
                         FoldItem fi = (FoldItem)genItr.next();
                         //do not add more newborns with the same lineoffset
-                        int fiLineOffset = Utilities.getLineOffset((BaseDocument)doc, fi.start);
+                        int fiLineOffset = LineDocumentUtils.getLineIndex((BaseDocument)doc, fi.start);
                         FoldItem found = (FoldItem)newbornsLinesCache.get(Integer.valueOf(fiLineOffset));
                         if(found != null) {
                             //figure out whether the new element is a descendant of the already added one
@@ -310,7 +311,7 @@ public class LanguagesFoldManager extends ASTEvaluator implements FoldManager {
                             zombies.add(f);
                         } else {
                             //store the fold lineoffset 2 fold mapping
-                            int lineoffset = Utilities.getLineOffset((BaseDocument)doc, f.getStartOffset());
+                            int lineoffset = LineDocumentUtils.getLineIndex((BaseDocument)doc, f.getStartOffset());
                             linesToFoldsCache.put(Integer.valueOf(lineoffset), f);
                         }
         //                }
@@ -323,7 +324,7 @@ public class LanguagesFoldManager extends ASTEvaluator implements FoldManager {
                     HashSet newbornsToRemove = new HashSet();
                     while(newbornsItr.hasNext()) {
                         FoldItem fi = (FoldItem)newbornsItr.next();
-                        Fold existing = (Fold)linesToFoldsCache.get(Integer.valueOf(Utilities.getLineOffset((BaseDocument)doc, fi.start)));
+                        Fold existing = (Fold)linesToFoldsCache.get(Integer.valueOf(LineDocumentUtils.getLineIndex((BaseDocument)doc, fi.start)));
                         if(existing != null) {
                             //test if the fold is my descendant
                             if(existing.getEndOffset() < fi.end) {

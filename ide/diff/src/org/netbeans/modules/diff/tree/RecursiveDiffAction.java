@@ -46,7 +46,7 @@ import org.openide.util.actions.NodeAction;
 )
 @ActionReference(
     path = "UI/ToolActions/Files",
-    position = 300
+    position = 250
 )
 @Messages("CTL_RecursiveDiffAction=Tree diff")
 public final class RecursiveDiffAction extends NodeAction implements ActionListener {

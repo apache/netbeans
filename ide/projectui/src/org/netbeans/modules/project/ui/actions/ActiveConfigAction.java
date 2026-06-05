@@ -89,6 +89,9 @@ import org.openide.util.WeakListeners;
 import org.openide.util.actions.CallableSystemAction;
 import org.openide.util.actions.Presenter;
 
+import static org.netbeans.modules.project.ui.OpenProjectList.PROPERTY_MAIN_PROJECT;
+import static org.netbeans.modules.project.ui.OpenProjectList.PROPERTY_OPEN_PROJECTS;
+
 /**
  * Action permitting selection of a configuration for the main project.
  * @author Greg Crawley, Adam Sotona, Jesse Glick
@@ -206,28 +209,31 @@ public class ActiveConfigAction extends CallableSystemAction implements LookupLi
     public ActiveConfigAction() {
         super();
         putValue("noIconInMenu", true); // NOI18N
-        EventQueue.invokeLater(new Runnable() {
-            public @Override void run() {
-                initConfigListCombo();
+        EventQueue.invokeLater(this::initConfigListCombo);
+        lst = (PropertyChangeEvent evt) -> {
+            String prop = evt.getPropertyName();
+            if (prop == null) {
+                return;
             }
-        });
-        lst = new PropertyChangeListener() {
-            public @Override void propertyChange(PropertyChangeEvent evt) {
-                ProjectConfigurationProvider<?> _pcp;
-                synchronized (ActiveConfigAction.this) {
-                    _pcp = pcp;
-                }
-                if (ProjectConfigurationProvider.PROP_CONFIGURATIONS.equals(evt.getPropertyName())) {
+            switch (prop) {
+                case ProjectConfigurationProvider.PROP_CONFIGURATIONS -> {
+                    ProjectConfigurationProvider<?> _pcp;
+                    synchronized (ActiveConfigAction.this) {
+                        _pcp = pcp;
+                    }       
                     configurationsListChanged(_pcp != null ? getConfigurations(_pcp) : null);
-                } else if (ProjectConfigurationProvider.PROP_CONFIGURATION_ACTIVE.equals(evt.getPropertyName())) {
+                }
+                case ProjectConfigurationProvider.PROP_CONFIGURATION_ACTIVE -> {
+                    ProjectConfigurationProvider<?> _pcp;
+                    synchronized (ActiveConfigAction.this) {
+                        _pcp = pcp;
+                    }       
                     activeConfigurationChanged(_pcp != null ? getActiveConfiguration(_pcp) : null);
                 }
             }
         };
-        looklst = new LookupListener() {
-            public @Override void resultChanged(LookupEvent ev) {
-                activeProjectProviderChanged();
-            }
+        looklst = (LookupEvent ev) -> {
+            activeProjectProviderChanged();
         };
 
         OpenProjectList.getDefault().addPropertyChangeListener(WeakListeners.propertyChange(this, OpenProjectList.getDefault()));
@@ -485,7 +491,7 @@ public class ActiveConfigAction extends CallableSystemAction implements LookupLi
     @SuppressWarnings("serial")
     private static class ConfigCellRenderer extends JLabel implements ListCellRenderer, UIResource {
         
-        private Border defaultBorder = getBorder();
+        private final Border defaultBorder = getBorder();
         
         ConfigCellRenderer() {
         }
@@ -494,9 +500,9 @@ public class ActiveConfigAction extends CallableSystemAction implements LookupLi
             // #89393: GTK needs name to render cell renderer "natively"
             setName("ComboBox.listRenderer"); // NOI18N
 
-            String label = null;
-            if (value instanceof ProjectConfiguration) {
-                label = ((ProjectConfiguration) value).getDisplayName();
+            String label;
+            if (value instanceof ProjectConfiguration conf) {
+                label = conf.getDisplayName();
                 setBorder (defaultBorder);
             } else if (value == CUSTOMIZE_ENTRY) {
                 label = org.openide.awt.Actions.cutAmpersand(
@@ -661,10 +667,14 @@ public class ActiveConfigAction extends CallableSystemAction implements LookupLi
         }
     }
 
-    public @Override void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals(OpenProjectList.PROPERTY_MAIN_PROJECT) ||
-            evt.getPropertyName().equals(OpenProjectList.PROPERTY_OPEN_PROJECTS) ) {
-            refreshViewLater();
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String prop = evt.getPropertyName();
+        if (prop == null) {
+            return;
+        }
+        switch (prop) {
+            case PROPERTY_MAIN_PROJECT, PROPERTY_OPEN_PROJECTS -> refreshViewLater();
         }
     }
 

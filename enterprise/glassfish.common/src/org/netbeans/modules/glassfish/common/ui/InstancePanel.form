@@ -98,16 +98,21 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jdbcDriverDeployment" alignment="0" pref="265" max="32767" attributes="0"/>
+                          <Component id="jdbcDriverDeployment" alignment="0" pref="327" max="32767" attributes="0"/>
                           <Component id="httpMonitor" alignment="0" max="32767" attributes="0"/>
                           <Component id="commetSupport" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="preserveSessions" pref="319" max="32767" attributes="0"/>
+                          <Component id="preserveSessions" pref="387" max="32767" attributes="0"/>
                           <Component id="startDerby" max="32767" attributes="0"/>
                           <Component id="showPassword" alignment="0" max="32767" attributes="0"/>
                       </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="jvmOptionsLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="additionalLauncherJvmOptionsField" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -174,7 +179,12 @@
                   <Component id="jdbcDriverDeployment" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="startDerby" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jvmOptionsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="additionalLauncherJvmOptionsField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="82" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -423,6 +433,26 @@
           <ResourceString bundle="org/netbeans/modules/glassfish/common/ui/Bundle.properties" key="InstancePanel.hostRemoteField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jvmOptionsLabel">
+      <Properties>
+        <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+          <ComponentRef name="additionalLauncherJvmOptionsField"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/glassfish/common/ui/Bundle.properties" key="InstanceLocalPanel.jvmOptionsLabel_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="additionalLauncherJvmOptionsField">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/glassfish/common/ui/Bundle.properties" key="InstancePanel.additionalLauncherJvmOptionsField.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="additionalLauncherJvmOptionsFieldActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

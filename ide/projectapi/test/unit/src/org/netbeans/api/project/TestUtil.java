@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -321,18 +320,12 @@ public final class TestUtil {
         }
         assert fo.isData();
         if (content != null || touch) {
-            OutputStream os = fo.getOutputStream();
-            try {
+            try (OutputStream os = fo.getOutputStream()) {
                 if (content != null) {
-                    InputStream is = content.openStream();
-                    try {
-                        FileUtil.copy(is, os);
-                    } finally {
-                        is.close();
+                    try (InputStream is = content.openStream()) {
+                        is.transferTo(os);
                     }
                 }
-            } finally {
-                os.close();
             }
         }
         return fo;

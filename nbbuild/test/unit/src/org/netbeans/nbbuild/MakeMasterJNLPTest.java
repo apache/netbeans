@@ -25,16 +25,22 @@ import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
 
 /** Is generation of Jnlp files correct?
  *
  * @author Jaroslav Tulach
  */
 public class MakeMasterJNLPTest extends TestBase {
+
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
     public MakeMasterJNLPTest (String name) {
         super (name);
     }
-    
+
     public void testOSGiModule() throws Exception {
         int cnt = 3;
         Manifest m;
@@ -68,7 +74,8 @@ public class MakeMasterJNLPTest extends TestBase {
             "</project>"
         );
         while (cnt-- > 0) {
-            execute (f, new String[] { "-verbose" });
+            buildRule.configureProject(f.getAbsolutePath());
+            buildRule.executeTarget("all");
         }
 
         assertTrue ("Output exists", output.exists ());
@@ -91,17 +98,17 @@ public class MakeMasterJNLPTest extends TestBase {
         assertExt(res1, "org.my.module");
         assertExt(res2, "org.second.module");
     }
-    
+
     public void testGenerateReferenceFilesOnce() throws Exception {
         doGenerateReferenceFiles(1);
     }
     public void testGenerateReferenceFilesThrice() throws Exception {
         doGenerateReferenceFiles(3);
     }
-    
+
     private void doGenerateReferenceFiles(int cnt) throws Exception {
         Manifest m;
-        
+
         m = createManifest ();
         m.getMainAttributes ().putValue ("OpenIDE-Module", "org.my.module/3");
         File simpleJar = generateJar (new String[0], m);
@@ -109,18 +116,18 @@ public class MakeMasterJNLPTest extends TestBase {
         m = createManifest ();
         m.getMainAttributes ().putValue ("OpenIDE-Module", "org.second.module/3");
         File secondJar = generateJar (new String[0], m);
-        
+
         File parent = simpleJar.getParentFile ();
         assertEquals("They are in the same folder", parent, secondJar.getParentFile());
-        
+
         File output = new File(parent, "output");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"jnlp\" classname=\"org.netbeans.nbbuild.MakeMasterJNLP\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='" + output + "' />" + 
+            "  <mkdir dir='" + output + "' />" +
             "  <jnlp dir='" + output + "'  >" +
             "    <modules dir='" + parent + "' >" +
             "      <include name='" + simpleJar.getName() + "' />" +
@@ -131,36 +138,37 @@ public class MakeMasterJNLPTest extends TestBase {
             "</project>"
         );
         while (cnt-- > 0) {
-            execute (f, new String[] { "-verbose" });
+            buildRule.configureProject(f.getAbsolutePath());
+            buildRule.executeTarget("all");
         }
-        
+
         assertTrue ("Output exists", output.exists ());
         assertTrue ("Output directory created", output.isDirectory());
-        
+
         String[] files = output.list();
         assertEquals("It has two files", 2, files.length);
 
         java.util.Arrays.sort(files);
-        
+
         assertEquals("The res1 file: " + files[0], "org-my-module.ref", files[0]);
         assertEquals("The res2 file: "+ files[1], "org-second-module.ref", files[1]);
-        
+
         File r1 = new File(output, "org-my-module.ref");
         String res1 = readFile (r1);
 
         File r2 = new File(output, "org-second-module.ref");
         String res2 = readFile (r2);
-        
+
         assertExt(res1, "org.my.module");
         assertExt(res2, "org.second.module");
     }
-    
+
     private static void assertExt(String res, String module) {
         int ext = res.indexOf("<extension");
         if (ext == -1) {
             fail ("<extension tag shall start there: " + res);
         }
-        
+
         assertEquals("Just one extension tag", -1, res.indexOf("<extension", ext + 1));
 
         int cnb = res.indexOf(module);
@@ -168,9 +176,9 @@ public class MakeMasterJNLPTest extends TestBase {
             fail("Cnb has to be there: " + module + " but is " + res);
         }
         assertEquals("Just one cnb", -1, res.indexOf(module, cnb + 1));
-        
+
         String dashcnb = module.replace('.', '-');
-        
+
         int dcnb = res.indexOf(dashcnb);
         if (dcnb == -1) {
             fail("Dash Cnb has to be there: " + dashcnb + " but is " + res);
@@ -187,10 +195,10 @@ public class MakeMasterJNLPTest extends TestBase {
             }
         }
     }
-    
+
     protected final File generateJar (String[] content, Manifest manifest) throws IOException {
         File f = createNewJarFile ();
-        
+
         try (JarOutputStream os = new JarOutputStream (new FileOutputStream (f), manifest)) {
             for (int i = 0; i < content.length; i++) {
                 os.putNextEntry(new JarEntry (content[i]));
@@ -198,7 +206,7 @@ public class MakeMasterJNLPTest extends TestBase {
             }
             os.closeEntry ();
         }
-        
+
         return f;
     }
 

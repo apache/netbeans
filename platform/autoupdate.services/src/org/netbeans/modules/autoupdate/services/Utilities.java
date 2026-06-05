@@ -63,7 +63,6 @@ import org.netbeans.updater.ModuleDeactivator;
 import org.netbeans.updater.ModuleUpdater;
 import org.netbeans.updater.UpdateTracking;
 import org.netbeans.updater.UpdaterDispatcher;
-import org.openide.filesystems.FileUtil;
 import org.openide.modules.*;
 import org.openide.util.*;
 import org.openide.xml.XMLUtil;
@@ -468,35 +467,15 @@ public class Utilities {
         doc.getDocumentElement ().normalize ();
 
         dest.getParentFile ().mkdirs ();
-        InputStream is = null;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream ();
-        OutputStream fos = null;
         try {
-            try {
-                XMLUtil.write (doc, bos, "UTF-8"); // NOI18N
-                bos.close ();
-                fos = new FileOutputStream (dest);
-                is = new ByteArrayInputStream (bos.toByteArray ());
-                FileUtil.copy (is, fos);
-            } finally {
-                if (is != null) {
-                    is.close ();
+            try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+                XMLUtil.write(doc, bos, "UTF-8"); // NOI18N
+                try (OutputStream fos = new FileOutputStream(dest)) {
+                    fos.write(bos.toByteArray());
                 }
-                if (fos != null) {
-                    fos.close ();
-                }
-                bos.close ();
             }
-        } catch (java.io.FileNotFoundException fnfe) {
-            Exceptions.printStackTrace (fnfe);
         } catch (java.io.IOException ioe) {
             Exceptions.printStackTrace (ioe);
-        } finally {
-            try {
-                bos.close ();
-            } catch (IOException x) {
-                Exceptions.printStackTrace (x);
-            }
         }
     }
 
@@ -536,20 +515,9 @@ public class Utilities {
         
         dest.getParentFile ().mkdirs ();
         assert dest.getParentFile ().exists () && dest.getParentFile ().isDirectory () : "Parent of " + dest + " exists and is directory.";
-        InputStream is = null;
-        OutputStream fos = null;            
         
-        try {
-            try {
-                fos = new FileOutputStream (dest);
-                is = new ByteArrayInputStream (content.toString().getBytes());
-                FileUtil.copy (is, fos);
-            } finally {
-                if (is != null) is.close();
-                if (fos != null) fos.close();
-            }                
-        } catch (java.io.FileNotFoundException fnfe) {
-            Exceptions.printStackTrace(fnfe);
+        try (OutputStream fos = new FileOutputStream(dest)) {
+            fos.write(content.toString().getBytes());
         } catch (java.io.IOException ioe) {
             Exceptions.printStackTrace(ioe);
         }
@@ -612,7 +580,6 @@ public class Utilities {
     }
     
     static void writeUpdateOfUpdaterJar (JarEntry updaterJarEntry, File zipFileWithUpdater, File targetCluster) throws IOException {
-        JarFile jf = new JarFile(zipFileWithUpdater);
         String entryPath = updaterJarEntry.getName();
         String entryName = entryPath.contains("/") ? entryPath.substring(entryPath.lastIndexOf("/") + 1) : entryPath;
         File dest = new File (targetCluster, UpdaterDispatcher.UPDATE_DIR + // updater
@@ -622,19 +589,11 @@ public class Utilities {
         
         dest.getParentFile ().mkdirs ();
         assert dest.getParentFile ().exists () && dest.getParentFile ().isDirectory () : "Parent of " + dest + " exists and is directory.";
-        InputStream is = null;
-        OutputStream fos = null;            
-        
-        try {
-            try {
-                fos = new FileOutputStream (dest);
-                is = jf.getInputStream (updaterJarEntry);
-                FileUtil.copy (is, fos);
-            } finally {
-                if (is != null) is.close();
-                if (fos != null) fos.close();
-                jf.close();
-            }                
+
+        try (JarFile jf = new JarFile(zipFileWithUpdater);
+             InputStream is = jf.getInputStream(updaterJarEntry);
+             OutputStream os = new FileOutputStream(dest)) {
+            is.transferTo(os);
         } catch (java.io.FileNotFoundException fnfe) {
             getLogger ().log (Level.SEVERE, fnfe.getLocalizedMessage (), fnfe);
         } catch (java.io.IOException ioe) {

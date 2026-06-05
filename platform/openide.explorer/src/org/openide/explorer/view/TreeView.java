@@ -74,6 +74,7 @@ import javax.accessibility.AccessibleContext;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
@@ -83,6 +84,7 @@ import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneLayout;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 import javax.swing.TransferHandler;
 import javax.swing.UIManager;
@@ -306,6 +308,10 @@ public abstract class TreeView extends JScrollPane {
         defaultActionListener = new PopupSupport();
         getInputMap( JTree.WHEN_FOCUSED ).put( 
                 KeyStroke.getKeyStroke( KeyEvent.VK_F10, KeyEvent.SHIFT_DOWN_MASK ), "org.openide.actions.PopupAction" );
+        if (Utilities.isMac()) {
+            // On Windows, this shortcut is already present in JTree's InputMap.
+            tree.getInputMap( JTree.WHEN_FOCUSED ).put(Utilities.stringToKey("F2"), "startEditing");
+        }
         getActionMap().put("org.openide.actions.PopupAction", defaultActionListener.popup);
         tree.addFocusListener(defaultActionListener);
         tree.addMouseListener(defaultActionListener);
@@ -915,73 +921,53 @@ public abstract class TreeView extends JScrollPane {
         autoWaitCursor = enable;
     }
 
-    //
-    // showing and removing the wait cursor
-    //
-    private void showWaitCursor (boolean show) {
-        JRootPane rPane = getRootPane();
-        if (rPane == null) {
-            return;
-        }
-
-        if (SwingUtilities.isEventDispatchThread()) {
-            doShowWaitCursor(rPane.getGlassPane(), show);
-        } else {
-            SwingUtilities.invokeLater(new CursorR(rPane.getGlassPane(), show));
-        }
-    }
-
-    private static void doShowWaitCursor (Component glassPane, boolean show) {
-        if (show) {
-            glassPane.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            glassPane.setVisible(true);
-        } else {
-            glassPane.setVisible(false);
-            glassPane.setCursor(null);
-        }
-    }
-
-    private static class CursorR implements Runnable {
-        private Component glassPane;
-        private boolean show;
-
-        private CursorR(Component cont, boolean show) {
-            this.glassPane = cont;
-            this.show = show;
-        }
-
-        @Override
-        public void run() {
-            doShowWaitCursor(glassPane, show);
-        }
-    }
-
-    private void prepareWaitCursor(final Node node) {
-        // check type of node
+    private void maybeShowWaitCursor(Node node) {
         if (node == null || !autoWaitCursor) {
             return;
         }
-
-        showWaitCursor(true);
-        // not sure whenter throughput 1 is OK...
-        ViewUtil.uiProcessor().post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    node.getChildren().getNodesCount(true);
-                } catch (Exception e) {
-                    // log a exception
-                    LOG.log(Level.WARNING, null, e);
-                } finally {
-                    // show normal cursor above all
-                    showWaitCursor(false);
-                }
+        DelayedWaitCursor waitCursor = new DelayedWaitCursor(getRootPane());
+        ViewUtil.uiProcessor().post(() -> {
+            try (waitCursor) {
+                node.getChildren().getNodesCount(true); // blocks until expanded
+            } catch (Exception e) {
+                LOG.log(Level.WARNING, "can't determine node count", e);
             }
         });
     }
-    
-   
-    
+
+    /// Shows the wait cursor after an initial delay.
+    /// construct on EDT, close() may be called from any thread.
+    private static class DelayedWaitCursor implements AutoCloseable {
+
+        private static final int DELAY = 200;
+
+        private final JRootPane root;
+        private final Timer timer;
+
+        private DelayedWaitCursor(JRootPane root) {
+            this.root = root;
+            timer = new Timer(DELAY, e -> {
+                if (root != null) {
+                    root.getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                    root.getGlassPane().setVisible(true);
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
+        }
+
+        @Override
+        public void close() {
+            SwingUtilities.invokeLater(() -> {
+                timer.stop();
+                if (root != null) {
+                    root.getGlassPane().setVisible(false);
+                    root.getGlassPane().setCursor(null);
+                }
+            });
+        }
+    }
+
     /** Synchronize the selected nodes from the manager of this Explorer.
     * The default implementation does nothing.
     */
@@ -1093,11 +1079,14 @@ public abstract class TreeView extends JScrollPane {
             return null;
         }
 
-        Point p = new Point(rect.x, rect.y);
+        Point p = new Point(
+            rect.x + Math.min(350, 10 + rect.width),
+            rect.y - 15);
 
         // bugfix #36984, convert point by TreeView.this
         p = SwingUtilities.convertPoint(tree, p, TreeView.this);
 
+        p.x = Math.min(p.x, TreeView.this.getWidth());
         return p;
     }
 
@@ -1499,7 +1488,7 @@ public abstract class TreeView extends JScrollPane {
         throws ExpandVetoException {
             // prepare wait cursor and optionally show it
             TreePath path = event.getPath();
-            prepareWaitCursor(DragDropUtilities.secureFindNode(path.getLastPathComponent()));
+            maybeShowWaitCursor(DragDropUtilities.secureFindNode(path.getLastPathComponent()));
         }
     }
      // end of TreePropertyListener

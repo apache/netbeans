@@ -18,8 +18,6 @@
  */
 package org.netbeans.spi.jumpto.support;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -37,22 +35,19 @@ import org.openide.util.Parameters;
  */
 public final class NameMatcherFactory {
 
-    private static final Map<Character,String> RE_SPECIALS;
-    static {
-        final Map<Character,String> m = new HashMap<>();
-        m.put('{',"\\{");         //NOI18N
-        m.put('}',"\\}");         //NOI18N
-        m.put('[',"\\[");         //NOI18N
-        m.put(']',"\\]");         //NOI18N
-        m.put('(',"\\(");         //NOI18N
-        m.put(')',"\\)");         //NOI18N
-        m.put('\\',"\\\\");       //NOI18N
-        m.put('.', "\\.");        //NOI18N
-        m.put('+',"\\+");         //NOI18N
-        m.put('*', ".*" );        //NOI18N
-        m.put('?', ".");          //NOI18N
-        RE_SPECIALS = Collections.unmodifiableMap(m);
-    }
+    private static final Map<Character, String> RE_SPECIALS = Map.ofEntries(
+            Map.entry('{', "\\{"),     //NOI18N
+            Map.entry('}', "\\}"),     //NOI18N
+            Map.entry('[', "\\["),     //NOI18N
+            Map.entry(']', "\\]"),     //NOI18N
+            Map.entry('(', "\\("),     //NOI18N
+            Map.entry(')', "\\)"),     //NOI18N
+            Map.entry('\\', "\\\\"),   //NOI18N
+            Map.entry('.', "\\."),     //NOI18N
+            Map.entry('+', "\\+"),     //NOI18N
+            Map.entry('*', ".*"),      //NOI18N
+            Map.entry('?', ".")        //NOI18N
+    );
 
     private NameMatcherFactory() {
     }
@@ -164,7 +159,7 @@ public final class NameMatcherFactory {
      */
     @NonNull
     public static NameMatcher createNameMatcher(@NonNull final String text, @NonNull final SearchType type) throws IllegalArgumentException {
-        return createNameMatcher(text, type, Collections.<String,Object>emptyMap());
+        return createNameMatcher(text, type, Map.of());
     }
 
     /**

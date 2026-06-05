@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.tomcat5.util;
 
 import java.io.BufferedReader;
@@ -29,7 +28,9 @@ import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public final class Utils {
     private Utils() {
         super();
     }
-    
+
     /** Return true if the specified port is free, false otherwise. */
     public static boolean isPortFree(int port) {
         try (ServerSocket soc = new ServerSocket(port)) {
@@ -60,9 +61,9 @@ public final class Utils {
             return false;
         }
     }
-    
+
     /** Return true if a Tomcat server is running on the specifed port */
-    public static boolean pingTomcat(int port, int timeout, String serverHeader, String managerUrl) {
+    public static boolean pingTomcat(int port, int timeout, String serverHeader, String managerUrl, String username, String password) {
         // checking whether a socket can be created is not reliable enough, see #47048
         try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress("localhost", port), timeout); // NOI18N
@@ -103,7 +104,7 @@ public final class Utils {
                     }
                 }
                 if (managerUrl != null) {
-                    return pingTomcatManager(managerUrl, port, timeout);
+                    return pingTomcatManager(managerUrl, port, timeout, username, password);
                 }
                 return false;
             }
@@ -112,9 +113,13 @@ public final class Utils {
         }
     }
 
-    public static boolean pingTomcatManager(String managerUrl, int port, int timeout) {
+    public static boolean pingTomcatManager(String managerUrl, int port, int timeout, String username, String password) {
         try {
             HttpURLConnection conn = (HttpURLConnection) new URL(managerUrl).openConnection();
+            if (username != null && password != null) {
+                String auth = Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
+                conn.setRequestProperty("Authorization", "Basic " + auth);
+            }
             try {
                 int response = conn.getResponseCode();
                 return response == HttpURLConnection.HTTP_OK
@@ -123,9 +128,6 @@ public final class Utils {
             } finally {
                 conn.disconnect();
             }
-        } catch (MalformedURLException ex) {
-            LOGGER.log(Level.INFO, null, ex);
-            return false;
         } catch (IOException ex) {
             LOGGER.log(Level.INFO, null, ex);
             return false;
@@ -133,10 +135,10 @@ public final class Utils {
     }
 
     public static String generatePassword(int length) {
-	int ran2 = 0;
+        int ran2 = 0;
         Random random = new Random();
-	StringBuilder pwd = new StringBuilder();
-	for (int i = 0; i < length; i++) {
+        StringBuilder pwd = new StringBuilder();
+        for (int i = 0; i < length; i++) {
             //ran2 = (int)(Math.random()*61);
             ran2 = random.nextInt(61);
             if (ran2 < 10) {
@@ -150,7 +152,7 @@ public final class Utils {
             }
             char c = (char) ran2;
             pwd.append(c);
-	}
+        }
         return pwd.toString();
     }
 }

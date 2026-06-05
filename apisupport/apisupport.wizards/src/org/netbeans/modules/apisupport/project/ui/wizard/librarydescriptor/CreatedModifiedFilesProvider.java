@@ -215,9 +215,7 @@ final class CreatedModifiedFilesProvider {
         }
 
         private static void createZipFile(OutputStream target, FileObject root, Collection<? extends FileObject> files) throws IOException {
-            ZipOutputStream str = null;
-            try {
-                str = new ZipOutputStream(target);
+            try (ZipOutputStream str = new ZipOutputStream(target)) {
                 for (FileObject fo : files) {
                     String relativePath = FileUtil.getRelativePath(root, fo);
                     if (fo.isFolder()) {
@@ -230,21 +228,11 @@ final class CreatedModifiedFilesProvider {
                     ZipEntry entry = new ZipEntry(relativePath);
                     str.putNextEntry(entry);
                     if (fo.isData()) {
-                        InputStream in = null;
-                        try {
-                            in = fo.getInputStream();
-                            FileUtil.copy(in, str);
-                        } finally {
-                            if (in != null) {
-                                in.close();
-                            }
+                        try (InputStream in = fo.getInputStream()) {
+                            in.transferTo(str);
                         }
                     }
                     str.closeEntry();
-                }
-            } finally {
-                if (str != null) {
-                    str.close();
                 }
             }
         }

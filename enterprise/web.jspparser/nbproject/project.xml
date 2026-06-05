@@ -59,6 +59,15 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.netbeans.modules.j2ee.core</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <release-version>0</release-version>
+                        <specification-version>1.56</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.netbeans.modules.j2ee.dd</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -73,7 +82,7 @@
                     <compile-dependency/>
                     <run-dependency>
                         <release-version>1</release-version>
-                        <specification-version>1.23</specification-version>
+                        <specification-version>1.62</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -125,14 +134,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.openide.util.ui</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>9.3</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.openide.util</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -146,6 +147,14 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>8.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.ui</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.3</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -218,9 +227,9 @@
             </friend-packages>
             <extra-compilation-unit>
                 <package-root>extsrc</package-root>
-                <classpath>${module.classpath}:${cluster}/${module.jar}:${extsrc.cp.extra}</classpath>
+                <classpath>${module.classpath}:${cluster}/${module.jar}:${extsrc.cp.extra.jakarta}</classpath>
                 <built-to>build/extclasses</built-to>
-                <built-to>build/external/jsp-parser-ext.jar</built-to>
+                <built-to>build/external/jsp-parser-ext-jakarta.jar</built-to>
             </extra-compilation-unit>
         </data>
     </configuration>

@@ -165,7 +165,7 @@
           <Connection code="new JSpinner.NumberEditor(jSpinner1, &quot;#&quot;)" type="code"/>
         </Property>
         <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new Integer(table.getRows())" type="code"/>
+          <Connection code="Integer.valueOf(table.getRows())" type="code"/>
         </Property>
       </Properties>
       <AccessibilityProperties>
@@ -189,7 +189,7 @@
           <Connection code="new JSpinner.NumberEditor(jSpinner2, &quot;#&quot;)" type="code"/>
         </Property>
         <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new Integer(table.getCols())" type="code"/>
+          <Connection code="Integer.valueOf(table.getCols())" type="code"/>
         </Property>
       </Properties>
       <AccessibilityProperties>
@@ -315,7 +315,7 @@
           <Connection code="new JSpinner.NumberEditor(jSpinner3, &quot;#&quot;)" type="code"/>
         </Property>
         <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new Integer(table.getBorder())" type="code"/>
+          <Connection code="Integer.valueOf(table.getBorder())" type="code"/>
         </Property>
       </Properties>
       <AccessibilityProperties>
@@ -336,7 +336,7 @@
           <Connection code="new JSpinner.NumberEditor(jSpinner4, &quot;#&quot;)" type="code"/>
         </Property>
         <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new Integer(table.getCspac())" type="code"/>
+          <Connection code="Integer.valueOf(table.getCspac())" type="code"/>
         </Property>
       </Properties>
       <AccessibilityProperties>
@@ -357,7 +357,7 @@
           <Connection code="new JSpinner.NumberEditor(jSpinner5, &quot;#&quot;)" type="code"/>
         </Property>
         <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new Integer(table.getCpadd())" type="code"/>
+          <Connection code="Integer.valueOf(table.getCpadd())" type="code"/>
         </Property>
       </Properties>
       <AccessibilityProperties>
@@ -378,7 +378,7 @@
           <Connection code="new JSpinner.NumberEditor(widthSpinner, &quot;#&quot;)" type="code"/>
         </Property>
         <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new Integer(table.getWidth())" type="code"/>
+          <Connection code="Integer.valueOf(table.getWidth())" type="code"/>
         </Property>
       </Properties>
       <AccessibilityProperties>

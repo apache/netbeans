@@ -68,6 +68,7 @@ CLASS      TestIssue145206                 [PUBLIC]   issue145206.php
 CLASS      TestIssue146176                 [PUBLIC]   issue146176.php
 CLASS      TestOptionalArgsClass           [PUBLIC]   optional_args.php
 CLASS      TypesinPHPDoc                   [PUBLIC]   types_in_phpdoc.php
+CLASS      UseKeywordClass                 [PUBLIC]   useKeywordInClass.php
 CLASS      User                            [PUBLIC]   issue142051.php
 CLASS      User147427                      [PUBLIC]   issue147427.php
 CLASS      VarAdvancedTest                 [PUBLIC]   varAssignment2.php

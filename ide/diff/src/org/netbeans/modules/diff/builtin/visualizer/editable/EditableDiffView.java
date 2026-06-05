@@ -64,12 +64,14 @@ import org.netbeans.api.diff.DiffController;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.FontColorNames;
 import org.netbeans.api.editor.settings.FontColorSettings;
+import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.BaseTextUI;
 import org.netbeans.spi.diff.DiffProvider;
 import org.netbeans.spi.diff.DiffControllerImpl;
 import org.netbeans.editor.EditorUI;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
 import org.netbeans.modules.diff.builtin.visualizer.TextDiffVisualizer;
+import static org.netbeans.modules.editor.errorstripe.privatespi.MarkProvider.PROP_MARKS;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.text.NbDocument;
@@ -122,6 +124,8 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
 
     final JLabel fileLabel1 = new JLabel();
     final JLabel fileLabel2 = new JLabel();
+    final JLabel lineEndingLabel1 = new JLabel();
+    final JLabel lineEndingLabel2 = new JLabel();
     final JPanel filePanel1 = new JPanel();
     final JPanel filePanel2 = new JPanel();
     final JPanel textualPanel = new JPanel();
@@ -166,6 +170,7 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
     private final Object DIFFING_LOCK = new Object();
     private final String name1;
     private final String name2;
+
     private boolean sourcesInitialized;
     private boolean viewAdded;
     private boolean addedToHierarchy;
@@ -181,6 +186,7 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
         if (title1 == null) title1 = NbBundle.getMessage(EditableDiffView.class, "CTL_DiffPanel_NoTitle"); // NOI18N
         String title2 = ss2.getTitle();
         if (title2 == null) title2 = NbBundle.getMessage(EditableDiffView.class, "CTL_DiffPanel_NoTitle"); // NOI18N
+
         String mimeType1 = ss1.getMIMEType();
         String mimeType2 = ss2.getMIMEType();
         name1 = ss1.getName();
@@ -237,7 +243,7 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
         view.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(EditableDiffView.class, "ACS_DiffPanelA11yName"));  // NOI18N
         view.getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(EditableDiffView.class, "ACS_DiffPanelA11yDesc"));  // NOI18N
         initializeTabPane(ss1, ss2);
-        
+
         setSourceTitle(fileLabel1, title1);
         setSourceTitle(fileLabel2, title2);
 
@@ -370,6 +376,24 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
         if (binaryDiff || canceled) {
             return;
         }
+    }
+
+    private static String detectLineEnding(DiffContentPanel source) {
+        try {
+            Document doc = source.getEditorPane().getDocument();
+            String separator = doc.getProperty(BaseDocument.READ_LINE_SEPARATOR_PROP).toString();
+            if ("\n".equals(separator)) {
+                return "LF";
+            } else if ("\r\n".equals(separator)) {
+                return "CRLF";
+            } else if ("\r".equals(separator)) {
+                return "CR";
+            }
+        }  catch (Exception e) {
+            // fallback to other means of obtaining the source
+        }
+
+        return null;
     }
 
     private void initializeTabPane (StreamSource ss1, StreamSource ss2) {
@@ -939,19 +963,36 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
         // scroll the left pane accordingly
         manager.scroll(index == diffs.length - 1 || index == 0);
     }
-    
+
     /** This method is called from within the constructor to initialize the form.
      */
     private void initComponents() {
         fileLabel1.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         fileLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lineEndingLabel1.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        lineEndingLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        JPanel headerPanel1 = new JPanel(new BorderLayout());
+        
+        JLabel filler1 = new JLabel();
+        headerPanel1.add(filler1, BorderLayout.WEST);
+        headerPanel1.add(fileLabel1, BorderLayout.CENTER);
+        headerPanel1.add(lineEndingLabel1, BorderLayout.EAST);
         filePanel1.setLayout(new BorderLayout());
-        filePanel1.add(fileLabel1, BorderLayout.PAGE_START);
+        filePanel1.add(headerPanel1, BorderLayout.PAGE_START);
 
         fileLabel2.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         fileLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lineEndingLabel2.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        
+        lineEndingLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        JPanel headerPanel2 = new JPanel(new BorderLayout());
+        
+        JLabel filler2 = new JLabel();
+        headerPanel2.add(lineEndingLabel2, BorderLayout.WEST);
+        headerPanel2.add(fileLabel2, BorderLayout.CENTER);
+        headerPanel2.add(filler2, BorderLayout.EAST);
         filePanel2.setLayout(new BorderLayout());
-        filePanel2.add(fileLabel2, BorderLayout.PAGE_START);
+        filePanel2.add(headerPanel2, BorderLayout.PAGE_START);
 
         textualPanel.setLayout(new BorderLayout());
 
@@ -1518,6 +1559,17 @@ public class EditableDiffView extends DiffControllerImpl implements DiffView, Do
                         support.firePropertyChange(DiffController.PROP_DIFFERENCES, null, null);
                         jEditorPane1.setCurrentDiff(diffs);
                         jEditorPane2.setCurrentDiff(diffs);
+
+                        String lineEnding1 = detectLineEnding(jEditorPane1);
+                        String lineEnding2 = detectLineEnding(jEditorPane2);
+
+                        boolean showLineEnding = lineEnding1 != null && lineEnding2 != null && !lineEnding1.equals(lineEnding2);
+
+                        if(showLineEnding) {
+                            lineEndingLabel1.setText("<html><strong style='background-color: " + String.format("#%02x%02x%02x", colorChanged.getRed(), colorChanged.getGreen(), colorChanged.getBlue()) + "'>" + lineEnding1 + "</strong></html>");
+                            lineEndingLabel2.setText("<html><strong style='background-color: " + String.format("#%02x%02x%02x", colorChanged.getRed(), colorChanged.getGreen(), colorChanged.getBlue()) + "'>" + lineEnding2 + "</strong></html>");
+                        }
+
                         refreshDividerSize();
                         view.repaint();
                         diffMarkprovider.refresh();

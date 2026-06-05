@@ -1470,7 +1470,7 @@ public final class VariousUtils {
                     case FUNCTION:
                         state = State.INVALID;
                         if (isString(token)) {
-                            metaAll.insert(0, token.text().toString());
+                            metaAll.insert(0, fetchPossibleClassName(tokenSequence));
                             if (anchor == -1) {
                                 anchor = tokenSequence.offset();
                             }

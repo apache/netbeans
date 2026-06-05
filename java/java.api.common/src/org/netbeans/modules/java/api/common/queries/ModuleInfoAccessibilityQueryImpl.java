@@ -32,10 +32,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ModuleElement;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -60,7 +63,7 @@ import org.openide.util.Parameters;
 import org.openide.util.WeakListeners;
 
 /**
- * An implementation of the {@link AccessibilityQueryImplementation} based on the module-info.
+ * An implementation of the {@link AccessibilityQueryImplementation2} based on the module-info.
  * Accessible through the {@link QuerySupport#createModuleInfoAccessibilityQuery}.
  * @author Tomas Zezula
  */
@@ -179,7 +182,8 @@ final class ModuleInfoAccessibilityQueryImpl implements AccessibilityQueryImplem
                 todo.offer(tests.getRoots());
             }
             for (FileObject[] work : todo) {
-                readExports(work, rootsCollector).ifPresent(data::add);
+                Collections.addAll(rootsCollector, work);
+                extractExports(work).ifPresent(data::add);
             }
 
             ec = new ExportsCache(rootsCollector, data);
@@ -232,48 +236,49 @@ final class ModuleInfoAccessibilityQueryImpl implements AccessibilityQueryImplem
         final MultiModule model = MultiModule.getOrCreate(mods, src);
         for (String modName : model.getModuleNames()) {
             final ClassPath cp = model.getModuleSources(modName);
-            res.add(cp.getRoots());
+            if (cp != null) {
+                res.add(cp.getRoots());
+            }
         }
         return res;
     }
 
     @NonNull
-    private static Optional<Pair<Set<FileObject>,Set<FileObject>>> readExports(
-            @NonNull final FileObject[] roots,
-            @NonNull final Set<? super FileObject> rootsCollector) {
-        Collections.addAll(rootsCollector, roots);
-        final Optional<FileObject> moduleInfo = Arrays.stream(roots)
-                .map((root) -> root.getFileObject(MODULE_INFO_JAVA))
-                .filter((mi) -> mi != null)
-                .findFirst();
-        if (!moduleInfo.isPresent()) {
-            return Optional.empty();
-        }
-        final Set<FileObject> rootsSet = new HashSet<>();
-        Collections.addAll(rootsSet, roots);
-        final Set<FileObject> exportsSet = readExports(moduleInfo.get(), rootsSet);
-        return Optional.of(Pair.of(rootsSet, exportsSet));
+    private static Optional<Pair<Set<FileObject>, Set<FileObject>>> extractExports(
+            @NonNull final FileObject[] roots) {
+        return Arrays.stream(roots)
+                .map(root -> root.getFileObject(MODULE_INFO_JAVA))
+                .filter(Objects::nonNull)
+                .findFirst()
+                .map(mi -> {
+                    Set<FileObject> rootsSet = new HashSet<>();
+                    Collections.addAll(rootsSet, roots);
+                    Set<FileObject> exportsSet = readExports(mi, rootsSet);
+                    return Pair.of(rootsSet, exportsSet);
+                });
     }
 
     @NonNull
     private static Set<FileObject> readExports(
-        @NonNull final FileObject moduleInfo,
-        @NonNull final Set<FileObject> roots) {
+            @NonNull final FileObject moduleInfo,
+            @NonNull final Set<FileObject> roots) {
         final Set<FileObject> exports = new HashSet<>();
         final JavaSource src = JavaSource.forFileObject(moduleInfo);
         if (src != null) {
             try {
                 src.runUserActionTask((cc) -> {
                     cc.toPhase(JavaSource.Phase.RESOLVED);
-                    final CompilationUnitTree cu = cc.getCompilationUnit();
-                    if (cu.getTypeDecls().size() == 1 && cu.getTypeDecls().get(0) instanceof ModuleTree) {
-                        final ModuleTree mt = (ModuleTree) cu.getTypeDecls().get(0);
-                        final ModuleElement me = (ModuleElement) cc.getTrees().getElement(TreePath.getPath(cu, mt));
-                        if (me != null) {
+                    CompilationUnitTree cu = cc.getCompilationUnit();
+                    ModuleTree mt = cu.getModule();
+                    if (mt != null) {
+                        TreePath path = TreePath.getPath(cu, mt);
+                        Element element = cc.getTrees().getElement(path);
+                        if (element.getKind() == ElementKind.MODULE) {
+                            ModuleElement me = (ModuleElement) element;
                             for (ModuleElement.Directive directive : me.getDirectives()) {
                                 if (directive.getKind() == ModuleElement.DirectiveKind.EXPORTS) {
-                                    final ModuleElement.ExportsDirective export = (ModuleElement.ExportsDirective) directive;
-                                    final String pkgName = export.getPackage().getQualifiedName().toString();
+                                    ModuleElement.ExportsDirective export = (ModuleElement.ExportsDirective) directive;
+                                    String pkgName = export.getPackage().getQualifiedName().toString();
                                     exports.addAll(findPackage(pkgName, roots));
                                 }
                             }

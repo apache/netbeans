@@ -321,7 +321,7 @@ public class FileChangedManager extends SecurityManager {
     }                
     
     private static int getKey(File f) {
-        return NamingFactory.createID(f);
+        return NamingFactory.createID(f).value();
     }
     private static int getKey(String f) {
         return getKey(new File(f));

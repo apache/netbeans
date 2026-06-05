@@ -1298,4 +1298,15 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         reformatFileContents("testfiles/formatting/php84/finalFieldsAnonClass_02.php", options);
     }
+
+    //PHP 8.5 pipe operator
+    public void testPipeOperatorInlineExpression_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php85/pipeOperatorInlineExpression_01.php", options);
+    }
+    
+    public void testPipeOperatorMultilineExpression_01() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php85/pipeOperatorMultilineExpression_01.php", options);
+    }
 }

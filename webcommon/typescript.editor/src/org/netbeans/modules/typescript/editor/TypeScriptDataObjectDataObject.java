@@ -44,7 +44,7 @@ import static org.netbeans.modules.typescript.editor.TypeScriptEditorKit.TYPESCR
 @MIMEResolver.ExtensionRegistration(
         displayName = "#LBL_TypeScriptDataObject_LOADER",
         mimeType = TYPESCRIPT_MIME_TYPE,
-        extension = {"ts"},
+        extension = {"ts", "tsx"},
         position = 193 // lower than 218 as CND also recognizes .ts file
 )
 @DataObject.Registration(

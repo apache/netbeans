@@ -21,6 +21,7 @@
 -->
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+
     <folder name="Favorites">
         <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.favorites.Bundle"/>
         <file name="Home.shadow">
@@ -38,4 +39,13 @@
             </file>
         </folder>
     </folder>
+
+    <folder name="Windows2">
+        <folder name="Groups">
+            <folder name="OpenedProjects">
+                <file name="favorites.wstcgrp" url="favorites.wstcgrp"/>
+            </folder>
+        </folder>
+    </folder>
+
 </filesystem>

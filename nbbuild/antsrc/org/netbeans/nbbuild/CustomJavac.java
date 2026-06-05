@@ -25,6 +25,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.apache.tools.ant.BuildException;
@@ -78,7 +79,7 @@ public class CustomJavac extends Javac {
             if (tgr.matches("\\d+")) {
                 tgr = "1." + tgr;
             }
-            if (!isBootclasspathOptionUsed()) {
+            if (canUseRelease()) {
                 setRelease(tgr.substring(2));
             }
             String src = getSource();
@@ -124,7 +125,7 @@ public class CustomJavac extends Javac {
         try {
             Class<?> mainClazz = CustomJavacClassLoader.findMainCompilerClass(getProject());
             if (mainClazz != null) {
-                super.add(CustomJavacClassLoader.createCompiler(mainClazz));
+                super.add(CustomJavacClassLoader.createCompiler(mainClazz, canUseRelease()));
             }
         } catch (ClassNotFoundException | MalformedURLException | URISyntaxException ex) {
             if (ex instanceof BuildException) {
@@ -135,13 +136,14 @@ public class CustomJavac extends Javac {
         super.compile();
     }
 
-    private boolean isBootclasspathOptionUsed() {
+    private boolean canUseRelease() {
+        // 'error: exporting a package from system module java.desktop is not allowed with --release'
         for (String arg : getCurrentCompilerArgs()) {
-            if (arg.contains("-Xbootclasspath")) {
-                return true;
+            if (arg.contains("-Xbootclasspath") || arg.contains("--add-exports=java.")) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     /**

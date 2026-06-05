@@ -68,7 +68,6 @@ import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.ui.ProjectGroup;
 import org.netbeans.api.project.ui.ProjectGroupChangeEvent;
 import org.netbeans.api.project.ui.ProjectGroupChangeListener;
-import static org.netbeans.modules.project.ui.Bundle.*;
 import org.netbeans.modules.project.ui.api.UnloadedProjectInformation;
 import org.netbeans.modules.project.ui.groups.Group;
 import org.netbeans.modules.project.uiapi.ProjectOpenedTrampoline;
@@ -108,6 +107,8 @@ import org.openide.util.WeakListeners;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.windows.WindowManager;
+
+import static org.netbeans.modules.project.ui.Bundle.*;
 
 /**
  * List of projects open in the GUI.
@@ -378,7 +379,7 @@ public final class OpenProjectList {
                     action = 2;
                     try {
                         progress.start();
-                        loadOnBackground();
+                        loadInBackground();
                     } finally {
                         progress.finish();
                     }
@@ -458,14 +459,14 @@ public final class OpenProjectList {
             "#NOI18N",
             "LOAD_PROJECTS_ON_START=true"
         })
-        private void loadOnBackground() {
+        private void loadInBackground() {
             lazilyOpenedProjects = new ArrayList<>();
             final boolean loadProjectsOnStart = "true".equals(Bundle.LOAD_PROJECTS_ON_START());
             List<URL> urls = loadProjectsOnStart ?
                     OpenProjectListSettings.getInstance().getOpenProjectsURLs() :
                     Collections.emptyList();
             final List<Project> initial = new ArrayList<>();
-            final LinkedList<Project> projects = URLs2Projects(urls);
+            final Collection<Project> projects = URLs2Projects(urls);
             OpenProjectList.MUTEX.writeAccess(new Mutex.Action<Void>() {
                 public @Override Void run() {
                     toOpenProjects.addAll(projects);
@@ -1269,46 +1270,27 @@ public final class OpenProjectList {
     
     // Private methods ---------------------------------------------------------
     
-    private static LinkedList<Project> URLs2Projects( Collection<URL> URLs ) {
-        LinkedList<Project> result = new LinkedList<Project>();
-            
-        for(URL url: URLs) {
-            FileObject dir = URLMapper.findFileObject( url );
-            if ( dir != null && dir.isFolder() ) {
+    private static Set<Project> URLs2Projects(Collection<URL> urls) {
+        Set<Project> result = new LinkedHashSet<>();
+
+        for (URL url : urls) {
+            FileObject dir = URLMapper.findFileObject(url);
+            if (dir != null && dir.isFolder()) {
                 try {
-                    Project p = ProjectManager.getDefault().findProject( dir );
-                    if ( p != null && !result.contains(p)) { //#238093, #238811 if multiple entries point to the same project we end up with the same instance multiple times in the linked list. That's wrong.
-                        result.add( p );
+                    Project p = ProjectManager.getDefault().findProject(dir);
+                    if (p != null && !result.contains(p)) { //#238093, #238811 if multiple entries point to the same project we end up with the same instance multiple times in the linked list. That's wrong.
+                        result.add(p);
                     }
-                }       
-                catch ( Throwable t ) {
+                } catch (Throwable t) {
                     //something bad happened during loading the project.
                     //log the problem, but allow the other projects to be load
-                    //see issue #65900
-                    if (t instanceof ThreadDeath) {
-                        throw (ThreadDeath) t;
-                    }
-                    
+                    //see issue #65900                   
                     ErrorManager.getDefault().notify(ErrorManager.INFORMATIONAL, t);
                 }
             }
         }
-        
         return result;
     }
-    
-    private static List<URL> projects2URLs( Collection<Project> projects ) {
-        ArrayList<URL> URLs = new ArrayList<URL>( projects.size() );
-        for(Project p: projects) {
-                URL root = p.getProjectDirectory().toURL();
-                if ( root != null ) {
-                    URLs.add( root );
-                }
-        }        
-        
-        return URLs;
-    }
-    
     
     private static boolean notifyOpened(Project p) {
         boolean ok = true;

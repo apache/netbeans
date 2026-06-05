@@ -27,10 +27,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
-import javax.servlet.jsp.tagext.TagAttributeInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagVariableInfo;
-import javax.servlet.jsp.tagext.VariableInfo;
 import javax.swing.ImageIcon;
 import javax.swing.text.Caret;
 import org.netbeans.api.editor.completion.Completion;
@@ -47,10 +43,16 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.JTextComponent;
+import org.netbeans.modules.web.jsps.parserapi.Node;
+import org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo;
+import org.netbeans.modules.web.jsps.parserapi.TagInfo;
+import org.netbeans.modules.web.jsps.parserapi.TagVariableInfo;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.spi.editor.completion.support.AsyncCompletionTask;
 import org.netbeans.spi.editor.completion.support.CompletionUtilities;
 import org.netbeans.swing.plaf.LFCustoms;
@@ -248,8 +250,8 @@ public class JspCompletionItem implements CompletionItem {
 
                 public void run() {
                     try {
-                        int startOffset = Utilities.getRowStart(doc, dotPos);
-                        int endOffset = Utilities.getRowEnd(doc, dotPos);
+                        int startOffset = LineDocumentUtils.getLineStartOffset(doc, dotPos);
+                        int endOffset = LineDocumentUtils.getLineEndOffset(doc, dotPos);
                         indent.reindent(startOffset, endOffset);
                     } catch (BadLocationException ex) {
                         //ignore
@@ -451,8 +453,8 @@ public class JspCompletionItem implements CompletionItem {
 
                 boolean hasAttrs = true;
                 if (tagInfo != null) {
-                    TagAttributeInfo[] tAttrs = tagInfo.getAttributes();
-                    hasAttrs = (tAttrs != null) ? (tAttrs.length > 0) : true;
+                    List<TagAttributeInfo> tAttrs = tagInfo.getAttributes();
+                    hasAttrs = (tAttrs != null) ? (! tAttrs.isEmpty()) : true;
                 }
                 if (hasAttrs) {
                     return substituteText(c,
@@ -716,7 +718,7 @@ public class JspCompletionItem implements CompletionItem {
                 helpText.append("</td></tr><tr><td><b>Required:</b></td><td>");         //NOI18N
                 helpText.append(tagAttributeInfo.isRequired());                         //NOI18N
                 helpText.append("</td></tr><tr><td><b>Request-time:</b></td><td>");     //NOI18N
-                helpText.append(tagAttributeInfo.canBeRequestTime());                   //NOI18N
+                helpText.append(tagAttributeInfo.isCanBeRequestTime());                   //NOI18N
                 helpText.append("</td></tr><tr><td><b>Fragment:</b></td><td>");         //NOI18N
                 helpText.append(tagAttributeInfo.isFragment());                         //NOI18N
                 helpText.append("</td></tr></table>");                                  //NOI18N
@@ -895,16 +897,15 @@ public class JspCompletionItem implements CompletionItem {
         sb.append("\" ");// NOI18N
         sb.append("size=\"+2\"><b>Attributes</b></font></td></tr>");// NOI18N
 
-        TagAttributeInfo[] attrs = tagInfo.getAttributes();
-        if (attrs != null && attrs.length > 0) {
+        if(! tagInfo.getAttributes().isEmpty()) {
             sb.append("<tr><td><b>Name</b></td><td><b>Required</b></td><td><b>Request-time</b></td></tr>");// NOI18N
-            for (int i = 0; i < attrs.length; i++) {
+            for (TagAttributeInfo tai: tagInfo.getAttributes()) {
                 sb.append("<tr><td>");         // NOI18N
-                sb.append(attrs[i].getName());
+                sb.append(tai.getName());
                 sb.append("</td><td>");                     // NOI18N
-                sb.append(attrs[i].isRequired());
+                sb.append(tai.isRequired());
                 sb.append("</td><td>");                     // NOI18N
-                sb.append(attrs[i].canBeRequestTime());
+                sb.append(tai.isCanBeRequestTime());
                 sb.append("</td></tr>");                    // NOI18N
             }
         } else {
@@ -918,39 +919,39 @@ public class JspCompletionItem implements CompletionItem {
         sb.append(hexColorCode(COLOR_HELP_HEADER_FG));// NOI18N
         sb.append("\" ");// NOI18N
         sb.append("size=\"+2\"><b>Variables</b></font></td></tr>");// NOI18N
-        TagVariableInfo[] variables = tagInfo.getTagVariableInfos();
-        if (variables != null && variables.length > 0) {
+
+        if (! tagInfo.getVariables().isEmpty()) {
             sb.append("<tr><td><b>Name</b></td><td><b>Type</b></td><td><b>Declare</b></td><td><b>Scope</b></td></tr>");// NOI18N
-            for (int i = 0; i < variables.length; i++) {
+            for (TagVariableInfo tvi: tagInfo.getVariables()) {
                 sb.append("<tr><td>");         // NOI18N
-                if (variables[i].getNameGiven() != null && !variables[i].getNameGiven().equals("")) {// NOI18N
-                    sb.append(variables[i].getNameGiven());
+                if (tvi.getNameGiven() != null && !tvi.getNameGiven().equals("")) {// NOI18N
+                    sb.append(tvi.getNameGiven());
                 } else {
-                    if (variables[i].getNameFromAttribute() != null && !variables[i].getNameFromAttribute().equals("")) // NOI18N
+                    if (tvi.getNameFromAttribute() != null && !tvi.getNameFromAttribute().equals("")) // NOI18N
                     {
-                        sb.append("<i>From attribute '").append(variables[i].getNameFromAttribute()).append("'</i>");
+                        sb.append("<i>From attribute '").append(tvi.getNameFromAttribute()).append("'</i>");
                     }// NOI18N
                     else {
                         sb.append("<i>Unknown</i>");
                     }  // NOI18N
                 }
                 sb.append("</td><td><code>");                     // NOI18N
-                if (variables[i].getClassName() == null || variables[i].getClassName().equals("")) {
+                if (tvi.getClassName() == null || tvi.getClassName().equals("")) {
                     sb.append("java.lang.String");
                 }// NOI18N
                 else {
-                    sb.append(variables[i].getClassName());
+                    sb.append(tvi.getClassName());
                 }
                 sb.append("</code></td></tr>");                    // NOI18N
                 sb.append("</td><td>");                     // NOI18N
-                sb.append(variables[i].getDeclare());
+                sb.append(tvi.isDeclare());
                 sb.append("</td></tr>");                    // NOI18N
                 sb.append("</td><td>");                     // NOI18N
-                switch (variables[i].getScope()) {
-                    case VariableInfo.AT_BEGIN:
+                switch (tvi.getScope()) {
+                    case Node.CustomTag.AT_BEGIN:
                         sb.append("AT_BEGIN");
                         break;// NOI18N
-                    case VariableInfo.AT_END:
+                    case Node.CustomTag.AT_END:
                         sb.append("AT_END");
                         break;// NOI18N
                     default:

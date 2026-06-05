@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.101
+#Version 2.106
 
 CLSS public abstract interface java.io.Serializable
 
@@ -14,6 +14,7 @@ intf java.lang.Comparable<{java.lang.Enum%0}>
 intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="18")
 meth public final boolean equals(java.lang.Object)
 meth public final int compareTo({java.lang.Enum%0})
 meth public final int hashCode()
@@ -37,7 +38,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -125,6 +126,7 @@ fld public final static org.netbeans.modules.php.api.PhpVersion PHP_81
 fld public final static org.netbeans.modules.php.api.PhpVersion PHP_82
 fld public final static org.netbeans.modules.php.api.PhpVersion PHP_83
 fld public final static org.netbeans.modules.php.api.PhpVersion PHP_84
+fld public final static org.netbeans.modules.php.api.PhpVersion PHP_85
 meth public boolean hasAsymmetricVisibility()
 meth public boolean hasConstantsInTraits()
 meth public boolean hasDeprecatedAttribute()

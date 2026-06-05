@@ -74,7 +74,9 @@ public enum JavaSEPlatform {
     /** JavaSE 24. */
     v24,
     /** JavaSE 25. */
-    v25;
+    v25,
+    /** JavaSE 26. */
+    v26;
 
     // Class attributes                                                       //
     /** GlassFish JavaEE platform enumeration length. */

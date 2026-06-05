@@ -38,7 +38,7 @@ import org.openide.util.ImageUtilities;
  *
  * @author Erno Mononen
  */
-final class ELResourceBundleKeyCompletionItem extends DefaultCompletionProposal {
+public final class ELResourceBundleKeyCompletionItem extends DefaultCompletionProposal {
 
     private static final String ICON_PATH = "org/netbeans/modules/web/el/completion/resources/propertiesKey.gif";//NOI18N
 

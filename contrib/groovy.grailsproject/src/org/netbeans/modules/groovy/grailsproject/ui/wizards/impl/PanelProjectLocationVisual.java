@@ -216,7 +216,6 @@ public class PanelProjectLocationVisual extends SettingsPanel implements Documen
 
     private void browseLocationJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseLocationJButtonActionPerformed
             JFileChooser chooser = new JFileChooser ();
-            FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
             chooser.setDialogTitle(NbBundle.getMessage(PanelProjectLocationVisual.class,"GetProjectLocationPanel.FileChooserTitle"));
             chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
             String path = projectLocationTextField.getText().trim();

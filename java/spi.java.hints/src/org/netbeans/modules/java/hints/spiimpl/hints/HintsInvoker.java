@@ -592,9 +592,17 @@ public class HintsInvoker {
                         }
                     }
 
-                    HintContext c = SPIAccessor.getINSTANCE().createHintContext(info, settings, hm, path, Collections.<String, TreePath>emptyMap(), Collections.<String, Collection<? extends TreePath>>emptyMap(), Collections.<String, String>emptyMap(), Collections.<String, TypeMirror>emptyMap(), new ArrayList<>(), bulkMode, cancel, caret);
-                    Collection<? extends ErrorDescription> errors = runHint(hd, c);
-
+                    // TODO: keep emptyMap() for now since spi.java.hints.MatcherUtilities mutates the context if fillInVariablesHack=true.
+                    // putAll(empty) works with emptyMap() but Map.of() will throw
+                    HintContext c = SPIAccessor.getINSTANCE().createHintContext(
+                            info, settings, hm, path, Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), Collections.emptyMap(), new ArrayList<>(), bulkMode, cancel, caret
+                    );
+                    Collection<? extends ErrorDescription> errors = null;
+                    try {
+                        errors = runHint(hd, c);
+                    } catch (Exception ex) {
+                        LOG.log(Level.WARNING, hd + " failed", ex);
+                    }
                     if (errors != null) {
                         merge(d, hd, errors);
                     }

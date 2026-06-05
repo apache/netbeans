@@ -45,7 +45,7 @@ public class ReplaceForSerialization extends Object implements java.io.Serializa
 
     public final Object readResolve() {
         final File file = new File(absolutePath);
-        final FileObject retVal = FileBasedFileSystem.getInstance().getFileObject(file);               
+        final FileObject retVal = FileBasedFileSystem.getFileObject(file);               
         return (retVal != null) ? retVal : new Invalid (file);
     }
 
@@ -58,12 +58,15 @@ public class ReplaceForSerialization extends Object implements java.io.Serializa
             throw new IOException(getPath()); 
         }
         
+        @Override
         boolean checkLock(FileLock lock) throws IOException {
             return false;
         }
 
+        @Override
         protected void setValid(boolean valid) {}
 
+        @Override
         public boolean isFolder() {
             return false;
         }
@@ -73,38 +76,47 @@ public class ReplaceForSerialization extends Object implements java.io.Serializa
         *
         * @return true if the file object is valid
         */
+        @Override
         public boolean isValid() {
             return false;
         }
 
+        @Override
         public InputStream getInputStream() throws FileNotFoundException {
             throw new FileNotFoundException (getPath());
         }
 
+        @Override
         public OutputStream getOutputStream(FileLock lock) throws IOException {
             throw new IOException (getPath());
         }
 
+        @Override
         public FileLock lock() throws IOException {
             throw new IOException (getPath());
         }
 
+        @Override
         public FileObject[] getChildren() {
             return new FileObject[] {};
         }
 
+        @Override
         public FileObject getFileObject(String name, String ext) {
             return null;
         }
 
+        @Override
         public FileObject createFolder(String name) throws IOException {
             throw new IOException (getPath());
         }
 
+        @Override
         public FileObject createData(String name, String ext) throws IOException {
             throw new IOException (getPath());
         }
 
+        @Override
         public void refreshImpl(final boolean expected, boolean fire) {
         }
 

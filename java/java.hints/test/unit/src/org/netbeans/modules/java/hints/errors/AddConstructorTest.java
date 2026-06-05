@@ -18,13 +18,7 @@
  */
 package org.netbeans.modules.java.hints.errors;
 
-import org.netbeans.modules.java.hints.errors.AddConstructor;
-import com.sun.source.util.TreePath;
-import java.util.List;
-import java.util.Set;
-import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
-import org.netbeans.spi.editor.hints.Fix;
 import org.openide.util.NbBundle;
 
 /**

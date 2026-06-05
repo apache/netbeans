@@ -28,7 +28,6 @@ import com.sun.source.tree.Scope;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +41,6 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 import org.netbeans.api.java.source.CompilationInfo;
-import org.netbeans.api.java.source.ElementUtilities;
 import org.netbeans.api.java.source.GeneratorUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.TreePathHandle;
@@ -77,12 +75,13 @@ import org.netbeans.spi.java.hints.TriggerTreeKind;
  *
  * @author Sam Halliday
  * @author markiewb
- * @see <a href="http://www.netbeans.org/issues/show_bug.cgi?id=89258">RFE 89258</a>
- * @see <a href="http://java.sun.com/j2se/1.5.0/docs/guide/language/static-import.html>Static Imports</a>
+ * @see <a href="https://docs.oracle.com/javase/1.5.0/docs/guide/language/static-import.html>Static Imports</a>
  */
 @Hint(category="rules15", displayName="#DN_StaticImport", description="#DSC_StaticImport", severity=Severity.HINT, enabled=false, suppressWarnings={"", "StaticImport"},
         minSourceVersion = "5")
 public class StaticImport {
+    
+    private static final Set<ElementKind> SUPPORTED_TYPES = EnumSet.of(ElementKind.METHOD, ElementKind.ENUM_CONSTANT, ElementKind.FIELD);
 
     @TriggerTreeKind(Kind.MEMBER_SELECT)
     public static List<ErrorDescription> run(HintContext ctx) {
@@ -90,23 +89,22 @@ public class StaticImport {
         TreePath treePath = ctx.getPath();
 
         Element e = info.getTrees().getElement(treePath);
-        EnumSet<ElementKind> supportedTypes = EnumSet.of(ElementKind.METHOD, ElementKind.ENUM_CONSTANT, ElementKind.FIELD);
-        if (e == null || !e.getModifiers().contains(Modifier.STATIC) || !supportedTypes.contains(e.getKind())) {
+        if (e == null || !e.getModifiers().contains(Modifier.STATIC) || !SUPPORTED_TYPES.contains(e.getKind())) {
             return null;
         }
 
         if (ElementKind.METHOD == e.getKind()) {
             TreePath mitp = treePath.getParentPath();
             if (mitp == null || mitp.getLeaf().getKind() != Kind.METHOD_INVOCATION) {
-            return null;
-        }
+                return null;
+            }
             if (((MethodInvocationTree) mitp.getLeaf()).getMethodSelect() != treePath.getLeaf()) {
-            return null;
-        }
+                return null;
+            }
             List<? extends Tree> typeArgs = ((MethodInvocationTree) mitp.getLeaf()).getTypeArguments();
             if (typeArgs != null && !typeArgs.isEmpty()) {
-            return null;
-        }
+                return null;
+            }
         }
         Element enclosingEl = e.getEnclosingElement();
         if (enclosingEl == null) {
@@ -122,7 +120,7 @@ public class StaticImport {
             return null;
         }
         Element klass = info.getTrees().getElement(cc);
-        if (klass == null || klass.getKind() != ElementKind.CLASS) {
+        if (klass == null || !klass.getKind().isDeclaredType()) {
             return null;
         }
         String fqn = null;
@@ -143,7 +141,7 @@ public class StaticImport {
         if (ctx.isCanceled()) {
             return null;
         }
-        return Collections.singletonList(ed);
+        return List.of(ed);
     }
 
     public static final class FixImpl extends JavaFix {
@@ -189,31 +187,18 @@ public class StaticImport {
                 return;
             }
             CompilationUnitTree cut = (CompilationUnitTree) copy.resolveRewriteTarget(copy.getCompilationUnit());
-            CompilationUnitTree nue = GeneratorUtilities.get(copy).addImports(cut, Collections.singleton(e));
+            CompilationUnitTree nue = GeneratorUtilities.get(copy).addImports(cut, Set.of(e));
             copy.rewrite(cut, nue);
         }
 
     }
 
-    /**
-     * @param info
-     * @return true if the source level supports the static import language feature
-     */
-    private static boolean supportsStaticImports(CompilationInfo info) {
-        return info.getSourceVersion().compareTo(SourceVersion.RELEASE_5) >= 0;
-    }
-
     // returns true if a METHOD is enclosed in element with simple name sn
     private static boolean hasMethodWithSimpleName(CompilationInfo info, Element element, final String sn) {
-        Iterable<? extends Element> members =
-                info.getElementUtilities().getMembers(element.asType(), new ElementUtilities.ElementAcceptor() {
-
-            @Override
-            public boolean accept(Element e, TypeMirror type) {
-                return e.getKind() == ElementKind.METHOD && e.getSimpleName().toString().equals(sn);
-            }
-        });
-        return members.iterator().hasNext();
+        return info.getElementUtilities().getMembers(
+                element.asType(),
+                (elem, type) -> elem.getKind() == ElementKind.METHOD && elem.getSimpleName().toString().equals(sn)
+        ).iterator().hasNext();
     }
 
     /**
@@ -266,7 +251,7 @@ public class StaticImport {
      */
     private static boolean isSubTypeOrInnerOfSubType(CompilationInfo info, Element t1, Element t2) {
         boolean isSubtype = info.getTypes().isSubtype(t1.asType(), t2.asType());
-        boolean isInnerClass = t1.getEnclosingElement().getKind() == ElementKind.CLASS;
+        boolean isInnerClass = t1.getEnclosingElement().getKind().isDeclaredType();
         return isSubtype || (isInnerClass && info.getTypes().isSubtype(t1.getEnclosingElement().asType(), t2.asType()));
     }
 
@@ -278,15 +263,12 @@ public class StaticImport {
      * methods in klass (which may be an inner or static class).
      */
     private static boolean hasMethodNameClash(CompilationInfo info, Element klass, String simpleName) {
-        assert klass != null;
-        assert klass.getKind() == ElementKind.CLASS;
-
         // check the members and inherited members of the klass
         if (hasMethodWithSimpleName(info, klass, simpleName)) {
             return true;
         }
         Element klassEnclosing = klass.getEnclosingElement();
-        return (klassEnclosing != null && klassEnclosing.getKind() == ElementKind.CLASS && hasMethodWithSimpleName(info, klassEnclosing, simpleName));
+        return klassEnclosing != null && klassEnclosing.getKind().isDeclaredType() && hasMethodWithSimpleName(info, klassEnclosing, simpleName);
     }
 
     /**

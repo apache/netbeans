@@ -24,8 +24,8 @@ import com.sun.el.parser.AstIdentifier;
 import com.sun.el.parser.AstString;
 import com.sun.el.parser.Node;
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyledDocument;
@@ -72,7 +72,7 @@ public final class ResourceBundles {
 
     private final WebModule webModule;
     private final Project project;
-    
+
     /* bundle base name to ResourceBundleInfo map */
     private Map<String, ResourceBundleInfo> bundlesMap;
     private long currentBundlesHashCode;
@@ -82,12 +82,12 @@ public final class ResourceBundles {
         @Override
         public void fileChanged(FileEvent fe) {
             super.fileChanged(fe);
-            LOGGER.finer(String.format("File %s has changed.", fe.getFile())); //NOI18N
+            LOGGER.log(Level.FINER, "File {0} has changed.", fe.getFile()); //NOI18N
             resetResourceBundleMap();
         }
         
     };
-    
+
     private ResourceBundles(WebModule webModule, Project project) {
         this.webModule = webModule;
         this.project = project;
@@ -143,7 +143,19 @@ public final class ResourceBundles {
      * {@code key}; {@code false} otherwise.
      */
     public boolean isValidKey(String bundle, String key) {
-        ResourceBundleInfo rbInfo = getBundleForIdentifier(bundle);
+        return isValidKey(new ResolverContext(), bundle, key);
+    }
+
+    /**
+     * Checks whether the given {@code key} is defined in the given {@code bundle}.
+     * @param context non-null {@link ResolverContext} instance
+     * @param bundle the base name of the bundle.
+     * @param key the key to check.
+     * @return {@code true} if the given {@code bundle} exists and contains the given 
+     * {@code key}; {@code false} otherwise.
+     */
+    public boolean isValidKey(ResolverContext context, String bundle, String key) {
+        ResourceBundleInfo rbInfo = getBundleForIdentifier(context, bundle);
         if (rbInfo == null) {
             // no matching bundle file
             return true;
@@ -158,12 +170,13 @@ public final class ResourceBundles {
 
     /**
      * Gets bundle info for given identifier.
+     * @param context non-null {@link ResolverContext} instance
      * @param ident identifier to examine
      * @return resource bundle info if any found, {@code null} otherwise
      */
-    private ResourceBundleInfo getBundleForIdentifier(String ident) {
+    private ResourceBundleInfo getBundleForIdentifier(ResolverContext context, String ident) {
         // XXX - do it more efficiently
-        for (ResourceBundleInfo rbi : getBundlesMap().values()) {
+        for (ResourceBundleInfo rbi : getBundlesMap(context).values()) {
             if (ident.equals(rbi.getVarName())) {
                 return rbi;
             }
@@ -177,16 +190,21 @@ public final class ResourceBundles {
      * @return locations corresponding to given bundle name, never {@code null}
      */
     public List<Location> getLocationsForBundleIdent(String ident) {
-        ResourceBundleInfo rbi = getBundleForIdentifier(ident);
+        return getLocationsForBundleIdent(new ResolverContext(), ident);
+    }
+
+    /**
+     * Gets all locations for given bundle identifier.
+     * @param context non-null {@link ResolverContext} instance
+     * @param ident identifier of the bundle
+     * @return locations corresponding to given bundle name, never {@code null}
+     */
+    public List<Location> getLocationsForBundleIdent(ResolverContext context, String ident) {
+        ResourceBundleInfo rbi = getBundleForIdentifier(context, ident);
         if (rbi == null) {
             return Collections.<Location>emptyList();
         }
-
-        List<Location> locations = new ArrayList<>(rbi.getFiles().size());
-        for (FileObject fileObject : rbi.getFiles()) {
-            locations.add(new Location(0, fileObject));
-        }
-        return locations;
+        return rbi.getFiles().stream().map(Location::new).toList();
     }
 
     /**
@@ -196,8 +214,19 @@ public final class ResourceBundles {
      * @return locations (including the offset) of the searched key, never {@code null}
      */
     public List<Location> getLocationsForBundleKey(String ident, String key) {
+        return getLocationsForBundleKey(new ResolverContext(), ident, key);
+    }
+
+    /**
+     * Gets all locations for given bundle identifier and key.
+     * @param context non-null {@link ResolverContext} instance
+     * @param ident identifier of the bundle
+     * @param key key to search
+     * @return locations (including the offset) of the searched key, never {@code null}
+     */
+    public List<Location> getLocationsForBundleKey(ResolverContext context, String ident, String key) {
         List<Location> locations = new ArrayList<>();
-        for (Location location : getLocationsForBundleIdent(ident)) {
+        for (Location location : getLocationsForBundleIdent(context, ident)) {
             try {
                 DataObject dobj = DataObject.find(location.getFile());
                 EditorCookie ec = dobj.getLookup().lookup(EditorCookie.class);
@@ -210,11 +239,18 @@ public final class ResourceBundles {
                 if (lc != null) {
                     Line.Set ls = lc.getLineSet();
                     for (Line line : ls.getLines()) {
-                        if (line.getText().contains(key + "=") || line.getText().contains(key + " =")) { //NOI18N
+                        String text = line.getText();
+                        if (text == null) {
+                            continue;
+                        }
+                        text = text.trim();
+                        if (text.startsWith(key + "=") || text.startsWith(key + " =")
+                                || text.startsWith(key + ":") || text.startsWith(key + " :")) {
                             try {
                                 StyledDocument document = ec.getDocument();
                                 int offset = document.getText(0, document.getLength()).indexOf(line.getText());
-                                locations.add(new Location(offset, location.getFile()));
+                                locations.add(new Location(offset, location.getFile(), line.getLineNumber()));
+                                break;
                             } catch (BadLocationException ex) {
                                 Exceptions.printStackTrace(ex);
                             }
@@ -234,6 +270,7 @@ public final class ResourceBundles {
 
     /**
      * Collects references to resource bundle keys in the given {@code root}.
+     * @param context non-null {@link ResolverContext} instance
      * @return List of identifier/string pairs. Identifier = resource bundle base name - string = res bundle key.
      */
     public List<Pair<AstIdentifier, Node>> collectKeys(final Node root, ResolverContext context) {
@@ -261,6 +298,10 @@ public final class ResourceBundles {
     }
 
     public String findResourceBundleIdentifier(AstPath astPath) {
+        return findResourceBundleIdentifier(new ResolverContext(), astPath);
+    }
+
+    public String findResourceBundleIdentifier(ResolverContext context, AstPath astPath) {
         List<Node> path = astPath.leafToRoot();
         for (int i = 0; i < path.size(); i++) {
             Node node = path.get(i);
@@ -273,7 +314,7 @@ public final class ResourceBundles {
                     Node identifier = path.get(i + 2);
                     if (brackets instanceof AstBracketSuffix
                             && identifier instanceof AstIdentifier
-                            && isResourceBundleIdentifier(identifier.getImage(), new ResolverContext())) {
+                            && isResourceBundleIdentifier(identifier.getImage(), context)) {
                         return identifier.getImage();
                     }
                 }
@@ -281,6 +322,7 @@ public final class ResourceBundles {
         }
         return null;
     }
+
     /**
      * Gets the value of the given {@code key} in the given {@code bundle}.
      * @param bundle the base name of the bundle.
@@ -288,7 +330,48 @@ public final class ResourceBundles {
      * @return the value or {@code null}.
      */
     public String getValue(String bundle, String key) {
-        ResourceBundleInfo rbInfo = getBundlesMap().get(bundle);
+        return getValue(new ResolverContext(), bundle, key);
+    }
+
+    /**
+     * Gets the value of the given {@code key} in the given {@code bundle}.
+     * @param context non-null {@link ResolverContext} instance
+     * @param bundle the base name of the bundle.
+     * @param key key in the given bundle.
+     * @return the value or {@code null}.
+     */
+    public String getValue(ResolverContext context, String bundle, String key) {
+        ResourceBundleInfo rbInfo = getBundlesMap(context).get(bundle);
+        if (rbInfo == null || !rbInfo.getResourceBundle().containsKey(key)) {
+            // no matching bundle file
+            return null;
+        }
+        try {
+            return rbInfo.getResourceBundle().getString(key);
+        } catch (MissingResourceException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Gets the value of the given {@code key} in the given {@code bundle}.
+     * @param varName the var name of the bundle.
+     * @param key key in the given bundle.
+     * @return the value or {@code null}.
+     */
+    public String getValueWithVarName(String varName, String key) {
+        return getValueWithVarName(new ResolverContext(), varName, key);
+    }
+
+    /**
+     * Gets the value of the given {@code key} in the given {@code bundle}.
+     * @param context non-null {@link ResolverContext} instance
+     * @param varName the var name of the bundle.
+     * @param key key in the given bundle.
+     * @return the value or {@code null}.
+     */
+    public String getValueWithVarName(ResolverContext context, String varName, String key) {
+        ResourceBundleInfo rbInfo = getBundleForIdentifier(context, varName);
         if (rbInfo == null || !rbInfo.getResourceBundle().containsKey(key)) {
             // no matching bundle file
             return null;
@@ -306,8 +389,18 @@ public final class ResourceBundles {
      * @return
      */
     public Map<String,String> getEntries(String bundleVar) {
-        ResourceBundle bundle = findResourceBundleForVar(bundleVar);
-        ResourceBundleInfo rbInfo = getBundlesMap().get(bundle.getBaseName());
+        return getEntries(new ResolverContext(), bundleVar);
+    }
+
+    /**
+     * Gets the entries in the bundle identified by {@code bundleName}.
+     * @param context non-null {@link ResolverContext} instance
+     * @param bundleVar
+     * @return
+     */
+    public Map<String,String> getEntries(ResolverContext context, String bundleVar) {
+        ResourceBundle bundle = findResourceBundleForVar(context, bundleVar);
+        ResourceBundleInfo rbInfo = getBundlesMap(context).get(bundle.getBaseName());
         if (rbInfo == null) {
             return Collections.emptyMap();
         }
@@ -318,11 +411,10 @@ public final class ResourceBundles {
         }
         return result;
     }
-    
-    
-    private ResourceBundle findResourceBundleForVar(String variableName) {
+
+    private ResourceBundle findResourceBundleForVar(ResolverContext context, String variableName) {
         List<ResourceBundle> foundBundles = webModule != null ? 
-                ELPlugin.Query.getResourceBundles(webModule.getDocumentBase(), new ResolverContext())
+                ELPlugin.Query.getResourceBundles(webModule.getDocumentBase(), context)
                 :
                 Collections.<ResourceBundle>emptyList();
         //make the bundle var to bundle 
@@ -333,9 +425,11 @@ public final class ResourceBundles {
         }
         return null;
     }
+
     /**
      * Finds list of all ResourceBundles, which are registered in all
      * JSF configuration files in a web module.
+     * @param context non-null {@link ResolverContext} instance
      */
     public List<ResourceBundle> getBundles(ResolverContext context) {
         FileObject docBase = webModule != null ? webModule.getDocumentBase() : null;
@@ -345,17 +439,17 @@ public final class ResourceBundles {
      /*
       * returns a map of bundle fully qualified name to java.util.ResourceBundle
       */
-    private synchronized Map<String, ResourceBundleInfo> getBundlesMap() {
-        long bundlesHash = getBundlesHashCode();
+    private synchronized Map<String, ResourceBundleInfo> getBundlesMap(ResolverContext context) {
+        long bundlesHash = getBundlesHashCode(context);
         if (bundlesMap == null) {
             currentBundlesHashCode = bundlesHash;
-            bundlesMap = createResourceBundleMapAndFileChangeListeners();
+            bundlesMap = createResourceBundleMapAndFileChangeListeners(context);
             LOGGER.fine("New resource bundle map created."); //NOI18N
         } else {
             if(bundlesHash != currentBundlesHashCode) {
                 //refresh the resource bundle map
                 resetResourceBundleMap();
-                bundlesMap = createResourceBundleMapAndFileChangeListeners();
+                bundlesMap = createResourceBundleMapAndFileChangeListeners(context);
                 currentBundlesHashCode = bundlesHash;
                 LOGGER.fine("Resource bundle map recreated based on configuration changes."); //NOI18N
                 
@@ -364,7 +458,7 @@ public final class ResourceBundles {
         
         return bundlesMap;
     }
-    
+
     private synchronized void resetResourceBundleMap() {
         if(bundlesMap == null) {
             return ;
@@ -372,25 +466,25 @@ public final class ResourceBundles {
         for(ResourceBundleInfo info : bundlesMap.values()) {
             for (FileObject fileObject : info.getFiles()) {
                 fileObject.removeFileChangeListener(FILE_CHANGE_LISTENER);
-                LOGGER.finer(String.format("Removed FileChangeListener from file %s", fileObject)); //NOI18N
+                LOGGER.log(Level.FINER, "Removed FileChangeListener from file {0}", fileObject); //NOI18N
             }
         }
         bundlesMap = null;
         LOGGER.fine("Resource bundle map released."); //NOI18N
     }
-    
-    private long getBundlesHashCode() {
+
+    private long getBundlesHashCode(ResolverContext context) {
         //compute hashcode so we can compare if there are changes since the last time and possibly
         //reset the bundle map cache
         long hash = 3;
-        for(ResourceBundle rb : getBundles(new ResolverContext())) {
+        for(ResourceBundle rb : getBundles(context)) {
             hash = 11 * hash + rb.getBaseName().hashCode();
             hash = 11 * hash + (rb.getVar() != null ? rb.getVar().hashCode() : 0);
         }
         return hash;
     }
-    
-    private Map<String, ResourceBundleInfo> createResourceBundleMapAndFileChangeListeners() {
+
+    private Map<String, ResourceBundleInfo> createResourceBundleMapAndFileChangeListeners(ResolverContext context) {
         Map<String, ResourceBundleInfo> result = new HashMap<>();
         ClassPathProvider provider = project.getLookup().lookup(ClassPathProvider.class);
         if (provider == null) {
@@ -403,8 +497,26 @@ public final class ResourceBundles {
         }
 
         SourceGroup[] sourceGroups = sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA);
-        for (ResourceBundle bundle : getBundles(new ResolverContext())) {
+        for (ResourceBundle bundle : getBundles(context)) {
             String bundleFile = bundle.getBaseName();
+
+            for (FileObject fileObject : bundle.getFiles()) {
+                if (fileObject.canWrite()) {
+                    fileObject.addFileChangeListener(
+                            WeakListeners.create(FileChangeListener.class, FILE_CHANGE_LISTENER, fileObject));
+                    LOGGER.log(Level.FINER, "Added FileChangeListener to file {0}", fileObject);
+                }
+            }
+
+            java.util.ResourceBundle found = null;
+            if (!bundle.getFiles().isEmpty()) {
+                found = loadBundleChain(bundle.getFiles());
+            }
+            if (found != null) {
+                result.put(bundleFile, new ResourceBundleInfo(bundle.getFiles(), found, bundle.getVar()));
+                continue;
+            }
+
             for (SourceGroup sourceGroup : sourceGroups) {
                 FileObject rootFolder = sourceGroup.getRootFolder();
 
@@ -415,38 +527,92 @@ public final class ResourceBundles {
                     }
                     ClassLoader classLoader = classPath.getClassLoader(false);
                     try {
-                        // TODO - rewrite listening on all (localized) files
-                        String resourceFileName = new StringBuilder()
-                                .append(bundleFile.replace(".", "/"))
-                                .append(".properties")
-                                .toString(); //NOI18N
-                        
-                        URL url = classLoader.getResource(resourceFileName);
-                        if(url != null) {
-                            LOGGER.finer(String.format("Found %s URL for resource bundle %s", url, resourceFileName ));
-                            FileObject fileObject = URLMapper.findFileObject(url);
-                            if(fileObject != null) {
-                                if (fileObject.canWrite()) {
-                                    fileObject.addFileChangeListener(
-                                            WeakListeners.create(FileChangeListener.class, FILE_CHANGE_LISTENER, fileObject));
-                                    LOGGER.finer(String.format("Added FileChangeListener to file %s", fileObject ));
-                                }
-                            } else {
-                                LOGGER.fine(String.format("Cannot map %s URL to FileObject!", url));
-                            }
-                        }
-                        
-                        java.util.ResourceBundle found = java.util.ResourceBundle.getBundle(bundleFile, Locale.getDefault(), classLoader);
+                        found = java.util.ResourceBundle.getBundle(bundleFile, Locale.getDefault(), classLoader);
                         result.put(bundleFile, new ResourceBundleInfo(bundle.getFiles(), found, bundle.getVar()));
                         break; // found the bundle in source cp, skip searching compile cp
                     } catch (MissingResourceException exception) {
                         continue;
                     }
                 }
-
             }
         }
         return result;
+    }
+
+    private java.util.ResourceBundle loadBundleChain(List<FileObject> files) {
+        Locale defaultLocale = Locale.getDefault();
+        String lang = defaultLocale.getLanguage();
+        String country = defaultLocale.getCountry();
+
+        FileObject baseFile = null;
+        FileObject langFile = null;
+        FileObject countryFile = null;
+        FileObject fallbackFile = null;
+
+        for (FileObject fo : files) {
+            String name = fo.getName();
+
+            if (fallbackFile == null) {
+                fallbackFile = fo;
+            }
+
+            if (!name.contains("_")) {
+                baseFile = fo;
+            } else if (name.endsWith("_" + lang)) {
+                langFile = fo;
+            } else if (name.endsWith("_" + lang + "_" + country)) {
+                countryFile = fo;
+            }
+        }
+        java.util.ResourceBundle chainHead = null;
+        java.util.ResourceBundle currentParent = null;
+        if (baseFile != null) {
+            currentParent = createBundleSafe(baseFile);
+            chainHead = currentParent;
+        }
+        if (langFile != null) {
+            LinkableResourceBundle langBundle = createBundleSafe(langFile);
+            if (langBundle != null) {
+                if (currentParent != null) {
+                    langBundle.setChainParent(currentParent);
+                }
+                currentParent = langBundle;
+                chainHead = langBundle;
+            }
+        }
+        if (countryFile != null) {
+            LinkableResourceBundle countryBundle = createBundleSafe(countryFile);
+            if (countryBundle != null) {
+                if (currentParent != null) {
+                    countryBundle.setChainParent(currentParent);
+                }
+                chainHead = countryBundle;
+            }
+        }
+        if (chainHead == null && fallbackFile != null) {
+            return createBundleSafe(fallbackFile);
+        }
+        return chainHead;
+    }
+
+    private LinkableResourceBundle createBundleSafe(FileObject fo) {
+        try (java.io.InputStream in = fo.getInputStream()) {
+            return new LinkableResourceBundle(in);
+        } catch (IOException ex) {
+            LOGGER.log(Level.FINE, "Error loading properties file: {0}", fo.getPath());
+            return null;
+        }
+    }
+
+    private static class LinkableResourceBundle extends PropertyResourceBundle {
+
+        public LinkableResourceBundle(java.io.InputStream stream) throws IOException {
+            super(stream);
+        }
+
+        public void setChainParent(java.util.ResourceBundle parent) {
+            setParent(parent);
+        }
     }
 
     private static final class ResourceBundleInfo {
@@ -477,10 +643,20 @@ public final class ResourceBundles {
 
         private final int offset;
         private final FileObject file;
+        private final int lineNumber;
+
+        public Location(FileObject file) {
+            this(0, file);
+        }
 
         public Location(int offset, FileObject file) {
+            this(offset, file, -1);
+        }
+
+        public Location(int offset, FileObject file, int lineNumber) {
             this.offset = offset;
             this.file = file;
+            this.lineNumber = lineNumber;
         }
 
         public int getOffset() {
@@ -489,6 +665,10 @@ public final class ResourceBundles {
 
         public FileObject getFile() {
             return file;
+        }
+
+        public int getLineNumber() {
+            return lineNumber;
         }
     }
 }

@@ -857,7 +857,7 @@ public class ParametersPanel extends JPanel implements ProgressListener, ChangeL
                     stop(event);
                 }
                 progressPanel.remove(innerPanel);
-                progressBar = ProgressBar.create(progressHandle = ProgressHandleFactory.createHandle("")); //NOI18N
+                progressBar = ProgressBar.create(progressHandle = ProgressHandle.createHandle("")); //NOI18N
                 if (event.getCount() == -1) {
                     isIndeterminate = true;
                     progressHandle.start();

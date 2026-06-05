@@ -26,6 +26,14 @@
             <code-name-base>org.netbeans.modules.servletjspapi</code-name-base>
             <module-dependencies/>
             <public-packages>
+                <package>jakarta.el</package>
+                <package>jakarta.servlet</package>
+                <package>jakarta.servlet.annotation</package>
+                <package>jakarta.servlet.descriptor</package>
+                <package>jakarta.servlet.http</package>
+                <package>jakarta.servlet.jsp</package>
+                <package>jakarta.servlet.jsp.el</package>
+                <package>jakarta.servlet.jsp.tagext</package>
                 <package>javax.el</package>
                 <package>javax.servlet</package>
                 <package>javax.servlet.annotation</package>
@@ -38,6 +46,10 @@
             <class-path-extension>
                 <runtime-relative-path>ext/servlet4.0-jsp2.3-api.jar</runtime-relative-path>
                 <binary-origin>external/generated-servlet-jsp-api-4.0_2.3.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/servlet-jsp-api-6.1_3.0.jar</runtime-relative-path>
+                <binary-origin>external/generated-servlet-jsp-api-6.1_3.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

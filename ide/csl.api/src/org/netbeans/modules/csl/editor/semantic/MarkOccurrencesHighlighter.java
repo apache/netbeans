@@ -19,6 +19,7 @@
 package org.netbeans.modules.csl.editor.semantic;
 
 import java.awt.Color;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -107,11 +108,10 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
                 return;
             }
 
-            List<OffsetRange> bag = processImpl(info, doc, caretPosition);
-            if (cancel.isCancelled()) {
-                //the occurrences finder haven't found anything, just ignore the result
-                //and keep the previous occurrences
-                return ;
+            List<OffsetRange> bag = Collections.emptyList();
+
+            if (snapshotOffset >= 0) {
+                bag = processImpl(info, doc, caretPosition);
             }
 
             GsfSemanticLayer layer = GsfSemanticLayer.getLayer(MarkOccurrencesHighlighter.class, doc);
@@ -124,18 +124,31 @@ public final class MarkOccurrencesHighlighter extends ParserResultTask<ParserRes
                     } catch (BadLocationException ex) {}
                 }
             }
-            layer.setColorings(seqs);
 
-            OccurrencesMarkProvider.get(doc).setOccurrences(OccurrencesMarkProvider.createMarks(doc, bag, ES_COLOR, NbBundle.getMessage(MarkOccurrencesHighlighter.class, "LBL_ES_TOOLTIP")));
+            boolean updateHighlights = false;
+            if (seqs.isEmpty()) {
+                OccurrencesFinder finder = language.getOccurrencesFinder();
+                if (finder == null || !finder.isMarkOccurrencesEnabled() || !finder.isKeepMarks()) {
+                    updateHighlights = true;
+                }
+            } else {
+                updateHighlights = true;
+            }
+
+            if (updateHighlights) {
+                // Update both editor highlighs and sidebar marks
+                layer.setColorings(seqs);
+                OccurrencesMarkProvider.get(doc).setOccurrences(OccurrencesMarkProvider.createMarks(doc, bag, ES_COLOR, NbBundle.getMessage(MarkOccurrencesHighlighter.class, "LBL_ES_TOOLTIP")));
+            }
         } finally {
             SpiSupportAccessor.getInstance().removeCancelSupport(cancel);
         }
     }
-    
+
     @NonNull
     List<OffsetRange> processImpl(ParserResult info, Document doc, int caretPosition) {
         OccurrencesFinder finder = language.getOccurrencesFinder();
-        if(finder == null) {
+        if (finder == null || !finder.isMarkOccurrencesEnabled()) {
             return List.of();
         }
 

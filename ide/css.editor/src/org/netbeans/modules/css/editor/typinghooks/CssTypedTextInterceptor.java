@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.Token;
@@ -243,7 +244,7 @@ public class CssTypedTextInterceptor implements TypedTextInterceptor {
     public void afterInsert(Context context) throws BadLocationException {
         char ch = context.getText().charAt(0);
         if ('}' == ch) {
-            final int lineStart = Utilities.getRowFirstNonWhite((BaseDocument) context.getDocument(), context.getOffset());
+            final int lineStart = LineDocumentUtils.getLineFirstNonWhitespace((BaseDocument) context.getDocument(), context.getOffset());
             if (lineStart == context.getOffset()) {
                 reindentLater((BaseDocument) context.getDocument(), context.getOffset(), context.getOffset());
             }
@@ -254,8 +255,8 @@ public class CssTypedTextInterceptor implements TypedTextInterceptor {
     //indentation infrastructure directly. Instead of that create a new
     //AWT task and post it for later execution.
     private void reindentLater(final BaseDocument doc, int start, int end) throws BadLocationException {
-        final Position from = doc.createPosition(Utilities.getRowStart(doc, start));
-        final Position to = doc.createPosition(Utilities.getRowEnd(doc, end));
+        final Position from = doc.createPosition(LineDocumentUtils.getLineStartOffset(doc, start));
+        final Position to = doc.createPosition(LineDocumentUtils.getLineEndOffset(doc, end));
         Runnable rn = new Runnable() {
 
             @Override

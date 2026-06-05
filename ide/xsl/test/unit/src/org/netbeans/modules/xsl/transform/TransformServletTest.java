@@ -18,34 +18,11 @@
  */
 package org.netbeans.modules.xsl.transform;
 
-//import java.io.*;
 import java.net.*;
-import java.security.Permission;
-//import java.util.*;
-
-//import javax.servlet.*;
-//import javax.servlet.http.*;
 
 import junit.framework.*;
 import org.netbeans.junit.*;
 
-/*import org.openide.util.HttpServer;
-import org.openide.filesystems.FileObject;
-import org.openide.util.SharedClassObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.execution.NbfsURLConnection;
-
-import org.xml.sax.*;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.sax.*;
-import javax.xml.transform.stream.*;
-
-import org.netbeans.api.xml.cookies.*;
-import org.netbeans.spi.xml.cookies.*;
-
-import org.netbeans.modules.xsl.utils.TransformUtil;
-*/
 /**
  *
  * @author Libor Kramolis
@@ -60,15 +37,12 @@ public class TransformServletTest extends NbTestCase {
         junit.textui.TestRunner.run(suite());
     }
     
-    
-    
     public static Test suite() {
         TestSuite suite = new NbTestSuite(TransformServletTest.class);
         
         return suite;
     }
     
-        
     /** Test of getServletURL method, of class org.netbeans.modules.xsl.transform.TransformServlet. */
     public void testGetServletURL() {
         // issue #196602
@@ -84,29 +58,6 @@ public class TransformServletTest extends NbTestCase {
         }
         
         assertTrue ("I need correct Transform Servlet URL!", (servletURL!=null & exceptionThrown!= true));
-    }
-
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        SecurityManager sm = new SecurityManager() {
-
-            @Override
-            public void checkPermission(Permission perm) {
-            }
-
-            @Override
-            public void checkPermission(Permission perm, Object context) {
-            }
-            
-        };
-        System.setSecurityManager(sm);
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        System.setSecurityManager(null);
-        super.tearDown();
     }
     
 }

@@ -32,6 +32,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.core.api.support.SourceGroups;
@@ -242,9 +243,9 @@ public class RelatedCMPWizard implements TemplateWizard.Iterator {
         }
 
         final String title = NbBundle.getMessage(RelatedCMPWizard.class, "TXT_EntityClassesGeneration");
-        final ProgressContributor progressContributor = AggregateProgressFactory.createProgressContributor(title);
+        final ProgressContributor progressContributor = BasicAggregateProgressFactory.createProgressContributor(title);
         final AggregateProgressHandle handle =
-                AggregateProgressFactory.createHandle(title, new ProgressContributor[]{progressContributor}, null, null);
+                BasicAggregateProgressFactory.createHandle(title, new ProgressContributor[]{progressContributor}, null, null);
         progressPanel = new ProgressPanel();
         final JComponent progressComponent = AggregateProgressFactory.createProgressComponent(handle);
 

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.3.0
+#Version 2.8.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -377,7 +377,7 @@ intf java.util.EventListener
 meth public abstract void actionPerformed(java.awt.event.ActionEvent)
 
 CLSS public abstract java.awt.event.MouseAdapter
-cons public init()
+cons protected init()
 intf java.awt.event.MouseListener
 intf java.awt.event.MouseMotionListener
 intf java.awt.event.MouseWheelListener
@@ -408,6 +408,28 @@ CLSS public abstract interface java.awt.event.MouseWheelListener
 intf java.util.EventListener
 meth public abstract void mouseWheelMoved(java.awt.event.MouseWheelEvent)
 
+CLSS public abstract java.awt.event.WindowAdapter
+cons protected init()
+intf java.awt.event.WindowFocusListener
+intf java.awt.event.WindowListener
+intf java.awt.event.WindowStateListener
+meth public void windowActivated(java.awt.event.WindowEvent)
+meth public void windowClosed(java.awt.event.WindowEvent)
+meth public void windowClosing(java.awt.event.WindowEvent)
+meth public void windowDeactivated(java.awt.event.WindowEvent)
+meth public void windowDeiconified(java.awt.event.WindowEvent)
+meth public void windowGainedFocus(java.awt.event.WindowEvent)
+meth public void windowIconified(java.awt.event.WindowEvent)
+meth public void windowLostFocus(java.awt.event.WindowEvent)
+meth public void windowOpened(java.awt.event.WindowEvent)
+meth public void windowStateChanged(java.awt.event.WindowEvent)
+supr java.lang.Object
+
+CLSS public abstract interface java.awt.event.WindowFocusListener
+intf java.util.EventListener
+meth public abstract void windowGainedFocus(java.awt.event.WindowEvent)
+meth public abstract void windowLostFocus(java.awt.event.WindowEvent)
+
 CLSS public abstract interface java.awt.event.WindowListener
 intf java.util.EventListener
 meth public abstract void windowActivated(java.awt.event.WindowEvent)
@@ -417,6 +439,10 @@ meth public abstract void windowDeactivated(java.awt.event.WindowEvent)
 meth public abstract void windowDeiconified(java.awt.event.WindowEvent)
 meth public abstract void windowIconified(java.awt.event.WindowEvent)
 meth public abstract void windowOpened(java.awt.event.WindowEvent)
+
+CLSS public abstract interface java.awt.event.WindowStateListener
+intf java.util.EventListener
+meth public abstract void windowStateChanged(java.awt.event.WindowEvent)
 
 CLSS public abstract interface java.awt.image.ImageObserver
 fld public final static int ABORT = 128
@@ -502,6 +528,7 @@ meth public static java.io.InputStream nullInputStream()
 meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
+meth public void skipNBytes(long) throws java.io.IOException
 supr java.lang.Object
 
 CLSS public abstract interface java.io.Serializable
@@ -524,8 +551,10 @@ meth public abstract !hasdefault java.lang.String since()
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -534,6 +563,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -589,6 +619,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract java.util.AbstractCollection<%0 extends java.lang.Object>
 cons protected init()
@@ -724,7 +757,7 @@ supr java.lang.Object
 
 CLSS public abstract javax.swing.AbstractButton
  anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="")
-cons public init()
+cons protected init()
 fld protected java.awt.event.ActionListener actionListener
 fld protected java.awt.event.ItemListener itemListener
 fld protected javax.swing.ButtonModel model
@@ -1723,7 +1756,7 @@ intf java.util.EventListener
 meth public abstract void tableChanged(javax.swing.event.TableModelEvent)
 
 CLSS public abstract javax.swing.table.AbstractTableModel
-cons public init()
+cons protected init()
 fld protected javax.swing.event.EventListenerList listenerList
 intf java.io.Serializable
 intf javax.swing.table.TableModel
@@ -2442,7 +2475,7 @@ CLSS public final org.netbeans.modules.versioning.util.DelayScanRegistry
 meth public boolean isDelayed(org.openide.util.RequestProcessor$Task,java.util.logging.Logger,java.lang.String)
 meth public static org.netbeans.modules.versioning.util.DelayScanRegistry getInstance()
 supr java.lang.Object
-hfds BLOCK_INDEFINITELY,MAX_WAITING_TIME,WAITING_PERIOD,instance,registry
+hfds BLOCK_INDEFINITELY,DELAY_SCAN,MAX_WAITING_TIME,WAITING_PERIOD,instance,registry
 hcls DelayedScan
 
 CLSS public org.netbeans.modules.versioning.util.DelegatingUndoRedo
@@ -2466,15 +2499,10 @@ hfds comp,delegate,listeners
 
 CLSS public org.netbeans.modules.versioning.util.DialogBoundsPreserver
 cons public init(java.util.prefs.Preferences,java.lang.String)
-intf java.awt.event.WindowListener
-meth public void windowActivated(java.awt.event.WindowEvent)
+meth public static void preserveAndRestore(java.awt.Window,java.util.prefs.Preferences,java.lang.String)
 meth public void windowClosed(java.awt.event.WindowEvent)
-meth public void windowClosing(java.awt.event.WindowEvent)
-meth public void windowDeactivated(java.awt.event.WindowEvent)
-meth public void windowDeiconified(java.awt.event.WindowEvent)
-meth public void windowIconified(java.awt.event.WindowEvent)
 meth public void windowOpened(java.awt.event.WindowEvent)
-supr java.lang.Object
+supr java.awt.event.WindowAdapter
 hfds DELIMITER,key,preferences
 
 CLSS public org.netbeans.modules.versioning.util.ExportDiffPanel

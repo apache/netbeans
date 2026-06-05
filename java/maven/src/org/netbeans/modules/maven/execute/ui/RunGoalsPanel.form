@@ -68,7 +68,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="txtGoals" alignment="0" max="32767" attributes="0"/>
                           <Component id="txtProfiles" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jScrollPane2" alignment="0" pref="540" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -78,7 +78,7 @@
                       <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
                       <Component id="cbRemember" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="txtRemember" pref="275" max="32767" attributes="0"/>
+                      <Component id="txtRemember" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
               </Group>
@@ -106,7 +106,7 @@
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="btnAddProps" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jScrollPane2" pref="110" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" pref="130" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">

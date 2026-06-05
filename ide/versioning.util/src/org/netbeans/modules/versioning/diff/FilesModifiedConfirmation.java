@@ -41,7 +41,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.versioning.util.CollectionUtils;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -51,6 +51,7 @@ import org.openide.cookies.SaveCookie;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
+
 import static org.openide.NotifyDescriptor.CANCEL_OPTION;
 import static org.openide.NotifyDescriptor.DEFAULT_OPTION;
 import static org.openide.NotifyDescriptor.ERROR_MESSAGE;
@@ -292,7 +293,7 @@ public class FilesModifiedConfirmation {
         final SaveCookie saveCookie = listModel.getElementAt(index);
 
         final AtomicReference<String> errMsg = new AtomicReference<String>();
-        ProgressUtils.showProgressDialogAndRun(new Runnable() {
+        BaseProgressUtils.showProgressDialogAndRun(new Runnable() {
             @Override
             public void run () {
                 try {

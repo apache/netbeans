@@ -47,7 +47,7 @@ public class ProgressFrame extends javax.swing.JFrame {
         this.getAccessibleContext().setAccessibleDescription(bundle.getString("ACS_ProgressFrameTabA11yDesc"));  // NOI18N
         okButton.getAccessibleContext().setAccessibleDescription(bundle.getString("ACS_CancelButtonA11yDesc"));  // NOI18N
         
-        progressHandle = ProgressHandleFactory.createHandle(null);
+        progressHandle = ProgressHandle.createHandle(null);
         progressComponent = ProgressHandleFactory.createProgressComponent(progressHandle);
         progressPanel.add(progressComponent);
         progressHandle.start();

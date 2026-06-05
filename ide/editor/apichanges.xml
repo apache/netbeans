@@ -458,7 +458,6 @@ org.netbeans.modules.editor.NbEditorKit:method public java.util.List&lt;javax.sw
 -->
     <head>
       <title>Change History for the Editor API</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>
 

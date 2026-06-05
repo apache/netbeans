@@ -140,9 +140,7 @@ public class TransformerPanelVisual extends JPanel {
     private void selectSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectSourceButtonActionPerformed
         String command = evt.getActionCommand();
         if ("BROWSE".equals(command)) {
-            JFileChooser chooser = new JFileChooser();
-            //FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
-            chooser.setCurrentDirectory(chooser.getCurrentDirectory());            
+            JFileChooser chooser = new JFileChooser();      
             chooser.setDialogTitle("Select source to transform");
             chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             String path = this.source.getText();
@@ -163,9 +161,7 @@ public class TransformerPanelVisual extends JPanel {
     private void selectTargetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectTargetButtonActionPerformed
         String command = evt.getActionCommand();
         if ("BROWSE".equals(command)) {
-            JFileChooser chooser = new JFileChooser();
-            //FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
-            chooser.setCurrentDirectory(chooser.getCurrentDirectory());            
+            JFileChooser chooser = new JFileChooser();       
             chooser.setDialogTitle("Select Folder to Transform");
             chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             String path = this.target.getText();

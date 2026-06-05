@@ -303,7 +303,7 @@ is as follows:
 <p>
 To create a setting object class compatible with the XMLProperties convertor
 the class has to contain the property change support
-(like java.beans.ProperyChangeSupport) to make possible to register <code>java.beans.PropertyChangeListener</code>, implement public default constructor
+(like java.beans.PropertyChangeSupport) to make possible to register <code>java.beans.PropertyChangeListener</code>, implement public default constructor
 (if the <code>settings.instanceCreate</code> attribute is not used). To collect
 data supposed to be persisted following methods have to be present:
 <pre>
@@ -423,7 +423,7 @@ to properly handle FooSetting object persisted in the properties format.
 </span>    <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">addPropertyChangeListener</span>(java.beans.<span class="type">PropertyChangeListener</span> <span class="variable-name">l</span>) {...}
     <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">removePropertyChangeListener</span>(java.beans.<span class="type">PropertyChangeListener</span> <span class="variable-name">l</span>) {...}
     <span class="comment">// getters/setters
-</span>    <span class="keyword">public</span> <span class="type">String</span> <span class="function-name">getPropery1</span>() {...}
+</span>    <span class="keyword">public</span> <span class="type">String</span> <span class="function-name">getProperty1</span>() {...}
     <span class="keyword">public</span> <span class="type">void</span> <span class="function-name">setProperty1</span>(<span class="type">Object</span> <span class="variable-name">property1</span>) {
         ...
         <span class="comment">// fire a property change event

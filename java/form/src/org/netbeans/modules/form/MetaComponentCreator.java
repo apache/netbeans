@@ -235,9 +235,8 @@ public class MetaComponentCreator {
             throw new Exception("Class not available"); // classloading failed, already reported to user // NOI18N
         }
 
-        // no preview component if this is a window, applet, or not visual
+        // no preview component if this is a window, or not visual
         if (java.awt.Window.class.isAssignableFrom(compClass)
-              || java.applet.Applet.class.isAssignableFrom(compClass)
               // JPopupMenu can't be used as a visual component (added to a container)
               || javax.swing.JPopupMenu.class.isAssignableFrom(compClass)
               || !FormUtils.isVisualizableClass(compClass)) {
@@ -612,7 +611,6 @@ public class MetaComponentCreator {
                 // visual component
                 if (targetComp != null
                         && (java.awt.Window.class.isAssignableFrom(beanClass)
-                            || java.applet.Applet.class.isAssignableFrom(beanClass)
                             || !java.awt.Component.class.isAssignableFrom(beanClass))) {
                     // visual component that cna't have a parent
                     if (defaultToOthers) {
@@ -941,8 +939,7 @@ public class MetaComponentCreator {
         }
 
 //        Class beanClass = newMetaComp.getBeanClass();
-        if (java.awt.Window.class.isAssignableFrom(compClass)
-                || java.applet.Applet.class.isAssignableFrom(compClass))
+        if (java.awt.Window.class.isAssignableFrom(compClass))
             targetComp = null;
 
         return addVisualComponent2(newMetaComp, targetComp, constraints, true);
@@ -1799,7 +1796,7 @@ public class MetaComponentCreator {
         else if (isContainer) {
             Dimension pref = comp.getPreferredSize();
             if (pref.width < 16 && pref.height < 12) {
-                if (comp instanceof Window || comp instanceof java.applet.Applet) {
+                if (comp instanceof Window) {
 
                     width = 400;
                     height = 300;

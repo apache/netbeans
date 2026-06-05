@@ -97,7 +97,7 @@ public abstract class TokenAcceptor {
     
     public static class Resolution extends NumberPostfixAcceptor {
 
-        private static final List<String> POSTFIXES = Arrays.asList(new String[]{"dpi", "dppx", "dpcm"}); //NOI18N
+        private static final List<String> POSTFIXES = Arrays.asList(new String[]{"dpi", "dppx", "dpcm", "x"}); //NOI18N
 
         public Resolution(String id) {
             super(id);

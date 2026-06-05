@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.dlight.terminal.action;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -28,13 +27,10 @@ import java.util.regex.Pattern;
 import org.netbeans.lib.terminalemulator.Term;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironmentFactory;
-import org.netbeans.modules.nativeexecution.api.util.HostInfoUtils;
+import org.netbeans.modules.nativeexecution.api.util.WindowsSupport;
 import org.netbeans.modules.terminal.spi.ui.ExternalCommandActionProvider;
 import org.netbeans.modules.terminal.support.OpenInEditorAction;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.filesystems.URLMapper;
-import org.openide.util.Exceptions;
+import org.openide.util.BaseUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -83,12 +79,14 @@ public class OpenInEditorActionProvider extends ExternalCommandActionProvider {
 
             Object key = lookup.lookup(Term.class).getClientProperty(Term.ExternalCommandsConstants.EXECUTION_ENV_PROPERTY_KEY);
             URL url = null;
+            boolean remoteShell = false;
             try {
 
                 if (key instanceof String) {
                     ExecutionEnvironment env = ExecutionEnvironmentFactory.fromUniqueID((String) key);
                     if (env.isRemote()) {
                         url = new URL("rfs://" + key + filePath); //NOI18N
+                        remoteShell = true;
                     }
 
                 }
@@ -99,6 +97,12 @@ public class OpenInEditorActionProvider extends ExternalCommandActionProvider {
             if (url != null) {
                 OpenInEditorAction.post(url, lineNumber);
             } else {
+                if (!remoteShell && BaseUtilities.isWindows()) {
+                    // NetBeans only supports shells running via cygwin/msys
+                    // the paths then need to be converted to basic windows
+                    // paths
+                    filePath = WindowsSupport.getInstance().convertToWindowsPath(filePath);
+                }
                 OpenInEditorAction.post(filePath, lineNumber);
             }
         }

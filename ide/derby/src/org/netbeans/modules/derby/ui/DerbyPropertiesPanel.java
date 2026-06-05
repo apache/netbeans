@@ -305,7 +305,6 @@ public class DerbyPropertiesPanel extends javax.swing.JPanel {
 
 private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(null);
         chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
         String location = getInstallLocation();
         if (location.length() > 0) {
@@ -326,7 +325,6 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
         JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(null);
         chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
         String derbySystemHome = getDerbySystemHome();
         if (derbySystemHome.length() > 0) {

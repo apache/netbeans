@@ -42,6 +42,7 @@ public class RustAddDependencyWizardPanel1 implements WizardDescriptor.Panel<Wiz
     private final DependencyType dependencyType;
     private final ChangeSupport changeSupport;
 
+    @SuppressWarnings({"this-escape"})
     public RustAddDependencyWizardPanel1(CargoTOML cargotoml, DependencyType dependencyType) {
         this.cargotoml = cargotoml;
         this.dependencyType = dependencyType;
@@ -78,6 +79,7 @@ public class RustAddDependencyWizardPanel1 implements WizardDescriptor.Panel<Wiz
 
     @Override
     public void readSettings(WizardDescriptor wiz) {
+        @SuppressWarnings("unchecked")
         List<RustPackage> packages = (List<RustPackage>) wiz.getProperty(PROP_PACKAGES);
         component.setPackages(packages);
     }

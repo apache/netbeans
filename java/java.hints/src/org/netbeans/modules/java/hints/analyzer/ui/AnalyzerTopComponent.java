@@ -30,12 +30,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressRunnable;
-import org.netbeans.api.progress.ProgressUtils;
 import org.netbeans.modules.java.hints.analyzer.Analyzer;
 import org.netbeans.modules.java.hints.spiimpl.options.HintsSettings;
 import org.netbeans.spi.editor.hints.ErrorDescription;
@@ -255,7 +254,7 @@ private void fixButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     applyingFixes = true;
 
     try {
-        ProgressUtils.showProgressDialogAndRun(new FixWorker(fixes), NbBundle.getMessage(AnalyzerTopComponent.class, "CAP_ApplyingFixes"), false);
+        BaseProgressUtils.showProgressDialogAndRun(new FixWorker(fixes), NbBundle.getMessage(AnalyzerTopComponent.class, "CAP_ApplyingFixes"), false);
     } finally {
         applyingFixes = false;
         stateChanged(null);

@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -39,10 +41,10 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import org.apache.maven.MavenExecutionException;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.dependency.tree.DependencyNode;
-import static org.netbeans.modules.maven.dependencies.Bundle.*;
 import org.netbeans.modules.maven.embedder.DependencyTreeFactory;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.netbeans.modules.maven.spi.IconResources;
@@ -50,6 +52,8 @@ import org.openide.NotificationLineSupport;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
+
+import static org.netbeans.modules.maven.dependencies.Bundle.*;
 
 /**
  *
@@ -92,7 +96,12 @@ public class ExcludeDependencyPanel extends javax.swing.JPanel {
 
         new RequestProcessor(ExcludeDependencyPanel.class.getName()).post(() -> {
             if (!isSingle) {
-                rootnode = DependencyTreeFactory.createDependencyTree(project, EmbedderFactory.getOnlineEmbedder(), Artifact.SCOPE_TEST);
+                try {
+                    rootnode = DependencyTreeFactory.createDependencyTree(project, EmbedderFactory.getOnlineEmbedder(), List.of(Artifact.SCOPE_TEST));
+                } catch (MavenExecutionException ex) {
+                    Logger.getLogger(ExcludeDependencyPanel.class.getName()).log(Level.WARNING, "Dependency tree scan failed", ex);
+                    rootnode = null;
+                }
             } else {
                 rootnode = root;
             }

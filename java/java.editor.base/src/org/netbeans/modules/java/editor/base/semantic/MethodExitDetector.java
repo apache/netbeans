@@ -66,8 +66,8 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
     public List<int[]> process(CompilationInfo info, Document document, TreePath methoddeclorblock, Collection<Tree> excs) {
         this.info = info;
         this.doc  = document;
-        this.highlights = new ArrayList<int[]>();
-        this.exceptions2HighlightsStack = new Stack<Map<TypeMirror, List<Tree>>>();
+        this.highlights = new ArrayList<>();
+        this.exceptions2HighlightsStack = new Stack<>();
         this.exceptions2HighlightsStack.push(null);
         
         try {
@@ -93,7 +93,7 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
             List<TypeMirror> exceptions = null;
             
             if (excs != null) {
-                exceptions = new ArrayList<TypeMirror>();
+                exceptions = new ArrayList<>();
                 
                 for (Tree t : excs) {
                     if (isCanceled())
@@ -162,7 +162,7 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
         Map<TypeMirror, List<Tree>> map = exceptions2HighlightsStack.peek();
         
         if (map == null) {
-            map = new HashMap<TypeMirror, List<Tree>>();
+            map = new HashMap<>();
             exceptions2HighlightsStack.pop();
             exceptions2HighlightsStack.push(map);
         }
@@ -170,7 +170,7 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
         List<Tree> l = map.get(key);
         
         if (l == null) {
-            map.put(key, l = new ArrayList<Tree>());
+            map.put(key, l = new ArrayList<>());
         }
         
         l.add(value);
@@ -250,7 +250,7 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
         Types t = info.getTypes();
         
         if (type1 != null) {
-            Set<TypeMirror> toRemove = new HashSet<TypeMirror>();
+            Set<TypeMirror> toRemove = new HashSet<>();
             Map<TypeMirror, List<Tree>> exceptions2Highlights = exceptions2HighlightsStack.peek();
             
             if (exceptions2Highlights != null) {

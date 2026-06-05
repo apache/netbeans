@@ -1083,7 +1083,7 @@ public final class OptionsExportModel {
      */
     private void copyFile(String relativePath, OutputStream out) throws IOException {
         try (InputStream in = getInputStream(relativePath)) {
-            FileUtil.copy(in, out);
+            in.transferTo(out);
         }
     }
 
@@ -1134,7 +1134,7 @@ public final class OptionsExportModel {
                 out.putNextEntry(new ZipEntry(relativePath));
                 // Transfer bytes from the file to the ZIP file
                 try (FileInputStream in = new FileInputStream(new File(sourceDir, relativePath))) {
-                    FileUtil.copy(in, out);
+                    in.transferTo(out);
                 }
                 // Complete the entry
                 out.closeEntry();

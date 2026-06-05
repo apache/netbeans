@@ -180,7 +180,7 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
     }
 
     public ProjectLibraryArea createArea() {
-        JFileChooser jfc = new JFileChooser();
+        JFileChooser jfc = new JFileChooser(); // XXX remember last-selected dir
         jfc.setApproveButtonText(NbBundle.getMessage(ProjectLibraryProvider.class, "ProjectLibraryProvider.open_or_create"));
         FileFilter filter = new FileFilter() {
             public boolean accept(File f) {
@@ -191,7 +191,6 @@ public class ProjectLibraryProvider implements ArealLibraryProvider<ProjectLibra
             }
         };
         jfc.setFileFilter(filter);
-        FileUtil.preventFileChooserSymlinkTraversal(jfc, null); // XXX remember last-selected dir
         while (jfc.showOpenDialog(Utilities.findDialogParent()) == JFileChooser.APPROVE_OPTION) {
             File f = jfc.getSelectedFile();
             if (filter.accept(f)) {

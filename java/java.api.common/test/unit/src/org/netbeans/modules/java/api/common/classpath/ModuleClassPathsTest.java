@@ -724,7 +724,7 @@ public class ModuleClassPathsTest extends NbTestCase {
                 final FileLock lck = res[0].lock();
                 try (OutputStream out = res[0].getOutputStream(lck);
                         InputStream in = new ByteArrayInputStream(module.toString().getBytes(FileEncodingQuery.getEncoding(res[0])))) {
-                    FileUtil.copy(in, out);
+                    in.transferTo(out);
                 } finally {
                     lck.releaseLock();
                 }
@@ -840,7 +840,7 @@ public class ModuleClassPathsTest extends NbTestCase {
                 path = f.getNameExt();
             }
             out.putNextEntry(new ZipEntry(path));
-            FileUtil.copy(f.getInputStream(), out);
+            f.getInputStream().transferTo(out);
             out.closeEntry();
         }
     }

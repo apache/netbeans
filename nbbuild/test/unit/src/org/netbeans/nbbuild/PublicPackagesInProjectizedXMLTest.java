@@ -19,11 +19,19 @@
 
 package org.netbeans.nbbuild;
 
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
+
 /** Check the behaviour of <public-packages> in project.xml modules.
  *
  * @author Jaroslav Tulach
  */
 public class PublicPackagesInProjectizedXMLTest extends TestBase {
+    
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+        
     public PublicPackagesInProjectizedXMLTest (String name) {
         super (name);
     }
@@ -43,9 +51,12 @@ public class PublicPackagesInProjectizedXMLTest extends TestBase {
             "</project>"
         );
         try {
-            execute ("GarbageUnderPackages.xml", new String[] { "-Dproject.file=" + f });
+            System.setProperty("project.file", f.getAbsolutePath());
+            buildRule.configureProject(getBuildFileInClassPath("GarbageUnderPackages.xml"));
+            buildRule.executeTarget("all");
+            
             fail ("This should fail as the public package definition contains comma");
-        } catch (ExecutionError ex) {
+        } catch (BuildException ex) {
             // ok, this should fail on exit code
         }
     }
@@ -65,9 +76,11 @@ public class PublicPackagesInProjectizedXMLTest extends TestBase {
             "</project>"
         );
         try {
-            execute ("GarbageUnderPackages.xml", new String[] { "-Dproject.file=" + f });
+            System.setProperty("project.file", f.getAbsolutePath());
+            buildRule.configureProject(getBuildFileInClassPath("GarbageUnderPackages.xml"));
+            buildRule.executeTarget("all");
             fail ("This should fail as the public package definition contains *");
-        } catch (ExecutionError ex) {
+        } catch (BuildException ex) {
             // ok, this should fail on exit code
         }
     }
@@ -87,9 +100,11 @@ public class PublicPackagesInProjectizedXMLTest extends TestBase {
             "</project>"
         );
         try {
-            execute ("GarbageUnderPackages.xml", new String[] { "-Dproject.file=" + f });
+            System.setProperty("project.file", f.getAbsolutePath());
+            buildRule.configureProject(getBuildFileInClassPath("GarbageUnderPackages.xml"));
+            buildRule.executeTarget("all");
             fail ("This should fail as the public package definition contains *");
-        } catch (ExecutionError ex) {
+        } catch (BuildException ex) {
             // ok, this should fail on exit code
         }
     }
@@ -108,7 +123,10 @@ public class PublicPackagesInProjectizedXMLTest extends TestBase {
             "   </data></configuration>" +
             "</project>"
         );
-        execute ("GarbageUnderPackages.xml", new String[] { "-Dproject.file=" + f, "-Dexpected.public.packages=org.hello.**" });
+        System.setProperty("project.file", f.getAbsolutePath());
+        System.setProperty("expected.public.packages", "org.hello.**");
+        buildRule.configureProject(getBuildFileInClassPath("GarbageUnderPackages.xml"));
+        buildRule.executeTarget("all");
     }
     
     /* DISABLED because of fix for #52135:
@@ -149,7 +167,11 @@ public class PublicPackagesInProjectizedXMLTest extends TestBase {
             "   </data></configuration>" +
             "</project>"
         );
-        execute ("GarbageUnderPackages.xml", new String[] { "-Djavadoc.pac=some",  "-Dproject.file=" + f, "withjavadoc" });
+        System.setProperty("project.file", f.getAbsolutePath());
+        System.setProperty("javadoc.pac", "some");
+        buildRule.configureProject(getBuildFileInClassPath("GarbageUnderPackages.xml"));
+        buildRule.executeTarget("withjavadoc");
+            
     }
     
 }

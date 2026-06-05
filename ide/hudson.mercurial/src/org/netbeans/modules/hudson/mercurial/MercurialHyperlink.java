@@ -39,7 +39,6 @@ import org.netbeans.api.diff.StreamSource;
 import org.netbeans.modules.hudson.ui.api.HudsonSCMHelper;
 import org.netbeans.modules.hudson.spi.HudsonJobChangeItem.HudsonJobChangeFile;
 import org.netbeans.modules.hudson.spi.HudsonJobChangeItem.HudsonJobChangeFile.EditType;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.windows.OutputEvent;
@@ -97,13 +96,10 @@ class MercurialHyperlink implements OutputListener {
             rev = null;
         } else {
             rev = after ? node : findParent(repo, node);
-            InputStream is = repo.resolve("raw-file/" + rev + "/" + file.getName()).toURL().openStream(); // NOI18N
-            try {
+            try (InputStream is = repo.resolve("raw-file/" + rev + "/" + file.getName()).toURL().openStream()) { // NOI18N
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                FileUtil.copy(is, baos);
+                is.transferTo(baos);
                 r = new StringReader(baos.toString());
-            } finally {
-                is.close();
             }
         }
         String mimeType = "text/plain"; // NOI18N // XXX use FileUtil.getMIMETypeExtensions

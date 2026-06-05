@@ -132,7 +132,7 @@ public interface ResourceService {
      * Provides a visual component (modal dialog) usable as a property
      * customizer that allows create a new locale file for default properties
      * file belonging to given source file. It writes the created locale as
-     * a string (locale suffix) to the given propery editor.
+     * a string (locale suffix) to the given property editor.
      * @param prEd a property editor where the component writes the created
      *        locale suffix
      * @param srcFile the source java file whose defining the resources scope

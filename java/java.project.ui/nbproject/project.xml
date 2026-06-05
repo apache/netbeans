@@ -71,14 +71,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.api.progress.nb</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>1.40</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.api.search</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -424,9 +416,6 @@
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.openide.nodes</code-name-base>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.openide.options</code-name-base>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.openide.text</code-name-base>

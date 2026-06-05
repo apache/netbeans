@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
 
     Licensed to the Apache Software Foundation (ASF) under one
@@ -28,7 +27,9 @@
             <folder name="xml">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.xml.schema.completion.Bundle"/>
                 <folder name="CompletionProviders">
-                    <file name="org-netbeans-modules-xml-schema-completion-SchemaBasedCompletionProvider.instance"/>
+                    <file name="org-netbeans-modules-xml-schema-completion-SchemaBasedCompletionProvider.instance">
+                        <attr name="position" intvalue="800"/>
+                    </file>
                 </folder>
             </folder>
         </folder>

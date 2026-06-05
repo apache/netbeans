@@ -225,7 +225,7 @@ public class JavaCustomIndexer extends CustomIndexer {
                             toDir.mkdirs();
                             File to = new File(toDir, name);
                             try (OutputStream os = new FileOutputStream(to); InputStream is = ch.getInputStream()) {
-                                FileUtil.copy(is, os);
+                                is.transferTo(os);
                             }
                         }
                     }

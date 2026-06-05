@@ -50,6 +50,7 @@ import javax.swing.UIManager;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.View;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.EditorStyleConstants;
 import org.netbeans.api.editor.settings.FontColorNames;
@@ -63,7 +64,7 @@ import org.openide.util.ImageUtilities;
 
 /**
  * Draws both line numbers and diff actions for a decorated editor pane.
- * 
+ *
  * @author Maros Sandor
  */
 class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionListener, MouseListener, PropertyChangeListener {
@@ -71,13 +72,13 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
     private static final int ACTIONS_BAR_WIDTH = 16;
     private static final int LINES_BORDER_WIDTH = 4;
     private static final Point POINT_ZERO = new Point(0, 0);
-    
+
     private final Icon insertIcon = ImageUtilities.loadIcon("org/netbeans/modules/diff/builtin/visualizer/editable/insert.png"); // NOI18N
     private final Icon removeIcon = ImageUtilities.loadIcon("org/netbeans/modules/diff/builtin/visualizer/editable/remove.png"); // NOI18N
 
     private final Icon insertActiveIcon = ImageUtilities.loadIcon("org/netbeans/modules/diff/builtin/visualizer/editable/insert_active.png"); // NOI18N
     private final Icon removeActiveIcon = ImageUtilities.loadIcon("org/netbeans/modules/diff/builtin/visualizer/editable/remove_active.png"); // NOI18N
-    
+
     private final DiffContentPanel master;
     private final boolean actionsEnabled;
     private final int actionIconsHeight;
@@ -85,18 +86,19 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
 
     private final String  lineNumberPadding = "        "; // NOI18N
 
-    private int     linesWidth;
-    private int     actionsWidth;
-    
+    private int           linesWidth;
+    private final int     actionsWidth;
+
     private Color   linesColor;
     private int     linesCount;
     private int     maxNumberCount;
 
     private Point   lastMousePosition = POINT_ZERO;
     private HotSpot lastHotSpot = null;
-    
-    private List<HotSpot> hotspots = new ArrayList<HotSpot>(0);
 
+    private List<HotSpot> hotspots = new ArrayList<>(0);
+
+    @SuppressWarnings("LeakingThisInConstructor")
     public LineNumbersActionsBar(DiffContentPanel master, boolean actionsEnabled) {
         this.master = master;
         this.actionsEnabled = actionsEnabled;
@@ -110,19 +112,22 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
         addMouseListener(this);
     }
 
+    @Override
     public void addNotify() {
         super.addNotify();
         initUI();
     }
 
+    @Override
     public void removeNotify() {
         super.removeNotify();
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         repaint();
     }
-    
+
     private Font getLinesFont() {
         String mimeType = DocumentUtilities.getMimeType(master.getEditorPane());
         FontColorSettings fcs = MimeLookup.getLookup(mimeType).lookup(FontColorSettings.class);
@@ -133,13 +138,13 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
         }
         return font;
     }
-    
+
     private void initUI() {
         String mimeType = DocumentUtilities.getMimeType(master.getEditorPane());
         FontColorSettings fcs = MimeLookup.getLookup(mimeType).lookup(FontColorSettings.class);
         AttributeSet attrs = fcs.getFontColors(FontColorNames.LINE_NUMBER_COLORING);
         AttributeSet defAttrs = fcs.getFontColors(FontColorNames.DEFAULT_COLORING);
-        
+
         linesColor = (Color) attrs.getAttribute(StyleConstants.Foreground);
         if (linesColor == null) {
             linesColor = (Color) defAttrs.getAttribute(StyleConstants.Foreground);
@@ -149,7 +154,7 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
             bg = (Color) defAttrs.getAttribute(StyleConstants.Background);
         }
         setBackground(bg);
-        
+
         updateStateOnDocumentChange();
     }
 
@@ -161,25 +166,28 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
         }
         return null;
     }
-    
+
+    @Override
     public String getToolTipText(MouseEvent event) {
         Point p = event.getPoint();
         HotSpot spot = getHotspotAt(p);
         if (spot == null) return null;
         Difference diff = spot.getDiff();
-        if (diff.getType() == Difference.ADD) {
-            return NbBundle.getMessage(LineNumbersActionsBar.class, "TT_DiffPanel_Remove"); // NOI18N
-        } else if (diff.getType() == Difference.CHANGE) {
-            return NbBundle.getMessage(LineNumbersActionsBar.class, "TT_DiffPanel_Replace"); // NOI18N
-        } else {
-            return NbBundle.getMessage(LineNumbersActionsBar.class, "TT_DiffPanel_Insert"); // NOI18N
-        }
+        return switch (diff.getType()) {
+            case Difference.ADD ->
+                NbBundle.getMessage(LineNumbersActionsBar.class, "TT_DiffPanel_Remove"); // NOI18N
+            case Difference.CHANGE ->
+                NbBundle.getMessage(LineNumbersActionsBar.class, "TT_DiffPanel_Replace"); // NOI18N
+            default ->
+                NbBundle.getMessage(LineNumbersActionsBar.class, "TT_DiffPanel_Insert"); // NOI18N
+        };
     }
 
     private void performAction(HotSpot spot) {
         master.getMaster().rollback(spot.getDiff());
     }
-    
+
+    @Override
     public void mouseClicked(MouseEvent e) {
         if (!e.isPopupTrigger()) {
             HotSpot spot = getHotspotAt(e.getPoint());
@@ -189,18 +197,22 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
         }
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         // not interested
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
         // not interested
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
         // not interested
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
         lastMousePosition = POINT_ZERO;
         if (lastHotSpot != null) {
@@ -208,7 +220,8 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
         }
         lastHotSpot = null;
     }
-    
+
+    @Override
     public void mouseMoved(MouseEvent e) {
         Point p = e.getPoint();
         lastMousePosition = p;
@@ -219,31 +232,32 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
         lastHotSpot = spot;
         setCursor(spot != null ? Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) : Cursor.getDefaultCursor());
     }
-    
+
+    @Override
     public void mouseDragged(MouseEvent e) {
         // not interested
     }
 
     void onUISettingsChanged() {
-        initUI();        
+        initUI();
         updateStateOnDocumentChange();
         repaint();
     }
-    
+
     private void updateStateOnDocumentChange() {
         assert SwingUtilities.isEventDispatchThread();
         StyledDocument doc = (StyledDocument) master.getEditorPane().getDocument();
         int lastOffset = doc.getEndPosition().getOffset();
-        linesCount = org.openide.text.NbDocument.findLineNumber(doc, lastOffset);            
+        linesCount = org.openide.text.NbDocument.findLineNumber(doc, lastOffset);
 
-        Graphics g = getGraphics(); 
+        Graphics g = getGraphics();
         if (g != null) checkLinesWidth(g);
         maxNumberCount = getNumberCount(linesCount);
         revalidate();
     }
-    
+
     private int oldLinesWidth;
-    
+
     private boolean checkLinesWidth(Graphics g) {
         FontMetrics fm = g.getFontMetrics(getLinesFont());
         Rectangle2D rect = fm.getStringBounds(Integer.toString(linesCount), g);
@@ -256,34 +270,41 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
         }
         return false;
     }
-    
-    private int getNumberCount(int n) {
+
+    @SuppressWarnings({"AssignmentToMethodParameter", "empty-statement"})
+    private static int getNumberCount(int n) {
         int nc = 0;
         for (; n > 0; n /= 10, nc++);
         return nc;
     }
 
+    @Override
     public Dimension getPreferredScrollableViewportSize() {
         Dimension dim = master.getEditorPane().getPreferredScrollableViewportSize();
         return new Dimension(getBarWidth(), dim.height);
     }
 
+    @Override
     public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
         return master.getEditorPane().getScrollableUnitIncrement(visibleRect, orientation, direction);//123
     }
 
+    @Override
     public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
         return master.getEditorPane().getScrollableBlockIncrement(visibleRect, orientation, direction);
     }
 
+    @Override
     public boolean getScrollableTracksViewportWidth() {
         return true;
     }
 
+    @Override
     public boolean getScrollableTracksViewportHeight() {
         return false;
     }
-    
+
+    @Override
     public Dimension getPreferredSize() {
         return new Dimension(getBarWidth(), Integer.MAX_VALUE >> 2);
     }
@@ -297,23 +318,24 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
         repaint();
     }
 
+    @Override
     protected void paintComponent(Graphics gr) {
         final Graphics2D g = (Graphics2D) gr;
         final Rectangle clip = g.getClipBounds();
         Stroke cs = g.getStroke();
 
         if (checkLinesWidth(gr)) return;
-        
+
         String mimeType = DocumentUtilities.getMimeType(master.getEditorPane());
         FontColorSettings fcs = MimeLookup.getLookup(mimeType).lookup(FontColorSettings.class);
         Map renderingHints = (Map) fcs.getFontColors(FontColorNames.DEFAULT_COLORING).getAttribute(EditorStyleConstants.RenderingHints);
         if (!renderingHints.isEmpty()) {
             g.addRenderingHints(renderingHints);
         }
-        
+
         EditorUI editorUI = org.netbeans.editor.Utilities.getEditorUI(master.getEditorPane());
         final int lineHeight = editorUI.getLineHeight();
-        
+
         g.setColor(getBackground());
         g.fillRect(clip.x, clip.y, clip.width, clip.height);
 
@@ -327,16 +349,16 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
         int offset = linesWidth;
 
         int currentDifference = master.getMaster().getCurrentDifference();
-        List<HotSpot> newActionIcons = new ArrayList<HotSpot>();
+        List<HotSpot> newActionIcons = new ArrayList<>();
         int idx = 0;
         for (DiffViewManager.DecoratedDifference dd : diffs) {
             int bottom = master.isFirst() ? dd.getBottomLeft() : dd.getBottomRight();
             int top = master.isFirst() ? dd.getTopLeft() : dd.getTopRight();
             g.setColor(master.getMaster().getColorLines());
             g.setStroke(currentDifference == idx ? master.getMaster().getBoldStroke() : cs);
-            g.drawLine(0, top, clip.width, top);
+            g.drawLine(0, top, getBarWidth(), top);
             if (bottom != -1) {
-                g.drawLine(0, bottom, clip.width, bottom);
+                g.drawLine(0, bottom, getBarWidth(), bottom);
             }
             if (actionsEnabled && dd.canRollback()) {
                 if (master.isFirst() && dd.getDiff().getType() != Difference.ADD
@@ -355,60 +377,57 @@ class LineNumbersActionsBar extends JPanel implements Scrollable, MouseMotionLis
             idx++;
         }
         hotspots = newActionIcons;
-        
+
         final int linesXOffset = (master.isFirst() ? actionsWidth : 0) + LINES_BORDER_WIDTH;
-        
-        g.setFont(getLinesFont()); 
+
+        g.setFont(getLinesFont());
         g.setColor(linesColor);
-        
-        Utilities.runViewHierarchyTransaction(master.getEditorPane(), true, new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    View rootView = Utilities.getDocumentView(master.getEditorPane());
-                    if(rootView == null) { // this might happen
-                        return;
-                    }
-                    int lineNumber = Utilities.getLineOffset((BaseDocument) master.getEditorPane().getDocument(), master.getEditorPane().viewToModel(new Point(clip.x, clip.y)));
-                    if (lineNumber > 0) {
-                        --lineNumber;
-                    }
-                    View view = rootView.getView(lineNumber);
-                    if(view == null) { // this might happen
-                        return;
-                    }
-                    Rectangle rec = master.getEditorPane().modelToView(view.getStartOffset());
-                    if (rec == null) {
-                        return;
-                    }
-                    int yOffset;
-                    int localLineHeight = rec.height;
-                    int linesDrawn = clip.height / localLineHeight + 4;  // draw past clipping rectangle to avoid partially drawn numbers
-                    int docLines = Utilities.getRowCount((BaseDocument) master.getEditorPane().getDocument());
-                    if (lineNumber + linesDrawn > docLines) {
-                        linesDrawn = docLines - lineNumber;
-                    }
-                    for (int i = 0; i < linesDrawn; i++) {
-                        view = rootView.getView(lineNumber);
-                        if (view == null) {
-                            break;
-                        }
-                        Rectangle rec1 = master.getEditorPane().modelToView(view.getStartOffset());
-                        Rectangle rec2 = master.getEditorPane().modelToView(view.getEndOffset() - 1);
-                        if (rec1 == null || rec2 == null) {
-                            break;
-                        }
-                        yOffset = rec1.y + rec1.height - rec1.height / 4;
-                        localLineHeight = (int) (rec2.getY() + rec2.getHeight() - rec1.getY());
-                        g.drawString(formatLineNumber(++lineNumber), linesXOffset, yOffset);
-                    }
-                } catch (BadLocationException ex) {
-                    //
+
+        Utilities.runViewHierarchyTransaction(master.getEditorPane(), true, () -> {
+            try {
+                View rootView = Utilities.getDocumentView(master.getEditorPane());
+                if(rootView == null) { // this might happen
+                    return;
                 }
+                int lineNumber = LineDocumentUtils.getLineIndex((BaseDocument) master.getEditorPane().getDocument(), master.getEditorPane().viewToModel(new Point(clip.x, clip.y)));
+                if (lineNumber > 0) {
+                    --lineNumber;
+                }
+                View view = rootView.getView(lineNumber);
+                if(view == null) { // this might happen
+                    return;
+                }
+                Rectangle rec = master.getEditorPane().modelToView(view.getStartOffset());
+                if (rec == null) {
+                    return;
+                }
+                int yOffset;
+                int localLineHeight = rec.height;
+                int linesDrawn = clip.height / localLineHeight + 4;  // draw past clipping rectangle to avoid partially drawn numbers
+                int docLines = LineDocumentUtils.getLineCount((BaseDocument) master.getEditorPane().getDocument());
+                if (lineNumber + linesDrawn > docLines) {
+                    linesDrawn = docLines - lineNumber;
+                }
+                for (int i = 0; i < linesDrawn; i++) {
+                    view = rootView.getView(lineNumber);
+                    if (view == null) {
+                        break;
+                    }
+                    Rectangle rec1 = master.getEditorPane().modelToView(view.getStartOffset());
+                    Rectangle rec2 = master.getEditorPane().modelToView(view.getEndOffset() - 1);
+                    if (rec1 == null || rec2 == null) {
+                        break;
+                    }
+                    yOffset = rec1.y + rec1.height - rec1.height / 4;
+                    lineNumber++;
+                    g.drawString(formatLineNumber(lineNumber), linesXOffset, yOffset);
+                }
+            } catch (BadLocationException ex) {
+                //
             }
         });
     }
-    
+
     private String formatLineNumber(int lineNumber) {
         String strNumber = Integer.toString(lineNumber);
         int nc = getNumberCount(lineNumber);

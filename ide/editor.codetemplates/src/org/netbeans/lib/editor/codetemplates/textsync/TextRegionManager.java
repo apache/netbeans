@@ -46,6 +46,7 @@ import javax.swing.text.Position;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.TextAction;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.AttributesUtilities;
@@ -1342,12 +1343,12 @@ public final class TextRegionManager {
 
                     int startOffset = masterRegion.startOffset();
                     int endOffset = masterRegion.endOffset();
-                    int startLine = Utilities.getLineOffset((BaseDocument) doc, startOffset);
-                    int endLine = Utilities.getLineOffset((BaseDocument) doc, endOffset);
+                    int startLine = LineDocumentUtils.getLineIndex((BaseDocument) doc, startOffset);
+                    int endLine = LineDocumentUtils.getLineIndex((BaseDocument) doc, endOffset);
 
                     for (int i = startLine; i <= endLine; i++) {
-                        int s = Math.max(Utilities.getRowStartFromLineOffset((BaseDocument) doc, i), startOffset);
-                        int e = Math.min(Utilities.getRowEnd((BaseDocument) doc, s), endOffset);
+                        int s = Math.max(LineDocumentUtils.getLineStartFromIndex((BaseDocument) doc, i), startOffset);
+                        int e = Math.min(LineDocumentUtils.getLineEndOffset((BaseDocument) doc, s), endOffset);
                         int size = e - s;
 
                         if (size == 1) {

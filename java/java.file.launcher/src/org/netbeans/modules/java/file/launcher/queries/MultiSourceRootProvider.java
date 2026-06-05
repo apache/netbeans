@@ -230,6 +230,18 @@ public class MultiSourceRootProvider implements ClassPathProvider {
         return getSourceRoot(file) != null;
     }
 
+    public boolean isRegisteredSourceLauncher(FileObject file) {
+        FileObject root = getSourceRoot(file);
+
+        if (root == null) {
+            return false;
+        }
+
+        synchronized (registeredRoots) {
+            return registeredRoots.contains(root);
+        }
+    }
+
     private ClassPath getBootPath(FileObject file) {
         if (isSourceLauncher(file)) {
             return JavaPlatformManager.getDefault()

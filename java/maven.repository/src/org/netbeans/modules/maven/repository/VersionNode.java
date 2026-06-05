@@ -34,8 +34,7 @@ import javax.swing.Action;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.AbstractArtifactResolutionException;
-import org.netbeans.api.annotations.common.StaticResource;
-import org.netbeans.api.progress.aggregate.AggregateProgressFactory;
+import org.netbeans.api.progress.aggregate.BasicAggregateProgressFactory;
 import org.netbeans.api.progress.aggregate.AggregateProgressHandle;
 import org.netbeans.api.progress.aggregate.ProgressContributor;
 import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
@@ -265,8 +264,8 @@ public class VersionNode extends AbstractNode {
             RP.post(new Runnable() {
                 public @Override void run() {
                     MavenEmbedder online = EmbedderFactory.getOnlineEmbedder();
-                    AggregateProgressHandle hndl = AggregateProgressFactory.createHandle(DownloadAction_downloading(art.getId()),
-                            new ProgressContributor[] {AggregateProgressFactory.createProgressContributor("")},
+                    AggregateProgressHandle hndl = BasicAggregateProgressFactory.createHandle(DownloadAction_downloading(art.getId()),
+                            new ProgressContributor[] {BasicAggregateProgressFactory.createProgressContributor("")},
                             ProgressTransferListener.cancellable(), null);
                     ProgressTransferListener.setAggregateHandle(hndl);
                     try {

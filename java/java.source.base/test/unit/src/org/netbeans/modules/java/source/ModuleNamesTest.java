@@ -627,10 +627,7 @@ public class ModuleNamesTest extends NbTestCase {
                         null;
                 if (fo != null) {
                     try (InputStream in = fo.openInputStream()) {
-                        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-                        FileUtil.copy(in, out);
-                        out.close();
-                        return out.toByteArray();
+                        return in.readAllBytes();
                     }
                 } else {
                     return null;

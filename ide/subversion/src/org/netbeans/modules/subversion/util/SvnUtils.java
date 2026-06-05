@@ -1008,7 +1008,7 @@ public class SvnUtils {
             }
             os = fo.getOutputStream();
             is = FileUtil.toFileObject(oldFile).getInputStream();
-            FileUtil.copy(is, os);
+            is.transferTo(os);
         } catch (IOException e) {
             if (refersToDirectory(e)) {
                 Subversion.LOG.log(Level.FINE, null, e);

@@ -54,7 +54,7 @@ import org.openide.util.BaseUtilities;
  */
 public class FileObj extends BaseFileObj {
     static final long serialVersionUID = -1133540210876356809L;
-    private static final MutualExclusionSupport<FileObj> MUT_EXCL_SUPPORT = new MutualExclusionSupport<FileObj>();
+    private static final MutualExclusionSupport<FileObj> MUT_EXCL_SUPPORT = new MutualExclusionSupport<>();
     private long lastModified = -1;
     private boolean realLastModifiedCached;
     private static final Logger LOGGER = Logger.getLogger(FileObj.class.getName());
@@ -70,6 +70,7 @@ public class FileObj extends BaseFileObj {
         return p == null ? true : p.noFolderListeners();
     }
 
+    @Override
     public OutputStream getOutputStream(final FileLock lock) throws IOException {
         ProvidedExtensions extensions = getProvidedExtensions();
         File file = getFileName().getFile();
@@ -224,7 +225,7 @@ public class FileObj extends BaseFileObj {
                 closeableReference.close();    
             }
             
-            FileNotFoundException fex = null;                        
+            FileNotFoundException fex;                        
             if (!FileChangedManager.getInstance().exists(f)) {
                 fex = (FileNotFoundException)new FileNotFoundException(e.getLocalizedMessage()).initCause(e);
             } else if (!f.canRead()) {
@@ -281,19 +282,23 @@ public class FileObj extends BaseFileObj {
     }
     
     
+    @Override
     public final FileObject createFolder(final String name) throws IOException {
         throw new IOException(getPath());//isn't directory - cannot create neither file nor folder
     }
 
+    @Override
     public final FileObject createData(final String name, final String ext) throws IOException {
         throw new IOException(getPath());//isn't directory - cannot create neither file nor folder
     }
 
 
+    @Override
     public final FileObject[] getChildren() {
         return new FileObject[]{};//isn't directory - no children
     }
 
+    @Override
     public final FileObject getFileObject(final String name, final String ext) {
         return null;
     }
@@ -306,6 +311,7 @@ public class FileObj extends BaseFileObj {
         return retval && super.isValid();
     }
 
+    @Override
     protected void setValid(boolean valid) {
         if (LOGGER.isLoggable(Level.FINEST)) {
             LOGGER.log(Level.FINEST, "setValid: " + valid + " (" + this + ")", new Exception("Stack trace"));  //NOI18N
@@ -319,6 +325,7 @@ public class FileObj extends BaseFileObj {
         }        
     }
 
+    @Override
     public final boolean isFolder() {
         return false;
     }
@@ -414,6 +421,7 @@ public class FileObj extends BaseFileObj {
         return l != null && l.isValid();
     }
 
+    @Override
     final boolean checkLock(final FileLock lock) throws IOException {
         final File f = getFileName().getFile();
         return ((lock instanceof LockForFile) && Utils.equals(((LockForFile) lock).getFile(), f));
@@ -461,18 +469,12 @@ public class FileObj extends BaseFileObj {
                 if (lastMod == 0) {
                     lastMod = 1;
                 }
-            } catch (UnsupportedOperationException ex) {
+            } catch (UnsupportedOperationException | SecurityException ex) {
                 if (file.exists()) {
                     lastMod = 1;
                 }
-            } catch (SecurityException ex) {
-                if (file.exists()) {
-                    lastMod = 1;
-                }
-            } catch (IOException ex) {
+            } catch (IOException | InvalidPathException ex) {
                 // lastMod stays 0, the file is invalid.
-            } catch (InvalidPathException ex) {
-                // lastMod stays 0, the path is invalid.
             }
         }
         setLastModified(lastMod, file, readOnly);

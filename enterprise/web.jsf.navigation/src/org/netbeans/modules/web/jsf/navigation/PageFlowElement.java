@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -138,7 +138,7 @@ public class PageFlowElement extends CloneableEditor implements MultiViewElement
         final FileObject storageFile = PageFlowView.getStorageFile(context.getFacesConfigFile());
 
         if (storageFile != null && storageFile.isValid()) {
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
                 @Override
                 public void run() {
                     long time = System.currentTimeMillis();

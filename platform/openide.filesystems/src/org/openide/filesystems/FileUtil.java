@@ -90,7 +90,7 @@ public final class FileUtil extends Object {
     /** transient attributes which should not be copied
     * of type Set<String>
     */
-    static final Set<String> transientAttributes = new HashSet<String>();
+    static final Set<String> transientAttributes = new HashSet<>();
 
     static {
         transientAttributes.add("templateWizardURL"); // NOI18N
@@ -519,24 +519,14 @@ public final class FileUtil extends Object {
     
     /** Copies stream of files.
     * <P>
-    * Please be aware, that this method doesn't close any of passed streams.
+    * Calls {@link InputStream#transferTo(java.io.OutputStream)} which should be now preferred.
     * @param is input stream
     * @param os output stream
+    * @deprecated use {@link InputStream#transferTo(java.io.OutputStream)}
     */
-    public static void copy(InputStream is, OutputStream os)
-    throws IOException {
-        final byte[] BUFFER = new byte[65536];
-        int len;
-
-        for (;;) {
-            len = is.read(BUFFER);
-
-            if (len == -1) {
-                return;
-            }
-
-            os.write(BUFFER, 0, len);
-        }
+    @Deprecated
+    public static void copy(InputStream is, OutputStream os) throws IOException {
+        is.transferTo(os);
     }
 
     /** Copies file to the selected folder.
@@ -555,32 +545,24 @@ public final class FileUtil extends Object {
         FileObject dest = destFolder.createData(newName, newExt);
 
         FileLock lock = null;
-        InputStream bufIn = null;
-        OutputStream bufOut = null;
 
         try {
             lock = dest.lock();
-            bufIn = source.getInputStream();
-
-            if (dest instanceof AbstractFileObject) {
-                /** prevents from firing fileChange*/
-                bufOut = ((AbstractFileObject) dest).getOutputStream(lock, false);
-            } else {
-                bufOut = dest.getOutputStream(lock);
+            try (InputStream bufIn = source.getInputStream()) {
+                OutputStream bufOut;
+                if (dest instanceof AbstractFileObject afo) {
+                    /** prevents from firing fileChange*/
+                    bufOut = afo.getOutputStream(lock, false);
+                } else {
+                    bufOut = dest.getOutputStream(lock);
+                }
+                try (bufOut) {
+                    bufIn.transferTo(bufOut);
+                }
             }
-
-            copy(bufIn, bufOut);
             copyPosixPerms(source, dest);
             copyAttributes(source, dest);
         } finally {
-            if (bufIn != null) {
-                bufIn.close();
-            }
-
-            if (bufOut != null) {
-                bufOut.close();
-            }
-
             if (lock != null) {
                 lock.releaseLock();
             }
@@ -1122,12 +1104,8 @@ public final class FileUtil extends Object {
                 FileLock lock = fd.lock();
 
                 try {
-                    OutputStream os = fd.getOutputStream(lock);
-
-                    try {
-                        copy(jis, os);
-                    } finally {
-                        os.close();
+                    try (OutputStream os = fd.getOutputStream(lock)) {
+                        jis.transferTo(os);
                     }
                 } finally {
                     lock.releaseLock();
@@ -2138,7 +2116,7 @@ public final class FileUtil extends Object {
      * @since org.openide/1 4.42
      * @deprecated Just use {@link javax.swing.JFileChooser#setCurrentDirectory}. JDK 6 does not have this bug.
      */
-    @Deprecated
+    @Deprecated(forRemoval = true)
     public static void preventFileChooserSymlinkTraversal(javax.swing.JFileChooser chooser, File currentDirectory) {
         chooser.setCurrentDirectory(currentDirectory);
     }

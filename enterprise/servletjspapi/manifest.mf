@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 OpenIDE-Module: org.netbeans.modules.servletjspapi/1
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/servletjspapi/Bundle.properties
-OpenIDE-Module-Implementation-Version: 25
+OpenIDE-Module-Implementation-Version: 26
 

@@ -18,30 +18,56 @@
  */
 package org.netbeans.modules.favorites;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.prefs.Preferences;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.netbeans.modules.favorites.api.Favorites;
 import org.netbeans.swing.plaf.LFCustoms;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObject;
+import org.openide.util.NbBundle;
+import org.openide.util.NbPreferences;
 import org.openide.windows.OnShowing;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  * For lifecycle tasks.
+ *
  * @author mbien
  */
 public final class Module {
+
+    private static final String INITIAL_OPEN_DONE_KEY = "initial-open-done"; //NOI18N
+    private static final String INITIAL_OPEN_BRANDING_KEY = "Favorites.openOnFirstFile"; //NOI18N
 
     private Module() {}
 
     @OnShowing
     public final static class EDTInit implements Runnable {
+
+        private final boolean openOnFirstFile;
+
+        public EDTInit() {
+            openOnFirstFile = Boolean.parseBoolean(
+                    NbBundle.getMessage(Module.class, INITIAL_OPEN_BRANDING_KEY));
+        }
+
         @Override
         public void run() {
+            registerFavAppenderFunction();
+            attachFirstEditorOpenListener();
+        }
+
+        private void registerFavAppenderFunction() {
             Function<File[], File[]> favAppender = (files) -> {
                 if (!UIManager.getBoolean(LFCustoms.FILECHOOSER_FAVORITES_ENABLED)) {
                     return files;
@@ -53,10 +79,49 @@ public final class Module {
                         shortcuts.add(file);
                     }
                 }
-                return shortcuts.toArray(new File[0]);
+                return shortcuts.toArray(File[]::new);
             };
             UIManager.put(LFCustoms.FILECHOOSER_SHORTCUTS_FILESFUNCTION, favAppender);
         }
+
+        // very first file editor opened will also open the Favorites tab
+        private void attachFirstEditorOpenListener() {
+            if (!openOnFirstFile) {
+                return;
+            }
+            Preferences prefs = NbPreferences.forModule(Module.class);
+            if (prefs.getBoolean(INITIAL_OPEN_DONE_KEY, false)) {
+                return;
+            }
+            TopComponent.Registry registry = TopComponent.getRegistry();
+            registry.addPropertyChangeListener(new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (TopComponent.Registry.PROP_TC_OPENED.equals(evt.getPropertyName())
+                            && evt.getNewValue() instanceof TopComponent tc
+                            && hasFileReference(tc)
+                            && WindowManager.getDefault().isEditorTopComponent(tc)) {
+                        try {
+                            Tab favTab = Tab.findDefault();
+                            if (favTab != null && !favTab.wasOpened() && !favTab.isOpened()) {
+                                favTab.open();
+                            }
+                        } finally {
+                            prefs.putBoolean(INITIAL_OPEN_DONE_KEY, true);
+                            PropertyChangeListener thisListener = this;
+                            SwingUtilities.invokeLater(() -> {
+                                registry.removePropertyChangeListener(thisListener);
+                            });
+                        }
+                    }
+
+                }
+            });
+        }
+
+        private boolean hasFileReference(TopComponent tc) {
+            return tc.getLookup().lookup(DataObject.class) != null;
+        }
     }
-    
+
 }

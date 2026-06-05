@@ -23,8 +23,11 @@ package org.netbeans.modules.maven.execute.model;
  //- Imported classes and packages -/
 //---------------------------------/
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Class NetbeansActionMapping.
@@ -56,12 +59,12 @@ public class NetbeansActionMapping implements java.io.Serializable {
     /**
      * Field packagings.
      */
-    private java.util.List<String> packagings;
+    private List<String> packagings;
 
     /**
      * Field goals.
      */
-    private java.util.List<String> goals;
+    private List<String> goals;
 
     /**
      * Field properties.
@@ -76,7 +79,7 @@ public class NetbeansActionMapping implements java.io.Serializable {
     /**
      * Field activatedProfiles.
      */
-    private java.util.List<String> activatedProfiles;
+    private List<String> activatedProfiles;
 
     private String basedir;
 
@@ -184,7 +187,7 @@ public class NetbeansActionMapping implements java.io.Serializable {
     {
         if ( this.activatedProfiles == null )
         {
-            this.activatedProfiles = new java.util.ArrayList<String>();
+            this.activatedProfiles = new ArrayList<>();
         }
         
         return this.activatedProfiles;
@@ -209,7 +212,7 @@ public class NetbeansActionMapping implements java.io.Serializable {
     {
         if ( this.goals == null )
         {
-            this.goals = new java.util.ArrayList<String>();
+            this.goals = new ArrayList<>();
         }
         
         return this.goals;
@@ -224,7 +227,7 @@ public class NetbeansActionMapping implements java.io.Serializable {
     {
         if ( this.packagings == null )
         {
-            this.packagings = new java.util.ArrayList<String>();
+            this.packagings = new ArrayList<>();
         }
         
         return this.packagings;
@@ -234,7 +237,7 @@ public class NetbeansActionMapping implements java.io.Serializable {
     {
         if ( this.properties == null )
         {
-            this.properties = new LinkedHashMap<String,String>();
+            this.properties = new LinkedHashMap<>();
         }
         
         return this.properties;
@@ -244,7 +247,7 @@ public class NetbeansActionMapping implements java.io.Serializable {
     {
         if ( this.options == null )
         {
-            this.options = new LinkedHashMap<String,String>();
+            this.options = new LinkedHashMap<>();
         }
         
         return this.options;
@@ -391,4 +394,71 @@ public class NetbeansActionMapping implements java.io.Serializable {
     {
         return modelEncoding;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+            actionName,
+            displayName,
+            recursive,
+            packagings,
+            goals,
+            properties,
+            options,
+            activatedProfiles,
+            basedir,
+            preAction,
+            reactor,
+            modelEncoding
+        );
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final NetbeansActionMapping other = (NetbeansActionMapping) obj;
+        if (this.recursive != other.recursive) {
+            return false;
+        }
+        if (!Objects.equals(this.actionName, other.actionName)) {
+            return false;
+        }
+        if (!Objects.equals(this.displayName, other.displayName)) {
+            return false;
+        }
+        if (!Objects.equals(this.basedir, other.basedir)) {
+            return false;
+        }
+        if (!Objects.equals(this.preAction, other.preAction)) {
+            return false;
+        }
+        if (!Objects.equals(this.reactor, other.reactor)) {
+            return false;
+        }
+        if (!Objects.equals(this.modelEncoding, other.modelEncoding)) {
+            return false;
+        }
+        if (!Objects.equals(this.packagings, other.packagings)) {
+            return false;
+        }
+        if (!Objects.equals(this.goals, other.goals)) {
+            return false;
+        }
+        if (!Objects.equals(this.properties, other.properties)) {
+            return false;
+        }
+        if (!Objects.equals(this.options, other.options)) {
+            return false;
+        }
+        return Objects.equals(this.activatedProfiles, other.activatedProfiles);
+    }
+    
 }

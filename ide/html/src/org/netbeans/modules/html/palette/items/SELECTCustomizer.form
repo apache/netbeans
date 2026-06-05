@@ -205,7 +205,7 @@
           <Connection code="new JSpinner.NumberEditor(jSpinner1, &quot;#&quot;)" type="code"/>
         </Property>
         <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new Integer(select.getOptions())" type="code"/>
+          <Connection code="Integer.valueOf(select.getOptions())" type="code"/>
         </Property>
       </Properties>
       <AccessibilityProperties>
@@ -251,7 +251,7 @@
           <Connection code="new JSpinner.NumberEditor(jSpinner2, &quot;#&quot;)" type="code"/>
         </Property>
         <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="new Integer(select.getOptionsVisible())" type="code"/>
+          <Connection code="Integer.valueOf(select.getOptionsVisible())" type="code"/>
         </Property>
       </Properties>
       <AccessibilityProperties>

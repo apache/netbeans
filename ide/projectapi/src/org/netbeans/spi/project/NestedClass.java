@@ -46,11 +46,16 @@ public final class NestedClass {
      * Creates a new instance holding the specified identification
      * of a nested class.
      *
-     * @param className name of a class inside the file
-     * @param topLevelClassName top level name of a class inside the file
+     * @param className name of a class inside the file. Can be an empty string
+     * if this NestedClass represents a top level element in the source file.
+     * This is relevant for Java, which allows multiple top level class
+     * declarations as long as they are not public. The class assumes, that the
+     * {@code className} follows java convention (i.e. is separated by dots).
+     * @param topLevelClassName top level name of a class inside the file.  This
+     * is the simple name without package qualification.
      * @param file file to be kept in the object
      * @exception  java.lang.IllegalArgumentException
-     *             if the file or class name is {@code null}
+     *             if the file, topLevelClassName or class name is {@code null}
      * @since 1.99
      */
     public NestedClass(String className, String topLevelClassName, FileObject file) {
@@ -90,7 +95,8 @@ public final class NestedClass {
     }
     
     /**
-     * Returns name of a top level class within a file.
+     * Returns name of a top level class within a file. This is the simple name
+     * without package qualification.
      *
      * @return top level class name held by this object
      * @since 1.99
@@ -108,9 +114,19 @@ public final class NestedClass {
      * @since 1.99
      */
     public String getFQN(String packageName) {
-        return String.join(".", packageName, topLevelClassName, className);
+        String classNameSuffix;
+        if (className.isBlank()) {
+            classNameSuffix = topLevelClassName;
+        } else {
+            classNameSuffix = topLevelClassName + "." + className;
+        }
+        if (packageName.isBlank()) {
+            return classNameSuffix;
+        } else {
+            return String.join(".", packageName, classNameSuffix);
+        }
     }
-    
+
     /**
      * Returns fully qualified name.
      *
@@ -121,9 +137,19 @@ public final class NestedClass {
      * @since 1.99
      */
     public String getFQN(String packageName, String nestedClassSeparator) {
-        return String.join(".", packageName, String.join(nestedClassSeparator, topLevelClassName, className.replace(".", nestedClassSeparator)));
+        String classNameSuffix;
+        if (className.isBlank()) {
+            classNameSuffix = topLevelClassName;
+        } else {
+            classNameSuffix = topLevelClassName + nestedClassSeparator + className.replace(".", nestedClassSeparator);
+        }
+        if (packageName.isBlank()) {
+            return classNameSuffix;
+        } else {
+            return String.join(".", packageName, classNameSuffix);
+        }
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 3;

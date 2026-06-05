@@ -279,7 +279,6 @@ class EditJarPanel extends javax.swing.JPanel {
         }
         chooser.enableVariableBasedSelection(true);
         chooser.setFileHidingEnabled(false);
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setMultiSelectionEnabled(false);
         chooser.setDialogTitle(LBL_Edit_Jar_Panel_browse());
@@ -315,7 +314,7 @@ class EditJarPanel extends javax.swing.JPanel {
         }
         chooser.enableVariableBasedSelection(true);
         chooser.setFileHidingEnabled(false);
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
+        chooser.setCurrentDirectory(null);
         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setMultiSelectionEnabled(false);
         chooser.setDialogTitle(LBL_Edit_Jar_Panel_browse());

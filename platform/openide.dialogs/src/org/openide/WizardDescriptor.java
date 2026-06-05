@@ -1540,7 +1540,7 @@ public class WizardDescriptor extends DialogDescriptor {
             err.fine("is BackgroundInstantiatingIterator");
         } else if (panels instanceof ProgressInstantiatingIterator) {
             err.fine("is ProgressInstantiatingIterator");
-            handle = ProgressHandleFactory.createHandle (PROGRESS_BAR_DISPLAY_NAME);
+            handle = ProgressHandle.createHandle(PROGRESS_BAR_DISPLAY_NAME);
             final JComponent progressComp = ProgressHandleFactory.createProgressComponent (handle);
             final JLabel detailComp = ProgressHandleFactory.createDetailLabelComponent (handle);
             Mutex.EVENT.readAccess( new Runnable() {
@@ -1555,7 +1555,7 @@ public class WizardDescriptor extends DialogDescriptor {
             err.log (Level.FINE, "Show progressPanel controlled by iterator later.");
         } else if (panels instanceof AsynchronousInstantiatingIterator) {
             err.fine("is AsynchronousInstantiatingIterator");
-            handle = ProgressHandleFactory.createHandle (PROGRESS_BAR_DISPLAY_NAME);
+            handle = ProgressHandle.createHandle(PROGRESS_BAR_DISPLAY_NAME);
 
             final JComponent progressComp = ProgressHandleFactory.createProgressComponent (handle);
             final JLabel mainLabelComp = ProgressHandleFactory.createMainLabelComponent (handle);

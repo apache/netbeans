@@ -391,6 +391,15 @@ public class PrintASTVisitor implements Visitor {
     }
 
     @Override
+    public void visit(CompositionExpression node) {
+        XMLPrintNode printNode = new XMLPrintNode(node, "CompositionExpression",
+                new String[]{"operator", node.getOperator().name()});
+        printNode.addChild(node.getLeft());
+        printNode.addChild(node.getRight());
+        printNode.print(this);
+    }
+    
+    @Override
     public void visit(ConditionalExpression node) {
         XMLPrintNode printNode = new XMLPrintNode(node, "ConditionalExpression");
         printNode.addChild("Condition", node.getCondition());

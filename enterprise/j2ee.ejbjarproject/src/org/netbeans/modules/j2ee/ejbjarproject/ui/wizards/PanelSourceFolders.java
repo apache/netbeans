@@ -385,7 +385,6 @@ public class PanelSourceFolders extends SettingsPanel implements PropertyChangeL
 
     private void jButtonLibrariesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLibrariesActionPerformed
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
         if (jTextFieldLibraries.getText().length() > 0 && getLibraries().exists()) {
             chooser.setSelectedFile(getLibraries());
@@ -400,7 +399,6 @@ public class PanelSourceFolders extends SettingsPanel implements PropertyChangeL
 
     private void jButtonConfigFilesLocationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfigFilesLocationActionPerformed
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
         if (jTextFieldConfigFiles.getText().length() > 0 && getConfigFiles().exists()) {
             chooser.setSelectedFile(getConfigFiles());

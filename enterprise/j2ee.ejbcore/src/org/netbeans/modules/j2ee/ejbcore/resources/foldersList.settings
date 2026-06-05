@@ -23,7 +23,6 @@
 <settings version="1.0">
     <module name="org.netbeans.modules.j2ee.ejbcore"/>
     <instanceof class="org.openide.util.SharedClassObject"/>
-    <instanceof class="org.openide.options.SystemOption"/>
     <instanceof class="org.netbeans.modules.j2ee.ejbcore.ui.FoldersListSettings"/>
     <instance class="org.netbeans.modules.j2ee.ejbcore.ui.FoldersListSettings"/>
 </settings>

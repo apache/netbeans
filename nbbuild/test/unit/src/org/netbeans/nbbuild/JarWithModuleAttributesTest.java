@@ -21,16 +21,22 @@ package org.netbeans.nbbuild;
 import java.io.File;
 import java.util.jar.JarFile;
 import junit.framework.AssertionFailedError;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
 
 /** Checks that javac.target gets reflected in the manifest.
  *
  * @author Jaroslav Tulach
  */
 public class JarWithModuleAttributesTest extends TestBase {
+
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
     public JarWithModuleAttributesTest (String name) {
         super (name);
     }
-    
+
     public void testAddThereVersionFromJavacTarget() throws Exception {
         File output = new File(getWorkDir(), "output");
         java.io.File manifest = extractString (
@@ -40,7 +46,7 @@ public class JarWithModuleAttributesTest extends TestBase {
 "OpenIDE-Module-Layer: org/netbeans/modules/sendopts/layer.xml\n"
         );
         File jar = new File(getWorkDir(), "x.jar");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
@@ -59,8 +65,9 @@ public class JarWithModuleAttributesTest extends TestBase {
         );
 
 
-        execute (f, new String[] { "-verbose" });
-        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+
         assertTrue ("JAR created", jar.isFile());
 
         File extracted = new File(new File(output, "META-INF"), "MANIFEST.MF");
@@ -87,7 +94,7 @@ public class JarWithModuleAttributesTest extends TestBase {
 "OpenIDE-Module-Layer: org/netbeans/modules/sendopts/layer.xml\n"
         );
         File jar = new File(getWorkDir(), "x.jar");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
@@ -106,8 +113,9 @@ public class JarWithModuleAttributesTest extends TestBase {
         );
 
 
-        execute (f, new String[] { "-verbose" });
-        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+
         assertTrue ("JAR created", jar.isFile());
 
         File extracted = new File(new File(output, "META-INF"), "MANIFEST.MF");
@@ -163,7 +171,8 @@ public class JarWithModuleAttributesTest extends TestBase {
         );
 
 
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
 
         assertTrue ("JAR created", jar.isFile());
 
@@ -218,7 +227,7 @@ public class JarWithModuleAttributesTest extends TestBase {
 "OpenIDE-Module-Layer: org/netbeans/modules/sendopts/layer.xml\n"
         );
         File jar = new File(getWorkDir(), "x.jar");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
@@ -237,8 +246,9 @@ public class JarWithModuleAttributesTest extends TestBase {
         );
 
 
-        execute (f, new String[] { "-verbose" });
-        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+
         assertTrue ("JAR created", jar.isFile());
 
         File extracted = new File(new File(output, "META-INF"), "MANIFEST.MF");
@@ -277,7 +287,8 @@ public class JarWithModuleAttributesTest extends TestBase {
         );
 
 
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
 
         assertTrue ("JAR created", jar.isFile());
 
@@ -303,7 +314,7 @@ public class JarWithModuleAttributesTest extends TestBase {
             fail("Unwanted dependency on org.netbeans.libs.osgi:\n" + req);
         }
     }
-    
+
     private static void assertVersionAtLeast(String limit, String value) {
         int[] segLimit = segments(limit);
         int[] segValue = segments(value);

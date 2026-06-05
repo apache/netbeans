@@ -122,7 +122,7 @@ public interface RefactoringElementImplementation {
     
     /**
      * Setter for property status
-     * @param status new value of propery status
+     * @param status new value of property status
      */
     void setStatus(int status);
     

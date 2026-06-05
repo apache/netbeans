@@ -197,8 +197,8 @@ public class HintsTask implements CancellableTask<CompilationInfo> {
 
         @Override
         public List<ErrorDescription> getErrorDescriptionsAt(CompilationInfo info, Context context, Document doc) throws BadLocationException {
-            int rowStart = LineDocumentUtils.getLineStart((BaseDocument) doc, context.getPosition());
-            int rowEnd = LineDocumentUtils.getLineEnd((BaseDocument) doc, context.getPosition());
+            int rowStart = LineDocumentUtils.getLineStartOffset((BaseDocument) doc, context.getPosition());
+            int rowEnd = LineDocumentUtils.getLineEndOffset((BaseDocument) doc, context.getPosition());
 
             return new HintsInvoker(HintsSettings.getSettingsFor(info.getFileObject()), rowStart, rowEnd, context.getCancel()).computeHints(info);
         }

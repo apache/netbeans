@@ -243,9 +243,6 @@
                         <compile-dependency/>
                         <test/>
                     </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.netbeans.api.progress.nb</code-name-base>
-                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <public-packages/>

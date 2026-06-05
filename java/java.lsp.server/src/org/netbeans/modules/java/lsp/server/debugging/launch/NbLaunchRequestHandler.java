@@ -32,6 +32,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -70,7 +72,7 @@ import org.openide.util.lookup.Lookups;
  * @author martin
  */
 public final class NbLaunchRequestHandler {
-
+    private static final Logger LOG = Logger.getLogger(NbLaunchRequestHandler.class.getName());
     private NbLaunchDelegate activeLaunchHandler;
 
     public CompletableFuture<Void> launch(Map<String, Object> launchArguments, DebugAdapterContext context) {
@@ -148,7 +150,10 @@ public final class NbLaunchRequestHandler {
                         case 1:
                             handleSelectedMainClass.accept(mainClasses.get(0));
                             break;
-                        case 2:
+                        default:
+                            if(mainClasses.size() > 10){
+                                LOG.log(Level.WARNING, "The number of main classes is large :{0}", mainClasses.size());
+                            }
                             List<NotifyDescriptor.QuickPick.Item> mainClassItems =
                                     mainClasses.stream()
                                                .map(eh -> new Item(eh.getQualifiedName(), eh.getQualifiedName()))

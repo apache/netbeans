@@ -78,7 +78,7 @@ public class ProgressUI implements ProgressListener {
         this.modal = modal;
         this.title = title;
         this.logger = logger;        
-        handle = ProgressHandleFactory.createHandle(title);
+        handle = ProgressHandle.createHandle(title);
     }
     
     public void start() {

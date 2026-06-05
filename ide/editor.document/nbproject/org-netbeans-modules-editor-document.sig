@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.36.0
+#Version 1.41.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -7,6 +7,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -132,6 +133,9 @@ meth public static int getLineCount(org.netbeans.api.editor.document.LineDocumen
 meth public static int getLineCount(org.netbeans.api.editor.document.LineDocument,int,int)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static int getLineEnd(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static int getLineEndOffset(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static int getLineFirstNonWhitespace(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -140,8 +144,11 @@ meth public static int getLineIndex(org.netbeans.api.editor.document.LineDocumen
 meth public static int getLineLastNonWhitespace(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static int getLineStart(org.netbeans.api.editor.document.LineDocument,int)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static int getLineStartFromIndex(org.netbeans.api.editor.document.LineDocument,int)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
+meth public static int getLineStartOffset(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static int getNextNonNewline(org.netbeans.api.editor.document.LineDocument,int) throws javax.swing.text.BadLocationException
  anno 1 org.netbeans.api.annotations.common.NonNull()
@@ -178,7 +185,7 @@ meth public static java.lang.String getWord(org.netbeans.api.editor.document.Lin
 meth public static org.netbeans.api.editor.document.LineDocument createDocument(java.lang.String)
  anno 0 org.netbeans.api.annotations.common.NonNull()
 supr java.lang.Object
-hfds NOT_FOUND,WRONG_POSITION_LOCALE
+hfds NOT_FOUND
 hcls V
 
 CLSS public abstract interface org.netbeans.spi.editor.document.DocumentFactory

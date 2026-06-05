@@ -238,14 +238,33 @@ public final class ImageUtilities {
         } else {
             if (!(scheme.equals("file") ||
                 scheme.equals("jar") && uri.toString().startsWith("jar:file:") ||
-                scheme.equals("file")))
+                scheme.equals("file") ||
+                /* The URL "ergoloc:/org/netbeans/modules/ide/ergonomics/enterprise/org-netbeans-modules-websvc-core-client-resources-ws_client_16.png"
+                was observed in one frequently occuring case, though in that case no valid Image is
+                found. See the more specific log statement further below. For now we just handle
+                these URLs the way they were always handled, with Toolkit.createImage. */
+                scheme.equals("ergoloc")))
             {
                 LOGGER.log(Level.WARNING, "loadImage(URI) called with unusual URI: {0}", uri);
             }
             try {
                 /* Observed to return an image with size (-1, -1) if URL points to a non-existent
                 file (after ensureLoaded(Image) is called). */
-                return Toolkit.getDefaultToolkit().createImage(uri.toURL());
+                Image ret = Toolkit.getDefaultToolkit().createImage(uri.toURL());
+
+                if (ret != null && scheme.equals("ergoloc") &&
+                    ret.getWidth(null) > 0 &&
+                    ret.getHeight(null) > 0)
+                {
+                    /* If this case ever occurs, and we decide we need to support an SVG version of
+                    the icon in question, then we might need to handle "ergoloc" in the same way as we
+                    handle "nbresloc" earlier. See o.n.modules.ide.ergonomics.fod.FoDURLStreamHandler,
+                    which simply replaces ergoloc to nbresloc for ergoloc URLs that do not end with
+                    ".html". It might still be necessary to open the original URL first to trigger
+                    whatever module loading magic the ergonomics module is supposed to cause. */
+                    LOGGER.log(Level.INFO, "loadImage(URI) got valid image from ergoloc URI: {0}", uri);
+                }
+                return ret;
             } catch (MalformedURLException e) {
                 LOGGER.log(Level.WARNING, "Malformed URL passed to loadImage(URI)", e);
                 return null;

@@ -177,7 +177,7 @@ public class TestPerformer {
      */
     private static FileObject copyStringToFile(FileObject f, String content) throws Exception {
         try (InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)); OutputStream os = f.getOutputStream()) {
-            FileUtil.copy(is, os);
+            is.transferTo(os);
         }
         return f;
     }

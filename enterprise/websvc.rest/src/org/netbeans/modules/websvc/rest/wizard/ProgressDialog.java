@@ -76,7 +76,7 @@ public class ProgressDialog {
     }
 
     private void createDialog(String title) {
-        pHandle = ProgressHandleFactory.createHandle(title);
+        pHandle = ProgressHandle.createHandle(title);
         JPanel panel = new ProgressPanel(pHandle);
 
         DialogDescriptor descriptor = new DialogDescriptor(

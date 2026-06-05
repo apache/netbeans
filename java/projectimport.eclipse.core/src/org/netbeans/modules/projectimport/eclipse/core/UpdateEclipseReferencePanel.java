@@ -233,7 +233,6 @@ class UpdateEclipseReferencePanel extends javax.swing.JPanel implements Document
 
 private void browseProjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseProjectButtonActionPerformed
     JFileChooser chooser = new JFileChooser();
-    FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
     chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
     chooser.setMultiSelectionEnabled(false);
     chooser.setDialogTitle(org.openide.util.NbBundle.getMessage(UpdateEclipseReferencePanel.class, "TITLE_Select_Eclipse_Project"));
@@ -245,7 +244,6 @@ private void browseProjectButtonActionPerformed(java.awt.event.ActionEvent evt) 
 
 private void browseWorkspaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseWorkspaceButtonActionPerformed
     JFileChooser chooser = new JFileChooser();
-    FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
     chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
     chooser.setMultiSelectionEnabled(false);
     chooser.setDialogTitle(org.openide.util.NbBundle.getMessage(UpdateEclipseReferencePanel.class, "TITLE_Select_Eclipse_Workspace"));

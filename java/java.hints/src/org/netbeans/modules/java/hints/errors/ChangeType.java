@@ -168,7 +168,7 @@ public final class ChangeType implements ErrorRule<Void> {
                     return null;
                 }
                 //anonymous class?
-                expressionType[0] = org.netbeans.modules.java.hints.errors.Utilities.convertIfAnonymous(expressionType[0]);
+                expressionType[0] = org.netbeans.modules.java.hints.errors.Utilities.convertIfAnonymous(expressionType[0], true);
 
                 result.add(new ChangeTypeFix(info, treePath,
                         ((VariableTree) leaf[0]).getName().toString(), 

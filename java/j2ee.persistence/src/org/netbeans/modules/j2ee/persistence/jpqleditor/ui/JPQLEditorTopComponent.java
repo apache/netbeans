@@ -57,7 +57,6 @@ import javax.swing.table.TableModel;
 import org.netbeans.api.db.explorer.ConnectionManager;
 import org.netbeans.api.db.explorer.DatabaseConnection;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.editor.NbEditorDocument;
@@ -318,7 +317,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
                     if (Thread.interrupted() || isSqlTranslationProcessDone) {
                         return;    // Cancel the task
                     }
-                    ph2 = ProgressHandleFactory.createHandle(
+                    ph2 = ProgressHandle.createHandle(
                             NbBundle.getMessage(JPQLEditorTopComponent.class, "progressTaskname"));
                     ph2.start(100);
                     FileObject pXml = puObject.getPrimaryFile();
@@ -347,7 +346,7 @@ public final class JPQLEditorTopComponent extends TopComponent {
 
                                 ph2.progress(50);
                                 ph2.setDisplayName(NbBundle.getMessage(JPQLEditorTopComponent.class, "queryParsingPassControlToProvider"));
-                                jpqlResult = queryExecutor.execute(jpql, selectedConfigObject, pe, props, provider, 0, ph2, false);
+                                jpqlResult = queryExecutor.execute(jpql, puObject.getPersistence(), selectedConfigObject, pe, props, provider, 0, ph2, false);
                                 ph2.progress(80);
                                 ph2.setDisplayName(NbBundle.getMessage(JPQLEditorTopComponent.class, "queryParsingProcessResults"));
 
@@ -827,37 +826,37 @@ public final class JPQLEditorTopComponent extends TopComponent {
         return 1000; // Optimum value.
     }
 
-private void resultToggleButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_resultToggleButtonItemStateChanged
-    if (resultToggleButton.isSelected()) {//GEN-LAST:event_resultToggleButtonItemStateChanged
+    private void resultToggleButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_resultToggleButtonItemStateChanged
+        if (resultToggleButton.isSelected()) {
             ((CardLayout) (executionPanel.getLayout())).first(executionPanel);
             sqlToggleButton.setSelected(false);
         }
-    }
+    }//GEN-LAST:event_resultToggleButtonItemStateChanged
 
-private void sqlToggleButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_sqlToggleButtonItemStateChanged
-    if (sqlToggleButton.isSelected()) {//GEN-HEADEREND:event_sqlToggleButtonItemStateChanged
-        ((CardLayout) (executionPanel.getLayout())).last(executionPanel);//GEN-LAST:event_sqlToggleButtonItemStateChanged
+    private void sqlToggleButtonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_sqlToggleButtonItemStateChanged
+        if (sqlToggleButton.isSelected()) {
+            ((CardLayout) (executionPanel.getLayout())).last(executionPanel);
             resultToggleButton.setSelected(false);
         }
-    }
+    }//GEN-LAST:event_sqlToggleButtonItemStateChanged
 
-private void runJPQLButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runJPQLButtonActionPerformed
-    // Fix - 138856
-    if(jpqlEditor.getText().trim().equals("")) {
-        switchToResultView();
-        setStatus(NbBundle.getMessage(JPQLEditorTopComponent.class, "emptyQuery"));
-        return;
-    }
-    if (puComboBox.getSelectedItem() == null) {
-        logger.info("hibernate configuration combo box is empty.");
-        switchToResultView();
-        setStatus(NbBundle.getMessage(JPQLEditorTopComponent.class, "emptyConfiguration"));
-        return;
-    }
-    runJPQLButton.setEnabled(false);                                            
-    try {
-        ph = ProgressHandleFactory.createHandle(//GEN-HEADEREND:event_runJPQLButtonActionPerformed
-                NbBundle.getMessage(JPQLEditorTopComponent.class, "progressTaskname"));//GEN-LAST:event_runJPQLButtonActionPerformed
+    private void runJPQLButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_runJPQLButtonActionPerformed
+        // Fix - 138856
+        if(jpqlEditor.getText().trim().equals("")) {
+            switchToResultView();
+            setStatus(NbBundle.getMessage(JPQLEditorTopComponent.class, "emptyQuery"));
+            return;
+        }
+        if (puComboBox.getSelectedItem() == null) {
+            logger.info("hibernate configuration combo box is empty.");
+            switchToResultView();
+            setStatus(NbBundle.getMessage(JPQLEditorTopComponent.class, "emptyConfiguration"));
+            return;
+        }
+        runJPQLButton.setEnabled(false);                                            
+        try {
+            ph = ProgressHandle.createHandle(
+                NbBundle.getMessage(JPQLEditorTopComponent.class, "progressTaskname"));
             isSqlTranslationProcessDone = true;//will be reparsed in execution thread
             if (hqlParserTask != null && !hqlParserTask.isFinished() && (hqlParserTask.getDelay() != 0)) {
                 hqlParserTask.cancel();
@@ -869,6 +868,7 @@ private void runJPQLButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             PersistenceUnit pu = (PersistenceUnit) puConfigMap.get(puComboBox.getSelectedItem());
             ph.start(100);
             controller.executeJPQLQuery(jpqlEditor.getText(),
+                    puObject.getPersistence(),
                     pu,
                     pe,
                     getMaxRowCount(),
@@ -876,7 +876,8 @@ private void runJPQLButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         }
-    }
+    }//GEN-LAST:event_runJPQLButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel containerPanel;
     private javax.swing.JTextArea errorTextArea;

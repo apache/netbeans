@@ -357,8 +357,8 @@ public class RunOffEDTImpl implements RunOffEDTProvider, Progress, Progress2 {
     public <T> T showProgressDialogAndRun(ProgressRunnable<T> toRun, String displayName, boolean includeDetailLabel) {
         try {
             return showProgressDialogAndRunLater(toRun, toRun instanceof Cancellable ?
-                ProgressHandleFactory.createHandle(displayName, (Cancellable) toRun) :
-                ProgressHandleFactory.createHandle(displayName), includeDetailLabel).get();
+                ProgressHandle.createHandle(displayName, (Cancellable) toRun) :
+                ProgressHandle.createHandle(displayName), includeDetailLabel).get();
         } catch (InterruptedException ex) {
             Exceptions.printStackTrace(ex);
         } catch (CancellationException ex) {
@@ -441,8 +441,8 @@ public class RunOffEDTImpl implements RunOffEDTProvider, Progress, Progress2 {
         private final ProgressRunnable<T> toRun;
         ProgressBackgroundRunner(ProgressRunnable<T> toRun, String displayName, boolean includeDetail, boolean showCancel) {
             super (showCancel ?
-                ProgressHandleFactory.createHandle(displayName, (Cancellable) toRun, null) :
-                ProgressHandleFactory.createHandle(displayName, (Action)null), includeDetail, showCancel);
+                ProgressHandle.createHandle(displayName, (Cancellable)toRun, null) :
+                ProgressHandle.createHandle(displayName, null, (Action)null), includeDetail, showCancel);
             this.toRun = toRun;
         }
 

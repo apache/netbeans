@@ -30,7 +30,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.search.Query;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -245,7 +244,7 @@ public class DocumentIndexImpl implements DocumentIndex2, Runnable {
         Parameters.notNull("query", query); //NOI18N
         Parameters.notNull("convertor", convertor); //NOI18N
         final Collection<T> result = new ArrayDeque<>();
-        FieldSelector selector = null;
+        Set<String> selector = null;
         if (fieldsToLoad != null && fieldsToLoad.length > 0) {
             final String[] fieldsWithSource = Arrays.copyOf(fieldsToLoad, fieldsToLoad.length+1);
             fieldsWithSource[fieldsToLoad.length] = IndexDocumentImpl.FIELD_PRIMARY_KEY;

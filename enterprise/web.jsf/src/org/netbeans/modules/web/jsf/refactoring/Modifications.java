@@ -27,7 +27,6 @@ import org.netbeans.api.queries.FileEncodingQuery;
 import org.netbeans.editor.BaseDocument;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 import org.openide.text.PositionRef;
 
@@ -111,21 +110,14 @@ public final class Modifications {
                 return;
             }
         }
-        InputStream ins = null;
-        ByteArrayOutputStream baos = null;
         Reader inputReader = null;
         try {
             Charset encoding = FileEncodingQuery.getEncoding(fileObject);
-            ins = fileObject.getInputStream();
-            baos = new ByteArrayOutputStream();
-            FileUtil.copy(ins, baos);
-
-            ins.close();
-            ins = null;
-            byte[] arr = baos.toByteArray();
+            byte[] arr;
+            try (InputStream ins = fileObject.getInputStream()) {
+                arr = ins.readAllBytes();
+            }
             int arrLength = convertToLF(arr);
-            baos.close();
-            baos = null;
             inputReader = new InputStreamReader(new ByteArrayInputStream(arr, 0, arrLength), encoding);
             // initialize standard commit output stream, if user
             // does not provide his own writer
@@ -189,12 +181,6 @@ public final class Modifications {
                 outWriter.write(buff, 0, count);
             }
         } finally {
-            if (ins != null) {
-                ins.close();
-            }
-            if (baos != null) {
-                baos.close();
-            }
             if (inputReader != null) {
                 inputReader.close();
             }

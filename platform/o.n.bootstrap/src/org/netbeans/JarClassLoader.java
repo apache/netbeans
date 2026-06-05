@@ -56,8 +56,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Vector;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
@@ -85,37 +83,27 @@ public class JarClassLoader extends ProxyClassLoader {
     // platform/netbinox/src/org/netbeans/modules/netbinox/JarBundleFile.java
     // should also be adjusted. At least the multi-release handling is similar.
     //
-    
+
     private static Stamps cache;
     private static final String META_INF = "META-INF/";
     private static final Name MULTI_RELEASE = new Name("Multi-Release");
     private static final int BASE_VERSION = 8;
-    private static final int RUNTIME_VERSION;
+    private static final int RUNTIME_VERSION = Runtime.version().feature();
 
-    static {
-        int version;
-        try {
-            Object runtimeVersion = Runtime.class.getMethod("version").invoke(null);
-            version = (int) runtimeVersion.getClass().getMethod("major").invoke(runtimeVersion);
-        } catch (ReflectiveOperationException ex) {
-            version = BASE_VERSION;
-        }
-        RUNTIME_VERSION = version;
-    }
-    
-    static Archive archive = new Archive(); 
+    @SuppressWarnings("PackageVisibleField") // used by NetigsoFramework
+    static Archive archive = new Archive();
 
     static void initializeCache() {
         cache = Stamps.getModulesJARs();
         archive = new Archive(cache);
         PackageAttrsCache.initialize();
     }
-    
+
     /**
      * Creates a new archive or updates existing archive with the necessary
      * resources gathered so far. It also stops gatheing and serving
      * additional request, if it was still doing so.
-     */    
+     */
     public static void saveArchive() {
         if (cache != null) {
             try {
@@ -128,44 +116,55 @@ public class JarClassLoader extends ProxyClassLoader {
             archive.stopServing();
         }
     }
-    
-    /** Check whether the archive has already been populated during 
+
+    /** Check whether the archive has already been populated during
      * previous executions.
-     * 
+     *
      * @return true, if the archive is ready and non-empty
      * @since 2.61
      */
     public static boolean isArchivePopulated() {
         return archive != null && archive.isPopulated();
     }
-    
+
     static {
         ProxyURLStreamHandlerFactory.register();
     }
-    
+
     private static final Logger LOGGER = Logger.getLogger(JarClassLoader.class.getName());
 
-    private Source[] sources;
-    private Module module;
-    
-    /** Creates new JarClassLoader.
+    private final Source[] sources;
+    private final Module module;
+
+    /**
+     * Creates new JarClassLoader.
      * Gives transitive flag as true.
+     *
+     * @param files
+     * @param parents
      */
     public JarClassLoader(List<File> files, ClassLoader[] parents) {
         this(files, parents, true, null);
     }
-    
+
     public JarClassLoader(List<File> files, ClassLoader[] parents, boolean transitive) {
         this(files, parents, transitive, null);
     }
-    /** Creates new JarClassLoader.
+
+    /**
+     * Creates new JarClassLoader.
+     *
+     * @param files
+     * @param parents
+     * @param transitive
+     * @param mod
      * @since org.netbeans.core/1 > 1.6
      * @see ProxyClassLoader#ProxyClassLoader(ClassLoader[],boolean)
      */
     public JarClassLoader(List<File> files, ClassLoader[] parents, boolean transitive, Module mod) {
         super(parents, transitive);
         this.module = mod;
-        List<Source> l = new ArrayList<Source>(files.size());
+        List<Source> l = new ArrayList<>(files.size());
         try {
             for (File file : files) {
                 l.add(Source.create(file, this));
@@ -173,33 +172,18 @@ public class JarClassLoader extends ProxyClassLoader {
         } catch (IOException exc) {
             throw new IllegalArgumentException(exc.getMessage());
         }
-        sources = l.toArray(new Source[0]);
-        // overlaps with old packages doesn't matter,PCL uses sets.
-        addCoveredPackages(getCoveredPackages(module, sources));
-    }
-
-    final void addURL(URL location) throws IOException, URISyntaxException {
-        File f = BaseUtilities.toFile(location.toURI());
-        assert f.exists() : "URL must be existing local file: " + location;
-
-        List<Source> arr = new ArrayList<Source>(Arrays.asList(sources));
-        arr.add(new JarSource(f));
-
-        synchronized (sources) {
-            sources = arr.toArray(new Source[0]);
-        }
-
+        sources = l.toArray(Source[]::new);
         // overlaps with old packages doesn't matter,PCL uses sets.
         addCoveredPackages(getCoveredPackages(module, sources));
     }
 
     /** Allows to specify the right permissions, OneModuleClassLoader does it differently.
      */
-    protected PermissionCollection getPermissions( CodeSource cs ) {           
-        return Policy.getPolicy().getPermissions(cs);       
-    }        
-    
-    
+    protected PermissionCollection getPermissions( CodeSource cs ) {
+        return Policy.getPolicy().getPermissions(cs);
+    }
+
+
     protected Package definePackage(String name, Manifest man, URL url)
     throws IllegalArgumentException {
         if (man == null) {
@@ -212,28 +196,16 @@ public class JarClassLoader extends ProxyClassLoader {
         return definePackage(name, arr[0], arr[1], arr[2],
             arr[3], arr[4], arr[5], sealBase);
     }
-    
+
     /**
      * Bytecode patching helper
      */
     private PatchByteCode patchingBytecode;
-    
-    byte[] getClassData(String name) {
-        String path = name.replace('.', '/').concat(".class"); // NOI18N
-        for( int i=0; i<sources.length; i++ ) {
-            final Source src = sources[i];
-            byte[] data = src.getClassData(path);
-            if (data != null) {
-                return data;
-            }
-        }
-        return null;
-    }
-    
+
     @Override
     protected Class<?> doLoadClass(String pkgName, String name) {
         String path = name.replace('.', '/').concat(".class"); // NOI18N
-        
+
         // look up the Sources and return a class based on their content
         for( int i=0; i<sources.length; i++ ) {
             final Source src = sources[i];
@@ -251,10 +223,10 @@ public class JarClassLoader extends ProxyClassLoader {
             }
             try {
                 data = patchingBytecode.apply(name, data);
-            } catch (Exception x) {
+            } catch (IOException | RuntimeException x) {
                 LOGGER.log(Level.INFO, "Could not bytecode-patch " + name, x);
             }
-            
+
             // Note that we assume that if we are defining a class in this package,
             // we should also define the package! Thus recurse==false.
             // However special packages might be defined in a parent and then we want
@@ -268,7 +240,7 @@ public class JarClassLoader extends ProxyClassLoader {
             } else {
                 class DelayedManifest extends Manifest {
                     private Manifest delegate;
-                    
+
                     private Manifest delegate() {
                         if (delegate == null) {
                             Manifest m;
@@ -281,7 +253,7 @@ public class JarClassLoader extends ProxyClassLoader {
                         }
                         return delegate;
                     }
-                    
+
                     @Override
                     public Attributes getMainAttributes() {
                         return delegate().getMainAttributes();
@@ -312,7 +284,7 @@ public class JarClassLoader extends ProxyClassLoader {
                 LOGGER.log(Level.WARNING, "Problems patching" + name, ex);
             }
             return defineClass (name, data, 0, data.length, src.getProtectionDomain());
-        } 
+        }
         return null;
     }
     // look up the jars and return a resource based on a content of jars
@@ -327,16 +299,16 @@ public class JarClassLoader extends ProxyClassLoader {
 
     @Override
     public Enumeration<URL> findResources(String name) {
-        Vector<URL> v = new Vector<URL>(3);
+        ArrayList<URL> v = new ArrayList<>(3);
         // look up the jars and return a resource based on a content of jars
 
         for( int i=0; i<sources.length; i++ ) {
             URL item = sources[i].getResource(name);
             if (item != null) v.add(item);
         }
-        return v.elements();
+        return Collections.enumeration(v);
     }
-    
+
     public @Override void destroy() {
         super.destroy ();
         for (Source src : sources) {
@@ -352,29 +324,29 @@ public class JarClassLoader extends ProxyClassLoader {
      * Used from JarClassLoaderTest to force close before reopening. */
     void releaseJars() throws IOException {
         for (Source src : sources) {
-            if (src instanceof JarSource) {
-                ((JarSource)src).doCloseJar();
+            if (src instanceof JarSource jarSource) {
+                jarSource.doCloseJar();
             }
         }
     }
 
-    abstract static class Source {
+    private abstract static class Source {
         private URL url;
         private ProtectionDomain pd;
         protected JarClassLoader jcl;
-        private static Map<String,Source> sources = new HashMap<String, Source>();
+        private static Map<String,Source> sources = new HashMap<>();
         private Boolean multiRelease;
-        
+
         public Source(URL url) {
             this.url = url;
         }
-        
+
         public final URL getURL() {
             return url;
         }
 
         public abstract String getPath();
-        
+
         public final ProtectionDomain getProtectionDomain() {
             if (pd == null) {
                 CodeSource cs = new CodeSource(url, (Certificate[])null);
@@ -382,19 +354,19 @@ public class JarClassLoader extends ProxyClassLoader {
             }
             return pd;
         }
-  
+
         public final URL getResource(String name) {
             try {
                 return doGetResource(name);
-            } catch (Exception e) {
+            } catch (IOException | RuntimeException e) {
                 // can't get the resource. E.g. already closed JarFile
                 LOGGER.log(Level.FINE, null, e);
             }
             return null;
         }
-        
+
         protected abstract URL doGetResource(String name) throws IOException;
-        
+
         public final byte[] getClassData(String path) {
             try {
                 return readClass(path);
@@ -410,14 +382,14 @@ public class JarClassLoader extends ProxyClassLoader {
             return null;
         }
 
-        protected abstract void listCoveredPackages(Set<String> known, StringBuffer save);
-        
+        protected abstract void listCoveredPackages(Set<String> known, StringBuilder save);
+
         protected void destroy() throws IOException {
             // relatively slow (millis instead of micros),
             // but rare enough to not matter
             sources.values().remove(this);
         }
-        
+
         static Source create(File f, JarClassLoader jcl) throws IOException {
             boolean directory;
             if (f.getName().endsWith("jar")) {
@@ -458,16 +430,16 @@ public class JarClassLoader extends ProxyClassLoader {
         }
 
     }
-    
+
     static void dumpFiles(File f, int retry) {
-        for (;;) {
-            if (f == null) {
+        for (File checkFile = f;; checkFile = checkFile.getParentFile()) {
+            if (checkFile == null) {
                 LOGGER.log(Level.INFO, "file {0} is null. # of retries {1}", new Object[]{f, retry}); // NOI18N
                 break;
             }
-            if (f.exists()) {
+            if (checkFile.exists()) {
                 LOGGER.log(Level.INFO, "file {0} exists. # of retries {1}", new Object[]{f, retry}); // NOI18N
-                if (f.isDirectory()) {
+                if (checkFile.isDirectory()) {
                     LOGGER.log(Level.INFO, "{0} is directory and contains: {1}", new Object[]{f, Arrays.toString(f.list())}); // NOI18N
                 } else {
                     LOGGER.log(Level.INFO, "{0} isDirectory: {1}, isFile: {2} size: {3}", new Object[]{f, f.isDirectory(), f.isFile(), f.length()}); // NOI18N
@@ -475,11 +447,10 @@ public class JarClassLoader extends ProxyClassLoader {
                 break;
             }
             LOGGER.log(Level.INFO, "{0} does not exist, # of retries {1}", new Object[]{f, retry}); // NOI18N
-            f = f.getParentFile();
         }
     }
 
-    static class JarSource extends Source implements ArchiveResources {
+    private static class JarSource extends Source implements ArchiveResources {
         private String resPrefix;
         private File file;
 
@@ -490,14 +461,14 @@ public class JarClassLoader extends ProxyClassLoader {
         private volatile int[] versions;
         private volatile Reference<Manifest> manifest;
         /** #141110: expensive to repeatedly look for them */
-        private final Set<String> nonexistentResources = Collections.synchronizedSet(new HashSet<String>());
-        private final Set<File> warnedFiles = Collections.synchronizedSet(new HashSet<File>()); // #183696
-        
+        private final Set<String> nonexistentResources = Collections.synchronizedSet(new HashSet<>());
+        private final Set<File> warnedFiles = Collections.synchronizedSet(new HashSet<>()); // #183696
+
         JarSource(File file) throws IOException {
             this(file, toURI(file));
         }
         private JarSource(File file, String resPrefix) throws IOException {
-            super(new URL(resPrefix)); // NOI18N
+            super(URI.create(resPrefix).toURL()); // NOI18N
             this.resPrefix = resPrefix; // NOI18N;
             this.file = file;
         }
@@ -527,6 +498,7 @@ public class JarClassLoader extends ProxyClassLoader {
         }
 
         @Override
+        @SuppressWarnings("NestedAssignment")
         public Manifest getManifest() {
             {
                 Manifest man;
@@ -540,14 +512,14 @@ public class JarClassLoader extends ProxyClassLoader {
                     return null;
                 }
                 final Manifest man = new Manifest(new ByteArrayInputStream(arr));
-                manifest = new SoftReference<Manifest>(man);
+                manifest = new SoftReference<>(man);
                 return man;
             } catch (IOException ex) {
                 LOGGER.log(Level.WARNING, "Cannot read manifest for " + getPath(), ex);
                 return null;
             }
         }
-        
+
         JarFile getJarFile(final String forWhat) throws IOException {
             FutureTask<JarFile> init = null;
             synchronized(sources) {
@@ -556,53 +528,51 @@ public class JarClassLoader extends ProxyClassLoader {
                 if (fjar == null) {
                     fjar = sources.get(this);
                     if (fjar == null) {
-                        fjar = init = new FutureTask<JarFile>(new Callable<JarFile>() {
-                            @Override
-                            public JarFile call() throws IOException {
-                                int retry = 0;
-                                for (;;) {
+                        init = new FutureTask<>(() -> {
+                            int retry = 0;
+                            for (;;) {
+                                try {
+                                    long now = System.currentTimeMillis();
+                                    JarFile ret;
                                     try {
-                                        long now = System.currentTimeMillis();
-                                        JarFile ret;
-                                        try {
-                                            ret = new JarFile(file, false);
-                                        } catch (FileNotFoundException | NoSuchFileException ex) {
-                                            throw (ZipException)new ZipException(ex.getMessage()).initCause(ex);
-                                        }
-                                        long took = System.currentTimeMillis() - now;
-                                        opened(JarClassLoader.JarSource.this, forWhat);
-                                        if (took > 500) {
-                                            LOGGER.log(Level.WARNING, "Opening {0} took {1} ms", new Object[]{file, took}); // NOI18N
-                                        }
-                                        return ret;
-                                    } catch (ZipException zip) {
-                                        if (file.exists() && retry++ < 3) {
-                                            LOGGER.log(Level.WARNING, "Error opening " + file + " (exists=" + file.exists() + ") retry: " + retry, zip); // NOI18N
-                                            opened(JarClassLoader.JarSource.this, "ziperror");
-                                            continue;
-                                        }
-                                        dumpFiles(file, retry);
-                                        throw zip;
+                                        ret = new JarFile(file, false);
+                                    } catch (FileNotFoundException | NoSuchFileException ex) {
+                                        throw (ZipException)new ZipException(ex.getMessage()).initCause(ex);
                                     }
+                                    long took = System.currentTimeMillis() - now;
+                                    opened(JarClassLoader.JarSource.this, forWhat);
+                                    if (took > 500) {
+                                        LOGGER.log(Level.WARNING, "Opening {0} took {1} ms", new Object[]{file, took}); // NOI18N
+                                    }
+                                    return ret;
+                                } catch (ZipException zip) {
+                                    if (file.exists() && retry++ < 3) {
+                                        LOGGER.log(Level.WARNING, "Error opening " + file + " (exists=" + file.exists() + ") retry: " + retry, zip); // NOI18N
+                                        opened(JarClassLoader.JarSource.this, "ziperror");
+                                        continue;
+                                    }
+                                    dumpFiles(file, retry);
+                                    throw zip;
                                 }
                             }
                         });
-                        sources.put(this, fjar);
+                        fjar = init;
+                        sources.put(this, init);
                     }
                 }
             }
             if (init != null) init.run();
             return callGet();
         }
-        
+
         private void releaseJarFile() {
             synchronized(sources) {
                 assert used > 0;
                 used--;
             }
         }
-        
-        
+
+
         @Override
         protected URL doGetResource(String name) throws IOException  {
             byte[] buf = archive.getData(this, name);
@@ -616,7 +586,7 @@ public class JarClassLoader extends ProxyClassLoader {
                 throw new IOException(name + " in " + resPrefix + ": " + x.toString(), x);
             }
         }
-        
+
         @Override
         protected byte[] readClass(String path) throws IOException {
             try {
@@ -657,7 +627,8 @@ public class JarClassLoader extends ProxyClassLoader {
                 int[] ret = new int[vers.size()];
                 int i = 0;
                 for (Integer ver : vers) {
-                    ret[i++] = ver;
+                    ret[i] = ver;
+                    i++;
                 }
                 versions = ret;
                 return ret;
@@ -695,7 +666,7 @@ public class JarClassLoader extends ProxyClassLoader {
                 if (LOGGER.isLoggable(Level.FINER)) {
                     LOGGER.log(Level.FINER, "Loading {0} from {1}", new Object[] {path, file.getPath()});
                 }
-            
+
                 int len = (int)ze.getSize();
                 byte[] data = new byte[len];
                 InputStream is = jf.getInputStream(ze);
@@ -711,7 +682,7 @@ public class JarClassLoader extends ProxyClassLoader {
 
 
         @Override
-        protected void listCoveredPackages(Set<String> known, StringBuffer save) {
+        protected void listCoveredPackages(Set<String> known, StringBuilder save) {
             try {
                 JarFile src = getJarFile("pkg");
 
@@ -729,26 +700,32 @@ public class JarClassLoader extends ProxyClassLoader {
                             }
                             continue;
                         }
-                        if (itm.startsWith("META-INF/")) {
+                        if (itm.startsWith("META-INF/versions/")) {
+                            int endOfVersion = itm.indexOf("/", 18) + 1;
+                            if (endOfVersion > 0 && endOfVersion < itm.length() && endOfVersion < slash) {
+                                String pkg = itm.substring(endOfVersion, slash).replace('/', '.');
+                                if (known.add(pkg)) {
+                                    save.append(pkg).append(',');
+                                }
+                            }
+                            continue;
+                        } else if (itm.startsWith("META-INF/")) {
                             String res = itm.substring(8); // "/services/pkg.Service"
                             if (known.add(res)) save.append(res).append(',');
                             continue;
                         }
-                        String pkg = slash > 0 ? itm.substring(0, slash).replace('/','.') : "";
-                        if (known.add(pkg)) save.append(pkg).append(',');
+                        String pkg = slash > 0 ? itm.substring(0, slash).replace('/', '.') : "";
+                        if (known.add(pkg)) {
+                            save.append(pkg).append(',');
+                        }
                     }
                 }
-            } catch (ZipException x) { // Unix
+            } catch (ZipException | FileNotFoundException x) { // Unix
                 if (warnedFiles.add(file)) {
                     LOGGER.log(Level.INFO, "Cannot open " + file, x);
                     dumpFiles(file, -1);
                 }
-            } catch (FileNotFoundException x) { // Windows
-                if (warnedFiles.add(file)) {
-                    LOGGER.log(Level.INFO, "Cannot open " + file, x);
-                    dumpFiles(file, -1);
-                }
-            } catch (IOException ioe) {
+            } catch (IOException ioe) { // Windows
                 if (warnedFiles.add(file)) {
                     LOGGER.log(Level.WARNING, "problems with " + file, ioe);
                     dumpFiles(file, -1);
@@ -758,14 +735,14 @@ public class JarClassLoader extends ProxyClassLoader {
             }
         }
 
-        
+
         @Override
         protected void destroy() throws IOException {
             super.destroy();
             if (dead) {
                 return;
             }
-            
+
             File orig = file;
 
             if (!orig.isFile()) {
@@ -777,7 +754,7 @@ public class JarClassLoader extends ProxyClassLoader {
                 // See comment in Module.cleanup.
                 return;
             }
-            
+
             String name = orig.getName();
             String prefix, suffix;
             int idx = name.lastIndexOf('.');
@@ -788,27 +765,17 @@ public class JarClassLoader extends ProxyClassLoader {
                 prefix = name.substring(0, idx);
                 suffix = name.substring(idx);
             }
-            
-            while (prefix.length() < 3) prefix += "x"; // NOI18N
+
+            while (prefix.length() < 3) {
+                prefix += "x"; // NOI18N
+            }
             File temp = Files.createTempFile(prefix, suffix).toFile();
             temp.deleteOnExit();
 
-            InputStream is = new FileInputStream(orig);
-            try {
-                OutputStream os = new FileOutputStream(temp);
-                try {
-                    byte[] buf = new byte[4096];
-                    int j;
-                    while ((j = is.read(buf)) != -1) {
-                        os.write(buf, 0, j);
-                    }
-                } finally {
-                    os.close();
-                }
-            } finally {
-                is.close();
+            try (InputStream is = new FileInputStream(orig); OutputStream os = new FileOutputStream(temp)) {
+                is.transferTo(os);
             }
- 
+
             doCloseJar();
             file = temp;
             dead = true;
@@ -816,7 +783,7 @@ public class JarClassLoader extends ProxyClassLoader {
                 LOGGER.log(Level.FINE, "#21114: replacing {0} with {1}", new Object[] {orig, temp});
             }
         }
-        
+
         private JarFile callGet() throws IOException {
             boolean interrupted = false;
             JarFile ret;
@@ -828,12 +795,10 @@ public class JarClassLoader extends ProxyClassLoader {
                     interrupted = true;
                 } catch (ExecutionException ex) {
                     Throwable cause = ex.getCause();
-                    if (cause instanceof IOException) {
+                    if (cause instanceof IOException ioe) {
                         // This is important for telling general IOException from ZipException
                         // down the stack.
-                        throw (IOException)cause;
-                    } else if (cause instanceof ThreadDeath) {
-                        throw (ThreadDeath) cause; // #201098
+                        throw ioe;
                     } else {
                         throw new IOException(cause);
                     }
@@ -851,7 +816,7 @@ public class JarClassLoader extends ProxyClassLoader {
                 if (fjar != null) {
                     jar = callGet();
                     if (sources.remove(this) == null) {
-                        LOGGER.warning("Can't remove " + this);
+                        LOGGER.log(Level.WARNING, "Can''t remove {0}", this);
                     }
                     LOGGER.log(Level.FINE, "Closing JAR {0}", jar.getName());
                     fjar = null;
@@ -867,7 +832,7 @@ public class JarClassLoader extends ProxyClassLoader {
         @Override
         protected void finalize() throws Throwable {
             super.finalize();
-            
+
             doCloseJar();
 
             if (dead) {
@@ -879,7 +844,7 @@ public class JarClassLoader extends ProxyClassLoader {
         }
 
         // JarFile pool tracking
-        private static final Map<JarSource, Future<JarFile>> sources = new HashMap<JarSource, Future<JarFile>>();
+        private static final Map<JarSource, Future<JarFile>> sources = new HashMap<>();
         private static int LIMIT = Integer.getInteger("org.netbeans.JarClassLoader.limit_fd", 300);
 
         static void opened(JarSource source, String forWhat) {
@@ -900,26 +865,26 @@ public class JarClassLoader extends ProxyClassLoader {
             }
         }
 
-        // called under lock(sources) 
+        // called under lock(sources)
         private static JarSource toClose(JarSource notThisOne) {
             assert Thread.holdsLock(sources);
-             
-            int min = Integer.MAX_VALUE; 
-            JarSource candidate = null; 
+
+            int min = Integer.MAX_VALUE;
+            JarSource candidate = null;
             for (JarSource act : sources.keySet()) {
                 // aging: slight exponential decay of all opened sources?
                 act.requests = 5*act.requests/6;
-                
+
                 if (act.used > 0) continue;
-                if (act.requests < min) { 
-                    min = act.requests; 
-                    candidate = act; 
-                } 
-            } 
-             
+                if (act.requests < min) {
+                    min = act.requests;
+                    candidate = act;
+                }
+            }
+
             assert candidate != null;
             assert candidate != notThisOne : "Closing just opened JarSource: " + notThisOne;
-            return candidate; 
+            return candidate;
         }
 
         @Override
@@ -939,10 +904,10 @@ public class JarClassLoader extends ProxyClassLoader {
         }
     }
 
-    static class DirSource extends Source {
+    private static class DirSource extends Source {
         File dir;
         Manifest manifest;
-        
+
         DirSource(File file) throws MalformedURLException {
             super(BaseUtilities.toURI(file).toURL());
             dir = file;
@@ -963,41 +928,37 @@ public class JarClassLoader extends ProxyClassLoader {
                     Exceptions.printStackTrace(ex);
                 }
             }
-            return manifest = mf;
+            manifest = mf;
+            return mf;
         }
-        
+
+        @Override
         public String getPath() {
             return dir.getPath();
         }
 
+        @Override
         protected URL doGetResource(String name) throws MalformedURLException {
             File resFile = new File(dir, name);
             return resFile.exists() ? BaseUtilities.toURI(resFile).toURL() : null;
         }
-        
+
+        @Override
         protected byte[] readClass(String path) throws IOException {
             File clsFile = new File(dir, path.replace('/', File.separatorChar));
             if (!clsFile.exists()) return null;
-            
-            int len = (int)clsFile.length();
-            byte[] data = new byte[len];
-            InputStream is = new FileInputStream(clsFile);
-            try {
-                int count = 0;
-                while (count < len) {
-                    count += is.read(data, count, len - count);
-                }
-                return data;
-            } finally {
-                is.close();
+
+            try (InputStream is = new FileInputStream(clsFile)) {
+                return is.readAllBytes();
             }
         }
-        
-        protected void listCoveredPackages(Set<String> known, StringBuffer save) {
+
+        @Override
+        protected void listCoveredPackages(Set<String> known, StringBuilder save) {
             appendAllChildren(known, save, dir, "");
         }
-        
-        private static void appendAllChildren(Set<String> known, StringBuffer save, File dir, String prefix) {
+
+        private static void appendAllChildren(Set<String> known, StringBuilder save, File dir, String prefix) {
             boolean populated = false;
             for (File f : dir.listFiles()) {
                 if (f.isDirectory()) {
@@ -1025,7 +986,7 @@ public class JarClassLoader extends ProxyClassLoader {
             }
         }
     }
-    
+
     private static Iterable<String> getCoveredPackages(Module mod, Source[] sources) {
         if (mod != null) {
             Set<String> ret = mod.getCoveredPackages();
@@ -1033,10 +994,11 @@ public class JarClassLoader extends ProxyClassLoader {
                 return ret;
             }
         }
-        
-        Set<String> known = new HashSet<String>();
+
+        Set<String> known = new HashSet<>();
         Manifest m = mod == null ? null : mod.getManifest();
         if (m != null) {
+            assert mod != null;
             Attributes attr = m.getMainAttributes();
             String pack = attr.getValue("Covered-Packages"); // NOI18N
             if (pack != null) {
@@ -1045,9 +1007,9 @@ public class JarClassLoader extends ProxyClassLoader {
                 return known;
             }
         }
-        
+
         // not precomputed/cached, analyze
-        StringBuffer save = new StringBuffer();
+        StringBuilder save = new StringBuilder();
         for (Source s : sources) s.listCoveredPackages(known, save);
 
         if (save.length() > 0) save.setLength(save.length()-1);
@@ -1056,12 +1018,13 @@ public class JarClassLoader extends ProxyClassLoader {
         }
         return known;
     }
-    
+
+    @SuppressWarnings("PackageVisibleInnerClass") // Testing
     static class JarURLStreamHandler extends URLStreamHandler {
 
         private static final URLStreamHandler fallback = new URLStreamHandler() {
             protected @Override URLConnection openConnection(URL u) throws IOException {
-                return new URL(u.toString()).openConnection();
+                return URI.create(u.toString()).toURL().openConnection();
             }
         };
 
@@ -1120,31 +1083,31 @@ public class JarClassLoader extends ProxyClassLoader {
                         LOGGER.log(Level.FINER, "Calling original {0} yields {1}", new Object[]{originalJarHandler, ret});
                     }
                     return ret;
-                } catch (Exception e) {
-                    throw (IOException) new IOException(e.toString()).initCause(e);
+                } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException | RuntimeException e) {
+                    throw new IOException(e.toString(), e);
                 }
             }
             String _name = url.substring(bang + 2);
             try {
                 _name = new URI(_name).getPath();
             } catch (URISyntaxException x) {
-                throw (IOException) new IOException("Decoding " + u + ": " + x).initCause(x);
+                throw new IOException("Decoding " + u + ": " + x.getMessage(), x);
             }
             if (LOGGER.isLoggable(Level.FINER)) {
                 LOGGER.log(Level.FINER, "creating NbJarURLConnection({0},{1},{2})", new Object[]{u, _src, _name});
             }
             return new NbJarURLConnection (u, _src, _name, loader);
         }
-        
+
         @Override
         protected void parseURL(URL u, String spec, int start, int limit) {
             if (spec.startsWith("/")) {
                 setURL(
-                    u, "jar", u.getHost(), u.getPort(), 
-                    u.getAuthority(), u.getUserInfo(), 
+                    u, "jar", u.getHost(), u.getPort(),
+                    u.getAuthority(), u.getUserInfo(),
                     u.getFile().replaceFirst("!/.*$", "!" + spec), // NOI18N
                     u.getQuery(), u.getRef()
-                ); 
+                );
             } else {
                 super.parseURL(u, spec, start, limit);
             }
@@ -1156,7 +1119,7 @@ public class JarClassLoader extends ProxyClassLoader {
      *
      */
     private static class NbJarURLConnection extends JarURLConnection {
-        private JarSource src;
+        private final JarSource src;
         private final String name;
         private byte[] data;
         private InputStream iStream;
@@ -1178,6 +1141,7 @@ public class JarClassLoader extends ProxyClassLoader {
             return name.length() == 0 || name.endsWith("/");
         }
 
+        @Override
         public void connect() throws IOException {
             if (isFolder()) {
                 return; // #139087: odd but harmless

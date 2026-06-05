@@ -1964,4 +1964,17 @@ public class Css3ParserTest extends CssTestBase {
         assertParses("@media (not (color)) or (hover) {}");
         assertParses("@media not (width <= -100px) {}");
     }
+
+    public void testHostPseudoClass() throws Exception {
+        assertParses(":host {}");
+        assertParses(":host(h1) {}");
+        assertParses(":host(.example) {}");
+    }
+    
+    public void testSlottedPseudoElement() throws Exception {
+        assertParses("::slotted(.content) {}");
+        assertParses(":slotted(.content) {}");
+        assertParses("h2 ::slotted(span) {}");
+        assertParses("::slotted(*) {}");
+    }
 }

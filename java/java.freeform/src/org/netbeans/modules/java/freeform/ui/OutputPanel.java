@@ -350,7 +350,6 @@ public class OutputPanel extends javax.swing.JPanel implements HelpCtx.Provider 
 
     private void javadocBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_javadocBrowseActionPerformed
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setFileSelectionMode (JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setMultiSelectionEnabled(false);
         if (lastChosenFile != null) {
@@ -529,7 +528,6 @@ public class OutputPanel extends javax.swing.JPanel implements HelpCtx.Provider 
 
     private void addOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addOutputActionPerformed
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setFileSelectionMode (JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setMultiSelectionEnabled(true);
         if (lastChosenFile != null) {

@@ -386,7 +386,7 @@ public class TokenList {
 
     private static List<TokenSequence<?>> embeddedTokenSequences(TokenHierarchy<Document> th, int offset) {
         TokenSequence<?> embedded = th.tokenSequence();
-        List<TokenSequence<?>> sequences = new ArrayList<TokenSequence<?>>();
+        List<TokenSequence<?>> sequences = new ArrayList<>();
 
         do {
             TokenSequence<?> seq = embedded;

@@ -20,14 +20,11 @@ package org.netbeans.modules.jumpto.common;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import javax.swing.ButtonModel;
@@ -50,7 +47,6 @@ import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.modules.jumpto.EntityComparator;
 import org.netbeans.modules.jumpto.settings.GoToSettings;
-import org.openide.awt.HtmlRenderer;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Parameters;
 
@@ -72,7 +68,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     }
 
     public static final class Builder<T> {
-        private final JList list;
+        private final JList<T> list;
         private final ButtonModel caseSensitive;
         private final Convertor<T> convertor;
         private String separatorPattern;
@@ -146,7 +142,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     private final Color fgSelectionColor;
     private final Color bgColorGreener;
     private final Color bgColorDarkerGreener;
-    private final JList jList;
+    private final JList<T> jList;
     private final ButtonModel caseSensitive;
     private final ButtonModel colorPrefered;
     private final ButtonModel searchFolders;
@@ -173,10 +169,9 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
         nameFormater = createNameFormatter(hs.getHighlightingType(), separatorPattern);
         this.jlName = new JLabel();
         resetNameLabel();
-        Container container = list.getParent();
-        if ( container instanceof JViewport ) {
-            ((JViewport)container).addChangeListener(this);
-            stateChanged(new ChangeEvent(container));
+        if (list.getParent() instanceof JViewport vp) {
+            vp.addChangeListener(this);
+            stateChanged(new ChangeEvent(vp));
         }
         rendererComponent = new MyPanel<>(convertor);
         rendererComponent.setLayout(new GridBagLayout());
@@ -252,7 +247,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     @NonNull
     @Override
     public Component getListCellRendererComponent(
-            @NonNull final JList list,
+            @NonNull final JList<?> list,
             @NullAllowed final Object value,
             final int index,
             final boolean isSelected,
@@ -361,8 +356,7 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     }
 
     private boolean isMainProject(String projectName) {
-        return projectName != null && projectName.equals(mainProjectName) ?
-            true : false;
+        return projectName != null && projectName.equals(mainProjectName);
     }
 
     private static class MyPanel<T> extends JPanel {
@@ -403,16 +397,11 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
     }
     
     private boolean shouldHighlight(final boolean selectedItem) {
-        switch (highlightMode) {
-            case NONE:
-                return false;
-            case ACTIVE:
-                return selectedItem;
-            case ALL:
-                return true;
-            default:
-                throw new IllegalArgumentException(String.valueOf(selectedItem));
-        }
+        return switch (highlightMode) {
+            case NONE -> false;
+            case ACTIVE -> selectedItem;
+            case ALL -> true;
+        };
     }
     
     @NonNull
@@ -442,13 +431,11 @@ public final class ItemRenderer<T> extends DefaultListCellRenderer implements Ch
                 if (colors != null) {
                     final AttributeSet attrs = colors.getFontColors("mark-occurrences");  //NOI18N
                     if (attrs != null) {
-                        Object o = attrs.getAttribute(StyleConstants.Background);
-                        if (o instanceof Color) {
-                            back = (Color) o;
+                        if (attrs.getAttribute(StyleConstants.Background) instanceof Color bg) {
+                            back = bg;
                         }
-                        o = attrs.getAttribute(StyleConstants.Foreground);
-                        if (o instanceof Color) {
-                            front = (Color) o;
+                        if (attrs.getAttribute(StyleConstants.Foreground) instanceof Color fg) {
+                            front = fg;
                         }
                     }
                 }

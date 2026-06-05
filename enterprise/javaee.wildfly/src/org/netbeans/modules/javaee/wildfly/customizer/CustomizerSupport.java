@@ -606,7 +606,6 @@ public final class CustomizerSupport {
 
         private void addPathElement () {
             JFileChooser chooser = new JFileChooser();
-            chooser.setCurrentDirectory(null);
             chooser.setMultiSelectionEnabled (true);
             String title = null;
             String message = null;

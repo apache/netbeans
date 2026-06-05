@@ -21,7 +21,6 @@ package org.netbeans.modules.websvc.wsitconf.wizard;
 import java.awt.Component;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -116,40 +115,23 @@ public class STSWizard implements TemplateWizard.Iterator {
 
         FileUtil.runAtomicAction(new Runnable() {
             public void run() {
-                OutputStream schemaos = null;
-                InputStream schemaIS = null;
                 try {
-                    FileObject wsdlFolder = FileUtil.toFileObject(userDirF);
-                    schemaIS = this.getClass().getClassLoader().getResourceAsStream("org/netbeans/modules/websvc/wsitconf/resources/templates/sts_schema.template"); //NOI18N
-                    FileObject schema = null;
-                    try {
-                        schema = wsdlFolder.createData("sts_schema.xsd");
-                    } catch (IOException ex) { // do not care - this is thrown if the file already exists
-                        logger.log(Level.FINE, null, ex);
-                        logger.log(Level.FINE, "schema: " + schema);
-                        schema = wsdlFolder.getFileObject("sts_schema.xsd");
+                    try (InputStream schemaIS = this.getClass().getClassLoader().getResourceAsStream("org/netbeans/modules/websvc/wsitconf/resources/templates/sts_schema.template")) { //NOI18N
+                        FileObject wsdlFolder = FileUtil.toFileObject(userDirF);
+                        FileObject schema = null;
+                        try {
+                            schema = wsdlFolder.createData("sts_schema.xsd");
+                        } catch (IOException ex) { // do not care - this is thrown if the file already exists
+                            logger.log(Level.FINE, null, ex);
+                            logger.log(Level.FINE, "schema: " + schema);
+                            schema = wsdlFolder.getFileObject("sts_schema.xsd");
+                        }
+                        try (OutputStream schemaos = schema.getOutputStream()) {
+                            schemaIS.transferTo(schemaos);
+                        }
                     }
-                    schemaos = schema.getOutputStream();
-                    FileUtil.copy(schemaIS, schemaos);
-                } catch (FileNotFoundException ex) {
-                    logger.log(Level.INFO, null, ex);
                 } catch (IOException ex) {
                     logger.log(Level.INFO, null, ex);
-                } finally {
-                    if (schemaos != null) {
-                        try {
-                            schemaos.close();
-                        } catch (IOException ex) {
-                            logger.log(Level.INFO, null, ex);
-                        }
-                    }
-                    if (schemaIS != null) {
-                        try {
-                            schemaIS.close();
-                        } catch (IOException ex) {
-                            logger.log(Level.INFO, null, ex);
-                        }
-                    }
                 }
             }
         });
@@ -161,70 +143,35 @@ public class STSWizard implements TemplateWizard.Iterator {
                 FileObject wsdlFolder = FileUtil.toFileObject(userDirF);
                 FileObject wsdlFO = null;
                 try {
-                    OutputStream wsdlos = null;
-                    InputStream wsdlIS = null;
                     try {
-                        wsdlIS = this.getClass().getClassLoader().getResourceAsStream("org/netbeans/modules/websvc/wsitconf/resources/templates/" + fileName + ".template"); //NOI18N
-
-                        try {
-                            wsdlFO = wsdlFolder.createData(fileName, "wsdl");
-                        } catch (IOException ex) { // do not care - this is thrown if the file already exists
-                            logger.log(Level.FINE, null, ex);
-                            logger.log(Level.FINE, "wsdl: " + wsdlFO);
-                            wsdlFO = wsdlFolder.getFileObject(fileName, "wsdl");
-                        }
-                        wsdlos = wsdlFO.getOutputStream();
-                        FileUtil.copy(wsdlIS, wsdlos);
-                    } catch (FileNotFoundException ex) {
-                        logger.log(Level.INFO, null, ex);
+                        try (InputStream wsdlIS = this.getClass().getClassLoader().getResourceAsStream("org/netbeans/modules/websvc/wsitconf/resources/templates/" + fileName + ".template")) { //NOI18N
+                            try {
+                                wsdlFO = wsdlFolder.createData(fileName, "wsdl");
+                            } catch (IOException ex) { // do not care - this is thrown if the file already exists
+                                logger.log(Level.FINE, null, ex);
+                                logger.log(Level.FINE, "wsdl: " + wsdlFO);
+                                wsdlFO = wsdlFolder.getFileObject(fileName, "wsdl");
+                            }
+                            try (OutputStream wsdlos = wsdlFO.getOutputStream()) {
+                                wsdlIS.transferTo(wsdlos);
+                            }
+                        }                    
                     } catch (IOException ex) {
                         logger.log(Level.INFO, null, ex);
-                    } finally {
-                        if (wsdlos != null) {
-                            try {
-                                wsdlos.close();
-                            } catch (IOException ex) {
-                                logger.log(Level.INFO, null, ex);
-                            }
-                        }
-                        if (wsdlIS != null) {
-                            try {
-                                wsdlIS.close();
-                            } catch (IOException ex) {
-                                logger.log(Level.INFO, null, ex);
-                            }
-                        }
                     }
 
                     String newName = serviceName;
                     FileObject newFO = null;
 
-                    InputStream fi = null;
-                    OutputStream fo = null;
-
                     try {
-                        File f = new File(FileUtil.toFile(wsdlFolder).getAbsolutePath(), newName + ".wsdl");
+                        File f = new File(FileUtil.toFile(wsdlFolder).getAbsolutePath(), newName + ".wsdl"); //NOI18N
                         f.createNewFile();
-                        fo = new FileOutputStream(f);
-                        fi = wsdlFO.getInputStream();
-                        FileUtil.copy(fi, fo);
-                        newFO = FileUtil.toFileObject(f);
-                    //newFO = FileUtil.copyFile(wsdlFO, wsdlFolder, newName);
-                    } catch (FileNotFoundException ex) {
-                        logger.log(Level.INFO, null, ex);
+                        try (InputStream fi = wsdlFO.getInputStream(); OutputStream fo = new FileOutputStream(f)) {
+                            fi.transferTo(fo);
+                            newFO = FileUtil.toFileObject(f);
+                        }
                     } catch (IOException ex) {
                         logger.log(Level.INFO, null, ex);
-                    } finally {
-                        try {
-                            if (fi != null) {
-                                fi.close();
-                            }
-                            if (fo != null) {
-                                fo.close();
-                            }
-                        } catch (IOException ex) {
-                            logger.log(Level.INFO, null, ex);
-                        }
                     }
 
                     File newFile = FileUtil.toFile(newFO);
@@ -232,31 +179,20 @@ public class STSWizard implements TemplateWizard.Iterator {
 
                     wiz.putProperty(WizardProperties.WSDL_FILE_PATH, newFile.getPath());
 
-                    BufferedWriter writer = null;
                     try {
                         List<String> lines = wsdlFO.asLines();
-                        writer = new BufferedWriter(new FileWriter(newFile));
-
-                        for (String line : lines) {
-                            if ((index = line.indexOf(SERVICENAME_TAG)) != -1) {
-                                line = line.replaceAll(SERVICENAME_TAG, serviceName);
+                        try (BufferedWriter writer = new BufferedWriter(new FileWriter(newFile))) {
+                            for (String line : lines) {
+                                if ((index = line.indexOf(SERVICENAME_TAG)) != -1) {
+                                    line = line.replaceAll(SERVICENAME_TAG, serviceName);
+                                }
+                                writer.write(line);
+                                writer.newLine();
                             }
-                            writer.write(line);
-                            writer.newLine();
+                            writer.flush();
                         }
-                    } catch (FileNotFoundException ex) {
-                        logger.log(Level.INFO, null, ex);
                     } catch (IOException ex) {
                         logger.log(Level.INFO, null, ex);
-                    } finally {
-                        try {
-                            if (writer != null) {
-                                writer.flush();
-                                writer.close();
-                            }
-                        } catch (IOException ex) {
-                            logger.log(Level.INFO, null, ex);
-                        }
                     }
 
                     wsdlModeler = WsdlModelerFactory.getDefault().getWsdlModeler(wsdlURL);
@@ -267,11 +203,7 @@ public class STSWizard implements TemplateWizard.Iterator {
                             if (wsdlModel == null) {
                                 try {
                                     WsdlServiceHandler.parse(wsdlURL.toExternalForm());
-                                } catch (ParserConfigurationException ex) {
-                                    logger.log(Level.FINE, null, ex);
-                                } catch (SAXException ex) {
-                                    logger.log(Level.FINE, null, ex);
-                                } catch (IOException ex) {
+                                } catch (ParserConfigurationException | SAXException | IOException ex) {
                                     logger.log(Level.FINE, null, ex);
                                 }
                             } else {

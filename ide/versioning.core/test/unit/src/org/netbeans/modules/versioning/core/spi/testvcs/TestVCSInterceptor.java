@@ -23,7 +23,6 @@ import org.netbeans.modules.versioning.core.spi.VCSInterceptor;
 
 import java.util.*;
 import org.netbeans.modules.versioning.core.api.VCSFileProxy;
-import org.openide.filesystems.FileUtil;
 
 /**
  * @author Maros Sandor
@@ -307,11 +306,9 @@ public class TestVCSInterceptor extends VCSInterceptor {
         
         private void copy(File fromFile, File toFile) throws IOException {
             if(fromFile.isFile()) {
-                InputStream is = new FileInputStream (fromFile);
-                OutputStream os = new FileOutputStream(toFile);
-                FileUtil.copy(is, os);
-                is.close();
-                os.close();
+                try (InputStream is = new FileInputStream (fromFile); OutputStream os = new FileOutputStream(toFile)) {
+                    is.transferTo(os);
+                }
             } else {
                 toFile.mkdirs();
                 File[] files = fromFile.listFiles();

@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.localhistory.utils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -48,8 +47,6 @@ public class Utils {
     }
     
     public static void revert(StoreEntry se) {
-        InputStream is = null;
-        OutputStream os = null;
         try {
             VCSFileProxy file = se.getFile();
             FileObject fo = file.toFileObject();
@@ -57,19 +54,14 @@ public class Utils {
                 if(fo == null) {
                     fo = FileUtil.createData(file.getParentFile().toFileObject(), file.getName());
                 }
-                os = getOutputStream(fo);
-                is = se.getStoreFileInputStream();
-                FileUtil.copy(is, os);
+                try (InputStream is = se.getStoreFileInputStream(); OutputStream os = getOutputStream(fo)) {
+                    is.transferTo(os);
+                }
             } else {
                 fo.delete();
             }
         } catch (Exception e) {
             LocalHistory.LOG.log(Level.SEVERE, null, e);
-        } finally {
-            try {
-                if(os != null) { os.close(); }
-                if(is != null) { is.close(); }
-            } catch (IOException e) {}
         }
     }
     

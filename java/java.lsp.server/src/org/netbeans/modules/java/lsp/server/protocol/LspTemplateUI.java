@@ -463,7 +463,7 @@ final class LspTemplateUI {
         String descriptionText = null;
         if (description != null) {
             try (ByteArrayOutputStream os = new ByteArrayOutputStream(); InputStream is = description.openStream()) {
-                FileUtil.copy(is, os);
+                is.transferTo(os);
                 String s = os.toString("UTF-8");
                 descriptionText = stripHtml(s);
             } catch (IOException ex) {

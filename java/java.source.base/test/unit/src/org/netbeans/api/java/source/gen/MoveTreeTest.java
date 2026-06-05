@@ -34,6 +34,7 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
+import com.sun.source.util.TreePath;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.File;
 import java.io.IOException;
@@ -43,16 +44,19 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Objects;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.ModificationResult;
+import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.junit.NbTestSuite;
 import org.netbeans.modules.java.ui.FmtOptions;
+import org.openide.filesystems.FileUtil;
 
 /**
  * Tests method type parameters changes.
@@ -812,6 +816,70 @@ public class MoveTreeTest extends GeneratorTestBase {
         assertEquals("str.substring(1)", res.substring(testSpan[0], testSpan[1]));
         int[] dvojkaSpan = mr.getSpan("dvojka");
         assertEquals("2", res.substring(dvojkaSpan[0], dvojkaSpan[1]));
+    }
+
+    public void testMoveSwitchExpression() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        File sourceFile = new File(getWorkDir(), "Source.java");
+        TestUtilities.copyStringToFile(testFile,
+                """
+                package hierbas.del.litoral;
+
+                public class Test {
+                }
+                """);
+        TestUtilities.copyStringToFile(sourceFile,
+                """
+                package hierbas.del.litoral;
+
+                class Source {
+                    public int taragui(String str) {
+                        return switch (str.length()) {
+                            case 0 -> 0;
+                            default -> 1;
+                        };
+                    }
+                }
+                """);
+        String golden =
+                """
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    public int taragui(String str) {
+                        return switch (str.length()) {
+                            case 0 -> 0;
+                            default -> 1;
+                        };
+                    }
+                }
+                """;
+
+        JavaSource src = getJavaSource(testFile);
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(final WorkingCopy workingCopy) throws IOException {
+                SourceUtils.forceSource(workingCopy, FileUtil.toFileObject(sourceFile));
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                CompilationUnitTree cut = workingCopy.getCompilationUnit();
+                ClassTree main = (ClassTree) cut.getTypeDecls().get(0);
+                
+                TypeElement sourceEl = workingCopy.getElements().getTypeElement("hierbas.del.litoral.Source");
+                TreePath sourcePath = workingCopy.getTrees().getPath(sourceEl);
+                ClassTree source = (ClassTree) sourcePath.getLeaf();
+                MethodTree method = (MethodTree) source.getMembers().get(1);
+                workingCopy.rewrite(main, make.removeClassMember(source, method));
+                workingCopy.rewrite(main, make.addClassMember(main, method));
+            }
+
+        };
+        ModificationResult mr = src.runModificationTask(task);
+        mr.commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
     }
 
     String getGoldenPckg() {

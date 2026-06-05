@@ -46,7 +46,6 @@ import org.netbeans.api.fileinfo.NonRecursiveFolder;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -98,7 +97,7 @@ public final class GlobalFormatAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         final JButton ok = new JButton(Bundle.BTN_OK());
         JButton cancelButton = new JButton(Bundle.BTN_Cancel());
-        final ProgressHandle handle = ProgressHandleFactory.createHandle("Format");
+        final ProgressHandle handle = ProgressHandle.createHandle("Format");
         final ConfirmationPanel panel = new ConfirmationPanel(handle);
         DialogDescriptor nd = new DialogDescriptor(panel, Bundle.CAP_Reformat(), true, new Object[] {ok, cancelButton}, ok, DialogDescriptor.DEFAULT_ALIGN, null, new ActionListener() {
             @Override public void actionPerformed(ActionEvent e) {}

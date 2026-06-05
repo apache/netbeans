@@ -37,6 +37,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -128,6 +129,12 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     private String processUUID;
     private Process preProcess;
     private String preProcessUUID;
+
+    /**
+     * Diagnostics: stracktrace that shows what code requested the execution.
+     */
+    private final Throwable trace;
+    
     private static final SpecificationVersion VER18 = new SpecificationVersion("1.8"); //NOI18N
     private static final Logger LOGGER = Logger.getLogger(MavenCommandLineExecutor.class.getName());
 
@@ -191,6 +198,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
     public MavenCommandLineExecutor(RunConfig conf, InputOutput io, TabContext tc) {
         super(conf, tc);
         this.io = io;
+        if (LOGGER.isLoggable(Level.FINER)) {
+            this.trace = new Throwable();
+        } else {
+            this.trace = null;
+        }
     }
 
     /**
@@ -331,6 +343,8 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
 //                ioput.getOut().println(key + ":" + env.get(key));
 //            }
             ProcessBuilder builder = constructBuilder(clonedConfig, ioput);
+            LOGGER.log(Level.FINER, "Executing process {0} from {1}", new Object[] { builder.command(), this });
+            LOGGER.log(Level.FINER, "Origin:", this.trace);
             printCoSWarning(clonedConfig, ioput);
             processUUID = UUID.randomUUID().toString();
             builder.environment().put(KEY_UUID, processUUID);
@@ -348,6 +362,7 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             throw death;
         } finally {
             BuildExecutionSupport.registerFinishedItem(item);
+            LOGGER.log(Level.FINER, "Execution of {0} terminated", this );
 
             try { //defend against badly written extensions..
                 out.buildFinished();
@@ -881,29 +896,38 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             if (p.equals("-1") || p.equals("--serial") || p.equals("-Dmvnd.serial")) { // "behave like standard maven" mode
                 return false;
             }
-            if (i + 1 < params.size() && (p.equals("-T") || p.equals("--threads"))) {
-                if (params.get(i+1).equals("1")) {
-                    return false;
-                }
-            }
             try {
                 if (p.startsWith("-Dmvnd.threads=") && Integer.parseInt(p.substring(15)) == 1)  {
                     return false;
                 }
-            } catch (NumberFormatException ignored) {} 
+            } catch (NumberFormatException ignored) {}
         }
-        return true;
+        String threads = threadsArgValue(params);
+        return threads == null || !threads.equals("1");
     }
 
     // mvn is ST by default
     static boolean isMultiThreadedMaven(List<String> params) {
-        for (int i = 0; i < params.size() - 1; i++) {
+        String threads = threadsArgValue(params);
+        return threads != null && !threads.equals("1");
+    }
+
+    // Recognizes -T <n>, -T<n>, --threads <n>, --threads=<n>; #9337
+    // The suffix is returned verbatim - Maven validates the value itself, so anything other than "1" is treated as multi-threaded by callers.
+    private static String threadsArgValue(List<String> params) {
+        for (int i = 0; i < params.size(); i++) {
             String p = params.get(i);
-            if ((p.equals("-T") || p.equals("--threads")) && !params.get(i+1).equals("1")) {
-                return true;
+            if (p.equals("-T") || p.equals("--threads")) {
+                if (i + 1 < params.size()) {
+                    return params.get(i + 1);
+                }
+            } else if (p.startsWith("-T") && p.length() > 2) {
+                return p.substring(2);
+            } else if (p.startsWith("--threads=")) {
+                return p.substring("--threads=".length());
             }
         }
-        return false;
+        return null;
     }
 
     /**

@@ -22,7 +22,6 @@ package org.netbeans.modules.glassfish.eecommon.api;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -32,8 +31,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.enterprise.deploy.shared.ActionType;
@@ -53,10 +50,8 @@ import org.netbeans.modules.j2ee.common.DatasourceHelper;
 import org.netbeans.modules.j2ee.deployment.common.api.Datasource;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.NbBundle;
-import org.openide.util.Parameters;
 
 public class JDBCDriverDeployHelper {
 
@@ -173,28 +168,12 @@ public class JDBCDriverDeployHelper {
                     try {
                         File toJar = new File(libsDir, new File(jarUrl.toURI()).getName());
                         try {
-                            BufferedInputStream is = new BufferedInputStream(jarUrl.openStream());
-                            try {
+                            try (BufferedInputStream is = new BufferedInputStream(jarUrl.openStream())) {
                                 msg = NbBundle.getMessage(JDBCDriverDeployHelper.class, "MSG_DeployDriver", toJar.getPath());
                                 eventSupport.fireHandleProgressEvent(null, ProgressEventSupport.createStatus(ActionType.EXECUTE, CommandType.DISTRIBUTE, msg, StateType.RUNNING));
-                                BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(toJar));
-                                try {
-                                    FileUtil.copy(is, os);
-                                } finally {
-                                    if (null != os)
-                                        try {
-                                            os.close();
-                                        } catch (IOException ioe) {
-
-                                        }
+                                try (BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(toJar))) {
+                                    is.transferTo(os);
                                 }
-                            } finally {
-                                if (null != is)
-                                    try {
-                                        is.close();
-                                    } catch (IOException ioe) {
-                                        
-                                    }
                             }
                         } catch (IOException e) {
                             Logger.getLogger(this.getClass().getName()).log(Level.FINER,"",e);

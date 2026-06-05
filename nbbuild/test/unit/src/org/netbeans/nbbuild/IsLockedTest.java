@@ -38,7 +38,7 @@ public class IsLockedTest extends NbTestCase {
         condition = new IsLocked();
         condition.setFile(file);
     }
-    
+
     public void testCanLock() {
         assertFalse("Is not locked", condition.eval());
     }

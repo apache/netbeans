@@ -36,13 +36,15 @@ import org.netbeans.modules.websvc.api.support.ClientCreator;
 import java.io.IOException;
 
 import java.util.Collections;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.j2ee.core.Profile;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.Project;
 
 import org.netbeans.modules.maven.jaxws.MavenJAXWSSupportImpl;
 import org.netbeans.modules.maven.model.ModelOperation;
 import org.netbeans.modules.maven.model.Utilities;
 import org.netbeans.modules.maven.model.pom.POMModel;
+import org.netbeans.modules.maven.model.pom.Plugin;
 import org.netbeans.modules.websvc.jaxws.light.api.JAXWSLightSupport;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -59,6 +61,11 @@ public class JaxWsClientCreator implements ClientCreator {
 
     private Project project;
     private WizardDescriptor wiz;
+    private boolean isWeb;
+    private boolean isEJB;
+    private boolean isJakartaEENameSpace;
+    
+    private static final Logger LOG = Logger.getLogger(JaxWsClientCreator.class.getCanonicalName());
 
     /**
      * Creates a new instance of WebServiceClientCreator
@@ -66,6 +73,9 @@ public class JaxWsClientCreator implements ClientCreator {
     public JaxWsClientCreator(Project project, WizardDescriptor wiz) {
         this.project = project;
         this.wiz = wiz;
+        this.isWeb = WSUtils.isWeb(project);
+        this.isEJB = WSUtils.isEJB(project);
+        this.isJakartaEENameSpace = WSUtils.isJakartaEENameSpace(project);
     }
 
     @Override
@@ -89,10 +99,9 @@ public class JaxWsClientCreator implements ClientCreator {
         }
         
         if (localWsdlFolder != null) {
-            FileObject wsdlFo = retrieveWsdl(wsdlUrl, localWsdlFolder,
-                    hasSrcFolder);
+            FileObject wsdlFo = retrieveWsdl(wsdlUrl, localWsdlFolder, hasSrcFolder);
             if (wsdlFo != null) {
-                final boolean isJaxWsLibrary = MavenModelUtils.hasJaxWsAPI(project);
+                final boolean isJaxWsLibrary = MavenModelUtils.hasJaxWsAPI(project, isJakartaEENameSpace);
                 final String relativePath = FileUtil.getRelativePath(localWsdlFolder, wsdlFo);
                 final String clientName = wsdlFo.getName();
 
@@ -102,14 +111,13 @@ public class JaxWsClientCreator implements ClientCreator {
                     prefs.put(MavenWebService.CLIENT_PREFIX+WSUtils.getUniqueId(wsdlFo.getName(), jaxWsSupport.getServices()), wsdlUrl);
                 }
 
+                Profile profile = MavenModelUtils.getProfile(project);
                 if (!isJaxWsLibrary) {
                     try {
-                        MavenModelUtils.addMetroLibrary(project);
+                        MavenModelUtils.addMetroLibrary(project, profile);
                         MavenModelUtils.addJavadoc(project);
                     } catch (Exception ex) {
-                        Logger.getLogger(
-                            JaxWsClientCreator.class.getName()).log(
-                                Level.INFO, "Cannot add Metro libbrary to pom file", ex); //NOI18N
+                        LOG.log(Level.INFO, "Cannot add Metro library to pom file", ex); //NOI18N
                     }
                 }
                 
@@ -119,20 +127,18 @@ public class JaxWsClientCreator implements ClientCreator {
                     public void performOperation(POMModel model) {
 
                         String packageName = (String) wiz.getProperty(WizardProperties.WSDL_PACKAGE_NAME);
-                        org.netbeans.modules.maven.model.pom.Plugin plugin =
-                                WSUtils.isEJB(project) ?
-                                    MavenModelUtils.addJaxWSPlugin(model, "2.0") : //NOI18N
-                                    MavenModelUtils.addJaxWSPlugin(model);
+                        Plugin plugin = MavenModelUtils.addJaxWSPlugin(model, profile);
 
                         MavenModelUtils.addWsimportExecution(plugin, clientName, 
                                 relativePath,wsdlLocation, packageName);
-                        if (WSUtils.isWeb(project)) { // expecting web project
+                        if (isWeb) { // expecting web project
                             MavenModelUtils.addWarPlugin(model, true);
                         } else { // J2SE Project
                             MavenModelUtils.addWsdlResources(model);
                         }
                     }
                 };
+                
                 Utilities.performPOMModelOperations(project.getProjectDirectory().getFileObject("pom.xml"),
                         Collections.singletonList(operation));
 
@@ -144,7 +150,7 @@ public class JaxWsClientCreator implements ClientCreator {
                         Collections.singletonList("compile")); //NOI18N
                 
                 RunUtils.executeMaven(cfg);
-             }
+            }
         }
     }
 
@@ -188,7 +194,7 @@ public class JaxWsClientCreator implements ClientCreator {
             }
         };
         AtomicBoolean isCancelled = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(runnable, NbBundle.getMessage(
+        BaseProgressUtils.runOffEventDispatchThread(runnable, NbBundle.getMessage(
                 JaxWsClientCreator.class, "LBL_RetrieveWSDL"), isCancelled, false);    // NOI18N
         
         if ( isCancelled.get() ){

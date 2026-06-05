@@ -621,7 +621,7 @@ public class SerialDataConvertorTest extends NbTestCase {
                 try {
                     l = corrupted.lock();
                     os = corrupted.getOutputStream(l);
-                    FileUtil.copy(valid.getInputStream(), os);
+                    valid.getInputStream().transferTo(os);
                     os.flush();
                 } finally {
                     if (os != null) try { os.close(); } catch (IOException ex) {}

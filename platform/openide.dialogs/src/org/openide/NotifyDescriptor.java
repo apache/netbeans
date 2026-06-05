@@ -134,19 +134,19 @@ public class NotifyDescriptor extends Object {
     //
 
     /** Return value if YES is chosen. */
-    public static final Object YES_OPTION = new Integer(JOptionPane.YES_OPTION);
+    public static final Object YES_OPTION = JOptionPane.YES_OPTION;
 
     /** Return value if NO is chosen. */
-    public static final Object NO_OPTION = new Integer(JOptionPane.NO_OPTION);
+    public static final Object NO_OPTION = JOptionPane.NO_OPTION;
 
     /** Return value if CANCEL is chosen. */
-    public static final Object CANCEL_OPTION = new Integer(JOptionPane.CANCEL_OPTION);
+    public static final Object CANCEL_OPTION = JOptionPane.CANCEL_OPTION;
 
     /** Return value if OK is chosen. */
-    public static final Object OK_OPTION = new Integer(JOptionPane.OK_OPTION);
+    public static final Object OK_OPTION = JOptionPane.OK_OPTION;
 
     /** Return value if user closes the window without pressing any button. */
-    public static final Object CLOSED_OPTION = new Integer(JOptionPane.CLOSED_OPTION);
+    public static final Object CLOSED_OPTION = JOptionPane.CLOSED_OPTION;
 
     //
     // Option types

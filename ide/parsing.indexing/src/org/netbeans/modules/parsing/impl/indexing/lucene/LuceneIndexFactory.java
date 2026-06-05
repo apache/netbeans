@@ -46,7 +46,7 @@ import org.openide.util.Parameters;
  */
 public final class LuceneIndexFactory implements IndexFactoryImpl {
     
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
     //@GuardedBy("LuceneIndexFactory.class")
     private static LuceneIndexFactory instance;
     //@GuardedBy("indexes")

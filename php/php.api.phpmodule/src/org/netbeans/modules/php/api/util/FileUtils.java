@@ -624,7 +624,7 @@ public final class FileUtils {
             return;
         }
         try (InputStream inputStream = zipFile.getInputStream(zipEntry); FileOutputStream outputStream = new FileOutputStream(destinationFile)) {
-            FileUtil.copy(inputStream, outputStream);
+            inputStream.transferTo(outputStream);
         }
     }
 

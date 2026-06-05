@@ -45,7 +45,7 @@ import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.project.JavaProjectConstants;
 import org.netbeans.api.java.project.classpath.ProjectClassPathModifier;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
@@ -729,7 +729,7 @@ public class Util {
     public static void addLibraryToProject(Project project, Library library, String classpathType) {
         if(SwingUtilities.isEventDispatchThread()){
             AtomicBoolean cancel = new AtomicBoolean();
-            ProgressUtils.runOffEventDispatchThread( new AddLibrary(project, library, classpathType), 
+            BaseProgressUtils.runOffEventDispatchThread( new AddLibrary(project, library, classpathType), 
                    NbBundle.getMessage(Util.class, 
                  "TTL_ExtendProjectClasspath"), cancel, false );  // NOI18N
         } else {

@@ -42,7 +42,6 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.fileinfo.NonRecursiveFolder;
 import org.netbeans.api.java.queries.AccessibilityQuery;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.queries.VisibilityQuery;
@@ -1332,7 +1331,7 @@ final class PackageViewChildren extends Children.Keys<String> implements FileCha
                 PackageRootNode.PKG_VIEW_RP.post(new java.lang.Runnable() {
                     @Override
                     public void run() {
-                        final ProgressHandle h = ProgressHandleFactory.createHandle(getName());
+                        final ProgressHandle h = ProgressHandle.createHandle(getName());
                         h.start();
                         h.switchToIndeterminate();
                         try {

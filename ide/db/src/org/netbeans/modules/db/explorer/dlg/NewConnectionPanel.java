@@ -24,8 +24,14 @@ import java.awt.Window;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -33,7 +39,9 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -47,7 +55,6 @@ import org.netbeans.modules.db.explorer.DatabaseConnection;
 import org.netbeans.api.db.explorer.JDBCDriver;
 import org.netbeans.api.db.explorer.JDBCDriverManager;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.db.util.DatabaseExplorerInternalUIs;
 import org.netbeans.modules.db.util.JdbcUrl;
 import org.netbeans.modules.db.util.PropertyEditorPanel;
@@ -55,6 +62,7 @@ import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.WizardValidationException;
+import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 
@@ -84,6 +92,7 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
         urlFields.put(JdbcUrl.TOKEN_SERVICENAME, new UrlField(serviceField, serviceLabel));
         urlFields.put(JdbcUrl.TOKEN_TNSNAME, new UrlField(tnsField, tnsLabel));
         urlFields.put(JdbcUrl.TOKEN_DSN, new UrlField(dsnField, dsnLabel));
+        urlFields.put(JdbcUrl.TOKEN_FILE, new UrlField(fileField, fileLabel, fileBrowseButton));
         urlFields.put(JdbcUrl.TOKEN_SERVERNAME, new UrlField(serverNameField, serverNameLabel));
         urlFields.put(JdbcUrl.TOKEN_INSTANCE, new UrlField(instanceField, instanceLabel));
     }
@@ -259,6 +268,8 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
         tnsLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(NewConnectionPanel.class, "ACS_NewConnectionTNSNameA11yDesc")); //NOI18N
         dsnField.getAccessibleContext().setAccessibleName(NbBundle.getMessage(NewConnectionPanel.class, "ACS_NewConnectionDSNTextFieldA11yName")); //NOI18N
         dsnLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(NewConnectionPanel.class, "ACS_NewConnectionDSNA11yDesc")); //NOI18N
+        fileField.getAccessibleContext().setAccessibleName(NbBundle.getMessage(NewConnectionPanel.class, "ACS_NewConnectionFileTextFieldA11yName")); //NOI18N
+        fileLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(NewConnectionPanel.class, "ACS_NewConnectionFileA11yDesc")); //NOI18N
         instanceField.getAccessibleContext().setAccessibleName(NbBundle.getMessage(NewConnectionPanel.class, "ACS_NewConnectionInstanceNameTextFieldA11yName")); //NOI18N
         instanceLabel.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(NewConnectionPanel.class, "ACS_NewConnectionInstanceNameA11yDesc")); //NOI18N
     }
@@ -301,6 +312,9 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
         passwordField = new javax.swing.JPasswordField();
         dsnLabel = new javax.swing.JLabel();
         dsnField = new javax.swing.JTextField();
+        fileLabel = new javax.swing.JLabel();
+        fileField = new javax.swing.JTextField();
+        fileBrowseButton = new javax.swing.JButton();
         urlField = new javax.swing.JTextField();
         passwordCheckBox = new javax.swing.JCheckBox();
         directUrlLabel = new javax.swing.JLabel();
@@ -371,6 +385,14 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
 
         dsnField.setToolTipText(org.openide.util.NbBundle.getMessage(NewConnectionPanel.class, "ACS_NewConnectionDSNA11yDesc")); // NOI18N
 
+        fileLabel.setLabelFor(fileField);
+        org.openide.awt.Mnemonics.setLocalizedText(fileLabel, org.openide.util.NbBundle.getMessage(NewConnectionPanel.class, "NewConnectionFile")); // NOI18N
+
+        fileField.setToolTipText(org.openide.util.NbBundle.getMessage(NewConnectionPanel.class, "ACS_NewConnectionFileA11yDesc")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(fileBrowseButton, "&Browse...");
+        fileBrowseButton.addActionListener(formListener);
+
         urlField.setToolTipText(org.openide.util.NbBundle.getMessage(NewConnectionPanel.class, "ACS_NewConnectionJDBCURLA11yDesc")); // NOI18N
         urlField.addActionListener(formListener);
         urlField.addFocusListener(formListener);
@@ -404,6 +426,7 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
                                 .addComponent(instanceLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(serverNameLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(dsnLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(fileLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(tnsLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(serviceLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(sidLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -418,7 +441,7 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
                                 .addComponent(bConnectionProperties)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(bTestConnection)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(userField, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(sidField)
                             .addComponent(serviceField)
@@ -438,7 +461,11 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
                             .addComponent(templateComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(passwordCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(fileField)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fileBrowseButton)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -476,6 +503,11 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dsnLabel)
                     .addComponent(dsnField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(fileLabel)
+                    .addComponent(fileField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(fileBrowseButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(serverNameLabel)
@@ -526,6 +558,9 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
             }
             else if (evt.getSource() == bConnectionProperties) {
                 NewConnectionPanel.this.bConnectionPropertiesActionPerformed(evt);
+            }
+            else if (evt.getSource() == fileBrowseButton) {
+                NewConnectionPanel.this.fileBrowseButtonActionPerformed(evt);
             }
         }
 
@@ -618,6 +653,48 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
         }
     }//GEN-LAST:event_bConnectionPropertiesActionPerformed
 
+  private void fileBrowseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileBrowseButtonActionPerformed
+        FileChooserBuilder fileChooserBuilder = new FileChooserBuilder(NewConnectionPanel.class);
+        fileChooserBuilder.setTitle(NbBundle.getMessage(AddDriverDialog.class, "NewConnectionFile_Chooser_Title")); //NOI18N
+        fileChooserBuilder.setFilesOnly(true);
+        File existingFile = new File(fileField.getText());
+        if (existingFile.exists() && existingFile.isDirectory()) {
+            fileChooserBuilder.setDefaultWorkingDirectory(existingFile);
+        } else {
+            File parentFile = existingFile.getParentFile();
+            if (parentFile != null && parentFile.exists()) {
+                fileChooserBuilder.setDefaultWorkingDirectory(existingFile.getParentFile());
+            }
+        }
+        File file = fileChooserBuilder.showOpenDialog();
+        if (file != null) {
+            JdbcUrl url = getSelectedJdbcUrl();
+            JdbcUrl.DatabaseFileValidator validator = (url == null) ? null : url.getDatabaseFileValidator();
+            String validationErrorMessage = null;
+            if (validator != null) {
+                try {
+                    validationErrorMessage = validator.getValidationErrorMessage(file);
+                } catch (IOException e) {
+                    LOGGER.log(Level.INFO, "Problem while attempting to validate database file", e);
+                }
+            }
+            if (validationErrorMessage != null) {
+                String validationErrorMessageFinal = validationErrorMessage;
+                /* Use invokeLater to give the file browser dialog time to disappear before the new
+                dialog is shown. Otherwise DialogDisplayer can make it appear behind the
+                New Connection dialog. */
+                SwingUtilities.invokeLater(() -> {
+                    NotifyDescriptor msgDesc =
+                            new NotifyDescriptor.Message(validationErrorMessageFinal, JOptionPane.WARNING_MESSAGE);
+                    DialogDisplayer.getDefault().notify(msgDesc);
+                });
+                /* Still allow the file to be selected. Maybe there's a newer JDBC driver that
+                supports other formats etc. */
+            }
+            fileField.setText(file.getAbsolutePath());
+        }
+  }//GEN-LAST:event_fileBrowseButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bConnectionProperties;
     private javax.swing.JButton bTestConnection;
@@ -626,6 +703,9 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
     private javax.swing.JLabel directUrlLabel;
     private javax.swing.JTextField dsnField;
     private javax.swing.JLabel dsnLabel;
+    private javax.swing.JButton fileBrowseButton;
+    private javax.swing.JTextField fileField;
+    private javax.swing.JLabel fileLabel;
     private javax.swing.JTextField hostField;
     private javax.swing.JLabel hostLabel;
     private javax.swing.ButtonGroup inputModeButtonGroup;
@@ -696,9 +776,10 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
         JdbcUrl jdbcurl = (JdbcUrl) item;
 
         if (jdbcurl == null) {
-            for (Entry<String, UrlField> entry : urlFields.entrySet()) {
-                entry.getValue().getField().setVisible(false);
-                entry.getValue().getLabel().setVisible(false);
+            for (UrlField uf : urlFields.values()) {
+                for (JComponent c : uf.getComponents()) {
+                    c.setVisible(false);
+                }
             }
 
             checkValid();
@@ -706,19 +787,24 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
             return;
         }
 
-        userField.setVisible(true);
-        userLabel.setVisible(true);
-
-        passwordField.setVisible(true);
-        passwordLabel.setVisible(true);
-
-        passwordCheckBox.setVisible(true);
+        boolean showUsernamePassword = jdbcurl.isUsernamePasswordDisplayed();
+        userField.setVisible(showUsernamePassword);
+        userLabel.setVisible(showUsernamePassword);
+        passwordField.setVisible(showUsernamePassword);
+        passwordLabel.setVisible(showUsernamePassword);
+        passwordCheckBox.setVisible(showUsernamePassword);
+        if (!showUsernamePassword) {
+            userField.setText("");
+            passwordField.setText("");
+            passwordCheckBox.setSelected(false);
+        }
 
         directUrlLabel.setVisible(true);
 
         for (Entry<String, UrlField> entry : urlFields.entrySet()) {
-            entry.getValue().getField().setVisible(jdbcurl.supportsToken(entry.getKey()));
-            entry.getValue().getLabel().setVisible(jdbcurl.supportsToken(entry.getKey()));
+            for (JComponent c : entry.getValue().getComponents()) {
+                c.setVisible(jdbcurl.supportsToken(entry.getKey()));
+            }
         }
 
         if (!jdbcurl.isParseUrl()) {
@@ -796,7 +882,7 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
 
             @Override
             public void run() {
-                progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(NewConnectionPanel.class, "ConnectionProgress_Connecting"));
+                progressHandle = ProgressHandle.createHandle(NbBundle.getMessage(NewConnectionPanel.class, "ConnectionProgress_Connecting"));
                 progressHandle.start();
                 enableInput(false);
             }
@@ -1020,10 +1106,16 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
 
         private final JTextField field;
         private final JLabel label;
+        private final List<JComponent> components;
 
-        public UrlField(JTextField field, JLabel label) {
+        public UrlField(JTextField field, JLabel label, JComponent ... otherComponents) {
             this.field = field;
             this.label = label;
+            List<JComponent> toComponents = new ArrayList<>();
+            toComponents.add(field);
+            toComponents.add(label);
+            toComponents.addAll(Arrays.asList(otherComponents));
+            components = Collections.unmodifiableList(toComponents);
         }
 
         public JTextField getField() {
@@ -1032,6 +1124,10 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
 
         public JLabel getLabel() {
             return label;
+        }
+
+        public List<JComponent> getComponents() {
+            return components;
         }
     }
 
@@ -1063,6 +1159,7 @@ public class NewConnectionPanel extends ConnectionDialog.FocusablePanel {
                     case JdbcUrl.TOKEN_SERVICENAME:
                     case JdbcUrl.TOKEN_TNSNAME:
                     case JdbcUrl.TOKEN_DSN:
+                    case JdbcUrl.TOKEN_FILE:
                     case JdbcUrl.TOKEN_SERVERNAME:
                     case JdbcUrl.TOKEN_INSTANCE:
                     case USERINPUT_FIELD:

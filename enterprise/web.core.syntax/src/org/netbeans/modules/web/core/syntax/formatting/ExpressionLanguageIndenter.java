@@ -22,6 +22,7 @@ package org.netbeans.modules.web.core.syntax.formatting;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.editor.indent.spi.Context;
@@ -67,7 +68,7 @@ public class ExpressionLanguageIndenter extends AbstractIndenter<ELTokenId> {
             inExression = true;
             context.getJoinedTokenSequences().move(context.getLineStartOffset());
             // try to find fixed indent:
-            int lineRealFirstNonWhite = Utilities.getRowFirstNonWhite(getDocument(), context.getLineStartOffset());
+            int lineRealFirstNonWhite = LineDocumentUtils.getLineFirstNonWhitespace(getDocument(), context.getLineStartOffset());
             if (lineRealFirstNonWhite != -1 && context.getLineStartOffset() > lineRealFirstNonWhite) {
                 int start = context.getLineStartOffset();
                 context.getJoinedTokenSequences().move(context.getLineStartOffset());

@@ -26,12 +26,12 @@ import javax.swing.SwingUtilities;
 import org.openide.cookies.EditorCookie;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
 import org.openide.text.Line;
 import org.openide.util.Exceptions;
 import org.openide.util.RequestProcessor;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -52,7 +52,7 @@ public final class OpenInEditorAction implements Runnable {
 
     public static void post(String filePath, int lineNumber) {
         try {
-            RP.post(new OpenInEditorAction(new URL("file://" + filePath), lineNumber)); //NOI18N
+            RP.post(new OpenInEditorAction(Utilities.toURI(new File(filePath)).toURL(), lineNumber)); //NOI18N
         } catch (MalformedURLException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -84,12 +84,7 @@ public final class OpenInEditorAction implements Runnable {
             return;
         }
         try {
-            FileObject fo;
-            if (url.getProtocol().equals("file")) { //NOI18N
-                fo = FileUtil.toFileObject(new File(url.getPath()));
-            } else {
-                fo = URLMapper.findFileObject(url); //NOI18N
-            }
+            FileObject fo = URLMapper.findFileObject(url); //NOI18N
             DataObject dobj = DataObject.find(fo);
             EditorCookie ed = dobj.getLookup().lookup(EditorCookie.class);
             if (ed != null && fo == dobj.getPrimaryFile()) {

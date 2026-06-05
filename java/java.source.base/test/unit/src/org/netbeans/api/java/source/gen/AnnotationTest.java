@@ -20,6 +20,7 @@ package org.netbeans.api.java.source.gen;
 
 import com.sun.source.tree.*;
 import com.sun.source.util.SourcePositions;
+import com.sun.source.util.TreePathScanner;
 import org.netbeans.api.java.source.support.ErrorAwareTreePathScanner;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
 import java.io.File;
@@ -1132,6 +1133,102 @@ public class AnnotationTest extends GeneratorTestBase {
                              "public enum Test {\n" +
                              "    A();\n" +
                              "}\n");
+    }
+
+    public void testAnnotationRemoveLastAttribute1() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+                                       """
+                                       package hierbas.del.litoral;
+                                       
+                                       @Ann( 1 )
+                                       public class Test {
+                                       }
+                                       public @interface Ann {
+                                           public int value() default 0;
+                                       }
+                                       """);
+        String golden =
+            """
+            package hierbas.del.litoral;
+            
+            @Ann
+            public class Test {
+            }
+            public @interface Ann {
+                public int value() default 0;
+            }
+            """;
+
+        JavaSource src = getJavaSource(testFile);
+        Task task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                CompilationUnitTree cut = workingCopy.getCompilationUnit();
+                new TreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitAnnotation(AnnotationTree node, Void p) {
+                        workingCopy.rewrite(node,
+                                            make.Annotation(node.getAnnotationType(), List.of()));
+                        return null;
+                    }
+                }.scan(cut, null);
+            }
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
+
+    public void testAnnotationRemoveLastAttribute2() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile,
+                                       """
+                                       package hierbas.del.litoral;
+                                       
+                                       @Ann( value = 1 )
+                                       public class Test {
+                                       }
+                                       public @interface Ann {
+                                           public int value() default 0;
+                                       }
+                                       """);
+        String golden =
+            """
+            package hierbas.del.litoral;
+            
+            @Ann
+            public class Test {
+            }
+            public @interface Ann {
+                public int value() default 0;
+            }
+            """;
+
+        JavaSource src = getJavaSource(testFile);
+        Task task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(Phase.RESOLVED);
+                TreeMaker make = workingCopy.getTreeMaker();
+                CompilationUnitTree cut = workingCopy.getCompilationUnit();
+                new TreePathScanner<Void, Void>() {
+                    @Override
+                    public Void visitAnnotation(AnnotationTree node, Void p) {
+                        workingCopy.rewrite(node,
+                                            make.Annotation(node.getAnnotationType(), List.of()));
+                        return null;
+                    }
+                }.scan(cut, null);
+            }
+        };
+        src.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(testFile);
+        //System.err.println(res);
+        assertEquals(golden, res);
     }
 
     String getGoldenPckg() {

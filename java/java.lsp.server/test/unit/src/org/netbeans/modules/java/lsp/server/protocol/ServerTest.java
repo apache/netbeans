@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
@@ -88,6 +89,7 @@ import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.CreateFile;
 import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
+import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
@@ -1299,7 +1301,8 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeParams initParams = new InitializeParams();
-        initParams.setWorkspaceFolders(Arrays.asList(new WorkspaceFolder(root.getFileObject("jdk/src/java.base").toURI().toString())));
+        FileObject javaBase = root.getFileObject("jdk/src/java.base");
+        initParams.setWorkspaceFolders(Arrays.asList(new WorkspaceFolder(javaBase.toURI().toString(), javaBase.getNameExt())));
         InitializeResult result = server.initialize(initParams).get();
         synchronized (indexingComplete) {
             while (!indexingComplete[0]) {
@@ -3779,6 +3782,82 @@ public class ServerTest extends NbTestCase {
                      fileChanges.get(1).getRange());
         assertEquals("List", fileChanges.get(1).getNewText());
     }
+    
+    public void testSourceActionFixImports() throws Exception {
+        File src = new File(getWorkDir(), "a/Test.java");
+        src.getParentFile().mkdirs();
+        try (Writer w = new FileWriter(new File(src.getParentFile().getParentFile(), ".test-project"))) {
+        }
+        String code = """
+                      package a;
+                      public class Test {
+                        private final List<String> names = new ArrayList<>();
+                      }
+                      """;
+        try (Writer w = new FileWriter(src)) {
+            w.write(code);
+        }
+        CountDownLatch indexingComplete = new CountDownLatch(1);
+        Launcher<LanguageServer> serverLauncher = createClientLauncherWithLogging(new TestCodeLanguageClient() {
+            @Override
+            public void showMessage(MessageParams params) {
+                if (Server.INDEXING_COMPLETED.equals(params.getMessage())) {
+                    indexingComplete.countDown();
+                } else {
+                    throw new UnsupportedOperationException("Unexpected message.");
+                }
+            }
+            @Override
+            public CompletableFuture<String> showHtmlPage(HtmlPageParams params) {
+                FixImportsUI ui = MockHtmlViewer.assertDialogShown(params.getId(), FixImportsUI.class);
+                ui.completeSelectedCandidates();
+                return CompletableFuture.completedFuture(null);
+            }
+
+        }, client.getInputStream(), client.getOutputStream());
+        serverLauncher.startListening();
+        LanguageServer server = serverLauncher.getRemoteProxy();
+        InitializeParams initParams = new InitializeParams();
+        initParams.setWorkspaceFolders(List.of(new WorkspaceFolder(getWorkDir().toURI().toString(),getWorkDir().getName())));
+        server.initialize(initParams).get();
+        indexingComplete.await();
+        String uri = src.toURI().toString();
+        server.getTextDocumentService().didOpen(new DidOpenTextDocumentParams(new TextDocumentItem(uri, "java", 0, code)));
+        VersionedTextDocumentIdentifier id = new VersionedTextDocumentIdentifier(src.toURI().toString(), 1);
+
+        CodeActionParams codeActionParams = new CodeActionParams(
+                id,
+                new Range(new Position(0, 0),
+                        new Position(0, 0)),
+                new CodeActionContext(Arrays.asList(), Arrays.asList(CodeActionKind.Source))
+        );
+
+        List<Either<Command, CodeAction>> codeActions = server.getTextDocumentService()
+                                                              .codeAction(codeActionParams)
+                                                              .get();
+        Optional<CodeAction> fixImports
+                = codeActions.stream()
+                        .filter(Either::isRight)
+                        .map(Either::getRight)
+                        .filter(a -> Bundle.DN_FixImports().equals(a.getTitle()))
+                        .findAny();
+        assertTrue(fixImports.isPresent());
+        CodeAction resolvedCodeAction = server.getTextDocumentService()
+                                              .resolveCodeAction(fixImports.get())
+                                              .get();
+
+        assertNotNull(resolvedCodeAction);
+        WorkspaceEdit edit = resolvedCodeAction.getEdit();
+        assertNotNull(edit);
+        assertEquals(1, edit.getChanges().size());
+        List<TextEdit> fileChanges = edit.getChanges().get(tripleSlashUri(uri));
+        assertNotNull(fileChanges);
+        assertEquals(1, fileChanges.size());
+        assertEquals(new Range(new Position(1, 0),
+                               new Position(1, 0)),
+                     fileChanges.get(0).getRange());
+        assertEquals("\nimport java.util.ArrayList;\nimport java.util.List;\n\n", fileChanges.get(0).getNewText());
+    }
 
     public void testRenameDocumentChangesCapabilitiesRenameOp() throws Exception {
         doTestRename(init -> {
@@ -5713,7 +5792,7 @@ public class ServerTest extends NbTestCase {
         serverLauncher.startListening();
         LanguageServer server = serverLauncher.getRemoteProxy();
         InitializeParams initP = new InitializeParams();
-        WorkspaceFolder wf = new WorkspaceFolder(wdBase.toURI().toString());
+        WorkspaceFolder wf = new WorkspaceFolder(wdBase.toURI().toString(), wdBase.getName());
         initP.setWorkspaceFolders(Collections.singletonList(wf));
         InitializeResult result = server.initialize(initP).get();
         
@@ -5911,10 +5990,15 @@ public class ServerTest extends NbTestCase {
 
             @Override
             public CompletableFuture<List<Object>> configuration(ConfigurationParams configurationParams) {
-                assertEquals(1, configurationParams.getItems().size());
-                ConfigurationItem item = configurationParams.getItems().get(0);
-                assertEquals("netbeans.inlay.enabled", item.getSection());
-                return CompletableFuture.completedFuture(Arrays.asList(JsonParser.parseString(settings[0])));
+                List<Object> res = new ArrayList<>(configurationParams.getItems().size());
+                for (ConfigurationItem item : configurationParams.getItems()) {
+                    if ("netbeans.inlay.enabled".equals(item.getSection())) {
+                        res.add(JsonParser.parseString(settings[0]));
+                    } else {
+                        res.add(new JsonObject());
+                    }
+                }
+                return CompletableFuture.completedFuture(res);
             }
 
         }, client.getInputStream(), client.getOutputStream());
@@ -5948,7 +6032,15 @@ public class ServerTest extends NbTestCase {
             assertEquals(expectedHints, convertHints.apply(hints));
         }
         {
-            settings[0] = "[\"chained\"]";
+            String jsonString = "{\n" +
+                "  \"netbeans\": {\n" +
+                "    \"inlay\": {\n" +
+                "      \"enabled\": [\"chained\"]\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+            JsonElement j = JsonParser.parseString(jsonString);
+            server.getWorkspaceService().didChangeConfiguration(new DidChangeConfigurationParams(j));
             List<InlayHint> hints = server.getTextDocumentService().inlayHint(new InlayHintParams(id, new Range(new Position(0, 0), new Position(9, 1)))).get();
             Set<String> expectedHints = new HashSet<>(Arrays.asList(
                     "4:33:  List<String>",
@@ -5958,14 +6050,30 @@ public class ServerTest extends NbTestCase {
             assertEquals(expectedHints, convertHints.apply(hints));
         }
         {
-            settings[0] = "[\"parameter\"]";
+            String jsonString = "{\n" +
+                "  \"netbeans\": {\n" +
+                "    \"inlay\": {\n" +
+                "      \"enabled\": [\"parameter\"]\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+            JsonElement j = JsonParser.parseString(jsonString);
+            server.getWorkspaceService().didChangeConfiguration(new DidChangeConfigurationParams(j));
             List<InlayHint> hints = server.getTextDocumentService().inlayHint(new InlayHintParams(id, new Range(new Position(0, 0), new Position(9, 1)))).get();
             Set<String> expectedHints = new HashSet<>(Arrays.asList(
                     "4:29:a:"));
             assertEquals(expectedHints, convertHints.apply(hints));
         }
         {
-            settings[0] = "[\"var\"]";
+            String jsonString = "{\n" +
+                "  \"netbeans\": {\n" +
+                "    \"inlay\": {\n" +
+                "      \"enabled\": [\"var\"]\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+            JsonElement j = JsonParser.parseString(jsonString);
+            server.getWorkspaceService().didChangeConfiguration(new DidChangeConfigurationParams(j));
             List<InlayHint> hints = server.getTextDocumentService().inlayHint(new InlayHintParams(id, new Range(new Position(0, 0), new Position(9, 1)))).get();
             Set<String> expectedHints = new HashSet<>(Arrays.asList(
                     "3:13: : int"));

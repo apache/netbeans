@@ -170,6 +170,7 @@ public final class CreateElement implements ErrorRule<Void> {
         TreePath parent = null;
         TreePath firstClass = null;
         TreePath firstMethod = null;
+        TreePath firstLambda = null;
         TreePath firstVar = null;
         TreePath firstInitializer = null;
         TreePath methodInvocation = null;
@@ -194,6 +195,9 @@ public final class CreateElement implements ErrorRule<Void> {
                 firstClass = path;
             if (leafKind == Kind.METHOD && firstMethod == null && firstClass == null)
                 firstMethod = path;
+            if (leafKind == Kind.LAMBDA_EXPRESSION && firstMethod == null &&
+                firstClass == null && firstLambda == null && firstInitializer == null)
+                firstLambda = path;
             //static/dynamic initializer:
             if (   leafKind == Kind.BLOCK && TreeUtilities.CLASS_TREE_KINDS.contains(path.getParentPath().getLeaf().getKind())
                 && firstMethod == null && firstClass == null)
@@ -354,6 +358,7 @@ public final class CreateElement implements ErrorRule<Void> {
         if (!ErrorFixesFakeHint.enabled(info.getFileObject(), FixKind.CREATE_LOCAL_VARIABLE)) {
             fixTypes.remove(ElementKind.LOCAL_VARIABLE);
         }
+        TypeMirror localType;
         final TypeMirror type;
         
         if (types != null && !types.isEmpty()) {
@@ -372,13 +377,15 @@ public final class CreateElement implements ErrorRule<Void> {
                 i++;
             }
             //XXX: should reasonably consider all the found type candidates, not only the one:
-            type = types.get(0);
+            localType = Utilities.convertIfAnonymous(types.get(0), true);
+            type = Utilities.convertIfAnonymous(types.get(0), false);
             
             if (superType[0] == null) {
                 // the type must be already un-captured.
                 superType[0] = type;
             }
         } else {
+            localType = null;
             type = null;
         }
 
@@ -485,7 +492,7 @@ public final class CreateElement implements ErrorRule<Void> {
             }
         }
 
-        if (!wasMemberSelect && (fixTypes.contains(ElementKind.LOCAL_VARIABLE) || fixTypes.contains(ElementKind.PARAMETER) || fixTypes.contains(ElementKind.RESOURCE_VARIABLE))) {
+        if (!wasMemberSelect && (fixTypes.contains(ElementKind.LOCAL_VARIABLE) || fixTypes.contains(ElementKind.PARAMETER) || fixTypes.contains(ElementKind.RESOURCE_VARIABLE) || fixTypes.contains(ElementKind.OTHER))) {
             ExecutableElement ee = null;
 
             if (firstMethod != null) {
@@ -495,10 +502,12 @@ public final class CreateElement implements ErrorRule<Void> {
             int identifierPos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), errorPath.getLeaf());
             if (ee != null && fixTypes.contains(ElementKind.PARAMETER) && !Utilities.isMethodHeaderInsideGuardedBlock(info, (MethodTree) firstMethod.getLeaf()))
                 result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.PARAMETER, identifierPos).toEditorFix());
-            if ((firstMethod != null || firstInitializer != null) && fixTypes.contains(ElementKind.LOCAL_VARIABLE) && ErrorFixesFakeHint.enabled(ErrorFixesFakeHint.FixKind.CREATE_LOCAL_VARIABLE))
-                result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.LOCAL_VARIABLE, identifierPos).toEditorFix());
+            if ((firstMethod != null || firstInitializer != null || firstLambda != null) && fixTypes.contains(ElementKind.LOCAL_VARIABLE) && ErrorFixesFakeHint.enabled(ErrorFixesFakeHint.FixKind.CREATE_LOCAL_VARIABLE))
+                result.add(new AddParameterOrLocalFix(info, localType, simpleName, ElementKind.LOCAL_VARIABLE, identifierPos).toEditorFix());
             if (fixTypes.contains(ElementKind.RESOURCE_VARIABLE))
-                result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.RESOURCE_VARIABLE, identifierPos).toEditorFix());
+                result.add(new AddParameterOrLocalFix(info, localType, simpleName, ElementKind.RESOURCE_VARIABLE, identifierPos).toEditorFix());
+            if (fixTypes.contains(ElementKind.OTHER))
+                result.add(new AddParameterOrLocalFix(info, localType, simpleName, ElementKind.OTHER, identifierPos).toEditorFix());
         }
 
         return result;

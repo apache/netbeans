@@ -320,7 +320,7 @@ private void jButtonWebInfActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private static JFileChooser createChooser(File webPagesLoc, WizardDescriptor wizardDescriptor) {
 	String path = webPagesLoc.getAbsolutePath();
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, new File(path));
+        chooser.setCurrentDirectory(new File(path));
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setAcceptAllFileFilterUsed(false);
         

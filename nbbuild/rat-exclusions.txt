@@ -191,9 +191,6 @@ harness/jellytools.platform/src/org/netbeans/jellytools/version_info
 platform/openide.util.ui/test/unit/src/org/openide/util/UtilitiesTranslateEmpty.txt
 platform/openide.util/test/unit/src/org/openide/util/LookupUsesRequestProcessorTest.resource
 
-###### projects used for automated tests
-java/java.lsp.server/vscode/test-projects/**
-
 ######  external dependencies licences and notices
 **/external/*-license.txt
 **/external/*-notice.txt

@@ -55,6 +55,7 @@ import java.io.*;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.util.logging.Level;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.settings.EditorStyleConstants;
 import org.netbeans.api.editor.settings.FontColorNames;
@@ -718,7 +719,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
         int line = -1;
         int offset = carett.getDot();
         try {
-            line = Utilities.getLineOffset(doc, offset);
+            line = LineDocumentUtils.getLineIndex(doc, offset);
         } catch (BadLocationException ex) {
             Subversion.LOG.log(Level.SEVERE, "Can not get line for caret at offset " + offset, ex); // NOI18N
             clearRecentFeedback();
@@ -1096,7 +1097,7 @@ final class AnnotationBar extends JComponent implements Accessible, PropertyChan
                 JTextComponent component = editorUI.getComponent();
                 BaseTextUI textUI = (BaseTextUI)component.getUI();
                 int clickOffset = textUI.viewToModel(component, new Point(0, e.getY()));
-                line = Utilities.getLineOffset(doc, clickOffset);
+                line = LineDocumentUtils.getLineIndex(doc, clickOffset);
             }catch (BadLocationException ble){
             }
         }

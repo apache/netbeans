@@ -175,6 +175,7 @@
                 <friend>org.netbeans.modules.gsf</friend>
                 <friend>org.netbeans.modules.jvi</friend>
                 <friend>org.netbeans.modules.languages</friend>
+                <friend>org.netbeans.modules.markdown</friend>
                 <friend>org.netbeans.modules.options.editor</friend>
                 <friend>org.netbeans.modules.editor.fold</friend>
                 <friend>org.netbeans.modules.editor.fold.nbui</friend>

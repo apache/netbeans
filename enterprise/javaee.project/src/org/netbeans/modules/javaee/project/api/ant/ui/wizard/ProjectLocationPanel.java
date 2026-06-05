@@ -235,7 +235,6 @@ final class ProjectLocationPanel extends JPanel implements DocumentListener {
         String command = evt.getActionCommand();        
         if ( "BROWSE".equals( command ) ) { // NOI18N                
             JFileChooser chooser = new JFileChooser ();
-            FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
             chooser.setDialogTitle(NbBundle.getMessage(ProjectLocationPanel.class,"LBL_NWP1_SelectProjectLocation"));
             chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
             String path = this.projectLocationTextField.getText();

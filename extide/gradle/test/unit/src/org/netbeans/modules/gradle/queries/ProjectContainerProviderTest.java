@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.Set;
 import static junit.framework.TestCase.assertFalse;
+import org.junit.Ignore;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.gradle.AbstractGradleProjectTestCase;
@@ -105,7 +106,9 @@ public class ProjectContainerProviderTest extends AbstractGradleProjectTestCase 
 
     }
 
+    @Ignore("With Gradle 9, these kind of projects regarder illegal in Gradle as well.")
     public void testWeirdMultiProject() throws IOException {
+        
         int rnd = new Random().nextInt(1000000);
         FileObject a = createGradleProject("projectA-" + rnd,
                 "", "include ':projectB'\n include ':folder:projectC'\nproject(':folder:projectC').projectDir = new File(\"$rootDir/projectC\")");

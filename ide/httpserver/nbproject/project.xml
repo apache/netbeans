@@ -162,11 +162,11 @@
             <public-packages/>
             <class-path-extension>
                 <runtime-relative-path>ext/webserver.jar</runtime-relative-path>
-                <binary-origin>external/tomcat-embed-core-9.0.102.jar</binary-origin>
+                <binary-origin>external/tomcat-embed-core-9.0.113.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/webserver-annotations.jar</runtime-relative-path>
-                <binary-origin>external/tomcat-annotations-api-9.0.102.jar</binary-origin>
+                <binary-origin>external/tomcat-annotations-api-9.0.113.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

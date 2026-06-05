@@ -39,6 +39,7 @@ import javax.swing.text.Document;
 import org.netbeans.api.actions.Editable;
 import org.netbeans.api.actions.Openable;
 import org.netbeans.api.editor.EditorRegistry;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lsp.HyperlinkLocation;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
@@ -86,8 +87,8 @@ public final class HyperlinkImpl implements HyperlinkProviderExt, HyperlinkLocat
 
         try {
             BaseDocument bdoc = (BaseDocument) doc;
-            int start = Utilities.getRowStart(bdoc, offset);
-            int end = Utilities.getRowEnd(bdoc, offset);
+            int start = LineDocumentUtils.getLineStartOffset(bdoc, offset);
+            int end = LineDocumentUtils.getLineEndOffset(bdoc, offset);
 
             for (int[] span : Parser.recognizeURLs(DocumentUtilities.getText(doc, start, end - start))) {
                 if (span[0] + start <= offset && offset <= span[1] + start) {

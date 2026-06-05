@@ -268,13 +268,15 @@ public abstract class JavaRefactoringPlugin extends ProgressProviderAdapter impl
         return results;
     }
 
-    private void processFiles(Map<FileObject, List<FileObject>> work, ClasspathInfo info, boolean modification, Collection<ModificationResult> results, CancellableTask<? extends CompilationController> task) throws IOException, IllegalArgumentException {
+    //the meaning of overrideInfo (used to be info) is very unclear, and is suspicious. Possibly, it should be eliminated:
+    private void processFiles(Map<FileObject, List<FileObject>> work, ClasspathInfo overrideInfo, boolean modification, Collection<ModificationResult> results, CancellableTask<? extends CompilationController> task) throws IOException, IllegalArgumentException {
         for (Map.Entry<FileObject, List<FileObject>> entry : work.entrySet()) {
             if (cancelRequested.get()) {
                 results.clear();
                 return;
             }
             final FileObject root = entry.getKey();
+            ClasspathInfo info = overrideInfo;
             if (info == null) {
                 ClassPath bootPath = ClassPath.getClassPath(root, ClassPath.BOOT);
                 if (bootPath == null) {

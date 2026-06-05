@@ -15,9 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-149BA650844774EECE841E98549127B2B468C364 org.openjfx:javafx-base:17.0.7:linux-aarch64
-BB43545BF1020672E299D9876167D761865E2D0B org.openjfx:javafx-controls:17.0.7:linux-aarch64
-BC0034EB15A9A9D4BDE89027145F414241969BCD org.openjfx:javafx-graphics:17.0.7:linux-aarch64
-2D0E71725CD814FE070CC85735C5706267847DDE org.openjfx:javafx-media:17.0.7:linux-aarch64
-688B4E963DD67CF9B8EFA7B9EF61405315C0D02A org.openjfx:javafx-web:17.0.7:linux-aarch64
-387F1ED3FC958FD2AD8FE8457F94AB81860D56B3 org.openjfx:javafx-swing:17.0.7:linux-aarch64
+4A15A86C8836EBE7DFA4224C67C33A6E998255A3 org.openjfx:javafx-base:21:linux-aarch64
+5F1BCC010534D0A3E9B40216450A5F840F35B570 org.openjfx:javafx-controls:21:linux-aarch64
+BA2FD911F95BA2DFB2150B57F8A9D29EFF5E2755 org.openjfx:javafx-graphics:21:linux-aarch64
+117A580DCEA8BC6B1500148A5E21A578466EAE0C org.openjfx:javafx-media:21:linux-aarch64
+6FC79F94A653746F078BC79593D29E5CF951C17F org.openjfx:javafx-web:21:linux-aarch64
+685DF92AC03BC913625C29788493827CEF83BF3B org.openjfx:javafx-swing:21:linux-aarch64

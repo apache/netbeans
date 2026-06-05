@@ -133,22 +133,10 @@ public class BrandingSupportTest extends TestBase {
     }
     
     private File createNewSource(final BrandingSupport.BrandedFile bFile) throws MalformedURLException, FileNotFoundException, IOException {
-        OutputStream os = null;
-        InputStream is = null;
-        File newSource = new File(getWorkDir(),"newSource.gif");
-        
-        try {
-            
-            os = new FileOutputStream(newSource);
-            is = bFile.getBrandingSource().openStream();
-            FileUtil.copy(is,os);
-        } finally  {
-            if (is != null) {
-                is.close();
-            }
-            if (os != null) {
-                os.close();
-            }
+        File newSource = new File(getWorkDir(), "newSource.gif");
+        try (InputStream is = bFile.getBrandingSource().openStream();
+             OutputStream os = new FileOutputStream(newSource);) {
+            is.transferTo(os);
         }
         return newSource;
     }

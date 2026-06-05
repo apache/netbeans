@@ -49,6 +49,8 @@ public class InstanceRemotePanel extends InstancePanel {
         localIpCB.setVisible(false);
         domainLabel.setVisible(true);
         domainField.setVisible(true);
+        jvmOptionsLabel.setVisible(false);
+        additionalLauncherJvmOptionsField.setVisible(false);
     }
 
     // Implemented abstract methods                                           //

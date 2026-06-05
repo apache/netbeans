@@ -85,9 +85,6 @@ public class FileChooserBuilder {
     private BadgeProvider badger;
     private String title;
     private String approveText;
-    //Just in case...
-    private static boolean PREVENT_SYMLINK_TRAVERSAL =
-            !Boolean.getBoolean("allow.filechooser.symlink.traversal"); //NOI18N
     private final String dirKey;
     private File failoverDir;
     private FileFilter filter;
@@ -391,10 +388,6 @@ public class FileChooserBuilder {
         if (badger != null) {
             chooser.setFileView(new CustomFileView(new BadgeIconProvider(badger),
                     chooser.getFileSystemView()));
-        }
-        if (PREVENT_SYMLINK_TRAVERSAL) {
-            FileUtil.preventFileChooserSymlinkTraversal(chooser,
-                    chooser.getCurrentDirectory());
         }
         if (filter != null) {
             chooser.setFileFilter(filter);

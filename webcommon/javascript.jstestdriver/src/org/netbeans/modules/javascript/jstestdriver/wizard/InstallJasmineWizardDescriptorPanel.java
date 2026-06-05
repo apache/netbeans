@@ -105,13 +105,8 @@ public class InstallJasmineWizardDescriptorPanel implements WizardDescriptor.Pan
     }
 
     private static void download(String url, File target) throws IOException {
-        try {
-            InputStream is = new URL(url).openStream();
-            try {
-                copyToFile(is, target);
-            } finally {
-                is.close();
-            }
+        try (InputStream is = new URL(url).openStream()) {
+            copyToFile(is, target);
         } catch (IOException ex) {
             // error => ensure file is deleted
             target.delete();
@@ -154,21 +149,15 @@ public class InstallJasmineWizardDescriptorPanel implements WizardDescriptor.Pan
     }
 
     private static File copyToFile(InputStream is, File target) throws IOException {
-        OutputStream os = new FileOutputStream(target);
-        try {
-            FileUtil.copy(is, os);
-        } finally {
-            os.close();
+        try (OutputStream os = new FileOutputStream(target)) {
+            is.transferTo(os);
         }
         return target;
     }
 
     private static void writeFile(InputStream str, FileObject fo) throws IOException {
-        OutputStream out = fo.getOutputStream();
-        try {
-            FileUtil.copy(str, out);
-        } finally {
-            out.close();
+        try (OutputStream out = fo.getOutputStream()) {
+            str.transferTo(out);
         }
     }
 

@@ -114,7 +114,7 @@ public class DownloadPanel extends javax.swing.JPanel {
         setStatus("Preparing...");
         submit(() -> {
             Pkg bundle = state.selection.get(discoClient);
-            return discoClient.getPkgInfo(bundle.getEphemeralId(), bundle.getJavaVersion());
+            return discoClient.getPkgInfoByPkgId(bundle.getId(), bundle.getJavaVersion());
         }).then(pkgInfo -> {
             download = new File(destinationFolder, pkgInfo.getFileName());
             String path = download.getAbsolutePath();

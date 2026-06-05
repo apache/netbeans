@@ -19,14 +19,15 @@
 package org.netbeans.modules.languages.antlr;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.prefs.Preferences;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OccurrencesFinder;
 import org.netbeans.modules.csl.api.OffsetRange;
+import org.netbeans.modules.languages.antlr.v4.MarkOccurencesSettings;
 import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 
@@ -39,6 +40,11 @@ public class AntlrOccurrencesFinder extends OccurrencesFinder<AntlrParserResult>
     private int caretPosition;
     private boolean cancelled;
     private final Map<OffsetRange, ColoringAttributes> occurrences = new HashMap<>();
+    private final Preferences markOccurrencesPreferences;
+
+    public AntlrOccurrencesFinder(Preferences markOccurrencesPreferences) {
+        this.markOccurrencesPreferences = markOccurrencesPreferences;
+    }
 
     @Override
     public void setCaretPosition(int position) {
@@ -74,6 +80,15 @@ public class AntlrOccurrencesFinder extends OccurrencesFinder<AntlrParserResult>
         this.cancelled = true;
     }
 
+    @Override
+    public boolean isKeepMarks() {
+        return markOccurrencesPreferences.getBoolean(MarkOccurencesSettings.KEEP_MARKS, true);
+    }
+
+    @Override
+    public boolean isMarkOccurrencesEnabled() {
+        return markOccurrencesPreferences.getBoolean(MarkOccurencesSettings.ON_OFF, true);
+    }
 
     private boolean checkAndResetCancel() {
         if (cancelled) {

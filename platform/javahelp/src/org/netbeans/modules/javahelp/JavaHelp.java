@@ -492,7 +492,7 @@ public final class JavaHelp extends AbstractHelp implements HelpCtx.Displayer, A
             // in a separate thread. When finished, the progress dialog will hide
             // itself and control will return to event thread.
             Installer.log.fine("showing progress dialog...");
-            progressHandle = ProgressHandleFactory.createHandle("");
+            progressHandle = ProgressHandle.createHandle("");
             createProgressDialog(run, currentModalDialog()).setVisible(true);
             progressHandle.finish();
             Installer.log.fine("dialog done.");

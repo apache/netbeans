@@ -43,21 +43,17 @@ public final class FileBasedURLMapper extends URLMapper {
         if (type == URLMapper.NETWORK) {
             return null;
         }
-        URL retVal = null;
         try {
-            if (fo instanceof BaseFileObj)  {
-                final BaseFileObj bfo = (BaseFileObj) fo;
-                retVal = FileBasedURLMapper.fileToURL(bfo.getFileName().getFile(), fo);
-            } else if (fo instanceof RootObj<?>) {
-                final RootObj<?> rfo = (RootObj<?>) fo;
+            if (fo instanceof BaseFileObj bfo)  {
+                return FileBasedURLMapper.fileToURL(bfo.getFileName().getFile(), fo);
+            } else if (fo instanceof RootObj<?> rfo) {
                 return getURL(rfo.getRealRoot(), type);                
             }
-        } catch (MalformedURLException e) {
-            retVal = null;
-        }
-        return retVal;
+        } catch (MalformedURLException e) {}
+        return null;
     }
 
+    @Override
     public final FileObject[] getFileObjects(final URL url) {
         if (!"file".equals(url.getProtocol())) {  //NOI18N
             return null;
@@ -67,20 +63,16 @@ public final class FileBasedURLMapper extends URLMapper {
             return null;
         }
         //TODO: review and simplify         
-        FileObject retVal = null;
         File file;
         try {
             file = FileUtil.normalizeFile(BaseUtilities.toFile(url.toURI()));
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | IllegalArgumentException e) {
             LOG.log(Level.INFO, "URL=" + url, e); // NOI18N
             return null;
-        } catch (IllegalArgumentException iax) {
-            LOG.log(Level.INFO, "URL=" + url, iax); // NOI18N
-            return null;
         }
-        
-        retVal = FileBasedFileSystem.getFileObject(file, FileObjectFactory.Caller.ToFileObject);
-        return new FileObject[]{retVal};
+        return new FileObject[] {
+            FileBasedFileSystem.getFileObject(file, FileObjectFactory.Caller.ToFileObject)
+        };
     }
 
     private static URL fileToURL(final File file, final FileObject fo) throws MalformedURLException {

@@ -18,12 +18,7 @@
  */
 package org.netbeans.modules.java.hints.errors;
 
-import com.sun.source.util.TreePath;
-import java.util.List;
-import java.util.Set;
-import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
-import org.netbeans.spi.editor.hints.Fix;
 import org.openide.util.NbBundle;
 
 /**
@@ -33,7 +28,7 @@ import org.openide.util.NbBundle;
 public class AddCatchFixTest extends ErrorHintsTestBase {
     
     public AddCatchFixTest(String testName) {
-        super(testName);
+        super(testName, UncaughtException.class);
     }
 
     public void test207480a() throws Exception {
@@ -42,20 +37,6 @@ public class AddCatchFixTest extends ErrorHintsTestBase {
                        -1,
                        "LBL_AddCatchClauses",
                        "package test; import java.io.IOException; import java.util.logging.Level; import java.util.logging.Logger; public class Test {public void test() {try { test2(); } catch (IOException ex) { Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex); } finally{ } } private void test2() throws IOException {} }");
-    }
-
-    protected List<Fix> computeFixes(CompilationInfo info, int pos, TreePath path) throws Exception {
-        return new UncaughtException().run(info, null, pos, path, null);
-    }
-
-    @Override
-    protected Set<String> getSupportedErrorKeys() {
-        return new UncaughtException().getCodes();
-    }
-
-    @Override
-    protected String toDebugString(CompilationInfo info, Fix f) {
-        return f.getText();
     }
 
     static {

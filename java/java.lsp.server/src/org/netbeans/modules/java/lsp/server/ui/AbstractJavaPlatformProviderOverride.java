@@ -39,6 +39,14 @@ public abstract class AbstractJavaPlatformProviderOverride implements JavaPlatfo
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private FileObject defaultPlatformOverride;
 
+    public AbstractJavaPlatformProviderOverride() {
+        this(null);
+    }
+
+    protected AbstractJavaPlatformProviderOverride(String defaultPlatformOverride) {
+        this.defaultPlatformOverride = defaultPlatformOverride == null || defaultPlatformOverride.isBlank() ? null : FileUtil.toFileObject(new File(defaultPlatformOverride));
+    }
+
     @Override
     @SuppressWarnings("ReturnOfCollectionOrArrayField")
     public JavaPlatform[] getInstalledPlatforms() {
@@ -68,7 +76,7 @@ public abstract class AbstractJavaPlatformProviderOverride implements JavaPlatfo
             existingNames.add(platform.getDisplayName());
         }
 
-        if (found == null ){
+        if (found == null) {
             String newName = defaultPlatformOverride.getPath();
 
             while (existingNames.contains(newName)) {
@@ -101,8 +109,7 @@ public abstract class AbstractJavaPlatformProviderOverride implements JavaPlatfo
     }
 
     private void dosetDefaultPlatformOverride(String defaultPlatformOverride) {
-        FileObject override = defaultPlatformOverride != null ? FileUtil.toFileObject(new File(defaultPlatformOverride))
-                                                              : null;
+        FileObject override = defaultPlatformOverride == null || defaultPlatformOverride.isBlank() ? null : FileUtil.toFileObject(new File(defaultPlatformOverride));
 
         synchronized (this) {
             this.defaultPlatformOverride = override;

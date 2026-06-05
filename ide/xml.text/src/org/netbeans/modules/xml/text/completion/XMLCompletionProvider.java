@@ -47,7 +47,7 @@ import org.openide.util.NbBundle;
  * @author Samaresh (Samaresh.Panda@Sun.Com)
  */
 @MimeRegistrations({
-    @MimeRegistration(mimeType = "text/xml", service = CompletionProvider.class),
+    @MimeRegistration(mimeType = "text/xml", service = CompletionProvider.class, position = 700),
     @MimeRegistration(mimeType = "text/xml-external-parsed-entity", service = CompletionProvider.class),
 })
 public class XMLCompletionProvider implements CompletionProvider {

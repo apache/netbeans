@@ -114,8 +114,6 @@ import org.eclipse.lsp4j.CompletionItemLabelDetails;
 import org.eclipse.lsp4j.CompletionItemTag;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
-import org.eclipse.lsp4j.ConfigurationItem;
-import org.eclipse.lsp4j.ConfigurationParams;
 import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
@@ -152,6 +150,7 @@ import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.ParameterInformation;
 import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.PrepareRenameDefaultBehavior;
 import org.eclipse.lsp4j.PrepareRenameParams;
 import org.eclipse.lsp4j.PrepareRenameResult;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
@@ -180,6 +179,7 @@ import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WillSaveTextDocumentParams;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.lsp4j.jsonrpc.messages.Either3;
 import org.eclipse.lsp4j.jsonrpc.messages.ResponseErrorCode;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
@@ -307,6 +307,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static final String NETBEANS_COMPLETION_WARNING_TIME = "completion.warning.time";// NOI18N
     private static final String NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS = "java.onSave.organizeImports";// NOI18N
     private static final String NETBEANS_CODE_COMPLETION_COMMIT_CHARS = "java.completion.commit.chars";// NOI18N
+    private static final String CLIENT_JAVA_COMPLETION_DISABLE_INSERT_METHOD_PARAMS = "java.completion.disable.insertMethodParameters";// NOI18N
+    private static final String NETBEANS_JAVA_COMPLETION_INSERT_TEXT_PARAMS = "completion-insert-text-parameters";// NOI18N
     private static final String URL = "url";// NOI18N
     private static final String INDEX = "index";// NOI18N
     
@@ -371,7 +373,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     private static final int DEFAULT_COMPLETION_WARNING_LENGTH = 10_000;
     private static final RequestProcessor COMPLETION_SAMPLER_WORKER = new RequestProcessor("java-lsp-completion-sampler", 1, false, false);
     private static final AtomicReference<Sampler> RUNNING_SAMPLER = new AtomicReference<>();
-
+    
     @Override
     @Messages({
         "# {0} - the timeout elapsed",
@@ -422,30 +424,30 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 return CompletableFuture.completedFuture(Either.forRight(completionList));
             }
             StyledDocument doc = (StyledDocument)rawDoc;
-            ConfigurationItem conf = new ConfigurationItem();
-            conf.setScopeUri(uri);
-            conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVADOC_LOAD_TIMEOUT);
-            ConfigurationItem completionWarningLength = new ConfigurationItem();
-            completionWarningLength.setScopeUri(uri);
-            completionWarningLength.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_COMPLETION_WARNING_TIME);
-            ConfigurationItem commitCharacterConfig = new ConfigurationItem();
-            commitCharacterConfig.setScopeUri(uri);
-            commitCharacterConfig.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_CODE_COMPLETION_COMMIT_CHARS);
-            return client.configuration(new ConfigurationParams(Arrays.asList(conf, completionWarningLength, commitCharacterConfig))).thenApply(c -> {
+            List<String> configValues = List.of(NETBEANS_JAVADOC_LOAD_TIMEOUT, NETBEANS_COMPLETION_WARNING_TIME, NETBEANS_CODE_COMPLETION_COMMIT_CHARS, CLIENT_JAVA_COMPLETION_DISABLE_INSERT_METHOD_PARAMS);
+            return client.getClientConfigurationManager().getConfigurations(configValues, uri).thenApply(c -> {
                 if (c != null && !c.isEmpty()) {
-                    if (c.get(0) instanceof JsonPrimitive) {
-                        JsonPrimitive javadocTimeSetting = (JsonPrimitive) c.get(0);
+                    if (c.get(0).isJsonPrimitive()) {
+                        JsonPrimitive javadocTimeSetting = c.get(0).getAsJsonPrimitive();
 
                         javadocTimeout.set(javadocTimeSetting.getAsInt());
                     }
-                    if (c.get(1) instanceof JsonPrimitive) {
-                        JsonPrimitive samplingWarningsLengthSetting = (JsonPrimitive) c.get(1);
+                    if (c.get(1).isJsonPrimitive()) {
+                        JsonPrimitive samplingWarningsLengthSetting = c.get(1).getAsJsonPrimitive();
 
                         samplingWarningLength.set(samplingWarningsLengthSetting.getAsLong());
                     }
                     if(c.get(2) instanceof JsonArray){
                         JsonArray commitCharsJsonArray = (JsonArray) c.get(2);
                         codeCompletionCommitChars.set(commitCharsJsonArray.asList().stream().map(ch -> ch.toString()).collect(Collectors.toList()));
+                    }
+                    if (c.size() >= 4 && c.get(3) instanceof JsonPrimitive) {
+                        boolean extDisabledSetting = ((JsonPrimitive) c.get(3)).getAsBoolean();
+                        Preferences langPreferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+                        boolean insertTextParams = langPreferences == null || langPreferences.getBoolean(NETBEANS_JAVA_COMPLETION_INSERT_TEXT_PARAMS, true);
+                        if (langPreferences != null && extDisabledSetting == insertTextParams) {
+                            langPreferences.putBoolean(NETBEANS_JAVA_COMPLETION_INSERT_TEXT_PARAMS, !extDisabledSetting);
+                        }
                     }
                 }
                 final int caret = Utils.getOffset(doc, params.getPosition());
@@ -454,7 +456,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         ? new Completion.Context(Completion.TriggerKind.valueOf(params.getContext().getTriggerKind().name()),
                                 params.getContext().getTriggerCharacter() == null || params.getContext().getTriggerCharacter().isEmpty() ? null : params.getContext().getTriggerCharacter().charAt(0))
                         : null;
-                Preferences prefs = CodeStylePreferences.get(doc, "text/x-java").getPreferences();
+                Preferences prefs = CodeStylePreferences.get(doc, JavaTokenId.language().mimeType()).getPreferences();
                 String point = prefs.get("classMemberInsertionPoint", null);
                 try {
                     prefs.put("classMemberInsertionPoint", CodeStyle.InsertionPoint.CARET_LOCATION.name());
@@ -1476,7 +1478,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     }
 
     @Override
-    public CompletableFuture<Either<Range, PrepareRenameResult>> prepareRename(PrepareRenameParams params) {
+    public CompletableFuture<Either3<Range, PrepareRenameResult, PrepareRenameDefaultBehavior>> prepareRename(PrepareRenameParams params) {
         // shortcut: if the projects are not yet initialized, return empty:
         if (server.openedProjects().getNow(null) == null) {
             return CompletableFuture.completedFuture(null);
@@ -1485,7 +1487,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         if (source == null) {
             return CompletableFuture.completedFuture(null);
         }
-        CompletableFuture<Either<Range, PrepareRenameResult>> result = new CompletableFuture<>();
+        CompletableFuture<Either3<Range, PrepareRenameResult, PrepareRenameDefaultBehavior>> result = new CompletableFuture<>();
         try {
             source.runUserActionTask(cc -> {
                 cc.toPhase(JavaSource.Phase.RESOLVED);
@@ -1522,7 +1524,7 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                         }
                         Range r = new Range(Utils.createPosition(cc.getCompilationUnit(), ts.offset()),
                                             Utils.createPosition(cc.getCompilationUnit(), ts.offset() + ts.token().length()));
-                        result.complete(Either.forRight(new PrepareRenameResult(r, ts.token().text().toString())));
+                        result.complete(Either3.forSecond(new PrepareRenameResult(r, ts.token().text().toString())));
                     } else {
                         result.complete(null);
                     }
@@ -1937,11 +1939,9 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
         if (js == null) {
             return CompletableFuture.completedFuture(Collections.emptyList());
         }
-        ConfigurationItem conf = new ConfigurationItem();
-        conf.setScopeUri(uri);
-        conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS);
-        return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenApply(c -> {
-            if (c != null && !c.isEmpty() && ((JsonPrimitive) c.get(0)).getAsBoolean()) {
+        
+        return client.getClientConfigurationManager().getConfiguration(NETBEANS_JAVA_ON_SAVE_ORGANIZE_IMPORTS, uri).thenApply(c -> {
+            if (c != null && c.isJsonPrimitive() && c.getAsJsonPrimitive().getAsBoolean()) {
                 try {
                     List<TextEdit> edits = TextDocumentServiceImpl.modify2TextEdits(js, wc -> {
                         wc.toPhase(JavaSource.Phase.RESOLVED);
@@ -2828,10 +2828,8 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
     @Override
     public CompletableFuture<List<InlayHint>> inlayHint(InlayHintParams params) {
         String uri = params.getTextDocument().getUri();
-        ConfigurationItem conf = new ConfigurationItem();
-        conf.setScopeUri(uri);
-        conf.setSection(client.getNbCodeCapabilities().getConfigurationPrefix() + NETBEANS_INLAY_HINT);
-        return client.configuration(new ConfigurationParams(Collections.singletonList(conf))).thenCompose(c -> {
+        
+        return client.getClientConfigurationManager().getConfiguration(NETBEANS_INLAY_HINT, uri).thenCompose(c -> {
             FileObject file;
             try {
                 file = Utils.fromUri(uri);
@@ -2839,13 +2837,13 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 return CompletableFuture.failedFuture(ex);
             }
             Set<String> enabled = null;
-            if (c != null && !c.isEmpty()) {
+            if (c != null && c.isJsonArray()) {
                 enabled = new HashSet<>();
 
-                JsonArray actualSettings = ((JsonArray) c.get(0));
+                JsonArray actualSettings = c.getAsJsonArray();
 
                 for (JsonElement el : actualSettings) {
-                    enabled.add(((JsonPrimitive) el).getAsString());
+                    enabled.add(el.getAsJsonPrimitive().getAsString());
                 }
             }
             org.netbeans.api.lsp.Range range = new org.netbeans.api.lsp.Range(Utils.getOffset(file, params.getRange().getStart()),

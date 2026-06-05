@@ -230,13 +230,11 @@ public class Util {
             dest = destFolder.createData(filename);
         }
         FileLock lock = dest.lock();
-        OutputStream out = dest.getOutputStream(lock);
-        InputStream in = Util.class.getResourceAsStream(path);
         try {
-            FileUtil.copy(in, out);
+            try (InputStream in = Util.class.getResourceAsStream(path); OutputStream out = dest.getOutputStream(lock)) {
+                in.transferTo(out);
+            }
         } finally {
-            out.close();
-            in.close();
             if (lock != null) lock.releaseLock();
         }
         return dest;

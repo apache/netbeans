@@ -21,7 +21,6 @@ package org.openide.filesystems;
 
 import java.beans.PropertyVetoException;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -461,18 +460,9 @@ public class JarFileSystem extends AbstractFileSystem {
         return (retVal == -1) ? 0 : retVal;
     }
 
-    private InputStream getMemInputStream(JarFile jf, JarEntry je)
-    throws IOException {
+    private InputStream getMemInputStream(JarFile jf, JarEntry je) throws IOException {
         InputStream is = getInputStream4336753(jf, je);
-        ByteArrayOutputStream os = new ByteArrayOutputStream(is.available());
-
-        try {
-            FileUtil.copy(is, os);
-        } finally {
-            os.close();
-        }
-
-        return new ByteArrayInputStream(os.toByteArray());
+        return new ByteArrayInputStream(is.readAllBytes());
     }
 
     private InputStream getTemporaryInputStream(JarFile jf, JarEntry je, boolean forceRecreate)
@@ -501,18 +491,8 @@ public class JarFileSystem extends AbstractFileSystem {
         if (createContent || forceRecreate) {
             // JDK 1.3 contains bug #4336753
             //is = j.getInputStream (je);
-            InputStream is = getInputStream4336753(jf, je);
-
-            try {
-                OutputStream os = new FileOutputStream(f);
-
-                try {
-                    FileUtil.copy(is, os);
-                } finally {
-                    os.close();
-                }
-            } finally {
-                is.close();
+            try (InputStream is = getInputStream4336753(jf, je); OutputStream os = new FileOutputStream(f)) {
+                is.transferTo(os);
             }
         }
 

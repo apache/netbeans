@@ -39,11 +39,14 @@ public class NetigsoHasSAXParserTest extends NbTestCase {
     }
 
     public static Test suite() {
+        // JDK 21+: enabling all clusters causes:
+        // Will not load class org.osgi.framework.launch.Framework arbitrarily from one of
+        // ModuleCL@1070d437[org.netbeans.libs.osgi] and ModuleCL@2bbc301d[org.netbeans.modules.websvc.restlib]
         return NbModuleSuite.create(
             NbModuleSuite.emptyConfiguration().addTest(
                 NetigsoHasSAXParserTest.class
             ).honorAutoloadEager(true).clusters(
-                ".*"
+                "platform|ide"
             ).failOnException(Level.WARNING)/*.failOnMessage(Level.WARNING)*/
             .gui(false)
         );

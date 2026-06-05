@@ -277,21 +277,10 @@ public abstract class BrandingSupport {
         
         assert target.exists();
         FileObject fo = FileUtil.toFileObject(target);
-        InputStream is = null;
-        OutputStream os = null;
-        try {
-            is = bFile.getBrandingSource().openStream();
-            os = fo.getOutputStream();
-            FileUtil.copy(is, os);
+        try (InputStream is = bFile.getBrandingSource().openStream();
+             OutputStream os = fo.getOutputStream()) {
+            is.transferTo(os);
         } finally {
-            if (is != null) {
-                is.close();
-            }
-            
-            if (os != null) {
-                os.close();
-            }
-            
             brandedFiles.add(bFile);
             bFile.modified = false;
         }

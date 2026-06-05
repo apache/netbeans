@@ -66,6 +66,7 @@ import org.netbeans.api.editor.settings.FontColorSettings;
 import org.netbeans.api.editor.settings.SimpleValueNames;
 import org.netbeans.editor.ext.ExtKit;
 import org.netbeans.api.editor.StickyWindowSupport;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.ext.ToolTipSupport;
 import org.netbeans.modules.editor.lib.ColoringMap;
 import org.netbeans.modules.editor.lib.EditorExtPackageAccessor;
@@ -1153,7 +1154,7 @@ public class EditorUI implements ChangeListener, PropertyChangeListener, MouseLi
             try {
                 if (maxDigitCount <= 0) {
                     BaseDocument doc = getDocument();
-                    int lineCnt = Utilities.getLineOffset(doc, doc.getLength()) + 1;
+                    int lineCnt = LineDocumentUtils.getLineIndex(doc, doc.getLength()) + 1;
                     maxDigitCount = Integer.toString(lineCnt).length();
                 }
 

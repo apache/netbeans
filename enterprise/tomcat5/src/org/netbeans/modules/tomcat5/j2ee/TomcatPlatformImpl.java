@@ -555,17 +555,19 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
     public Set<String> getSupportedJavaPlatformVersions() {
         Set<String> versions = new HashSet<>(16);
 
-        // TomEE has different supported Java versions
+        // TomEE has different supported Java versions.
+        // The Java Security Manager (JSM) has been permanently disabled 
+        // as of JDK 24. Only TomEE 10+ will work with Java 24+.
         if (manager.isTomEE()) {
             switch (manager.getTomEEVersion()) {
                 case TOMEE_100:
-                    versions = versionRange(17, 25);
+                    versions = versionRange(17, 26);
                     break;
                 case TOMEE_90:
-                    versions = versionRange(11, 25);
+                    versions = versionRange(11, 23);
                     break;
                 case TOMEE_80:
-                    versions = versionRange(8, 25);
+                    versions = versionRange(8, 23);
                     break;
                 case TOMEE_71:
                 case TOMEE_70:
@@ -582,20 +584,20 @@ public class TomcatPlatformImpl extends J2eePlatformImpl2 {
         } else {
             switch (manager.getTomcatVersion()) {
                 case TOMCAT_110:
-                    versions = versionRange(17, 25);
+                    versions = versionRange(17, 26);
                     break;
                 case TOMCAT_101:
-                    versions = versionRange(11, 25);
+                    versions = versionRange(11, 26);
                     break;
                 case TOMCAT_100:
                 case TOMCAT_90:
-                    versions = versionRange(8, 25);
+                    versions = versionRange(8, 26);
                     break;
                 case TOMCAT_80:
-                    versions = versionRange(7, 25);
+                    versions = versionRange(7, 26);
                     break;
                 case TOMCAT_70:
-                    versions = versionRange(6, 25);
+                    versions = versionRange(6, 26);
                     break;
                 case TOMCAT_60:
                     versions = versionRange(5, 8);

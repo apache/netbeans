@@ -24,7 +24,6 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.subversion.OutputLogger;
 import org.netbeans.modules.subversion.Subversion;
 import org.netbeans.modules.subversion.util.SvnUtils;
@@ -147,9 +146,9 @@ public abstract class SvnProgressSupport implements Runnable, Cancellable, ISVNN
     protected ProgressHandle getProgressHandle() {
         if(progressHandle == null) {
             if(repositoryRoot != null) {
-                progressHandle = ProgressHandleFactory.createHandle(displayName, this, getLogger().getOpenOutputAction());
+                progressHandle = ProgressHandle.createHandle(displayName, this, getLogger().getOpenOutputAction());
             } else {
-                progressHandle = ProgressHandleFactory.createHandle(displayName, this);
+                progressHandle = ProgressHandle.createHandle(displayName, this);
             }
         }
         return progressHandle;

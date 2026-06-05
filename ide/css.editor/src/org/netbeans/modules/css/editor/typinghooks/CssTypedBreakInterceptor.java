@@ -20,6 +20,7 @@ package org.netbeans.modules.css.editor.typinghooks;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Position;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.editor.BaseDocument;
@@ -53,8 +54,8 @@ public class CssTypedBreakInterceptor implements TypedBreakInterceptor {
                 //context.setText("\n\n", 1, 1, 0, 2);
                 //reformat workaround -- the preferred 
                 //won't work as the reformatter will not reformat the line with the closing tag
-                int from = Utilities.getRowStart(doc, offset);
-                int to = Utilities.getRowEnd(doc, offset);
+                int from = LineDocumentUtils.getLineStartOffset(doc, offset);
+                int to = LineDocumentUtils.getLineEndOffset(doc, offset);
                 reformat = new Position[]{doc.createPosition(from), doc.createPosition(to)};
                 context.setText("\n\n", 1, 1);
             }

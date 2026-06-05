@@ -40,6 +40,7 @@ import org.netbeans.modules.nativeexecution.api.util.ConnectionManager.Cancellat
  * but is never stored. So the password is asked for every new execution session.
  *
  */
+@Deprecated(forRemoval = true)
 public interface SolarisPrivilegesSupport {
 
     /**

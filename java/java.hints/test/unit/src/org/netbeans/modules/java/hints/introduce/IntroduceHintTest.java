@@ -2618,6 +2618,87 @@ public class IntroduceHintTest extends NbTestCase {
                        1, 0);
     }
     
+    public void testLocalType1() throws Exception {
+        sourceLevel = "17";
+        performCheckFixesTest(
+                """
+                package test;
+                public class Test {
+                    public static void test() {
+                        record R(int i) {}
+                        |new R(0)|;
+                    }
+                }
+                """,
+                "[IntroduceFix:r:1:CREATE_VARIABLE]",
+                "[IntroduceField:r:1:true:false:[3, 3]]");
+    }
+
+    public void testLocalType2() throws Exception {
+        sourceLevel = "17";
+        performCheckFixesTest(
+                """
+                package test;
+                public class Test {
+                    public static void test() {
+                        record R(int i) {}
+                        R r = |new R(0)|;
+                    }
+                }
+                """,
+                "[IntroduceFix:r1:1:CREATE_VARIABLE]",
+                "[IntroduceField:r:1:true:false:[3, 3]]");
+    }
+
+    public void testIntroduceVariableLocalType() throws Exception {
+        sourceLevel = "17";
+        performFixTest("""
+                       package test;
+                       public class Test {
+                           public static void test() {
+                               record R(int i) {}
+                               |new R(0)|;
+                           }
+                       }
+                       """,
+                       """
+                       package test;
+                       public class Test {
+                           public static void test() {
+                               record R(int i) {}
+                               R name = new R(0);
+                           }
+                       }
+                       """.replaceAll("[ \t\n]+", " "),
+                       new DialogDisplayerImpl("name", false, false, true),
+                       2, 0);
+    }
+
+    public void testIntroduceFieldLocalType() throws Exception {
+        sourceLevel = "17";
+        performFixTest("""
+                       package test;
+                       public class Test {
+                           public static void test() {
+                               record R(int i) {}
+                               |new R(0)|;
+                           }
+                       }
+                       """,
+                       """
+                       package test;
+                       public class Test {
+                           private static Record name;
+                           public static void test() {
+                               record R(int i) {}
+                               name = new R(0);
+                           }
+                       }
+                       """.replaceAll("[ \t\n]+", " "),
+                       new DialogDisplayerImpl("name", false, false, true),
+                       2, 1);
+    }
+
     protected void prepareTest(String code) throws Exception {
         clearWorkDir();
 

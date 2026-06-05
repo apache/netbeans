@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.jumpto.common;
 
-import java.util.Collections;
 import java.util.Map;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -111,7 +110,7 @@ public abstract class AbstractModelFilter<T> implements Models.Filter<T> {
             NameMatcherFactory.createNameMatcher(
                     searchText,
                     searchType,
-                    options == null ? Collections.<String,Object>emptyMap() : options) :
+                    options == null ? Map.of() : options) :
             null;
     }
 }

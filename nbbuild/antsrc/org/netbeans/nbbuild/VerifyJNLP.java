@@ -217,7 +217,7 @@ public class VerifyJNLP extends Task {
                                     break; // just check one representative file
                                 }
                             }
-                        } catch (IOException x) {
+                        } catch (SecurityException | IOException x) {
                             error(jnlp, results, "Signatures", "error examining signatures in " + f + ": " + x);
                         }
                     }

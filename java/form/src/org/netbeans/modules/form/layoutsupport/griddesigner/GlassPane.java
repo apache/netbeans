@@ -1501,8 +1501,6 @@ public class GlassPane extends JPanel implements GridActionPerformer {
             if(!noChange(change)) {
                 animChange = change;
                 animLayer.animate();
-            } else {
-                animation = false;
             }
         }
 

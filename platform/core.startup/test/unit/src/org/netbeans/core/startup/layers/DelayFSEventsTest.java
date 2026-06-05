@@ -114,22 +114,19 @@ public class DelayFSEventsTest extends NbTestCase implements FileChangeListener 
     private File createModuleJar(String manifest) throws IOException {
         File jarFile = new File( getWorkDir(), "mymodule.jar" );
         
-        JarOutputStream os = new JarOutputStream(new FileOutputStream(jarFile), new Manifest(
-            new ByteArrayInputStream(manifest.getBytes())
-        ));
-        JarEntry entry = new JarEntry("foo/mf-layer.xml");
-        os.putNextEntry( entry );
-        
-        File l3 = new File(new File(new File(getDataDir(), "layers"), "data"), "layer3.xml");
-        InputStream is = new FileInputStream(l3);
-        FileUtil.copy( is, os );
-        is.close();
-        os.putNextEntry(new JarEntry("org/netbeans/core/startup/layers/DelayFSInstaller.class"));
-        is = DelayFSEventsTest.class.getResourceAsStream("DelayFSInstaller.class");
-        FileUtil.copy (is, os);
-        
-        os.close();
-        
+        try (JarOutputStream os = new JarOutputStream(new FileOutputStream(jarFile), new Manifest(new ByteArrayInputStream(manifest.getBytes())))) {
+
+            os.putNextEntry(new JarEntry("foo/mf-layer.xml"));
+            File l3 = new File(new File(new File(getDataDir(), "layers"), "data"), "layer3.xml");
+            try (InputStream is = new FileInputStream(l3)) {
+                is.transferTo(os);
+            }
+
+            os.putNextEntry(new JarEntry("org/netbeans/core/startup/layers/DelayFSInstaller.class"));
+            try (InputStream is = DelayFSEventsTest.class.getResourceAsStream("DelayFSInstaller.class")) {
+                is.transferTo(os);
+            }
+        }
         return jarFile;
     }
 

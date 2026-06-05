@@ -33,7 +33,7 @@ import org.netbeans.api.project.Project;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.api.project.ProjectManager;
 import org.openide.util.Exceptions;
 
@@ -129,7 +129,7 @@ final class RemoveClassPathRootAction extends NodeAction {
                 removables.forEach(Removable::afterRemove);
             }
         };
-        ProgressUtils.runOffEventDispatchThread(
+        BaseProgressUtils.runOffEventDispatchThread(
                 action,
                 NbBundle.getMessage(RemoveClassPathRootAction.class, "TXT_RemovingClassPathRoots"),
                 cancel,

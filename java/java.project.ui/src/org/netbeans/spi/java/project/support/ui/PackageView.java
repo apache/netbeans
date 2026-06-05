@@ -44,7 +44,6 @@ import javax.swing.ListCellRenderer;
 import javax.swing.plaf.UIResource;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.queries.VisibilityQuery;
 import org.netbeans.modules.java.project.ui.JavaProjectSettings;
@@ -162,7 +161,7 @@ public class PackageView {
     @Messages({"# {0} - root folder", "PackageView.find_packages_progress=Finding packages in {0}"})
     static void findNonExcludedPackages(PackageViewChildren children, Collection<PackageItem> target, FileObject fo, SourceGroup group, boolean showProgress) {
         if (showProgress) {
-            ProgressHandle progress = ProgressHandleFactory.createHandle(PackageView_find_packages_progress(FileUtil.getFileDisplayName(fo)));
+            ProgressHandle progress = ProgressHandle.createHandle(PackageView_find_packages_progress(FileUtil.getFileDisplayName(fo)));
             progress.start(1000);
             findNonExcludedPackages(children, target, fo, group, progress, 0, 1000);
             progress.finish();

@@ -3,7 +3,7 @@ Version: 1.2
 License: EPL-v20
 Description: Jakarta Standard Tag Library
 Origin: Eclipse Foundation (https://projects.eclipse.org/projects/ee4j.jstl)
-Files: jakarta.servlet.jsp.jstl-1.2.6.jar, jakarta.servlet.jsp.jstl-api-1.2.7.jar
+Files: jakarta.servlet.jsp.jstl-1.2.6.jar, jakarta.servlet.jsp.jstl-api-1.2.7.jar, jakarta.servlet.jsp.jstl-3.0.1.jar, jakarta.servlet.jsp.jstl-api-3.0.2.jar
 Type: compile-time
 
 Eclipse Public License - v 2.0

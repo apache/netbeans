@@ -37,7 +37,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URI;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
@@ -53,7 +52,6 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.TreeMaker;
 import org.netbeans.api.java.source.WorkingCopy;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
@@ -133,7 +131,7 @@ public class ClientHandlerButtonListener implements ActionListener {
         if (!panel.isChanged()) {
             return;
         }
-        ProgressHandle handle = ProgressHandleFactory.createHandle(NbBundle.getMessage(ClientHandlerButtonListener.class, "MSG_ConfigureHandler")); //NOI18N
+        ProgressHandle handle = ProgressHandle.createHandle(NbBundle.getMessage(ClientHandlerButtonListener.class, "MSG_ConfigureHandler")); //NOI18N
         handle.start();
         handle.switchToIndeterminate();
         JAXWSLightSupport support = node.getLookup().lookup(JAXWSLightSupport.class);

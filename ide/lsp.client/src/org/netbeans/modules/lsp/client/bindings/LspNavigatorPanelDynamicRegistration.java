@@ -22,8 +22,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.modules.lsp.client.LSPBindings;
+import org.netbeans.modules.lsp.client.Utils;
 import org.netbeans.spi.lsp.StructureProvider;
 import org.netbeans.spi.navigator.NavigatorPanel;
 import org.openide.filesystems.FileObject;
@@ -39,9 +41,12 @@ public final class LspNavigatorPanelDynamicRegistration implements NavigatorPane
         try {
             FileObject file = URLMapper.findFileObject(uri.toURL());
             if (file != null) {
-                LSPBindings bindings = LSPBindings.getBindings(file);
-                if (bindings != null) {
-                    return Collections.singletonList(new NavigatorPanelImpl(bindings));
+                List<LSPBindings> bindings = LSPBindings.getBindings(file);
+                if (!bindings.isEmpty()) {
+                    return bindings.stream()
+                                   .filter(server -> Utils.isEnabled(Utils.getCapabilities(server).getDocumentSymbolProvider()))
+                                   .map(NavigatorPanelImpl::new)
+                                   .toList();
                 } else {
                     String mime = file.getMIMEType();
                     for (StructureProvider sp : MimeLookup.getLookup(mime).lookupAll(StructureProvider.class)) {

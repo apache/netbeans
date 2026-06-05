@@ -326,12 +326,12 @@ public class ImplementAbstractMethodsHintError extends HintErrorRule {
         }
         if (offset == -1 && typeScope.getBlockRange() != null) {
             try {
-                int rowStartOfClassEnd = LineDocumentUtils.getLineStart(doc, typeScope.getBlockRange().getEnd());
+                int rowStartOfClassEnd = LineDocumentUtils.getLineStartOffset(doc, typeScope.getBlockRange().getEnd());
                 int rowEndOfPreviousRow = rowStartOfClassEnd - 1;
 
                 // #254173 the previous row may have something to break the code
                 // e.g. "{" for the class declaration, a field accross multiple lines
-                int rowStartOfPreviousRow = LineDocumentUtils.getLineStart(doc, rowEndOfPreviousRow);
+                int rowStartOfPreviousRow = LineDocumentUtils.getLineStartOffset(doc, rowEndOfPreviousRow);
                 int newMethodPossibleOffset = rowStartOfPreviousRow < rowEndOfPreviousRow ? rowStartOfClassEnd : rowStartOfPreviousRow;
 
                 int newMethodLineOffset = LineDocumentUtils.getLineIndex(doc, newMethodPossibleOffset);

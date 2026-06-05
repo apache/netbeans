@@ -164,7 +164,6 @@ public class AdminPropertiesPanel extends javax.swing.JPanel {
     private void chooseFile(JTextField txtField) {
         JFileChooser chooser = new JFileChooser();
         
-        chooser.setCurrentDirectory(null);
         chooser.setFileSelectionMode (JFileChooser.FILES_ONLY);
         
         String path = txtField.getText().trim();

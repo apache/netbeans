@@ -258,7 +258,6 @@ is the proper place.
 -->
     <head>
       <title>Settings API/SPI Changes by Date</title>
-      <link rel="stylesheet" href="prose.css" type="text/css"/>
     </head>
     <body>
 <!-- The actual lists of changes, as summaries and details: -->

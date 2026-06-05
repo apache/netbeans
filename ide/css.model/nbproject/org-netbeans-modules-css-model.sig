@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.58
+#Version 1.63
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -8,13 +8,16 @@ meth public abstract void propertyChange(java.beans.PropertyChangeEvent)
 CLSS public abstract interface !annotation java.lang.Deprecated
  anno 0 java.lang.annotation.Documented()
  anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE])
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
 intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
 
 CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -54,7 +57,7 @@ meth public abstract java.lang.annotation.ElementType[] value()
 CLSS public abstract interface java.util.EventListener
 
 CLSS public abstract interface org.netbeans.modules.css.live.LiveUpdater
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract boolean update(javax.swing.text.Document)
 
 CLSS public abstract interface org.netbeans.modules.css.model.api.AtRule
@@ -248,6 +251,13 @@ meth public abstract java.util.List<org.netbeans.modules.css.model.api.Rule> get
 meth public abstract void addPage(org.netbeans.modules.css.model.api.Page)
 meth public abstract void addRule(org.netbeans.modules.css.model.api.Rule)
 
+CLSS public abstract interface org.netbeans.modules.css.model.api.MediaCondition
+intf org.netbeans.modules.css.model.api.Element
+meth public abstract java.util.Collection<org.netbeans.modules.css.model.api.MediaExpression> getMediaExpressions()
+meth public abstract java.util.Collection<org.netbeans.modules.css.model.api.MediaInParens> getMediaInParens()
+meth public abstract void addMediaExpression(org.netbeans.modules.css.model.api.MediaExpression)
+meth public abstract void addMediaInParens(org.netbeans.modules.css.model.api.MediaInParens)
+
 CLSS public abstract interface org.netbeans.modules.css.model.api.MediaExpression
 intf org.netbeans.modules.css.model.api.Element
 meth public abstract org.netbeans.modules.css.model.api.MediaFeature getMediaFeature()
@@ -262,6 +272,11 @@ CLSS public abstract interface org.netbeans.modules.css.model.api.MediaFeatureVa
 intf org.netbeans.modules.css.model.api.Element
 meth public abstract org.netbeans.modules.css.model.api.Expression getExpression()
 meth public abstract void setExpression(org.netbeans.modules.css.model.api.Expression)
+
+CLSS public abstract interface org.netbeans.modules.css.model.api.MediaInParens
+intf org.netbeans.modules.css.model.api.Element
+meth public abstract org.netbeans.modules.css.model.api.MediaExpression getMediaExpression()
+meth public abstract void setMediaExpression(org.netbeans.modules.css.model.api.MediaExpression)
 
 CLSS public abstract interface org.netbeans.modules.css.model.api.MediaQuery
 intf org.netbeans.modules.css.model.api.Element

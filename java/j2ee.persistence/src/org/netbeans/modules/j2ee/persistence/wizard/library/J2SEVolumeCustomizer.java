@@ -295,7 +295,6 @@ public class J2SEVolumeCustomizer extends javax.swing.JPanel implements Customiz
     private void addResource(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addResource
         // TODO add your handling code here:
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setAcceptAllFileFilterUsed(false);
         if (this.volumeType.equals(PersistenceLibrarySupport.VOLUME_TYPE_CLASSPATH)) {
             chooser.setMultiSelectionEnabled (true);

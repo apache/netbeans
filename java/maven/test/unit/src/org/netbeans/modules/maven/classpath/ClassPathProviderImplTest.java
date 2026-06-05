@@ -557,7 +557,7 @@ public class ClassPathProviderImplTest extends NbTestCase {
             // rewrite the file in place
             try (InputStream is = prjCopy.getFileObject("pom-with-processor.xml").getInputStream();
                  OutputStream os = pom.getOutputStream()) {
-                FileUtil.copy(is, os);
+                is.transferTo(os);
             }
         });
         

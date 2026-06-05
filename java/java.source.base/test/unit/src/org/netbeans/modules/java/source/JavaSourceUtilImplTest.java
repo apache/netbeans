@@ -28,6 +28,7 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
@@ -39,6 +40,8 @@ import org.junit.Test;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery;
+import org.netbeans.modules.java.preprocessorbridge.spi.JavaSourceUtilImpl.ModuleInfoHandle;
+import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.java.source.SourceUtilsTestUtil2;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.NbTestCase;
@@ -65,6 +68,11 @@ public class JavaSourceUtilImplTest extends NbTestCase {
     private FileObject cache;
     private FileObject cacheSrc;
     private FileObject ap;
+    private final String MODULE_INFO_SOURCE=
+            """
+            module org.nb {
+            }
+            """;
     
     public JavaSourceUtilImplTest(String name) {
         super(name);
@@ -274,7 +282,15 @@ public class JavaSourceUtilImplTest extends NbTestCase {
         }
         System.out.printf("Dumped into: %s%n", FileUtil.getFileDisplayName(wd));
     }
-
+    @Test
+    public void testGetModuleInfoHandle() throws Exception {
+        JavaSourceUtilImpl impl = new JavaSourceUtilImpl();
+        FileObject ff = createFile(root,"module-info.java", MODULE_INFO_SOURCE);
+        JavaSource src = Objects.requireNonNull(JavaSource.forFileObject(ff));
+        ModuleInfoHandle mih = Objects.requireNonNull(impl.getModuleInfoHandle(src));
+        String moduleName = mih.parseModuleName();
+        assertEquals("org.nb", moduleName);
+    }
     static {
         System.setProperty("SourcePath.no.source.filter", "true");
     }

@@ -54,10 +54,12 @@ import org.netbeans.modules.java.lsp.server.explorer.api.NodeChangedParams;
 class NbCodeClientWrapper implements NbCodeLanguageClient {
     private final NbCodeLanguageClient remote;
     private volatile NbCodeClientCapabilities  clientCaps;
+    private final ClientConfigurationManager confManager;
 
     public NbCodeClientWrapper(NbCodeLanguageClient remote) {
         this.remote = remote;
         this.clientCaps = new NbCodeClientCapabilities();
+        this.confManager = new ClientConfigurationManager(this);
     }
 
     public void setClientCaps(NbCodeClientCapabilities clientCaps) {
@@ -243,5 +245,9 @@ class NbCodeClientWrapper implements NbCodeLanguageClient {
     public CompletableFuture<Void> resetOutput(String outputName) {
         return remote.resetOutput(outputName);
     }
-    
+
+    @Override
+    public ClientConfigurationManager getClientConfigurationManager() {
+        return confManager;
+    }
 }

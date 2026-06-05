@@ -19,12 +19,7 @@
 
 package org.netbeans.modules.java.hints.errors;
 
-import com.sun.source.util.TreePath;
-import java.util.List;
-import java.util.Set;
-import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.modules.java.hints.infrastructure.ErrorHintsTestBase;
-import org.netbeans.spi.editor.hints.Fix;
 import org.openide.util.NbBundle;
 
 /**
@@ -34,7 +29,7 @@ import org.openide.util.NbBundle;
 public class AddCastTest extends ErrorHintsTestBase {
     
     public AddCastTest(String testName) {
-        super(testName);
+        super(testName, AddCast.class);
     }
 
     public void test117868() throws Exception {
@@ -155,21 +150,6 @@ public class AddCastTest extends ErrorHintsTestBase {
                        -1,
                        "[AddCastFix:...l:byte]",
                        "package test; public class Test { private static void x(long l) { t((byte) l); } void t(byte b) {} void t(int i) {} void t(String s) {} }");
-    }
-    
-    @Override
-    protected List<Fix> computeFixes(CompilationInfo info, int pos, TreePath path) throws Exception {
-        return new AddCast().run(info, null, pos, path, null);
-    }
-
-    @Override
-    protected String toDebugString(CompilationInfo info, Fix f) {
-        return f.getText();
-    }
-
-    @Override
-    protected Set<String> getSupportedErrorKeys() {
-        return new AddCast().getCodes();
     }
     
     static {

@@ -587,7 +587,6 @@ for (<a href="@JDK@@JDKMODULE_JAVA_BASE@/java/net/URLStreamHandlerFactory.html">
 <htmlcontents>
 <head>
 <title>Change History for the Lookup API</title>
-<link rel="stylesheet" href="prose.css" type="text/css"/>
 </head>
 <body>
 <p class="overviewlink">

@@ -102,6 +102,7 @@ public final class ServletVersion extends J2EEBaseVersion {
      *     than the version passed in as an argument.
      *  @throws ClassCastException if obj is not a ServletVersion object.
      */
+    @Override
     public int compareTo(Object obj) {
         ServletVersion target = (ServletVersion) obj;
         return numericCompare(target);
@@ -126,6 +127,8 @@ public final class ServletVersion extends J2EEBaseVersion {
             result = SERVLET_5_0;
         } else if(SERVLET_6_0.toString().equals(version)) {
             result = SERVLET_6_0;
+        } else if(SERVLET_6_1.toString().equals(version)) {
+            result = SERVLET_6_1;
         }
 
         return result;

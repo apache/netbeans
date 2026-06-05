@@ -24,13 +24,11 @@ import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.netbeans.api.java.queries.CompilerOptionsQuery;
 import org.netbeans.api.java.source.CompilationInfo;
+import org.netbeans.modules.java.hints.Feature;
 import org.netbeans.modules.java.hints.spi.ErrorRule;
 import org.netbeans.spi.editor.hints.Fix;
 import org.netbeans.spi.java.hints.JavaFix;
@@ -45,19 +43,16 @@ import org.openide.util.NbBundle;
  */
 public class DifferentCaseKindsFix implements ErrorRule<Void> {
 
-    private static final int SWITCH_RULE_PREVIEW_JDK_VERSION = 13;
+    private static final Set<String> ERROR_CODES = Set.of("compiler.err.switch.mixing.case.types"); // NOI18N
 
-    private static final Set<String> ERROR_CODES = new HashSet<String>(Arrays.asList(
-            "compiler.err.switch.mixing.case.types")); // NOI18N
-    
     @Override
     public Set<String> getCodes() {
-        return Collections.unmodifiableSet(ERROR_CODES);
+        return ERROR_CODES;
     }
 
     @Override
     public List<Fix> run(CompilationInfo info, String diagnosticKey, int offset, TreePath treePath, Data<Void> data) {
-        if (Utilities.isJDKVersionLower(SWITCH_RULE_PREVIEW_JDK_VERSION) && !CompilerOptionsQuery.getOptions(info.getFileObject()).getArguments().contains("--enable-preview")) {
+        if (!Feature.SWITCH_EXPRESSIONS.isEnabled(info)) {
             return null;
         }
         TreePath parentPath = treePath.getParentPath();
@@ -119,13 +114,8 @@ public class DifferentCaseKindsFix implements ErrorRule<Void> {
 
     private static final class FixImpl extends JavaFix {
 
-        CompilationInfo info;
-        TreePath path;
-
         public FixImpl(CompilationInfo info, TreePath path) {
             super(info, path);
-            this.info = info;
-            this.path = path;
         }
 
         @Override

@@ -31,7 +31,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.apisupport.project.api.BasicWizardPanel;
 import static org.netbeans.modules.apisupport.project.ui.platform.Bundle.*;
 import org.netbeans.modules.apisupport.project.universe.NbPlatform;
@@ -84,7 +84,7 @@ public final class NbPlatformCustomizer extends JPanel {
     })
     public static Object showCustomizer() {
         final AtomicBoolean canceled = new AtomicBoolean();
-        ProgressUtils.runOffEventDispatchThread(new Runnable() { // #207451
+        BaseProgressUtils.runOffEventDispatchThread(new Runnable() { // #207451
             @Override public void run() {
                 HarnessUpgrader.checkForUpgrade();
             }

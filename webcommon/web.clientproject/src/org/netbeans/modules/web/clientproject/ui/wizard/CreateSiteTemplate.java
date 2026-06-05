@@ -717,7 +717,7 @@ public class CreateSiteTemplate extends javax.swing.JPanel implements ExplorerMa
                 ZipEntry ze = new ZipEntry(relPath);
                 str.putNextEntry(ze);
                 if (is != null) {
-                    FileUtil.copy(fo.getInputStream(), str);
+                    fo.getInputStream().transferTo(str);
                 }
             } finally {
                 if (is != null) {

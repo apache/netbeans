@@ -417,9 +417,8 @@ public final class GitUtils {
     }
 
     /**
-     *
-     * @param ctx
-     * @return
+     * Returns the repository and its roots. May open a selection dialog if
+     * there is more than one repository in the provided context.
      */
     public static HashMap.SimpleImmutableEntry<File, File[]> getActionRoots(VCSContext ctx) {
         Set<File> rootsSet = ctx.getRootFiles();

@@ -73,12 +73,17 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.StyledDocument;
 
-import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.SwitchTree;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.Trees;
 import java.awt.Component;
 import java.util.Set;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.editor.EditorActionRegistration;
 import org.netbeans.api.editor.EditorActionRegistrations;
 import org.netbeans.api.java.lexer.JavaTokenId;
@@ -407,25 +412,50 @@ public class ClipboardHandler {
                         @Override public void run(final CompilationController parameter) throws Exception {
                             parameter.toPhase(JavaSource.Phase.RESOLVED);
 
+                            Trees trees = parameter.getTrees();
+
                             new ErrorAwareTreePathScanner<Void, Void>() {
                                 private final Set<Element> declaredInCopiedText = new HashSet<>();
                                 @Override public Void visitIdentifier(IdentifierTree node, Void p) {
-                                    int s = (int) parameter.getTrees().getSourcePositions().getStartPosition(parameter.getCompilationUnit(), node);
-                                    int e = (int) parameter.getTrees().getSourcePositions().getEndPosition(parameter.getCompilationUnit(), node);
-                                    javax.lang.model.element.Element el = parameter.getTrees().getElement(getCurrentPath());
+                                    int s = (int) trees.getSourcePositions().getStartPosition(parameter.getCompilationUnit(), node);
+                                    int e = (int) trees.getSourcePositions().getEndPosition(parameter.getCompilationUnit(), node);
+                                    javax.lang.model.element.Element el = trees.getElement(getCurrentPath());
 
                                     if (s >= start && e >= start && e <= end && el != null && !declaredInCopiedText.contains(el)) {
                                         if (el.getKind().isClass() || el.getKind().isInterface()) {
-                                            TreePath parentPath = getCurrentPath().getParentPath();
-                                            if (parentPath == null || parentPath.getLeaf().getKind() != Tree.Kind.NEW_CLASS
-                                                    || ((NewClassTree)parentPath.getLeaf()).getEnclosingExpression() == null
-                                                    || ((NewClassTree)parentPath.getLeaf()).getIdentifier() != node) {
-                                                simple2ImportFQN.put(el.getSimpleName().toString(), ((TypeElement) el).getQualifiedName().toString());
-                                                spans.add(new int[] {s - start, e - start});
+                                            if (el.asType().getKind() != TypeKind.ERROR) {
+                                                TreePath parentPath = getCurrentPath().getParentPath();
+                                                if (parentPath == null || parentPath.getLeaf().getKind() != Tree.Kind.NEW_CLASS
+                                                        || ((NewClassTree)parentPath.getLeaf()).getEnclosingExpression() == null
+                                                        || ((NewClassTree)parentPath.getLeaf()).getIdentifier() != node) {
+                                                    simple2ImportFQN.put(el.getSimpleName().toString(), ((TypeElement) el).getQualifiedName().toString());
+                                                    spans.add(new int[] {s - start, e - start});
+                                                }
                                             }
                                         } else if ((el.getKind() == ElementKind.ENUM_CONSTANT)) {
                                             TreePath parentPath = getCurrentPath().getParentPath();
-                                            if (parentPath.getLeaf().getKind() != Tree.Kind.CASE || ((CaseTree)parentPath.getLeaf()).getExpression() != node) {
+                                            boolean shouldImport = true;
+                                            if (parentPath.getLeaf().getKind() == Tree.Kind.CONSTANT_CASE_LABEL) {
+                                                TreePath swtch = parentPath;
+                                                while (swtch != null &&
+                                                       swtch.getLeaf().getKind() != Kind.SWITCH &&
+                                                       swtch.getLeaf().getKind() != Kind.SWITCH_EXPRESSION) {
+                                                    swtch = swtch.getParentPath();
+                                                }
+                                                TypeMirror selectorType;
+                                                if (swtch != null) {
+                                                    selectorType = switch (swtch.getLeaf().getKind()) {
+                                                        case SWITCH -> trees.getTypeMirror(new TreePath(swtch, ((SwitchTree) swtch.getLeaf()).getExpression()));
+                                                        case SWITCH_EXPRESSION -> trees.getTypeMirror(new TreePath(swtch, ((SwitchExpressionTree) swtch.getLeaf()).getExpression()));
+                                                        default -> null;
+                                                    };
+                                                } else {
+                                                    selectorType = null;
+                                                }
+                                                Element selectorElement = selectorType != null ? parameter.getTypes().asElement(selectorType) : null;
+                                                shouldImport = selectorElement == null || selectorElement.getKind() != ElementKind.ENUM;
+                                            }
+                                            if (shouldImport) {
                                                 simple2ImportFQN.put(el.getSimpleName().toString(), ((TypeElement) el.getEnclosingElement()).getQualifiedName().toString() + '.' + el.getSimpleName().toString());
                                                 spans.add(new int[] {s - start, e - start});
                                             }
@@ -447,8 +477,8 @@ public class ClipboardHandler {
                                     return super.visitMethod(node, p);
                                 }
                                 private void handleDeclaration() {
-                                    int s = (int) parameter.getTrees().getSourcePositions().getStartPosition(parameter.getCompilationUnit(), getCurrentPath().getLeaf());
-                                    int e = (int) parameter.getTrees().getSourcePositions().getEndPosition(parameter.getCompilationUnit(), getCurrentPath().getLeaf());
+                                    int s = (int) trees.getSourcePositions().getStartPosition(parameter.getCompilationUnit(), getCurrentPath().getLeaf());
+                                    int e = (int) trees.getSourcePositions().getEndPosition(parameter.getCompilationUnit(), getCurrentPath().getLeaf());
                                     javax.lang.model.element.Element el = parameter.getTrees().getElement(getCurrentPath());
 
                                     if (el != null && ((start <= s && s <= end) || (start <= e && e <= end))) {
@@ -719,7 +749,7 @@ public class ClipboardHandler {
 
     private static final Object NO_IMPORTS = new Object();
     private static final Object RUN_SYNCHRONOUSLY = new Object();
-    private static final DataFlavor IMPORT_FLAVOR = new DataFlavor(ImportsWrapper.class, NbBundle.getMessage(ClipboardHandler.class, "MSG_ClipboardImportFlavor"));
+            static final DataFlavor IMPORT_FLAVOR = new DataFlavor(ImportsWrapper.class, NbBundle.getMessage(ClipboardHandler.class, "MSG_ClipboardImportFlavor"));
     private static final DataFlavor COPY_FROM_STRING_FLAVOR = new DataFlavor(Boolean.class, NbBundle.getMessage(ClipboardHandler.class, "MSG_ClipboardCopyFromStringFlavor"));
 
     private static final class WrappedTransferable implements Transferable {
@@ -776,6 +806,10 @@ public class ClipboardHandler {
             this.sourceFO = sourceFO;
             this.simple2ImportFQN = simple2ImportFQN;
             this.identifiers = identifiers;
+        }
+
+        public Map<String, String> getSimple2ImportFQN() {
+            return simple2ImportFQN;
         }
     }
 

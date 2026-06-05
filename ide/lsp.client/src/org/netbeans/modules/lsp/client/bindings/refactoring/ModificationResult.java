@@ -133,22 +133,15 @@ public final class ModificationResult implements org.netbeans.modules.refactorin
                 return;
             }
         }
-        InputStream ins = null;
-        ByteArrayOutputStream baos = null;           
         Reader in = null;
         Writer out2 = out;
         try {
             Charset encoding = FileEncodingQuery.getEncoding(fo);
-            ins = fo.getInputStream();
-            baos = new ByteArrayOutputStream();
-            FileUtil.copy(ins, baos);
-
-            ins.close();
-            ins = null;
-            byte[] arr = baos.toByteArray();
+            byte[] arr;
+            try (InputStream ins = fo.getInputStream()) {
+                arr = ins.readAllBytes();
+            }
             int arrLength = convertToLF(arr);
-            baos.close();
-            baos = null;
             in = new InputStreamReader(new ByteArrayInputStream(arr, 0, arrLength), encoding);
             // initialize standard commit output stream, if user
             // does not provide his own writer
@@ -198,10 +191,6 @@ public final class ModificationResult implements org.netbeans.modules.refactorin
             while ((n = in.read(buff)) > 0)
                 out2.write(buff, 0, n);
         } finally {
-            if (ins != null)
-                ins.close();
-            if (baos != null)
-                baos.close();
             if (in != null)
                 in.close();
             if (out2 != null)

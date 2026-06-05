@@ -242,16 +242,8 @@ public class ArchiveURLMapper extends URLMapper {
                     copy = copy.getCanonicalFile();
                     copy.deleteOnExit();
                 }
-                InputStream is = fo.getInputStream();
-                try {
-                    OutputStream os = new FileOutputStream(copy);
-                    try {
-                        FileUtil.copy(is, os);
-                    } finally {
-                        os.close();
-                    }
-                } finally {
-                    is.close();
+                try (InputStream is = fo.getInputStream(); OutputStream os = new FileOutputStream(copy)) {
+                    is.transferTo(os);
                 }
                 copiedJARs.put(archiveFileURI, copy);
             }

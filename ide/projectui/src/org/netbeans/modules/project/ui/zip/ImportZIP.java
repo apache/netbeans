@@ -32,9 +32,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +43,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -61,7 +58,6 @@ import org.openide.awt.ActionRegistration;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Cancellable;
-import org.openide.util.NbBundle;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
@@ -226,11 +222,8 @@ public class ImportZIP extends JPanel {
                         if (!p.isDirectory() && !p.mkdirs()) {
                             throw new IOException("could not make " + p);
                         }
-                        OutputStream os = new FileOutputStream(f);
-                        try {
-                            FileUtil.copy(zis, os);
-                        } finally {
-                            os.close();
+                        try (OutputStream os = new FileOutputStream(f)) {
+                            zis.transferTo(os);
                         }
                         if (entry.getTime() > 0) {
                             if (!f.setLastModified(entry.getTime())) {

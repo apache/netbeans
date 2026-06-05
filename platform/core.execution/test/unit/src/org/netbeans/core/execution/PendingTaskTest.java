@@ -22,7 +22,6 @@ package org.netbeans.core.execution;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.progress.spi.Controller;
@@ -108,7 +107,7 @@ public class PendingTaskTest extends NbTestCase {
         MyWorker worker = new MyWorker();
         Controller.defaultInstance = new Controller(worker);
         
-        ProgressHandle proghandle = ProgressHandleFactory.createHandle("a1");
+        ProgressHandle proghandle = ProgressHandle.createHandle("a1");
         proghandle.setInitialDelay(0);
         
         assertEquals("None before", 0, Install.getPendingTasks().size());

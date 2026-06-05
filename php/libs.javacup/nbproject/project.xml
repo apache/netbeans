@@ -32,7 +32,7 @@
             </friend-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/java-cup-11a.jar</runtime-relative-path>
-                <binary-origin>external/java-cup-11a.jar</binary-origin>
+                <binary-origin>external/java-cup-0.11a.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

@@ -131,7 +131,7 @@ public class CopyResourcesOnSave extends FileChangeAdapter {
                 is = srcFile.getInputStream();
                 fl = destFile.lock();
                 os = destFile.getOutputStream(fl);
-                FileUtil.copy(is, os);
+                is.transferTo(os);
             } finally {
                 if (is != null) {
                     is.close();

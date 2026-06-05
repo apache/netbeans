@@ -286,7 +286,6 @@ public class ServerVolumeCustomizer extends javax.swing.JPanel implements Custom
             baseFolder = new File(URI.create(area.getLocation().toExternalForm())).getParentFile();
         }
         FileChooser chooser = new FileChooser(baseFolder, baseFolder);
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setAcceptAllFileFilterUsed(false);
         if (!this.volumeType.equals(ServerLibraryTypeProvider.VOLUME_JAVADOC)
                 && !this.volumeType.equals(ServerLibraryTypeProvider.VOLUME_SOURCE)) {

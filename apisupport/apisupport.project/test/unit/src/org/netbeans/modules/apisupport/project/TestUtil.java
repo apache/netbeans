@@ -34,7 +34,6 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.zip.CRC32;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
 import org.openide.util.test.JarBuilder;
 
@@ -65,16 +64,8 @@ public class TestUtil {
             }
         } else {
             assert from.isFile() : from;
-            InputStream is = new FileInputStream(from);
-            try {
-                OutputStream os = new FileOutputStream(to);
-                try {
-                    FileUtil.copy(is, os);
-                } finally {
-                    os.close();
-                }
-            } finally {
-                is.close();
+            try (InputStream is = new FileInputStream(from); OutputStream os = new FileOutputStream(to)) {
+                is.transferTo(os);
             }
         }
     }

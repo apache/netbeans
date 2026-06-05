@@ -19,19 +19,15 @@
 package org.netbeans.modules.netbinox;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.logging.Level;
 import junit.framework.Test;
 import org.netbeans.Module;
 import org.netbeans.ModuleManager;
-import org.netbeans.NetigsoFramework;
 import org.netbeans.SetupHid;
 import org.netbeans.core.netigso.NetigsoUtil;
 import org.netbeans.core.startup.Main;
 import org.netbeans.junit.NbModuleSuite;
 import org.netbeans.junit.NbTestCase;
-import org.openide.util.Lookup;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.launch.Framework;
 
@@ -47,11 +43,14 @@ public class IntegrationTest extends NbTestCase {
     }
 
     public static Test suite() {
+        // JDK 21+: enabling all clusters causes:
+        // Will not load class org.osgi.framework.launch.Framework arbitrarily from one of
+        // ModuleCL@1070d437[org.netbeans.libs.osgi] and ModuleCL@2bbc301d[org.netbeans.modules.websvc.restlib]
         return NbModuleSuite.create(
             NbModuleSuite.emptyConfiguration().addTest(
                 IntegrationTest.class
             ).honorAutoloadEager(true).clusters(
-                ".*"
+                "platform|ide"
             ).failOnException(Level.WARNING)/*.failOnMessage(Level.WARNING)*/
             .gui(false)
         );

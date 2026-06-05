@@ -44,14 +44,6 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.api.progress.nb</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>1.40</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.modules.project.ant</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -240,9 +232,6 @@
                         <code-name-base>org.openide.filesystems</code-name-base>
                         <compile-dependency/>
                         <test/>
-                    </test-dependency>
-                    <test-dependency>
-                        <code-name-base>org.openide.options</code-name-base>
                     </test-dependency>
                     <test-dependency>
                         <code-name-base>org.openide.util.ui</code-name-base>

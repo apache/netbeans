@@ -29,13 +29,17 @@ import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
 
 /**
  *
  * @author pzajac
  */
 public class ShorterPathsTest extends TestBase {
-
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+    
     public ShorterPathsTest(java.lang.String testName) {
         super(testName);
     }
@@ -57,14 +61,12 @@ public class ShorterPathsTest extends TestBase {
         }
 
 
-        execute("ShorterPathsTest.xml", new String[]{
-                    "-verbose",
-                    "-Dtest.ext.lib=" + extlib.getPath(),
-                    "-Dtest.modules.dir=" + modules.getPath(),
-                    "-Dextra.test.libs.dir=" + extraLibsDir.getPath(),
-                    "-Dtest.properties=" + testProperties.getPath(),
-                    "all"
-                });
+        System.setProperty("test.ext.lib", extlib.getAbsolutePath());
+        System.setProperty("test.modules.dir", modules.getAbsolutePath());
+        System.setProperty("extra.test.libs.dir", extraLibsDir.getAbsolutePath());
+        System.setProperty("test.properties", testProperties.getAbsolutePath());
+        buildRule.configureProject(getBuildFileInClassPath("ShorterPathsTest.xml"));
+        buildRule.executeTarget("all");
         File extralibCopy = new File(extraLibsDir, "extlib.jar");
 
         assertTrue("No extra library has been copied", extralibCopy.exists());
@@ -112,14 +114,12 @@ public class ShorterPathsTest extends TestBase {
         File extlib = new File(getWorkDir(), "extlib.jar");
         generateJar(extlib, new String[]{"a/b/c/Class1.class", "a/b/c/Class2.class"}, m);
 
-        execute("ShorterPathsTest.xml", new String[]{
-                    "-verbose",
-                    "-Dtest.ext.lib=" + extlib.getPath(),
-                    "-Dtest.modules.dir=" + modules.getPath(),
-                    "-Dextra.test.libs.dir=" + extraLibsDir.getPath(),
-                    "-Dtest.properties=" + testProperties.getPath(),
-                    "all"
-                });
+        System.setProperty("test.ext.lib", extlib.getAbsolutePath());
+        System.setProperty("test.modules.dir", modules.getAbsolutePath());
+        System.setProperty("extra.test.libs.dir", extraLibsDir.getAbsolutePath());
+        System.setProperty("test.properties", testProperties.getAbsolutePath());
+        buildRule.configureProject(getBuildFileInClassPath("ShorterPathsTest.xml"));
+        buildRule.executeTarget("all");
         File extralibCopy = new File(extraLibsDir, "extlib.jar");
         assertTrue("Extra library not copied.", extralibCopy.exists());
         File classPathExtensionCopy = new File(extraLibsDir, cpExtensionRelativePath);

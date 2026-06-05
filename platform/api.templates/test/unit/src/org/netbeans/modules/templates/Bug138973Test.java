@@ -23,7 +23,6 @@ import java.util.Enumeration;
 import org.openide.loaders.*;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -81,11 +80,9 @@ public class Bug138973Test extends NbTestCase {
         templateFile.setAttribute ("template", Boolean.TRUE);
         templateFile.setAttribute(ScriptingCreateFromTemplateHandler.SCRIPT_ENGINE_ATTR, "js");
         byte[] templateBytes = TESTING_TEXT.getBytes(StandardCharsets.ISO_8859_1);
-        InputStream source = new ByteArrayInputStream(templateBytes);
-        OutputStream target = templateFile.getOutputStream();
-        FileUtil.copy(source, target);
-        target.close();
-        source.close();
+        try (OutputStream target = templateFile.getOutputStream()) {
+            target.write(templateBytes);
+        }
         assert templateFile.getSize() != 0L;
         templateFile.setAttribute("template", Boolean.TRUE);
 

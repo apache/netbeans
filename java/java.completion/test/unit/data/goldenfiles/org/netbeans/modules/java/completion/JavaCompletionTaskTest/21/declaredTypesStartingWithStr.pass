@@ -1,0 +1,6 @@
+StrictMath
+String
+StringBuffer
+StringBuilder
+StringIndexOutOfBoundsException
+StringTemplate

@@ -15,5 +15,5 @@
 # specific language governing permissions and limitations
 # under the License.
 
-3AA6C33C386D649763838B2F0F7EF20E3E27E80B org.apache.tomcat:tomcat-annotations-api:9.0.102
-371C7ADD45D1A5B97DAA457BBF3804FF82923092 org.apache.tomcat.embed:tomcat-embed-core:9.0.102
+6C156B32284C8371ADB228AE21688387627E558B org.apache.tomcat:tomcat-annotations-api:9.0.113
+B364692BCA96817268B38F183FAFD14DBD00950E org.apache.tomcat.embed:tomcat-embed-core:9.0.113

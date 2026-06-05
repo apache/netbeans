@@ -21,6 +21,7 @@ package org.netbeans.modules.groovy.editor.typinghooks;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.api.lexer.Token;
@@ -63,8 +64,8 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
         int offset = context.getCaretOffset();
         boolean insertMatching = TypingHooksUtil.isMatchingBracketsEnabled(doc);
 
-        int lineBegin = Utilities.getRowStart(doc, offset);
-        int lineEnd = Utilities.getRowEnd(doc, offset);
+        int lineBegin = LineDocumentUtils.getLineStartOffset(doc, offset);
+        int lineEnd = LineDocumentUtils.getLineEndOffset(doc, offset);
 
         if (lineBegin == offset && lineEnd == offset) {
             // Pressed return on a blank newline - do nothing
@@ -92,7 +93,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
         if (id != GroovyTokenId.ERROR && id != GroovyTokenId.BLOCK_COMMENT && insertMatching && insertRightBrace) {
             int indent = GsfUtilities.getLineIndent(doc, offset);
 
-            int afterLastNonWhite = Utilities.getRowLastNonWhite(doc, offset);
+            int afterLastNonWhite = LineDocumentUtils.getLineLastNonWhitespace(doc, offset);
 
             // We've either encountered a further indented line, or a line that doesn't
             // look like the end we're after, so insert a matching end.
@@ -118,7 +119,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
                     // I'm inserting a newline in the middle of a sentence, such as the scenario in #118656
                     // I should insert the end AFTER the text on the line
                     String restOfLine = doc.getText(offset,
-                            Math.min(end, Utilities.getRowEnd(doc, afterLastNonWhite)) - offset);
+                            Math.min(end, LineDocumentUtils.getLineEndOffset(doc, afterLastNonWhite)) - offset);
                     sb.append("\n"); // XXX On Windows, do \r\n?
                     sb.append(IndentUtils.createIndentString(doc, indent + IndentUtils.indentLevelSize(doc)));
                     // right brace must be included into the correct context - issue #219683
@@ -146,7 +147,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
         if (id == GroovyTokenId.ERROR) {
             // See if it's a block comment opener
             String text = token.text().toString();
-            if (text.startsWith("/*") && ts.offset() == Utilities.getRowFirstNonWhite(doc, offset)) {
+            if (text.startsWith("/*") && ts.offset() == LineDocumentUtils.getLineFirstNonWhitespace(doc, offset)) {
                 int indent = GsfUtilities.getLineIndent(doc, offset);
                 StringBuilder sb = new StringBuilder();
                 sb.append("\n"); // NOI18N
@@ -225,7 +226,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
             // Pressing newline in the whitespace before a comment
             // should be identical to pressing newline with the caret
             // at the beginning of the comment
-            int begin = Utilities.getRowFirstNonWhite(doc, offset);
+            int begin = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
             if (begin != -1 && offset < begin) {
                 ts.move(begin);
                 if (ts.moveNext()) {
@@ -240,8 +241,8 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
         if ((id == GroovyTokenId.BLOCK_COMMENT)
                 && offset > ts.offset() && offset < ts.offset()+ts.token().length()) {
             // Continue *'s
-            int begin = Utilities.getRowFirstNonWhite(doc, offset);
-            int end = Utilities.getRowEnd(doc, offset)+1;
+            int begin = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
+            int end = LineDocumentUtils.getLineEndOffset(doc, offset)+1;
             if (begin == -1) {
                 begin = end;
             }
@@ -263,7 +264,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
                     // Copy existing indentation inside the block
                     sb.append("*"); //NOI18N
                     int afterStar = isBlockStart ? begin+2 : begin+1;
-                    line = doc.getText(afterStar, Utilities.getRowEnd(doc, afterStar)-afterStar);
+                    line = doc.getText(afterStar, LineDocumentUtils.getLineEndOffset(doc, afterStar)-afterStar);
                     for (int i = 0; i < line.length(); i++) {
                         char c = line.charAt(i);
                         if (c == ' ' || c == '\t') { //NOI18N
@@ -297,15 +298,15 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
             // or if the next line is a comment!
 
             boolean continueComment = false;
-            int begin = Utilities.getRowFirstNonWhite(doc, offset);
+            int begin = LineDocumentUtils.getLineFirstNonWhitespace(doc, offset);
 
             // We should only continue comments if the previous line had a comment
             // (and a comment from the beginning, not a trailing comment)
             boolean previousLineWasComment = false;
             boolean nextLineIsComment = false;
-            int rowStart = Utilities.getRowStart(doc, offset);
+            int rowStart = LineDocumentUtils.getLineStartOffset(doc, offset);
             if (rowStart > 0) {
-                int prevBegin = Utilities.getRowFirstNonWhite(doc, rowStart - 1);
+                int prevBegin = LineDocumentUtils.getLineFirstNonWhitespace(doc, rowStart - 1);
                 if (prevBegin != -1) {
                     Token<GroovyTokenId> firstToken = LexUtilities.getToken(doc, prevBegin);
                     if (firstToken != null && firstToken.id() == GroovyTokenId.LINE_COMMENT) {
@@ -313,9 +314,9 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
                     }
                 }
             }
-            int rowEnd = Utilities.getRowEnd(doc, offset);
+            int rowEnd = LineDocumentUtils.getLineEndOffset(doc, offset);
             if (rowEnd < doc.getLength()) {
-                int nextBegin = Utilities.getRowFirstNonWhite(doc, rowEnd + 1);
+                int nextBegin = LineDocumentUtils.getLineFirstNonWhitespace(doc, rowEnd + 1);
                 if (nextBegin != -1) {
                     Token<GroovyTokenId> firstToken = LexUtilities.getToken(doc, nextBegin);
                     if (firstToken != null && firstToken.id() == GroovyTokenId.LINE_COMMENT) {
@@ -331,7 +332,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
                     || (offset > ts.offset() && offset < ts.offset() + ts.token().length())) {
                 if (ts.offset() + token.length() > offset + 1) {
                     // See if the remaining text is just whitespace
-                    String trailing = doc.getText(offset, Utilities.getRowEnd(doc, offset) - offset);
+                    String trailing = doc.getText(offset, LineDocumentUtils.getLineEndOffset(doc, offset) - offset);
                     if (trailing.trim().length() != 0) {
                         continueComment = true;
                     }
@@ -346,9 +347,9 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
                 if (!continueComment) {
                     // See if the next line is a comment; if so we want to continue
                     // comments editing the middle of the comment
-                    int nextLine = Utilities.getRowEnd(doc, offset) + 1;
+                    int nextLine = LineDocumentUtils.getLineEndOffset(doc, offset) + 1;
                     if (nextLine < doc.getLength()) {
-                        int nextLineFirst = Utilities.getRowFirstNonWhite(doc, nextLine);
+                        int nextLineFirst = LineDocumentUtils.getLineFirstNonWhitespace(doc, nextLine);
                         if (nextLineFirst != -1) {
                             Token<GroovyTokenId> firstToken = LexUtilities.getToken(doc, nextLineFirst);
                             if (firstToken != null && firstToken.id() == GroovyTokenId.LINE_COMMENT) {
@@ -370,7 +371,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
                 sb.append("//"); // NOI18N
                 // Copy existing indentation
                 int afterSlash = begin + 2;
-                String line = doc.getText(afterSlash, Utilities.getRowEnd(doc, afterSlash) - afterSlash);
+                String line = doc.getText(afterSlash, LineDocumentUtils.getLineEndOffset(doc, afterSlash) - afterSlash);
                 for (int i = 0; i < line.length(); i++) {
                     char c = line.charAt(i);
                     if (c == ' ' || c == '\t') {
@@ -425,7 +426,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
         int indent = GsfUtilities.getLineIndent(doc, offset);
         int currentOffset = offset;
         while (currentOffset > 0) {
-            if (!Utilities.isRowEmpty(doc, currentOffset) && !Utilities.isRowWhite(doc, currentOffset)
+            if (!LineDocumentUtils.isLineEmpty(doc, currentOffset) && !LineDocumentUtils.isLineWhitespace(doc, currentOffset)
                     && !LexUtilities.isCommentOnlyLine(doc, currentOffset)) {
                 indent = GsfUtilities.getLineIndent(doc, currentOffset);
                 int parenBalance = LexUtilities.getLineBalance(doc, currentOffset,
@@ -440,7 +441,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
                 }
                 return indent;
             }
-            currentOffset = Utilities.getRowStart(doc, currentOffset) - 1;
+            currentOffset = LineDocumentUtils.getLineStartOffset(doc, currentOffset) - 1;
         }
 
         return indent;
@@ -468,7 +469,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
         if (LexUtilities.getTokenBalance(doc, GroovyTokenId.LBRACE, GroovyTokenId.RBRACE, caretOffset) <= 0) {
             return false;
         }
-        int caretRowStartOffset = org.netbeans.editor.Utilities.getRowStart(doc, caretOffset);
+        int caretRowStartOffset = LineDocumentUtils.getLineStartOffset(doc, caretOffset);
         TokenSequence<GroovyTokenId> ts = LexUtilities.getPositionedSequence(doc, caretOffset);
         if (ts == null) {
             return false;
@@ -505,7 +506,7 @@ public class GroovyTypedBreakInterceptor implements TypedBreakInterceptor {
      * character on the caret row is returned.
      */
     private int getRowOrBlockEnd(BaseDocument doc, int caretOffset, boolean[] insert) throws BadLocationException {
-        int rowEnd = org.netbeans.editor.Utilities.getRowLastNonWhite(doc, caretOffset);
+        int rowEnd = LineDocumentUtils.getLineLastNonWhitespace(doc, caretOffset);
         if (rowEnd == -1 || caretOffset >= rowEnd) {
             return caretOffset;
         }

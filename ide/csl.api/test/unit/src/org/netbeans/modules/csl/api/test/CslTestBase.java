@@ -22,7 +22,6 @@ package org.netbeans.modules.csl.api.test;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -116,6 +115,7 @@ import javax.swing.text.DefaultEditorKit;
 import javax.swing.text.Document;
 import javax.swing.text.Element;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
@@ -182,6 +182,7 @@ import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Pair;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.test.MockLookup;
+
 import static org.openide.util.test.MockLookup.setLookup;
 
 /**
@@ -344,17 +345,9 @@ public abstract class CslTestBase extends NbTestCase {
     }
 
     public static final FileObject copyStringToFileObject(FileObject fo, String content) throws IOException {
-        OutputStream os = fo.getOutputStream();
-        try {
-            InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-            try {
-                FileUtil.copy(is, os);
-                return fo;
-            } finally {
-                is.close();
-            }
-        } finally {
-            os.close();
+        try (OutputStream os = fo.getOutputStream()) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
+            return fo;
         }
     }
 
@@ -388,13 +381,10 @@ public abstract class CslTestBase extends NbTestCase {
 
     /** Copy-pasted from APISupport. */
     protected static String slurp(File file) throws IOException {
-        InputStream is = new FileInputStream(file);
-        try {
+        try (InputStream is = new FileInputStream(file)) {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            FileUtil.copy(is, baos);
-            return baos.toString("UTF-8");
-        } finally {
-            is.close();
+            is.transferTo(baos);
+            return baos.toString(StandardCharsets.UTF_8);
         }
     }
 
@@ -1223,13 +1213,13 @@ public abstract class CslTestBase extends NbTestCase {
     // Copied from LexUtilities
     public static int getLineIndent(BaseDocument doc, int offset) {
         try {
-            int start = Utilities.getRowStart(doc, offset);
+            int start = LineDocumentUtils.getLineStartOffset(doc, offset);
             int end;
 
-            if (Utilities.isRowWhite(doc, start)) {
-                end = Utilities.getRowEnd(doc, offset);
+            if (LineDocumentUtils.isLineWhitespace(doc, start)) {
+                end = LineDocumentUtils.getLineEndOffset(doc, offset);
             } else {
-                end = Utilities.getRowFirstNonWhite(doc, start);
+                end = LineDocumentUtils.getLineFirstNonWhitespace(doc, start);
             }
 
             int indent = Utilities.getVisualColumn(doc, end);
@@ -3408,11 +3398,11 @@ public abstract class CslTestBase extends NbTestCase {
                 int index = 0;
                 while (index < doc.getLength()) {
                     int lineStart = index;
-                    int lineEnd = Utilities.getRowEnd(doc, index);
+                    int lineEnd = LineDocumentUtils.getLineEndOffset(doc, index);
                     if (lineEnd == -1) {
                         break;
                     }
-                    if (Utilities.getRowFirstNonWhite(doc, index) != -1) {
+                    if (LineDocumentUtils.getLineFirstNonWhitespace(doc, index) != -1) {
                         String line = doc.getText(lineStart, lineEnd-lineStart);
                         for (int i = lineStart; i <= lineEnd; i++) {
                             String prefix = completer.getPrefix(pr, i, true); // line.charAt(i)
@@ -4073,8 +4063,8 @@ public abstract class CslTestBase extends NbTestCase {
         int index = 0;
         int length = text.length();
         while (index < length) {
-            int lineStart = Utilities.getRowStart(doc, index);
-            int lineEnd = Utilities.getRowEnd(doc, index);
+            int lineStart = LineDocumentUtils.getLineStartOffset(doc, index);
+            int lineEnd = LineDocumentUtils.getLineEndOffset(doc, index);
             OffsetRange lineRange = new OffsetRange(lineStart, lineEnd);
             boolean skipLine = true;
             for (OffsetRange range : ranges) {

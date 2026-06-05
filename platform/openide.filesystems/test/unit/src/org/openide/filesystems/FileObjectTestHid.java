@@ -1853,7 +1853,7 @@ public class FileObjectTestHid extends TestBaseHid {
         
         InputStream is = getClass ().getResourceAsStream(getClass().getName().substring(getClass().getName().lastIndexOf('.')+1)+".class");
         OutputStream os = fo.getOutputStream (lock);
-        FileUtil.copy (is, os);
+        is.transferTo (os);
         is.close ();
         os.close ();
         lock.releaseLock ();

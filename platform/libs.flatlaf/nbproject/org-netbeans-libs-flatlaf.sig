@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.21
+#Version 1.26
 
 CLSS public abstract interface com.formdev.flatlaf.FlatClientProperties
 fld public final static java.lang.String BUTTON_TYPE = "JButton.buttonType"
@@ -24,6 +24,7 @@ fld public final static java.lang.String MINIMUM_HEIGHT = "JComponent.minimumHei
 fld public final static java.lang.String MINIMUM_WIDTH = "JComponent.minimumWidth"
 fld public final static java.lang.String OUTLINE = "JComponent.outline"
 fld public final static java.lang.String OUTLINE_ERROR = "error"
+fld public final static java.lang.String OUTLINE_SUCCESS = "success"
 fld public final static java.lang.String OUTLINE_WARNING = "warning"
 fld public final static java.lang.String PLACEHOLDER_TEXT = "JTextField.placeholderText"
 fld public final static java.lang.String POPUP_BORDER_CORNER_RADIUS = "Popup.borderCornerRadius"
@@ -40,6 +41,7 @@ fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY = "JTextFiel
 fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY_ALWAYS = "always"
 fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY_NEVER = "never"
 fld public final static java.lang.String SELECT_ALL_ON_FOCUS_POLICY_ONCE = "once"
+fld public final static java.lang.String SELECT_ALL_ON_MOUSE_CLICK = "JTextField.selectAllOnMouseClick"
 fld public final static java.lang.String SPLIT_PANE_EXPANDABLE_SIDE = "JSplitPane.expandableSide"
 fld public final static java.lang.String SPLIT_PANE_EXPANDABLE_SIDE_LEFT = "left"
 fld public final static java.lang.String SPLIT_PANE_EXPANDABLE_SIDE_RIGHT = "right"
@@ -85,6 +87,7 @@ fld public final static java.lang.String TABBED_PANE_TAB_TYPE_UNDERLINED = "unde
 fld public final static java.lang.String TABBED_PANE_TAB_WIDTH_MODE = "JTabbedPane.tabWidthMode"
 fld public final static java.lang.String TABBED_PANE_TAB_WIDTH_MODE_COMPACT = "compact"
 fld public final static java.lang.String TABBED_PANE_TAB_WIDTH_MODE_EQUAL = "equal"
+fld public final static java.lang.String TABBED_PANE_TAB_WIDTH_MODE_ICON_ONLY = "iconOnly"
 fld public final static java.lang.String TABBED_PANE_TAB_WIDTH_MODE_PREFERRED = "preferred"
 fld public final static java.lang.String TABBED_PANE_TRAILING_COMPONENT = "JTabbedPane.trailingComponent"
 fld public final static java.lang.String TAB_BUTTON_SELECTED_BACKGROUND = "JToggleButton.tab.selectedBackground"
@@ -107,6 +110,7 @@ fld public final static java.lang.String TITLE_BAR_SHOW_ICONIFFY = "JRootPane.ti
 fld public final static java.lang.String TITLE_BAR_SHOW_MAXIMIZE = "JRootPane.titleBarShowMaximize"
 fld public final static java.lang.String TITLE_BAR_SHOW_TITLE = "JRootPane.titleBarShowTitle"
 fld public final static java.lang.String TREE_PAINT_SELECTION = "JTree.paintSelection"
+fld public final static java.lang.String TREE_WIDE_CELL_RENDERER = "JTree.wideCellRenderer"
 fld public final static java.lang.String TREE_WIDE_SELECTION = "JTree.wideSelection"
 fld public final static java.lang.String USE_WINDOW_DECORATIONS = "JRootPane.useWindowDecorations"
 fld public final static java.lang.String WINDOW_STYLE = "Window.style"
@@ -220,8 +224,11 @@ meth public static java.lang.String getPreferredFontFamily()
 meth public static java.lang.String getPreferredLightFontFamily()
 meth public static java.lang.String getPreferredMonospacedFontFamily()
 meth public static java.lang.String getPreferredSemiboldFontFamily()
+meth public static java.lang.String getUIKeyLightOrDarkPrefix(boolean)
 meth public static java.util.Map<java.lang.String,java.lang.Class<?>> getStyleableInfos(javax.swing.JComponent)
 meth public static java.util.Map<java.lang.String,java.lang.String> getGlobalExtraDefaults()
+meth public static java.util.Set<java.lang.String> getUIKeyPlatformPrefixes()
+meth public static java.util.Set<java.lang.String> getUIKeySpecialPrefixes()
 meth public static java.util.function.Function<java.lang.String,java.awt.Color> getSystemColorGetter()
 meth public static javax.swing.UIDefaults$ActiveValue createActiveFontValue(float)
 meth public static void disableWindowsD3Donscreen()
@@ -255,7 +262,7 @@ meth public void setExtraDefaults(java.util.Map<java.lang.String,java.lang.Strin
 meth public void uninitialize()
 meth public void unregisterUIDefaultsGetter(java.util.function.Function<java.lang.Object,java.lang.Object>)
 supr javax.swing.plaf.basic.BasicLookAndFeel
-hfds DESKTOPFONTHINTS,aquaLoaded,customDefaultsSources,desktopPropertyListener,desktopPropertyName,desktopPropertyName2,extraDefaults,globalExtraDefaults,mnemonicHandler,oldPopupFactory,postInitialization,preferredFontFamily,preferredLightFontFamily,preferredMonospacedFontFamily,preferredSemiboldFontFamily,subMenuUsabilityHelperInstalled,systemColorGetter,uiDefaultsGetters,updateUIPending
+hfds DESKTOPFONTHINTS,aquaLoaded,customDefaultsSources,desktopPropertyListener,desktopPropertyName,desktopPropertyName2,extraDefaults,globalExtraDefaults,linuxPopupMenuCanceler,mnemonicHandler,oldPopupFactory,postInitialization,preferredFontFamily,preferredLightFontFamily,preferredMonospacedFontFamily,preferredSemiboldFontFamily,subMenuUsabilityHelperInstalled,systemColorGetter,uiDefaultsGetters,uiKeyPlatformPrefixes,uiKeySpecialPrefixes,updateUIPending
 hcls ActiveFont,FlatUIDefaults,ImageIconUIResource
 
 CLSS public abstract interface static com.formdev.flatlaf.FlatLaf$DisabledIconProvider
@@ -291,6 +298,7 @@ CLSS public abstract interface com.formdev.flatlaf.FlatSystemProperties
 fld public final static java.lang.String ANIMATION = "flatlaf.animation"
 fld public final static java.lang.String MENUBAR_EMBEDDED = "flatlaf.menuBarEmbedded"
 fld public final static java.lang.String NATIVE_LIBRARY_PATH = "flatlaf.nativeLibraryPath"
+fld public final static java.lang.String REUSE_VISIBLE_POPUP_WINDOW = "flatlaf.reuseVisiblePopupWindow"
 fld public final static java.lang.String UI_SCALE = "flatlaf.uiScale"
 fld public final static java.lang.String UI_SCALE_ALLOW_SCALE_DOWN = "flatlaf.uiScale.allowScaleDown"
 fld public final static java.lang.String UI_SCALE_ENABLED = "flatlaf.uiScale.enabled"
@@ -300,6 +308,7 @@ fld public final static java.lang.String USE_JETBRAINS_CUSTOM_DECORATIONS = "fla
 fld public final static java.lang.String USE_NATIVE_LIBRARY = "flatlaf.useNativeLibrary"
 fld public final static java.lang.String USE_ROUNDED_POPUP_BORDER = "flatlaf.useRoundedPopupBorder"
 fld public final static java.lang.String USE_SUB_MENU_SAFE_TRIANGLE = "flatlaf.useSubMenuSafeTriangle"
+fld public final static java.lang.String USE_SYSTEM_FILE_CHOOSER = "flatlaf.useSystemFileChooser"
 fld public final static java.lang.String USE_TEXT_Y_CORRECTION = "flatlaf.useTextYCorrection"
 fld public final static java.lang.String USE_UBUNTU_FONT = "flatlaf.useUbuntuFont"
 fld public final static java.lang.String USE_WINDOW_DECORATIONS = "flatlaf.useWindowDecorations"
@@ -318,7 +327,7 @@ meth public static boolean setup(java.io.InputStream)
 meth public static com.formdev.flatlaf.FlatLaf createLaf(com.formdev.flatlaf.IntelliJTheme)
 meth public static com.formdev.flatlaf.FlatLaf createLaf(java.io.InputStream) throws java.io.IOException
 supr java.lang.Object
-hfds checkboxDuplicateColors,checkboxKeyMapping,colors,icons,isMaterialUILite,namedColors,ui,uiKeyCopying,uiKeyDoNotOverride,uiKeyExcludes,uiKeyInverseMapping,uiKeyMapping
+hfds checkboxDuplicateColors,checkboxKeyMapping,jsonColors,jsonIcons,jsonUI,namedColors,uiKeyCopying,uiKeyDoNotOverride,uiKeyExcludesContains,uiKeyExcludesStartsWith,uiKeyInverseMapping,uiKeyMapping
 
 CLSS public static com.formdev.flatlaf.IntelliJTheme$ThemeLaf
  outer com.formdev.flatlaf.IntelliJTheme
@@ -413,6 +422,7 @@ innr public static Fade
 innr public static HSLChange
 innr public static HSLIncreaseDecrease
 innr public static Mix
+innr public static Mix2
 meth public !varargs static java.awt.Color applyFunctions(java.awt.Color,com.formdev.flatlaf.util.ColorFunctions$ColorFunction[])
 meth public static float clamp(float)
 meth public static float luma(java.awt.Color)
@@ -469,6 +479,16 @@ CLSS public static com.formdev.flatlaf.util.ColorFunctions$Mix
 cons public init(java.awt.Color,float)
 fld public final float weight
 fld public final java.awt.Color color2
+intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
+meth public java.lang.String toString()
+meth public void apply(float[])
+supr java.lang.Object
+
+CLSS public static com.formdev.flatlaf.util.ColorFunctions$Mix2
+ outer com.formdev.flatlaf.util.ColorFunctions
+cons public init(java.awt.Color,float)
+fld public final float weight
+fld public final java.awt.Color color1
 intf com.formdev.flatlaf.util.ColorFunctions$ColorFunction
 meth public java.lang.String toString()
 meth public void apply(float[])
@@ -752,9 +772,126 @@ cons public init()
 meth public static <%0 extends java.awt.Component> {%%0} getComponentByName(java.awt.Container,java.lang.String)
 supr java.lang.Object
 
+CLSS public com.formdev.flatlaf.util.SystemFileChooser
+cons public init()
+cons public init(java.io.File)
+cons public init(java.lang.String)
+fld public final static int APPROVE_OPTION = 0
+fld public final static int CANCEL_OPTION = 1
+fld public final static int DIRECTORIES_ONLY = 1
+fld public final static int FILES_ONLY = 0
+fld public final static int OPEN_DIALOG = 0
+fld public final static int SAVE_DIALOG = 1
+fld public final static java.lang.String LINUX_OPTIONS_CLEAR = "linux.optionsClear"
+fld public final static java.lang.String LINUX_OPTIONS_SET = "linux.optionsSet"
+fld public final static java.lang.String MAC_FILTER_FIELD_LABEL = "mac.filterFieldLabel"
+fld public final static java.lang.String MAC_MESSAGE = "mac.message"
+fld public final static java.lang.String MAC_NAME_FIELD_LABEL = "mac.nameFieldLabel"
+fld public final static java.lang.String MAC_OPTIONS_CLEAR = "mac.optionsClear"
+fld public final static java.lang.String MAC_OPTIONS_SET = "mac.optionsSet"
+fld public final static java.lang.String MAC_TREATS_FILE_PACKAGES_AS_DIRECTORIES = "mac.treatsFilePackagesAsDirectories"
+fld public final static java.lang.String WINDOWS_DEFAULT_EXTENSION = "windows.defaultExtension"
+fld public final static java.lang.String WINDOWS_DEFAULT_FOLDER = "windows.defaultFolder"
+fld public final static java.lang.String WINDOWS_FILE_NAME_LABEL = "windows.fileNameLabel"
+fld public final static java.lang.String WINDOWS_OPTIONS_CLEAR = "windows.optionsClear"
+fld public final static java.lang.String WINDOWS_OPTIONS_SET = "windows.optionsSet"
+innr public abstract interface static ApproveCallback
+innr public abstract interface static StateStore
+innr public abstract static ApproveContext
+innr public abstract static FileFilter
+innr public final static FileNameExtensionFilter
+innr public final static PatternFilter
+meth public <%0 extends java.lang.Object> {%%0} getPlatformProperty(java.lang.String)
+meth public boolean isAcceptAllFileFilterUsed()
+meth public boolean isDirectorySelectionEnabled()
+meth public boolean isFileHidingEnabled()
+meth public boolean isFileSelectionEnabled()
+meth public boolean isMultiSelectionEnabled()
+meth public boolean removeChoosableFileFilter(com.formdev.flatlaf.util.SystemFileChooser$FileFilter)
+meth public com.formdev.flatlaf.util.SystemFileChooser$ApproveCallback getApproveCallback()
+meth public com.formdev.flatlaf.util.SystemFileChooser$FileFilter getAcceptAllFileFilter()
+meth public com.formdev.flatlaf.util.SystemFileChooser$FileFilter getFileFilter()
+meth public com.formdev.flatlaf.util.SystemFileChooser$FileFilter[] getChoosableFileFilters()
+meth public int getApproveButtonMnemonic()
+meth public int getDialogType()
+meth public int getFileSelectionMode()
+meth public int showDialog(java.awt.Component,java.lang.String)
+meth public int showOpenDialog(java.awt.Component)
+meth public int showSaveDialog(java.awt.Component)
+meth public java.io.File getCurrentDirectory()
+meth public java.io.File getSelectedFile()
+meth public java.io.File[] getSelectedFiles()
+meth public java.lang.String getApproveButtonText()
+meth public java.lang.String getDialogTitle()
+meth public java.lang.String getStateStoreID()
+meth public static com.formdev.flatlaf.util.SystemFileChooser$StateStore getStateStore()
+meth public static void setStateStore(com.formdev.flatlaf.util.SystemFileChooser$StateStore)
+meth public void addChoosableFileFilter(com.formdev.flatlaf.util.SystemFileChooser$FileFilter)
+meth public void putPlatformProperty(java.lang.String,java.lang.Object)
+meth public void resetChoosableFileFilters()
+meth public void setAcceptAllFileFilterUsed(boolean)
+meth public void setApproveButtonMnemonic(char)
+meth public void setApproveButtonMnemonic(int)
+meth public void setApproveButtonText(java.lang.String)
+meth public void setApproveCallback(com.formdev.flatlaf.util.SystemFileChooser$ApproveCallback)
+meth public void setCurrentDirectory(java.io.File)
+meth public void setDialogTitle(java.lang.String)
+meth public void setDialogType(int)
+meth public void setFileFilter(com.formdev.flatlaf.util.SystemFileChooser$FileFilter)
+meth public void setFileHidingEnabled(boolean)
+meth public void setFileSelectionMode(int)
+meth public void setMultiSelectionEnabled(boolean)
+meth public void setSelectedFile(java.io.File)
+meth public void setSelectedFiles(java.io.File[])
+meth public void setStateStoreID(java.lang.String)
+supr java.lang.Object
+hfds acceptAllFileFilter,approveButtonMnemonic,approveButtonText,approveCallback,approveResult,currentDirectory,dialogTitle,dialogType,fileFilter,fileSelectionMode,filters,inMemoryStateStore,keepAcceptAllAtEnd,multiSelection,platformProperties,selectedFile,selectedFiles,stateStore,stateStoreID,useAcceptAllFileFilter,useFileHiding
+hcls AcceptAllFileFilter,FileChooserProvider,LinuxFileChooserProvider,MacFileChooserProvider,SwingFileChooserProvider,SystemFileChooserProvider,WindowsFileChooserProvider
+
+CLSS public abstract interface static com.formdev.flatlaf.util.SystemFileChooser$ApproveCallback
+ outer com.formdev.flatlaf.util.SystemFileChooser
+meth public abstract int approve(java.io.File[],com.formdev.flatlaf.util.SystemFileChooser$ApproveContext)
+
+CLSS public abstract static com.formdev.flatlaf.util.SystemFileChooser$ApproveContext
+ outer com.formdev.flatlaf.util.SystemFileChooser
+cons public init()
+meth public abstract !varargs int showMessageDialog(int,java.lang.String,java.lang.String,int,java.lang.String[])
+supr java.lang.Object
+
+CLSS public abstract static com.formdev.flatlaf.util.SystemFileChooser$FileFilter
+ outer com.formdev.flatlaf.util.SystemFileChooser
+cons public init()
+meth public abstract java.lang.String getDescription()
+supr java.lang.Object
+
+CLSS public final static com.formdev.flatlaf.util.SystemFileChooser$FileNameExtensionFilter
+ outer com.formdev.flatlaf.util.SystemFileChooser
+cons public !varargs init(java.lang.String,java.lang.String[])
+meth public java.lang.String getDescription()
+meth public java.lang.String toString()
+meth public java.lang.String[] getExtensions()
+supr com.formdev.flatlaf.util.SystemFileChooser$FileFilter
+hfds description,extensions
+
+CLSS public final static com.formdev.flatlaf.util.SystemFileChooser$PatternFilter
+ outer com.formdev.flatlaf.util.SystemFileChooser
+cons public !varargs init(java.lang.String,java.lang.String[])
+meth public java.lang.String getDescription()
+meth public java.lang.String toString()
+meth public java.lang.String[] getPatterns()
+supr com.formdev.flatlaf.util.SystemFileChooser$FileFilter
+hfds description,patterns
+
+CLSS public abstract interface static com.formdev.flatlaf.util.SystemFileChooser$StateStore
+ outer com.formdev.flatlaf.util.SystemFileChooser
+fld public final static java.lang.String KEY_CURRENT_DIRECTORY = "currentDirectory"
+meth public abstract java.lang.String get(java.lang.String,java.lang.String)
+meth public abstract void put(java.lang.String,java.lang.String)
+
 CLSS public com.formdev.flatlaf.util.SystemInfo
 cons public init()
 fld public final static boolean isAARCH64
+fld public final static boolean isGNOME
 fld public final static boolean isJava_11_orLater
 fld public final static boolean isJava_12_orLater
 fld public final static boolean isJava_15_orLater
@@ -771,6 +908,7 @@ fld public final static boolean isMacOS_10_11_ElCapitan_orLater
 fld public final static boolean isMacOS_10_14_Mojave_orLater
 fld public final static boolean isMacOS_10_15_Catalina_orLater
 fld public final static boolean isProjector
+fld public final static boolean isUnknownOS
 fld public final static boolean isWebswing
 fld public final static boolean isWinPE
 fld public final static boolean isWindows
@@ -786,13 +924,21 @@ supr java.lang.Object
 
 CLSS public com.formdev.flatlaf.util.UIScale
 cons public init()
+fld public final static java.lang.String PROP_USER_SCALE_FACTOR = "userScaleFactor"
+fld public final static java.lang.String PROP_ZOOM_FACTOR = "zoomFactor"
 meth public static boolean isSystemScalingEnabled()
+meth public static boolean setZoomFactor(float)
+meth public static boolean zoomIn()
+meth public static boolean zoomOut()
+meth public static boolean zoomReset()
 meth public static double getSystemScaleFactor(java.awt.Graphics2D)
 meth public static double getSystemScaleFactor(java.awt.GraphicsConfiguration)
 meth public static float computeFontScaleFactor(java.awt.Font)
 meth public static float getUserScaleFactor()
+meth public static float getZoomFactor()
 meth public static float scale(float)
 meth public static float unscale(float)
+meth public static float[] getSupportedZoomFactors()
 meth public static int scale(int)
 meth public static int scale2(int)
 meth public static int unscale(int)
@@ -802,8 +948,9 @@ meth public static javax.swing.plaf.FontUIResource applyCustomScaleFactor(javax.
 meth public static void addPropertyChangeListener(java.beans.PropertyChangeListener)
 meth public static void removePropertyChangeListener(java.beans.PropertyChangeListener)
 meth public static void scaleGraphics(java.awt.Graphics2D)
+meth public static void setSupportedZoomFactors(float[])
 supr java.lang.Object
-hfds DEBUG,changeSupport,initialized,jreHiDPI,scaleFactor
+hfds DEBUG,changeSupport,ignoreFontChange,inUnitTests,initialized,jreHiDPI,listenerInitialized,scaleFactor,supportedZoomFactors,unzoomedScaleFactor,zoomFactor
 
 CLSS public java.awt.Color
 cons public init(float,float,float)

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 9.36
+#Version 9.41
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -94,6 +94,7 @@ meth public static java.io.InputStream nullInputStream()
 meth public void close() throws java.io.IOException
 meth public void mark(int)
 meth public void reset() throws java.io.IOException
+meth public void skipNBytes(long) throws java.io.IOException
 supr java.lang.Object
 
 CLSS public abstract interface java.io.ObjectInput
@@ -867,7 +868,7 @@ meth public static java.awt.Image createDisabledImage(java.awt.Image)
 meth public static java.net.URL findImageBaseURL(java.awt.Image)
 meth public static javax.swing.Icon createDisabledIcon(javax.swing.Icon)
 supr java.lang.Object
-hfds DARK_LAF_SUFFIX,ERR,LOGGER,NO_ICON,PNG_READER,TOOLTIP_SEPAR,cache,classLoaderLoader,component,compositeCache,dummyIconComponentButton,dummyIconComponentLabel,extraInitialSlashes,imageIconFilter,imageToolTipCache,localizedCache,mediaTrackerID,svgLoaderLoader,tracker
+hfds DARK_LAF_SUFFIX,LOGGER,NO_ICON,PNG_READER,TOOLTIP_SEPAR,cache,classLoaderLoader,component,compositeCache,dummyIconComponentButton,dummyIconComponentLabel,extraInitialSlashes,imageIconFilter,imageToolTipCache,localizedCache,mediaTrackerID,svgLoaderLoader,tracker
 hcls ActiveRef,CachedLookupLoader,CompositeImageKey,DisabledButtonFilter,IconImageIcon,MergedIcon,ToolTipImage,ToolTipImageKey
 
 CLSS public abstract org.openide.util.Lookup
@@ -1179,8 +1180,8 @@ meth public void execute(java.lang.Runnable)
 meth public void shutdown()
 meth public void stop()
 supr java.lang.Object
-hfds DEFAULT,SLOW,TOP_GROUP,UNLIMITED,counter,enableStackTraces,finishAwaitingTasks,inParallel,interruptThread,logger,name,processorLock,processors,queue,stopped,throughput,warnParallel
-hcls CreatedItem,FastItem,FixedDelayTask,FixedRateTask,Item,Processor,RPFutureTask,RunnableWrapper,ScheduledRPFutureTask,SlowItem,TaskFutureWrapper,TickTac,TopLevelThreadGroup,WaitableCallable
+hfds DEFAULT,SLOW,UNLIMITED,counter,enableStackTraces,finishAwaitingTasks,inParallel,interruptThread,logger,name,processorLock,processors,queue,stopped,throughput,warnParallel
+hcls CreatedItem,FastItem,FixedDelayTask,FixedRateTask,Item,Processor,RPFutureTask,RunnableWrapper,ScheduledRPFutureTask,SlowItem,TaskFutureWrapper,TickTac,WaitableCallable
 
 CLSS public final org.openide.util.RequestProcessor$Task
  outer org.openide.util.RequestProcessor
@@ -1436,6 +1437,7 @@ meth public static javax.swing.event.DocumentListener document(javax.swing.event
 supr java.lang.Object
 
 CLSS public org.openide.util.WeakSet<%0 extends java.lang.Object>
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="")
 cons public init()
 cons public init(int)
 cons public init(int,float)

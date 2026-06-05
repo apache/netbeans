@@ -30,7 +30,6 @@ import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.modules.autoupdate.services.AutoupdateSettings;
-import org.openide.filesystems.FileUtil;
 import org.openide.modules.Places;
 import org.openide.util.Utilities;
 
@@ -259,12 +258,8 @@ public final class AutoupdateCatalogCache {
         if (!temp.renameTo(cache)) {
             err.log(Level.INFO, "Cannot rename temp {0} to cache {1}", new Object[]{temp, cache});
             err.log(Level.INFO, "Trying to copy {0} to cache {1}", new Object[] {temp, cache});
-            try {
-                FileOutputStream os = new FileOutputStream(cache);
-                FileInputStream is = new FileInputStream(temp);
-                FileUtil.copy(is, os);
-                os.close();
-                is.close();
+            try (FileInputStream is = new FileInputStream(temp); FileOutputStream os = new FileOutputStream(cache)) {
+                is.transferTo(os);
                 temp.delete();
             } catch (IOException ex) {
                 err.log(Level.INFO, "Cannot even copy: {0}", ex.getMessage());

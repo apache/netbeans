@@ -206,7 +206,14 @@ public class BreadCrumbsTask extends ElementScanningTask {
         
         @Override
         protected Collection<? extends SchedulerTask> createTasks(Language language, Snapshot snapshot) {
-            return Collections.singletonList(new BreadCrumbsTask());
+            if (language.getStructure() != null) {
+                // Language#hasStructureScanner has a broken/unusable
+                // implementation, so support is deduced from the (non-)presence
+                // of a structure scanner.
+                return List.of(new BreadCrumbsTask());
+            } else {
+                return List.of();
+            }
         }
         
     }

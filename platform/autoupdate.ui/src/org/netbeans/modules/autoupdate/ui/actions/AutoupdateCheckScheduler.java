@@ -182,7 +182,7 @@ public class AutoupdateCheckScheduler {
         // check
         err.log (Level.FINEST, "Check UpdateElements for " + type);
         if (forceReload) {
-            ProgressHandle dummyHandler = ProgressHandleFactory.createHandle ("dummy-check-for-updates"); // NOI18N
+            ProgressHandle dummyHandler = ProgressHandle.createHandle ("dummy-check-for-updates"); // NOI18N
             ProgressHandleFactory.createProgressComponent(dummyHandler);
             dummyHandler.start();
             Collection <String> updateProblems=refreshUpdateCenters (dummyHandler);

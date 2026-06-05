@@ -575,7 +575,6 @@ public class CustomizerRun extends JPanel implements HelpCtx.Provider {
 
     private void jButtonWorkingDirectoryBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonWorkingDirectoryBrowseActionPerformed
         JFileChooser chooser = new JFileChooser();
-        FileUtil.preventFileChooserSymlinkTraversal(chooser, null);
         chooser.setFileSelectionMode (JFileChooser.DIRECTORIES_ONLY);
         chooser.setMultiSelectionEnabled(false);
         

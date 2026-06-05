@@ -60,6 +60,7 @@ public class ExLocalFileSystem extends LocalFileSystem {
         }
         
         
+        @Override
         public String[] children(String f) {
             return super.children(f);
         }
@@ -69,6 +70,7 @@ public class ExLocalFileSystem extends LocalFileSystem {
         * @param attrName name of the attribute
         * @return appropriate (serializable) value or <CODE>null</CODE> if the attribute is unset (or could not be properly restored for some reason)
         */
+        @Override
         public Object readAttribute(String name, String attrName) {
             return super.readAttribute(transformName (name), attrName);
         }
@@ -79,6 +81,7 @@ public class ExLocalFileSystem extends LocalFileSystem {
         * @param value new value or <code>null</code> to clear the attribute. Must be serializable, although particular filesystems may or may not use serialization to store attribute values.
         * @exception IOException if the attribute cannot be set. If serialization is used to store it, this may in fact be a subclass such as {@link NotSerializableException}.
         */
+        @Override
         public void writeAttribute(String name, String attrName, Object value)
                 throws IOException {
             super.writeAttribute(transformName (name), attrName, value);
@@ -88,6 +91,7 @@ public class ExLocalFileSystem extends LocalFileSystem {
         * @param name the file
         * @return enumeration of keys (as strings)
         */
+        @Override
         public synchronized Enumeration<String> attributes(String name) {
             return super.attributes(transformName (name));
         }
@@ -97,6 +101,7 @@ public class ExLocalFileSystem extends LocalFileSystem {
         * @param oldName old name of the file
         * @param newName new name of the file
         */
+        @Override
         public synchronized void renameAttributes(String oldName, String newName) {
             super.renameAttributes(transformName (oldName), transformName (newName));
         }
@@ -105,6 +110,7 @@ public class ExLocalFileSystem extends LocalFileSystem {
         *
         * @param name name of the file
         */
+        @Override
         public synchronized void deleteAttributes(String name) {
             super.deleteAttributes(transformName (name));
         }
@@ -112,7 +118,7 @@ public class ExLocalFileSystem extends LocalFileSystem {
         private String transformName (String name) {
             char replaceChar = '|';//NOI18N       
             if (name.indexOf(replaceChar) != -1 ) {
-                StringBuffer transformed = new StringBuffer(name.length() + 50);
+                StringBuilder transformed = new StringBuilder(name.length() + 50);
                 for (int i = 0; i < name.length(); i++) {
                     transformed.append(name.charAt(i));                        
                     if (name.charAt(i) == replaceChar) 
@@ -120,7 +126,7 @@ public class ExLocalFileSystem extends LocalFileSystem {
                 }
                 name = transformed.toString();
             }
-            return name.replace('/',replaceChar);//NOI18N
+            return name.replace('/', replaceChar);//NOI18N
         }        
     }    
 }

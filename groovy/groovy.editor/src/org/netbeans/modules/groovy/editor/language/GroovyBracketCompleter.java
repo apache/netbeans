@@ -26,6 +26,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.codehaus.groovy.ast.ASTNode;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.api.lexer.Token;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.lexer.TokenId;
@@ -119,21 +120,21 @@ public class GroovyBracketCompleter implements KeystrokeHandler {
                     ranges.add(new OffsetRange(begin, end));
                 } else if ((token != null) && (token.id() == GroovyTokenId.LINE_COMMENT)) {
                     // First add a range for the current line
-                    int begin = Utilities.getRowStart(doc, caretOffset);
-                    int end = Utilities.getRowEnd(doc, caretOffset);
+                    int begin = LineDocumentUtils.getLineStartOffset(doc, caretOffset);
+                    int end = LineDocumentUtils.getLineEndOffset(doc, caretOffset);
 
                     if (LexUtilities.isCommentOnlyLine(doc, caretOffset)) {
-                        ranges.add(new OffsetRange(Utilities.getRowFirstNonWhite(doc, begin), 
-                                Utilities.getRowLastNonWhite(doc, end)+1));
+                        ranges.add(new OffsetRange(LineDocumentUtils.getLineFirstNonWhitespace(doc, begin), 
+                                LineDocumentUtils.getLineLastNonWhitespace(doc, end)+1));
 
                         int lineBegin = begin;
                         int lineEnd = end;
 
                         while (begin > 0) {
-                            int newBegin = Utilities.getRowStart(doc, begin - 1);
+                            int newBegin = LineDocumentUtils.getLineStartOffset(doc, begin - 1);
 
                             if ((newBegin < 0) || !LexUtilities.isCommentOnlyLine(doc, newBegin)) {
-                                begin = Utilities.getRowFirstNonWhite(doc, begin);
+                                begin = LineDocumentUtils.getLineFirstNonWhitespace(doc, begin);
                                 break;
                             }
 
@@ -141,10 +142,10 @@ public class GroovyBracketCompleter implements KeystrokeHandler {
                         }
 
                         while (true) {
-                            int newEnd = Utilities.getRowEnd(doc, end + 1);
+                            int newEnd = LineDocumentUtils.getLineEndOffset(doc, end + 1);
 
                             if ((newEnd >= length) || !LexUtilities.isCommentOnlyLine(doc, newEnd)) {
-                                end = Utilities.getRowLastNonWhite(doc, end)+1;
+                                end = LineDocumentUtils.getLineLastNonWhitespace(doc, end)+1;
                                 break;
                             }
 

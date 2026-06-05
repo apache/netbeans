@@ -24,7 +24,6 @@ import java.util.function.BiFunction;
 import javax.swing.JEditorPane;
 import javax.swing.text.Document;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.gsf.testrunner.api.CommonUtils;
 import org.netbeans.modules.gsf.testrunner.ui.annotation.TestMethodAnnotation;
 import org.netbeans.modules.gsf.testrunner.ui.api.TestMethodController.TestMethod;
@@ -118,7 +117,7 @@ public abstract class TestMethodRunnerProvider {
 		    singleMethod = findTestMethod(doc, caret, TestMethodRunnerProvider.this::getTestMethod);
 		}
 	    });
-	    final ProgressHandle ph = ProgressHandleFactory.createHandle(Bundle.Search_For_Test_Method(), singleMethodTask);
+	    final ProgressHandle ph = ProgressHandle.createHandle(Bundle.Search_For_Test_Method(), singleMethodTask);
 	    singleMethodTask.addTaskListener(new TaskListener() {
 		@Override
 		public void taskFinished(org.openide.util.Task task) {

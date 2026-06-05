@@ -189,9 +189,9 @@ public abstract class GitProgressSupport implements Runnable, Cancellable {
         if (progressHandle == null) {
             Action openAction = getLogger().getOpenOutputAction();
             if (openAction == null) {
-                progressHandle = ProgressHandleFactory.createHandle(displayName, this);
+                progressHandle = ProgressHandle.createHandle(displayName, this);
             } else {
-                progressHandle = ProgressHandleFactory.createHandle(displayName, this, openAction);
+                progressHandle = ProgressHandle.createHandle(displayName, this, openAction);
             }
         }
         return progressHandle;

@@ -216,7 +216,7 @@ public class LanguageServerImpl implements LanguageServerProvider {
             } else if (commandsPath != null && commandsPath.canRead()) {
                 try (InputStream in = new FileInputStream(commandsPath);
                      OutputStream out = new FileOutputStream(tempFile)) {
-                    FileUtil.copy(in, out);
+                    in.transferTo(out);
                 } catch (IOException ex) {
                     LOG.log(Level.WARNING, null, ex);
                     return null;

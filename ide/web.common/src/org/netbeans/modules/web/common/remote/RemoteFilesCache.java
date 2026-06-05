@@ -111,25 +111,16 @@ public class RemoteFilesCache {
     }
     
     private void fetchRemoteFile(File destination, URL url) throws IOException {
-        InputStream is = null;
+        InputStream tmp;
         try {
-            is = url.openStream();
+            tmp = url.openStream();
         } catch (FileNotFoundException ex) {
-            is = new ByteArrayInputStream(("file not found at "+url.toExternalForm()+" \n"+ex.toString()).getBytes()); //NOI18N
+            tmp = new ByteArrayInputStream(("file not found at "+url.toExternalForm()+" \n"+ex.toString()).getBytes()); //NOI18N
         } catch (Throwable ex) {
-            is = new ByteArrayInputStream(("could not open stream for "+url.toExternalForm()+" \n"+ex.toString()).getBytes()); //NOI18N
+            tmp = new ByteArrayInputStream(("could not open stream for "+url.toExternalForm()+" \n"+ex.toString()).getBytes()); //NOI18N
         }
-        OutputStream os = null;
-        try {
-            os = new FileOutputStream(destination);
-            FileUtil.copy(is, os);
-        } finally {
-            if (os != null) {
-                os.close();
-            }
-            if (is != null) {
-                is.close();
-            }
+        try (InputStream is = tmp; OutputStream os = new FileOutputStream(destination)) {
+            is.transferTo(os);
         }
         FileObject fo = FileUtil.toFileObject(destination);
         fo.refresh();

@@ -58,6 +58,11 @@ public class QueryAction extends SystemAction {
     }
 
     @Override
+    public boolean isEnabled() {
+        return BugtrackingManager.getInstance().hasRegisteredConnectors();
+    }
+
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx(QueryAction.class);
     }

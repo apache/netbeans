@@ -86,7 +86,7 @@ public class DOMConvertorTest extends NbTestCase {
             assertEquals(cs2.b1, cs2.b2);
         } catch (IOException e) {
             System.err.println("File contents:\n");
-            FileUtil.copy(fo.getInputStream(), System.err);
+            fo.getInputStream().transferTo(System.err);
             throw e;
         }
         } catch (Exception ex) {
@@ -119,7 +119,7 @@ public class DOMConvertorTest extends NbTestCase {
             assertEquals(cs2.b1, cs2.b2);
         } catch (IOException e) {
             System.err.println("File contents:\n");
-            FileUtil.copy(fo.getInputStream(), System.err);
+            fo.getInputStream().transferTo(System.err);
             throw e;
         }
         } catch (Exception ex) {

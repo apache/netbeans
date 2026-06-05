@@ -24,10 +24,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 import javax.swing.text.Document;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
+import org.netbeans.api.editor.mimelookup.MimeLookup;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.JavaSource;
@@ -35,6 +38,7 @@ import org.netbeans.api.java.source.SourceUtilsTestUtil;
 import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.api.lsp.Completion;
 import org.netbeans.api.lsp.Completion.Context;
+import org.netbeans.api.lsp.Completion.Kind;
 import org.netbeans.api.lsp.Completion.TextFormat;
 import org.netbeans.api.lsp.Completion.TriggerKind;
 import org.netbeans.api.lsp.TextEdit;
@@ -343,15 +347,107 @@ public class JavaCompletionCollectorTest extends NbTestCase {
         assertTrue(found.get());
     }
 
-    private void runJavaCollector(List<FileDescription> files, Validator<List<Completion>> validator) throws Exception {
-        SourceUtilsTestUtil.prepareTest(new String[]{"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[]{new MIMEResolverImpl(), new MIMEDataProvider()});
+    public void testMethodWithoutParameterInsertion() throws Exception {
+        Set<String> found = new HashSet<>();
+        FileDescription fileDescription = new FileDescription("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    public static void test(String s) {
+                        Test.|
+                    }
+                }
+                """);
 
+        runJavaCollector(List.of(fileDescription),
+                preferences -> preferences.putBoolean("completion-insert-text-parameters", false),
+                completions -> {
+                    for (Completion completion : completions) {
+                        if ("test".equals(completion.getLabel())) {
+                            assertNull(completion.getTextEdit());
+                            assertNull(completion.getAdditionalTextEdits());
+                            assertEquals(TextFormat.Snippet, completion.getInsertTextFormat());
+                            assertEquals("test($1);$0", completion.getInsertText());
+                            found.add(completion.getLabelDetail());
+                        }
+                    }
+                });
+        assertEquals(Set.of("(String s)"), found);
+    }
+
+    public void testConstructorWithoutParameterInsertion() throws Exception {
+        Set<String> found = new HashSet<>();
+        FileDescription fileDescription = new FileDescription("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    private String s;
+                    public Test(String s) {
+                        this.s = s;
+                    }
+                    public static void test() {
+                        Test m = new Test|
+                    }
+                }
+                """);
+
+        runJavaCollector(List.of(fileDescription),
+                preferences -> preferences.putBoolean("completion-insert-text-parameters", false),
+                completions -> {
+                    for (Completion completion : completions) {
+                        if ("Test".equals(completion.getLabel()) && completion.getKind() == Kind.Constructor) {
+                            assertNull(completion.getTextEdit());
+                            assertNull(completion.getAdditionalTextEdits());
+                            assertEquals("Test($1)$0", completion.getInsertText());
+                            found.add(completion.getLabelDetail());
+                        }
+                    }
+                });
+        assertEquals(Set.of("(String s)"), found);
+    }
+
+    public void testThisConstructorWithoutParameterInsertion() throws Exception {
+        Set<String> found = new HashSet<>();
+        FileDescription fileDescription = new FileDescription("test/Test.java",
+                """
+                package test;
+                public class Test {
+                    private String s;
+                    public Test(String s) {
+                        this.s = s;
+                    }
+                    public Test() {
+                        this|
+                    }
+                }
+                """);
+
+        runJavaCollector(List.of(fileDescription),
+                preferences -> preferences.putBoolean("completion-insert-text-parameters", false),
+                completions -> {
+                    for (Completion completion : completions) {
+                        if ("this".equals(completion.getLabel()) && completion.getKind() == Kind.Constructor) {
+                            assertNull(completion.getTextEdit());
+                            assertNull(completion.getAdditionalTextEdits());
+                            assertEquals("this($1);$0", completion.getInsertText());
+                            found.add(completion.getLabelDetail());
+                        }
+                    }
+                });
+        assertEquals(Set.of("(String s)"), found);
+    }
+
+    private void runJavaCollector(List<FileDescription> files, Validator<List<Completion>> validator) throws Exception {
+        runJavaCollector(files, preferences -> {}, validator);
+    }
+
+    private void runJavaCollector(List<FileDescription> files, Consumer<Preferences> alterSettings, Validator<List<Completion>> validator) throws Exception {
+        SourceUtilsTestUtil.prepareTest(new String[]{"org/netbeans/modules/java/editor/resources/layer.xml"}, new Object[]{new MIMEResolverImpl(), new MIMEDataProvider()});
         FileObject scratch = SourceUtilsTestUtil.makeScratchDir(this);
         FileObject cache = scratch.createFolder("cache");
         FileObject src = scratch.createFolder("src");
         primaryTestFO = null;
         int caretPosition = -1;
-
         for (FileDescription testFile : files) {
             FileObject testFO = FileUtil.createData(src, testFile.fileName);
             String code = testFile.code;
@@ -367,27 +463,29 @@ public class JavaCompletionCollectorTest extends NbTestCase {
 
             TestUtilities.copyStringToFile(testFO, code);
         }
-
         assertNotNull(primaryTestFO);
-
         if (sourceLevel != null) {
             SourceUtilsTestUtil.setSourceLevel(primaryTestFO, sourceLevel);
         }
-
         SourceUtilsTestUtil.prepareTest(src, FileUtil.createFolder(scratch, "test-build"), cache);
-        SourceUtilsTestUtil.compileRecursively(src);
-
-        EditorCookie ec = primaryTestFO.getLookup().lookup(EditorCookie.class);
-        Document doc = ec.openDocument();
-        JavaCompletionCollector collector = new JavaCompletionCollector();
-        Context ctx = new Context(TriggerKind.Invoked, null);
-        List<Completion> completions = new ArrayList<>();
-
-        JavaSource.forDocument(doc).runUserActionTask(cc -> {
-            cc.toPhase(JavaSource.Phase.RESOLVED);
-        }, true);
-        collector.collectCompletions(doc, caretPosition, ctx, completions::add);
-        validator.validate(completions);
+        
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+        try {
+            alterSettings.accept(preferences);
+            SourceUtilsTestUtil.compileRecursively(src);
+            EditorCookie ec = primaryTestFO.getLookup().lookup(EditorCookie.class);
+            Document doc = ec.openDocument();
+            JavaCompletionCollector collector = new JavaCompletionCollector();
+            Context ctx = new Context(TriggerKind.Invoked, null);
+            List<Completion> completions = new ArrayList<>();
+            JavaSource.forDocument(doc).runUserActionTask(cc -> {
+                cc.toPhase(JavaSource.Phase.RESOLVED);
+            }, true);
+            collector.collectCompletions(doc, caretPosition, ctx, completions::add);
+            validator.validate(completions);
+        } finally {
+            preferences.clear();
+        }
     }
 
     private static String textEdit2String(TextEdit te) {

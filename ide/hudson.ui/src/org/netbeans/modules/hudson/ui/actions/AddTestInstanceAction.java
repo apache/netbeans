@@ -28,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.hudson.api.ConnectionBuilder;
 import org.netbeans.modules.hudson.api.HudsonManager;
 import org.netbeans.modules.hudson.ui.api.UI;
@@ -89,7 +88,7 @@ public class AddTestInstanceAction extends AbstractAction implements Runnable {
             return;
         }
         final AtomicBoolean cancelled = new AtomicBoolean();
-        ProgressHandle progress = ProgressHandleFactory.createHandle(
+        ProgressHandle progress = ProgressHandle.createHandle(
                 Bundle.AddTestInstanceAction_starting(), new Cancellable() {
             @Override
             public boolean cancel() {

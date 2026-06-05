@@ -723,7 +723,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
             }
             this.left.remove(customComponent);
         }
-        final ProgressHandle progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(RefactoringPanel.class, isQuery ? "LBL_PreparingUsagesTree":"LBL_PreparingRefactoringTree"));
+        final ProgressHandle progressHandle = ProgressHandle.createHandle(NbBundle.getMessage(RefactoringPanel.class, isQuery ? "LBL_PreparingUsagesTree":"LBL_PreparingRefactoringTree"));
         if (currentView == GRAPHICAL) {
             assert refactoringUI instanceof RefactoringCustomUI;
             assert customComponent != null;
@@ -1303,7 +1303,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
 
         public ProgressL() {
             final String lab = NbBundle.getMessage(RefactoringPanel.class, "LBL_RefactorProgressLabel");
-            handle = ProgressHandleFactory.createHandle(lab);
+            handle = ProgressHandle.createHandle(lab);
             JComponent progress = ProgressHandleFactory.createProgressComponent(handle);
             JPanel component = new JPanel();
             component.setLayout(new BorderLayout());
@@ -1356,7 +1356,7 @@ public class RefactoringPanel extends JPanel implements FiltersManagerImpl.Filte
 
         @Override
         public void start(final ProgressEvent event) {
-            handle = ProgressHandleFactory.createHandle(getMessage(event), this);
+            handle = ProgressHandle.createHandle(getMessage(event), this);
             if (event.getCount() == -1) {
                 handle.start();
                 handle.switchToIndeterminate();

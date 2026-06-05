@@ -5539,7 +5539,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                 final File packedIndex = new File (into,getSimpleName(indexURL));       //NOI18N
                 try (final InputStream in = new BufferedInputStream(indexURL.openStream());
                      final OutputStream out = new BufferedOutputStream(new FileOutputStream(packedIndex))) {
-                     FileUtil.copy(in, out);
+                    in.transferTo(out);
                 }
                 return packedIndex;
             } catch (IOException ioe) {
@@ -5561,7 +5561,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                         target.getParentFile().mkdirs();
                         try (final InputStream in = zf.getInputStream(entry);
                             final FileOutputStream out = new FileOutputStream(target)) {
-                                FileUtil.copy(in, out);
+                            in.transferTo(out);
                         }
                     }
                 }

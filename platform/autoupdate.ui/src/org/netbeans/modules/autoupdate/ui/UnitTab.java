@@ -42,10 +42,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.PreferenceChangeEvent;
@@ -81,7 +79,6 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.autoupdate.ui.wizards.OperationWizardModel.OperationType;
 import org.openide.awt.Mnemonics;
-import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -761,7 +758,7 @@ public final class UnitTab extends javax.swing.JPanel {
         final Runnable checkUpdates = new Runnable (){
             @Override
             public void run () {
-                ProgressHandle handle = ProgressHandleFactory.createHandle (NbBundle.getMessage (UnitTab.class,  ("UnitTab_ReloadAction")));
+                ProgressHandle handle = ProgressHandle.createHandle (NbBundle.getMessage (UnitTab.class,  ("UnitTab_ReloadAction")));
                 JComponent progressComp = ProgressHandleFactory.createProgressComponent (handle);
                 JLabel detailLabel = new JLabel (NbBundle.getMessage (UnitTab.class, "UnitTab_PrepareReloadAction"));
                 manager.setProgressComponent (detailLabel, progressComp);

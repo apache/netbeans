@@ -1086,12 +1086,14 @@ public class OutlineView extends JScrollPane {
         Rectangle rect = outline.getCellRect(i, j, true);
         if (rect == null) return null;
 
-        Point p = new Point(rect.x + rect.width / 3,
-                rect.y + rect.height / 2);
+        Point p = new Point(
+            rect.x + Math.min(350, 5 + rect.width),
+            rect.y - 15);
         
         // bugfix #36984, convert point by TableView.this
         p =  SwingUtilities.convertPoint (outline, p, OutlineView.this);
 
+        p.x = Math.min(p.x, OutlineView.this.getWidth());
         return p;
     }
 

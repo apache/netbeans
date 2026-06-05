@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 import javax.xml.namespace.QName;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.apache.maven.model.Dependency;
@@ -45,6 +44,7 @@ import org.netbeans.modules.maven.model.pom.POMModel;
 import org.netbeans.modules.maven.model.pom.POMQName;
 import org.netbeans.modules.maven.model.pom.Plugin;
 import org.netbeans.modules.maven.model.pom.Project;
+import org.netbeans.modules.maven.model.pom.Properties;
 import org.netbeans.modules.maven.model.pom.Repository;
 import org.netbeans.modules.maven.model.pom.RepositoryPolicy;
 import org.netbeans.modules.maven.options.MavenVersionSettings;
@@ -118,8 +118,7 @@ final class NBMNativeMWI {
                 File res = new File(src, path);
                 res.mkdirs();
                 try (OutputStream os = new BufferedOutputStream(new FileOutputStream(new File(res, "Bundle.properties")))) {
-                    Properties p = new Properties();
-                    p.store(os, EMPTY_BUNDLE_FILE);
+                    new java.util.Properties().store(os, EMPTY_BUNDLE_FILE);
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }
@@ -309,7 +308,7 @@ final class NBMNativeMWI {
                         p.setVersion(settings.getVersion(Constants.GROUP_APACHE_PLUGINS, Constants.PLUGIN_COMPILER));
                     }
                     getOrCreateBuild(model).addPlugin(p);
-                    model.getProject().getProperties().setProperty("maven.compiler.release", "17");
+                    getOrCreateProperties(model).setProperty("maven.compiler.release", "17");
                 }
                 
                 //now the jar plugin
@@ -384,6 +383,15 @@ final class NBMNativeMWI {
                 model.getProject().setBuild(bld);
             }
             return bld;
+        }
+
+        private Properties getOrCreateProperties(POMModel model) {
+            Properties props = model.getProject().getProperties();
+            if (props == null) {
+                props = model.getFactory().createProperties();
+                model.getProject().setProperties(props);
+            }
+            return props;
         }
     }
 

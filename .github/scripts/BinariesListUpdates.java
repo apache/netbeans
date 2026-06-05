@@ -61,7 +61,7 @@ public class BinariesListUpdates {
 
         Path path = Path.of(args[0]);
         try (Stream<Path> dependencyFiles = Files.find(path, 10, (p, a) -> p.getFileName().toString().equals("binaries-list"));
-             SmoSearchBackend backend = SmoSearchBackendFactory.createDefault()) {
+             SmoSearchBackend backend = SmoSearchBackendFactory.createSmo()) {
             dependencyFiles.sorted().forEach(p -> {
                 try {
                     checkDependencies(p, backend);
@@ -126,7 +126,7 @@ public class BinariesListUpdates {
     }
 
     // reduce concurrency level if needed
-    private final static Semaphore requests = new Semaphore(4);
+    private final static Semaphore requests = new Semaphore(3);
 
     private static String queryLatestVersion(SmoSearchBackend backend, SearchRequest request) throws IOException, InterruptedException {
         requests.acquire();

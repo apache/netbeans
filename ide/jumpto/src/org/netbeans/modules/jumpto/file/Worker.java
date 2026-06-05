@@ -661,7 +661,7 @@ final class Worker implements Runnable {
             final NameMatcher matcher = NameMatcherFactory.createNameMatcher(
                     request.getText(),
                     jumpToSearchType,
-                    Utils.isCaseSensitive(Utils.toSearchType(request.getSearchKind())) ?
+                    Utils.isCaseSensitive(jumpToSearchType) ?
                             FileSearchAction.SEARCH_OPTIONS_CASE_SENSITIVE :
                             FileSearchAction.SEARCH_OPTIONS_CASE_INSENSITIVE);
             final List<FileDescriptor> files = new ArrayList<FileDescriptor>();

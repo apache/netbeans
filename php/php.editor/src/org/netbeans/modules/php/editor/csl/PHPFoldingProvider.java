@@ -44,6 +44,7 @@ public class PHPFoldingProvider implements FoldTypeProvider {
         TYPES.add(FoldingScanner.TYPE_USE);
         TYPES.add(FoldingScanner.TYPE_PHPTAG);
         TYPES.add(FoldingScanner.TYPE_ATTRIBUTES);
+        TYPES.add(FoldingScanner.TYPE_HEREDOC_NOWDOC);
     }
 
     @Override

@@ -561,29 +561,23 @@ abstract class BackupFacility2 {
         }
 
         private void copy(FileObject a, File b) throws IOException {
-            InputStream fs = a.getInputStream();
-            FileOutputStream fo = new FileOutputStream(b);
-            copy(fs, fo);
+            try (InputStream fs = a.getInputStream(); 
+                 FileOutputStream fo = new FileOutputStream(b)) {
+                fs.transferTo(fo);
+            }
         }
 
         private void copy(File a, File b) throws IOException {
-            FileInputStream fs = new FileInputStream(a);
-            FileOutputStream fo = new FileOutputStream(b);
-            copy(fs, fo);
+            try (FileInputStream fs = new FileInputStream(a);
+                 FileOutputStream fo = new FileOutputStream(b)) {
+                fs.transferTo(fo);
+            }
         }
 
         private void copy(File a, FileObject b) throws IOException {
-            FileInputStream fs = new FileInputStream(a);
-            OutputStream fo = b.getOutputStream();
-            copy(fs, fo);
-        }
-
-        private void copy(InputStream is, OutputStream os) throws IOException {
-            try {
-                FileUtil.copy(is, os);
-            } finally {
-                is.close();
-                os.close();
+            try (FileInputStream fs = new FileInputStream(a);
+                 OutputStream fo = b.getOutputStream()) {
+                fs.transferTo(fo);
             }
         }
 

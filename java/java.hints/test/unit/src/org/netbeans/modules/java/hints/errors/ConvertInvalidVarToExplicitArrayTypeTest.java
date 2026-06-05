@@ -216,6 +216,7 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
                 "package test; public class Test {{int[]/*comment1*/ k = {1,'c'};}}");
     }
 
+    @Override
     protected List<Fix> computeFixes(CompilationInfo info, int pos, TreePath path) {
         List<Fix> fixes = new ConvertInvalidVarToExplicitArrayType().run(info, null, pos, path, null);
         List<Fix> result = new LinkedList<Fix>();
@@ -227,11 +228,6 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         }
 
         return result;
-    }
-
-    @Override
-    protected String toDebugString(CompilationInfo info, Fix f) {
-        return (f.getText());
     }
 
     static {

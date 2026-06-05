@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.profiler.nbimpl;
 
-import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
@@ -75,13 +74,9 @@ public class TestUtilities extends ProxyLookup {
     public static final FileObject copyStringToFileObject(FileObject fo, String content) 
         throws IOException 
      {
-        OutputStream os = fo.getOutputStream();
-        try {
-            InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-            FileUtil.copy(is, os);
+        try (OutputStream os = fo.getOutputStream()) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
             return fo;
-        } finally {
-            os.close();
         }
     }
 

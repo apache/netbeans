@@ -22,8 +22,6 @@ package org.netbeans.modules.project.ui.actions;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -61,7 +59,6 @@ import org.openide.util.Mutex;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Pair;
 import org.openide.util.RequestProcessor;
-import org.openide.util.WeakListeners;
 import org.openide.util.actions.Presenter.Popup;
 
 /** Action for invoking the project sensitive NewFile Wizard
@@ -71,7 +68,7 @@ import org.openide.util.actions.Presenter.Popup;
     "LBL_NewFileAction_PopupName=New",
     "# {0} - Name of the template", "LBL_NewFileAction_Template_PopupName={0}..."
 })
-public class NewFile extends ProjectAction implements PropertyChangeListener, Popup {
+public class NewFile extends ProjectAction implements Popup {
 
     private static final RequestProcessor RP = new RequestProcessor(NewFile.class);
     private static final RequestProcessor INSTANTIATE_RP = new RequestProcessor(NewFile.class.getName() + ".INSTANTIATE_RP", 5);
@@ -88,7 +85,6 @@ public class NewFile extends ProjectAction implements PropertyChangeListener, Po
         super((String) null, LBL_NewFileAction_Name(), null, context);
         putValue("iconBase","org/netbeans/modules/project/ui/resources/newFile.png"); //NOI18N
         putValue(SHORT_DESCRIPTION, LBL_NewFileAction_Tooltip());
-        OpenProjectList.getDefault().addPropertyChangeListener( WeakListeners.propertyChange( this, OpenProjectList.getDefault() ) );
         refresh(getLookup(), true);
     }
 
@@ -279,11 +275,6 @@ public class NewFile extends ProjectAction implements PropertyChangeListener, Po
 
         LOG.log(Level.FINE, "#210919: found preselected folder {0} for {1}", new Object[] {preselectedFolder, context});
         return preselectedFolder;
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        refresh(Lookup.EMPTY, false);
     }
 
     private static final String TEMPLATE_PROPERTY = "org.netbeans.modules.project.ui.actions.NewFile.Template"; // NOI18N

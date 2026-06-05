@@ -97,10 +97,16 @@ public class InlineValueComputerImpl implements PreferenceChangeListener, Proper
     private TaskDescription currentTask;
 
     private InlineValueComputerImpl(Session session) {
-        debugger = (JPDADebuggerImpl) session.lookupFirst(null, JPDADebugger.class);
-        debugger.addPropertyChangeListener(this);
-        prefs = MimeLookup.getLookup("text/x-java").lookup(Preferences.class);
-        prefs.addPreferenceChangeListener(WeakListeners.create(PreferenceChangeListener.class, this, prefs));
+        JPDADebugger jpdaDebugger = session.lookupFirst(null, JPDADebugger.class);
+        if (jpdaDebugger instanceof JPDADebuggerImpl) {
+            debugger = (JPDADebuggerImpl) jpdaDebugger;
+            debugger.addPropertyChangeListener(this);
+            prefs = MimeLookup.getLookup("text/x-java").lookup(Preferences.class);
+            prefs.addPreferenceChangeListener(WeakListeners.create(PreferenceChangeListener.class, this, prefs));
+        } else {
+            debugger = null;
+            prefs = null;
+        }
     }
 
     @Override

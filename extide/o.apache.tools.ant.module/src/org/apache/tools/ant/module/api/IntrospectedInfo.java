@@ -683,21 +683,21 @@ public final class IntrospectedInfo {
                         try {
                             v = node.get(k, null);
                         } catch (IllegalArgumentException ex) { // e.g invalid code point JDK-8075156
-                            LOG.log(Level.WARNING, "malformed key: {0}, pref path: {1}, msg: {2}",
-                                    new Object[] {k, node.absolutePath(), ex.getMessage()});
+                            LOG.log(Level.WARNING, "skipping malformed key; pref path: {0}, msg: {1}",
+                                    new Object[] {node.absolutePath(), ex.getMessage()});
                             continue;
                         }
                         assert v != null : k;
                         String[] ss = k.split("\\.", 2);
                         if (ss.length != 2) {
-                            LOG.log(Level.WARNING, "malformed key: {0}, pref path: {1}", new Object[] {k, node.absolutePath()});
+                            LOG.log(Level.WARNING, "skipping malformed key: {0}, pref path: {1}", new Object[] {k, node.absolutePath()});
                             continue;
                         }
                         if (ss[0].equals("class")) {
                             Matcher m = p.matcher(ss[1]);
                             boolean match = m.matches();
                             if (!match) {
-                                LOG.log(Level.WARNING, "malformed key: {0}, pref path: {1}", new Object[] {k, node.absolutePath()});
+                                LOG.log(Level.WARNING, "skipping malformed key: {0}, pref path: {1}", new Object[] {k, node.absolutePath()});
                                 continue;
                             }
                             String c = m.group(1);

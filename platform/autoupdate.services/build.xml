@@ -27,8 +27,7 @@
         <javac srcdir="libsrc" destdir="${build.dir}/updaterclasses"
                deprecation="${build.compiler.deprecation}"
                debug="${build.compiler.debug}" debuglevel="${build.compiler.debuglevel}"
-               optimize="${build.compiler.optimize}" source="${javac.source}"
-               target="${javac.target}">
+               optimize="${build.compiler.optimize}" release="${javac.release}">
             <compilerarg line="${javac.compilerargs}"/>
         </javac>
         <copy todir="${build.dir}/updaterclasses">

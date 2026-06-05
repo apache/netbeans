@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<library version="3.0" xmlns="http://www.netbeans.org/ns/library-declaration/3">
+    <name>jstl-jakarta</name>
+    <type>j2se</type>
+    <localizing-bundle>org/netbeans/libs/jstl/Bundle</localizing-bundle>
+    <volume>
+        <type>classpath</type>
+        <resource>jar:nbinst://org.netbeans.libs.jstl/modules/ext/jstl-jakarta-impl.jar!/</resource>
+        <resource>jar:nbinst://org.netbeans.libs.jstl/modules/ext/jstl-jakarta-api.jar!/</resource>
+    </volume>
+    <volume>
+        <type>javadoc</type>
+        <resource>jar:nbinst://org.netbeans.modules.j2ee.platform/docs/javaee-doc-api.jar!/</resource>
+    </volume>
+    <properties>
+        <!-- please check with mkleint@netbeans.org before/after updating this or "classpath" section -->
+        <property>
+            <name>maven-dependencies</name>
+            <value>
+                jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.2:jar
+                org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1:jar
+            </value>
+        </property>
+    </properties>
+</library>

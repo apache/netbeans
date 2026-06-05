@@ -142,6 +142,7 @@ public final class QueryTopComponent extends TopComponent
                 getBundleText("QueryTopComponent.repositoryComboBox.AccessibleContext.accessibleDescription")); //NOI18N
         newButton.getAccessibleContext().setAccessibleDescription(
                 getBundleText("QueryTopComponent.newButton.AccessibleContext.accessibleDescription")); //NOI18N
+        newButton.setEnabled(BugtrackingManager.getInstance().hasRegisteredConnectors());
 
         /* background colors */
         Color editorBgColor = UIManager.getDefaults()

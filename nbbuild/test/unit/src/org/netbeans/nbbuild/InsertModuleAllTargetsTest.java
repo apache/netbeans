@@ -102,14 +102,14 @@ public class InsertModuleAllTargetsTest extends NbTestCase {
         insert.setProject(p);
         
         insert.execute();
-
+        
         Object obj = p.getTargets().get("all-java.source.queries");
         assertNotNull("Target found", obj);
         Target t = (Target)obj;
 
         Set<String> s = depsToNames(t.getDependencies());
-        assertEquals("Five dependencies: " + s, 5, s.size());
-        assertEquals(new HashSet<>(Arrays.asList("init", "all-openide.dialogs", "all-openide.util", "all-openide.util.lookup", "all-api.annotations.common")), s);
+        assertEquals("Two dependencies: " + s, 2, s.size());
+        assertEquals(new HashSet<>(Arrays.asList("init", "all-cluster-nb.cluster.java")), s);
         
         int callTargets = 0;
         for (Task task : t.getTasks()) {
@@ -148,10 +148,10 @@ public class InsertModuleAllTargetsTest extends NbTestCase {
         assertEquals("No call targes", 0, callTargets);
     }
 
-    private Set<String> depsToNames(Enumeration en) {
+    private Set<String> depsToNames(Enumeration<String> en) {
         Set<String> set = new HashSet<>();
         while (en.hasMoreElements()) {
-            String dep = en.nextElement().toString();
+            String dep = en.nextElement();
             set.add(dep);
         }
         return set;

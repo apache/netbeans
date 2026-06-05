@@ -38,16 +38,33 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileRule;
+import org.junit.Rule;
 
 /** Is generation of Jnlp files correct?
  *
  * @author Jaroslav Tulach, Jesse Glick
  */
 public class MakeJNLPTest extends TestBase {
+    @Rule
+    public final BuildFileRule buildRule = new BuildFileRule();
+
     public MakeJNLPTest (String name) {
         super (name);
     }
-    
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        System.clearProperty("test.output");
+        System.clearProperty("test.parent");
+        System.clearProperty("test.name");
+        System.clearProperty("test.ks");
+        System.clearProperty("test.ext");
+    }
+
+
     private static void assertFilenames(File dir, String... contents) {
         assertTrue(dir + " is a directory", dir.isDirectory());
         SortedSet<String> expected = new TreeSet<>(Arrays.asList(contents));
@@ -64,10 +81,10 @@ public class MakeJNLPTest extends TestBase {
             }
         }
     }
-    
+
     public void testGenerateJNLPAndSignedJarForSimpleModule() throws Exception {
         Manifest m;
-        
+
         m = createManifest ();
         m.getMainAttributes ().putValue ("OpenIDE-Module", "org.my.module/3");
         File simpleJar = generateJar (new String[0], m);
@@ -75,13 +92,13 @@ public class MakeJNLPTest extends TestBase {
         File parent = simpleJar.getParentFile ();
         File output = new File(parent, "output");
         File ks = generateKeystore("jnlp", "netbeans-test");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"jnlp\" classname=\"org.netbeans.nbbuild.MakeJNLP\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='" + output + "' />" + 
+            "  <mkdir dir='" + output + "' />" +
             "  <jnlp dir='" + output + "' alias='jnlp' storepass='netbeans-test' keystore='" + ks + "' >" +
             "    <modules dir='" + parent + "' >" +
             "      <include name='" + simpleJar.getName() + "' />" +
@@ -90,21 +107,22 @@ public class MakeJNLPTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+
         assertFilenames(output, "org-my-module.jnlp", "org-my-module/s0.jar");
-        
+
         File jnlp = new File(output, "org-my-module.jnlp");
         String res = readFile (jnlp);
-        
+
         assertTrue ("Component JNLP type: " + res, res.indexOf ("<component-desc/>") >= 0);
         assertTrue ("We support all permissions by default: " + res, res.indexOf ("<all-permissions/>") >= 0);
-        
+
         Matcher match = Pattern.compile(".*codebase=['\\\"]([^'\\\"]*)['\\\"]").matcher(res);
         assertTrue("codebase is there", match.find());
         assertEquals("one group found", 1, match.groupCount());
         String base = match.group(1);
-        
+
         assertEquals("By default the dest directory is $$codebase: ", "$$codebase", base);
 
         CHECK_SIGNED: {
@@ -146,8 +164,8 @@ public class MakeJNLPTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         assertFilenames(output, "org-my-module.jnlp", "org-my-module/s0.jar");
 
         File jnlp = new File(output, "org-my-module.jnlp");
@@ -166,7 +184,7 @@ public class MakeJNLPTest extends TestBase {
 
     public void testGenerateJNLPAndUnSignedJarForSimpleModule() throws Exception {
         Manifest m;
-        
+
         m = createManifest ();
         m.getMainAttributes ().putValue ("OpenIDE-Module", "org.my.module/3");
         File simpleJar = generateJar (new String[0], m);
@@ -174,13 +192,13 @@ public class MakeJNLPTest extends TestBase {
         File parent = simpleJar.getParentFile ();
         File output = new File(parent, "output");
         File ks = generateKeystore("jnlp", "netbeans-test");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"jnlp\" classname=\"org.netbeans.nbbuild.MakeJNLP\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='" + output + "' />" + 
+            "  <mkdir dir='" + output + "' />" +
             "  <jnlp dir='" + output + "' alias='jnlp' storepass='netbeans-test' keystore='" + ks + "' signjars='false' >" +
             "    <modules dir='" + parent + "' >" +
             "      <include name='" + simpleJar.getName() + "' />" +
@@ -189,21 +207,22 @@ public class MakeJNLPTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+
         assertFilenames(output, "org-my-module.jnlp", "org-my-module/s0.jar");
-        
+
         File jnlp = new File(output, "org-my-module.jnlp");
         String res = readFile (jnlp);
-        
+
         assertTrue ("Component JNLP type: " + res, res.indexOf ("<component-desc/>") >= 0);
         assertTrue ("We support all permissions by default: " + res, res.indexOf ("<all-permissions/>") >= 0);
-        
+
         Matcher match = Pattern.compile(".*codebase=['\\\"]([^'\\\"]*)['\\\"]").matcher(res);
         assertTrue("codebase is there", match.find());
         assertEquals("one group found", 1, match.groupCount());
         String base = match.group(1);
-        
+
         assertEquals("By default the dest directory is $$codebase: ", "$$codebase", base);
 
         File jar = new File(output, "org-my-module/s0.jar");
@@ -215,7 +234,7 @@ public class MakeJNLPTest extends TestBase {
                 fail ("File should not be signed: " + jar);
             }
         }
-        
+
     }
 
     public void testGenerateMacOSOnlySimpleModule() throws Exception {
@@ -232,10 +251,10 @@ public class MakeJNLPTest extends TestBase {
     public void testGenerateSolarisOSOnlySimpleModule() throws Exception {
         doGenerateOSOnlySimpleModule("org.openide.modules.os.Solaris", "<resources os='Solaris'>");
     }
-    
+
     private void doGenerateOSOnlySimpleModule(String tok, String find) throws Exception {
         Manifest m;
-        
+
         m = createManifest ();
         m.getMainAttributes ().putValue ("OpenIDE-Module", "org.my.module/3");
         m.getMainAttributes ().putValue ("OpenIDE-Module-Requires", tok + ", pepa.z.bota");
@@ -244,13 +263,13 @@ public class MakeJNLPTest extends TestBase {
         File parent = simpleJar.getParentFile ();
         File output = new File(parent, "output");
         File ks = generateKeystore("jnlp", "netbeans-test");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"jnlp\" classname=\"org.netbeans.nbbuild.MakeJNLP\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='" + output + "' />" + 
+            "  <mkdir dir='" + output + "' />" +
             "  <jnlp dir='" + output + "' alias='jnlp' storepass='netbeans-test' keystore='" + ks + "' signjars='false' >" +
             "    <modules dir='" + parent + "' >" +
             "      <include name='" + simpleJar.getName() + "' />" +
@@ -259,22 +278,23 @@ public class MakeJNLPTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+
         assertFilenames(output, "org-my-module.jnlp", "org-my-module/s0.jar");
-        
+
         File jnlp = new File(output, "org-my-module.jnlp");
         String res = readFile (jnlp);
-        
+
         assertTrue ("Component JNLP type: " + res, res.indexOf ("<component-desc/>") >= 0);
         assertTrue ("Resource is os dependant: " + res, res.indexOf (find) >= 0);
         assertTrue ("We support all permissions by default: " + res, res.indexOf ("<all-permissions/>") >= 0);
-        
+
         Matcher match = Pattern.compile(".*codebase=['\\\"]([^'\\\"]*)['\\\"]").matcher(res);
         assertTrue("codebase is there", match.find());
         assertEquals("one group found", 1, match.groupCount());
         String base = match.group(1);
-        
+
         assertEquals("By default the dest directory is $$codebase: ", "$$codebase", base);
 
         File jar = new File(output, "org-my-module/s0.jar");
@@ -286,11 +306,11 @@ public class MakeJNLPTest extends TestBase {
                 fail ("File should not be signed: " + jar);
             }
         }
-        
+
     }
-    
+
     public void testTheLocalizedAutoupdateProblem() throws Exception {
-        String UTfile =   
+        String UTfile =
             "<?xml version='1.0' encoding='UTF-8'?>" +
             "<module codename='org.netbeans.modules.autoupdate/1'>" +
             "    <module_version install_time='1136503038669' last='true' origin='installer' specification_version='2.16.1'>" +
@@ -303,22 +323,22 @@ public class MakeJNLPTest extends TestBase {
             "        <file crc='3477298901' name='modules/org-netbeans-modules-autoupdate.jar'/>" +
             "    </module_version>" +
             "</module>";
-      
+
         Manifest m = createManifest ();
         m.getMainAttributes ().putValue ("OpenIDE-Module", "org.netbeans.modules.autoupdate/1");
         m.getMainAttributes ().putValue ("Class-Path", "ext/updater.jar");
         File simpleJar = generateJar ("modules/", new String[0], m, null);
         File moduleJar = new File(simpleJar.getParentFile(), "org-netbeans-modules-autoupdate.jar");
         simpleJar.renameTo(moduleJar);
-        
+
         File p = simpleJar.getParentFile();
-        
+
         simpleJar = generateJar ("modules/locale/", new String[0], createManifest(), null);
         simpleJar.renameTo(new File(simpleJar.getParentFile(), "org-netbeans-modules-autoupdate_ja.jar"));
 
         simpleJar = generateJar ("modules/locale/", new String[0], createManifest(), null);
         simpleJar.renameTo(new File(simpleJar.getParentFile(), "org-netbeans-modules-autoupdate_zh_CN.jar"));
-        
+
         simpleJar = generateJar ("modules/ext/", new String[0], createManifest(), null);
         simpleJar.renameTo(new File(simpleJar.getParentFile(), "updater.jar"));
 
@@ -331,11 +351,11 @@ public class MakeJNLPTest extends TestBase {
         File xml = new File(p, "config/Modules/org-netbeans-modules-autoupdate.xml");
         xml.getParentFile().mkdirs();
         xml.createNewFile();
-        
+
         File updateTracking = new File(getWorkDir(), "update_tracking");
         updateTracking.mkdirs();
         assertTrue("Created", updateTracking.isDirectory());
-        
+
         File trackingFile = new File(updateTracking, "org-netbeans-modules-autoupdate.xml");
         try (FileWriter w = new FileWriter(trackingFile)) {
             w.write(UTfile);
@@ -343,13 +363,13 @@ public class MakeJNLPTest extends TestBase {
 
         File output = new File(getWorkDir(), "output");
         File ks = generateKeystore("jnlp", "netbeans-test");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"jnlp\" classname=\"org.netbeans.nbbuild.MakeJNLP\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='" + output + "' />" + 
+            "  <mkdir dir='" + output + "' />" +
             "  <jnlp dir='" + output + "' alias='jnlp' storepass='netbeans-test' keystore='" + ks + "' verify='true' >" +
             "    <modules dir='" + p + "' >" +
             "      <include name='" + moduleJar.getName() + "' />" +
@@ -358,8 +378,9 @@ public class MakeJNLPTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+
         assertFilenames(output, "org-netbeans-modules-autoupdate.jnlp",
                 "org-netbeans-modules-autoupdate/org-netbeans-modules-autoupdate.jar",
                 "org-netbeans-modules-autoupdate/locale-org-netbeans-modules-autoupdate_zh_CN.jar",
@@ -367,21 +388,21 @@ public class MakeJNLPTest extends TestBase {
                 "org-netbeans-modules-autoupdate/ext-locale-updater_zh_CN.jar",
                 "org-netbeans-modules-autoupdate/ext-locale-updater_ja.jar",
                 "org-netbeans-modules-autoupdate/ext-updater.jar");
-        
+
         File jnlp = new File(output, "org-netbeans-modules-autoupdate.jnlp");
         String res = readFile (jnlp);
-        
-        
+
+
         assertTrue ("Component JNLP type: " + res, res.indexOf ("<component-desc/>") >= 0);
         assertTrue ("We support all permissions by default: " + res, res.indexOf ("<all-permissions/>") >= 0);
-        
+
         Matcher match = Pattern.compile(".*codebase=['\\\"]([^'\\\"]*)['\\\"]").matcher(res);
         assertTrue("codebase is there", match.find());
         assertEquals("one group found", 1, match.groupCount());
         String base = match.group(1);
-        
+
         assertEquals("By default the dest directory is $$codebase: ", "$$codebase", base);
-        
+
         assertResource(res, "ja", "org-netbeans-modules-autoupdate/ext-locale-updater_ja.jar");
         assertResource(res, "zh_CN", "org-netbeans-modules-autoupdate/ext-locale-updater_zh_CN.jar");
         assertResource(res, "ja", "org-netbeans-modules-autoupdate/locale-org-netbeans-modules-autoupdate_ja.jar");
@@ -401,11 +422,11 @@ public class MakeJNLPTest extends TestBase {
             }
             fail ("File does not seem to be signed: " + jar);
         }
-        
+
     }
     public void testGenerateJNLPForMissingRegularModule() throws Exception {
         Manifest m;
-        
+
         m = createManifest ();
         m.getMainAttributes ().putValue ("OpenIDE-Module", "org.netbeans.core.startup");
         File simpleJar = generateJar ("modules/", new String[0], m, null);
@@ -416,11 +437,11 @@ public class MakeJNLPTest extends TestBase {
         File parent = simpleJar.getParentFile ();
         File localizedJarCZ = generateJar("modules/locale/", new String[0], createManifest(), null);
         assertTrue("Successful rename", localizedJarCZ.renameTo(new File(localizedJarCZ.getParent(), "core_cs.jar")));
-        
+
         File updateTracking = new File(getWorkDir(), "update_tracking");
         updateTracking.mkdirs();
         assertTrue("Created", updateTracking.isDirectory());
-        
+
         File trackingFile = new File(updateTracking, "org-netbeans-core-startup.xml");
         try (FileWriter w = new FileWriter(trackingFile)) {
             w.write(
@@ -436,17 +457,17 @@ public class MakeJNLPTest extends TestBase {
                                     "</module>\n"
             );
         }
-        
-        
+
+
         File output = new File(parent, "output");
         File ks = generateKeystore("jnlp", "netbeans-test");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"jnlp\" classname=\"org.netbeans.nbbuild.MakeJNLP\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='" + output + "' />" + 
+            "  <mkdir dir='" + output + "' />" +
             "  <jnlp dir='" + output + "' alias='jnlp' storepass='netbeans-test' keystore='" + ks + "' verify='true' >" +
             "    <modules dir='" + parent + "' >" +
             "      <include name='" + simpleJar.getName() + "' />" +
@@ -455,16 +476,17 @@ public class MakeJNLPTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
 
         assertFilenames(output, "org-netbeans-core-startup.jnlp",
                 "org-netbeans-core-startup/core.jar",
                 "org-netbeans-core-startup/locale-core_cs.jar");
     }
-    
+
     public void testGenerateJNLPAndSignedJarForSimpleLocalizedModule() throws Exception {
         Manifest m;
-        
+
         m = createManifest ();
         m.getMainAttributes ().putValue ("OpenIDE-Module", "org.my.module/3");
         File simpleJar = generateJar ("modules/", new String[0], m, null);
@@ -473,11 +495,11 @@ public class MakeJNLPTest extends TestBase {
         File localizedJarCZ = generateJar("modules/locale/", new String[0], createManifest(), null);
         assertEquals("There need to have the same name", simpleJar.getName(), localizedJarCZ.getName());
         assertTrue("Successful rename", localizedJarCZ.renameTo(new File(localizedJarCZ.getParent(), "0_cs.jar")));
-        
+
         File localizedJarZH = generateJar("modules/locale/", new String[0], createManifest(), null);
         assertEquals("There need to have the same name", simpleJar.getName(), localizedJarZH.getName());
         assertTrue("Successful rename", localizedJarZH.renameTo(new File(localizedJarCZ.getParent(), "0_zh_CN.jar")));
-        
+
         File localizedJarJA = generateJar("modules/locale/", new String[0], createManifest(), null);
         assertEquals("There need to have the same name", simpleJar.getName(), localizedJarJA.getName());
         assertTrue("Successful rename", localizedJarJA.renameTo(new File(localizedJarCZ.getParent(), "0_ja.jar")));
@@ -485,7 +507,7 @@ public class MakeJNLPTest extends TestBase {
         File updateTracking = new File(getWorkDir(), "update_tracking");
         updateTracking.mkdirs();
         assertTrue("Created", updateTracking.isDirectory());
-        
+
         File trackingFile = new File(updateTracking, "org-my-module.xml");
         try (FileWriter w = new FileWriter(trackingFile)) {
             w.write(
@@ -501,17 +523,17 @@ public class MakeJNLPTest extends TestBase {
                                     "</module>\n"
             );
         }
-        
-        
+
+
         File output = new File(parent, "output");
         File ks = generateKeystore("jnlp", "netbeans-test");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"jnlp\" classname=\"org.netbeans.nbbuild.MakeJNLP\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='" + output + "' />" + 
+            "  <mkdir dir='" + output + "' />" +
             "  <jnlp dir='" + output + "' alias='jnlp' storepass='netbeans-test' keystore='" + ks + "' verify='true' >" +
             "    <modules dir='" + parent + "' >" +
             "      <include name='" + simpleJar.getName() + "' />" +
@@ -520,7 +542,8 @@ public class MakeJNLPTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
 
         assertFilenames(output, "org-my-module.jnlp",
                 "org-my-module/0.jar",
@@ -530,17 +553,17 @@ public class MakeJNLPTest extends TestBase {
 
         File jnlp = new File(output, "org-my-module.jnlp");
         String res = readFile (jnlp);
-        
+
         assertTrue ("Component JNLP type: " + res, res.indexOf ("<component-desc/>") >= 0);
         assertTrue ("We support all permissions by default: " + res, res.indexOf ("<all-permissions/>") >= 0);
-        
+
         Matcher match = Pattern.compile(".*codebase=['\\\"]([^'\\\"]*)['\\\"]").matcher(res);
         assertTrue("codebase is there", match.find());
         assertEquals("one group found", 1, match.groupCount());
         String base = match.group(1);
-        
+
         assertEquals("By default the dest directory is $$codebase: ", "$$codebase", base);
-        
+
         assertResource(res, "cs", "org-my-module/locale-0_cs.jar");
         assertResource(res, "ja", "org-my-module/locale-0_ja.jar");
         assertResource(res, "zh_CN", "org-my-module/locale-0_zh_CN.jar");
@@ -549,7 +572,7 @@ public class MakeJNLPTest extends TestBase {
             if (!jar.getName().endsWith(".jar")) {
                 continue;
             }
-            
+
             JarFile signed = new JarFile(jar);
             Enumeration<JarEntry> it = signed.entries();
             while (it.hasMoreElements()) {
@@ -563,7 +586,7 @@ public class MakeJNLPTest extends TestBase {
     }
     public void testGenerateJNLPForMissingCoreIssue103301() throws Exception {
         Manifest m;
-        
+
         m = createManifest ();
         m.getMainAttributes ().putValue ("OpenIDE-Module", "org.netbeans.core.startup");
         File simpleJar = generateJar ("core/", new String[0], m, null);
@@ -574,11 +597,11 @@ public class MakeJNLPTest extends TestBase {
         File parent = simpleJar.getParentFile ();
         File localizedJarCZ = generateJar("core/locale/", new String[0], createManifest(), null);
         assertTrue("Successful rename", localizedJarCZ.renameTo(new File(localizedJarCZ.getParent(), "core_cs.jar")));
-        
+
         File updateTracking = new File(getWorkDir(), "update_tracking");
         updateTracking.mkdirs();
         assertTrue("Created", updateTracking.isDirectory());
-        
+
         File trackingFile = new File(updateTracking, "org-netbeans-core-startup.xml");
         try (FileWriter w = new FileWriter(trackingFile)) {
             w.write(
@@ -594,17 +617,17 @@ public class MakeJNLPTest extends TestBase {
                                     "</module>\n"
             );
         }
-        
-        
+
+
         File output = new File(parent, "output");
         File ks = generateKeystore("jnlp", "netbeans-test");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"jnlp\" classname=\"org.netbeans.nbbuild.MakeJNLP\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='" + output + "' />" + 
+            "  <mkdir dir='" + output + "' />" +
             "  <jnlp dir='" + output + "' alias='jnlp' storepass='netbeans-test' keystore='" + ks + "' verify='true' >" +
             "    <modules dir='" + parent + "' >" +
             "      <include name='" + simpleJar.getName() + "' />" +
@@ -613,16 +636,17 @@ public class MakeJNLPTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
 
         assertFilenames(output, "org-netbeans-core-startup.jnlp",
                 "org-netbeans-core-startup/core.jar",
                 "org-netbeans-core-startup/locale-core_cs.jar");
     }
-    
+
     public void testGenerateJNLPAndUnSignedJarForSimpleLocalizedModule() throws Exception {
         Manifest m;
-        
+
         m = createManifest ();
         m.getMainAttributes ().putValue ("OpenIDE-Module", "org.my.module/3");
         File simpleJar = generateJar ("modules/", new String[0], m, null);
@@ -631,11 +655,11 @@ public class MakeJNLPTest extends TestBase {
         File localizedJarCZ = generateJar("modules/locale/", new String[0], createManifest(), null);
         assertEquals("There need to have the same name", simpleJar.getName(), localizedJarCZ.getName());
         assertTrue("Successful rename", localizedJarCZ.renameTo(new File(localizedJarCZ.getParent(), "0_cs.jar")));
-        
+
         File localizedJarZH = generateJar("modules/locale/", new String[0], createManifest(), null);
         assertEquals("There need to have the same name", simpleJar.getName(), localizedJarZH.getName());
         assertTrue("Successful rename", localizedJarZH.renameTo(new File(localizedJarCZ.getParent(), "0_zh_CN.jar")));
-        
+
         File localizedJarJA = generateJar("modules/locale/", new String[0], createManifest(), null);
         assertEquals("There need to have the same name", simpleJar.getName(), localizedJarJA.getName());
         assertTrue("Successful rename", localizedJarJA.renameTo(new File(localizedJarCZ.getParent(), "0_ja.jar")));
@@ -643,7 +667,7 @@ public class MakeJNLPTest extends TestBase {
         File updateTracking = new File(getWorkDir(), "update_tracking");
         updateTracking.mkdirs();
         assertTrue("Created", updateTracking.isDirectory());
-        
+
         File trackingFile = new File(updateTracking, "org-my-module.xml");
         try (FileWriter w = new FileWriter(trackingFile)) {
             w.write(
@@ -659,17 +683,17 @@ public class MakeJNLPTest extends TestBase {
                                     "</module>\n"
             );
         }
-        
-        
+
+
         File output = new File(parent, "output");
         File ks = generateKeystore("jnlp", "netbeans-test");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"jnlp\" classname=\"org.netbeans.nbbuild.MakeJNLP\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='" + output + "' />" + 
+            "  <mkdir dir='" + output + "' />" +
             "  <jnlp dir='" + output + "' alias='jnlp' storepass='netbeans-test' keystore='" + ks + "' verify='true' signjars='false' >" +
             "    <modules dir='" + parent + "' >" +
             "      <include name='" + simpleJar.getName() + "' />" +
@@ -678,7 +702,8 @@ public class MakeJNLPTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
 
         assertFilenames(output, "org-my-module.jnlp",
                 "org-my-module/0.jar",
@@ -688,17 +713,17 @@ public class MakeJNLPTest extends TestBase {
 
         File jnlp = new File(output, "org-my-module.jnlp");
         String res = readFile (jnlp);
-        
+
         assertTrue ("Component JNLP type: " + res, res.indexOf ("<component-desc/>") >= 0);
         assertTrue ("We support all permissions by default: " + res, res.indexOf ("<all-permissions/>") >= 0);
-        
+
         Matcher match = Pattern.compile(".*codebase=['\\\"]([^'\\\"]*)['\\\"]").matcher(res);
         assertTrue("codebase is there", match.find());
         assertEquals("one group found", 1, match.groupCount());
         String base = match.group(1);
-        
+
         assertEquals("By default the dest directory is $$codebase: ", "$$codebase", base);
-        
+
         assertResource(res, "cs", "org-my-module/locale-0_cs.jar");
         assertResource(res, "ja", "org-my-module/locale-0_ja.jar");
         assertResource(res, "zh_CN", "org-my-module/locale-0_zh_CN.jar");
@@ -707,7 +732,7 @@ public class MakeJNLPTest extends TestBase {
             if (!jar.getName().endsWith(".jar")) {
                 continue;
             }
-            
+
             JarFile signed = new JarFile(jar);
             Enumeration<JarEntry> it = signed.entries();
             while (it.hasMoreElements()) {
@@ -718,16 +743,16 @@ public class MakeJNLPTest extends TestBase {
             }
         }
     }
-    
+
     private static void assertResource(String where, String locale, String file) {
         where = where.replace('\n', ' ');
         Matcher match = Pattern.compile("<resources *locale='" + locale + "' *>.*<jar href='" + file + "' */>.*</resources>").matcher(where);
         assertTrue("File really referenced " + file + " in locale " + locale + "\n" + where, match.find());
     }
-    
+
     public void testOneCanChangeTheCodeBase() throws Exception {
         Manifest m;
-        
+
         m = createManifest ();
         m.getMainAttributes ().putValue ("OpenIDE-Module", "org.my.module/3");
         File simpleJar = generateJar (new String[0], m);
@@ -735,13 +760,13 @@ public class MakeJNLPTest extends TestBase {
         File parent = simpleJar.getParentFile ();
         File output = new File(parent, "output");
         File ks = generateKeystore("jnlp", "netbeans-test");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"jnlp\" classname=\"org.netbeans.nbbuild.MakeJNLP\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='" + output + "' />" + 
+            "  <mkdir dir='" + output + "' />" +
             "  <jnlp dir='" + output + "' alias='jnlp' storepass='netbeans-test' keystore='" + ks + "' codebase='http://www.my.org/' >" +
             "    <modules dir='" + parent + "' >" +
             "      <include name='" + simpleJar.getName() + "' />" +
@@ -750,22 +775,23 @@ public class MakeJNLPTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { "-verbose" });
-        
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+
         assertFilenames(output, "org-my-module.jnlp",
                 "org-my-module/s0.jar");
-        
+
         File jnlp = new File(output, "org-my-module.jnlp");
         String res = readFile (jnlp);
-        
+
         assertTrue ("Component JNLP type: " + res, res.indexOf ("<component-desc/>") >= 0);
         assertTrue ("We support all permissions by default: " + res, res.indexOf ("<all-permissions/>") >= 0);
-        
+
         Matcher match = Pattern.compile(".*codebase=['\\\"]([^'\\\"]*)['\\\"]").matcher(res);
         assertTrue("codebase is there", match.find());
         assertEquals("one group found", 1, match.groupCount());
         String base = match.group(1);
-        
+
         assertEquals("By default the codebases can be changed: ", "http://www.my.org/", base);
     }
 
@@ -775,7 +801,7 @@ public class MakeJNLPTest extends TestBase {
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"jnlp\" classname=\"org.netbeans.nbbuild.MakeJNLP\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='${test.output}' />" + 
+            "  <mkdir dir='${test.output}' />" +
             "  <jnlp dir='${test.output}' alias='jnlp' storepass='netbeans-test' keystore='${test.ks}' >" +
             "    <modules dir='${test.parent}' >" +
             "      <include name='${test.name}' />" +
@@ -784,13 +810,13 @@ public class MakeJNLPTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        
+
         assertFilenames(output, "aaa-my-module.jnlp", "aaa-my-module/ext-t0.jar", "aaa-my-module/s0.jar");
-        
+
         File jnlp = new File(output, "aaa-my-module.jnlp");
         String res = readFile (jnlp);
 
-        
+
         Matcher m = Pattern.compile("<jar href='(.*)' */>").matcher(res);
         for (int x = 0; x < 2; x++) {
             assertTrue("Matches at least one" + "(" + x + ")", m.find());
@@ -798,18 +824,18 @@ public class MakeJNLPTest extends TestBase {
             File f = new File (jnlp.getParentFile(), m.group(1));
             assertTrue("The file " + f + " exists" + "(" + x + ")", f.exists());
         }
-        
+
     }
 
     public void testGenerateJNLPAndSignedJarForModuleWithClassPathAndSignedJar() throws Exception {
         File ks = generateKeystore("external", "netbeans-test");
-        
+
         File output = doClassPathModuleCheck(
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"jnlp\" classname=\"org.netbeans.nbbuild.MakeJNLP\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='${test.output}' />" + 
+            "  <mkdir dir='${test.output}' />" +
             "  <signjar jar='${test.ext}' alias='external' storepass='netbeans-test' keystore='${test.ks}' />\n" +
             "  <jnlp dir='${test.output}' alias='jnlp' storepass='netbeans-test' keystore='${test.ks}' >" +
             "    <modules dir='${test.parent}' >" +
@@ -819,11 +845,11 @@ public class MakeJNLPTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        
+
         assertFilenames(output, "aaa-my-module.jnlp", "aaa-my-module/s0.jar",
                 "aaa-my-module/ext-t0.jar",
                 "aaa-my-module-ext-t0.jnlp");
-        
+
         JarFile f = new JarFile(new File(output, "aaa-my-module/ext-t0.jar"));
         Enumeration<JarEntry> en = f.entries();
         StringBuffer sb = new StringBuffer();
@@ -843,45 +869,45 @@ public class MakeJNLPTest extends TestBase {
         if (cnt == 0) {
             fail("Signed with wrong file:\n" + sb);
         }
-        
+
         File jnlp = new File(output, "aaa-my-module.jnlp");
-        
+
         String res = readFile (jnlp);
 
         int first = res.indexOf("jar href");
         assertEquals("Just one jar href ", -1, res.indexOf("jar href", first + 1));
-        
+
         String extRes = readFile(new File(output, "aaa-my-module-ext-t0.jnlp"));
-        
+
         Matcher m = Pattern.compile("<title>(.*)</title>").matcher(extRes);
         assertTrue("title is there: " + extRes, m.find());
         assertEquals("Name of file is used for title", "t0", m.group(1));
     }
-    
+
     public void testInformationIsTakenFromLocalizedBundle() throws Exception {
         Manifest m;
-        
+
         m = createManifest ();
         m.getMainAttributes ().putValue ("OpenIDE-Module", "org.my.module/3");
-        
+
         Properties props = new Properties();
         props.put("OpenIDE-Module-Name", "Module Build Harness");
         props.put("OpenIDE-Module-Display-Category", "Developing NetBeans");
         props.put("OpenIDE-Module-Short-Description", "Lets you build external plug-in modules from sources.");
         props.put("OpenIDE-Module-Long-Description", "XXX");
-        
+
         File simpleJar = generateJar (null, new String[0], m, props);
 
         File parent = simpleJar.getParentFile ();
         File output = new File(parent, "output");
         File ks = generateKeystore("jnlp", "netbeans-test");
-        
+
         java.io.File f = extractString (
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"jnlp\" classname=\"org.netbeans.nbbuild.MakeJNLP\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='" + output + "' />" + 
+            "  <mkdir dir='" + output + "' />" +
             "  <jnlp dir='" + output + "' alias='jnlp' storepass='netbeans-test' keystore='" + ks + "' >" +
             "    <modules dir='" + parent + "' >" +
             "      <include name='" + simpleJar.getName() + "' />" +
@@ -890,35 +916,36 @@ public class MakeJNLPTest extends TestBase {
             "</target>" +
             "</project>"
         );
-        execute (f, new String[] { });
-    
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
+
         assertFilenames(output, "org-my-module.jnlp", "org-my-module/s0.jar");
-        
+
         File jnlp = new File(output, "org-my-module.jnlp");
         String res = readFile (jnlp);
 
         int infoBegin = res.indexOf("<information>");
         int infoEnd = res.indexOf("</information>");
-        
+
         if (infoEnd == -1 || infoBegin == -1) {
             fail ("Both information tags must be present: " + res);
         }
-        
+
         String info = res.substring(infoBegin, infoEnd);
-        
+
         if (info.indexOf("<title>Module Build Harness</title>") == -1) {
             fail("Title should be there with Module Build Harness inside itself: " + info);
         }
-        
+
         if (info.indexOf("<description kind='one-line'>Lets you build external plug-in modules from sources.</description>") == -1) {
             fail("one-line should be there with 'lets you...' inside itself: " + info);
         }
-        
+
         if (info.indexOf("<description kind='short'>XXX</description>") == -1) {
             fail("short should be there with XXX inside itself: " + info);
         }
     }
-    
+
     public void testGenerateJNLPFailsForModulesWithExtraFiles() throws Exception {
         doCompareJNLPFileWithUpdateTracking(true, null, "");
     }
@@ -931,14 +958,14 @@ public class MakeJNLPTest extends TestBase {
     public void testGenerateJNLPSucceedsWhenModuleAutoDepsArePresent() throws Exception {
         doCompareJNLPFileWithUpdateTracking(false, "config/ModuleAutoDeps/aaa-my-module.xml", " verifyexcludes=' none ' ");
     }
-    
+
     private void doCompareJNLPFileWithUpdateTracking(boolean useNonModule, String fakeEntry, String extraScript) throws Exception {
         File nonModule = generateJar (new String[0], createManifest());
-        
+
         Manifest m = createManifest ();
         m.getMainAttributes ().putValue ("OpenIDE-Module", "aaa.my.module/3");
         File module = generateJar (new String[0], m);
-        
+
         File updateTracking = new File(getWorkDir(), "update_tracking");
         updateTracking.mkdirs();
         assertTrue("Created", updateTracking.isDirectory());
@@ -946,7 +973,7 @@ public class MakeJNLPTest extends TestBase {
         File enableXML = new File(new File(getWorkDir(), "config"), "Modules");
         enableXML.getParentFile().mkdirs();
         enableXML.createNewFile();
-        
+
         File trackingFile = new File(updateTracking, "aaa-my-module.xml");
         try (FileWriter w = new FileWriter(trackingFile)) {
             w.write(
@@ -961,15 +988,15 @@ public class MakeJNLPTest extends TestBase {
                                     "</module>\n"
             );
         }
-        
-        
-        
+
+
+
         String script =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
             "<project name=\"Test Arch\" basedir=\".\" default=\"all\" >" +
             "  <taskdef name=\"jnlp\" classname=\"org.netbeans.nbbuild.MakeJNLP\" classpath=\"${nbantext.jar}\"/>" +
             "<target name=\"all\" >" +
-            "  <mkdir dir='${test.output}' />" + 
+            "  <mkdir dir='${test.output}' />" +
             "  <jnlp dir='${test.output}' alias='jnlp' storepass='netbeans-test' keystore='${test.ks}' verify='true' " + extraScript + " >" +
             "    <modules dir='${test.parent}' >" +
             "      <include name='${test.name}' />" +
@@ -979,22 +1006,29 @@ public class MakeJNLPTest extends TestBase {
             "</project>";
 
         assertEquals("Both modules in the same dir", module.getParentFile(), nonModule.getParentFile());
-        
+
         File output = new File(getWorkDir(), "output");
         File ks = generateKeystore("jnlp", "netbeans-test");
-        
+
         java.io.File f = extractString (script);
         try {
-            execute (f, new String[] { 
-                "-Dtest.output=" + output, 
-                "-Dtest.parent=" + module.getParent(), 
+            System.setProperty("test.output", output.getAbsolutePath());
+            System.setProperty("test.parent", module.getParentFile().getAbsolutePath());
+            System.setProperty("test.name", module.getName());
+            System.setProperty("test.ks", ks.getAbsolutePath());
+
+            buildRule.configureProject(f.getAbsolutePath());
+            buildRule.executeTarget("all");
+            /*execute (f, new String[] {
+                "-Dtest.output=" + output,
+                "-Dtest.parent=" + module.getParent(),
                 "-Dtest.name=" + module.getName(),
                 "-Dtest.ks=" + ks,
-            });
+            });*/
             if (useNonModule) {
-                fail("The task has to fail");   
+                fail("The task has to fail");
             }
-            
+
             assertTrue ("Output exists", output.exists ());
             assertTrue ("Output directory created", output.isDirectory());
 
@@ -1003,7 +1037,7 @@ public class MakeJNLPTest extends TestBase {
 
             String[] files = ext.getParentFile().list();
             assertEquals("Two files are there", 2, files.length);
-        } catch (ExecutionError ex) {
+        } catch (BuildException ex) {
             if (!useNonModule) {
                 throw ex;
             } else {
@@ -1018,46 +1052,53 @@ public class MakeJNLPTest extends TestBase {
                 assertEquals("Output dir is empty as nothing has been generated", 0, files.length);
             }
         }
-        
+
     }
 
     private File doClassPathModuleCheck(String script) throws Exception {
         Manifest m;
 
         File extJar = generateJar ("modules/ext", new String[0], createManifest(), null);
-        
+
         m = createManifest ();
         m.getMainAttributes ().putValue ("OpenIDE-Module", "aaa.my.module/3");
         m.getMainAttributes ().putValue ("Class-Path", "ext/" + extJar.getName());
         File simpleJar = generateJar ("modules", new String[0], m, null);
 
         File parent = simpleJar.getParentFile ();
-        
+
         File output = new File(parent, "output");
         File ks = generateKeystore("jnlp", "netbeans-test");
-        
+
         java.io.File f = extractString (script);
-        execute (f, new String[] { 
-            "-Dtest.output=" + output, 
-            "-Dtest.parent=" + parent, 
+/*        execute (f, new String[] {
+            "-Dtest.output=" + output,
+            "-Dtest.parent=" + parent,
             "-Dtest.name=" + simpleJar.getName(),
             "-Dtest.ks=" + ks,
             "-Dtest.ext=" + extJar
-        });
-        
+        });*/
+        System.setProperty("test.output", output.getAbsolutePath());
+        System.setProperty("test.parent", parent.getAbsolutePath());
+        System.setProperty("test.name", simpleJar.getName());
+        System.setProperty("test.ks", ks.getAbsolutePath());
+        System.setProperty("test.ext", extJar.getAbsolutePath());
+
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         return output;
     }
-    
-    
+
+
     private File createNewJarFile(String prefix) throws IOException {
         if (prefix == null) {
             prefix = "modules";
         }
         String ss = prefix.substring(prefix.length()-1);
-                
+
         File dir = new File(this.getWorkDir(), prefix);
         dir.mkdirs();
-        
+
         int i = 0;
         for (;;) {
             File f = new File (dir, ss + i++ + ".jar");
@@ -1066,43 +1107,43 @@ public class MakeJNLPTest extends TestBase {
             }
         }
     }
-    
+
     protected final File generateJar (String[] content, Manifest manifest) throws IOException {
         return generateJar(null, content, manifest, null);
     }
-    
+
     protected final File generateJar (String prefix, String[] content, Manifest manifest, Properties props) throws IOException {
         File f = createNewJarFile (prefix);
-        
+
         if (props != null) {
             manifest.getMainAttributes().putValue("OpenIDE-Module-Localizing-Bundle", "some/fake/prop/name/Bundle.properties");
         }
-        
+
         try (JarOutputStream os = new JarOutputStream (new FileOutputStream (f), manifest)) {
             if (props != null) {
                 os.putNextEntry(new JarEntry("some/fake/prop/name/Bundle.properties"));
                 props.store(os, "# properties for the module");
                 os.closeEntry();
             }
-            
-            
+
+
             for (int i = 0; i < content.length; i++) {
                 os.putNextEntry(new JarEntry (content[i]));
                 os.closeEntry();
             }
             os.closeEntry ();
         }
-        
+
         return f;
     }
-    
+
     @SuppressWarnings("SleepWhileInLoop")
     private File generateKeystore(String alias, String password) throws Exception {
-        Error lastEx = null;
+        BuildException lastEx = null;
         for (int i = 0; i < 10; i++) {
             File where = new File(getWorkDir(), "key" + i + ".ks");
 
-            String script = 
+            String script =
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<project name=\"Generate Keystore\" basedir=\".\" default=\"all\" >" +
                 "<target name=\"all\" >" +
@@ -1111,13 +1152,15 @@ public class MakeJNLPTest extends TestBase {
                   "keystore='" + where + "' \n" +
                   "storepass='" + password + "' \n" +
                   "dname='CN=A NetBeans Friend, OU=NetBeans, O=netbeans.org, C=US' \n" +
+                  "keyalg='DSA' \n" +
                 "/>\n" +
                 "</target></project>\n";
 
             java.io.File f = extractString (script);
             try {
-                execute (f, new String[] { });
-            } catch (ExecutionError ex) {
+                buildRule.configureProject(f.getAbsolutePath());
+                buildRule.executeTarget("all");
+            } catch (BuildException ex) {
                 Logger.getAnonymousLogger().log(Level.WARNING, "Failed for " + i, ex);
                 lastEx = ex;
                 if (ex.getMessage().indexOf("CKR_KEY_SIZE_RANGE") >= 0) {
@@ -1156,7 +1199,8 @@ public class MakeJNLPTest extends TestBase {
                 "</target>" +
                 "</project>"
                 );
-        execute(f, new String[] { "-verbose" });
+        buildRule.configureProject(f.getAbsolutePath());
+        buildRule.executeTarget("all");
         assertFilenames(output, "me.jnlp", "me/s0.jar", "me/lib-b0.jar");
         File jnlp = new File(output, "me.jnlp");
         String res = readFile(jnlp);

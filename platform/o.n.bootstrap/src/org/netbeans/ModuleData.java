@@ -21,8 +21,6 @@ package org.netbeans;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -91,7 +89,7 @@ class ModuleData {
             if (verifyCNBs) {
                 Dependency.create(Dependency.TYPE_MODULE, codeName);
             }
-            codeNameRelease = (cnParse[1] != null) ? ((Integer) cnParse[1]).intValue() : -1;
+            codeNameRelease = (cnParse[1] != null) ? (Integer) cnParse[1] : -1;
             if (cnParse[2] != null) {
                 throw new NumberFormatException(codeName);
             }
@@ -120,7 +118,7 @@ class ModuleData {
                     publicPackages = ZERO_PACKAGE_ARRAY;
                 } else {
                     StringTokenizer tok = new StringTokenizer(exportsS, ", "); // NOI18N
-                    List<Module.PackageExport> exports = new ArrayList<Module.PackageExport>(Math.max(tok.countTokens(), 1));
+                    List<Module.PackageExport> exports = new ArrayList<>(Math.max(tok.countTokens(), 1));
                     while (tok.hasMoreTokens()) {
                         String piece = tok.nextToken();
                         if (piece.endsWith(".*")) { // NOI18N
@@ -148,7 +146,7 @@ class ModuleData {
                     if (exports.isEmpty()) {
                         throw new IllegalArgumentException("Illegal OpenIDE-Module-Public-Packages: " + exportsS); // NOI18N
                     }
-                    publicPackages = exports.toArray(new Module.PackageExport[0]);
+                    publicPackages = exports.toArray(Module.PackageExport[]::new);
                 }
             } else {
                 // XXX new link?
@@ -166,7 +164,7 @@ class ModuleData {
                 String friends = attr.getValue("OpenIDE-Module-Friends"); // NOI18N
                 if (friends != null) {
                     StringTokenizer tok = new StringTokenizer(friends, ", "); // NOI18N
-                    set = new HashSet<String>();
+                    set = new HashSet<>();
                     while (tok.hasMoreTokens()) {
                         String piece = tok.nextToken();
                         if (piece.indexOf('/') != -1) {
@@ -209,7 +207,7 @@ class ModuleData {
         } catch (IllegalArgumentException iae) {
             throw (InvalidException) new InvalidException("While parsing " + codeName + " a dependency attribute: " + iae.toString()).initCause(iae); // NOI18N
         }
-        this.coveredPackages = new HashSet<String>();
+        this.coveredPackages = new HashSet<>();
         this.agentClass = attr.getValue("Agent-Class");
     }
     
@@ -242,41 +240,53 @@ class ModuleData {
         this.publicPackages = null;
         this.provides = computeProvides(m, mf.getMainAttributes(), false, true);
         this.dependencies = computeImported(mf.getMainAttributes());
-        this.coveredPackages = new HashSet<String>();
+        this.coveredPackages = new HashSet<>();
         this.agentClass = getMainAttribute(mf, "Agent-Class"); // NOI18N
         this.fragmentHostCodeName = null;
     }
     
-    ModuleData(ObjectInput dis) throws IOException {
-        try {
-            this.codeName = dis.readUTF();
-            this.codeNameBase = dis.readUTF();
-            this.codeNameRelease = dis.readInt();
-            this.coveredPackages = readStrings(dis, new HashSet<String>(), true);
-            this.dependencies = (Dependency[]) dis.readObject();
-            this.implVersion = dis.readUTF();
-            this.buildVersion = dis.readUTF();
-            this.provides = readStrings(dis);
-            this.friendNames = readStrings(dis, new HashSet<String>(), false);
-            this.specVers = new SpecificationVersion(dis.readUTF());
-            this.publicPackages = Module.PackageExport.read(dis);
-            this.agentClass = dis.readUTF();
-            String s = dis.readUTF();
-            if (s != null) {
-                s = s.trim();
-            }
-            this.fragmentHostCodeName = s == null || s.isEmpty() ? null : s;
-        } catch (ClassNotFoundException cnfe) {
-            throw new IOException(cnfe);
+    ModuleData(DataInput dis) throws IOException {
+        this.codeName = dis.readUTF();
+        this.codeNameBase = dis.readUTF();
+        this.codeNameRelease = dis.readInt();
+        this.coveredPackages = readStrings(dis, new HashSet<>(), true);
+        this.dependencies = readDeps(dis);
+        this.implVersion = dis.readUTF();
+        this.buildVersion = dis.readUTF();
+        this.provides = readStrings(dis);
+        this.friendNames = readStrings(dis, new HashSet<>(), false);
+        this.specVers = new SpecificationVersion(dis.readUTF());
+        this.publicPackages = Module.PackageExport.read(dis);
+        this.agentClass = dis.readUTF();
+        String s = dis.readUTF();
+        if (s != null) {
+            s = s.trim();
         }
+        this.fragmentHostCodeName = s == null || s.isEmpty() ? null : s;
+    }
+
+    private static Dependency[] readDeps(DataInput dis) throws IOException {
+        int count = Math.max(dis.readInt(), 0);
+        Dependency[] deps = new Dependency[count];
+        for (int i = 0; i < deps.length; i++) {
+            deps[i] = DepUtil.read(dis);
+        }
+        return deps;
     }
     
-    void write(ObjectOutput dos) throws IOException {
+    void write(DataOutput dos) throws IOException {
         dos.writeUTF(codeName);
         dos.writeUTF(codeNameBase);
         dos.writeInt(codeNameRelease);
         writeStrings(dos, coveredPackages);
-        dos.writeObject(dependencies);
+        if (dependencies == null) {
+            dos.writeInt(0);
+        } else {
+            dos.writeInt(dependencies.length);
+            for (Dependency dep : dependencies) {
+                DepUtil.write(dep, dos);
+            }
+        }
         dos.writeUTF(implVersion);
         dos.writeUTF(buildVersion);
         writeStrings(dos, provides);
@@ -291,7 +301,7 @@ class ModuleData {
         String pkgs = attr.getValue("Import-Package"); // NOI18N
         List<Dependency> arr = null;
         if (pkgs != null) {
-            arr = new ArrayList<Dependency>();
+            arr = new ArrayList<>();
             StringTokenizer tok = createTokenizer(pkgs); // NOI18N
             while (tok.hasMoreElements()) {
                 String dep = beforeSemicolon(tok);
@@ -301,7 +311,7 @@ class ModuleData {
         String recomm = attr.getValue("Require-Bundle"); // NOI18N
         if (recomm != null) {
             if (arr == null) {
-                arr = new ArrayList<Dependency>();
+                arr = new ArrayList<>();
             }
             StringTokenizer tok = createTokenizer(recomm); // NOI18N
             while (tok.hasMoreElements()) {
@@ -309,7 +319,7 @@ class ModuleData {
                 arr.addAll(Dependency.create(Dependency.TYPE_RECOMMENDS, "cnb." + dep)); // NOI18N
             }
         }
-        return arr == null ? null : arr.toArray(new Dependency[0]);
+        return arr == null ? null : arr.toArray(Dependency[]::new);
     }
 
     private static StringTokenizer createTokenizer(String osgiDep) {
@@ -355,7 +365,7 @@ class ModuleData {
     private String[] computeProvides(
         Module forModule, Attributes attr, boolean verifyCNBs, boolean useOSGi
     ) throws InvalidException, IllegalArgumentException {
-        Set<String> arr = new LinkedHashSet<String>();
+        Set<String> arr = new LinkedHashSet<>();
         // Token provides
         String providesS = attr.getValue("OpenIDE-Module-Provides"); // NOI18N
         if (providesS != null) {
@@ -394,11 +404,11 @@ class ModuleData {
     private Dependency[] initDeps(Module forModule, Set<?> knownDeps, Attributes attr)
         throws IllegalStateException, IllegalArgumentException {
         if (knownDeps != null) {
-            return knownDeps.toArray(new Dependency[0]);
+            return knownDeps.toArray(Dependency[]::new);
         }
 
         // deps
-        Set<Dependency> deps = new HashSet<Dependency>(20);
+        Set<Dependency> deps = new HashSet<>(20);
         // First convert IDE/1 -> org.openide/1, so we never have to deal with
         // "IDE deps" internally:
         @SuppressWarnings(value = "deprecation")
@@ -428,7 +438,7 @@ class ModuleData {
         deps.addAll(Dependency.create(Dependency.TYPE_NEEDS, attr.getValue("OpenIDE-Module-Needs"))); // NOI18N
         deps.addAll(Dependency.create(Dependency.TYPE_RECOMMENDS, attr.getValue("OpenIDE-Module-Recommends"))); // NOI18N
         forModule.refineDependencies(deps);
-        return deps.toArray(new Dependency[0]);
+        return deps.toArray(Dependency[]::new);
     }
     
     final String getFragmentHostCodeName() {
@@ -496,13 +506,12 @@ class ModuleData {
         }
         return set;
     }
-    private String[] readStrings(ObjectInput dis) throws IOException {
-        List<String> arr = new ArrayList<String>();
+    private String[] readStrings(DataInput dis) throws IOException {
+        List<String> arr = new ArrayList<>();
         readStrings(dis, arr, false);
-        return arr.toArray(new String[0]);
+        return arr.toArray(String[]::new);
     }
-    private void writeStrings(DataOutput dos, Collection<String> set) 
-    throws IOException {
+    private void writeStrings(DataOutput dos, Collection<String> set) throws IOException {
         if (set == null) {
             dos.writeInt(0);
             return;
@@ -512,7 +521,7 @@ class ModuleData {
             dos.writeUTF(s);
         }
     }
-    private void writeStrings(ObjectOutput dos, String[] provides) throws IOException {
+    private void writeStrings(DataOutput dos, String[] provides) throws IOException {
         writeStrings(dos, Arrays.asList(provides));
     }
     

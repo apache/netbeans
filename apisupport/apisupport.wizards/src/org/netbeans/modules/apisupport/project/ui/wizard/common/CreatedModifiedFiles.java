@@ -1472,16 +1472,8 @@ public final class CreatedModifiedFiles {
     }
 
     private static void copyByteAfterByte(FileObject content, FileObject target) throws IOException {
-        OutputStream os = target.getOutputStream();
-        try {
-            InputStream is = content.getInputStream();
-            try {
-                FileUtil.copy(is, os);
-            } finally {
-                is.close();
-            }
-        } finally {
-            os.close();
+        try (OutputStream os = target.getOutputStream(); InputStream is = content.getInputStream()) {
+            is.transferTo(os);
         }
     }
 

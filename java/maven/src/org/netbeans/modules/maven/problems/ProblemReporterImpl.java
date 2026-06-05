@@ -206,7 +206,7 @@ public final class ProblemReporterImpl implements ProblemReporter, Comparator<Pr
                     if (repos.isEmpty()) {
                         repos = rq.getRemoteRepositories();
                     }
-                    EmbedderFactory.getProjectEmbedder().resolve(a, repos, EmbedderFactory.getProjectEmbedder().getLocalRepository());
+                    EmbedderFactory.getProjectEmbedder().resolveArtifact(a, repos, EmbedderFactory.getProjectEmbedder().getLocalRepository());
                 } catch (ArtifactResolutionException | ArtifactNotFoundException ex) {
                     return;
                 }

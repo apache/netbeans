@@ -73,6 +73,7 @@ import com.sun.source.doctree.ValueTree;
 import com.sun.source.doctree.VersionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.YieldTree;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.source.util.DocTreeScanner;
 
@@ -1362,8 +1363,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
                 print(tree.getGuard());
             }
         }
-        Object caseKind = tree.getCaseKind();
-        if (caseKind == null || !String.valueOf(caseKind).equals("RULE")) {
+        if (tree.getCaseKind() != CaseTree.CaseKind.RULE) {
             print(':');
             newline();
             indent();
@@ -1371,7 +1371,12 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             undent(old);
         } else {
             print(" -> "); //TODO: configure spaces!
-            printStat(tree.stats.head);
+            if (tree.stats.head.getKind() == Kind.YIELD) {
+                print((JCTree) ((YieldTree) tree.stats.head).getValue());
+                print(";");
+            } else {
+                printStat(tree.stats.head);
+            }
             undent(old);
         }
     }
@@ -2896,16 +2901,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
 	        needSpace();
         }
     }
-    
-    private static final String[] flagLowerCaseNames = new String[Flag.values().length];
-    
-    static {
-        for (Flag flag : Flag.values()) {
-            flagLowerCaseNames[flag.ordinal()] = flag.name().toLowerCase(Locale.ENGLISH);
-        }
-        flagLowerCaseNames[Flag.NON_SEALED.ordinal()] = "non-sealed";
-    }
-    
+
     /**
      * Workaround for defect #239258. Prints flag names converted to lowercase in ENGLISH locale to 
      * avoid weird Turkish I > i-without-dot-above conversion.
@@ -2917,9 +2913,10 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         flags = flags & Flags.ExtendedStandardFlags;
         StringBuilder buf = new StringBuilder();
         String sep = ""; // NOI18N
-        for (Flag flag : Flags.asFlagSet(flags)) {
+        for (FlagsEnum flag : Flags.asFlagSet(flags)) {
             buf.append(sep);
-            String fname = flagLowerCaseNames[flag.ordinal()];
+            // Since JDK26 javac FlagsEnum#toString is usable for printing
+            String fname = flag.toString();
             buf.append(fname);
             sep = " "; // NOI18N
         }

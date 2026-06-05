@@ -70,7 +70,10 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
+import org.netbeans.api.java.queries.SourceJavadocAttacher;
+import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CodeStyle;
 import org.netbeans.api.java.source.CodeStyleUtils;
 import org.netbeans.api.java.source.CompilationController;
@@ -98,6 +101,7 @@ import org.netbeans.modules.parsing.api.ResultIterator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.netbeans.spi.lsp.CompletionCollector;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
@@ -162,9 +166,50 @@ public class JavaCompletionCollector implements CompletionCollector {
                     @Override
                     public Future<String> create(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel) {
                         ElementJavadoc doc = ElementJavadoc.create(compilationInfo, element, cancel);
+                        if (doc.getGotoSourceAction() == null && doc.getURL() == null) {
+                            // try to attach sources and get doc from them
+                            CompletableFuture<String> docFromSources = docFromAttachedSources(compilationInfo, element, cancel, doc);
+                            if (docFromSources != null) {
+                                return docFromSources;
+                            }
+                        }
                         return ((CompletableFuture<String>) doc.getTextAsync()).thenApplyAsync(content -> {
                             return Utilities.resolveLinks(content, doc);
                         });
+                    }
+
+                    private CompletableFuture<String> docFromAttachedSources(CompilationInfo compilationInfo, Element element, Callable<Boolean> cancel, ElementJavadoc currentDoc) {
+                        final TypeElement te = compilationInfo.getElementUtilities().outermostTypeElement(element);
+                        final ClasspathInfo cpInfo = compilationInfo.getClasspathInfo();
+                        final ClassPath cp = ClassPathSupport.createProxyClassPath(
+                                cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT),
+                                cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE),
+                                cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE));
+                        final FileObject resource = cp.findResource(te.getQualifiedName().toString().replace('.', '/') + ".class");
+                        if (resource != null) {
+                            final FileObject root = cp.findOwnerRoot(resource);
+                            if (root != null) {
+                                CompletableFuture<String> future = new CompletableFuture<>();
+                                try {
+                                    SourceJavadocAttacher.attachSources(root.toURL(), new SourceJavadocAttacher.AttachmentListener() {
+                                        @Override
+                                        public void attachmentSucceeded() {
+                                            ElementJavadoc ejd = ElementJavadoc.create(compilationInfo, element, cancel);
+                                            future.complete(Utilities.resolveLinks(ejd.getText(), ejd));
+                                        }
+
+                                        @Override
+                                        public void attachmentFailed() {
+                                            future.complete(Utilities.resolveLinks(currentDoc.getText(), currentDoc));
+                                        }
+                                    });
+                                }catch (Throwable t) {
+                                    future.completeExceptionally(t);
+                                }
+                                return future;
+                            }
+                        }
+                        return null;
                     }
                 }, () -> false);
                 ParserManager.parse(Collections.singletonList(Source.create(doc)), new UserTask() {
@@ -328,6 +373,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     .kind(Completion.Kind.Folder)
                     .sortText(String.format("%04d%s", 1950, moduleName))
                     .insertTextFormat(Completion.TextFormat.PlainText)
+                    .textEdit(new TextEdit(substitutionOffset, offset, moduleName))
                     .build();
         }
 
@@ -482,28 +528,28 @@ public class JavaCompletionCollector implements CompletionCollector {
         }
 
         @Override
-        public Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
-            return createExecutableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef);
+        public Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
+            return createExecutableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef, insertTextParams);
         }
 
         @Override
-        public Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef) {
-            return createExecutableItem(info, elem, type, null, null, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, afterConstructorTypeParams, smartType, assignToVarOffset, memberRef);
+        public Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
+            return createExecutableItem(info, elem, type, null, null, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, afterConstructorTypeParams, smartType, assignToVarOffset, memberRef, insertTextParams);
         }
 
         @Override
-        public Completion createTypeCastableExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
-            return createExecutableItem(info, elem, type, null, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef);
+        public Completion createTypeCastableExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
+            return createExecutableItem(info, elem, type, null, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, false, smartType, assignToVarOffset, memberRef, insertTextParams);
         }
 
         @Override
-        public Completion createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name) {
-            return createExecutableItem(info, elem, type, name, null, substitutionOffset, null, false, isDeprecated, false, false, false, false, -1, false);
+        public Completion createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name, boolean insertTextParams) {
+            return createExecutableItem(info, elem, type, name, null, substitutionOffset, null, false, isDeprecated, false, false, false, false, -1, false, insertTextParams);
         }
 
         @Override
         public Completion createOverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement) {
-            Completion item = createExecutableItem(info, elem, type, substitutionOffset, null, false, false, false, false, false, -1, false);
+            Completion item = createExecutableItem(info, elem, type, substitutionOffset, null, false, false, false, false, false, -1, false, true);
             CompletionCollector.Builder builder = CompletionCollector.newBuilder(item.getLabel())
                     .kind(elementKind2CompletionItemKind(elem.getKind()))
                     .labelDetail(String.format("%s - %s", item.getLabelDetail(), implement ? "implement" : "override"))
@@ -594,7 +640,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     } else {
                         insertText.append("\n{\n$0}");
                     }
-                    builder.command(new Command("Complete Abstract Methods", "java.complete.abstract.methods"));
+                    builder.command(new Command("Complete Abstract Methods", "nbls.java.complete.abstract.methods"));
                 } catch (IOException ioe) {
                 }
                 builder.insertTextFormat(Completion.TextFormat.Snippet);
@@ -1065,7 +1111,7 @@ public class JavaCompletionCollector implements CompletionCollector {
             return builder.build();
         }
 
-        private Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, String name, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef) {
+        private Completion createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, String name, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
             String simpleName = name != null ? name : (elem.getKind() == ElementKind.METHOD ? elem : elem.getEnclosingElement()).getSimpleName().toString();
             Iterator<? extends VariableElement> it = elem.getParameters().iterator();
             Iterator<? extends TypeMirror> tIt = type.getParameterTypes().iterator();
@@ -1089,7 +1135,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                 if (tm == null) {
                     break;
                 }
-                if (!inImport && !memberRef && cnt == 0 && cs.spaceWithinMethodCallParens()) {
+                if (!inImport && !memberRef && insertTextParams && cnt == 0 && cs.spaceWithinMethodCallParens()) {
                     insertText.append(' ');
                 }
                 cnt++;
@@ -1098,14 +1144,19 @@ public class JavaCompletionCollector implements CompletionCollector {
                 labelDetail.append(paramTypeName).append(' ').append(paramName);
                 sortParams.append(paramTypeName);
                 if (!inImport && !memberRef) {
-                    VariableElement inst = instanceOf(tm, paramName);
-                    insertText.append("${").append(cnt).append(":").append(inst != null ? inst.getSimpleName() : paramName).append("}");
                     asTemplate = true;
+                    if (insertTextParams) {
+                        VariableElement inst = instanceOf(tm, paramName);
+                        insertText.append("${").append(cnt).append(":").append(inst != null ? inst.getSimpleName() : paramName).append("}");
+                    } else if (cnt == 1) {
+                        // Ensure that the cursor is placed in-between the inserted parentheses i.e. "(|)"
+                        insertText.append("$1");
+                    }
                 }
                 if (tIt.hasNext()) {
                     labelDetail.append(", ");
                     sortParams.append(',');
-                    if (!inImport && !memberRef) {
+                    if (!inImport && !memberRef && insertTextParams) {
                         if (cs.spaceBeforeComma()) {
                             insertText.append(' ');
                         }
@@ -1114,7 +1165,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                             insertText.append(' ');
                         }
                     }
-                } else if (!inImport && !memberRef && cs.spaceWithinMethodCallParens()) {
+                } else if (!inImport && !memberRef && insertTextParams && cs.spaceWithinMethodCallParens()) {
                     insertText.append(' ');
                 }
             }
@@ -1137,7 +1188,7 @@ public class JavaCompletionCollector implements CompletionCollector {
                     } else {
                         insertText.append("\n{\n$0}");
                     }
-                    command = new Command("Complete Abstract Methods", "java.complete.abstract.methods");
+                    command = new Command("Complete Abstract Methods", "nbls.java.complete.abstract.methods");
                     asTemplate = true;
                 } else if (asTemplate) {
                     insertText.append("$0");
@@ -1185,6 +1236,12 @@ public class JavaCompletionCollector implements CompletionCollector {
             }
             if (isDeprecated) {
                 builder.addTag(Completion.Tag.Deprecated);
+            }
+            if (command == null && !insertTextParams && cnt > 0) {
+                command = new Command("Show Signature Help", "editor.action.triggerParameterHints");
+            }
+            if (command != null) {
+                builder.command(command);
             }
             return builder.build();
         }

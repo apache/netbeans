@@ -225,7 +225,7 @@ public class MicronautProjectWizardIterator implements WizardDescriptor.Progress
                 } else {
                     FileObject fo = FileUtil.createData(folder, entryName);
                     try (OutputStream out = fo.getOutputStream()) {
-                        FileUtil.copy(zis, out);
+                        zis.transferTo(out);
                         File backingFile = FileUtil.toFile(fo);
                         if (backingFile != null) {
                             // Workaround for limit of JDK API:

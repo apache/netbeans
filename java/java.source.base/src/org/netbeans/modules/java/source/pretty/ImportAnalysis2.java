@@ -187,7 +187,7 @@ public class ImportAnalysis2 {
 
     public void enterVisibleThroughClasses(ClassTree clazz) {
         Set<Element> visible = visibleThroughClasses.getFirst();
-        visible.addAll(overlay.getAllVisibleThrough(model, elements, currentFQN.getFQN(), clazz, modle));
+        visible.addAll(overlay.getAllVisibleThrough(model, elements, currentFQN.getFQN(), clazz, pack, modle));
     }
 
     public void classLeft() {
@@ -367,7 +367,7 @@ public class ImportAnalysis2 {
             return make.Identifier(element.getSimpleName());
         }
 
-        if (getPackageOf(element) != null && getPackageOf(element).isUnnamed()) {
+        if (overlay.packageOf(element) != null && overlay.packageOf(element).isUnnamed()) {
             if (orig.getExpression().getKind() == Kind.MEMBER_SELECT) {
                 return make.MemberSelect(resolveImport((MemberSelectTree) orig.getExpression(), element.getEnclosingElement()),
                                          element.getSimpleName());
@@ -450,12 +450,6 @@ public class ImportAnalysis2 {
             }           
         }
         return false;
-    }
-
-    private PackageElement getPackageOf(Element el) {
-        while ((el != null) && (el.getKind() != ElementKind.PACKAGE)) el = el.getEnclosingElement();
-
-        return (PackageElement) el;
     }
 
     private Map<String, Element> getUsedImplicitlyImportedClasses() {

@@ -24,14 +24,13 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import org.netbeans.api.progress.ProgressUtils;
+import org.netbeans.api.progress.BaseProgressUtils;
 import org.netbeans.modules.options.CategoryModel;
 import org.netbeans.modules.options.OptionsDisplayerImpl;
 import org.netbeans.spi.options.OptionsPanelController.ContainerRegistration;
 import org.netbeans.spi.options.OptionsPanelController.SubRegistration;
 import org.netbeans.spi.options.OptionsPanelController.TopLevelRegistration;
 import org.openide.awt.StatusDisplayer;
-import org.openide.util.Exceptions;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.windows.WindowManager;
@@ -95,7 +94,7 @@ public final class OptionsDisplayer {
                 currentCategoryID = null;
                 operationCancelled.set(false);
             }
-            ProgressUtils.runOffEventDispatchThread(new Runnable() {
+            BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                 @Override
                 public void run() {
@@ -141,7 +140,7 @@ public final class OptionsDisplayer {
                 if (operationCancelled.get()) {
                     operationCancelled.set(false);
                 }
-                ProgressUtils.runOffEventDispatchThread(new Runnable() {
+                BaseProgressUtils.runOffEventDispatchThread(new Runnable() {
 
                     @Override
                     public void run() {

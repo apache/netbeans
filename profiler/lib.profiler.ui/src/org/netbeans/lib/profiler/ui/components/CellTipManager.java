@@ -338,7 +338,7 @@ public class CellTipManager implements MouseListener, MouseMotionListener, Mouse
             for (parent = invoker.getParent(); parent != null; parent = parent.getParent()) {
                 if (parent instanceof JFrame || parent instanceof JDialog || parent instanceof JWindow) {
                     return getHeightAdjust(parent.getBounds(), popupRectInScreen);
-                } else if (parent instanceof JApplet || parent instanceof JInternalFrame) {
+                } else if (parent instanceof JInternalFrame) {
                     if (popupFrameRect == null) {
                         popupFrameRect = new Rectangle();
                     }
@@ -361,7 +361,7 @@ public class CellTipManager implements MouseListener, MouseMotionListener, Mouse
             for (parent = invoker.getParent(); parent != null; parent = parent.getParent()) {
                 if (parent instanceof JFrame || parent instanceof JDialog || parent instanceof JWindow) {
                     return getWidthAdjust(parent.getBounds(), popupRectInScreen);
-                } else if (parent instanceof JApplet || parent instanceof JInternalFrame) {
+                } else if (parent instanceof JInternalFrame) {
                     if (popupFrameRect == null) {
                         popupFrameRect = new Rectangle();
                     }

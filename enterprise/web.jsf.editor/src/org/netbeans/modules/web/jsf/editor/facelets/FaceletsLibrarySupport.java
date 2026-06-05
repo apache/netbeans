@@ -43,7 +43,6 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.servlet.ServletContext;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.modules.web.jsf.api.editor.JsfFacesComponentsProvider;
 import org.netbeans.modules.web.jsf.editor.JsfSupportImpl;
 import org.netbeans.modules.web.jsf.editor.facelets.mojarra.ConfigManager;
@@ -262,7 +261,7 @@ public class FaceletsLibrarySupport {
 
     //handle progress
     private Map<String, Library> findLibraries() {
-        ProgressHandle progress = ProgressHandleFactory.createHandle(
+        ProgressHandle progress = ProgressHandle.createHandle(
                 NbBundle.getMessage(FaceletsLibrarySupport.class, "MSG_ParsingFaceletsLibraries")); //NOI18N
         progress.start();
         progress.switchToIndeterminate();

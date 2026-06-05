@@ -26,6 +26,6 @@ import org.openide.nodes.Node;
  */
 public class HistoryTestKit {
     public static Node createHistoryNode(org.netbeans.modules.versioning.core.spi.VCSHistoryProvider.HistoryEntry entry) {
-        return RevisionNode.create(new HistoryEntry(entry, false));
+        return RevisionNode.create(HistoryEntry.createVCSEntry(entry, 42));
     }
 }

@@ -62,6 +62,11 @@ public class IssueAction extends SystemAction {
     }
 
     @Override
+    public boolean isEnabled() {
+        return BugtrackingManager.getInstance().hasRegisteredConnectors();
+    }
+
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx(IssueAction.class);
     }

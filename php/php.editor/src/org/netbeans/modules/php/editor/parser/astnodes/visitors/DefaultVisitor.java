@@ -42,6 +42,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ClassInstanceCreationVari
 import org.netbeans.modules.php.editor.parser.astnodes.ClassName;
 import org.netbeans.modules.php.editor.parser.astnodes.CloneExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Comment;
+import org.netbeans.modules.php.editor.parser.astnodes.CompositionExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ConditionalExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.ConstantVariable;
@@ -286,6 +287,12 @@ public class DefaultVisitor implements Visitor {
     @Override
     public void visit(ConstantVariable constantVariable) {
         scan(constantVariable.getName());
+    }
+    
+    @Override
+    public void visit(CompositionExpression node) {
+        scan(node.getLeft());
+        scan(node.getRight());
     }
 
     @Override

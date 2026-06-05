@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.swing.text.BadLocationException;
+import org.netbeans.api.editor.document.LineDocumentUtils;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.editor.Utilities;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -78,8 +79,8 @@ public class YamlScanner implements StructureScanner {
         int docLength = doc == null ? text.length() : doc.getLength();
         int begin = Math.min((int) item.getPosition(), docLength);
         int end = Math.min((int) item.getEndPosition(), docLength);
-        int firstRowEnd = doc == null ? GsfUtilities.getRowEnd(text, begin) : Utilities.getRowEnd(doc, begin);
-        int lastRowEnd = doc == null ? GsfUtilities.getRowEnd(text, end) : Utilities.getRowEnd(doc, end);
+        int firstRowEnd = doc == null ? GsfUtilities.getRowEnd(text, begin) : LineDocumentUtils.getLineEndOffset(doc, begin);
+        int lastRowEnd = doc == null ? GsfUtilities.getRowEnd(text, end) : LineDocumentUtils.getLineEndOffset(doc, end);
         if (begin < end && firstRowEnd != lastRowEnd) {
             codeblocks.add(new OffsetRange(firstRowEnd, end));
         } else {

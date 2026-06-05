@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.106
+#Version 2.111
 
 CLSS public java.awt.datatransfer.Clipboard
 cons public init(java.lang.String)
@@ -160,6 +160,12 @@ meth public java.io.OutputStream getOutputStream()
 meth public java.lang.String[] getArguments()
 supr java.lang.Object
 hfds args,argsBackup,closed,currentDir,err,is,os
+
+CLSS public final org.netbeans.DepUtil
+meth public static org.openide.modules.Dependency read(java.io.DataInput) throws java.io.IOException
+meth public static void write(org.openide.modules.Dependency,java.io.DataOutput) throws java.io.IOException
+supr java.lang.Object
+hfds create
 
 CLSS public final org.netbeans.DuplicateException
 meth public org.netbeans.Module getNewModule()
@@ -410,6 +416,13 @@ CLSS public org.netbeans.NbExecJavaStartTry
 cons public init()
 meth public static void main(java.lang.String[])
 supr java.lang.Object
+
+CLSS public org.netbeans.NbExit
+cons public init()
+meth public static boolean isExiting()
+meth public static void exit(int)
+supr java.lang.Object
+hfds officialExit
 
 CLSS public abstract org.netbeans.NetigsoFramework
 cons protected init()

@@ -19,13 +19,11 @@
 
 package org.netbeans.modules.masterfs.filebasedfs;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.logging.LogRecord;
 import org.openide.filesystems.*;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -160,12 +158,9 @@ public class MIMESupportLoggingTest extends NbTestCase {
     }
 
     public static final File copyStringToFile (File f, String content) throws Exception {
-        FileOutputStream os = new FileOutputStream(f);
-        InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-        FileUtil.copy(is, os);
-        os.close ();
-        is.close();
-
+        try (FileOutputStream os = new FileOutputStream(f)) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
+        }
         return f;
     }
 }

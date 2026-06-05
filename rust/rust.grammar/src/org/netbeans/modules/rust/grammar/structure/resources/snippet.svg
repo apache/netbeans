@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #6d6d6d;
+      }
+
+      .st1 {
+        fill: #2e92ff;
+      }
+
+      .st2 {
+        opacity: .33;
+      }
+
+      .st3 {
+        fill: #8d8d8d;
+      }
+
+      .st4 {
+        fill: #3aea00;
+      }
+
+      .st5 {
+        fill: #ececec;
+      }
+    </style>
+  </defs>
+  <g>
+    <polygon class="st5" points="1.5 14.5 1.5 .5 10.193 .5 13.5 3.807 13.5 14.5 1.5 14.5"/>
+    <path class="st0" d="M9.986,1l3.014,3.014v9.986H2V1h7.986M10.4,0H1v15h13V3.6l-3.6-3.6h0Z"/>
+  </g>
+  <polygon class="st3" points="13 5 13 4 10 4 10 1 9 1 9 5 13 5"/>
+  <g>
+    <circle class="st1" cx="7.5" cy="8.5" r="3.5"/>
+    <path class="st4" d="M8.702,5.225c-.366.281-.813.766-.813,1.33,0,.821-.981,1.035-1.269,1.257-.24.185-.342.233-.256.604.073.314.411.446.714.403.454-.065.517.074.612.498.062.277-.013.851.213,1.041.304.256.569-.118.682-.385.138-.329.146-.541.176-.904.034-.413.335-.497.547-.793.144-.201.832-.724,1.381-1.208-.384-.854-1.101-1.518-1.986-1.843Z"/>
+    <path class="st4" d="M7.625,5.829c-.081.406-.344.697-.587.648-.243-.049-.373-.417-.292-.824s.344-.697.587-.648c.243.049.373.417.292.824Z"/>
+  </g>
+  <g class="st2">
+    <path d="M7.5,6c1.379,0,2.5,1.121,2.5,2.5s-1.121,2.5-2.5,2.5-2.5-1.121-2.5-2.5,1.121-2.5,2.5-2.5M7.5,5c-1.933,0-3.5,1.567-3.5,3.5s1.567,3.5,3.5,3.5,3.5-1.567,3.5-3.5-1.567-3.5-3.5-3.5h0Z"/>
+  </g>
+</svg>

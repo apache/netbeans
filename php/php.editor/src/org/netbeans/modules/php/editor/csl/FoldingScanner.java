@@ -63,6 +63,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.ForStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.IfStatement;
 import org.netbeans.modules.php.editor.parser.astnodes.MatchExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
+import org.netbeans.modules.php.editor.parser.astnodes.Quote;
 import org.netbeans.modules.php.editor.parser.astnodes.Statement;
 import org.netbeans.modules.php.editor.parser.astnodes.SwitchCase;
 import org.netbeans.modules.php.editor.parser.astnodes.SwitchStatement;
@@ -139,6 +140,12 @@ public final class FoldingScanner {
             new FoldTemplate(0, 0, "#[...]") // NOI18N
     );
 
+    @NbBundle.Messages("FT_HEREDOC_NOWDOC=Heredoc/Nowdoc")
+    public static final FoldType TYPE_HEREDOC_NOWDOC = FoldType.MEMBER.derive(
+            "heredoc/nowdoc", // NOI18N
+            Bundle.FT_HEREDOC_NOWDOC(),
+            new FoldTemplate(0, 0, "<<<...") // NOI18N
+    );
     private static final String LAST_CORRECT_FOLDING_PROPERTY = "LAST_CORRECT_FOLDING_PROPERY"; //NOI18N
     private static final boolean FOLD_PHPTAG = !Boolean.getBoolean("nb.php.editor.doNotFoldPhptag"); // NOI18N NETBEANS-5480
 
@@ -183,6 +190,7 @@ public final class FoldingScanner {
             if (FOLD_PHPTAG) {
                 processPHPTags(folds, doc);
             }
+            processNowdoc(folds, doc);
             setFoldingProperty(doc, folds);
             return folds;
         }
@@ -262,6 +270,37 @@ public final class FoldingScanner {
                                 break;
                             default:
                                 break;
+                        }
+                    }
+                }
+            } finally {
+                doc.readUnlock();
+            }
+        }
+    }
+
+    private void processNowdoc(Map<String, List<OffsetRange>> folds, Document document) {
+        if (document instanceof BaseDocument doc) {
+            doc.readLock();
+            try {
+                TokenSequence<PHPTokenId> ts = LexUtilities.getPHPTokenSequence(doc, 0);
+                if (ts == null) {
+                    return;
+                }
+                ts.move(0);
+                int startOffset = -1;
+                int endOffset = -1;
+                while (ts.moveNext()) {
+                    Token<PHPTokenId> token = ts.token();
+                    if (token != null) {
+                        PHPTokenId id = token.id();
+                        switch (id) {
+                            case PHP_NOWDOC_TAG_START -> startOffset = ts.offset();
+                            case PHP_NOWDOC_TAG_END -> {
+                                assert startOffset != -1;
+                                endOffset = ts.offset() + token.length();
+                                getRanges(folds, TYPE_HEREDOC_NOWDOC).add(new OffsetRange(startOffset, endOffset));
+                            }
                         }
                     }
                 }
@@ -539,6 +578,15 @@ public final class FoldingScanner {
                 addFold(node, TYPE_ATTRIBUTES);
             }
             super.visit(node);
+        }
+
+        public void visit(Quote node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            if (node.getQuoteType().equals(Quote.Type.HEREDOC)) {
+                addFold(node, TYPE_HEREDOC_NOWDOC);
+            }
         }
 
         private void addFold(final ASTNode node) {

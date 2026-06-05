@@ -30,7 +30,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
 
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 /**
  * Utilities to aid unit testing java.source module.
@@ -85,12 +84,9 @@ public final class TestUtilities {
      * @return the created file
      */
     public static final File copyStringToFile (File f, String content) throws Exception {
-        FileOutputStream os = new FileOutputStream(f);
-        InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-        FileUtil.copy(is, os);
-        os.close ();
-        is.close();
-            
+        try (FileOutputStream os = new FileOutputStream(f)) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
+        }
         return f;
     }
     
@@ -102,12 +98,9 @@ public final class TestUtilities {
      * @return the created file
      */
     public static final FileObject copyStringToFile (FileObject f, String content) throws Exception {
-        OutputStream os = f.getOutputStream();
-        InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-        FileUtil.copy(is, os);
-        os.close ();
-        is.close();
-            
+        try (OutputStream os = f.getOutputStream()) {
+            os.write(content.getBytes(StandardCharsets.UTF_8));
+        }
         return f;
     }   
 

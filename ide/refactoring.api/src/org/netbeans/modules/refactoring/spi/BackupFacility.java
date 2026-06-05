@@ -265,11 +265,8 @@ public abstract class BackupFacility {
         }
 
         private void copy(InputStream is, OutputStream os) throws IOException {
-            try {
-                FileUtil.copy(is, os);
-            } finally {
-                is.close();
-                os.close();
+            try (is; os) {
+                is.transferTo(os);
             }
         }
         

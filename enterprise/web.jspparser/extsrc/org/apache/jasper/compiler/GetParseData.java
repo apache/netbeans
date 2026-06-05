@@ -28,15 +28,22 @@ import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.TagAttributeInfo;
-import javax.servlet.jsp.tagext.TagFileInfo;
-import javax.servlet.jsp.tagext.TagInfo;
-import javax.servlet.jsp.tagext.TagLibraryInfo;
+import jakarta.servlet.jsp.JspException;
+import jakarta.servlet.jsp.tagext.TagAttributeInfo;
+import jakarta.servlet.jsp.tagext.TagData;
+import jakarta.servlet.jsp.tagext.TagFileInfo;
+import jakarta.servlet.jsp.tagext.TagInfo;
+import jakarta.servlet.jsp.tagext.TagLibraryInfo;
+import jakarta.servlet.jsp.tagext.TagVariableInfo;
+import jakarta.servlet.jsp.tagext.VariableInfo;
+import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.jasper.JasperException;
 import org.apache.jasper.JspCompilationContext;
 import org.apache.jasper.Options;
+import org.openide.util.Utilities;
 
 
 /**
@@ -58,7 +65,12 @@ public class GetParseData {
     private Throwable parseException;
     
   
-    /** Creates a new instance of ExtractPageData */
+    /**
+     * Creates a new instance of ExtractPageData
+     *
+     * @param ctxt
+     * @param errorReportingMode
+     */
     public GetParseData(JspCompilationContext ctxt, int errorReportingMode) {
         this.ctxt = ctxt;
         this.errorReportingMode = errorReportingMode;
@@ -242,9 +254,7 @@ public class GetParseData {
 
             // PENDING - we may need to process tag files somehow
             //	tfp.removeProtoTypeFiles(ctxt.getClassFileName());
-        } catch (ThreadDeath t) {
-            throw t;
-        } catch (Throwable t) {
+        } catch (IOException | JasperException | RuntimeException t) {
             parseException = t;
         } finally {
             // convert the nodes
@@ -279,9 +289,13 @@ public class GetParseData {
     }    
     
     private static org.netbeans.modules.web.jsps.parserapi.PageInfo convertPageInfo(PageInfo pageInfo, String xmlView, JspCompilationContext ctxt) throws JspException {
+        IdentityHashMap<Object,Object> convertedObjects = new IdentityHashMap<>();
         PageInfoImpl nbPageInfo = 
             new PageInfoImpl(
-                getTaglibsMapReflect(pageInfo, ctxt),
+                getTaglibsMapReflect(pageInfo, ctxt).entrySet().stream().collect(Collectors.toMap(
+                        e -> e.getKey(),
+                        e -> convert(convertedObjects, e.getValue())
+                )),
                 getJSPPrefixMapperReflect(pageInfo), 
                 getXMLPrefixMapperReflect(pageInfo), 
                 ((CompilerHacks.HackPageInfo)pageInfo).getApproxXmlPrefixMapper(), 
@@ -315,9 +329,160 @@ public class GetParseData {
         nbPageInfo.setXMLView(xmlView);
       
         nbPageInfo.setTagFile(ctxt.isTagFile());
-        nbPageInfo.setTagInfo(ctxt.getTagInfo());
-        
+        nbPageInfo.setTagInfo(convert(convertedObjects, ctxt.getTagInfo()));
+
         return nbPageInfo;
+    }
+
+    private static org.netbeans.modules.web.jsps.parserapi.TagInfo convert(IdentityHashMap<Object,Object> convertedObjects, TagInfo source) {
+        if(source == null) {
+            return null;
+        }
+
+        if(convertedObjects.containsKey(source)) {
+            return (org.netbeans.modules.web.jsps.parserapi.TagInfo) convertedObjects.get(source);
+        }
+
+        org.netbeans.modules.web.jsps.parserapi.TagInfo result = new org.netbeans.modules.web.jsps.parserapi.TagInfo();
+        convertedObjects.put(source, result);
+
+        TagData td = new TagData(new Object[][]{});
+        result.setDisplayName(source.getDisplayName());
+        result.setTagClassName(source.getTagClassName());
+        result.setTagName(source.getTagName());
+        result.setBodyContent(source.getBodyContent());
+        result.setInfoString(source.getInfoString());
+        result.setTagLibrary(convert(convertedObjects, source.getTagLibrary()));
+        result.getAttributes().addAll(stream(source.getAttributes()).map(s -> convert(convertedObjects, s)).toList());
+        result.getVariables().addAll(stream(source.getTagVariableInfos()).map(s -> convert(convertedObjects, s)).toList());
+        result.getRuntimeVariables().addAll(stream(source.getVariableInfo(td)).map(s -> convert(convertedObjects, s)).toList());
+
+        return result;
+    }
+
+    private static org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo convert(IdentityHashMap<Object,Object> convertedObjects, TagLibraryInfo source) {
+        if(source == null) {
+            return null;
+        }
+
+        if(convertedObjects.containsKey(source)) {
+            return (org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo) convertedObjects.get(source);
+        }
+
+        org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo result = new org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo();
+        convertedObjects.put(source, result);
+
+        result.setShortName(source.getShortName());
+        result.setReliableURN(source.getReliableURN());
+        result.setInfoString(source.getInfoString());
+        result.setURI(source.getURI());
+        result.setPrefixString(source.getPrefixString());
+        result.setRequiredVersion(source.getRequiredVersion());
+        result.setTlibversion(getFieldByReflection("tlibversion", source));
+        result.getTags().addAll(stream(source.getTags()).map(s -> convert(convertedObjects, s)).toList());
+        result.getTagFiles().addAll(stream(source.getTagFiles()).map(s -> convert(convertedObjects, s)).toList());
+
+        return result;
+    }
+
+    private static org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo convert(IdentityHashMap<Object,Object> convertedObjects, TagAttributeInfo source) {
+        if(source == null) {
+            return null;
+        }
+
+        if (convertedObjects.containsKey(source)) {
+            return (org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo) convertedObjects.get(source);
+        }
+
+        org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo result = new org.netbeans.modules.web.jsps.parserapi.TagAttributeInfo();
+        convertedObjects.put(source, result);
+
+        result.setName(source.getName());
+        result.setRequired(source.isRequired());
+        result.setTypeName(source.getTypeName());
+        result.setCanBeRequestTime(source.canBeRequestTime());
+        result.setFragment(source.isFragment());
+
+        return result;
+    }
+
+    private static org.netbeans.modules.web.jsps.parserapi.TagVariableInfo convert(IdentityHashMap<Object,Object> convertedObjects, TagVariableInfo source) {
+        if(source == null) {
+            return null;
+        }
+
+        if (convertedObjects.containsKey(source)) {
+            return (org.netbeans.modules.web.jsps.parserapi.TagVariableInfo) convertedObjects.get(source);
+        }
+
+        org.netbeans.modules.web.jsps.parserapi.TagVariableInfo result = new org.netbeans.modules.web.jsps.parserapi.TagVariableInfo();
+        convertedObjects.put(source, result);
+
+        result.setNameGiven(source.getNameGiven());
+        result.setNameFromAttribute(source.getNameFromAttribute());
+        result.setClassName(source.getClassName());
+        result.setDeclare(source.getDeclare());
+        result.setScope(source.getScope());
+
+        return result;
+    }
+
+    private static org.netbeans.modules.web.jsps.parserapi.VariableInfo convert(IdentityHashMap<Object,Object> convertedObjects, VariableInfo source) {
+        if(source == null) {
+            return null;
+        }
+
+        if (convertedObjects.containsKey(source)) {
+            return (org.netbeans.modules.web.jsps.parserapi.VariableInfo) convertedObjects.get(source);
+        }
+
+        org.netbeans.modules.web.jsps.parserapi.VariableInfo result = new org.netbeans.modules.web.jsps.parserapi.VariableInfo();
+        convertedObjects.put(source, result);
+
+        result.setVarName(source.getVarName());
+        result.setClassName(source.getClassName());
+        result.setDeclare(source.getDeclare());
+
+        return result;
+    }
+
+    private static org.netbeans.modules.web.jsps.parserapi.TagFileInfo convert(IdentityHashMap<Object, Object> convertedObjects, TagFileInfo source) {
+        if(source == null) {
+            return null;
+        }
+
+        if (convertedObjects.containsKey(source)) {
+            return (org.netbeans.modules.web.jsps.parserapi.TagFileInfo) convertedObjects.get(source);
+        }
+
+        org.netbeans.modules.web.jsps.parserapi.TagFileInfo result = new org.netbeans.modules.web.jsps.parserapi.TagFileInfo();
+        convertedObjects.put(source, result);
+
+        result.setName(source.getName());
+        result.setPath(source.getPath());
+        result.setTagInfo(convert(convertedObjects, source.getTagInfo()));
+
+        return result;
+    }
+
+    private static <T> Stream<T> stream(T[] t) {
+        if(t == null) {
+            return Stream.empty();
+        } else {
+            return Arrays.stream(t);
+        }
+    }
+
+    private static String getFieldByReflection(String fieldName, TagLibraryInfo info) {
+        try {
+            java.lang.reflect.Field f = TagLibraryInfo.class.getDeclaredField(fieldName);
+            f.setAccessible(true);
+            return (String) f.get(info);
+        }
+        catch (NoSuchFieldException | IllegalAccessException | ClassCastException e) {
+            Logger.getLogger("global").log(Level.INFO, null, e);
+        }
+        return null;
     }
 
     private static org.netbeans.modules.web.jsps.parserapi.PageInfo.BeanData[] createBeanData(BeanRepository rep) {
@@ -343,19 +508,19 @@ public class GetParseData {
         }
     }
     
-    static class PageInfoImpl extends org.netbeans.modules.web.jsps.parserapi.PageInfo {
+    private static class PageInfoImpl extends org.netbeans.modules.web.jsps.parserapi.PageInfo {
         
         public PageInfoImpl(/*BeanRepository beanRepository*/
-                Map taglibsMap,
-                Map jspPrefixMapper,
-                Map xmlPrefixMapper,
-                Map approxXmlPrefixMapper,
-                List imports,
-                List dependants,
-                List includePrelude,
-                List includeCoda,
-                List pluginDcls,
-                Set prefixes
+                Map<String, org.netbeans.modules.web.jsps.parserapi.TagLibraryInfo> taglibsMap,
+                Map<String, String> jspPrefixMapper,
+                Map<String, LinkedList<String>> xmlPrefixMapper,
+                Map<String, String> approxXmlPrefixMapper,
+                List<String> imports,
+                List<String> dependants,
+                List<String> includePrelude,
+                List<String> includeCoda,
+                List<String> pluginDcls,
+                Set<String> prefixes
             ) {
             super(taglibsMap, jspPrefixMapper, xmlPrefixMapper, approxXmlPrefixMapper, imports, dependants, includePrelude,
                 includeCoda, pluginDcls, prefixes);
@@ -385,7 +550,7 @@ public class GetParseData {
         }
     }
     
-    static class BeanDataImpl implements org.netbeans.modules.web.jsps.parserapi.PageInfo.BeanData {
+    private static class BeanDataImpl implements org.netbeans.modules.web.jsps.parserapi.PageInfo.BeanData {
 
         private final String id;
         private final String className;
@@ -445,6 +610,7 @@ public class GetParseData {
         }
     }
     
+    @SuppressWarnings("unchecked")
     private static List<String> getPluginDclsReflect(PageInfo pageInfo) {
         initPageInfoFields();
         try {
@@ -455,7 +621,8 @@ public class GetParseData {
         }
     }
     
-    private static HashSet getPrefixesReflect(PageInfo pageInfo) {
+    @SuppressWarnings("unchecked")
+    private static HashSet<String> getPrefixesReflect(PageInfo pageInfo) {
         initPageInfoFields();
         try {
             return (HashSet)prefixesF.get(pageInfo);
@@ -480,14 +647,15 @@ public class GetParseData {
      * The cache is changed, when a jsp page is parsed and a tag file was changed. 
      */
     
-    private static Map<URL, TagFileInfoCacheRecord> tagFileInfoCache = new HashMap<URL, TagFileInfoCacheRecord>();
-    
-    private static Map getTaglibsMapReflect(PageInfo pageInfo, JspCompilationContext ctxt) {
+    private static final Map<URL, TagFileInfoCacheRecord> tagFileInfoCache = new ConcurrentHashMap<>();
+
+    @SuppressWarnings("unchecked")
+    private static Map<String, TagLibraryInfo> getTaglibsMapReflect(PageInfo pageInfo, JspCompilationContext ctxt) {
         initPageInfoFields();
         try {
             Map taglibs = (Map)taglibsMapF.get(pageInfo);
             Iterator iter = taglibs.values().iterator();
-            TagLibraryInfo libInfo;    
+            TagLibraryInfo libInfo;
             // Caching information about tag files from implicit libraries
             while (iter.hasNext()){
                 libInfo = (TagLibraryInfo)iter.next();
@@ -507,7 +675,7 @@ public class GetParseData {
                             String filePath = (String)tagFileMap.get(name);
                             
                             URL path =  ctxt.getResource(filePath);
-                            File file = new File (new URI( path.toExternalForm() ));
+                            File file = Utilities.toFile(new URI( path.toExternalForm() ));
                             // Is there the file in the cache?
                             if (tagFileInfoCache.containsKey(path)){
                                 TagFileInfoCacheRecord r = (TagFileInfoCacheRecord)tagFileInfoCache.get(path);
@@ -520,17 +688,14 @@ public class GetParseData {
                                 tagFileInfoCache.put(path, new TagFileInfoCacheRecord (file.lastModified(), libInfo.getTagFile(name)));
                             }
                             //Obtain information from the cache
-                            tagFiles[index++] = tagFileInfoCache.get(path).tagFileInfo;
+                            tagFiles[index] = tagFileInfoCache.get(path).tagFileInfo;
+                            index++;
                         }
                         Field tagInfosF = ImplicitTagLibraryInfo.class.getSuperclass().getDeclaredField("tagFiles");
                         tagInfosF.setAccessible(true);    
                         tagInfosF.set(libInfo, tagFiles);
                     }
-                } catch (NoSuchFieldException e) {
-                    LOGGER.log(Level.INFO, null, e);
-                } catch (MalformedURLException e) {
-                    LOGGER.log(Level.INFO, null, e);
-                } catch (URISyntaxException e) {
+                } catch (NoSuchFieldException | MalformedURLException | URISyntaxException e) {
                     LOGGER.log(Level.INFO, null, e);
                 }
             }
@@ -541,20 +706,22 @@ public class GetParseData {
         }
     }
     
-    private static Map getJSPPrefixMapperReflect(PageInfo pageInfo) {
+    @SuppressWarnings("unchecked")
+    private static Map<String, String> getJSPPrefixMapperReflect(PageInfo pageInfo) {
         initPageInfoFields();
         try {
-            return (Map)jspPrefixMapperF.get(pageInfo);
+            return (Map<String,String>) jspPrefixMapperF.get(pageInfo);
         } catch (IllegalAccessException e) {
             LOGGER.log(Level.INFO, null, e);
             throw new RuntimeException();
         }
     }
     
-    private static Map getXMLPrefixMapperReflect(PageInfo pageInfo) {
+    @SuppressWarnings("unchecked")
+    private static Map<String, LinkedList<String>> getXMLPrefixMapperReflect(PageInfo pageInfo) {
         initPageInfoFields();
         try {
-            return (Map)xmlPrefixMapperF.get(pageInfo);
+            return (Map<String, LinkedList<String>>) xmlPrefixMapperF.get(pageInfo);
         } catch (IllegalAccessException e) {
             LOGGER.log(Level.INFO, null, e);
             throw new RuntimeException();

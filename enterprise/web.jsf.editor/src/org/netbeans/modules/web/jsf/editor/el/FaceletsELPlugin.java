@@ -82,7 +82,7 @@ public class FaceletsELPlugin extends ELPlugin {
         }
 
         if(implObjects == null) {
-            List<ImplicitObject> implObjectsBuilder = new ArrayList<>(9);
+            List<ImplicitObject> implObjectsBuilder = new ArrayList<>(20);
 
             implObjectsBuilder.addAll(getScopeObjects());
 
@@ -105,14 +105,16 @@ public class FaceletsELPlugin extends ELPlugin {
             implObjects = Collections.unmodifiableCollection(implObjectsBuilder);
 
 
-            List<ImplicitObject> implObjectsJakartaBuilder = new ArrayList<>(9);
+            List<ImplicitObject> implObjectsJakartaBuilder = new ArrayList<>(22);
 
             implObjectsJakartaBuilder.addAll(getScopeObjects());
 
             implObjectsJakartaBuilder.add(new JsfImplicitObject("facesContext", "jakarta.faces.context.FacesContext", OBJECT_TYPE)); //NOI18N
+            implObjectsJakartaBuilder.add(new JsfImplicitObject("externalContext", "jakarta.faces.context.ExternalContext", OBJECT_TYPE));
             implObjectsJakartaBuilder.add(new JsfImplicitObject("application",  "jakarta.servlet.ServletContext", OBJECT_TYPE)); //NOI18N
             implObjectsJakartaBuilder.add(new JsfImplicitObject("component", "jakarta.faces.component.UIComponent", OBJECT_TYPE)); //NOI18N
             implObjectsJakartaBuilder.add(new JsfImplicitObject("flash", "jakarta.faces.context.Flash", OBJECT_TYPE)); //NOI18N
+            implObjectsJakartaBuilder.add(new JsfImplicitObject("flow", "jakarta.faces.flow.Flow", OBJECT_TYPE));
             implObjectsJakartaBuilder.add(new JsfImplicitObject("resource", "jakarta.faces.application.ResourceHandler", OBJECT_TYPE)); //NOI18N
             implObjectsJakartaBuilder.add(new JsfImplicitObject("session", "jakarta.servlet.http.HttpSession", OBJECT_TYPE)); //NOI18N
             implObjectsJakartaBuilder.add(new JsfImplicitObject("view", "jakarta.faces.component.UIViewRoot", OBJECT_TYPE)); //NOI18N

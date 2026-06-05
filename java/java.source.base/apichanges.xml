@@ -19,12 +19,25 @@
     under the License.
 
 -->
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.1//EN" "../../nbbuild/javadoctools/apichanges-1.1.dtd">
 <apichanges>
 <apidefs>
     <apidef name="javasource_base">Java Source API</apidef>
 </apidefs>
 <changes>
+    <change id="parseTypeScope">
+        <api name="javasource_base" />
+        <summary>Adding TreeUtilities.parseType(String, Scope) method overload</summary>
+        <version major="1" minor="2.84"/>
+        <date day="17" month="3" year="2026"/>
+        <author login="jlahoda"/>
+        <compatibility addition="yes" binary="compatible" source="compatible"/>
+        <description>
+                Adding TreeUtilities.parseType(String, Scope) method overload
+                to support more exact type parsing.
+        </description>
+        <class name="TreeUtilities" package="org.netbeans.api.java.source"/>
+    </change>
     <change id="ModuleImports">
         <api name="javasource_base" />
         <summary>API Support for module imports</summary>
@@ -491,7 +504,6 @@
 <htmlcontents>
 <head>
 <title>Change History for the Base Java Source API</title>
-<link rel="stylesheet" href="prose.css" type="text/css"/>
 </head>
 <body>
 <p class="overviewlink">

@@ -161,8 +161,7 @@ public class TaskCache {
             boolean existed = interestedInReturnValue && output.exists();
             output.getParentFile().mkdirs();
             try {
-                final PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), StandardCharsets.UTF_8));
-                try {
+                try (PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(output), StandardCharsets.UTF_8))) {
                     for (T err : errors) {
                         pw.print(convertor.getKind(err).name());
                         pw.print(':'); //NOI18N
@@ -185,8 +184,6 @@ public class TaskCache {
                             pw.println(description);
                         }
                     }
-                } finally {
-                    pw.close();
                 }
             } catch (FileNotFoundException  fnf) {
                 if (!output.getParentFile().canWrite()) {
@@ -288,50 +285,58 @@ public class TaskCache {
 
     private <T> List<T> loadErrors(File input, ReverseConvertor<T> convertor) throws IOException {
         List<T> result = new LinkedList<>();
-        BufferedReader pw = new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8));
-        String line;
+        try (BufferedReader pw = new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_8))) {
+            String line;
 
-        while ((line = pw.readLine()) != null) {
-            String[] parts = line.split(":"); //NOI18N
-            if (parts.length != 3) {
-                continue;
-            }
+            while ((line = pw.readLine()) != null) {
+                String[] parts = line.split(":"); //NOI18N
+                if (parts.length != 3) {
+                    continue;
+                }
 
-            ErrorKind kind = null;
-            try {
-                kind = ErrorKind.valueOf(parts[0]);
-            } catch (IllegalArgumentException iae) {
-                LOG.log(Level.FINE, "Invalid ErrorKind: {0}", line);    //NOI18N
-            }
-            
-            if (kind == null) {
-                continue;
-            }
+                ErrorKind kind = null;
+                try {
+                    kind = ErrorKind.valueOf(parts[0]);
+                } catch (IllegalArgumentException iae) {
+                    LOG.log(Level.FINE, "Invalid ErrorKind: {0}", line);    //NOI18N
+                }
 
-            ErrorsCache.Range range;
-            Matcher matcher = PATTERN.matcher(parts[1]);
-            if (matcher.matches()) {
-                ErrorsCache.Position start = new ErrorsCache.Position(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
-                ErrorsCache.Position end = matcher.group(3) != null && matcher.group(4) != null ? new ErrorsCache.Position(Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(4))) : null;
-                range = new ErrorsCache.Range(start, end);
-            } else {
-                int lineNumber = Integer.parseInt(parts[1]);
-                range = new ErrorsCache.Range(new ErrorsCache.Position(lineNumber, 1), null);
-            }
+                if (kind == null) {
+                    continue;
+                }
 
-            String message = parts[2];
+                ErrorsCache.Range range;
+                Matcher matcher = PATTERN.matcher(parts[1]);
+                try {
+                    if ("-1,-1".equals(parts[1])) { //NOI18N
+                        range = new ErrorsCache.Range(new ErrorsCache.Position(-1, -1), null);
+                    } else if (matcher.matches()) {
+                        ErrorsCache.Position start = new ErrorsCache.Position(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)));
+                        ErrorsCache.Position end = matcher.group(3) != null && matcher.group(4) != null
+                                ? new ErrorsCache.Position(Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(4)))
+                                : null;
+                        range = new ErrorsCache.Range(start, end);
+                    } else {
+                        int lineNumber = Integer.parseInt(parts[1]);
+                        range = new ErrorsCache.Range(new ErrorsCache.Position(lineNumber, 1), null);
+                    }
+                } catch (NumberFormatException ex) {
+                    LOG.log(Level.FINE, "Can't parse error line: " + line, ex);    //NOI18N
+                    continue;
+                }
 
-            message = message.replace("\\d", ":") //NOI18N
-                             .replace("\\n", "\n") //NOI18N
-                             .replace("\\\\", "\\"); //NOI18N
+                String message = parts[2];
 
-            T item = convertor.get(kind, range, message);
-            if (null != item) {
-                result.add(item);
+                message = message.replace("\\d", ":") //NOI18N
+                                 .replace("\\n", "\n") //NOI18N
+                                 .replace("\\\\", "\\"); //NOI18N
+
+                T item = convertor.get(kind, range, message);
+                if (item != null) {
+                    result.add(item);
+                }
             }
         }
-
-        pw.close();
         
         return result;
     }
@@ -521,13 +526,8 @@ public class TaskCache {
         final Properties result = new Properties();
         final  File relocationFile = new File (cacheRoot, RELOCATION_FILE);
         if (relocationFile.canRead()) {
-            try {
-                final FileInputStream in = new FileInputStream(relocationFile);
-                try {
-                    result.load(in);
-               } finally {
-                    in.close();
-               }
+            try (FileInputStream in = new FileInputStream(relocationFile)) {
+                result.load(in);
             } catch (IOException ioe) {
                 Exceptions.printStackTrace(ioe);
             }
@@ -539,13 +539,8 @@ public class TaskCache {
             @NonNull final File cacheRoot,
             @NonNull final Properties relocation) {
         final File relocationFile = new File (cacheRoot, RELOCATION_FILE);
-        try {
-            final OutputStream out = new FileOutputStream(relocationFile);
-            try {
-                relocation.store(out, null);
-            } finally {
-                out.close();
-            }
+        try (OutputStream out = new FileOutputStream(relocationFile)) {
+            relocation.store(out, null);
         } catch (IOException ioe) {
             Exceptions.printStackTrace(ioe);
         }

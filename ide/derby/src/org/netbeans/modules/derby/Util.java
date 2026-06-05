@@ -113,9 +113,7 @@ public class Util {
     }
 
     public static void extractZip(File source, FileObject target) throws IOException {
-        FileInputStream is = new FileInputStream(source);
-        try {
-            ZipInputStream zis = new ZipInputStream(is);
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(source))) {
             ZipEntry ze;
 
             while ((ze = zis.getNextEntry()) != null) {
@@ -131,18 +129,13 @@ public class Util {
                 FileObject fd = FileUtil.createData(target, name);
                 FileLock lock = fd.lock();
                 try {
-                    OutputStream os = fd.getOutputStream(lock);
-                    try {
-                        FileUtil.copy(zis, os);
-                    } finally {
-                        os.close();
+                    try (OutputStream os = fd.getOutputStream(lock)) {
+                        zis.transferTo(os);
                     }
                 } finally {
                     lock.releaseLock();
                 }
             }
-        } finally {
-            is.close();
         }
     }
 

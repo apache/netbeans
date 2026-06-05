@@ -162,6 +162,40 @@ public class ClassPathProviderImplTest extends NbTestCase {
                                  sourceCP.getRoots());
     }
 
+    public void testWrongPackageClause() throws Exception {
+        File workDir = getWorkDir();
+
+        FileUtil.createFolder(new File(workDir, "src/share/classes"));
+        FileObject testRoot = createData("test/jdk/TEST.ROOT", "");
+        FileObject testFile = createData("test/jdk/testpkg/nested/Test.java",
+                                         """
+                                         package other.nested;
+                                         /** @test */
+                                         public class Test {}
+                                         """);
+        ClassPath sourceCP = new ClassPathProviderImpl().findClassPath(testFile, ClassPath.SOURCE);
+
+        Assert.assertArrayEquals(new FileObject[] {testFile.getParent()},
+                                 sourceCP.getRoots());
+    }
+
+    public void testPackageClausePointsOutOfRoot() throws Exception {
+        File workDir = getWorkDir();
+
+        FileUtil.createFolder(new File(workDir, "src/share/classes"));
+        FileObject testRoot = createData("test/jdk/TEST.ROOT", "");
+        FileObject testFile = createData("test/jdk/testpkg/nested/Test.java",
+                                         """
+                                         package test.jdk.testpkg.nested;
+                                         /** @test */
+                                         public class Test {}
+                                         """);
+        ClassPath sourceCP = new ClassPathProviderImpl().findClassPath(testFile, ClassPath.SOURCE);
+
+        Assert.assertArrayEquals(new FileObject[] {testFile.getParent()},
+                                 sourceCP.getRoots());
+    }
+
     private FileObject createData(String relPath, String content) throws IOException {
         File workDir = getWorkDir();
         FileObject file = FileUtil.createData(new File(workDir, relPath));

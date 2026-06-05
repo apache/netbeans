@@ -45,10 +45,11 @@ public class TestCategory extends javax.swing.JPanel {
     /**
      * Creates new form TestCategory
      */
-    public TestCategory(RunBuild runBuild, String jtregLocation) {
+    public TestCategory(RunBuild runBuild, String jtregLocation, boolean testUseImage) {
         initComponents();
         this.buildBeforeTest.getModel().setSelectedItem(runBuild);
         this.jtregLocation.setText(jtregLocation);
+        this.useFullImage.setSelected(testUseImage);
     }
 
     /**
@@ -63,6 +64,7 @@ public class TestCategory extends javax.swing.JPanel {
         buildBeforeTest = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jtregLocation = new javax.swing.JTextField();
+        useFullImage = new javax.swing.JCheckBox();
 
         buildBeforeTestLabel.setLabelFor(buildBeforeTest);
         org.openide.awt.Mnemonics.setLocalizedText(buildBeforeTestLabel, org.openide.util.NbBundle.getMessage(TestCategory.class, "TestCategory.buildBeforeTestLabel.text")); // NOI18N
@@ -75,6 +77,8 @@ public class TestCategory extends javax.swing.JPanel {
 
         jtregLocation.setText(org.openide.util.NbBundle.getMessage(TestCategory.class, "TestCategory.jtregLocation.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(useFullImage, org.openide.util.NbBundle.getMessage(TestCategory.class, "TestCategory.useFullImage.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -82,12 +86,17 @@ public class TestCategory extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buildBeforeTestLabel)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(buildBeforeTest, 0, 173, Short.MAX_VALUE)
-                    .addComponent(jtregLocation))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(buildBeforeTestLabel)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(buildBeforeTest, 0, 173, Short.MAX_VALUE)
+                            .addComponent(jtregLocation)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(useFullImage)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -101,7 +110,9 @@ public class TestCategory extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jtregLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(227, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(useFullImage)
+                .addContainerGap(187, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -111,6 +122,7 @@ public class TestCategory extends javax.swing.JPanel {
     private javax.swing.JLabel buildBeforeTestLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField jtregLocation;
+    private javax.swing.JCheckBox useFullImage;
     // End of variables declaration//GEN-END:variables
 
     private ListCellRenderer<Object> runBuildRenderer() {
@@ -153,10 +165,11 @@ public class TestCategory extends javax.swing.JPanel {
             @Override
             public JComponent createComponent(Category category, Lookup context) {
                 Settings settings = context.lookup(Settings.class);
-                TestCategory panel = new TestCategory(settings.getRunBuildSetting(), settings.getJTregLocation());
+                TestCategory panel = new TestCategory(settings.getRunBuildSetting(), settings.getJTregLocation(), settings.isTestUseImage());
                 category.setOkButtonListener(evt -> {
                     settings.setRunBuildSetting((RunBuild) panel.buildBeforeTest.getSelectedItem());
                     settings.setJTregLocation(panel.jtregLocation.getText());
+                    settings.setTestUseImage(panel.useFullImage.isSelected());
                 });
                 category.setStoreListener(evt -> settings.flush());
                 return panel;

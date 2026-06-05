@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.lsp.server.protocol;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import java.net.URI;
@@ -135,6 +136,23 @@ public class ClientConfigurationManagerTest extends NbTestCase {
 
         mockClient.addConfig(expectedSection, new JsonPrimitive("Old Value"));
         JsonObject newConfigTree = mockClient.updateSectionAndGetDeepCopy(expectedSection, expectedValue);
+        mockClient.getClientConfigurationManager().handleConfigurationChange(newConfigTree);
+    }
+
+    @Test
+    public void testConfigListenerWithValueReset() {
+        String expectedSection = "project.jdkhome";
+        JsonElement expectedValue = JsonNull.INSTANCE;
+
+        BiConsumer<String, JsonElement> listener = (actualSection, actualValue) -> {
+            assertEquals("Section mismatch in listener", expectedSection, actualSection);
+            assertEquals("Value != JsonNull in listener", expectedValue, actualValue);
+        };
+
+        mockClient.getClientConfigurationManager().registerConfigChangeListener(expectedSection, listener);
+
+        mockClient.addConfig(expectedSection, new JsonPrimitive("Old Value"));
+        JsonObject newConfigTree = mockClient.updateSectionAndGetDeepCopy(expectedSection, null);
         mockClient.getClientConfigurationManager().handleConfigurationChange(newConfigTree);
     }
 

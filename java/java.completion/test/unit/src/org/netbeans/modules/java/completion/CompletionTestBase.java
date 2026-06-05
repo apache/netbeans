@@ -246,7 +246,7 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         }
 
         @Override
-        public CI createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef) {
+        public CI createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
             String simpleName = elem.getKind() == ElementKind.CONSTRUCTOR ? elem.getEnclosingElement().getSimpleName().toString() : elem.getSimpleName().toString();
             StringBuilder sb = new StringBuilder();
             StringBuilder sortParams = new StringBuilder();
@@ -297,7 +297,7 @@ public class CompletionTestBase extends CompletionTestBaseBase {
         }
 
         @Override
-        public CI createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name) {
+        public CI createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name, boolean insertTextParams) {
             if (elem.getKind() == ElementKind.CONSTRUCTOR) {
                 StringBuilder sb = new StringBuilder();
                 StringBuilder sortParams = new StringBuilder();

@@ -16,28 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.netbeans.api.debugger.jpda.testapps;
 
-body {
-    font-family: sans-serif;
-}
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-h1 {
-    color: #1b6ac6;
-    margin: 0;
-}
+/**
+ * Sample lambda expression breakpoints application.
+ * @author aksinsin
+ */
+public class ExpressionLambdaBreakpointMultiLineApp {
 
-h2 {
-    color: #a1c535;
-    margin-top: 1ex;
-    margin-bottom: 0;
-}
+    public static void main(String... args) {
 
-h3 {
-    color: #a5073e;
-    margin-top: 0.5ex;
-    margin-bottom: 0.5ex;
-}
-
-sup.tmtext {
-    font-size: 50%;
+        List<String> nonEmptyListCollection = Arrays.stream(new String[]{"a", "", "b", "", "c"})
+                .map(l1 -> l1).map(l2 -> l2).map(l3 -> l3)   // LBREAKPOINT
+                .collect(Collectors.toList());
+        System.out.println(nonEmptyListCollection); // LBREAKPOINT
+    }
 }

@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import org.junit.Assert;
 
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -153,7 +154,13 @@ public class ActionProviderImplTest extends NbTestCase {
 
         FileOwnerQuery.markExternalOwner(testFile.getParent(), FileOwnerQuery.getOwner(createDir("langtools/src/java.compiler")), FileOwnerQuery.EXTERNAL_ALGORITHM_TRANSIENT);
 
-        File target = BuildUtils.findTargetJavaHome(testFile);
+        File target;
+
+        target = BuildUtils.findTargetJavaHome(testFile, false);
+
+        assertEquals("/build/conf/images/j2sdk-image", target.getAbsolutePath().substring(getWorkDir().getAbsolutePath().length()));
+
+        target = BuildUtils.findTargetJavaHome(testFile, true);
 
         assertEquals("/build/conf/images/j2sdk-image", target.getAbsolutePath().substring(getWorkDir().getAbsolutePath().length()));
     }
@@ -170,9 +177,53 @@ public class ActionProviderImplTest extends NbTestCase {
 
         FileOwnerQuery.markExternalOwner(testFile.getParent(), FileOwnerQuery.getOwner(createDir("langtools/src/java.compiler")), FileOwnerQuery.EXTERNAL_ALGORITHM_TRANSIENT);
 
-        File target = BuildUtils.findTargetJavaHome(testFile);
+        File target;
+
+        target = BuildUtils.findTargetJavaHome(testFile, false);
 
         assertEquals("/build/conf/jdk", target.getAbsolutePath().substring(getWorkDir().getAbsolutePath().length()));
+
+        target = BuildUtils.findTargetJavaHome(testFile, true);
+
+        assertEquals("/build/conf/images/jdk", target.getAbsolutePath().substring(getWorkDir().getAbsolutePath().length()));
+    }
+
+    public void testBuildTargets() throws Exception {
+        createFile("modules.xml");
+        createDir("jdk/src/java.base/share/classes");
+        createDir("build/conf/jdk");
+        createDir("build/conf/images/jdk");
+        createDir("langtools/src/java.compiler/share/classes");
+        FileObject jdkTestFile = createFile("jdk/test/Test.java");
+        FileObject langtoolsTestFile = createFile("langtools/test/Test.java");
+
+        createDir("").setAttribute(BuildUtils.NB_JDK_PROJECT_BUILD, FileUtil.toFile(createDir("build/conf")));
+
+        FileOwnerQuery.markExternalOwner(langtoolsTestFile.getParent(), FileOwnerQuery.getOwner(createDir("langtools/src/java.compiler")), FileOwnerQuery.EXTERNAL_ALGORITHM_TRANSIENT);
+        FileOwnerQuery.markExternalOwner(jdkTestFile.getParent(), FileOwnerQuery.getOwner(createDir("jdk/src/java.base")), FileOwnerQuery.EXTERNAL_ALGORITHM_TRANSIENT);
+
+        //for langtools tests, always use a quick build when using ant build:
+        Assert.assertArrayEquals(new String[] {ActionProviderImpl.COMMAND_BUILD_FAST, ActionProviderImpl.COMMAND_BUILD},
+                                 ActionProviderImpl.beforeTestProjectBuildTargets(langtoolsTestFile, true, false));
+        Assert.assertArrayEquals(new String[] {ActionProviderImpl.COMMAND_BUILD_FAST, ActionProviderImpl.COMMAND_BUILD},
+                                 ActionProviderImpl.beforeTestProjectBuildTargets(langtoolsTestFile, true, true));
+
+        Assert.assertArrayEquals(new String[] {ActionProviderImpl.COMMAND_BUILD_GENERIC_FAST, ActionProviderImpl.COMMAND_BUILD},
+                                 ActionProviderImpl.beforeTestProjectBuildTargets(langtoolsTestFile, false, false));
+        Assert.assertArrayEquals(new String[] {ActionProviderImpl.COMMAND_BUILD},
+                                 ActionProviderImpl.beforeTestProjectBuildTargets(langtoolsTestFile, false, true));
+
+        //for JDK tests, there's no quick ant build:
+        Assert.assertArrayEquals(new String[] {ActionProviderImpl.COMMAND_BUILD_GENERIC_FAST, ActionProviderImpl.COMMAND_BUILD},
+                                 ActionProviderImpl.beforeTestProjectBuildTargets(jdkTestFile, true, false));
+        Assert.assertArrayEquals(new String[] {ActionProviderImpl.COMMAND_BUILD},
+                                 ActionProviderImpl.beforeTestProjectBuildTargets(jdkTestFile, true, true));
+
+        Assert.assertArrayEquals(new String[] {ActionProviderImpl.COMMAND_BUILD_GENERIC_FAST, ActionProviderImpl.COMMAND_BUILD},
+                                 ActionProviderImpl.beforeTestProjectBuildTargets(jdkTestFile, false, false));
+        Assert.assertArrayEquals(new String[] {ActionProviderImpl.COMMAND_BUILD},
+                                 ActionProviderImpl.beforeTestProjectBuildTargets(jdkTestFile, false, true));
+
     }
 
     public void testStackTracePattern() {

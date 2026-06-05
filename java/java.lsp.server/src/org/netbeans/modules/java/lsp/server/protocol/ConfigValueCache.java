@@ -88,7 +88,7 @@ public class ConfigValueCache {
                     consumer.accept(section, tree);
                 }
             } catch (RuntimeException e) {
-                LOG.log(Level.SEVERE, "Exception occurred while calling config change consumer handler, config: {0} and excpetion: {1}", new Object[]{section, e.getMessage()});
+                LOG.log(Level.SEVERE, "Exception occurred while calling config change consumer handler for config: {0}, with error: {1}", new Object[]{section, e.getMessage()});
             }
             Map<String, JsonElement> scopedValuesMap = rootData.getAllScopedValues();
             if (scopedValuesMap != null && !scopedValuesMap.isEmpty()) {

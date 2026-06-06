@@ -133,7 +133,7 @@ final class ELOccurrencesFinder extends OccurrencesFinder<ELParserResult> {
         try {
             jsource.runUserActionTask((CompilationController info) -> {
                 info.toPhase(JavaSource.Phase.RESOLVED);
-                CompilationContext ccontext = CompilationContext.create(file, info);
+                CompilationContext ccontext = CompilationContext.create(file, info, parserResult.getContext());
                 occurrences.putAll(findMatchingTypes(ccontext, target, matching));
                 if (this.occurrences.isEmpty()) {
                     // perhaps the caret is on a resource bundle key node

@@ -27,19 +27,24 @@ import org.openide.filesystems.FileObject;
  * @author marekfukala
  */
 public class CompilationContext {
-    
+
     private final FileObject file;
     private final CompilationInfo info;
-    private final ResolverContext context = new ResolverContext();
+    private final ResolverContext context;
     private CompilationCache cache;
 
-    private CompilationContext(FileObject file, CompilationInfo info) {
+    private CompilationContext(FileObject file, CompilationInfo info, ResolverContext context) {
         this.file = file;
         this.info = info;
+        this.context = context != null ? context : new ResolverContext();
     }
-    
+
     public static CompilationContext create(FileObject file, CompilationInfo info) {
-        return new CompilationContext(file, info);
+        return create(file, info, new ResolverContext());
+    }
+
+    public static CompilationContext create(FileObject file, CompilationInfo info, ResolverContext context) {
+        return new CompilationContext(file, info, context);
     }
 
     public FileObject file() {
@@ -53,12 +58,12 @@ public class CompilationContext {
     public ResolverContext context() {
         return context;
     }
-    
+
     public synchronized CompilationCache cache() {
         if(cache == null) {
             cache = new CompilationCache();
         }
         return cache;
     }
-    
+
 }

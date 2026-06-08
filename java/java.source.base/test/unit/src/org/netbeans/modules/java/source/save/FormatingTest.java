@@ -3429,33 +3429,33 @@ public class FormatingTest extends NbTestCase {
         EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
-        String content = "package test;\n"
-                + "record Point(int x, int y){}\n"
-                + "public class Test {\n"
-                + "    private void test(Object o) {\n"
-                + "        if (o instanceof Point\n"
-                + "                (int     x, int    \n"
-                + "                y) ) {\n"
-                + "            System.out.println(\"Hello\");\n"
-                + "        }\n"
-                + "    }\n"
-                + "}";
+        String content = """
+                         package test;
+                         record Point(int x, int y){}
+                         public class Test {
+                             private void test(Object o) {
+                                 if (o instanceof Point
+                                         (int     x, int    
+                                         y) ) {
+                                     System.out.println("Hello");
+                                 }
+                             }
+                         }""";
 
-        String golden = "package test;\n"
-                + "\n"
-                + "record Point(int x, int y) {\n"
-                + "\n"
-                + "}\n"
-                + "\n"
-                + "public class Test {\n"
-                + "\n"
-                + "    private void test(Object o) {\n"
-                + "        if (o instanceof Point(int x, int y)) {\n"
-                + "            System.out.println(\"Hello\");\n"
-                + "        }\n"
-                + "    }\n"
-                + "}"
-                + "\n";
+        String golden = """
+                        package test;
+                        
+                        record Point(int x, int y) {}
+                        
+                        public class Test {
+                        
+                            private void test(Object o) {
+                                if (o instanceof Point(int x, int y)) {
+                                    System.out.println("Hello");
+                                }
+                            }
+                        }
+                        """;
         reformat(doc, content, golden);
     }
 
@@ -3473,54 +3473,50 @@ public class FormatingTest extends NbTestCase {
         EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
-        String content = "package test;\n"
-                + "\n"
-                + "record Rect(ColoredPoint ul,ColoredPoint lr) {}\n"
-                + "enum Color {RED,GREEN,BLUE}\n"
-                + "record ColoredPoint(Point p, Color c) {}\n"
-                + "record Point(int x, int y) {}\n"
-                + "\n"
-                + "public class Test {\n"
-                + "\n"
-                + "    private void test(Object o) {\n"
-                + "        if (o instanceof\n"
-                + "                Rect\n"
-                + "                (       ColoredPoint      ul,   ColoredPoint\n"
-                + "                        lr)  ) {\n"
-                + "            Point p = ul.p();\n"
-                + "            System.out.println(\"Hello\");\n"
-                + "        }\n"
-                + "    }\n"
-                + "}";
+        String content = """
+                        package test;
+                        
+                        record Rect(ColoredPoint ul,ColoredPoint lr) {}
+                        enum Color {RED,GREEN,BLUE}
+                        record ColoredPoint(Point p, Color c) {}
+                        record Point(int x, int y) {}
+                        
+                        public class Test {
+                        
+                            private void test(Object o) {
+                                if (o instanceof
+                                        Rect
+                                        (       ColoredPoint      ul,   ColoredPoint
+                                                lr)  ) {
+                                    Point p = ul.p();
+                                    System.out.println("Hello");
+                                }
+                            }
+                        }""";
 
-        String golden = "package test;\n"
-                + "\n"
-                + "record Rect(ColoredPoint ul, ColoredPoint lr) {\n"
-                + "\n"
-                + "}\n"
-                + "\n"
-                + "enum Color {\n"
-                + "    RED, GREEN, BLUE\n"
-                + "}\n"
-                + "\n"
-                + "record ColoredPoint(Point p, Color c) {\n"
-                + "\n"
-                + "}\n"
-                + "\n"
-                + "record Point(int x, int y) {\n"
-                + "\n"
-                + "}\n"
-                + "\n"
-                + "public class Test {\n"
-                + "\n"
-                + "    private void test(Object o) {\n"
-                + "        if (o instanceof Rect(ColoredPoint ul, ColoredPoint lr)) {\n"
-                + "            Point p = ul.p();\n"
-                + "            System.out.println(\"Hello\");\n"
-                + "        }\n"
-                + "    }\n"
-                + "}"
-                + "\n";
+        String golden = """
+                        package test;
+                        
+                        record Rect(ColoredPoint ul, ColoredPoint lr) {}               
+                        
+                        enum Color {
+                            RED, GREEN, BLUE
+                        }
+                        
+                        record ColoredPoint(Point p, Color c) {}
+                        
+                        record Point(int x, int y) {}
+                        
+                        public class Test {
+                        
+                            private void test(Object o) {
+                                if (o instanceof Rect(ColoredPoint ul, ColoredPoint lr)) {
+                                    Point p = ul.p();
+                                    System.out.println("Hello");
+                                }
+                            }
+                        }
+                        """;
         reformat(doc, content, golden);
     }
 
@@ -3538,58 +3534,54 @@ public class FormatingTest extends NbTestCase {
         EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
-        String content = "package test;\n"
-                + "\n"
-                + "record Rect(ColoredPoint ul,ColoredPoint lr) {}\n"
-                + "enum Color {RED,GREEN,BLUE}\n"
-                + "record ColoredPoint(Point p, Color c) {}\n"
-                + "record Point(int x, int y) {}\n"
-                + "\n"
-                + "public class Test {\n"
-                + "\n"
-                + "    private void test(Object o) {\n"
-                + "        if (o instanceof\n"
-                + "                Rect\n"
-                + "                (       ColoredPoint(Point   \n"
-                + "                        p, Color \n"
-                + "                                c\n"
-                + "                        )      ,   ColoredPoint\n"
-                + "                        lr)    \n"
-                + "                ) {\n"
-                + "            int x = p.x();\n"
-                + "            System.out.println(\"Hello\");\n"
-                + "        }\n"
-                + "    }\n"
-                + "}";
+        String content = """
+                        package test;
+                        
+                        record Rect(ColoredPoint ul,ColoredPoint lr) {}
+                        enum Color {RED,GREEN,BLUE}
+                        record ColoredPoint(Point p, Color c) {}
+                        record Point(int x, int y) {}
+                        
+                        public class Test {
+                        
+                            private void test(Object o) {
+                                if (o instanceof
+                                        Rect
+                                        (       ColoredPoint(Point   
+                                                p, Color 
+                                                        c
+                                                )      ,   ColoredPoint
+                                                lr)    
+                                        ) {
+                                    int x = p.x();
+                                    System.out.println("Hello");
+                                }
+                            }
+                        }""";
 
-        String golden = "package test;\n"
-                + "\n"
-                + "record Rect(ColoredPoint ul, ColoredPoint lr) {\n"
-                + "\n"
-                + "}\n"
-                + "\n"
-                + "enum Color {\n"
-                + "    RED, GREEN, BLUE\n"
-                + "}\n"
-                + "\n"
-                + "record ColoredPoint(Point p, Color c) {\n"
-                + "\n"
-                + "}\n"
-                + "\n"
-                + "record Point(int x, int y) {\n"
-                + "\n"
-                + "}\n"
-                + "\n"
-                + "public class Test {\n"
-                + "\n"
-                + "    private void test(Object o) {\n"
-                + "        if (o instanceof Rect(ColoredPoint(Point p, Color c), ColoredPoint lr)) {\n"
-                + "            int x = p.x();\n"
-                + "            System.out.println(\"Hello\");\n"
-                + "        }\n"
-                + "    }\n"
-                + "}"
-                + "\n";
+        String golden = """
+                        package test;
+                        
+                        record Rect(ColoredPoint ul, ColoredPoint lr) {}
+                        
+                        enum Color {
+                            RED, GREEN, BLUE
+                        }
+                        
+                        record ColoredPoint(Point p, Color c) {}
+                        
+                        record Point(int x, int y) {}
+                        
+                        public class Test {
+                        
+                            private void test(Object o) {
+                                if (o instanceof Rect(ColoredPoint(Point p, Color c), ColoredPoint lr)) {
+                                    int x = p.x();
+                                    System.out.println("Hello");
+                                }
+                            }
+                        }
+                        """;
         reformat(doc, content, golden);
     }
 
@@ -3607,26 +3599,24 @@ public class FormatingTest extends NbTestCase {
         EditorCookie ec = (EditorCookie) testSourceDO.getLookup().lookup(EditorCookie.class);
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
-        String content =
-                  "package test;\n"
-                + "\n"
-                + "/**\n"
-                + " * @author duke\n"
-                + " */\n"
-                + "@Deprecated public record DeprecatedRecord(int a) {}"
-                + "\n";
+        String content = """
+                    package test;
+ 
+                    /**
+                     * @author duke
+                     */
+                    @Deprecated public record DeprecatedRecord(int a) {}
+                    """;
 
-        String golden =
-                  "package test;\n"
-                + "\n"
-                + "/**\n"
-                + " * @author duke\n"
-                + " */\n"
-                + "@Deprecated\n"
-                + "public record DeprecatedRecord(int a) {\n"
-                + "\n"
-                + "}"
-                + "\n";
+        String golden = """
+                    package test;
+                    
+                    /**
+                     * @author duke
+                     */
+                    @Deprecated
+                    public record DeprecatedRecord(int a) {}
+                    """;
         reformat(doc, content, golden);
     }
 
@@ -6210,6 +6200,49 @@ public class FormatingTest extends NbTestCase {
         reformat(doc, content, golden);
     }
 
+    public void testLambdaNesting() throws Exception {
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie)testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content =
+                """
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    public static void main(String[] args) {
+                        List<String> lines = Stream.of(args)
+                                .flatMap(s -> s.lines()
+                                .filter(l -> !l.isBlank())
+                                ).toList();
+                    }
+                }
+                """;
+
+        String golden =
+                """
+                package hierbas.del.litoral;
+
+                public class Test {
+
+                    public static void main(String[] args) {
+                        List<String> lines = Stream.of(args)
+                                .flatMap(s -> s.lines()
+                                        .filter(l -> !l.isBlank())
+                                ).toList();
+                    }
+                }
+                """;
+        reformat(doc, content, golden);
+        reformat(doc, golden, golden);
+
+
+    }
+
     public void testLambdaParameterWithInferredType() throws Exception {
         testFile = new File(getWorkDir(), "Test.java");
         TestUtilities.copyStringToFile(testFile, "");
@@ -6754,16 +6787,22 @@ public class FormatingTest extends NbTestCase {
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
         String content
-                = "package hierbas.del.litoral;\n\n"
-                + "public class Test {\n\n"
-                + "public record g3(){}}";
-
+                = """
+                  package hierbas.del.litoral;
+                  
+                  public class Test {
+                  
+                  public record g3(){}}""";
+                  
         String golden
-                = "package hierbas.del.litoral;\n\n"
-                + "public class Test {\n\n"
-                + "    public record g3() {\n"
-                + "    }\n"
-                + "}\n";
+                = """
+                  package hierbas.del.litoral;
+                  
+                  public class Test {
+                  
+                      public record g3() {}
+                  }
+                  """;
         reformat(doc, content, golden);
     }
 
@@ -6784,15 +6823,22 @@ public class FormatingTest extends NbTestCase {
         EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
         final Document doc = ec.openDocument();
         doc.putProperty(Language.class, JavaTokenId.language());
-        String content = "package hierbas.del.litoral;\n\n"
-                + "public class Test {\n\n"
-                + "public record g3(@Override int a, @Override int b){}}";
-        String golden
-                = "package hierbas.del.litoral;\n\n"
-                + "public class Test {\n\n"
-                + "    public record g3(@Override int a, @Override int b) {\n\n"
-                + "    }\n"
-                + "}\n";
+        String content = """
+                    package hierbas.del.litoral;
+
+                    public class Test {
+                         
+                    public record g3(@Override int a, @Override int b){ }}""";
+        String golden = """
+                    package hierbas.del.litoral;
+
+                    public class Test {
+
+                        public record g3(@Override int a, @Override int b) {
+
+                        }
+                    }
+                    """;
         reformat(doc, content, golden);
     }
     

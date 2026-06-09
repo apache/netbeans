@@ -338,7 +338,12 @@
                     </test-dependency>
                 </test-type>
             </test-dependencies>
-            <public-packages/>
+            <friend-packages>
+                <friend>org.netbeans.modules.form.binding</friend>
+                <package>org.netbeans.modules.form</package>
+                <package>org.netbeans.modules.form.codestructure</package>
+                <package>org.netbeans.modules.form.project</package>
+            </friend-packages>
             <class-path-extension>
                 <runtime-relative-path>ext/AbsoluteLayout.jar</runtime-relative-path>
             </class-path-extension>

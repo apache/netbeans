@@ -38,35 +38,35 @@ public static function setStaticNullable(?int $$staticNullable): void {
 self::$$staticNullable = $staticNullable;
 }
 
-public  function setInstanceInt74($$instanceInt74): void {
+public  function setInstanceInt74(int $$instanceInt74): void {
 $$this->instanceInt74 = $instanceInt74;
 }
 
-public  function setInstanceString74($$instanceString74): void {
+public  function setInstanceString74(string $$instanceString74): void {
 $$this->instanceString74 = $instanceString74;
 }
 
-public  function setInstanceBool74($$instanceBool74): void {
+public  function setInstanceBool74(bool $$instanceBool74): void {
 $$this->instanceBool74 = $instanceBool74;
 }
 
-public  function setInstanceNullable74($$instanceNullable74): void {
+public  function setInstanceNullable74(?string $$instanceNullable74): void {
 $$this->instanceNullable74 = $instanceNullable74;
 }
 
-public static function setStaticInt74($$staticInt74): void {
+public static function setStaticInt74(int $$staticInt74): void {
 self::$$staticInt74 = $staticInt74;
 }
 
-public static function setStaticString74($$staticString74): void {
+public static function setStaticString74(string $$staticString74): void {
 self::$$staticString74 = $staticString74;
 }
 
-public static function setStaticBool74($$staticBool74): void {
+public static function setStaticBool74(bool $$staticBool74): void {
 self::$$staticBool74 = $staticBool74;
 }
 
-public static function setStaticNullable74($$staticNullable74): void {
+public static function setStaticNullable74(?string $$staticNullable74): void {
 self::$$staticNullable74 = $staticNullable74;
 }
 

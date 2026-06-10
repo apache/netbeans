@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -36,6 +38,7 @@ import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointEvent;
 import org.netbeans.api.debugger.jpda.event.JPDABreakpointListener;
 import org.netbeans.modules.java.lsp.server.debugging.NbThreads;
+import org.openide.util.Pair;
 
 public final class BreakpointsManager {
 
@@ -43,7 +46,7 @@ public final class BreakpointsManager {
 
     private final NbThreads threadsProvider;
     private final List<NbBreakpoint> breakpoints;
-    private final HashMap<String, HashMap<Integer, NbBreakpoint>> sourceToBreakpoints;
+    private final HashMap<String, HashMap<BreakpointKey, NbBreakpoint>> sourceToBreakpoints;
     private final AtomicInteger nextBreakpointId = new AtomicInteger(1);
     private final AtomicReference<ExceptionBreakpoint> exceptionBreakpoint = new AtomicReference<>(null);
     private final ExceptionBreakpointListener exceptionBreakpointListener = new ExceptionBreakpointListener();
@@ -68,7 +71,7 @@ public final class BreakpointsManager {
      */
     public NbBreakpoint[] setBreakpoints(String source, NbBreakpoint[] breakpoints, boolean sourceModified) {
         List<NbBreakpoint> result = new ArrayList<>();
-        HashMap<Integer, NbBreakpoint> breakpointMap = this.sourceToBreakpoints.get(source);
+        HashMap<BreakpointKey, NbBreakpoint> breakpointMap = this.sourceToBreakpoints.get(source);
         // When source file is modified, delete all previously added breakpoints.
         if (sourceModified && breakpointMap != null) {
             for (NbBreakpoint bp : breakpointMap.values()) {
@@ -89,42 +92,43 @@ public final class BreakpointsManager {
         }
 
         // Compute the breakpoints that are newly added.
-        List<NbBreakpoint> toAdd = new ArrayList<>();
-        List<Integer> visitedLineNumbers = new ArrayList<>();
+        List<Pair<BreakpointKey, NbBreakpoint>> toAdd = new ArrayList<>();
+        List<BreakpointKey> visitedKeys = new ArrayList<>();
         for (NbBreakpoint breakpoint : breakpoints) {
-            NbBreakpoint existingBP = breakpointMap.get(breakpoint.getLineNumber());
+            BreakpointKey key = new BreakpointKey(breakpoint.getLineNumber(), breakpoint.getColumn());
+            NbBreakpoint existingBP = breakpointMap.get(key);
             if (existingBP != null) {
                 result.add(existingBP);
-                visitedLineNumbers.add(existingBP.getLineNumber());
+                visitedKeys.add(key);
                 continue;
             } else {
                 result.add(breakpoint);
             }
-            toAdd.add(breakpoint);
+            toAdd.add(Pair.of(key, breakpoint));
         }
 
         // Compute the breakpoints that are no longer listed.
-        List<NbBreakpoint> toRemove = new ArrayList<>();
-        for (NbBreakpoint breakpoint : breakpointMap.values()) {
-            if (!visitedLineNumbers.contains(breakpoint.getLineNumber())) {
-                toRemove.add(breakpoint);
+        List<Pair<BreakpointKey, NbBreakpoint>> toRemove = new ArrayList<>();
+        for (Entry<BreakpointKey, NbBreakpoint> breakpointEntry : breakpointMap.entrySet()) {
+            if (!visitedKeys.contains(breakpointEntry.getKey())) {
+                toRemove.add(Pair.of(breakpointEntry.getKey(), breakpointEntry.getValue()));
             }
         }
 
-        removeBreakpointsInternally(source, toRemove.toArray(new NbBreakpoint[0]));
-        addBreakpointsInternally(source, toAdd.toArray(new NbBreakpoint[0]));
+        removeBreakpointsInternally(source, toRemove);
+        addBreakpointsInternally(source, toAdd);
 
         return result.toArray(new NbBreakpoint[0]);
     }
 
-    private void addBreakpointsInternally(String source, NbBreakpoint[] breakpoints) {
-        Map<Integer, NbBreakpoint> breakpointMap = this.sourceToBreakpoints.computeIfAbsent(source, k -> new HashMap<>());
+    private void addBreakpointsInternally(String source, List<Pair<BreakpointKey, NbBreakpoint>> breakpoints) {
+        Map<BreakpointKey, NbBreakpoint> breakpointMap = this.sourceToBreakpoints.computeIfAbsent(source, k -> new HashMap<>());
 
-        if (breakpoints != null && breakpoints.length > 0) {
-            for (NbBreakpoint breakpoint : breakpoints) {
-                breakpoint.putProperty("id", this.nextBreakpointId.getAndIncrement());
-                this.breakpoints.add(breakpoint);
-                breakpointMap.put(breakpoint.getLineNumber(), breakpoint);
+        if (!breakpoints.isEmpty()) {
+            for (Pair<BreakpointKey, NbBreakpoint> entry : breakpoints) {
+                entry.second().putProperty("id", this.nextBreakpointId.getAndIncrement());
+                this.breakpoints.add(entry.second());
+                breakpointMap.put(entry.first(), entry.second());
             }
         }
     }
@@ -132,19 +136,19 @@ public final class BreakpointsManager {
     /**
      * Removes the specified breakpoints from breakpoint manager.
      */
-    private void removeBreakpointsInternally(String source, NbBreakpoint[] breakpoints) {
-        Map<Integer, NbBreakpoint> breakpointMap = this.sourceToBreakpoints.get(source);
-        if (breakpointMap == null || breakpointMap.isEmpty() || breakpoints.length == 0) {
+    private void removeBreakpointsInternally(String source, List<Pair<BreakpointKey, NbBreakpoint>> breakpoints) {
+        Map<BreakpointKey, NbBreakpoint> breakpointMap = this.sourceToBreakpoints.get(source);
+        if (breakpointMap == null || breakpointMap.isEmpty() || breakpoints.isEmpty()) {
             return;
         }
 
-        for (NbBreakpoint breakpoint : breakpoints) {
-            if (this.breakpoints.contains(breakpoint)) {
+        for (Pair<BreakpointKey, NbBreakpoint> entry : breakpoints) {
+            if (this.breakpoints.contains(entry.second())) {
                 try {
                     // Destroy the breakpoint on the debugee VM.
-                    breakpoint.close();
-                    this.breakpoints.remove(breakpoint);
-                    breakpointMap.remove(breakpoint.getLineNumber());
+                    entry.second().close();
+                    this.breakpoints.remove(entry.second());
+                    breakpointMap.remove(entry.first());
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, String.format("Remove breakpoint exception: %s", e.toString()), e);
                 }
@@ -160,7 +164,7 @@ public final class BreakpointsManager {
      * Gets the registered breakpoints at the source file.
      */
     public NbBreakpoint[] getBreakpoints(String source) {
-        HashMap<Integer, NbBreakpoint> breakpointMap = this.sourceToBreakpoints.get(source);
+        HashMap<BreakpointKey, NbBreakpoint> breakpointMap = this.sourceToBreakpoints.get(source);
         if (breakpointMap == null) {
             return new NbBreakpoint[0];
         }
@@ -222,5 +226,42 @@ public final class BreakpointsManager {
             }
         }
         
+    }
+
+    private static final class BreakpointKey {
+        private final int line;
+        private final Integer column;
+
+        public BreakpointKey(int line, Integer column) {
+            this.line = line;
+            this.column = column;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 53 * hash + this.line;
+            hash = 53 * hash + Objects.hashCode(this.column);
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final BreakpointKey other = (BreakpointKey) obj;
+            if (this.line != other.line) {
+                return false;
+            }
+            return Objects.equals(this.column, other.column);
+        }
+
     }
 }

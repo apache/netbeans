@@ -189,20 +189,20 @@ public abstract class JavaCompletionItem implements CompletionItem {
         return new VariableItem(info, null, varName, substitutionOffset, newVarName, smartType, -1);
     }
 
-    public static JavaCompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef, WhiteListQuery.WhiteList whiteList) {
+    public static JavaCompletionItem createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef, boolean substituteTextParams, WhiteListQuery.WhiteList whiteList) {
         switch (elem.getKind()) {
             case METHOD:
-                return new MethodItem(info, elem, type, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, smartType, assignToVarOffset, memberRef, whiteList);
+                return new MethodItem(info, elem, type, castType, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, smartType, assignToVarOffset, memberRef, substituteTextParams, whiteList);
             case CONSTRUCTOR:
-                return new ConstructorItem(info, elem, type, substitutionOffset, isDeprecated, afterConstructorTypeParams, smartType, null, whiteList);
+                return new ConstructorItem(info, elem, type, substitutionOffset, isDeprecated, afterConstructorTypeParams, smartType, null, substituteTextParams, whiteList);
             default:
                 throw new IllegalArgumentException("kind=" + elem.getKind());
         }
     }
 
-    public static JavaCompletionItem createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name, WhiteListQuery.WhiteList whiteList) {
+    public static JavaCompletionItem createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name, boolean substituteTextParams, WhiteListQuery.WhiteList whiteList) {
         if (elem.getKind() == ElementKind.CONSTRUCTOR) {
-            return new ConstructorItem(info, elem, type, substitutionOffset, isDeprecated, false, false, name, whiteList);
+            return new ConstructorItem(info, elem, type, substitutionOffset, isDeprecated, false, false, name, substituteTextParams, whiteList);
         }
         throw new IllegalArgumentException("kind=" + elem.getKind());
     }
@@ -1838,8 +1838,9 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private CharSequence castText;
         private int startOffset;
         private CharSequence assignToVarText;
+        private final boolean substituteTextParams;
 
-        private MethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, WhiteListQuery.WhiteList whiteList) {
+        private MethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean substituteTextParams, WhiteListQuery.WhiteList whiteList) {
             super(substitutionOffset, ElementHandle.create(elem), whiteList);
             Color c = LFCustoms.getTextFgColor();
             this.isInherited = isInherited;
@@ -1885,6 +1886,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             } else {
                 this.castEndOffset = -1;
             }
+            this.substituteTextParams = !memberRef && substituteTextParams;
         }
 
         @Override
@@ -2067,7 +2069,8 @@ public abstract class JavaCompletionItem implements CompletionItem {
                             sb.append(' '); //NOI18N
                         }
                         sb.append('('); //NOI18N
-                        if (params.isEmpty()) {
+                        if (params.isEmpty() || !substituteTextParams) {
+                            // Ensure that the cursor is placed in-between the inserted parentheses i.e. "(|)"
                             sb.append("${cursor}"); //NOI18N
                         } else {
                             boolean guessArgs = Utilities.guessMethodArguments();
@@ -2179,7 +2182,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private String leftText;
 
         private OverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement, WhiteListQuery.WhiteList whiteList) {
-            super(info, elem, type, null, substitutionOffset, null, false, false, false, false, false, -1, false, whiteList);
+            super(info, elem, type, null, substitutionOffset, null, false, false, false, false, false, -1, false, true, whiteList);
             CodeStyle cs = null;
             try {
                 cs = CodeStyle.getDefault(info.getDocument());
@@ -2495,8 +2498,9 @@ public abstract class JavaCompletionItem implements CompletionItem {
         private boolean insertName;
         private String sortText;
         private String leftText;
+        private final boolean substituteTextParams;
 
-        private ConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, boolean afterConstructorTypeParams, boolean smartType, String name, WhiteListQuery.WhiteList whiteList) {
+        private ConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, boolean afterConstructorTypeParams, boolean smartType, String name, boolean substituteTextParams, WhiteListQuery.WhiteList whiteList) {
             super(substitutionOffset, ElementHandle.create(elem), whiteList);
             this.isDeprecated = isDeprecated;
             this.smartType = smartType;
@@ -2517,6 +2521,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             this.isAbstract = !insertName && elem.getEnclosingElement().getModifiers().contains(Modifier.ABSTRACT);
             Scope s = info.getTreeUtilities().scopeFor(substitutionOffset);
             this.isProtected = elem.getModifiers().contains(Modifier.PROTECTED) && !info.getTrees().isAccessible(s, elem, (DeclaredType)elem.getEnclosingElement().asType());
+            this.substituteTextParams = substituteTextParams;
         }
 
         @Override
@@ -2685,20 +2690,25 @@ public abstract class JavaCompletionItem implements CompletionItem {
                             }
                         }
                         if (!params.isEmpty()) {
-                            boolean guessArgs = Utilities.guessMethodArguments();
-                            for (Iterator<ParamDesc> it = params.iterator(); it.hasNext();) {
-                                ParamDesc paramDesc = it.next();
-                                sb.append("${"); //NOI18N
-                                sb.append(paramDesc.name);
-                                if (guessArgs) {
-                                    sb.append(" named instanceof=\""); //NOI18N
-                                    sb.append(paramDesc.fullTypeName);
-                                    sb.append("\""); //NOI18N
+                            if (substituteTextParams) {
+                                boolean guessArgs = Utilities.guessMethodArguments();
+                                for (Iterator<ParamDesc> it = params.iterator(); it.hasNext(); ) {
+                                    ParamDesc paramDesc = it.next();
+                                    sb.append("${"); //NOI18N
+                                    sb.append(paramDesc.name);
+                                    if (guessArgs) {
+                                        sb.append(" named instanceof=\""); //NOI18N
+                                        sb.append(paramDesc.fullTypeName);
+                                        sb.append("\""); //NOI18N
+                                    }
+                                    sb.append("}"); //NOI18N
+                                    if (it.hasNext()) {
+                                        sb.append(", "); //NOI18N
+                                    }
                                 }
-                                sb.append("}"); //NOI18N
-                                if (it.hasNext()) {
-                                    sb.append(", "); //NOI18N
-                                }
+                            } else {
+                                // Ensure that the cursor is placed in-between the inserted parentheses i.e. "(|)"
+                                sb.append("${cursor}"); //NOI18N
                             }
                             c.select(startPos.getOffset() + (insertName ? text.length() : 0) + toAddText.indexOf('(') + 1, endPos.getOffset());
                             sb.append(c.getSelectedText());

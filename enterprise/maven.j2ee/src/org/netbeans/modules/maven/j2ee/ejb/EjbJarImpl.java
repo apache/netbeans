@@ -39,6 +39,7 @@ import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
 import org.netbeans.modules.j2ee.spi.ejbjar.EjbJarImplementation2;
 import org.netbeans.modules.javaee.project.api.JavaEEProjectSettings;
 import org.netbeans.modules.maven.j2ee.BaseEEModuleImpl;
+import org.netbeans.modules.maven.j2ee.utils.MavenProjectSupport;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -75,24 +76,27 @@ public class EjbJarImpl extends BaseEEModuleImpl implements EjbJarImplementation
         if (profile != null) {
             return profile;
         }
+        
+        Profile pomProfile = MavenProjectSupport.getProfileFromPOM(project);
+        if (pomProfile != null) {
+            return pomProfile;
+        }
+        
+        // Should we check CDI(beans.xml) too?
+        
         String ver = getModuleVersion();
-
-        if (EjbJar.VERSION_4_0.equals(ver)) {
-            return Profile.JAKARTA_EE_9_FULL;
+        if (null == ver) {
+            return Profile.JAKARTA_EE_8_FULL;
+        } else { 
+            return switch (ver) {
+                case EjbJar.VERSION_4_0 -> Profile.JAKARTA_EE_10_FULL;
+                case EjbJar.VERSION_3_2 -> Profile.JAKARTA_EE_8_FULL;
+                case EjbJar.VERSION_3_1 -> Profile.JAVA_EE_6_FULL;
+                case EjbJar.VERSION_3_0 -> Profile.JAVA_EE_5;
+                case EjbJar.VERSION_2_1 -> Profile.J2EE_14;
+                default -> Profile.JAKARTA_EE_8_FULL;
+            };
         }
-        if (EjbJar.VERSION_3_2.equals(ver)) {
-            return Profile.JAVA_EE_7_FULL;
-        }
-        if (EjbJar.VERSION_3_1.equals(ver)) {
-            return Profile.JAVA_EE_6_FULL;
-        }
-        if (EjbJar.VERSION_3_0.equals(ver)) {
-            return Profile.JAVA_EE_5;
-        }
-        if (EjbJar.VERSION_2_1.equals(ver)) {
-            return Profile.J2EE_14;
-        }
-        return Profile.JAVA_EE_8_FULL;
     }
     
     @Override

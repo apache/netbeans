@@ -24,12 +24,13 @@ SUPPORTED_ACTIONS: build,build-fast,clean,rebuild
     <target name="build">
         <exec executable="make" dir="${basedir}" failonerror="true">
             <arg value="images" />
+            <arg line="${nb.extra.make.targets}" />
             <env key="CONF" value="${CONF}" />
         </exec>
     </target>
     <target name="build-fast">
         <exec executable="make" dir="${basedir}" failonerror="true">
-            <arg value="default" />
+            <arg value="exploded-image" />
             <arg line="${nb.extra.make.targets}" />
             <env key="CONF" value="${CONF}" />
         </exec>

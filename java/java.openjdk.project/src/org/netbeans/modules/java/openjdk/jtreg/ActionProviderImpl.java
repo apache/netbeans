@@ -122,8 +122,8 @@ public class ActionProviderImpl implements ActionProvider {
         createAndRunTest(context, command);
     }
 
-    private static final String COMMAND_BUILD_FAST = "build-fast";
-    private static final String COMMAND_BUILD_GENERIC_FAST = "build-generic-fast";
+    static final String COMMAND_BUILD_FAST = "build-fast";
+    static final String COMMAND_BUILD_GENERIC_FAST = "build-generic-fast";
 
     //public for test
     @Messages({"# {0} - simple file name",
@@ -191,12 +191,15 @@ public class ActionProviderImpl implements ActionProvider {
                     redebug.disable();
                     Project prj = FileOwnerQuery.getOwner(file);
                     ActionProvider prjAP = prj != null ? prj.getLookup().lookup(ActionProvider.class) : null;
-                    if (prjAP != null) {
+                    Settings settings = prj != null ? prj.getLookup().lookup(Settings.class) : null;
+                    boolean useAntBuild = settings != null ? settings.isUseAntBuild(): false;
+                    boolean useFullImage = settings != null ? settings.isTestUseImage() : false;
+                    if (prjAP != null && (settings == null || settings.getRunBuildSetting() != Settings.RunBuild.NEVER)) {
                         Lookup targetContext = Lookup.EMPTY;
                         Set<String> supported = new HashSet<>(Arrays.asList(prjAP.getSupportedActions()));
                         String toRun = null;
-                        
-                        for (String command : new String[] {idealBuildTarget(file), ActionProvider.COMMAND_BUILD}) {
+
+                        for (String command : beforeTestProjectBuildTargets(file, useAntBuild, useFullImage)) {
                             if (supported.contains(command) && prjAP.isActionEnabled(command, targetContext)) {
                                 toRun = command;
                                 break;
@@ -257,7 +260,7 @@ public class ActionProviderImpl implements ActionProvider {
                     ClassPath extraSourcePath = allSources(file);
                     final ClassPath fullSourcePath = ClassPathSupport.createProxyClassPath(testSourcePath, extraSourcePath);
                     List<String> options = new ArrayList<>();
-                    File targetJavaHome = BuildUtils.findTargetJavaHome(file);
+                    File targetJavaHome = BuildUtils.findTargetJavaHome(file, useFullImage);
                     options.add(new File(new File(targetJavaHome, "bin"), "java").getAbsolutePath());
                     options.add("-jar");
                     options.add(jtregJar.getAbsolutePath());
@@ -347,7 +350,6 @@ public class ActionProviderImpl implements ActionProvider {
                             case 5: //error
                                 //check if it is a version error:
                                 if (errorOutput.toString().contains("jtreg version")) {
-                                    Settings settings = prj.getLookup().lookup(Settings.class);
                                     String jtregLocation = settings.getJTregLocation();
                                     InputLine nd = new InputLine(Bundle.LBL_IncorrectVersionSelectJTReg(), Bundle.TITLE_IncorrectVersionSelectJTReg(), NotifyDescriptor.OK_CANCEL_OPTION, NotifyDescriptor.ERROR_MESSAGE);
                                     nd.setInputText(jtregLocation);
@@ -604,14 +606,19 @@ public class ActionProviderImpl implements ActionProvider {
         }
     }
 
-    static String idealBuildTarget(FileObject testFile) {
+    static String[] beforeTestProjectBuildTargets(FileObject testFile, boolean useAntBuild, boolean useFullImage) {
         Project prj = FileOwnerQuery.getOwner(testFile);
         FileObject repo = prj.getProjectDirectory().getParent().getParent();
         String repoName = ShortcutUtils.getDefault().inferLegacyRepository(prj);
-        if (ShortcutUtils.getDefault().shouldUseCustomTest(repoName, FileUtil.getRelativePath(repo, testFile))) {
-            return COMMAND_BUILD_FAST;
+        if (ShortcutUtils.getDefault().shouldUseCustomTest(repoName, FileUtil.getRelativePath(repo, testFile)) && useAntBuild) {
+            //make "ant" build override the "useFullImage" w.r.t. building;
+            //if useFullImage == true, tests will run using a full JDK image,
+            //but will still patch in the custom built classes:
+            return new String[] {COMMAND_BUILD_FAST, COMMAND_BUILD};
+        } else if (useFullImage) {
+            return new String[] {COMMAND_BUILD};
         } else {
-            return COMMAND_BUILD_GENERIC_FAST;
+            return new String[] {COMMAND_BUILD_GENERIC_FAST, COMMAND_BUILD};
         }
     }
 

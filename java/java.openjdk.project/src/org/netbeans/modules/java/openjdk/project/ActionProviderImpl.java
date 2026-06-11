@@ -202,14 +202,6 @@ public class ActionProviderImpl implements ActionProvider {
             }
         }
         if (COMMAND_BUILD_GENERIC_FAST.equals(command)) {
-            switch (settings.getRunBuildSetting()) {
-                case NEVER:
-                    ActionProgress.start(context).finished(true);
-                    return;
-                case ALWAYS:
-                default:
-                    break;
-            }
             scriptFO = genericScript;
             command = COMMAND_BUILD_FAST; //XXX: should only do this if genericScript supports it
         }
@@ -222,7 +214,7 @@ public class ActionProviderImpl implements ActionProvider {
                                                              : repository.getParent();
         props.put("basedir", FileUtil.toFile(basedirFO).getAbsolutePath());
         props.put("CONF", project.configurations.getActiveConfiguration().getLocation().getName());
-        props.put("nb.jdk.project.target.java.home", BuildUtils.findTargetJavaHome(project.getProjectDirectory()).getAbsolutePath());
+        props.put("nb.jdk.project.target.java.home", BuildUtils.findTargetJavaHome(project.getProjectDirectory(), false).getAbsolutePath());
         props.put("nb.extra.make.targets", extraTargets);
         RootKind kind = getKind(context);
         RunSingleConfig singleFileProperty = command2Properties.get(Pair.of(command, kind));

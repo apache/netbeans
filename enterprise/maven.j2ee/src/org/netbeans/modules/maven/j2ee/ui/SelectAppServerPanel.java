@@ -33,6 +33,7 @@ import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.modules.j2ee.api.ejbjar.Car;
 import org.netbeans.modules.j2ee.api.ejbjar.Ear;
 import org.netbeans.modules.j2ee.api.ejbjar.EjbJar;
 import org.netbeans.modules.j2ee.deployment.devmodules.api.Deployment;
@@ -232,12 +233,23 @@ public class SelectAppServerPanel extends javax.swing.JPanel {
         Ear ear = Ear.getEar(project.getProjectDirectory());
         EjbJar ejb = EjbJar.getEjbJar(project.getProjectDirectory());
         WebModule war = WebModule.getWebModule(project.getProjectDirectory());
-        J2eeModule.Type type = ear != null ? J2eeModule.Type.EAR :
-                                     ( war != null ? J2eeModule.Type.WAR :
-                                           (ejb != null ? J2eeModule.Type.EJB : J2eeModule.Type.CAR));
-        Profile profile = ear != null ? ear.getJ2eeProfile() :
-                                     ( war != null ? war.getJ2eeProfile() :
-                                           (ejb != null ? ejb.getJ2eeProfile() : Profile.JAVA_EE_6_FULL));
+        Car car = Car.getCar(project.getProjectDirectory());
+        
+        J2eeModule.Type type;
+        Profile profile;
+        if (ear != null) {
+            type = J2eeModule.Type.EAR;
+            profile = ear.getJ2eeProfile();
+        } else if (ejb != null) {
+            type = J2eeModule.Type.EJB;
+            profile = ejb.getJ2eeProfile();
+        } else if (war != null) {
+            type = J2eeModule.Type.WAR;
+            profile = war.getJ2eeProfile();
+        } else {
+            type = J2eeModule.Type.CAR;
+            profile = car.getJ2eeProfile();
+        }
         String[] ids = Deployment.getDefault().getServerInstanceIDs(Collections.singletonList(type), profile);
         Collection<Server> col = new ArrayList<>();
         col.add(new Server(ExecutionChecker.DEV_NULL));

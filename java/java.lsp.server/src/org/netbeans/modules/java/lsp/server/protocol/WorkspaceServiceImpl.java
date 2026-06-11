@@ -1384,9 +1384,11 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
             String newWorkingDirectory = null;
             JsonObject runConfig = newValue.isJsonObject() ? newValue.getAsJsonObject() : null;
             if (runConfig != null) {
-                newVMOptions = runConfig.getAsJsonPrimitive("vmOptions").getAsString();
-                JsonPrimitive cwd = runConfig.getAsJsonPrimitive("cwd");
-                newWorkingDirectory = cwd != null ? cwd.getAsString() : null;
+                JsonElement el;
+                el = runConfig.get("vmOptions");
+                if (el != null && el.isJsonPrimitive()) newVMOptions = el.getAsJsonPrimitive().getAsString();
+                el = runConfig.get("cwd");
+                if (el != null && el.isJsonPrimitive()) newWorkingDirectory = el.getAsJsonPrimitive().getAsString();
             }
             for (SingleFileOptionsQueryImpl query : Lookup.getDefault().lookupAll(SingleFileOptionsQueryImpl.class)) {
                 modified |= query.setConfiguration(workspace, newVMOptions, newWorkingDirectory);
@@ -1405,23 +1407,23 @@ public final class WorkspaceServiceImpl implements WorkspaceService, LanguageCli
         BiConsumer<String, JsonElement> formatPrefsListener = (config, newValue)
                 -> server.openedProjects().thenAccept(projects -> {
                     if (projects != null && projects.length > 0) {
-                        updateJavaFormatPreferences(projects[0].getProjectDirectory(), newValue.getAsJsonObject());
+                        updateJavaFormatPreferences(projects[0].getProjectDirectory(), newValue != null && newValue.isJsonObject() ? newValue.getAsJsonObject() : null);
                     }
                 });
 
         BiConsumer<String, JsonElement> importPrefsListener = (config, newValue)
                 -> server.openedProjects().thenAccept(projects -> {
                     if (projects != null && projects.length > 0) {
-                        updateJavaImportPreferences(projects[0].getProjectDirectory(), newValue.getAsJsonObject());
+                        updateJavaImportPreferences(projects[0].getProjectDirectory(), newValue != null && newValue.isJsonObject() ? newValue.getAsJsonObject() : null);
                     }
                 });
 
         // PENDING: The typecast to serviceImpl is ugly
         BiConsumer<String, JsonElement> hintPrefsListener = (config, newValue)
-                -> ((TextDocumentServiceImpl) server.getTextDocumentService()).updateJavaHintPreferences(newValue.getAsJsonObject());
+                -> ((TextDocumentServiceImpl) server.getTextDocumentService()).updateJavaHintPreferences(newValue != null && newValue.isJsonObject() ? newValue.getAsJsonObject() : null);
 
         BiConsumer<String, JsonElement> projectJdkHomeListener = (config, newValue)
-                -> ((TextDocumentServiceImpl) server.getTextDocumentService()).updateProjectJDKHome(newValue.getAsJsonPrimitive());
+                -> ((TextDocumentServiceImpl) server.getTextDocumentService()).updateProjectJDKHome(newValue != null && newValue.isJsonPrimitive() ? newValue.getAsJsonPrimitive() : null);
         
         
         

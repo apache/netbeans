@@ -23,6 +23,7 @@ import com.sun.el.parser.Node;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.Trees;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,8 +32,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+
 import javax.lang.model.element.Element;
 import javax.swing.text.Document;
+
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.ElementHandle;
@@ -51,6 +54,7 @@ import org.netbeans.modules.web.common.spi.ProjectWebRootQuery;
 import org.netbeans.modules.web.el.AstPath;
 import org.netbeans.modules.web.el.CompilationContext;
 import org.netbeans.modules.web.el.ELElement;
+import org.netbeans.modules.web.el.ELParserResult;
 import org.netbeans.modules.web.el.ELTypeUtilities;
 import org.netbeans.modules.web.el.ResourceBundles;
 import org.netbeans.modules.web.el.completion.ELResourceBundleKeyCompletionItem;
@@ -83,7 +87,12 @@ public class ELDeclarationFinder implements DeclarationFinder {
                 @Override
                 public void run(CompilationController cc) throws Exception {
                     cc.toPhase(JavaSource.Phase.RESOLVED);
-                    CompilationContext context = CompilationContext.create(file, cc);
+                    CompilationContext context;
+                    if (info instanceof ELParserResult elParserResult) {
+                        context = CompilationContext.create(file, cc, elParserResult.getContext());
+                    } else {
+                        context = CompilationContext.create(file, cc);
+                    }
 
                     // resolve beans
                     Element javaElement = ELTypeUtilities.resolveElement(context, nodeElem.second(), nodeElem.first());

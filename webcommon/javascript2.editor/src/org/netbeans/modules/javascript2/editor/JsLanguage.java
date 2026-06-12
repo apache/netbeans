@@ -49,7 +49,7 @@ import org.openide.windows.TopComponent;
 public class JsLanguage extends DefaultLanguageConfig {
 
     @MIMEResolver.ExtensionRegistration(
-        extension={ "js", "sdoc", "jsx", "mjs" },
+        extension={ "js", "sdoc", "jsx", "mjs", "cjs", "es6", "pac" },
         displayName="#JsResolver",
         mimeType=JsTokenId.JAVASCRIPT_MIME_TYPE,
         position=190

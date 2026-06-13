@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -76,6 +77,7 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
     private boolean secondPass = false;
     private boolean stopSecondPass = false;
     private final AtomicBoolean cancel;
+    private boolean isLambda = false;
     
     /**
      * Nesting level for local classes and lambdas. Ignore returns in nested scopes
@@ -114,12 +116,18 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
         }
         return null;
     }
-
+    
     @Override
     public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
         nesting++;
+        if (node == firstInSelection) {
+            phase = PHASE_INSIDE_SELECTION;
+        }
+        isLambda = true;
+
         super.visitLambdaExpression(node, p);
         nesting--;
+        isLambda = false;
         return null;
     }
 
@@ -164,7 +172,14 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
             if (IntroduceHint.LOCAL_VARIABLES.contains(e.getKind())) {
                 switch (phase) {
                     case PHASE_INSIDE_SELECTION:
-                        if (localVariables.contains(e) && usedLocalVariables.get(e) == null) {
+
+                        final boolean isUsedInLambda = isLambda
+                                && treesSeensInSelection.contains(node)
+                                && !selectionLocalVariables.contains((VariableElement) e);
+
+                        if (isUsedInLambda) {
+                            usedLocalVariables.put((VariableElement) e, !localVariables.contains(e));
+                        } else if (localVariables.contains(e) && usedLocalVariables.get(e) == null) {
                             Iterable<? extends TreePath> writes = assignmentsForUse.get(getCurrentPath().getLeaf());
                             Boolean definitellyAssignedInSelection = true;
                             if (writes != null) {
@@ -229,7 +244,7 @@ final class ScanStatement extends ErrorAwareTreePathScanner<Void, Void> {
 
     @Override
     public Void visitReturn(ReturnTree node, Void p) {
-        if (isMethodCode() && phase == PHASE_INSIDE_SELECTION) {
+        if ((isMethodCode() || isLambda) && phase == PHASE_INSIDE_SELECTION) {
             selectionExits.add(getCurrentPath());
             hasReturns = true;
         }

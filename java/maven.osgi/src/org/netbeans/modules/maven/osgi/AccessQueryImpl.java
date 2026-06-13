@@ -19,10 +19,7 @@
 
 package org.netbeans.modules.maven.osgi;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
 import java.util.StringTokenizer;
-import java.util.regex.Pattern;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.maven.api.PluginPropertyUtils;
@@ -38,13 +35,12 @@ import org.openide.filesystems.FileUtil;
 public class AccessQueryImpl implements AccessibilityQueryImplementation {
 
     private final Project prj;
-    private WeakReference<List<Pattern>> ref;
     private static final String DEFAULT_IMP = "*";
-    
+
     public AccessQueryImpl(Project prj) {
         this.prj = prj;
     }
-    
+
     /**
      *
      * @param pkg
@@ -60,10 +56,10 @@ public class AccessQueryImpl implements AccessibilityQueryImplementation {
                 return check(name);
             }
         }
-        
+
         return null;
     }
-    
+
     private Boolean check(String value) {
         String[] exps = PluginPropertyUtils.getPluginPropertyList(prj,
                 OSGiConstants.GROUPID_FELIX, OSGiConstants.ARTIFACTID_BUNDLE_PLUGIN,
@@ -99,44 +95,44 @@ public class AccessQueryImpl implements AccessibilityQueryImplementation {
         }
         return result;
     }
-    
-	static boolean testPackagePatterns(String patterns, String value) {
-		boolean matches = false;
+
+    static boolean testPackagePatterns(String patterns, String value) {
+        boolean matches = false;
         if (patterns != null) {
-			patterns = PackageDefinitionUtil.omitDirectives(patterns);
-            StringTokenizer tok = new StringTokenizer(patterns, " ,", false); //NOI18N
+            String onlyPackagesPatterns = PackageDefinitionUtil.omitDirectives(patterns);
+            StringTokenizer tok = new StringTokenizer(onlyPackagesPatterns, " ,", false); //NOI18N
             while (tok.hasMoreTokens() && !matches) {
                 String token = tok.nextToken();
                 token = token.trim();
-				if ("*".equals(token)) { //NOI18N
-					return true;
-				}
-					
-                boolean recursive = false;
-				boolean exclusivePattern = false;
-				if (token.startsWith("!")) {
-					token = token.substring(1);
-					exclusivePattern = true;
-				}
-				if (token.endsWith("*")) { //NOI18N
-					// The following cases are tested with maven-bundle-plugin
-					// a.* or a* -> recursive
-					// a. -> non-recursive
-					token = token.substring(0, token.length() - "*".length()); //NOI18N
-					recursive = true;
-					if (token.endsWith(".")) {
-						// Removes the last dot also
-						token = token.substring(0, token.length() - 1);
-					}
+                if ("*".equals(token)) { //NOI18N
+                    return true;
                 }
-				matches = recursive ? value.startsWith(token) : value.equals(token);
-				if (matches && exclusivePattern) {
-					// only excluding when it matches
-					matches = !matches;
-				}
+
+                boolean recursive = false;
+                boolean exclusivePattern = false;
+                if (token.startsWith("!")) {
+                    token = token.substring(1);
+                    exclusivePattern = true;
+                }
+                if (token.endsWith("*")) { //NOI18N
+                    // The following cases are tested with maven-bundle-plugin
+                    // a.* or a* -> recursive
+                    // a. -> non-recursive
+                    token = token.substring(0, token.length() - "*".length()); //NOI18N
+                    recursive = true;
+                    if (token.endsWith(".")) {
+                        // Removes the last dot also
+                        token = token.substring(0, token.length() - 1);
+                    }
+                }
+                matches = recursive ? value.startsWith(token) : value.equals(token);
+                if (matches && exclusivePattern) {
+                    // only excluding when it matches
+                    matches = !matches;
+                }
             }
         }
-		return matches;
-	}
+        return matches;
+    }
 
 }

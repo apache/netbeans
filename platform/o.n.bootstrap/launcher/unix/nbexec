@@ -146,47 +146,58 @@ parse_args "$@"
 #
 
 if [ -z "$jdkhome" ] ; then
-    # Check Java installed with sdkman
-    if [ -x "$HOME/.sdkman/candidates/java/current/bin/java" ]; then
+    if [ ! -z "$JAVA_HOME" ]; then
+        # Use JAVA_HOME if set
+        jdkhome="${JAVA_HOME}"
+    elif [ -x "$HOME/.sdkman/candidates/java/current/bin/java" ]; then
+        # Check Java installed with sdkman
         jdkhome=`resolve_symlink "$HOME/.sdkman/candidates/java/current"`
     fi
     if [ -z "$jdkhome" ] ; then
         # try to find JDK
         case "`uname`" in
             Darwin*)
-            # check if JAVA_HOME is empty string since java_home will return the value of JAVA_HOME
-            if [ -z "$JAVA_HOME" ]; then
-                unset JAVA_HOME
-            fi
-            # read Java Preferences
+            # read MacOS Java Preferences
             if [ -x "/usr/libexec/java_home" ]; then
-                jdkhome=`/usr/libexec/java_home --version 1.8+`
-            # JDK1.8 as a fallback
-            elif [ -f "/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/bin/java" ] ; then
-                jdkhome="/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home"
+                # NetBeans no longer runs on JDK 8.
+                #   So, ignore locations that are no longer valid for JDK > 8.
+                # Apple java_home tool no longer supports the '+' suffix in --version values,
+                #   i.e. `/usr/libexec/java_home --version 21+` does not work anymore.
+                # Thus it is only being used to obtain the default (most likely latest) version
+                #   found in /Library/Java/JavaVirtualMachines locations.
+                jdkhome=`/usr/libexec/java_home 2>/dev/null`
             fi
-
-            # JRE fallback
-            if [ ! -x "${jdkhome}/bin/java" -a -f "/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home/bin/java" ] ; then
-                jdkhome="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Home"
-            fi
-            ;;
-            *)
-            if [ ! -z "${JAVA_HOME}" ]; then
-                jdkhome="${JAVA_HOME}"
-            else
-                # Doesn't work with jenv-style shims
+            # Fallback to PATH based value
+            if [ -z "$jdkhome" ]; then
+                # Note: Doesn't work with jenv-style shims
+                # Also, the Apple launcher utilities in /usr/bin/ should be ignored,
+                # as they load Java from the same path as /usr/libexec/java_home checked above.
                 javac=`which javac`
-                if [ -z "$javac" ] ; then
+                if [ ! -z "$javac" -a "$javac" != "/usr/bin/javac" ]; then
+                    javac=`resolve_symlink "$javac"`
+                    jdkhome=`dirname $javac`"/.."
+                else
                     java=`which java`
-                    if [ ! -z "$java" ] ; then
+                    if [ ! -z "$java" -a "$java" != "/usr/bin/java" ]; then
                         java=`resolve_symlink "$java"`
                         jdkhome=`dirname $java`"/.."
                     fi
-                else
-                    javac=`resolve_symlink "$javac"`
-                    jdkhome=`dirname $javac`"/.."
                 fi
+            fi
+            ;;
+            *)
+            # Fallback to PATH based value
+            # Note: Doesn't work with jenv-style shims
+            javac=`which javac`
+            if [ -z "$javac" ] ; then
+                java=`which java`
+                if [ ! -z "$java" ] ; then
+                    java=`resolve_symlink "$java"`
+                    jdkhome=`dirname $java`"/.."
+                fi
+            else
+                javac=`resolve_symlink "$javac"`
+                jdkhome=`dirname $javac`"/.."
             fi
             ;;
         esac

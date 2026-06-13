@@ -28,7 +28,10 @@ import java.util.*;
 import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import org.netbeans.modules.git.GitModuleConfig;
 import org.netbeans.modules.git.GitStatusNode.GitStatusProperty;
 import org.netbeans.modules.versioning.util.status.VCSStatusTableModel;
 import org.netbeans.modules.versioning.util.status.VCSStatusTable;
@@ -36,6 +39,8 @@ import org.netbeans.modules.versioning.diff.DiffUtils;
 import org.netbeans.modules.versioning.util.FilePathCellRenderer;
 import org.netbeans.modules.versioning.util.status.VCSStatusNode.NameProperty;
 import org.netbeans.modules.versioning.util.status.VCSStatusNode.PathProperty;
+import org.netbeans.swing.etable.ETable;
+import org.netbeans.swing.etable.ETableColumn;
 import org.openide.cookies.EditorCookie;
 import org.openide.nodes.Node;
 import org.openide.nodes.PropertySupport.ReadOnly;
@@ -63,10 +68,51 @@ class DiffFileTable extends VCSStatusTable<DiffNode> implements DiffFileViewComp
     private PropertyChangeListener changeListener;
     private final MultiDiffPanelController controller;
     
+    private static final String SORTING_PANEL = "diffView"; //NOI18N
+
+    private static final List<String> COLUMN_NAMES = List.of(
+        NameProperty.NAME,
+        GitStatusProperty.NAME,
+        PathProperty.NAME
+    );
+
     public DiffFileTable (VCSStatusTableModel<DiffNode> model, MultiDiffPanelController controller) {
         super(model);
         this.controller = controller;
         setDefaultRenderer(new DiffTableCellRenderer());
+        setSortingStatus();
+    }
+
+    private void setSortingStatus () {
+        Map<String, SortOrder> sortingStatus = GitModuleConfig.getDefault().getSortingStatus(SORTING_PANEL);
+        ETable eTable = (ETable) getTable();
+        int rank = 1;
+        for (Map.Entry<String, SortOrder> e : sortingStatus.entrySet()) {
+            SortOrder state = e.getValue();
+            int index = COLUMN_NAMES.indexOf(e.getKey());
+            if (state != SortOrder.UNSORTED && index >= 0) {
+                eTable.setColumnSorted(index, state == SortOrder.ASCENDING, rank++);
+            }
+        }
+    }
+
+    void storeSortingStatus () {
+        List<ETableColumn> sortedColumns = new ArrayList<>(COLUMN_NAMES.size());
+        TableColumnModel columnModel = getTable().getColumnModel();
+        for (int i = 0; i < columnModel.getColumnCount(); ++i) {
+            if (columnModel.getColumn(i) instanceof ETableColumn eColumn
+                    && eColumn.isSorted()
+                    && eColumn.getModelIndex() < COLUMN_NAMES.size()) {
+                sortedColumns.add(eColumn);
+            }
+        }
+        sortedColumns.sort(Comparator.comparingInt(ETableColumn::getSortRank));
+        Map<String, SortOrder> sortingStatus = new LinkedHashMap<>(sortedColumns.size());
+        for (ETableColumn column : sortedColumns) {
+            sortingStatus.put(COLUMN_NAMES.get(column.getModelIndex()),
+                    column.isAscending() ? SortOrder.ASCENDING : SortOrder.DESCENDING);
+        }
+        GitModuleConfig.getDefault().setSortingStatus(SORTING_PANEL, sortingStatus);
     }
 
     @Override

@@ -146,20 +146,22 @@
                 </Block>
             </ClassDeclaration>
             <ASTError start='848' end='896'/>
-            <ASTError start='897' end='900'/>
-            <ReturnStatement start='909' end='928'>
-                <FieldAccess start='916' end='927' isNullsafe='false'>
-                    <Variable start='916' end='921' isDollared='true'>
-                        <Identifier start='917' end='921' name='this'/>
-                    </Variable>
-                    <Field>
-                        <Variable start='923' end='927' isDollared='false'>
-                            <Identifier start='923' end='927' name='test'/>
+            <ASTError start='897' end='898'/>
+            <Block start='899' end='934' isCurly='true'>
+                <ReturnStatement start='909' end='928'>
+                    <FieldAccess start='916' end='927' isNullsafe='false'>
+                        <Variable start='916' end='921' isDollared='true'>
+                            <Identifier start='917' end='921' name='this'/>
                         </Variable>
-                    </Field>
-                </FieldAccess>
-            </ReturnStatement>
-            <ASTError start='0' end='928'/>
+                        <Field>
+                            <Variable start='923' end='927' isDollared='false'>
+                                <Identifier start='923' end='927' name='test'/>
+                            </Variable>
+                        </Field>
+                    </FieldAccess>
+                </ReturnStatement>
+            </Block>
+            <ASTError start='0' end='934'/>
         </Statements>
     </Program>
 </testresult>

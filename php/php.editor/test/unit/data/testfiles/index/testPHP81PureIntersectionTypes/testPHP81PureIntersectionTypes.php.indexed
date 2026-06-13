@@ -25,7 +25,7 @@ Not Searchable Keys:
 Document 1
 Searchable Keys:
   clz : testclass;TestClass;937;;;;1;;0;<TESTURL>/testPHP81PureIntersectionTypes.php;;0;
-  field : test;test;966;2;X&Y;\X&\Y;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;
+  field : test;test;966;2;X&Y;\X&\Y;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;[];
   method : paramtype;paramType;993;$test:X&Y:1::1:0:0:0:0:1:X&Y:;void;1;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;0;void;
   method : returntype;returnType;1078;;\X&\Y;1;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;1;X&Y;
   top : testclass
@@ -59,7 +59,7 @@ Not Searchable Keys:
 
 Document 5
 Searchable Keys:
-  field : test;test;1170;2;X&Y;\X&\Y;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;
+  field : test;test;1170;2;X&Y;\X&\Y;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;[];
   method : paramtype;paramType;1197;$test1:X&Y:1::1:0:0:0:0:1:X&Y:,$test2:X&Y&Z:1::1:0:0:0:0:1:X&Y&Z:;void;1;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;0;void;
   method : returntype;returnType;1297;;\X&\Y;1;0;<TESTURL>/testPHP81PureIntersectionTypes.php;0;1;X&Y;
   top : testtrait

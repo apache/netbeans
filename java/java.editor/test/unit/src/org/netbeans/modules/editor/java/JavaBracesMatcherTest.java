@@ -49,6 +49,13 @@ public class JavaBracesMatcherTest extends NbTestCase {
                 + "^)\n"
                 + "\"\"\"");
     }
+    
+    public void testAngleBrackets() throws Exception {
+        assertMatches2("^<test^>");
+        assertMatches2("Map^<Class<? extends AbstractStudent>,  Map<CourseTime, List<? extends AbstractCourse>>^>");
+        assertMatches2("Map<Class<? extends AbstractStudent>,  Map^<CourseTime, List<? extends AbstractCourse>^>>");
+        assertMatches2("Map x = new HashMap<String, List^<String^>>()");
+    }
 
     //from CslTestBase:
     protected void assertMatches2(String original) throws Exception {

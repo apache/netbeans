@@ -18,11 +18,12 @@
  */
 package org.netbeans.modules.web.beans.impl.model;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -33,6 +34,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -64,67 +66,107 @@ class EnableBeansFilter {
     private static final String EXTENSION = "javax.enterprise.inject.spi.Extension";// NOI18N
     private static final String EXTENSION_JAKARTA = "jakarta.enterprise.inject.spi.Extension";// NOI18N
 
-     private final HashSet<String> predefinedBeans;
-     {
-         predefinedBeans = new HashSet<>();
-         predefinedBeans.add(EventInjectionPointLogic.EVENT_INTERFACE);
-         predefinedBeans.add("javax.servlet.http.HttpServletRequest");//NOI18N
-         predefinedBeans.add("javax.servlet.http.HttpSession");//NOI18N
-         predefinedBeans.add("javax.servlet.ServletContext");//NOI18N
-         predefinedBeans.add("javax.jms.JMSContext");//NOI18N
-         predefinedBeans.add(AnnotationUtil.INJECTION_POINT);//NOI18N
-         predefinedBeans.add("javax.enterprise.inject.spi.BeanManager");//NOI18N
-         predefinedBeans.add("javax.transaction.UserTransaction");//NOI18N
-         predefinedBeans.add("java.security.Principal");//NOI18N
-         predefinedBeans.add("javax.validation.ValidatorFactory");//NOI18N
-         predefinedBeans.add("javax.faces.application.Application");//NOI18N
-         predefinedBeans.add("javax.faces.annotation.ApplicationMap");//NOI18N
-         predefinedBeans.add("javax.faces.annotation.FlowMap");//NOI18N
-         predefinedBeans.add("javax.faces.annotation.HeaderMap");//NOI18N
-         predefinedBeans.add("javax.faces.annotation.HeaderValuesMap");//NOI18N
-         predefinedBeans.add("javax.faces.annotation.InitParameterMap");//NOI18N
-         predefinedBeans.add("javax.faces.annotation.ManagedProperty");//NOI18N
-         predefinedBeans.add("javax.faces.annotation.RequestCookieMap");//NOI18N
-         predefinedBeans.add("javax.faces.annotation.RequestMap");//NOI18N
-         predefinedBeans.add("javax.faces.annotation.RequestParameterMap");//NOI18N
-         predefinedBeans.add("javax.faces.annotation.RequestParameterValuesMap");//NOI18N
-         predefinedBeans.add("javax.faces.annotation.SessionMap");//NOI18N
-         predefinedBeans.add("javax.faces.annotation.ViewMap");//NOI18N
-         predefinedBeans.add("javax.faces.context.ExternalContext");//NOI18N
-         predefinedBeans.add("javax.faces.context.FacesContext");//NOI18N
-         predefinedBeans.add(EventInjectionPointLogic.EVENT_INTERFACE_JAKARTA);
-         predefinedBeans.add("jakarta.servlet.http.HttpServletRequest");//NOI18N
-         predefinedBeans.add("jakarta.servlet.http.HttpSession");//NOI18N
-         predefinedBeans.add("jakarta.servlet.ServletContext");//NOI18N
-         predefinedBeans.add("jakarta.jms.JMSContext");//NOI18N
-         predefinedBeans.add(AnnotationUtil.INJECTION_POINT_JAKARTA);//NOI18N
-         predefinedBeans.add("jakarta.enterprise.inject.spi.BeanManager");//NOI18N
-         predefinedBeans.add("jakarta.transaction.UserTransaction");//NOI18N
-         predefinedBeans.add("java.security.Principal");//NOI18N
-         predefinedBeans.add("jakarta.validation.ValidatorFactory");//NOI18N
-         predefinedBeans.add("jakarta.faces.application.Application");//NOI18N
-         predefinedBeans.add("jakarta.faces.annotation.ApplicationMap");//NOI18N
-         predefinedBeans.add("jakarta.faces.annotation.FlowMap");//NOI18N
-         predefinedBeans.add("jakarta.faces.annotation.HeaderMap");//NOI18N
-         predefinedBeans.add("jakarta.faces.annotation.HeaderValuesMap");//NOI18N
-         predefinedBeans.add("jakarta.faces.annotation.InitParameterMap");//NOI18N
-         predefinedBeans.add("jakarta.faces.annotation.ManagedProperty");//NOI18N
-         predefinedBeans.add("jakarta.faces.annotation.RequestCookieMap");//NOI18N
-         predefinedBeans.add("jakarta.faces.annotation.RequestMap");//NOI18N
-         predefinedBeans.add("jakarta.faces.annotation.RequestParameterMap");//NOI18N
-         predefinedBeans.add("jakarta.faces.annotation.RequestParameterValuesMap");//NOI18N
-         predefinedBeans.add("jakarta.faces.annotation.SessionMap");//NOI18N
-         predefinedBeans.add("jakarta.faces.annotation.ViewMap");//NOI18N
-         predefinedBeans.add("jakarta.faces.context.ExternalContext");//NOI18N
-         predefinedBeans.add("jakarta.faces.context.FacesContext");//NOI18N
-    };
+    private static final Set<String> predefinedBeans = Set.of(
+            // Java Servlet
+            "javax.servlet.http.HttpServletRequest",//NOI18N
+            "javax.servlet.http.HttpSession",//NOI18N
+            "javax.servlet.ServletContext",//NOI18N
+            // Java Message Service
+            "javax.jms.JMSContext",//NOI18N
+            // Java CDI
+            EventInjectionPointLogic.EVENT_INTERFACE,
+            AnnotationUtil.INJECTION_POINT,
+            "javax.enterprise.inject.spi.BeanManager",//NOI18N
+            // Jakarta Transaction
+            "javax.transaction.UserTransaction",//NOI18N
+            // Jakarta Security (javax package)
+            "java.security.Principal",//NOI18N
+            "java.security.enterprise.SecurityContext",//NOI18N
+            // Java Bean Validation
+            "javax.validation.Validator",//NOI18N
+            "javax.validation.ValidatorFactory",//NOI18N
+            // JSF
+            "javax.faces.application.Application",//NOI18N
+            "javax.faces.application.ResourceHandler",//NOI18N
+            "javax.faces.component.UIViewRoot",//NOI18N
+            "javax.faces.context.ExternalContext",//NOI18N
+            "javax.faces.context.FacesContext",//NOI18N
+            "javax.faces.context.Flash",//NOI18N
+            // Jakarta Servlet
+            "jakarta.servlet.http.HttpServletRequest",//NOI18N
+            "jakarta.servlet.http.HttpSession",//NOI18N
+            "jakarta.servlet.ServletContext",//NOI18N
+            // Jakarta Messaging
+            "jakarta.jms.JMSContext",//NOI18N
+            // Jakarta CDI
+            EventInjectionPointLogic.EVENT_INTERFACE_JAKARTA,
+            AnnotationUtil.INJECTION_POINT_JAKARTA,
+            "jakarta.enterprise.inject.spi.BeanManager",//NOI18N
+            // Jakarta Transaction
+            "jakarta.transaction.UserTransaction",//NOI18N
+            // Jakarta Security (jakarta package)
+            "jakarta.security.enterprise.SecurityContext",//NOI18N
+            // Jakarta Validation
+            "jakarta.validation.Validator",//NOI18N
+            "jakarta.validation.ValidatorFactory",//NOI18N
+            // Jakarta Faces
+            "jakarta.faces.application.Application",//NOI18N
+            "jakarta.faces.application.ResourceHandler",//NOI18N
+            "jakarta.faces.component.UIViewRoot",//NOI18N
+            "jakarta.faces.context.ExternalContext",//NOI18N
+            "jakarta.faces.context.FacesContext",//NOI18N
+            "jakarta.faces.context.Flash",//NOI18N
+            "jakarta.faces.flow.Flow"//NOI18N
+    );
 
-     private final HashMap<String, String> predefinedBeanAnnotationPairs;
-     {
-         predefinedBeanAnnotationPairs = new HashMap<>();
-         predefinedBeanAnnotationPairs.put("javax.faces.flow.builder.FlowBuilder","javax.faces.flow.builder.FlowBuilderParameter");//NOI18N
-         predefinedBeanAnnotationPairs.put("jakarta.faces.flow.builder.FlowBuilder","jakarta.faces.flow.builder.FlowBuilderParameter");//NOI18N
-     };
+    private static final Set<String> predefinedMapAnnotations = Set.of(
+            // JSF
+            "javax.faces.annotation.ApplicationMap", //NOI18N
+            "javax.faces.annotation.FlowMap", //NOI18N
+            "javax.faces.annotation.HeaderMap", //NOI18N
+            "javax.faces.annotation.HeaderValuesMap", //NOI18N
+            "javax.faces.annotation.InitParameterMap", //NOI18N
+            "javax.faces.annotation.RequestCookieMap", //NOI18N
+            "javax.faces.annotation.RequestMap", //NOI18N
+            "javax.faces.annotation.RequestParameterMap", //NOI18N
+            "javax.faces.annotation.RequestParameterValuesMap", //NOI18N
+            "javax.faces.annotation.SessionMap", //NOI18N
+            "javax.faces.annotation.ViewMap", //NOI18N
+            // Jakarta Faces
+            "jakarta.faces.annotation.ApplicationMap", //NOI18N
+            "jakarta.faces.annotation.FlowMap", //NOI18N
+            "jakarta.faces.annotation.HeaderMap", //NOI18N
+            "jakarta.faces.annotation.HeaderValuesMap", //NOI18N
+            "jakarta.faces.annotation.InitParameterMap", //NOI18N
+            "jakarta.faces.annotation.RequestCookieMap", //NOI18N
+            "jakarta.faces.annotation.RequestMap", //NOI18N
+            "jakarta.faces.annotation.RequestParameterMap", //NOI18N
+            "jakarta.faces.annotation.RequestParameterValuesMap", //NOI18N
+            "jakarta.faces.annotation.SessionMap", //NOI18N
+            "jakarta.faces.annotation.ViewMap" //NOI18N
+    );
+
+    private static final Map<String, String> predefinedBeanAnnotationPairs = Map.of(
+            // JSF
+            "javax.faces.flow.builder.FlowBuilder", "javax.faces.flow.builder.FlowBuilderParameter",//NOI18N
+            // Jakarta Faces
+            "jakarta.faces.flow.builder.FlowBuilder", "jakarta.faces.flow.builder.FlowBuilderParameter"//NOI18N
+    );
+
+    private static final Set<String> managedPropertyAnnotations = Set.of(
+            // JSF
+            "javax.faces.annotation.ManagedProperty", //NOI18N
+            // Jakarta Faces
+            "jakarta.faces.annotation.ManagedProperty" //NOI18N
+    );
+
+    private Set<Element> myAlternatives;
+    private Set<Element> myEnabledAlternatives;
+    private final ResultImpl myResult;
+    private final AnnotationModelHelper myHelper;
+    private final BeansModel myBeansModel;
+    private final WebBeansModelImplementation myModel;
+    private final boolean isProgrammatic;
 
     EnableBeansFilter(ResultImpl result, WebBeansModelImplementation model ,
             boolean programmatic )
@@ -137,13 +179,13 @@ class EnableBeansFilter {
     }
 
     DependencyInjectionResult filter(AtomicBoolean cancel){
-        myAlternatives = new HashSet<Element>();
-        myEnabledAlternatives = new HashSet<Element>();
+        myAlternatives = new HashSet<>();
+        myEnabledAlternatives = new HashSet<>();
 
         PackagingFilter filter = new PackagingFilter(getWebBeansModel());
         Set<TypeElement> typeElements = getResult().getTypeElements();
 
-        TypeElement firstElement = typeElements.size()>0 ? typeElements.iterator().next() : null;
+        TypeElement firstElement = !typeElements.isEmpty() ? typeElements.iterator().next() : null;
 
         // remove elements defined in compile class path which doesn't have beans.xml
         filter.filter( typeElements, cancel );
@@ -165,8 +207,8 @@ class EnableBeansFilter {
             }
         }
 
-        Set<Element> enabledTypeElements = new HashSet<Element>( typeElements );
-        Set<Element> enabledProductions = new HashSet<Element>( productions );
+        Set<Element> enabledTypeElements = new HashSet<>( typeElements );
+        Set<Element> enabledProductions = new HashSet<>( productions );
         myAlternatives.removeAll(myEnabledAlternatives);
         // now myAlternative contains only disabled alternatives.
         enabledProductions.removeAll( myAlternatives );
@@ -180,7 +222,7 @@ class EnableBeansFilter {
         findEnabledProductions( enabledProductions);
         int commonSize = enabledTypes.size() + enabledProductions.size();
         if ( commonSize == 1 ){
-            Element injectable = enabledTypes.size() ==0 ?
+            Element injectable = enabledTypes.isEmpty() ?
                     enabledProductions.iterator().next():
                         enabledTypes.iterator().next();
             enabledTypes.addAll( enabledProductions);
@@ -190,14 +232,15 @@ class EnableBeansFilter {
             //no implementation on classpath/sources or it's fileterd by common logic(for usual beans)
             //first check if we have a class in white list (i.e. must be implemented in ee7 environment)
             String nm = myResult.getVariableType().toString();
-            if(nm.startsWith("javax.") || nm.startsWith("java.") || nm.startsWith("jakarta.")) {//NOI18N
+            if (nm.startsWith("javax.") || nm.startsWith("java.") || nm.startsWith("jakarta.") //NOI18N
+                    || hasManagedPropertyAnnotation(getResult().getVariable())) {
                 InjectableResultImpl res = handleEESpecificImplementations(getResult(), firstElement, enabledTypes);
-                if(res != null) {
+                if (res != null) {
                     return res;
                 }
             }
             //
-            if ( typeElements.size() == 0 && productions.size() == 0 ){
+            if ( typeElements.isEmpty() && productions.isEmpty() ){
                 return new ErrorImpl(getResult().getVariable(),
                         getResult().getVariableType(), NbBundle.getMessage(
                                 EnableBeansFilter.class, "ERR_NoFound"));   // NOI18N
@@ -214,7 +257,7 @@ class EnableBeansFilter {
             return new ResolutionErrorImpl( getResult(),  NbBundle.getMessage(
                     EnableBeansFilter.class, "ERR_NoEnabledBeans"));        // NOI18N
         }
-        Set<Element> allElements = new HashSet<Element>( enabledTypes );
+        Set<Element> allElements = new HashSet<>( enabledTypes );
         allElements.addAll( enabledProductions );
         allElements.retainAll( myEnabledAlternatives );
         boolean hasSingleAlternative = allElements.size() == 1;
@@ -303,15 +346,15 @@ class EnableBeansFilter {
     }
 
     private Set<Element> findEnabledTypes(Set<Element> elements) {
-        LinkedList<Element> types = new LinkedList<Element>( elements );
-        Set<Element> result = new HashSet<Element>( elements );
-        while( types.size() != 0 ) {
-            TypeElement typeElement = (TypeElement)types.remove();
+        LinkedList<Element> types = new LinkedList<>( elements );
+        Set<Element> result = new HashSet<>( elements );
+        while( !types.isEmpty() ) {
+            TypeElement typeElement = (TypeElement)types.removeFirst();
             if ( !checkClass( typeElement )){
                 result.remove( typeElement );
                 continue;
             }
-            checkProxyability( typeElement , types, result );
+            checkProxyability( typeElement , result );
             checkSpecializes(typeElement, types, result ,  elements );
         }
         return result;
@@ -365,14 +408,15 @@ class EnableBeansFilter {
          */
         List<ExecutableElement> constructors = ElementFilter.constructorsIn(
                 element.getEnclosedElements());
-        boolean foundCtor = constructors.size() ==0;
+        boolean foundCtor = constructors.isEmpty();
         for (ExecutableElement ctor : constructors) {
-            if ( ctor.getParameters().size() == 0 ){
+            if ( ctor.getParameters().isEmpty() ){
                 foundCtor = true;
                 break;
             }
-            if ( getHelper().hasAnnotation(allAnnotations, FieldInjectionPointLogic.INJECT_ANNOTATION)
-                    || getHelper().hasAnnotation(allAnnotations, FieldInjectionPointLogic.INJECT_ANNOTATION_JAKARTA))
+            List<? extends AnnotationMirror> ctorAnnotations = ctor.getAnnotationMirrors();
+            if ( getHelper().hasAnnotation(ctorAnnotations, FieldInjectionPointLogic.INJECT_ANNOTATION)
+                    || getHelper().hasAnnotation(ctorAnnotations, FieldInjectionPointLogic.INJECT_ANNOTATION_JAKARTA))
             {
                 foundCtor = true;
                 break;
@@ -381,8 +425,7 @@ class EnableBeansFilter {
         return foundCtor;
     }
 
-    private void checkProxyability( TypeElement typeElement,
-            LinkedList<Element> types , Set<Element> elements)
+    private void checkProxyability( TypeElement typeElement, Set<Element> elements)
     {
         try {
             String scope = ParameterInjectionPointLogic.getScope(typeElement,
@@ -402,7 +445,6 @@ class EnableBeansFilter {
             }
         }
         catch (CdiException e) {
-            types.remove( typeElement );
             elements.remove( typeElement);
             return;
         }
@@ -414,33 +456,23 @@ class EnableBeansFilter {
          * -  and array types.
          */
         if ( hasModifier(typeElement, Modifier.FINAL)){
-            types.remove(typeElement);
             elements.remove( typeElement );
             return;
         }
-        checkFinalMethods(typeElement, types, elements);
+        checkFinalMethods(typeElement, elements);
 
         List<ExecutableElement> constructors = ElementFilter.constructorsIn(
                 typeElement.getEnclosedElements()) ;
-        boolean appropriateCtor = false;
-        for (ExecutableElement constructor : constructors) {
-            if ( hasModifier(constructor, Modifier.PRIVATE)){
-                continue;
-            }
-            if ( constructor.getParameters().size() == 0 ){
-                appropriateCtor = true;
-                break;
-            }
-        }
+        boolean appropriateCtor = constructors.stream()
+                .anyMatch(ctor -> !hasModifier(ctor, Modifier.PRIVATE)
+                && ctor.getParameters().isEmpty());
 
         if ( !appropriateCtor){
-            types.remove(typeElement);
             elements.remove( typeElement );
         }
     }
 
-    private void checkFinalMethods( TypeElement typeElement,
-            LinkedList<Element> types, Set<Element> elements )
+    private void checkFinalMethods( TypeElement typeElement, Set<Element> elements )
     {
         TypeMirror variableType = getResult().getVariableType();
         DeclaredType beanType = getDeclaredType( variableType );
@@ -448,12 +480,11 @@ class EnableBeansFilter {
             return;
         }
         Element beanElement = beanType.asElement();
-        if ( !( beanElement instanceof TypeElement )){
+        if ( !( beanElement instanceof TypeElement te )){
             return;
         }
         List<ExecutableElement> methods = ElementFilter.methodsIn(
-                getHelper().getCompilationController().getElements().getAllMembers(
-                        (TypeElement)beanElement)) ;
+                getHelper().getCompilationController().getElements().getAllMembers(te)) ;
         TypeElement objectElement = getHelper().getCompilationController().
             getElements().getTypeElement(Object.class.getCanonicalName());
         for (ExecutableElement executableElement : methods) {
@@ -462,7 +493,6 @@ class EnableBeansFilter {
                 continue;
             }
             if ( hasModifier(executableElement, Modifier.FINAL)){
-                types.remove(typeElement);
                 elements.remove( typeElement );
                 return;
             }
@@ -473,36 +503,24 @@ class EnableBeansFilter {
                 continue;
             }
             if ( hasModifier(overloaded, Modifier.FINAL)){
-                types.remove(typeElement);
                 elements.remove( typeElement );
                 return;
             }
         }
     }
 
-    private DeclaredType getDeclaredType( TypeMirror type ){
-        if ( type instanceof DeclaredType && type.getKind()!= TypeKind.ERROR){
-            return (DeclaredType)type;
-        }
-        if ( type instanceof TypeVariable ){
-            TypeMirror upperBound = ((TypeVariable)type).getUpperBound();
-            return getDeclaredType( upperBound );
-        }
-        else if ( type instanceof WildcardType ){
-            TypeMirror extendsBound = ((WildcardType)type).getExtendsBound();
-            return getDeclaredType( extendsBound );
-        }
-        return null;
+    private DeclaredType getDeclaredType(TypeMirror type) {
+        return switch (type) {
+            case null -> null;
+            case DeclaredType dt when type.getKind() != TypeKind.ERROR -> dt;
+            case TypeVariable tv -> getDeclaredType(tv.getUpperBound());
+            case WildcardType wt -> getDeclaredType(wt.getExtendsBound());
+            default -> null;
+        };
     }
 
     private boolean hasModifier ( Element element , Modifier mod){
-        Set<Modifier> modifiers = element.getModifiers();
-        for (Modifier modifier : modifiers) {
-            if (modifier == mod) {
-                return true;
-            }
-        }
-        return false;
+        return element.getModifiers().contains(mod);
     }
 
     private void checkSpecializes( TypeElement typeElement,
@@ -512,14 +530,13 @@ class EnableBeansFilter {
         TypeElement current = typeElement;
         while( current != null ){
             TypeMirror superClass = current.getSuperclass();
-            if (!(superClass instanceof DeclaredType)) {
+            if (!(superClass instanceof DeclaredType dt)) {
                 break;
             }
             if (!AnnotationObjectProvider.hasSpecializes(current, getHelper())) {
                 break;
             }
-            TypeElement superElement = (TypeElement) ((DeclaredType) superClass)
-                .asElement();
+            TypeElement superElement = (TypeElement) dt.asElement();
             if (originalElements.contains(superElement)) {
                 resultElementSet.remove(superElement);
             }
@@ -590,16 +607,6 @@ class EnableBeansFilter {
         return myModel;
     }
 
-    private Set<Element> myAlternatives;
-    private Set<Element> myEnabledAlternatives;
-    private ResultImpl myResult;
-    private final AnnotationModelHelper myHelper;
-    private final BeansModel myBeansModel;
-    private WebBeansModelImplementation myModel;
-    private boolean isProgrammatic;
-
-
-
     private InjectableResultImpl handleEESpecificImplementations(ResultImpl result, TypeElement firstElement, Set<Element> enabledTypes) {
         if(result.getVariable() != null) {
             String nm = result.getVariable().asType().toString();
@@ -610,15 +617,26 @@ class EnableBeansFilter {
             if(predefinedBeans.contains(nm)) {
                         return new InjectableResultImpl( getResult(), firstElement, enabledTypes );
             }
-            String ann = predefinedBeanAnnotationPairs.get(nm);
-            if(ann != null) {//NOI18N
-                for(AnnotationMirror am:result.getVariable().getAnnotationMirrors()) {
-                    if(ann.equals(am.getAnnotationType().toString())) {//NOI18N
-                        return new InjectableResultImpl( getResult(), firstElement, enabledTypes );
-                    }
+            if (Objects.equals("java.util.Map", nm)) { //NOI18N
+                if (getHelper().hasAnyAnnotation(result.getVariable().getAnnotationMirrors(), predefinedMapAnnotations)) {
+                    return new InjectableResultImpl(getResult(), firstElement, enabledTypes);
                 }
+            }
+            String ann = predefinedBeanAnnotationPairs.get(nm);
+            if(ann != null) {
+                if(getHelper().hasAnnotation(result.getVariable().getAnnotationMirrors(), ann)) {
+                    return new InjectableResultImpl( getResult(), firstElement, enabledTypes );
+                }
+            }
+            if (hasManagedPropertyAnnotation(result.getVariable())) {
+                return new InjectableResultImpl( getResult(), firstElement, enabledTypes );
             }
         }
         return null;
     }
+
+    private boolean hasManagedPropertyAnnotation(VariableElement variable) {
+        return variable != null && getHelper().hasAnyAnnotation(variable.getAnnotationMirrors(), managedPropertyAnnotations);
+    }
+
 }

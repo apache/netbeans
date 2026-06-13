@@ -223,6 +223,12 @@ public class WebCompositePanelProvider implements ProjectCustomizer.CompositeCat
     public static ProjectCustomizer.CompositeCategoryProvider createCssPreprocessors() {
         return CssPreprocessorsUI.getDefault().createCustomizer();
     }
+    
+    @ProjectCustomizer.CompositeCategoryProvider.Registration(
+            projectType = "org-netbeans-modules-java-j2seproject", position = 500)
+    public static ProjectCustomizer.CompositeCategoryProvider createCssPreprocessorsj2se() {
+        return CssPreprocessorsUI.getDefault().createCustomizer();
+    }
 
     @ProjectCustomizer.CompositeCategoryProvider.Registration(
         projectType="org-netbeans-modules-web-project",

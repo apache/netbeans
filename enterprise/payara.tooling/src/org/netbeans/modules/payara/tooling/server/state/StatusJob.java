@@ -298,6 +298,21 @@ public class StatusJob {
                                             event));
                                     break;
                                 }
+                                // COMPLETED but versions do not match.
+                                // For remote servers, accept the server as
+                                // running (SUCCESS) but fire VERSION_MISMATCH
+                                // so the user is notified via a warning popup.
+                                if (job.status.getServer().isRemote()
+                                        && taskResult != null
+                                        && CommandVersion.isVersionMismatch(
+                                                taskResult, job.status.getServer())) {
+                                    job.version.setResult(new StatusResultVersion(
+                                            taskResult,
+                                            PayaraStatusCheckResult.SUCCESS,
+                                            TaskEvent.VERSION_MISMATCH));
+                                    notifyError = true;
+                                    break;
+                                }
                             case FAILED:
                                 job.version.setResult(new StatusResultVersion(taskResult,
                                         PayaraStatusCheckResult.FAILED,

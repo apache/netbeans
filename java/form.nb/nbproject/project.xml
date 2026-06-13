@@ -341,7 +341,10 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <friend-packages>
+                <friend>org.netbeans.modules.form.binding</friend>
+                <package>org.netbeans.modules.nbform.project</package>
+            </friend-packages>
         </data>
     </configuration>
 </project>

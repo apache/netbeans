@@ -1621,7 +1621,7 @@ public class FlowTest extends NbTestCase {
                         }
                     }
                     """,
-                    "int ii");
+                    "/*missing*/ ii");
     }
 
     public void testCatchParameters() throws Exception {

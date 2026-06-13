@@ -69,6 +69,7 @@ import com.sun.tools.javac.tree.DocTreeMaker;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.tree.JCTree.JCCaseLabel;
+import com.sun.tools.javac.tree.JCTree.JCVariableDecl.DeclKind;
 import com.sun.tools.javac.util.DiagnosticSource;
 import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
@@ -419,7 +420,11 @@ public class TreeFactory {
     public EmptyStatementTree EmptyStatement() {
         return make.at(NOPOS).Skip();
     }
-    
+
+    public VarTypeTree VarType() {
+        return make.at(NOPOS).VarType();
+    }
+
     public EnhancedForLoopTree EnhancedForLoop(VariableTree variable, 
                                                ExpressionTree expression,
                                                StatementTree statement) {
@@ -941,8 +946,13 @@ public class TreeFactory {
                                  CharSequence name,
                                  Tree type,
                                  ExpressionTree initializer) {
+        DeclKind kind = switch (type) {
+            case null -> DeclKind.IMPLICIT;
+            case VarTypeTree vtt -> DeclKind.VAR;
+            default -> DeclKind.EXPLICIT;
+        };
         return make.at(NOPOS).VarDef((JCModifiers)modifiers, names.fromString(name.toString()),
-                           (JCExpression)type, (JCExpression)initializer);
+                           (JCExpression)type, (JCExpression)initializer, kind);
     }
     
     public VariableTree RecordComponent(ModifiersTree modifiers,

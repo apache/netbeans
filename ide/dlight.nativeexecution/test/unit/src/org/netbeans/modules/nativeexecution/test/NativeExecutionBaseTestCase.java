@@ -18,24 +18,19 @@
  */
 package org.netbeans.modules.nativeexecution.test;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
 import java.net.ConnectException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -69,38 +64,32 @@ import org.netbeans.modules.nativeexecution.api.util.ShellScriptRunner;
 import org.netbeans.modules.nativeexecution.api.util.WindowsSupport;
 import org.netbeans.modules.nativeexecution.support.MiscUtils;
 import org.netbeans.modules.nativeexecution.test.RcFile.FormatException;
-import org.openide.filesystems.FileAttributeEvent;
-import org.openide.filesystems.FileChangeListener;
-import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
-import org.openide.util.NotImplementedException;
+import org.openide.util.Utilities;
 
 public class NativeExecutionBaseTestCase extends NbTestCase {
     static {
         // Setting netbeans.dirs makes installedFileLocator work properly
         System.setProperty("netbeans.dirs", NbClustersInfoProvider.getClusters());
         System.setProperty("remote.user.password.keep_in_memory", "true"); // NOI18N
-        System.setProperty("cnd.mode.unittest", "true");        
+        System.setProperty("cnd.mode.unittest", "true");
     }
 
-    protected static class TestLogHandler extends Handler {
+    private static class TestLogHandler extends Handler {
 
         protected final Logger log;
 
-        @Deprecated
-        public TestLogHandler(Logger log) {
+        private TestLogHandler(Logger log) {
             this.log = log;
         }
-        
+
         public static void attach(Logger log) {
             log.addHandler(new TestLogHandler((log)));
         }
-    
-        
+
         @Override
         public void publish(LogRecord record) {
             // Log if parent cannot log the message ONLY.
@@ -129,90 +118,14 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
 
     }
 
-    protected static class DumpingFileChangeListener implements FileChangeListener {
-        public static final String FILE_ATTRIBUTE_CHANGED = "fileAttributeChanged";
-        public static final String FILE_CHANGED = "fileChanged";
-        public static final String FILE_DATA_CREATED = "fileDataCreated";
-        public static final String FILE_DELETED = "fileDeleted";
-        public static final String FILE_FOLDER_CREATED = "fileFolderCreated";
-        public static final String FILE_RENAMED = "fileRenamed";
-
-        private final String listenerName;
-        private final String prefixToStrip;
-        private final PrintStream out;
-        private final boolean checkExpected;
-
-        public DumpingFileChangeListener(String name, String prefixToStrip, PrintStream out, boolean checkExpected) {
-            this.listenerName = name;
-            this.prefixToStrip = prefixToStrip;
-            this.out = out;
-            this.checkExpected = checkExpected;
-        }
-
-        protected void register(String eventKind, FileEvent fe) {
-            String src = stripPrefix(((FileObject) fe.getSource()).getPath());
-            String obj = stripPrefix(fe.getFile().getPath());
-            String exp = checkExpected ? ("exp=" + Boolean.toString(fe.isExpected())) : "";
-            String extra = "";
-            if (fe instanceof FileRenameEvent) {
-                FileRenameEvent fre = (FileRenameEvent) fe;
-                extra = "oldName="+fre.getName()+" oldExt="+fre.getExt();
-            }
-            out.printf("%-20s: %-20s SRC %-20s OBJ %-20s %s %s\n", listenerName, eventKind, src, obj, exp, extra);
-        }
-
-        private String stripPrefix(String path) {
-            if (path.startsWith(prefixToStrip)) {
-                path = path.substring(prefixToStrip.length());
-                if (path.startsWith("/")) {
-                    path = path.substring(1);
-                }
-            }
-            if (path.length() == 0) {
-                path = ".";
-            }
-            return path;
-        }
-
-        @Override
-        public void fileAttributeChanged(FileAttributeEvent fe) {
-            register(FILE_ATTRIBUTE_CHANGED, fe);
-        }
-
-        @Override
-        public void fileChanged(FileEvent fe) {
-            register(FILE_CHANGED, fe);
-        }
-
-        @Override
-        public void fileDataCreated(FileEvent fe) {
-            register(FILE_DATA_CREATED, fe);
-        }
-
-        @Override
-        public void fileDeleted(FileEvent fe) {
-            register(FILE_DELETED, fe);
-        }
-
-        @Override
-        public void fileFolderCreated(FileEvent fe) {
-            register(FILE_FOLDER_CREATED, fe);
-        }
-
-        @Override
-        public void fileRenamed(FileRenameEvent fe) {
-            register(FILE_RENAMED, fe);
-        }
-    }
-    
     static {
         TestLogHandler.attach(org.netbeans.modules.nativeexecution.support.Logger.getInstance());
- 
+
         // the 3 lines below contain a workaround for some WinXP tests failure
         File tmpDir = new File(System.getProperty("java.io.tmpdir"));
         tmpDir = FileUtil.normalizeFile(tmpDir.getAbsoluteFile());
         System.setProperty("java.io.tmpdir", tmpDir.getAbsolutePath());
-        
+
         Logger fsLogger = Logger.getLogger("org.netbeans.modules.masterfs.watcher.Watcher");
         fsLogger.setLevel(Level.WARNING);
     }
@@ -220,7 +133,8 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
     private final ExecutionEnvironment testExecutionEnvironment;
     private String remoteTmpDir;
     private Level oldLevel = null;
-    
+
+    @SuppressWarnings("this-escape")
     public NativeExecutionBaseTestCase(String name) {
         super(name);
         System.setProperty("nativeexecution.mode.unittest", "true");
@@ -234,12 +148,13 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
      * @param testExecutionEnvironment
      */
     /*protected - feel free to make it public in the case you REALLY need this */
+    @SuppressWarnings("this-escape")
     protected NativeExecutionBaseTestCase(String name, ExecutionEnvironment testExecutionEnvironment) {
         super(name);
         System.setProperty("nativeexecution.mode.unittest", "true");
         this.testExecutionEnvironment = testExecutionEnvironment;
         assertNotNull(testExecutionEnvironment);
-        setupUserDir();        
+        setupUserDir();
     }
 
     @Override
@@ -254,11 +169,11 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
         super.tearDown();
         setLoggers(false);
     }
-    
+
     private void setLoggers(boolean setup) {
         if (setup) {
             if (NativeExecutionTestSupport.getBoolean("execution", "logging.finest")
-                 || NativeExecutionTestSupport.getBoolean("execution", getClass().getName() + ".logging.finest")) {        
+                 || NativeExecutionTestSupport.getBoolean("execution", getClass().getName() + ".logging.finest")) {
                 oldLevel = org.netbeans.modules.nativeexecution.support.Logger.getInstance().getLevel();
                 org.netbeans.modules.nativeexecution.support.Logger.getInstance().setLevel(Level.ALL);
             }
@@ -292,7 +207,7 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
             String value = rcFile.get(section, key);
             System.setProperty(key, value);
         }
-    }    
+    }
 
     @Override
     protected int timeOut() {
@@ -311,7 +226,7 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
         return NativeExecutionTestSupport.getRcFile();
     }
 
-    protected RcFile getRemoteRcFile() 
+    protected RcFile getRemoteRcFile()
             throws IOException, RcFile.FormatException, ConnectException,
             ConnectionManager.CancellationException, InterruptedException, ExecutionException {
         return NativeExecutionTestSupport.getRemoteRcFile(getTestExecutionEnvironment());
@@ -332,15 +247,15 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
             return String.format("%s [%s]", name, env);
         }
     }
-    
+
     private static boolean ignoreRandomFailures() {
         return Boolean.getBoolean("ignore.random.failures");
     }
-    
+
     private static boolean randomFailsOnly() {
         return Boolean.getBoolean("random.failures.only");
     }
-    
+
     private boolean isRandomFail() {
         if (getClass().isAnnotationPresent(RandomlyFails.class)) {
             return true;
@@ -362,7 +277,7 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
         if (randomFailsOnly()) {
             return isRandomFail();
         }
-        
+
         res = res && super.canRun();
         if (!res) {
             return false;
@@ -389,16 +304,16 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
 
     protected String runCommandInDir(String dir, String command, String... args) throws Exception {
         return runCommandInDir(getTestExecutionEnvironment(), dir, command, args);
-        
+
     }
-    
+
     protected String runCommandInDir(ExecutionEnvironment env, String dir, String command, String... args) throws Exception {
         ProcessUtils.ExitStatus res = ProcessUtils.executeInDir(dir, env, command, args);
         assertTrue("Command \"" + command + ' ' + stringArrayToString(args) +
                 "\" in dir " + dir + " failed", res.isOK());
         return res.getOutputString();
     }
-    
+
     /**
      * Creates a directory structure described by parameters
      *
@@ -418,6 +333,7 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
     public static void createDirStructure(ExecutionEnvironment env, String baseDir, String[] creationData) throws Exception {
         createDirStructure(env, baseDir, creationData, true);
     }
+    @SuppressWarnings("AssignmentToMethodParameter")
     public static void createDirStructure(ExecutionEnvironment env, String baseDir, String[] creationData, boolean cleanOld) throws Exception {
         if (baseDir == null || baseDir.length() == 0 || baseDir.equals("/")) {
             throw new IllegalArgumentException("Illegal base dir: " + baseDir);
@@ -448,28 +364,19 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
                     }
                 }
                 switch (data.charAt(0)) {
-                    case '-':
-                        script.append("touch \"").append(path).append("\";\n");
-                        break;
-                    case 'd':
-                        script.append("mkdir -p \"").append(path).append("\";\n");
-                        break;
-                    case 'l':
+                    case '-' -> script.append("touch \"").append(path).append("\";\n");
+                    case 'd' -> script.append("mkdir -p \"").append(path).append("\";\n");
+                    case 'l' -> {
                         String link = parts[2];
                         script.append("ln -s \"").append(path).append("\" \"").append(link).append("\";\n");
-                        break;
-                    case 'R':
-                        script.append("rm -rf \"").append(path).append("\";\n");
-                        break;
-                    case 'T':
-                        script.append("touch \"").append(path).append("\";\n");
-                        break;
-                    case 'M':
+                    }
+                    case 'R' -> script.append("rm -rf \"").append(path).append("\";\n");
+                    case 'T' -> script.append("touch \"").append(path).append("\";\n");
+                    case 'M' -> {
                         String dst = parts[2];
                         script.append("mv \"").append(path).append("\" \"").append(dst).append("\";\n");
-                        break;
-                    default:
-                        throw new IllegalArgumentException("Unexpected 1-st char: " + data);
+                    }
+                    default -> throw new IllegalArgumentException("Unexpected 1-st char: " + data);
                 }
             }
         } catch (Throwable thr) {
@@ -482,7 +389,7 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
             assertTrue("script failed at " + env.getDisplayName() + " rc=" + res.exitCode + " err=" + res.getErrorString(), false);
         }
     }
-    
+
     private String stringArrayToString(String[] args) {
         StringBuilder sb = new StringBuilder();
         for (String arg : args) {
@@ -490,13 +397,14 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
         }
         return sb.toString();
     }
-    
+
     protected String runScript(String script) throws Exception {
         return runScript(getTestExecutionEnvironment(), script);
     }
 
     protected String runScript(ExecutionEnvironment env, String script) throws Exception {
-        final StringBuilder output = new StringBuilder();        
+        final StringBuilder output = new StringBuilder();
+        @SuppressWarnings("deprecation")
         ShellScriptRunner scriptRunner = new ShellScriptRunner(env, script, new LineProcessor() {
             @Override
             public void processLine(String line) {
@@ -512,7 +420,7 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
         assertEquals("Error running script", 0, rc);
         return output.toString();
     }
-    
+
     protected boolean canRead(ExecutionEnvironment env, String path) throws Exception {
         NativeProcessBuilder npb = NativeProcessBuilder.newProcessBuilder(env);
         npb.setExecutable("test").setArguments("-r", path);
@@ -532,35 +440,23 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
     }
 
     public static void writeFile(File file, CharSequence content) throws IOException {
-        Writer writer = new FileWriter(file);
-        try {
+        try (Writer writer = new FileWriter(file)) {
             writer.write(content.toString());
-        } finally {
-            writer.close();
         }
     }
-    
+
     protected static void writeFile(FileObject fo, CharSequence content) throws IOException {
-        BufferedWriter bw = null;
-        try {
-            bw = new BufferedWriter(new OutputStreamWriter(fo.getOutputStream()));
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fo.getOutputStream()))) {
             bw.append(content);
-        } finally {
-            if (bw != null) {
-                bw.close();
-            }
         }
     }
 
     public static void writeFile(File file, List<? extends CharSequence> lines) throws IOException {
-        Writer writer = new FileWriter(file);
-        try {
+        try (Writer writer = new FileWriter(file)) {
             for (CharSequence line : lines) {
                 writer.write(line.toString());
                 writer.write('\n');
             }
-        } finally {
-            writer.close();
         }
     }
 
@@ -569,35 +465,26 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
         Collections.sort(lines);
         writeFile(file, lines);
     }
-    
+
     private List<String> readFileLines(File file) throws IOException {
-        BufferedReader r = new BufferedReader(new FileReader(file));
-        try {
+        try (BufferedReader r = new BufferedReader(new FileReader(file));) {
             List<String> lines = new ArrayList<>();
-            String line;
-            while ((line = r.readLine()) != null) {
+            for(String line = r.readLine(); line != null; line = r.readLine()) {
                 lines.add(line);
             }
             return lines;
-        } finally {
-            if (r != null) { 
-                try { 
-                    r.close(); 
-                } catch (IOException e) {}
-            }
         }
     }
 
     public static String readStream(InputStream is) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
-        char buf[] = new char[4096];
-        int cnt = 0;
-        while ((cnt = reader.read(buf)) != -1) {
-            String text = String.valueOf(buf, 0, cnt);
-            sb.append(text);
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+            char buf[] = new char[4096];
+            for(int cnt = reader.read(buf); cnt != -1; cnt = reader.read(buf)) {
+                String text = String.valueOf(buf, 0, cnt);
+                sb.append(text);
+            }
         }
-        reader.close();
         return sb.toString();
     }
 
@@ -674,7 +561,7 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
     }
 
     protected File getIdeUtilJar() throws URISyntaxException  {
-        return new File(Lookup.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        return Utilities.toFile(Lookup.class.getProtectionDomain().getCodeSource().getLocation().toURI());
     }
 
     protected void copyDirectory(File srcDir, File dstDir) throws IOException {
@@ -694,24 +581,22 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
     }
 
     protected static void printFile(File file, String prefix, PrintStream out) throws Exception {
-        BufferedReader rdr = new BufferedReader(new FileReader(file));
-        try {
-            String line;
-            while ((line = rdr.readLine()) != null) {
+        try (BufferedReader rdr = new BufferedReader(new FileReader(file))) {
+            for(String line = rdr.readLine(); line != null; line = rdr.readLine()) {
                 if (prefix == null) {
                     out.printf("%s\n", line);
                 } else {
                     out.printf("%s: %s\n", prefix, line);
                 }
             }
-        } finally {
-            if (rdr != null) {
-                rdr.close();                
-            }
         }
     }
-    
-    /** A convenience wrapper for Thread.sleep */
+
+    /**
+     * A convenience wrapper for Thread.sleep
+     *
+     * @param millis
+     */
     protected static void sleep(int millis) {
         try {
             Thread.sleep(millis);
@@ -726,14 +611,14 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
 
     protected String createRemoteTmpDir() throws Exception {
         String dir = getRemoteTmpDir();
-        int rc = CommonTasksSupport.mkDir(getTestExecutionEnvironment(), dir, new PrintWriter(System.err)).get().intValue();
+        int rc = CommonTasksSupport.mkDir(getTestExecutionEnvironment(), dir, new PrintWriter(System.err)).get();
         assertEquals("Can not create directory " + dir, 0, rc);
         return dir;
     }
 
     protected void clearRemoteTmpDir() throws Exception {
         String dir = getRemoteTmpDir();
-        int rc = CommonTasksSupport.rmDir(getTestExecutionEnvironment(), dir, true, new PrintWriter(System.err)).get().intValue();
+        int rc = CommonTasksSupport.rmDir(getTestExecutionEnvironment(), dir, true, new PrintWriter(System.err)).get();
         if (rc != 0) {
             System.err.printf("Can not delete directory %s\n", dir);
         }
@@ -759,12 +644,12 @@ public class NativeExecutionBaseTestCase extends NbTestCase {
         }
         return remoteTmpDir;
     }
-    
+
     protected static void threadsDump(String header, String footer) {
         NativeExecutionTestSupport.threadsDump(header, footer);
     }
 
     protected static boolean isDebugged() {
         return MiscUtils.isDebugged();
-    }    
+    }
 }

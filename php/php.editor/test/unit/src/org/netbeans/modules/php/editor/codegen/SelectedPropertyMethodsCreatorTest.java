@@ -358,6 +358,19 @@ public class SelectedPropertyMethodsCreatorTest extends PHPTestBase {
         checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleSetters()), new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)));
     }
 
+    public void testTypedPropertiesSetter_PHP80() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleSetters()), new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)));
+    }
+
+    public void testTypedPropertiesSetter_PHP80Fluent() throws Exception {
+        CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_80);
+        cgsInfo.setPublicModifier(true);
+        cgsInfo.setFluentSetter(true);
+        checkResult(new SelectedPropertyMethodsCreator().create(selectAllProperties(cgsInfo.getPossibleSetters()), new SinglePropertyMethodCreator.SingleSetterCreator(cgsInfo)));
+    }
+
     // constructor
     public void testTypedPropertiesConstructor_PHP56() throws Exception {
         CGSInfo cgsInfo = getCgsInfo("^}", PhpVersion.PHP_56);

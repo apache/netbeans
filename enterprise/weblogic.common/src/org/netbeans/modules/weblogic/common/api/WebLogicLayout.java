@@ -134,13 +134,10 @@ public final class WebLogicLayout {
     }
 
     /**
-     * Checks whether the server root contains weblogic.jar of version 9, 10 or 11.
+     * Checks whether the server root contains weblogic.jar of version 9 or above.
      */
     public static boolean isSupportedVersion(Version version) {
-        return version != null && (Integer.valueOf(9).equals(version.getMajor())
-                    || Integer.valueOf(10).equals(version.getMajor())
-                    || Integer.valueOf(11).equals(version.getMajor())
-                    || Integer.valueOf(12).equals(version.getMajor()));
+        return version != null && version.isAboveOrEqual(Version.fromDottedNotationWithFallback("9.0.0.0"));
     }
 
     @NonNull

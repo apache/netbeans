@@ -130,6 +130,10 @@ public class WLJ2eePlatformFactory extends J2eePlatformFactory {
 
     private static final Version JDK8_SUPPORTED_SERVER_VERSION = Version.fromJsr277NotationWithFallback("12.1.3"); // NOI18N
 
+    private static final Version JDK11_SUPPORTED_SERVER_VERSION = Version.fromJsr277NotationWithFallback("14.1.1"); // NOI18N
+
+    private static final Version JDK17_SUPPORTED_SERVER_VERSION = Version.fromJsr277NotationWithFallback("15.1.1"); // NOI18N
+
     private static final Version JPA2_SUPPORTED_SERVER_VERSION = Version.fromJsr277NotationWithFallback("12.1.1"); // NOI18N
 
     private static final Version JPA21_SUPPORTED_SERVER_VERSION = Version.fromJsr277NotationWithFallback("12.1.3"); // NOI18N
@@ -529,6 +533,22 @@ public class WLJ2eePlatformFactory extends J2eePlatformFactory {
                     profiles.add(Profile.JAVA_EE_7_FULL);
                     profiles.add(Profile.JAVA_EE_7_WEB);
                 }
+                if (version.isAboveOrEqual(WLDeploymentFactory.VERSION_1411)) {
+                    profiles.add(Profile.JAVA_EE_8_FULL);
+                    profiles.add(Profile.JAVA_EE_8_WEB);
+                    profiles.add(Profile.JAKARTA_EE_8_FULL);
+                    profiles.add(Profile.JAKARTA_EE_8_WEB);
+                }
+                if (version.isAboveOrEqual(WLDeploymentFactory.VERSION_1511)) {
+                    profiles.add(Profile.JAKARTA_EE_9_FULL);
+                    profiles.add(Profile.JAKARTA_EE_9_WEB);
+                    profiles.add(Profile.JAKARTA_EE_9_1_FULL);
+                    profiles.add(Profile.JAKARTA_EE_9_1_WEB);
+                    profiles.add(Profile.JAKARTA_EE_10_FULL);
+                    profiles.add(Profile.JAKARTA_EE_10_WEB);
+                    profiles.add(Profile.JAKARTA_EE_11_FULL);
+                    profiles.add(Profile.JAKARTA_EE_11_WEB);
+                }
             }
 
             domainChangeListener = new DomainChangeListener(this);
@@ -620,6 +640,12 @@ public class WLJ2eePlatformFactory extends J2eePlatformFactory {
                 }
                 if (serverVersion.isAboveOrEqual(JDK8_SUPPORTED_SERVER_VERSION)) {
                     versions.add("1.8"); // NOI18N
+                }
+                if (serverVersion.isAboveOrEqual(JDK11_SUPPORTED_SERVER_VERSION)) {
+                    versions.add("11"); // NOI18N
+                }
+                if (serverVersion.isAboveOrEqual(JDK17_SUPPORTED_SERVER_VERSION)) {
+                    versions.add("17"); // NOI18N
                 }
             }
             return versions;

@@ -370,7 +370,12 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
         currentSym = oldSym;
         return result;
     }
-	
+
+    @Override
+    public Tree visitVarType(VarTypeTree tree, Object p) {
+	return rewriteChildren(tree);
+    }
+
     @Override
     public Tree visitEmptyStatement(EmptyStatementTree tree, Object p) {
 	return rewriteChildren(tree);
@@ -749,7 +754,7 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
 	}
 	return tree;
     }
-	
+
     protected final VariableTree rewriteChildren(VariableTree tree) {
         ModifiersTree mods = (ModifiersTree)translate(tree.getModifiers());
 	ExpressionTree vartype = (ExpressionTree)translateClassRef(tree.getType());
@@ -763,6 +768,10 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
 	return tree;
     }
 	
+    protected final VarTypeTree rewriteChildren(VarTypeTree tree) {
+	return tree;
+    }
+
     protected final EmptyStatementTree rewriteChildren(EmptyStatementTree tree) {
 	return tree;
     }
@@ -888,10 +897,6 @@ public class ImmutableTreeTranslator implements TreeVisitor<Tree,Object> {
             parameters != tree.getParameters())
         {
             LambdaExpressionTree n = make.LambdaExpression(parameters, body);
-            // issue #239256, NETBEANS-345
-            // Subsequent to the construction of tree, the vartype of the head
-            // param might have been filled in, so we need to copy tree's paramKind.
-            ((JCLambda)n).paramKind = ((JCLambda)tree).paramKind;
             model.setType(n, model.getType(tree));
 	    copyCommentTo(tree,n);
             copyPosTo(tree,n);

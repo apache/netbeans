@@ -717,22 +717,32 @@ abstract class BaseTask extends UserTask {
 
         @Override
         public long getStartPosition(CompilationUnitTree compilationUnitTree, Tree tree) {
+            return getStartPosition(tree);
+        }
+
+        @Override
+        public long getStartPosition(Tree tree) {
             if (tree == root) {
                 return startOffset;
             }
             found = false;
             scan(root, tree);
-            return found ? modified.getStartPosition(compilationUnitTree, tree) + startOffset : original.getStartPosition(compilationUnitTree, tree);
+            return found ? modified.getStartPosition(tree) + startOffset : original.getStartPosition(tree);
         }
 
         @Override
         public long getEndPosition(CompilationUnitTree compilationUnitTree, Tree tree) {
+            return getEndPosition(tree);
+        }
+
+        @Override
+        public long getEndPosition(Tree tree) {
             if (tree == root) {
                 return endOffset;
             }
             found = false;
             scan(root, tree);
-            return found ? modified.getEndPosition(compilationUnitTree, tree) + startOffset : original.getEndPosition(compilationUnitTree, tree);
+            return found ? modified.getEndPosition(tree) + startOffset : original.getEndPosition(tree);
         }
 
         @Override

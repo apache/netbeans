@@ -453,13 +453,13 @@ public class TreePathHandleTest extends NbTestCase {
         CompilationInfo info = SourceUtilsTestUtil.getCompilationInfo(js, Phase.RESOLVED);
         assertTrue(info.getDiagnostics().size() > 0);
 
-        TreePath tp = info.getTreeUtilities().pathFor(code.indexOf("var v1") + 1); //NOI18N
+        TreePath tp = info.getTreeUtilities().pathFor(code.indexOf("var v1") + 5); //NOI18N
         VariableElement elem = (VariableElement) info.getTrees().getElement(tp);
         ClassFileUtil.createFieldDescriptor(elem);
         TreePathHandle handle = TreePathHandle.create(tp, info);
         assertNotNull(handle.getElementHandle());
         
-        tp = info.getTreeUtilities().pathFor(code.indexOf("var v2") + 1); //NOI18N
+        tp = info.getTreeUtilities().pathFor(code.indexOf("var v2") + 5); //NOI18N
         elem = (VariableElement) info.getTrees().getElement(tp);
         ClassFileUtil.createFieldDescriptor(elem);
         

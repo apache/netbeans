@@ -84,6 +84,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.UsesTree;
+import com.sun.source.tree.VarTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
@@ -578,6 +579,15 @@ public class TreeDuplicator implements TreeVisitor<Tree, Void> {
     @Override
     public Tree visitVariable(VariableTree tree, Void p) {
         VariableTree n = make.Variable(tree.getModifiers(), tree.getName().toString(), tree.getType(), tree.getInitializer());
+        comments.copyComments(tree, n);
+        model.setPos(n, model.getPos(tree));
+        return n;
+    }
+
+    @Override
+    public Tree visitVarType(VarTypeTree tree, Void p) {
+        VarTypeTree n = make.VarType();
+        model.setType(n, model.getType(tree));
         comments.copyComments(tree, n);
         model.setPos(n, model.getPos(tree));
         return n;

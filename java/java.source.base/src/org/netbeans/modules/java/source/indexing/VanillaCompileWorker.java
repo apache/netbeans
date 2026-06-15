@@ -823,6 +823,10 @@ final class VanillaCompileWorker extends CompileWorker {
                     clazz.defs = clazz.defs.prepend(make.MethodDef((MethodSymbol) s, make.Block(0, com.sun.tools.javac.util.List.of(throwTree("java.lang.runtime.ObjectMethods does not exist!")))));
                     s.flags_field &= ~Flags.RECORD;
                 }
+                //clear other record flags:
+                clazz.sym.flags_field &= ~Flags.RECORD;
+                clazz.mods.flags &= ~Flags.RECORD;
+                clazz.defs.forEach(t -> { if (t instanceof JCVariableDecl var) var.mods.flags &= ~Flags.RECORD; });
             }
 
             private JCStatement clearAndWrapAnonymous(JCNewClass nc) {

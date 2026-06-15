@@ -41,7 +41,6 @@ import com.sun.tools.javac.comp.Flow;
 import com.sun.tools.javac.parser.LazyDocCommentTable;
 import com.sun.tools.javac.parser.Scanner;
 import com.sun.tools.javac.parser.ScannerFactory;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeInfo;
 import com.sun.tools.javac.tree.TreeMaker;
@@ -220,7 +219,6 @@ public class VanillaPartialReparser implements PartialReparser {
                     long start = System.currentTimeMillis();
                     Map<JCTree, Object> docComments = new HashMap<>();
                     block = reparseMethodBody(ctx, cu, orig, newBody + " ", docComments);
-                    final EndPosTable endPos = ((JCTree.JCCompilationUnit)cu).endPositions;
                     LOGGER.log(Level.FINER, "Reparsed method in: {0}", fo);     //NOI18N
                     if (block == null) {
                         LOGGER.log(
@@ -250,7 +248,7 @@ public class VanillaPartialReparser implements PartialReparser {
                         JavacParser.logTime (fo,Phase.PARSED,(end-start));
                     }
                     final int delta = newEndPos - origEndPos;
-                    final TranslatePositionsVisitor tpv = new TranslatePositionsVisitor(orig, endPos, delta);
+                    final TranslatePositionsVisitor tpv = new TranslatePositionsVisitor(orig, delta);
                     tpv.scan(cu, null);
                     Enter.instance(ctx).unenter((JCTree.JCCompilationUnit) cu, ((JCTree.JCMethodDecl)orig).body);
                     ((JCTree.JCMethodDecl)orig).body = block;
@@ -326,7 +324,7 @@ public class VanillaPartialReparser implements PartialReparser {
         }
         body[startPos + newBodyText.length()] = '\u0000';
         CharBuffer buf = CharBuffer.wrap(body, 0, body.length - 1);
-        com.sun.tools.javac.parser.JavacParser parser = newParser(ctx, buf, ((JCTree.JCBlock)methodToReparse.getBody()).pos, ((JCTree.JCCompilationUnit)topLevel).endPositions);
+        com.sun.tools.javac.parser.JavacParser parser = newParser(ctx, buf, ((JCTree.JCBlock)methodToReparse.getBody()).pos);
         final JCTree.JCStatement statement = parser.parseStatement();
         if (statement.getKind() == Tree.Kind.BLOCK) {
             if (docComments != null) {
@@ -337,42 +335,16 @@ public class VanillaPartialReparser implements PartialReparser {
         return null;
     }
 
-    private com.sun.tools.javac.parser.JavacParser newParser(Context context, CharSequence input, int startPos, final EndPosTable endPos) {
+    private com.sun.tools.javac.parser.JavacParser newParser(Context context, CharSequence input, int startPos) {
         NBParserFactory parserFactory = (NBParserFactory) NBParserFactory.instance(context); //TODO: eliminate the cast
         ScannerFactory scannerFactory = ScannerFactory.instance(context);
         CancelService cancelService = CancelService.instance(context);
         Scanner lexer = scannerFactory.newScanner(input, true);
 //        lexer.seek(startPos);
-        if (endPos instanceof NBParserFactory.NBJavacParser.EndPosTableImpl table) {
-            table.resetErrorEndPos();
-        }
-        return new NBParserFactory.NBJavacParser(parserFactory, lexer, true, false, true, false, cancelService) {
-            @Override protected com.sun.tools.javac.parser.JavacParser.AbstractEndPosTable newEndPosTable(boolean keepEndPositions) {
-                return new com.sun.tools.javac.parser.JavacParser.AbstractEndPosTable() {
-
-                    @Override
-                    public <T extends JCTree> T storeEnd(T tree, int endpos) {
-                        return ((NBParserFactory.NBJavacParser.EndPosTableImpl)endPos).storeEnd(tree, endpos);
-                    }
-
-                    @Override
-                    public int getEndPos(JCTree tree) {
-                        return endPos.getEndPos(tree);
-                    }
-
-                    @Override
-                    public int replaceTree(JCTree oldtree, JCTree newtree) {
-                        return endPos.replaceTree(oldtree, newtree);
-                    }
-
-                    @Override
-                    public void setErrorEndPos(int errPos) {
-                        super.setErrorEndPos(errPos);
-                        ((NBParserFactory.NBJavacParser.EndPosTableImpl)endPos).setErrorEndPos(errPos);
-                    }
-                };
-            }
-        };
+//        if (endPos instanceof NBParserFactory.NBJavacParser.EndPosTableImpl table) {
+//            table.resetErrorEndPos();
+//        }
+        return new NBParserFactory.NBJavacParser(parserFactory, lexer, true, false, false, cancelService);
     }
 
     public BlockTree reattrMethodBody(Context context, Scope scope, MethodTree methodToReparse, BlockTree block) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException {

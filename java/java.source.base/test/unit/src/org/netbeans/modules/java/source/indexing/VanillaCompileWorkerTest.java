@@ -1177,7 +1177,6 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
                 "    }\n" +
                 "    \n" +
                 "    public Test(String s) {\n" +
-                "        super();\n" +
                 "    }\n" +
                 "}");
         if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
@@ -2359,15 +2358,13 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
                 "\n" +
-                "public class Test {\n" +
+                "public record Test(int wait) {\n" +
                 "    static {\n" +
                 "        throw new java.lang.RuntimeException(\"Uncompilable code - compiler.err.illegal.record.component.name\");\n" +
                 "    }\n" +
                 "    \n" +
                 "    public Test(int wait) {\n" +
-                "        super();\n" +
                 "    }\n" +
-                "    private final int wait;\n" +
                 "}");
         if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);
@@ -2453,12 +2450,10 @@ public class VanillaCompileWorkerTest extends CompileWorkerTestBase {
         Map<String, String> expected = Collections.singletonMap("test/Test.java",
                 "package test;\n" +
                 "\n" +
-                "class Test {\n" +
+                "record Test(int i) {\n" +
                 "    \n" +
                 "    Test(int i) {\n" +
-                "        super();\n" +
                 "    }\n" +
-                "    private final int i;\n" +
                 "}");
         if (!"\n".equals(System.lineSeparator())) file2Fixed.replaceAll((k, v) -> v.replaceAll(System.lineSeparator(), "\n"));
         assertEquals(expected, file2Fixed);

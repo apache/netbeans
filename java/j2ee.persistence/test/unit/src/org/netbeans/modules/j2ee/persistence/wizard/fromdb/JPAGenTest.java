@@ -31,6 +31,7 @@ import org.netbeans.modules.dbschema.SchemaElementUtil;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.DbSchemaEjbGenerator;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityClass;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityMember;
+import org.netbeans.modules.j2ee.persistence.entitygenerator.DateTimeType;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.CollectionType;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.FetchType;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.GeneratedTables;
@@ -69,13 +70,57 @@ public class JPAGenTest extends SourceTestSupport{
         EntityClass user = getUserEntity();
         
         generator.generateBeans(new EntityClass[]{user}, true, false, false, false, false,
-                FetchType.DEFAULT, CollectionType.COLLECTION, getProgressContributor(), null, null);
+                FetchType.DEFAULT, CollectionType.COLLECTION, DateTimeType.LEGACY, getProgressContributor(), null, null);
         assertEquals(1,generator.createdObjects().size());
         
         FileObject result = generator.createdObjects().iterator().next();
         assertFile(FileUtil.toFile(result), getGoldenFile("testGenEntity/" + result.getName() + ".pass"));
     }
     
+    public void testGenerateJavaTimeTypes() throws IOException{
+        EntityClass event = new EntityClass(null, null, "EVENT",
+                getWorkDirFO(), packageName, "Event", UpdateType.NEW, false, null);
+        event.usePkField(true);
+
+        EntityMemberImpl eventDate = temporalMember("eventDate", "EVENT_DATE", "java.sql.Date", "EVENT");
+        EntityMemberImpl eventTime = temporalMember("eventTime", "EVENT_TIME", "java.sql.Time", "EVENT");
+        EntityMemberImpl created = temporalMember("created", "CREATED", "java.sql.Timestamp", "EVENT");
+
+        List<EntityMember> fields = new ArrayList<>();
+        fields.add(getId("EVENT"));
+        fields.add(eventDate);
+        fields.add(eventTime);
+        fields.add(created);
+        event.setFields(fields);
+
+        generator.generateBeans(new EntityClass[]{event}, true, false, false, false, false,
+                FetchType.DEFAULT, CollectionType.COLLECTION, DateTimeType.JAVA_8, getProgressContributor(), null, null);
+        assertEquals(1, generator.createdObjects().size());
+
+        FileObject result = generator.createdObjects().iterator().next();
+        String content = result.asText();
+
+        // java.time types are used instead of java.util.Date ...
+        assertTrue("expected LocalDate", content.contains("java.time.LocalDate") || content.contains("LocalDate"));
+        assertTrue("expected LocalTime", content.contains("java.time.LocalTime") || content.contains("LocalTime"));
+        assertTrue("expected LocalDateTime", content.contains("java.time.LocalDateTime") || content.contains("LocalDateTime"));
+        assertFalse("java.util.Date must not be generated", content.contains("java.util.Date"));
+        // ... and java.time types are mapped natively, without @Temporal.
+        assertFalse("@Temporal must not be generated for java.time types", content.contains("@Temporal"));
+    }
+
+    private EntityMemberImpl temporalMember(String memberName, String columnName, String memberType, String tableName){
+        EntityMemberImpl member = new EntityMemberImpl();
+        member.setMemberName(memberName);
+        member.setColumnName(columnName);
+        member.setSupportsFinder(true);
+        member.setNullable(true);
+        member.setPrimaryKey(false);
+        member.setMemberType(memberType);
+        member.setTableName(tableName);
+        return member;
+    }
+
     public void testGenerateTwoUnrelated() throws IOException{
         
         EntityClass user = getUserEntity();
@@ -103,7 +148,7 @@ public class JPAGenTest extends SourceTestSupport{
         
         
         generator.generateBeans(new EntityClass[]{user, product}, true, false, false,
-                false, false, FetchType.DEFAULT, CollectionType.COLLECTION,
+                false, false, FetchType.DEFAULT, CollectionType.COLLECTION, DateTimeType.LEGACY,
                 getProgressContributor(), null, null);
         Set<FileObject> result = generator.createdObjects();
         assertEquals(2, result.size());
@@ -128,10 +173,10 @@ public class JPAGenTest extends SourceTestSupport{
         
         EntityClass[] beans = new DbSchemaEjbGenerator(genTables, schema).getBeans();
         
-        generator.generateBeans(beans, true, false, false, false, false, FetchType.DEFAULT, CollectionType.COLLECTION, getProgressContributor(), null, null);
+        generator.generateBeans(beans, true, false, false, false, false, FetchType.DEFAULT, CollectionType.COLLECTION, DateTimeType.LEGACY, getProgressContributor(), null, null);
         Set<FileObject> result = generator.createdObjects();
         assertEquals(1, result.size());
-        
+
         for(FileObject each : result){
             assertFile(FileUtil.toFile(each), getGoldenFile("testGenFromSample/" + each.getName() + ".pass"));
         }

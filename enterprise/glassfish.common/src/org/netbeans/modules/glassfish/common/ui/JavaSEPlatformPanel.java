@@ -105,9 +105,20 @@ public class JavaSEPlatformPanel extends JPanel {
         JavaPlatform platform = JavaUtils.findInstalledPlatform(javaHome);
         String platformName = platform != null
                 ? platform.getDisplayName() : javaHome.getAbsolutePath();
-        String message = NbBundle.getMessage(
-                JavaSEPlatformPanel.class,
-                "JavaSEPlatformPanel.warning", platformName);
+        // When no installed platform is compatible the selection combo is
+        // empty and OK stays disabled, so point the user at "Manage Platforms"
+        // and name the supported range instead of the generic warning.
+        JavaPlatform[] supportedPlatforms
+                = JavaUtils.findSupportedPlatforms(instance);
+        String message = supportedPlatforms == null
+                || supportedPlatforms.length == 0
+                ? NbBundle.getMessage(
+                        JavaSEPlatformPanel.class,
+                        "JavaSEPlatformPanel.noPlatform", platformName,
+                        JavaUtils.supportedJavaSERange(instance))
+                : NbBundle.getMessage(
+                        JavaSEPlatformPanel.class,
+                        "JavaSEPlatformPanel.warning", platformName);
         String title = NbBundle.getMessage(
                 JavaSEPlatformPanel.class,
                 "JavaSEPlatformPanel.title", platformName);

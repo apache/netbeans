@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
+            <code-name-base>org.apache.sshd.osgi</code-name-base>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>bcprov</code-name-base>
+                    <run-dependency/>
+                </dependency>
+                <dependency>
+                    <code-name-base>slf4j.api</code-name-base>
+                    <run-dependency/>
+                </dependency>
+            </module-dependencies>
+            <public-packages>
+                <package>org.apache.sshd.agent</package>
+                <package>org.apache.sshd.agent.common</package>
+                <package>org.apache.sshd.agent.local</package>
+                <package>org.apache.sshd.agent.unix</package>
+                <package>org.apache.sshd.certificate</package>
+                <package>org.apache.sshd.client</package>
+                <package>org.apache.sshd.client.auth</package>
+                <package>org.apache.sshd.client.auth.hostbased</package>
+                <package>org.apache.sshd.client.auth.keyboard</package>
+                <package>org.apache.sshd.client.auth.password</package>
+                <package>org.apache.sshd.client.auth.pubkey</package>
+                <package>org.apache.sshd.client.channel</package>
+                <package>org.apache.sshd.client.channel.exit</package>
+                <package>org.apache.sshd.client.config</package>
+                <package>org.apache.sshd.client.config.hosts</package>
+                <package>org.apache.sshd.client.config.keys</package>
+                <package>org.apache.sshd.client.future</package>
+                <package>org.apache.sshd.client.global</package>
+                <package>org.apache.sshd.client.kex</package>
+                <package>org.apache.sshd.client.keyverifier</package>
+                <package>org.apache.sshd.client.session</package>
+                <package>org.apache.sshd.client.session.forward</package>
+                <package>org.apache.sshd.client.simple</package>
+                <package>org.apache.sshd.client.subsystem</package>
+                <package>org.apache.sshd.common</package>
+                <package>org.apache.sshd.common.auth</package>
+                <package>org.apache.sshd.common.channel</package>
+                <package>org.apache.sshd.common.channel.exception</package>
+                <package>org.apache.sshd.common.channel.throttle</package>
+                <package>org.apache.sshd.common.cipher</package>
+                <package>org.apache.sshd.common.compression</package>
+                <package>org.apache.sshd.common.config</package>
+                <package>org.apache.sshd.common.config.keys</package>
+                <package>org.apache.sshd.common.config.keys.impl</package>
+                <package>org.apache.sshd.common.config.keys.loader</package>
+                <package>org.apache.sshd.common.config.keys.loader.openssh</package>
+                <package>org.apache.sshd.common.config.keys.loader.openssh.kdf</package>
+                <package>org.apache.sshd.common.config.keys.loader.pem</package>
+                <package>org.apache.sshd.common.config.keys.loader.ssh2</package>
+                <package>org.apache.sshd.common.config.keys.u2f</package>
+                <package>org.apache.sshd.common.config.keys.writer</package>
+                <package>org.apache.sshd.common.config.keys.writer.openssh</package>
+                <package>org.apache.sshd.common.digest</package>
+                <package>org.apache.sshd.common.file</package>
+                <package>org.apache.sshd.common.file.nativefs</package>
+                <package>org.apache.sshd.common.file.nonefs</package>
+                <package>org.apache.sshd.common.file.root</package>
+                <package>org.apache.sshd.common.file.util</package>
+                <package>org.apache.sshd.common.file.virtualfs</package>
+                <package>org.apache.sshd.common.forward</package>
+                <package>org.apache.sshd.common.future</package>
+                <package>org.apache.sshd.common.global</package>
+                <package>org.apache.sshd.common.helpers</package>
+                <package>org.apache.sshd.common.io</package>
+                <package>org.apache.sshd.common.io.nio2</package>
+                <package>org.apache.sshd.common.kex</package>
+                <package>org.apache.sshd.common.kex.dh</package>
+                <package>org.apache.sshd.common.kex.extension</package>
+                <package>org.apache.sshd.common.kex.extension.parser</package>
+                <package>org.apache.sshd.common.keyprovider</package>
+                <package>org.apache.sshd.common.mac</package>
+                <package>org.apache.sshd.common.net</package>
+                <package>org.apache.sshd.common.random</package>
+                <package>org.apache.sshd.common.session</package>
+                <package>org.apache.sshd.common.session.helpers</package>
+                <package>org.apache.sshd.common.signature</package>
+                <package>org.apache.sshd.common.util</package>
+                <package>org.apache.sshd.common.util.buffer</package>
+                <package>org.apache.sshd.common.util.buffer.keys</package>
+                <package>org.apache.sshd.common.util.closeable</package>
+                <package>org.apache.sshd.common.util.functors</package>
+                <package>org.apache.sshd.common.util.helper</package>
+                <package>org.apache.sshd.common.util.io</package>
+                <package>org.apache.sshd.common.util.io.der</package>
+                <package>org.apache.sshd.common.util.io.functors</package>
+                <package>org.apache.sshd.common.util.io.input</package>
+                <package>org.apache.sshd.common.util.io.output</package>
+                <package>org.apache.sshd.common.util.io.resource</package>
+                <package>org.apache.sshd.common.util.logging</package>
+                <package>org.apache.sshd.common.util.net</package>
+                <package>org.apache.sshd.common.util.security</package>
+                <package>org.apache.sshd.common.util.security.bouncycastle</package>
+                <package>org.apache.sshd.common.util.security.eddsa</package>
+                <package>org.apache.sshd.common.util.security.eddsa.bouncycastle</package>
+                <package>org.apache.sshd.common.util.security.eddsa.generic</package>
+                <package>org.apache.sshd.common.util.threads</package>
+                <package>org.apache.sshd.core</package>
+                <package>org.apache.sshd.server</package>
+                <package>org.apache.sshd.server.auth</package>
+                <package>org.apache.sshd.server.auth.gss</package>
+                <package>org.apache.sshd.server.auth.hostbased</package>
+                <package>org.apache.sshd.server.auth.keyboard</package>
+                <package>org.apache.sshd.server.auth.password</package>
+                <package>org.apache.sshd.server.auth.pubkey</package>
+                <package>org.apache.sshd.server.channel</package>
+                <package>org.apache.sshd.server.command</package>
+                <package>org.apache.sshd.server.config</package>
+                <package>org.apache.sshd.server.config.keys</package>
+                <package>org.apache.sshd.server.forward</package>
+                <package>org.apache.sshd.server.global</package>
+                <package>org.apache.sshd.server.jaas</package>
+                <package>org.apache.sshd.server.kex</package>
+                <package>org.apache.sshd.server.keyprovider</package>
+                <package>org.apache.sshd.server.session</package>
+                <package>org.apache.sshd.server.shell</package>
+                <package>org.apache.sshd.server.subsystem</package>
+                <package>org.apache.sshd.server.x11</package>
+            </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>org-apache-sshd-osgi.jar</runtime-relative-path>
+                <binary-origin>external/sshd-osgi-2.17.1.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>

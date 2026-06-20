@@ -14,7 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-is.autoload=true
-
-release.external/org.eclipse.jgit.ssh.jsch-7.6.0.202603022253-r.jar=modules/org-eclipse-jgit-ssh-jsch.jar
+91085AB6F205AD68007A8034E58D46A82A0D126E org.apache.sshd:sshd-sftp:2.17.1

@@ -27,7 +27,7 @@ import org.codehaus.plexus.PlexusContainer;
  *
  * @author mkleint
  */
-record EmbedderConfiguration(PlexusContainer container, Properties systemProps, Properties userProps, boolean offline, File settingsXml) {
+record EmbedderConfiguration(PlexusContainer container, Properties systemProps, Properties userProps, boolean offline, File settingsXml, File userSettingsXml) {
 
     Properties getSystemProperties() {
         return systemProps();
@@ -47,6 +47,10 @@ record EmbedderConfiguration(PlexusContainer container, Properties systemProps, 
 
     File getSettingsXml() {
         return settingsXml();
+    }
+
+    File getUserSettingsXml() {
+        return userSettingsXml();
     }
 
 }

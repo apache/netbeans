@@ -75,6 +75,41 @@ public class CopyFilesTest extends org.netbeans.junit.NbTestCase {
         lock.releaseLock ();
     }
 
+    @Test
+    public void testCopyFilteredAttributesXml() throws Exception {
+        List<String> fileList = List.of("source/var/attributes.xml", "source/foo/etc/patterns.import");
+        FileSystem fs = createLocalFileSystem(fileList.toArray(String[]::new));
+
+        FileObject path = fs.findResource("source");
+        assertNotNull(path);
+        FileObject tg = fs.getRoot().createFolder("target");
+        assertNotNull(tg);
+        FileObject patterns = FileUtil.createData(fs.getRoot(), "source/foo/etc/patterns.import");
+        assertNotNull(patterns);
+        String pattern = "include var/attributes\\.xml\n";
+        writeTo(fs, "source/foo/etc/patterns.import", pattern);
+
+        String attrXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                       + "<!DOCTYPE attributes PUBLIC \"-//NetBeans//DTD DefaultAttributes 1.0//EN\" \"http://www.netbeans.org/dtds/attributes-1_0.dtd\">\n"
+                       + "<attributes version=\"1.0\">\n"
+                       + "    <fileobject name=\"Templates\">\n"
+                       + "        <attr name=\"AuxilaryConfiguration\" stringvalue=\"someValue\"/>\n"
+                       + "    </fileobject>\n"
+                       + "    <fileobject name=\"Cache\">\n"
+                       + "        <attr name=\"CacheTimestamp\" stringvalue=\"12345678\"/>\n"
+                       + "    </fileobject>\n"
+                       + "</attributes>\n";
+        writeTo(fs, "source/var/attributes.xml", attrXml);
+
+        org.netbeans.upgrade.CopyFiles.copyDeep(FileUtil.toFile(path), FileUtil.toFile(tg), FileUtil.toFile(patterns));
+
+        FileObject targetAttrFo = tg.getFileObject("var/attributes.xml");
+        assertNotNull("attributes.xml not copied", targetAttrFo);
+        String targetContent = targetAttrFo.asText("UTF-8");
+        assertTrue("Templates attribute should be kept", targetContent.contains("Templates"));
+        assertFalse("CacheTimestamp attribute should be filtered out", targetContent.contains("CacheTimestamp"));
+    }
+
     public LocalFileSystem createLocalFileSystem(String[] resources) throws Exception {
         File mountPoint = new File(getWorkDir(), "tmpfs");
         mountPoint.mkdir();

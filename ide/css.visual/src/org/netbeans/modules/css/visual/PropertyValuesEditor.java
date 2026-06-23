@@ -278,7 +278,7 @@ public class PropertyValuesEditor extends PropertyEditorSupport implements ExPro
     
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "; property: " + pmodel != null ? pmodel.getName() : "?"; //NOI18N
+        return getClass().getSimpleName() + "; property: " + (pmodel != null ? pmodel.getName() : "?"); //NOI18N
     }
 
     @Override

@@ -18,6 +18,7 @@
  */
 package org.netbeans.api.java.platform;
 
+import java.util.Objects;
 import org.openide.modules.SpecificationVersion;
 
 /**
@@ -25,8 +26,8 @@ import org.openide.modules.SpecificationVersion;
  */
 public class Profile {
 
-    private String name;
-    private SpecificationVersion version;
+    private final String name;
+    private final SpecificationVersion version;
 
     /**
      * Creates new Profile
@@ -55,7 +56,8 @@ public class Profile {
     }
 
 
-    public int hashCode () {
+    @Override
+    public int hashCode() {
         int hc = 0;
         if (name != null)
             hc = name.hashCode() << 16;
@@ -64,7 +66,8 @@ public class Profile {
         return hc;
     }
 
-    public boolean equals (Object other) {
+    @Override
+    public boolean equals(Object other) {
         if (other instanceof Profile) {
             Profile op = (Profile) other;
             return this.name == null ? op.name == null : this.name.equals(op.name) &&
@@ -74,10 +77,11 @@ public class Profile {
             return false;
     }
 
-    public String toString () {
+    @Override
+    public String toString() {
         String str;
         str = this.name == null ? "" : this.name;
-        str += " " + this.version == null ? "" : this.version.toString(); // NOI18N
+        str += " " + Objects.toString(this.version, ""); // NOI18N
         return str;
     }
 }

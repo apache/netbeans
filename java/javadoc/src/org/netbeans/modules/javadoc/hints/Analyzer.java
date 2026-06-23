@@ -657,7 +657,12 @@ final class Analyzer extends DocTreePathScanner<Void, List<ErrorDescription>> {
         final TypeElement errorEl = elements.getTypeElement("java.lang.Error");
         final TypeElement runtimeEl = elements.getTypeElement("java.lang.RuntimeException");
         if(throwableEl == null || errorEl == null || runtimeEl == null) {
-            LOG.warning("Broken java-platform, cannot resolve " + throwableEl == null? "java.lang.Throwable" : errorEl == null? "java.lang.Error" : "java.lang.RuntimeException"); //NOI18N
+            LOG.log(Level.WARNING, "Broken java-platform, cannot resolve {0}", 
+                    throwableEl == null
+                            ? "java.lang.Throwable"
+                            : errorEl == null
+                                    ? "java.lang.Error"
+                                    : "java.lang.RuntimeException");
             return null;
         }
         TypeMirror throwable = throwableEl.asType();

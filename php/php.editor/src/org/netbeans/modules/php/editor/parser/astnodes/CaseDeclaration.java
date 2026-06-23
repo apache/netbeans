@@ -86,7 +86,7 @@ public class CaseDeclaration extends BodyDeclaration {
     public String toString() {
         StringBuilder sbAttributes = new StringBuilder();
         getAttributes().forEach(attribute -> sbAttributes.append(attribute).append(" ")); // NOI18N
-        return sbAttributes.toString() + "case" + name + initializer == null ? "" : " = " + initializer; // NOI18N
+        return sbAttributes.toString() + "case" + name + (initializer == null ? "" : " = " + initializer); // NOI18N
     }
 
 }

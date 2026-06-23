@@ -63,21 +63,22 @@ import org.openide.util.NbBundle.Messages;
  *
  * @author mkleint
  */
-@TemplateRegistration(folder="OSGi", position=100, content="Activator.java.template", scriptEngine="freemarker", displayName="#template.activator", iconBase="org/netbeans/modules/maven/osgi/templates/new_OSGi_file_16.png", description="new_OSGi_activator.html", category="osgi")
+@TemplateRegistration(
+        folder="OSGi",
+        position=100,
+        content="Activator.java.template",
+        scriptEngine="freemarker",
+        displayName="#template.activator",
+        iconBase="org/netbeans/modules/maven/osgi/templates/new_OSGi_file_16.png",
+        description="new_OSGi_activator.html",
+        category="osgi"
+)
 @Messages("template.activator=Bundle Activator")
 public class ActivatorIterator implements TemplateWizard.AsynchronousInstantiatingIterator<WizardDescriptor> {
-    private static final Logger LOG = Logger.getLogger(ActivatorIterator.class.getName());
-    
+
     // You should define what panels you want to use here:
     protected List<WizardDescriptor.Panel<WizardDescriptor>> createPanels (Project project, TemplateWizard wiz) {
         Sources sources = ProjectUtils.getSources(project);
-        DataFolder targetFolder=null;
-        try {
-            targetFolder = wiz.getTargetFolder();
-        }
-        catch (IOException ex) {
-            targetFolder = DataFolder.findFolder(project.getProjectDirectory());
-        }
         return Collections.<WizardDescriptor.Panel<WizardDescriptor>>singletonList(
             JavaTemplates.createPackageChooser(project,
                           sources.getSourceGroups(JavaProjectConstants.SOURCES_TYPE_JAVA))
@@ -94,13 +95,13 @@ public class ActivatorIterator implements TemplateWizard.AsynchronousInstantiati
         // More advanced wizards can create multiple objects from template
         // (return them all in the result of this method), populate file
         // contents on the fly, etc.
-       
+
         org.openide.filesystems.FileObject dir = Templates.getTargetFolder( wiz );
         DataFolder df = DataFolder.findFolder( dir );
-        
+
         FileObject template = Templates.getTemplate( wiz );
-        
-        DataObject dTemplate = DataObject.find( template );                
+
+        DataObject dTemplate = DataObject.find( template );
         final DataObject dobj = dTemplate.createFromTemplate( df, Templates.getTargetName( wiz )  );
 
         //this part might be turned pluggable once we have also ant based osgi projects. if..
@@ -110,15 +111,10 @@ public class ActivatorIterator implements TemplateWizard.AsynchronousInstantiati
 
         final NbMavenProject prj = project.getLookup().lookup(NbMavenProject.class);
         if (prj != null) {
-            Utilities.performPOMModelOperations(project.getProjectDirectory().getFileObject("pom.xml"),
-                    Collections.<ModelOperation<POMModel>>singletonList(
-                        new ModelOperation<POMModel>() {
-                @Override
-                           public void performOperation(POMModel model) {
-                               addActivator(prj, model, path);
-                           }
-                    }
-            ));
+            Utilities.performPOMModelOperations(
+                    project.getProjectDirectory().getFileObject("pom.xml"),
+                    List.<ModelOperation<POMModel>>of((model) -> addActivator(prj, model, path))
+            );
         }
 
         return Collections.singleton(dobj);
@@ -141,7 +137,7 @@ public class ActivatorIterator implements TemplateWizard.AsynchronousInstantiati
             plugin = mdl.getFactory().createPlugin();
             plugin.setGroupId(OSGiConstants.GROUPID_FELIX);
             plugin.setArtifactId(OSGiConstants.ARTIFACTID_BUNDLE_PLUGIN);
-            String ver = PluginPropertyUtils.getPluginVersion(prj.getMavenProject(), 
+            String ver = PluginPropertyUtils.getPluginVersion(prj.getMavenProject(),
                     OSGiConstants.GROUPID_FELIX, OSGiConstants.ARTIFACTID_BUNDLE_PLUGIN);
             if (ver == null) {
                 //not defined in resolved project, set version.
@@ -183,13 +179,14 @@ public class ActivatorIterator implements TemplateWizard.AsynchronousInstantiati
     }
 
     // --- The rest probably does not need to be touched. ---
-    
+
     private transient int index;
     private transient List<WizardDescriptor.Panel<WizardDescriptor>> panels;
     private transient TemplateWizard wiz;
 
+    @SuppressWarnings("unused")
     private static final long serialVersionUID = -7586964579556513549L;
-    
+
     // You can keep a reference to the TemplateWizard which can
     // provide various kinds of useful information such as
     // the currently selected target name.
@@ -200,15 +197,15 @@ public class ActivatorIterator implements TemplateWizard.AsynchronousInstantiati
         index = 0;
         Project project = Templates.getProject( wiz );
         panels = createPanels (project,this.wiz);
-        
+
         // Creating steps.
         Object prop = wiz.getProperty (WizardDescriptor.PROP_CONTENT_DATA); // NOI18N
         String[] beforeSteps = null;
-        if (prop instanceof String[]) {
-            beforeSteps = (String[])prop;
+        if (prop instanceof String[] strings) {
+            beforeSteps = strings;
         }
         String[] steps = createSteps (beforeSteps, panels);
-        
+
         for (int i = 0; i < panels.size(); i++) {
             Component c = panels.get(i).getComponent ();
             if (steps[i] == null) {
@@ -217,10 +214,9 @@ public class ActivatorIterator implements TemplateWizard.AsynchronousInstantiati
                 // chooser to appear in the list of steps.
                 steps[i] = c.getName ();
             }
-            if (c instanceof JComponent) { // assume Swing components
-                JComponent jc = (JComponent) c;
+            if (c instanceof JComponent jc) { // assume Swing components
                 // Step #.
-                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(i));
+                jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
                 // Step name (actually the whole list for reference).
                 jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
             }
@@ -242,7 +238,7 @@ public class ActivatorIterator implements TemplateWizard.AsynchronousInstantiati
     public String name () {
         return TITLE_x_of_y(index + 1, panels.size());
     }
-    
+
     @Override
     public boolean hasNext () {
         return index < panels.size() - 1;
@@ -269,7 +265,7 @@ public class ActivatorIterator implements TemplateWizard.AsynchronousInstantiati
     public WizardDescriptor.Panel<WizardDescriptor> current () {
         return panels.get(index);
     }
-    
+
     // If nothing unusual changes in the middle of the wizard, simply:
     @Override
     public final void addChangeListener (ChangeListener l) {}

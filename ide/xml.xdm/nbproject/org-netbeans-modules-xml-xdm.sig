@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.65.0
+#Version 1.66.0
 
 CLSS public abstract interface java.beans.PropertyChangeListener
 intf java.util.EventListener
@@ -14,8 +14,10 @@ meth public abstract int compareTo({java.lang.Comparable%0})
 
 CLSS public abstract java.lang.Enum<%0 extends java.lang.Enum<{java.lang.Enum%0}>>
 cons protected init(java.lang.String,int)
+innr public final static EnumDesc
 intf java.io.Serializable
 intf java.lang.Comparable<{java.lang.Enum%0}>
+intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
 meth public final boolean equals(java.lang.Object)
@@ -24,6 +26,7 @@ meth public final int hashCode()
 meth public final int ordinal()
 meth public final java.lang.Class<{java.lang.Enum%0}> getDeclaringClass()
 meth public final java.lang.String name()
+meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>> describeConstable()
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
@@ -43,6 +46,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -78,6 +82,9 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
  anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[ANNOTATION_TYPE])
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
+
+CLSS public abstract interface java.lang.constant.Constable
+meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
 CLSS public abstract java.util.AbstractCollection<%0 extends java.lang.Object>
 cons protected init()
@@ -131,6 +138,7 @@ supr java.util.AbstractCollection<{java.util.AbstractSet%0}>
 
 CLSS public abstract interface java.util.Collection<%0 extends java.lang.Object>
 intf java.lang.Iterable<{java.util.Collection%0}>
+meth public <%0 extends java.lang.Object> {%%0}[] toArray(java.util.function.IntFunction<{%%0}[]>)
 meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
 meth public abstract boolean add({java.util.Collection%0})
 meth public abstract boolean addAll(java.util.Collection<? extends {java.util.Collection%0}>)
@@ -216,12 +224,14 @@ cons public init(java.util.Collection<? extends {java.util.HashSet%0}>)
 intf java.io.Serializable
 intf java.lang.Cloneable
 intf java.util.Set<{java.util.HashSet%0}>
+meth public <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
 meth public boolean add({java.util.HashSet%0})
 meth public boolean contains(java.lang.Object)
 meth public boolean isEmpty()
 meth public boolean remove(java.lang.Object)
 meth public int size()
 meth public java.lang.Object clone()
+meth public java.lang.Object[] toArray()
 meth public java.util.Iterator<{java.util.HashSet%0}> iterator()
 meth public java.util.Spliterator<{java.util.HashSet%0}> spliterator()
 meth public void clear()
@@ -229,6 +239,8 @@ supr java.util.AbstractSet<{java.util.HashSet%0}>
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry
+meth public !varargs static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> ofEntries(java.util.Map$Entry<? extends {%%0},? extends {%%1}>[])
+ anno 0 java.lang.SafeVarargs()
 meth public abstract boolean containsKey(java.lang.Object)
 meth public abstract boolean containsValue(java.lang.Object)
 meth public abstract boolean equals(java.lang.Object)
@@ -245,6 +257,19 @@ meth public abstract {java.util.Map%1} put({java.util.Map%0},{java.util.Map%1})
 meth public abstract {java.util.Map%1} remove(java.lang.Object)
 meth public boolean remove(java.lang.Object,java.lang.Object)
 meth public boolean replace({java.util.Map%0},{java.util.Map%1},{java.util.Map%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map$Entry<{%%0},{%%1}> entry({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> copyOf(java.util.Map<? extends {%%0},? extends {%%1}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
 meth public void forEach(java.util.function.BiConsumer<? super {java.util.Map%0},? super {java.util.Map%1}>)
 meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
 meth public {java.util.Map%1} compute({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
@@ -257,6 +282,8 @@ meth public {java.util.Map%1} replace({java.util.Map%0},{java.util.Map%1})
 
 CLSS public abstract interface java.util.Set<%0 extends java.lang.Object>
 intf java.util.Collection<{java.util.Set%0}>
+meth public !varargs static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0}[])
+ anno 0 java.lang.SafeVarargs()
 meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
 meth public abstract boolean add({java.util.Set%0})
 meth public abstract boolean addAll(java.util.Collection<? extends {java.util.Set%0}>)
@@ -273,11 +300,23 @@ meth public abstract java.lang.Object[] toArray()
 meth public abstract java.util.Iterator<{java.util.Set%0}> iterator()
 meth public abstract void clear()
 meth public java.util.Spliterator<{java.util.Set%0}> spliterator()
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> copyOf(java.util.Collection<? extends {%%0}>)
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of()
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
+meth public static <%0 extends java.lang.Object> java.util.Set<{%%0}> of({%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0},{%%0})
 
 CLSS public abstract interface javax.xml.namespace.NamespaceContext
 meth public abstract java.lang.String getNamespaceURI(java.lang.String)
 meth public abstract java.lang.String getPrefix(java.lang.String)
-meth public abstract java.util.Iterator getPrefixes(java.lang.String)
+meth public abstract java.util.Iterator<java.lang.String> getPrefixes(java.lang.String)
 
 CLSS public abstract org.netbeans.modules.xml.xam.ModelAccess
 cons public init()
@@ -1064,7 +1103,7 @@ hfds oldtree,pathVisitor,target,xmlModel
 
 CLSS public org.netbeans.modules.xml.xdm.visitor.NamespaceRefactorVisitor
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(org.netbeans.modules.xml.xdm.XDMModel)
 innr public static NamespaceCheck
 meth public static boolean isDefaultPrefix(java.lang.String)
@@ -1242,7 +1281,7 @@ CLSS public org.netbeans.modules.xml.xdm.xam.XDMListener
 cons public init(org.netbeans.modules.xml.xam.dom.AbstractDocumentModel)
 intf java.beans.PropertyChangeListener
 meth protected org.netbeans.modules.xml.xam.dom.ChangeInfo prepareChangeInfo(java.util.List<? extends org.netbeans.modules.xml.xdm.nodes.Node>,java.util.List<? extends org.netbeans.modules.xml.xdm.nodes.Node>)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth protected void processChange(org.netbeans.modules.xml.xam.dom.ChangeInfo)
 meth protected void processEvent(org.netbeans.modules.xml.xdm.nodes.Node,org.netbeans.modules.xml.xdm.diff.NodeInfo,boolean)
 meth protected void processRootRelatedEvent(org.netbeans.modules.xml.xdm.nodes.Node,java.util.List<org.netbeans.modules.xml.xdm.nodes.Node>,boolean)

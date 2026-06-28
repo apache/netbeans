@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.42
+#Version 1.43
 
 CLSS public java.io.IOException
 cons public init()
@@ -22,6 +22,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -56,7 +57,7 @@ supr java.lang.Object
 
 CLSS public org.netbeans.modules.hudson.ui.api.HudsonSCMHelper
 meth public static java.lang.String xpath(java.lang.String,org.w3c.dom.Element)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public static void addTrigger(org.w3c.dom.Document)
 meth public static void noteWillShowDiff(java.lang.String)
 meth public static void showDiff(org.netbeans.api.diff.StreamSource,org.netbeans.api.diff.StreamSource,java.lang.String)

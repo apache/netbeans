@@ -350,7 +350,7 @@ sass_use
 
 sass_use_as
     :
-    {tokenNameEquals("as")}? IDENT ws IDENT
+    {tokenNameEquals("as")}? IDENT ws (IDENT | STAR)
     ;
 
 sass_use_with
@@ -371,7 +371,7 @@ sass_forward
 
 sass_forward_as
     :
-    {tokenNameEquals("as")}? IDENT ws IDENT
+    {tokenNameEquals("as")}? IDENT ws (IDENT | STAR)
     ;
 
 sass_forward_with
@@ -433,6 +433,7 @@ mediaBodyItem
     //Just a partial hotfix for nested MQ: complete grammar is defined in: http://www.w3.org/TR/css3-conditional/#processing
     | media
     | supportsAtRule
+    | containerAtRule
     ;
 
 mediaQueryList
@@ -587,8 +588,8 @@ supportsDecl
 
 containerAtRule options {backtrack=true;}
 	:
-	(CONTAINER_SYM ws containerCondition ws? LBRACE) => CONTAINER_SYM ws containerCondition ws? LBRACE ws? syncToFollow body? RBRACE
-	| CONTAINER_SYM ws containerName ws containerCondition ws? LBRACE ws? syncToFollow body? RBRACE
+	(CONTAINER_SYM ws containerCondition ws? LBRACE) => CONTAINER_SYM ws containerCondition ws? LBRACE ws? syncToFollow mediaBody? RBRACE
+	| CONTAINER_SYM ws containerName ws containerCondition ws? LBRACE ws? syncToFollow mediaBody? RBRACE
 	;
 
 containerCondition
@@ -993,7 +994,7 @@ elementSubsequent
     :
     (
         {isScssSource()}? sass_extend_only_selector
-        | {isCssPreprocessorSource()}? LESS_AND (IDENT | NUMBER | {isScssSource()}? sass_interpolation_expression_var)*
+        | {isCssPreprocessorSource()}? LESS_AND (IDENT | NUMBER | DIMENSION | {isScssSource()}? sass_interpolation_expression_var)*
         | {isLessSource()}? LESS_AND less_selector_interpolation_exp
     	| cssId
     	| cssClass
@@ -1331,6 +1332,7 @@ cp_expression
         | (ws? cp_expression_atom)=>ws? cp_expression_atom
     )*)
     | {isScssSource()}? LPAREN ws? syncToFollow sass_map_pairs? RPAREN
+    | {isScssSource()}? LBRACKET ws? (cp_expression_list ws?)? RBRACKET
     ;
 
 cp_expression_operator
@@ -1417,7 +1419,7 @@ cp_mixin_block
 
 cp_mixin_name
     :
-    IDENT
+    IDENT ({isScssSource()}? DOT IDENT)*
     ;
 
 cp_mixin_call_args
@@ -1737,7 +1739,7 @@ fragment    URL         : ((
                             | NMCHAR
                           )
                           (
-                              '['|'!'|'#'|'$'|'%'|'&'|'*'|'~'|'.'|':'|'/'|'?'|'='|';'|','|'+'|'@'|'|' | WS  | '\"' | '{' | '}'
+                              '['|'!'|'#'|'$'|'%'|'&'|'*'|'~'|'.'|':'|'/'|'?'|'='|';'|','|'+'|'@'|'|' | WS  | '\"' | '\'' | '{' | '}'
                             | NMCHAR
                           )*)?
                         ;

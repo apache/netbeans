@@ -114,8 +114,8 @@ final class CustomJavacClassLoader extends URLClassLoader {
      * {@link #findMainCompilerClass(org.apache.tools.ant.Project)} method
      * @return instance of Ant Javac compiler using the {@code mainClass}
      */
-    static Javac13 createCompiler(Class<?> mainClass) {
-        return new NbJavacCompiler(mainClass);
+    static Javac13 createCompiler(Class<?> mainClass, boolean canUseRelease) {
+        return new NbJavacCompiler(mainClass, canUseRelease);
     }
 
     private static void assertIsolatedClassLoader(Class<?> c, URLClassLoader loader) throws ClassNotFoundException, BuildException {
@@ -153,9 +153,11 @@ final class CustomJavacClassLoader extends URLClassLoader {
     private static final class NbJavacCompiler extends Javac13 {
 
         private final Class<?> mainClazz;
+        private final boolean canUseRelease;
 
-        NbJavacCompiler(Class<?> mainClazz) {
+        NbJavacCompiler(Class<?> mainClazz, boolean canUseRelease) {
             this.mainClazz = mainClazz;
+            this.canUseRelease = canUseRelease;
         }
 
         @Override
@@ -163,14 +165,8 @@ final class CustomJavacClassLoader extends URLClassLoader {
             attributes.log("Using modern compiler", Project.MSG_VERBOSE);
             Commandline cmd = setupModernJavacCommand();
             final String[] args = cmd.getArguments();
-            boolean bootClasspath = false;
             for (int i = 0; i < args.length; i++) {
-                if (args[i].startsWith("-Xbootclasspath/p:")) { // ide/html
-                    bootClasspath = true;
-                }
-            }
-            for (int i = 0; i < args.length; i++) {
-                if (!bootClasspath) {
+                if (canUseRelease) {
                     if ("-target".equals(args[i]) || "-source".equals(args[i])) {
                         args[i] = "--release";
                         if (args[i + 1].startsWith("1.")) {

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.17.0
+#Version 2.19.0
 
 CLSS public abstract interface java.io.Serializable
 
@@ -24,7 +24,6 @@ meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -107,7 +106,7 @@ meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$It
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createAttributeValueItem(org.netbeans.api.java.source.CompilationInfo,java.lang.String,java.lang.String,javax.lang.model.element.TypeElement,int,org.netbeans.api.java.source.support.ReferencesCount)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createChainedMembersItem(org.netbeans.api.java.source.CompilationInfo,java.util.List<? extends javax.lang.model.element.Element>,java.util.List<? extends javax.lang.model.type.TypeMirror>,int,boolean,boolean)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createDefaultConstructorItem(javax.lang.model.element.TypeElement,int,boolean)
-meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createExecutableItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.ExecutableElement,javax.lang.model.type.ExecutableType,int,org.netbeans.api.java.source.support.ReferencesCount,boolean,boolean,boolean,boolean,boolean,int,boolean)
+meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createExecutableItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.ExecutableElement,javax.lang.model.type.ExecutableType,int,org.netbeans.api.java.source.support.ReferencesCount,boolean,boolean,boolean,boolean,boolean,int,boolean,boolean)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createGetterSetterMethodItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.VariableElement,javax.lang.model.type.TypeMirror,int,java.lang.String,boolean)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createInitializeAllConstructorItem(org.netbeans.api.java.source.CompilationInfo,boolean,java.lang.Iterable<? extends javax.lang.model.element.VariableElement>,javax.lang.model.element.ExecutableElement,javax.lang.model.element.TypeElement,int)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createKeywordItem(java.lang.String,java.lang.String,int,boolean)
@@ -116,13 +115,13 @@ meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$It
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createParametersItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.ExecutableElement,javax.lang.model.type.ExecutableType,int,boolean,int,java.lang.String)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createStaticMemberItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.type.DeclaredType,javax.lang.model.element.Element,javax.lang.model.type.TypeMirror,boolean,int,boolean,boolean,boolean)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createStaticMemberItem(org.netbeans.api.java.source.ElementHandle<javax.lang.model.element.TypeElement>,java.lang.String,int,boolean,org.netbeans.api.java.source.support.ReferencesCount,org.netbeans.modules.parsing.api.Source,boolean)
-meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createThisOrSuperConstructorItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.ExecutableElement,javax.lang.model.type.ExecutableType,int,boolean,java.lang.String)
+meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createThisOrSuperConstructorItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.ExecutableElement,javax.lang.model.type.ExecutableType,int,boolean,java.lang.String,boolean)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createTypeItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.TypeElement,javax.lang.model.type.DeclaredType,int,org.netbeans.api.java.source.support.ReferencesCount,boolean,boolean,boolean,boolean,boolean,boolean)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createTypeItem(org.netbeans.api.java.source.ElementHandle<javax.lang.model.element.TypeElement>,java.util.EnumSet<javax.lang.model.element.ElementKind>,int,org.netbeans.api.java.source.support.ReferencesCount,org.netbeans.modules.parsing.api.Source,boolean,boolean,boolean)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createTypeParameterItem(javax.lang.model.element.TypeParameterElement,int)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createVariableItem(org.netbeans.api.java.source.CompilationInfo,java.lang.String,int,boolean,boolean)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createVariableItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.VariableElement,javax.lang.model.type.TypeMirror,int,org.netbeans.api.java.source.support.ReferencesCount,boolean,boolean,boolean,int)
-meth public {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createExecutableItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.ExecutableElement,javax.lang.model.type.ExecutableType,int,org.netbeans.api.java.source.support.ReferencesCount,boolean,boolean,boolean,boolean,boolean,boolean,int,boolean)
+meth public {org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory%0} createExecutableItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.ExecutableElement,javax.lang.model.type.ExecutableType,int,org.netbeans.api.java.source.support.ReferencesCount,boolean,boolean,boolean,boolean,boolean,boolean,int,boolean,boolean)
 
 CLSS public abstract interface static org.netbeans.modules.java.completion.JavaCompletionTask$LambdaItemFactory<%0 extends java.lang.Object>
  outer org.netbeans.modules.java.completion.JavaCompletionTask
@@ -151,7 +150,7 @@ meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$Re
 CLSS public abstract interface static org.netbeans.modules.java.completion.JavaCompletionTask$TypeCastableItemFactory<%0 extends java.lang.Object>
  outer org.netbeans.modules.java.completion.JavaCompletionTask
 intf org.netbeans.modules.java.completion.JavaCompletionTask$ItemFactory<{org.netbeans.modules.java.completion.JavaCompletionTask$TypeCastableItemFactory%0}>
-meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$TypeCastableItemFactory%0} createTypeCastableExecutableItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.ExecutableElement,javax.lang.model.type.ExecutableType,javax.lang.model.type.TypeMirror,int,org.netbeans.api.java.source.support.ReferencesCount,boolean,boolean,boolean,boolean,boolean,int,boolean)
+meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$TypeCastableItemFactory%0} createTypeCastableExecutableItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.ExecutableElement,javax.lang.model.type.ExecutableType,javax.lang.model.type.TypeMirror,int,org.netbeans.api.java.source.support.ReferencesCount,boolean,boolean,boolean,boolean,boolean,int,boolean,boolean)
 meth public abstract {org.netbeans.modules.java.completion.JavaCompletionTask$TypeCastableItemFactory%0} createTypeCastableVariableItem(org.netbeans.api.java.source.CompilationInfo,javax.lang.model.element.VariableElement,javax.lang.model.type.TypeMirror,javax.lang.model.type.TypeMirror,int,org.netbeans.api.java.source.support.ReferencesCount,boolean,boolean,boolean,int)
 
 CLSS public final org.netbeans.modules.java.completion.JavaDocumentationTask<%0 extends java.lang.Object>
@@ -190,6 +189,7 @@ hfds INIT,SUPER_KEYWORD,THIS_KEYWORD,activeSignatureIndex,anchorOffset,toolTipDa
 
 CLSS public final org.netbeans.modules.java.completion.Utilities
 meth public static boolean isCaseSensitive()
+meth public static boolean isCompletionInsertTextParameters()
 meth public static boolean isExcludeMethods()
 meth public static boolean isExcluded(java.lang.CharSequence)
 meth public static boolean isShowDeprecatedMembers()
@@ -199,7 +199,7 @@ meth public static boolean startsWithCamelCase(java.lang.String,java.lang.String
 meth public static java.util.List<java.lang.String> varNamesSuggestions(javax.lang.model.type.TypeMirror,javax.lang.model.element.ElementKind,java.util.Set<javax.lang.model.element.Modifier>,java.lang.String,java.lang.String,javax.lang.model.util.Types,javax.lang.model.util.Elements,java.lang.Iterable<? extends javax.lang.model.element.Element>,org.netbeans.api.java.source.CodeStyle)
 meth public static void exclude(java.lang.CharSequence)
 supr java.lang.Object
-hfds COMPLETION_CASE_SENSITIVE,COMPLETION_CASE_SENSITIVE_DEFAULT,EMPTY,ERROR,JAVA_COMPLETION_BLACKLIST,JAVA_COMPLETION_BLACKLIST_DEFAULT,JAVA_COMPLETION_EXCLUDER_METHODS,JAVA_COMPLETION_EXCLUDER_METHODS_DEFAULT,JAVA_COMPLETION_SUBWORDS,JAVA_COMPLETION_SUBWORDS_DEFAULT,JAVA_COMPLETION_WHITELIST,SHOW_DEPRECATED_MEMBERS,SHOW_DEPRECATED_MEMBERS_DEFAULT,cachedCamelCasePattern,cachedPrefix,cachedSubwordsPattern,caseSensitive,excludeRef,includeRef,inited,javaCompletionExcluderMethods,javaCompletionSubwords,preferences,preferencesTracker,showDeprecatedMembers
+hfds COMPLETION_CASE_SENSITIVE,COMPLETION_CASE_SENSITIVE_DEFAULT,COMPLETION_INSERT_TEXT_PARAMETERS,COMPLETION_INSERT_TEXT_PARAMETERS_DEFAULT,EMPTY,ERROR,JAVA_COMPLETION_BLACKLIST,JAVA_COMPLETION_BLACKLIST_DEFAULT,JAVA_COMPLETION_EXCLUDER_METHODS,JAVA_COMPLETION_EXCLUDER_METHODS_DEFAULT,JAVA_COMPLETION_SUBWORDS,JAVA_COMPLETION_SUBWORDS_DEFAULT,JAVA_COMPLETION_WHITELIST,SHOW_DEPRECATED_MEMBERS,SHOW_DEPRECATED_MEMBERS_DEFAULT,cachedCamelCasePattern,cachedPrefix,cachedSubwordsPattern,caseSensitive,completionInsertTextParameters,excludeRef,includeRef,inited,javaCompletionExcluderMethods,javaCompletionSubwords,preferences,preferencesTracker,showDeprecatedMembers
 
 CLSS public abstract interface org.netbeans.modules.parsing.api.ResultProcessor
  anno 0 java.lang.FunctionalInterface()

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.26
+#Version 2.28
 
 CLSS public abstract interface com.sun.jna.AltCallingConvention
 
@@ -155,7 +155,7 @@ meth public void write()
 meth public void writeField(java.lang.String)
 meth public void writeField(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds LOG,PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,encoding,fieldList,fieldListLock,fieldOrder,fieldOrderLock,layoutInfo,layoutInfoLock,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper,validationLock,validationMap
+hfds LOG,PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,cacheStructureLock,encoding,fieldList,fieldOrder,layoutInfo,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper,validationMap
 hcls AutoAllocated,FFIType,LayoutInfo,NativeStringTracking,StructureSet
 
 CLSS public abstract interface static com.sun.jna.Structure$ByReference
@@ -940,13 +940,16 @@ fld public final static com.sun.jna.platform.mac.CoreFoundation$CFTypeID STRING_
 fld public final static int kCFNotFound = -1
 fld public final static int kCFStringEncodingASCII = 1536
 fld public final static int kCFStringEncodingUTF8 = 134217984
+innr public final static !enum CFDateFormatterStyle
 innr public final static !enum CFNumberType
 innr public static CFAllocatorRef
 innr public static CFArrayRef
 innr public static CFBooleanRef
 innr public static CFDataRef
+innr public static CFDateFormatter
 innr public static CFDictionaryRef
 innr public static CFIndex
+innr public static CFLocale
 innr public static CFMutableDictionaryRef
 innr public static CFNumberRef
 innr public static CFStringRef
@@ -964,6 +967,7 @@ meth public abstract com.sun.jna.Pointer CFDictionaryGetValue(com.sun.jna.platfo
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFAllocatorRef CFAllocatorGetDefault()
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFArrayRef CFArrayCreate(com.sun.jna.platform.mac.CoreFoundation$CFAllocatorRef,com.sun.jna.Pointer,com.sun.jna.platform.mac.CoreFoundation$CFIndex,com.sun.jna.Pointer)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFDataRef CFDataCreate(com.sun.jna.platform.mac.CoreFoundation$CFAllocatorRef,com.sun.jna.Pointer,com.sun.jna.platform.mac.CoreFoundation$CFIndex)
+meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFDateFormatter CFDateFormatterCreate(com.sun.jna.platform.mac.CoreFoundation$CFAllocatorRef,com.sun.jna.platform.mac.CoreFoundation$CFLocale,com.sun.jna.platform.mac.CoreFoundation$CFIndex,com.sun.jna.platform.mac.CoreFoundation$CFIndex)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFIndex CFArrayGetCount(com.sun.jna.platform.mac.CoreFoundation$CFArrayRef)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFIndex CFDataGetLength(com.sun.jna.platform.mac.CoreFoundation$CFDataRef)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFIndex CFDictionaryGetCount(com.sun.jna.platform.mac.CoreFoundation$CFDictionaryRef)
@@ -971,9 +975,11 @@ meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFIndex CFGetRetain
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFIndex CFNumberGetType(com.sun.jna.platform.mac.CoreFoundation$CFNumberRef)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFIndex CFStringGetLength(com.sun.jna.platform.mac.CoreFoundation$CFStringRef)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFIndex CFStringGetMaximumSizeForEncoding(com.sun.jna.platform.mac.CoreFoundation$CFIndex,int)
+meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFLocale CFLocaleCopyCurrent()
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFMutableDictionaryRef CFDictionaryCreateMutable(com.sun.jna.platform.mac.CoreFoundation$CFAllocatorRef,com.sun.jna.platform.mac.CoreFoundation$CFIndex,com.sun.jna.Pointer,com.sun.jna.Pointer)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFNumberRef CFNumberCreate(com.sun.jna.platform.mac.CoreFoundation$CFAllocatorRef,com.sun.jna.platform.mac.CoreFoundation$CFIndex,com.sun.jna.ptr.ByReference)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFStringRef CFCopyDescription(com.sun.jna.platform.mac.CoreFoundation$CFTypeRef)
+meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFStringRef CFDateFormatterGetFormat(com.sun.jna.platform.mac.CoreFoundation$CFDateFormatter)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFStringRef CFStringCreateWithCharacters(com.sun.jna.platform.mac.CoreFoundation$CFAllocatorRef,char[],com.sun.jna.platform.mac.CoreFoundation$CFIndex)
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFTypeID CFArrayGetTypeID()
 meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFTypeID CFBooleanGetTypeID()
@@ -1016,6 +1022,23 @@ meth public com.sun.jna.Pointer getBytePtr()
 meth public int getLength()
 supr com.sun.jna.platform.mac.CoreFoundation$CFTypeRef
 
+CLSS public static com.sun.jna.platform.mac.CoreFoundation$CFDateFormatter
+ outer com.sun.jna.platform.mac.CoreFoundation
+cons public init()
+supr com.sun.jna.platform.mac.CoreFoundation$CFTypeRef
+
+CLSS public final static !enum com.sun.jna.platform.mac.CoreFoundation$CFDateFormatterStyle
+ outer com.sun.jna.platform.mac.CoreFoundation
+fld public final static com.sun.jna.platform.mac.CoreFoundation$CFDateFormatterStyle kCFDateFormatterFullStyle
+fld public final static com.sun.jna.platform.mac.CoreFoundation$CFDateFormatterStyle kCFDateFormatterLongStyle
+fld public final static com.sun.jna.platform.mac.CoreFoundation$CFDateFormatterStyle kCFDateFormatterMediumStyle
+fld public final static com.sun.jna.platform.mac.CoreFoundation$CFDateFormatterStyle kCFDateFormatterNoStyle
+fld public final static com.sun.jna.platform.mac.CoreFoundation$CFDateFormatterStyle kCFDateFormatterShortStyle
+meth public com.sun.jna.platform.mac.CoreFoundation$CFIndex index()
+meth public static com.sun.jna.platform.mac.CoreFoundation$CFDateFormatterStyle valueOf(java.lang.String)
+meth public static com.sun.jna.platform.mac.CoreFoundation$CFDateFormatterStyle[] values()
+supr java.lang.Enum<com.sun.jna.platform.mac.CoreFoundation$CFDateFormatterStyle>
+
 CLSS public static com.sun.jna.platform.mac.CoreFoundation$CFDictionaryRef
  outer com.sun.jna.platform.mac.CoreFoundation
 cons public init()
@@ -1040,6 +1063,11 @@ cons public init()
 cons public init(long)
 supr com.sun.jna.NativeLong
 hfds serialVersionUID
+
+CLSS public static com.sun.jna.platform.mac.CoreFoundation$CFLocale
+ outer com.sun.jna.platform.mac.CoreFoundation
+cons public init()
+supr com.sun.jna.platform.mac.CoreFoundation$CFTypeRef
 
 CLSS public static com.sun.jna.platform.mac.CoreFoundation$CFMutableDictionaryRef
  outer com.sun.jna.platform.mac.CoreFoundation
@@ -1119,6 +1147,90 @@ meth public com.sun.jna.platform.mac.CoreFoundation$CFTypeID getTypeID()
 meth public void release()
 meth public void retain()
 supr com.sun.jna.PointerType
+
+CLSS public abstract interface com.sun.jna.platform.mac.CoreGraphics
+fld public final static com.sun.jna.platform.mac.CoreGraphics INSTANCE
+fld public final static int kCGBackingStoreBuffered = 2
+fld public final static int kCGBackingStoreNonretained = 1
+fld public final static int kCGBackingStoreRetained = 0
+fld public final static int kCGNullWindowID = 0
+fld public final static int kCGWindowImageBestResolution = 8
+fld public final static int kCGWindowImageBoundsIgnoreFraming = 1
+fld public final static int kCGWindowImageDefault = 0
+fld public final static int kCGWindowImageNominalResolution = 16
+fld public final static int kCGWindowImageOnlyShadows = 4
+fld public final static int kCGWindowImageShouldBeOpaque = 2
+fld public final static int kCGWindowListExcludeDesktopElements = 16
+fld public final static int kCGWindowListOptionAll = 0
+fld public final static int kCGWindowListOptionIncludingWindow = 8
+fld public final static int kCGWindowListOptionOnScreenAboveWindow = 2
+fld public final static int kCGWindowListOptionOnScreenBelowWindow = 4
+fld public final static int kCGWindowListOptionOnScreenOnly = 1
+fld public final static int kCGWindowSharingNone = 0
+fld public final static int kCGWindowSharingReadOnly = 1
+fld public final static int kCGWindowSharingReadWrite = 2
+fld public final static java.lang.String kCGWindowAlpha = "kCGWindowAlpha"
+fld public final static java.lang.String kCGWindowBackingLocationVideoMemory = "kCGWindowBackingLocationVideoMemory"
+fld public final static java.lang.String kCGWindowBounds = "kCGWindowBounds"
+fld public final static java.lang.String kCGWindowIsOnscreen = "kCGWindowIsOnscreen"
+fld public final static java.lang.String kCGWindowLayer = "kCGWindowLayer"
+fld public final static java.lang.String kCGWindowMemoryUsage = "kCGWindowMemoryUsage"
+fld public final static java.lang.String kCGWindowName = "kCGWindowName"
+fld public final static java.lang.String kCGWindowNumber = "kCGWindowNumber"
+fld public final static java.lang.String kCGWindowOwnerName = "kCGWindowOwnerName"
+fld public final static java.lang.String kCGWindowOwnerPID = "kCGWindowOwnerPID"
+fld public final static java.lang.String kCGWindowSharingState = "kCGWindowSharingState"
+fld public final static java.lang.String kCGWindowStoreType = "kCGWindowStoreType"
+innr public static CGPoint
+innr public static CGRect
+innr public static CGSize
+intf com.sun.jna.Library
+meth public abstract byte CGRectMakeWithDictionaryRepresentation(com.sun.jna.platform.mac.CoreFoundation$CFDictionaryRef,com.sun.jna.platform.mac.CoreGraphics$CGRect)
+meth public abstract com.sun.jna.platform.mac.CoreFoundation$CFArrayRef CGWindowListCopyWindowInfo(int,int)
+meth public abstract com.sun.jna.platform.mac.CoreGraphics$CGRect$ByValue CGDisplayBounds(int)
+meth public abstract com.sun.jna.platform.unix.LibCAPI$size_t CGDisplayPixelsHigh(int)
+meth public abstract com.sun.jna.platform.unix.LibCAPI$size_t CGDisplayPixelsWide(int)
+meth public abstract double CGDisplayRotation(int)
+meth public abstract int CGDisplayIsActive(int)
+meth public abstract int CGDisplayIsBuiltin(int)
+meth public abstract int CGDisplayIsMain(int)
+meth public abstract int CGDisplayModelNumber(int)
+meth public abstract int CGDisplaySerialNumber(int)
+meth public abstract int CGDisplayVendorNumber(int)
+meth public abstract int CGGetActiveDisplayList(int,int[],com.sun.jna.ptr.IntByReference)
+meth public abstract int CGGetOnlineDisplayList(int,int[],com.sun.jna.ptr.IntByReference)
+meth public abstract int CGMainDisplayID()
+
+CLSS public static com.sun.jna.platform.mac.CoreGraphics$CGPoint
+ outer com.sun.jna.platform.mac.CoreGraphics
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["x", "y"])
+cons public init()
+fld public double x
+fld public double y
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.mac.CoreGraphics$CGRect
+ outer com.sun.jna.platform.mac.CoreGraphics
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["origin", "size"])
+cons public init()
+fld public com.sun.jna.platform.mac.CoreGraphics$CGPoint origin
+fld public com.sun.jna.platform.mac.CoreGraphics$CGSize size
+innr public static ByValue
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.mac.CoreGraphics$CGRect$ByValue
+ outer com.sun.jna.platform.mac.CoreGraphics$CGRect
+cons public init()
+intf com.sun.jna.Structure$ByValue
+supr com.sun.jna.platform.mac.CoreGraphics$CGRect
+
+CLSS public static com.sun.jna.platform.mac.CoreGraphics$CGSize
+ outer com.sun.jna.platform.mac.CoreGraphics
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["width", "height"])
+cons public init()
+fld public double height
+fld public double width
+supr com.sun.jna.Structure
 
 CLSS public abstract interface com.sun.jna.platform.mac.DiskArbitration
 fld public final static com.sun.jna.platform.mac.DiskArbitration INSTANCE
@@ -1281,6 +1393,8 @@ supr com.sun.jna.Structure
 
 CLSS public abstract interface com.sun.jna.platform.mac.SystemB
 fld public final static com.sun.jna.platform.mac.SystemB INSTANCE
+fld public final static int AF_INET = 2
+fld public final static int AF_INET6 = 30
 fld public final static int CPU_STATE_IDLE = 2
 fld public final static int CPU_STATE_MAX = 4
 fld public final static int CPU_STATE_NICE = 3
@@ -1301,12 +1415,18 @@ fld public final static int MNT_WAIT = 1
 fld public final static int PROCESSOR_BASIC_INFO = 1
 fld public final static int PROCESSOR_CPU_LOAD_INFO = 2
 fld public final static int PROC_ALL_PIDS = 1
+fld public final static int PROC_PIDFDSOCKETINFO = 3
+fld public final static int PROC_PIDLISTFDS = 1
 fld public final static int PROC_PIDPATHINFO_MAXSIZE = 4096
 fld public final static int PROC_PIDTASKALLINFO = 2
 fld public final static int PROC_PIDTASKINFO = 4
 fld public final static int PROC_PIDTBSDINFO = 3
 fld public final static int PROC_PIDVNODEPATHINFO = 9
+fld public final static int PROX_FDTYPE_SOCKET = 2
 fld public final static int RUSAGE_INFO_V2 = 2
+fld public final static int SOCKINFO_IN = 1
+fld public final static int SOCKINFO_TCP = 2
+fld public final static int TSI_T_NTIMERS = 4
 fld public final static int UINT64_SIZE
 innr public static Group
 innr public static HostCpuLoadInfo
@@ -1315,17 +1435,29 @@ innr public static IFdata
 innr public static IFdata64
 innr public static IFmsgHdr
 innr public static IFmsgHdr2
+innr public static In4In6Addr
+innr public static In6Addr
+innr public static InSockInfo
+innr public static InsiAddr
 innr public static Passwd
+innr public static Pri
 innr public static ProcBsdInfo
+innr public static ProcFdInfo
+innr public static ProcFileInfo
 innr public static ProcTaskAllInfo
 innr public static ProcTaskInfo
 innr public static RUsageInfoV2
+innr public static SockbufInfo
+innr public static SocketFdInfo
+innr public static SocketInfo
 innr public static Statfs
+innr public static TcpSockInfo
 innr public static Timeval
 innr public static Timezone
 innr public static VMMeter
 innr public static VMStatistics
 innr public static VMStatistics64
+innr public static VinfoStat
 innr public static VnodeInfoPath
 innr public static VnodePathInfo
 innr public static XswUsage
@@ -1337,6 +1469,8 @@ meth public abstract int getfsstat64(com.sun.jna.platform.mac.SystemB$Statfs[],i
 meth public abstract int getpid()
 meth public abstract int gettimeofday(com.sun.jna.platform.mac.SystemB$Timeval,com.sun.jna.platform.mac.SystemB$Timezone)
 meth public abstract int host_page_size(int,com.sun.jna.ptr.LongByReference)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public abstract int host_page_size(int,com.sun.jna.ptr.NativeLongByReference)
 meth public abstract int host_processor_info(int,int,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.PointerByReference,com.sun.jna.ptr.IntByReference)
 meth public abstract int host_statistics(int,int,com.sun.jna.Structure,com.sun.jna.ptr.IntByReference)
 meth public abstract int host_statistics64(int,int,com.sun.jna.Structure,com.sun.jna.ptr.IntByReference)
@@ -1345,8 +1479,10 @@ meth public abstract int mach_port_deallocate(int,int)
 meth public abstract int mach_task_self()
 meth public abstract int proc_listpids(int,int,int[],int)
 meth public abstract int proc_pid_rusage(int,int,com.sun.jna.platform.mac.SystemB$RUsageInfoV2)
+meth public abstract int proc_pidfdinfo(int,int,int,com.sun.jna.Structure,int)
 meth public abstract int proc_pidinfo(int,int,long,com.sun.jna.Structure,int)
 meth public abstract int proc_pidpath(int,com.sun.jna.Pointer,int)
+meth public abstract int statfs64(java.lang.String,com.sun.jna.platform.mac.SystemB$Statfs)
 meth public abstract int sysctl(int[],int,com.sun.jna.Pointer,com.sun.jna.platform.unix.LibCAPI$size_t$ByReference,com.sun.jna.Pointer,com.sun.jna.platform.unix.LibCAPI$size_t)
 meth public abstract int sysctl(int[],int,com.sun.jna.Pointer,com.sun.jna.ptr.IntByReference,com.sun.jna.Pointer,int)
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
@@ -1356,6 +1492,7 @@ meth public abstract int sysctlbyname(java.lang.String,com.sun.jna.Pointer,com.s
 meth public abstract int sysctlnametomib(java.lang.String,com.sun.jna.Pointer,com.sun.jna.platform.unix.LibCAPI$size_t$ByReference)
 meth public abstract int sysctlnametomib(java.lang.String,com.sun.jna.Pointer,com.sun.jna.ptr.IntByReference)
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public abstract int vm_deallocate(int,long,long)
 
 CLSS public static com.sun.jna.platform.mac.SystemB$Group
  outer com.sun.jna.platform.mac.SystemB
@@ -1479,6 +1616,47 @@ fld public short ifm_index
 fld public short ifm_msglen
 supr com.sun.jna.Structure
 
+CLSS public static com.sun.jna.platform.mac.SystemB$In4In6Addr
+ outer com.sun.jna.platform.mac.SystemB
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["i46a_pad32", "i46a_addr4"])
+cons public init()
+fld public int i46a_addr4
+fld public int[] i46a_pad32
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.mac.SystemB$In6Addr
+ outer com.sun.jna.platform.mac.SystemB
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["__u6_addr"])
+cons public init()
+fld public byte[] __u6_addr
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.mac.SystemB$InSockInfo
+ outer com.sun.jna.platform.mac.SystemB
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["insi_fport", "insi_lport", "insi_gencnt", "insi_flags", "insi_flow", "insi_vflag", "insi_ip_ttl", "rfu_1", "insi_faddr", "insi_laddr", "insi_v4", "insi_v6"])
+cons public init()
+fld public byte insi_ip_ttl
+fld public byte insi_v4
+fld public byte insi_vflag
+fld public byte[] insi_v6
+fld public com.sun.jna.platform.mac.SystemB$InsiAddr insi_faddr
+fld public com.sun.jna.platform.mac.SystemB$InsiAddr insi_laddr
+fld public int insi_flags
+fld public int insi_flow
+fld public int insi_fport
+fld public int insi_lport
+fld public int rfu_1
+fld public long insi_gencnt
+meth public void read()
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.mac.SystemB$InsiAddr
+ outer com.sun.jna.platform.mac.SystemB
+cons public init()
+fld public com.sun.jna.platform.mac.SystemB$In4In6Addr ina_46
+fld public com.sun.jna.platform.mac.SystemB$In6Addr ina_6
+supr com.sun.jna.Union
+
 CLSS public static com.sun.jna.platform.mac.SystemB$Passwd
  outer com.sun.jna.platform.mac.SystemB
  anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["pw_name", "pw_passwd", "pw_uid", "pw_gid", "pw_change", "pw_class", "pw_gecos", "pw_dir", "pw_shell", "pw_expire", "pw_fields"])
@@ -1495,6 +1673,14 @@ fld public java.lang.String pw_name
 fld public java.lang.String pw_passwd
 fld public java.lang.String pw_shell
 supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.mac.SystemB$Pri
+ outer com.sun.jna.platform.mac.SystemB
+cons public init()
+fld public byte[] max_size
+fld public com.sun.jna.platform.mac.SystemB$InSockInfo pri_in
+fld public com.sun.jna.platform.mac.SystemB$TcpSockInfo pri_tcp
+supr com.sun.jna.Union
 
 CLSS public static com.sun.jna.platform.mac.SystemB$ProcBsdInfo
  outer com.sun.jna.platform.mac.SystemB
@@ -1522,6 +1708,25 @@ fld public int pbi_xstatus
 fld public int rfu_1
 fld public long pbi_start_tvsec
 fld public long pbi_start_tvusec
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.mac.SystemB$ProcFdInfo
+ outer com.sun.jna.platform.mac.SystemB
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["proc_fd", "proc_fdtype"])
+cons public init()
+fld public int proc_fd
+fld public int proc_fdtype
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.mac.SystemB$ProcFileInfo
+ outer com.sun.jna.platform.mac.SystemB
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["fi_openflags", "fi_status", "fi_offset", "fi_type", "fi_guardflags"])
+cons public init()
+fld public int fi_guardflags
+fld public int fi_openflags
+fld public int fi_status
+fld public int fi_type
+fld public long fi_offset
 supr com.sun.jna.Structure
 
 CLSS public static com.sun.jna.platform.mac.SystemB$ProcTaskAllInfo
@@ -1581,6 +1786,54 @@ fld public long ri_user_time
 fld public long ri_wired_size
 supr com.sun.jna.Structure
 
+CLSS public static com.sun.jna.platform.mac.SystemB$SockbufInfo
+ outer com.sun.jna.platform.mac.SystemB
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["sbi_cc", "sbi_hiwat", "sbi_mbcnt", "sbi_mbmax", "sbi_lowat", "sbi_flags", "sbi_timeo"])
+cons public init()
+fld public int sbi_cc
+fld public int sbi_hiwat
+fld public int sbi_lowat
+fld public int sbi_mbcnt
+fld public int sbi_mbmax
+fld public short sbi_flags
+fld public short sbi_timeo
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.mac.SystemB$SocketFdInfo
+ outer com.sun.jna.platform.mac.SystemB
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["pfi", "psi"])
+cons public init()
+fld public com.sun.jna.platform.mac.SystemB$ProcFileInfo pfi
+fld public com.sun.jna.platform.mac.SystemB$SocketInfo psi
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.mac.SystemB$SocketInfo
+ outer com.sun.jna.platform.mac.SystemB
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["soi_stat", "soi_so", "soi_pcb", "soi_type", "soi_protocol", "soi_family", "soi_options", "soi_linger", "soi_state", "soi_qlen", "soi_incqlen", "soi_qlimit", "soi_timeo", "soi_error", "soi_oobmark", "soi_rcv", "soi_snd", "soi_kind", "rfu_1", "soi_proto"])
+cons public init()
+fld public com.sun.jna.platform.mac.SystemB$Pri soi_proto
+fld public com.sun.jna.platform.mac.SystemB$SockbufInfo soi_rcv
+fld public com.sun.jna.platform.mac.SystemB$SockbufInfo soi_snd
+fld public com.sun.jna.platform.mac.SystemB$VinfoStat soi_stat
+fld public int rfu_1
+fld public int soi_family
+fld public int soi_kind
+fld public int soi_oobmark
+fld public int soi_protocol
+fld public int soi_type
+fld public long soi_pcb
+fld public long soi_so
+fld public short soi_error
+fld public short soi_incqlen
+fld public short soi_linger
+fld public short soi_options
+fld public short soi_qlen
+fld public short soi_qlimit
+fld public short soi_state
+fld public short soi_timeo
+meth public void read()
+supr com.sun.jna.Structure
+
 CLSS public static com.sun.jna.platform.mac.SystemB$Statfs
  outer com.sun.jna.platform.mac.SystemB
  anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["f_bsize", "f_iosize", "f_blocks", "f_bfree", "f_bavail", "f_files", "f_ffree", "f_fsid", "f_owner", "f_type", "f_flags", "f_fssubtype", "f_fstypename", "f_mntonname", "f_mntfromname", "f_reserved"])
@@ -1601,6 +1854,19 @@ fld public long f_bfree
 fld public long f_blocks
 fld public long f_ffree
 fld public long f_files
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.mac.SystemB$TcpSockInfo
+ outer com.sun.jna.platform.mac.SystemB
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["tcpsi_ini", "tcpsi_state", "tcpsi_timer", "tcpsi_mss", "tcpsi_flags", "rfu_1", "tcpsi_tp"])
+cons public init()
+fld public com.sun.jna.platform.mac.SystemB$InSockInfo tcpsi_ini
+fld public int rfu_1
+fld public int tcpsi_flags
+fld public int tcpsi_mss
+fld public int tcpsi_state
+fld public int[] tcpsi_timer
+fld public long tcpsi_tp
 supr com.sun.jna.Structure
 
 CLSS public static com.sun.jna.platform.mac.SystemB$Timeval
@@ -1711,6 +1977,33 @@ fld public long total_uncompressed_pages_in_compressor
 fld public long zero_fill_count
 supr com.sun.jna.Structure
 
+CLSS public static com.sun.jna.platform.mac.SystemB$VinfoStat
+ outer com.sun.jna.platform.mac.SystemB
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["vst_dev", "vst_mode", "vst_nlink", "vst_ino", "vst_uid", "vst_gid", "vst_atime", "vst_atimensec", "vst_mtime", "vst_mtimensec", "vst_ctime", "vst_ctimensec", "vst_birthtime", "vst_birthtimensec", "vst_size", "vst_blocks", "vst_blksize", "vst_flags", "vst_gen", "vst_rdev", "vst_qspare"])
+cons public init()
+fld public int vst_blksize
+fld public int vst_dev
+fld public int vst_flags
+fld public int vst_gen
+fld public int vst_gid
+fld public int vst_rdev
+fld public int vst_uid
+fld public long vst_atime
+fld public long vst_atimensec
+fld public long vst_birthtime
+fld public long vst_birthtimensec
+fld public long vst_blocks
+fld public long vst_ctime
+fld public long vst_ctimensec
+fld public long vst_ino
+fld public long vst_mtime
+fld public long vst_mtimensec
+fld public long vst_size
+fld public long[] vst_qspare
+fld public short vst_mode
+fld public short vst_nlink
+supr com.sun.jna.Structure
+
 CLSS public static com.sun.jna.platform.mac.SystemB$VnodeInfoPath
  outer com.sun.jna.platform.mac.SystemB
  anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["vip_vi", "vip_path"])
@@ -1750,10 +2043,16 @@ fld public final static int XATTR_SHOWCOMPRESSION = 32
 fld public final static java.lang.String XATTR_FINDERINFO_NAME = "com.apple.FinderInfo"
 fld public final static java.lang.String XATTR_RESOURCEFORK_NAME = "com.apple.ResourceFork"
 intf com.sun.jna.Library
+meth public abstract com.sun.jna.platform.unix.LibCAPI$ssize_t getxattr(java.lang.String,java.lang.String,com.sun.jna.Pointer,com.sun.jna.platform.unix.LibCAPI$size_t,int,int)
+meth public abstract com.sun.jna.platform.unix.LibCAPI$ssize_t listxattr(java.lang.String,com.sun.jna.Pointer,com.sun.jna.platform.unix.LibCAPI$size_t,int)
 meth public abstract int removexattr(java.lang.String,java.lang.String,int)
+meth public abstract int setxattr(java.lang.String,java.lang.String,com.sun.jna.Pointer,com.sun.jna.platform.unix.LibCAPI$size_t,int,int)
 meth public abstract int setxattr(java.lang.String,java.lang.String,com.sun.jna.Pointer,long,int,int)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract long getxattr(java.lang.String,java.lang.String,com.sun.jna.Pointer,long,int,int)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public abstract long listxattr(java.lang.String,com.sun.jna.Pointer,long,int)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 
 CLSS public com.sun.jna.platform.mac.XAttrUtil
 cons public init()
@@ -1765,6 +2064,106 @@ meth public static int setXAttr(java.lang.String,java.lang.String,java.lang.Stri
 meth public static java.lang.String getXAttr(java.lang.String,java.lang.String)
 meth public static java.util.List<java.lang.String> listXAttr(java.lang.String)
 supr java.lang.Object
+
+CLSS public abstract interface com.sun.jna.platform.unix.Cups
+fld public final static com.sun.jna.platform.unix.Cups INSTANCE
+fld public final static int CUPS_PRINTER_AUTHENTICATED = 4194304
+fld public final static int CUPS_PRINTER_BIND = 1024
+fld public final static int CUPS_PRINTER_BW = 4
+fld public final static int CUPS_PRINTER_CLASS = 1
+fld public final static int CUPS_PRINTER_COLLATE = 128
+fld public final static int CUPS_PRINTER_COLOR = 8
+fld public final static int CUPS_PRINTER_COMMANDS = 8388608
+fld public final static int CUPS_PRINTER_COPIES = 64
+fld public final static int CUPS_PRINTER_COVER = 512
+fld public final static int CUPS_PRINTER_DEFAULT = 131072
+fld public final static int CUPS_PRINTER_DISCOVERED = 16777216
+fld public final static int CUPS_PRINTER_DUPLEX = 16
+fld public final static int CUPS_PRINTER_FAX = 262144
+fld public final static int CUPS_PRINTER_LARGE = 16384
+fld public final static int CUPS_PRINTER_MEDIUM = 8192
+fld public final static int CUPS_PRINTER_NOT_SHARED = 2097152
+fld public final static int CUPS_PRINTER_PUNCH = 256
+fld public final static int CUPS_PRINTER_REJECTING = 524288
+fld public final static int CUPS_PRINTER_REMOTE = 2
+fld public final static int CUPS_PRINTER_SMALL = 4096
+fld public final static int CUPS_PRINTER_SORT = 2048
+fld public final static int CUPS_PRINTER_STAPLE = 32
+fld public final static int CUPS_PRINTER_VARIABLE = 32768
+fld public final static int CUPS_WHICHJOBS_ACTIVE = 0
+fld public final static int CUPS_WHICHJOBS_ALL = -1
+fld public final static int CUPS_WHICHJOBS_COMPLETED = 1
+fld public final static int IPP_JSTATE_ABORTED = 8
+fld public final static int IPP_JSTATE_CANCELED = 7
+fld public final static int IPP_JSTATE_COMPLETED = 9
+fld public final static int IPP_JSTATE_HELD = 4
+fld public final static int IPP_JSTATE_PENDING = 3
+fld public final static int IPP_JSTATE_PROCESSING = 5
+fld public final static int IPP_JSTATE_STOPPED = 6
+fld public final static int IPP_PRINTER_IDLE = 3
+fld public final static int IPP_PRINTER_PROCESSING = 4
+fld public final static int IPP_PRINTER_STOPPED = 5
+innr public static CupsDest
+innr public static CupsJob
+innr public static CupsOption
+intf com.sun.jna.Library
+meth public abstract com.sun.jna.Pointer cupsGetDest(java.lang.String,java.lang.String,int,com.sun.jna.Pointer)
+meth public abstract com.sun.jna.Pointer cupsGetNamedDest(com.sun.jna.Pointer,java.lang.String,java.lang.String)
+meth public abstract int cupsAddOption(java.lang.String,java.lang.String,int,com.sun.jna.ptr.PointerByReference)
+meth public abstract int cupsCancelJob(java.lang.String,int)
+meth public abstract int cupsGetDests(com.sun.jna.ptr.PointerByReference)
+meth public abstract int cupsGetDests2(com.sun.jna.Pointer,com.sun.jna.ptr.PointerByReference)
+meth public abstract int cupsGetJobs2(com.sun.jna.Pointer,com.sun.jna.ptr.PointerByReference,java.lang.String,int,int)
+meth public abstract int cupsLastError()
+meth public abstract java.lang.String cupsGetDefault()
+meth public abstract java.lang.String cupsGetOption(java.lang.String,int,com.sun.jna.Pointer)
+meth public abstract java.lang.String cupsLastErrorString()
+meth public abstract java.lang.String cupsServer()
+meth public abstract java.lang.String cupsUser()
+meth public abstract void cupsFreeDests(int,com.sun.jna.Pointer)
+meth public abstract void cupsFreeJobs(int,com.sun.jna.Pointer)
+meth public abstract void cupsFreeOptions(int,com.sun.jna.Pointer)
+meth public abstract void cupsSetServer(java.lang.String)
+meth public abstract void cupsSetUser(java.lang.String)
+
+CLSS public static com.sun.jna.platform.unix.Cups$CupsDest
+ outer com.sun.jna.platform.unix.Cups
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["name", "instance", "is_default", "num_options", "options"])
+cons public init()
+cons public init(com.sun.jna.Pointer)
+fld public com.sun.jna.Pointer options
+fld public int is_default
+fld public int num_options
+fld public java.lang.String instance
+fld public java.lang.String name
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.unix.Cups$CupsJob
+ outer com.sun.jna.platform.unix.Cups
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["id", "dest", "title", "user", "format", "state", "size", "priority", "completed_time", "creation_time", "processing_time"])
+cons public init()
+cons public init(com.sun.jna.Pointer)
+fld public com.sun.jna.NativeLong completed_time
+fld public com.sun.jna.NativeLong creation_time
+fld public com.sun.jna.NativeLong processing_time
+fld public int id
+fld public int priority
+fld public int size
+fld public int state
+fld public java.lang.String dest
+fld public java.lang.String format
+fld public java.lang.String title
+fld public java.lang.String user
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.unix.Cups$CupsOption
+ outer com.sun.jna.platform.unix.Cups
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["name", "value"])
+cons public init()
+cons public init(com.sun.jna.Pointer)
+fld public java.lang.String name
+fld public java.lang.String value
+supr com.sun.jna.Structure
 
 CLSS public abstract interface com.sun.jna.platform.unix.LibC
 fld public final static com.sun.jna.platform.unix.LibC INSTANCE
@@ -3913,7 +4312,7 @@ meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE RegisterEventSource
 meth public abstract com.sun.jna.platform.win32.Winsvc$SC_HANDLE CreateService(com.sun.jna.platform.win32.Winsvc$SC_HANDLE,java.lang.String,java.lang.String,int,int,int,int,java.lang.String,java.lang.String,com.sun.jna.ptr.IntByReference,java.lang.String,java.lang.String,java.lang.String)
 meth public abstract com.sun.jna.platform.win32.Winsvc$SC_HANDLE OpenSCManager(java.lang.String,java.lang.String,int)
 meth public abstract com.sun.jna.platform.win32.Winsvc$SC_HANDLE OpenService(com.sun.jna.platform.win32.Winsvc$SC_HANDLE,java.lang.String,int)
-meth public abstract com.sun.jna.platform.win32.Winsvc$SERVICE_STATUS_HANDLE RegisterServiceCtrlHandler(java.lang.String,com.sun.jna.Library$Handler)
+meth public abstract com.sun.jna.platform.win32.Winsvc$SERVICE_STATUS_HANDLE RegisterServiceCtrlHandler(java.lang.String,com.sun.jna.platform.win32.Winsvc$Handler)
 meth public abstract com.sun.jna.platform.win32.Winsvc$SERVICE_STATUS_HANDLE RegisterServiceCtrlHandlerEx(java.lang.String,com.sun.jna.platform.win32.Winsvc$HandlerEx,com.sun.jna.Pointer)
 meth public abstract int GetLengthSid(com.sun.jna.platform.win32.WinNT$PSID)
 meth public abstract int GetNamedSecurityInfo(java.lang.String,int,int,com.sun.jna.ptr.PointerByReference,com.sun.jna.ptr.PointerByReference,com.sun.jna.ptr.PointerByReference,com.sun.jna.ptr.PointerByReference,com.sun.jna.ptr.PointerByReference)
@@ -4204,6 +4603,80 @@ cons public init(com.sun.jna.platform.win32.BaseTSD$ULONG_PTR)
 meth public com.sun.jna.platform.win32.BaseTSD$ULONG_PTR getValue()
 meth public void setValue(com.sun.jna.platform.win32.BaseTSD$ULONG_PTR)
 supr com.sun.jna.ptr.ByReference
+
+CLSS public abstract interface com.sun.jna.platform.win32.BluetoothApis
+fld public final static com.sun.jna.platform.win32.BluetoothApis INSTANCE
+fld public final static int BLUETOOTH_MAX_NAME_SIZE = 248
+innr public static BLUETOOTH_ADDRESS
+innr public static BLUETOOTH_DEVICE_INFO
+innr public static BLUETOOTH_DEVICE_SEARCH_PARAMS
+innr public static BLUETOOTH_FIND_RADIO_PARAMS
+innr public static BLUETOOTH_RADIO_INFO
+intf com.sun.jna.win32.StdCallLibrary
+meth public abstract boolean BluetoothFindDeviceClose(com.sun.jna.platform.win32.WinNT$HANDLE)
+meth public abstract boolean BluetoothFindNextDevice(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.platform.win32.BluetoothApis$BLUETOOTH_DEVICE_INFO)
+meth public abstract boolean BluetoothFindNextRadio(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.platform.win32.WinNT$HANDLEByReference)
+meth public abstract boolean BluetoothFindRadioClose(com.sun.jna.platform.win32.WinNT$HANDLE)
+meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE BluetoothFindFirstDevice(com.sun.jna.platform.win32.BluetoothApis$BLUETOOTH_DEVICE_SEARCH_PARAMS,com.sun.jna.platform.win32.BluetoothApis$BLUETOOTH_DEVICE_INFO)
+meth public abstract com.sun.jna.platform.win32.WinNT$HANDLE BluetoothFindFirstRadio(com.sun.jna.platform.win32.BluetoothApis$BLUETOOTH_FIND_RADIO_PARAMS,com.sun.jna.platform.win32.WinNT$HANDLEByReference)
+meth public abstract int BluetoothGetRadioInfo(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.platform.win32.BluetoothApis$BLUETOOTH_RADIO_INFO)
+
+CLSS public static com.sun.jna.platform.win32.BluetoothApis$BLUETOOTH_ADDRESS
+ outer com.sun.jna.platform.win32.BluetoothApis
+cons public init()
+fld public byte[] rgBytes
+fld public long ullLong
+meth public byte[] getBytes()
+meth public long getAddress()
+supr com.sun.jna.Union
+
+CLSS public static com.sun.jna.platform.win32.BluetoothApis$BLUETOOTH_DEVICE_INFO
+ outer com.sun.jna.platform.win32.BluetoothApis
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["dwSize", "Address", "ulClassofDevice", "fConnected", "fRemembered", "fAuthenticated", "stLastSeen", "stLastUsed", "szName"])
+cons public init()
+fld public boolean fAuthenticated
+fld public boolean fConnected
+fld public boolean fRemembered
+fld public char[] szName
+fld public com.sun.jna.platform.win32.BluetoothApis$BLUETOOTH_ADDRESS Address
+fld public com.sun.jna.platform.win32.WinBase$SYSTEMTIME stLastSeen
+fld public com.sun.jna.platform.win32.WinBase$SYSTEMTIME stLastUsed
+fld public int dwSize
+fld public int ulClassofDevice
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.win32.BluetoothApis$BLUETOOTH_DEVICE_SEARCH_PARAMS
+ outer com.sun.jna.platform.win32.BluetoothApis
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["dwSize", "fReturnAuthenticated", "fReturnRemembered", "fReturnUnknown", "fReturnConnected", "fIssueInquiry", "cTimeoutMultiplier", "hRadio"])
+cons public init()
+fld public boolean fIssueInquiry
+fld public boolean fReturnAuthenticated
+fld public boolean fReturnConnected
+fld public boolean fReturnRemembered
+fld public boolean fReturnUnknown
+fld public byte cTimeoutMultiplier
+fld public com.sun.jna.platform.win32.WinNT$HANDLE hRadio
+fld public int dwSize
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.win32.BluetoothApis$BLUETOOTH_FIND_RADIO_PARAMS
+ outer com.sun.jna.platform.win32.BluetoothApis
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["dwSize"])
+cons public init()
+fld public int dwSize
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.win32.BluetoothApis$BLUETOOTH_RADIO_INFO
+ outer com.sun.jna.platform.win32.BluetoothApis
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["dwSize", "address", "szName", "ulClassofDevice", "lmpSubversion", "manufacturer"])
+cons public init()
+fld public char[] szName
+fld public com.sun.jna.platform.win32.BluetoothApis$BLUETOOTH_ADDRESS address
+fld public int dwSize
+fld public int ulClassofDevice
+fld public short lmpSubversion
+fld public short manufacturer
+supr com.sun.jna.Structure
 
 CLSS public com.sun.jna.platform.win32.COM.COMBindingBaseObject
 cons public init(com.sun.jna.platform.win32.COM.IDispatch)
@@ -8912,6 +9385,8 @@ fld public com.sun.jna.platform.win32.WinDef$SHORT cScodes
 fld public com.sun.jna.platform.win32.WinDef$SHORT oVft
 fld public com.sun.jna.platform.win32.WinDef$WORD wFuncFlags
 innr public static ByReference
+meth public void read()
+meth public void write()
 supr com.sun.jna.Structure
 
 CLSS public static com.sun.jna.platform.win32.OaIdl$FUNCDESC$ByReference
@@ -9095,6 +9570,7 @@ supr com.sun.jna.Structure
 CLSS public static com.sun.jna.platform.win32.OaIdl$SAFEARRAY$ByReference
  outer com.sun.jna.platform.win32.OaIdl$SAFEARRAY
 cons public init()
+cons public init(com.sun.jna.Pointer)
 intf com.sun.jna.Structure$ByReference
 supr com.sun.jna.platform.win32.OaIdl$SAFEARRAY
 
@@ -9238,6 +9714,7 @@ fld public com.sun.jna.platform.win32.OaIdl$TYPEDESC$_TYPEDESC _typedesc
 fld public com.sun.jna.platform.win32.WTypes$VARTYPE vt
 innr public static ByReference
 innr public static _TYPEDESC
+meth public void read()
 supr com.sun.jna.Structure
 
 CLSS public static com.sun.jna.platform.win32.OaIdl$TYPEDESC$ByReference
@@ -9298,6 +9775,7 @@ fld public com.sun.jna.platform.win32.WTypes$LPOLESTR lpstrSchema
 fld public com.sun.jna.platform.win32.WinDef$WORD wVarFlags
 innr public static ByReference
 innr public static _VARDESC
+meth public void read()
 supr com.sun.jna.Structure
 
 CLSS public static com.sun.jna.platform.win32.OaIdl$VARDESC$ByReference
@@ -19052,16 +19530,20 @@ supr com.sun.jna.Structure
 
 CLSS public static com.sun.jna.platform.win32.WinNT$CACHE_RELATIONSHIP
  outer com.sun.jna.platform.win32.WinNT
- anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["level", "associativity", "lineSize", "cacheSize", "type", "reserved", "groupMask"])
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["level", "associativity", "lineSize", "cacheSize", "type", "reserved", "groupCount", "groupMasks"])
 cons public init()
 cons public init(com.sun.jna.Pointer)
 fld public byte associativity
 fld public byte level
 fld public byte[] reserved
 fld public com.sun.jna.platform.win32.WinNT$GROUP_AFFINITY groupMask
+fld public com.sun.jna.platform.win32.WinNT$GROUP_AFFINITY[] groupMasks
 fld public int cacheSize
 fld public int type
+fld public short groupCount
 fld public short lineSize
+meth protected java.util.List<java.lang.reflect.Field> getFieldList()
+meth public void read()
 supr com.sun.jna.platform.win32.WinNT$SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX
 
 CLSS public static com.sun.jna.platform.win32.WinNT$EVENTLOGRECORD
@@ -19183,6 +19665,7 @@ cons public init()
 cons public init(long)
 fld public com.sun.jna.platform.win32.WinNT$LARGE_INTEGER$UNION u
 innr public static ByReference
+innr public static ByValue
 innr public static LowHigh
 innr public static UNION
 intf java.lang.Comparable<com.sun.jna.platform.win32.WinNT$LARGE_INTEGER>
@@ -19198,7 +19681,15 @@ supr com.sun.jna.Structure
 CLSS public static com.sun.jna.platform.win32.WinNT$LARGE_INTEGER$ByReference
  outer com.sun.jna.platform.win32.WinNT$LARGE_INTEGER
 cons public init()
+cons public init(long)
 intf com.sun.jna.Structure$ByReference
+supr com.sun.jna.platform.win32.WinNT$LARGE_INTEGER
+
+CLSS public static com.sun.jna.platform.win32.WinNT$LARGE_INTEGER$ByValue
+ outer com.sun.jna.platform.win32.WinNT$LARGE_INTEGER
+cons public init()
+cons public init(long)
+intf com.sun.jna.Structure$ByValue
 supr com.sun.jna.platform.win32.WinNT$LARGE_INTEGER
 
 CLSS public static com.sun.jna.platform.win32.WinNT$LARGE_INTEGER$LowHigh
@@ -21350,6 +21841,88 @@ fld public com.sun.jna.platform.win32.Wincon$COORD dwSize
 meth public java.lang.String toString()
 supr com.sun.jna.Structure
 
+CLSS public abstract interface com.sun.jna.platform.win32.Windot11
+fld public final static int DOT11_SSID_MAX_LENGTH = 32
+innr public abstract interface static DOT11_AUTH_ALGORITHM
+innr public abstract interface static DOT11_BSS_TYPE
+innr public abstract interface static DOT11_CIPHER_ALGORITHM
+innr public abstract interface static DOT11_PHY_TYPE
+innr public static DOT11_MAC_ADDRESS
+innr public static DOT11_SSID
+intf com.sun.jna.Library
+
+CLSS public abstract interface static com.sun.jna.platform.win32.Windot11$DOT11_AUTH_ALGORITHM
+ outer com.sun.jna.platform.win32.Windot11
+fld public final static int DOT11_AUTH_ALGO_80211_OPEN = 1
+fld public final static int DOT11_AUTH_ALGO_80211_SHARED_KEY = 2
+fld public final static int DOT11_AUTH_ALGO_IHV_END = -1
+fld public final static int DOT11_AUTH_ALGO_IHV_START = -2147483648
+fld public final static int DOT11_AUTH_ALGO_OWE = 10
+fld public final static int DOT11_AUTH_ALGO_RSNA = 6
+fld public final static int DOT11_AUTH_ALGO_RSNA_PSK = 7
+fld public final static int DOT11_AUTH_ALGO_WPA = 3
+fld public final static int DOT11_AUTH_ALGO_WPA3 = 8
+fld public final static int DOT11_AUTH_ALGO_WPA3_ENT = 11
+fld public final static int DOT11_AUTH_ALGO_WPA3_ENT_192 = 8
+fld public final static int DOT11_AUTH_ALGO_WPA3_SAE = 9
+fld public final static int DOT11_AUTH_ALGO_WPA_NONE = 5
+fld public final static int DOT11_AUTH_ALGO_WPA_PSK = 4
+
+CLSS public abstract interface static com.sun.jna.platform.win32.Windot11$DOT11_BSS_TYPE
+ outer com.sun.jna.platform.win32.Windot11
+fld public final static int dot11_BSS_type_any = 3
+fld public final static int dot11_BSS_type_independent = 2
+fld public final static int dot11_BSS_type_infrastructure = 1
+
+CLSS public abstract interface static com.sun.jna.platform.win32.Windot11$DOT11_CIPHER_ALGORITHM
+ outer com.sun.jna.platform.win32.Windot11
+fld public final static int DOT11_CIPHER_ALGO_BIP = 6
+fld public final static int DOT11_CIPHER_ALGO_BIP_CMAC_256 = 13
+fld public final static int DOT11_CIPHER_ALGO_BIP_GMAC_128 = 11
+fld public final static int DOT11_CIPHER_ALGO_BIP_GMAC_256 = 12
+fld public final static int DOT11_CIPHER_ALGO_CCMP = 4
+fld public final static int DOT11_CIPHER_ALGO_CCMP_256 = 10
+fld public final static int DOT11_CIPHER_ALGO_GCMP = 8
+fld public final static int DOT11_CIPHER_ALGO_GCMP_256 = 9
+fld public final static int DOT11_CIPHER_ALGO_IHV_END = -1
+fld public final static int DOT11_CIPHER_ALGO_IHV_START = -2147483648
+fld public final static int DOT11_CIPHER_ALGO_NONE = 0
+fld public final static int DOT11_CIPHER_ALGO_RSN_USE_GROUP = 256
+fld public final static int DOT11_CIPHER_ALGO_TKIP = 2
+fld public final static int DOT11_CIPHER_ALGO_WEP = 257
+fld public final static int DOT11_CIPHER_ALGO_WEP104 = 5
+fld public final static int DOT11_CIPHER_ALGO_WEP40 = 1
+fld public final static int DOT11_CIPHER_ALGO_WPA_USE_GROUP = 256
+
+CLSS public static com.sun.jna.platform.win32.Windot11$DOT11_MAC_ADDRESS
+ outer com.sun.jna.platform.win32.Windot11
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["ucDot11MacAddress"])
+cons public init()
+fld public com.sun.jna.platform.win32.WinDef$UCHAR[] ucDot11MacAddress
+supr com.sun.jna.Structure
+
+CLSS public abstract interface static com.sun.jna.platform.win32.Windot11$DOT11_PHY_TYPE
+ outer com.sun.jna.platform.win32.Windot11
+fld public final static int dot11_phy_type_IHV_end = -1
+fld public final static int dot11_phy_type_IHV_start = -2147483648
+fld public final static int dot11_phy_type_any = 0
+fld public final static int dot11_phy_type_dsss = 2
+fld public final static int dot11_phy_type_erp = 6
+fld public final static int dot11_phy_type_fhss = 1
+fld public final static int dot11_phy_type_hrdsss = 5
+fld public final static int dot11_phy_type_ht = 7
+fld public final static int dot11_phy_type_irbaseband = 3
+fld public final static int dot11_phy_type_ofdm = 4
+fld public final static int dot11_phy_type_unknown = 0
+
+CLSS public static com.sun.jna.platform.win32.Windot11$DOT11_SSID
+ outer com.sun.jna.platform.win32.Windot11
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["uSSIDLength", "ucSSID"])
+cons public init()
+fld public byte[] ucSSID
+fld public com.sun.jna.platform.win32.WinDef$ULONG uSSIDLength
+supr com.sun.jna.Structure
+
 CLSS public abstract interface com.sun.jna.platform.win32.Winevt
 fld public final static int EVT_ALL_ACCESS = 7
 fld public final static int EVT_CLEAR_ACCESS = 4
@@ -22610,6 +23183,135 @@ fld public com.sun.jna.platform.win32.Winsvc$SERVICE_MAIN_FUNCTION lpServiceProc
 fld public java.lang.String lpServiceName
 supr com.sun.jna.Structure
 
+CLSS public abstract interface com.sun.jna.platform.win32.WlanApi
+fld public final static com.sun.jna.platform.win32.WlanApi INSTANCE
+fld public final static int WLAN_MAX_NAME_LENGTH = 256
+innr public abstract interface static WLAN_CONNECTION_MODE
+innr public abstract interface static WLAN_INTERFACE_STATE
+innr public abstract interface static WLAN_INTF_OPCODE
+innr public abstract interface static WLAN_OPCODE_VALUE_TYPE
+innr public static WLAN_ASSOCIATION_ATTRIBUTES
+innr public static WLAN_CONNECTION_ATTRIBUTES
+innr public static WLAN_INTERFACE_INFO
+innr public static WLAN_INTERFACE_INFO_LIST
+innr public static WLAN_SECURITY_ATTRIBUTES
+intf com.sun.jna.Library
+meth public abstract int WlanCloseHandle(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.Pointer)
+meth public abstract int WlanEnumInterfaces(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.Pointer,com.sun.jna.ptr.PointerByReference)
+meth public abstract int WlanOpenHandle(int,com.sun.jna.Pointer,com.sun.jna.ptr.IntByReference,com.sun.jna.platform.win32.WinNT$HANDLEByReference)
+meth public abstract int WlanQueryInterface(com.sun.jna.platform.win32.WinNT$HANDLE,com.sun.jna.platform.win32.Guid$GUID,int,com.sun.jna.Pointer,com.sun.jna.ptr.IntByReference,com.sun.jna.ptr.PointerByReference,com.sun.jna.ptr.IntByReference)
+meth public abstract void WlanFreeMemory(com.sun.jna.Pointer)
+
+CLSS public static com.sun.jna.platform.win32.WlanApi$WLAN_ASSOCIATION_ATTRIBUTES
+ outer com.sun.jna.platform.win32.WlanApi
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["dot11Ssid", "dot11BssType", "dot11Bssid", "dot11PhyType", "uDot11PhyIndex", "wlanSignalQuality", "ulRxRate", "ulTxRate"])
+cons public init(com.sun.jna.Pointer)
+fld public com.sun.jna.platform.win32.WinDef$ULONG uDot11PhyIndex
+fld public com.sun.jna.platform.win32.WinDef$ULONG ulRxRate
+fld public com.sun.jna.platform.win32.WinDef$ULONG ulTxRate
+fld public com.sun.jna.platform.win32.WinDef$ULONG wlanSignalQuality
+fld public com.sun.jna.platform.win32.Windot11$DOT11_MAC_ADDRESS dot11Bssid
+fld public com.sun.jna.platform.win32.Windot11$DOT11_SSID dot11Ssid
+fld public int dot11BssType
+fld public int dot11PhyType
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.win32.WlanApi$WLAN_CONNECTION_ATTRIBUTES
+ outer com.sun.jna.platform.win32.WlanApi
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["isState", "wlanConnectionMode", "strProfileName", "wlanAssociationAttributes", "wlanSecurityAttributes"])
+cons public init(com.sun.jna.Pointer)
+fld public char[] strProfileName
+fld public com.sun.jna.platform.win32.WlanApi$WLAN_ASSOCIATION_ATTRIBUTES wlanAssociationAttributes
+fld public com.sun.jna.platform.win32.WlanApi$WLAN_SECURITY_ATTRIBUTES wlanSecurityAttributes
+fld public int isState
+fld public int wlanConnectionMode
+supr com.sun.jna.Structure
+
+CLSS public abstract interface static com.sun.jna.platform.win32.WlanApi$WLAN_CONNECTION_MODE
+ outer com.sun.jna.platform.win32.WlanApi
+fld public final static int wlan_connection_mode_auto = 4
+fld public final static int wlan_connection_mode_discovery_secure = 2
+fld public final static int wlan_connection_mode_discovery_unsecure = 3
+fld public final static int wlan_connection_mode_invalid = 5
+fld public final static int wlan_connection_mode_profile = 0
+fld public final static int wlan_connection_mode_temporary_profile = 1
+
+CLSS public static com.sun.jna.platform.win32.WlanApi$WLAN_INTERFACE_INFO
+ outer com.sun.jna.platform.win32.WlanApi
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["InterfaceGuid", "strInterfaceDescription", "isState"])
+cons public init()
+fld public char[] strInterfaceDescription
+fld public com.sun.jna.platform.win32.Guid$GUID InterfaceGuid
+fld public int isState
+supr com.sun.jna.Structure
+
+CLSS public static com.sun.jna.platform.win32.WlanApi$WLAN_INTERFACE_INFO_LIST
+ outer com.sun.jna.platform.win32.WlanApi
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["dwNumberOfItems", "dwIndex", "InterfaceInfo"])
+cons public init()
+cons public init(com.sun.jna.Pointer)
+fld public com.sun.jna.platform.win32.WlanApi$WLAN_INTERFACE_INFO[] InterfaceInfo
+fld public int dwIndex
+fld public int dwNumberOfItems
+meth public void read()
+supr com.sun.jna.Structure
+
+CLSS public abstract interface static com.sun.jna.platform.win32.WlanApi$WLAN_INTERFACE_STATE
+ outer com.sun.jna.platform.win32.WlanApi
+fld public final static int wlan_interface_state_ad_hoc_network_formed = 2
+fld public final static int wlan_interface_state_associating = 5
+fld public final static int wlan_interface_state_authenticating = 7
+fld public final static int wlan_interface_state_connected = 1
+fld public final static int wlan_interface_state_disconnected = 4
+fld public final static int wlan_interface_state_disconnecting = 3
+fld public final static int wlan_interface_state_discovering = 6
+fld public final static int wlan_interface_state_not_ready = 0
+
+CLSS public abstract interface static com.sun.jna.platform.win32.WlanApi$WLAN_INTF_OPCODE
+ outer com.sun.jna.platform.win32.WlanApi
+fld public final static int wlan_intf_opcode_autoconf_enabled = 1
+fld public final static int wlan_intf_opcode_autoconf_end = 268435455
+fld public final static int wlan_intf_opcode_autoconf_start = 0
+fld public final static int wlan_intf_opcode_background_scan_enabled = 2
+fld public final static int wlan_intf_opcode_bss_type = 5
+fld public final static int wlan_intf_opcode_certified_safe_mode = 14
+fld public final static int wlan_intf_opcode_channel_number = 8
+fld public final static int wlan_intf_opcode_current_connection = 7
+fld public final static int wlan_intf_opcode_current_operation_mode = 12
+fld public final static int wlan_intf_opcode_hosted_network_capable = 15
+fld public final static int wlan_intf_opcode_ihv_end = 1073741823
+fld public final static int wlan_intf_opcode_ihv_start = 805306368
+fld public final static int wlan_intf_opcode_interface_state = 6
+fld public final static int wlan_intf_opcode_media_streaming_mode = 3
+fld public final static int wlan_intf_opcode_msm_end = 536870911
+fld public final static int wlan_intf_opcode_msm_start = 268435712
+fld public final static int wlan_intf_opcode_radio_state = 4
+fld public final static int wlan_intf_opcode_rssi = 268435714
+fld public final static int wlan_intf_opcode_security_end = 805306367
+fld public final static int wlan_intf_opcode_security_start = 536936448
+fld public final static int wlan_intf_opcode_statistics = 268435713
+fld public final static int wlan_intf_opcode_supported_adhoc_auth_cipher_pairs = 10
+fld public final static int wlan_intf_opcode_supported_country_or_region_string_list = 11
+fld public final static int wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs = 9
+fld public final static int wlan_intf_opcode_supported_safe_mode = 13
+
+CLSS public abstract interface static com.sun.jna.platform.win32.WlanApi$WLAN_OPCODE_VALUE_TYPE
+ outer com.sun.jna.platform.win32.WlanApi
+fld public final static int wlan_opcode_value_type_invalid = 3
+fld public final static int wlan_opcode_value_type_query_only = 0
+fld public final static int wlan_opcode_value_type_set_by_group_policy = 1
+fld public final static int wlan_opcode_value_type_set_by_user = 2
+
+CLSS public static com.sun.jna.platform.win32.WlanApi$WLAN_SECURITY_ATTRIBUTES
+ outer com.sun.jna.platform.win32.WlanApi
+ anno 0 com.sun.jna.Structure$FieldOrder(java.lang.String[] value=["bSecurityEnabled", "bOneXEnabled", "dot11AuthAlgorithm", "dot11CipherAlgorithm"])
+cons public init()
+fld public boolean bOneXEnabled
+fld public boolean bSecurityEnabled
+fld public int dot11AuthAlgorithm
+fld public int dot11CipherAlgorithm
+supr com.sun.jna.Structure
+
 CLSS public abstract interface com.sun.jna.platform.win32.Wtsapi32
 fld public final static com.sun.jna.platform.win32.WinNT$HANDLE WTS_CURRENT_SERVER_HANDLE
 fld public final static com.sun.jna.platform.win32.Wtsapi32 INSTANCE
@@ -23064,8 +23766,6 @@ meth public void transferFocusUpCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.lang.Object
-hfds FOCUS_TRAVERSABLE_DEFAULT,FOCUS_TRAVERSABLE_SET,FOCUS_TRAVERSABLE_UNKNOWN,LOCK,acc,actionListenerK,adjustmentListenerK,appContext,autoFocusTransferOnDisposal,background,backgroundEraseDisabled,boundsOp,bufferStrategy,changeSupport,coalesceEventsParams,coalesceMap,coalescingEnabled,componentListener,componentListenerK,componentOrientation,componentSerializedDataVersion,compoundShape,containerListenerK,cursor,dropTarget,enabled,eventCache,eventLog,eventMask,focusListener,focusListenerK,focusLog,focusTraversalKeyPropertyNames,focusTraversalKeys,focusTraversalKeysEnabled,focusable,font,foreground,graphicsConfig,height,hierarchyBoundsListener,hierarchyBoundsListenerK,hierarchyListener,hierarchyListenerK,ignoreRepaint,incRate,inputMethodListener,inputMethodListenerK,isAddNotifyComplete,isFocusTraversableOverridden,isInc,isPacked,itemListenerK,keyListener,keyListenerK,locale,log,maxSize,maxSizeSet,minSize,minSizeSet,mixingCutoutRegion,mixingLog,mouseListener,mouseListenerK,mouseMotionListener,mouseMotionListenerK,mouseWheelListener,mouseWheelListenerK,name,nameExplicitlySet,newEventsOnly,objectLock,ownedWindowK,parent,peer,peerFont,popups,prefSize,prefSizeSet,requestFocusController,serialVersionUID,textListenerK,valid,visible,width,windowFocusListenerK,windowListenerK,windowStateListenerK,x,y
-hcls AWTTreeLock,BltSubRegionBufferStrategy,DummyRequestFocusController,FlipSubRegionBufferStrategy,ProxyCapabilities,SingleBufferStrategy
 
 CLSS public java.awt.Container
 cons public init()
@@ -23150,8 +23850,6 @@ meth public void transferFocusDownCycle()
 meth public void update(java.awt.Graphics)
 meth public void validate()
 supr java.awt.Component
-hfds EMPTY_ARRAY,INCLUDE_SELF,SEARCH_HEAVYWEIGHTS,component,containerListener,containerSerializedDataVersion,descendUnconditionallyWhenValidating,descendantsCount,dispatcher,eventLog,focusCycleRoot,focusTraversalPolicy,focusTraversalPolicyProvider,isJavaAwtSmartInvalidate,layoutMgr,listeningBoundsChildren,listeningChildren,log,mixingLog,modalAppContext,modalComp,numOfHWComponents,numOfLWComponents,preserveBackgroundColor,printing,printingThreads,serialPersistentFields,serialVersionUID
-hcls DropTargetEventTargetFilter,EventTargetFilter,MouseEventTargetFilter,WakingRunnable
 
 CLSS public abstract interface java.awt.MenuContainer
 meth public abstract boolean postEvent(java.awt.Event)
@@ -23292,7 +23990,6 @@ meth public final java.util.Optional<java.lang.Enum$EnumDesc<{java.lang.Enum%0}>
 meth public java.lang.String toString()
 meth public static <%0 extends java.lang.Enum<{%%0}>> {%%0} valueOf(java.lang.Class<{%%0}>,java.lang.String)
 supr java.lang.Object
-hfds name,ordinal
 
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -23301,7 +23998,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public abstract interface !annotation java.lang.FunctionalInterface
  anno 0 java.lang.annotation.Documented()
@@ -23324,7 +24020,6 @@ meth public abstract long longValue()
 meth public byte byteValue()
 meth public short shortValue()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -23352,7 +24047,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Thread
 cons public init()
@@ -23418,8 +24112,6 @@ meth public void setContextClassLoader(java.lang.ClassLoader)
 meth public void setUncaughtExceptionHandler(java.lang.Thread$UncaughtExceptionHandler)
 meth public void start()
 supr java.lang.Object
-hfds EMPTY_STACK_TRACE,blocker,blockerLock,contextClassLoader,daemon,defaultUncaughtExceptionHandler,eetop,group,inheritableThreadLocals,inheritedAccessControlContext,interrupted,name,parkBlocker,priority,stackSize,stillborn,target,threadInitNumber,threadLocalRandomProbe,threadLocalRandomSecondarySeed,threadLocalRandomSeed,threadLocals,threadSeqNumber,threadStatus,tid,uncaughtExceptionHandler
-hcls Caches,WeakClassKey
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -23442,8 +24134,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -23493,7 +24183,6 @@ intf java.io.Serializable
 meth public java.lang.Object getSource()
 meth public java.lang.String toString()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public abstract interface java.util.Iterator<%0 extends java.lang.Object>
 meth public abstract boolean hasNext()
@@ -23701,8 +24390,6 @@ meth public void unregisterKeyboardAction(javax.swing.KeyStroke)
 meth public void update(java.awt.Graphics)
 meth public void updateUI()
 supr java.awt.Container
-hfds ACTIONMAP_CREATED,ANCESTOR_INPUTMAP_CREATED,ANCESTOR_USING_BUFFER,AUTOSCROLLS_SET,COMPLETELY_OBSCURED,CREATED_DOUBLE_BUFFER,DEBUG_GRAPHICS_LOADED,FOCUS_INPUTMAP_CREATED,FOCUS_TRAVERSAL_KEYS_BACKWARD_SET,FOCUS_TRAVERSAL_KEYS_FORWARD_SET,INHERITS_POPUP_MENU,INPUT_VERIFIER_SOURCE_KEY,IS_DOUBLE_BUFFERED,IS_OPAQUE,IS_PAINTING_TILE,IS_PRINTING,IS_PRINTING_ALL,IS_REPAINTING,KEYBOARD_BINDINGS_KEY,KEY_EVENTS_ENABLED,NEXT_FOCUS,NOT_OBSCURED,OPAQUE_SET,PARTIALLY_OBSCURED,REQUEST_FOCUS_DISABLED,RESERVED_1,RESERVED_2,RESERVED_3,RESERVED_4,RESERVED_5,RESERVED_6,WHEN_IN_FOCUSED_WINDOW_BINDINGS,WIF_INPUTMAP_CREATED,WRITE_OBJ_COUNTER_FIRST,WRITE_OBJ_COUNTER_LAST,aaHint,actionMap,alignmentX,alignmentY,ancestorInputMap,autoscrolls,border,clientProperties,componentObtainingGraphicsFrom,componentObtainingGraphicsFromLock,defaultLocale,flags,focusController,focusInputMap,inputVerifier,isAlignmentXSet,isAlignmentYSet,lcdRenderingHint,managingFocusBackwardTraversalKeys,managingFocusForwardTraversalKeys,paintingChild,popupMenu,readObjectCallbacks,revalidateRunnableScheduled,tempRectangles,uiClassID,verifyInputWhenFocusTarget,vetoableChangeSupport,windowInputMap
-hcls ActionStandin,IntVector,KeyboardState,ReadObjectCallback
 
 CLSS public javax.swing.JPanel
  anno 0 java.beans.JavaBean(java.lang.String defaultEventSet="", java.lang.String defaultProperty="UI", java.lang.String description="A generic lightweight container.")
@@ -23722,5 +24409,4 @@ meth public void setUI(javax.swing.plaf.PanelUI)
  anno 0 java.beans.BeanProperty(boolean bound=true, boolean expert=false, boolean hidden=true, boolean preferred=false, boolean required=false, boolean visualUpdate=true, java.lang.String description="The UI object that implements the Component's LookAndFeel.", java.lang.String[] enumerationValues=[])
 meth public void updateUI()
 supr javax.swing.JComponent
-hfds uiClassID
 

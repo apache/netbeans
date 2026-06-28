@@ -531,6 +531,11 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
         if (config.isUpdateSnapshots()) {
             toRet.add("--update-snapshots");//NOI18N
         }
+        String userSettingsXml = MavenSettings.getDefault().getUserSettingsXml();
+        if (!userSettingsXml.equals(EmbedderFactory.getDefaultUserSettingsXmlFile().getAbsolutePath())) {
+            toRet.add("--settings");
+            toRet.add(userSettingsXml);
+        }
         if (config.getReactorStyle() != RunConfig.ReactorStyle.NONE) {
             File basedir = config.getExecutionDirectory();
             MavenProject mp = NbMavenProject.getPartialProject(config.getMavenProject());
@@ -896,29 +901,38 @@ public class MavenCommandLineExecutor extends AbstractMavenExecutor {
             if (p.equals("-1") || p.equals("--serial") || p.equals("-Dmvnd.serial")) { // "behave like standard maven" mode
                 return false;
             }
-            if (i + 1 < params.size() && (p.equals("-T") || p.equals("--threads"))) {
-                if (params.get(i+1).equals("1")) {
-                    return false;
-                }
-            }
             try {
                 if (p.startsWith("-Dmvnd.threads=") && Integer.parseInt(p.substring(15)) == 1)  {
                     return false;
                 }
-            } catch (NumberFormatException ignored) {} 
+            } catch (NumberFormatException ignored) {}
         }
-        return true;
+        String threads = threadsArgValue(params);
+        return threads == null || !threads.equals("1");
     }
 
     // mvn is ST by default
     static boolean isMultiThreadedMaven(List<String> params) {
-        for (int i = 0; i < params.size() - 1; i++) {
+        String threads = threadsArgValue(params);
+        return threads != null && !threads.equals("1");
+    }
+
+    // Recognizes -T <n>, -T<n>, --threads <n>, --threads=<n>; #9337
+    // The suffix is returned verbatim - Maven validates the value itself, so anything other than "1" is treated as multi-threaded by callers.
+    private static String threadsArgValue(List<String> params) {
+        for (int i = 0; i < params.size(); i++) {
             String p = params.get(i);
-            if ((p.equals("-T") || p.equals("--threads")) && !params.get(i+1).equals("1")) {
-                return true;
+            if (p.equals("-T") || p.equals("--threads")) {
+                if (i + 1 < params.size()) {
+                    return params.get(i + 1);
+                }
+            } else if (p.startsWith("-T") && p.length() > 2) {
+                return p.substring(2);
+            } else if (p.startsWith("--threads=")) {
+                return p.substring("--threads=".length());
             }
         }
-        return false;
+        return null;
     }
 
     /**

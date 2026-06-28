@@ -88,13 +88,13 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
         T createVariableItem(CompilationInfo info, String varName, int substitutionOffset, boolean newVarName, boolean smartType);
 
-        T createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef);
+        T createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams);
 
-        default T createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef) {
-            return createExecutableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, smartType, assignToVarOffset, memberRef);
+        default T createExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean afterConstructorTypeParams, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams) {
+            return createExecutableItem(info, elem, type, substitutionOffset, referencesCount, isInherited, isDeprecated, inImport, addSemicolon, smartType, assignToVarOffset, memberRef, insertTextParams);
         }
 
-        T createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name);
+        T createThisOrSuperConstructorItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean isDeprecated, String name, boolean insertTextParams);
 
         T createOverrideMethodItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, int substitutionOffset, boolean implement);
 
@@ -123,7 +123,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
         T createTypeCastableVariableItem(CompilationInfo info, VariableElement elem, TypeMirror type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean smartType, int assignToVarOffset);
 
-        T createTypeCastableExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef);        
+        T createTypeCastableExecutableItem(CompilationInfo info, ExecutableElement elem, ExecutableType type, TypeMirror castType, int substitutionOffset, ReferencesCount referencesCount, boolean isInherited, boolean isDeprecated, boolean inImport, boolean addSemicolon, boolean smartType, int assignToVarOffset, boolean memberRef, boolean insertTextParams);
     }
     
     public static interface LambdaItemFactory<T> extends ItemFactory<T> {
@@ -731,10 +731,21 @@ public final class JavaCompletionTask<T> extends BaseTask {
         ImportTree im = (ImportTree) env.getPath().getLeaf();
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
+        if (im.isModule()) {
+            if (offset >= sourcePositions.getStartPosition(root, im.getQualifiedIdentifier())) {
+                addModuleNamesFromGraph(env, null);
+            }
+        } else {
         if (offset <= sourcePositions.getStartPosition(root, im.getQualifiedIdentifier())) {
             TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, im, offset);
-            if (last != null && last.token().id() == JavaTokenId.IMPORT && Utilities.startsWith(STATIC_KEYWORD, prefix)) {
-                addKeyword(env, STATIC_KEYWORD, SPACE, false);
+            if (last != null && last.token().id() == JavaTokenId.IMPORT) {
+                if (Utilities.startsWith(STATIC_KEYWORD, prefix)) {
+                    addKeyword(env, STATIC_KEYWORD, SPACE, false);
+                }
+                if (Utilities.startsWith(MODULE_KEYWORD, prefix) &&
+                    env.getController().getSourceVersion().compareTo(SourceVersion.RELEASE_25) >= 0) {
+                    addKeyword(env, MODULE_KEYWORD, SPACE, false);
+                }
             }
             if (options.contains(Options.ALL_COMPLETION) || options.contains(Options.COMBINED_COMPLETION)) {
                 EnumSet<ElementKind> classKinds = EnumSet.of(CLASS, INTERFACE, ENUM, ANNOTATION_TYPE);
@@ -745,6 +756,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             } else {
                 addPackages(env, null, false);
             }
+        }
         }
     }
 
@@ -1635,7 +1647,13 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         if (!afterDot) {
             if (expEndPos <= offset) {
-                insideExpression(env, new TreePath(path, fa.getExpression()));
+                if (fa.getExpression().getKind() == Kind.IDENTIFIER &&
+                    ((IdentifierTree) fa.getExpression()).getName().contentEquals(MODULE_KEYWORD)) {
+                    controller.toPhase(Phase.ELEMENTS_RESOLVED);
+                    addModuleNamesFromGraph(env, null);
+                } else {
+                    insideExpression(env, new TreePath(path, fa.getExpression()));
+                }
             }
             return;
         }
@@ -1656,10 +1674,15 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
         } else if (lastNonWhitespaceTokenId != JavaTokenId.STAR) {
             controller.toPhase(Phase.RESOLVED);
-            if (withinModuleName(env)) {
+            boolean inModuleNameInImport = false;
+            if (withinModuleName(env) || (inModuleNameInImport = withinModuleNameInImport(env))) {
                 String fqnPrefix = fa.getExpression().toString() + '.';
                 anchorOffset = (int) sourcePositions.getStartPosition(root, fa);
-                addModuleNames(env, fqnPrefix, true);
+                if (inModuleNameInImport) {
+                    addModuleNamesFromGraph(env, fqnPrefix);
+                } else {
+                    addModuleNames(env, fqnPrefix, true);
+                }
                 return;
             }
             TreePath parentPath = path.getParentPath();
@@ -2035,7 +2058,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 }
                 case COMMA -> {
                     if (let.getParameters().isEmpty()
-                            || !env.getController().getTreeUtilities().isSynthetic(new TreePath(path, let.getParameters().get(0).getType()))) {
+                            || (let.getParameters().get(0).getType() instanceof Tree type && type.getKind() != Kind.VAR_TYPE)) {
                         addClassTypes(env, null);
                         addPrimitiveTypeKeywords(env);
                         addKeyword(env, FINAL_KEYWORD, SPACE, false);
@@ -3701,7 +3724,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     if (e.getEnclosingElement() != enclClass && conflictsWithLocalMethods(e.getSimpleName(), enclClass, methodsIn)) {
                         results.add(itemFactory.createStaticMemberItem(env.getController(), (DeclaredType)e.getEnclosingElement().asType(), e, et, false, anchorOffset, elements.isDeprecated(e), env.addSemicolon(), true));
                     } else {
-                        results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, env.getScope().getEnclosingClass() != e.getEnclosingElement(), elements.isDeprecated(e), false, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, enclClass != null ? enclClass.asType() : null), smartTypes), env.assignToVarPos(), false));
+                        results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, env.getScope().getEnclosingClass() != e.getEnclosingElement(), elements.isDeprecated(e), false, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, enclClass != null ? enclClass.asType() : null), smartTypes), env.assignToVarPos(), false, Utilities.isCompletionInsertTextParameters()));
                     }
                     break;
             }
@@ -4065,7 +4088,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             switch (e.getKind()) {
                 case METHOD:
                     ExecutableType et = (ExecutableType) asMemberOf(e, type, types);
-                    results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), false, false, isOfSmartType(env, et, smartTypes), env.assignToVarPos(), true));
+                    results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), false, false, isOfSmartType(env, et, smartTypes), env.assignToVarPos(), true, false));  // insertTextParams is hard-coded to false because memberRef is true for method-references, thus, irrelevant.
                     break;
             }
         }
@@ -4222,16 +4245,16 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     break;
                 case CONSTRUCTOR:
                     ExecutableType et = (ExecutableType) asMemberOf(e, actualType, types);
-                    results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, false, afterConstructorTypeParams, isOfSmartType(env, actualType, smartTypes), env.assignToVarPos(), false));
+                    results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, false, afterConstructorTypeParams, isOfSmartType(env, actualType, smartTypes), env.assignToVarPos(), false, Utilities.isCompletionInsertTextParameters()));
                     break;
                 case METHOD:
                     et = (ExecutableType) asMemberOf(e, actualType, types);
                     if (addCast && itemFactory instanceof TypeCastableItemFactory
                             && !types.isSubtype(type, e.getEnclosingElement().asType())
                             && type.getKind() == TypeKind.DECLARED && !hasBaseMethod(elements, (DeclaredType) type, (ExecutableElement) e)) {
-                        results.add(((TypeCastableItemFactory<T>)itemFactory).createTypeCastableExecutableItem(env.getController(), (ExecutableElement) e, et, actualType, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, actualType), smartTypes), env.assignToVarPos(), false));
+                        results.add(((TypeCastableItemFactory<T>)itemFactory).createTypeCastableExecutableItem(env.getController(), (ExecutableElement) e, et, actualType, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, actualType), smartTypes), env.assignToVarPos(), false, Utilities.isCompletionInsertTextParameters()));
                     } else {
-                        results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, actualType), smartTypes), env.assignToVarPos(), false));
+                        results.add(itemFactory.createExecutableItem(env.getController(), (ExecutableElement) e, et, anchorOffset, autoImport ? env.getReferencesCount() : null, typeElem != e.getEnclosingElement(), elements.isDeprecated(e), inImport, env.addSemicolon(), isOfSmartType(env, getCorrectedReturnType(env, et, (ExecutableElement) e, actualType), smartTypes), env.assignToVarPos(), false, Utilities.isCompletionInsertTextParameters()));
                     }
                     break;
                 case CLASS:
@@ -4290,7 +4313,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         for (Element e : controller.getElementUtilities().getMembers(type, acceptor)) {
             if (e.getKind() == CONSTRUCTOR) {
                 ExecutableType et = (ExecutableType) asMemberOf(e, type, types);
-                results.add(itemFactory.createThisOrSuperConstructorItem(env.getController(), (ExecutableElement) e, et, anchorOffset, elements.isDeprecated(e), name));
+                results.add(itemFactory.createThisOrSuperConstructorItem(env.getController(), (ExecutableElement) e, et, anchorOffset, elements.isDeprecated(e), name, Utilities.isCompletionInsertTextParameters()));
             }
         }
     }
@@ -4457,12 +4480,20 @@ public final class JavaCompletionTask<T> extends BaseTask {
     }
     
     private void addModuleNames(Env env, String fqnPrefix, boolean srcOnly) {
+        srcOnly = false;
+        addModuleNames(env, fqnPrefix, SourceUtils.getModuleNames(env.getController(), srcOnly ? EnumSet.of(ClassIndex.SearchScope.SOURCE) : EnumSet.allOf(ClassIndex.SearchScope.class)));
+    }
+
+    private void addModuleNamesFromGraph(Env env, String fqnPrefix) {
+        addModuleNames(env, fqnPrefix, env.getController().getElements().getAllModuleElements().stream().map(me -> me.getQualifiedName().toString()).toList());
+    }
+
+    private void addModuleNames(Env env, String fqnPrefix, Iterable<? extends String> modulesNames) {
         if (fqnPrefix == null) {
             fqnPrefix = EMPTY;
         }
-        srcOnly = false;
         String prefix = env.getPrefix() != null ? fqnPrefix + env.getPrefix() : fqnPrefix;
-        for (String name : SourceUtils.getModuleNames(env.getController(), srcOnly ? EnumSet.of(ClassIndex.SearchScope.SOURCE) : EnumSet.allOf(ClassIndex.SearchScope.class))) {
+        for (String name : modulesNames) {
             if (startsWith(env, name, prefix) && itemFactory instanceof ModuleItemFactory) {
                 results.add(((ModuleItemFactory<T>)itemFactory).createModuleItem(name, anchorOffset));
             }
@@ -6655,6 +6686,21 @@ public final class JavaCompletionTask<T> extends BaseTask {
         return false;
     }
     
+    private boolean withinModuleNameInImport(Env env) {
+        TreePath path = env.getPath();
+        Tree last = null;
+        while (path != null) {
+            Tree tree = path.getLeaf();
+            if (last != null
+                    && tree.getKind() == Tree.Kind.IMPORT && ((ImportTree) tree).isModule() && ((ImportTree) tree).getQualifiedIdentifier() == last) {
+                return true;
+            }
+            path = path.getParentPath();
+            last = tree;
+        }
+        return false;
+    }
+
     private boolean withinProvidesService(Env env) {
         TreePath path = env.getPath();
         Tree last = null;

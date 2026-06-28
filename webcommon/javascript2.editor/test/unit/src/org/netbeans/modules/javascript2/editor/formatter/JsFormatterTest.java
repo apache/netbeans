@@ -2543,4 +2543,8 @@ public class JsFormatterTest extends JsFormatterTestBase {
                 "} //comment2\n" +
                 "p = stripName(p);", null);
     }
+
+    public void testFormatStaticClassInitializer() throws Exception {
+        reformatFileContents("testfiles/formatter/staticClassInitializer1.js",new IndentPrefs(4, 4));
+    }
 }

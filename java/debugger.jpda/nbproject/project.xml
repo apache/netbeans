@@ -216,10 +216,11 @@
                 </test-type>
             </test-dependencies>
             <friend-packages>
-                <friend>org.netbeans.modules.javafx.debugger</friend>
                 <friend>org.netbeans.modules.debugger.jpda.truffle</friend>
                 <friend>org.netbeans.modules.debugger.jpda.ui</friend>
                 <friend>org.netbeans.modules.debugger.jpda.visual</friend>
+                <friend>org.netbeans.modules.java.lsp.server</friend>
+                <friend>org.netbeans.modules.javafx.debugger</friend>
                 <friend>org.netbeans.modules.jshell.support</friend>
                 <package>org.netbeans.modules.debugger.jpda</package>
                 <package>org.netbeans.modules.debugger.jpda.actions</package>

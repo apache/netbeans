@@ -52,7 +52,18 @@ import org.openide.util.NbPreferences;
 
 /**
  * Finds a project by searching the directory tree.
+ *
+ * This allows for safely scanning up the directory hierarchy, up to the
+ * globally configured scan root limits ({@code -Dproject.limitScanRoot}), if
+ * any; and mindful of forbidden folders ({@code -Dproject.forbiddenFolders} or
+ * {@code -Dversioning.forbiddenFolders}), if any.
+ *
  * @author Jesse Glick
+ * @implNote The logic and most of the code of scanning with limits is shared to
+ * {@code org.netbeans.modules.gradle.spi.GradleFiles.Searcher}; with the
+ * replacement of handling paths from {@code FileObject} instances to handling
+ * paths from {@code File} instances there, instead. If any logical changes are
+ * made here, they should also be kept in sync in {@code GradleFiles.Searcher}.
  */
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.spi.project.FileOwnerQueryImplementation.class, position=100)
 public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImplementation {
@@ -108,10 +119,10 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
     
     public Project getOwner(FileObject f) {
         List<FileObject> folders = new ArrayList<>();
-        
+
         deserialize();
         while (f != null) {
-            if (projectScanRoots != null && projectScanRoots.stream().noneMatch(f.getPath()::startsWith)) {
+            if (notWithinProjectScanRoots(f)) {
                 break;
             }
             boolean folder = f.isFolder();
@@ -210,6 +221,21 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
         return null;
     }
 
+    private static boolean notWithinProjectScanRoots(FileObject f) {
+        if (projectScanRoots == null)
+            return false;
+        String path = f.getPath();
+        for (String scanRoot : projectScanRoots) {
+            if (path.startsWith(scanRoot)
+                    && (path.length() == scanRoot.length()
+                    || path.charAt(scanRoot.length()) == '/'))
+                return false;
+            // Note: Since the path is obtained from a FileObject,
+            // the file-separator will always be '/', even on Windows,
+            // not File.separatorChar.
+        }
+        return true;
+    }
 
     private static boolean hasRoot(
             @NonNull final Set<URI> extRoots,
@@ -419,7 +445,7 @@ public class SimpleFileOwnerQueryImplementation implements FileOwnerQueryImpleme
 
         Set<String> paths = null;
         for (String split : joinedPaths.split(pathSeparator)) {
-            if ((split = split.trim()).isEmpty()) continue;
+            if (split.isBlank()) continue;
 
             // Ensure that variations in terms of ".." or "." or windows drive-letter case differences are removed.
             // File.getCanonicalFile() will additionally resolve symlinks, which is not required.

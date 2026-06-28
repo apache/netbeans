@@ -1918,7 +1918,7 @@ public final class ReferenceHelper {
         
         public @Override String toString() {
             return "ReferenceHelper.RawReference<" + foreignProjectName + "," + 
-                artifactType + "," + newScriptLocation != null ? newScriptLocation : scriptLocation + 
+                artifactType + "," + (newScriptLocation != null ? newScriptLocation : scriptLocation) + 
                 "," + targetName + "," + cleanTargetName + "," + artifactID + ">"; // NOI18N
         }
         

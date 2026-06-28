@@ -509,22 +509,6 @@ public class WorkingCopy extends CompilationController {
                 }
             }
         }
-        if (node.getKind() == Kind.VARIABLE) {
-            JCVariableDecl var = (JCVariableDecl) node;
-
-            if (var.declaredUsingVar()) {
-                diffContext.syntheticTrees.add(var.vartype);
-            }
-        }
-        if (node.getKind() == Kind.LAMBDA_EXPRESSION) {
-            JCLambda lambda = (JCLambda) node;
-
-            if (lambda.paramKind == JCLambda.ParameterKind.IMPLICIT) {
-                for (JCVariableDecl param : lambda.params) {
-                    diffContext.syntheticTrees.add(param.vartype);
-                }
-            }
-        }
     }
 
     /**

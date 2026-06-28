@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.26
+#Version 2.28
 
 CLSS public abstract interface com.sun.jna.AltCallingConvention
 
@@ -274,7 +274,7 @@ fld public final static int POINTER_SIZE
 fld public final static int SIZE_T_SIZE
 fld public final static int WCHAR_SIZE
 fld public final static java.lang.String DEFAULT_ENCODING
-fld public final static java.lang.String VERSION = "5.17.0"
+fld public final static java.lang.String VERSION = "5.19.1"
 fld public final static java.lang.String VERSION_NATIVE = "7.0.4"
 fld public final static java.nio.charset.Charset DEFAULT_CHARSET
 innr public abstract interface static ffi_callback
@@ -342,7 +342,7 @@ meth public static void setProtected(boolean)
 meth public static void unregister()
 meth public static void unregister(java.lang.Class<?>)
 supr java.lang.Object
-hfds CB_HAS_INITIALIZER,CB_OPTION_DIRECT,CB_OPTION_IN_DLL,CVT_ARRAY_BOOLEAN,CVT_ARRAY_BYTE,CVT_ARRAY_CHAR,CVT_ARRAY_DOUBLE,CVT_ARRAY_FLOAT,CVT_ARRAY_INT,CVT_ARRAY_LONG,CVT_ARRAY_SHORT,CVT_BOOLEAN,CVT_BUFFER,CVT_BYTE,CVT_CALLBACK,CVT_DEFAULT,CVT_FLOAT,CVT_INTEGER_TYPE,CVT_JNIENV,CVT_NATIVE_MAPPED,CVT_NATIVE_MAPPED_STRING,CVT_NATIVE_MAPPED_WSTRING,CVT_OBJECT,CVT_POINTER,CVT_POINTER_TYPE,CVT_SHORT,CVT_STRING,CVT_STRUCTURE,CVT_STRUCTURE_BYVAL,CVT_TYPE_MAPPER,CVT_TYPE_MAPPER_STRING,CVT_TYPE_MAPPER_WSTRING,CVT_UNSUPPORTED,CVT_WSTRING,DEBUG_JNA_LOAD_LEVEL,DEFAULT_HANDLER,JNA_TMPLIB_PREFIX,LOG,MAX_ALIGNMENT,MAX_PADDING,TYPE_BOOL,TYPE_LONG,TYPE_LONG_DOUBLE,TYPE_SIZE_T,TYPE_VOIDP,TYPE_WCHAR_T,_OPTION_ENCLOSING_LIBRARY,callbackExceptionHandler,finalizer,jnidispatchPath,libraries,nativeThreadTerminationFlag,nativeThreads,registeredClasses,registeredLibraries,typeOptions
+hfds CB_HAS_INITIALIZER,CB_OPTION_DIRECT,CB_OPTION_IN_DLL,CVT_ARRAY_BOOLEAN,CVT_ARRAY_BYTE,CVT_ARRAY_CHAR,CVT_ARRAY_DOUBLE,CVT_ARRAY_FLOAT,CVT_ARRAY_INT,CVT_ARRAY_LONG,CVT_ARRAY_SHORT,CVT_BOOLEAN,CVT_BUFFER,CVT_BYTE,CVT_CALLBACK,CVT_DEFAULT,CVT_FLOAT,CVT_INTEGER_TYPE,CVT_JNIENV,CVT_NATIVE_MAPPED,CVT_NATIVE_MAPPED_STRING,CVT_NATIVE_MAPPED_WSTRING,CVT_OBJECT,CVT_POINTER,CVT_POINTER_TYPE,CVT_SHORT,CVT_STRING,CVT_STRUCTURE,CVT_STRUCTURE_BYVAL,CVT_TYPE_MAPPER,CVT_TYPE_MAPPER_STRING,CVT_TYPE_MAPPER_WSTRING,CVT_UNSUPPORTED,CVT_WSTRING,DEBUG_JNA_LOAD_LEVEL,DEFAULT_HANDLER,JNA_TMPLIB_PREFIX,LOG,MAX_ALIGNMENT,MAX_PADDING,TYPE_BOOL,TYPE_LONG,TYPE_LONG_DOUBLE,TYPE_SIZE_T,TYPE_VOIDP,TYPE_WCHAR_T,_OPTION_ENCLOSING_LIBRARY,accessControllerDoPrivileged,callbackExceptionHandler,finalizer,jnidispatchPath,libraries,nativeThreadTerminationFlag,nativeThreads,registeredClasses,registeredLibraries,securityManagerExposerConstructor,securityManagerGetClassContext,stackWalkerFilter,stackWalkerGetInstance,stackWalkerRetainClassReference,stackWalkerWalk,typeOptions
 hcls AWT,Buffers
 
 CLSS public abstract interface static com.sun.jna.Native$ffi_callback
@@ -436,6 +436,7 @@ meth public final static boolean isMac()
 meth public final static boolean isNetBSD()
 meth public final static boolean isOpenBSD()
 meth public final static boolean isPPC()
+meth public final static boolean isRISCV()
 meth public final static boolean isSPARC()
 meth public final static boolean isSolaris()
 meth public final static boolean isWindows()
@@ -620,7 +621,7 @@ meth public void write()
 meth public void writeField(java.lang.String)
 meth public void writeField(java.lang.String,java.lang.Object)
 supr java.lang.Object
-hfds LOG,PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,encoding,fieldList,fieldListLock,fieldOrder,fieldOrderLock,layoutInfo,layoutInfoLock,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper,validationLock,validationMap
+hfds LOG,PLACEHOLDER_MEMORY,actualAlignType,alignType,array,autoRead,autoWrite,busy,cacheStructureLock,encoding,fieldList,fieldOrder,layoutInfo,memory,nativeStrings,readCalled,reads,size,structAlignment,structFields,typeInfo,typeMapper,validationMap
 hcls AutoAllocated,FFIType,LayoutInfo,NativeStringTracking,StructureSet
 
 CLSS public abstract interface static com.sun.jna.Structure$ByReference
@@ -869,7 +870,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
-hfds serialVersionUID
 
 CLSS public abstract java.lang.Number
 cons public init()
@@ -881,7 +881,6 @@ meth public abstract long longValue()
 meth public byte byteValue()
 meth public short shortValue()
 supr java.lang.Object
-hfds serialVersionUID
 
 CLSS public java.lang.Object
 cons public init()
@@ -905,7 +904,6 @@ cons public init(java.lang.String)
 cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Exception
-hfds serialVersionUID
 
 CLSS public java.lang.Throwable
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
@@ -928,8 +926,6 @@ meth public void printStackTrace(java.io.PrintStream)
 meth public void printStackTrace(java.io.PrintWriter)
 meth public void setStackTrace(java.lang.StackTraceElement[])
 supr java.lang.Object
-hfds CAUSE_CAPTION,EMPTY_THROWABLE_ARRAY,NULL_CAUSE_MESSAGE,SELF_SUPPRESSION_MESSAGE,SUPPRESSED_CAPTION,SUPPRESSED_SENTINEL,UNASSIGNED_STACK,backtrace,cause,depth,detailMessage,serialVersionUID,stackTrace,suppressedExceptions
-hcls PrintStreamOrWriter,SentinelHolder,WrappedPrintStream,WrappedPrintWriter
 
 CLSS public abstract interface java.lang.annotation.Annotation
 meth public abstract boolean equals(java.lang.Object)
@@ -967,8 +963,6 @@ meth public static void reachabilityFence(java.lang.Object)
 meth public void clear()
 meth public {java.lang.ref.Reference%0} get()
 supr java.lang.Object
-hfds discovered,next,processPendingActive,processPendingLock,queue,referent
-hcls ReferenceHandler
 
 CLSS public java.lang.ref.WeakReference<%0 extends java.lang.Object>
 cons public init({java.lang.ref.WeakReference%0})

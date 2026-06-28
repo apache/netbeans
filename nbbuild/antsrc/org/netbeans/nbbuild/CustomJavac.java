@@ -25,6 +25,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import org.apache.tools.ant.BuildException;
@@ -124,7 +125,7 @@ public class CustomJavac extends Javac {
         try {
             Class<?> mainClazz = CustomJavacClassLoader.findMainCompilerClass(getProject());
             if (mainClazz != null) {
-                super.add(CustomJavacClassLoader.createCompiler(mainClazz));
+                super.add(CustomJavacClassLoader.createCompiler(mainClazz, canUseRelease()));
             }
         } catch (ClassNotFoundException | MalformedURLException | URISyntaxException ex) {
             if (ex instanceof BuildException) {

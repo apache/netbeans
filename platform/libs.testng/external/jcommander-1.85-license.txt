@@ -1,9 +1,10 @@
-Name: Apache Maven Distribution
-Description: Apache Maven Distribution
-Version: 3.9.14
+Name: JCommander
+Version: 1.85
+Description: Parse command line parameters
 License: Apache-2.0
-Origin: Apache Software Foundation
-URL: https://maven.apache.org/
+Origin: Cédric Beust
+URL: https://jcommander.org
+Files: jcommander-1.85.jar
 
                                  Apache License
                            Version 2.0, January 2004

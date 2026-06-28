@@ -1,89 +1,89 @@
-public  function setInstanceArray(array $$instanceArray) {
+public  function setInstanceArray(array $$instanceArray): self {
 $$this->instanceArray = $instanceArray;
 return $$this;
 }
 
-public  function setInstanceInt(int $$instanceInt) {
+public  function setInstanceInt(int $$instanceInt): self {
 $$this->instanceInt = $instanceInt;
 return $$this;
 }
 
-public  function setInstanceString(string $$instanceString) {
+public  function setInstanceString(string $$instanceString): self {
 $$this->instanceString = $instanceString;
 return $$this;
 }
 
-public  function setInstanceBool(bool $$instanceBool) {
+public  function setInstanceBool(bool $$instanceBool): self {
 $$this->instanceBool = $instanceBool;
 return $$this;
 }
 
-public  function setInstanceNull($$instanceNull) {
+public  function setInstanceNull($$instanceNull): self {
 $$this->instanceNull = $instanceNull;
 return $$this;
 }
 
-public  function setInstanceNullable(string $$instanceNullable) {
+public  function setInstanceNullable(string $$instanceNullable): self {
 $$this->instanceNullable = $instanceNullable;
 return $$this;
 }
 
-public  function setInstanceArrayNullable(array $$instanceArrayNullable) {
+public  function setInstanceArrayNullable(array $$instanceArrayNullable): self {
 $$this->instanceArrayNullable = $instanceArrayNullable;
 return $$this;
 }
 
-public  function setInstanceClass(Test53 $$instanceClass) {
+public  function setInstanceClass(Test53 $$instanceClass): self {
 $$this->instanceClass = $instanceClass;
 return $$this;
 }
 
-public static function setStaticInt(int $$staticInt) {
+public static function setStaticInt(int $$staticInt): self {
 self::$$staticInt = $staticInt;
 return self;
 }
 
-public static function setStaticNullable(int $$staticNullable) {
+public static function setStaticNullable(int $$staticNullable): self {
 self::$$staticNullable = $staticNullable;
 return self;
 }
 
-public  function setInstanceInt74($$instanceInt74) {
+public  function setInstanceInt74($$instanceInt74): self {
 $$this->instanceInt74 = $instanceInt74;
 return $$this;
 }
 
-public  function setInstanceString74($$instanceString74) {
+public  function setInstanceString74($$instanceString74): self {
 $$this->instanceString74 = $instanceString74;
 return $$this;
 }
 
-public  function setInstanceBool74($$instanceBool74) {
+public  function setInstanceBool74($$instanceBool74): self {
 $$this->instanceBool74 = $instanceBool74;
 return $$this;
 }
 
-public  function setInstanceNullable74($$instanceNullable74) {
+public  function setInstanceNullable74($$instanceNullable74): self {
 $$this->instanceNullable74 = $instanceNullable74;
 return $$this;
 }
 
-public static function setStaticInt74($$staticInt74) {
+public static function setStaticInt74($$staticInt74): self {
 self::$$staticInt74 = $staticInt74;
 return self;
 }
 
-public static function setStaticString74($$staticString74) {
+public static function setStaticString74($$staticString74): self {
 self::$$staticString74 = $staticString74;
 return self;
 }
 
-public static function setStaticBool74($$staticBool74) {
+public static function setStaticBool74($$staticBool74): self {
 self::$$staticBool74 = $staticBool74;
 return self;
 }
 
-public static function setStaticNullable74($$staticNullable74) {
+public static function setStaticNullable74($$staticNullable74): self {
 self::$$staticNullable74 = $staticNullable74;
 return self;
 }

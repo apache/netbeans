@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.98
+#Version 1.99
 
 CLSS public abstract interface java.io.Serializable
 
@@ -9,6 +9,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -80,6 +81,8 @@ supr java.lang.Object
 
 CLSS public abstract interface java.util.Map<%0 extends java.lang.Object, %1 extends java.lang.Object>
 innr public abstract interface static Entry
+meth public !varargs static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> ofEntries(java.util.Map$Entry<? extends {%%0},? extends {%%1}>[])
+ anno 0 java.lang.SafeVarargs()
 meth public abstract boolean containsKey(java.lang.Object)
 meth public abstract boolean containsValue(java.lang.Object)
 meth public abstract boolean equals(java.lang.Object)
@@ -96,6 +99,19 @@ meth public abstract {java.util.Map%1} put({java.util.Map%0},{java.util.Map%1})
 meth public abstract {java.util.Map%1} remove(java.lang.Object)
 meth public boolean remove(java.lang.Object,java.lang.Object)
 meth public boolean replace({java.util.Map%0},{java.util.Map%1},{java.util.Map%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map$Entry<{%%0},{%%1}> entry({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> copyOf(java.util.Map<? extends {%%0},? extends {%%1}>)
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Map<{%%0},{%%1}> of({%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1},{%%0},{%%1})
 meth public void forEach(java.util.function.BiConsumer<? super {java.util.Map%0},? super {java.util.Map%1}>)
 meth public void replaceAll(java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
 meth public {java.util.Map%1} compute({java.util.Map%0},java.util.function.BiFunction<? super {java.util.Map%0},? super {java.util.Map%1},? extends {java.util.Map%1}>)
@@ -157,7 +173,7 @@ meth public org.netbeans.spi.project.support.ant.PropertyProvider getPropertyPro
 meth public org.netbeans.spi.project.support.ant.PropertyProvider getStockPropertyPreprovider()
 meth public org.netbeans.spi.queries.FileBuiltQueryImplementation createGlobFileBuiltQuery(org.netbeans.spi.project.support.ant.PropertyEvaluator,java.lang.String[],java.lang.String[])
 meth public org.netbeans.spi.queries.SharabilityQueryImplementation createSharabilityQuery(org.netbeans.spi.project.support.ant.PropertyEvaluator,java.lang.String[],java.lang.String[])
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.spi.queries.SharabilityQueryImplementation2 createSharabilityQuery2(org.netbeans.spi.project.support.ant.PropertyEvaluator,java.lang.String[],java.lang.String[])
 meth public org.openide.filesystems.FileObject getProjectDirectory()
 meth public org.openide.filesystems.FileObject resolveFileObject(java.lang.String)
@@ -182,7 +198,7 @@ meth public abstract void propertiesChanged(org.netbeans.spi.project.support.ant
 
 CLSS public final org.netbeans.spi.project.support.ant.EditableProperties
 cons public init()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(boolean)
 cons public init(java.util.Map<java.lang.String,java.lang.String>)
 intf java.lang.Cloneable
@@ -287,24 +303,24 @@ cons public init(org.netbeans.spi.project.support.ant.AntProjectHelper,org.netbe
 innr public final static RawReference
 meth public boolean addRawReference(org.netbeans.spi.project.support.ant.ReferenceHelper$RawReference)
 meth public boolean addReference(org.netbeans.api.project.ant.AntArtifact)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean destroyReference(java.lang.String)
 meth public boolean isReferenced(org.netbeans.api.project.ant.AntArtifact,java.net.URI)
 meth public boolean removeRawReference(java.lang.String,java.lang.String)
 meth public boolean removeReference(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public boolean removeReference(java.lang.String,java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.Object[] findArtifactAndLocation(java.lang.String)
 meth public java.lang.String addReference(org.netbeans.api.project.ant.AntArtifact,java.net.URI)
 meth public java.lang.String createExtraForeignFileReferenceAsIs(java.lang.String,java.lang.String)
 meth public java.lang.String createForeignFileReference(java.io.File,java.lang.String)
 meth public java.lang.String createForeignFileReference(org.netbeans.api.project.ant.AntArtifact)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.lang.String createForeignFileReferenceAsIs(java.lang.String,java.lang.String)
 meth public java.lang.String createLibraryReference(org.netbeans.api.project.libraries.Library,java.lang.String)
 meth public org.netbeans.api.project.ant.AntArtifact getForeignFileReferenceAsArtifact(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public org.netbeans.api.project.libraries.Library copyLibrary(org.netbeans.api.project.libraries.Library) throws java.io.IOException
 meth public org.netbeans.api.project.libraries.Library findLibrary(java.lang.String)
 meth public org.netbeans.api.project.libraries.LibraryManager getProjectLibraryManager()
@@ -317,7 +333,7 @@ meth public static org.netbeans.api.project.libraries.Library copyLibrary(org.ne
 meth public static org.netbeans.api.project.libraries.LibraryManager getProjectLibraryManager(org.netbeans.api.project.Project)
 meth public void addExtraBaseDirectory(java.lang.String)
 meth public void destroyForeignFileReference(java.lang.String)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void fixReferences(java.io.File)
 meth public void removeExtraBaseDirectory(java.lang.String)
 supr java.lang.Object
@@ -335,7 +351,7 @@ meth public java.lang.String getScriptLocationValue()
 meth public java.lang.String getTargetName()
 meth public java.lang.String toString()
 meth public java.net.URI getScriptLocation()
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public java.util.Properties getProperties()
 meth public org.netbeans.api.project.ant.AntArtifact toAntArtifact(org.netbeans.spi.project.support.ant.ReferenceHelper)
 supr java.lang.Object
@@ -351,7 +367,7 @@ hfds referenceHelperHandler,uriHandler
 CLSS public final org.netbeans.spi.project.support.ant.SourcesHelper
 cons public init(org.netbeans.api.project.Project,org.netbeans.spi.project.support.ant.AntProjectHelper,org.netbeans.spi.project.support.ant.PropertyEvaluator)
 cons public init(org.netbeans.spi.project.support.ant.AntProjectHelper,org.netbeans.spi.project.support.ant.PropertyEvaluator)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 innr public final SourceRootConfig
 meth public org.netbeans.api.project.Sources createSources()
 meth public org.netbeans.spi.project.SourceGroupModifierImplementation createSourceGroupModifierImplementation()
@@ -359,13 +375,13 @@ meth public org.netbeans.spi.project.support.ant.SourcesHelper$SourceRootConfig 
 meth public void addNonSourceRoot(java.lang.String)
 meth public void addOwnedFile(java.lang.String)
 meth public void addPrincipalSourceRoot(java.lang.String,java.lang.String,java.lang.String,java.lang.String,javax.swing.Icon,javax.swing.Icon)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addPrincipalSourceRoot(java.lang.String,java.lang.String,javax.swing.Icon,javax.swing.Icon)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addTypedSourceRoot(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,javax.swing.Icon,javax.swing.Icon)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void addTypedSourceRoot(java.lang.String,java.lang.String,java.lang.String,javax.swing.Icon,javax.swing.Icon)
- anno 0 java.lang.Deprecated()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void registerExternalRoots(int)
 meth public void registerExternalRoots(int,boolean)
 supr java.lang.Object

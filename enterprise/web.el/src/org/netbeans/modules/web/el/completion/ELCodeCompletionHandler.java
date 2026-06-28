@@ -151,7 +151,12 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
                 @Override
                 public void run(CompilationController info) throws Exception {
                     info.toPhase(JavaSource.Phase.RESOLVED);
-                    CompilationContext ccontext = CompilationContext.create(file, info);
+                    CompilationContext ccontext;
+                    if (context.getParserResult() instanceof ELParserResult elParserResult) {
+                        ccontext = CompilationContext.create(file, info, elParserResult.getContext());
+                    } else {
+                        ccontext = CompilationContext.create(file, info);
+                    }
 
                     // assignments to resolve
                     Node node = nodeToResolve instanceof AstIdentifier && assignments.containsKey((AstIdentifier) nodeToResolve) ?

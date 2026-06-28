@@ -33,6 +33,7 @@ public class Settings {
 
     private static final String KEY_BUILD_BEFORE_TESTS = "build-before-test";
     private static final String KEY_JTREG_LOCATION = "jtreg-location";
+    private static final String KEY_TEST_USE_IMAGE = "test-use-image";
     private static final String KEY_USE_ANT_BUILD = "use-langtools-ant-build";
     private static final String KEY_ANT_BUILD_LOCATION = "langtools-ant-build-location";
 
@@ -74,6 +75,14 @@ public class Settings {
 
     public void setUseAntBuild(boolean useAntBuild) {
         getPrivatePreferences().putBoolean(KEY_USE_ANT_BUILD, useAntBuild);
+    }
+
+    public boolean isTestUseImage() {
+        return getPrivatePreferences().getBoolean(KEY_TEST_USE_IMAGE, false);
+    }
+
+    public void setTestUseImage(boolean useImage) {
+        getPrivatePreferences().putBoolean(KEY_TEST_USE_IMAGE, useImage);
     }
 
     public String getAntBuildLocation() {

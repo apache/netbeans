@@ -38,7 +38,7 @@ public class BuildUtils {
 
     private BuildUtils() {}
 
-    public static File findTargetJavaHome(FileObject file) {
+    public static File findTargetJavaHome(FileObject file, boolean fullImage) {
         File buildDir = getBuildTargetDir(file);
 
         if (buildDir != null) {
@@ -46,6 +46,8 @@ public class BuildUtils {
 
             if (candidate.isDirectory()) {
                 return candidate;
+            } else if (fullImage) {
+                return new File(new File(buildDir, "images"), "jdk");
             } else {
                 return new File(buildDir, "jdk");
            }

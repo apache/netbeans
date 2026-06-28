@@ -70,21 +70,21 @@ class StandardModule extends Module {
     /** if reloadable, temporary JAR file actually loaded from */
     private File physicalJar;
     private Manifest manifest;
-    
+
     /** Simple registry of JAR files used as modules.
      * Used only for debugging purposes, so that we can be sure
      * that no one is using Class-Path to refer to other modules.
      */
-    private static final Set<File> moduleJARs = new HashSet<File>();
+    private static final Set<File> moduleJARs = new HashSet<>();
 
     /** Patches added at the front of the classloader (or null).
      * Files are assumed to be JARs; directories are themselves.
      */
     private Set<File> patches;
-    
+
     /** localized properties, only non-null if requested from disabled module */
     private Properties localizedProps;
-    
+
     /** Use ModuleManager.create as a factory. */
     public StandardModule(ModuleManager mgr, Events ev, File jar, Object history, boolean reloadable, boolean autoload, boolean eager) throws IOException {
         super(mgr, ev, history, reloadable, autoload, eager);
@@ -116,7 +116,7 @@ class StandardModule extends Module {
     public @Override void releaseManifest() {
         manifest = null;
     }
-    
+
     /** Get a localized attribute.
      * First, if OpenIDE-Module-Localizing-Bundle was given, the specified
      * bundle file (in all locale JARs as well as base JAR) is searched for
@@ -150,13 +150,14 @@ class StandardModule extends Module {
                         }
                     } catch (MissingResourceException mre) {
                         String resource = basename.replace('.', '/') + ".properties";
-                        Exceptions.attachMessage(mre, "#149833: failed to find " + basename +
+                        Exceptions.printStackTrace(
+                                Exceptions.attachMessage(mre, "#149833: failed to find " + basename +
                                 " in locale " + Locale.getDefault() + " in " + classloader + " for " + jar +
-                                "; resource lookup of " + resource + " -> " + classloader.getResource(resource));
-                        Exceptions.printStackTrace(mre);
+                                "; resource lookup of " + resource + " -> " + classloader.getResource(resource))
+                        );
                     }
                 } else {
-                    Util.err.warning("cannot efficiently load non-*.properties OpenIDE-Module-Localizing-Bundle: " + locb);
+                    Util.err.log(Level.WARNING, "cannot efficiently load non-*.properties OpenIDE-Module-Localizing-Bundle: {0}", locb);
                 }
             }
             if (!usingLoader) {
@@ -200,12 +201,12 @@ class StandardModule extends Module {
             }
         }
     }
-    
+
     @Override
     public boolean isFixed() {
         return false;
     }
-    
+
     /** Get the JAR this module is packaged in.
      * May be null for modules installed specially, e.g.
      * automatically from the classpath.
@@ -214,7 +215,7 @@ class StandardModule extends Module {
     public @Override File getJarFile() {
         return jar;
     }
-    
+
     /** Create a temporary test JAR if necessary.
      * This is primarily necessary to work around a Java bug,
      * #4405789, which is marked as fixed so might be obsolete.
@@ -228,21 +229,21 @@ class StandardModule extends Module {
         if (physicalJar != null) {
             if (physicalJar.isFile()) {
                 if (! physicalJar.delete()) {
-                    Util.err.warning("temporary JAR " + physicalJar + " not currently deletable.");
+                    Util.err.log(Level.WARNING, "temporary JAR {0} not currently deletable.", physicalJar);
                 } else {
-                    Util.err.fine("deleted: " + physicalJar);
+                    Util.err.log(Level.FINE, "deleted: {0}", physicalJar);
                 }
             }
             physicalJar = null;
         } else {
-            Util.err.fine("no physicalJar to delete for " + this);
+            Util.err.log(Level.FINE, "no physicalJar to delete for {0}", this);
         }
     }
-    
+
     /** Open the JAR, load its manifest, and do related things. */
     private void loadManifest() throws IOException {
         if (Util.err.isLoggable(Level.FINE)) {
-            Util.err.fine("loading manifest of " + jar);
+            Util.err.log(Level.FINE, "loading manifest of {0}", jar);
         }
         File jarBeingOpened = null; // for annotation purposes
         try {
@@ -262,14 +263,15 @@ class StandardModule extends Module {
             }
         } catch (IOException e) {
             if (jarBeingOpened != null) {
-                Exceptions.attachMessage(e,
+                throw Exceptions.attachMessage(e,
                                          "While loading manifest from: " +
                                          jarBeingOpened); // NOI18N
             }
             throw e;
         }
     }
-    
+
+    @SuppressWarnings("ReturnOfCollectionOrArrayField") // collection is only accessed in StandardModule
     private Set<File> findPatches() {
         if (patches == null) {
             // #9273: load any modules/patches/this-code-name/*.jar files first:
@@ -280,12 +282,12 @@ class StandardModule extends Module {
                 if (jars != null) {
                     for (File patchJar : jars) {
                         if (patches == null) {
-                            patches = new HashSet<File>(5);
+                            patches = new HashSet<>(5);
                         }
                         patches.add(patchJar);
                     }
                 } else {
-                    Util.err.warning("Could not search for patches in " + patchdir);
+                    Util.err.log(Level.WARNING, "Could not search for patches in {0}", patchdir);
                 }
             }
             // The following system property is used
@@ -300,7 +302,7 @@ class StandardModule extends Module {
                     File fileElement = new File(element);
                     if (fileElement.exists()) {
                         if (patches == null) {
-                            patches = new HashSet<File>(15);
+                            patches = new HashSet<>(15);
                         }
                         patches.add(fileElement);
                     }
@@ -318,11 +320,11 @@ class StandardModule extends Module {
                 patches = Collections.emptySet();
             }
         }
-        
+
         return patches;
     }
-    
-    
+
+
     /** Check if there is any need to load localized properties.
      * If so, try to load them. Throw an exception if they cannot
      * be loaded for some reason. Uses an open JAR file for the
@@ -391,7 +393,7 @@ class StandardModule extends Module {
             */
         }
     }
-    
+
     /** Get all JARs loaded by this module.
      * Includes the module itself, any locale variants of the module,
      * any extensions specified with Class-Path, any locale variants
@@ -405,7 +407,7 @@ class StandardModule extends Module {
      */
     @Override
     public List<File> getAllJars() {
-        List<File> l = new ArrayList<File>();
+        List<File> l = new ArrayList<>();
         Set<File> ptchs = findPatches();
         if (ptchs != null) l.addAll(ptchs);
         if (physicalJar != null) {
@@ -432,7 +434,7 @@ class StandardModule extends Module {
             getManager().fireReloadable(this);
         }
     }
-    
+
     /** Reload this module. Access from ModuleManager.
      * If an exception is thrown, the module is considered
      * to be in an invalid state.
@@ -452,7 +454,7 @@ class StandardModule extends Module {
             throw new InvalidException("Code name base changed during reload: " + codeNameBase1 + " -> " + codeNameBase2); // NOI18N
         }
     }
-    
+
     // Access from ModuleManager:
     /** Turn on the classloader. Passed a list of parent modules to use.
      * The parents should already have had their classloaders initialized.
@@ -460,10 +462,10 @@ class StandardModule extends Module {
     @Override
     protected void classLoaderUp(Set<Module> parents) throws IOException {
         if (Util.err.isLoggable(Level.FINE)) {
-            Util.err.fine("classLoaderUp on " + this + " with parents " + parents);
+            Util.err.log(Level.FINE, "classLoaderUp on {0} with parents {1}", new Object[]{this, parents});
         }
         // Find classloaders for dependent modules and parent to them.
-        List<ClassLoader> loaders = new ArrayList<ClassLoader>(parents.size() + 1);
+        List<ClassLoader> loaders = new ArrayList<>(parents.size() + 1);
         // This should really be the base loader created by org.nb.Main for loading openide etc.:
         loaders.add(Module.class.getClassLoader());
         for (Module parent: parents) {
@@ -494,7 +496,7 @@ class StandardModule extends Module {
             }
             loaders.add(l);
         }
-        List<File> classp = new ArrayList<File>(3);
+        List<File> classp = new ArrayList<>(3);
         Set<File> ptchs = findPatches();
         if (ptchs != null) classp.addAll(ptchs);
 
@@ -507,12 +509,12 @@ class StandardModule extends Module {
         } else {
             classp.add(jar);
         }
-        
+
         ((StandardModuleData)data()).addCp(classp);
 
         // possibly inject some patches
         getManager().refineModulePath(this, classp);
-        
+
         // #27853
         ClassLoader cld = getManager().refineClassLoader(this, loaders);
         // the classloader may be shared, if this module is a fragment
@@ -527,12 +529,12 @@ class StandardModule extends Module {
             }
         }
     }
-    
+
     /** Setup a new module with the given class path and the set of parent
      * class loaders.
      */
     protected ClassLoader createNewClassLoader(List<File> classp, List<ClassLoader> parents) {
-        return new OneModuleClassLoader(classp, parents.toArray(new ClassLoader[0]));
+        return new OneModuleClassLoader(classp, parents.toArray(ClassLoader[]::new));
     }
 
     /** Get the class loader of a particular parent module. */
@@ -556,20 +558,20 @@ class StandardModule extends Module {
         // XXX should this rather be done when the classloader is collected?
         destroyPhysicalJar();
     }
-    
+
     /** Notify the module that it is being deleted. */
     @Override
     public void destroy() {
         moduleJARs.remove(jar);
     }
-    
+
     /** String representation for debugging. */
     public @Override String toString() {
         String s = "StandardModule:" + getCodeNameBase() + " jarFile: " + jar.getAbsolutePath(); // NOI18N
         if (!isValid()) s += "[invalid]"; // NOI18N
         return s;
     }
-    
+
     /** PermissionCollection with an instance of AllPermission. */
     private static PermissionCollection modulePermissions;
     /** @return initialized @see #modulePermission */
@@ -581,7 +583,7 @@ class StandardModule extends Module {
         }
         return modulePermissions;
     }
-    
+
     static boolean isModuleJar(File f) {
         return moduleJARs.contains(f);
     }
@@ -590,7 +592,7 @@ class StandardModule extends Module {
     /** Class loader to load a single module.
      * Auto-localizing, multi-parented, permission-granting, the works.
      */
-    class OneModuleClassLoader extends JarClassLoader implements Util.ModuleProvider {
+    private class OneModuleClassLoader extends JarClassLoader implements Util.ModuleProvider {
         /** Create a new loader for a module.
          * @param classp the List of all module jars of code directories;
          *      includes the module itself, its locale variants,
@@ -601,12 +603,12 @@ class StandardModule extends Module {
         public OneModuleClassLoader(List<File> classp, ClassLoader[] parents) throws IllegalArgumentException {
             super(classp, parents, false, StandardModule.this);
         }
-        
+
         @Override
         public Module getModule() {
             return StandardModule.this;
         }
-        
+
         /** Inherited.
          * @param cs is ignored
          * @return PermissionCollection with an AllPermission instance
@@ -614,7 +616,7 @@ class StandardModule extends Module {
         protected @Override PermissionCollection getPermissions(CodeSource cs) {
             return getAllPermission();
         }
-        
+
         /**
          * Look up a native library as described in modules documentation.
          * @see http://bits.netbeans.org/dev/javadoc/org-openide-modules/org/openide/modules/doc-files/api.html#jni
@@ -643,7 +645,7 @@ class StandardModule extends Module {
                 CL_LOG.log(Level.FINE, "found {0}", lib);
                 return lib.getAbsolutePath();
             }
-            
+
             if( BaseUtilities.isMac() ) {
                 String jniMapped = mapped.replaceFirst("\\.dylib$",".jnilib");
                 lib = ifl.locate("modules/lib/" + jniMapped, getCodeNameBase(), false); // NOI18N
@@ -682,7 +684,7 @@ class StandardModule extends Module {
             }
             return getManager().shouldDelegateResource(StandardModule.this, other, pkg, parent);
         }
-        
+
         public @Override String toString() {
             return "ModuleCL@" + Integer.toHexString(System.identityHashCode(this)) + "[" + getCodeNameBase() + "]"; // NOI18N
         }

@@ -41,12 +41,12 @@ final class ProxyClassPackages {
     static void addCoveredPackages( ProxyClassLoader loader, Iterable<String> coveredPackages) {
         synchronized(packageCoverage) {
             for (String pkg : coveredPackages) {
-                Set<ProxyClassLoader> delegates = ProxyClassPackages.packageCoverage.get(pkg); 
-                if (delegates == null) { 
+                Set<ProxyClassLoader> delegates = ProxyClassPackages.packageCoverage.get(pkg);
+                if (delegates == null) {
                     delegates = Collections.<ProxyClassLoader>singleton(loader);
                     ProxyClassPackages.packageCoverage.put(pkg, delegates);
                 } else if (delegates.size() == 1) {
-                    delegates = new HashSet<ProxyClassLoader>(delegates);
+                    delegates = new HashSet<>(delegates);
                     ProxyClassPackages.packageCoverage.put(pkg, delegates);
                     delegates.add(loader);
                 } else {
@@ -55,7 +55,7 @@ final class ProxyClassPackages {
             }
         }
     }
-    
+
     static void removeCoveredPakcages(ProxyClassLoader loader) {
         synchronized (packageCoverage) {
             packageCoverage.values().removeIf( (Set<ProxyClassLoader> set) -> {
@@ -74,5 +74,5 @@ final class ProxyClassPackages {
             return v;
         });
     }
-    
+
 }

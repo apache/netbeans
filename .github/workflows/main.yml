@@ -142,7 +142,7 @@ jobs:
     timeout-minutes: 40
     strategy:
       matrix:
-        java: [ '21', '25', '26' ]
+        java: [ '21', '25', '27-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
       fail-fast: false
@@ -155,7 +155,7 @@ jobs:
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
           
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
           submodules: false
@@ -207,7 +207,7 @@ jobs:
     steps:
 
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
           submodules: false
@@ -247,7 +247,7 @@ jobs:
         java: [ '21' ]
         include:
           - os: ubuntu-latest
-            java: 26
+            java: 27-ea
       fail-fast: false
     steps:
 
@@ -288,7 +288,7 @@ jobs:
         run: ant $OPTS -f platform/core.network test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: |
@@ -317,7 +317,7 @@ jobs:
 
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
         if: ${{ !cancelled() }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
           submodules: false
@@ -465,7 +465,7 @@ jobs:
           ant $OPTS -Djavadoc.fail.broken.links=true build-javadoc
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: |
@@ -843,7 +843,7 @@ jobs:
         run: ant $OPTS -f ide/xsl test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -858,7 +858,7 @@ jobs:
     timeout-minutes: 50
     strategy:
       matrix:
-        java: [ '21', '25', '26' ]
+        java: [ '21', '25', '27-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
       fail-fast: false
@@ -968,7 +968,7 @@ jobs:
         run: ant $OPTS -f apisupport/apisupport.ant test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1131,7 +1131,7 @@ jobs:
         run: ant $OPTS -f platform/netbinox test -Dtest.config=stableBTD
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1266,7 +1266,7 @@ jobs:
         run: ant $OPTS -f platform/api.templates test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1455,7 +1455,7 @@ jobs:
         run: ant $OPTS -f java/javadoc test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1470,10 +1470,10 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '21', '26' ]
+        java: [ '21', '27-ea' ]
         config: [ 'batch1', 'batch2' ]
         exclude:
-          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '26' }}
+          - java: ${{ github.event_name == 'pull_request' && 'nothing' || '27-ea' }}
       fail-fast: false
     steps:
 
@@ -1512,7 +1512,7 @@ jobs:
         run: ant $OPTS -f java/spi.java.hints test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1527,7 +1527,7 @@ jobs:
     timeout-minutes: 60
     strategy:
       matrix:
-        java: [ '21', '25', '26' ]
+        java: [ '21', '25', '27-ea' ]
         exclude:
           - java: ${{ github.event_name == 'pull_request' && 'nothing' || '25' }}
       fail-fast: false
@@ -1574,7 +1574,7 @@ jobs:
         run: ant $OPTS -f java/debugger.jpda.ui test-unit
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1619,7 +1619,7 @@ jobs:
         run: ant $OPTS -f profiler/profiler.oql test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1797,7 +1797,7 @@ jobs:
         run: ant $OPTS -f webcommon/api.knockout test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1845,7 +1845,7 @@ jobs:
 #        run: ant $OPTS -f javafx/javafx2.project test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1898,7 +1898,7 @@ jobs:
 #        run: ant $OPTS -f groovy/groovy.kit test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -1946,7 +1946,7 @@ jobs:
         run: ant $OPTS -f rust/rust.options test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2191,7 +2191,7 @@ jobs:
         run: ant $OPTS -f enterprise/j2ee.dd.webservice test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2274,7 +2274,7 @@ jobs:
           ant $OPTS -f ide/versioning test-qa-functional
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2334,7 +2334,7 @@ jobs:
         run: .github/retry.sh ant $OPTS $OPTS_TEST -f ide/db.mysql test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2381,7 +2381,7 @@ jobs:
       # linux specific setup
       - name: Setup PHP
         if: contains(matrix.os, 'ubuntu')
-        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # v2.37.0
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2.37.2
         with:
           php-version: '8.3'
           tools: pecl
@@ -2492,7 +2492,7 @@ jobs:
         run: ant $OPTS -f php/spellchecker.bindings.php test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2537,7 +2537,7 @@ jobs:
         run: .github/retry.sh ant $OPTS -f java/java.lsp.server test
 
       - name: Create Test Summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()
         with:
           paths: "./*/*/build/test/*/results/TEST-*.xml"
@@ -2580,13 +2580,13 @@ jobs:
     steps:
 
       - name: Delete Workspace Artifact
-        uses: geekyeggo/delete-artifact@f275313e70c08f6120db482d7a6b98377786765b # v5.1.0
+        uses: geekyeggo/delete-artifact@176a747ab7e287e3ff4787bf8a148716375ca118 # v6.0.0
         with:
           name: build.tar.zst 
           useGlob: false
 
       - name: Delete Dev Build Artifact
-        uses: geekyeggo/delete-artifact@f275313e70c08f6120db482d7a6b98377786765b # v5.1.0
+        uses: geekyeggo/delete-artifact@176a747ab7e287e3ff4787bf8a148716375ca118 # v6.0.0
         if: ${{ contains(github.event.pull_request.labels.*.name, 'ci:dev-build') && cancelled() }}
         with:
           name: dev-build_${{github.event.pull_request.number || github.run_id}}.zip

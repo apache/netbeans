@@ -239,9 +239,10 @@ public class ActivatorTest extends NbTestCase {
                 .manifest(
                     "OpenIDE-Module: custom",
                     "OpenIDE-Module-Install: custom.Install",
-                    "OpenIDE-Module-Module-Dependencies: org.openide.modules, org.netbeans.libs.jna/2")
+                    "OpenIDE-Module-Module-Dependencies: org.openide.modules, org.netbeans.libs.jna/2, com.sun.jna")
                 .done()
                 .module("org.netbeans.libs.jna")
+                .module("com.sun.jna")
                 .run(false);
         assertTrue(Boolean.getBoolean("used.jna"));
     }

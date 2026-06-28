@@ -25,8 +25,6 @@ import org.openide.modules.InstalledFileLocator;
 import org.openide.modules.ModuleInstall;
 import org.openide.util.*;
 
-import static java.lang.System.setProperty;
-
 public class Installer extends ModuleInstall {
 
     private static final System.Logger LOG = System.getLogger(Installer.class.getName());
@@ -45,6 +43,7 @@ public class Installer extends ModuleInstall {
         String arch = System.getProperty("os.arch"); // NOI18N
         String system = System.getProperty("os.name").toLowerCase(Locale.ENGLISH); // NOI18N
         String mapped = System.mapLibraryName(JNIDISPATCHNB);
+        String jniMapped = null;
 
         // See org.netbeans.StandardModule.OneModuleClassLoader#findLibrary in
         // core.startup.base for the base idea of the logic.
@@ -64,7 +63,7 @@ public class Installer extends ModuleInstall {
 
         if (lib == null) {
             if (BaseUtilities.isMac()) {
-                String jniMapped = mapped.replaceFirst("\\.dylib$", ".jnilib");
+                jniMapped = mapped.replaceFirst("\\.dylib$", ".jnilib");
                 if (lib != null) {
                     lib = ifl.locate("modules/lib/" + jniMapped, JNA_CND, false); // NOI18N
                 }
@@ -83,7 +82,10 @@ public class Installer extends ModuleInstall {
             LOG.log(Level.DEBUG, "Found JNA library for OS in path: {0}", lib);
             System.setProperty("jna.boot.library.path", lib.getAbsoluteFile().getParent()); //NOI18N
         } else {
-            LOG.log(Level.WARNING, "Failed to find location for JNA library");
+            LOG.log(Level.WARNING, String.format(
+                    "Failed to find location for JNA library (arch: %s, system: %s, mapped: %s, jniMapped: %s)",
+                    arch, system, mapped, jniMapped)
+            );
         }
     }
 }

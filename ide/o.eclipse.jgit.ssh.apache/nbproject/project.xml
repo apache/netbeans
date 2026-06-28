@@ -26,6 +26,14 @@
             <code-name-base>org.eclipse.jgit.ssh.apache</code-name-base>
             <module-dependencies>
                 <dependency>
+                    <code-name-base>org.apache.sshd.osgi</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>2.17.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.eclipse.jgit</code-name-base>
                     <run-dependency/>
                 </dependency>

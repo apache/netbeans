@@ -24,8 +24,31 @@
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
             <code-name-base>org.apache.sshd.sftp</code-name-base>
-            <module-dependencies/>
-            <public-packages/>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>org.apache.sshd.osgi</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>2.17.1</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
+            <public-packages>
+                <package>org.apache.sshd.sftp</package>
+                <package>org.apache.sshd.sftp.client</package>
+                <package>org.apache.sshd.sftp.client.extensions</package>
+                <package>org.apache.sshd.sftp.client.extensions.helpers</package>
+                <package>org.apache.sshd.sftp.client.extensions.openssh</package>
+                <package>org.apache.sshd.sftp.client.extensions.openssh.helpers</package>
+                <package>org.apache.sshd.sftp.client.fs</package>
+                <package>org.apache.sshd.sftp.client.fs.impl</package>
+                <package>org.apache.sshd.sftp.client.impl</package>
+                <package>org.apache.sshd.sftp.common</package>
+                <package>org.apache.sshd.sftp.common.extensions</package>
+                <package>org.apache.sshd.sftp.common.extensions.openssh</package>
+                <package>org.apache.sshd.sftp.server</package>
+            </public-packages>
             <class-path-extension>
                 <runtime-relative-path>org-apache-sshd-sftp.jar</runtime-relative-path>
                 <binary-origin>external/sshd-sftp-2.17.1.jar</binary-origin>

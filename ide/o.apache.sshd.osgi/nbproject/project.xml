@@ -24,7 +24,16 @@
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
             <code-name-base>org.apache.sshd.osgi</code-name-base>
-            <module-dependencies/>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>bcprov</code-name-base>
+                    <run-dependency/>
+                </dependency>
+                <dependency>
+                    <code-name-base>slf4j.api</code-name-base>
+                    <run-dependency/>
+                </dependency>
+            </module-dependencies>
             <public-packages>
                 <package>org.apache.sshd.agent</package>
                 <package>org.apache.sshd.agent.common</package>

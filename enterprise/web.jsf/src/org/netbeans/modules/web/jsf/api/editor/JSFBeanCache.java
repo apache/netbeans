@@ -24,14 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.api.project.Project;
 
+import org.netbeans.api.project.Project;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
-import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelAction;
-import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelException;
 import org.netbeans.modules.web.jsf.JSFUtils;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.api.metamodel.FacesManagedBean;
 import org.netbeans.modules.web.jsf.api.metamodel.JsfModel;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.openide.util.Lookup;
 
 /**
@@ -42,7 +42,7 @@ import org.openide.util.Lookup;
  * @author ads
  */
 public class JSFBeanCache {
-    
+
     public static List<FacesManagedBean> getBeans(Project project) {
         //unit testing, tests can provider a fake beans provider >>>
         JsfBeansProvider beansProvider = Lookup.getDefault().lookup(JsfBeansProvider.class);
@@ -51,34 +51,34 @@ public class JSFBeanCache {
         }
         //<<<
 
-        final List<FacesManagedBean> beans = new ArrayList<FacesManagedBean>();
+        final List<FacesManagedBean> beans = new ArrayList<>();
+
+        // managed beans have been removed in Faces 4.0
+        JsfVersion jsfVersion = JsfVersionUtils.forProject(project);
+        if (jsfVersion != null && jsfVersion.isAtLeast(JsfVersion.JSF_4_0)) {
+            return beans;
+        }
+
         MetadataModel<JsfModel> model = JSFUtils.getModel(project);
         if ( model == null){
             return beans;
         }
         try {
-            model.runReadAction( new MetadataModelAction<JsfModel, Void>() {
-
-                public Void run( JsfModel model ) throws Exception {
-                    List<FacesManagedBean> managedBeans = model.getElements( 
-                            FacesManagedBean.class);
-                    beans.addAll( managedBeans );
-                    return null;
-                }
+            model.runReadAction(jsfModel -> {
+                List<FacesManagedBean> managedBeans = jsfModel.getElements(
+                        FacesManagedBean.class);
+                beans.addAll( managedBeans );
+                return null;
             });
-        }
-        catch (MetadataModelException e) {
-            LOG.log( Level.WARNING , e.getMessage(), e );
         }
         catch (IOException e) {
             LOG.log( Level.WARNING , e.getMessage(), e );
         }
         return beans;
     }
-    
+
     private static final Logger LOG = Logger.getLogger( 
             JSFBeanCache.class.getCanonicalName() );
-
 
     //for unit tests>>>
     public static interface JsfBeansProvider {
@@ -87,5 +87,5 @@ public class JSFBeanCache {
 
     }
     //<<<
-    
+
 }

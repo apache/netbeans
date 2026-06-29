@@ -25,14 +25,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
@@ -56,19 +57,19 @@ import org.netbeans.modules.parsing.api.UserTask;
 import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.parsing.spi.Parser.Result;
 import org.netbeans.modules.web.common.api.LexerUtils;
-import org.netbeans.modules.web.el.ELTypeUtilities;
 import org.netbeans.modules.web.el.spi.ELVariableResolver;
 import org.netbeans.modules.web.el.spi.ELVariableResolver.VariableInfo;
 import org.netbeans.modules.web.el.spi.ResolverContext;
 import org.netbeans.modules.web.jsf.api.editor.JSFBeanCache;
+import org.netbeans.modules.web.jsf.api.facesmodel.JsfVersionUtils;
 import org.netbeans.modules.web.jsf.api.facesmodel.ManagedBean;
 import org.netbeans.modules.web.jsf.api.metamodel.FacesManagedBean;
 import org.netbeans.modules.web.jsf.api.metamodel.ManagedProperty;
-import org.netbeans.modules.web.jsf.editor.JsfSupportImpl;
 import org.netbeans.modules.web.jsf.editor.JsfUtils;
 import org.netbeans.modules.web.jsf.editor.index.CompositeComponentModel;
 import org.netbeans.modules.web.jsf.editor.index.JsfPageModelFactory;
 import org.netbeans.modules.web.jsfapi.api.DefaultLibraryInfo;
+import org.netbeans.modules.web.jsfapi.api.JsfVersion;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Exceptions;
 import org.openide.util.Parameters;
@@ -227,8 +228,12 @@ public final class JsfELVariableResolver implements ELVariableResolver {
             List<FacesManagedBean> beans = (List<FacesManagedBean>) context.getContent(CONTENT_NAME);
             result.addAll(beans);
 
-            // issue #225844 - get beans defined via ui:param tag
-            result.addAll(getFaceletParameters(target, beans));
+            // managed beans have been removed in Faces 4.0
+            JsfVersion jsfVersion = JsfVersionUtils.forProject(project);
+            if (jsfVersion == null || !jsfVersion.isAtLeast(JsfVersion.JSF_4_0)) {
+                // issue #225844 - get beans defined via ui:param tag
+                result.addAll(getFaceletParameters(target, beans));
+            }
 
             return result;
         }

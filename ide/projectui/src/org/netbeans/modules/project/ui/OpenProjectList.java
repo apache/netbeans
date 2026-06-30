@@ -56,6 +56,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javax.swing.Icon;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -428,13 +429,35 @@ public final class OpenProjectList {
             }
             });
             
-            INSTANCE.pchSupport.firePropertyChange(PROPERTY_OPEN_PROJECTS, new Project[0], lazilyOpenedProjects.toArray(new Project[0]));
+            Project[] opened = lazilyOpenedProjects.toArray(Project[]::new);
+            INSTANCE.pchSupport.firePropertyChange(PROPERTY_OPEN_PROJECTS, new Project[0], opened);
             Project main = INSTANCE.mainProject;
             if (main != null) { // else PROPERTY_MAIN_PROJECT would be fired spuriously
                 INSTANCE.pchSupport.firePropertyChange(PROPERTY_MAIN_PROJECT, null, main);
             }
 
+            if (checkFirstRun() && opened.length > 0) {
+                OPENING_RP.execute(() -> {
+                    for (Project p : opened) {
+                        Project del = p.getLookup().lookup(Project.class);
+                        ProjectUtilities.openProjectFiles(del == null ? p : del);
+                    }
+                });
+            }
+
             log(Level.FINER, "updateGlobalState, done, notified"); // NOI18N
+        }
+
+        private boolean checkFirstRun() {
+            Preferences prefs = OpenProjectListSettings.getInstance().getPreferences();
+            String prefKey = "projectListVersion"; // NOI18N
+            String build = System.getProperty("netbeans.buildnumber", "0"); // NOI18N
+            if (!prefs.get(prefKey, "").equals(build)) {
+                prefs.put(prefKey, build);
+                return true;
+            } else {
+                return false;
+            }
         }
 
         boolean closeBeforeOpen(final Project[] arr) {

@@ -32,6 +32,10 @@ name: NetBeans Native Launcher
 
 on:
   push:
+    branches:
+      - 'master'
+      - 'delivery'
+      - 'release*'
     # Triggers the workflow on push or pull request events but only for
     # relevant paths
     paths:

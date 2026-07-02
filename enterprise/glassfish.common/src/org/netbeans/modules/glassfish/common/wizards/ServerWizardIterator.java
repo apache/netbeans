@@ -337,7 +337,17 @@ public class ServerWizardIterator extends PortCollection implements WizardDescri
         wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, errMsg); // getSanitizedPath(installDir)));
         File jar = ServerUtilities.getJarName(glassfishDir.getAbsolutePath(), ServerUtilities.GFV3_JAR_MATCHER);
         if (jar == null || !jar.exists()) {
-            return null;
+            // GlassFish 8 no longer ships a versioned modules/glassfish*.jar; the
+            // bootstrap jar lives at lib/bootstrap/glassfish.jar in every
+            // distribution (both the full and the web profile). Accept that as
+            // proof of a GlassFish install while staying backward compatible with
+            // GlassFish 3-7. The actual version is still resolved further below
+            // through ServerUtils.getServerVersion() (modules/common-util.jar).
+            File bootstrapJar = new File(glassfishDir,
+                    "lib" + File.separator + "bootstrap" + File.separator + "glassfish.jar"); // NOI18N
+            if (!bootstrapJar.exists()) {
+                return null;
+            }
         }
 
         File containerRef = new File(glassfishDir, "config" + File.separator + "glassfish.container");

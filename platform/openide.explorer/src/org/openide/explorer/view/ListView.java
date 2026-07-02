@@ -45,7 +45,6 @@ import javax.accessibility.AccessibleContext;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -58,6 +57,8 @@ import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListDataEvent;
@@ -73,10 +74,11 @@ import org.openide.nodes.Node;
 import org.openide.nodes.Node.Property;
 import org.openide.nodes.NodeOp;
 import org.openide.util.Mutex;
-import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.util.actions.CallbackSystemAction;
+import org.netbeans.api.annotations.common.StaticResource;
+import org.openide.util.ImageUtilities;
 
 /** Explorer view to display items in a list.
  * <p>
@@ -112,6 +114,13 @@ import org.openide.util.actions.CallbackSystemAction;
  * @author   Ian Formanek, Jan Jancura, Jaroslav Tulach
  */
 public class ListView extends JScrollPane implements Externalizable {
+    @StaticResource
+    private static final String ICON_FIND = "org/openide/explorer/view/find.png"; // NOI18N
+    private static final KeyStroke NEXT_ALTERNATIVE_KEY_STROKE = Utilities.stringToKey("D-G");
+    private static final KeyStroke PREVIOUS_ALTERNATIVE_KEY_STROKE = Utilities.stringToKey("DS-G");
+    private static final KeyStroke OPEN_SEARCH_KEY_STROKE = Utilities.stringToKey("D-F");
+    private static final KeyStroke OPEN_SEARCH_ALTERNATIVE_KEY_STROKE = Utilities.stringToKey("F3");
+
     /** generated Serialized Version UID */
     static final long serialVersionUID = -7540940974042262975L;
 
@@ -1035,6 +1044,13 @@ public class ListView extends JScrollPane implements Externalizable {
                     public void keyPressed(KeyEvent e) {
                         int modifiers = e.getModifiers();
                         int keyCode = e.getKeyCode();
+                        KeyStroke ks = KeyStroke.getKeyStrokeForEvent(e);
+
+                        if (OPEN_SEARCH_KEY_STROKE.equals(ks) || OPEN_SEARCH_ALTERNATIVE_KEY_STROKE.equals(ks)) {
+                            searchTextField.setText("");
+                            displaySearchField();
+                            return;
+                        }
 
                         if (((modifiers > 0) && (modifiers != KeyEvent.SHIFT_MASK)) || e.isActionKey()) {
                             return;
@@ -1108,12 +1124,17 @@ public class ListView extends JScrollPane implements Externalizable {
             if (searchpanel == null) {
                 searchpanel = new JPanel();
 
-                JLabel lbl = new JLabel(NbBundle.getMessage(TreeView.class, "LBL_QUICKSEARCH")); //NOI18N
+                JLabel lbl = new JLabel(ImageUtilities.loadImageIcon(ICON_FIND, false)); //NOI18N
                 searchpanel.setLayout(new BorderLayout(5, 0));
                 searchpanel.add(lbl, BorderLayout.WEST);
                 searchpanel.add(searchTextField, BorderLayout.CENTER);
                 lbl.setLabelFor(searchTextField);
-                searchpanel.setBorder(BorderFactory.createRaisedBevelBorder());
+                Border customBorder = UIManager.getBorder("NbExplorerView.quicksearch.listview.border.instance");
+                if (customBorder != null) {
+                    searchpanel.setBorder(customBorder);
+                } else {
+                    searchpanel.setBorder(BorderFactory.createRaisedBevelBorder());
+                }
             }
         }
 
@@ -1216,19 +1237,30 @@ public class ListView extends JScrollPane implements Externalizable {
 
             @Override
             public void keyPressed(KeyEvent e) {
+                // Recognize the same keystrokes as in org.openide.awt.QuickSearch.
                 int keyCode = e.getKeyCode();
+                KeyStroke ks = KeyStroke.getKeyStrokeForEvent(e);
 
                 if (keyCode == KeyEvent.VK_ESCAPE) {
                     removeSearchField();
                     NbList.this.requestFocus();
-                } else if (keyCode == KeyEvent.VK_UP) {
+                } else if (OPEN_SEARCH_KEY_STROKE.equals(ks) || OPEN_SEARCH_ALTERNATIVE_KEY_STROKE.equals(ks)) {
+                    searchTextField.selectAll();
+                } else if (keyCode == KeyEvent.VK_UP ||
+                        keyCode == KeyEvent.VK_F3 && e.getModifiersEx() == KeyEvent.SHIFT_DOWN_MASK ||
+                        keyCode == KeyEvent.VK_ENTER && e.getModifiersEx() == KeyEvent.SHIFT_DOWN_MASK ||
+                        PREVIOUS_ALTERNATIVE_KEY_STROKE.equals(ks))
+                {
                     currentSelectionIndex--;
                     displaySearchResult();
 
                     // Stop processing the event here. Otherwise it's dispatched
                     // to the tree too (which scrolls)
                     e.consume();
-                } else if (keyCode == KeyEvent.VK_DOWN) {
+                } else if (keyCode == KeyEvent.VK_DOWN ||
+                        keyCode == KeyEvent.VK_F3 && e.getModifiersEx() == 0 ||
+                        NEXT_ALTERNATIVE_KEY_STROKE.equals(ks))
+                {
                     currentSelectionIndex++;
                     displaySearchResult();
 

@@ -1,0 +1,2613 @@
+<testresult testFile='propertyHooksTrait.php'>
+    <scanner>
+        <token id='T_TRAIT' start='815' end='820'>
+            <text>trait</text>
+        </token>
+        <token id='T_STRING' start='821' end='839'>
+            <text>PropertyHooksTrait</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='840' end='841'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='846' end='852'>
+            <text>public</text>
+        </token>
+        <token id='T_CONST' start='853' end='858'>
+            <text>const</text>
+        </token>
+        <token id='T_STRING' start='859' end='865'>
+            <text>string</text>
+        </token>
+        <token id='T_STRING' start='866' end='874'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_EQUAL' start='875' end='876'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='877' end='892'>
+            <text>"property hook"</text>
+        </token>
+        <token id='T_SEMICOLON' start='892' end='893'>
+            <text>;</text>
+        </token>
+        <token id='T_PUBLIC' start='922' end='928'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='929' end='937'>
+            <text>$valid01</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='938' end='939'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='948' end='951'>
+            <text>get</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='952' end='953'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='966' end='972'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='973' end='978'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='978' end='980'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='980' end='985'>
+            <text>prop1</text>
+        </token>
+        <token id='T_SEMICOLON' start='985' end='986'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='995' end='996'>
+            <text>}</text>
+        </token>
+        <token id='T_STRING' start='1005' end='1008'>
+            <text>set</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1009' end='1010'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1023' end='1028'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1028' end='1030'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1030' end='1037'>
+            <text>valid01</text>
+        </token>
+        <token id='T_EQUAL' start='1038' end='1039'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1040' end='1046'>
+            <text>$value</text>
+        </token>
+        <token id='T_SEMICOLON' start='1046' end='1047'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1056' end='1057'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1062' end='1063'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1068' end='1074'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1075' end='1078'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='1079' end='1087'>
+            <text>$valid02</text>
+        </token>
+        <token id='T_EQUAL' start='1088' end='1089'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='1090' end='1091'>
+            <text>1</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1092' end='1093'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1102' end='1105'>
+            <text>get</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1106' end='1107'>
+            <text>{</text>
+        </token>
+        <token id='T_ECHO' start='1120' end='1124'>
+            <text>echo</text>
+        </token>
+        <token id='T_METHOD_C' start='1125' end='1135'>
+            <text>__METHOD__</text>
+        </token>
+        <token id='T_COMMA' start='1135' end='1136'>
+            <text>,</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1137' end='1141'>
+            <text>"\n"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1141' end='1142'>
+            <text>;</text>
+        </token>
+        <token id='T_RETURN' start='1155' end='1161'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='1162' end='1167'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1167' end='1169'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1169' end='1176'>
+            <text>valid02</text>
+        </token>
+        <token id='T_SEMICOLON' start='1176' end='1177'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1186' end='1187'>
+            <text>}</text>
+        </token>
+        <token id='T_STRING' start='1196' end='1199'>
+            <text>set</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1199' end='1200'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1200' end='1206'>
+            <text>$value</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1206' end='1207'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1207' end='1208'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1221' end='1226'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1226' end='1228'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1228' end='1235'>
+            <text>valid02</text>
+        </token>
+        <token id='T_EQUAL' start='1236' end='1237'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1238' end='1244'>
+            <text>$value</text>
+        </token>
+        <token id='T_SEMICOLON' start='1244' end='1245'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1254' end='1255'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1260' end='1261'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1266' end='1272'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='1273' end='1281'>
+            <text>$valid03</text>
+        </token>
+        <token id='T_EQUAL' start='1282' end='1283'>
+            <text>=</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1284' end='1292'>
+            <text>"string"</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1293' end='1294'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1303' end='1306'>
+            <text>get</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1307' end='1308'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1321' end='1327'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='1328' end='1333'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1333' end='1335'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1335' end='1342'>
+            <text>valid03</text>
+        </token>
+        <token id='T_SEMICOLON' start='1342' end='1343'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1352' end='1353'>
+            <text>}</text>
+        </token>
+        <token id='T_STRING' start='1362' end='1365'>
+            <text>set</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1366' end='1367'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1367' end='1368'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1373' end='1374'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1379' end='1385'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1386' end='1392'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1393' end='1401'>
+            <text>$valid04</text>
+        </token>
+        <token id='T_EQUAL' start='1402' end='1403'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1404' end='1408'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1408' end='1410'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1410' end='1418'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1419' end='1420'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1429' end='1432'>
+            <text>get</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1433' end='1435'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='1436' end='1441'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1441' end='1443'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1443' end='1450'>
+            <text>valid04</text>
+        </token>
+        <token id='T_SEMICOLON' start='1450' end='1451'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1460' end='1463'>
+            <text>set</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1464' end='1465'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1465' end='1466'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1471' end='1472'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1477' end='1483'>
+            <text>public</text>
+        </token>
+        <token id='T_ARRAY' start='1484' end='1489'>
+            <text>array</text>
+        </token>
+        <token id='T_VARIABLE' start='1490' end='1498'>
+            <text>$valid05</text>
+        </token>
+        <token id='T_EQUAL' start='1499' end='1500'>
+            <text>=</text>
+        </token>
+        <token id='T_OPEN_RECT' start='1501' end='1502'>
+            <text>[</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='1502' end='1503'>
+            <text>]</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1504' end='1505'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1514' end='1517'>
+            <text>get</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1518' end='1520'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='1521' end='1526'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1526' end='1528'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1528' end='1535'>
+            <text>valid05</text>
+        </token>
+        <token id='T_SEMICOLON' start='1535' end='1536'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1545' end='1548'>
+            <text>set</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1549' end='1551'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='1552' end='1557'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1557' end='1559'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1559' end='1566'>
+            <text>valid05</text>
+        </token>
+        <token id='T_EQUAL' start='1567' end='1568'>
+            <text>=</text>
+        </token>
+        <token id='T_VARIABLE' start='1569' end='1575'>
+            <text>$value</text>
+        </token>
+        <token id='T_SEMICOLON' start='1575' end='1576'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1581' end='1582'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1587' end='1593'>
+            <text>public</text>
+        </token>
+        <token id='T_PRIVATE_SET' start='1594' end='1606'>
+            <text>private(set)</text>
+        </token>
+        <token id='T_STRING' start='1607' end='1613'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1614' end='1622'>
+            <text>$valid06</text>
+        </token>
+        <token id='T_EQUAL' start='1623' end='1624'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1625' end='1629'>
+            <text>self</text>
+        </token>
+        <token id='T_PAAMAYIM_NEKUDOTAYIM' start='1629' end='1631'>
+            <text>::</text>
+        </token>
+        <token id='T_STRING' start='1631' end='1639'>
+            <text>CONSTANT</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1640' end='1641'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1650' end='1653'>
+            <text>get</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1654' end='1655'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='1668' end='1674'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='1675' end='1680'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1680' end='1682'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1682' end='1689'>
+            <text>valid06</text>
+        </token>
+        <token id='T_NEKUDA' start='1690' end='1691'>
+            <text>.</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1692' end='1698'>
+            <text>"test"</text>
+        </token>
+        <token id='T_SEMICOLON' start='1698' end='1699'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1708' end='1709'>
+            <text>}</text>
+        </token>
+        <token id='T_STRING' start='1718' end='1721'>
+            <text>set</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1722' end='1723'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1723' end='1724'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1729' end='1730'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1735' end='1741'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='1742' end='1750'>
+            <text>$valid07</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1751' end='1752'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1772' end='1775'>
+            <text>get</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1776' end='1778'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='1779' end='1784'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1784' end='1786'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1786' end='1790'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1790' end='1791'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1791' end='1792'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='1792' end='1793'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='1802' end='1805'>
+            <text>set</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='1806' end='1808'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='1809' end='1814'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1814' end='1816'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1816' end='1820'>
+            <text>test</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1820' end='1821'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1821' end='1822'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDA' start='1823' end='1824'>
+            <text>.</text>
+        </token>
+        <token id='T_VARIABLE' start='1825' end='1831'>
+            <text>$value</text>
+        </token>
+        <token id='T_SEMICOLON' start='1831' end='1832'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1837' end='1838'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='1843' end='1849'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='1850' end='1856'>
+            <text>string</text>
+        </token>
+        <token id='T_VARIABLE' start='1857' end='1865'>
+            <text>$valid08</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1866' end='1867'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='1876' end='1879'>
+            <text>set</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1879' end='1880'>
+            <text>(</text>
+        </token>
+        <token id='T_STRING' start='1880' end='1886'>
+            <text>string</text>
+        </token>
+        <token id='T_OR' start='1886' end='1887'>
+            <text>|</text>
+        </token>
+        <token id='T_ARRAY' start='1887' end='1892'>
+            <text>array</text>
+        </token>
+        <token id='T_VARIABLE' start='1893' end='1899'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1899' end='1900'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='1901' end='1902'>
+            <text>{</text>
+        </token>
+        <token id='T_VARIABLE' start='1915' end='1920'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='1920' end='1922'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='1922' end='1929'>
+            <text>valid08</text>
+        </token>
+        <token id='T_EQUAL' start='1930' end='1931'>
+            <text>=</text>
+        </token>
+        <token id='T_STRING' start='1932' end='1940'>
+            <text>is_array</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1940' end='1941'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='1941' end='1947'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1947' end='1948'>
+            <text>)</text>
+        </token>
+        <token id='T_QUESTION_MARK' start='1949' end='1950'>
+            <text>?</text>
+        </token>
+        <token id='T_STRING' start='1951' end='1955'>
+            <text>join</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='1955' end='1956'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='1956' end='1960'>
+            <text>&apos;, &apos;</text>
+        </token>
+        <token id='T_COMMA' start='1960' end='1961'>
+            <text>,</text>
+        </token>
+        <token id='T_VARIABLE' start='1962' end='1968'>
+            <text>$param</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='1968' end='1969'>
+            <text>)</text>
+        </token>
+        <token id='T_NEKUDOTAIM' start='1970' end='1971'>
+            <text>:</text>
+        </token>
+        <token id='T_VARIABLE' start='1972' end='1978'>
+            <text>$param</text>
+        </token>
+        <token id='T_SEMICOLON' start='1978' end='1979'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1988' end='1989'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='1994' end='1995'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2000' end='2006'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='2007' end='2015'>
+            <text>$valid09</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2016' end='2017'>
+            <text>{</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='2026' end='2028'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='2028' end='2033'>
+            <text>Arri1</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='2033' end='2034'>
+            <text>]</text>
+        </token>
+        <token id='T_STRING' start='2035' end='2038'>
+            <text>get</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2039' end='2040'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2040' end='2041'>
+            <text>}</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='2050' end='2052'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='2052' end='2057'>
+            <text>Attr2</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='2057' end='2058'>
+            <text>]</text>
+        </token>
+        <token id='T_STRING' start='2059' end='2062'>
+            <text>set</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2063' end='2064'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2064' end='2065'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2070' end='2071'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2076' end='2082'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='2083' end='2091'>
+            <text>$valid10</text>
+        </token>
+        <token id='T_EQUAL' start='2092' end='2093'>
+            <text>=</text>
+        </token>
+        <token id='T_LNUMBER' start='2094' end='2097'>
+            <text>100</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2098' end='2099'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='2108' end='2111'>
+            <text>get</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2112' end='2113'>
+            <text>{</text>
+        </token>
+        <token id='T_YIELD' start='2126' end='2131'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='2132' end='2133'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='2133' end='2134'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD' start='2147' end='2152'>
+            <text>yield</text>
+        </token>
+        <token id='T_VARIABLE' start='2153' end='2158'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2158' end='2160'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2160' end='2167'>
+            <text>valid10</text>
+        </token>
+        <token id='T_SEMICOLON' start='2167' end='2168'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD' start='2181' end='2186'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='2187' end='2188'>
+            <text>3</text>
+        </token>
+        <token id='T_SEMICOLON' start='2188' end='2189'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2198' end='2199'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2204' end='2205'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2210' end='2216'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='2217' end='2225'>
+            <text>$valid11</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2226' end='2227'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='2247' end='2250'>
+            <text>get</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2251' end='2252'>
+            <text>{</text>
+        </token>
+        <token id='T_YIELD' start='2265' end='2270'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='2271' end='2272'>
+            <text>1</text>
+        </token>
+        <token id='T_SEMICOLON' start='2272' end='2273'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD' start='2286' end='2291'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='2292' end='2293'>
+            <text>2</text>
+        </token>
+        <token id='T_SEMICOLON' start='2293' end='2294'>
+            <text>;</text>
+        </token>
+        <token id='T_YIELD' start='2307' end='2312'>
+            <text>yield</text>
+        </token>
+        <token id='T_LNUMBER' start='2313' end='2314'>
+            <text>3</text>
+        </token>
+        <token id='T_SEMICOLON' start='2314' end='2315'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2324' end='2325'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2330' end='2331'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2336' end='2342'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='2343' end='2351'>
+            <text>$valid12</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2352' end='2353'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='2362' end='2365'>
+            <text>set</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2365' end='2366'>
+            <text>(</text>
+        </token>
+        <token id='T_ATTRIBUTE' start='2366' end='2368'>
+            <text>#[</text>
+        </token>
+        <token id='T_STRING' start='2368' end='2386'>
+            <text>SensitiveParameter</text>
+        </token>
+        <token id='T_CLOSE_RECT' start='2386' end='2387'>
+            <text>]</text>
+        </token>
+        <token id='T_VARIABLE' start='2388' end='2394'>
+            <text>$value</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2394' end='2395'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2396' end='2397'>
+            <text>{</text>
+        </token>
+        <token id='T_THROW' start='2410' end='2415'>
+            <text>throw</text>
+        </token>
+        <token id='T_NEW' start='2416' end='2419'>
+            <text>new</text>
+        </token>
+        <token id='T_STRING' start='2420' end='2429'>
+            <text>Exception</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2429' end='2430'>
+            <text>(</text>
+        </token>
+        <token id='T_CONSTANT_ENCAPSED_STRING' start='2430' end='2436'>
+            <text>&apos;test&apos;</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2436' end='2437'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='2437' end='2438'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2447' end='2448'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2453' end='2454'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2459' end='2465'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='2466' end='2474'>
+            <text>$valid13</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2475' end='2476'>
+            <text>{</text>
+        </token>
+        <token id='T_FINAL' start='2485' end='2490'>
+            <text>final</text>
+        </token>
+        <token id='T_STRING' start='2491' end='2494'>
+            <text>get</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2495' end='2496'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='2497' end='2503'>
+            <text>return</text>
+        </token>
+        <token id='T_LNUMBER' start='2504' end='2507'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='2507' end='2508'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2509' end='2510'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2515' end='2516'>
+            <text>}</text>
+        </token>
+        <token id='T_FINAL' start='2521' end='2526'>
+            <text>final</text>
+        </token>
+        <token id='T_PUBLIC' start='2527' end='2533'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='2534' end='2542'>
+            <text>$valid14</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2543' end='2544'>
+            <text>{</text>
+        </token>
+        <token id='T_FINAL' start='2553' end='2558'>
+            <text>final</text>
+        </token>
+        <token id='T_STRING' start='2559' end='2562'>
+            <text>get</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='2563' end='2565'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='2566' end='2571'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2571' end='2573'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2573' end='2580'>
+            <text>valid14</text>
+        </token>
+        <token id='T_SEMICOLON' start='2580' end='2581'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2586' end='2587'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2592' end='2598'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='2599' end='2607'>
+            <text>$valid15</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2608' end='2609'>
+            <text>{</text>
+        </token>
+        <token id='T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG' start='2618' end='2619'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_STRING' start='2619' end='2622'>
+            <text>get</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='2623' end='2625'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='2626' end='2631'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2631' end='2633'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2633' end='2640'>
+            <text>valid15</text>
+        </token>
+        <token id='T_SEMICOLON' start='2640' end='2641'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2646' end='2647'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2652' end='2658'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='2659' end='2667'>
+            <text>$closure</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2668' end='2669'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='2678' end='2681'>
+            <text>get</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2682' end='2683'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='2696' end='2702'>
+            <text>return</text>
+        </token>
+        <token id='T_FUNCTION' start='2703' end='2711'>
+            <text>function</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2712' end='2713'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2713' end='2714'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2715' end='2716'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='2733' end='2739'>
+            <text>return</text>
+        </token>
+        <token id='T_VARIABLE' start='2740' end='2745'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2745' end='2747'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2747' end='2754'>
+            <text>closure</text>
+        </token>
+        <token id='T_SEMICOLON' start='2754' end='2755'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2768' end='2769'>
+            <text>}</text>
+        </token>
+        <token id='T_SEMICOLON' start='2769' end='2770'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2779' end='2780'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2785' end='2786'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='2791' end='2797'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='2798' end='2812'>
+            <text>$arrowFunction</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2813' end='2814'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='2823' end='2826'>
+            <text>get</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2827' end='2828'>
+            <text>{</text>
+        </token>
+        <token id='T_RETURN' start='2841' end='2847'>
+            <text>return</text>
+        </token>
+        <token id='T_FN' start='2848' end='2850'>
+            <text>fn</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='2850' end='2851'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='2851' end='2852'>
+            <text>)</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='2853' end='2855'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_VARIABLE' start='2856' end='2861'>
+            <text>$this</text>
+        </token>
+        <token id='T_OBJECT_OPERATOR' start='2861' end='2863'>
+            <text>-&gt;</text>
+        </token>
+        <token id='T_STRING' start='2863' end='2876'>
+            <text>arrowFunction</text>
+        </token>
+        <token id='T_SEMICOLON' start='2876' end='2877'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2886' end='2887'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2892' end='2893'>
+            <text>}</text>
+        </token>
+        <token id='T_PRIVATE' start='2898' end='2905'>
+            <text>private</text>
+        </token>
+        <token id='T_VARIABLE' start='2906' end='2920'>
+            <text>$propertyConst</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2921' end='2922'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='2931' end='2934'>
+            <text>get</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='2935' end='2937'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_PROPERTY_C' start='2938' end='2950'>
+            <text>__PROPERTY__</text>
+        </token>
+        <token id='T_SEMICOLON' start='2950' end='2951'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2956' end='2957'>
+            <text>}</text>
+        </token>
+        <token id='T_VAR' start='2962' end='2965'>
+            <text>var</text>
+        </token>
+        <token id='T_VARIABLE' start='2966' end='2970'>
+            <text>$var</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='2971' end='2972'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='2973' end='2976'>
+            <text>get</text>
+        </token>
+        <token id='T_DOUBLE_ARROW' start='2977' end='2979'>
+            <text>=&gt;</text>
+        </token>
+        <token id='T_LNUMBER' start='2980' end='2983'>
+            <text>100</text>
+        </token>
+        <token id='T_SEMICOLON' start='2983' end='2984'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='2985' end='2986'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='3018' end='3024'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='3025' end='3042'>
+            <text>$invalidEmptyHook</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3043' end='3044'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3044' end='3045'>
+            <text>}</text>
+        </token>
+        <token id='T_PRIVATE' start='3077' end='3084'>
+            <text>private</text>
+        </token>
+        <token id='T_VARIABLE' start='3085' end='3105'>
+            <text>$invalidPrivateFinal</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3106' end='3107'>
+            <text>{</text>
+        </token>
+        <token id='T_FINAL' start='3108' end='3113'>
+            <text>final</text>
+        </token>
+        <token id='T_STRING' start='3114' end='3117'>
+            <text>get</text>
+        </token>
+        <token id='T_SEMICOLON' start='3117' end='3118'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3119' end='3120'>
+            <text>}</text>
+        </token>
+        <token id='T_PRIVATE' start='3152' end='3159'>
+            <text>private</text>
+        </token>
+        <token id='T_VARIABLE' start='3160' end='3176'>
+            <text>$invalidPublic01</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3177' end='3178'>
+            <text>{</text>
+        </token>
+        <token id='T_PUBLIC' start='3187' end='3193'>
+            <text>public</text>
+        </token>
+        <token id='T_STRING' start='3194' end='3197'>
+            <text>get</text>
+        </token>
+        <token id='T_SEMICOLON' start='3197' end='3198'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3230' end='3231'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='3236' end='3242'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='3243' end='3259'>
+            <text>$invalidStatic01</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3260' end='3261'>
+            <text>{</text>
+        </token>
+        <token id='T_STATIC' start='3270' end='3276'>
+            <text>static</text>
+        </token>
+        <token id='T_STRING' start='3277' end='3280'>
+            <text>get</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3281' end='3282'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3282' end='3283'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3315' end='3316'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='3321' end='3327'>
+            <text>public</text>
+        </token>
+        <token id='T_STATIC' start='3328' end='3334'>
+            <text>static</text>
+        </token>
+        <token id='T_VARIABLE' start='3335' end='3351'>
+            <text>$invalidStatic02</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3352' end='3353'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='3389' end='3392'>
+            <text>get</text>
+        </token>
+        <token id='T_SEMICOLON' start='3392' end='3393'>
+            <text>;</text>
+        </token>
+        <token id='T_STRING' start='3402' end='3405'>
+            <text>set</text>
+        </token>
+        <token id='T_SEMICOLON' start='3405' end='3406'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3411' end='3412'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='3417' end='3423'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='3424' end='3440'>
+            <text>$invalidGetParam</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3441' end='3442'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='3451' end='3454'>
+            <text>get</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='3454' end='3455'>
+            <text>(</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='3455' end='3456'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3457' end='3458'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='3498' end='3506'>
+            <text>var_dump</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='3506' end='3507'>
+            <text>(</text>
+        </token>
+        <token id='T_VARIABLE' start='3507' end='3513'>
+            <text>$value</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='3513' end='3514'>
+            <text>)</text>
+        </token>
+        <token id='T_SEMICOLON' start='3514' end='3515'>
+            <text>;</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3524' end='3525'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3530' end='3531'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='3536' end='3542'>
+            <text>public</text>
+        </token>
+        <token id='T_READONLY' start='3543' end='3551'>
+            <text>readonly</text>
+        </token>
+        <token id='T_STRING' start='3552' end='3555'>
+            <text>int</text>
+        </token>
+        <token id='T_VARIABLE' start='3556' end='3572'>
+            <text>$invalidReadonly</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3573' end='3574'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='3575' end='3578'>
+            <text>get</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3578' end='3579'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3579' end='3580'>
+            <text>}</text>
+        </token>
+        <token id='T_STRING' start='3581' end='3584'>
+            <text>set</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3584' end='3585'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3585' end='3586'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3587' end='3588'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='3620' end='3626'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='3627' end='3641'>
+            <text>$invalidSetRef</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3642' end='3643'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='3652' end='3655'>
+            <text>set</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='3655' end='3656'>
+            <text>(</text>
+        </token>
+        <token id='T_REFERENCE' start='3656' end='3657'>
+            <text>&amp;</text>
+        </token>
+        <token id='T_VARIABLE' start='3657' end='3663'>
+            <text>$value</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='3663' end='3664'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3665' end='3666'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3666' end='3667'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3699' end='3700'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='3705' end='3711'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='3712' end='3728'>
+            <text>$invalidVariadic</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3729' end='3730'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='3739' end='3742'>
+            <text>set</text>
+        </token>
+        <token id='T_OPEN_PARENTHESE' start='3742' end='3743'>
+            <text>(</text>
+        </token>
+        <token id='T_ELLIPSIS' start='3743' end='3746'>
+            <text>...</text>
+        </token>
+        <token id='T_VARIABLE' start='3746' end='3752'>
+            <text>$value</text>
+        </token>
+        <token id='T_CLOSE_PARENTHESE' start='3752' end='3753'>
+            <text>)</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3754' end='3755'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3755' end='3756'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3788' end='3789'>
+            <text>}</text>
+        </token>
+        <token id='T_PUBLIC' start='3794' end='3800'>
+            <text>public</text>
+        </token>
+        <token id='T_VARIABLE' start='3801' end='3820'>
+            <text>$invalidUnknownHook</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3821' end='3822'>
+            <text>{</text>
+        </token>
+        <token id='T_STRING' start='3831' end='3838'>
+            <text>unknown</text>
+        </token>
+        <token id='T_CURLY_OPEN' start='3839' end='3840'>
+            <text>{</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3840' end='3841'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3855' end='3856'>
+            <text>}</text>
+        </token>
+        <token id='T_CURLY_CLOSE' start='3857' end='3858'>
+            <text>}</text>
+        </token>
+        <token id='EOF' start='3859' end='3859'>
+            <text></text>
+        </token>
+    </scanner>
+    <Program start='0' end='3859'>
+        <Comments>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='898' end='918' commentType='singleLine'/>
+            <Comment start='1753' end='1764' commentType='singleLine'/>
+            <Comment start='2228' end='2239' commentType='singleLine'/>
+            <Comment start='2992' end='3014' commentType='singleLine'/>
+            <Comment start='3046' end='3073' commentType='singleLine'/>
+            <Comment start='3121' end='3148' commentType='singleLine'/>
+            <Comment start='3199' end='3226' commentType='singleLine'/>
+            <Comment start='3284' end='3311' commentType='singleLine'/>
+            <Comment start='3354' end='3381' commentType='singleLine'/>
+            <Comment start='3459' end='3486' commentType='singleLine'/>
+            <Comment start='3589' end='3616' commentType='singleLine'/>
+            <Comment start='3668' end='3695' commentType='singleLine'/>
+            <Comment start='3757' end='3784' commentType='singleLine'/>
+            <Comment start='3842' end='3851' commentType='singleLine'/>
+            <Comment start='6' end='813' commentType='multiLine'/>
+            <Comment start='898' end='918' commentType='singleLine'/>
+            <Comment start='1753' end='1764' commentType='singleLine'/>
+            <Comment start='2228' end='2239' commentType='singleLine'/>
+            <Comment start='2992' end='3014' commentType='singleLine'/>
+            <Comment start='3046' end='3073' commentType='singleLine'/>
+            <Comment start='3121' end='3148' commentType='singleLine'/>
+            <Comment start='3199' end='3226' commentType='singleLine'/>
+            <Comment start='3284' end='3311' commentType='singleLine'/>
+            <Comment start='3354' end='3381' commentType='singleLine'/>
+            <Comment start='3459' end='3486' commentType='singleLine'/>
+            <Comment start='3589' end='3616' commentType='singleLine'/>
+            <Comment start='3668' end='3695' commentType='singleLine'/>
+            <Comment start='3757' end='3784' commentType='singleLine'/>
+            <Comment start='3842' end='3851' commentType='singleLine'/>
+        </Comments>
+        <Statements>
+            <TraitDeclaration start='815' end='3858'>
+                <TraitName>
+                    <Identifier start='821' end='839' name='PropertyHooksTrait'/>
+                </TraitName>
+                <Block start='840' end='3858' isCurly='true'>
+                    <ClassConstantDeclaration start='846' end='893' modifier='public'>
+                        <ConstType>
+                            <NamespaceName start='859' end='865' isCurrent='false' isGlobal='false'>
+                                <Identifier start='859' end='865' name='string'/>
+                            </NamespaceName>
+                        </ConstType>
+                        <Names>
+                            <Identifier start='866' end='874' name='CONSTANT'/>
+                        </Names>
+                        <Initializers>
+                            <Scalar start='877' end='892' type='STRING' value='"property hook"'/>
+                        </Initializers>
+                    </ClassConstantDeclaration>
+                    <FieldsDeclaration start='922' end='1063' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='929' end='937' isDollared='true'>
+                                <Identifier start='930' end='937' name='valid01'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='938' end='1063' isCurly='true'>
+                            <PropertyHookDeclaration start='948' end='996' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='948' end='951' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='952' end='996' isCurly='true'>
+                                    <ReturnStatement start='966' end='986'>
+                                        <FieldAccess start='973' end='985' isNullsafe='false'>
+                                            <Variable start='973' end='978' isDollared='true'>
+                                                <Identifier start='974' end='978' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='980' end='985' isDollared='false'>
+                                                    <Identifier start='980' end='985' name='prop1'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                    </ReturnStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                            <PropertyHookDeclaration start='1005' end='1057' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='1005' end='1008' name='set'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='1009' end='1057' isCurly='true'>
+                                    <ExpressionStatement start='1023' end='1047'>
+                                        <Assignment start='1023' end='1046' operator='EQUAL'>
+                                            <FieldAccess start='1023' end='1037' isNullsafe='false'>
+                                                <Variable start='1023' end='1028' isDollared='true'>
+                                                    <Identifier start='1024' end='1028' name='this'/>
+                                                </Variable>
+                                                <Field>
+                                                    <Variable start='1030' end='1037' isDollared='false'>
+                                                        <Identifier start='1030' end='1037' name='valid01'/>
+                                                    </Variable>
+                                                </Field>
+                                            </FieldAccess>
+                                            <Variable start='1040' end='1046' isDollared='true'>
+                                                <Identifier start='1041' end='1046' name='value'/>
+                                            </Variable>
+                                        </Assignment>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1068' end='1261' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='1075' end='1078' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1075' end='1078' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1079' end='1087' isDollared='true'>
+                                <Identifier start='1080' end='1087' name='valid02'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='1090' end='1091' type='INT' value='1'/>
+                        </InitialValues>
+                        <Block start='1092' end='1261' isCurly='true'>
+                            <PropertyHookDeclaration start='1102' end='1187' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='1102' end='1105' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='1106' end='1187' isCurly='true'>
+                                    <EchoStatement start='1120' end='1142'>
+                                        <Scalar start='1125' end='1135' type='SYSTEM' value='__METHOD__'/>
+                                        <Scalar start='1137' end='1141' type='STRING' value='"\n"'/>
+                                    </EchoStatement>
+                                    <ReturnStatement start='1155' end='1177'>
+                                        <FieldAccess start='1162' end='1176' isNullsafe='false'>
+                                            <Variable start='1162' end='1167' isDollared='true'>
+                                                <Identifier start='1163' end='1167' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='1169' end='1176' isDollared='false'>
+                                                    <Identifier start='1169' end='1176' name='valid02'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                    </ReturnStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                            <PropertyHookDeclaration start='1196' end='1255' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='1196' end='1199' name='set'/>
+                                </Name>
+                                <FormalParameters>
+                                    <FormalParameter start='1200' end='1206' isMandatory='true' isVariadic='false'>
+                                        <ParametrType>
+                                        </ParametrType>
+                                        <ParametrName>
+                                            <Variable start='1200' end='1206' isDollared='true'>
+                                                <Identifier start='1201' end='1206' name='value'/>
+                                            </Variable>
+                                        </ParametrName>
+                                        <DefaultValue>
+                                        </DefaultValue>
+                                    </FormalParameter>
+                                </FormalParameters>
+                                <Block start='1207' end='1255' isCurly='true'>
+                                    <ExpressionStatement start='1221' end='1245'>
+                                        <Assignment start='1221' end='1244' operator='EQUAL'>
+                                            <FieldAccess start='1221' end='1235' isNullsafe='false'>
+                                                <Variable start='1221' end='1226' isDollared='true'>
+                                                    <Identifier start='1222' end='1226' name='this'/>
+                                                </Variable>
+                                                <Field>
+                                                    <Variable start='1228' end='1235' isDollared='false'>
+                                                        <Identifier start='1228' end='1235' name='valid02'/>
+                                                    </Variable>
+                                                </Field>
+                                            </FieldAccess>
+                                            <Variable start='1238' end='1244' isDollared='true'>
+                                                <Identifier start='1239' end='1244' name='value'/>
+                                            </Variable>
+                                        </Assignment>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1266' end='1374' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1273' end='1281' isDollared='true'>
+                                <Identifier start='1274' end='1281' name='valid03'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='1284' end='1292' type='STRING' value='"string"'/>
+                        </InitialValues>
+                        <Block start='1293' end='1374' isCurly='true'>
+                            <PropertyHookDeclaration start='1303' end='1353' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='1303' end='1306' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='1307' end='1353' isCurly='true'>
+                                    <ReturnStatement start='1321' end='1343'>
+                                        <FieldAccess start='1328' end='1342' isNullsafe='false'>
+                                            <Variable start='1328' end='1333' isDollared='true'>
+                                                <Identifier start='1329' end='1333' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='1335' end='1342' isDollared='false'>
+                                                    <Identifier start='1335' end='1342' name='valid03'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                    </ReturnStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                            <PropertyHookDeclaration start='1362' end='1368' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='1362' end='1365' name='set'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='1366' end='1368' isCurly='true'>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1379' end='1472' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='1386' end='1392' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1386' end='1392' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1393' end='1401' isDollared='true'>
+                                <Identifier start='1394' end='1401' name='valid04'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <StaticConstantAccess start='1404' end='1418' isDynamicName='false'>
+                                <NamespaceName start='1404' end='1408' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1404' end='1408' name='self'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <Identifier start='1410' end='1418' name='CONSTANT'/>
+                                </Constant>
+                                <Member>
+                                    <Identifier start='1410' end='1418' name='CONSTANT'/>
+                                </Member>
+                            </StaticConstantAccess>
+                        </InitialValues>
+                        <Block start='1419' end='1472' isCurly='true'>
+                            <PropertyHookDeclaration start='1429' end='1451' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='1429' end='1432' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='1436' end='1451' isCurly='flase'>
+                                    <ExpressionStatement start='1436' end='1451'>
+                                        <FieldAccess start='1436' end='1450' isNullsafe='false'>
+                                            <Variable start='1436' end='1441' isDollared='true'>
+                                                <Identifier start='1437' end='1441' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='1443' end='1450' isDollared='false'>
+                                                    <Identifier start='1443' end='1450' name='valid04'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                            <PropertyHookDeclaration start='1460' end='1466' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='1460' end='1463' name='set'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='1464' end='1466' isCurly='true'>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1477' end='1582' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='1484' end='1489' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1484' end='1489' name='array'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1490' end='1498' isDollared='true'>
+                                <Identifier start='1491' end='1498' name='valid05'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <ArrayCreation start='1501' end='1503' type='NEW'>
+                            </ArrayCreation>
+                        </InitialValues>
+                        <Block start='1504' end='1582' isCurly='true'>
+                            <PropertyHookDeclaration start='1514' end='1536' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='1514' end='1517' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='1521' end='1536' isCurly='flase'>
+                                    <ExpressionStatement start='1521' end='1536'>
+                                        <FieldAccess start='1521' end='1535' isNullsafe='false'>
+                                            <Variable start='1521' end='1526' isDollared='true'>
+                                                <Identifier start='1522' end='1526' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='1528' end='1535' isDollared='false'>
+                                                    <Identifier start='1528' end='1535' name='valid05'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                            <PropertyHookDeclaration start='1545' end='1576' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='1545' end='1548' name='set'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='1552' end='1576' isCurly='flase'>
+                                    <ExpressionStatement start='1552' end='1576'>
+                                        <Assignment start='1552' end='1575' operator='EQUAL'>
+                                            <FieldAccess start='1552' end='1566' isNullsafe='false'>
+                                                <Variable start='1552' end='1557' isDollared='true'>
+                                                    <Identifier start='1553' end='1557' name='this'/>
+                                                </Variable>
+                                                <Field>
+                                                    <Variable start='1559' end='1566' isDollared='false'>
+                                                        <Identifier start='1559' end='1566' name='valid05'/>
+                                                    </Variable>
+                                                </Field>
+                                            </FieldAccess>
+                                            <Variable start='1569' end='1575' isDollared='true'>
+                                                <Identifier start='1570' end='1575' name='value'/>
+                                            </Variable>
+                                        </Assignment>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1587' end='1730' modifier='public private(set)'>
+                        <FieldType>
+                            <NamespaceName start='1607' end='1613' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1607' end='1613' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1614' end='1622' isDollared='true'>
+                                <Identifier start='1615' end='1622' name='valid06'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <StaticConstantAccess start='1625' end='1639' isDynamicName='false'>
+                                <NamespaceName start='1625' end='1629' isCurrent='false' isGlobal='false'>
+                                    <Identifier start='1625' end='1629' name='self'/>
+                                </NamespaceName>
+                                <Constant>
+                                    <Identifier start='1631' end='1639' name='CONSTANT'/>
+                                </Constant>
+                                <Member>
+                                    <Identifier start='1631' end='1639' name='CONSTANT'/>
+                                </Member>
+                            </StaticConstantAccess>
+                        </InitialValues>
+                        <Block start='1640' end='1730' isCurly='true'>
+                            <PropertyHookDeclaration start='1650' end='1709' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='1650' end='1653' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='1654' end='1709' isCurly='true'>
+                                    <ReturnStatement start='1668' end='1699'>
+                                        <InfixExpression start='1675' end='1698' operator='CONCAT'>
+                                            <FieldAccess start='1675' end='1689' isNullsafe='false'>
+                                                <Variable start='1675' end='1680' isDollared='true'>
+                                                    <Identifier start='1676' end='1680' name='this'/>
+                                                </Variable>
+                                                <Field>
+                                                    <Variable start='1682' end='1689' isDollared='false'>
+                                                        <Identifier start='1682' end='1689' name='valid06'/>
+                                                    </Variable>
+                                                </Field>
+                                            </FieldAccess>
+                                            <Scalar start='1692' end='1698' type='STRING' value='"test"'/>
+                                        </InfixExpression>
+                                    </ReturnStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                            <PropertyHookDeclaration start='1718' end='1724' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='1718' end='1721' name='set'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='1722' end='1724' isCurly='true'>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1735' end='1838' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1742' end='1750' isDollared='true'>
+                                <Identifier start='1743' end='1750' name='valid07'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='1751' end='1838' isCurly='true'>
+                            <PropertyHookDeclaration start='1772' end='1793' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='1772' end='1775' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='1779' end='1793' isCurly='flase'>
+                                    <ExpressionStatement start='1779' end='1793'>
+                                        <MethodInvocation start='1779' end='1792' isNullsafe='false'>
+                                            <Variable start='1779' end='1784' isDollared='true'>
+                                                <Identifier start='1780' end='1784' name='this'/>
+                                            </Variable>
+                                            <Method>
+                                                <FunctionInvocation start='1786' end='1792'>
+                                                    <FucntionName start='1786' end='1790'>
+                                                        <Variable start='1786' end='1790' isDollared='false'>
+                                                            <Identifier start='1786' end='1790' name='test'/>
+                                                        </Variable>
+                                                    </FucntionName>
+                                                    <Parameters>
+                                                    </Parameters>
+                                                </FunctionInvocation>
+                                            </Method>
+                                        </MethodInvocation>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                            <PropertyHookDeclaration start='1802' end='1832' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='1802' end='1805' name='set'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='1809' end='1832' isCurly='flase'>
+                                    <ExpressionStatement start='1809' end='1832'>
+                                        <InfixExpression start='1809' end='1831' operator='CONCAT'>
+                                            <MethodInvocation start='1809' end='1822' isNullsafe='false'>
+                                                <Variable start='1809' end='1814' isDollared='true'>
+                                                    <Identifier start='1810' end='1814' name='this'/>
+                                                </Variable>
+                                                <Method>
+                                                    <FunctionInvocation start='1816' end='1822'>
+                                                        <FucntionName start='1816' end='1820'>
+                                                            <Variable start='1816' end='1820' isDollared='false'>
+                                                                <Identifier start='1816' end='1820' name='test'/>
+                                                            </Variable>
+                                                        </FucntionName>
+                                                        <Parameters>
+                                                        </Parameters>
+                                                    </FunctionInvocation>
+                                                </Method>
+                                            </MethodInvocation>
+                                            <Variable start='1825' end='1831' isDollared='true'>
+                                                <Identifier start='1826' end='1831' name='value'/>
+                                            </Variable>
+                                        </InfixExpression>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='1843' end='1995' modifier='public'>
+                        <FieldType>
+                            <NamespaceName start='1850' end='1856' isCurrent='false' isGlobal='false'>
+                                <Identifier start='1850' end='1856' name='string'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='1857' end='1865' isDollared='true'>
+                                <Identifier start='1858' end='1865' name='valid08'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='1866' end='1995' isCurly='true'>
+                            <PropertyHookDeclaration start='1876' end='1989' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='1876' end='1879' name='set'/>
+                                </Name>
+                                <FormalParameters>
+                                    <FormalParameter start='1880' end='1899' isMandatory='true' isVariadic='false'>
+                                        <ParametrType>
+                                            <UnionType start='1880' end='1892'>
+                                                <NamespaceName start='1880' end='1886' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1880' end='1886' name='string'/>
+                                                </NamespaceName>
+                                                <NamespaceName start='1887' end='1892' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='1887' end='1892' name='array'/>
+                                                </NamespaceName>
+                                            </UnionType>
+                                        </ParametrType>
+                                        <ParametrName>
+                                            <Variable start='1893' end='1899' isDollared='true'>
+                                                <Identifier start='1894' end='1899' name='param'/>
+                                            </Variable>
+                                        </ParametrName>
+                                        <DefaultValue>
+                                        </DefaultValue>
+                                    </FormalParameter>
+                                </FormalParameters>
+                                <Block start='1901' end='1989' isCurly='true'>
+                                    <ExpressionStatement start='1915' end='1979'>
+                                        <Assignment start='1915' end='1978' operator='EQUAL'>
+                                            <FieldAccess start='1915' end='1929' isNullsafe='false'>
+                                                <Variable start='1915' end='1920' isDollared='true'>
+                                                    <Identifier start='1916' end='1920' name='this'/>
+                                                </Variable>
+                                                <Field>
+                                                    <Variable start='1922' end='1929' isDollared='false'>
+                                                        <Identifier start='1922' end='1929' name='valid08'/>
+                                                    </Variable>
+                                                </Field>
+                                            </FieldAccess>
+                                            <ConditionalExpression start='1932' end='1978'>
+                                                <Condition>
+                                                    <FunctionInvocation start='1932' end='1948'>
+                                                        <FucntionName start='1932' end='1940'>
+                                                            <NamespaceName start='1932' end='1940' isCurrent='false' isGlobal='false'>
+                                                                <Identifier start='1932' end='1940' name='is_array'/>
+                                                            </NamespaceName>
+                                                        </FucntionName>
+                                                        <Parameters>
+                                                            <Variable start='1941' end='1947' isDollared='true'>
+                                                                <Identifier start='1942' end='1947' name='param'/>
+                                                            </Variable>
+                                                        </Parameters>
+                                                    </FunctionInvocation>
+                                                </Condition>
+                                                <Then>
+                                                    <FunctionInvocation start='1951' end='1969'>
+                                                        <FucntionName start='1951' end='1955'>
+                                                            <NamespaceName start='1951' end='1955' isCurrent='false' isGlobal='false'>
+                                                                <Identifier start='1951' end='1955' name='join'/>
+                                                            </NamespaceName>
+                                                        </FucntionName>
+                                                        <Parameters>
+                                                            <Scalar start='1956' end='1960' type='STRING' value='&apos;, &apos;'/>
+                                                            <Variable start='1962' end='1968' isDollared='true'>
+                                                                <Identifier start='1963' end='1968' name='param'/>
+                                                            </Variable>
+                                                        </Parameters>
+                                                    </FunctionInvocation>
+                                                </Then>
+                                                <Else>
+                                                    <Variable start='1972' end='1978' isDollared='true'>
+                                                        <Identifier start='1973' end='1978' name='param'/>
+                                                    </Variable>
+                                                </Else>
+                                            </ConditionalExpression>
+                                        </Assignment>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2000' end='2071' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2007' end='2015' isDollared='true'>
+                                <Identifier start='2008' end='2015' name='valid09'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='2016' end='2071' isCurly='true'>
+                            <PropertyHookDeclaration start='2026' end='2041' modifier='' isReference='false'>
+                                <Attributes>
+                                    <Attribute start='2026' end='2034'>
+                                        <AttributeDeclarations>
+                                            <AttributeDeclaration start='2028' end='2033'>
+                                                <AttributeName>
+                                                    <NamespaceName start='2028' end='2033' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='2028' end='2033' name='Arri1'/>
+                                                    </NamespaceName>
+                                                </AttributeName>
+                                            </AttributeDeclaration>
+                                        </AttributeDeclarations>
+                                    </Attribute>
+                                </Attributes>
+                                <Name>
+                                    <Identifier start='2035' end='2038' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='2039' end='2041' isCurly='true'>
+                                </Block>
+                            </PropertyHookDeclaration>
+                            <PropertyHookDeclaration start='2050' end='2065' modifier='' isReference='false'>
+                                <Attributes>
+                                    <Attribute start='2050' end='2058'>
+                                        <AttributeDeclarations>
+                                            <AttributeDeclaration start='2052' end='2057'>
+                                                <AttributeName>
+                                                    <NamespaceName start='2052' end='2057' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='2052' end='2057' name='Attr2'/>
+                                                    </NamespaceName>
+                                                </AttributeName>
+                                            </AttributeDeclaration>
+                                        </AttributeDeclarations>
+                                    </Attribute>
+                                </Attributes>
+                                <Name>
+                                    <Identifier start='2059' end='2062' name='set'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='2063' end='2065' isCurly='true'>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2076' end='2205' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2083' end='2091' isDollared='true'>
+                                <Identifier start='2084' end='2091' name='valid10'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                            <Scalar start='2094' end='2097' type='INT' value='100'/>
+                        </InitialValues>
+                        <Block start='2098' end='2205' isCurly='true'>
+                            <PropertyHookDeclaration start='2108' end='2199' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='2108' end='2111' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='2112' end='2199' isCurly='true'>
+                                    <ExpressionStatement start='2126' end='2134'>
+                                        <YieldExpression start='2126' end='2133'>
+                                            <Scalar start='2132' end='2133' type='INT' value='1'/>
+                                        </YieldExpression>
+                                    </ExpressionStatement>
+                                    <ExpressionStatement start='2147' end='2168'>
+                                        <YieldExpression start='2147' end='2167'>
+                                            <FieldAccess start='2153' end='2167' isNullsafe='false'>
+                                                <Variable start='2153' end='2158' isDollared='true'>
+                                                    <Identifier start='2154' end='2158' name='this'/>
+                                                </Variable>
+                                                <Field>
+                                                    <Variable start='2160' end='2167' isDollared='false'>
+                                                        <Identifier start='2160' end='2167' name='valid10'/>
+                                                    </Variable>
+                                                </Field>
+                                            </FieldAccess>
+                                        </YieldExpression>
+                                    </ExpressionStatement>
+                                    <ExpressionStatement start='2181' end='2189'>
+                                        <YieldExpression start='2181' end='2188'>
+                                            <Scalar start='2187' end='2188' type='INT' value='3'/>
+                                        </YieldExpression>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2210' end='2331' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2217' end='2225' isDollared='true'>
+                                <Identifier start='2218' end='2225' name='valid11'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='2226' end='2331' isCurly='true'>
+                            <PropertyHookDeclaration start='2247' end='2325' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='2247' end='2250' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='2251' end='2325' isCurly='true'>
+                                    <ExpressionStatement start='2265' end='2273'>
+                                        <YieldExpression start='2265' end='2272'>
+                                            <Scalar start='2271' end='2272' type='INT' value='1'/>
+                                        </YieldExpression>
+                                    </ExpressionStatement>
+                                    <ExpressionStatement start='2286' end='2294'>
+                                        <YieldExpression start='2286' end='2293'>
+                                            <Scalar start='2292' end='2293' type='INT' value='2'/>
+                                        </YieldExpression>
+                                    </ExpressionStatement>
+                                    <ExpressionStatement start='2307' end='2315'>
+                                        <YieldExpression start='2307' end='2314'>
+                                            <Scalar start='2313' end='2314' type='INT' value='3'/>
+                                        </YieldExpression>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2336' end='2454' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2343' end='2351' isDollared='true'>
+                                <Identifier start='2344' end='2351' name='valid12'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='2352' end='2454' isCurly='true'>
+                            <PropertyHookDeclaration start='2362' end='2448' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='2362' end='2365' name='set'/>
+                                </Name>
+                                <FormalParameters>
+                                    <FormalParameter start='2366' end='2394' isMandatory='true' isVariadic='false'>
+                                        <Attributes>
+                                            <Attribute start='2366' end='2387'>
+                                                <AttributeDeclarations>
+                                                    <AttributeDeclaration start='2368' end='2386'>
+                                                        <AttributeName>
+                                                            <NamespaceName start='2368' end='2386' isCurrent='false' isGlobal='false'>
+                                                                <Identifier start='2368' end='2386' name='SensitiveParameter'/>
+                                                            </NamespaceName>
+                                                        </AttributeName>
+                                                    </AttributeDeclaration>
+                                                </AttributeDeclarations>
+                                            </Attribute>
+                                        </Attributes>
+                                        <ParametrType>
+                                        </ParametrType>
+                                        <ParametrName>
+                                            <Variable start='2388' end='2394' isDollared='true'>
+                                                <Identifier start='2389' end='2394' name='value'/>
+                                            </Variable>
+                                        </ParametrName>
+                                        <DefaultValue>
+                                        </DefaultValue>
+                                    </FormalParameter>
+                                </FormalParameters>
+                                <Block start='2396' end='2448' isCurly='true'>
+                                    <ExpressionStatement start='2410' end='2438'>
+                                        <ThrowExpression start='2410' end='2437'>
+                                            <ClassInstanceCreation start='2416' end='2437' anonymous='false'>
+                                                <ClassName start='2420' end='2429'>
+                                                    <NamespaceName start='2420' end='2429' isCurrent='false' isGlobal='false'>
+                                                        <Identifier start='2420' end='2429' name='Exception'/>
+                                                    </NamespaceName>
+                                                </ClassName>
+                                                <Parameters>
+                                                    <Scalar start='2430' end='2436' type='STRING' value='&apos;test&apos;'/>
+                                                </Parameters>
+                                            </ClassInstanceCreation>
+                                        </ThrowExpression>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2459' end='2516' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2466' end='2474' isDollared='true'>
+                                <Identifier start='2467' end='2474' name='valid13'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='2475' end='2516' isCurly='true'>
+                            <PropertyHookDeclaration start='2485' end='2510' modifier='final' isReference='false'>
+                                <Name>
+                                    <Identifier start='2491' end='2494' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='2495' end='2510' isCurly='true'>
+                                    <ReturnStatement start='2497' end='2508'>
+                                        <Scalar start='2504' end='2507' type='INT' value='100'/>
+                                    </ReturnStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2521' end='2587' modifier='public final'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2534' end='2542' isDollared='true'>
+                                <Identifier start='2535' end='2542' name='valid14'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='2543' end='2587' isCurly='true'>
+                            <PropertyHookDeclaration start='2553' end='2581' modifier='final' isReference='false'>
+                                <Name>
+                                    <Identifier start='2559' end='2562' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='2566' end='2581' isCurly='flase'>
+                                    <ExpressionStatement start='2566' end='2581'>
+                                        <FieldAccess start='2566' end='2580' isNullsafe='false'>
+                                            <Variable start='2566' end='2571' isDollared='true'>
+                                                <Identifier start='2567' end='2571' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='2573' end='2580' isDollared='false'>
+                                                    <Identifier start='2573' end='2580' name='valid14'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2592' end='2647' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2599' end='2607' isDollared='true'>
+                                <Identifier start='2600' end='2607' name='valid15'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='2608' end='2647' isCurly='true'>
+                            <PropertyHookDeclaration start='2618' end='2641' modifier='' isReference='true'>
+                                <Name>
+                                    <Identifier start='2619' end='2622' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='2626' end='2641' isCurly='flase'>
+                                    <ExpressionStatement start='2626' end='2641'>
+                                        <FieldAccess start='2626' end='2640' isNullsafe='false'>
+                                            <Variable start='2626' end='2631' isDollared='true'>
+                                                <Identifier start='2627' end='2631' name='this'/>
+                                            </Variable>
+                                            <Field>
+                                                <Variable start='2633' end='2640' isDollared='false'>
+                                                    <Identifier start='2633' end='2640' name='valid15'/>
+                                                </Variable>
+                                            </Field>
+                                        </FieldAccess>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2652' end='2786' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2659' end='2667' isDollared='true'>
+                                <Identifier start='2660' end='2667' name='closure'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='2668' end='2786' isCurly='true'>
+                            <PropertyHookDeclaration start='2678' end='2780' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='2678' end='2681' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='2682' end='2780' isCurly='true'>
+                                    <ReturnStatement start='2696' end='2770'>
+                                        <LambdaFunctionDeclaration start='2703' end='2769' isReference='false'>
+                                            <Block start='2715' end='2769' isCurly='true'>
+                                                <ReturnStatement start='2733' end='2755'>
+                                                    <FieldAccess start='2740' end='2754' isNullsafe='false'>
+                                                        <Variable start='2740' end='2745' isDollared='true'>
+                                                            <Identifier start='2741' end='2745' name='this'/>
+                                                        </Variable>
+                                                        <Field>
+                                                            <Variable start='2747' end='2754' isDollared='false'>
+                                                                <Identifier start='2747' end='2754' name='closure'/>
+                                                            </Variable>
+                                                        </Field>
+                                                    </FieldAccess>
+                                                </ReturnStatement>
+                                            </Block>
+                                        </LambdaFunctionDeclaration>
+                                    </ReturnStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2791' end='2893' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2798' end='2812' isDollared='true'>
+                                <Identifier start='2799' end='2812' name='arrowFunction'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='2813' end='2893' isCurly='true'>
+                            <PropertyHookDeclaration start='2823' end='2887' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='2823' end='2826' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='2827' end='2887' isCurly='true'>
+                                    <ReturnStatement start='2841' end='2877'>
+                                        <ArrowFunctionDeclaration start='2848' end='2876' isReference='false' isStatic='false'>
+                                            <FieldAccess start='2856' end='2876' isNullsafe='false'>
+                                                <Variable start='2856' end='2861' isDollared='true'>
+                                                    <Identifier start='2857' end='2861' name='this'/>
+                                                </Variable>
+                                                <Field>
+                                                    <Variable start='2863' end='2876' isDollared='false'>
+                                                        <Identifier start='2863' end='2876' name='arrowFunction'/>
+                                                    </Variable>
+                                                </Field>
+                                            </FieldAccess>
+                                        </ArrowFunctionDeclaration>
+                                    </ReturnStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2898' end='2957' modifier='private'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2906' end='2920' isDollared='true'>
+                                <Identifier start='2907' end='2920' name='propertyConst'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='2921' end='2957' isCurly='true'>
+                            <PropertyHookDeclaration start='2931' end='2951' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='2931' end='2934' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='2938' end='2951' isCurly='flase'>
+                                    <ExpressionStatement start='2938' end='2951'>
+                                        <Scalar start='2938' end='2950' type='SYSTEM' value='__PROPERTY__'/>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='2962' end='2986' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='2966' end='2970' isDollared='true'>
+                                <Identifier start='2967' end='2970' name='var'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='2971' end='2986' isCurly='true'>
+                            <PropertyHookDeclaration start='2973' end='2984' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='2973' end='2976' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='2980' end='2984' isCurly='flase'>
+                                    <ExpressionStatement start='2980' end='2984'>
+                                        <Scalar start='2980' end='2983' type='INT' value='100'/>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3018' end='3045' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3025' end='3042' isDollared='true'>
+                                <Identifier start='3026' end='3042' name='invalidEmptyHook'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='3043' end='3045' isCurly='true'>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3077' end='3120' modifier='private'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3085' end='3105' isDollared='true'>
+                                <Identifier start='3086' end='3105' name='invalidPrivateFinal'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='3106' end='3120' isCurly='true'>
+                            <PropertyHookDeclaration start='3108' end='3118' modifier='final' isReference='false'>
+                                <Name>
+                                    <Identifier start='3114' end='3117' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3152' end='3231' modifier='private'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3160' end='3176' isDollared='true'>
+                                <Identifier start='3161' end='3176' name='invalidPublic01'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='3177' end='3231' isCurly='true'>
+                            <PropertyHookDeclaration start='3187' end='3198' modifier='public' isReference='false'>
+                                <Name>
+                                    <Identifier start='3194' end='3197' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3236' end='3316' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3243' end='3259' isDollared='true'>
+                                <Identifier start='3244' end='3259' name='invalidStatic01'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='3260' end='3316' isCurly='true'>
+                            <PropertyHookDeclaration start='3270' end='3283' modifier='static' isReference='false'>
+                                <Name>
+                                    <Identifier start='3277' end='3280' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='3281' end='3283' isCurly='true'>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3321' end='3412' modifier='public static'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3335' end='3351' isDollared='true'>
+                                <Identifier start='3336' end='3351' name='invalidStatic02'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='3352' end='3412' isCurly='true'>
+                            <PropertyHookDeclaration start='3389' end='3393' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='3389' end='3392' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                            </PropertyHookDeclaration>
+                            <PropertyHookDeclaration start='3402' end='3406' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='3402' end='3405' name='set'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3417' end='3531' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3424' end='3440' isDollared='true'>
+                                <Identifier start='3425' end='3440' name='invalidGetParam'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='3441' end='3531' isCurly='true'>
+                            <PropertyHookDeclaration start='3451' end='3525' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='3451' end='3454' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='3457' end='3525' isCurly='true'>
+                                    <ExpressionStatement start='3498' end='3515'>
+                                        <FunctionInvocation start='3498' end='3514'>
+                                            <FucntionName start='3498' end='3506'>
+                                                <NamespaceName start='3498' end='3506' isCurrent='false' isGlobal='false'>
+                                                    <Identifier start='3498' end='3506' name='var_dump'/>
+                                                </NamespaceName>
+                                            </FucntionName>
+                                            <Parameters>
+                                                <Variable start='3507' end='3513' isDollared='true'>
+                                                    <Identifier start='3508' end='3513' name='value'/>
+                                                </Variable>
+                                            </Parameters>
+                                        </FunctionInvocation>
+                                    </ExpressionStatement>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3536' end='3588' modifier='public readonly'>
+                        <FieldType>
+                            <NamespaceName start='3552' end='3555' isCurrent='false' isGlobal='false'>
+                                <Identifier start='3552' end='3555' name='int'/>
+                            </NamespaceName>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3556' end='3572' isDollared='true'>
+                                <Identifier start='3557' end='3572' name='invalidReadonly'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='3573' end='3588' isCurly='true'>
+                            <PropertyHookDeclaration start='3575' end='3580' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='3575' end='3578' name='get'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='3578' end='3580' isCurly='true'>
+                                </Block>
+                            </PropertyHookDeclaration>
+                            <PropertyHookDeclaration start='3581' end='3586' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='3581' end='3584' name='set'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='3584' end='3586' isCurly='true'>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3620' end='3700' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3627' end='3641' isDollared='true'>
+                                <Identifier start='3628' end='3641' name='invalidSetRef'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='3642' end='3700' isCurly='true'>
+                            <PropertyHookDeclaration start='3652' end='3667' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='3652' end='3655' name='set'/>
+                                </Name>
+                                <FormalParameters>
+                                    <FormalParameter start='3656' end='3663' isMandatory='true' isVariadic='false'>
+                                        <ParametrType>
+                                        </ParametrType>
+                                        <ParametrName>
+                                            <Reference start='3656' end='3663'>
+                                                <Variable start='3657' end='3663' isDollared='true'>
+                                                    <Identifier start='3658' end='3663' name='value'/>
+                                                </Variable>
+                                            </Reference>
+                                        </ParametrName>
+                                        <DefaultValue>
+                                        </DefaultValue>
+                                    </FormalParameter>
+                                </FormalParameters>
+                                <Block start='3665' end='3667' isCurly='true'>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3705' end='3789' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3712' end='3728' isDollared='true'>
+                                <Identifier start='3713' end='3728' name='invalidVariadic'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='3729' end='3789' isCurly='true'>
+                            <PropertyHookDeclaration start='3739' end='3756' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='3739' end='3742' name='set'/>
+                                </Name>
+                                <FormalParameters>
+                                    <FormalParameter start='3743' end='3752' isMandatory='false' isVariadic='true'>
+                                        <ParametrType>
+                                        </ParametrType>
+                                        <ParametrName>
+                                            <Variadic start='3743' end='3752'>
+                                                <Variable start='3746' end='3752' isDollared='true'>
+                                                    <Identifier start='3747' end='3752' name='value'/>
+                                                </Variable>
+                                            </Variadic>
+                                        </ParametrName>
+                                        <DefaultValue>
+                                        </DefaultValue>
+                                    </FormalParameter>
+                                </FormalParameters>
+                                <Block start='3754' end='3756' isCurly='true'>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                    <FieldsDeclaration start='3794' end='3856' modifier='public'>
+                        <FieldType>
+                        </FieldType>
+                        <VariableNames>
+                            <Variable start='3801' end='3820' isDollared='true'>
+                                <Identifier start='3802' end='3820' name='invalidUnknownHook'/>
+                            </Variable>
+                        </VariableNames>
+                        <InitialValues>
+                        </InitialValues>
+                        <Block start='3821' end='3856' isCurly='true'>
+                            <PropertyHookDeclaration start='3831' end='3841' modifier='' isReference='false'>
+                                <Name>
+                                    <Identifier start='3831' end='3838' name='unknown'/>
+                                </Name>
+                                <FormalParameters>
+                                </FormalParameters>
+                                <Block start='3839' end='3841' isCurly='true'>
+                                </Block>
+                            </PropertyHookDeclaration>
+                        </Block>
+                    </FieldsDeclaration>
+                </Block>
+            </TraitDeclaration>
+        </Statements>
+    </Program>
+</testresult>

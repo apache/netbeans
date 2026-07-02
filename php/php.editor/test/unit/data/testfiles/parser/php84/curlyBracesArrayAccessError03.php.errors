@@ -1,0 +1,10 @@
+[[166,167]-Syntax error
+ unexpected:	{
+ after:	String '"string"'
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', [, ], (, ), :, **, ??, &] 166-167:Syntax error
+ unexpected:	{
+ after:	String '"string"'
+ expected:	instanceof, as, =>, }, ',', OR, XOR, &&, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', [, ], (, ), :, **, ??, &
+[[168,169]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 168-169:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}

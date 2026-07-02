@@ -1,10 +1,10 @@
 [[829,830]-Syntax error
  unexpected:	\
  after:	identifier 'test'
- expected:	instanceof, as, ->, ?->, =>, {, }, ::, ',', OR, XOR, &&, =, +=, -=, *=, /=, .=, %=, &=, |=, ^=, <<=, >>=, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ++, --, [, ], (, ), :, ??, ??=] 829-830:Syntax error
+ expected:	instanceof, as, ->, ?->, =>, {, }, ::, ',', OR, XOR, &&, =, +=, -=, *=, /=, .=, %=, &=, |=, ^=, <<=, >>=, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ++, --, [, ], (, ), :, **, **=, ??, ??=, &] 829-830:Syntax error
  unexpected:	\
  after:	identifier 'test'
- expected:	instanceof, as, ->, ?->, =>, {, }, ::, ',', OR, XOR, &&, =, +=, -=, *=, /=, .=, %=, &=, |=, ^=, <<=, >>=, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ++, --, [, ], (, ), :, ??, ??=
+ expected:	instanceof, as, ->, ?->, =>, {, }, ::, ',', OR, XOR, &&, =, +=, -=, *=, /=, .=, %=, &=, |=, ^=, <<=, >>=, ?, ;, ||, &&, |, ^, &, ==, !=, ===, !==, <=, >=, <=>, <, >, <<, >>, +, -, *, /, %, '.', ++, --, [, ], (, ), :, **, **=, ??, ??=, &
 [[839,840]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	{] 839-840:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	{

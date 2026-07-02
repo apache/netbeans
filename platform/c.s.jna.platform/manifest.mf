@@ -1,0 +1,2 @@
+OpenIDE-Module: com.sun.jna.platform
+OpenIDE-Module-Specification-Version: 5.19.1

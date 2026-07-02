@@ -26,12 +26,18 @@
             <code-name-base>org.netbeans.modules.masterfs.windows</code-name-base>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>org.netbeans.libs.jna</code-name-base>
+                    <code-name-base>com.sun.jna</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
+                        <specification-version>5.19.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.jna</code-name-base>
+                    <run-dependency>
                         <release-version>2</release-version>
-                        <specification-version>2.1</specification-version>
+                        <specification-version>2.28</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.28
+#Version 5.19.1
 
 CLSS public abstract interface com.sun.jna.AltCallingConvention
 
@@ -28,7 +28,7 @@ meth public abstract java.lang.Object callback(java.lang.Object[])
 CLSS public com.sun.jna.CallbackReference
 intf java.io.Closeable
 meth protected void dispose()
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+ anno 0 java.lang.Deprecated()
 meth public com.sun.jna.Pointer getTrampoline()
 meth public static com.sun.jna.Callback getCallback(java.lang.Class<?>,com.sun.jna.Pointer)
 meth public static com.sun.jna.Pointer getFunctionPointer(com.sun.jna.Callback)
@@ -201,7 +201,7 @@ meth protected static long malloc(long)
 meth protected static void free(long)
 meth protected void boundsCheck(long,long)
 meth protected void dispose()
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+ anno 0 java.lang.Deprecated()
 meth public boolean valid()
 meth public byte getByte(long)
 meth public char getChar(long)
@@ -283,13 +283,13 @@ meth public static <%0 extends com.sun.jna.Library> {%%0} load(java.lang.Class<{
 meth public static <%0 extends com.sun.jna.Library> {%%0} load(java.lang.String,java.lang.Class<{%%0}>)
 meth public static <%0 extends com.sun.jna.Library> {%%0} load(java.lang.String,java.lang.Class<{%%0}>,java.util.Map<java.lang.String,?>)
 meth public static <%0 extends java.lang.Object> {%%0} loadLibrary(java.lang.Class<{%%0}>)
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+ anno 0 java.lang.Deprecated()
 meth public static <%0 extends java.lang.Object> {%%0} loadLibrary(java.lang.Class<{%%0}>,java.util.Map<java.lang.String,?>)
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+ anno 0 java.lang.Deprecated()
 meth public static <%0 extends java.lang.Object> {%%0} loadLibrary(java.lang.String,java.lang.Class<{%%0}>)
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+ anno 0 java.lang.Deprecated()
 meth public static <%0 extends java.lang.Object> {%%0} loadLibrary(java.lang.String,java.lang.Class<{%%0}>,java.util.Map<java.lang.String,?>)
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+ anno 0 java.lang.Deprecated()
 meth public static boolean isProtected()
 meth public static boolean isSupportedNativeType(java.lang.Class<?>)
 meth public static boolean registered(java.lang.Class<?>)
@@ -367,7 +367,7 @@ meth public java.lang.String toString()
 meth public java.util.Map<java.lang.String,?> getOptions()
 meth public void close()
 meth public void dispose()
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+ anno 0 java.lang.Deprecated()
 supr java.lang.Object
 hfds DEBUG_LOAD_LEVEL,DEFAULT_OPEN_OPTIONS,LOG,NATIVE_SYMBOL_PROVIDER,addSuppressedMethod,callFlags,cleanable,encoding,functions,handle,libraries,libraryName,libraryPath,librarySearchPath,options,searchPaths,symbolProvider
 hcls NativeLibraryDisposer
@@ -725,6 +725,26 @@ meth public void put(java.lang.Object,com.sun.jna.Memory)
 supr java.lang.Object
 hfds backingMap,referenceQueue
 
+CLSS public com.sun.jna.internal.Cleaner
+innr public abstract interface static Cleanable
+meth public com.sun.jna.internal.Cleaner$Cleanable register(java.lang.Object,java.lang.Runnable)
+meth public static com.sun.jna.internal.Cleaner getCleaner()
+supr java.lang.Object
+hfds INSTANCE,cleanerThread,firstCleanable,referenceQueue
+hcls CleanerRef,CleanerThread
+
+CLSS public abstract interface static com.sun.jna.internal.Cleaner$Cleanable
+ outer com.sun.jna.internal.Cleaner
+meth public abstract void clean()
+
+CLSS public com.sun.jna.internal.ReflectionUtils
+cons public init()
+meth public !varargs static java.lang.Object invokeDefaultMethod(java.lang.Object,java.lang.Object,java.lang.Object[]) throws java.lang.Throwable
+meth public static boolean isDefault(java.lang.reflect.Method)
+meth public static java.lang.Object getMethodHandle(java.lang.reflect.Method) throws java.lang.Exception
+supr java.lang.Object
+hfds CONSTRUCTOR_LOOKUP_CLASS,LOG,METHOD_HANDLES_BIND_TO,METHOD_HANDLES_INVOKE_WITH_ARGUMENTS,METHOD_HANDLES_LOOKUP,METHOD_HANDLES_LOOKUP_FIND_SPECIAL,METHOD_HANDLES_LOOKUP_IN,METHOD_HANDLES_LOOKUP_UNREFLECT_SPECIAL,METHOD_HANDLES_PRIVATE_LOOKUP_IN,METHOD_IS_DEFAULT,METHOD_TYPE
+
 CLSS public abstract com.sun.jna.ptr.ByReference
 cons protected init(int)
 meth public java.lang.String toString()
@@ -855,10 +875,8 @@ meth public abstract char charAt(int)
 meth public abstract int length()
 meth public abstract java.lang.CharSequence subSequence(int,int)
 meth public abstract java.lang.String toString()
-meth public boolean isEmpty()
 meth public java.util.stream.IntStream chars()
 meth public java.util.stream.IntStream codePoints()
-meth public static int compare(java.lang.CharSequence,java.lang.CharSequence)
 
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
@@ -886,7 +904,6 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -954,12 +971,8 @@ intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
 CLSS public abstract java.lang.ref.Reference<%0 extends java.lang.Object>
-meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth public boolean enqueue()
 meth public boolean isEnqueued()
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="16")
-meth public final boolean refersTo({java.lang.ref.Reference%0})
-meth public static void reachabilityFence(java.lang.Object)
 meth public void clear()
 meth public {java.lang.ref.Reference%0} get()
 supr java.lang.Object
@@ -970,6 +983,5 @@ cons public init({java.lang.ref.WeakReference%0},java.lang.ref.ReferenceQueue<? 
 supr java.lang.ref.Reference<{java.lang.ref.WeakReference%0}>
 
 CLSS public abstract interface java.lang.reflect.InvocationHandler
-meth public !varargs static java.lang.Object invokeDefault(java.lang.Object,java.lang.reflect.Method,java.lang.Object[]) throws java.lang.Throwable
 meth public abstract java.lang.Object invoke(java.lang.Object,java.lang.reflect.Method,java.lang.Object[]) throws java.lang.Throwable
 

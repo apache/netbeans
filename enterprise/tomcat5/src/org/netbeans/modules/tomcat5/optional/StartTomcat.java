@@ -127,7 +127,7 @@ public final class StartTomcat extends StartServer implements ProgressObject {
     private ProgressEventSupport pes;
     private int currentServerPort; // current server port Tomcat is running on
     
-    private static Map isDebugModeUri = Collections.synchronizedMap((Map)new HashMap(2,1));
+    private static Map<String, Object> isDebugModeUri = Collections.synchronizedMap(new HashMap<>(2,1));
     
     public StartTomcat (DeploymentManager manager) {
         assert manager instanceof TomcatManager : 

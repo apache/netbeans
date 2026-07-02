@@ -16,6 +16,7 @@
 /*/*/external/*.exe
 /*/*/external/*.js
 /*/*/external/*.nbm
+/*/*/external/*.tar.gz
 /*/*/external/*/**
 /nbbuild/installer/jnlp/external/*.zip
 /nbbuild/installer/jnlp/external/*.jar

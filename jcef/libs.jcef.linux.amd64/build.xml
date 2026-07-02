@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<project basedir="." default="build" name="jcef/libs.jcef.linux.amd64">
+    <description>Builds, tests, and runs the project org.netbeans.libs.jcef.linux.amd64</description>
+    <import file="../../nbbuild/templates/projectized.xml"/>
+
+    <property name="native.dir" location="release/modules/jcef/native/linux/amd64" />
+    <available property="has.native.dir" file="${native.dir}" type="dir"/>
+    <target name="-process.release.files" unless="has.native.dir">
+        <unjar src="external/jcef-natives-linux-amd64-jcef-37f25dc+cef-116.0.19+gc6a20bc+chromium-116.0.5845.141.jar" dest="external">
+            <patternset>
+                <include name="jcef-natives-*.tar.gz"/>
+            </patternset>
+        </unjar>
+        <mkdir dir="${native.dir}"/>
+        <untar dest="${native.dir}" compression="gzip">
+            <fileset dir="external" includes="jcef-natives-*.tar.gz"/>
+        </untar>
+    </target>
+</project>

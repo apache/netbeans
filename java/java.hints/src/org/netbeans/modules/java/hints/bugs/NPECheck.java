@@ -49,6 +49,8 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.TypeVariable;
+import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.ElementFilter;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.java.source.CompilationInfo;
@@ -88,11 +90,6 @@ public class NPECheck {
     })
     public static ErrorDescription assignment(HintContext ctx) {
         Element e = ctx.getInfo().getTrees().getElement(ctx.getVariables().get("$var"));
-
-        if (!isVariableElement(ctx, e)) {
-            return null;
-        }
-        
         TreePath expr = ctx.getVariables().get("$expr");
         StateEnum r = computeExpressionsState(ctx).getOrDefault(expr.getLeaf(), DEFAULT_STATE).thisTypeState;
 
@@ -459,7 +456,7 @@ public class NPECheck {
     @TriggerPattern("return $expression;")
     public static ErrorDescription returnNull(HintContext ctx) {
         TreePath expression = ctx.getVariables().get("$expression");
-        StateEnum returnState = computeExpressionsState(ctx).getOrDefault(expression.getLeaf(), DEFAULT_STATE).thisTypeState;
+        State returnState = computeExpressionsState(ctx).getOrDefault(expression.getLeaf(), DEFAULT_STATE);
 
         if (returnState == null) return null;
 
@@ -483,16 +480,12 @@ public class NPECheck {
         if (el == null || el.getKind() != ElementKind.METHOD) return null;
 
         State expected = getStateFromAnnotations(info, el);
-        String key = null;
-
-        switch (returnState) {
-            case NULL:
-                if (expected.isNotNull()) key = "ERR_ReturningNullFromNonNull";
-                break;
-            case POSSIBLE_NULL_REPORT:
-                if (expected.isNotNull()) key = "ERR_ReturningPossibleNullFromNonNull";
-                break;
-        }
+        String key = switch (statesMatch(expected, returnState)) {
+            case TOP_LEVEL_NULL_TO_NONNULL -> "ERR_ReturningNullFromNonNull";
+            case TOP_LEVEL_POSSIBLE_NULL_TO_NONNULL -> "ERR_ReturningPossibleNullFromNonNull";
+            case MISMATCH -> "ERR_TYPES_MISMATCH";
+            default -> null;
+        };
 
         if (key != null) {
             String displayName = NbBundle.getMessage(NPECheck.class, key);
@@ -633,6 +626,7 @@ public class NPECheck {
             //XXX:
             //- should include with OVERRIDE_ANNOTATIONS?
             //- adjust default(!)
+            //- should really ignore the defaults for local variables??? especially at validation time?
             result = getStateFromAnnotations(info, e.asType(), x -> null,
                     LOCAL_VARIABLES.contains(e.getKind()) ? StateEnum.POSSIBLE_NULL : typeDefault, typeDefault);
         } else if (e.getKind() == ElementKind.METHOD) {
@@ -660,11 +654,40 @@ public class NPECheck {
     }
 
     private static State getStateFromAnnotations(CompilationInfo info, TypeMirror type, Function<TypeMirror, State> type2StateMapper, StateEnum topLevelFallbackState, StateEnum fallbackState) {
+        return getStateFromAnnotations(info, type, type2StateMapper, topLevelFallbackState, fallbackState, true);
+    }
+
+    private static State getStateFromAnnotations(CompilationInfo info, TypeMirror type, Function<TypeMirror, State> type2StateMapper, StateEnum topLevelFallbackState, StateEnum fallbackState, boolean recurseToGenericTypes) {
         State state = type2StateMapper.apply(type);
 
         if (state != null) {
             //TODO: should presumably merge with other aspects?
             return state;
+        }
+
+        if (recurseToGenericTypes) {
+            if (type.getKind() == TypeKind.TYPEVAR) {
+                StateEnum thisTypeState = getStateFromAnnotations(type.getAnnotationMirrors(), StateEnum.POSSIBLE_NULL);
+                State fromBound = getStateFromAnnotations(info, ((TypeVariable) type).getUpperBound(), type2StateMapper, topLevelFallbackState, fallbackState);
+
+                if (thisTypeState != StateEnum.POSSIBLE_NULL) {
+                    return fromBound.setThisState(thisTypeState);
+                } else {
+                    return fromBound;
+                }
+            } else if (type.getKind() == TypeKind.WILDCARD) {
+                WildcardType wt = (WildcardType) type;
+                TypeMirror base;
+                if (wt.getExtendsBound() != null) {
+                    base = wt.getExtendsBound();
+                } else if (wt.getSuperBound() != null) {
+                    base = wt.getSuperBound();
+                } else {
+                    return new State(StateEnum.POSSIBLE_NULL);
+                }
+
+                return getStateFromAnnotations(info, base, type2StateMapper, topLevelFallbackState, fallbackState);
+            }
         }
 
         StateEnum thisTypeState = getStateFromAnnotations(type.getAnnotationMirrors(), topLevelFallbackState);
@@ -676,12 +699,12 @@ public class NPECheck {
 
             typeParameters = dt.getTypeArguments()
                                .stream()
-                               .map(ta -> getStateFromAnnotations(info, ta, type2StateMapper, fallbackState))
+                               .map(ta -> getStateFromAnnotations(info, ta, type2StateMapper, fallbackState, fallbackState, recurseToGenericTypes))
                                .toList();
         } else if (type.getKind() == TypeKind.ARRAY) {
             ArrayType at = (ArrayType) type;
 
-            arrayComponentState = getStateFromAnnotations(info, at.getComponentType(), type2StateMapper, fallbackState);
+            arrayComponentState = getStateFromAnnotations(info, at.getComponentType(), type2StateMapper, fallbackState, fallbackState, recurseToGenericTypes);
         }
 
         return new State(thisTypeState, typeParameters, arrayComponentState);
@@ -1263,9 +1286,12 @@ public class NPECheck {
                             TypeMirror instantiatedReturnType = ((ExecutableType) info.getTypes().asMemberOf(receiver, e)).getReturnType();
                             State instantiatedState = getStateFromAnnotations(info, instantiatedReturnType, marker2State::get, StateEnum.POSSIBLE_NULL);
                             TypeMirror declaredReturnType = ((ExecutableElement) e).getReturnType();
-                            State declaredState = getStateFromAnnotations(info, declaredReturnType, null);
+                            State declaredState = getStateFromAnnotations(info, declaredReturnType, type -> null, null, null, false);
 
+                            //testTypeAnnotations2: NOT_NULL List <PNR String> + PNR T ->    PNR<PNR>       
+                            //testTypeVariables4: @NN String, T -> PNR
                             return State.weakMerge(instantiatedState, declaredState);
+//                            return instantiatedState;
                         }
                     }
                 }
@@ -1996,9 +2022,9 @@ public class NPECheck {
         }
 
         private static List<State> mergeTypeParams(List<State> typeParams1, List<State> typeParams2, boolean strict) {
-            if (typeParams1 == null) {
+            if (typeParams1 == null || typeParams1.isEmpty()) {
                 return typeParams2;
-            } else if (typeParams2 == null) {
+            } else if (typeParams2 == null || typeParams2.isEmpty()) {
                 return typeParams1;
             } else if (typeParams1.size() == typeParams2.size()) {
                 List<State> typeParams = new ArrayList<>();

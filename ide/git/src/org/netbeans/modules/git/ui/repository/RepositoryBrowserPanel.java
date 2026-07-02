@@ -298,7 +298,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             if (tc != null) {
                 tc.setActivatedNodes(getExplorerManager().getSelectedNodes());
             }
-            
+
             currRepository = null;
             Revision oldRevision = currRevision;
             currRevision = null;
@@ -307,13 +307,15 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                 currRevision = selectedNode.getLookup().lookup(Revision.class);
                 currRepository = lookupRepository(selectedNode);
             }
-            if ((currRevision != null || oldRevision != null) && !(currRevision != null && oldRevision != null 
+            if ((currRevision != null || oldRevision != null) && !(currRevision != null && oldRevision != null
                     && currRevision.equals(oldRevision))) {
                 firePropertyChange(PROP_REVISION_CHANGED, oldRevision, currRevision);
             }
             if (options.contains(Option.DISPLAY_REVISIONS) && currRevision != null) {
                 revisionsPanel1.updateHistory(currRepository, roots, currRevision);
             }
+            // If a branch node with pending merge status is selected, compute it immediately.
+            computeMergeStatusForSelectedNodeIfNotComputedYet();
         } else if (options.contains(Option.DISPLAY_REVISIONS) && "focusOwner".equals(evt.getPropertyName())) {
             Component compNew = (Component) evt.getNewValue();
             if (compNew != null) {
@@ -339,6 +341,38 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
         return selectedNode == null ? null : ((RepositoryNode) selectedNode).getRepository();
     }
 
+    private void computeMergeStatusForSelectedNodeIfNotComputedYet () {
+        if (branchMergeWith == null || getExplorerManager().getSelectedNodes().length != 1) {
+            return;
+        }
+        Node selectedNode = getExplorerManager().getSelectedNodes()[0];
+        if (!(selectedNode instanceof BranchNode)) {
+            return;
+        }
+        final BranchNode branchNode = (BranchNode) selectedNode;
+        if (branchNode.mergeStatus != null) {
+            return;
+        }
+        final String mergeWith = branchMergeWith;
+        final String branchName = branchNode.branchName;
+        // Walk up to BranchesTopChildren via parent chain
+        Node parent = branchNode.getParentNode();
+        if (parent != null) {
+            parent = parent.getParentNode();
+        }
+        final BranchesTopChildren topChildren = (parent instanceof BranchesTopNode)
+                ? (BranchesTopChildren) parent.getChildren() : null;
+        if (topChildren == null) {
+            return;
+        }
+        RP.post(() -> {
+            if (branchNode.mergeStatus != null) {
+                return;
+            }
+            topChildren.computeSingleMergeStatus(branchName, mergeWith);
+        });
+    }
+
     public void selectRepository (File repository) {
         Node[] nodes = root.getChildren().getNodes();
         for (Node node : nodes) {
@@ -357,13 +391,13 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
     public boolean requestFocusInWindow () {
         return tree.requestFocusInWindow();
     }
-    
+
     void setSliderPosition (int pos) {
         assert options.contains(Option.DISPLAY_REVISIONS);
         sliderPos = pos;
         jSplitPane1.setDividerLocation(pos);
     }
-    
+
     int getSliderPosition () {
         assert options.contains(Option.DISPLAY_REVISIONS);
         return jSplitPane1.getDividerLocation();
@@ -439,9 +473,9 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             return delegate == null ? Collections.<Action>emptyList() : Arrays.asList(delegate);
         }
     }
-    
+
     private abstract class RepositoryBrowserNode extends AbstractNode {
-        
+
         protected RepositoryBrowserNode (Children children, File repository) {
             this(children, repository, null);
         }
@@ -458,7 +492,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
         protected Action[] getPopupActions (boolean context) {
             return getDefaultActions();
         }
-        
+
         protected Image getFolderIcon (int type) {
             Image img = null;
             if (type == BeanInfo.ICON_COLOR_16x16) {
@@ -802,7 +836,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             this.autoSyncState = autoSyncState;
         }
     }
-    
+
     private class BranchesTopChildren extends Children.Keys<BranchNodeType> implements PropertyChangeListener {
         private final File repository;
         private final java.util.Map<String, GitBranchInfo> branches = new TreeMap<String, GitBranchInfo>();
@@ -879,43 +913,28 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                 }
             }.start(RP, repository, NbBundle.getMessage(BranchesTopChildren.class, "MSG_RepositoryPanel.refreshingBranches")); //NOI18N
         }
-        
+
         private void refreshBranches (java.util.Map<String, GitBranch> branches) {
             assert !EventQueue.isDispatchThread();
             if (branches.isEmpty()) {
                 BranchesTopChildren.this.branches.clear();
             } else {
-                branches = new java.util.HashMap<String, GitBranch>(branches);
+                branches = new HashMap<String, GitBranch>(branches);
                 BranchesTopChildren.this.branches.keySet().retainAll(branches.keySet());
                 for (java.util.Map.Entry<String, GitBranchInfo> e : BranchesTopChildren.this.branches.entrySet()) {
                     GitBranch newBranchInfo = branches.get(e.getKey());
                     // do not refresh branches that don't change their active state or head id
-                    if (newBranchInfo != null && (newBranchInfo.getId().equals(e.getValue().branch.getId()) 
+                    if (newBranchInfo != null && (newBranchInfo.getId().equals(e.getValue().branch.getId())
                             && newBranchInfo.isActive() == e.getValue().branch.isActive()
                             && equalTracking(newBranchInfo, e.getValue().branch))) {
                         branches.remove(e.getKey());
                     }
                 }
-                GitClient client = null;
-                try {
-                    if (branchMergeWith != null) {
-                        client = Git.getInstance().getClient(repository);
-                    }
-                    for (java.util.Map.Entry<String, GitBranch> e : branches.entrySet()) {
-                        Boolean mergedStatus = null;
-                        if (branchMergeWith != null) {
-                            GitRevisionInfo commonAncestor = client.getCommonAncestor(new String[] { branchMergeWith, e.getValue().getId()}, GitUtils.NULL_PROGRESS_MONITOR);
-                            mergedStatus = commonAncestor != null && commonAncestor.getRevision().equals(e.getValue().getId());
-                        }
-                        boolean autoSyncState = GitModuleConfig.getDefault().getAutoSyncBranch(repository, e.getKey());
-                        BranchesTopChildren.this.branches.put(e.getKey(), new GitBranchInfo(e.getValue(), mergedStatus, autoSyncState));
-                    }
-                } catch (GitException ex) {
-                    LOG.log(Level.INFO, null, ex);
-                } finally {
-                    if (client != null) {
-                        client.release();
-                    }
+                // Store branches immediately with null mergedStatus so nodes appear without delay.
+                // Merge status is computed asynchronously in computeMergeStatuses below.
+                for (java.util.Map.Entry<String, GitBranch> e : branches.entrySet()) {
+                    boolean autoSyncState = GitModuleConfig.getDefault().getAutoSyncBranch(repository, e.getKey());
+                    BranchesTopChildren.this.branches.put(e.getKey(), new GitBranchInfo(e.getValue(), null, autoSyncState));
                 }
             }
             if (local != null) {
@@ -923,6 +942,64 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             }
             if (remote != null) {
                 remote.refresh();
+            }
+            // Compute merge status in a separate task so node population is not blocked.
+            if (branchMergeWith != null) {
+                final String mergeWith = branchMergeWith;
+                final java.util.Map<String, String> snapshot = new HashMap<String, String>();
+                for (java.util.Map.Entry<String, GitBranchInfo> e : BranchesTopChildren.this.branches.entrySet()) {
+                    snapshot.put(e.getKey(), e.getValue().branch.getId());
+                }
+                RP.post(() -> computeMergeStatuses(snapshot, mergeWith));
+            }
+        }
+
+        private void computeMergeStatuses (java.util.Map<String, String> snapshot, String mergeWith) {
+            GitClient client = null;
+            try {
+                client = Git.getInstance().getClient(repository);
+                for (java.util.Map.Entry<String, String> e : snapshot.entrySet()) {
+                    GitRevisionInfo commonAncestor = client.getCommonAncestor(
+                            new String[] { mergeWith, e.getValue() },
+                            GitUtils.NULL_PROGRESS_MONITOR);
+                    boolean merged = commonAncestor != null
+                            && commonAncestor.getRevision().equals(e.getValue());
+                    updateBranchMergeStatus(e.getKey(), merged);
+                }
+            } catch (GitException ex) {
+                LOG.log(Level.INFO, null, ex);
+            } finally {
+                if (client != null) {
+                    client.release();
+                }
+            }
+        }
+
+        void computeSingleMergeStatus (String branchName, String mergeWith) {
+            GitBranchInfo info = BranchesTopChildren.this.branches.get(branchName);
+            if (info == null) {
+                return;
+            }
+            java.util.Map<String, String> single = new HashMap<String, String>();
+            single.put(branchName, info.branch.getId());
+            computeMergeStatuses(single, mergeWith);
+        }
+
+        void updateBranchMergeStatus (String branchName, boolean merged) {
+            GitBranchInfo info = BranchesTopChildren.this.branches.get(branchName);
+            if (info != null) {
+                BranchesTopChildren.this.branches.put(branchName,
+                        new GitBranchInfo(info.branch, merged, info.autoSyncState));
+            }
+            BranchNode node = null;
+            if (local != null) {
+                node = ((BranchesChildren) local.getChildren()).findBranchNode(branchName);
+            }
+            if (node == null && remote != null) {
+                node = ((BranchesChildren) remote.getChildren()).findBranchNode(branchName);
+            }
+            if (node != null) {
+                node.updateMergeStatus(merged);
             }
         }
 
@@ -988,6 +1065,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
     private class BranchesChildren extends Children.Keys<GitBranchInfo> {
         private final BranchNodeType type;
         private final java.util.Map<String, GitBranchInfo> branches;
+        private final java.util.Map<String, BranchNode> nodesByBranchName = new HashMap<String, BranchNode>();
 
         private BranchesChildren (BranchNodeType type, java.util.Map<String, GitBranchInfo> branches) {
             this.type = type;
@@ -1006,6 +1084,12 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
         }
 
         @Override
+        protected void removeNotify () {
+            nodesByBranchName.clear();
+            super.removeNotify();
+        }
+
+        @Override
         protected Node[] createNodes (GitBranchInfo key) {
             Node node = getNode();
             while (!(node instanceof RepositoryNode)) {
@@ -1013,6 +1097,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             }
             File repository = ((RepositoryNode) node).getRepository();
             final BranchNode n = new BranchNode(repository, key);
+            nodesByBranchName.put(key.branch.getName(), n);
             if (options.containsAll(EnumSet.of(Option.EXPAND_BRANCHES, Option.SELECT_ACTIVE_BRANCH)) && n.active) {
                 EventQueue.invokeLater(new Runnable() {
                     @Override
@@ -1027,11 +1112,15 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             return new Node[] { n };
         }
 
+        BranchNode findBranchNode (String branchName) {
+            return nodesByBranchName.get(branchName);
+        }
+
         private void refreshKeys () {
             List<GitBranchInfo> keys = new LinkedList<GitBranchInfo>();
             for (java.util.Map.Entry<String, GitBranchInfo> e : branches.entrySet()) {
                 GitBranchInfo branchInfo = e.getValue();
-                if (type == BranchNodeType.REMOTE && branchInfo.branch.isRemote() 
+                if (type == BranchNodeType.REMOTE && branchInfo.branch.isRemote()
                         || type == BranchNodeType.LOCAL && !branchInfo.branch.isRemote()) {
                     keys.add(branchInfo);
                 }
@@ -1041,8 +1130,14 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                 keys.sort(new Comparator<GitBranchInfo>() {
                     @Override
                     public int compare (GitBranchInfo i1, GitBranchInfo i2) {
-                        assert i1.mergedStatus != null;
-                        assert i2.mergedStatus != null;
+                        // mergedStatus may be null while async computation is in progress
+                        if (i1.mergedStatus == null && i2.mergedStatus == null) {
+                            return i1.branch.getName().compareToIgnoreCase(i2.branch.getName());
+                        } else if (i1.mergedStatus == null) {
+                            return 1;
+                        } else if (i2.mergedStatus == null) {
+                            return -1;
+                        }
                         int res = i1.mergedStatus.compareTo(i2.mergedStatus);
                         if (res == 0) {
                             res = i1.branch.getName().compareToIgnoreCase(i2.branch.getName());
@@ -1063,7 +1158,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
         private final GitBranch trackedBranch;
         private String lastTrackingMyId;
         private String lastTrackingOtherId;
-        private final Boolean mergeStatus;
+        private volatile Boolean mergeStatus;
         private final boolean remote;
         private String trackingStatus;
         private Boolean autoSyncState;
@@ -1109,7 +1204,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
         public String getName() {
             return getName(false);
         }
-        
+
         @NbBundle.Messages({
             "# {0} - tracked branch", "LBL_BranchNode.basedOn= (based on {0})",
             "# {0} - tracking status", "LBL_BranchNode.trackingStatus= ({0})"
@@ -1240,7 +1335,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                             }
                         });
                     }
-                    
+
                     @Override
                     public boolean isEnabled() {
                         return branch != GitBranch.NO_BRANCH;
@@ -1287,7 +1382,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                                 });
                             }
                         });
-                        
+
                         class AutoSyncAction extends AbstractAction implements Presenter.Popup {
 
                             @Override
@@ -1316,12 +1411,12 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                                         }.start(Git.getInstance().getRequestProcessor(repo), repo,
                                                 Bundle.MSG_AutosyncBranchAction_progress(branch, trackedBranch.getName()));
                                     }
-                                    
+
                                 };
                                 Actions.connect(item, a, true);
                                 return item;
                             }
-                            
+
                         }
                         actions.add(new AutoSyncAction());
                     }
@@ -1452,11 +1547,11 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                                     GitRevisionInfo[] revs = client.log(crit, false, GitUtils.NULL_PROGRESS_MONITOR);
                                     int diff = (revs.length - 1);
                                     if (info.getRevision().equals(trackedBranch.getId())) {
-                                        tt = NbBundle.getMessage(RepositoryBrowserPanel.class, diff == 1 
+                                        tt = NbBundle.getMessage(RepositoryBrowserPanel.class, diff == 1
                                                 ? "MSG_BranchNode.tracking.ahead.commit" : "MSG_BranchNode.tracking.ahead.commits", //NOI18N
                                                 trackedBranch.getName(), diff);
                                     } else if (info.getRevision().equals(id)) {
-                                        tt = NbBundle.getMessage(RepositoryBrowserPanel.class, diff == 1 
+                                        tt = NbBundle.getMessage(RepositoryBrowserPanel.class, diff == 1
                                                 ? "MSG_BranchNode.tracking.behind.commit" : "MSG_BranchNode.tracking.behind.commits", //NOI18N
                                                 trackedBranch.getName(), diff);
                                     }
@@ -1476,7 +1571,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                                 }
                             });
                         }
-                        
+
                         private void setTrackingStatus (final String status) {
                             EventQueue.invokeLater(new Runnable() {
                                 @Override
@@ -1492,15 +1587,28 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             }
         }
 
-        @NbBundle.Messages("MSG_BranchMergeStatus.merged= [merged]")
+        void updateMergeStatus (boolean merged) {
+            EventQueue.invokeLater(() -> {
+                String oldName = getDisplayName();
+                mergeStatus = merged;
+                fireDisplayNameChange(oldName, getDisplayName());
+            });
+        }
+
+        @NbBundle.Messages({
+            "MSG_BranchMergeStatus.merged= [merged]",
+            "MSG_BranchMergeStatus.unknown= [merged ? ]"
+        })
         private String getMergeStatus (Boolean mergedStatus) {
             if (Boolean.TRUE.equals(mergedStatus)) {
                 return Bundle.MSG_BranchMergeStatus_merged();
+            } else if (mergedStatus == null && branchMergeWith != null) {
+                return Bundle.MSG_BranchMergeStatus_unknown();
             } else {
                 return "";
             }
         }
-        
+
     }
     //</editor-fold>
 
@@ -1550,7 +1658,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             }
         }
 
-        
+
         @Override
         protected void addNotify () {
             super.addNotify();
@@ -1585,17 +1693,17 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                 }
             }.start(RP, repository, NbBundle.getMessage(BranchesTopChildren.class, "MSG_RepositoryPanel.refreshingTags")); //NOI18N
         }
-        
+
         private void refreshTags (java.util.Map<String, GitTag> tags) {
             if (tags.isEmpty()) {
                 this.tags.clear();
             } else {
-                tags = new java.util.HashMap<String, GitTag>(tags);
+                tags = new HashMap<String, GitTag>(tags);
                 this.tags.keySet().retainAll(tags.keySet());
                 for (java.util.Map.Entry<String, GitTag> e : this.tags.entrySet()) {
                     GitTag newTagInfo = tags.get(e.getKey());
                     // do not refresh tags they keep the same
-                    if (newTagInfo != null && (newTagInfo.getTaggedObjectId().equals(e.getValue().getTaggedObjectId()) 
+                    if (newTagInfo != null && (newTagInfo.getTaggedObjectId().equals(e.getValue().getTaggedObjectId())
                             && newTagInfo.getMessage().equals(e.getValue().getMessage()))) {
                         tags.remove(e.getKey());
                     }
@@ -1669,7 +1777,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
         public String getName() {
             return getName(false);
         }
-        
+
         public String getName (boolean html) {
             StringBuilder sb = new StringBuilder();
             if (active && html) {
@@ -1775,12 +1883,12 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                     @Override
                     public void actionPerformed (ActionEvent e) {
                         EventQueue.invokeLater(new Runnable() {
-                            
+
                             @Override
                             public void run () {
                                 if (JOptionPane.showConfirmDialog(RepositoryBrowserPanel.this, Bundle.MSG_TagNode_deleteTag_confirmation(tag),
                                         Bundle.LBL_TagNode_deleteTag_confirmation(),
-                                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {                                     
+                                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                                     new GitProgressSupport() {
 
                                         @Override
@@ -1832,10 +1940,10 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             }
             return null;
         }
-        
+
     }
     //</editor-fold>
-    
+
     //<editor-fold defaultstate="collapsed" desc="stashes">
     @NbBundle.Messages({
         "LBL_RepositoryPanel.StashesNode.name=Stashes",
@@ -1904,7 +2012,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                 info.addPropertyChangeListener(WeakListeners.propertyChange(this, info));
             }
         }
-        
+
         @Override
         protected void addNotify () {
             super.addNotify();
@@ -1938,7 +2046,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                 }
             }.start(RP, repository, Bundle.MSG_RepositoryPanel_refreshingStashes());
         }
-        
+
         private void refreshStash (List<GitRevisionInfo> stash) {
             List<Stash> items = Stash.create(repository, stash);
             setKeys(items);
@@ -1990,7 +2098,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
         public String getName() {
             return getName(false);
         }
-        
+
         public String getName (boolean html) {
             String retval = Bundle.CTL_StashNode_name(item.getName(), item.getInfo().getShortMessage());
             if (retval.length() > 75) {
@@ -2024,12 +2132,12 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                     @Override
                     public void actionPerformed (ActionEvent e) {
                         EventQueue.invokeLater(new Runnable() {
-                            
+
                             @Override
                             public void run () {
                                 if (JOptionPane.showConfirmDialog(RepositoryBrowserPanel.this, Bundle.MSG_StashNode_drop_confirmation(stash.getName()),
                                         Bundle.LBL_StashNode_drop_confirmation(),
-                                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {                                     
+                                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
                                     new GitProgressSupport() {
 
                                         @Override
@@ -2071,10 +2179,10 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             }
             return null;
         }
-        
+
     }
-    
-    
+
+
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="remotes">
@@ -2160,7 +2268,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
                 }
             }.start(RP, repository, NbBundle.getMessage(BranchesTopChildren.class, "MSG_RepositoryPanel.refreshingRemotes")); //NOI18N
         }
-        
+
         private void refreshRemotes (java.util.Map<String, GitRemoteConfig> remotes) {
             setKeys(remotes.values());
         }
@@ -2199,7 +2307,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
         public String getName () {
             return remoteName;
         }
-        
+
         @Override
         protected Action[] getPopupActions (boolean context) {
             List<Action> actions = new LinkedList<Action>();
@@ -2266,10 +2374,10 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             this.push = push;
         }
     }
-    
+
     private class RemoteChildren extends Children.Keys<RemoteUri> {
         private final GitRemoteConfig remote;
-        
+
         public RemoteChildren (GitRemoteConfig remote) {
             this.remote = remote;
         }
@@ -2296,13 +2404,13 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
             });
             setKeys(urls);
         }
-        
+
         @Override
         protected Node[] createNodes (RemoteUri key) {
             return new Node[] { new RemoteUriNode(lookupRepository(getNode()), key, remote) };
         }
     }
-    
+
     private class RemoteUriNode extends RepositoryBrowserNode {
         private final RemoteUri uri;
         private final GitRemoteConfig remote;
@@ -2384,7 +2492,7 @@ public class RepositoryBrowserPanel extends JPanel implements Provider, Property
     private static String getContextDisplayName (final File repo) {
         return Utils.getContextDisplayName(GitUtils.getContextForFile(repo));
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

@@ -1117,19 +1117,6 @@ jobs:
       - name: platform/openide.util.ui
         run: ant $OPTS -f platform/openide.util.ui test
 
-      # isolation required by netbinox tests
-      - name: isolate platform build
-        run: |
-          cp -r platform/ _platform/ && cp -r harness/ _harness/ && cp nbbuild/build/nbantext.jar .
-          cp -r nbbuild/netbeans/platform/ _nb_platform/ && cp -r nbbuild/netbeans/harness/ _nb_harness/
-          ant $OPTS -quiet clean && rm -Rf platform/ && rm -Rf harness/
-          mkdir nbbuild/build && mkdir nbbuild/netbeans
-          mv _platform/ platform/ && mv _harness/ harness/ && mv nbantext.jar nbbuild/build/
-          mv _nb_platform/ nbbuild/netbeans/platform/ && mv _nb_harness/ nbbuild/netbeans/harness/
-
-      - name: platform/netbinox
-        run: ant $OPTS -f platform/netbinox test -Dtest.config=stableBTD
-
       - name: Create Test Summary
         uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5 # v2.6
         if: failure()

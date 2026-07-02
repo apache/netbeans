@@ -14,8 +14,4 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
-# When this is updated, the spec-version (manifest.mf) of c.s.jna.platform must be updated
-# If the public packages are changed, the project.xmls of both projects must
-# be updated
-D1E54D9231DA5CA3FA730D52960DEAA555475468 net.java.dev.jna:jna-platform:5.19.1
+F095E8F8BBF918A67A2A052E20D6BC6FEBA04B1D org.eclipse.jgit:org.eclipse.jgit.ssh.apache:7.6.0.202603022253-r

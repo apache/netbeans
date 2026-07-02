@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="platform/o.apache.commons.lang3" default="build" basedir=".">
+<project name="ide/o.eclipse.jgit.ssh.apache" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
     <target name="jar" />
 </project>

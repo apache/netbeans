@@ -19,7 +19,7 @@
     under the License.
 
 -->
-<project name="platform/o.apache.commons.lang3" default="build" basedir=".">
+<project name="platform/c.s.jna.platform" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
-    <target name="jar" />
+    <!--<target name="jar" />-->
 </project>

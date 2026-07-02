@@ -6696,7 +6696,7 @@ public class FormatingTest extends NbTestCase {
         try {
             SourceVersion.valueOf("RELEASE_16"); //NOI18N
         } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_14, skip test
+            //OK, no RELEASE_16, skip test
             return;
         }
         sourceLevel="16";
@@ -6732,7 +6732,7 @@ public class FormatingTest extends NbTestCase {
         try {
             SourceVersion.valueOf("RELEASE_16"); //NOI18N
         } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_14, skip test
+            //OK, no RELEASE_16, skip test
             return;
         }
         sourceLevel="16";
@@ -6774,7 +6774,7 @@ public class FormatingTest extends NbTestCase {
         try {
             SourceVersion.valueOf("RELEASE_16"); //NOI18N
         } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_14, skip test
+            //OK, no RELEASE_16, skip test
             return;
         }
         sourceLevel="16";
@@ -6811,7 +6811,7 @@ public class FormatingTest extends NbTestCase {
         try {
             SourceVersion.valueOf("RELEASE_16"); //NOI18N
         } catch (IllegalArgumentException ex) {
-            //OK, no RELEASE_14, skip test
+            //OK, no RELEASE_16, skip test
             return;
         }
         sourceLevel="16";
@@ -6842,6 +6842,101 @@ public class FormatingTest extends NbTestCase {
         reformat(doc, content, golden);
     }
     
+    public void testRecordBracePlacement() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_16"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_16, skip test
+            return;
+        }
+        sourceLevel = "16";
+        JavacParser.DISABLE_SOURCE_LEVEL_DOWNGRADE = true;
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        String content = """
+                    package hierbas.del.litoral;
+
+                    public class Test {
+
+                        record R1(int x) {}
+
+                        record R2(int x, int y) {
+
+                            public void run() {
+                            }
+                        }
+                    }
+                    """;
+        reformat(doc, content, content);
+        Preferences preferences = MimeLookup.getLookup(
+                JavaTokenId.language().mimeType()).lookup(Preferences.class);
+
+        preferences.put("classDeclBracePlacement", CodeStyle.BracePlacement.NEW_LINE.name());
+        String golden = """
+                    package hierbas.del.litoral;
+
+                    public class Test
+                    {
+
+                        record R1(int x) {}
+
+                        record R2(int x, int y)
+                        {
+
+                            public void run() {
+                            }
+                        }
+                    }
+                    """;
+        reformat(doc, content, golden);
+
+        preferences.put("classDeclBracePlacement",
+                CodeStyle.BracePlacement.NEW_LINE_HALF_INDENTED.name());
+        golden = """
+                    package hierbas.del.litoral;
+
+                    public class Test
+                      {
+
+                        record R1(int x) {}
+
+                        record R2(int x, int y)
+                          {
+
+                            public void run() {
+                            }
+                          }
+                      }
+                    """;
+        reformat(doc, content, golden);
+
+        preferences.put("classDeclBracePlacement",
+                CodeStyle.BracePlacement.NEW_LINE_INDENTED.name());
+        golden = """
+                    package hierbas.del.litoral;
+
+                    public class Test
+                        {
+
+                        record R1(int x) {}
+
+                        record R2(int x, int y)
+                            {
+
+                            public void run() {
+                            }
+                            }
+                        }
+                    """;
+        reformat(doc, content, golden);
+
+    }
+
     // #6573
     public void testRecordConstructorReformat() throws Exception {
         sourceLevel="16";

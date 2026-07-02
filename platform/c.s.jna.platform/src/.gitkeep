@@ -1,0 +1,8 @@
+Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements; and to You under the Apache License, Version 2.0.
+
+This module exists as an alias module for org.netbeans.libs.jna.platform. The NetBeans
+module works correctly in an OSGI environment if a dependency is declared on the
+packages (Import-Package). It does not work if the OSGI module used the upstream
+bundle name "com.sun.jna.platform" to import the whole bundle.
+
+This module reexports the JNA packages under the original bundle name and version.

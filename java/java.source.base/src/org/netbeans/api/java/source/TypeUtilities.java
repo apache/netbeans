@@ -19,6 +19,7 @@
 package org.netbeans.api.java.source;
 
 import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.CapturedType;
 import com.sun.tools.javac.code.Type.ClassType;
@@ -186,7 +187,13 @@ public final class TypeUtilities {
             return t;
         }
     }
-    
+
+    public TypeMirror asSuper(TypeMirror subtype, TypeElement superEl) {
+        Types types = Types.instance(info.impl.getJavacTask().getContext());
+
+        return types.asSuper((Type) subtype, (Symbol) superEl);
+    }
+
     boolean checkDenotable(Type t) {
         return denotableChecker.visit(t, null);
     }

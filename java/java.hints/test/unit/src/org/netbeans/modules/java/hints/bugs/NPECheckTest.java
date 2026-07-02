@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.java.hints.bugs;
 
+import java.io.File;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.hints.test.api.HintTest;
 import org.openide.filesystems.FileUtil;
@@ -806,6 +807,21 @@ public class NPECheckTest extends NbTestCase {
                 .assertWarnings();
     }
     
+    public void test222871NewClass() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    private void t(@CheckForNull String onSuccess, @CheckForNull Integer onError) {\n" +
+                       "        new Test(onSuccess != null || onError != null);\n" +
+                       "        new Test(onSuccess == null || onError == null);\n" +
+                       "    }\n" +
+                       "    public Test(boolean b) {}\n" +
+                       "    @interface CheckForNull {}\n" +
+                       "}")
+                .run(NPECheck.class)
+                .assertWarnings();
+    }
+
     public void testWhileInitializeWithField() throws Exception {
         HintTest.create()
                 .input("package test;\n" +
@@ -1676,6 +1692,19 @@ public class NPECheckTest extends NbTestCase {
                 .assertWarnings("4:41-4:50:verifier:ERR_NotNull");
     }
     
+    public void testNETBEANS407a2() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "  public void test(Object o) {\n" +
+                       "    boolean b1 = o instanceof Integer;\n" +
+                       "    System.out.println(o.toString());\n" +
+                       "  }\n" +
+                       "}")
+                .run(NPECheck.class)
+                .assertWarnings();
+    }
+
     public void testNETBEANS407b() throws Exception {
         HintTest.create()
                 .input("package test;\n" +
@@ -1685,7 +1714,10 @@ public class NPECheckTest extends NbTestCase {
                        "  }\n" +
                        "}")
                 .run(NPECheck.class)
-                .assertWarnings("3:45-3:53:verifier:Possibly Dereferencing null");
+                .assertWarnings();
+        //originally, there was this warning:
+        //3:45-3:53:verifier:Possibly Dereferencing null
+        //but the warning is very hard to defend, if the instanceof fails, we simply don't know anything
     }
     
     public void testNETBEANS407c() throws Exception {
@@ -1969,6 +2001,567 @@ public class NPECheckTest extends NbTestCase {
                 .run(NPECheck.class)
                 .assertWarnings("9:12-9:21:verifier:ERR_NotNull");
     }
+
+    public void testIfAndInstanceOf() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       public class Test {
+                           public @NotNull Object test(Object o) {
+                               if (o instanceof String s) {
+                                   return s;
+                               } else {
+                                   return o; //can't say anything
+                               }
+                           }
+                       }
+                       @interface NotNull {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings();
+    }
+
+    public void testTypeAnnotations1() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       import java.lang.annotation.*;
+                       public class Test {
+                           private void test(Box<@NullAllowed String> boxOfString) {
+                               boxOfString.get().toString();
+                           }
+                       }
+                       class Box<T> {
+                           private final T t;
+                           public Box(T t) { this.t = t; }
+                           public T get() { return t; }
+                       }
+                       @Target(ElementType.TYPE_USE)
+                       @interface NullAllowed {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("4:26-4:34:verifier:Possibly Dereferencing null");
+    }
+
+    public void testTypeAnnotations2() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       import java.lang.annotation.*;
+                       import java.util.*;
+                       public class Test {
+                           private void test(Box<@NotNull List<@NullAllowed String>> boxOfStrings) {
+                               boxOfStrings.get()
+                                           .get(1)
+                                           .toString();
+                           }
+                       }
+                       class Box<T> {
+                           private final T t;
+                           public Box(T t) { this.t = t; }
+                           public @NullAllowed T get() { return t; }
+                       }
+                       @Target(ElementType.TYPE_USE)
+                       @interface NullAllowed {}
+                       @Target(ElementType.TYPE_USE)
+                       @interface NotNull {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("6:21-6:24:verifier:Possibly Dereferencing null",
+                                "7:21-7:29:verifier:Possibly Dereferencing null");
+    }
+
+    public void testTypeAnnotations3() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       import java.lang.annotation.*;
+                       import java.util.*;
+                       public class Test {
+                           private void test(Box<@NotNull String> boxOfStrings) {
+                               boxOfStrings.get().get(1).toString();
+                           }
+                       }
+                       class Box<T> {
+                           private final T t;
+                           public Box(T t) { this.t = t; }
+                           public List<@NullAllowed T> get() { return null; }
+                       }
+                       @Target(ElementType.TYPE_USE)
+                       @interface NullAllowed {}
+                       @Target(ElementType.TYPE_USE)
+                       @interface NotNull {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("5:34-5:42:verifier:Possibly Dereferencing null");
+    }
+
+    public void testTypeAnnotations4() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       import java.lang.annotation.*;
+                       import java.util.*;
+                       public class Test {
+                           private void test() {
+                               List<String> l = new ArrayList<@NullAllowed String>();
+                               l.get(0).toString();
+                           }
+                       }
+                       @Target(ElementType.TYPE_USE)
+                       @interface NullAllowed {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("6:17-6:25:verifier:Possibly Dereferencing null");
+    }
+
+    public void testTypeAnnotationsRemapping() throws Exception {
+        //needs to properly map types on assign(!!!!)
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       import java.lang.annotation.*;
+                       import java.util.*;
+                       public class Test {
+                           private void test() {
+                               I<String, Integer> i = new C<@NotNull Integer, @NullAllowed String>(0, null);
+                               i.a().toString(); //warning
+                               i.b().toString(); //no warning
+                           }
+                       }
+                       interface I<A, B> {
+                           public A a();
+                           public B b();
+                       }
+                       record C<B, A>(B b, A a) implements I<A, B> {}
+                       @Target(ElementType.TYPE_USE)
+                       @interface NullAllowed {}
+                       @Target(ElementType.TYPE_USE)
+                       @interface NotNull {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("6:14-6:22:verifier:Possibly Dereferencing null");
+    }
+
+    //TODO: other types of assignment(!)
+
+    public void testTypeAnnotationsStringMergeTypeParams() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       import java.lang.annotation.*;
+                       import java.util.*;
+                       public class Test {
+                           private void test(boolean b) {
+                               List<String> l;
+                               if (b) {
+                                   l = new ArrayList<@NotNull String>();
+                               } else {
+                                   l = new ArrayList<@NullAllowed String>();
+                               }
+                               l.get(0).toString();
+                           }
+                       }
+                       @Target(ElementType.TYPE_USE)
+                       @interface NullAllowed {}
+                       @Target(ElementType.TYPE_USE)
+                       @interface NotNull {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("11:17-11:25:verifier:Possibly Dereferencing null");
+    }
+
+    public void testTypeAnnotationsStringMergeTypeParamsRemapping() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       import java.lang.annotation.*;
+                       import java.util.*;
+                       public class Test {
+                           private void test(boolean b) {
+                               I<String, Integer> i;
+                               if (b) {
+                                   i = new C<@NotNull Integer, @NullAllowed String>(0, null);
+                               } else {
+                                   i = new C<@NotNull Integer, @NotNull String>(0, "");
+                               }
+                               i.a().toString(); //warning
+                               i.b().toString(); //no warning
+                           }
+                       }
+                       interface I<A, B> {
+                           public A a();
+                           public B b();
+                       }
+                       record C<B, A>(B b, A a) implements I<A, B> {}
+                       @Target(ElementType.TYPE_USE)
+                       @interface NullAllowed {}
+                       @Target(ElementType.TYPE_USE)
+                       @interface NotNull {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("11:14-11:22:verifier:Possibly Dereferencing null");
+    }
+
+    public void testTypeAnnotationsArrays() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       import java.lang.annotation.*;
+                       import java.util.*;
+                       public class Test {
+                           private void test(@NotNull String[] arr1, @NullAllowed String[] arr2) {
+                               if (arr1[0] != null) {
+                                   System.err.println("null!");
+                               }
+                               arr2[0].toString();
+                           }
+                       }
+                       @Target(ElementType.TYPE_USE)
+                       @interface NullAllowed {}
+                       @Target(ElementType.TYPE_USE)
+                       @interface NotNull {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("5:12-5:27:verifier:ERR_NotNull",
+                                "8:16-8:24:verifier:Possibly Dereferencing null");
+    }
+
+    public void testTypeAnnotationsNestedTypesWarnings1() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       import java.lang.annotation.*;
+                       import java.util.*;
+                       public class Test {
+                           private void test1(List<@NotNull String[]> arr) {
+                               test2(arr);
+                           }
+                           private void test2(List<@NullAllowed String[]> arr) {
+                               test1(arr);
+                           }
+                       }
+                       @Target(ElementType.TYPE_USE)
+                       @interface NullAllowed {}
+                       @Target(ElementType.TYPE_USE)
+                       @interface NotNull {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("5:14-5:17:verifier:Nullness states mismatch",
+                                "8:14-8:17:verifier:Nullness states mismatch");
+    }
+
+    public void testJSpecifyNullMarked() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .classpath(FileUtil.urlForArchiveOrDir(new File(System.getProperty("hints-jspecify.jar.location"))))
+                .input("""
+                       package test;
+                       import org.jspecify.annotations.NullMarked;
+                       import org.jspecify.annotations.Nullable;
+                       @NullMarked
+                       public class Test {
+                           public String test(@Nullable String s) {
+                               return s;
+                           }
+                       }
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("6:15-6:16:verifier:ERR_ReturningPossibleNullFromNonNull");
+    }
+
+    public void testJSpecifyUnspecified() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .classpath(FileUtil.urlForArchiveOrDir(new File(System.getProperty("hints-jspecify.jar.location"))))
+                .input("""
+                       package test;
+                       import org.jspecify.annotations.NullMarked;
+                       import org.jspecify.annotations.Nullable;
+                       import org.jspecify.annotations.NullnessUnspecified;
+                       @NullMarked
+                       public class Test {
+                           public @NullnessUnspecified String test(@Nullable String s) {
+                               return s;
+                           }
+                           public Object test(@NullnessUnspecified Object o) {
+                               if (o instanceof String s) {
+                                   return s;
+                               } else {
+                                   return o; //can't say anything
+                               }
+                           }
+                       }
+                       """)
+                .input("org/jspecify/annotations/NullnessUnspecified.java",
+                       """
+                       package org.jspecify.annotations;
+                       import java.lang.annotation.*;
+                       @Target(ElementType.TYPE_USE)
+                       public @interface NullnessUnspecified {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings();
+    }
+
+    public void testJSpecifyNullMarkedLocalVariables1() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .classpath(FileUtil.urlForArchiveOrDir(new File(System.getProperty("hints-jspecify.jar.location"))))
+                .input("""
+                       package test;
+                       import org.jspecify.annotations.NullMarked;
+                       import org.jspecify.annotations.Nullable;
+                       @NullMarked
+                       public class Test {
+                           public String test(@Nullable String s) {
+                               String local = s;
+                               return local != null ? local : "";
+                           }
+                       }
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings();
+    }
+
+    public void testNotNullReturnType() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       import java.lang.annotation.*;
+                       public class Test {
+                           public @NotNull String test(@NullAllowed String s) {
+                               return s;
+                           }
+                       }
+                       @Target(ElementType.TYPE_USE)
+                       @interface NullAllowed {}
+                       @Target(ElementType.TYPE_USE)
+                       @interface NotNull {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("4:15-4:16:verifier:ERR_ReturningPossibleNullFromNonNull");
+    }
+
+    public void testSynchronizedHint() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       import java.lang.annotation.*;
+                       public class Test {
+                           public void test(@NullAllowed String s) {
+                               Object o = null;
+                               synchronized (o) {}
+                               synchronized (s) {}
+                           }
+                       }
+                       @Target(ElementType.TYPE_USE)
+                       @interface NullAllowed {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("5:22-5:23:verifier:Synchronizing on null",
+                                "6:22-6:23:verifier:Synchronizing on possible null");
+    }
+
+    public void testAssignmentIsExpression() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       import java.lang.annotation.*;
+                       import java.util.*;
+                       public class Test {
+                           private void test(@NullAllowed String str) {
+                               String s;
+                               if ((s = str) != null) {
+                                   s.toString();
+                                   str.toString();
+                               }
+                           }
+                       }
+                       @Target(ElementType.TYPE_USE)
+                       @interface NullAllowed {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings();
+    }
+
+    public void testTypeVariables() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       import java.lang.annotation.*;
+                       public class Test<T1 extends @NullAllowed String, T2 extends @NotNull T1, T3 extends @NullAllowed T2> {
+                           private void test(T1 t1, T2 t2, T3 t3) {
+                               @NotNull String s;
+                               s = t1;
+                               s = t2;
+                               s = t3;
+                           }
+                       }
+                       @Target(ElementType.TYPE_USE)
+                       @interface NullAllowed {}
+                       @Target(ElementType.TYPE_USE)
+                       @interface NotNull {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("5:8-5:14:verifier:PANNNV",
+                                "7:8-7:14:verifier:PANNNV");
+    }
+
+    public void testTypeVariables2() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .classpath(FileUtil.urlForArchiveOrDir(new File(System.getProperty("hints-jspecify.jar.location"))))
+                .input("""
+                       package test;
+                       import org.jspecify.annotations.NullMarked;
+                       import org.jspecify.annotations.Nullable;
+                       @NullMarked
+                       public class Test<T1 extends @Nullable String, T2 extends T1, T3 extends @Nullable T2> {
+                           private String s;
+                           private void test(T1 t1, T2 t2, T3 t3) {
+                               s = t1;
+                               s = t2;
+                               s = t3;
+                           }
+                       }
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("7:8-7:14:verifier:PANNNV",
+                                "8:8-8:14:verifier:PANNNV",
+                                "9:8-9:14:verifier:PANNNV");
+    }
+
+    public void testTypeVariables3() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .classpath(FileUtil.urlForArchiveOrDir(new File(System.getProperty("hints-jspecify.jar.location"))))
+                .input("""
+                       package test;
+                       import java.util.*;
+                       import org.jspecify.annotations.NonNull;
+                       import org.jspecify.annotations.Nullable;
+                       import org.jspecify.annotations.NullnessUnspecified;
+                       public class Test {
+                           private @NonNull String test1(Box<? extends @Nullable String> b) {
+                               return b.t();
+                           }
+                           private @NonNull Object test2(Box<? super @Nullable String> b) {
+                               return b.t();
+                           }
+                           private List<? extends @NonNull String> test3(Box<? extends @Nullable String> b) {
+                               return b.tList();
+                           }
+                           private List<? extends @NonNull String> test4(Box<? extends @NullnessUnspecified String> b) {
+                               return b.tList(); //unspecified, no warning
+                           }
+                       }
+                       record Box<T>(T t) {
+                           public List<T> tList() { return List.of(t()); }
+                       }
+                       """)
+                .input("org/jspecify/annotations/NullnessUnspecified.java",
+                       """
+                       package org.jspecify.annotations;
+                       import java.lang.annotation.*;
+                       @Target(ElementType.TYPE_USE)
+                       public @interface NullnessUnspecified {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("7:17-7:18:verifier:ERR_ReturningPossibleNullFromNonNull",
+                                "10:17-10:18:verifier:ERR_ReturningPossibleNullFromNonNull",
+                                "13:17-13:22:verifier:Nullness states mismatch");
+    }
+
+    public void testTypeVariables4() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .classpath(FileUtil.urlForArchiveOrDir(new File(System.getProperty("hints-jspecify.jar.location"))))
+                .input("""
+                       package test;
+                       import java.util.*;
+                       import org.jspecify.annotations.NonNull;
+                       import org.jspecify.annotations.Nullable;
+                       import org.jspecify.annotations.NullnessUnspecified;
+                       public class Test {
+                           private @NonNull String test1(Box<@NonNull String> b) {
+                               return b.t();
+                           }
+                           private @NonNull String test2(Box<? extends @NonNull String> b) {
+                               return b.t();
+                           }
+                           private @NonNull String test3(Box<@Nullable String> b) {
+                               return b.t();
+                           }
+                           private @NonNull String test4(Box<? extends @Nullable String> b) {
+                               return b.t();
+                           }
+                           private @NonNull String test5(Box<@NullnessUnspecified String> b) {
+                               return b.t();
+                           }
+                           private @NonNull String test6(Box<? extends @NullnessUnspecified String> b) {
+                               return b.t();
+                           }
+                       }
+                       record Box<T extends @Nullable Object>(T t) {
+                       }
+                       """)
+                .input("org/jspecify/annotations/NullnessUnspecified.java",
+                       """
+                       package org.jspecify.annotations;
+                       import java.lang.annotation.*;
+                       @Target(ElementType.TYPE_USE)
+                       public @interface NullnessUnspecified {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("13:17-13:18:verifier:ERR_ReturningPossibleNullFromNonNull",
+                                "16:17-16:18:verifier:ERR_ReturningPossibleNullFromNonNull");
+    }
+
+    public void testAssignToFields() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .classpath(FileUtil.urlForArchiveOrDir(new File(System.getProperty("hints-jspecify.jar.location"))))
+                .input("""
+                       package test;
+                       import java.lang.annotation.*;
+                       public class Test {
+                           private @NotNull String nn;
+                           private @NullAllowed String na;
+                           private String nothing;
+                           private void test(@NullAllowed String p) {
+                               nn = p;
+                               na = p;
+                               nothing = p;
+                           }
+                       }
+                       @Target(ElementType.TYPE_USE)
+                       @interface NullAllowed {}
+                       @Target(ElementType.TYPE_USE)
+                       @interface NotNull {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings("7:8-7:14:verifier:PANNNV");
+    }
+
+    //TODO: NullnessUnspecified
+
+    //TODO: check full "assignment" type in hints;; needs to remap parameter types(!!!)
+    //TODO: when a declaration has annotations, the state on assign should be sensibly merged to it
 
     private void performAnalysisTest(String fileName, String code, String... golden) throws Exception {
         HintTest.create()

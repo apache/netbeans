@@ -76,7 +76,7 @@ fragment BackTickQuote
    ;
 
 fragment SQuoteLiteral
-   : SQuote (Esc [btnfr"'\\] | ~ ['\\])* SQuote
+   : SQuote ( Esc ~[\r\n] | ~[\\'\r\n])* SQuote
    ;
 
 fragment NewLine

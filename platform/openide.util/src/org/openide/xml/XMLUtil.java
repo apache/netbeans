@@ -36,6 +36,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.Map;
 import java.util.Set;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
@@ -108,22 +109,35 @@ public final class XMLUtil extends Object {
         return createXMLReader(validate, false);
     }
 
-    private static SAXParserFactory[][] saxes  = new SAXParserFactory[2][2];
+    /** Create a simple parser, possibly validating.
+     * @param validate if true, a validating parser is returned
+     * @param namespaceAware if true, a namespace aware parser is returned
+     * @throws SAXException if a parser can not be created
+     * @return <code>createXMLReader(validate, false)</code> 
+     */
+    public static XMLReader createXMLReader(boolean validate, boolean namespaceAware) throws SAXException {
+        return createXMLReader(validate, namespaceAware, false);
+    }
+
+    // TODO LazyConstant candidate
+    private static final SAXParserFactory[][][] saxes  = new SAXParserFactory[2][2][2];
+
     /** Creates a SAX parser.
      *
      * <p>See {@link #parse} for hints on setting an entity resolver.
      *
      * @param validate if true, a validating parser is returned
      * @param namespaceAware if true, a namespace aware parser is returned
+     * @param secureProcessing if true, {@link XMLConstants#FEATURE_SECURE_PROCESSING} will be set
      *
      * @throws FactoryConfigurationError Application developers should never need to directly catch errors of this type.
      * @throws SAXException if a parser fulfilling given parameters can not be created
      *
      * @return XMLReader configured according to passed parameters
      */
-    public static synchronized XMLReader createXMLReader(boolean validate, boolean namespaceAware)
+    public static synchronized XMLReader createXMLReader(boolean validate, boolean namespaceAware, boolean secureProcessing)
     throws SAXException {
-        SAXParserFactory factory = saxes[validate ? 0 : 1][namespaceAware ? 0 : 1];
+        SAXParserFactory factory = saxes[validate ? 0 : 1][namespaceAware ? 0 : 1][secureProcessing ? 0 : 1];
         if (factory == null) {
             try {
                 factory = SAXParserFactory.newInstance();
@@ -135,9 +149,17 @@ public final class XMLUtil extends Object {
                 );
                 throw err;
             }
+            // keep default if false
+            if (secureProcessing) {
+                try {
+                    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+                } catch (ParserConfigurationException ex) {
+                    throw new IllegalStateException("FEATURE_SECURE_PROCESSING required", ex);
+                }
+            }
             factory.setValidating(validate);
             factory.setNamespaceAware(namespaceAware);
-            saxes[validate ? 0 : 1][namespaceAware ? 0 : 1] = factory;
+            saxes[validate ? 0 : 1][namespaceAware ? 0 : 1][secureProcessing ? 0 : 1] = factory;
         }
 
         try {
@@ -197,7 +219,7 @@ public final class XMLUtil extends Object {
     private static DOMImplementation getDOMImplementation()
     throws DOMException { //can be made public
 
-        DocumentBuilderFactory factory = getFactory(false, false);
+        DocumentBuilderFactory factory = getFactory(false, false, true);
 
         try {
             return factory.newDocumentBuilder().getDOMImplementation();
@@ -211,16 +233,36 @@ public final class XMLUtil extends Object {
         }
     }
 
-    private static DocumentBuilderFactory[][] doms = new DocumentBuilderFactory[2][2];
-    private static synchronized DocumentBuilderFactory getFactory(boolean validate, boolean namespaceAware) {
-        DocumentBuilderFactory factory = doms[validate ? 0 : 1][namespaceAware ? 0 : 1];
+    // TODO LazyConstant candidate
+    private static final DocumentBuilderFactory[][][] doms = new DocumentBuilderFactory[2][2][2];
+    
+    private static synchronized DocumentBuilderFactory getFactory(boolean validate, boolean namespaceAware, boolean secureProcessing) {
+        DocumentBuilderFactory factory = doms[validate ? 0 : 1][namespaceAware ? 0 : 1][secureProcessing ? 0 : 1];
         if (factory == null) {
             factory = DocumentBuilderFactory.newInstance();
+            // keep default if false
+            if (secureProcessing) {
+                try {
+                    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+                } catch (ParserConfigurationException ex) {
+                    throw new IllegalStateException("FEATURE_SECURE_PROCESSING required", ex);
+                }
+            }
             factory.setValidating(validate);
             factory.setNamespaceAware(namespaceAware);
-            doms[validate ? 0 : 1][namespaceAware ? 0 : 1] = factory;
+            doms[validate ? 0 : 1][namespaceAware ? 0 : 1][secureProcessing ? 0 : 1] = factory;
         }
         return factory;
+    }
+
+    /**
+     * Calls {@link #parse(org.xml.sax.InputSource, boolean, boolean, boolean, org.xml.sax.ErrorHandler, org.xml.sax.EntityResolver) }
+     * with <code>secureProcessing</code> set to false.
+     * @see #parse(org.xml.sax.InputSource, boolean, boolean, boolean, org.xml.sax.ErrorHandler, org.xml.sax.EntityResolver) 
+     */
+    public static Document parse(InputSource input, boolean validate, boolean namespaceAware, ErrorHandler errorHandler, EntityResolver entityResolver)
+            throws IOException, SAXException {
+        return parse(input, validate, namespaceAware, false, errorHandler, entityResolver);
     }
 
     /**
@@ -308,6 +350,7 @@ public final class XMLUtil extends Object {
      * @param input a parser input (for URL users use: <code>new InputSource(url.toString())</code>
      * @param validate if true validating parser is used
      * @param namespaceAware if true DOM is created by namespace aware parser
+     * @param secureProcessing if true, {@link XMLConstants#FEATURE_SECURE_PROCESSING} will be set
      * @param errorHandler a error handler to notify about exception (such as {@link #defaultErrorHandler}) or <code>null</code>
      * @param entityResolver SAX entity resolver (such as {@link EntityCatalog#getDefault}) or <code>null</code>
      *
@@ -318,12 +361,12 @@ public final class XMLUtil extends Object {
      * @return document representing given input
      */
     public static Document parse(
-        InputSource input, boolean validate, boolean namespaceAware, ErrorHandler errorHandler,
+        InputSource input, boolean validate, boolean namespaceAware, boolean secureProcessing, ErrorHandler errorHandler,
         EntityResolver entityResolver
     ) throws IOException, SAXException {
         
         DocumentBuilder builder = null;
-        DocumentBuilderFactory factory = getFactory(validate, namespaceAware);
+        DocumentBuilderFactory factory = getFactory(validate, namespaceAware, secureProcessing);
 
         try {
             builder = factory.newDocumentBuilder();
@@ -789,7 +832,7 @@ public final class XMLUtil extends Object {
      */
     private static Document normalize(Document orig) throws IOException {
         DocumentBuilder builder = null;
-        DocumentBuilderFactory factory = getFactory(false, false);
+        DocumentBuilderFactory factory = getFactory(false, false, true);
         try {
             builder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
@@ -799,9 +842,9 @@ public final class XMLUtil extends Object {
         DocumentType doctype = null;
         NodeList nl = orig.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
-            if (nl.item(i) instanceof DocumentType) {
+            if (nl.item(i) instanceof DocumentType dt) {
                 // We cannot import DocumentType's, so we need to manually copy it.
-                doctype = (DocumentType) nl.item(i);
+                doctype = dt;
             }
         }
         Document doc;

@@ -170,6 +170,11 @@ final class HeapUtils {
                 return instanceId;
             }
 
+            public void dumpStickyClassRoot(ClassInstance clazz) throws IOException {
+                heap.writeByte(0x05);
+                heap.writeInt(clazz.id);
+            }
+
             public final class ThreadBuilder {
 
                 private String groupName;

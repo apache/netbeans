@@ -93,7 +93,10 @@ class HprofGCRoots {
                 heap.getGCRoots();
                 roots = new HashMap<>();
                 for (GCRoot r : getGCRoots()) {
-                    roots.put(r.getInstance().getInstanceId(), r);
+                    Instance instance = r.getInstance();
+                    if (instance != null) {
+                        roots.put(instance.getInstanceId(), r);
+                    }
                 }
                 gcRoots = roots;
             } else {

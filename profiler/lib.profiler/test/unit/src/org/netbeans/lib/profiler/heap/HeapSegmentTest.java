@@ -31,6 +31,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import org.junit.Test;
 import org.netbeans.lib.profiler.heap.HeapUtils.HprofGenerator;
 
@@ -43,6 +44,29 @@ public class HeapSegmentTest {
     @Test
     public void singleObjectMultipleSegments() throws IOException {
         singleObject(true);
+    }
+
+    @Test
+    public void unresolvedStickyClassRootDoesNotBreakGCRootLookup() throws IOException {
+        File mydump = File.createTempFile("mydump", ".hprof");
+        try (HprofGenerator gen = new HprofGenerator(new FileOutputStream(mydump))) {
+            gen.writeHeapSegment(new HprofGenerator.Generator<HprofGenerator.HeapSegment>() {
+                @Override
+                public void generate(HprofGenerator.HeapSegment seg) throws IOException {
+                    seg.newClass("com.oracle.svm.core.heap.heapImpl.DiscoverableReference")
+                            .addField("rawReferent", Object.class)
+                            .dumpClass();
+                    HprofGenerator.ClassInstance clazz = seg.newClass("text.HelloWorld").dumpClass();
+                    seg.dumpStickyClassRoot(clazz);
+                    seg.dumpInstance(clazz);
+                }
+            }, true);
+        }
+
+        Heap heap = HeapFactory.createHeap(mydump);
+        assertEquals("One unresolved sticky class root", 1, heap.getGCRoots().size());
+        Instance instance = (Instance) heap.getJavaClassByName("text.HelloWorld").getInstances().iterator().next();
+        assertNull("Non-root instance", heap.getGCRoot(instance));
     }
 
     private static void singleObject(boolean flush) throws IOException {

@@ -204,9 +204,13 @@ public class PHPDocCommentParser {
         if (types.isEmpty()) {
             List<PHPDocTypeNode> docTypes = findTypes(description, start, originalComment, originalCommentStart, type);
             if (PHP_DOC_VAR_TYPE_TAGS.contains(type)) {
-                String variable = getVaribleName(description);
+                String variable = getVariableName(description);
                 PHPDocNode varibaleNode = null;
                 if (variable != null) {
+                    // Strip variadic prefix from variable
+                    if (variable.startsWith("...")) { //NOI18N
+                        variable = variable.substring(3);
+                    }
                     int startOfVariable = findStartOfDocNode(originalComment, originalCommentStart, variable, start);
                     if (startOfVariable != -1) {
                         varibaleNode = new PHPDocNode(startOfVariable, startOfVariable + variable.length(), variable);
@@ -298,7 +302,7 @@ public class PHPDocCommentParser {
             tokens = Arrays.copyOfRange(tokens, 1, tokens.length);
         }
         ArrayList<String> types = new ArrayList<>();
-        if (tokens.length > 0 && (isReturnTag(tagType) || !tokens[0].startsWith("$"))) { //NOI18N
+        if (tokens.length > 0 && (isReturnTag(tagType) || !isVariableName(tokens[0]))) {
             if (findParameterStartPosition(tokens[0]) != -1) {
                 // e.g. @method voidReturn((X&Y)|Z $param)
                 types.add(Type.VOID);
@@ -320,16 +324,21 @@ public class PHPDocCommentParser {
         return types;
     }
 
-    private String getVaribleName(String description) {
+    private String getVariableName(String description) {
         String[] tokens = description.trim().split("[ \n\t]+"); //NOI18N
         String variable = null;
 
-        if (tokens.length > 0 && tokens[0].length() > 0 && tokens[0].charAt(0) == '$') {
+        if (tokens.length > 0 && tokens[0].length() > 0 && isVariableName(tokens[0])) {
             variable = tokens[0].trim();
-        } else if ((tokens.length > 1) && (tokens[1].charAt(0) == '$')) {
+        } else if ((tokens.length > 1) && isVariableName(tokens[1])) {
             variable = tokens[1].trim();
         }
         return variable;
+    }
+
+    public static boolean isVariableName(String token) {
+        return token.startsWith("$") /* variable */ //NOI18N
+                || token.startsWith("...$")  /* variadic variable */; //NOI18N
     }
 
     private String getMethodName(String description) {
@@ -366,7 +375,7 @@ public class PHPDocCommentParser {
             String[] tokens = parameters.split("[,]+"); //NOI18N
             String paramName;
             for (String token : tokens) {
-                paramName = getVaribleName(token.trim());
+                paramName = getVariableName(token.trim());
                 if (paramName != null) {
                     int startOfParamName = findStartOfDocNode(description, startOfDescription, paramName, position);
                     if (startOfParamName != -1) {

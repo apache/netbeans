@@ -21,8 +21,9 @@ package org.netbeans.modules.maven.htmlui;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
-import java.nio.file.NoSuchFileException;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
@@ -41,6 +42,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.netbeans.modules.maven.api.FileUtilities;
+import org.openide.xml.XMLUtil;
 
 final class MavenUtilities {
 
@@ -70,23 +72,16 @@ final class MavenUtilities {
             if (!this.settings.isFile()) {
                 return null;
             }
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder;
-            dBuilder = dbFactory.newDocumentBuilder();
-            Document settingsDoc = dBuilder.parse(this.settings);
-            NodeList elementsByTagName = settingsDoc.getElementsByTagName(tag);
-            if (elementsByTagName.getLength() >0) return elementsByTagName.item(0).getTextContent();
+            
+            try (InputStream is = Files.newInputStream(settings.toPath())) {
+                Document settingsDoc = XMLUtil.parse(new InputSource(is), false, false, true, null, null);
+                NodeList elementsByTagName = settingsDoc.getElementsByTagName(tag);
+                if (elementsByTagName.getLength() > 0) {
+                    return elementsByTagName.item(0).getTextContent();
+                }
+            }
             return null;
-        } catch (NoSuchFileException ex) {
-            LOG.log(Level.FINE, "Cannot find " + settings, ex);
-            return null;
-        } catch (IOException ex) {
-            LOG.log(Level.INFO, "Cannot read " + settings, ex);
-            return null;
-        } catch (ParserConfigurationException ex) {
-            LOG.log(Level.INFO, "Cannot read " + settings, ex);
-            return null;
-        } catch (SAXException ex) {
+        } catch (IOException | SAXException ex) {
             LOG.log(Level.INFO, "Cannot read " + settings, ex);
             return null;
         }

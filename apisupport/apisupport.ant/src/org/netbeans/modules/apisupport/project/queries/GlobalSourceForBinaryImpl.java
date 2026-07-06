@@ -380,13 +380,10 @@ public final class GlobalSourceForBinaryImpl implements SourceForBinaryQueryImpl
         
         private String parseCNB(final ZipEntry projectXML) throws IOException {
             Document doc;
-            InputStream is = nbSrcZip.getInputStream(projectXML);
-            try {
-                doc = XMLUtil.parse(new InputSource(is), false, true, null, null);
+            try (InputStream is = nbSrcZip.getInputStream(projectXML)) {
+                doc = XMLUtil.parse(new InputSource(is), false, true, true, null, null);
             } catch (SAXException e) {
-                throw (IOException) new IOException(projectXML + ": " + e.toString()).initCause(e); // NOI18N
-            } finally {
-                is.close();
+                throw new IOException(projectXML + ": " + e.toString(), e); // NOI18N
             }
             Element docel = doc.getDocumentElement();
             Element type = XMLUtil.findElement(docel, "type", "http://www.netbeans.org/ns/project/1"); // NOI18N

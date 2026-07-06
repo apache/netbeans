@@ -66,21 +66,21 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author Dusan Balek
  */
-public class FormatingTest extends NbTestCase {
+public class ReformatterTest extends NbTestCase {
 
     File testFile = null;
     private String sourceLevel = "1.8";
     private static final List<String> EXTRA_OPTIONS = new ArrayList<>();
 
     /** Creates a new instance of FormatingTest */
-    public FormatingTest(String name) {
+    public ReformatterTest(String name) {
         super(name);
     }
 
     public static NbTestSuite suite() {
         NbTestSuite suite = new NbTestSuite();
-        suite.addTestSuite(FormatingTest.class);
-//        suite.addTest(new FormatingTest("testLabelled"));
+        suite.addTestSuite(ReformatterTest.class);
+//        suite.addTest(new ReformatterTest("testLabelled"));
         return suite;
     }
 

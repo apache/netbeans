@@ -2891,6 +2891,74 @@ public class ReformatterTest extends NbTestCase {
         reformat(doc, content, golden);
     }
 
+    public void testSwitchCaseExprWrapping() throws Exception {
+        try {
+            SourceVersion.valueOf("RELEASE_17"); //NOI18N
+        } catch (IllegalArgumentException ex) {
+            //OK, no RELEASE_17, skip test
+            return;
+        }
+        testFile = new File(getWorkDir(), "Test.java");
+        TestUtilities.copyStringToFile(testFile, "");
+        FileObject testSourceFO = FileUtil.toFileObject(testFile);
+        DataObject testSourceDO = DataObject.find(testSourceFO);
+        EditorCookie ec = (EditorCookie) testSourceDO.getCookie(EditorCookie.class);
+        final Document doc = ec.openDocument();
+        doc.putProperty(Language.class, JavaTokenId.language());
+        Preferences preferences = MimeLookup.getLookup(JavaTokenId.language().mimeType()).lookup(Preferences.class);
+
+        String content
+                = """
+                package p;
+
+                public class Test {
+
+                    String choose(String str) {
+                        IntStream iso = IntStream.of(1, 2);
+                        return switch (str) {
+                            case null -> "case with null formatting";
+                            case String string when (string.length() == iso.filter(i -> i / 2 == 0).count() || string.length() == 0) ->
+                                "case with pattern matching + condition + lambda expression formatting";
+                            case String s when s.length() == 1 -> "case with pattern matching + condition formatting";
+                            case String s when s.length() == 2 -> {
+                                yield "case with pattern matching + condition formatting";
+                            }
+                            default -> "default formatting";
+                        };
+                    }
+                }
+                """;
+
+        String golden
+                = """
+                package p;
+
+                public class Test {
+
+                    String choose(String str) {
+                        IntStream iso = IntStream.of(1, 2);
+                        return switch (str) {
+                            case null ->
+                                "case with null formatting";
+                            case String string when (string.length() == iso.filter(i -> i / 2 == 0).count() || string.length() == 0) ->
+                                "case with pattern matching + condition + lambda expression formatting";
+                            case String s when s.length() == 1 ->
+                                "case with pattern matching + condition formatting";
+                            case String s when s.length() == 2 -> {
+                                yield "case with pattern matching + condition formatting";
+                            }
+                            default ->
+                                "default formatting";
+                        };
+                    }
+                }
+                """;
+        reformat(doc, content, golden);
+        preferences.put("wrapCaseStatements", CodeStyle.WrapStyle.WRAP_NEVER.name());
+        reformat(doc, content, content);
+
+    }
+
     public void testSwitchCaseNullAndDefault() throws Exception {
         try {
             SourceVersion.valueOf("RELEASE_17"); //NOI18N

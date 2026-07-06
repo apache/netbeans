@@ -3047,7 +3047,14 @@ public class Reformatter implements ReformatTask {
                 }
             }
             else if (caseBody != null) {
-                newline();
+                switch (cs.wrapCaseStatements()) {
+                    case WRAP_ALWAYS -> {
+                        newline();
+                    }
+                    default -> {
+                        spaces(1, true);
+                    }
+                }
                 scan(caseBody, p);
                 spaces(cs.spaceBeforeSemi() ? 1 : 0);
                 accept(SEMICOLON);

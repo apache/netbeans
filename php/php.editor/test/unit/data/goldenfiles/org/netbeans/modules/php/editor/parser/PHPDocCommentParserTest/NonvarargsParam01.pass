@@ -1,0 +1,12 @@
+<PHPDocBlock start='3' end='23'>
+    <Tags>
+        <PHPDocVarTypeTag start='3' end='26' kind='param'>
+            <Variable>
+                <PHPDocNode start='20' end='26' value='$param'/>
+            </Variable>
+            <Types>
+                <PHPDocTypeNode start='13' end='19' value='string' isArray='false'/>
+            </Types>
+        </PHPDocVarTypeTag>
+    </Tags>
+</PHPDocBlock>

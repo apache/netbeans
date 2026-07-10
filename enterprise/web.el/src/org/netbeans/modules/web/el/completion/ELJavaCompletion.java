@@ -22,6 +22,7 @@ import com.sun.el.parser.AstDotSuffix;
 import com.sun.el.parser.AstIdentifier;
 import com.sun.el.parser.AstMethodArguments;
 import com.sun.el.parser.Node;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +32,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -38,6 +40,7 @@ import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementScanner6;
+
 import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
@@ -47,6 +50,7 @@ import org.netbeans.modules.csl.spi.DefaultCompletionProposal;
 import org.netbeans.modules.web.el.AstPath;
 import org.netbeans.modules.web.el.CompilationContext;
 import org.netbeans.modules.web.el.ELElement;
+import org.netbeans.modules.web.el.ELTypeUtilities;
 import org.netbeans.modules.web.el.completion.ELCodeCompletionHandler.PrefixMatcher;
 
 /**
@@ -111,9 +115,9 @@ public class ELJavaCompletion {
         addTypesFromPackages(cc, pm, packages, offset + dotIndex + 1, proposals);
 
         // adds element type fields and methods
-        TypeElement typeElement = cc.getElements().getTypeElement(packName);
+        TypeElement typeElement = ELTypeUtilities.getElementForType(ccontext, packName);
         if (typeElement == null && dotIndex != -1) {
-            typeElement = cc.getElements().getTypeElement(JAVA_LANG_PREFIX + pm.getPrefix().substring(0, dotIndex));
+            typeElement = ELTypeUtilities.getElementForType(ccontext, JAVA_LANG_PREFIX + pm.getPrefix().substring(0, dotIndex));
         }
         if (typeElement != null) {
             proposals.addAll(getFieldsAndMethods(typeElement, offset + dotIndex + 1));

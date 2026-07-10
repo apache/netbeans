@@ -19,6 +19,7 @@
 package org.netbeans.modules.web.el;
 
 import com.sun.el.parser.*;
+
 import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -27,13 +28,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.el.ELException;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -48,6 +49,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import javax.lang.model.util.ElementFilter;
+
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.java.source.ClasspathInfo;
@@ -97,7 +99,7 @@ public final class ELTypeUtilities {
     }
 
     private ELTypeUtilities() {
-        //do not create instancies
+        //do not create instances
     }
 
     public static String getTypeNameFor(CompilationContext info, Element element) {
@@ -334,7 +336,7 @@ public final class ELTypeUtilities {
     }
 
     public static TypeElement getElementForType(CompilationContext info, final String clazz) {
-        return info.info().getElements().getTypeElement(clazz);
+        return info.cache().getOrCache(CompilationCache.createKey(clazz), () -> info.info().getElements().getTypeElement(clazz));
     }
 
     public static List<String> getParameterNames(CompilationContext info, final ExecutableElement method) {
@@ -591,7 +593,7 @@ public final class ELTypeUtilities {
             tempClass = ELVariableResolvers.findBeanClass(info, identifier.getImage(), element.getSnapshot().getSource().getFileObject());
         }
         if (tempClass != null) {
-            return info.info().getElements().getTypeElement(tempClass);
+            return getElementForType(info, tempClass);
         }
 
         // probably a variable
@@ -624,7 +626,7 @@ public final class ELTypeUtilities {
     public static Element getReferredType(CompilationContext info, VariableInfo vi, FileObject context) {
         //resolved variable
         if (vi.clazz != null) {
-            return info.info().getElements().getTypeElement(vi.clazz);
+            return getElementForType(info, vi.clazz);
         }
 
         //unresolved variable
@@ -662,7 +664,7 @@ public final class ELTypeUtilities {
                     if (beanClass == null) {
                         return;
                     }
-                    Element enclosing = info.info().getElements().getTypeElement(beanClass);
+                    Element enclosing = getElementForType(info, beanClass);
                     if (enclosing == null) {
                         //no such class on the classpath
                         return;
@@ -798,7 +800,7 @@ public final class ELTypeUtilities {
      * @return {@code true} if tm inherits the given typeName, {@code false} otherwise
      */
     public static boolean isSubtypeOf(CompilationContext info, TypeMirror tm, CharSequence typeName) {
-        Element element = info.info().getElements().getTypeElement(typeName);
+        Element element = getElementForType(info, String.valueOf(typeName));
         if (element == null) {
             return false;
         }
@@ -807,10 +809,6 @@ public final class ELTypeUtilities {
         TypeMirror tmErasure = info.info().getTypes().erasure(tm);
 
         return info.info().getTypes().isSubtype(tmErasure, erasedType);
-    }
-
-    private static TypeElement getTypeFor(CompilationContext info, String clazz) {
-        return info.info().getElements().getTypeElement(clazz);
     }
 
     private static class TypeResolverVisitor implements NodeVisitor {
@@ -870,20 +868,20 @@ public final class ELTypeUtilities {
                                         return;
                                     }
                                     // it's a managed bean in a scope
-                                    propertyType = getTypeFor(info, clazz);
+                                    propertyType = getElementForType(info, clazz);
                                 }
 
                                 // cc.attrs.<xxx> resolving - XXX better way how to detect this special case?
                                 if ("cc".equals(node.getImage())) {
                                     if ("attrs".equals(child.getImage())) {
-                                        propertyType = info.info().getElements().getTypeElement("java.lang.Object"); //NOI18N
+                                        propertyType = getElementForType(info, "java.lang.Object"); //NOI18N
                                     } else {
                                         for (VariableInfo property : variableInfos) {
                                             if (child.getImage().equals(property.name)) {
                                                 if (property.clazz == null) {
-                                                    propertyType = info.info().getElements().getTypeElement("java.lang.Object"); //NOI18N
+                                                    propertyType = getElementForType(info, "java.lang.Object"); //NOI18N
                                                 } else {
-                                                    propertyType = info.info().getElements().getTypeElement(property.clazz);
+                                                    propertyType = getElementForType(info, property.clazz);
                                                 }
                                             }
                                         }
@@ -892,20 +890,20 @@ public final class ELTypeUtilities {
 
                                 // maps
                                 if (ELTypeUtilities.isMapElement(info, enclosing)) {
-                                    result = info.info().getElements().getTypeElement("java.lang.Object"); //NOI18N
+                                    result = getElementForType(info, "java.lang.Object"); //NOI18N
                                     return;
                                 }
 
                                 // stream method
                                 if (ELTypeUtilities.isIterableElement(info, enclosing)) {
-                                    propertyType = enclosing = info.info().getElements().getTypeElement(STREAM_CLASS);
+                                    propertyType = enclosing = getElementForType(info, STREAM_CLASS);
                                 }
                             } else {
                                 // issue #244065 - in case of JDK8 and Collection, return the EL's Stream class
                                 if (propertyType instanceof ExecutableElement) {
                                     String returnType = ((ExecutableElement) propertyType).getReturnType().toString();
                                     if ("java.util.stream.Stream<E>".equals(returnType)) {  //NOI18N
-                                        propertyType = info.info().getElements().getTypeElement(STREAM_CLASS);
+                                        propertyType = getElementForType(info, STREAM_CLASS);
                                     }
                                 }
                             }
@@ -919,7 +917,7 @@ public final class ELTypeUtilities {
                                 TypeMirror returnType = getReturnType(info, method, elem, NodeUtil.getRootToNode(elem, target));
                                 if (returnType.getKind() == TypeKind.ARRAY) {
                                     // for array try to look like Iterable (operators for array return type)
-                                    enclosing = info.info().getElements().getTypeElement("java.lang.Iterable"); //NOI18N
+                                    enclosing = getElementForType(info, "java.lang.Iterable"); //NOI18N
                                 } else {
                                     if (isAccessIntoCollection(info, target) && returnType instanceof DeclaredType) {
                                         List<? extends TypeMirror> typeArguments = ((DeclaredType) returnType).getTypeArguments();
@@ -946,7 +944,7 @@ public final class ELTypeUtilities {
                     Node child = parent.jjtGetChild(i);
                     if (child instanceof AstDotSuffix) {
                         if (ELStreamCompletionItem.STREAM_METHOD.equals(child.getImage())) {
-                            enclosing = info.info().getElements().getTypeElement(STREAM_CLASS);
+                            enclosing = getElementForType(info, STREAM_CLASS);
                         } else {
                             if (enclosing != null) {
                                 ExecutableElement propertyType = getElementForProperty(info, child, enclosing);
@@ -957,7 +955,7 @@ public final class ELTypeUtilities {
                                     return;
                                 } else {
                                     if (propertyType != null) {
-                                        enclosing = getTypeFor(info, propertyType.getReturnType().toString());
+                                        enclosing = getElementForType(info, propertyType.getReturnType().toString());
                                     }
                                 }
                             }

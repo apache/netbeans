@@ -358,7 +358,7 @@ public final class ELCodeCompletionHandler implements CodeCompletionHandler2 {
     private void proposeOperators(CompilationContext ccontext, CodeCompletionContext context,
             PrefixMatcher prefixMatcher, ELElement element, List<CompletionProposal> proposals, List<Node> rootToNode,
             boolean isBracketProperty) {
-        TypeElement streamElement = ccontext.info().getElements().getTypeElement("com.sun.el.stream.Stream"); //NOI18N
+        TypeElement streamElement = ELTypeUtilities.getElementForType(ccontext, "com.sun.el.stream.Stream"); //NOI18N
         if (streamElement != null) {
             proposeJavaMethodsForElements(ccontext, context, prefixMatcher, element,
                     Arrays.<Element>asList(streamElement), isBracketProperty, proposals);

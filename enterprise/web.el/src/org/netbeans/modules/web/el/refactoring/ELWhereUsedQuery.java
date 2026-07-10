@@ -216,7 +216,7 @@ public class ELWhereUsedQuery extends ELRefactoringPlugin {
                     TypeElement fmbType = null;
                     if (beanClass != null) {
                         //found corresponding bean class
-                        fmbType = info.info().getElements().getTypeElement(beanClass);                        
+                        fmbType = ELTypeUtilities.getElementForType(info, beanClass);
                     } else {
                         //no bean found, try to resolve as a variable
                         VariableInfo var = findVariable(astIdent, variables);

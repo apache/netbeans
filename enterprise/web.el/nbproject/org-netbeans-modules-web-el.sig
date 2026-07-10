@@ -40,6 +40,13 @@ meth public final void wait(long,int) throws java.lang.InterruptedException
 meth public int hashCode()
 meth public java.lang.String toString()
 
+CLSS public abstract java.lang.Record
+cons protected init()
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract int hashCode()
+meth public abstract java.lang.String toString()
+supr java.lang.Object
+
 CLSS public abstract interface java.lang.constant.Constable
 meth public abstract java.util.Optional<? extends java.lang.constant.ConstantDesc> describeConstable()
 
@@ -168,23 +175,21 @@ hfds nodes,root
 
 CLSS public org.netbeans.modules.web.el.CompilationCache
 cons public init()
-innr public abstract interface static ValueProvider
-innr public static Key
+innr public final static Key
 meth public !varargs static org.netbeans.modules.web.el.CompilationCache$Key createKey(java.lang.Object[])
-meth public java.lang.Object getOrCache(org.netbeans.modules.web.el.CompilationCache$Key,org.netbeans.modules.web.el.CompilationCache$ValueProvider<?>)
+meth public <%0 extends java.lang.Object> {%%0} getOrCache(org.netbeans.modules.web.el.CompilationCache$Key,java.util.function.Supplier<{%%0}>)
 supr java.lang.Object
-hfds map
+hfds NULL_RESULT,map
 
-CLSS public static org.netbeans.modules.web.el.CompilationCache$Key
+CLSS public final static org.netbeans.modules.web.el.CompilationCache$Key
  outer org.netbeans.modules.web.el.CompilationCache
-meth public boolean equals(java.lang.Object)
-meth public int hashCode()
-supr java.lang.Object
+cons public init(java.util.List<java.lang.Object>)
+meth public final boolean equals(java.lang.Object)
+meth public final int hashCode()
+meth public final java.lang.String toString()
+meth public java.util.List<java.lang.Object> keys()
+supr java.lang.Record
 hfds keys
-
-CLSS public abstract interface static org.netbeans.modules.web.el.CompilationCache$ValueProvider<%0 extends java.lang.Object>
- outer org.netbeans.modules.web.el.CompilationCache
-meth public abstract {org.netbeans.modules.web.el.CompilationCache$ValueProvider%0} get()
 
 CLSS public org.netbeans.modules.web.el.CompilationContext
 meth public org.netbeans.api.java.source.CompilationInfo info()

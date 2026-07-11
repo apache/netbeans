@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: org.netbeans.libs.jsobject
+OpenIDE-Module-Localizing-Bundle: org/netbeans/libs/jsobject/Bundle.properties
+OpenIDE-Module-Fragment-Host: org.netbeans.libs.javafx
+OpenIDE-Module-Specification-Version: 25.0

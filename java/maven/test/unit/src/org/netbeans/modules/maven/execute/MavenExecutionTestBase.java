@@ -188,7 +188,7 @@ public class MavenExecutionTestBase extends NbTestCase {
                 + "            <plugin>\n"
                 + "                <groupId>org.codehaus.mojo</groupId>\n"
                 + "                <artifactId>exec-maven-plugin</artifactId>\n"
-                + "                <version>3.5.1</version>\n"
+                + "                <version>3.6.3</version>\n"
                 + "                <configuration>\n"
                 +                      argsString 
                 + "                </configuration>\n"

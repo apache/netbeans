@@ -21,12 +21,12 @@
 -->
 <licenseinfo>
     <fileset>
-        <file>external/javafx-base-21.0.9-mac.jar.external</file>
-        <file>external/javafx-controls-21.0.9-mac.jar.external</file>
-        <file>external/javafx-graphics-21.0.9-mac.jar.external</file>
-        <file>external/javafx-media-21.0.9-mac.jar.external</file>
-        <file>external/javafx-swing-21.0.9-mac.jar.external</file>
-        <file>external/javafx-web-21.0.9-mac.jar.external</file>
+        <file>external/javafx-base-23.0.2-mac.jar.external</file>
+        <file>external/javafx-controls-23.0.2-mac.jar.external</file>
+        <file>external/javafx-graphics-23.0.2-mac.jar.external</file>
+        <file>external/javafx-media-23.0.2-mac.jar.external</file>
+        <file>external/javafx-swing-23.0.2-mac.jar.external</file>
+        <file>external/javafx-web-23.0.2-mac.jar.external</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

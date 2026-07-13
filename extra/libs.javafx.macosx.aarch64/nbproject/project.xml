@@ -26,14 +26,6 @@
             <code-name-base>org.netbeans.libs.javafx.macosx.aarch64</code-name-base>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>org.openide.modules</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <specification-version>7.40</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.libs.javafx</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -41,31 +33,47 @@
                         <specification-version>2.10</specification-version>
                     </run-dependency>
                 </dependency>
+                <dependency>
+                    <code-name-base>org.netbeans.libs.jsobject</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>25.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.modules</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.40</specification-version>
+                    </run-dependency>
+                </dependency>
             </module-dependencies>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>ext/javafx-base-21.0.9-mac-aarch64.jar</runtime-relative-path>
-                <binary-origin>external/javafx-base-21.0.9-mac-aarch64.jar</binary-origin>
+                <runtime-relative-path>ext/javafx-base-23.0.2-mac-aarch64.jar</runtime-relative-path>
+                <binary-origin>external/javafx-base-23.0.2-mac-aarch64.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/javafx-controls-21.0.9-mac-aarch64.jar</runtime-relative-path>
-                <binary-origin>external/javafx-controls-21.0.9-mac-aarch64.jar</binary-origin>
+                <runtime-relative-path>ext/javafx-controls-23.0.2-mac-aarch64.jar</runtime-relative-path>
+                <binary-origin>external/javafx-controls-23.0.2-mac-aarch64.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/javafx-graphics-21.0.9-mac-aarch64.jar</runtime-relative-path>
-                <binary-origin>external/javafx-graphics-21.0.9-mac-aarch64.jar</binary-origin>
+                <runtime-relative-path>ext/javafx-graphics-23.0.2-mac-aarch64.jar</runtime-relative-path>
+                <binary-origin>external/javafx-graphics-23.0.2-mac-aarch64.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/javafx-media-21.0.9-mac-aarch64.jar</runtime-relative-path>
-                <binary-origin>external/javafx-media-21.0.9-mac-aarch64.jar</binary-origin>
+                <runtime-relative-path>ext/javafx-media-23.0.2-mac-aarch64.jar</runtime-relative-path>
+                <binary-origin>external/javafx-media-23.0.2-mac-aarch64.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/javafx-swing-21.0.9-mac-aarch64.jar</runtime-relative-path>
-                <binary-origin>external/javafx-swing-21.0.9-mac-aarch64.jar</binary-origin>
+                <runtime-relative-path>ext/javafx-swing-23.0.2-mac-aarch64.jar</runtime-relative-path>
+                <binary-origin>external/javafx-swing-23.0.2-mac-aarch64.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/javafx-web-21.0.9-mac-aarch64.jar</runtime-relative-path>
-                <binary-origin>external/javafx-web-21.0.9-mac-aarch64.jar</binary-origin>
+                <runtime-relative-path>ext/javafx-web-23.0.2-mac-aarch64.jar</runtime-relative-path>
+                <binary-origin>external/javafx-web-23.0.2-mac-aarch64.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

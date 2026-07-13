@@ -28,9 +28,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Logger;
 import javax.swing.Icon;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -579,23 +576,6 @@ public final class J2SEModularProject implements Project {
 
     }
 
-    private static final DocumentBuilder db;
-    static {
-        try {
-            db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw new AssertionError(e);
-        }
-    }
-//    private static Document createNewDocument() {
-//        // #50198: for thread safety, use a separate document.
-//        // Using XMLUtil.createDocument is much too slow.
-//        synchronized (db) {
-//            return db.newDocument();
-//        }
-//    }
-//
-//
     @NonNull
     private Runnable newStartMainUpdaterAction() {
         return () -> {

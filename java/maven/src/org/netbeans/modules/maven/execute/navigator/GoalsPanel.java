@@ -671,7 +671,7 @@ public class GoalsPanel extends javax.swing.JPanel implements ExplorerManager.Pr
         }
         LOG.log(Level.FINER, "parsing plugin.xml from {0}", jar);
             try {
-            return XMLUtil.parse(new InputSource("jar:" + Utilities.toURI(jar) + "!/META-INF/maven/plugin.xml"), false, false, XMLUtil.defaultErrorHandler(), null);
+            return XMLUtil.parse(new InputSource("jar:" + Utilities.toURI(jar) + "!/META-INF/maven/plugin.xml"), false, false, true, XMLUtil.defaultErrorHandler(), null);
         } catch (Exception x) {
             LOG.log(Level.FINE, "could not parse " + jar, x.toString());
             return null;

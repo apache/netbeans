@@ -173,7 +173,7 @@ public class M2AuxilaryConfigImpl implements AuxiliaryConfiguration {
 
     private Document loadConfig(FileObject config) throws IOException, SAXException {
         synchronized (configIOLock) {
-            return XMLUtil.parse(new InputSource(config.toURL().toString()), false, true, null, null);
+            return XMLUtil.parse(new InputSource(config.toURL().toString()), false, true, true, null, null);
         }
     }
 
@@ -283,7 +283,7 @@ public class M2AuxilaryConfigImpl implements AuxiliaryConfiguration {
             if (str != null) {
                 Document doc;
                 try {
-                    doc = XMLUtil.parse(new InputSource(new StringReader(str)), false, true, null, null);
+                    doc = XMLUtil.parse(new InputSource(new StringReader(str)), false, true, true, null, null);
                     return XMLUtil.findElement(doc.getDocumentElement(), elementName, namespace);
                 } catch (SAXException ex) {
                     LOG.log(Level.FINE, "cannot parse", ex);
@@ -329,7 +329,7 @@ public class M2AuxilaryConfigImpl implements AuxiliaryConfiguration {
             String str = (String) projectDirectory.getAttribute(AUX_CONFIG);
             if (str != null) {
                 try {
-                    doc = XMLUtil.parse(new InputSource(new StringReader(str)), false, true, null, null);
+                    doc = XMLUtil.parse(new InputSource(new StringReader(str)), false, true, true, null, null);
                 } catch (SAXException ex) {
                     LOG.log(Level.FINE, "cannot parse", ex);
                 } catch (IOException ex) {
@@ -398,7 +398,7 @@ public class M2AuxilaryConfigImpl implements AuxiliaryConfiguration {
             String str = (String) projectDirectory.getAttribute(AUX_CONFIG);
             if (str != null) {
                 try {
-                    doc = XMLUtil.parse(new InputSource(new StringReader(str)), false, true, null, null);
+                    doc = XMLUtil.parse(new InputSource(new StringReader(str)), false, true, true, null, null);
                 } catch (SAXException ex) {
                     Exceptions.printStackTrace(ex);
                 } catch (IOException ex) {
@@ -423,7 +423,7 @@ public class M2AuxilaryConfigImpl implements AuxiliaryConfiguration {
                 try {
                     ByteArrayOutputStream wr = new ByteArrayOutputStream();
                     XMLUtil.write(doc, wr, "UTF-8"); //NOI18N
-                    projectDirectory.setAttribute(AUX_CONFIG, wr.toString("UTF-8"));
+                    projectDirectory.setAttribute(AUX_CONFIG, wr.toString(StandardCharsets.UTF_8));
                 } catch (IOException ex) {
                     Exceptions.printStackTrace(ex);
                 }

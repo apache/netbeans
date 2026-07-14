@@ -19,12 +19,14 @@
 package org.netbeans.modules.php.editor.model.impl;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
 import org.netbeans.modules.php.editor.api.ElementQuery;
+import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.QualifiedName;
 import org.netbeans.modules.php.editor.api.elements.ClassElement;
 import org.netbeans.modules.php.editor.api.elements.InterfaceElement;
@@ -34,20 +36,25 @@ import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.index.PHPIndexer;
 import org.netbeans.modules.php.editor.index.Signature;
 import org.netbeans.modules.php.editor.model.ClassConstantElement;
+import org.netbeans.modules.php.editor.model.FieldElement;
 import org.netbeans.modules.php.editor.model.IndexScope;
 import org.netbeans.modules.php.editor.model.InterfaceScope;
 import org.netbeans.modules.php.editor.model.MethodScope;
+import org.netbeans.modules.php.editor.model.ModelElement;
 import org.netbeans.modules.php.editor.model.ModelUtils;
 import org.netbeans.modules.php.editor.model.NamespaceScope;
 import org.netbeans.modules.php.editor.model.Scope;
+import org.netbeans.modules.php.editor.model.TypeScope;
 import org.netbeans.modules.php.editor.model.VariableName;
+import static org.netbeans.modules.php.editor.model.impl.ScopeImpl.filter;
 import org.netbeans.modules.php.editor.model.nodes.InterfaceDeclarationInfo;
 
 /**
  *
  * @author Radek Matous
  */
-class InterfaceScopeImpl extends TypeScopeImpl implements InterfaceScope {
+class InterfaceScopeImpl extends TypeScopeImpl implements InterfaceScope, TypeScope.FieldDeclarable {
+
     InterfaceScopeImpl(Scope inScope, InterfaceDeclarationInfo nodeInfo, boolean isDeprecated) {
         super(inScope, nodeInfo, isDeprecated);
     }
@@ -60,15 +67,14 @@ class InterfaceScopeImpl extends TypeScopeImpl implements InterfaceScope {
     public String asString(PrintAs as) {
         StringBuilder retval = new StringBuilder();
         switch (as) {
-            case NameAndSuperTypes:
+            case NameAndSuperTypes -> {
                 retval.append(getName());
                 printAsSuperTypes(retval);
-                break;
-            case SuperTypes:
-                printAsSuperTypes(retval);
-                break;
-            default:
+            }
+            case SuperTypes -> printAsSuperTypes(retval);
+            default-> {
                 assert false : as;
+            }
         }
         return retval.toString();
     }
@@ -152,6 +158,10 @@ class InterfaceScopeImpl extends TypeScopeImpl implements InterfaceScope {
         for (ClassConstantElement constantElement : getDeclaredConstants()) {
             constantElement.addSelfToIndex(indexDocument);
         }
+        // PHP 8.4 interface can declare property hooks
+        for (FieldElement fieldElement : getDeclaredFields()) {
+            fieldElement.addSelfToIndex(indexDocument);
+        }
     }
 
     @Override
@@ -164,7 +174,7 @@ class InterfaceScopeImpl extends TypeScopeImpl implements InterfaceScope {
         for (int i = 0; i < superInterfaces.size(); i++) {
             String iface = superInterfaces.get(i);
             if (i > 0) {
-                sb.append(",");
+                sb.append(","); // NOI18N
             }
             sb.append(iface);
         }
@@ -192,8 +202,7 @@ class InterfaceScopeImpl extends TypeScopeImpl implements InterfaceScope {
 
     @Override
     public QualifiedName getNamespaceName() {
-        if (indexedElement instanceof InterfaceElement) {
-            InterfaceElement indexedInterface = (InterfaceElement) indexedElement;
+        if (indexedElement instanceof InterfaceElement indexedInterface) {
             return indexedInterface.getNamespaceName();
         }
         return super.getNamespaceName();
@@ -205,9 +214,9 @@ class InterfaceScopeImpl extends TypeScopeImpl implements InterfaceScope {
         sb.append(super.toString());
         List<? extends InterfaceScope> implementedInterfaces = getSuperInterfaceScopes();
         if (!implementedInterfaces.isEmpty()) {
-            sb.append(" implements ");
+            sb.append(" implements "); // NOI18N
             for (InterfaceScope interfaceScope : implementedInterfaces) {
-                sb.append(interfaceScope.getName()).append(" ");
+                sb.append(interfaceScope.getName()).append(" "); // NOI18N
             }
         }
         return sb.toString();
@@ -215,7 +224,59 @@ class InterfaceScopeImpl extends TypeScopeImpl implements InterfaceScope {
 
     @Override
     public Collection<? extends VariableName> getDeclaredVariables() {
-        return Collections.emptyList();
+        return List.of();
     }
 
+    @Override
+    public Collection<? extends FieldElement> getDeclaredFields() {
+        if (ModelUtils.getFileScope(this) == null) {
+            IndexScope indexScopeImpl =  ModelUtils.getIndexScope(this);
+            if (indexScopeImpl instanceof IndexScope.PHP84IndexScope indexScope) {
+                return indexScope.findFields(this);
+            } else {
+                return List.of();
+            }
+        }
+        return filter(getElements(), (ModelElement element) -> element.getPhpElementKind().equals(PhpElementKind.FIELD));
+    }
+
+    @Override
+    public Collection<? extends FieldElement> getInheritedFields() {
+        Set<FieldElement> allFields = new HashSet<>();
+        Map<String, FieldElement> fieldNames = new HashMap<>();
+        Collection<? extends InterfaceScope> allInterfaceScopes = getAllSuperInterfaceScopes(getSuperInterfaceScopes());
+        for (InterfaceScope interfaceScope : allInterfaceScopes) {
+            if (interfaceScope instanceof TypeScope.FieldDeclarable ifaceScope) {
+                for (FieldElement declaredField : ifaceScope.getDeclaredFields()) {
+                    addField(declaredField, allFields, fieldNames);
+                }
+            }
+        }
+        return allFields;
+    }
+
+    private void addField(FieldElement declaredField, Set<FieldElement> allFields, Map<String, FieldElement> fieldNames) {
+        // check duplicate fields
+        FieldElement field = fieldNames.get(declaredField.getName());
+        if (field != null && !field.equals(declaredField)) {
+            InterfaceScope inScope = (InterfaceScope) field.getInScope();
+            InterfaceScope declaredInScope = (InterfaceScope) declaredField.getInScope();
+            Collection<? extends InterfaceScope> allInheritedTypes = getAllSuperInterfaceScopes(inScope.getSuperInterfaceScopes());
+            if (allInheritedTypes.contains(declaredInScope)) {
+                return;
+            }
+            allFields.remove(field);
+        }
+        if(allFields.add(declaredField)) {
+            fieldNames.put(declaredField.getName(), declaredField);
+        }
+    }
+
+   private Collection<? extends InterfaceScope> getAllSuperInterfaceScopes(Collection<? extends InterfaceScope> declaredInterfaces) {
+        Set<InterfaceScope> interfaces = new HashSet<>(declaredInterfaces);
+        for (InterfaceScope declaredInterface : declaredInterfaces) {
+            interfaces.addAll(getAllSuperInterfaceScopes(declaredInterface.getSuperInterfaceScopes()));
+        }
+        return interfaces;
+    }
 }

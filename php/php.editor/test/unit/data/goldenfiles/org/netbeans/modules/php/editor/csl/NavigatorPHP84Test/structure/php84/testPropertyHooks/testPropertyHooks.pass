@@ -1,0 +1,99 @@
+|-PropertyHooksClass [820, 3032] : ESCAPED{PropertyHooksClass}
+|--CONSTANT [865, 873] : ESCAPED{CONSTANT}<font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"property hook"}</font>
+|--$valid01 [929, 1062] : ESCAPED{$valid01}
+|---get [947, 995] : ESCAPED{get}ESCAPED{ {}}
+|---set [1004, 1056] : ESCAPED{set}ESCAPED{ {}}
+|--$valid02 [1079, 1264] : ESCAPED{$valid02}<font color="#999999">:ESCAPED{int}</font>
+|---get [1101, 1186] : ESCAPED{get}ESCAPED{ {}}
+|---set [1195, 1258] : ESCAPED{set}ESCAPED{(}<font color="#999999">ESCAPED{int}</font>ESCAPED{$value}ESCAPED{)}ESCAPED{ {}}
+|--$valid03 [1277, 1377] : ESCAPED{$valid03}
+|---get [1306, 1356] : ESCAPED{get}ESCAPED{ {}}
+|---set [1365, 1371] : ESCAPED{set}ESCAPED{ {}}
+|--$valid04 [1397, 1475] : ESCAPED{$valid04}<font color="#999999">:ESCAPED{string}</font>
+|---get [1432, 1454] : ESCAPED{get}ESCAPED{ {}}
+|---set [1463, 1469] : ESCAPED{set}ESCAPED{ {}}
+|--$valid05 [1494, 1585] : ESCAPED{$valid05}<font color="#999999">:ESCAPED{array}</font>
+|---get [1517, 1539] : ESCAPED{get}ESCAPED{ {}}
+|---set [1548, 1579] : ESCAPED{set}ESCAPED{ {}}
+|--$valid06 [1618, 1733] : ESCAPED{$valid06}<font color="#999999">:ESCAPED{string}</font>
+|---get [1653, 1712] : ESCAPED{get}ESCAPED{ {}}
+|---set [1721, 1727] : ESCAPED{set}ESCAPED{ {}}
+|--$valid07 [1746, 1841] : ESCAPED{$valid07}
+|---get [1775, 1796] : ESCAPED{get}ESCAPED{ {}}
+|---set [1805, 1835] : ESCAPED{set}ESCAPED{ {}}
+|--$valid08 [1867, 2004] : ESCAPED{$valid08}<font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{array}</font>
+|---set [1885, 1998] : ESCAPED{set}ESCAPED{(}<font color="#999999">ESCAPED{string}ESCAPED{|}ESCAPED{array}</font>ESCAPED{$param}ESCAPED{)}ESCAPED{ {}}
+|--$valid09 [2017, 2080] : ESCAPED{$valid09}
+|---get [2044, 2050] : ESCAPED{get}ESCAPED{ {}}
+|---set [2068, 2074] : ESCAPED{set}ESCAPED{ {}}
+|--$valid10 [2093, 2214] : ESCAPED{$valid10}
+|---get [2117, 2208] : ESCAPED{get}ESCAPED{ {}}
+|--$valid11 [2227, 2340] : ESCAPED{$valid11}
+|---get [2256, 2334] : ESCAPED{get}ESCAPED{ {}}
+|--$valid12 [2353, 2463] : ESCAPED{$valid12}
+|---set [2371, 2457] : ESCAPED{set}ESCAPED{(}ESCAPED{$value}ESCAPED{)}ESCAPED{ {}}
+|--$valid13 [2476, 2525] : ESCAPED{$valid13}
+|---get [2500, 2519] : ESCAPED{get}ESCAPED{ {}}
+|--$valid14 [2544, 2596] : ESCAPED{$valid14}
+|---get [2568, 2590] : ESCAPED{get}ESCAPED{ {}}
+|--$valid15 [2609, 2656] : ESCAPED{$valid15}
+|---get [2628, 2650] : ESCAPED{&}ESCAPED{get}ESCAPED{ {}}
+|--$closure [2669, 2795] : ESCAPED{$closure}
+|---get [2687, 2789] : ESCAPED{get}ESCAPED{ {}}
+|--$arrowFunction [2808, 2902] : ESCAPED{$arrowFunction}
+|---get [2832, 2896] : ESCAPED{get}ESCAPED{ {}}
+|--$propertyConst [2916, 2966] : ESCAPED{$propertyConst}
+|---get [2940, 2960] : ESCAPED{get}ESCAPED{ {}}
+|--$var [2976, 2995] : ESCAPED{$var}
+|---get [2982, 2993] : ESCAPED{get}ESCAPED{ {}}
+|--$prop [3009, 3029] : ESCAPED{$prop}
+|---get [3016, 3027] : ESCAPED{get}ESCAPED{ {}}
+|-Child [3040, 3208] : ESCAPED{Child}<font color="#999999">::ESCAPED{PropertyHooksClass}</font>
+|--(Inherited) CONSTANT [865, 873] : <font color="#7D694A">ESCAPED{CONSTANT}</font><font color="#999999">:ESCAPED{string}</font>ESCAPED{ }<font color="#999999">ESCAPED{"property hook"}</font>
+|--(Inherited) $valid01 [929, 1062] : <font color="#7D694A">ESCAPED{$valid01}</font>
+|---get [947, 995] : ESCAPED{get}ESCAPED{ {}}
+|---set [1004, 1056] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $valid02 [1079, 1264] : <font color="#7D694A">ESCAPED{$valid02}</font><font color="#999999">:ESCAPED{int}</font>
+|---get [1101, 1186] : ESCAPED{get}ESCAPED{ {}}
+|---set [1195, 1258] : ESCAPED{set}ESCAPED{(}<font color="#999999">ESCAPED{int}</font>ESCAPED{$value}ESCAPED{)}ESCAPED{ {}}
+|--(Inherited) $valid03 [1277, 1377] : <font color="#7D694A">ESCAPED{$valid03}</font>
+|---get [1306, 1356] : ESCAPED{get}ESCAPED{ {}}
+|---set [1365, 1371] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $valid04 [1397, 1475] : <font color="#7D694A">ESCAPED{$valid04}</font><font color="#999999">:ESCAPED{string}</font>
+|---get [1432, 1454] : ESCAPED{get}ESCAPED{ {}}
+|---set [1463, 1469] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $valid05 [1494, 1585] : <font color="#7D694A">ESCAPED{$valid05}</font><font color="#999999">:ESCAPED{array}</font>
+|---get [1517, 1539] : ESCAPED{get}ESCAPED{ {}}
+|---set [1548, 1579] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $valid06 [1618, 1733] : <font color="#7D694A">ESCAPED{$valid06}</font><font color="#999999">:ESCAPED{string}</font>
+|---get [1653, 1712] : ESCAPED{get}ESCAPED{ {}}
+|---set [1721, 1727] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $valid07 [1746, 1841] : <font color="#7D694A">ESCAPED{$valid07}</font>
+|---get [1775, 1796] : ESCAPED{get}ESCAPED{ {}}
+|---set [1805, 1835] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $valid08 [1867, 2004] : <font color="#7D694A">ESCAPED{$valid08}</font><font color="#999999">:ESCAPED{string}ESCAPED{|}ESCAPED{array}</font>
+|---set [1885, 1998] : ESCAPED{set}ESCAPED{(}<font color="#999999">ESCAPED{string}ESCAPED{|}ESCAPED{array}</font>ESCAPED{$param}ESCAPED{)}ESCAPED{ {}}
+|--(Inherited) $valid09 [2017, 2080] : <font color="#7D694A">ESCAPED{$valid09}</font>
+|---get [2044, 2050] : ESCAPED{get}ESCAPED{ {}}
+|---set [2068, 2074] : ESCAPED{set}ESCAPED{ {}}
+|--(Inherited) $valid10 [2093, 2214] : <font color="#7D694A">ESCAPED{$valid10}</font>
+|---get [2117, 2208] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $valid11 [2227, 2340] : <font color="#7D694A">ESCAPED{$valid11}</font>
+|---get [2256, 2334] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $valid12 [2353, 2463] : <font color="#7D694A">ESCAPED{$valid12}</font>
+|---set [2371, 2457] : ESCAPED{set}ESCAPED{(}ESCAPED{$value}ESCAPED{)}ESCAPED{ {}}
+|--(Inherited) $valid13 [2476, 2525] : <font color="#7D694A">ESCAPED{$valid13}</font>
+|---get [2500, 2519] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $valid14 [2544, 2596] : <font color="#7D694A">ESCAPED{$valid14}</font>
+|---get [2568, 2590] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $valid15 [2609, 2656] : <font color="#7D694A">ESCAPED{$valid15}</font>
+|---get [2628, 2650] : ESCAPED{&}ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $closure [2669, 2795] : <font color="#7D694A">ESCAPED{$closure}</font>
+|---get [2687, 2789] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $arrowFunction [2808, 2902] : <font color="#7D694A">ESCAPED{$arrowFunction}</font>
+|---get [2832, 2896] : ESCAPED{get}ESCAPED{ {}}
+|--(Inherited) $var [2976, 2995] : <font color="#7D694A">ESCAPED{$var}</font>
+|---get [2982, 2993] : ESCAPED{get}ESCAPED{ {}}
+|--$prop [3087, 3206] : ESCAPED{$prop}
+|---get [3108, 3136] : ESCAPED{get}ESCAPED{ {}}
+|---set [3145, 3200] : ESCAPED{set}ESCAPED{ {}}

@@ -21,9 +21,12 @@ package org.netbeans.modules.php.editor.model.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
+import org.netbeans.modules.php.editor.CodeUtils;
 import org.netbeans.modules.php.editor.api.ElementQuery;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.QualifiedName;
@@ -53,7 +56,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.Variable;
  *
  * @author Ondrej Brejla <obrejla@netbeans.org>
  */
-class TraitScopeImpl extends TypeScopeImpl implements TraitScope, VariableNameFactory {
+class TraitScopeImpl extends TypeScopeImpl implements TraitScope, VariableNameFactory, TypeScope.FieldDeclarable {
     private final Collection<QualifiedName> usedTraits;
     private final Set<? super TypeScope> superRecursionDetection = new HashSet<>();
     private final Set<? super TypeScope> subRecursionDetection = new HashSet<>();
@@ -143,8 +146,7 @@ class TraitScopeImpl extends TypeScopeImpl implements TraitScope, VariableNameFa
             indexDocument.addPair(PHPIndexer.FIELD_USED_TRAIT, String.format("%s;%s;%s", name.toLowerCase(), name, namespaceName), true, true); //NOI18N
         }
         for (MethodScope methodScope : getDeclaredMethods()) {
-            if (methodScope instanceof LazyBuild) {
-                LazyBuild lazyMethod = (LazyBuild) methodScope;
+            if (methodScope instanceof LazyBuild lazyMethod) {
                 if (!lazyMethod.isScanned()) {
                     lazyMethod.scan();
                 }
@@ -168,7 +170,7 @@ class TraitScopeImpl extends TypeScopeImpl implements TraitScope, VariableNameFa
         sb.append(getOffset()).append(Signature.ITEM_DELIMITER);
         NamespaceScope namespaceScope = ModelUtils.getNamespaceScope(this);
         // if inScope is IndexScope, namespaceScope is null
-        QualifiedName qualifiedName = namespaceScope != null ? namespaceScope.getQualifiedName() : QualifiedName.create(""); // NOI18N
+        QualifiedName qualifiedName = namespaceScope != null ? namespaceScope.getQualifiedName() : QualifiedName.create(CodeUtils.EMPTY_STRING);
         sb.append(qualifiedName.toString()).append(Signature.ITEM_DELIMITER);
         if (!usedTraits.isEmpty()) {
             StringBuilder traitSb = new StringBuilder();
@@ -188,9 +190,8 @@ class TraitScopeImpl extends TypeScopeImpl implements TraitScope, VariableNameFa
 
     @Override
     public QualifiedName getNamespaceName() {
-        if (indexedElement instanceof TraitElement) {
-            TraitElement traitClass = (TraitElement) indexedElement;
-            return traitClass.getNamespaceName();
+        if (indexedElement instanceof TraitElement traitElement) {
+            return traitElement.getNamespaceName();
         }
         return super.getNamespaceName();
     }
@@ -201,12 +202,45 @@ class TraitScopeImpl extends TypeScopeImpl implements TraitScope, VariableNameFa
             IndexScope indexScopeImpl =  ModelUtils.getIndexScope(this);
             return indexScopeImpl.findFields(this);
         }
-        return filter(getElements(), new ElementFilter() {
-            @Override
-            public boolean isAccepted(ModelElement element) {
-                return element.getPhpElementKind().equals(PhpElementKind.FIELD);
+        return filter(getElements(), (ModelElement element) -> element.getPhpElementKind().equals(PhpElementKind.FIELD));
+    }
+
+    @Override
+    public Collection<? extends FieldElement> getInheritedFields() {
+        Collection<? extends TraitScope> inheritedTraits = getAllTraits(getTraits());
+        Map<String, FieldElement> fieldNames = new HashMap<>();
+        Set<FieldElement> allFields = new HashSet<>();
+        for (TraitScope inheritedTrait : inheritedTraits) {
+            for (FieldElement declaredField : inheritedTrait.getDeclaredFields()) {
+                addField(declaredField, allFields, fieldNames);
             }
-        });
+        }
+        return allFields;
+    }
+
+    private void addField(FieldElement declaredField, Set<FieldElement> allFields, Map<String, FieldElement> fieldNames) {
+        // check duplicate fields
+        FieldElement field = fieldNames.get(declaredField.getName());
+        if (field != null && !field.equals(declaredField)) {
+            TraitScope inScope = (TraitScope) field.getInScope();
+            TraitScope declaredInScope = (TraitScope) declaredField.getInScope();
+            Collection<? extends TraitScope> allInheritedTypes = getAllTraits(inScope.getTraits());
+            if (allInheritedTypes.contains(declaredInScope)) {
+                return;
+            }
+            allFields.remove(field);
+        }
+        if(allFields.add(declaredField)) {
+            fieldNames.put(declaredField.getName(), declaredField);
+        }
+    }
+
+    private Collection<? extends TraitScope> getAllTraits(Collection<? extends TraitScope> declaredTraits) {
+        Set<TraitScope> traits = new HashSet<>(declaredTraits);
+        for (TraitScope declaredClass : declaredTraits) {
+            traits.addAll(getAllTraits(declaredClass.getTraits()));
+        }
+        return traits;
     }
 
     @Override
@@ -290,19 +324,15 @@ class TraitScopeImpl extends TypeScopeImpl implements TraitScope, VariableNameFa
 
     @Override
     public Collection<? extends VariableName> getDeclaredVariables() {
-        return filter(getElements(), new ElementFilter() {
-            @Override
-            public boolean isAccepted(ModelElement element) {
-                if (element instanceof MethodScope && ((MethodScope) element).isInitiator()
-                        && element instanceof LazyBuild) {
-                    LazyBuild scope = (LazyBuild) element;
-                    if (!scope.isScanned()) {
-                        scope.scan();
-                    }
+        return filter(getElements(), (ModelElement element) -> {
+            if (element instanceof MethodScope && ((MethodScope) element).isInitiator()
+                    && element instanceof LazyBuild) {
+                LazyBuild scope = (LazyBuild) element;
+                if (!scope.isScanned()) {
+                    scope.scan();
                 }
-                return element.getPhpElementKind().equals(PhpElementKind.VARIABLE);
             }
+            return element.getPhpElementKind().equals(PhpElementKind.VARIABLE);
         });
     }
-
 }

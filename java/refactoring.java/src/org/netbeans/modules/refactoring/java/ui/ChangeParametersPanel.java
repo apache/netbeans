@@ -179,6 +179,7 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
                     try {
                         info.toPhase(org.netbeans.api.java.source.JavaSource.Phase.RESOLVED);
                         ExecutableElement e = (ExecutableElement) refactoredObj.resolveElement(info);
+                        MethodTree methodTree = (MethodTree) refactoredObj.resolve(info).getLeaf();
                         isConstructor = e.getKind() == ElementKind.CONSTRUCTOR;
                         TreePath enclosingClass = JavaRefactoringUtils.findEnclosingClass(info, refactoredObj.resolve(info), true, true, true, true, true);
                         TreePathHandle tph = TreePathHandle.create(enclosingClass, info);
@@ -187,10 +188,9 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
                                 enclosingElement.getSimpleName().toString() :
                                 e.getSimpleName().toString());
                         final FileObject fileObject = refactoredObj.getFileObject();
-                        final String returnType = e.getReturnType().toString();
+                        final String returnType = methodTree.getReturnType().toString();
                         final long[] returnSpan = {-1, -1};
                         if(!isConstructor) {
-                            MethodTree methodTree = (MethodTree) refactoredObj.resolve(info).getLeaf();
                             final long methodStart = info.getTreeUtilities().findNameSpan(methodTree)[0];
                             Tree tree = methodTree.getReturnType();
                             returnSpan[0] = tree == null ? methodStart -1 : info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
@@ -764,13 +764,7 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
         List<? extends VariableElement> pars = method.getParameters();
         int originalIndex = 0;
         for (VariableElement par : pars) {
-            VariableTree parTree = (VariableTree) info.getTrees().getTree(par);
-            String typeRepresentation;
-            if (method.isVarArgs() && originalIndex == pars.size() - 1) {
-                typeRepresentation = getTypeStringRepresentation(parTree).replace("[]", "..."); // NOI18N
-            } else {
-                typeRepresentation = getTypeStringRepresentation(parTree);
-            }
+            String typeRepresentation = ParameterInfo.parameterTypeFromSource(info, par);
             LocalVarScanner scan = new LocalVarScanner(info, null);
             scan.scan(path, par);
             Boolean removable = !scan.hasRefernces();

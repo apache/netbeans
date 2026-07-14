@@ -38,7 +38,7 @@ public final class Wizards {
     private static final List<Integer> JAVA_VERSIONS = List.of(26, 25, 21, 17, 11, 8);
     private static final List<TestFramework> JAVA_TEST_FRAMEWORKS = List.of(
             JUNIT,
-            JUNIT_5,
+            JUNIT_JUPITER,
             TESTNG
     );
 
@@ -51,7 +51,7 @@ public final class Wizards {
         return GradleInitWizard.create("java-application", Bundle.LBL_SimpleApplicationProject())
                 .withJavaVersions(JAVA_VERSIONS)
                 .withTestframeworks(JAVA_TEST_FRAMEWORKS)
-                .withPreferredTestFramework(JUNIT_5)
+                .withPreferredTestFramework(JUNIT_JUPITER)
                 .withImportantPaths(List.of(
                         "app",
                         "app/src/main/java/${package}/App.java"
@@ -68,7 +68,7 @@ public final class Wizards {
         return GradleInitWizard.create("java-library", Bundle.LBL_SimpleApplicationProject())
                 .withJavaVersions(JAVA_VERSIONS)
                 .withTestframeworks(JAVA_TEST_FRAMEWORKS)
-                .withPreferredTestFramework(JUNIT_5)
+                .withPreferredTestFramework(JUNIT_JUPITER)
                 .withImportantPaths(List.of(
                         "lib",
                         "lib/src/main/java/${package}/Library.java"

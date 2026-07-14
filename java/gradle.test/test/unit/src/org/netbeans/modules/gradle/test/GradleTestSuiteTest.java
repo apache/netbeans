@@ -21,6 +21,7 @@ package org.netbeans.modules.gradle.test;
 import org.gradle.tooling.events.OperationDescriptor;
 import org.gradle.tooling.events.test.JvmTestKind;
 import org.gradle.tooling.events.test.JvmTestOperationDescriptor;
+import org.gradle.tooling.events.test.source.TestSource;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
@@ -110,6 +111,11 @@ public class GradleTestSuiteTest {
 
         @Override
         public String getTestDisplayName() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public TestSource getSource() {
             throw new UnsupportedOperationException();
         }
     }

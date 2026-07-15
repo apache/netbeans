@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.106
+#Version 1.107
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -2120,6 +2120,8 @@ meth public static boolean isJavaPlatformSupported(org.netbeans.modules.glassfis
  anno 2 org.netbeans.api.annotations.common.NonNull()
 meth public static java.lang.String getDefaultJavaHome()
 meth public static java.lang.String getJavaHome(org.netbeans.api.java.platform.JavaPlatform)
+meth public static java.lang.String supportedJavaSERange(org.netbeans.modules.glassfish.common.GlassfishInstance)
+ anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.api.java.platform.JavaPlatform findInstalledPlatform(java.io.File)
  anno 1 org.netbeans.api.annotations.common.NonNull()
 meth public static org.netbeans.api.java.platform.JavaPlatform findPlatformByJavaHome(org.netbeans.api.java.platform.JavaPlatform[],java.io.File)

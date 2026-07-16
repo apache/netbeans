@@ -46,6 +46,6 @@ public class Utilities {
             }
         }
 
-        return new Locale(language, country, variant);
+        return Locale.of(language, country, variant);
     }
 }

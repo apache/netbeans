@@ -26,11 +26,12 @@ import org.netbeans.modules.spellchecker.spi.language.TokenListProvider;
  *
  * @author Jan Lahoda
  */
-public class PlainTokenListProvider implements TokenListProvider {
+public final class PlainTokenListProvider implements TokenListProvider {
 
     public PlainTokenListProvider() {
     }
 
+    @Override
     public TokenList findTokenList(Document doc) {
         return new PlainTokenList(doc);
     }

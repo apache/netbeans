@@ -64,7 +64,7 @@ public class OutputOptions {
     public static final String PROP_COLOR_LINK_IMPORTANT =
             "color.link.important";                                     //NOI18N
     public static final String PROP_COLOR_BACKGROUND =
-            "color.backgorund";                                         //NOI18N
+            "color.background";                                         //NOI18N
     public static final String PROP_COLOR_WARNING = "color.warning";    //NOI18N
     public static final String PROP_COLOR_FAILURE = "color.failure";    //NOI18N
     public static final String PROP_COLOR_SUCCESS = "color.success";    //NOI18N
@@ -668,7 +668,11 @@ public class OutputOptions {
     }
 
     static Color getDefaultColorBackground() {
-        Color back = UIManager.getColor("nb.output.backgorund");        //NOI18N
+        Color back = UIManager.getColor("nb.output.background");        //NOI18N
+        if (back == null) {
+            // dprecated
+            back = UIManager.getColor("nb.output.backgorund");        //NOI18N
+        }
         if (back == null) {
             back = UIManager.getColor("TextField.background");          //NOI18N
             if (back == null) {

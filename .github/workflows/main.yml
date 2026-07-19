@@ -1623,7 +1623,7 @@ jobs:
   profiler-test:
     name: Profiler on Linux/JDK ${{ matrix.java }}
     # equals env.test_java == 'true'
-    if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'Java') || contains(github.event.pull_request.labels.*.name, 'profiler') || contains(github.event.pull_request.labels.*.name, 'ci:all-tests') || github.event_name != 'pull_request' }}
     needs: base-build
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -1654,6 +1654,10 @@ jobs:
 
       - name: Extract
         run: tar --zstd -xf build.tar.zst
+
+      - name: lib.profiler
+        # test-unit's build dependency also compiles this module's legacy QA-functional sources.
+        run: ant $OPTS -f profiler/lib.profiler test-unit -Ddisable.qa-functional.tests=true
 
       - name: profiler
         run: ant $OPTS -f profiler/profiler test-unit

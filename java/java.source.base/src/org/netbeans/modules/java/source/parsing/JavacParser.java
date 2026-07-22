@@ -423,7 +423,7 @@ public class JavacParser extends Parser {
                     boolean needsFullReparse = true;
                     if (supportsReparse) {
                         final Pair<DocPositionRegion,MethodTree> _changedMethod = changedMethod.getAndSet(null);
-                        if (_changedMethod != null && ciImpl != null) {
+                        if (_changedMethod != null && ciImpl != null && !ciImpl.isDetached()) {
                             LOGGER.log(Level.FINE, "\t:trying partial reparse:\n{0}", _changedMethod.first().getText());                           //NOI18N
                             PartialReparser reparser = Lookup.getDefault().lookup(PartialReparser.class);
                             needsFullReparse = !reparser.reparseMethod(ciImpl, snapshot, _changedMethod.second(), _changedMethod.first().getText());
@@ -683,7 +683,7 @@ public class JavacParser extends Parser {
                 currentInfo.setCompilationUnit(unit);
 
                 final Document doc = currentInfo.getDocument();
-                if (doc != null && supportsReparse) {
+                if (doc != null && supportsReparse && !currentInfo.isDetached()) {
                     final FindMethodRegionsVisitor v = new FindMethodRegionsVisitor(doc,Trees.instance(currentInfo.getJavacTask()).getSourcePositions(),this.parserCanceled, unit);
                     doc.render(v);
                     synchronized (positions) {

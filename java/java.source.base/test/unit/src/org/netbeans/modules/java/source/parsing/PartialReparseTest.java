@@ -24,6 +24,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -52,12 +53,15 @@ import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.java.source.TestUtil;
 import org.openide.util.SharedClassObject;
 import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
+import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.ElementHandle;
 import org.netbeans.api.java.source.SourceUtils;
+import org.netbeans.modules.java.preprocessorbridge.api.JavaSourceUtil;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.cookies.EditorCookie;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -380,12 +384,38 @@ public class PartialReparseTest extends NbTestCase {
                   info -> {});
     }
 
+    public void testTaggedControllerDoesNotBreakPartialReparse() throws Exception {
+        doRunTest("""
+                  package test;
+                  public class Test {
+                      void t() {
+                          java.util.List.of("a").stream().^^
+                      }
+                  }
+                  """,
+                  "filter(predicate)",
+                  info -> {},
+                  file -> {
+                      try {
+                          CompilationController cc = (CompilationController)
+                              JavaSourceUtil.createControllerHandle(file, 0, null)
+                                            .getCompilationController();
+                          cc.toPhase(Phase.RESOLVED);
+                      } catch (IOException ex) {
+                          throw new AssertionError(ex.getMessage(), ex);
+                      }
+                  });
+    }
+
     private void doRunTest(String code, String inject) throws Exception {
         doRunTest(code, inject, info -> {});
     }
 
     private void doRunTest(String code, String inject, Consumer<CompilationInfo> callback) throws Exception {
+        doRunTest(code, inject, callback, file -> {});
+    }
 
+    private void doRunTest(String code, String inject, Consumer<CompilationInfo> callback, Consumer<FileObject> runBeforeModification) throws Exception {
         FileObject srcDir = FileUtil.createFolder(getWorkDir());
         FileObject src = srcDir.createFolder("test").createData("Test.java");
 
@@ -404,6 +434,8 @@ public class PartialReparseTest extends NbTestCase {
             topLevel[0] = cc.getCompilationUnit();
             callback.accept(cc);
         }, true);
+
+        runBeforeModification.accept(src);
 
         // replace snippet and run again
         replaceSourceSnippetInDoc(doc, code, inject);

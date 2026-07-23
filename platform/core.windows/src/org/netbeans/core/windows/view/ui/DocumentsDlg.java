@@ -25,11 +25,8 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
@@ -87,7 +84,7 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
         initComponents();
         
         // Internationalize.
-	Mnemonics.setLocalizedText(jButtonActivate, NbBundle.getMessage(DocumentsDlg.class, "LBL_Activate"));
+        Mnemonics.setLocalizedText(jButtonActivate, NbBundle.getMessage(DocumentsDlg.class, "LBL_Activate"));
         Mnemonics.setLocalizedText(jButtonClose, NbBundle.getMessage(DocumentsDlg.class, "LBL_CloseDocuments"));
         Mnemonics.setLocalizedText(jButtonSave, NbBundle.getMessage(DocumentsDlg.class, "LBL_SaveDocuments"));
         Mnemonics.setLocalizedText(explorerLabel, NbBundle.getMessage(DocumentsDlg.class, "LBL_Documents"));
@@ -106,12 +103,8 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
         closeButton.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(DocumentsDlg.class, "ACSD_Close"));
         descriptionArea.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(DocumentsDlg.class, "ACSD_DescriptionArea"));
 
-        ItemListener orderingListener = new ItemListener() {
-
-            @Override
-            public void itemStateChanged( ItemEvent e ) {
-                updateNodes();
-            }
+        ItemListener orderingListener = (e) -> {
+            updateNodes();
         };
         radioOrderByName.addItemListener( orderingListener );
         radioOrderByUsage.addItemListener( orderingListener );
@@ -290,7 +283,7 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
         for (int i = 0; i < selNodes.length; i++) {
             TopComponent tc = ((TopComponentNode) selNodes[i]).getTopComponent();
             Lookup l = tc.getLookup();
-            SaveCookie sc = (SaveCookie) l.lookup(SaveCookie.class);
+            SaveCookie sc = l.lookup(SaveCookie.class);
             if (sc != null) {
                 try {
                     sc.save();
@@ -315,16 +308,16 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
         if (selNodes.length == 0) {
             return;
         }
-        //#70965 begin - select document previous to first closed document
-        int positionToSelectAfter = 0;
+        // avoid moving the selection if possible
+        int selectionStart = 0;
         Node[] children = explorer.getRootContext().getChildren().getNodes();
         for (int i = 0; i < children.length; i++) {
             if (children[i] == selNodes[0]) {
-                positionToSelectAfter = Math.max(0, i - 1);
+                selectionStart = i;
                 break;
             }
         }
-        //#70965 end
+
         for (int i = 0; i < selNodes.length; i++) {
             TopComponent tc = ((TopComponentNode) selNodes[i]).getTopComponent();
             if( Switches.isEditorTopComponentClosingEnabled() && Switches.isClosingEnabled( tc ) )
@@ -332,7 +325,7 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
         }
         
         List<TopComponent> tcList = getOpenedDocuments();
-        List<TopComponentNode> tcNodes = new ArrayList<TopComponentNode> (tcList.size());
+        List<TopComponentNode> tcNodes = new ArrayList<>(tcList.size());
         for (TopComponent tc : tcList) {
             tcNodes.add(new TopComponentNode(tc));
         }
@@ -346,12 +339,15 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
                 java.util.Collections.sort(tcNodes);
             }
             Children.Array nodeArray = new Children.Array();
-            nodeArray.add((TopComponentNode[])tcNodes.toArray(new TopComponentNode[0]));
+            nodeArray.add(tcNodes.toArray(TopComponentNode[]::new));
             Node root = new AbstractNode(nodeArray);
             explorer.setRootContext(root);
             //#54656 begin
             try {
-                explorer.setSelectedNodes(new Node[]{root.getChildren().getNodes()[positionToSelectAfter]});
+                Node[] nodes = root.getChildren().getNodes();
+                explorer.setSelectedNodes(new Node[] {
+                    nodes[Math.min(selectionStart, nodes.length - 1)]
+                });
             } catch (PropertyVetoException exc) {
                 //mkleint - well, what can we do, I've never seen the selection being vetoed anyway.
             }
@@ -372,16 +368,14 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
         final TopComponent tc = ((TopComponentNode) selNodes[0]).getTopComponent();
         //Call using invokeLater to make sure it is performed after dialog
         //is closed.
-        SwingUtilities.invokeLater(new Runnable () {
-            public void run() {
-                // #37226-41075 Unmaximized the other mode if needed.
-                WindowManagerImpl wm = WindowManagerImpl.getInstance();
-                ModeImpl mode = (ModeImpl)wm.findMode(tc);
-                if(mode != null && mode != wm.getCurrentMaximizedMode()) {
-                    wm.switchMaximizedMode(null);
-                }
-                tc.requestActive();
+        SwingUtilities.invokeLater(() -> {
+            // #37226-41075 Unmaximized the other mode if needed.
+            WindowManagerImpl wm = WindowManagerImpl.getInstance();
+            ModeImpl mode = (ModeImpl)wm.findMode(tc);
+            if(mode != null && mode != wm.getCurrentMaximizedMode()) {
+                wm.switchMaximizedMode(null);
             }
+            tc.requestActive();
         });
     }//GEN-LAST:event_activate
 
@@ -430,8 +424,8 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
         dlgDesc.setHelpCtx( null ); //hide the default Help button
         final Dialog dlg = DialogDisplayer.getDefault().createDialog(dlgDesc);
         dlg.getAccessibleContext().setAccessibleDescription(NbBundle.getMessage(DocumentsDlg.class, "ACSD_DocumentsDialog"));
-        if( dlg instanceof JDialog ) {
-            HelpCtx.setHelpIDString(((JDialog)dlg).getRootPane(), documentsPanel.getHelpCtx().getHelpID());
+        if (dlg instanceof JDialog jd) {
+            HelpCtx.setHelpIDString(jd.getRootPane(), documentsPanel.getHelpCtx().getHelpID());
         }
         getDefault().updateNodes();
         
@@ -527,7 +521,7 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
     private static List<TopComponent> getOpenedDocuments() {
         WindowManagerImpl wm = WindowManagerImpl.getInstance();
         TopComponent[] recentDocuments = wm.getRecentViewList();
-        List<TopComponent> documents = new ArrayList<TopComponent> (recentDocuments.length);
+        List<TopComponent> documents = new ArrayList<>(recentDocuments.length);
         TopComponentTracker tcTracker = TopComponentTracker.getDefault();
         for( TopComponent tc : recentDocuments ) {
             if( tcTracker.isEditorTopComponent( tc ) ) {
@@ -538,6 +532,7 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
         return documents;
     }
     
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (ExplorerManager.PROP_SELECTED_NODES.equals(evt.getPropertyName())) {
             Node [] selNodes = (Node []) evt.getNewValue();
@@ -565,7 +560,7 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
             for (int i = 0; i < selNodes.length; i++) {
                 TopComponent tc = ((TopComponentNode) selNodes[i]).getTopComponent();
                 Lookup l = tc.getLookup();
-                SaveCookie sc = (SaveCookie) l.lookup(SaveCookie.class);
+                SaveCookie sc = l.lookup(SaveCookie.class);
                 if (sc != null) {
                     enableSave = true;
                     break;
@@ -574,7 +569,7 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
             jButtonSave.setEnabled(enableSave);
             
             // Set description.
-            if(selNodes != null && selNodes.length == 1) {
+            if(selNodes.length == 1) {
                 descriptionArea.setText(((TopComponentNode)selNodes[0]).getDescription());
             } else {
                 descriptionArea.setText(null);
@@ -599,6 +594,7 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
     // End of variables declaration//GEN-END:variables
     private ListView listView;
     
+    @Override
     public ExplorerManager getExplorerManager() {
         return explorer;
     }
@@ -609,7 +605,7 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
     private class TopComponentNode extends AbstractNode
                                    implements Comparable<TopComponentNode>, Action, PropertyChangeListener {
         
-        private TopComponent tc;
+        private final TopComponent tc;
         
         public TopComponentNode (TopComponent tc) {
             super(Children.LEAF);
@@ -617,6 +613,7 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
             tc.addPropertyChangeListener(WeakListeners.propertyChange(this, tc));
         }
         
+        @Override
         public String getName() {
             // #60263: apparently used by functional tests.
             String result = tc.getName();
@@ -626,16 +623,19 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
                 result = tc.toString();
             return result;
         }
+        @Override
         public String getDisplayName() {
             // Also #60263. Forms do not have a tc.name??
             String result = tc.getDisplayName();
             return result != null ? result : tc.getName();
         }
 
+        @Override
         public String getHtmlDisplayName() {
             return tc.getHtmlDisplayName();
         }
         
+        @Override
         public Image getIcon (int type) {
             Image image = tc.getIcon();
             return image == null ? ImageUtilities.loadImage("org/openide/resources/actions/empty.gif") : image; // NOI18N
@@ -659,6 +659,7 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
             fireNameChange(null, null);
         }
         
+        @Override
         public int compareTo(TopComponentNode tcn) {
             String displayName1 = getDisplayName();
             String displayName2 = tcn.getDisplayName();
@@ -672,30 +673,36 @@ public class DocumentsDlg extends JPanel implements PropertyChangeListener, Expl
         
         /** Invokes itself ac action when double click or Enter pressed on node
          */
+        @Override
         public Action getPreferredAction() {
             return this;
         }
 
         /** Implementation of Action interface, activates TopComponent
          * currently selected in the list view (should be the same component
-         * that is asociated with this Node) 
+         * that is associated with this Node) 
          */
+        @Override
         public void actionPerformed(ActionEvent evt) {
             activate(evt);
         }
         
+        @Override
         public boolean isEnabled() {
             return true;
         }
         
+        @Override
         public void putValue(String key, Object value) {
             // no operation
         }
         
+        @Override
         public void setEnabled(boolean b) {
             // no operation
         }
 
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             fireDisplayNameChange(null, null);
         }

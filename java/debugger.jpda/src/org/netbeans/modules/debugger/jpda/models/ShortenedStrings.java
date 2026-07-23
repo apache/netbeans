@@ -43,6 +43,7 @@ import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.text.MessageFormat;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -73,7 +74,7 @@ import org.openide.util.Exceptions;
  */
 public final class ShortenedStrings {
     
-    private static final Map<String, StringInfo> infoStrings = new WeakHashMap<String, StringInfo>();
+    private static final Map<String, StringInfo> infoStrings = new HashMap<String, StringInfo>();
     private static final Map<StringReference, StringValueInfo> stringsCache = new WeakHashMap<StringReference, StringValueInfo>();
     private static final Set<StringReference> retrievingStrings = new HashSet<StringReference>();
     private static final Map<VirtualMachine, Boolean> isLittleEndianCache =
@@ -85,7 +86,6 @@ public final class ShortenedStrings {
 
             @Override
             public void sessionRemoved(Session session) {
-                // Clean up. WeakHashMap does not clean up if not touched. :-(
                 int n = DebuggerManager.getDebuggerManager().getSessions().length;
                 if (n == 0) {
                     synchronized (infoStrings) {
@@ -107,8 +107,19 @@ public final class ShortenedStrings {
     private ShortenedStrings() {}
     
     public static StringInfo getShortenedInfo(String s) {
+        if (s == null) {
+            return null;
+        }
         synchronized (infoStrings) {
-            return infoStrings.get(s);
+            StringInfo info = infoStrings.get(s);
+            if (info != null) {
+                return info;
+            }
+            // Variable.getValue() wraps Strings in quotes: "content..."
+            if (s.length() >= 2 && s.charAt(0) == '"' && s.charAt(s.length() - 1) == '"') {
+                return infoStrings.get(s.substring(1, s.length() - 1));
+            }
+            return null;
         }
     }
 

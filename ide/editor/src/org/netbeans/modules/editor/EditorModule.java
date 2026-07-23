@@ -250,6 +250,8 @@ public class EditorModule extends ModuleInstall {
         if (topComponentRegistryListener != null) {
             TopComponent.getRegistry().removePropertyChangeListener(topComponentRegistryListener);
         }
+        
+        // TODO AppContext and kitRegistryKey don't exist anymore in JDK 27+
 
         // unregister our registry
         try {

@@ -518,6 +518,10 @@ public final class CompilationInfoImpl {
         userCache.remove(CacheClearPolicy.ON_TASK_END);
         userCache.remove(CacheClearPolicy.ON_CHANGE);
     }
+
+    boolean isDetached() {
+        return isDetached;
+    }
     
     /**
      * Sets the {@link CompilationUnitTree}

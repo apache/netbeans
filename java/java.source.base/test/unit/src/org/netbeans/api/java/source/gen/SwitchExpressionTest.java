@@ -246,4 +246,117 @@ public class SwitchExpressionTest extends TreeRewriteTestBase {
 
     }
 
+    public void testAnythingToBlock() throws Exception {
+        String code = """
+                      package test; 
+                      public class Test {
+                           private void test(int p) {
+                               var v = switch (p) {
+                                   case 1 -> p = 0;
+                                   default -> throw IllegalStateException();
+                               }
+                           }
+                      }
+                      """;
+        String golden = """
+                        package test; 
+                        public class Test {
+                             private void test(int p) {
+                                 var v = switch (p) {
+                                     case 1 -> {
+                                     }
+                                     default -> {
+                                     }
+                                 }
+                             }
+                        }
+                        """;
+
+        prepareTest("Test", code);
+
+
+        JavaSource js = getJavaSource();
+        assertNotNull(js);
+
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(JavaSource.Phase.RESOLVED);
+
+                TreeMaker make = workingCopy.getTreeMaker();
+
+                new TreePathScanner<>() {
+                    @Override
+                    public Object visitCase(CaseTree node, Object p) {
+                        workingCopy.rewrite(node, make.CasePatterns(node.getLabels(), make.Block(List.of(), false)));
+                        return super.visitCase(node, p);
+                    }
+                }.scan(workingCopy.getCompilationUnit(), null);
+            }
+
+        };
+
+        js.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(getTestFile());
+        //System.err.println(res);
+        assertEquals(golden, res);
+
+    }
+
+    public void testBlockToAnything() throws Exception {
+        String code = """
+                      package test; 
+                      public class Test {
+                           private void test(int p) {
+                               var v = switch (p) {
+                                   case 1 -> {}
+                                   default -> { throw IllegalStateException(); }
+                               }
+                           }
+                      }
+                      """;
+        String golden = """
+                        package test; 
+                        public class Test {
+                             private void test(int p) {
+                                 var v = switch (p) {
+                                     case 1 -> 0;
+                                     default -> throw IllegalStateException();
+                                 }
+                             }
+                        }
+                        """;
+
+        prepareTest("Test", code);
+
+
+        JavaSource js = getJavaSource();
+        assertNotNull(js);
+
+        Task<WorkingCopy> task = new Task<WorkingCopy>() {
+
+            public void run(WorkingCopy workingCopy) throws IOException {
+                workingCopy.toPhase(JavaSource.Phase.RESOLVED);
+
+                TreeMaker make = workingCopy.getTreeMaker();
+
+                new TreePathScanner<>() {
+                    @Override
+                    public Object visitCase(CaseTree node, Object p) {
+                        BlockTree bt = (BlockTree) node.getBody();
+                        Tree newBody = bt.getStatements().isEmpty() ? make.Literal(0)
+                                                                    : bt.getStatements().get(0);
+                        workingCopy.rewrite(node, make.CasePatterns(node.getLabels(), newBody));
+                        return super.visitCase(node, p);
+                    }
+                }.scan(workingCopy.getCompilationUnit(), null);
+            }
+
+        };
+
+        js.runModificationTask(task).commit();
+        String res = TestUtilities.copyFileToString(getTestFile());
+        //System.err.println(res);
+        assertEquals(golden, res);
+    }
 }

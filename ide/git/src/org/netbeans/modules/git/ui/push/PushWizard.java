@@ -50,10 +50,16 @@ class PushWizard  implements ChangeListener {
     private PanelsIterator wizardIterator;
     private WizardDescriptor wizardDescriptor;
     private final File repository;
+    private final GitBranch branchToSelect;
 
     public PushWizard (File repository, Map<String, GitRemoteConfig> remotes) {
+        this(repository, remotes, null);
+    }
+
+    public PushWizard (File repository, Map<String, GitRemoteConfig> remotes, GitBranch branchToSelect) {
         this.repository = repository;
         this.remotes = remotes;
+        this.branchToSelect = branchToSelect;
     }
 
     boolean show () {
@@ -161,7 +167,7 @@ class PushWizard  implements ChangeListener {
                 Map<String, String> remoteTags = selectUriStep.getRemoteTags();
                 if (remoteBranches != null) {
                     pushBranchesStep.fillRemoteBranches(selectUriStep.getSelectedRemote(),
-                            remoteBranches, remoteTags == null ? Collections.<String, String>emptyMap() : remoteTags);
+                            remoteBranches, remoteTags == null ? Collections.<String, String>emptyMap() : remoteTags, branchToSelect);
                 }
                 pushBranchesStep.setAsLastPanel(!selectUriStep.isConfiguredRemoteSelected() && selectUriStep.getRemoteName() == null);
                 selectUriStep.storeURI();

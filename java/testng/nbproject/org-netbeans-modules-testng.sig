@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.52
+#Version 2.53
 
 CLSS public abstract interface java.io.Serializable
 
@@ -182,6 +182,7 @@ meth public abstract void execute(org.netbeans.modules.testng.api.TestNGSupport$
 CLSS public final org.netbeans.modules.testng.spi.XMLSuiteSupport
 meth public static java.io.File createSuiteforMethod(java.io.File,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
 supr java.lang.Object
+hfds LOGGER
 
 CLSS public abstract interface org.xml.sax.ContentHandler
 meth public abstract void characters(char[],int,int) throws org.xml.sax.SAXException

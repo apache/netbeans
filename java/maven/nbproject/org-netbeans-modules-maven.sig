@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.172.0
+#Version 2.173.0
 
 CLSS public abstract java.awt.Component
 cons protected init()
@@ -2479,6 +2479,7 @@ meth public java.lang.String getDefaultOptions()
 meth public java.lang.String getLastArchetypeGroupId()
 meth public java.lang.String getLastArchetypeVersion()
 meth public java.lang.String getProjectNodeNamePattern()
+meth public java.lang.String getUserSettingsXml()
 meth public java.util.List<java.lang.String> getUserDefinedMavenRuntimes()
 meth public org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy getBinaryDownloadStrategy()
 meth public org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy getJavadocDownloadStrategy()
@@ -2517,9 +2518,10 @@ meth public void setUseBestMaven(boolean)
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 meth public void setUseBestMavenAltLocation(boolean)
  anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public void setUserSettingsXml(java.lang.String)
 meth public void setVMOptionsWrap(boolean)
 supr java.lang.Object
-hfds DEFAULT_PROXY_BEHAVIOUR,INSTANCE,MAVEN_CORE_JAR_PATTERN,PROP_ALWAYS_OUTPUT,PROP_BINARY_DOWNLOAD,PROP_CHECKSUM_POLICY,PROP_COLLAPSE_FOLDS,PROP_DEBUG,PROP_DEFAULT_JDK,PROP_DEFAULT_OPTIONS,PROP_ERRORS,PROP_FAILURE_BEHAVIOUR,PROP_JAVADOC_DOWNLOAD,PROP_LAST_ARCHETYPE_GROUPID,PROP_LAST_ARCHETYPE_VERSION,PROP_MAVEN_RUNTIMES,PROP_OUTPUT_TAB_CONFIG,PROP_OUTPUT_TAB_NAME,PROP_PLUGIN_POLICY,PROP_PREFER_WRAPPER,PROP_REUSE_OUTPUT,PROP_SHOW_LOGGING_LEVEL,PROP_SKIP_TESTS,PROP_SOURCE_DOWNLOAD,PROP_USE_REGISTRY,PROP_VM_OPTIONS_WRAP,SYSPROP_DEFAULT_PROXY_BEHAVIOUR,listeners
+hfds DEFAULT_PROXY_BEHAVIOUR,INSTANCE,MAVEN_CORE_JAR_PATTERN,PREFERENCES_PATH,PROP_ALWAYS_OUTPUT,PROP_BINARY_DOWNLOAD,PROP_CHECKSUM_POLICY,PROP_COLLAPSE_FOLDS,PROP_DEBUG,PROP_DEFAULT_JDK,PROP_DEFAULT_OPTIONS,PROP_ERRORS,PROP_FAILURE_BEHAVIOUR,PROP_JAVADOC_DOWNLOAD,PROP_LAST_ARCHETYPE_GROUPID,PROP_LAST_ARCHETYPE_VERSION,PROP_MAVEN_RUNTIMES,PROP_OUTPUT_TAB_CONFIG,PROP_OUTPUT_TAB_NAME,PROP_PLUGIN_POLICY,PROP_PREFER_WRAPPER,PROP_REUSE_OUTPUT,PROP_SHOW_LOGGING_LEVEL,PROP_SKIP_TESTS,PROP_SOURCE_DOWNLOAD,PROP_USE_REGISTRY,PROP_VM_OPTIONS_WRAP,SYSPROP_DEFAULT_PROXY_BEHAVIOUR,listeners
 
 CLSS public final static !enum org.netbeans.modules.maven.options.MavenSettings$DownloadStrategy
  outer org.netbeans.modules.maven.options.MavenSettings
@@ -2571,7 +2573,7 @@ meth public static void showGlobalMavenGoalCustomizer()
 meth public void applyValues()
 meth public void setValues()
 supr javax.swing.JPanel
-hfds AVAILABLE_OPTIONS,RP,SEPARATOR,bgIndexFilter,btnGoals,btnIndex,btnOptions,buttonGroup1,cbAlwaysShow,cbCollapseSuccessFolds,cbEnableIndexDownload,cbEnableIndexing,cbEnableMultiThreading,cbNetworkProxy,cbOutputTabShowConfig,cbPreferWrapper,cbProjectNodeNameMode,cbReuse,cbShowInfoLevel,cbSkipTests,changed,comBinaries,comIndex,comJavadoc,comJdkHome,comManageJdks,comMavenHome,comSource,completer,controller,jLabel3,jLabel4,jScrollPane1,jdkHomeDataModel,lastSelected,lbNetworkSettings,lblBinaries,lblCategory,lblCommandLine,lblExternalVersion,lblIndex,lblIndexFilter,lblJavadoc,lblJdkHome,lblOptions,lblOutputTab,lblSource,listItemChangedListener,listener,lstCategory,mavenHomeDataModel,mavenRuntimeHome,permissionsTable,pnlAppearance,pnlCards,pnlDependencies,pnlExecution,pnlIndex,predefinedRuntimes,rb2Years,rb5Years,rbFullIndex,rbOutputTabId,rbOutputTabName,txtOptions,txtProjectNodeNameCustomPattern,userDefinedMavenRuntimes,userDefinedMavenRuntimesStored,valid
+hfds AVAILABLE_OPTIONS,RP,SEPARATOR,bgIndexFilter,btnGoals,btnIndex,btnOptions,buttonGroup1,cbAlwaysShow,cbCollapseSuccessFolds,cbEnableIndexDownload,cbEnableIndexing,cbEnableMultiThreading,cbNetworkProxy,cbOutputTabShowConfig,cbPreferWrapper,cbProjectNodeNameMode,cbReuse,cbShowInfoLevel,cbSkipTests,changed,comBinaries,comIndex,comJavadoc,comJdkHome,comManageJdks,comMavenHome,comMavenUserSettingsXml,comSource,completer,controller,jLabel3,jLabel4,jScrollPane1,jdkHomeDataModel,lastSelected,lastSelectedSettingsXml,lbNetworkSettings,lblBinaries,lblCategory,lblCommandLine,lblExternalVersion,lblIndex,lblIndexFilter,lblJavadoc,lblJdkHome,lblMavenUserSettingsXml,lblOptions,lblOutputTab,lblSource,listItemChangedListener,listener,lstCategory,mavenHomeDataModel,mavenRuntimeHome,permissionsTable,pnlAppearance,pnlCards,pnlDependencies,pnlExecution,pnlIndex,predefinedRuntimes,rb2Years,rb5Years,rbFullIndex,rbOutputTabId,rbOutputTabName,settingsXmlChangedListener,txtOptions,txtProjectNodeNameCustomPattern,userDefinedMavenRuntimes,userDefinedMavenRuntimesStored,valid
 hcls ActionListenerImpl,ComboBoxRenderer,DocumentListenerImpl,IndexDownloadPermissionTableModel
 
 CLSS public org.netbeans.modules.maven.options.UnsetProxyChecker

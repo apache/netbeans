@@ -51,7 +51,8 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                             "<?php\n" +
                             "/**\n" +
                             " * \n" +
-                            " * @param " + PhpCommentGenerator.TYPE_PLACEHOLDER + " $i^\n" +
+                            " * @param " + PhpCommentGenerator.TYPE_PLACEHOLDER + " $i\n" +
+                            " * @return void^\n" +
                             " */\n" +
                             "function foo($i) {\n" +
                             "}\n" +
@@ -70,7 +71,8 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                             "$r = 1;\n" +
                             "/**\n" +
                             " * \n" +
-                            " * @global int $r^\n" +
+                            " * @global int $r\n" +
+                            " * @return void^\n" +
                             " */\n" +
                             "function foo() {\n" +
                             "    global $r;\n" +
@@ -88,7 +90,8 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                             "<?php\n" +
                             "/**\n" +
                             " * \n" +
-                            " * @staticvar " + PhpCommentGenerator.TYPE_PLACEHOLDER + " $r^\n" +
+                            " * @staticvar " + PhpCommentGenerator.TYPE_PLACEHOLDER + " $r\n" +
+                            " * @return void^\n" +
                             " */\n" +
                             "function foo() {\n" +
                             "    static $r;\n" +
@@ -159,7 +162,8 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                             "class foo {\n" +
                             "    /**\n" +
                             "     * \n" +
-                            "     * @param " + PhpCommentGenerator.TYPE_PLACEHOLDER + " $par^\n" +
+                            "     * @param " + PhpCommentGenerator.TYPE_PLACEHOLDER + " $par\n" +
+                            "     * @return void^\n" +
                             "     */\n" +
                             "    function bar($par) {\n" +
                             "    }\n" +
@@ -206,7 +210,8 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                 "?>", "<?php\n" +
                 "class MyCls {\n" +
                 "    /**\n" +
-                "     * ^\n" +
+                "     * \n" +
+                "     * @return void^\n" +
                 "     */\n" +
                 "    public static function beginRequest()\n" +
                 "    {\n" +
@@ -233,7 +238,8 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                 "interface Iface1 {\n" +
                 "    /**\n" +
                 "     * \n" +
-                "     * @param type $param^\n" +
+                "     * @param type $param\n" +
+                "     * @return void^\n" +
                 "     */\n" +
                 "    public function faceFnc($param);\n" +
                 "}\n" +
@@ -254,7 +260,8 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                 "class Test {\n" +
                 "    /**\n" +
                 "     * \n" +
-                "     * @param SomeClass $someClass^\n" +
+                "     * @param SomeClass $someClass\n" +
+                "     * @return void^\n" +
                 "     */\n" +
                 "    public function getSomething(SomeClass $someClass) {}\n" +
                 "}";
@@ -275,7 +282,8 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                 "class Test {\n" +
                 "    /**\n" +
                 "     * \n" +
-                "     * @param SomeClassAlias $someClass^\n" +
+                "     * @param SomeClassAlias $someClass\n" +
+                "     * @return void^\n" +
                 "     */\n" +
                 "    public function getSomething(SomeClassAlias $someClass) {}\n" +
                 "}";
@@ -295,7 +303,8 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                 "<?php\n"
                 + "/**\n"
                 + " * \n"
-                + " * @param " + PhpCommentGenerator.TYPE_PLACEHOLDER + " $i^\n"
+                + " * @param " + PhpCommentGenerator.TYPE_PLACEHOLDER + " $i\n"
+                + " * @return void^\n"
                 + " */\n"
                 + "function foo(...$i) {\n"
                 + "}\n"
@@ -319,7 +328,8 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                 + "class foo {\n"
                 + "    /**\n"
                 + "     * \n"
-                + "     * @param " + PhpCommentGenerator.TYPE_PLACEHOLDER + " $par^\n"
+                + "     * @param " + PhpCommentGenerator.TYPE_PLACEHOLDER + " $par\n"
+                + "     * @return void^\n"
                 + "     */\n"
                 + "    function bar(&...$par) {\n"
                 + "    }\n"
@@ -351,7 +361,8 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                 + "class Bar {\n"
                 + "    /**\n"
                 + "     * \n"
-                + "     * @param callable $callable^\n"
+                + "     * @param callable $callable\n"
+                + "     * @return void^\n"
                 + "     */\n"
                 + "    function callableType(callable $callable) {\n"
                 + "        //...\n"
@@ -384,7 +395,8 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                 + "class Bar {\n"
                 + "    /**\n"
                 + "     * \n"
-                + "     * @param int $int^\n"
+                + "     * @param int $int\n"
+                + "     * @return void^\n"
                 + "     */\n"
                 + "    function intType(int $int) {\n"
                 + "        //...\n"
@@ -417,7 +429,8 @@ public class PhpCommentGeneratorTest extends PHPNavTestBase {
                 + "class Bar {\n"
                 + "    /**\n"
                 + "     * \n"
-                + "     * @param iterable $iterable^\n"
+                + "     * @param iterable $iterable\n"
+                + "     * @return void^\n"
                 + "     */\n"
                 + "    function iterableType(iterable $iterable) {\n"
                 + "        //...\n"

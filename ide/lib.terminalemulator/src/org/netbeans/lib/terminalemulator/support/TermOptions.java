@@ -126,7 +126,11 @@ public final class TermOptions {
     }
 
     private static Color getDefaultColorBackground() {
-        Color back = UIManager.getColor("nb.output.backgorund"); //NOI18N
+        Color back = UIManager.getColor("nb.output.background"); //NOI18N
+        if (back == null) {
+            // dprecated
+            back = UIManager.getColor("nb.output.backgorund");   //NOI18N
+        }
         if (back == null) {
             back = UIManager.getColor("TextField.background"); //NOI18N
             if (back == null) {

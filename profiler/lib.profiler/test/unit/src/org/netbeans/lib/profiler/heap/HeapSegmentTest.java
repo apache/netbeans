@@ -31,6 +31,8 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.netbeans.lib.profiler.heap.HeapUtils.HprofGenerator;
 
@@ -43,6 +45,67 @@ public class HeapSegmentTest {
     @Test
     public void singleObjectMultipleSegments() throws IOException {
         singleObject(true);
+    }
+
+    @Test
+    public void stickyClassRootKeepsStaticReferencesReachable() throws IOException {
+        File mydump = File.createTempFile("mydump", ".hprof");
+        final int[] targetId = new int[1];
+        try (HprofGenerator gen = new HprofGenerator(new FileOutputStream(mydump))) {
+            gen.writeHeapSegment(new HprofGenerator.Generator<HprofGenerator.HeapSegment>() {
+                @Override
+                public void generate(HprofGenerator.HeapSegment seg) throws IOException {
+                    seg.newClass("java.lang.Class").dumpClass();
+                    seg.newClass("com.oracle.svm.core.heap.heapImpl.DiscoverableReference")
+                            .addField("rawReferent", Object.class)
+                            .dumpClass();
+                    HprofGenerator.ClassInstance targetClass = seg.newClass("text.Target").dumpClass();
+                    targetId[0] = seg.dumpInstance(targetClass);
+                    HprofGenerator.ClassInstance rootClass = seg.newClass("text.Root")
+                            .addStaticObjectField("target", targetId[0])
+                            .dumpClass();
+                    seg.dumpStickyClassRoot(rootClass);
+                }
+            }, true);
+        }
+
+        Heap heap = HeapFactory.createHeap(mydump);
+        assertEquals("One sticky class root", 1, heap.getGCRoots().size());
+        GCRoot root = (GCRoot) heap.getGCRoots().iterator().next();
+        Instance rootInstance = root.getInstance();
+        assertTrue("Class object instance", rootInstance instanceof ClassDumpInstance);
+        assertEquals("Root found by class object ID", root, heap.getGCRoot(rootInstance));
+
+        Instance target = heap.getInstanceByID(targetId[0]);
+        assertNotNull("Static field target", target);
+        heap.getBiggestObjectsByRetainedSize(1);
+        assertEquals("Target reached from sticky class", rootInstance, target.getNearestGCRootPointer());
+        assertTrue("Sticky class retains its static target", rootInstance.getRetainedSize() > rootInstance.getSize());
+    }
+
+    @Test
+    public void unresolvedStickyClassRootDoesNotBreakRetainedSize() throws IOException {
+        File mydump = File.createTempFile("mydump", ".hprof");
+        try (HprofGenerator gen = new HprofGenerator(new FileOutputStream(mydump))) {
+            gen.writeHeapSegment(new HprofGenerator.Generator<HprofGenerator.HeapSegment>() {
+                @Override
+                public void generate(HprofGenerator.HeapSegment seg) throws IOException {
+                    seg.newClass("java.lang.Class").dumpClass();
+                    seg.newClass("com.oracle.svm.core.heap.heapImpl.DiscoverableReference")
+                            .addField("rawReferent", Object.class)
+                            .dumpClass();
+                    HprofGenerator.ClassInstance ordinaryClass = seg.newClass("text.Ordinary").dumpClass();
+                    seg.dumpInstance(ordinaryClass);
+                    seg.dumpStickyClassRoot(Integer.MAX_VALUE);
+                }
+            }, true);
+        }
+
+        Heap heap = HeapFactory.createHeap(mydump);
+        assertEquals("One unresolved sticky class root", 1, heap.getGCRoots().size());
+        GCRoot root = (GCRoot) heap.getGCRoots().iterator().next();
+        assertNull("No heap object for unresolved root", root.getInstance());
+        assertNotNull("Retained-size computation completes", heap.getBiggestObjectsByRetainedSize(1));
     }
 
     private static void singleObject(boolean flush) throws IOException {

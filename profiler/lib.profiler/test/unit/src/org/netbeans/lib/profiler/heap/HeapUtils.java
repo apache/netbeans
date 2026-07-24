@@ -170,6 +170,15 @@ final class HeapUtils {
                 return instanceId;
             }
 
+            public void dumpStickyClassRoot(ClassInstance clazz) throws IOException {
+                dumpStickyClassRoot(clazz.id);
+            }
+
+            public void dumpStickyClassRoot(int classId) throws IOException {
+                heap.writeByte(0x05);
+                heap.writeInt(classId);
+            }
+
             public final class ThreadBuilder {
 
                 private String groupName;
@@ -235,6 +244,7 @@ final class HeapUtils {
 
                 private final int classId;
                 private TreeMap<String, Class<?>> fieldNamesAndTypes = new TreeMap<>();
+                private TreeMap<String, Integer> staticObjectFields = new TreeMap<>();
 
                 private ClassBuilder(int id) {
                     this.classId = id;
@@ -242,6 +252,11 @@ final class HeapUtils {
 
                 public ClassBuilder addField(String name, Class<?> type) {
                     fieldNamesAndTypes.put(name, type);
+                    return this;
+                }
+
+                public ClassBuilder addStaticObjectField(String name, int instanceId) {
+                    staticObjectFields.put(name, instanceId);
                     return this;
                 }
 
@@ -257,7 +272,12 @@ final class HeapUtils {
                     heap.writeInt(0); // reserved 2
                     heap.writeInt(0); // instance size
                     heap.writeShort(0); // # of constant pool entries
-                    heap.writeShort(0); // # of static fields
+                    heap.writeShort(staticObjectFields.size()); // # of static fields
+                    for (Map.Entry<String, Integer> entry : staticObjectFields.entrySet()) {
+                        heap.writeInt(writeString(entry.getKey()));
+                        heap.writeByte(0x02); // object
+                        heap.writeInt(entry.getValue());
+                    }
                     heap.writeShort(fieldNamesAndTypes.size()); // # of instance fields
                     int fieldBytes = 0;
                     for (Map.Entry<String, Class<?>> entry : fieldNamesAndTypes.entrySet()) {
@@ -299,6 +319,7 @@ final class HeapUtils {
                     }
                     ClassInstance inst = new ClassInstance(classId, fieldNamesAndTypes, fieldBytes);
                     fieldNamesAndTypes = new TreeMap<>();
+                    staticObjectFields = new TreeMap<>();
                     return inst;
                 }
             }

@@ -1066,6 +1066,11 @@ public class PHPFormatterTest extends PHPFormatterTestBase {
         reformatFileContents("testfiles/formatting/php81/enumerations_01.php", options);
     }
 
+    public void testEnumerations_02() throws Exception {
+        HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
+        reformatFileContents("testfiles/formatting/php81/enumerations_02.php", options);
+    }
+
     public void testEnumDeclarationBracePlacement_01() throws Exception {
         HashMap<String, Object> options = new HashMap<>(FmtOptions.getDefaults());
         options.put(FmtOptions.CLASS_DECL_BRACE_PLACEMENT, CodeStyle.BracePlacement.NEW_LINE);

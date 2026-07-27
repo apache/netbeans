@@ -1230,7 +1230,11 @@ public class FormatVisitor extends DefaultVisitor {
             }
         }
         scan(node.getAttributes());
-        while (ts.moveNext() && ts.token().id() != PHPTokenId.PHP_STRING) {
+        // Scan through everything until the identifier for the case is reached.
+        // The token id can't be used as the identifier may not be a plain string
+        // but could be a keyword in other contexts (unset being one example).
+        int identifierStart = node.getName().getStartOffset();
+        while (ts.moveNext() && ts.offset() < identifierStart) {
             addFormatToken(formatTokens);
         }
         FormatToken lastWhitespace = formatTokens.remove(formatTokens.size() - 1);

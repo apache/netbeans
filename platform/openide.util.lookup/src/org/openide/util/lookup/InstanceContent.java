@@ -38,6 +38,13 @@ import org.openide.util.Lookup.Item;
  *
  * {@link java.awt.Dimension Dimension} theDim = lookup.lookup ({@link java.awt.Dimension Dimension}.class);
  * </PRE>
+ * <p>
+ * <i>Note:</i> Objects added to the content must maintain stable
+ * {@link Object#hashCode()} and {@link Object#equals(Object)} values
+ * while they are present in the lookup. If these values change after
+ * an object is added, {@link #remove(Object)} may silently fail.
+ * This is analogous to the general contract of hash-based collections
+ * such as {@link java.util.HashMap}.
  *
  * @author  Jaroslav Tulach
  *
@@ -59,12 +66,16 @@ public final class InstanceContent extends AbstractLookup.Content {
         super(notifyIn);
     }
     
-    /** Adds an instance to the lookup. If <code>inst</code> already exists 
+    /** Adds an instance to the lookup. If <code>inst</code> already exists
      * in the lookup (equality is determined by object's {@link Object#equals(java.lang.Object)}
-     * method) then the new instance replaces the old one 
-     * in the lookup but listener notifications are <i>not</i> delivered in 
+     * method) then the new instance replaces the old one
+     * in the lookup but listener notifications are <i>not</i> delivered in
      * such case.
-     * 
+     * <p>
+     * The <code>inst</code> object's {@link Object#hashCode()} and
+     * {@link Object#equals(Object)} must remain stable while the object
+     * is in the lookup.
+     *
      * @param inst instance
      */
     public final void add(Object inst) {
@@ -92,7 +103,9 @@ public final class InstanceContent extends AbstractLookup.Content {
         addPair(new ConvertingItem<T,R>(inst, conv));
     }
 
-    /** Remove instance.
+    /** Remove instance. Removal relies on {@link Object#hashCode()} and
+     * {@link Object#equals(Object)} matching the state at the time the object
+     * was added. If the object has mutated since, removal may silently fail.
      * @param inst instance
      */
     public final void remove(Object inst) {

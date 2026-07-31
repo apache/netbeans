@@ -65,7 +65,14 @@ public enum TaskEvent {
     /** Java VM execution failed. */
     JAVA_VM_EXEC_FAILED,
     /** Signals wrong proxy settings. */
-    BAD_GATEWAY;
+    BAD_GATEWAY,
+
+    /** Version returned by server does not match expected version. */
+    VERSION_MISMATCH,
+    /** Connection to the server administration interface failed. */
+    CONNECTION_FAILED,
+    /** Administration command URL could not be constructed. */
+    CMD_URL_FAILED;
 
     // Class attributes                                                       //
     /**  A <code>String</code> representation of SUBMIT value. */
@@ -118,6 +125,15 @@ public enum TaskEvent {
     
     /** A <code>String</code> representation of BAD_GATEWAY value. */
     private static final String BAD_GATEWAY_STR = "BadGateway";
+
+    /** A <code>String</code> representation of VERSION_MISMATCH value. */
+    private static final String VERSION_MISMATCH_STR = "VersionMismatch";
+
+    /** A <code>String</code> representation of CONNECTION_FAILED value. */
+    private static final String CONNECTION_FAILED_STR = "ConnectionFailed";
+
+    /** A <code>String</code> representation of CMD_URL_FAILED value. */
+    private static final String CMD_URL_FAILED_STR = "CmdUrlFailed";
 
     /** 
      * Stored <code>String</code> values for backward <code>String</code>
@@ -180,7 +196,10 @@ public enum TaskEvent {
             case WRONG_JAVA_VM:       return WRONG_JAVA_VM_STR;
             case JAVA_VM_EXEC_FAILED: return JAVA_VM_EXEC_FAILED_STR;
             case BAD_GATEWAY:         return BAD_GATEWAY_STR;
-            // This is unrecheable. Returned null value means that some
+            case VERSION_MISMATCH:    return VERSION_MISMATCH_STR;
+            case CONNECTION_FAILED:   return CONNECTION_FAILED_STR;
+            case CMD_URL_FAILED:      return CMD_URL_FAILED_STR;
+            // This is unreachable. Returned null value means that some
             // enum value is not handled correctly.
             default:            return null;
         }

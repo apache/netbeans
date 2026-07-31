@@ -32,6 +32,7 @@ public interface PathConverter {
 
         CYGWIN,
         MSYS,
-        WINDOWS
+        WINDOWS,
+        WSL
     }
 }

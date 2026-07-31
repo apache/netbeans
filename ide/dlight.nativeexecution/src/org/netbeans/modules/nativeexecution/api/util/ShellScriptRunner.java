@@ -49,6 +49,7 @@ import org.openide.util.RequestProcessor;
  *
  * @author ak119685
  */
+@SuppressWarnings("deprecation") // API
 public final class ShellScriptRunner {
 
     private static final Logger log = org.netbeans.modules.nativeexecution.support.Logger.getInstance();
@@ -57,7 +58,7 @@ public final class ShellScriptRunner {
     private final ExecutionEnvironment env;
     private final String script;
     private final URI scriptURI;
-    private LineProcessor outputProcessor;
+    private final LineProcessor outputProcessor;
     private LineProcessor errorProcessor;
     private CountDownLatch countdown;
     private NativeProcess shellProcess;
@@ -135,42 +136,26 @@ public final class ShellScriptRunner {
         RequestProcessor rp = new RequestProcessor("Shell runner", 3); // NOI18N
         countdown = new CountDownLatch(3);
 
-        Callable<Integer> scriptWriter = new Callable<Integer>() {
-            @Override
-            public Integer call() throws Exception {
-                BufferedWriter scriptWriter = null;
-                try {
-                    scriptWriter = new BufferedWriter(new OutputStreamWriter(shellProcess.getOutputStream(), scriptCS));
-                    if (script != null) {
-                        scriptWriter.write(script);
-                        scriptWriter.write('\n');
-                    } else {
-                        BufferedReader scriptReader = null;
-                        try {
-                            scriptReader = new BufferedReader(new InputStreamReader(scriptURI.toURL().openStream(), scriptCS));
-                            String scriptLine;
-
-                            while ((scriptLine = scriptReader.readLine()) != null) {
-                                scriptWriter.write(scriptLine);
-                                scriptWriter.write('\n');
-                            }
-                        } finally {
-                            if (scriptReader != null) {
-                                scriptReader.close();
-                            }
+        Callable<Integer> scriptWriter = () -> {
+            try (BufferedWriter scriptWriter1 = new BufferedWriter(new OutputStreamWriter(shellProcess.getOutputStream(), scriptCS))) {
+                if (script != null) {
+                    scriptWriter1.write(script);
+                    scriptWriter1.write('\n');
+                } else {
+                    try (BufferedReader scriptReader = new BufferedReader(new InputStreamReader(scriptURI.toURL().openStream(), scriptCS))) {
+                        for(    String scriptLine = scriptReader.readLine();
+                                scriptLine != null;
+                                scriptLine = scriptReader.readLine()) {
+                            scriptWriter1.write(scriptLine);
+                            scriptWriter1.write('\n');
                         }
                     }
-                    scriptWriter.flush();
-                } finally {
-                    if (scriptWriter != null) {
-                        scriptWriter.close();
-                    }
-
-                    countdown.countDown();
                 }
-
-                return 0;
+                scriptWriter1.flush();
+            } finally {
+                countdown.countDown();
             }
+            return 0;
         };
 
         ProcessOutputReader outReader = new ProcessOutputReader(shellProcess.getInputStream(), outputProcessor);
@@ -252,19 +237,13 @@ public final class ShellScriptRunner {
 
         @Override
         public Integer call() throws Exception {
-            BufferedReader reader = null;
-            try {
-                reader = new BufferedReader(new InputStreamReader(in));
-                String line;
-                while ((line = reader.readLine()) != null) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+                for(String line = reader.readLine(); line != null; line = reader.readLine()) {
                     if (lineProcessor != null) {
                         lineProcessor.processLine(line);
                     }
                 }
             } finally {
-                if (reader != null) {
-                    reader.close();
-                }
                 if (lineProcessor != null) {
                     lineProcessor.close();
                 }

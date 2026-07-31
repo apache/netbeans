@@ -26,6 +26,7 @@ import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironmentFactory;
 import org.netbeans.modules.nativeexecution.api.HostInfo;
 import org.netbeans.modules.nativeexecution.api.NativeProcessBuilder;
+import org.netbeans.modules.nativeexecution.api.util.ConnectionManager;
 import org.netbeans.modules.nativeexecution.api.util.HostInfoUtils;
 import org.netbeans.modules.nativeexecution.api.util.ProcessUtils;
 import org.netbeans.modules.nativeexecution.api.util.ProcessUtils.ExitStatus;
@@ -49,11 +50,13 @@ public class IZ182478 extends NativeExecutionBaseTestCase {
 
         try {
             info = HostInfoUtils.getHostInfo(env);
-        } catch (Exception ex) {
+        } catch (IOException | ConnectionManager.CancellationException | RuntimeException ex) {
             Exceptions.printStackTrace(ex);
         }
 
         assertNotNull("HostInfo for localhost is unavailable", info); // NOI18N
+
+        assert info != null;
 
         if (info.getOSFamily() != HostInfo.OSFamily.SUNOS) {
             System.out.println("Skip this test on " + info.getOSFamily().name());
@@ -102,24 +105,20 @@ public class IZ182478 extends NativeExecutionBaseTestCase {
         return count;
     }
 
+    @SuppressWarnings("SleepWhileInLoop")
     private void startLoop() {
         int count = 30;
         RequestProcessor rp = new RequestProcessor("IZ182478", 1);
 
         for (int i = 0; i < count; i++) {
-            Future task = rp.submit(new Runnable() {
+            Future<?> task = rp.submit(() -> {
+                NativeProcessBuilder npb = NativeProcessBuilder.newLocalProcessBuilder();
+                npb.setExecutable("/bin/echo").setArguments("XXX");
 
-                @Override
-                public void run() {
-                    NativeProcessBuilder npb = NativeProcessBuilder.newLocalProcessBuilder();
-                    npb.setExecutable("/bin/echo").setArguments("XXX");
-
-                    try {
-                        npb.call();
-                    } catch (IOException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-
+                try {
+                    npb.call();
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             });
 

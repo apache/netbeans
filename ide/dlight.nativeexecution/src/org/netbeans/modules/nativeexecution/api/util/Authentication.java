@@ -38,18 +38,18 @@ import org.openide.util.Pair;
 public final class Authentication {
 
     public static final MethodList PASSWORD_METHODS =
-            new MethodList(
+            new MethodList(List.of(
                     Pair.of(Method.GssapiWithMic, true),
                     Pair.of(Method.PublicKey, false),
                     Pair.of(Method.KeyboardInteractive, true),
-                    Pair.of(Method.Password, true));
+                    Pair.of(Method.Password, true)));
 
     public static final MethodList SSH_KEY_METHODS  =
-            new MethodList(
+            new MethodList(List.of(
                     Pair.of(Method.GssapiWithMic, true),
                     Pair.of(Method.PublicKey, true),
                     Pair.of(Method.KeyboardInteractive, true),
-                    Pair.of(Method.Password, true));
+                    Pair.of(Method.Password, true)));
 
     public static final MethodList DEFAULT_METHODS  = PASSWORD_METHODS;
     
@@ -317,6 +317,12 @@ public final class Authentication {
             }
         }
 
+        /**
+         * @param pairs
+         * @deprecated use {@link #MethodList(java.util.List)}
+         */
+        @Deprecated
+        @SuppressWarnings("unchecked")
         public MethodList(Pair<Method, Boolean> ... pairs) {
             this.methods = new Method[pairs.length];
             this.enabled = new boolean[pairs.length];

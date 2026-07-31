@@ -138,7 +138,7 @@ public class VarCompoundDeclarationTest extends TreeRewriteTestBase {
                 + "        switch(i){\n"
                 + "            case 1:\n"
                 + "            var v = 1;\n"
-                + "            var v1 = 10;\n\n"
+                + "            var v1 = 10;\n"
                 + "        }\n"
                 + "    }\n"
                 + "}\n";
@@ -172,7 +172,7 @@ public class VarCompoundDeclarationTest extends TreeRewriteTestBase {
                 + "            case 1:\n"
                 + "             final var v = 1;\n"
                 + "             final var v1 = 10;\n"
-                + "             break;\n\n"
+                + "             break;\n"
                 + "            }\n"
                 + "    }\n"
                 + "}\n";

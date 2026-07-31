@@ -379,6 +379,7 @@ public class ChangeParametersTest extends RefactoringTestBase {
                 new File("t/A.java", "package t;\n"
                 + "\n"
                 + "import java.io.File;\n"
+                + "import java.io.InputStream;\n"
                 + "import java.util.Scanner;\n"
                 + "\n"
                 + "public class A\n"
@@ -395,7 +396,7 @@ public class ChangeParametersTest extends RefactoringTestBase {
                 + "        analyzeFile(file);\n"
                 + "    }\n"
                 + "\n"
-                + "    private static void analyzeFile(final java.io.InputStream is) throws\n"
+                + "    private static void analyzeFile(final InputStream is) throws\n"
                 + "java.io.FileNotFoundException\n"
                 + "    {\n"
                 + "        Scanner scanner = new Scanner(is);\n"
@@ -1339,6 +1340,226 @@ public class ChangeParametersTest extends RefactoringTestBase {
                 + "        testMethod(2, \"ddd\", testMethod(1, \"\", 2, 3), 4);\n"
                 + "    }\n"
                 + "}\n"));
+    }
+
+    public void testQualifiedNamedPreserveAndAdd() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("t/A.java",
+                         """
+                         package t;
+                         public interface A {
+                             int testMethod(java.io.File file, String y);
+                         }
+                         """),
+                new File("t/B.java",
+                         """
+                         package t;
+                         import java.io.File;
+                         public class B implements A {
+                             public int testMethod(File file, java.lang.String y) {
+                                  return x;
+                             }
+
+                             public void foo() {
+                                 testMethod(new File(""), "ddd");
+                                 A a1 = (file, y) -> testMethod(new File(""), "ddd");
+                                 A a2 = (File file, java.lang.String y) -> testMethod(new File(""), "ddd");
+                             }
+                         }
+                         """));
+        ParameterInfo[] paramTable = new ParameterInfo[] {new ParameterInfo(0, "file", "java.io.File", null), new ParameterInfo(1, "y", "String", null), new ParameterInfo(-1, "set", "java.util.Set<java.lang.String>", "null")};
+        performChangeParameters(null, null, null, paramTable, Javadoc.NONE, 0, false);
+        verifyContent(src,
+                new File("t/A.java",
+                         """
+                         package t;
+                         import java.util.Set;
+                         public interface A {
+                             int testMethod(java.io.File file, String y, Set<String> set);
+                         }
+                         """),
+                new File("t/B.java",
+                         """
+                         package t;
+                         import java.io.File;
+                         import java.util.Set;
+                         public class B implements A {
+                             public int testMethod(File file, java.lang.String y, Set<String> set) {
+                                  return x;
+                             }
+
+                             public void foo() {
+                                 testMethod(new File(""), "ddd", null);
+                                 A a1 = (file, y, set) -> testMethod(new File(""), "ddd", null);
+                                 A a2 = (File file, java.lang.String y, Set<String> set) -> testMethod(new File(""), "ddd", null);
+                             }
+                         }
+                         """));
+    }
+
+    public void testQualifiedNamedTypeChange() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("t/A.java",
+                         """
+                         package t;
+                         public interface A {
+                             int testMethod(java.io.File file, String y);
+                         }
+                         """),
+                new File("t/B.java",
+                         """
+                         package t;
+                         import java.io.File;
+                         public class B implements A {
+                             public int testMethod(File file, java.lang.String y) {
+                                  return x;
+                             }
+
+                             public void foo() {
+                                 testMethod(null, null);
+                                 A a1 = (file, y) -> testMethod(null, null);
+                                 A a2 = (File file, java.lang.String y) -> testMethod(null, null);
+                             }
+                         }
+                         """));
+        ParameterInfo[] paramTable = new ParameterInfo[] {new ParameterInfo(0, "x", "java.util.List<java.lang.String>", null), new ParameterInfo(1, "y", "java.util.Set<java.lang.String>", null)};
+        performChangeParameters(null, null, null, paramTable, Javadoc.NONE, 0, false, new Problem(false, "WRN_isNotAssignable"), new Problem(false, "WRN_isNotAssignable"));
+        verifyContent(src,
+                new File("t/A.java",
+                         """
+                         package t;
+                         import java.util.List;
+                         import java.util.Set;
+                         public interface A {
+                             int testMethod(List<String> x, Set<String> y);
+                         }
+                         """),
+                new File("t/B.java",
+                         """
+                         package t;
+                         import java.io.File;
+                         import java.util.List;
+                         import java.util.Set;
+                         public class B implements A {
+                             public int testMethod(List<String> x, Set<String> y) {
+                                  return x;
+                             }
+
+                             public void foo() {
+                                 testMethod(null, null);
+                                 A a1 = (file, y) -> testMethod(null, null);
+                                 A a2 = (List<String> file, Set<String> y) -> testMethod(null, null);
+                             }
+                         }
+                         """));
+    }
+
+    public void testQualifiedNamedVarArgsPreserve() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("t/A.java",
+                         """
+                         package t;
+                         public interface A {
+                             int testMethod(java.io.File file, String... y);
+                         }
+                         """),
+                new File("t/B.java",
+                         """
+                         package t;
+                         import java.io.File;
+                         public class B implements A {
+                             public int testMethod(File file, java.lang.String... y) { //TODO: ideally the FQN should be preserved, but too difficult for now
+                                  return x;
+                             }
+
+                             public void foo() {
+                                 testMethod(null, null);
+                                 A a1 = (file, y) -> testMethod(null, null);
+                                 A a2 = (File file, java.lang.String... y) -> testMethod(null, null);
+                             }
+                         }
+                         """));
+        ParameterInfo[] paramTable = new ParameterInfo[] {new ParameterInfo(0, "x", "java.util.List<java.lang.String>", null), new ParameterInfo(1, "y", "java.lang.String...", null)};
+        performChangeParameters(null, null, null, paramTable, Javadoc.NONE, 0, false, new Problem(false, "WRN_isNotAssignable"));
+        verifyContent(src,
+                new File("t/A.java",
+                         """
+                         package t;
+                         import java.util.List;
+                         public interface A {
+                             int testMethod(List<String> x, String... y);
+                         }
+                         """),
+                new File("t/B.java",
+                         """
+                         package t;
+                         import java.io.File;
+                         import java.util.List;
+                         public class B implements A {
+                             public int testMethod(List<String> x, String... y) { //TODO: ideally the FQN should be preserved, but too difficult for now
+                                  return x;
+                             }
+
+                             public void foo() {
+                                 testMethod(null, null);
+                                 A a1 = (file, y) -> testMethod(null, null);
+                                 A a2 = (List<String> file, String... y) -> testMethod(null, null);
+                             }
+                         }
+                         """));
+    }
+
+    public void testQualifiedNamedVarArgsAdd() throws Exception {
+        writeFilesAndWaitForScan(src,
+                new File("t/A.java",
+                         """
+                         package t;
+                         public interface A {
+                             int testMethod(java.io.File file);
+                         }
+                         """),
+                new File("t/B.java",
+                         """
+                         package t;
+                         import java.io.File;
+                         public class B implements A {
+                             public int testMethod(File file) {
+                                  return x;
+                             }
+
+                             public void foo() {
+                                 testMethod(null);
+                                 A a1 = (file) -> testMethod(null);
+                                 A a2 = (File file) -> testMethod(null);
+                             }
+                         }
+                         """));
+        ParameterInfo[] paramTable = new ParameterInfo[] {new ParameterInfo(0, "file", "java.io.File", null), new ParameterInfo(-1, "y", "java.lang.String...", "null")};
+        performChangeParameters(null, null, null, paramTable, Javadoc.NONE, 0, false);
+        verifyContent(src,
+                new File("t/A.java",
+                         """
+                         package t;
+                         public interface A {
+                             int testMethod(java.io.File file, String... y);
+                         }
+                         """),
+                new File("t/B.java",
+                         """
+                         package t;
+                         import java.io.File;
+                         public class B implements A {
+                             public int testMethod(File file, String... y) {
+                                  return x;
+                             }
+
+                             public void foo() {
+                                 testMethod(null, null);
+                                 A a1 = (file, y) -> testMethod(null, null);
+                                 A a2 = (File file, String... y) -> testMethod(null, null);
+                             }
+                         }
+                         """));
     }
 
     private void performChangeParameters(final Set<Modifier> modifiers, String methodName, String returnType, ParameterInfo[] paramTable, final Javadoc javadoc, final int position, final boolean compatible, Problem... expectedProblems) throws Exception {

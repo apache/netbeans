@@ -21,6 +21,7 @@ package org.netbeans.modules.j2ee.persistence.wizard.fromdb;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.ChangeListener;
+import org.netbeans.modules.j2ee.persistence.entitygenerator.DateTimeType;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.CollectionType;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.FetchType;
 import org.openide.WizardDescriptor;
@@ -45,9 +46,15 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
         collectionTypeComboBox.setModel(new DefaultComboBoxModel(
                 new String[]{"java.util.Collection", "java.util.List", "java.util.Set"})); // NOI18N
         collectionTypeComboBox.setSelectedIndex(0);
+
+        dateTimeComboBox.setModel(new DefaultComboBoxModel(
+                new String[]{NbBundle.getMessage(MappingOptionsPanel.class, "LBL_DATE_TIME_LEGACY"),
+                    NbBundle.getMessage(MappingOptionsPanel.class, "LBL_DATE_TIME_JAVA8")
+                }));
+        dateTimeComboBox.setSelectedIndex(0);
     }
-    
-    public void initialize(CollectionType collectionType, FetchType fetchType, boolean fullyQualifiedTblName, boolean regenSchemaAttrs, boolean useColumnNamesInRelationships) {
+
+    public void initialize(CollectionType collectionType, DateTimeType dateTimeType, FetchType fetchType, boolean fullyQualifiedTblName, boolean regenSchemaAttrs, boolean useColumnNamesInRelationships) {
         
         switch(fetchType) {
             case EAGER:
@@ -72,7 +79,16 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
             default:
                 collectionTypeComboBox.setSelectedIndex(0);
         }
-        
+
+        switch(dateTimeType) {
+            case JAVA_8:
+                dateTimeComboBox.setSelectedIndex(1);
+                break;
+            case LEGACY:
+            default:
+                dateTimeComboBox.setSelectedIndex(0);
+        }
+
         tableNameCheckBox.setSelected(fullyQualifiedTblName);
         regenTablesCheckBox.setSelected(regenSchemaAttrs);
         relationshipColumnNamesCheckBox.setSelected(useColumnNamesInRelationships);
@@ -100,6 +116,15 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
         }
     }
     
+    public DateTimeType getDateTimeType() {
+        int selected = dateTimeComboBox.getSelectedIndex();
+        if(selected == 1 ) {
+            return DateTimeType.JAVA_8;
+        } else {
+            return DateTimeType.LEGACY;
+        }
+    }
+
     public boolean isFullyQualifiedTableName() {
         return tableNameCheckBox.isSelected();
     }
@@ -136,6 +161,8 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
         descLabel = new javax.swing.JLabel();
         collectionTypeLabel = new javax.swing.JLabel();
         collectionTypeComboBox = new javax.swing.JComboBox();
+        dateTimeLabel = new javax.swing.JLabel();
+        dateTimeComboBox = new javax.swing.JComboBox();
         relationshipColumnNamesCheckBox = new javax.swing.JCheckBox();
         defaultsCheckBox = new javax.swing.JCheckBox();
         relationshipsUnresolvedCheckBox = new javax.swing.JCheckBox();
@@ -163,7 +190,7 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(tableNameCheckBox, org.openide.util.NbBundle.getMessage(MappingOptionsPanel.class, "LBL_TABLE_NAME")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
@@ -172,14 +199,14 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(regenTablesCheckBox, org.openide.util.NbBundle.getMessage(MappingOptionsPanel.class, "LBL_REGENERATE_TABLES")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         add(regenTablesCheckBox, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 8;
+        gridBagConstraints.gridy = 9;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 1.0;
@@ -210,10 +237,27 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(5, 12, 0, 0);
         add(collectionTypeComboBox, gridBagConstraints);
 
+        dateTimeLabel.setLabelFor(dateTimeComboBox);
+        org.openide.awt.Mnemonics.setLocalizedText(dateTimeLabel, org.openide.util.NbBundle.getMessage(MappingOptionsPanel.class, "LBL_DATE_TIME_TYPE")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
+        add(dateTimeLabel, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(5, 12, 0, 0);
+        add(dateTimeComboBox, gridBagConstraints);
+
         org.openide.awt.Mnemonics.setLocalizedText(relationshipColumnNamesCheckBox, org.openide.util.NbBundle.getMessage(MappingOptionsPanel.class, "MappingOptionsPanel.relationshipColumnNamesCheckBox.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
@@ -222,7 +266,7 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(defaultsCheckBox, org.openide.util.NbBundle.getMessage(MappingOptionsPanel.class, "MappingOptionsPanel.defaultsCheckBox.text_1")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
@@ -231,7 +275,7 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(relationshipsUnresolvedCheckBox, org.openide.util.NbBundle.getMessage(MappingOptionsPanel.class, "MappingOptionsPanel.relationshipsUnresolvedCheckBox.text_1")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
@@ -242,6 +286,8 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox collectionTypeComboBox;
     private javax.swing.JLabel collectionTypeLabel;
+    private javax.swing.JComboBox dateTimeComboBox;
+    private javax.swing.JLabel dateTimeLabel;
     private javax.swing.JCheckBox defaultsCheckBox;
     private javax.swing.JLabel descLabel;
     private javax.swing.JComboBox fetchComboBox;
@@ -286,7 +332,8 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
                 boolean regenSchema = helper.isRegenTablesAttrs();
                 boolean useColumnNamesInRelationships = helper.isUseColumnNamesInRelationships();
                 CollectionType clcType = helper.getCollectionType();
-                getComponent().initialize(clcType, fetchType, fullTblName, regenSchema, useColumnNamesInRelationships);
+                DateTimeType dtType = helper.getDateTimeType();
+                getComponent().initialize(clcType, dtType, fetchType, fullTblName, regenSchema, useColumnNamesInRelationships);
             }
         }
 
@@ -304,6 +351,7 @@ public class MappingOptionsPanel extends javax.swing.JPanel {
             helper.setRegenTablesAttrs(mPanel.isRegenSchemaAttributes());
             helper.setUseColumnNamesInRelationships(mPanel.isUseColumnNamesInRelationships());
             helper.setCollectionType(mPanel.getCollectionType());
+            helper.setDateTimeType(mPanel.getDateTimeType());
             helper.setUseDefaults(mPanel.isUseDefaults());
             helper.setGenerateUnresolvedRelationships(mPanel.isGenerateUnresolved());
         }

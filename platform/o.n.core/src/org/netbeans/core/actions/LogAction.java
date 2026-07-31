@@ -37,6 +37,7 @@ import org.openide.util.NbBundle.Messages;
 @ActionReference(path = "Menu/View", position = 500)
 @Messages("MSG_LogTab_name=IDE &Log")
 public class LogAction implements ActionListener {
+    LogViewerSupport previousLogViewer;
 
     @Messages("MSG_ShortLogTab_name=IDE Log")
     @Override public void actionPerformed(ActionEvent evt) {
@@ -44,8 +45,15 @@ public class LogAction implements ActionListener {
         if (userDir == null) {
             return;
         }
+        if (previousLogViewer != null) {
+            /* Avoid starting multiple updater threads at the same time. I could have tried to
+            reuse the existing LogViewer, but it's safer to just create fresh state every time this
+            action is invoked. */
+            previousLogViewer.stopUpdatingLogViewer();
+        }
         File f = new File(userDir, "/var/log/messages.log");
         LogViewerSupport p = new LogViewerSupport(f, MSG_ShortLogTab_name());
+        previousLogViewer = p;
         try {
             p.showLogViewer();
         } catch (IOException e) {

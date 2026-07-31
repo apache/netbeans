@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.java.source.ui;
 
+import com.sun.tools.javac.api.JavacTaskImpl;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
@@ -29,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -118,6 +120,7 @@ public class JavaSymbolProvider implements SymbolProvider {
             final Cache cache = scanInProgress ?
                 Cache.create(textToSearch, st) :
                 null;
+            ConcurrentHashMap<FileObject,JavacTaskImpl> javacCache = new ConcurrentHashMap<>();
             doComputeSymbols(st, textToSearch, new ResultHandler() {
                 private FileObject root;
                 private ProjectInformation projectInfo;
@@ -129,6 +132,9 @@ public class JavaSymbolProvider implements SymbolProvider {
 
                 @Override
                 public void runRoot(FileObject root, ClassIndexImpl ci, Exec exec) throws IOException, InterruptedException {
+                    /* In practice, one root is processed at a time, so we can clear the cache
+                    whenever the root changes, and let the previous JavacTaskImpl be GCed. */
+                    javacCache.clear();
                     try {
                         Project project = FileOwnerQuery.getOwner(root);
 
@@ -153,7 +159,8 @@ public class JavaSymbolProvider implements SymbolProvider {
                             ci,
                             owner,
                             ident,
-                            caseSensitive);
+                            caseSensitive,
+                            javacCache);
                     result.addResult(d);
                     if (cache != null) {
                         cache.offer(d);

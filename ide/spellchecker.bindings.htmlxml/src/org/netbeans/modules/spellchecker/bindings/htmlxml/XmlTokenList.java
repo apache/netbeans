@@ -34,7 +34,7 @@ import org.openide.filesystems.FileUtil;
  *
  * @author Tor Norbye
  */
-public class XmlTokenList extends AbstractTokenList {
+public final class XmlTokenList extends AbstractTokenList {
 
 
     private boolean hidden = false;
@@ -51,11 +51,12 @@ public class XmlTokenList extends AbstractTokenList {
         hidden = Boolean.TRUE.equals (b);
     }
 
-    protected int[] findNextSpellSpan() throws BadLocationException {
+    @Override
+    protected SpellSpan findNextSpellSpan() throws BadLocationException {
         TokenHierarchy<Document> h = TokenHierarchy.get((Document) doc);
         TokenSequence<?> ts = h.tokenSequence();
         if (ts == null || hidden) {
-            return new int[]{-1, -1};
+            return SpellSpan.NONE;
         }
 
         ts.move(nextSearchOffset);
@@ -64,9 +65,9 @@ public class XmlTokenList extends AbstractTokenList {
             TokenId id = ts.token().id();
 
             if (id == XMLTokenId.BLOCK_COMMENT || id == XMLTokenId.TEXT) {
-                return new int[]{ts.offset(), ts.offset() + ts.token().length()};
+                return new SpellSpan(ts.offset(), ts.offset() + ts.token().length());
             }
         }
-        return new int[]{-1, -1};
+        return SpellSpan.NONE;
     }
 }

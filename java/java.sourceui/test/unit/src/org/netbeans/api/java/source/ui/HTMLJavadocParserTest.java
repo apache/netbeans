@@ -18,7 +18,6 @@
  */
 package org.netbeans.api.java.source.ui;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -83,7 +82,12 @@ public class HTMLJavadocParserTest extends TestCase {
     assertTrue(result.contains("This is an example class."));
     assertFalse(result.contains("</section>"));
 
-    URL url = appendFragment(root, "<init>(java.lang.String)");
+    URL url = appendFragment(root, "<init>()");
+    result = HTMLJavadocParser.getJavadocText(url, false);
+    assertTrue(result.contains("This is the default constructor."));
+    assertFalse(result.contains("</section>"));
+
+    url = appendFragment(root, "<init>(java.lang.String)");
     result = HTMLJavadocParser.getJavadocText(url, false);
     assertTrue(result.contains("This is a constructor taking a single String parameter."));
     assertFalse(result.contains("</section>"));

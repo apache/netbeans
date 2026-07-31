@@ -525,7 +525,10 @@ public final class TreePathHandle {
          */
         public Element resolveElement(final CompilationInfo info) {
             if (correspondingEl != null) {
-                return correspondingEl.resolve(info);
+                Element resolved = correspondingEl.resolve(info);
+                if (resolved != null) {
+                    return resolved;
+                }
             }
             if ((this.file != null && info.getFileObject() != null) && info.getFileObject().equals(this.file) && this.position != null) {
                 TreePath tp = this.resolve(info);

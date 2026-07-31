@@ -87,8 +87,10 @@ class TableQuickSearchSupport implements QuickSearch.Callback {
                 quickSearchInitialColumn = 0;
             }
         }
-        quickSearchLastRow = quickSearchInitialRow;
-        quickSearchLastColumn = quickSearchInitialColumn;
+        if (quickSearchLastRow < 0 || quickSearchLastColumn < 0) {
+            quickSearchLastRow = quickSearchInitialRow;
+            quickSearchLastColumn = quickSearchInitialColumn;
+        }
         doSearch(searchText, true);
     }
 
@@ -152,14 +154,18 @@ class TableQuickSearchSupport implements QuickSearch.Callback {
         quickSearchInitialColumn = -1;
     }
 
+    private static final boolean RESTORE_PRIOR_SELECTION_AFTER_QUICK_SEARCH = false;
+
     @Override
     public void quickSearchCanceled() {
         // Check whether the cancel was explicit or implicit.
         // Implicit cancel has undefined focus owner
         // TODO: After switch to JDK 8, we can e.g. add a static method to Callback providing the info.
-        Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        if (focusOwner != null) {
-            displaySearchResult(quickSearchInitialRow, quickSearchInitialColumn);
+        if (RESTORE_PRIOR_SELECTION_AFTER_QUICK_SEARCH) {
+            Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+            if (focusOwner != null) {
+                displaySearchResult(quickSearchInitialRow, quickSearchInitialColumn);
+            }
         }
         quickSearchInitialRow = -1;
         quickSearchInitialColumn = -1;

@@ -274,14 +274,14 @@ public class CLIHandlerTest extends NbTestCase {
         File f = runner.resultFile();
         byte[] arr = new byte[(int)f.length()];
         int len = arr.length;
-        assertTrue("We know that the size of the file should be int + key_length + 4 for ip address: ", len >=14 && len <= 18);
+        assertTrue("We know that the size of the file should be int + key_length + 4 for ip address: ", len >=68 && len <= 72);
         FileInputStream is = new FileInputStream(f);
         assertEquals("Fully read", arr.length, is.read(arr));
         is.close();
         
-        byte[] altarr = new byte[18];
-        for (int i = 0; i < 18; i++) {
-            altarr[i] = i<14? arr[i]: 1;
+        byte[] altarr = new byte[72];
+        for (int i = 0; i < 72; i++) {
+            altarr[i] = i<68? arr[i]: 1;
         }
         
         // change the IP at the end of the file

@@ -131,10 +131,10 @@ public class PagesMultiViewElement extends ToolBarMultiViewElement implements ja
     public void propertyChange(java.beans.PropertyChangeEvent evt) {
         if (!dObj.isChangedFromUI()) {
             String name = evt.getPropertyName();
-            if ( name.indexOf("WelcomeFileList")>0 || //NOI18N
-                 name.indexOf("JspConfig")>0 || //NOI18N
-                 name.indexOf("ErrorPage")>0 || //NOI18N
-                 name.indexOf("version")>0 ) { //NOI18N
+            if ( name.indexOf("WelcomeFileList")>=0 || //NOI18N
+                 name.indexOf("JspConfig")>=0 || //NOI18N
+                 name.indexOf("ErrorPage")>=0 || //NOI18N
+                 name.indexOf("version")>=0 ) { //NOI18N
                 // repaint view if the wiew is active and something is changed with elements listed above
                 MultiViewPerspective perspective = dObj.getSelectedPerspective();
                 // dont repaint if the top component doens't exist any more

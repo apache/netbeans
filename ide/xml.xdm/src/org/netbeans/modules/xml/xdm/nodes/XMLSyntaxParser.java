@@ -31,7 +31,9 @@ import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.api.xml.lexer.XMLTokenId;
 
 public class XMLSyntaxParser {
-            
+
+    private static final String BOM = "\uFEFF";
+
     public Document parse(BaseDocument basedoc)
     throws IOException, BadLocationException {
         try {
@@ -44,22 +46,8 @@ public class XMLSyntaxParser {
             List<Token> currentTokens = new ArrayList<Token>();
             TokenHierarchy th = TokenHierarchy.get(basedoc);
             TokenSequence<XMLTokenId> tokenSequence = th.tokenSequence();
-            org.netbeans.api.lexer.Token<XMLTokenId> token = tokenSequence.token();
-            // Add the text token, if any, before xml decalration to document node
-            if(token != null && token.id() == XMLTokenId.TEXT) {
-                currentTokens.add(Token.create(token.text().toString(),TokenType.TOKEN_CHARACTER_DATA));
-                if(tokenSequence.moveNext()) {
-                    token = tokenSequence.token();
-                }
-                // if the xml decalration is not there assign this token to document
-                if(token.id() != XMLTokenId.PI_START) {
-                    currentNode.setTokens(new ArrayList<Token>(currentTokens));
-                    currentTokens.clear();
-                }
-            }
-
             while (tokenSequence.moveNext()) {
-                token = tokenSequence.token();
+                org.netbeans.api.lexer.Token<XMLTokenId> token = tokenSequence.token();
                 XMLTokenId tokenId = token.id();
                 String image = token.text().toString();
                 TokenType tokenType = TokenType.TOKEN_WHITESPACE;
@@ -245,7 +233,7 @@ public class XMLSyntaxParser {
                             ((Element)parent).appendChild(currentNode, false);
                         } else {//parent is Document
                             if(token.id() != XMLTokenId.BLOCK_COMMENT &&
-                                    token.text().toString().trim().length() > 0) {
+                                    !token.text().toString().isBlank() && !BOM.equals(token.text().toString().trim())) {
                                 throw new IOException("Invalid token '" + token.text() +
                                         "' found in document: " +
                                         "Please use the text editor to resolve the issues...");

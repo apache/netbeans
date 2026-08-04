@@ -64,6 +64,7 @@ public class XMLSyntaxParserTest extends TestCase {
         suite.addTest(new XMLSyntaxParserTest("testParseWSDL"));
 //        Disabled as referenced files were partly not donated by oracle to apache
 //        suite.addTest(new XMLSyntaxParserTest("testParsePerformace"));
+        suite.addTest(new XMLSyntaxParserTest("testParseBOM"));
         return suite;
     }
     
@@ -254,5 +255,20 @@ public class XMLSyntaxParserTest extends TestCase {
         //FlushVisitor fv = new FlushVisitor();
         //String docBuf = fv.flushModel(doc);
         //assertEquals("The document should be unaltered",basedoc.getText(0,basedoc.getLength()),docBuf);
-    }    
+    }
+
+    /**
+     * Test of parse method, of class org.netbeans.modules.xmltools.xmlmodel.nodes.XMLSyntaxParser.
+     * XMLSyntaxParser should handle xml files with BOM
+     */
+    public void testParseBOM() throws Exception {
+        BaseDocument basedoc = getDocument("nodes/testBOM.xml");
+        XMLSyntaxParser parser = new XMLSyntaxParser();
+        Document doc = parser.parse(basedoc);
+        assertNotNull("Document can not be null", doc);
+        FlushVisitor fv = new FlushVisitor();
+        String docBuf = fv.flushModel(doc);
+        assertEquals("The document should be unaltered",basedoc.getText(0,basedoc.getLength()),docBuf);
+    }
+
 }

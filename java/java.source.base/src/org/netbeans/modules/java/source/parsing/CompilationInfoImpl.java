@@ -24,12 +24,19 @@ import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.api.ClientCodeWrapper.Trusted;
 import com.sun.tools.javac.api.DiagnosticFormatter;
 import com.sun.tools.javac.api.JavacTaskImpl;
+import com.sun.tools.javac.code.Flags;
+import com.sun.tools.javac.code.Symbol.ModuleSymbol;
+import com.sun.tools.javac.code.Symtab;
+import com.sun.tools.javac.comp.Modules;
+import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.Log;
 
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -42,6 +49,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -54,6 +62,7 @@ import javax.tools.JavaFileObject;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.source.ClassIndex;
 import org.netbeans.api.java.source.ClasspathInfo;
 import org.netbeans.api.java.source.CompilationInfo;
 import org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy;
@@ -63,7 +72,10 @@ import org.netbeans.modules.java.source.JavaFileFilterQuery;
 import org.netbeans.modules.java.source.indexing.JavaIndex;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
+import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.URLMapper;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.Pair;
@@ -98,6 +110,7 @@ public final class CompilationInfoImpl {
     private Map<FileObject, AbstractSourceFileObject> ide2javacFileObject;
     private Map<FileObject, Snapshot> fileObject2Snapshot;
     private boolean incomplete;
+    private ClassIndex classIndex;
     
     /**
      * Creates a new CompilationInfoImpl for given source file
@@ -576,6 +589,55 @@ public final class CompilationInfoImpl {
 
     public void markIncomplete() {
         this.incomplete = true;
+    }
+
+    public ClassIndex getClassIndex() {
+        if (classIndex == null) {
+            if (this.phase.compareTo (JavaSource.Phase.ELEMENTS_RESOLVED) < 0)
+                throw new IllegalStateException("Cannot call getCompilationUnit() if current phase < JavaSource.Phase.ELEMENTS_RESOLVED. You must call toPhase(Phase.ELEMENTS_RESOLVED) first.");//NOI18N
+            Context context = javacTask.getContext();
+            Modules modules = Modules.instance(context);
+            Symtab syms = Symtab.instance(context);
+            if (modules.getDefaultModule() == syms.noModule) {
+                classIndex = cpInfo.getClassIndex();
+            } else {
+                ModuleSymbol mainModule;
+                if (this.jfo == null) {
+                    mainModule = modules.getDefaultModule();
+                } else {
+                    mainModule = ((JCTree.JCCompilationUnit) compilationUnit).modle;
+                }
+                Set<ModuleSymbol> allModules = new HashSet<>();
+                mainModule.visiblePackages.values().forEach(ps -> allModules.add(ps.modle));
+                allModules.remove(mainModule);
+                List<URL> bootRoots = new ArrayList<>();
+                List<URL> compileRoots = new ArrayList<>();
+                for (ModuleSymbol ms : allModules) {
+                    if (ms.isUnnamed()) {
+                        cpInfo.getClassPath(ClasspathInfo.PathKind.MODULE_CLASS).entries().forEach(e -> compileRoots.add(e.getURL()));
+                    } else {
+                        List<URL> targetRoots = (ms.flags() & Flags.SYSTEM_MODULE) != 0 ? bootRoots : compileRoots;
+                        ModuleLocation loc = (ModuleLocation) ms.classLocation;
+                        for (URL root : loc.getModuleRoots()) {
+                            URL sourceRoot = CacheFolder.getSourceRootForDataFolder(URLMapper.findFileObject(root));
+                            if (sourceRoot != null) {
+                                targetRoots.add(sourceRoot);
+                            } else {
+                                targetRoots.add(root);
+                            }
+                        }
+                    }
+                }
+                //TODO: use an accessor, and avoid creating the CPInfo:
+                ClasspathInfo adjustedCPInfo = ClasspathInfo.create(
+                        ClassPathSupport.createClassPath(bootRoots.toArray(URL[]::new)),
+                        ClassPathSupport.createClassPath(compileRoots.toArray(URL[]::new)),
+                        cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE));
+
+                classIndex = adjustedCPInfo.getClassIndex();
+            }
+        }
+        return classIndex;
     }
 
     // Innerclasses ------------------------------------------------------------

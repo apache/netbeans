@@ -1,0 +1,6 @@
+"Please avoid ClasspathInfo.getClassIndex() wherever possible":
+$cpInfo.getClassIndex() :: $cpInfo instanceof org.netbeans.api.java.source.ClasspathInfo
+=>
+"Use CompilationInfo.getClassIndex()":
+$info.getClassIndex() :: matchesWithBind($cpInfo, "$info.getClasspathInfo()") && $info instanceof org.netbeans.api.java.source.CompilationInfo
+;;

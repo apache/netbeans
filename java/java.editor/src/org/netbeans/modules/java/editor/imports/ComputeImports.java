@@ -104,7 +104,6 @@ public final class ComputeImports {
     }
     
     private final CompilationInfo info;
-    private CompilationInfo allInfo;
     
     private final PreferenceChangeListener pcl = new PreferenceChangeListener() {
         @Override
@@ -165,42 +164,7 @@ public final class ComputeImports {
         if (cache != null) {
             return cache;
         }
-        boolean modules = false;
-        
-        if (info.getSourceVersion().compareTo(SourceVersion.RELEASE_9) <= 0) {
-            if (info.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE).findResource("module-info.java") != null) {
-                modules = true;
-            }
-        }
-        
-        if (modules) {
-            ClasspathInfo cpInfo = info.getClasspathInfo();
-            ClasspathInfo extraInfo = ClasspathInfo.create(
-                    ClassPathSupport.createProxyClassPath(
-                            cpInfo.getClassPath(ClasspathInfo.PathKind.BOOT),
-                            cpInfo.getClassPath(ClasspathInfo.PathKind.MODULE_BOOT)),
-                    ClassPathSupport.createProxyClassPath(
-                            cpInfo.getClassPath(ClasspathInfo.PathKind.COMPILE),
-                            cpInfo.getClassPath(ClasspathInfo.PathKind.MODULE_COMPILE),
-                            cpInfo.getClassPath(ClasspathInfo.PathKind.MODULE_CLASS)),
-                    cpInfo.getClassPath(ClasspathInfo.PathKind.SOURCE));
-            JavaSource src = JavaSource.create(extraInfo, info.getSnapshot().getSource().getFileObject());
-            try {
-                src.runUserActionTask(new Task<CompilationController>() {
-                    @Override
-                    public void run(CompilationController parameter) throws Exception {
-                        allInfo = parameter;
-                        parameter.toPhase(JavaSource.Phase.RESOLVED);
-                        doComputeCandidates(forcedUnresolved);
-                    }
-                }, true);
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        } else {
-            allInfo = info;
-            doComputeCandidates(forcedUnresolved);
-        }
+        doComputeCandidates(forcedUnresolved);
         info.putCachedValue(IMPORT_CANDIDATES_KEY, this, CacheClearPolicy.ON_CHANGE);
         return this;
     }
@@ -225,7 +189,6 @@ public final class ComputeImports {
     
     private void doComputeCandidates(Set<String> forcedUnresolved) {
         final CompilationUnitTree cut = info.getCompilationUnit();
-        ClasspathInfo cpInfo = allInfo.getClasspathInfo();
         final TreeVisitorImpl v = new TreeVisitorImpl(info);
         setVisitor(v);
         try {
@@ -249,7 +212,7 @@ public final class ComputeImports {
                 return;
             
             List<Element> classes = new ArrayList<Element>();
-            Set<ElementHandle<TypeElement>> typeNames = cpInfo.getClassIndex().getDeclaredTypes(unresolved, NameKind.SIMPLE_NAME,EnumSet.allOf(ClassIndex.SearchScope.class));
+            Set<ElementHandle<TypeElement>> typeNames = info.getClassIndex().getDeclaredTypes(unresolved, NameKind.SIMPLE_NAME,EnumSet.allOf(ClassIndex.SearchScope.class));
             if (typeNames == null) {
                 //Canceled
                 return;
@@ -257,7 +220,7 @@ public final class ComputeImports {
             for (ElementHandle<TypeElement> typeName : typeNames) {
                 if (isCancelled())
                     return;
-                TypeElement te = typeName.resolve(allInfo);
+                TypeElement te = typeName.resolve(info);
                 
                 if (te == null) {
                     Logger.getLogger(ComputeImports.class.getName()).log(Level.INFO, "Cannot resolve type element \"" + typeName + "\".");
@@ -272,7 +235,7 @@ public final class ComputeImports {
             }
             
             if (unresolvedNonTypes.contains(unresolved)) {
-                Iterable<Symbols> simpleNames = cpInfo.getClassIndex().getDeclaredSymbols(unresolved, NameKind.SIMPLE_NAME,EnumSet.allOf(ClassIndex.SearchScope.class));
+                Iterable<Symbols> simpleNames = info.getClassIndex().getDeclaredSymbols(unresolved, NameKind.SIMPLE_NAME,EnumSet.allOf(ClassIndex.SearchScope.class));
 
                 if (simpleNames == null) {
                     //Canceled:
@@ -283,7 +246,7 @@ public final class ComputeImports {
                     if (isCancelled())
                         return;
 
-                    final TypeElement te = p.getEnclosingType().resolve(allInfo);
+                    final TypeElement te = p.getEnclosingType().resolve(info);
                     final Set<String> idents = p.getSymbols();
                     if (te != null) {
                         for (Element ne : te.getEnclosedElements()) {
@@ -312,7 +275,7 @@ public final class ComputeImports {
             possibleMethodFQNs.clear();
             
             for (Hint hint: v.hints) {
-                wasChanged |= hint.filter(allInfo, this);
+                wasChanged |= hint.filter(info, this);
             }
         }
         

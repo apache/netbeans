@@ -42,6 +42,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.GlobalPathRegistry;
@@ -70,9 +71,13 @@ import org.netbeans.spi.project.support.ant.PathMatcher;
 import org.netbeans.spi.project.support.ant.PropertyEvaluator;
 import org.netbeans.spi.project.support.ant.PropertyUtils;
 import org.openide.ErrorManager;
+import org.openide.filesystems.FileChangeAdapter;
+import org.openide.filesystems.FileEvent;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Mutex;
+import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 import org.openide.xml.XMLUtil;
@@ -103,6 +108,11 @@ import org.w3c.dom.Element;
 final class Classpaths implements ClassPathProvider, AntProjectListener, PropertyChangeListener {
     
     private static final ErrorManager err = ErrorManager.getDefault().getInstance(Classpaths.class.getName());
+
+    /** Recomputes wildcard classpaths off the file-event thread; see {@code wildcardListener}. */
+    private static final RequestProcessor WILDCARD_RP = new RequestProcessor(Classpaths.class.getName() + ".wildcard", 1); // NOI18N
+    /** Coalescing delay (ms) so that a build creating many JARs triggers a single refresh. */
+    private static final int WILDCARD_REFRESH_DELAY = 500;
 
     //for tests only:
     static CountDownLatch TESTING_LATCH = null;
@@ -403,22 +413,33 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
         return roots;
     }
     
-    private List<URL> createCompileClasspath(Element compilationUnitEl) {
+    private List<URL> createCompileClasspath(Element compilationUnitEl, Set<File> watchedDirs) {
         for (Element e : XMLUtil.findSubElements(compilationUnitEl)) {
             if (e.getLocalName().equals("classpath") && e.getAttribute("mode").equals("compile")) { // NOI18N
-                return createClasspath(e, new RemoveSources(helper, sfbqImpl));
+                return createClasspath(e, new RemoveSources(helper, sfbqImpl), watchedDirs);
             }
         }
         // None specified; assume it is empty.
         return Collections.emptyList();
     }
-    
+
     /**
      * Create a classpath from a &lt;classpath&gt; element.
+     * <p>
+     * A path entry whose last path component contains a wildcard (<code>*</code>
+     * or <code>?</code>) is expanded to the archives in the preceding directory
+     * whose names match the glob; e.g. <code>build/lib/*</code> or
+     * <code>build/lib/*.jar</code> pick up every JAR in <code>build/lib</code>.
+     * This mirrors the wildcard classpath syntax understood by the {@code java}
+     * launcher and lets freeform projects reference a directory of libraries
+     * without listing each JAR. The directories backing any wildcards are added
+     * to {@code watchedDirs} so the caller can recompute when their contents
+     * change (e.g. after a build produces new JARs).
      */
     private List<URL> createClasspath(
             final Element classpathEl,
-            final Function<URL,Collection<URL>> translate) {
+            final Function<URL,Collection<URL>> translate,
+            final Set<File> watchedDirs) {
         String cp = XMLUtil.findText(classpathEl);
         if (cp == null) {
             cp = "";
@@ -430,26 +451,90 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
         final String[] path = PropertyUtils.tokenizePath(cpEval);
         final List<URL> res = new ArrayList<>();
         for (String pathElement : path) {
-            res.addAll(translate.apply(createClasspathEntry(pathElement)));
+            for (URL entry : createClasspathEntries(pathElement, watchedDirs)) {
+                res.addAll(translate.apply(entry));
+            }
         }
         return res;
     }
-    
+
+    /**
+     * Turn a single (already property-evaluated) classpath token into zero or
+     * more classpath root URLs. Ordinary tokens map to exactly one URL; a token
+     * whose last path component is a filename glob is expanded to the matching
+     * archives in the directory it names.
+     */
+    private List<URL> createClasspathEntries(String text, Set<File> watchedDirs) {
+        final int slash = Math.max(text.lastIndexOf('/'), text.lastIndexOf(File.separatorChar));
+        final String lastComponent = slash >= 0 ? text.substring(slash + 1) : text;
+        if (lastComponent.indexOf('*') < 0 && lastComponent.indexOf('?') < 0) {
+            return Collections.singletonList(createClasspathEntry(text));
+        }
+        final String prefix = slash >= 0 ? text.substring(0, slash) : ""; // NOI18N
+        final File dir = helper.resolveFile(prefix.isEmpty() ? "." : prefix); // NOI18N
+        if (watchedDirs != null) {
+            // Watch the directory even if it does not exist yet: a build may
+            // create it (and the matching JARs) after the project is opened.
+            watchedDirs.add(dir);
+        }
+        final File[] kids = dir.listFiles();
+        if (kids == null) {
+            return Collections.emptyList();
+        }
+        // Sort for a stable classpath order independent of directory listing order.
+        Arrays.sort(kids);
+        final Pattern pattern = wildcardToRegex(lastComponent);
+        final List<URL> res = new ArrayList<>();
+        for (File kid : kids) {
+            if (!kid.isFile() || !pattern.matcher(kid.getName()).matches()) {
+                continue;
+            }
+            final URL entry = FileUtil.urlForArchiveOrDir(kid);
+            // Only archives yield a URL ending in '/'; skip anything that is not
+            // a valid classpath root (matches the java launcher's JARs-only rule).
+            if (entry != null && entry.toExternalForm().endsWith("/")) { // NOI18N
+                res.add(entry);
+            }
+        }
+        return res;
+    }
+
+    /**
+     * Translate a filename glob (<code>*</code> matches any run of characters,
+     * <code>?</code> matches a single character) into a case-insensitive regex.
+     */
+    private static Pattern wildcardToRegex(String glob) {
+        final StringBuilder sb = new StringBuilder(glob.length() + 8);
+        for (int i = 0; i < glob.length(); i++) {
+            final char c = glob.charAt(i);
+            switch (c) {
+                case '*': sb.append(".*"); break; // NOI18N
+                case '?': sb.append('.'); break;
+                default:
+                    if ("\\.[]{}()+-^$|".indexOf(c) >= 0) { // NOI18N
+                        sb.append('\\');
+                    }
+                    sb.append(c);
+            }
+        }
+        return Pattern.compile(sb.toString(), Pattern.CASE_INSENSITIVE);
+    }
+
     private URL createClasspathEntry(String text) {
         File entryFile = helper.resolveFile(text);
         return FileUtil.urlForArchiveOrDir(entryFile);
     }
-    
-    private List<URL> createExecuteClasspath(List<String> packageRoots, Element compilationUnitEl) {
+
+    private List<URL> createExecuteClasspath(List<String> packageRoots, Element compilationUnitEl, Set<File> watchedDirs) {
         for (Element e : XMLUtil.findSubElements(compilationUnitEl)) {
             if (e.getLocalName().equals("classpath") && e.getAttribute("mode").equals("execute")) { // NOI18N
-                return createClasspath(e, new RemoveSources(helper, sfbqImpl));
+                return createClasspath(e, new RemoveSources(helper, sfbqImpl), watchedDirs);
             }
         }
         // None specified; assume it is same as compile classpath plus (cf. #49113) <built-to> dirs/JARs
         // if there are any (else include the source dir(s) as a fallback for the I18N wizard to work).
         Set<URL> urls = new LinkedHashSet<>();
-        urls.addAll(createCompileClasspath(compilationUnitEl));
+        urls.addAll(createCompileClasspath(compilationUnitEl, watchedDirs));
         final Project prj = FileOwnerQuery.getOwner(helper.getProjectDirectory());
         if (prj != null) {
             for (URL src : createSourcePath(packageRoots)) {
@@ -459,19 +544,19 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
         return new ArrayList<>(urls);
     }
 
-    private List<URL> createProcessorClasspath(Element compilationUnitEl) {
+    private List<URL> createProcessorClasspath(Element compilationUnitEl, Set<File> watchedDirs) {
         final Element ap = XMLUtil.findElement(compilationUnitEl, AnnotationProcessingQueryImpl.EL_ANNOTATION_PROCESSING, JavaProjectNature.NS_JAVA_LASTEST);
         if (ap != null) {
             final Element path = XMLUtil.findElement(ap, AnnotationProcessingQueryImpl.EL_PROCESSOR_PATH, JavaProjectNature.NS_JAVA_LASTEST);
             if (path != null) {
-                return createClasspath(path, new RemoveSources(helper, sfbqImpl));
+                return createClasspath(path, new RemoveSources(helper, sfbqImpl), watchedDirs);
             }
         }
         // None specified; assume it is the same as the compile classpath.
-        return createCompileClasspath(compilationUnitEl);
+        return createCompileClasspath(compilationUnitEl, watchedDirs);
     }
 
-    private List<URL> createBootClasspath(Element compilationUnitEl) {
+    private List<URL> createBootClasspath(Element compilationUnitEl, Set<File> watchedDirs) {
         for (Element e : XMLUtil.findSubElements(compilationUnitEl)) {
             if (e.getLocalName().equals("classpath") && e.getAttribute("mode").equals("boot")) { // NOI18N
                 return createClasspath(e, new Function<URL,Collection<URL>>() {
@@ -479,7 +564,7 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
                     public Collection<URL> apply(URL p) {
                         return Collections.singleton(p);
                     }
-                });
+                }, watchedDirs);
             }
         }
         // None specified;
@@ -540,7 +625,25 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
         private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
         private List<URL> roots; // should always be non-null
         private List<PathResourceImplementation> resources;
-        
+        /** Directories backing wildcard classpath entries we currently listen to. */
+        private final Set<File> watchedWildcardDirs = new HashSet<File>();
+        /**
+         * Coalesces the refresh triggered by wildcard-directory changes and, just
+         * as importantly, moves it off the file-event thread: {@link #syncWildcardListeners}
+         * registers listeners while holding this object's monitor, so refreshing
+         * synchronously from an event could invert lock order with that registration.
+         */
+        private final RequestProcessor.Task wildcardRefreshTask = WILDCARD_RP.create(new Runnable() {
+            public @Override void run() { pathsChanged(); }
+        });
+        /** Refreshes this path when the contents of a watched wildcard directory change. */
+        private final FileChangeAdapter wildcardListener = new FileChangeAdapter() {
+            public @Override void fileDataCreated(FileEvent fe) { wildcardRefreshTask.schedule(WILDCARD_REFRESH_DELAY); }
+            public @Override void fileFolderCreated(FileEvent fe) { wildcardRefreshTask.schedule(WILDCARD_REFRESH_DELAY); }
+            public @Override void fileDeleted(FileEvent fe) { wildcardRefreshTask.schedule(WILDCARD_REFRESH_DELAY); }
+            public @Override void fileRenamed(FileRenameEvent fe) { wildcardRefreshTask.schedule(WILDCARD_REFRESH_DELAY); }
+        };
+
         public MutableClassPathImplementation(List<String> packageRootNames, String type, Element initialCompilationUnit) {
             this.packageRootNames = packageRootNames;
             this.type = type;
@@ -569,24 +672,28 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
          */
         private boolean initRoots(Element compilationUnitEl) {
             List<URL> oldRoots = roots;
+            // Directories backing any wildcard entries encountered while (re)computing
+            // the roots; SOURCE paths never use wildcards so the set stays empty there.
+            Set<File> watchedDirs = new HashSet<File>();
             if (compilationUnitEl != null) {
                 if (type.equals(ClassPath.SOURCE)) {
                     roots = createSourcePath(packageRootNames);
                 } else if (type.equals(ClassPath.COMPILE)) {
-                    roots = createCompileClasspath(compilationUnitEl);
+                    roots = createCompileClasspath(compilationUnitEl, watchedDirs);
                 } else if (type.equals(ClassPath.EXECUTE)) {
-                    roots = createExecuteClasspath(packageRootNames, compilationUnitEl);
+                    roots = createExecuteClasspath(packageRootNames, compilationUnitEl, watchedDirs);
                 } else if (type.equals(JavaClassPathConstants.PROCESSOR_PATH)) {
-                    roots = createProcessorClasspath(compilationUnitEl);
+                    roots = createProcessorClasspath(compilationUnitEl, watchedDirs);
                 } else {
                     assert type.equals(ClassPath.BOOT) : type;
-                    roots = createBootClasspath(compilationUnitEl);
+                    roots = createBootClasspath(compilationUnitEl, watchedDirs);
                 }
             } else {
                 // Dead.
                 roots = Collections.emptyList();
             }
             assert roots != null;
+            syncWildcardListeners(watchedDirs);
             if (!roots.equals(oldRoots)) {
                 resources = new ArrayList<PathResourceImplementation>(roots.size());
                 for (URL root : roots) {
@@ -604,6 +711,26 @@ final class Classpaths implements ClassPathProvider, AntProjectListener, Propert
                 return true;
             } else {
                 return false;
+            }
+        }
+
+        /**
+         * Register file listeners on exactly the set of directories backing the
+         * current wildcard entries, so newly built (or removed) JARs refresh the
+         * path. Listeners for directories no longer referenced are dropped.
+         */
+        private void syncWildcardListeners(Set<File> newDirs) {
+            for (Iterator<File> it = watchedWildcardDirs.iterator(); it.hasNext(); ) {
+                File dir = it.next();
+                if (!newDirs.contains(dir)) {
+                    FileUtil.removeFileChangeListener(wildcardListener, dir);
+                    it.remove();
+                }
+            }
+            for (File dir : newDirs) {
+                if (watchedWildcardDirs.add(dir)) {
+                    FileUtil.addFileChangeListener(wildcardListener, dir);
+                }
             }
         }
 

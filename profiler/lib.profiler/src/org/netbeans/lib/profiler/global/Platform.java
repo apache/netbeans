@@ -413,12 +413,6 @@ public class Platform implements CommonConstants {
         } else if (osName.startsWith("Windows ")) { // NOI18N
 
             return OS_WIN_OTHER;
-        } else if ("Solaris".equals(osName)) { // NOI18N
-
-            return OS_SOLARIS;
-        } else if (osName.startsWith("SunOS")) { // NOI18N
-
-            return OS_SOLARIS;
         } else if (osName.endsWith("Linux")) { // NOI18N
 
             return OS_LINUX;
@@ -431,9 +425,6 @@ public class Platform implements CommonConstants {
         } else if ("Irix".equals(osName)) { // NOI18N
 
             return OS_IRIX;
-        } else if ("SunOS".equals(osName)) { // NOI18N
-
-            return OS_SOLARIS;
         } else if ("Digital UNIX".equals(osName)) { // NOI18N
 
             return OS_TRU64;

@@ -186,9 +186,6 @@ class SearchResultRender extends JLabel implements ListCellRenderer {
             if (Utilities.isMac()) {
                 // Mac cloverleaf symbol
                 sb.append ("\u2318+");
-            } else if (isSolaris()) {
-                // Sun meta symbol
-                sb.append ("\u25C6+");
             } else {
                 sb.append ("Meta+");
             }
@@ -202,10 +199,5 @@ class SearchResultRender extends JLabel implements ListCellRenderer {
                 KeyStroke.getKeyStroke (keyStroke.getKeyCode (), 0)
             ));
         return sb.toString ();
-    }
-
-    private static boolean isSolaris () {
-        String osName = System.getProperty ("os.name");
-        return osName != null && osName.startsWith ("SunOS");
     }
 }

@@ -1968,7 +1968,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                             addPackageContent(env, (PackageElement) el, kinds, baseType, insideNew, srcOnly, switchItemAdder);
                             if (results.isEmpty() && ((PackageElement) el).getQualifiedName() == el.getSimpleName()) {
                                 // no package content? Check for unimported class
-                                ClassIndex ci = controller.getClasspathInfo().getClassIndex();
+                                ClassIndex ci = controller.getClassIndex();
                                 if (el.getEnclosedElements().isEmpty() && ci.getPackageNames(el.getSimpleName() + ".", true, EnumSet.allOf(ClassIndex.SearchScope.class)).isEmpty()) {
                                     Trees trees = controller.getTrees();
                                     Scope scope = env.getScope();
@@ -3982,7 +3982,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 }
             }
             ClassIndex.NameKind kind = Utilities.isCaseSensitive() ? ClassIndex.NameKind.PREFIX : ClassIndex.NameKind.CASE_INSENSITIVE_PREFIX;
-            Iterable<Symbols> declaredSymbols = controller.getClasspathInfo().getClassIndex().getDeclaredSymbols(prefix, kind, EnumSet.allOf(ClassIndex.SearchScope.class));
+            Iterable<Symbols> declaredSymbols = controller.getClassIndex().getDeclaredSymbols(prefix, kind, EnumSet.allOf(ClassIndex.SearchScope.class));
             for (Symbols symbols : declaredSymbols) {
                 if (Utilities.isExcluded(symbols.getEnclosingType().getQualifiedName())
                         || excludeHandles != null && excludeHandles.contains(symbols.getEnclosingType())
@@ -4462,7 +4462,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         ModuleElement moduleElement = el != null ? controller.getElements().getModuleOf(el) : null;
         Set<String> seenPkgs = new HashSet<>();
         EnumSet<ClassIndex.SearchScope> scope = srcOnly ? EnumSet.of(ClassIndex.SearchScope.SOURCE) : EnumSet.allOf(ClassIndex.SearchScope.class);        
-        for (String pkgName : env.getController().getClasspathInfo().getClassIndex().getPackageNames(fqnPrefix, false, scope)) {
+        for (String pkgName : env.getController().getClassIndex().getPackageNames(fqnPrefix, false, scope)) {
             if (startsWith(env, pkgName, prefix) && !Utilities.isExcluded(pkgName + ".")
                     && (moduleElement != null ? elements.getPackageElement(moduleElement, pkgName) : elements.getPackageElement(pkgName)) != null) { //NOI18N
                 if (fqnPrefix != null) {
@@ -4606,7 +4606,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
         }
         if (!kinds.contains(ElementKind.CLASS) && !kinds.contains(ElementKind.INTERFACE)) {
-            Set<ElementHandle<TypeElement>> declaredTypes = controller.getClasspathInfo().getClassIndex().getDeclaredTypes(EMPTY, ClassIndex.NameKind.PREFIX, EnumSet.allOf(ClassIndex.SearchScope.class));
+            Set<ElementHandle<TypeElement>> declaredTypes = controller.getClassIndex().getDeclaredTypes(EMPTY, ClassIndex.NameKind.PREFIX, EnumSet.allOf(ClassIndex.SearchScope.class));
             Map<String, ElementHandle<TypeElement>> removed = new HashMap<>(declaredTypes.size());
             Set<String> doNotRemove = new HashSet<>();
             for (ElementHandle<TypeElement> name : declaredTypes) {
@@ -4648,7 +4648,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     ? Utilities.isCaseSensitive() ? ClassIndex.NameKind.CAMEL_CASE : ClassIndex.NameKind.CAMEL_CASE_INSENSITIVE
                     : subwordsPattern != null ? ClassIndex.NameKind.REGEXP
                     : Utilities.isCaseSensitive() ? ClassIndex.NameKind.PREFIX : ClassIndex.NameKind.CASE_INSENSITIVE_PREFIX;
-            Set<ElementHandle<TypeElement>> declaredTypes = controller.getClasspathInfo().getClassIndex().getDeclaredTypes(subwordsPattern != null ? subwordsPattern : prefix != null ? prefix : EMPTY, kind, EnumSet.allOf(ClassIndex.SearchScope.class));
+            Set<ElementHandle<TypeElement>> declaredTypes = controller.getClassIndex().getDeclaredTypes(subwordsPattern != null ? subwordsPattern : prefix != null ? prefix : EMPTY, kind, EnumSet.allOf(ClassIndex.SearchScope.class));
             results.ensureCapacity(results.size() + declaredTypes.size());
             for (ElementHandle<TypeElement> name : declaredTypes) {
                 if (!kinds.contains(name.getKind()) || excludeHandles != null && excludeHandles.contains(name) || isAnnonInner(name)) {
@@ -4701,7 +4701,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     ? Utilities.isCaseSensitive() ? ClassIndex.NameKind.CAMEL_CASE : ClassIndex.NameKind.CAMEL_CASE_INSENSITIVE
                     : subwordsPattern != null ? ClassIndex.NameKind.REGEXP
                     : Utilities.isCaseSensitive() ? ClassIndex.NameKind.PREFIX : ClassIndex.NameKind.CASE_INSENSITIVE_PREFIX;
-            for (ElementHandle<TypeElement> handle : controller.getClasspathInfo().getClassIndex().getDeclaredTypes(subwordsPattern != null ? subwordsPattern : prefix, kind, EnumSet.allOf(ClassIndex.SearchScope.class))) {
+            for (ElementHandle<TypeElement> handle : controller.getClassIndex().getDeclaredTypes(subwordsPattern != null ? subwordsPattern : prefix, kind, EnumSet.allOf(ClassIndex.SearchScope.class))) {
                 TypeElement te = handle.resolve(controller);
                 if (te != null && trees.isAccessible(scope, te) && types.isSubtype(types.getDeclaredType(te), baseType)) {
                     subtypes.add(types.getDeclaredType(te));
@@ -4711,7 +4711,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             HashSet<TypeElement> elems = new HashSet<>();
             LinkedList<DeclaredType> bases = new LinkedList<>();
             bases.add(baseType);
-            ClassIndex index = controller.getClasspathInfo().getClassIndex();
+            ClassIndex index = controller.getClassIndex();
             while (!bases.isEmpty()) {
                 DeclaredType head = bases.remove();
                 TypeElement elem = (TypeElement) head.asElement();
@@ -5769,7 +5769,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     Types types = controller.getTypes();
                     TypeElement te = (TypeElement) ((DeclaredType) err).asElement();
                     if (te.getQualifiedName() == te.getSimpleName()) {
-                        ClassIndex ci = controller.getClasspathInfo().getClassIndex();
+                        ClassIndex ci = controller.getClassIndex();
                         for (ElementHandle<TypeElement> eh : ci.getDeclaredTypes(te.getSimpleName().toString(), ClassIndex.NameKind.SIMPLE_NAME, EnumSet.allOf(ClassIndex.SearchScope.class))) {
                             te = eh.resolve(controller);
                             if (te != null) {

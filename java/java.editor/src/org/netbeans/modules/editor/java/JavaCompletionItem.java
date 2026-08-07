@@ -4770,7 +4770,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
         if (tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
             MemberSelectTree mst = (MemberSelectTree) tp.getLeaf();
             if (mst.getExpression().getKind() == Tree.Kind.IDENTIFIER) {
-                ClassIndex index = info.getClasspathInfo().getClassIndex();
+                ClassIndex index = info.getClassIndex();
                 Types types = info.getTypes();
                 Trees trees = info.getTrees();
                 Scope scope = trees.getScope(tp);

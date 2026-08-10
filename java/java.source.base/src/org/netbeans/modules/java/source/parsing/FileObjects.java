@@ -24,7 +24,6 @@ import com.sun.tools.javac.api.ClientCodeWrapper.Trusted;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -64,7 +63,6 @@ import java.util.concurrent.Executor;
 import java.util.jar.Manifest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.lang.model.SourceVersion;
@@ -942,7 +940,7 @@ public class FileObjects {
                 final List<URL> patches = Arrays.stream(m.group(2).split(File.pathSeparator))
                         .map((p) -> FileUtil.normalizeFile(new File(p)))
                         .map(FileUtil::urlForArchiveOrDir)
-                        .collect(Collectors.toList());
+                        .toList();
                 return Pair.of(module, patches);
             }
         }

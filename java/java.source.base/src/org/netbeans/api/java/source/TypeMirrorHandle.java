@@ -124,7 +124,7 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
     private static <T extends TypeMirror> TypeMirrorHandle<T> create(T tm, Map<TypeMirror, TypeMirrorHandle> map) {
         TypeMirrorHandle<T> handle = map.get(tm);
         if (handle != null)
-            return handle.typeMirrors == null ? handle : (TypeMirrorHandle<T>)handle.typeMirrors.get(0);
+            return handle.typeMirrors == null ? handle : (TypeMirrorHandle<T>)handle.typeMirrors.getFirst();
         map.put(tm, new TypeMirrorHandle(null, null, null));
         TypeKind kind = tm.getKind();
         ElementHandle<? extends Element> element = null;
@@ -164,7 +164,7 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
                     targs = temp;
                 }
                 if (!targs.isEmpty()) {
-                    TypeMirror targ = targs.get(0);
+                    TypeMirror targ = targs.getFirst();
                     if (targ.getKind() == TypeKind.TYPEVAR) {
                         TypeParameterElement tpe = (TypeParameterElement)((TypeVariable)targ).asElement();
                         if (tpe.getGenericElement() == dt.asElement())
@@ -233,12 +233,8 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
     
     private T resolve(CompilationInfo info, Map<TypeMirrorHandle, PlaceholderType> map) {
         if (kind == null) {
-            TypeMirrorHandle handle = typeMirrors.get(0);
-            PlaceholderType pt = map.get(handle);
-            if (pt == null) {
-                pt = new PlaceholderType();
-                map.put(handle, pt);
-            }
+            TypeMirrorHandle handle = typeMirrors.getFirst();
+            PlaceholderType pt = map.computeIfAbsent(handle, k -> new PlaceholderType());
             return pt.delegate != null ? (T)pt.delegate : (T)pt;
         }
         switch (kind) {
@@ -305,7 +301,7 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
                 }
                 return (T)dt;
             case ARRAY:
-                TypeMirror resolved = typeMirrors.get(0).resolve(info, map);
+                TypeMirror resolved = typeMirrors.getFirst().resolve(info, map);
                 if (resolved == null)
                     return null;
                 ArrayType at = info.getTypes().getArrayType(resolved);
@@ -319,7 +315,7 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
                 Element e = element.resolve(info);
                 if (!(e instanceof TypeSymbol))
                     return null;
-                TypeMirrorHandle<? extends TypeMirror> lBound = typeMirrors.get(0);
+                TypeMirrorHandle<? extends TypeMirror> lBound = typeMirrors.getFirst();
                 TypeMirror lowerBound = lBound != null ? lBound.resolve(info, map) : null;
                 TypeMirrorHandle<? extends TypeMirror> uBound = typeMirrors.get(1);
                 TypeMirror upperBound = uBound != null ? uBound.resolve(info, map) : null;
@@ -331,7 +327,7 @@ public final class TypeMirrorHandle<T extends TypeMirror> {
                 }
                 return (T)tv;
             case WILDCARD:
-                TypeMirrorHandle<? extends TypeMirror> eBound = typeMirrors.get(0);
+                TypeMirrorHandle<? extends TypeMirror> eBound = typeMirrors.getFirst();
                 TypeMirror extendsBound = eBound != null ? eBound.resolve(info, map) : null;
                 TypeMirrorHandle<? extends TypeMirror> sBound = typeMirrors.get(1);
                 TypeMirror superBound = sBound != null ? sBound.resolve(info, map) : null;

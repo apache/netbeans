@@ -805,11 +805,7 @@ public class ProfileSupport {
         @CheckForNull
         Profile profileForType(@NonNull final ClassName className) {
             final String binName = className.getInternalName();
-            Object res = cache.get(binName);
-            if (res == null) {
-                res = findProfile(binName);
-                cache.put(binName, res);
-            }
+            Object res = cache.computeIfAbsent(binName, k -> findProfile(binName));
             return res == UNKNOWN ? null : (Profile) res;
         }
 

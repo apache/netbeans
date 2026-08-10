@@ -308,8 +308,7 @@ final class VanillaCompileWorker extends CompileWorker {
                     }
                 } else {
                     for (Tree tree : unit.getKey().getTypeDecls()) {
-                        if (tree instanceof JCTree) {
-                            final JCTree jct = (JCTree)tree;
+                        if (tree instanceof JCTree jct) {
                             if (jct.getTag() == JCTree.Tag.CLASSDEF) {
                                 final Element sym = ((JCClassDecl)tree).sym;
                                 if (sym != null)
@@ -329,7 +328,7 @@ final class VanillaCompileWorker extends CompileWorker {
                         activeTypes.stream()                                                
                                 .filter((e) -> e.getKind().isClass() || e.getKind().isInterface())
                                 .map ((e) -> (TypeElement)e)
-                                .collect(Collectors.toList()),
+                                .toList(),
                         jt.getElements()) || context.isSupplementaryFilesIndexing()) {
                     javaContext.analyze(Collections.singleton(unit.getKey()), jt, active, addedTypes, addedModules, main);
                 } else {
@@ -372,8 +371,8 @@ final class VanillaCompileWorker extends CompileWorker {
                     CompileTuple unit = clazz2Tuple.get(type);
                     if (unit == null || !unit.virtual) {
                         for (JavaFileObject generated : generatedFiles) {
-                            if (generated instanceof FileObjects.FileBase) {
-                                createdFiles.add(((FileObjects.FileBase) generated).getFile());
+                            if (generated instanceof FileObjects.FileBase fb) {
+                                createdFiles.add(fb.getFile());
                             } else {
                                 // presumably should not happen
                             }
@@ -570,7 +569,7 @@ final class VanillaCompileWorker extends CompileWorker {
                                                     d -> Collections.singletonList(d),
                                                     (dl1, dl2) -> Stream.of(dl1, dl2)
                                                                         .flatMap(dl -> dl.stream())
-                                                                        .collect(Collectors.toList()),
+                                                                        .toList(),
                                                     () -> new TreeMap<>()));
                 super.visitCompilationUnit(node, p);
                 //TODO: if diagnostics are remaining, make all classes non-usable
@@ -714,7 +713,7 @@ final class VanillaCompileWorker extends CompileWorker {
                 boolean prevErrorFound = errorFound;
                 errorFound = false;
                 try {
-                    anonymousClasses = Collections.newSetFromMap(new LinkedHashMap<>());
+                    anonymousClasses = new LinkedHashSet<>();
                 JCClassDecl clazz = (JCTree.JCClassDecl) node;
                 Symbol.ClassSymbol csym = clazz.sym;
                 if (isErroneousClass(csym)) {

@@ -30,11 +30,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.tools.FileObject;
@@ -52,7 +50,6 @@ import org.netbeans.spi.java.classpath.support.ClassPathSupport;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.BaseUtilities;
-import org.openide.util.Exceptions;
 import org.openide.util.Pair;
 
 /**
@@ -104,7 +101,7 @@ final class PatchModuleFileManager implements JavaFileManager {
                                             }
                                         })
                                         .filter((url) -> url != null)
-                                        .collect(Collectors.toList());
+                                        .toList();
                         return cacheRoots.isEmpty() ?
                                 null :
                                 new PatchLocation(
@@ -141,7 +138,7 @@ final class PatchModuleFileManager implements JavaFileManager {
         if (location == StandardLocation.PATCH_MODULE_PATH) {
             return moduleLocations(location).stream()
                     .map((ml) -> Collections.<Location>singleton(ml))
-                    .collect(Collectors.toList());
+                    .toList();
         } else {
             return Collections.emptyList();
         }
@@ -168,7 +165,7 @@ final class PatchModuleFileManager implements JavaFileManager {
         } else if (head.startsWith(JavacParser.NB_X_MODULE)) {
             overrideModuleName = head.substring(JavacParser.NB_X_MODULE.length());
             addModulePatches(overrideModuleName,
-                             src.entries().stream().map(e -> e.getURL()).collect(Collectors.toList()));
+                             src.entries().stream().map(e -> e.getURL()).toList());
             return true;
         }
         return false;
@@ -358,7 +355,7 @@ final class PatchModuleFileManager implements JavaFileManager {
                     name,
                     Stream.of(bin, src)
                         .flatMap((c) -> c.stream())
-                        .collect(Collectors.toList()));
+                        .toList());
             this.bin = binaryLocation(name, bin);
             this.src = sourceLocation(name, src);
         }
@@ -408,7 +405,7 @@ final class PatchModuleFileManager implements JavaFileManager {
                         }
                         return ClassPathSupport.createClassPath(root).entries().get(0);
                     })
-                    .collect(Collectors.toList());
+                    .toList();
             return ModuleLocation.WithExcludes.createExcludes(StandardLocation.MODULE_SOURCE_PATH, moduleEntries, name);
         }
 

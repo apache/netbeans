@@ -32,7 +32,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
@@ -273,7 +272,7 @@ final class ModuleFileManager implements JavaFileManager {
     public Iterable<Set<Location>> listLocationsForModules(Location location) throws IOException {
         return moduleLocations(location).stream()
                 .map((ml) -> Collections.<Location>singleton(ml))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

@@ -213,9 +213,9 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
                 if (annTs == null || annTs.isEmpty()) {
                     return pos;
                 }
-                int modPos = ((JCTree)annTs.get(0)).pos;
+                int modPos = ((JCTree)annTs.getFirst()).pos;
                 if (modPos < pos) {
-                    child = annTs.get(0);
+                    child = annTs.getFirst();
                 } else {
                     child = null;
                 }
@@ -310,7 +310,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
                 ClassTree clazz = (ClassTree)tree;
                 int cnt = clazz.getMembers().size();
                 if (cnt == 1) {
-                    Tree mt = clazz.getMembers().get(0);
+                    Tree mt = clazz.getMembers().getFirst();
                     if (mt.getKind() == Tree.Kind.METHOD && info.getTreeUtilities().isSynthetic(new TreePath(new TreePath(unit), mt))) {
                         cnt--;
                     }

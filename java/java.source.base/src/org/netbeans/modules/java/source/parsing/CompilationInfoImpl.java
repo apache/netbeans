@@ -44,7 +44,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import javax.swing.text.Document;
 import javax.tools.Diagnostic;
@@ -543,7 +542,7 @@ public final class CompilationInfoImpl {
     List<AbstractSourceFileObject> getFiles(List<FileObject> sourceFiles) throws IOException {
         return sourceFiles.stream()
                           .map(fo -> runAndThrow(this::getSourceFileObject, fo))
-                          .collect(Collectors.toList());
+                          .toList();
     }
 
     private <P, R> R runAndThrow(Convert<P, R> run, P p) {

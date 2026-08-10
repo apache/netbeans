@@ -55,6 +55,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -63,7 +64,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.annotation.processing.Processor;
@@ -88,7 +88,6 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.lib.editor.util.swing.PositionRegion;
 import org.netbeans.modules.java.preprocessorbridge.spi.JavaFileFilterImplementation;
-import org.netbeans.modules.java.source.JavaFileFilterQuery;
 import org.netbeans.modules.java.source.JavaSourceAccessor;
 import org.netbeans.modules.java.source.PostFlowAnalysis;
 import org.netbeans.modules.java.source.indexing.APTUtils;
@@ -194,8 +193,6 @@ public class JavacParser extends Parser {
             Collections.synchronizedList(new LinkedList<>());
     //Incremental parsing support
     private final AtomicReference<Pair<DocPositionRegion,MethodTree>> changedMethod = new AtomicReference<>();
-    //J2ME preprocessor support
-    private final FilterListener filterListener;
     //ClasspathInfo Listener
     private final ChangeListener cpInfoListener;
     private final SequentialParsing sequentialParsing;
@@ -220,16 +217,6 @@ public class JavacParser extends Parser {
         this.snapshots = snapshots;
         final boolean singleJavaFile = this.snapshots.size() == 1 && MIME_TYPE.equals(snapshots.iterator().next().getSource().getMimeType());
         this.supportsReparse = singleJavaFile && !DISABLE_PARTIAL_REPARSE;
-        JavaFileFilterImplementation filter = null;
-        if (singleJavaFile) {
-            final Source source = snapshots.iterator().next().getSource();
-            FileObject fo = source.getFileObject();
-            if (fo != null) {
-                //fileless Source -- ie. debugger watch CC etc
-                filter = JavaFileFilterQuery.getFilter(fo);
-            }
-        }
-        this.filterListener = filter != null ? new FilterListener (filter) : null;
         this.cpInfoListener = new ClasspathInfoListener(
                 listeners,
                 () -> {
@@ -555,8 +542,7 @@ public class JavacParser extends Parser {
         //Todo: shared = false should replace this
         //for now it creates a new parser and passes it outside the infrastructure
         //used by debugger private api
-        if (task instanceof NewComilerTask) {
-            final NewComilerTask nct = (NewComilerTask)task;
+        if (task instanceof NewComilerTask nct) {
             if (nct.getCompilationController() == null || nct.getTimeStamp() != parseId) {
                 try {
                     CompilationInfoImpl cii = new CompilationInfoImpl(this, file, root, null, null, cachedSnapShot, true, new HashMap<>(), new HashMap<>());
@@ -756,7 +742,7 @@ public class JavacParser extends Parser {
                 JavaCompiler compiler = JavaCompiler.instance(jti.getContext());
                 List<Env<AttrContext>> savedTodo = new ArrayList<>(compiler.todo);
                 try {
-                    List<FileObject> currentFileObjects = new ArrayList<>();
+                    List<FileObject> currentFileObjects = new ArrayList<>(forcedSources.size() + 1);
                     currentFileObjects.addAll(forcedSources);
                     currentFileObjects.add(file);
                     List<AbstractSourceFileObject> currentFiles = currentInfo.getFiles(currentFileObjects);
@@ -900,7 +886,6 @@ public class JavacParser extends Parser {
                     jfos);
             Lookup.getDefault()
                   .lookupAll(TreeLoaderRegistry.class)
-                  .stream()
                   .forEach(r -> r.enhance(javacTask.getContext(), cpInfo, detached));
             ParameterNameProviderImpl.register(javacTask, cpInfo);
             return javacTask;
@@ -958,7 +943,7 @@ public class JavacParser extends Parser {
                 cpInfo,
                 flags.contains(ConfigFlags.MODULE_INFO));
         String useRelease = useRelease(sourceLevel, validatedSourceLevel);
-        if (lintOptions.length() > 0) {
+        if (!lintOptions.isEmpty()) {
             options.addAll(Arrays.asList(lintOptions.split(" ")));
         }
         if (!backgroundCompilation) {
@@ -1043,13 +1028,13 @@ public class JavacParser extends Parser {
         }
         if (!additionalModules.isEmpty()) {
             options.add("--add-modules");       //NOI18N
-            options.add(additionalModules.stream().collect(Collectors.joining(",")));   //NOI18N
+            options.add(String.join(",", additionalModules));   //NOI18N
         }
 
         //filter out classfiles:
         files = StreamSupport.stream(files.spliterator(), false)
                              .filter(file -> file.getKind() == Kind.SOURCE)
-                             .collect(Collectors.toList());
+                             .toList();
 
         Context context = new Context();
         //need to preregister the Messages here, because the getTask below requires Log instance:
@@ -1066,11 +1051,9 @@ public class JavacParser extends Parser {
         NBClassReader.preRegister(context);
         Lookup.getDefault()
               .lookupAll(ContextEnhancer.class)
-              .stream()
               .forEach(r -> r.enhance(context, backgroundCompilation));
         Lookup.getDefault()
               .lookupAll(DuplicateClassRegistry.class)
-              .stream()
               .forEach(r -> r.enhance(context, fqn2Files));
         if (cancelService != null) {
             DefaultCancelService.preRegister(context, cancelService);
@@ -1275,8 +1258,8 @@ public class JavacParser extends Parser {
         @NonNull ClassPath[] boot,
         @NonNull ClassPath[] compile,
         @NonNull ClassPath[] source) {
-        final String resourceClass = String.format("%s.class", resourceBase);    //NOI18N
-        final String resourceJava = String.format("%s.java", resourceBase);      //NOI18N
+        final String resourceClass = "%s.class".formatted(resourceBase);    //NOI18N
+        final String resourceJava = "%s.java".formatted(resourceBase);      //NOI18N
         if (!hasResource(resourceClass, boot)) {
             if (!hasResource(resourceJava, source)) {
                 if (!hasResource(resourceClass, compile)) {
@@ -1366,9 +1349,9 @@ public class JavacParser extends Parser {
                     final ClassPath classPath  = info.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.COMPILE);
                     final ClassPath sourcePath = info.getClasspathInfo().getClassPath(ClasspathInfo.PathKind.SOURCE);
 
-                    writer.println("bootPath: " + (bootPath != null ? bootPath.toString() : "null"));
-                    writer.println("classPath: " + (classPath != null ? classPath.toString() : "null"));
-                    writer.println("sourcePath: " + (sourcePath != null ? sourcePath.toString() : "null"));
+                    writer.println("bootPath: " + Objects.toString(bootPath, "null"));
+                    writer.println("classPath: " + Objects.toString(classPath, "null"));
+                    writer.println("sourcePath: " + Objects.toString(sourcePath, "null"));
 
                     writer.println("----- Original exception ---------------------------------------------"); // NOI18N
                     exc.printStackTrace(writer);
@@ -1435,8 +1418,8 @@ public class JavacParser extends Parser {
     }
 
     private void checkSourceModification(SourceModificationEvent evt) {
-        if (evt instanceof SourceModificationEvent.Composite) {
-            evt = ((SourceModificationEvent.Composite)evt).getWriteEvent();
+        if (evt instanceof SourceModificationEvent.Composite composite) {
+            evt = composite.getWriteEvent();
         }
         if (evt != null && evt.sourceChanged()) {
             Pair<DocPositionRegion,MethodTree> changedMethod = null;

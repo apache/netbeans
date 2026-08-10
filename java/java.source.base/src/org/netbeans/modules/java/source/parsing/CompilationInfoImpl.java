@@ -622,32 +622,37 @@ public final class CompilationInfoImpl {
                 List<URL> bootRoots = new ArrayList<>();
                 List<URL> compileRoots = new ArrayList<>();
                 if (mainModule.requires.stream().anyMatch(rd -> rd.module == syms.unnamedModule)) {
-                    cpInfo.getClassPath(ClasspathInfo.PathKind.MODULE_CLASS).entries().forEach(e -> compileRoots.add(e.getURL()));
+                    cpInfo.getClassPath(ClasspathInfo.PathKind.MODULE_CLASS)
+                          .entries()
+                          .forEach(e -> compileRoots.add(e.getURL()));
                 }
                 for (ModuleSymbol ms : allModules) {
                     //TODO: patch module
                     List<URL> targetRoots = (ms.flags() & Flags.SYSTEM_MODULE) != 0 ? bootRoots : compileRoots;
-                    List<URL> candidateRoots;
-                    if (!(ms.classLocation instanceof ModuleLocation)) {
-                        //XXX: this is a branch for the implicit/hardcoded --release option when source level check fails
-                        //it may need improvements and needs testing:
-                        candidateRoots = new ArrayList<>();
-                        try {
-                            Method getPaths = ms.classLocation.getClass().getDeclaredMethod("getPaths");
-                            getPaths.setAccessible(true);
-                            for (Path p : (Iterable<Path>) getPaths.invoke(ms.classLocation)) {
-                                candidateRoots.add(URI.create(p.toUri().toString() + "/").toURL());
-                            }
-                        } catch (ReflectiveOperationException | MalformedURLException ex) {
-                            Exceptions.printStackTrace(ex);
-                        }
-                        System.err.println("non NB based roots: " + candidateRoots);
+                    List<URL> candidateRoots = new ArrayList<>();
+                    if (ms.classLocation instanceof ModuleLocation moduleLoc) {
+                        moduleLoc.getModuleRoots()
+                                 .forEach(candidateRoots::add);
+                    } else if ((ms.flags() & Flags.SYSTEM_MODULE) != 0) {
+                        //this is meant for the implicit/hardcoded --release option when source level check fails:
+                        String augmentedModuleName = "/" + ms.name.toString() + "/";
+                        cpInfo.getClassPath(ClasspathInfo.PathKind.MODULE_BOOT)
+                                .entries()
+                                .stream()
+                                .map(ClassPath.Entry::getURL)
+                                .filter(url -> url.getPath().endsWith(augmentedModuleName))
+                                .forEach(candidateRoots::add);
                     } else {
-                        ModuleLocation loc = (ModuleLocation) ms.classLocation;
-                        candidateRoots = new ArrayList<>(loc.getModuleRoots());
+                        throw new InternalError("Unexpected class location: " + ms.classLocation.getClass().getName());
+                    }
+                    if (ms.patchLocation instanceof ModuleLocation patchLoc) {
+                        patchLoc.getModuleRoots()
+                                .forEach(candidateRoots::add);
+                    } else if (ms.patchLocation != null) {
+                        throw new InternalError("Unexpected patch location: " + ms.patchLocation.getClass().getName());
                     }
                     for (URL root : candidateRoots) {
-                        //TODO: it is not clear if the getSourceRootForDataFolder is needed in the current state (sources are handled separately):
+                        //TODO: this is not really tested, but is needed:
                         URL sourceRoot = CacheFolder.getSourceRootForDataFolder(URLMapper.findFileObject(root));
                         if (sourceRoot != null) {
                             targetRoots.add(sourceRoot);

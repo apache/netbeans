@@ -750,7 +750,7 @@ public final class ProxyFileManager implements JavaFileManager {
                 if (TreeLoaderOutputFileManager.OUTPUT_ROOT.equals(hint)) {
                     createTreeLoaderFileManager();
                 }
-                if (JavacParser.OPTION_PATCH_MODULE.equals(hint) || (hint != null && hint.startsWith(JavacParser.NB_X_MODULE))) {
+                if (hint != null && (hint.startsWith(JavacParser.OPTION_PATCH_MODULE) || hint.startsWith(JavacParser.NB_X_MODULE))) {
                     createPatchFileManager();
                     createModuleSrcFileManager();
                 }

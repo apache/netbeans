@@ -248,10 +248,10 @@ public class CompilationInfoTest extends NbTestCase {
         FileObject patchClasses = patch.createFolder("classes");
 
         SourceUtilsTestUtil.writeFiles(patchSrc,
-                   new FileDescription("api/Patch.java",
+                   new FileDescription("api/AddedPatch.java",
                                        """
                                        package api;
-                                       public class Patch {
+                                       public class AddedPatch {
                                        }
                                        """));
         SourceUtilsTestUtil.compile(patchSrc, patchClasses, "21");
@@ -299,12 +299,26 @@ public class CompilationInfoTest extends NbTestCase {
         assertTrue(found.contains("java.lang.String"));
         assertTrue(found.contains("java.lang.StringBuilder"));
 
-        //module classpath (whatever that means):
+        //module classpath:
+        cpInfo = new ClasspathInfo.Builder(ClassPath.EMPTY) //attempt to cause source level downgrade
+                .setModuleBootPath(BootClassPathUtil.getModuleBootPath())
+                .setModuleCompilePath(ClassPathSupport.createClassPath(module1Classes.toURL(), module2Classes.toURL(), module3Classes.toURL()))
+                .setModuleClassPath(ClassPathSupport.createClassPath(module3Classes.toURL()))
+                .setSourcePath(srcPath).build();
+        found = getDeclaredTypes(cpInfo, testFile, "Api");
+        assertEquals(Set.of("api.Api", "api2.Api2"), found);
+        found = getDeclaredTypes(cpInfo, testFile, "String");
+        assertTrue(found.contains("java.lang.String"));
+        assertTrue(found.contains("java.lang.StringBuilder"));
+        found = getDeclaredTypes(cpInfo, testFile, "List");
+        assertTrue(found.contains("java.util.List"));
+        assertFalse(found.contains("java.awt.List"));
+
+        //module classpath:
         cpInfo = new ClasspathInfo.Builder(BootClassPathUtil.getBootClassPath()) //bootclasspath: prevent source level downgrade
                 .setModuleBootPath(BootClassPathUtil.getModuleBootPath())
                 .setModuleCompilePath(ClassPathSupport.createClassPath(module1Classes.toURL(), module2Classes.toURL(), module3Classes.toURL()))
                 .setModuleClassPath(ClassPathSupport.createClassPath(module3Classes.toURL()))
-                //TODO: classpath/module classpath
                 .setSourcePath(srcPath).build();
         found = getDeclaredTypes(cpInfo, testFile, "Api");
         assertEquals(Set.of("api.Api", "api2.Api2"), found);
@@ -324,10 +338,10 @@ public class CompilationInfoTest extends NbTestCase {
         assertEquals(Set.of("api3.Api3"), found);
         SourceUtilsTestUtil.setCompilerOptions(src, null);
 
-        //TODO: patch module?
-//        SourceUtilsTestUtil.setCompilerOptions(src, List.of("--add-modules=module1", "--patch-module=module1=" + FileUtil.toFile(patchClasses).getAbsolutePath()));
-//        found = getDeclaredTypes(cpInfo, testFile, "Patch");
-//        assertEquals(Set.of("api.Patch"), found);
+        //patch-module:
+        SourceUtilsTestUtil.setCompilerOptions(src, List.of("--add-modules=module1", "--patch-module=module1=" + FileUtil.toFile(patchClasses).getAbsolutePath()));
+        found = getDeclaredTypes(cpInfo, testFile, "AddedPat");
+        assertEquals(Set.of("api.AddedPatch"), found);
 
         //source level == 8:
         SourceUtilsTestUtil.setSourceLevel(src, "8");
@@ -335,7 +349,6 @@ public class CompilationInfoTest extends NbTestCase {
         assertEquals(Set.of(), found);
         cpInfo = new ClasspathInfo.Builder(BootClassPathUtil.getBootClassPath())
                 .setClassPath(ClassPathSupport.createClassPath(module3Classes.toURL()))
-                //TODO: classpath/module classpath
                 .setSourcePath(srcPath).build();
         found = getDeclaredTypes(cpInfo, testFile, "Api");
         assertEquals(Set.of("api3.Api3"), found);

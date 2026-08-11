@@ -94,6 +94,9 @@ public class ReloadAction extends AbstractAction {
             return;
         }
         NbMavenProject nbMavenProject = project.getLookup().lookup(NbMavenProject.class);
+        if (nbMavenProject == null) {
+            return;
+        }
         MavenProject mavenProject = nbMavenProject.getMavenProject();
 
         MicroApplication microApplication = MicroApplication.getInstance(project);

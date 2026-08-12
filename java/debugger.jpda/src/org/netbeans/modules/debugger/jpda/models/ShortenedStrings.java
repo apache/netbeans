@@ -74,6 +74,17 @@ import org.openide.util.Exceptions;
  */
 public final class ShortenedStrings {
     
+    /**
+     * Shortened display text → full remote content helper.
+     * <p>
+     * Must be a strong map for the duration of a debugger session. A
+     * {@link WeakHashMap} drops the entry as soon as nothing holds the exact
+     * key {@link String} instance. The UI / property editor often holds an
+     * equal but different instance (or a quoted form from
+     * {@code Variable.getValue()}), so lookup fails while the truncated
+     * preview is still shown and "Save Value to File" only writes that
+     * preview. Cleared when the last debugger session ends.
+     */
     private static final Map<String, StringInfo> infoStrings = new HashMap<String, StringInfo>();
     private static final Map<StringReference, StringValueInfo> stringsCache = new WeakHashMap<StringReference, StringValueInfo>();
     private static final Set<StringReference> retrievingStrings = new HashSet<StringReference>();
@@ -86,6 +97,7 @@ public final class ShortenedStrings {
 
             @Override
             public void sessionRemoved(Session session) {
+                // Strong infoStrings map is session-scoped; clear when idle.
                 int n = DebuggerManager.getDebuggerManager().getSessions().length;
                 if (n == 0) {
                     synchronized (infoStrings) {

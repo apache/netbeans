@@ -57,6 +57,7 @@ public final class Main extends Object {
     private static boolean moduleSystemInitialized;
 
   /** Prints the text to splash screen or to status line, if available.
+     * @param msg
    */
   public static void setStatusText (String msg) {
         Splash.getInstance().print (msg);
@@ -67,6 +68,8 @@ public final class Main extends Object {
   
   /** Starts TopThreadGroup which properly overrides uncaughtException
    * Further - new thread in the group execs main
+     * @param argv
+     * @throws java.lang.Exception
    */
   public static void main (String[] argv) throws Exception {
     TopThreadGroup tg = new TopThreadGroup ("IDE Main", argv); // NOI18N - programatic name
@@ -90,7 +93,7 @@ public final class Main extends Object {
           return;
       }
       
-      Class<?> uiClass = CLIOptions.uiClass;
+      Class<?> uiClass;
       // try again loading L&F class, this time with full module system.
       if (CLIOptions.uiClassName != null && CLIOptions.uiClass == null) {
           // try again
@@ -109,7 +112,7 @@ public final class Main extends Object {
     
       URL themeURL = null;
       boolean wantTheme = Boolean.getBoolean ("netbeans.useTheme") ||
-          CLIOptions.uiClass != null && CLIOptions.uiClass.getName().indexOf("MetalLookAndFeel") >= 0;
+          CLIOptions.uiClass != null && CLIOptions.uiClass.getName().contains("MetalLookAndFeel");
 
       try {
           if (wantTheme) {
@@ -138,7 +141,9 @@ public final class Main extends Object {
       }
       StartLog.logProgress("Fonts updated"); // NOI18N
   }
-    /** Get and initialize module subsystem.  */
+    /** Get and initialize module subsystem.
+     * @return ModuleSystem
+     */
     public static ModuleSystem getModuleSystem() {
         return getModuleSystem(true);
     }
@@ -517,11 +522,7 @@ public final class Main extends Object {
                 if (shouldDisplayLicense()) {
                     try {
                         SwingUtilities.invokeAndWait(this);
-                        if (executedOk) {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        return executedOk;
                     } catch (java.lang.reflect.InvocationTargetException ex) {
                         return false;
                     } catch (InterruptedException ex) {

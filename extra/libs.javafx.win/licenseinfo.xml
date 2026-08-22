@@ -27,6 +27,7 @@
         <file>external/javafx-media-23.0.2-win.jar.external</file>
         <file>external/javafx-swing-23.0.2-win.jar.external</file>
         <file>external/javafx-web-23.0.2-win.jar.external</file>
+        <file>external/javafx-fxml-23.0.2-win.jar.external</file>
         <license ref="Apache-2.0-ASF" />
         <comment type="COMMENT_UNSUPPORTED" />
     </fileset>

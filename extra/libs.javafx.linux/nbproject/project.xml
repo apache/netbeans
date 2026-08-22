@@ -75,6 +75,10 @@
                 <runtime-relative-path>ext/javafx-web-23.0.2-linux.jar</runtime-relative-path>
                 <binary-origin>external/javafx-web-23.0.2-linux.jar</binary-origin>
             </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/javafx-fxml-23.0.2-linux.jar</runtime-relative-path>
+                <binary-origin>external/javafx-fxml-23.0.2-linux.jar</binary-origin>
+            </class-path-extension>
         </data>
     </configuration>
 </project>

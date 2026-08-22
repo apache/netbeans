@@ -4,7 +4,7 @@ Version: 23.0.2
 License: GPL-2-CP
 Origin: https://github.com/openjdk/jfx
 Source: https://github.com/openjdk/jfx23u/tree/23.0.2-ga
-Files: javafx-base-23.0.2-mac-aarch64.jar, javafx-controls-23.0.2-mac-aarch64.jar, javafx-graphics-23.0.2-mac-aarch64.jar, javafx-media-23.0.2-mac-aarch64.jar, javafx-swing-23.0.2-mac-aarch64.jar, javafx-web-23.0.2-mac-aarch64.jar
+Files: javafx-base-23.0.2-mac-aarch64.jar, javafx-controls-23.0.2-mac-aarch64.jar, javafx-graphics-23.0.2-mac-aarch64.jar, javafx-media-23.0.2-mac-aarch64.jar, javafx-swing-23.0.2-mac-aarch64.jar, javafx-web-23.0.2-mac-aarch64.jar, javafx-fxml-23.0.2-mac-aarch64.jar
 Type: compile-time,optional
 Comment: Used at compile. Possibly downloaded later.
 

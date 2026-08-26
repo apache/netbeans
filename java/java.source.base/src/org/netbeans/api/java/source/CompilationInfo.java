@@ -493,6 +493,15 @@ public class CompilationInfo {
         }
     }
 
+    /**
+     * TODO.
+     * only valid after toPhase(ELEMENTS_RESOLVED)
+     * @return
+     */
+    public ClassIndex getClassIndex() {
+        return impl.getClassIndex();
+    }
+
     /**Constants to specify when a valued cached by {@link #putCachedValue(java.lang.Object, java.lang.Object, org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy)}
      * should be evicted from the cache.
      *

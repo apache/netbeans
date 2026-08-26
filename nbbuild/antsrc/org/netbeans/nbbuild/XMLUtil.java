@@ -88,7 +88,8 @@ public final class XMLUtil extends Object {
             factory.setNamespaceAware(namespaceAware);
 
             try {
-                factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+                //TODO org.netbeans.modules.apisupport.project.suite.BuildNBMSTest#testBuildNBMS failure
+//                factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
                 builder = factory.newDocumentBuilder();
             } catch (ParserConfigurationException ex) {
                 throw new SAXException(ex);

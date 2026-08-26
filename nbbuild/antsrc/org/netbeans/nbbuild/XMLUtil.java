@@ -26,6 +26,7 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -87,6 +88,7 @@ public final class XMLUtil extends Object {
             factory.setNamespaceAware(namespaceAware);
 
             try {
+                factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
                 builder = factory.newDocumentBuilder();
             } catch (ParserConfigurationException ex) {
                 throw new SAXException(ex);
@@ -127,6 +129,7 @@ public final class XMLUtil extends Object {
     public static Document createDocument(String rootQName) throws DOMException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             return factory.newDocumentBuilder().getDOMImplementation().createDocument(null, rootQName, null);
         } catch (ParserConfigurationException ex) {
             throw (DOMException)new DOMException(DOMException.NOT_SUPPORTED_ERR, "Cannot create parser").initCause(ex); // NOI18N

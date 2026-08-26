@@ -149,13 +149,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Checkout ${{ github.ref }} ( ${{ github.sha }} )
         uses: actions/checkout@v7
@@ -217,10 +215,11 @@ jobs:
           show-progress: false
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
             distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
             java-version: 17
+            problem-matcher: false
       - name: Caching dependencies
         uses: actions/cache/restore@v6
         with:
@@ -255,13 +254,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         if: contains(matrix.os, 'ubuntu') && success()
@@ -331,10 +328,11 @@ jobs:
 
       - name: Set up JDK 25 for scripts
         if: ${{ github.event_name == 'pull_request' && !cancelled() }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: 25
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
+          problem-matcher: false
 
       - name: Check Commit Headers
         if: ${{ github.event_name == 'pull_request' && !cancelled() }}
@@ -342,13 +340,11 @@ jobs:
 
       - name: Set up JDK ${{ matrix.java }} 
         if: ${{ !cancelled() }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Check line endings and verify RAT report
         if: ${{ !cancelled() }}
@@ -398,13 +394,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -465,14 +459,11 @@ jobs:
       # 13-14 min for javadoc; JDK version must be synced with nb-javac
       - name: Set up JDK 25 for javadoc
         if: env.test_javadoc == 'true' && success()
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: 25
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        if: env.test_javadoc == 'true' && success()
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Build javadoc
         if: env.test_javadoc == 'true' && success()
@@ -504,13 +495,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Download Build
         uses: actions/download-artifact@v8
@@ -552,13 +541,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -887,13 +874,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1013,13 +998,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1179,13 +1162,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1317,13 +1298,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1512,13 +1491,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1571,13 +1548,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1634,13 +1609,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1686,13 +1659,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }}
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1867,13 +1838,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1920,13 +1889,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -1974,13 +1941,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -2025,13 +1990,11 @@ jobs:
     steps:
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -2273,13 +2236,11 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -2369,13 +2330,11 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |
@@ -2441,13 +2400,11 @@ jobs:
         shell: cmd
 
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       # linux specific setup
       - name: Setup PHP
@@ -2583,13 +2540,11 @@ jobs:
 
     steps:
       - name: Set up JDK ${{ matrix.java }} 
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ matrix.java }} 
           distribution: ${{ env.DEFAULT_JAVA_DISTRIBUTION }}
-
-      - name: Disable javac log matcher
-        run: echo "::remove-matcher owner=javac::"
+          problem-matcher: false
 
       - name: Setup Xvfb
         run: |

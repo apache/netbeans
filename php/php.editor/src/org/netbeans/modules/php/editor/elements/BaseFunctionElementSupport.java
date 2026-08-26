@@ -137,7 +137,7 @@ public class BaseFunctionElementSupport  {
                 if (methdodInvocation.startsWith(" ")) {
                     methdodInvocation = methdodInvocation.substring(1);
                 }
-                if (returns2.size() > 0) {
+                if (!returns2.isEmpty() && !element.getName().equals(MethodElement.CONSTRUCTOR_NAME)) {
                     template.append(String.format("{%nreturn parent::%s;%n}", methdodInvocation)); //NOI18N
                 } else {
                     template.append(String.format("{%nparent::%s;%n}", methdodInvocation)); //NOI18N

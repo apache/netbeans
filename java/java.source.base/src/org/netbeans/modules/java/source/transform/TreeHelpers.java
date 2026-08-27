@@ -20,11 +20,9 @@ package org.netbeans.modules.java.source.transform;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.Tag;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -35,7 +33,7 @@ public class TreeHelpers {
         JCCompilationUnit cu = (JCCompilationUnit) cut;
         return cu.defs.stream()
                       .filter(t -> t.hasTag(Tag.CLASSDEF) || t.hasTag(Tag.MODULEDEF))
-                      .collect(Collectors.toList());
+                      .toList();
     }
 
 }

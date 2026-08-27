@@ -66,8 +66,6 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocTrees;
-import com.sun.tools.javac.tree.JCTree.JCLambda;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -98,7 +96,6 @@ import org.netbeans.modules.java.source.save.DiffUtilities;
 import org.netbeans.modules.java.source.save.ElementOverlay;
 import org.netbeans.modules.java.source.save.ElementOverlay.FQNComputer;
 import org.netbeans.modules.java.source.transform.ImmutableDocTreeTranslator;
-import org.netbeans.modules.java.source.transform.ImmutableTreeTranslator;
 import org.netbeans.modules.java.source.transform.TreeDuplicator;
 import org.netbeans.modules.parsing.api.Source;
 import org.netbeans.modules.parsing.impl.SourceAccessor;
@@ -336,13 +333,8 @@ public class WorkingCopy extends CompilationController {
             return;
         }
         
-        Map<DocTree, DocTree> changesMap = docChanges.get(tree);
-        if(changesMap == null) {
-            changesMap = new IdentityHashMap<DocTree, DocTree>();
-            docChanges.put(tree, changesMap);
-        }
-        
-        changesMap.put(oldTree, newTree);
+        docChanges.computeIfAbsent(tree, k -> new IdentityHashMap<DocTree, DocTree>())
+                  .put(oldTree, newTree);
     }
               
     /**
@@ -464,7 +456,7 @@ public class WorkingCopy extends CompilationController {
      */
     synchronized void associateTree(Tree nue, Tree original, boolean force) {
         if (rewriteHints == null) {
-            rewriteHints = new HashMap<Tree, Tree>(7);
+            rewriteHints = HashMap.newHashMap(7);
         }
         
         if (original == null) {
@@ -486,7 +478,7 @@ public class WorkingCopy extends CompilationController {
         return ((JCTree.JCCompilationUnit) topLevel).sourcefile.getCharContent(true).toString();
     }
     
-    private static boolean REWRITE_WHOLE_FILE = Boolean.getBoolean(WorkingCopy.class.getName() + ".rewrite-whole-file");
+    private static final boolean REWRITE_WHOLE_FILE = Boolean.getBoolean(WorkingCopy.class.getName() + ".rewrite-whole-file");
 
     private void addSyntheticTrees(DiffContext diffContext, Tree node) {
         if (node == null) return ;
@@ -671,7 +663,7 @@ public class WorkingCopy extends CompilationController {
                                     getCurrentPath(), tree)).size() > 1) {
                             // start of a variable, which is a part of a variable group
                             variableParent = getCurrentPath();
-                            lastVar = group.get(group.size() - 1) == tree;
+                            lastVar = group.getLast() == tree;
                         } else if (variableParent != null && getCurrentPath().getLeaf().getKind() == Tree.Kind.VARIABLE) {
                             VariableTree vt = (VariableTree)getCurrentPath().getLeaf();
                             beginVariableDeclarator = vt.getModifiers() == tree || vt.getType() == tree;
@@ -690,9 +682,7 @@ public class WorkingCopy extends CompilationController {
                                 }
                             }
                             pathsToRewrite.add(currentParent);
-                            if (!parent2Rewrites.containsKey(currentParent)) {
-                                parent2Rewrites.put(currentParent, new IdentityHashMap<Tree, Tree>());
-                            }
+                            parent2Rewrites.computeIfAbsent(currentParent, k -> new IdentityHashMap<Tree, Tree>());
                         }
                         Tree rev = changes.get(tree);
                         Tree hint = resolveRewriteHint(tree);
@@ -798,7 +788,7 @@ public class WorkingCopy extends CompilationController {
                 }
             }
 
-            Collections.reverse(classes);
+            classes = classes.reversed();
             
             for (Pair<ClassTree, Boolean> ct : classes) {
                 ia.classEntered(ct.first(), ct.second());
@@ -986,7 +976,7 @@ public class WorkingCopy extends CompilationController {
     }
     
     private void addCommentsToContext(DiffContext context) {
-        Map<Integer, Comment> m = new HashMap<>(usedComments.size());
+        Map<Integer, Comment> m = HashMap.newHashMap(usedComments.size());
         for (Comment c : usedComments) {
             m.put(c.pos(), c);
         }
@@ -1141,12 +1131,6 @@ public class WorkingCopy extends CompilationController {
         }
     }
     
-    private static class CopyEntry {
-        private RelativePosition pos;
-        private Tree commentSource;
-        private boolean copyNonEmpty;
-    }
-    
     private Tree resolveRewriteHint(Tree orig) {
         Tree last;
         Tree target = null;
@@ -1217,23 +1201,16 @@ public class WorkingCopy extends CompilationController {
         } else if (cut.getTypeDecls().isEmpty()) {
             kind = null;
         } else {
-            switch (cut.getTypeDecls().get(0).getKind()) {
-                case CLASS:
-                    kind = ElementKind.CLASS;
-                    break;
-                case INTERFACE:
-                    kind = ElementKind.INTERFACE;
-                    break;
-                case ANNOTATION_TYPE:
-                    kind = ElementKind.ANNOTATION_TYPE;
-                    break;
-                case ENUM:
-                    kind = ElementKind.ENUM;
-                    break;
-                default:
-                    Logger.getLogger(WorkingCopy.class.getName()).log(Level.SEVERE, "Cannot resolve template for {0}", cut.getTypeDecls().get(0).getKind());
-                    kind = null;
-            }
+            kind = switch (cut.getTypeDecls().getFirst().getKind()) {
+                case CLASS -> ElementKind.CLASS;
+                case INTERFACE -> ElementKind.INTERFACE;
+                case ANNOTATION_TYPE -> ElementKind.ANNOTATION_TYPE;
+                case ENUM -> ElementKind.ENUM;
+                default -> {
+                    Logger.getLogger(WorkingCopy.class.getName()).log(Level.SEVERE, "Cannot resolve template for {0}", cut.getTypeDecls().getFirst().getKind());
+                    yield null;
+                }
+            };
         }
         FileObject template = FileUtil.getConfigFile(template(kind));
         return doCreateFromTemplate(template, cut.getSourceFile());

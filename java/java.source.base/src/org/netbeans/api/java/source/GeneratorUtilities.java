@@ -364,10 +364,10 @@ public final class GeneratorUtilities {
         }
         if (lastMember != null) {
             // do not move the comments tied to last member in guarded block:
-            moveCommentsAfterOffset(copy, lastMember, members.get(0), offset, doc);
+            moveCommentsAfterOffset(copy, lastMember, members.getFirst(), offset, doc);
         }
         if (nextMember != null) {
-            moveCommentsBeforeOffset(copy, nextMember, members.get(members.size() - 1), offset, doc);
+            moveCommentsBeforeOffset(copy, nextMember, members.getLast(), offset, doc);
         }
         TreeMaker tm = copy.getTreeMaker();
         ClassTree newClazz = clazz;
@@ -530,12 +530,8 @@ public final class GeneratorUtilities {
         }
         
         private void addDependency(Name n) {
-            Collection<Name> deps = dependencies.get(member);
-            if (deps == null) {
-                deps = new ArrayList<>(3);
-                dependencies.put(member, deps);
-            }
-            deps.add(n);
+            dependencies.computeIfAbsent(member, k -> new ArrayList<>(3))
+                        .add(n);
         }
 
         // the following Nodes would just confuse the Identifier scanner:
@@ -2146,7 +2142,7 @@ public final class GeneratorUtilities {
     private static String[] correspondingGSNames(Tree member) {
         if (isSetter(member)) {
             String name = name(member);
-            VariableTree param = ((MethodTree)member).getParameters().get(0);
+            VariableTree param = ((MethodTree)member).getParameters().getFirst();
             if (param.getType().getKind() == Tree.Kind.PRIMITIVE_TYPE && ((PrimitiveTypeTree)param.getType()).getPrimitiveTypeKind() == TypeKind.BOOLEAN) {
                 return new String[] {'g' + name.substring(1), "is" + name.substring(3)};
             }
@@ -2322,10 +2318,10 @@ public final class GeneratorUtilities {
      */
     private void tagFirst(List<MethodTree> methods) {
         //tag first method body, if any
-        if (methods.size() > 0) {
-            BlockTree body = methods.get(0).getBody();
+        if (!methods.isEmpty()) {
+            BlockTree body = methods.getFirst().getBody();
             if (body != null && !body.getStatements().isEmpty()) {
-                copy.tag(body.getStatements().get(0), "methodBodyTag"); // NOI18N
+                copy.tag(body.getStatements().getFirst(), "methodBodyTag"); // NOI18N
             }
         }
     }

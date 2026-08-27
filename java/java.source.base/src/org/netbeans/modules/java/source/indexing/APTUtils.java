@@ -471,9 +471,7 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
                     return vote;
                 }
             }
-            final String cmpOptsStr = JavacParser.validateCompilerOptions(compilerOptions.getArguments(), null)
-                    .stream()
-                    .collect(Collectors.joining(" "));  //NOI18N
+            final String cmpOptsStr = String.join(" ", JavacParser.validateCompilerOptions(compilerOptions.getArguments(), null));  //NOI18N
             if (JavaIndex.ensureAttributeValue(url, COMPILER_OPTIONS, cmpOptsStr, checkOnly)) {
                 JavaIndex.LOG.fine("forcing reindex due to compiler options change"); //NOI18N
                 vote = true;
@@ -629,7 +627,7 @@ public class APTUtils implements ChangeListener, PropertyChangeListener {
                     .filter(pUsed)
                     .map((f) -> Pair.of(f, f.isFile() ? f.length() : -1))
                     .filter(pModified)
-                    .collect(Collectors.toList());
+                    .toList();
             if (!times.isEmpty()) {
                 LOG.log(Level.FINEST, "Important changed: {0}", times);    //NOI18N
                 for (Pair<File,Long> p : times) {

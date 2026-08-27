@@ -19,7 +19,6 @@
 
 package org.netbeans.api.java.source;
 
-import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.IdentifierTree;

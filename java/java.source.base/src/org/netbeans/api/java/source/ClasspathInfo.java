@@ -36,11 +36,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import javax.tools.JavaFileManager;
-import javax.tools.StandardLocation;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -653,7 +651,7 @@ public final class ClasspathInfo {
                                     }
                                 })
                                 .filter((u) -> u != null)
-                                .collect(Collectors.toList());
+                                .toList();
                         if (cfs.size() > 1) {
                             for (URL u : cfs) {
                                 res.put(u, cfs);

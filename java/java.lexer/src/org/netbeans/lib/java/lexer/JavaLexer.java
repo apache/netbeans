@@ -19,9 +19,7 @@
 
 package org.netbeans.lib.java.lexer;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -1212,8 +1210,8 @@ public class JavaLexer implements Lexer<JavaTokenId> {
                                     // For surrogate 2 chars must be backed up
                                     backup((c >= Character.MIN_SUPPLEMENTARY_CODE_POINT) ? 2 : 1);
                                 }
+                                c = nextChar();
                             }
-                            c = nextChar();
                             break;
                         case 'o':
                             switch (c = nextChar()) {

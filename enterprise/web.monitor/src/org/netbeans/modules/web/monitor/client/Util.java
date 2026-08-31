@@ -19,9 +19,12 @@
 
 package org.netbeans.modules.web.monitor.client;
 
-import java.util.*;
-import javax.servlet.http.HttpUtils;
-import org.netbeans.modules.web.monitor.data.*;
+import java.util.Map;
+import java.util.StringTokenizer;
+import org.netbeans.modules.web.monitor.data.Headers;
+import org.netbeans.modules.web.monitor.data.MonitorData;
+import org.netbeans.modules.web.monitor.data.Param;
+import org.netbeans.modules.web.monitor.data.RequestData;
 
 
 /**
@@ -58,7 +61,7 @@ public class Util  {
 	if(rd.sizeParam() == 0) return;
 	
 	Param[] params = rd.getParam();
-	StringBuffer buf = new StringBuffer(512);
+	StringBuilder buf = new StringBuilder(512);
 	String name, value;
 	 
 	for(int i=0; i < params.length; i++) {
@@ -99,9 +102,9 @@ public class Util  {
 	    rd.getAttributeValue("queryString");  //NOI18N
 
 	// MULTIBYTE - I think this isn't working... 
-	Hashtable ht = null;
+	Map<String, String[]> ht = null;
 	try {
-	    ht = HttpUtils.parseQueryString(queryString);
+	    ht = RequestData.parseQueryString(queryString);
 	}
 	catch(IllegalArgumentException iae) {
 	    // do nothing, that's OK
@@ -109,12 +112,9 @@ public class Util  {
 	}
 	if(ht == null || ht.isEmpty()) return false;
 	
-	Enumeration<String> e = ht.keys();
-
-	while(e.hasMoreElements()) {
-	    String name = e.nextElement();
+        for (String name : ht.keySet()) {
 	    try {
-		String[] value = (String[])(ht.get(name));
+		String[] value = ht.get(name);
 		for(int i=0; i<value.length; ++i) {
 		    if(debug) System.out.println("Removing " + //NOI18N
 						 name + " " + //NOI18N
@@ -131,18 +131,16 @@ public class Util  {
 
     static void addParametersToQuery(RequestData rd) {
 
-	Hashtable ht = null;
+	Map<String, String[]> ht = null;
 	String queryString = rd.getAttributeValue("queryString");  //NOI18N
 	try {
-	    ht = HttpUtils.parseQueryString(queryString);
+	    ht = RequestData.parseQueryString(queryString);
 	}
 	catch(Exception ex) { }
 			    
 	if(ht != null && ht.size() > 0) {
-	    Enumeration<String> e = ht.keys();
-	    while(e.hasMoreElements()) {
-		String name = e.nextElement();
-		String[] value = (String[])(ht.get(name));
+        for (String name : ht.keySet()) {
+		String[] value = ht.get(name);
 		for(int i=0; i<value.length; ++i) {
 		    if(debug) 
 			System.out.println("Adding " + name +  //NOI18N
@@ -173,7 +171,7 @@ public class Util  {
 
 	boolean sessionCookie = false;
 	Param[] params = headers.getParam(); 
-	StringBuffer cookiesOut = new StringBuffer("");  //NOI18N
+	StringBuilder cookiesOut = new StringBuilder("");  //NOI18N
 	 
 	for(int i=0; i<numParams; ++i) {
 
@@ -237,4 +235,5 @@ public class Util  {
 	}
 	return null;
     }
+    
 }

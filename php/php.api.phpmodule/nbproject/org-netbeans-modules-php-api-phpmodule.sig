@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.106
+#Version 2.107
 
 CLSS public abstract interface java.io.Serializable
 
@@ -141,6 +141,8 @@ meth public boolean hasObjectType()
 meth public boolean hasOverrideAttribute()
 meth public boolean hasPropertyTypes()
 meth public boolean hasScalarAndReturnTypes()
+meth public boolean hasSelfReturnType()
+meth public boolean hasStaticReturnType()
 meth public boolean hasVoidReturnType()
 meth public boolean isSupportedVersion()
 meth public java.lang.String getDisplayName()

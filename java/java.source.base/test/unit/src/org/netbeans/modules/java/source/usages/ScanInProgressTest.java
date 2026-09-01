@@ -75,9 +75,6 @@ public class ScanInProgressTest extends NbTestCase implements PropertyChangeList
 
     @Override
     protected void setUp() throws Exception {
-        //ensure ProjectsRootNode children are processed synchronously:
-        System.setProperty("test.projectnode.sync", "true");
-
         clearWorkDir();
 
         MockServices.setServices(TestSupport.TestProjectFactory.class);
@@ -119,18 +116,18 @@ public class ScanInProgressTest extends NbTestCase implements PropertyChangeList
         logicalView.addNodeListener(listener);
 
         assertEquals("No events in API", 0, events);
-        assertEquals("10 children", 10, logicalView.getChildren().getNodesCount());
+        assertEquals("10 children", 10, logicalView.getChildren().getNodesCount(true));
         listener.assertEvents("None", 0);
         assertEquals("No project opened yet", 0, TestProjectOpenedHookImpl.opened);
         assertEquals("No events in API", 0, events);
 
-        for (Node n : logicalView.getChildren().getNodes()) {
+        for (Node n : logicalView.getChildren().getNodes(true)) {
             TestSupport.TestProject p = n.getLookup().lookup(TestSupport.TestProject.class);
             assertNull("No project of this type, yet", p);
         }
         assertEquals("No events in API", 0, events);
 
-        Node midNode = logicalView.getChildren().getNodes()[5];
+        Node midNode = logicalView.getChildren().getNodes(true)[5];
         {
             TestSupport.TestProject p = midNode.getLookup().lookup(TestSupport.TestProject.class);
             assertNull("No project of this type, yet", p);
@@ -145,7 +142,7 @@ public class ScanInProgressTest extends NbTestCase implements PropertyChangeList
         Thread.sleep(300);
         assertEquals("Still no processing", 0, TestProjectOpenedHookImpl.opened);
         // trigger initialization of the node, shall trigger OpenProjectList.preferredProject(lazyP);
-        midNode.getChildren().getNodes();
+        midNode.getChildren().getNodes(true);
         first.countDown();
 
         TestProjectOpenedHookImpl.toOpen.await();
@@ -153,7 +150,7 @@ public class ScanInProgressTest extends NbTestCase implements PropertyChangeList
         {
             TestSupport.TestProject p = null;
             for (int i = 0; i < 10; i++) {
-                Node midNode2 = logicalView.getChildren().getNodes()[5];
+                Node midNode2 = logicalView.getChildren().getNodes(true)[5];
                 p = midNode.getLookup().lookup(TestSupport.TestProject.class);
                 if (p != null) {
                     break;
@@ -167,7 +164,7 @@ public class ScanInProgressTest extends NbTestCase implements PropertyChangeList
         {
             int cnt = 0;
             for (int i = 0; i < 10; i++) {
-                Node n = logicalView.getChildren().getNodes()[i];
+                Node n = logicalView.getChildren().getNodes(true)[i];
                 TestSupport.TestProject p = null;
                 p = n.getLookup().lookup(TestSupport.TestProject.class);
                 if (p != null) {
@@ -187,7 +184,7 @@ public class ScanInProgressTest extends NbTestCase implements PropertyChangeList
         assertEquals("All projects opened", 10, TestProjectOpenedHookImpl.opened);
 
 
-        for (Node n : logicalView.getChildren().getNodes()) {
+        for (Node n : logicalView.getChildren().getNodes(true)) {
             TestSupport.TestProject p = n.getLookup().lookup(TestSupport.TestProject.class);
             assertNotNull("Nodes have correct project of this type", p);
         }

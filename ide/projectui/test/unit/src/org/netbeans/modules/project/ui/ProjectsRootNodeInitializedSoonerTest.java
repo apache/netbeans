@@ -60,10 +60,6 @@ public class ProjectsRootNodeInitializedSoonerTest extends NbTestCase {
     }
 
     public void testWrongOrderOfInitialization() throws Exception {
-        
-        //compute project root node children in sync mode
-        System.setProperty("test.projectnode.sync", "true");
-        
         MockLookup.setInstances(new TestSupport.TestProjectFactory());
         List<URL> list = new ArrayList<URL>();
         List<ExtIcon> icons = new ArrayList<ExtIcon>();
@@ -130,14 +126,14 @@ public class ProjectsRootNodeInitializedSoonerTest extends NbTestCase {
         OpenProjectList.LOGGER.setUseParentHandlers(false);
         OpenProjectList.LOGGER.setLevel(Level.ALL);
 
-        assertEquals("30 children", 30, logicalView.getChildren().getNodesCount());
+        assertEquals("30 children", 30, logicalView.getChildren().getNodesCount(true));
 
         OpenProjectList.waitProjectsFullyOpen();
         assertTrue("Handler was called", h.ok);
         assertEquals("All projects opened", 30, TestProjectOpenedHookImpl.opened);
 
         int i = 0;
-        for (Node n : logicalView.getChildren().getNodes()) {
+        for (Node n : logicalView.getChildren().getNodes(true)) {
             i++;
             TestSupport.TestProject p = n.getLookup().lookup(TestSupport.TestProject.class);
             assertNotNull("Project type is correct " + i, p);

@@ -47,10 +47,6 @@ public class ProjectsRootNodeFindTest extends NbTestCase {
     }            
 
     public void testFindNode() throws Exception{
-        
-         //compute project root node children in sync mode
-        System.setProperty("test.projectnode.sync", "true");
-        
         //prepearing project
         MockLookup.setInstances(new TestSupport.TestProjectFactory());
         CountDownLatch down = new CountDownLatch(1);
@@ -79,7 +75,7 @@ public class ProjectsRootNodeFindTest extends NbTestCase {
         OpenProjectListSettings.getInstance().setOpenProjectsIcons(icons);
 
         Node logicalView = new ProjectsRootNode(ProjectsRootNode.LOGICAL_VIEW);
-        assertEquals("2 children", 2, logicalView.getChildren().getNodesCount());
+        assertEquals("2 children", 2, logicalView.getChildren().getNodesCount(true));
 
         // let project open code run
         down.countDown();

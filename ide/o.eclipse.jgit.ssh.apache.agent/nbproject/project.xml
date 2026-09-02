@@ -23,13 +23,8 @@
     <type>org.netbeans.modules.apisupport.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/nb-module-project/2">
-            <code-name-base>org.eclipse.jgit.ssh.jsch</code-name-base>
+            <code-name-base>org.eclipse.jgit.ssh.apache.agent</code-name-base>
             <module-dependencies>
-                <dependency>
-                    <code-name-base>com.jcraft.jsch</code-name-base>
-                    <compile-dependency/>
-                    <run-dependency/>
-                </dependency>
                 <dependency>
                     <code-name-base>org.eclipse.jgit</code-name-base>
                     <run-dependency/>
@@ -53,8 +48,8 @@
             </module-dependencies>
             <public-packages/>
             <class-path-extension>
-                <runtime-relative-path>org-eclipse-jgit-ssh-jsch.jar</runtime-relative-path>
-                <binary-origin>external/org.eclipse.jgit.ssh.jsch-7.6.0.202603022253-r.jar</binary-origin>
+                <runtime-relative-path>org-eclipse-jgit-ssh-apache-agent.jar</runtime-relative-path>
+                <binary-origin>external/org.eclipse.jgit.ssh.apache.agent-7.6.0.202603022253-r.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

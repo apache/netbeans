@@ -19,8 +19,13 @@
 
 package org.netbeans.core.netigso;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URLStreamHandler;
+import java.net.URLStreamHandlerFactory;
 import java.util.logging.Level;
 import org.netbeans.core.startup.MainLookup;
+import org.openide.util.Exceptions;
 import org.openide.util.lookup.InstanceContent;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleEvent;
@@ -43,6 +48,33 @@ implements SynchronousBundleListener, ServiceListener, InstanceContent.Convertor
         this.netigso = netigso;
         for (ServiceReference ref : f.getRegisteredServices()) {
             MainLookup.register(ref, this);
+        }
+        try {
+            // The registration of the felix URLStreamHandler is deactivated in
+            // Netigso.java by setting the felix configuration value of the
+            // property felix.service.urlhandlers to false. That is required
+            // so that the NetBeanss handlers are not replaced/get priority.
+            //
+            // The runtime system however still assumes, that the bundle content
+            // is accessible using the protocols: bundle:, bundleentry: and
+            // bundleresource:.
+            //
+            // Felix does not make the implementing classes directly accessible,
+            // so the implementation is extracted from the Framework
+            // implemenation (org.apache.felix.framework.Felix)
+            Method accessor = f.getClass().getDeclaredMethod("getBundleStreamHandler");
+            accessor.setAccessible(true);
+            URLStreamHandler ush = (URLStreamHandler) accessor.invoke(f);
+            MainLookup.register((URLStreamHandlerFactory) (String protocol) -> {
+                return switch(protocol) {
+                    case "bundle" -> ush;
+                    case "bundleentry" -> ush;
+                    case "bundleresource" -> ush;
+                    default -> null;
+                };
+            });
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
+            Exceptions.printStackTrace(ex);
         }
         f.getBundleContext().addServiceListener(this);
         f.getBundleContext().addBundleListener(this);

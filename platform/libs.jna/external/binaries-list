@@ -15,4 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
+# When this is updated, the spec-version (manifest.mf) of c.s.jna must be updated
+# If the public packages are changed, the project.xmls of both projects must
+# be updated
 CA303052CD617C1AF2E2C8D344C98A706FB63143 net.java.dev.jna:jna:5.19.1

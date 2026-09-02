@@ -26,11 +26,11 @@
             <code-name-base>org.netbeans.libs.git</code-name-base>
             <module-dependencies>
                 <dependency>
-                    <code-name-base>com.jcraft.jsch</code-name-base>
+                    <code-name-base>org.apache.sshd.osgi</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>0.1.55</specification-version>
+                        <specification-version>2.17.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -42,20 +42,27 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.eclipse.jgit.ssh.jsch</code-name-base>
+                    <code-name-base>org.eclipse.jgit.ssh.apache</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>6.7</specification-version>
+                        <specification-version>7.6.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
-                    <code-name-base>org.netbeans.libs.jsch.agentproxy</code-name-base>
+                    <code-name-base>org.openide.modules</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>1.0</specification-version>
+                        <specification-version>7.81</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.util.ui</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>9.42</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>

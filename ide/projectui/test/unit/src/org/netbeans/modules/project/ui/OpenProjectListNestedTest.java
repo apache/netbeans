@@ -32,8 +32,15 @@ import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.project.ui.actions.TestSupport;
 import org.netbeans.spi.project.SubprojectProvider;
+import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataFolder;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.Lookups;
 import org.openide.util.test.MockLookup;
 
@@ -55,8 +62,17 @@ public class OpenProjectListNestedTest extends NbTestCase {
         OpenProjectList.waitProjectsFullyOpen();
     }
 
-    public void testOpenNestedProjects() throws Exception {
-        doOpenProjects(true, () -> {
+    public void testNestedSubProjects() throws Exception {
+        doOpenProjects(true, true, () -> {
+            var em = OpenProjects.getDefault().createLogicalView();
+            var all = em.getRootContext().getChildren().getNodes(true);
+            assertEquals("Only one project is visible, the other is nested", 1, all.length);
+            return null;
+        });
+    }
+
+    public void testNoNestedSubProjects() throws Exception {
+        doOpenProjects(true, false, () -> {
             var em = OpenProjects.getDefault().createLogicalView();
             var all = em.getRootContext().getChildren().getNodes(true);
             assertEquals("Two projects are visible", 2, all.length);
@@ -64,16 +80,16 @@ public class OpenProjectListNestedTest extends NbTestCase {
         });
     }
 
-    public void testOpenNonNestedProjects() throws Exception {
-        doOpenProjects(false, () -> {
+    public void testNestedNoSubProjects() throws Exception {
+        doOpenProjects(false, true, () -> {
             var em = OpenProjects.getDefault().createLogicalView();
             var all = em.getRootContext().getChildren().getNodes(true);
-            assertEquals("One project is visible", 1, all.length);
+            assertEquals("Both projects are visible", 2, all.length);
             return null;
         });
     }
 
-    private void doOpenProjects(boolean withSubprojects, Callable<Void> inner) throws Exception {
+    private void doOpenProjects(boolean withSubprojects, boolean withNested, Callable<Void> inner) throws Exception {
         MockLookup.setInstances(new TestSupport.TestProjectFactory());
         clearWorkDir();
         FileObject workDir = FileUtil.toFileObject(getWorkDir());
@@ -83,42 +99,61 @@ public class OpenProjectListNestedTest extends NbTestCase {
         final TestSupport.TestProject mainPrj = (TestSupport.TestProject) ProjectManager.getDefault().findProject(prjFo);
         final TestSupport.TestProject nestedPrj = (TestSupport.TestProject) ProjectManager.getDefault().findProject(nestedFo);
         assertNotNull("Project found", mainPrj);
-        var subProvider = new SubprojectProvider() {
-            @Override
-            public Set<? extends Project> getSubprojects() {
-                return Set.of(nestedPrj);
-            }
-
-            @Override
-            public void addChangeListener(ChangeListener listener) {
-            }
-
-            @Override
-            public void removeChangeListener(ChangeListener listener) {
-            }
-        };
+        var content = new InstanceContent();
         if (withSubprojects) {
-            mainPrj.setLookup(Lookups.singleton(subProvider));
+            var subProvider = new SubprojectProvider() {
+                @Override
+                public Set<? extends Project> getSubprojects() {
+                    return Set.of(nestedPrj);
+                }
+
+                @Override
+                public void addChangeListener(ChangeListener listener) {
+                }
+
+                @Override
+                public void removeChangeListener(ChangeListener listener) {
+                }
+            };
+            content.add(subProvider);
         }
+        if (withNested) {
+            var logical = new LogicalViewProvider.WithNestedProjects() {
+                @Override
+                public Node createLogicalView() {
+                    var ch = new Children.Array();
+                    var mainNode = new AbstractNode(ch);
+                    var nestedNode = DataFolder.findFolder(nestedPrj.getProjectDirectory()).getNodeDelegate().cloneNode();
+                    ch.add(nestedNode);
+                    return mainNode;
+                }
+
+                @Override
+                public Node findPath(Node root, Object target) {
+                    if (target == mainPrj || target.equals(mainPrj.getProjectDirectory())) {
+                        return root;
+                    }
+                    if (target == nestedPrj || target.equals(nestedPrj.getProjectDirectory())) {
+                        return root.getChildren().getNodeAt(0);
+                    }
+                    return null;
+                }
+            };
+            content.add(logical);
+        }
+        mainPrj.setLookup(new AbstractLookup(content));
 
         OpenProjectList.waitProjectsFullyOpen();
         assertEquals("Initially empty", 0, OpenProjects.getDefault().openProjects().get().length);
 
-        OpenProjects.getDefault().open(new Project[] { mainPrj }, true);
+        OpenProjects.getDefault().open(new Project[] { mainPrj, nestedPrj }, false);
         
         List<Project> arr = Arrays.asList(OpenProjects.getDefault().openProjects().get());
-        if (withSubprojects) {
-            assertEquals("Both projects open", 2, arr.size());
-            assertTrue("Prj1 is there", arr.contains(mainPrj));
-            assertTrue("Nested1 is there", arr.contains(nestedPrj));
-            inner.call();
-            OpenProjects.getDefault().close (new Project[] { nestedPrj, mainPrj });
-        } else {
-            assertEquals("However one project instance is there", 1, arr.size());
-            assertEquals("arr[0] is equal to p", arr.get(0), mainPrj);
-            inner.call();
-            OpenProjects.getDefault().close (new Project[] { mainPrj });
-        }
+        assertEquals("Both projects open", 2, arr.size());
+        assertTrue("Prj1 is there", arr.contains(mainPrj));
+        assertTrue("Nested1 is there", arr.contains(nestedPrj));
+        inner.call();
+        OpenProjects.getDefault().close (new Project[] { nestedPrj, mainPrj });
 
         if (OpenProjects.getDefault().getOpenProjects().length != 0) {
             fail("All projects shall be closed: " + Arrays.asList(OpenProjects.getDefault().getOpenProjects()));

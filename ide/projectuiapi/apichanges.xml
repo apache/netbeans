@@ -20,7 +20,7 @@
 
 -->
 <?xml-stylesheet type="text/xml" href="../../nbbuild/javadoctools/apichanges.xsl"?>
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges-1.1.dtd">
 
 <!--
 
@@ -83,6 +83,21 @@ is the proper place.
     <!-- ACTUAL CHANGES BEGIN HERE: -->
 
     <changes>
+        <change id="nested-projects">
+            <api name="general"/>
+            <summary>Logical view supports nested projects.</summary>
+            <version major="1" minor="124"/>
+            <date day="9" month="9" year="2026"/>
+            <author login="jtulach"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    There is a new interface
+                    <a href="@TOP@/org/netbeans/spi/project/ui/LogicalViewProvider.WithNestedProjects.html">LogicalViewProvider.WithNestedProjects</a>
+                    that allows a <em>parent</em> project to nest its children projects.
+                </p>
+            </description>
+        </change>
         <change id="project-problems-implementation">
             <api name="general"/>
             <summary>Allow pluggable implementation for ProjectProblems API.</summary>

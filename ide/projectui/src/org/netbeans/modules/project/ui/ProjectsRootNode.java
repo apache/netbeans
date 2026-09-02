@@ -58,6 +58,7 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
 import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.FileOwnerQueryImplementation;
+import org.netbeans.spi.project.SubprojectProvider;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.support.ProjectConvertors;
 import org.openide.filesystems.FileChangeAdapter;
@@ -461,7 +462,24 @@ public class ProjectsRootNode extends AbstractNode {
         // Own methods ---------------------------------------------------------
         
         public Collection<Pair> getKeys() {
-            List<Project> projects = Arrays.asList( OpenProjectList.getDefault().getOpenProjects() );
+            var arr = OpenProjectList.getDefault().getOpenProjects();
+            var projects = new ArrayList<>(Arrays.asList(arr));
+            if (type == LOGICAL_VIEW) {
+                var hideNestedProjects = new HashSet<Project>();
+                for (var p : projects) {
+                    var lkp = p.getLookup();
+                    var nestedProjects = lkp.lookup(LogicalViewProvider.WithNestedProjects.class);
+                    if (nestedProjects == null) {
+                        continue;
+                    }
+                    var subProjects = lkp.lookup(SubprojectProvider.class);
+                    if (subProjects == null) {
+                        continue;
+                    }
+                    hideNestedProjects.addAll(subProjects.getSubprojects());
+                }
+                projects.removeAll(hideNestedProjects);
+            }
             projects.sort(OpenProjectList.projectByDisplayName());
             
             final List<Pair> dirs = new ArrayList<>(projects.size());

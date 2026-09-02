@@ -357,7 +357,7 @@ public abstract class Children extends Object {
     * @param nodes set of nodes to add to the list
     * @return <code>true</code> if successfully added
     */
-    public abstract boolean add(final Node[] nodes);
+    public abstract boolean add(final Node... nodes);
 
     /** Remove nodes from the list. Only nodes that are present are
     * removed.
@@ -365,7 +365,7 @@ public abstract class Children extends Object {
     * @param nodes nodes to be removed
     * @return <code>true</code> if the nodes could be removed
     */
-    public abstract boolean remove(final Node[] nodes);
+    public abstract boolean remove(final Node... nodes);
 
     /** Get the nodes as an enumeration.
     * @return enumeration of nodes
@@ -437,8 +437,6 @@ public abstract class Children extends Object {
      * this point, see {@link #getNodes(boolean)}
      * @return array of nodes
      */
-
-    //  private static String off = ""; // NOI18N
     public final Node[] getNodes() {
         checkSupport();
         return entrySupport().getNodes(false);
@@ -605,12 +603,14 @@ public abstract class Children extends Object {
         }
 
         /** @return false, does no action */
-        public boolean add(Node[] nodes) {
+        @Override
+        public boolean add(Node... nodes) {
             return false;
         }
 
         /** @return false, does no action */
-        public boolean remove(Node[] nodes) {
+        @Override
+        public boolean remove(Node... nodes) {
             return false;
         }
     }
@@ -789,7 +789,7 @@ public abstract class Children extends Object {
         * @return true if changed false if not
         */
         @Override
-        public boolean add(final Node[] arr) {
+        public boolean add(final Node... arr) {
             synchronized (COLLECTION_LOCK) {
                 if (!getCollection().addAll(Arrays.asList(arr))) {
                     // no change to the collection
@@ -805,7 +805,7 @@ public abstract class Children extends Object {
         * @return true if changed false if not
         */
         @Override
-        public boolean remove(final Node[] arr) {
+        public boolean remove(final Node... arr) {
             synchronized (COLLECTION_LOCK) {
                 final Collection<Node> collection = getCollection();
                 // fast check
@@ -1055,7 +1055,7 @@ public abstract class Children extends Object {
         * @param arr nodes to add
         * @return <code>false</code> in the default implementation
         */
-        public boolean add(Node[] arr) {
+        public boolean add(Node... arr) {
             return false;
         }
 
@@ -1064,7 +1064,7 @@ public abstract class Children extends Object {
         * @param arr nodes to remove
         * @return <code>false</code> in the default implementation
         */
-        public boolean remove(Node[] arr) {
+        public boolean remove(Node... arr) {
             return false;
         }
 
@@ -1403,7 +1403,7 @@ public abstract class Children extends Object {
          */
         @Deprecated
         @Override
-        public boolean add(Node[] arr) {
+        public boolean add(Node... arr) {
             if (lazySupport) {
                 fallbackToDefaultSupport();
             }
@@ -1415,7 +1415,7 @@ public abstract class Children extends Object {
          */
         @Deprecated
         @Override
-        public boolean remove(final Node[] arr) {
+        public boolean remove(final Node... arr) {
             if (lazySupport) {
                 return false;
             }
@@ -1840,12 +1840,12 @@ public abstract class Children extends Object {
         }
 
         @Override
-        public boolean add(Node[] nodes) {
+        public boolean add(Node... nodes) {
             return getOriginal().add(nodes);
         }
 
         @Override
-        public boolean remove(Node[] nodes) {
+        public boolean remove(Node... nodes) {
             return getOriginal().remove(nodes);
         }
 
@@ -1870,32 +1870,6 @@ public abstract class Children extends Object {
         }
         
     }
-
-    /*
-      static void printNodes (Node[] n) {
-        for (int i = 0; i < n.length; i++) {
-          System.out.println ("  " + i + ". " + n[i].getName () + " number: " + System.identityHashCode (n[i]));
-        }
-        }
-        */
-    /* JST: Useful test routine ;-) *
-    static {
-      final TopComponent.Registry r = TopComponent.getRegistry ();
-      r.addPropertyChangeListener (new PropertyChangeListener () {
-        Node last = new AbstractNode (LEAF);
-
-        public void propertyChange (PropertyChangeEvent ev) {
-          Node[] arr = r.getCurrentNodes ();
-          if (arr != null && arr.length == 1) {
-            last = arr[0];
-          }
-          System.out.println (
-            "Activated node: " + last + " \nparent: " + last.getParentNode ()
-          );
-        }
-      });
-    }
-    */
 
     private static final class ProjectManagerDeadlockDetector implements Executor {
         private final Mutex FALLBACK = new Mutex();

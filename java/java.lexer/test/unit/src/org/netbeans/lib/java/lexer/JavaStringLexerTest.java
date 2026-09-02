@@ -39,12 +39,12 @@ public class JavaStringLexerTest extends NbTestCase {
 
     public void testNextToken1() {
         String text = "t";
-        
+
         TokenHierarchy<?> hi = TokenHierarchy.create(text, JavaStringTokenId.language());
         TokenSequence<?> ts = hi.tokenSequence();
         LexerTestUtilities.assertNextTokenEquals(ts, JavaStringTokenId.TEXT, "t");
     }
-    
+
     public void testNextToken2() {
         String text = "\\t\\b\\b\\t \\tabc\\rsddfdsffffffffff\\uuuuAbcD\\377";
         

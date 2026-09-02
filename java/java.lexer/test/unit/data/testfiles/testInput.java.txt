@@ -48,3 +48,20 @@ null true false
 
 .t.e.s.t. Non-keywords
 abstracta assertx b br car dou doubl finall im i ifa inti throwsx
+.e.o.f.
+
+.t.e.s.t. Var
+int v = 2;
+int va = 2;
+int var = 2;
+int vari = 2;
+int variable = 2;
+var v = 2;
+var va = 2;
+var var = 2;
+var vari = 2;
+var variable = 2;
+vari x = 2;
+variable x = 2;
+for (var i = 0; i < 10; i++) {}
+for (int var = 0; var < 10; var++) {}

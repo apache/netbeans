@@ -276,16 +276,12 @@ public class ProjectsRootNode extends AbstractNode {
         @Override
         public void addNotify() {   
             OpenProjectList.getDefault().addPropertyChangeListener(this);              
-            if (Boolean.getBoolean("test.projectnode.sync")) {
-                setKeys( getKeys());
-            } else {
-                RP.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        setKeys( getKeys() );
-                    }
-                });
-            }
+            RP.post(new Runnable() {
+                @Override
+                public void run() {
+                    setKeys( getKeys() );
+                }
+            });
         }
 
         @Override
@@ -307,7 +303,13 @@ public class ProjectsRootNode extends AbstractNode {
             return super.getNodesCount(optimalResult);
         }
 
-
+        @Override
+        public Node[] getNodes(boolean optimalResult) {
+            if (optimalResult) {
+                setKeys(getKeys());
+            }
+            return super.getNodes(optimalResult);
+        }
         
         @Override
         protected Node[] createNodes(Pair p) {

@@ -92,9 +92,6 @@ public class ProjectsRootNodePhysicalViewTest extends NbTestCase {
         OpenProjectListSettings.getInstance().setOpenProjectsURLs(list);
         OpenProjectListSettings.getInstance().setOpenProjectsDisplayNames(names);
         OpenProjectListSettings.getInstance().setOpenProjectsIcons(icons);
-        
-         //compute project root node children in sync mode
-        System.setProperty("test.projectnode.sync", "true");
     }
 
     @RandomlyFails // NB-Core-Build #3939: "Can be garbage collected when closed" involving TimedWeakReference
@@ -127,11 +124,11 @@ public class ProjectsRootNodePhysicalViewTest extends NbTestCase {
         L listener = new L();
         view.addNodeListener(listener);
         
-        assertEquals("30 children", 30, view.getChildren().getNodesCount());
+        assertEquals("30 children", 30, view.getChildren().getNodesCount(true));
         listener.assertEvents("None", 0);
         assertEquals("No project opened yet", 0, TestProjectOpenedHookImpl.opened);
         
-        for (Node n : view.getChildren().getNodes()) {
+        for (Node n : view.getChildren().getNodes(true)) {
             TestSupport.TestProject p = n.getLookup().lookup(TestSupport.TestProject.class);
             assertNull("No project of this type, yet", p);
         }
@@ -144,7 +141,7 @@ public class ProjectsRootNodePhysicalViewTest extends NbTestCase {
         
         OpenProjectList.waitProjectsFullyOpen();
 
-        for (Node n : view.getChildren().getNodes()) {
+        for (Node n : view.getChildren().getNodes(true)) {
             LogicalView v = n.getLookup().lookup(LogicalView.class);
             assertEquals("View is not present in physical view", null, v);
         }
@@ -152,7 +149,7 @@ public class ProjectsRootNodePhysicalViewTest extends NbTestCase {
         listener.assertEvents("Goal is to receive no events at all", 0);
         
         
-        return view.getChildren().getNodes()[0];
+        return view.getChildren().getNodes(true)[0];
     }
     
     private static class L implements NodeListener {

@@ -107,7 +107,7 @@ class RecordOwnerLockFactory extends LockFactory {
             sb.append(this.getClass().getSimpleName());
             sb.append("owned by: ");    //NOI18N
             sb.append(owner);
-            sb.append('(').append(owner == null ? -1 : owner.getId()).append("); ");  //NOI18N
+            sb.append('(').append(owner == null ? -1 : owner.threadId()).append("); ");  //NOI18N
             sb.append("created from:\n");
             stackTrace(caller == null ? new StackTraceElement[0] : caller.getStackTrace(), sb);
             return sb.toString();
@@ -157,7 +157,7 @@ class RecordOwnerLockFactory extends LockFactory {
         }
         if (threads != null) {
             final Thread ct = Thread.currentThread();
-            message.append("current thread: ").append(ct).append('(').append(ct.getId()).append(')');    //NOI18N
+            message.append("current thread: ").append(ct).append('(').append(ct.threadId()).append(')');    //NOI18N
             message.append("threads: \n");     //NOI18N   //NOI18N
             stackTraces(threads, message);
         }
@@ -172,7 +172,7 @@ class RecordOwnerLockFactory extends LockFactory {
         @NonNull final StringBuilder sb) {
         for (Map.Entry<Thread,StackTraceElement[]> entry : traces.entrySet()) {
             final Thread t = entry.getKey();
-            sb.append(t).append('(').append(t.getId()).append(")\n"); //NOI18N
+            sb.append(t).append('(').append(t.threadId()).append(")\n"); //NOI18N
             stackTrace(entry.getValue(), sb);
         }
     }

@@ -56,11 +56,6 @@
     <folder name="Services">
 
         <folder name="Hidden">
-            <file name="com-jcraft-jzlib-antlibrary.instance">
-                <attr name="instanceCreate" methodvalue="org.apache.tools.ant.module.spi.AutomaticExtraClasspath.url"/>
-                <attr name="instanceOf" stringvalue="org.apache.tools.ant.module.spi.AutomaticExtraClasspathProvider"/>
-                <attr name="url" urlvalue="nbinst://com.jcraft.jzlib/modules/com-jcraft-jzlib.jar"/>
-            </file>
             <file name="com-jcraft-jsch-antlibrary.instance">
                 <attr name="instanceCreate" methodvalue="org.apache.tools.ant.module.spi.AutomaticExtraClasspath.url"/>
                 <attr name="instanceOf" stringvalue="org.apache.tools.ant.module.spi.AutomaticExtraClasspathProvider"/>

@@ -33,6 +33,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -274,7 +275,7 @@ public class ProjectsRootNode extends AbstractNode {
         // Children.Keys impl --------------------------------------------------
         
         @Override
-        public void addNotify() {   
+        public void addNotify() {
             OpenProjectList.getDefault().addPropertyChangeListener(this);              
             RP.post(new Runnable() {
                 @Override
@@ -455,7 +456,11 @@ public class ProjectsRootNode extends AbstractNode {
         }
         
         final void refresh(Project p) {
-            refreshKey(new Pair(p, type));
+            for (var k : getKeys()) {
+                if (k.project == p) {
+                    refreshKey(k);
+                }
+            }
         }
                                 
         // Own methods ---------------------------------------------------------
@@ -466,10 +471,18 @@ public class ProjectsRootNode extends AbstractNode {
             
             final List<Pair> dirs = new ArrayList<>(projects.size());
             final java.util.Map<Project,Pair> snapshot = new HashMap<>();
-            for (Project project : projects) {
-                final Pair p = new Pair(project, type);
+            var nested = new LinkedList<FileObject>();
+            for (Project prj : projects) {
+                while (!nested.isEmpty()) {
+                    if (FileUtil.isParentOf(nested.peekLast(), prj.getProjectDirectory())) {
+                        break;
+                    }
+                    nested.removeLast();
+                }
+                var p = new Pair(prj, type, nested.size());
+                nested.add(prj.getProjectDirectory());
                 dirs.add(p);
-                snapshot.put(project, p);
+                snapshot.put(prj, p);
             }
             synchronized (projects2Pairs) {
                 projects2Pairs.clear();
@@ -491,13 +504,15 @@ public class ProjectsRootNode extends AbstractNode {
             final FileObject fo;
             private final int type;
             private Union2<LogicalViewProvider,org.openide.util.Pair<Sources,SourceGroup[]>> data;
+            final int depth;
 
             public Pair(
                     final Project project,
-                    final int type) {
+                    final int type, int depth) {
                 this.project = project;
                 this.fo = project.getProjectDirectory();
                 this.type = type;
+                this.depth = depth;
                 this.data = createData(project, type);
             }
 
@@ -563,7 +578,7 @@ public class ProjectsRootNode extends AbstractNode {
         private volatile Boolean mainCache;
         private final ProjectChildren ch;
         private final boolean logicalView;
-        private final ProjectChildren.Pair pair;
+        final ProjectChildren.Pair pair;
         private final Set<FileObject> projectDirsListenedTo = Collections.newSetFromMap(new WeakHashMap<>());
         private static final int DELAY = 50;
         private final FileChangeListener newSubDirListener = new FileChangeAdapter() {

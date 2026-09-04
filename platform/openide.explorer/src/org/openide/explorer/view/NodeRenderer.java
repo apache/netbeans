@@ -29,6 +29,8 @@ import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -135,7 +137,9 @@ public class NodeRenderer extends Object implements TreeCellRenderer, ListCellRe
 
         //Do our additional configuration - set up the icon and possibly
         //do some hacks to make it look focused for TreeTableView
-        configureFrom(renderer, tree, expanded, sel, vis);
+        int iconWidth = configureFrom(renderer, tree, expanded, sel, vis);
+
+        renderer.setIndent(iconWidth * findIndent(tree.getModel(), vis));
 
         return result;
     }
@@ -156,7 +160,7 @@ public class NodeRenderer extends Object implements TreeCellRenderer, ListCellRe
 
         String text = vis.getHtmlDisplayName();
         if (list.getModel() instanceof NodeListModel) {
-            int depth = NodeListModel.findVisualizerDepth(list.getModel(), vis);
+            int depth = findIndent(list, vis);
             if (depth == -1) {
                 text = NbBundle.getMessage(NodeRenderer.class, "LBL_UP");
             }
@@ -187,13 +191,30 @@ public class NodeRenderer extends Object implements TreeCellRenderer, ListCellRe
             //in the node tree.  Only does anything if you've subclassed and
             //overridden createModel().  Does anybody do that?
             if (list.getModel() instanceof NodeListModel && (((NodeListModel) list.getModel()).getDepth() > 1)) {
-                int indent = iconWidth * NodeListModel.findVisualizerDepth(list.getModel(), vis);
+                int indent = iconWidth * findIndent(list.getModel(), vis);
 
                 renderer.setIndent(indent);
             }
         }
 
         return result;
+    }
+
+    /** Finds the indentation level of a node.
+     *
+     * @param model the model (either {@link ListModel} or {@link TreeModel}) that's currently being rendered
+     * @param visualizer the visualizer to find indentation for
+     * @return the indentation level for the renderer of the given {@code visualizer};
+     *   return {@code 0} for no indentation or positive number to indent the rendering to right
+     * @see Visualizer#findNode(java.lang.Object)
+     * @sincet 6.97
+     */
+    protected int findIndent(Object model, TreeNode visualizer) {
+        if (model instanceof ListModel) {
+            return NodeListModel.findVisualizerDepth((ListModel) model, visualizer);
+        } else {
+            return 0;
+        }
     }
 
     /** Utility method which performs configuration which is common to all of the renderer

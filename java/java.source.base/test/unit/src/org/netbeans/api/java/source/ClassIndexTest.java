@@ -620,9 +620,12 @@ public class ClassIndexTest extends NbTestCase {
         GlobalPathRegistry.getDefault().register(ClassPath.COMPILE, new ClassPath[] {compilePath});
         GlobalPathRegistry.getDefault().register(ClassPath.SOURCE, new ClassPath[] {sourcePath});
 
-        IndexingManager.getDefault().refreshAllIndices(true, true, root);
+        System.out.println("## 1 before wait: " +SourceUtils.isScanInProgress());
         SourceUtils.waitScanFinished();
-
+        System.out.println("## 2 after wait: " +SourceUtils.isScanInProgress());
+        IndexingManager.getDefault().refreshAllIndices(true, true, root);
+        System.out.println("## 3 after refresh: " +SourceUtils.isScanInProgress());
+        
         result = ci.getDeclaredTypes("TestLib", NameKind.PREFIX, Set.of(ClassIndex.SearchScope.DEPENDENCIES));
         assertNotNull(result);
         assertElementHandles(new String[] {"lib.TestLib"}, result);

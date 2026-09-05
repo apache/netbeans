@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -517,7 +518,17 @@ public class ProjectsRootNode extends AbstractNode {
             }
 
             @Override
+            public int hashCode() {
+                int hash = 7 * this.depth;
+                hash += 53 * this.fo.hashCode();
+                return hash;
+            }
+
+            @Override
             public boolean equals(Object obj) {
+                if (this == obj) {
+                    return true;
+                }
                 if (obj == null) {
                     return false;
                 }
@@ -525,17 +536,10 @@ public class ProjectsRootNode extends AbstractNode {
                     return false;
                 }
                 final Pair other = (Pair) obj;
-                if (this.fo != other.fo && (this.fo == null || !this.fo.equals(other.fo))) {
+                if (this.depth != other.depth) {
                     return false;
                 }
-                return true;
-            }
-
-            @Override
-            public int hashCode() {
-                int hash = 7;
-                hash = 53 * hash + (this.fo != null ? this.fo.hashCode() : 0);
-                return hash;
+                return Objects.equals(this.fo, other.fo);
             }
 
             private void update(@NonNull final Project project) {

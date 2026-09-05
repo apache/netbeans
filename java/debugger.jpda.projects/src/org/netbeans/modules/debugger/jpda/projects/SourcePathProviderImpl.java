@@ -125,7 +125,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
         Map properties = contextProvider.lookupFirst(null, Map.class);
 
         Set<FileObject> srcRootsToListenForArtifactsUpdates = null;
-        
+
         // 2) get default allSourceRoots of source roots used for stepping
         if (logger.isLoggable(Level.FINE)) logger.fine("Have properties = "+properties);
         if (properties != null) {
@@ -151,23 +151,23 @@ public class SourcePathProviderImpl extends SourcePathProvider {
                         });
             }
             smartSteppingSourcePath = jdkCP == null ?
-                smartSteppingSourcePath :
+                    smartSteppingSourcePath :
                 ClassPathSupport.createProxyClassPath (
                     new ClassPath[] {
-                        jdkCP,
+                                jdkCP,
                         smartSteppingSourcePath,
                     }
-            );
+                    );
             unorderedOriginalSourcePath = smartSteppingSourcePath;
 
             Map<String, Integer> orderIndexes = getSourceRootsOrder(baseDir);
             String[] unorderedOriginalRoots = getSourceRoots(unorderedOriginalSourcePath);
             String[] sortedOriginalRoots = new String[unorderedOriginalRoots.length];
             sourcePathPermutation = createPermutation(unorderedOriginalRoots,
-                                                      orderIndexes,
-                                                      sortedOriginalRoots);
+                    orderIndexes,
+                    sortedOriginalRoots);
             smartSteppingSourcePath = createClassPath(sortedOriginalRoots);
-            
+
             originalSourcePath = smartSteppingSourcePath;
 
             Set<String> disabledRoots;
@@ -201,16 +201,29 @@ public class SourcePathProviderImpl extends SourcePathProvider {
                     globalCP
             );
              */
+            String sourcepathSeperator = ",";
+
             String listeningCP = (String) properties.get("listeningCP");
             if (listeningCP != null) {
                 boolean isSourcepath = false;
                 if ("sourcepath".equalsIgnoreCase(listeningCP)) {
-                    listeningCP = ((ClassPath) properties.get ("sourcepath")).toString(ClassPath.PathConversionMode.SKIP);
+                    sourcepathSeperator = File.pathSeparator;
+                    listeningCP = ((ClassPath) properties.get("sourcepath")).toString(ClassPath.PathConversionMode.SKIP);
                     isSourcepath = true;
                 }
                 srcRootsToListenForArtifactsUpdates = new HashSet<FileObject>();
-                for (String cp : listeningCP.split(File.pathSeparator)) {
-                    logger.log(Level.FINE, "Listening cp = ''{0}''", cp);
+
+                List<String> list = new ArrayList<>();
+                list.addAll(Arrays.asList(listeningCP.split(sourcepathSeperator)));
+                for (String string : listeningCP.split(";")) {
+                    list.add(string.replace(",", ""));
+                }
+
+                for (String cp : list) {
+                    cp = cp.replace(",", "");
+                    cp = cp.replace(";", "");
+//                for (String cp : listeningCP.split(File.pathSeparator)) {
+                    logger.log(Level.INFO, "Listening cp = ''{0}''", cp);
                     File f = new File(cp);
                     f = FileUtil.normalizeFile(f);
                     URL entry = FileUtil.urlForArchiveOrDir(f);
@@ -235,12 +248,12 @@ public class SourcePathProviderImpl extends SourcePathProvider {
             pathRegistryListener = new PathRegistryListener();
             GlobalPathRegistry.getDefault().addGlobalPathRegistryListener(
                     WeakListeners.create(GlobalPathRegistryListener.class,
-                                         pathRegistryListener,
-                                         GlobalPathRegistry.getDefault()));
+                            pathRegistryListener,
+                            GlobalPathRegistry.getDefault()));
             JavaPlatformManager.getDefault ().addPropertyChangeListener(
                     WeakListeners.propertyChange(pathRegistryListener,
-                                                 JavaPlatformManager.getDefault()));
-            
+                            JavaPlatformManager.getDefault()));
+
             List<FileObject> allSourceRoots = new ArrayList<FileObject>();
             Set<FileObject> preferredRoots = new HashSet<FileObject>();
             Set<FileObject> addedBinaryRoots = new HashSet<FileObject>();
@@ -311,16 +324,16 @@ public class SourcePathProviderImpl extends SourcePathProvider {
             }
 
             Set<String> disabledRoots = getRemoteDisabledSourceRoots();
-            
+
             synchronized (this) {
                 unorderedOriginalSourcePath = createClassPath(allSourceRoots.toArray(new FileObject[0]));
-                
+
                 Map<String, Integer> orderIndexes = getRemoteSourceRootsOrder();
                 String[] unorderedOriginalRoots = getSourceRoots(unorderedOriginalSourcePath);
                 String[] sorterOriginalRoots = new String[unorderedOriginalRoots.length];
                 sourcePathPermutation = createPermutation(unorderedOriginalRoots,
-                                                          orderIndexes,
-                                                          sorterOriginalRoots);
+                        orderIndexes,
+                        sorterOriginalRoots);
                 originalSourcePath = createClassPath(sorterOriginalRoots);
 
                 projectSourceRoots = getSourceRoots(originalSourcePath);
@@ -342,13 +355,13 @@ public class SourcePathProviderImpl extends SourcePathProvider {
                 }
             }
         }
-        
+
         if (verbose) 
             System.out.println 
                 ("SPPI: init originalSourcePath " + originalSourcePath);    
         if (verbose) 
             System.out.println (
-                "SPPI: init smartSteppingSourcePath " + smartSteppingSourcePath
+                    "SPPI: init smartSteppingSourcePath " + smartSteppingSourcePath
             );
 
         if (logger.isLoggable(Level.FINE)) {
@@ -1434,9 +1447,7 @@ public class SourcePathProviderImpl extends SourcePathProvider {
 
             boolean canFixClasses = Properties.getDefault().getProperties("debugger.options.JPDA").
                     getBoolean("ApplyCodeChangesOnSave", CAN_FIX_CLASSES_AUTOMATICALLY);
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("artifactsUpdated("+artifacts+") error = '"+error+"', canFixClasses = "+canFixClasses);
-            }
+            logger.info("artifactsUpdated("+artifacts+") error = '"+error+"', canFixClasses = "+canFixClasses);
             if (error == null) {
                 if (!canFixClasses) {
                     for (File f : artifacts) {

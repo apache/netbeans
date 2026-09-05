@@ -19,8 +19,14 @@
 
 package org.netbeans.modules.web.api.webmodule;
 
+import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import org.netbeans.api.j2ee.core.Profile;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.netbeans.modules.j2ee.dd.api.web.WebAppMetadata;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
 import org.netbeans.modules.web.spi.webmodule.WebModuleImplementation;
@@ -103,17 +109,71 @@ public final class WebModule {
      *         to any web module.
      * @throws NullPointerException if the <code>file</code> parameter is null.
      */
-    public static WebModule getWebModule (FileObject file) {
+     public static WebModule getWebModule(FileObject file) {
         Parameters.notNull("file", file); // NOI18N
+
         Iterator<WebModuleProvider> it = implementations.allInstances().iterator();
         while (it.hasNext()) {
+
             WebModuleProvider impl = it.next();
-            WebModule wm = impl.findWebModule (file);
+            WebModule wm = impl.findWebModule(file);
             if (wm != null) {
                 return wm;
             }
         }
-        return null;
+        final WebModule webModule = new WebModule(null, new WebModuleImplementation2() {
+            @Override
+            public FileObject getDocumentBase() {
+                Project project = FileOwnerQuery.getOwner(file);
+                Sources sources = ProjectUtils.getSources(project);
+                for (SourceGroup group : sources.getSourceGroups("java")) {
+                    FileObject root = group.getRootFolder();
+                    if (file.getPath().startsWith(root.getPath())) {
+                        return root; // нашли src-папку, к которой относится файл
+                    }
+                }
+                return project.getProjectDirectory();
+            }
+
+            @Override
+            public String getContextPath() {
+                return "/";
+            }
+
+            @Override
+            public Profile getJ2eeProfile() {
+                return Profile.JAVA_EE_8_FULL;
+            }
+
+            @Override
+            public FileObject getWebInf() {
+                return null;
+            }
+
+            @Override
+            public FileObject getDeploymentDescriptor() {
+                return null;
+            }
+
+            @Override
+            public FileObject[] getJavaSources() {
+                return new FileObject[0];
+            }
+
+            @Override
+            public MetadataModel<WebAppMetadata> getMetadataModel() {
+                return null;
+            }
+
+            @Override
+            public void addPropertyChangeListener(PropertyChangeListener listener) {
+            }
+
+            @Override
+            public void removePropertyChangeListener(PropertyChangeListener listener) {
+            }
+        });
+        return webModule;
     }
 
     /**

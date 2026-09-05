@@ -442,6 +442,19 @@ public class CreateElementTest extends HintsTestBase {
                 "CreateConstructorFix:(java.lang.String string):org.netbeans.test.java.hints.CreateConstructor"
         )));
     }
+
+    // the test shows that no fix is suggested for a method call where the return type is using the var.
+    public void testNBIssue8594() throws Exception{
+         performTestAnalysisTest("org.netbeans.test.java.hints.UnknownReturnType", 228, Set.of());
+    }
+
+    // this test shows that a hint is given when the type of the local variable is known
+    public void testNBIssue8594B() throws Exception{
+
+         performTestAnalysisTest("org.netbeans.test.java.hints.KnownReturnType", 228, Set.of(
+         "CreateMethodFix:whoKnows(java.lang.String[] args)int:org.netbeans.test.java.hints.KnownReturnType"
+         ));
+    }
     
     protected void performTestAnalysisTest(String className, int offset, Set<String> golden) throws Exception {
         prepareTest(className);

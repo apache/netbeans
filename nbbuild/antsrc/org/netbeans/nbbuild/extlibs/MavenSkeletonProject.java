@@ -29,6 +29,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -97,34 +100,47 @@ public class MavenSkeletonProject extends Task {
         }
         Path pseudoMavendirectory = Files.createDirectory(pseudoMaven);
         Path parentPom = Files.createFile(pseudoMavendirectory.resolve("pom.xml"));
-        Files.write(parentPom, ("<project>"
-                + "\n  <modelVersion>4.0.0</modelVersion>"
-                + "\n  <groupId>com.mycompany.app</groupId>"
-                + "\n  <artifactId>my-app</artifactId>"
-                + "\n  <version>1</version>"
-                + "\n  <packaging>pom</packaging>"
-                + "<distributionManagement>\n"
-                + "    <site><id>dummy</id><url>https://netbeans.apache.org/dummy</url><name>dummy</name></site>\n"
-                + "  </distributionManagement>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+        Files.write(parentPom, ("""
+                                <project>
+                                  <modelVersion>4.0.0</modelVersion>
+                                  <groupId>pseudo.org.netbeans</groupId>
+                                  <artifactId>netbeans</artifactId>
+                                  <version>1</version>
+                                  <packaging>pom</packaging><distributionManagement>
+                                    <site><id>dummy</id><url>https://netbeans.apache.org/dummy</url><name>dummy</name></site>
+                                  </distributionManagement>""").getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         Files.write(parentPom, "\n  <modules>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+        // scan module with external folder
+        Map<String,Set<String>> clusters = new HashMap<>();
         for (String module : modules) {
             File d = new File(new File(nball, module), "external");
             if (d.exists() && d.isDirectory()) {
-                String moduleName = module.replace("/", "").replace(".", "");
-                Files.write(parentPom, ("\n    <module>" + moduleName + "</module>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-                Path modulesPathFolder = Files.createDirectory(pseudoMavendirectory.resolve(moduleName));
-                Path moduleparentPom = Files.createFile(modulesPathFolder.resolve("pom.xml"));
-                Files.write(moduleparentPom, ("<project>"
-                        + "\n  <modelVersion>4.0.0</modelVersion>"
-                        + "\n  <parent><groupId>com.mycompany.app</groupId><artifactId>my-app</artifactId><version>1</version></parent>"
-                        + "\n  <groupId>com.mycompany.app</groupId>"
-                        + "\n  <artifactId>" + moduleName + "</artifactId>"
-                        + "\n  <version>1</version>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+                var name = module.split("/");
+                String clusterName = module.split("/")[0];
+                clusters.computeIfAbsent(clusterName,k-> new HashSet<>());
+                Path clusterfolder;String moduleName;
+                if (name.length > 1) {
+                    moduleName = name[1];
+                    clusters.get(name[0]).add(moduleName);
+                } else {
+                    moduleName = "nbbuild";
+                }
+                clusterfolder = Files.createDirectories(pseudoMavendirectory.resolve(clusterName).resolve(moduleName));
+                // write pom for the module in clusterfolder/modulefolder/pom.xml
+                Path moduleparentPom = Files.createFile(clusterfolder.resolve("pom.xml"));
+                Files.write(moduleparentPom, ("""
+                                              <project>
+                                                <modelVersion>4.0.0</modelVersion>
+                                                <parent><groupId>pseudo.org.netbeans</groupId><artifactId>%s</artifactId><version>1</version></parent>
+                                                <groupId>%s</groupId>
+                                                <artifactId>%s</artifactId>
+                                                <version>1</version>""".formatted(clusterName,clusterName,moduleName)).getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
                 Files.write(moduleparentPom, "\n  <dependencies>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 
                 File list = new File(d, "binaries-list");
                 if (list.isFile()) {
-
+                    // do not accept more than once a g:a artifacts
+                    Set<MavenGA> duplicatecheck = new HashSet<>();
                     try ( Reader r = new FileReader(list)) {
                         BufferedReader br = new BufferedReader(r);
                         String line;
@@ -139,18 +155,21 @@ public class MavenSkeletonProject extends Task {
                             if (hashAndFile.length < 2) {
                                 throw new BuildException("Bad line '" + line + "' in " + list);
                             }
+
                             if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
                                 MavenCoordinate coordinate = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
-                                Files.write(moduleparentPom, ("\n    <dependency>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-                                Files.write(moduleparentPom, ("\n    <groupId>" + coordinate.getGroupId() + "</groupId>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-                                Files.write(moduleparentPom, ("\n    <artifactId>" + coordinate.getArtifactId() + "</artifactId>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-                                Files.write(moduleparentPom, ("\n    <version>" + coordinate.getVersion() + "</version>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-                                Files.write(moduleparentPom, ("\n    <type>" + coordinate.getExtension() + "</type>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+                                if (duplicatecheck.add(MavenGA.from(coordinate))) {
+                                    Files.write(moduleparentPom, ("\n    <dependency>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+                                    Files.write(moduleparentPom, ("\n      <groupId>" + coordinate.getGroupId() + "</groupId>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+                                    Files.write(moduleparentPom, ("\n      <artifactId>" + coordinate.getArtifactId() + "</artifactId>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+                                    Files.write(moduleparentPom, ("\n      <version>" + coordinate.getVersion() + "</version>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+                                    Files.write(moduleparentPom, ("\n      <type>" + coordinate.getExtension() + "</type>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 
-                                if (coordinate.hasClassifier()) {
-                                    Files.write(moduleparentPom, ("\n    <classifier>" + coordinate.getClassifier() + "</classifier>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+                                    if (coordinate.hasClassifier()) {
+                                        Files.write(moduleparentPom, ("\n      <classifier>" + coordinate.getClassifier() + "</classifier>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+                                    }
+                                    Files.write(moduleparentPom, ("\n    </dependency>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
                                 }
-                                Files.write(moduleparentPom, ("\n    </dependency>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
                             }
                         }
                     }
@@ -160,52 +179,72 @@ public class MavenSkeletonProject extends Task {
 
             }
         }
-        Files.write(parentPom, "\n  </modules>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-        Files.write(parentPom, ("\n  <build>\n"
-                + "        <pluginManagement>\n"
-                + "            <plugins>\n"
-                + "                <plugin>\n"
-                + "                    <artifactId>maven-site-plugin</artifactId>\n"
-                + "                    <version>4.0.0-M1</version>\n"
-                + "                </plugin>\n"
-                + "            </plugins>\n"
-                + "        </pluginManagement>\n"
-                + "  </build>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+        // write clusters pom
+        for (Map.Entry<String, Set<String>> clusterEntry : clusters.entrySet()) {
+            String clusterName = clusterEntry.getKey();
+            Path clusterFolder =  pseudoMavendirectory.resolve(clusterName) ;
+            Files.write(parentPom, ("\n    <module>" + clusterName + "</module>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 
-        Files.write(parentPom, ("\n  <reporting>\n"
-                + "    <plugins>\n"
-                + "      <plugin>\n"
-                + "        <groupId>org.owasp</groupId>\n"
-                + "        <artifactId>dependency-check-maven</artifactId>\n"
-                + "        <version>7.1.0</version>\n"
-                + "        <configuration>\n"
-                + "          <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>\n"
-                + "          <failOnError>false</failOnError>\n"
-                + "        </configuration>\n"
-                + "        <reportSets>\n"
-                + "          <reportSet>\n"
-                + "            <reports>\n"
-                + "              <report>aggregate</report>\n"
-                + "            </reports>\n"
-                + "          </reportSet>\n"
-                + "        </reportSets>\n"
-                + "      </plugin>\n"
-                + "      \n"
-                + "      <plugin>\n"
-                + "        <groupId>org.codehaus.mojo</groupId>\n"
-                + "        <artifactId>versions-maven-plugin</artifactId>\n"
-                + "        <version>2.11.0</version>\n"
-                + "        <reportSets>\n"
-                + "          <reportSet>\n"
-                + "            <reports>\n"
-                + "              <report>dependency-updates-report</report>\n"
-                + "            </reports>\n"
-                + "          </reportSet>\n"
-                + "        </reportSets>\n"
-                + "      </plugin>\n"
-                + "    </plugins>\n"
-                + "  </reporting>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+            Path clusterparentPom = Files.createFile(clusterFolder.resolve("pom.xml"));
+            Files.write(clusterparentPom, ("""
+                                              <project>
+                                                <modelVersion>4.0.0</modelVersion>
+                                                <parent><groupId>pseudo.org.netbeans</groupId><artifactId>netbeans</artifactId><version>1</version></parent>
+                                                <artifactId>""" + clusterName + "</artifactId><packaging>pom</packaging>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            if (!clusterEntry.getValue().isEmpty()) {
+                Files.write(clusterparentPom, "\n  <modules>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+                for (String module : clusterEntry.getValue()) {
+                    Files.write(clusterparentPom, ("\n    <module>" + module + "</module>").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+
+                }
+                Files.write(clusterparentPom, "\n  </modules>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+            }
+            Files.write(clusterparentPom, "</project>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+        }
+        // parent pom with plugin for report owasp
+        Files.write(parentPom, "\n  </modules>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+        Files.write(parentPom, ("""
+                                  <build>
+                                        <pluginManagement>
+                                            <plugins>
+                                                <plugin>
+                                                    <artifactId>maven-site-plugin</artifactId>
+                                                    <version>3.22.0</version>
+                                                </plugin>
+                                            </plugins>
+                                        </pluginManagement>
+                                  </build>""").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+
+        Files.write(parentPom, ("""
+                                  <reporting>
+                                    <plugins>
+                                      <plugin>
+                                        <groupId>org.owasp</groupId>
+                                        <artifactId>dependency-check-maven</artifactId>
+                                        <version>13.0.0</version>
+                                        <configuration>
+                                          <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                                          <failOnError>false</failOnError>
+                                        </configuration>
+                                        <reportSets>
+                                          <reportSet>
+                                            <reports>
+                                              <report>aggregate</report>
+                                            </reports>
+                                          </reportSet>
+                                        </reportSets>
+                                      </plugin>
+                                    </plugins>
+                                  </reporting>""").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
         Files.write(parentPom, "</project>".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+
+    }
+
+    record MavenGA(String groupId, String artifactId) {
+
+        private static MavenGA from(MavenCoordinate coordinate) {
+            return new MavenGA(coordinate.getGroupId(), coordinate.getArtifactId());
+        }
 
     }
 

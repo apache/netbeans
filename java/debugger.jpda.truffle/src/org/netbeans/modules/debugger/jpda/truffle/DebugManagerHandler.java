@@ -163,7 +163,10 @@ final class DebugManagerHandler {
 
     void initDebuggerRemoteService(JPDAThread thread) {
         if (inited.compareAndSet(false, true)) {
+            long now = System.currentTimeMillis();
             doInitDebuggerRemoteService(thread);
+            long took = System.currentTimeMillis() - now;
+            LOG.log(Level.FINE, "doInitDebuggerRemoteService took {0} ms", took);
         }
     }
 

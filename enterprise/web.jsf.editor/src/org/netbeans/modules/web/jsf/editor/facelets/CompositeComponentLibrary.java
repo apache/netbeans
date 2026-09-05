@@ -19,16 +19,18 @@
 package org.netbeans.modules.web.jsf.editor.facelets;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import org.netbeans.modules.web.jsf.editor.index.CompositeComponentModel;
 import org.netbeans.modules.web.jsf.editor.index.JsfIndex;
 import org.netbeans.modules.web.jsfapi.api.Attribute;
@@ -43,7 +45,7 @@ import org.openide.util.WeakListeners;
  */
 public class CompositeComponentLibrary extends FaceletsLibrary {
 
-    //https://javaserverfaces.java.net/docs/2.2/vdldocs/facelets/ui/component.html
+    // https://jakarta.ee/specifications/faces/4.1/vdldoc/ui/component
     private static final String[] DEFAULT_COMPONENT_ATTRS = new String[]{
         "id", "binding", "rendered"}; //NOI18N
 
@@ -159,8 +161,7 @@ public class CompositeComponentLibrary extends FaceletsLibrary {
 
         @Override
         public int hashCode() {
-            int hash = 7;
-            return hash;
+            return Objects.hash(this.name);
         }
 
         @Override
@@ -192,7 +193,7 @@ public class CompositeComponentLibrary extends FaceletsLibrary {
             Map<String, Tag> map = new HashMap<>();
             Collection<CompositeComponent> components = getCompositeComponentsMap().values();
             for (CompositeComponent cc : components) {
-                map.put(cc.getName(), new LazyLoadingTag(cc));
+                map.put(cc.getName(), ComponentTag.wrap(new LazyLoadingTag(cc)));
             }
             return map;
         }
@@ -212,25 +213,15 @@ public class CompositeComponentLibrary extends FaceletsLibrary {
             modelsCache.clear();
         }
         
-        private class LazyLoadingTag extends GenericTag {
+        private class LazyLoadingTag implements Tag {
 
             private final CompositeComponent cc;
             private Map<String, Attribute> attrs;
             private String description;
+            private boolean hasNonGenericAttributes;
 
-            public LazyLoadingTag(CompositeComponent cc) {
+            public LazyLoadingTag(CompositeComponent cc) { 
                 this.cc = cc;
-            }
-
-            @Override
-            protected Map<String, Attribute> getAdditionalGenericAttributes() {
-                Map<String, Attribute> result = new HashMap<>();
-                for (String name : DEFAULT_COMPONENT_ATTRS) {
-                    result.put(name,
-                            new Attribute.DefaultAttribute(name,
-                                    NbBundle.getMessage(CompositeComponentLibrary.class, new StringBuilder().append("HELP_").append(name).toString()), false));
-                }
-                return result;
             }
 
             private synchronized void load() {
@@ -255,6 +246,14 @@ public class CompositeComponentLibrary extends FaceletsLibrary {
                     String attributeType = attrsMap.get("type"); //NOI18N
                     String methodSignature = attrsMap.get("method-signature"); //NOI18N
                     attrs.put(attrname, new Attribute.DefaultAttribute(attrname, attributeDescription, attributeType, required, methodSignature, defaultValue));
+                }
+                hasNonGenericAttributes = !attrs.isEmpty();
+
+                //merge with default attributes
+                for (String name : DEFAULT_COMPONENT_ATTRS) {
+                    attrs.putIfAbsent(name,
+                            new Attribute.DefaultAttribute(name,
+                                    NbBundle.getMessage(CompositeComponentLibrary.class, "HELP_" + name), false));
                 }
 
                 StringBuilder sb = new StringBuilder();
@@ -359,23 +358,19 @@ public class CompositeComponentLibrary extends FaceletsLibrary {
             @Override
             public boolean hasNonGenenericAttributes() {
                 load();
-                return !attrs.isEmpty();
+                return hasNonGenericAttributes;
             }
 
             @Override
             public Collection<Attribute> getAttributes() {
                 load();
-                //merge with default attributes
-                Collection<Attribute> all = new ArrayList<>(super.getAttributes());
-                all.addAll(attrs.values());
-                return all;
+                return attrs == null ? Collections.emptyList() : attrs.values();
             }
 
             @Override
             public Attribute getAttribute(String name) {
                 load();
-                Attribute superA = super.getAttribute(name);
-                return superA != null ? superA : attrs.get(name);
+                return attrs == null ? null : attrs.get(name);
             }
         }
     }

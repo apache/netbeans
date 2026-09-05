@@ -45,25 +45,30 @@ public class SpellcheckerOptionsPanelController extends OptionsPanelController {
 
     public SpellcheckerOptionsPanelController() {}
 
+    @Override
     public void update() {
         getComponentImpl().update();
         changed = false;
     }
 
+    @Override
     public void applyChanges() {
         getComponentImpl().commit();
         changed = false;
     }
 
+    @Override
     public void cancel() {
         getComponentImpl().update();
         changed = false;
     }
 
+    @Override
     public boolean isValid() {
         return valid;
     }
 
+    @Override
     public boolean isChanged() {
         return changed;
     }
@@ -86,20 +91,24 @@ public class SpellcheckerOptionsPanelController extends OptionsPanelController {
         return comp;
     }
     
+    @Override
     public JComponent getComponent(Lookup masterLookup) {
         return getComponentImpl();
     }
 
+    @Override
     public HelpCtx getHelpCtx() {
         return new HelpCtx("netbeans.optionsDialog.editor.spellchecker"); //NOI18N
     }
 
-    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener l) {
         pcs.addPropertyChangeListener(l);
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener l) {
         pcs.removePropertyChangeListener(l);
     }

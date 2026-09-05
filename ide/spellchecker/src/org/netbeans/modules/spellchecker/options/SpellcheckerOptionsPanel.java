@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.netbeans.modules.spellchecker.options;
 
 import java.awt.Color;
@@ -39,14 +38,12 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.ListModel;
 import javax.swing.UIManager;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
@@ -56,6 +53,7 @@ import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.modules.spellchecker.ComponentPeer;
 import org.netbeans.modules.spellchecker.DefaultLocaleQueryImplementation;
 import org.netbeans.modules.spellchecker.DictionaryProviderImpl;
+import org.netbeans.modules.spellchecker.Utilities;
 import org.netbeans.modules.spellchecker.options.DictionaryInstallerPanel.DictionaryDescription;
 import org.netbeans.modules.spellchecker.spi.dictionary.DictionaryProvider;
 import org.netbeans.spi.options.OptionsPanelController;
@@ -69,22 +67,21 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
-
 /**
  *
  * @author Jan Lahoda
  */
 @OptionsPanelController.Keywords(keywords = {"#TITLE_InstallDictionary", "#KW_SpellcheckerOptions",
-					    "#TITLE_OptionsPanel", "#LBL_Default_Locale_Panel"},
-	location = OptionsDisplayer.EDITOR, tabTitle="#TITLE_OptionsPanel")
-public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
-    
-    private List<Locale> removedDictionaries = new ArrayList<Locale>();
-    private List<DictionaryDescription> addedDictionaries = new ArrayList<DictionaryDescription>();
+    "#TITLE_OptionsPanel", "#LBL_Default_Locale_Panel"},
+        location = OptionsDisplayer.EDITOR, tabTitle = "#TITLE_OptionsPanel")
+public final class SpellcheckerOptionsPanel extends javax.swing.JPanel {
+
+    private List<Locale> removedDictionaries = new ArrayList<>();
+    private List<DictionaryDescription> addedDictionaries = new ArrayList<>();
 
     private SpellcheckerOptionsPanelController c;
     private static final Icon errorIcon = ImageUtilities.loadIcon("org/netbeans/modules/spellchecker/resources/error.gif");
-    
+
     /**
      * Creates new form SpellcheckerOptionsPanel
      */
@@ -92,16 +89,16 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
         initComponents();
         this.c = c;
         Color errorColor = UIManager.getColor("nb.errorForeground");
-        
+
         if (errorColor == null) {
             errorColor = new Color(255, 0, 0);
         }
-        
+
         errorText.setForeground(errorColor);
-        
+
         JTextComponent editorComponent = (JTextComponent) defaultLocale.getEditor().getEditorComponent();
         final Document document = editorComponent.getDocument();
-        
+
         document.addDocumentListener(new DocumentListener() {
             private void validate() {
                 try {
@@ -112,89 +109,95 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
                     Exceptions.printStackTrace(ex);
                 }
             }
+
+            @Override
             public void insertUpdate(DocumentEvent e) {
                 validate();
             }
+
+            @Override
             public void removeUpdate(DocumentEvent e) {
                 validate();
             }
-            public void changedUpdate(DocumentEvent e) {}
-        });
-        List<String> cathegories = loadCategories ();
-        DefaultListModel<String> model = new DefaultListModel<>();
-        for (String category : cathegories)
-            model.addElement (category);
-        lUseIn.setModel (model);
-        lUseIn.setCellRenderer (new CheckBoxRenderrer ());
-        lUseIn.addKeyListener (new KeyAdapter () {
 
             @Override
-            public void keyTyped (KeyEvent e) {
-                if (e.getKeyChar () == KeyEvent.VK_SPACE) {
-                    int i = lUseIn.getSelectedIndex ();
-                    if (i < 0) return;
-                    String name = (String) lUseIn.getModel ().getElementAt (i);
-                    if (name.charAt (0) == '+')
-                        ((DefaultListModel) lUseIn.getModel ()).set (i, "-" + name.substring (1));
-                    else
-                        ((DefaultListModel) lUseIn.getModel ()).set (i, "+" + name.substring (1));
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
+        List<String> cathegories = loadCategories();
+        DefaultListModel<String> model = new DefaultListModel<>();
+        for (String category : cathegories) {
+            model.addElement(category);
+        }
+        lUseIn.setModel(model);
+        lUseIn.setCellRenderer(new CheckBoxRenderrer());
+        lUseIn.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (e.getKeyChar() == KeyEvent.VK_SPACE) {
+                    int i = lUseIn.getSelectedIndex();
+                    if (i < 0) {
+                        return;
+                    }
+                    String name = (String) lUseIn.getModel().getElementAt(i);
+                    if (name.charAt(0) == '+') {
+                        ((DefaultListModel) lUseIn.getModel()).set(i, "-" + name.substring(1));
+                    } else {
+                        ((DefaultListModel) lUseIn.getModel()).set(i, "+" + name.substring(1));
+                    }
                     fireChanged();
                 }
             }
         });
-        lUseIn.addMouseListener (new MouseAdapter () {
+        lUseIn.addMouseListener(new MouseAdapter() {
 
             @Override
-            public void mouseClicked (MouseEvent e) {
-                int i = lUseIn.getSelectedIndex ();
-                if (i < 0) return;
-                String name = (String) lUseIn.getModel ().getElementAt (i);
-                if (name.charAt (0) == '+')
-                    ((DefaultListModel) lUseIn.getModel ()).set (i, "-" + name.substring (1));
-                else
-                    ((DefaultListModel) lUseIn.getModel ()).set (i, "+" + name.substring (1));
+            public void mouseClicked(MouseEvent e) {
+                int i = lUseIn.getSelectedIndex();
+                if (i < 0) {
+                    return;
+                }
+                String name = (String) lUseIn.getModel().getElementAt(i);
+                if (name.charAt(0) == '+') {
+                    ((DefaultListModel) lUseIn.getModel()).set(i, "-" + name.substring(1));
+                } else {
+                    ((DefaultListModel) lUseIn.getModel()).set(i, "+" + name.substring(1));
+                }
                 fireChanged();
             }
         });
-        
-        installedLocalesList.addListSelectionListener(new ListSelectionListener() {
 
-            public void valueChanged(ListSelectionEvent e) {
-                enableDisableButtons();
-            }
+        installedLocalesList.addListSelectionListener((ListSelectionEvent e) -> {
+            enableDisableButtons();
         });
         enableDisableButtons();
     }
-    
+
     private void fireChanged() {
         List<String> savedCategories = loadCategories();
         ListModel model = lUseIn.getModel();
-        List<String> currentCategories = new ArrayList<String>(model.getSize());
+        List<String> currentCategories = new ArrayList<>(model.getSize());
         for (int i = 0; i < model.getSize(); i++) {
             currentCategories.add((String) model.getElementAt(i));
         }
         boolean isChanged = !savedCategories.equals(currentCategories);
-        
-        List<Locale> savedLocales = new ArrayList<Locale>(Arrays.asList(DictionaryProviderImpl.getInstalledDictionariesLocales()));
+
+        List<Locale> savedLocales = new ArrayList<>(Arrays.asList(DictionaryProviderImpl.getInstalledDictionariesLocales()));
         model = installedLocalesList.getModel();
-        List<Locale> currentLocales = new ArrayList<Locale>(model.getSize());
+        List<Locale> currentLocales = new ArrayList<>(model.getSize());
         for (int i = 0; i < model.getSize(); i++) {
             currentLocales.add((Locale) model.getElementAt(i));
         }
         isChanged |= !savedLocales.equals(currentLocales);
-        
+
         Object selectedItem = defaultLocale.getSelectedItem();
         Locale selectedLocale = null;
-        if (selectedItem instanceof Locale) {
-            selectedLocale = (Locale) selectedItem;
+        if (selectedItem instanceof Locale l) {
+            selectedLocale = l;
         }
-        if (selectedItem instanceof String) {
-            String[] parsedComponents = ((String) selectedItem).split("_");
-            String[] components = new String[] {"", "", ""};
-            
-            System.arraycopy(parsedComponents, 0, components, 0, parsedComponents.length);
-            
-            selectedLocale = new Locale(components[0], components[1], components[2]);
+        if (selectedItem instanceof String s) {
+            selectedLocale = Utilities.name2Locale(s);
         }
         if (selectedLocale != null) {
             isChanged |= !DefaultLocaleQueryImplementation.getDefaultLocale().equals(selectedLocale);
@@ -207,17 +210,17 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
         errorText.setText(error != null ? NbBundle.getMessage(SpellcheckerOptionsPanel.class, error) : "");
         errorText.setIcon(error != null ? errorIcon : null);
     }
-    
+
     public void update() {
         updateUsedIn();
         removedDictionaries.clear();
         addedDictionaries.clear();
 
         updateLocales();
-        
+
         defaultLocale.setSelectedItem(DefaultLocaleQueryImplementation.getDefaultLocale());
     }
-    
+
     private void updateUsedIn() {
         List<String> categories = loadCategories();
         DefaultListModel<String> model = new DefaultListModel<>();
@@ -234,16 +237,16 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
         for (DictionaryDescription desc : addedDictionaries) {
             locales.add(desc.getLocale());
         }
-        
+
         locales.removeAll(removedDictionaries);
 
         for (Locale l : locales) {
             model.addElement(l);
         }
-        
+
         installedLocalesList.setModel(model);
     }
-    
+
     public void commit() {
         //Add dictionaries:
         for (DictionaryDescription desc : addedDictionaries) {
@@ -254,68 +257,65 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
         for (Locale remove : removedDictionaries) {
             DictionaryInstallerPanel.removeDictionary(remove);
         }
-        
+
         Object selectedItem = defaultLocale.getSelectedItem();
         Locale selectedLocale = null;
-        
-        if (selectedItem instanceof Locale) {
-            selectedLocale = (Locale) selectedItem;
+
+        if (selectedItem instanceof Locale l) {
+            selectedLocale = l;
         }
-        
-        if (selectedItem instanceof String) {
-            String[] parsedComponents = ((String) selectedItem).split("_");
-            String[] components = new String[] {"", "", ""};
-            
-            System.arraycopy(parsedComponents, 0, components, 0, parsedComponents.length);
-            
-            selectedLocale = new Locale(components[0], components[1], components[2]);
+
+        if (selectedItem instanceof String s) {
+            selectedLocale = Utilities.name2Locale(s);
         }
-        
+
         if (selectedLocale != null) {
             DefaultLocaleQueryImplementation.setDefaultLocale(selectedLocale);
         }
 
         for (DictionaryProvider p : Lookup.getDefault().lookupAll(DictionaryProvider.class)) {
-            if (p instanceof DictionaryProviderImpl) {
-                ((DictionaryProviderImpl) p).clearDictionaries();
+            if (p instanceof DictionaryProviderImpl pvd) {
+                pvd.clearDictionaries();
             }
         }
 
         // save categories:
-        FileObject root = FileUtil.getConfigFile ("Spellcheckers");
+        FileObject root = FileUtil.getConfigFile("Spellcheckers");
         if (root != null) {
-            Set<String> hidden = new HashSet<String> ();
-            ListModel model = lUseIn.getModel ();
-            for (int i = 0; i < model.getSize (); i++) {
-                String n = (String) model.getElementAt (i);
-                if (n.charAt (0) == '-')
-                    hidden.add (n.substring (1));
+            Set<String> hidden = new HashSet<>();
+            ListModel model = lUseIn.getModel();
+            for (int i = 0; i < model.getSize(); i++) {
+                String n = (String) model.getElementAt(i);
+                if (n.charAt(0) == '-') {
+                    hidden.add(n.substring(1));
+                }
             }
-            FileObject[] children = root.getChildren ();
+            FileObject[] children = root.getChildren();
             for (FileObject fileObject : children) {
                 String name = null;
                 try {
-                    name = fileObject.getFileSystem ().getDecorator ().annotateName (fileObject.getName (), Collections.singleton (fileObject));
+                    name = fileObject.getFileSystem().getDecorator().annotateName(fileObject.getName(), Set.of(fileObject));
                 } catch (FileStateInvalidException ex) {
-                    name = fileObject.getName ();
+                    name = fileObject.getName();
                 }
                 try {
-                    fileObject.setAttribute ("Hidden", Boolean.valueOf (hidden.contains (name)));
+                    fileObject.setAttribute("Hidden", hidden.contains(name));
                 } catch (IOException ex) {
                 }
             }
         }
-        for (JTextComponent component : EditorRegistry.componentList ()) {
-            ComponentPeer componentPeer = (ComponentPeer) component.getClientProperty (ComponentPeer.class);
-            if (componentPeer != null)
-                componentPeer.reschedule ();
+        for (JTextComponent component : EditorRegistry.componentList()) {
+            ComponentPeer componentPeer = (ComponentPeer) component.getClientProperty(ComponentPeer.class);
+            if (componentPeer != null) {
+                componentPeer.reschedule();
+            }
         }
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -451,7 +451,7 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
-        for (Object o : installedLocalesList.getSelectedValues()) {
+        for (Object o : installedLocalesList.getSelectedValuesList()) {
             removedDictionaries.add((Locale) o);
         }
         updateLocales();
@@ -459,7 +459,8 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_removeButtonActionPerformed
 
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        Collection<String> currentLocales = new HashSet<String>();
+        Collection<String> currentLocales;
+        currentLocales = new HashSet<>();
         ListModel locales = installedLocalesList.getModel();
 
         for (int c = 0; c < locales.getSize(); c++) {
@@ -468,11 +469,11 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
 
         JButton okButton = new JButton(NbBundle.getMessage(SpellcheckerOptionsPanel.class, "BTN_Add"));
         DictionaryInstallerPanel panel = new DictionaryInstallerPanel(okButton, currentLocales);
-        DialogDescriptor dd = new DialogDescriptor(panel, NbBundle.getMessage(SpellcheckerOptionsPanel.class, "LBL_AddDictionary"), true, new Object[] {okButton, DialogDescriptor.CANCEL_OPTION}, okButton, DialogDescriptor.DEFAULT_ALIGN, null, null);
+        DialogDescriptor dd = new DialogDescriptor(panel, NbBundle.getMessage(SpellcheckerOptionsPanel.class, "LBL_AddDictionary"), true, new Object[]{okButton, DialogDescriptor.CANCEL_OPTION}, okButton, DialogDescriptor.DEFAULT_ALIGN, null, null);
 
         dd.setClosingOptions(null);
         panel.setNotifications(dd.createNotificationLineSupport());
-        
+
         Dialog d = DialogDisplayer.getDefault().createDialog(dd);
 
         d.setVisible(true);
@@ -490,8 +491,8 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     private void defaultLocaleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_defaultLocaleItemStateChanged
         fireChanged();
     }//GEN-LAST:event_defaultLocaleItemStateChanged
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
     private javax.swing.JComboBox defaultLocale;
@@ -509,7 +510,7 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JList lUseIn;
     private javax.swing.JButton removeButton;
     // End of variables declaration//GEN-END:variables
-    
+
     private ListModel getInstalledDictionariesModel() {
         DefaultListModel<Locale> dlm = new DefaultListModel<>();
 
@@ -523,38 +524,38 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     private ComboBoxModel getLocaleModel() {
         DefaultComboBoxModel<Locale> dlm = new DefaultComboBoxModel<>();
         List<Locale> locales = new ArrayList<>(Arrays.asList(Locale.getAvailableLocales()));
-        
-        locales.sort(new LocaleComparator());
-        
+
+        locales.sort(LOCALE_COMPARATOR);
+
         for (Locale l : locales) {
             dlm.addElement(l);
         }
-        
+
         return dlm;
     }
 
-    private static List<String> loadCategories () {
+    private static List<String> loadCategories() {
         //Repository.getDefault ().findResource ("Spellcheckers");
-        List<String> result = new ArrayList<String> ();
-        FileObject root = FileUtil.getConfigFile ("Spellcheckers");
+        List<String> result = new ArrayList<>();
+        FileObject root = FileUtil.getConfigFile("Spellcheckers");
         if (root != null) {
-            FileObject[] children = root.getChildren ();
+            FileObject[] children = root.getChildren();
             for (FileObject fileObject : children) {
                 String name = null;
                 try {
-                    name = fileObject.getFileSystem ().getDecorator ().annotateName (fileObject.getName (), Collections.singleton (fileObject));
+                    name = fileObject.getFileSystem().getDecorator().annotateName(fileObject.getName(), Collections.singleton(fileObject));
                 } catch (FileStateInvalidException ex) {
-                    name = fileObject.getName ();
+                    name = fileObject.getName();
                 }
-                Boolean b = (Boolean) fileObject.getAttribute ("Hidden");
+                Boolean b = (Boolean) fileObject.getAttribute("Hidden");
                 if (b != null && b) {
-                    result.add ("-" + name); // hidden
+                    result.add("-" + name); // hidden
                 } else {
-                    result.add ("+" + name);
+                    result.add("+" + name);
                 }
             }
         }
-        result.sort(CategoryComparator);
+        result.sort(CATEGORY_COMPARATOR);
         return result;
     }
 
@@ -569,16 +570,16 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
             return "ERR_InvalidLocale";
         }
 
-        if (!Arrays.asList(Locale.getISOLanguages()).contains(components[0])) {
+        if (!Set.of(Locale.getISOLanguages()).contains(components[0])) {
             return "ERR_UnknownLanguage";
         }
 
         if (components.length > 1) {
-            if (!Arrays.asList(Locale.getISOCountries()).contains(components[1])) {
+            if (!Set.of(Locale.getISOCountries()).contains(components[1])) {
                 return "ERR_UnknownCountry";
             }
 
-            if (!Arrays.asList(Locale.getAvailableLocales()).contains(new Locale(components[0], components[1]))) {
+            if (!Set.of(Locale.getAvailableLocales()).contains(Locale.of(components[0], components[1]))) {
                 return "ERR_UnsupportedLocale";
             }
         }
@@ -589,19 +590,8 @@ public class SpellcheckerOptionsPanel extends javax.swing.JPanel {
     private void enableDisableButtons() {
         removeButton.setEnabled(installedLocalesList.getSelectedIndex() != (-1));
     }
-    
-    private static final Comparator<String> CategoryComparator = new Comparator<String> () {
 
-        public int compare (String o1, String o2) {
-            return o1.substring (1).compareTo (o2.substring (1));
-        }
-    };
+    private static final Comparator<String> CATEGORY_COMPARATOR = (String o1, String o2) -> o1.substring(1).compareTo(o2.substring(1));
 
-    private static class LocaleComparator implements Comparator<Locale> {
-        
-        public int compare(Locale o1, Locale o2) {
-            return o1.toString().compareTo(o2.toString());
-        }
-        
-    }
+    private static final Comparator<Locale> LOCALE_COMPARATOR = (Locale o1, Locale o2) -> o1.toString().compareTo(o2.toString());
 }

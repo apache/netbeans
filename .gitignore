@@ -119,5 +119,10 @@ derby.log
 
 /webcommon/javascript2.json/src/org/netbeans/modules/javascript2/json/parser/Json*.java
 
+php/php.blade/src/org/netbeans/modules/php/blade/syntax/antlr4/v10/BladeAntlr*.java
+php/php.blade/src/org/netbeans/modules/php/blade/syntax/antlr4/formatter/BladeAntlr*.java
+php/php.blade/src/org/netbeans/modules/php/blade/syntax/antlr4/html_components/Blade*.java
+php/php.blade/src/org/netbeans/modules/php/blade/syntax/antlr4/php/Blade*.java
+
 # idea
 .idea

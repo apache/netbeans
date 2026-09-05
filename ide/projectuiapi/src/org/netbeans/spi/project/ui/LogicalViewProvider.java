@@ -46,6 +46,13 @@ public interface LogicalViewProvider extends PathFinder {
      * @return a node displaying the contents of the project in an intuitive way
      * @see CommonProjectActions#forType
      */
-    Node createLogicalView();        
-    
+    Node createLogicalView();
+
+    /** An extension of {@link LogicalViewProvider} handling also <em>nested projects</em>.
+     *
+     * @since 1.124
+     */
+    public interface WithNestedProjects extends LogicalViewProvider {
+
+    }
 }

@@ -806,6 +806,21 @@ public class NPECheckTest extends NbTestCase {
                 .assertWarnings();
     }
     
+    public void test222871NewClass() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "    private void t(@CheckForNull String onSuccess, @CheckForNull Integer onError) {\n" +
+                       "        new Test(onSuccess != null || onError != null);\n" +
+                       "        new Test(onSuccess == null || onError == null);\n" +
+                       "    }\n" +
+                       "    public Test(boolean b) {}\n" +
+                       "    @interface CheckForNull {}\n" +
+                       "}")
+                .run(NPECheck.class)
+                .assertWarnings();
+    }
+
     public void testWhileInitializeWithField() throws Exception {
         HintTest.create()
                 .input("package test;\n" +
@@ -1676,6 +1691,19 @@ public class NPECheckTest extends NbTestCase {
                 .assertWarnings("4:41-4:50:verifier:ERR_NotNull");
     }
     
+    public void testNETBEANS407a2() throws Exception {
+        HintTest.create()
+                .input("package test;\n" +
+                       "public class Test {\n" +
+                       "  public void test(Object o) {\n" +
+                       "    boolean b1 = o instanceof Integer;\n" +
+                       "    System.out.println(o.toString());\n" +
+                       "  }\n" +
+                       "}")
+                .run(NPECheck.class)
+                .assertWarnings();
+    }
+
     public void testNETBEANS407b() throws Exception {
         HintTest.create()
                 .input("package test;\n" +
@@ -1685,7 +1713,10 @@ public class NPECheckTest extends NbTestCase {
                        "  }\n" +
                        "}")
                 .run(NPECheck.class)
-                .assertWarnings("3:45-3:53:verifier:Possibly Dereferencing null");
+                .assertWarnings();
+        //originally, there was this warning:
+        //3:45-3:53:verifier:Possibly Dereferencing null
+        //but the warning is very hard to defend, if the instanceof fails, we simply don't know anything
     }
     
     public void testNETBEANS407c() throws Exception {
@@ -1968,6 +1999,26 @@ public class NPECheckTest extends NbTestCase {
                        """)
                 .run(NPECheck.class)
                 .assertWarnings("9:12-9:21:verifier:ERR_NotNull");
+    }
+
+    public void testIfAndInstanceOf() throws Exception {
+        HintTest.create()
+                .sourceLevel("21")
+                .input("""
+                       package test;
+                       public class Test {
+                           public @NotNull Object test(Object o) {
+                               if (o instanceof String s) {
+                                   return s;
+                               } else {
+                                   return o; //can't say anything
+                               }
+                           }
+                       }
+                       @interface NotNull {}
+                       """)
+                .run(NPECheck.class)
+                .assertWarnings();
     }
 
     private void performAnalysisTest(String fileName, String code, String... golden) throws Exception {

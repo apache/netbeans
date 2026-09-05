@@ -29,8 +29,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.apache.tools.ant.BuildException;
@@ -67,7 +68,7 @@ public class CheckEmbeddedBinaries extends Task {
         boolean success = true;
 
         File manifest = shalist;
-        Map<String,String> shamap = new HashMap<>();
+        Map<String,String> shamap = new LinkedHashMap<>();
         log("Scanning: " + manifest, Project.MSG_VERBOSE);
         try {
             try (InputStream is = new FileInputStream(manifest)) {
@@ -80,7 +81,7 @@ public class CheckEmbeddedBinaries extends Task {
                     if (line.trim().length() == 0) {
                         continue;
                     }
-                    String[] hashAndFile = line.split(";", 2);
+                    String[] hashAndFile = line.split(";", 3);
                     if (hashAndFile.length < 2) {
                         throw new BuildException("Bad line '" + line + "' in " + manifest, getLocation());
                     }
@@ -88,32 +89,38 @@ public class CheckEmbeddedBinaries extends Task {
                     if (MavenCoordinate.isMavenFile(hashAndFile[1])) {
                         MavenCoordinate mc = MavenCoordinate.fromGradleFormat(hashAndFile[1]);
                         shamap.put(hashAndFile[0], mc.toArtifactFilename());
-                    } else {
-                        throw new BuildException("Invalid manifest entry should be Maven coordinate", getLocation());
+                    } else if (hashAndFile.length >= 3 && Files.isReadable(dir.toPath().resolve(hashAndFile[2]))){
+                        shamap.put(hashAndFile[0], hashAndFile[2]);
+                    } else{
+                        throw new BuildException("Invalid manifest entry should be Maven coordinate: "+hashAndFile[1], getLocation());
                     }
                 }
             }
         } catch (IOException x) {
             throw new BuildException("Could not open " + manifest + ": " + x, x, getLocation());
-
         }
-        try (Stream<Path> list = Files.list(dir.toPath())) {
+
+        for (Map.Entry<String, String> entry : shamap.entrySet()) {
+            log ("sha entry "+ entry.getKey()+" = "+entry.getValue());
+        }
+        try (Stream<Path> list = Files.list(dir.toPath()).sorted((a,b)-> a.getFileName().toString().compareTo(b.getFileName().toString()))) {
             StringBuilder errorList = new StringBuilder();
             list.forEach((t) -> {
                         String sha1 = hash(t.toFile());
                         String filename = shamap.get(sha1);
+//                        log("visiting "+t.toString());
                         if (filename == null) {
                             errorList.append("No sha1 (expected ").append(sha1).append(" for file: ").append(t.getFileName()).append("\n");
                         } else if (!filename.equals(t.getFileName().toString())) {
                             errorList.append("Wrong filename for hash (expected ").append(filename).append(" but got: ").append(t.getFileName()).append("\n");
                         }
                     });
-            if (errorList.toString().length()>0) {
-                log(""+errorList.toString());
-                throw new BuildException("Missing Sha1 file", getLocation());
+            if (! errorList.isEmpty()) {
+//                log(""+errorList.toString());
+                throw new BuildException("Errors while processing files:\n"+errorList, getLocation());
             }
         } catch (IOException ex) {
-            throw new BuildException("Invalid manifest entry should be Maven coordinate", getLocation());
+            throw new BuildException("Invalid manifest entry should be Maven coordinate: "+ex.getMessage(), getLocation());
         }
         if (!success) {
             throw new BuildException("Failed to download binaries - see log message for the detailed reasons.", getLocation());

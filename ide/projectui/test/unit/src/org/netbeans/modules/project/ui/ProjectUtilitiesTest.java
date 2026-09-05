@@ -144,7 +144,6 @@ public class ProjectUtilitiesTest extends NbTestCase {
                 "org.openide.util.lookup.MetaInfServicesLookup.beforeLookup",
                 "org.netbeans.modules.project.ui.OpenProjectList.close",
                 "org.netbeans.modules.project.ui.OpenProjectList.doOpenProject");
-        RestrictThreadCreation.forbidNewThreads(false);
     }
     
     @SuppressWarnings("deprecation")

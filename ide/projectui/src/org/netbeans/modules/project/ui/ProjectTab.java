@@ -57,8 +57,10 @@ import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -67,6 +69,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.DefaultEditorKit;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -89,6 +92,7 @@ import org.openide.awt.UndoRedo;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
+import org.openide.explorer.view.NodeRenderer;
 import org.openide.explorer.view.Visualizer;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataObject;
@@ -417,6 +421,34 @@ public class ProjectTab extends TopComponent
         }
     }
 
+    private static class DepthRespectingRenderer extends NodeRenderer {
+        DepthRespectingRenderer() {
+        }
+
+        @Override
+        protected int findIndent(Object model, TreeNode vis) {
+            var node = Visualizer.findNode(vis);
+            while (node != null) {
+                if (node instanceof ProjectsRootNode.BadgingNode) {
+                    var badge = (ProjectsRootNode.BadgingNode) node;
+                    return badge.pair.depth;
+                }
+                node = node.getParentNode();
+            }
+            return 0;
+        }
+
+        private static final int parents(FileObject fo) {
+            int cnt = 0;
+            while (fo != null) {
+                cnt++;
+                fo = fo.getParent();
+            }
+            return cnt;
+        }
+
+    }
+
     private class KeepExpansion implements Runnable {
         final RequestProcessor.Task task;
         final List<String[]> exPaths;
@@ -719,6 +751,10 @@ public class ProjectTab extends TopComponent
     /** Extending bean treeview. To be able to persist the selected paths
      */
     private class ProjectTreeView extends BeanTreeView {
+        {
+            this.tree.setCellRenderer(new DepthRespectingRenderer());
+        }
+
         public void scrollToNode(final Node n) {
             // has to be delayed to be sure that events for Visualizers
             // were processed and TreeNodes are already in hierarchy

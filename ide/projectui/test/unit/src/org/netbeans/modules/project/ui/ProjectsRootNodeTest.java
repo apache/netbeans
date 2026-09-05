@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.event.ChangeListener;
+import static org.junit.Assert.assertNotEquals;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.SourceGroup;
@@ -276,7 +277,7 @@ public class ProjectsRootNodeTest extends NbTestCase {
         Project prj = ProjectManager.getDefault().findProject(root);
         assertNotNull(prj);
         System.setProperty("test.nodelay", "true");
-        ProjectsRootNode.BadgingNode node = new ProjectsRootNode.BadgingNode(null, new ProjectsRootNode.ProjectChildren.Pair(prj, ProjectsRootNode.LOGICAL_VIEW),
+        ProjectsRootNode.BadgingNode node = new ProjectsRootNode.BadgingNode(null, new ProjectsRootNode.ProjectChildren.Pair(prj, ProjectsRootNode.LOGICAL_VIEW, 0),
                 new AbstractNode(Children.LEAF, Lookups.singleton(prj)) {
                     public @Override String getDisplayName() {return "Prj";}
                     public @Override String getHtmlDisplayName() {return "Prj";}
@@ -363,7 +364,7 @@ public class ProjectsRootNodeTest extends NbTestCase {
         ProjectIconAnnotatorImpl annotator = new ProjectIconAnnotatorImpl();
         MockLookup.setInstances(annotator);
         System.setProperty("test.nodelay", "true");
-        ProjectsRootNode.BadgingNode node = new ProjectsRootNode.BadgingNode(null, new ProjectsRootNode.ProjectChildren.Pair(prj, ProjectsRootNode.LOGICAL_VIEW),
+        ProjectsRootNode.BadgingNode node = new ProjectsRootNode.BadgingNode(null, new ProjectsRootNode.ProjectChildren.Pair(prj, ProjectsRootNode.LOGICAL_VIEW, 0),
                 new AbstractNode(Children.LEAF, Lookups.singleton(prj)), true);
         assertEquals(icon3, node.getIcon(BeanInfo.ICON_COLOR_16x16));
         assertEquals(icon2, node.getOpenedIcon(BeanInfo.ICON_COLOR_16x16));
@@ -399,7 +400,7 @@ public class ProjectsRootNodeTest extends NbTestCase {
         final LazyProject lp = new LazyProject(d.toURL(), "p", new ExtIcon());
         Children ch = new ProjectsRootNode.ProjectChildren(ProjectsRootNode.PHYSICAL_VIEW) {
             public @Override void addNotify() {
-                setKeys(Collections.singleton(new ProjectsRootNode.ProjectChildren.Pair(lp, ProjectsRootNode.PHYSICAL_VIEW)));
+                setKeys(Collections.singleton(new ProjectsRootNode.ProjectChildren.Pair(lp, ProjectsRootNode.PHYSICAL_VIEW, 0)));
             }
         };
         ProjectsRootNode.checkNoLazyNode(ch);
@@ -408,4 +409,13 @@ public class ProjectsRootNodeTest extends NbTestCase {
         assertEquals("p - Testing", ns[0].getDisplayName());
     }
 
+    public void testDepthIsImportantForEqualsAndHash() throws Exception {
+        var d = FileUtil.toFileObject(getWorkDir()).createFolder("p");
+        var lp = new LazyProject(d.toURL(), "p", new ExtIcon());
+        var p1 = new ProjectsRootNode.ProjectChildren.Pair(lp, ProjectsRootNode.PHYSICAL_VIEW, 1);
+        var p2 = new ProjectsRootNode.ProjectChildren.Pair(lp, ProjectsRootNode.PHYSICAL_VIEW, 2);
+
+        assertNotEquals("Depth is important for equals", p1, p2);
+        assertNotEquals("Depth is important for hash (unless accidentally equal)", p1.hashCode(), p2.hashCode());
+    }
 }

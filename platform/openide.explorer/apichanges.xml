@@ -19,13 +19,27 @@
     under the License.
 
 -->
-<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges.dtd">
+<!DOCTYPE apichanges PUBLIC "-//NetBeans//DTD API changes list 1.0//EN" "../../nbbuild/javadoctools/apichanges-1.1.dtd">
 
 <apichanges>
 <apidefs>
 <apidef name="explorer">Explorer API</apidef>
 </apidefs>
 <changes>
+    <change id="findIndent">
+        <api name="explorer"/>
+        <summary>NodeRenderer.findIndent</summary>
+        <version major="6" minor="97"/>
+        <date day="11" month="9" year="2026"/>
+        <author login="jtulach"/>
+        <compatibility binary="compatible" source="compatible" deprecation="no" deletion="no" addition="yes"/>
+        <description>
+            Control <b>NodeRenderer</b> indentation by overriding its
+            <code>findIndent</code> method.
+        </description>
+        <class package="org.openide.explorer.view" name="NodeRenderer"/>
+        <issue number="NETBEANS-5146"/>
+    </change>
     <change id="ScrollOnExpand">
         <api name="explorer"/>
         <summary>Expose scrollOnExpand property on TreeView.</summary>

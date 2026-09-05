@@ -28,6 +28,7 @@ import java.lang.ref.WeakReference;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.tree.TreeNode;
 import org.openide.nodes.Children;
 
 
@@ -295,7 +296,7 @@ public class NodeListModel extends AbstractListModel implements ComboBoxModel {
     * @param o the visualizer node
     * @return depth or 0 if not found
     */
-    static int findVisualizerDepth(ListModel m, VisualizerNode o) {
+    static int findVisualizerDepth(ListModel m, TreeNode o) {
         if (m instanceof NodeListModel) {
             NodeListModel n = (NodeListModel) m;
             Info i = n.childrenCount.get(o);

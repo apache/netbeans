@@ -126,7 +126,11 @@ public final class OpenProjectList {
     public static Comparator<Project> projectByDisplayName() {
         return new ProjectByDisplayNameComparator();
     }
-    
+
+    static Comparator<? super Project> projectByPath() {
+        return new ProjectByPathComparator();
+    }
+
     // Property names
     public static final String PROPERTY_OPEN_PROJECTS = "OpenProjects";
     public static final String PROPERTY_WILL_OPEN_PROJECTS = "willOpenProjects"; // NOI18N
@@ -1964,6 +1968,21 @@ public final class OpenProjectList {
             
         }
         
+    }
+    private static class ProjectByPathComparator implements Comparator<Project> {
+        @Override
+        public int compare(Project p1, Project p2) {
+            if (p1 == null && p2 == null) {
+                return 0;
+            }
+            if (p1 == null) {
+                return -1;
+            }
+            if (p2 == null) {
+                return 1;
+            }
+            return p1.getProjectDirectory().getPath().compareTo(p2.getProjectDirectory().getPath());
+        }
     }
     
     private final class NbProjectDeletionListener extends FileChangeAdapter {

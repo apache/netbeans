@@ -1,8 +1,8 @@
 Name: JSch
-Version: 0.1.72
+Version: 2.28.0
 License: BSD-jsch
 Origin: JCraft Inc.
-URL: https://github.com/mwiede/jsch/tree/jsch-0.1.72
+URL: https://github.com/mwiede/jsch/tree/jsch-2.28.0
 Description: Java implementation of SSH2
 
 Copyright (c) 2002-2015 Atsuhiko Yamanaka, JCraft,Inc.

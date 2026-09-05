@@ -31,21 +31,6 @@
                     <run-dependency/>
                 </dependency>
                 <dependency>
-                    <code-name-base>com.jcraft.jzlib</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency/>
-                </dependency>
-                <dependency>
-                    <code-name-base>libs.c.kohlschutter.junixsocket</code-name-base>
-                    <build-prerequisite/>
-                    <compile-dependency/>
-                    <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>3.0</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
                     <code-name-base>org.netbeans.libs.jna</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -69,7 +54,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>com-jcraft-jsch.jar</runtime-relative-path>
-                <binary-origin>external/jsch-0.1.72.jar</binary-origin>
+                <binary-origin>external/jsch-2.28.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

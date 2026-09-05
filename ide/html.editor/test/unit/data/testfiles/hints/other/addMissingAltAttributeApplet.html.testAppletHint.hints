@@ -1,0 +1,6 @@
+    <applet^ code="MyApplet.class" width="300" height="300"></applet>
+           ------------------------------------------------
+HINT:Find img/applet/area elements where no alt attribute is provided.
+FIX:Provide Text Alternatives
+HINT:Remove Surrounding Tag
+FIX:Remove Surrounding Tag

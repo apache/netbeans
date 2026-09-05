@@ -155,6 +155,7 @@ public class JavacParser extends Parser {
     private static final boolean DISABLE_PARAMETER_NAMES_READING = Boolean.getBoolean("org.netbeans.modules.java.source.parsing.JavacParser.no_parameter_names");   //NOI18N
     private static final Set<Reference<Object>> HUGE_SNAPSHOTS = new HashSet<>();
     private static final LowMemoryWatcher LOW_MEMORY_WATCHER = LowMemoryWatcher.getInstance();
+    public static final String LOMBOK_ANNOTATION_PROCESSOR_PREFIX = "lombok.";
     public static final String LOMBOK_DETECTED = "lombokDetected";
 
     /**
@@ -997,7 +998,7 @@ public class JavacParser extends Parser {
                 aptEnabled = false;
             } else {
                 for (Processor p : processors) {
-                    if ("lombok.core.AnnotationProcessor".equals(p.getClass().getName())) {
+                    if (p.getClass().getName().startsWith(LOMBOK_ANNOTATION_PROCESSOR_PREFIX)) {
                         options.add("-XD" + LOMBOK_DETECTED);
                         break;
                     }

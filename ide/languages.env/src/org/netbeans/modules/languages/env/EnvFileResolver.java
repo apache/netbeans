@@ -18,6 +18,7 @@
  */
 package org.netbeans.modules.languages.env;
 
+import java.util.Set;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.openide.awt.ActionID;
@@ -92,8 +93,15 @@ import org.openide.util.lookup.ServiceProvider;
 
 @ServiceProvider(service = MIMEResolver.class)
 public class EnvFileResolver extends MIMEResolver {
+
     public static final String ENV_EXT = "env"; //NOI18N
+    public static final String DOT_ENV = "." + ENV_EXT; //NOI18N
     public static final String MIME_TYPE = "text/x-env"; //NOI18N
+
+    /**
+     * extensions to exclude from mime association
+     */
+    private static final Set<String> EXCLUDED_EXTENSIONS = Set.of("lexer", "errors"); //NOI18N
 
     public EnvFileResolver() {
         super(MIME_TYPE);
@@ -103,17 +111,17 @@ public class EnvFileResolver extends MIMEResolver {
     @Override
     public String findMIMEType(@NonNull final FileObject fo) {
         final String nameWithExt = fo.getNameExt().toLowerCase();
+        final String ext = fo.getExt();
 
-        if (nameWithExt.endsWith("." + ENV_EXT)) { //NOI18N
-            return MIME_TYPE;
+        if (EXCLUDED_EXTENSIONS.contains(ext)) {
+            return null;
         }
 
-        //Some application might use .env.example name format
-        int envPartPosition = 2;
-        String[] nameParts = nameWithExt.split("\\."); //NOI18N
-
-        //check for previous name part
-        if (nameParts.length >= envPartPosition && nameParts[nameParts.length - envPartPosition].equals(ENV_EXT)) {
+        if (ext.equals(ENV_EXT)
+                || nameWithExt.equals(DOT_ENV)
+                //env files naming usually used in JS, PHP, Python frameworks
+                //.env.dist, .env.local, .env.local.demo ...
+                || nameWithExt.startsWith(DOT_ENV + ".")) { //NOI18N
             return MIME_TYPE;
         }
 

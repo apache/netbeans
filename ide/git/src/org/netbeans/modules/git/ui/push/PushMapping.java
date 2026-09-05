@@ -44,11 +44,17 @@ public abstract class PushMapping extends ItemSelector.Item {
     private static final String COLOR_MODIFIED = GitUtils.getColorString(AnnotationColorProvider.getInstance().MODIFIED_FILE.getActualColor());
     private static final String COLOR_REMOVED = GitUtils.getColorString(AnnotationColorProvider.getInstance().REMOVED_FILE.getActualColor());
     private static final String COLOR_CONFLICT = GitUtils.getColorString(AnnotationColorProvider.getInstance().CONFLICT_FILE.getActualColor());
-    
-    protected PushMapping (String localName, String localId, String remoteName, boolean conflict, boolean preselected, boolean updateNeeded) {
+    private final boolean active;
+
+    protected PushMapping (String localName, String localId, String remoteName, boolean conflict, boolean preselected, boolean updateNeeded, boolean active) {
         super(preselected, localName == null || conflict);
         this.localName = localName;
         this.remoteName = remoteName == null ? localName : remoteName;
+        this.active = active;
+        String displayName = localName;
+        if (active && localName != null) {
+            displayName = localName + " (active)"; //NOI18N
+        }
         if (localName == null) {
             // to remove
             label = MessageFormat.format(BRANCH_DELETE_MAPPING_LABEL, remoteName, "<font color=\"" + COLOR_REMOVED + "\">R</font>"); //NOI18N
@@ -61,7 +67,7 @@ public abstract class PushMapping extends ItemSelector.Item {
                     }); //NOI18N
         } else if (remoteName == null) {
             // added
-            label = MessageFormat.format(BRANCH_MAPPING_LABEL, localName, localName, "<font color=\"" + COLOR_NEW + "\">A</font>"); //NOI18N
+            label = MessageFormat.format(BRANCH_MAPPING_LABEL, displayName, localName, "<font color=\"" + COLOR_NEW + "\">A</font>"); //NOI18N
             tooltip = NbBundle.getMessage(
                     PushBranchesStep.class,
                     "LBL_PushBranchMapping.description", //NOI18N
@@ -71,7 +77,7 @@ public abstract class PushMapping extends ItemSelector.Item {
                     }); //NOI18N
         } else if (conflict) {
             // modified
-            label = MessageFormat.format(BRANCH_MAPPING_LABEL, localName, remoteName, "<font color=\"" + COLOR_CONFLICT + "\">C</font>"); //NOI18N
+            label = MessageFormat.format(BRANCH_MAPPING_LABEL, displayName, remoteName, "<font color=\"" + COLOR_CONFLICT + "\">C</font>"); //NOI18N
             tooltip = NbBundle.getMessage(
                     PushBranchesStep.class,
                     "LBL_PushBranchMapping.Mode.conflict.description", //NOI18N
@@ -80,7 +86,7 @@ public abstract class PushMapping extends ItemSelector.Item {
                     });
         } else if (updateNeeded) {
             // modified
-            label = MessageFormat.format(BRANCH_MAPPING_LABEL, localName, remoteName, "<font color=\"" + COLOR_MODIFIED + "\">U</font>"); //NOI18N
+            label = MessageFormat.format(BRANCH_MAPPING_LABEL, displayName, remoteName, "<font color=\"" + COLOR_MODIFIED + "\">U</font>"); //NOI18N
             tooltip = NbBundle.getMessage(
                     PushBranchesStep.class,
                     "LBL_PushBranchMapping.description", //NOI18N
@@ -90,7 +96,7 @@ public abstract class PushMapping extends ItemSelector.Item {
                     });
         } else {
             // up to date
-            label = MessageFormat.format(BRANCH_MAPPING_LABEL_UPTODATE, localName, remoteName);
+            label = MessageFormat.format(BRANCH_MAPPING_LABEL_UPTODATE, displayName, remoteName);
             tooltip = NbBundle.getMessage(PushBranchesStep.class,
                     "LBL_PushBranchMapping.Mode.uptodate.description", //NOI18N
                     remoteName);
@@ -118,6 +124,10 @@ public abstract class PushMapping extends ItemSelector.Item {
         return localName;
     }
 
+    public final boolean isActive () {
+        return active;
+    }
+
     @Override
     public int compareTo (Item t) {
         if (t == null) {
@@ -125,6 +135,17 @@ public abstract class PushMapping extends ItemSelector.Item {
         }
         if (t instanceof PushMapping) {
             PushMapping other = (PushMapping) t;
+            if (isActive() != other.isActive()) {
+                return isActive() ? -1 : 1;
+            }
+            if (isActive()) {
+                if (this instanceof PushBranchMapping && other instanceof PushTagMapping) {
+                    return -1;
+                }
+                if (this instanceof PushTagMapping && other instanceof PushBranchMapping) {
+                    return 1;
+                }
+            }
             if (isDestructive() && other.isDestructive()) {
                 return remoteName.compareTo(other.remoteName);
             } else if (isDestructive() && !other.isDestructive()) {
@@ -162,7 +183,7 @@ public abstract class PushMapping extends ItemSelector.Item {
          * Denotes a branch to be deleted in a remote repository
          */
         public PushBranchMapping (String remoteBranchName, String remoteBranchId, boolean preselected, boolean updateNeeded) {
-            super(null, null, remoteBranchName, false, preselected, updateNeeded);
+            super(null, null, remoteBranchName, false, preselected, updateNeeded, false);
             this.localBranch = null;
             this.remoteBranchName = remoteBranchName;
             this.remoteBranchId = remoteBranchId;
@@ -177,7 +198,8 @@ public abstract class PushMapping extends ItemSelector.Item {
                     remoteBranchName, 
                     conflict,
                     preselected,
-                    updateNeeded);
+                    updateNeeded,
+                    localBranch != null && localBranch.isActive());
             this.localBranch = localBranch;
             this.remoteBranchName = remoteBranchName;
             this.remoteBranchId = remoteBranchId;
@@ -243,8 +265,8 @@ public abstract class PushMapping extends ItemSelector.Item {
          *
          * @param remoteName remote tag name
          */
-        public PushTagMapping(String remoteName) {
-            super(null, null, remoteName, false, false, remoteName != null);
+        public PushTagMapping(String remoteName, boolean active) {
+            super(null, null, remoteName, false, false, remoteName != null, active);
             this.tag = null;
             this.isUpdate = remoteName != null;
             this.remoteTagName = remoteName;
@@ -256,8 +278,8 @@ public abstract class PushMapping extends ItemSelector.Item {
          * @param tag representation of a local tag
          * @param remoteName remote tag name, can be null. If null than we create tag.
          */
-        public PushTagMapping (GitTag tag, String remoteName) {
-            super("tags/" + tag.getTagName(), tag.getTaggedObjectId(), remoteName, false, false, remoteName != null); //NOI18N
+        public PushTagMapping (GitTag tag, String remoteName, boolean active) {
+            super("tags/" + tag.getTagName(), tag.getTaggedObjectId(), remoteName, false, false, remoteName != null, active); //NOI18N
             this.tag = tag;
             this.isUpdate = remoteName != null;
             this.remoteTagName = remoteName;

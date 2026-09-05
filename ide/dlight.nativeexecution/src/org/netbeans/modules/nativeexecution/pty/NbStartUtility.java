@@ -26,6 +26,9 @@ import org.netbeans.modules.nativeexecution.api.HostInfo;
 import org.netbeans.modules.nativeexecution.api.util.ConnectionManager.CancellationException;
 import org.netbeans.modules.nativeexecution.api.util.HelperUtility;
 import org.netbeans.modules.nativeexecution.api.util.HostInfoUtils;
+import org.netbeans.modules.nativeexecution.api.util.Shell;
+import org.netbeans.modules.nativeexecution.api.util.Shell.ShellType;
+import org.netbeans.modules.nativeexecution.api.util.WindowsSupport;
 import org.netbeans.modules.nativeexecution.support.InstalledFileLocatorProvider;
 import org.openide.modules.InstalledFileLocator;
 
@@ -36,19 +39,31 @@ import org.openide.modules.InstalledFileLocator;
 public class NbStartUtility extends HelperUtility {
 
     private static final boolean ENABLED = Boolean.parseBoolean(System.getProperty("enable.nbstart", "true")); // NOI18N
-    private static final NbStartUtility instance = new NbStartUtility();
+    private static final NbStartUtility instanceRemote = new NbStartUtility(false);
+    private static final NbStartUtility instanceLocal = new NbStartUtility(true);
 
-    public NbStartUtility() {
+    // Hack to be able to differentiate between local and remote execution
+    // getLocalFile(Hostinfo) needs this on Windows WSL. Implemented like this
+    // as HelperUtility is exported and Hostinfo can't be used to detect if
+    // execution is local
+    private final boolean local;
+
+    public NbStartUtility(boolean local) {
         super("bin/nativeexecution/${osname}-${platform}${_isa}/pty"); // NOI18N
+        this.local = local;
     }
 
-    public static NbStartUtility getInstance() {
-        return instance;
+    public static NbStartUtility getInstance(boolean local) {
+        return local ? instanceLocal : instanceRemote;
     }
 
     @Override
     protected File getLocalFile(final HostInfo hostInfo) throws MissingResourceException {
         String osname = hostInfo.getOS().getFamily().cname();
+        Shell activeShell = WindowsSupport.getInstance().getActiveShell();
+        if(local && activeShell != null && activeShell.type == Shell.ShellType.WSL) {
+            osname = "Linux";
+        }
         String platform = hostInfo.getCpuFamily().name().toLowerCase();
         String bitness = hostInfo.getOS().getBitness() == HostInfo.Bitness._64 ? "_64" : ""; // NOI18N
 
@@ -70,9 +85,7 @@ public class NbStartUtility extends HelperUtility {
     public boolean isSupported(ExecutionEnvironment executionEnvironment) {
         try {
             return isSupported(HostInfoUtils.getHostInfo(executionEnvironment));
-        } catch (IOException ex) {
-            return false;
-        } catch (CancellationException ex) {
+        } catch (IOException | CancellationException ex) {
             return false;
         }
     }
@@ -84,16 +97,22 @@ public class NbStartUtility extends HelperUtility {
 
         try {
             switch (hostInfo.getOS().getFamily()) {
-                case MACOSX:
-                case SUNOS:
-                case LINUX:
+                case MACOSX, SUNOS, LINUX -> {
                     try {
                         return getLocalFile(hostInfo) != null;
                     } catch (MissingResourceException ex) {
                     }
                     return false;
-                case WINDOWS:
-                case FREEBSD:
+                }
+                case WINDOWS -> {
+                    Shell shell = WindowsSupport.getInstance().getActiveShell();
+                    if(shell != null && shell.getValidationStatus().isValid() && shell.type == ShellType.WSL) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+                case FREEBSD -> {
                     // For now will disable it on Windows, as there are some
                     // side-effects with paths (need deeper studying)
 //                    Shell activeShell = WindowsSupport.getInstance().getActiveShell();
@@ -102,8 +121,10 @@ public class NbStartUtility extends HelperUtility {
 //                    }
 //                    return getPath(executionEnvironment) != null;
                     return false;
-                default:
+                }
+                default -> {
                     return false;
+                }
             }
         } catch (Exception ex) {
             return false;

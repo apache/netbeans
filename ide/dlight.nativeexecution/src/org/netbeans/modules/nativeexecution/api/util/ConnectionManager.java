@@ -38,7 +38,6 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-//import javax.swing.Action;
 import javax.swing.SwingUtilities;
 import org.netbeans.modules.nativeexecution.ConnectionManagerAccessor;
 import org.netbeans.modules.nativeexecution.api.ExecutionEnvironment;
@@ -48,14 +47,9 @@ import org.netbeans.modules.nativeexecution.jsch.JSchChannelsSupport;
 import org.netbeans.modules.nativeexecution.jsch.JSchConnectionTask;
 import org.netbeans.modules.nativeexecution.spi.support.JSchAccess;
 import org.netbeans.modules.nativeexecution.spi.support.NativeExecutionUserNotification;
-;
 import org.netbeans.modules.nativeexecution.support.Logger;
 import org.netbeans.modules.nativeexecution.support.MiscUtils;
 import org.netbeans.modules.nativeexecution.support.NativeTaskExecutorService;
-//import org.openide.awt.StatusDisplayer;
-//import org.openide.DialogDisplayer;
-//import org.openide.NotifyDescriptor;
-//import org.openide.awt.StatusDisplayer;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -94,22 +88,17 @@ public final class ConnectionManager {
 
     private final ConnectionWatcher connectionWatcher;
     final int connectionWatcherInterval;
-    
+
     private final SlowListenerDetector slowConnectionListenerDetector;
 
     static {
         ConnectionManagerAccessor.setDefault(new ConnectionManagerAccessorImpl());
 
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                shutdown();
-            }
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(ConnectionManager::shutdown));
     }
 
     private ConnectionManager() {
-        
+
         int timeout = Integer.getInteger(
                 "nativeexecution.slow.connection.listener.timeout", 500); //NOI18N
         Level level;
@@ -184,10 +173,10 @@ public final class ConnectionManager {
         // No need to lock - use thread-safe collection
         connectionListeners.remove(listener);
     }
-    
+
     /**
      * Remove a connection from list of recent connections. Any stored settings will be removed
-     * @param execEnv environment 
+     * @param execEnv environment
      */
     public void deleteConnectionFromRecentConnections(ExecutionEnvironment execEnv) {
       synchronized (recentConnections) {
@@ -196,11 +185,11 @@ public final class ConnectionManager {
           storeRecentConnectionsList(true);
       }
     }
-    
-    
+
+
     /**
      * Add a connection to a recent connection list.
-     * @param execEnv environment 
+     * @param execEnv environment
      * @return true if a connection was added to a list
      */
     public boolean addConnectionToRecentConnections(ExecutionEnvironment execEnv) {
@@ -215,7 +204,7 @@ public final class ConnectionManager {
           storeRecentConnectionsList(false);
           return true;
       }
-    }    
+    }
 
     public List<ExecutionEnvironment> getRecentConnections() {
         synchronized (recentConnections) {
@@ -232,7 +221,7 @@ public final class ConnectionManager {
     }
 
     /**
-     * Store recent connection list. 
+     * Store recent connection list.
      * @param clear true if settings is cleared before stored
      */
     /*package-local for test purposes*/ void storeRecentConnectionsList(boolean clear) {
@@ -314,7 +303,7 @@ public final class ConnectionManager {
     }
 
     /**
-     * Tests whether the connection with the <tt>execEnv</tt> is established or
+     * Tests whether the connection with the {@code execEnv} is established or
      * not.
      *
      * @param execEnv execution environment to test connection with.
@@ -411,7 +400,7 @@ public final class ConnectionManager {
      * This method does nothing if connection is already established.
      *
      * @param env - environment to initiate connection with
-     * @return <tt>true</tt> if host is connected when return from the method.
+     * @return {@code true} if host is connected when return from the method.
      */
     public boolean connect(final ExecutionEnvironment env) {
         return connect(env, DEFAULT_CC);
@@ -419,7 +408,7 @@ public final class ConnectionManager {
 
     /**
      *
-     * @param env <tt>ExecutionEnvironment</tt> to connect to.
+     * @param env {@code ExecutionEnvironment} to connect to.
      * @throws IOException
      * @throws CancellationException
      */
@@ -508,9 +497,10 @@ public final class ConnectionManager {
             } else {
                 JSchConnectionTask.Problem problem = connectionTask.getProblem();
                 switch (problem.type) {
-                    case CONNECTION_CANCELLED:
+                    case CONNECTION_CANCELLED -> {
                         throw new CancellationException("Connection cancelled for " + env); // NOI18N
-                    default:
+                    }
+                    default -> {
                         // Note that AUTH_FAIL is generated not only on bad password,
                         // but on socket timeout as well. These cases are
                         // indistinguishable based on information from JSch.
@@ -518,6 +508,7 @@ public final class ConnectionManager {
                             log.log(Level.INFO, "Error when connecting " + env, problem.cause); //NOI18N
                         }
                         throw new IOException(problem.type.name()+" "+env, problem.cause); //NOI18N
+                    }
                 }
             }
 
@@ -550,7 +541,7 @@ public final class ConnectionManager {
      * @param execEnv - {@link ExecutionEnvironment} to connect to.
      * @param onConnect - Runnable that is executed when connection is
      * established.
-     * @return action to be used to connect to the <tt>execEnv</tt>.
+     * @return action to be used to connect to the {@code execEnv}.
      * @see Action
      */
     public synchronized AsynchronousAction getConnectToAction(
@@ -639,14 +630,11 @@ public final class ConnectionManager {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            NativeTaskExecutorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        invoke();
-                    } catch (Throwable ex) {
-                        log.warning(ex.getMessage());
-                    }
+            NativeTaskExecutorService.submit(() -> {
+                try {
+                    invoke();
+                } catch (Throwable ex) {
+                    log.warning(ex.getMessage());
                 }
             }, "Connecting to " + env.toString()); // NOI18N
         }
@@ -722,12 +710,13 @@ public final class ConnectionManager {
                 }
 
                 switch (auth.getType()) {
-                    case SSH_KEY:
+                    case SSH_KEY -> {
                         try {
                             jsch.addIdentity(auth.getSSHKeyFile());
                         } catch (JSchException ex) {
                             Exceptions.printStackTrace(ex);
                         }
+                    }
                 }
             }
         }
@@ -846,6 +835,7 @@ public final class ConnectionManager {
 
         private final RequestProcessor.Task myTask;
 
+        @SuppressWarnings("LeakingThisInConstructor")
         public ConnectionWatcher() {
             myTask = new RequestProcessor("Connection Watcher", 1).create(this); //NOI18N
         }

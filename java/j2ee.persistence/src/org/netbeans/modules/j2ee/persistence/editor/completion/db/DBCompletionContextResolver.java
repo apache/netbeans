@@ -616,7 +616,7 @@ public class DBCompletionContextResolver implements CompletionContextResolver {
                     
                     CCParser.CC tblNN = null;
                     if(nn != null && nn.getName().equals("JoinTable")) { //NOI18N
-                        Map attrs = nn.getAttributes();
+                        Map<String, Object> attrs = nn.getAttributes();
                         Object val = attrs.get("table"); //NOI18N
                         if(val instanceof CCParser.CC) {
                             CCParser.CC tableNN = (CCParser.CC)val;

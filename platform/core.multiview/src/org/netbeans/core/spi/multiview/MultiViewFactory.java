@@ -176,7 +176,7 @@ public final class MultiViewFactory {
         return new DefaultCloseHandler();
     }
     
-    static MultiViewDescription createMultiViewDescription(Map map) {
+    static MultiViewDescription createMultiViewDescription(Map<String, Object> map) {
         return new MapMVD(map, null, false);
     }
     
@@ -256,7 +256,7 @@ public final class MultiViewFactory {
             Iterator<CloseOperationState> it;
             if (elements != null) {
                 boolean canBeClosed = true;
-                Map<String,CloseOperationState> badOnes = new LinkedHashMap<String, CloseOperationState>();
+                Map<String, CloseOperationState> badOnes = new LinkedHashMap<>();
                 for (int i = 0; i < elements.length; i++) {
                     if (!elements[i].canClose()) {
                         badOnes.put(elements[i].getCloseWarningID(), elements[i]);
@@ -350,10 +350,10 @@ public final class MultiViewFactory {
     /** default MultiViewDescription */
     private static final class MapMVD implements
     MultiViewDescription, ContextAwareDescription , SourceCheckDescription {
-        private final Map map;
+        private final Map<String, Object> map;
         private final Lookup context;
 	private boolean isSplitDescription;
-        public MapMVD(Map map, Lookup context, boolean isSplitDescription) {
+        public MapMVD(Map<String, Object> map, Lookup context, boolean isSplitDescription) {
             this.map = map;
             this.context = context;
 	    this.isSplitDescription = isSplitDescription;

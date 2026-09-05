@@ -1,11 +1,11 @@
 Name: Apache Lucene
 Description: Java-based indexing and search technology
-Version: 9.12.3
+Version: 10.5.1
 Origin: Apache Software Foundation
 License: Apache-2.0-lucene
 URL: https://lucene.apache.org/core/
-Source: https://archive.apache.org/dist/lucene/java/9.12.3/
-Files: lucene-core-9.12.3.jar lucene-analysis-common-9.12.3.jar
+Source: https://archive.apache.org/dist/lucene/java/10.5.1/
+Files: lucene-core-10.5.1.jar lucene-analysis-common-10.5.1.jar lucene-backward-codecs-10.5.1.jar
 
 
                                  Apache License

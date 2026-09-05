@@ -36,9 +36,13 @@ import org.openide.ErrorManager;
  *
  * @author Riha, Poppenreiter
  */
-public abstract class AbstractTokenList implements TokenList {
+public abstract sealed class AbstractTokenList implements TokenList permits HtmlTokenList, XmlTokenList {
 
-    protected BaseDocument doc;
+    record SpellSpan(int begin, int end) {
+        public static final SpellSpan NONE = new SpellSpan(-1, -1);
+    };
+
+    protected final BaseDocument doc;
     private CharSequence currentWord;
     private int currentStartOffset;
     protected int nextSearchOffset;
@@ -49,6 +53,7 @@ public abstract class AbstractTokenList implements TokenList {
         this.doc = doc;
     }
 
+    @Override
     public void setStartOffset(int offset) {
         currentWord = null;
         currentStartOffset = (-1);
@@ -61,37 +66,40 @@ public abstract class AbstractTokenList implements TokenList {
         }
     }
 
+    @Override
     public int getCurrentWordStartOffset() {
         return currentStartOffset;
     }
 
+    @Override
     public CharSequence getCurrentWordText() {
         return currentWord;
     }
 
-    protected abstract int[] findNextSpellSpan() throws BadLocationException;
+    abstract SpellSpan findNextSpellSpan() throws BadLocationException;
 
+    @Override
     public boolean nextWord() {
         boolean next = nextWordImpl();
-        
-        while (next && (currentStartOffset + currentWord.length()) < ignoreBefore)
+
+        while (next && (currentStartOffset + currentWord.length()) < ignoreBefore) {
             next = nextWordImpl();
-        
+        }
+
         return next;
     }
-    
+
     private boolean nextWordImpl() {
         try {
-            int[] span = findNextSpellSpan();
+            SpellSpan span = findNextSpellSpan();
 
-            while (span[0] != -1) {
-                int offset = (span[0] < nextSearchOffset) ? nextSearchOffset : span[0];
+            while (span.begin != -1) {
+                int offset = (span.begin < nextSearchOffset) ? nextSearchOffset : span.begin;
 
-                int length = span[1];
                 boolean searching = true;
 
 					 /* find next word */
-                while (offset < length) {
+                while (offset < span.end) {
                     String t = doc.getText(offset, 1);
                     char c = t.charAt(0);
 
@@ -130,10 +138,12 @@ public abstract class AbstractTokenList implements TokenList {
         }
     }
 
+    @Override
     public void addChangeListener(ChangeListener l) {
     //ignored...
     }
 
+    @Override
     public void removeChangeListener(ChangeListener l) {
     //ignored...
     }

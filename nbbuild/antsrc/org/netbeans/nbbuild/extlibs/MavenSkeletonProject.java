@@ -124,6 +124,7 @@ public class MavenSkeletonProject extends Task {
                     clusters.get(name[0]).add(moduleName);
                 } else {
                     moduleName = "nbbuild";
+                    clusters.get(name[0]).add(moduleName);
                 }
                 clusterfolder = Files.createDirectories(pseudoMavendirectory.resolve(clusterName).resolve(moduleName));
                 // write pom for the module in clusterfolder/modulefolder/pom.xml

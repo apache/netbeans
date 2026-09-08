@@ -403,7 +403,7 @@ public class ProjectsRootNodeTest extends NbTestCase {
             }
         };
         ProjectsRootNode.checkNoLazyNode(ch);
-        Node[] ns = ch.getNodes(true);
+        Node[] ns = ch.getNodes(false);
         assertEquals(1, ns.length);
         assertEquals("p - Testing", ns[0].getDisplayName());
     }

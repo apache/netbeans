@@ -761,6 +761,9 @@ jobs:
       - name: ide/projectuiapi.base
         run: ant $OPTS -f ide/projectuiapi.base test
 
+      - name: ide/projectui
+        run: ant $OPTS -f ide/projectui test
+
       - name: ide/refactoring.api
         run: ant $OPTS -f ide/refactoring.api test
 

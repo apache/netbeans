@@ -18,59 +18,54 @@
  */
 package org.netbeans.modules.web.jsf.editor;
 
-import java.net.URL;
-import java.util.Collections;
-import java.util.StringTokenizer;
-import javax.swing.Icon;
-import javax.swing.event.ChangeListener;
-import javax.swing.text.Document;
-import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
-import org.netbeans.api.html.lexer.HTMLTokenId;
-import org.netbeans.api.lexer.Language;
-import org.netbeans.api.project.Project;
-import org.netbeans.api.project.SourceGroup;
-import org.netbeans.api.project.Sources;
-import org.netbeans.editor.BaseDocument;
-import org.netbeans.junit.MockServices;
-import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
-import org.netbeans.modules.editor.NbEditorDocument;
-import org.netbeans.modules.csl.api.test.CslTestBase;
-import org.netbeans.modules.html.editor.api.HtmlKit;
-import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
-import org.netbeans.modules.html.editor.gsf.HtmlLanguage;
-import org.netbeans.modules.parsing.api.ParserManager;
-import org.netbeans.modules.parsing.api.ResultIterator;
-import org.netbeans.modules.parsing.api.Snapshot;
-import org.netbeans.modules.parsing.api.Source;
-import org.netbeans.modules.parsing.api.UserTask;
-import org.netbeans.modules.parsing.spi.ParseException;
-import org.netbeans.modules.web.common.api.WebUtils;
-import org.netbeans.modules.web.jsf.api.editor.JSFBeanCache.JsfBeansProvider;
-import org.netbeans.modules.web.jsf.api.metamodel.FacesManagedBean;
-import org.netbeans.spi.project.ProjectFactory;
-import org.netbeans.spi.project.ProjectState;
-import org.openide.cookies.EditorCookie;
-import org.openide.filesystems.FileSystem;
-import org.openide.loaders.DataObject;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
+
+import javax.swing.Icon;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.Document;
+
+import org.netbeans.api.editor.mimelookup.test.MockMimeLookup;
+import org.netbeans.api.html.lexer.HTMLTokenId;
 import org.netbeans.api.j2ee.core.Profile;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.lexer.Language;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.netbeans.api.xml.services.UserCatalog;
+import org.netbeans.editor.BaseDocument;
+import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.csl.api.test.CslTestBase;
+import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
+import org.netbeans.modules.editor.NbEditorDocument;
+import org.netbeans.modules.html.editor.api.HtmlKit;
+import org.netbeans.modules.html.editor.api.gsf.HtmlParserResult;
+import org.netbeans.modules.html.editor.gsf.HtmlLanguage;
 import org.netbeans.modules.j2ee.dd.api.web.WebAppMetadata;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
+import org.netbeans.modules.java.source.TestUtil;
+import org.netbeans.modules.parsing.api.ParserManager;
+import org.netbeans.modules.parsing.api.ResultIterator;
+import org.netbeans.modules.parsing.api.Snapshot;
+import org.netbeans.modules.parsing.api.Source;
+import org.netbeans.modules.parsing.api.UserTask;
+import org.netbeans.modules.parsing.spi.ParseException;
 import org.netbeans.modules.web.api.webmodule.WebModule;
+import org.netbeans.modules.web.common.api.WebUtils;
+import org.netbeans.modules.web.jsf.api.editor.JSFBeanCache.JsfBeansProvider;
 import org.netbeans.modules.web.jsf.api.facesmodel.ManagedBean.Scope;
-import org.netbeans.modules.web.jsf.api.metamodel.JsfModel;
-import org.netbeans.modules.web.jsf.api.metamodel.JsfModelProvider;
+import org.netbeans.modules.web.jsf.api.metamodel.FacesManagedBean;
 import org.netbeans.modules.web.jsf.api.metamodel.ManagedProperty;
 import org.netbeans.modules.web.jsf.impl.metamodel.JsfModelProviderImpl;
 import org.netbeans.modules.web.spi.webmodule.WebModuleFactory;
@@ -78,9 +73,14 @@ import org.netbeans.modules.web.spi.webmodule.WebModuleImplementation2;
 import org.netbeans.modules.web.spi.webmodule.WebModuleProvider;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
+import org.netbeans.spi.project.ProjectFactory;
+import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.support.ant.PropertyUtils;
+import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileSystem;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
@@ -234,29 +234,10 @@ public class TestBase extends CslTestBase {
     }
 
     /**
-     * Creates boot {@link ClassPath} for platform the test is running on,
-     * it uses the sun.boot.class.path property to find out the boot path roots.
-     * @return ClassPath
-     * @throws java.io.IOException when boot path property contains non valid path
+     * Creates boot {@link ClassPath} for platform the test is running on.
      */
-    public static ClassPath createBootClassPath() throws IOException {
-        String bootPath = System.getProperty("sun.boot.class.path");
-        String[] paths = bootPath.split(File.pathSeparator);
-        List<URL> roots = new ArrayList<URL>(paths.length);
-        for (String path : paths) {
-            File f = new File(path);
-            if (!f.exists()) {
-                continue;
-            }
-            URL url = f.toURI().toURL();
-            if (FileUtil.isArchiveFile(url)) {
-                url = FileUtil.getArchiveRoot(url);
-            }
-            roots.add(url);
-//            System.out.println(url);
-        }
-//        System.out.println("-----------");
-        return ClassPathSupport.createClassPath(roots.toArray(new URL[0]));
+    public static ClassPath createBootClassPath() {
+        return TestUtil.getBootClassPath();
     }
 
     public final ClassPath createServletAPIClassPath() throws MalformedURLException, IOException {

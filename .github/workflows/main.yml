@@ -2128,9 +2128,9 @@ jobs:
 #      - name: web.freeform
 #        run: ant $OPTS -f enterprise/web.freeform test
 
-# Fails
-#      - name: web.jsf.editor
-#        run: ant $OPTS -f enterprise/web.jsf.editor test
+# only unit tests, IT fails + slow
+      - name: web.jsf.editor
+        run: ant $OPTS -f enterprise/web.jsf.editor test-unit
 
 # Fails
 #      - name: web.jsf.navigation

@@ -64,6 +64,7 @@ import com.sun.faces.spi.InjectionProviderFactory;
 import com.sun.faces.util.FacesLogger;
 import com.sun.faces.util.Timer;
 import com.sun.faces.util.Util;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -102,6 +103,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import javax.el.ELContext;
 import javax.el.ELContextEvent;
 import javax.el.ELContextListener;
@@ -122,10 +124,11 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+
 import org.netbeans.api.xml.services.UserCatalog;
 import org.netbeans.modules.web.jsf.editor.facelets.DefaultFaceletLibraries;
 import org.netbeans.modules.web.jsfapi.api.JsfNamespaces;
-import org.openide.util.Exceptions;
+import org.openide.util.Utilities;
 import org.w3c.dom.*;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
@@ -715,7 +718,7 @@ public class ConfigManager {
 
         URLClassLoader jsfImplJarClassLoader = null;
         try {
-            jsfImplJarClassLoader = new URLClassLoader(new URL[]{jsfImplJar.toURI().toURL()});
+            jsfImplJarClassLoader = new URLClassLoader(new URL[]{Utilities.toURI(jsfImplJar).toURL()});
         } catch (MalformedURLException ex) {
             // should only happen when bundleling a broken JSF implementation, so ignore
         }
@@ -1184,13 +1187,19 @@ public class ConfigManager {
                 throw new IllegalArgumentException("Expected URLClassLoader to have only one entry");
             }
 
-            String id = Stream.of(schemaResourceSource).map(URL::toString).collect(Collectors.joining("+"));
+            String id = Stream.of(schemaResourceSource).map(URL::toString).collect(Collectors.joining("+")) + "->" + schemaResourceName; //NOI18N
             WeakReference<Schema> schema = SCHEMA_CACHE.get(id);
             if (schema == null || schema.get() == null) {
                 SchemaFactory schemaFactory = SchemaFactory.newDefaultInstance();
                 schemaFactory.setResourceResolver(new LSResourceResolver() {
                     @Override
                     public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
+                        // try to load schemas/DTDs from jsf imple jar first
+                        // this is especially useful for tests, because it's completely offline
+                        LSInput bundled = resolveBundledResource(systemId);
+                        if (bundled != null) {
+                            return bundled;
+                        }
                         try {
                             InputSource is = UserCatalog.getDefault().
                                     getEntityResolver().
@@ -1219,6 +1228,28 @@ public class ConfigManager {
             }
 
             return schema.get();
+        }
+
+        /**
+         * Resolves a schema or DTD reference against the copy bundled in the JSF
+         * impl jar
+         *
+         * @param systemId the system id to resolve
+         * @return the bundled resource, or <code>null</code> if there is none
+         */
+        private LSInput resolveBundledResource(String systemId) {
+            if (systemId == null) {
+                return null;
+            }
+            String fileName = systemId.substring(systemId.lastIndexOf('/') + 1);
+            if (fileName.isEmpty()) {
+                return null;
+            }
+            URL bundled = jsfRIClassLoader.getResource("com/sun/faces/" + fileName); //NOI18N
+            if (bundled == null) {
+                return null;
+            }
+            return new LSInputFromInputSource(new InputSource(bundled.toExternalForm()));
         }
 
         private boolean isKnownNamespace(String namespace) {

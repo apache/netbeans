@@ -18,8 +18,8 @@
  */
 package org.netbeans.modules.netbinox;
 
-import org.eclipse.osgi.baseadaptor.HookConfigurator;
-import org.eclipse.osgi.baseadaptor.HookRegistry;
+import org.eclipse.osgi.internal.hookregistry.HookConfigurator;
+import org.eclipse.osgi.internal.hookregistry.HookRegistry;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.openide.util.Exceptions;

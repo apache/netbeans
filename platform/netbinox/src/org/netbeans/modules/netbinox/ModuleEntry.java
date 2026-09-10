@@ -21,7 +21,7 @@ package org.netbeans.modules.netbinox;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry;
+import org.eclipse.osgi.storage.bundlefile.BundleEntry;
 
 /** An entry representing a direct entry inside a NetBeans
  * module.

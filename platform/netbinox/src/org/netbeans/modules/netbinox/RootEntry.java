@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry;
+import org.eclipse.osgi.storage.bundlefile.BundleEntry;
 
 /** An entry representing root of a JAR file.
  *

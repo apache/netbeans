@@ -26,23 +26,14 @@ import java.security.ProtectionDomain;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import org.eclipse.osgi.baseadaptor.BaseAdaptor;
-import org.eclipse.osgi.baseadaptor.BaseData;
-import org.eclipse.osgi.baseadaptor.HookConfigurator;
-import org.eclipse.osgi.baseadaptor.HookRegistry;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleFile;
-import org.eclipse.osgi.baseadaptor.bundlefile.MRUBundleFileList;
-import org.eclipse.osgi.baseadaptor.hooks.AdaptorHook;
-import org.eclipse.osgi.baseadaptor.hooks.BundleFileFactoryHook;
-import org.eclipse.osgi.baseadaptor.hooks.ClassLoadingHook;
-import org.eclipse.osgi.baseadaptor.loader.BaseClassLoader;
-import org.eclipse.osgi.baseadaptor.loader.ClasspathEntry;
-import org.eclipse.osgi.baseadaptor.loader.ClasspathManager;
-import org.eclipse.osgi.framework.adaptor.BundleProtectionDomain;
-import org.eclipse.osgi.framework.adaptor.ClassLoaderDelegate;
 import org.eclipse.osgi.framework.log.FrameworkLog;
 import org.eclipse.osgi.framework.log.FrameworkLogEntry;
+import org.eclipse.osgi.internal.hookregistry.HookConfigurator;
+import org.eclipse.osgi.internal.hookregistry.HookRegistry;
+import org.eclipse.osgi.internal.loader.classpath.ClasspathEntry;
+import org.eclipse.osgi.internal.loader.classpath.ClasspathManager;
+import org.eclipse.osgi.storage.bundlefile.BundleEntry;
+import org.eclipse.osgi.storage.bundlefile.MRUBundleFileList;
 import org.netbeans.core.netigso.spi.NetigsoArchive;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
@@ -58,28 +49,33 @@ import org.osgi.framework.wiring.BundleWiring;
  *
  * @author Jaroslav Tulach <jaroslav.tulach@netbeans.org>
  */
-public final class NetbinoxHooks implements HookConfigurator, ClassLoadingHook,
-BundleFileFactoryHook, FrameworkLog, FrameworkListener, AdaptorHook, LookupListener {
+public final class NetbinoxHooks implements HookConfigurator,
+        // ClassLoadingHook, BundleFileFactoryHook, AdaptorHook,
+        FrameworkLog, FrameworkListener,
+        LookupListener {
     private static Map<Bundle,ClassLoader> map;
     private static NetigsoArchive archive;
     private static Lookup.Result<HookConfigurator> configurators;
     private static Collection<? extends HookConfigurator> previous = Collections.emptyList();
     private static HookRegistry hookRegistry;
-    
+
     @Override
     public void addHooks(HookRegistry hr) {
         initRegistry(hr, this);
         initAndRefresh();
     }
 
-
+/*
     @Override
     public byte[] processClass(String className, byte[] bytes, ClasspathEntry ce, BundleEntry be, ClasspathManager cm) {
+        /*
         final BaseData bd = ce.getBaseData();
         if (bd == null) {
             return bytes;
         }
         final Bundle b = bd.getBundle();
+        * /
+        Bundle b = null;
         if (b == null) {
             return bytes;
         }
@@ -91,22 +87,18 @@ BundleFileFactoryHook, FrameworkLog, FrameworkListener, AdaptorHook, LookupListe
         return archive.patchByteCode(loader, className, ce.getDomain(), bytes);
     }
 
-    @Override
     public boolean addClassPathEntry(ArrayList al, String string, ClasspathManager cm, BaseData bd, ProtectionDomain pd) {
         return false;
     }
 
-    @Override
     public String findLibrary(BaseData bd, String string) {
         return null;
     }
 
-    @Override
     public ClassLoader getBundleClassLoaderParent() {
         return null;
     }
 
-    @Override
     public BaseClassLoader createClassLoader(ClassLoader parent, final ClassLoaderDelegate delegate, final BundleProtectionDomain bpd, BaseData bd, String[] classpath) {
         String loc = bd.getBundle().getLocation();
         //NetigsoModule.LOG.log(Level.FINER, "createClassLoader {0}", bd.getLocation());
@@ -122,12 +114,10 @@ BundleFileFactoryHook, FrameworkLog, FrameworkListener, AdaptorHook, LookupListe
         }
     }
 
-    @Override
     public void initializedClassLoader(BaseClassLoader bcl, BaseData bd) {
     }
 
-    private final MRUBundleFileList mruList = new MRUBundleFileList();
-    @Override
+    private final MRUBundleFileList mruList = new MRUBundleFileList(5, null);
     public BundleFile createBundleFile(Object file, final BaseData bd, boolean isBase) throws IOException {
 
         if (file instanceof File) {
@@ -141,14 +131,14 @@ BundleFileFactoryHook, FrameworkLog, FrameworkListener, AdaptorHook, LookupListe
         }
         return null;
     }
-
+*/
     @Override
     public void frameworkEvent(FrameworkEvent ev) {
 		if (ev.getType() == FrameworkEvent.ERROR) {
             log(ev);
 		}
     }
-    
+
     @Override
     public void log(FrameworkEvent fe) {
         Level l = Level.FINE;
@@ -194,39 +184,33 @@ BundleFileFactoryHook, FrameworkLog, FrameworkListener, AdaptorHook, LookupListe
 
     // adaptor hooks
 
-    @Override
+    /*
     public void initialize(BaseAdaptor ba) {
     }
+    */
 
-    @Override
     public void frameworkStart(BundleContext bc) throws BundleException {
         bc.addFrameworkListener(this);
     }
 
-    @Override
     public void frameworkStop(BundleContext bc) throws BundleException {
         bc.removeFrameworkListener(this);
     }
 
-    @Override
     public void frameworkStopping(BundleContext bc) {
     }
 
-    @Override
     public void addProperties(Properties prprts) {
     }
 
-    @Override
     public URLConnection mapLocationToURLConnection(String string) throws IOException {
         return null;
     }
 
-    @Override
     public void handleRuntimeError(Throwable thrwbl) {
         NetbinoxFactory.LOG.log(Level.WARNING, thrwbl.getMessage(), thrwbl);
     }
 
-    @Override
     public FrameworkLog createFrameworkLog() {
         return this;
     }
@@ -235,7 +219,7 @@ BundleFileFactoryHook, FrameworkLog, FrameworkListener, AdaptorHook, LookupListe
     public void resultChanged(LookupEvent ev) {
         initAndRefresh();
     }
-    
+
     //
     // synchronized to access internal data structures
     //
@@ -246,7 +230,7 @@ BundleFileFactoryHook, FrameworkLog, FrameworkListener, AdaptorHook, LookupListe
                 configurators = Lookup.getDefault().lookupResult(HookConfigurator.class);
                 configurators.addLookupListener(this);
             }
-    
+
             Collection<? extends HookConfigurator> now = configurators.allInstances();
             added = new HashSet<HookConfigurator>(now);
             added.removeAll(previous);
@@ -262,11 +246,11 @@ BundleFileFactoryHook, FrameworkLog, FrameworkListener, AdaptorHook, LookupListe
         configurators = null;
         hookRegistry = null;
     }
-    private static synchronized ClassLoader classLoaderForBundle(BaseData bd) {
+    private static synchronized ClassLoader classLoaderForBundle(Bundle bundle) {
         if (map == null) {
             return null;
         }
-        return map.get(bd.getBundle());
+        return map.get(bundle);
     }
 
 
@@ -280,8 +264,10 @@ BundleFileFactoryHook, FrameworkLog, FrameworkListener, AdaptorHook, LookupListe
 
     private static synchronized void initRegistry(HookRegistry hr, NetbinoxHooks hooks) {
         hookRegistry = hr;
+        /*
         hr.addClassLoadingHook(hooks);
         hr.addBundleFileFactoryHook(hooks);
         hr.addAdaptorHook(hooks);
+        */
     }
 }

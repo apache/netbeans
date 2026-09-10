@@ -24,28 +24,22 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.ProtectionDomain;
 import java.util.logging.Level;
-import org.eclipse.osgi.baseadaptor.BaseData;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleFile;
-import org.eclipse.osgi.baseadaptor.loader.BaseClassLoader;
-import org.eclipse.osgi.baseadaptor.loader.ClasspathEntry;
-import org.eclipse.osgi.baseadaptor.loader.ClasspathManager;
-import org.eclipse.osgi.framework.adaptor.ClassLoaderDelegate;
-import org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader;
+import org.eclipse.osgi.internal.loader.classpath.ClasspathManager;
+import org.eclipse.osgi.storage.BundleInfo;
 import org.osgi.framework.FrameworkEvent;
 
 /** Classloader that eliminates some unnecessary disk touches.
  *
  * @author Jaroslav Tulach <jtulach@netbeans.org>
  */
-final class NetbinoxLoader extends DefaultClassLoader {
+final class NetbinoxLoader extends ClassLoader {
     static {
         registerAsParallelCapable();
     }
     
-    public NetbinoxLoader(ClassLoader parent, ClassLoaderDelegate delegate, ProtectionDomain domain, BaseData bd, String[] classpath) {
-        super(parent, delegate, domain, bd, classpath);
-        this.manager = new NoTouchCPM(bd, classpath, this);
+    public NetbinoxLoader(ClassLoader parent, ClassLoader delegate, ProtectionDomain domain, BundleInfo bd, String[] classpath) {
+        // super(parent, delegate, domain, bd, classpath);
+        // this.manager = new NoTouchCPM(bd, classpath, this);
     }
 
     @Override
@@ -57,9 +51,9 @@ final class NetbinoxLoader extends DefaultClassLoader {
 
     @Override
     public String toString() {
-        return "NetbinoxLoader delegating to " + delegate;
+        return "NetbinoxLoader delegating to "; // + delegate;
     }
-    
+    /*
     private static class NoTouchCPM extends ClasspathManager {
         public NoTouchCPM(BaseData data, String[] classpath, BaseClassLoader classloader) {
             super(data, classpath, classloader);
@@ -124,4 +118,5 @@ final class NetbinoxLoader extends DefaultClassLoader {
             };
         }
     } // end of NoTouchCPM
+    */
 }

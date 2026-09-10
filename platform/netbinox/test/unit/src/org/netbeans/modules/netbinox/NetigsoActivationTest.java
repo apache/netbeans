@@ -19,16 +19,13 @@
 package org.netbeans.modules.netbinox;
 
 import java.util.Enumeration;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleFile;
 import org.netbeans.core.startup.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
-import org.eclipse.osgi.baseadaptor.BaseData;
-import org.eclipse.osgi.framework.adaptor.BundleData;
-import org.eclipse.osgi.framework.internal.core.AbstractBundle;
+import org.eclipse.osgi.storage.bundlefile.BundleEntry;
+import org.eclipse.osgi.storage.bundlefile.BundleFile;
 import org.netbeans.Module;
 import org.netbeans.ModuleManager;
 import org.netbeans.SetupHid;
@@ -83,12 +80,14 @@ public class NetigsoActivationTest extends SetupHid {
                     sb.append("No root URL for ").append(b.getSymbolicName()).append("\n");
                 }
                 BundleFile bFile = null;
+                /*
                 if (b instanceof AbstractBundle) {
                     BundleData bd = ((AbstractBundle) b).getBundleData();
                     if (bd instanceof BaseData) {
                         bFile = ((BaseData) bd).getBundleFile();
                     }
                 }
+                */
                 assertNotNull("All our bundles have BundleFile", bFile);
                 
                 Enumeration<URL> en = b.findEntries("/", null, true);

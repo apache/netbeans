@@ -26,7 +26,6 @@ import java.util.Dictionary;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
-import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.eclipse.osgi.launch.Equinox;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -62,6 +61,7 @@ class Netbinox extends Equinox {
     public void init() throws BundleException {
         super.init();
         if (Boolean.getBoolean("osgi.framework.useSystemProperties")) {
+            /*
             Properties prev = FrameworkProperties.getProperties();
             try {
                 Field f = FrameworkProperties.class.getDeclaredField("properties"); // NOI18N
@@ -77,6 +77,7 @@ class Netbinox extends Equinox {
                 }
             }
             assert System.getProperties() == FrameworkProperties.getProperties();
+            */
         }
     }
     

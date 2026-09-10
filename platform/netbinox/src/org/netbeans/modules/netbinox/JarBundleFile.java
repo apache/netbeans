@@ -35,12 +35,12 @@ import java.util.TreeSet;
 import java.util.jar.Attributes.Name;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
-import org.eclipse.osgi.baseadaptor.BaseData;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleFile;
-import org.eclipse.osgi.baseadaptor.bundlefile.DirBundleFile;
-import org.eclipse.osgi.baseadaptor.bundlefile.MRUBundleFileList;
-import org.eclipse.osgi.baseadaptor.bundlefile.ZipBundleFile;
+import org.eclipse.osgi.storage.BundleInfo;
+import org.eclipse.osgi.storage.bundlefile.BundleEntry;
+import org.eclipse.osgi.storage.bundlefile.BundleFile;
+import org.eclipse.osgi.storage.bundlefile.DirBundleFile;
+import org.eclipse.osgi.storage.bundlefile.MRUBundleFileList;
+import org.eclipse.osgi.storage.bundlefile.ZipBundleFile;
 import org.netbeans.core.netigso.spi.BundleContent;
 import org.netbeans.core.netigso.spi.NetigsoArchive;
 import org.openide.modules.ModuleInfo;
@@ -67,20 +67,20 @@ final class JarBundleFile extends BundleFile implements BundleContent {
     private BundleFile delegate;
 
     private final MRUBundleFileList mru;
-    private final BaseData data;
+    private final BundleInfo data;
     private final NetigsoArchive archive;
     private int[] versions;
     private Boolean isMultiRelease;
 
     JarBundleFile(
-        File base, BaseData data, NetigsoArchive archive,
+        File base, BundleInfo data, NetigsoArchive archive,
         MRUBundleFileList mru, boolean isBase
     ) {
         super(base);
 
         long id;
         if (isBase) {
-            id = data.getBundleID();
+            id = data.getBundleId();
         } else {
             id = 100000 + base.getPath().hashCode();
         }
@@ -111,7 +111,8 @@ final class JarBundleFile extends BundleFile implements BundleContent {
         if (delegate == null) {
             NetbinoxFactory.LOG.log(Level.FINE, "opening {0} because of {1} needing {2}", new Object[]{data.getLocation(), who, what});
             try {
-                delegate = new ZipBundleFile(getBaseFile(), data, mru) {
+                delegate = new ZipBundleFile(getBaseFile(), null, mru, null, false) {
+                    /*
                     @Override
                     protected boolean checkedOpen() {
                         try {
@@ -138,6 +139,7 @@ final class JarBundleFile extends BundleFile implements BundleContent {
                         // no optimizations
                         return super.checkedOpen();
                     }
+                    */
                 };
             } catch (IOException ex) {
                 NetbinoxFactory.LOG.log(Level.WARNING, "Error creating delegate for {0} because of {1}", new Object[] { getBaseFile(), data.getLocation() });
@@ -178,7 +180,8 @@ final class JarBundleFile extends BundleFile implements BundleContent {
 
             @Override
             public long lastModified() {
-                return data.getLastModified();
+                // return data.getStorage().getLastModified();
+                throw new UnsupportedOperationException("lastModified");
             }
         }
         return new VFile();
@@ -326,11 +329,16 @@ final class JarBundleFile extends BundleFile implements BundleContent {
 
     @Override
     public Enumeration<String> getEntryPaths(String prefix) {
+        return getEntryPaths(prefix, false);
+    }
+
+    @Override
+    public Enumeration<String> getEntryPaths(String prefix, boolean recurse) {
         BundleFile d = delegate("getEntryPaths", prefix);
         if (d == null) {
             return Collections.enumeration(Collections.<String>emptyList());
         }
-        return d.getEntryPaths(prefix);
+        return d.getEntryPaths(prefix, recurse);
     }
 
     @Override

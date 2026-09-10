@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.74
+#Version 1.75
 
 CLSS public abstract interface java.io.Closeable
 intf java.lang.AutoCloseable
@@ -47,6 +47,14 @@ CLSS public abstract interface java.lang.Cloneable
 CLSS public abstract interface java.lang.Comparable<%0 extends java.lang.Object>
 meth public abstract int compareTo({java.lang.Comparable%0})
 
+CLSS public abstract interface !annotation java.lang.Deprecated
+ anno 0 java.lang.annotation.Documented()
+ anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
+ anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, MODULE, PARAMETER, TYPE])
+intf java.lang.annotation.Annotation
+meth public abstract !hasdefault boolean forRemoval()
+meth public abstract !hasdefault java.lang.String since()
+
 CLSS public java.lang.Exception
 cons protected init(java.lang.String,java.lang.Throwable,boolean,boolean)
 cons public init()
@@ -55,11 +63,10 @@ cons public init(java.lang.String,java.lang.Throwable)
 cons public init(java.lang.Throwable)
 supr java.lang.Throwable
 
-CLSS public abstract interface !annotation java.lang.FunctionalInterface
- anno 0 java.lang.annotation.Documented()
- anno 0 java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy value=RUNTIME)
- anno 0 java.lang.annotation.Target(java.lang.annotation.ElementType[] value=[TYPE])
-intf java.lang.annotation.Annotation
+CLSS public abstract interface java.lang.Iterable<%0 extends java.lang.Object>
+meth public abstract java.util.Iterator<{java.lang.Iterable%0}> iterator()
+meth public java.util.Spliterator<{java.lang.Iterable%0}> spliterator()
+meth public void forEach(java.util.function.Consumer<? super {java.lang.Iterable%0}>)
 
 CLSS public java.lang.Object
 cons public init()
@@ -132,17 +139,28 @@ CLSS public abstract interface !annotation java.lang.annotation.Target
 intf java.lang.annotation.Annotation
 meth public abstract java.lang.annotation.ElementType[] value()
 
-CLSS public java.security.ProtectionDomain
-cons public init(java.security.CodeSource,java.security.PermissionCollection)
-cons public init(java.security.CodeSource,java.security.PermissionCollection,java.lang.ClassLoader,java.security.Principal[])
-meth public boolean implies(java.security.Permission)
-meth public final boolean staticPermissionsOnly()
-meth public final java.lang.ClassLoader getClassLoader()
-meth public final java.security.CodeSource getCodeSource()
-meth public final java.security.PermissionCollection getPermissions()
-meth public final java.security.Principal[] getPrincipals()
-meth public java.lang.String toString()
-supr java.lang.Object
+CLSS public abstract interface java.util.Collection<%0 extends java.lang.Object>
+intf java.lang.Iterable<{java.util.Collection%0}>
+meth public <%0 extends java.lang.Object> {%%0}[] toArray(java.util.function.IntFunction<{%%0}[]>)
+meth public abstract <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
+meth public abstract boolean add({java.util.Collection%0})
+meth public abstract boolean addAll(java.util.Collection<? extends {java.util.Collection%0}>)
+meth public abstract boolean contains(java.lang.Object)
+meth public abstract boolean containsAll(java.util.Collection<?>)
+meth public abstract boolean equals(java.lang.Object)
+meth public abstract boolean isEmpty()
+meth public abstract boolean remove(java.lang.Object)
+meth public abstract boolean removeAll(java.util.Collection<?>)
+meth public abstract boolean retainAll(java.util.Collection<?>)
+meth public abstract int hashCode()
+meth public abstract int size()
+meth public abstract java.lang.Object[] toArray()
+meth public abstract java.util.Iterator<{java.util.Collection%0}> iterator()
+meth public abstract void clear()
+meth public boolean removeIf(java.util.function.Predicate<? super {java.util.Collection%0}>)
+meth public java.util.Spliterator<{java.util.Collection%0}> spliterator()
+meth public java.util.stream.Stream<{java.util.Collection%0}> parallelStream()
+meth public java.util.stream.Stream<{java.util.Collection%0}> stream()
 
 CLSS public abstract java.util.Dictionary<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init()
@@ -202,8 +220,8 @@ meth public {java.util.Map%1} replace({java.util.Map%0},{java.util.Map%1})
 
 CLSS public org.eclipse.core.runtime.adaptor.EclipseStarter
 cons public init()
-fld protected final static java.lang.String DEFAULT_ADAPTOR_CLASS = "org.eclipse.osgi.baseadaptor.BaseAdaptor"
 fld public final static java.lang.String PROP_ADAPTOR = "osgi.adaptor"
+fld public final static java.lang.String PROP_ALLOW_APPRELAUNCH = "eclipse.allowAppRelaunch"
 fld public final static java.lang.String PROP_ARCH = "osgi.arch"
 fld public final static java.lang.String PROP_BUNDLES = "osgi.bundles"
 fld public final static java.lang.String PROP_BUNDLES_STARTLEVEL = "osgi.bundles.defaultStartLevel"
@@ -240,574 +258,8 @@ meth public static void main(java.lang.String[]) throws java.lang.Exception
 meth public static void setInitialProperties(java.util.Map<java.lang.String,java.lang.String>)
 meth public static void shutdown() throws java.lang.Exception
 supr java.lang.Object
-hfds ARCH,CLEAN,CONFIGURATION,CONSOLE,CONSOLE_LOG,DATA,DEBUG,DEFAULT_BUNDLES_STARTLEVEL,DEFAULT_INITIAL_STARTLEVEL,DEV,FILE_SCHEME,INITIALIZE,INITIAL_LOCATION,LAUNCHER,NL,NL_EXTENSIONS,NOEXIT,OS,PROP_ALLOW_APPRELAUNCH,PROP_APPLICATION_LAUNCHDEFAULT,PROP_FORCED_RESTART,PROP_IGNORE_USER_CONFIGURATION,PROP_NL_EXTENSIONS,REFERENCE_PROTOCOL,REFERENCE_SCHEME,USER,WS,adaptor,appLauncher,appLauncherRegistration,consoleMgr,context,defaultMonitorRegistration,framework,initialize,log,running,searchCandidates,shutdownHandlers,splashStreamRegistration
+hfds ARCH,CLEAN,CONFIGURATION,CONSOLE,CONSOLE_LOG,DATA,DEBUG,DEFAULT_BUNDLES_STARTLEVEL,DEFAULT_INITIAL_STARTLEVEL,DEV,FILE_SCHEME,INITIALIZE,INITIAL_LOCATION,LAUNCHER,NL,NL_EXTENSIONS,NOEXIT,OS,PROP_APPLICATION_LAUNCHDEFAULT,PROP_NL_EXTENSIONS,REFERENCE_PROTOCOL,REFERENCE_SCHEME,USER,WS,allArgs,appArgs,appLauncher,appLauncherRegistration,configuration,consoleMgr,context,defaultMonitorRegistration,equinoxConfig,framework,frameworkArgs,initialize,log,running,searchCandidates,shutdownHandlers,splashStreamRegistration
 hcls InitialBundle,StartupEventListener
-
-CLSS public org.eclipse.core.runtime.adaptor.LocationManager
-cons public init()
-fld public final static java.lang.String BUNDLES_DIR = "bundles"
-fld public final static java.lang.String BUNDLE_DATA_FILE = ".bundledata"
-fld public final static java.lang.String CONFIG_FILE = "config.ini"
-fld public final static java.lang.String ECLIPSE_PROPERTIES = "eclipse.properties"
-fld public final static java.lang.String LAZY_FILE = ".lazy"
-fld public final static java.lang.String MANIFESTS_DIR = "manifests"
-fld public final static java.lang.String PROP_CONFIG_AREA = "osgi.configuration.area"
-fld public final static java.lang.String PROP_CONFIG_AREA_DEFAULT = "osgi.configuration.area.default"
-fld public final static java.lang.String PROP_HOME_LOCATION_AREA = "eclipse.home.location"
-fld public final static java.lang.String PROP_INSTALL_AREA = "osgi.install.area"
-fld public final static java.lang.String PROP_INSTANCE_AREA = "osgi.instance.area"
-fld public final static java.lang.String PROP_INSTANCE_AREA_DEFAULT = "osgi.instance.area.default"
-fld public final static java.lang.String PROP_MANIFEST_CACHE = "osgi.manifest.cache"
-fld public final static java.lang.String PROP_SHARED_CONFIG_AREA = "osgi.sharedConfiguration.area"
-fld public final static java.lang.String PROP_USER_AREA = "osgi.user.area"
-fld public final static java.lang.String PROP_USER_AREA_DEFAULT = "osgi.user.area.default"
-fld public final static java.lang.String PROP_USER_DIR = "user.dir"
-fld public final static java.lang.String PROP_USER_HOME = "user.home"
-fld public final static java.lang.String READ_ONLY_AREA_SUFFIX = ".readOnly"
-fld public final static java.lang.String STATE_FILE = ".state"
-meth public static java.io.File getConfigurationFile(java.lang.String)
-meth public static java.io.File getOSGiConfigurationDir()
-meth public static java.net.URL buildURL(java.lang.String,boolean)
-meth public static org.eclipse.osgi.service.datalocation.Location getConfigurationLocation()
-meth public static org.eclipse.osgi.service.datalocation.Location getEclipseHomeLocation()
-meth public static org.eclipse.osgi.service.datalocation.Location getInstallLocation()
-meth public static org.eclipse.osgi.service.datalocation.Location getInstanceLocation()
-meth public static org.eclipse.osgi.service.datalocation.Location getUserLocation()
-meth public static void initializeLocations()
-supr java.lang.Object
-hfds CONFIG_DIR,ECLIPSE,INSTALL_HASH_PLACEHOLDER,INSTANCE_DATA_AREA_PREFIX,NONE,NO_DEFAULT,PRODUCT_SITE_ID,PRODUCT_SITE_MARKER,PRODUCT_SITE_VERSION,PROP_LAUNCHER,USER_DIR,USER_HOME,configurationLocation,eclipseHomeLocation,installLocation,instanceLocation,userLocation
-
-CLSS public org.eclipse.osgi.baseadaptor.BaseAdaptor
-cons public init(java.lang.String[])
-intf org.eclipse.osgi.framework.adaptor.FrameworkAdaptor
-meth protected org.eclipse.osgi.internal.baseadaptor.BaseStorage getStorage()
-meth public boolean isReadOnly()
-meth public boolean isStopping()
-meth public int getInitialBundleStartLevel()
-meth public java.lang.ClassLoader getBundleClassLoaderParent()
-meth public java.net.URLConnection mapLocationToURLConnection(java.lang.String) throws org.osgi.framework.BundleException
-meth public java.util.Enumeration<java.net.URL> findEntries(java.util.List<org.eclipse.osgi.framework.adaptor.BundleData>,java.lang.String,java.lang.String,int)
-meth public java.util.List<java.lang.String> listEntryPaths(java.util.List<org.eclipse.osgi.baseadaptor.bundlefile.BundleFile>,java.lang.String,java.lang.String,int)
-meth public java.util.Properties getProperties()
-meth public long getTotalFreeSpace() throws java.io.IOException
-meth public org.eclipse.osgi.baseadaptor.HookRegistry getHookRegistry()
-meth public org.eclipse.osgi.baseadaptor.bundlefile.BundleFile createBundleFile(java.lang.Object,org.eclipse.osgi.baseadaptor.BaseData) throws java.io.IOException
-meth public org.eclipse.osgi.framework.adaptor.BundleData createSystemBundleData() throws org.osgi.framework.BundleException
-meth public org.eclipse.osgi.framework.adaptor.BundleData[] getInstalledBundles()
-meth public org.eclipse.osgi.framework.adaptor.BundleOperation installBundle(java.lang.String,java.net.URLConnection)
-meth public org.eclipse.osgi.framework.adaptor.BundleOperation uninstallBundle(org.eclipse.osgi.framework.adaptor.BundleData)
-meth public org.eclipse.osgi.framework.adaptor.BundleOperation updateBundle(org.eclipse.osgi.framework.adaptor.BundleData,java.net.URLConnection)
-meth public org.eclipse.osgi.framework.adaptor.BundleWatcher getBundleWatcher()
-meth public org.eclipse.osgi.framework.adaptor.EventPublisher getEventPublisher()
-meth public org.eclipse.osgi.framework.adaptor.PermissionStorage getPermissionStorage() throws java.io.IOException
-meth public org.eclipse.osgi.framework.log.FrameworkLog getFrameworkLog()
-meth public org.eclipse.osgi.service.resolver.PlatformAdmin getPlatformAdmin()
-meth public org.eclipse.osgi.service.resolver.State getState()
-meth public org.osgi.framework.Bundle getBundle(long)
-meth public org.osgi.framework.BundleContext getContext()
-meth public void compactStorage() throws java.io.IOException
-meth public void frameworkStart(org.osgi.framework.BundleContext) throws org.osgi.framework.BundleException
-meth public void frameworkStop(org.osgi.framework.BundleContext) throws org.osgi.framework.BundleException
-meth public void frameworkStopping(org.osgi.framework.BundleContext)
-meth public void handleRuntimeError(java.lang.Throwable)
-meth public void initialize(org.eclipse.osgi.framework.adaptor.EventPublisher)
-meth public void initializeStorage() throws java.io.IOException
-meth public void setInitialBundleStartLevel(int)
-supr java.lang.Object
-hfds PARENT_CLASSLOADER_APP,PARENT_CLASSLOADER_BOOT,PARENT_CLASSLOADER_EXT,PARENT_CLASSLOADER_FWK,PROP_PARENT_CLASSLOADER,bundleClassLoaderParent,bundleWatcher,context,eventPublisher,hookRegistry,log,stopping,storage
-
-CLSS public org.eclipse.osgi.baseadaptor.BaseData
-cons public init(long,org.eclipse.osgi.baseadaptor.BaseAdaptor)
-fld protected java.lang.String fileName
-fld protected java.util.Collection<java.lang.String> loadedNativeCode
-fld protected java.util.Dictionary<java.lang.String,java.lang.String> manifest
-fld protected org.eclipse.osgi.baseadaptor.bundlefile.BundleFile bundleFile
-intf org.eclipse.osgi.framework.adaptor.BundleData
-meth public boolean isDirty()
-meth public final int getType()
-meth public final java.lang.String getActivator()
-meth public final java.lang.String getDynamicImports()
-meth public final java.lang.String getExecutionEnvironment()
-meth public final java.lang.String getLocation()
-meth public final java.lang.String getSymbolicName()
-meth public final java.lang.String[] getClassPath() throws org.osgi.framework.BundleException
-meth public final java.net.URL getEntry(java.lang.String)
-meth public final java.util.Enumeration<java.lang.String> getEntryPaths(java.lang.String)
-meth public final long getLastModified()
-meth public final org.eclipse.osgi.baseadaptor.BaseAdaptor getAdaptor()
-meth public final org.osgi.framework.Bundle getBundle()
-meth public final org.osgi.framework.Version getVersion()
-meth public final void setActivator(java.lang.String)
-meth public final void setBundle(org.osgi.framework.Bundle)
-meth public final void setLastModified(long)
-meth public final void setLocation(java.lang.String)
-meth public final void setSymbolicName(java.lang.String)
-meth public final void setType(int)
-meth public final void setVersion(org.osgi.framework.Version)
-meth public int getStartLevel()
-meth public int getStatus()
-meth public java.io.File getDataFile(java.lang.String)
-meth public java.io.File getExtractFile(java.lang.String)
-meth public java.lang.String findLibrary(java.lang.String)
-meth public java.lang.String getClassPathString()
-meth public java.lang.String toString()
-meth public java.util.Dictionary<java.lang.String,java.lang.String> getManifest() throws org.osgi.framework.BundleException
-meth public java.util.Enumeration<java.net.URL> findLocalResources(java.lang.String)
-meth public long getBundleID()
-meth public org.eclipse.osgi.baseadaptor.bundlefile.BundleFile getBundleFile()
-meth public org.eclipse.osgi.baseadaptor.bundlefile.BundleFile getBundleFile(java.lang.Object,boolean)
-meth public org.eclipse.osgi.baseadaptor.hooks.StorageHook getStorageHook(java.lang.String)
-meth public org.eclipse.osgi.baseadaptor.hooks.StorageHook[] getStorageHooks()
-meth public org.eclipse.osgi.framework.adaptor.BundleClassLoader createClassLoader(org.eclipse.osgi.framework.adaptor.ClassLoaderDelegate,org.eclipse.osgi.framework.adaptor.BundleProtectionDomain,java.lang.String[])
-meth public void close() throws java.io.IOException
-meth public void installNativeCode(java.lang.String[]) throws org.osgi.framework.BundleException
-meth public void open() throws java.io.IOException
-meth public void save() throws java.io.IOException
-meth public void setBundleFile(java.lang.Object,org.eclipse.osgi.baseadaptor.bundlefile.BundleFile)
-meth public void setClassPathString(java.lang.String)
-meth public void setDirty(boolean)
-meth public void setDynamicImports(java.lang.String)
-meth public void setExecutionEnvironment(java.lang.String)
-meth public void setFileName(java.lang.String)
-meth public void setStartLevel(int)
-meth public void setStatus(int)
-meth public void setStorageHooks(org.eclipse.osgi.baseadaptor.hooks.StorageHook[])
-supr java.lang.Object
-hfds COPY_NATIVES,activator,adaptor,bundle,bundleFiles,classpath,dirty,dynamicImports,executionEnvironment,id,lastModified,location,startLevel,status,storageHooks,symbolicName,type,version
-
-CLSS public abstract interface org.eclipse.osgi.baseadaptor.HookConfigurator
-meth public abstract void addHooks(org.eclipse.osgi.baseadaptor.HookRegistry)
-
-CLSS public final org.eclipse.osgi.baseadaptor.HookRegistry
-cons public init(org.eclipse.osgi.baseadaptor.BaseAdaptor)
-fld public final static java.lang.String HOOK_CONFIGURATORS = "hook.configurators"
-fld public final static java.lang.String HOOK_CONFIGURATORS_FILE = "hookconfigurators.properties"
-fld public final static java.lang.String PROP_HOOK_CONFIGURATORS = "osgi.hook.configurators"
-fld public final static java.lang.String PROP_HOOK_CONFIGURATORS_EXCLUDE = "osgi.hook.configurators.exclude"
-fld public final static java.lang.String PROP_HOOK_CONFIGURATORS_INCLUDE = "osgi.hook.configurators.include"
-meth public org.eclipse.osgi.baseadaptor.BaseAdaptor getAdaptor()
-meth public org.eclipse.osgi.baseadaptor.hooks.AdaptorHook[] getAdaptorHooks()
-meth public org.eclipse.osgi.baseadaptor.hooks.BundleFileFactoryHook[] getBundleFileFactoryHooks()
-meth public org.eclipse.osgi.baseadaptor.hooks.BundleFileWrapperFactoryHook[] getBundleFileWrapperFactoryHooks()
-meth public org.eclipse.osgi.baseadaptor.hooks.ClassLoadingHook[] getClassLoadingHooks()
-meth public org.eclipse.osgi.baseadaptor.hooks.ClassLoadingStatsHook[] getClassLoadingStatsHooks()
-meth public org.eclipse.osgi.baseadaptor.hooks.StorageHook[] getStorageHooks()
-meth public org.eclipse.osgi.framework.adaptor.BundleWatcher[] getWatchers()
-meth public org.eclipse.osgi.framework.adaptor.ClassLoaderDelegateHook[] getClassLoaderDelegateHooks()
-meth public org.eclipse.osgi.framework.log.FrameworkLogEntry[] initialize()
-meth public void addAdaptorHook(org.eclipse.osgi.baseadaptor.hooks.AdaptorHook)
-meth public void addBundleFileFactoryHook(org.eclipse.osgi.baseadaptor.hooks.BundleFileFactoryHook)
-meth public void addBundleFileWrapperFactoryHook(org.eclipse.osgi.baseadaptor.hooks.BundleFileWrapperFactoryHook)
-meth public void addClassLoaderDelegateHook(org.eclipse.osgi.framework.adaptor.ClassLoaderDelegateHook)
-meth public void addClassLoadingHook(org.eclipse.osgi.baseadaptor.hooks.ClassLoadingHook)
-meth public void addClassLoadingStatsHook(org.eclipse.osgi.baseadaptor.hooks.ClassLoadingStatsHook)
-meth public void addStorageHook(org.eclipse.osgi.baseadaptor.hooks.StorageHook)
-meth public void addWatcher(org.eclipse.osgi.framework.adaptor.BundleWatcher)
-supr java.lang.Object
-hfds BUILTIN_HOOKS,adaptor,adaptorHooks,bundleFileFactoryHooks,bundleFileWrapperFactoryHooks,classLoaderDelegateHooks,classLoadingHooks,classLoadingStatsHooks,readonly,storageHooks,watchers
-
-CLSS public abstract org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry
-cons public init()
-fld protected final static int BUF_SIZE = 8192
-meth public abstract java.io.InputStream getInputStream() throws java.io.IOException
-meth public abstract java.lang.String getName()
-meth public abstract java.net.URL getFileURL()
-meth public abstract java.net.URL getLocalURL()
-meth public abstract long getSize()
-meth public abstract long getTime()
-meth public byte[] getBytes() throws java.io.IOException
-meth public java.lang.String toString()
-supr java.lang.Object
-
-CLSS public abstract org.eclipse.osgi.baseadaptor.bundlefile.BundleFile
-cons public init()
-cons public init(java.io.File)
-fld protected final static java.lang.String PROP_SETPERMS_CMD = "osgi.filepermissions.command"
-fld protected java.io.File basefile
-meth public abstract boolean containsDir(java.lang.String)
-meth public abstract java.io.File getFile(java.lang.String,boolean)
-meth public abstract java.util.Enumeration<java.lang.String> getEntryPaths(java.lang.String)
-meth public abstract org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry getEntry(java.lang.String)
-meth public abstract void close() throws java.io.IOException
-meth public abstract void open() throws java.io.IOException
-meth public java.io.File getBaseFile()
-meth public java.lang.String toString()
-meth public java.net.URL getResourceURL(java.lang.String,long)
-meth public java.net.URL getResourceURL(java.lang.String,long,int)
-meth public java.net.URL getResourceURL(java.lang.String,org.eclipse.osgi.baseadaptor.BaseData,int)
-meth public static java.lang.String fixTrailingSlash(java.lang.String,org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry)
-meth public static void setPermissions(java.io.File)
-supr java.lang.Object
-hfds mruIndex,secureAction
-
-CLSS public org.eclipse.osgi.baseadaptor.bundlefile.BundleFileWrapperChain
-cons public init(org.eclipse.osgi.baseadaptor.bundlefile.BundleFile,org.eclipse.osgi.baseadaptor.bundlefile.BundleFileWrapperChain)
-meth public boolean containsDir(java.lang.String)
-meth public java.io.File getBaseFile()
-meth public java.io.File getFile(java.lang.String,boolean)
-meth public java.lang.String toString()
-meth public java.net.URL getResourceURL(java.lang.String,org.eclipse.osgi.baseadaptor.BaseData,int)
-meth public java.util.Enumeration<java.lang.String> getEntryPaths(java.lang.String)
-meth public org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry getEntry(java.lang.String)
-meth public org.eclipse.osgi.baseadaptor.bundlefile.BundleFile getWrapped()
-meth public org.eclipse.osgi.baseadaptor.bundlefile.BundleFileWrapperChain getNext()
-meth public void close() throws java.io.IOException
-meth public void open() throws java.io.IOException
-supr org.eclipse.osgi.baseadaptor.bundlefile.BundleFile
-hfds next,wrapped
-
-CLSS public org.eclipse.osgi.baseadaptor.bundlefile.DirBundleFile
-cons public init(java.io.File,boolean) throws java.io.IOException
-meth public boolean containsDir(java.lang.String)
-meth public java.io.File getFile(java.lang.String,boolean)
-meth public java.util.Enumeration<java.lang.String> getEntryPaths(java.lang.String)
-meth public java.util.Enumeration<java.lang.String> getEntryPaths(java.lang.String,boolean)
-meth public org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry getEntry(java.lang.String)
-meth public void close()
-meth public void open()
-supr org.eclipse.osgi.baseadaptor.bundlefile.BundleFile
-hfds POINTER_SAME_DIRECTORY_1,POINTER_SAME_DIRECTORY_2,POINTER_UPPER_DIRECTORY,enableStrictBundleEntryPath
-
-CLSS public org.eclipse.osgi.baseadaptor.bundlefile.DirZipBundleEntry
-cons public init(org.eclipse.osgi.baseadaptor.bundlefile.ZipBundleFile,java.lang.String)
-meth public java.io.InputStream getInputStream() throws java.io.IOException
-meth public java.lang.String getName()
-meth public java.net.URL getFileURL()
-meth public java.net.URL getLocalURL()
-meth public long getSize()
-meth public long getTime()
-supr org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry
-hfds bundleFile,name
-
-CLSS public org.eclipse.osgi.baseadaptor.bundlefile.FileBundleEntry
-meth public java.io.InputStream getInputStream() throws java.io.IOException
-meth public java.lang.String getName()
-meth public java.net.URL getFileURL()
-meth public java.net.URL getLocalURL()
-meth public long getSize()
-meth public long getTime()
-supr org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry
-hfds file,name
-
-CLSS public org.eclipse.osgi.baseadaptor.bundlefile.MRUBundleFileList
-cons public init()
-cons public init(int)
-intf org.eclipse.osgi.framework.eventmgr.EventDispatcher<java.lang.Object,java.lang.Object,org.eclipse.osgi.baseadaptor.bundlefile.BundleFile>
-meth public boolean isClosing(org.eclipse.osgi.baseadaptor.bundlefile.BundleFile)
-meth public boolean isEnabled()
-meth public boolean remove(org.eclipse.osgi.baseadaptor.bundlefile.BundleFile)
-meth public final void dispatchEvent(java.lang.Object,java.lang.Object,int,org.eclipse.osgi.baseadaptor.bundlefile.BundleFile)
-meth public void add(org.eclipse.osgi.baseadaptor.bundlefile.BundleFile)
-meth public void shutdown()
-meth public void use(org.eclipse.osgi.baseadaptor.bundlefile.BundleFile)
-supr java.lang.Object
-hfds MIN,PROP_FILE_LIMIT,PROP_FILE_LIMIT_VALUE,bundleFileCloser,bundleFileCloserManager,bundleFileList,closingBundleFile,curUseStamp,fileLimit,firstDispatch,numOpen,useStampList
-
-CLSS public org.eclipse.osgi.baseadaptor.bundlefile.NestedDirBundleFile
-cons public init(org.eclipse.osgi.baseadaptor.bundlefile.BundleFile,java.lang.String)
-meth public boolean containsDir(java.lang.String)
-meth public java.io.File getFile(java.lang.String,boolean)
-meth public java.util.Enumeration<java.lang.String> getEntryPaths(java.lang.String)
-meth public org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry getEntry(java.lang.String)
-meth public void close()
-meth public void open() throws java.io.IOException
-supr org.eclipse.osgi.baseadaptor.bundlefile.BundleFile
-hfds baseBundleFile,cp
-
-CLSS public org.eclipse.osgi.baseadaptor.bundlefile.ZipBundleEntry
-fld protected final java.util.zip.ZipEntry zipEntry
-fld protected final org.eclipse.osgi.baseadaptor.bundlefile.ZipBundleFile bundleFile
-meth public java.io.InputStream getInputStream() throws java.io.IOException
-meth public java.lang.String getName()
-meth public java.net.URL getFileURL()
-meth public java.net.URL getLocalURL()
-meth public long getSize()
-meth public long getTime()
-supr org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry
-hcls ZipBundleEntryInputStream
-
-CLSS public org.eclipse.osgi.baseadaptor.bundlefile.ZipBundleFile
-cons public init(java.io.File,org.eclipse.osgi.baseadaptor.BaseData) throws java.io.IOException
-cons public init(java.io.File,org.eclipse.osgi.baseadaptor.BaseData,org.eclipse.osgi.baseadaptor.bundlefile.MRUBundleFileList) throws java.io.IOException
-fld protected org.eclipse.osgi.baseadaptor.BaseData bundledata
-fld protected volatile boolean closed
-fld protected volatile java.util.zip.ZipFile zipFile
-meth protected boolean checkedOpen()
-meth protected java.io.File extractDirectory(java.lang.String)
-meth protected java.io.File getExtractFile(java.lang.String)
-meth protected java.util.zip.ZipEntry getZipEntry(java.lang.String)
-meth protected java.util.zip.ZipFile basicOpen() throws java.io.IOException
-meth protected java.util.zip.ZipFile getZipFile() throws java.io.IOException
-meth public boolean containsDir(java.lang.String)
-meth public java.io.File getFile(java.lang.String,boolean)
-meth public java.util.Enumeration<java.lang.String> getEntryPaths(java.lang.String)
-meth public java.util.Enumeration<java.lang.String> getEntryPaths(java.lang.String,boolean)
-meth public org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry getEntry(java.lang.String)
-meth public void close() throws java.io.IOException
-meth public void open()
-supr org.eclipse.osgi.baseadaptor.bundlefile.BundleFile
-hfds mruList,referenceCount
-
-CLSS public abstract interface org.eclipse.osgi.baseadaptor.hooks.AdaptorHook
-meth public abstract java.net.URLConnection mapLocationToURLConnection(java.lang.String) throws java.io.IOException
-meth public abstract org.eclipse.osgi.framework.log.FrameworkLog createFrameworkLog()
-meth public abstract void addProperties(java.util.Properties)
-meth public abstract void frameworkStart(org.osgi.framework.BundleContext) throws org.osgi.framework.BundleException
-meth public abstract void frameworkStop(org.osgi.framework.BundleContext) throws org.osgi.framework.BundleException
-meth public abstract void frameworkStopping(org.osgi.framework.BundleContext)
-meth public abstract void handleRuntimeError(java.lang.Throwable)
-meth public abstract void initialize(org.eclipse.osgi.baseadaptor.BaseAdaptor)
-
-CLSS public abstract interface org.eclipse.osgi.baseadaptor.hooks.BundleFileFactoryHook
-meth public abstract org.eclipse.osgi.baseadaptor.bundlefile.BundleFile createBundleFile(java.lang.Object,org.eclipse.osgi.baseadaptor.BaseData,boolean) throws java.io.IOException
-
-CLSS public abstract interface org.eclipse.osgi.baseadaptor.hooks.BundleFileWrapperFactoryHook
-meth public abstract org.eclipse.osgi.baseadaptor.bundlefile.BundleFile wrapBundleFile(org.eclipse.osgi.baseadaptor.bundlefile.BundleFile,java.lang.Object,org.eclipse.osgi.baseadaptor.BaseData,boolean) throws java.io.IOException
-
-CLSS public abstract interface org.eclipse.osgi.baseadaptor.hooks.ClassLoadingHook
-meth public abstract boolean addClassPathEntry(java.util.ArrayList<org.eclipse.osgi.baseadaptor.loader.ClasspathEntry>,java.lang.String,org.eclipse.osgi.baseadaptor.loader.ClasspathManager,org.eclipse.osgi.baseadaptor.BaseData,java.security.ProtectionDomain)
-meth public abstract byte[] processClass(java.lang.String,byte[],org.eclipse.osgi.baseadaptor.loader.ClasspathEntry,org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry,org.eclipse.osgi.baseadaptor.loader.ClasspathManager)
-meth public abstract java.lang.ClassLoader getBundleClassLoaderParent()
-meth public abstract java.lang.String findLibrary(org.eclipse.osgi.baseadaptor.BaseData,java.lang.String)
-meth public abstract org.eclipse.osgi.baseadaptor.loader.BaseClassLoader createClassLoader(java.lang.ClassLoader,org.eclipse.osgi.framework.adaptor.ClassLoaderDelegate,org.eclipse.osgi.framework.adaptor.BundleProtectionDomain,org.eclipse.osgi.baseadaptor.BaseData,java.lang.String[])
-meth public abstract void initializedClassLoader(org.eclipse.osgi.baseadaptor.loader.BaseClassLoader,org.eclipse.osgi.baseadaptor.BaseData)
-
-CLSS public abstract interface org.eclipse.osgi.baseadaptor.hooks.ClassLoadingStatsHook
-meth public abstract void postFindLocalClass(java.lang.String,java.lang.Class<?>,org.eclipse.osgi.baseadaptor.loader.ClasspathManager) throws java.lang.ClassNotFoundException
-meth public abstract void postFindLocalResource(java.lang.String,java.net.URL,org.eclipse.osgi.baseadaptor.loader.ClasspathManager)
-meth public abstract void preFindLocalClass(java.lang.String,org.eclipse.osgi.baseadaptor.loader.ClasspathManager) throws java.lang.ClassNotFoundException
-meth public abstract void preFindLocalResource(java.lang.String,org.eclipse.osgi.baseadaptor.loader.ClasspathManager)
-meth public abstract void recordClassDefine(java.lang.String,java.lang.Class<?>,byte[],org.eclipse.osgi.baseadaptor.loader.ClasspathEntry,org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry,org.eclipse.osgi.baseadaptor.loader.ClasspathManager)
-
-CLSS public abstract interface org.eclipse.osgi.baseadaptor.hooks.StorageHook
-intf org.eclipse.osgi.framework.util.KeyedElement
-meth public abstract boolean forgetStartLevelChange(int)
-meth public abstract boolean forgetStatusChange(int)
-meth public abstract int getStorageVersion()
-meth public abstract java.util.Dictionary<java.lang.String,java.lang.String> getManifest(boolean) throws org.osgi.framework.BundleException
-meth public abstract org.eclipse.osgi.baseadaptor.hooks.StorageHook create(org.eclipse.osgi.baseadaptor.BaseData) throws org.osgi.framework.BundleException
-meth public abstract org.eclipse.osgi.baseadaptor.hooks.StorageHook load(org.eclipse.osgi.baseadaptor.BaseData,java.io.DataInputStream) throws java.io.IOException
-meth public abstract void copy(org.eclipse.osgi.baseadaptor.hooks.StorageHook)
-meth public abstract void initialize(java.util.Dictionary<java.lang.String,java.lang.String>) throws org.osgi.framework.BundleException
-meth public abstract void save(java.io.DataOutputStream) throws java.io.IOException
-meth public abstract void validate()
-
-CLSS public abstract interface org.eclipse.osgi.baseadaptor.loader.BaseClassLoader
-intf org.eclipse.osgi.framework.adaptor.BundleClassLoader
-meth public abstract java.lang.Class<?> defineClass(java.lang.String,byte[],org.eclipse.osgi.baseadaptor.loader.ClasspathEntry,org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry)
-meth public abstract java.lang.Class<?> publicFindLoaded(java.lang.String)
-meth public abstract java.lang.Object publicDefinePackage(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.net.URL)
-meth public abstract java.lang.Object publicGetPackage(java.lang.String)
-meth public abstract java.security.ProtectionDomain getDomain()
-meth public abstract org.eclipse.osgi.baseadaptor.loader.ClasspathEntry createClassPathEntry(org.eclipse.osgi.baseadaptor.bundlefile.BundleFile,java.security.ProtectionDomain)
-meth public abstract org.eclipse.osgi.baseadaptor.loader.ClasspathManager getClasspathManager()
-
-CLSS public org.eclipse.osgi.baseadaptor.loader.ClasspathEntry
-cons public init(org.eclipse.osgi.baseadaptor.bundlefile.BundleFile,java.security.ProtectionDomain)
-meth public java.lang.Object getUserObject(java.lang.Object)
-meth public java.security.ProtectionDomain getDomain()
-meth public org.eclipse.osgi.baseadaptor.BaseData getBaseData()
-meth public org.eclipse.osgi.baseadaptor.bundlefile.BundleFile getBundleFile()
-meth public void addUserObject(org.eclipse.osgi.framework.util.KeyedElement)
-supr java.lang.Object
-hfds bundlefile,data,domain,userObjects
-
-CLSS public org.eclipse.osgi.baseadaptor.loader.ClasspathManager
-cons public init(org.eclipse.osgi.baseadaptor.BaseData,java.lang.String[],org.eclipse.osgi.baseadaptor.loader.BaseClassLoader)
-meth public java.lang.Class<?> findLocalClass(java.lang.String) throws java.lang.ClassNotFoundException
-meth public java.lang.String findLibrary(java.lang.String)
-meth public java.net.URL findLocalResource(java.lang.String)
-meth public java.util.Collection<java.lang.String> listLocalResources(java.lang.String,java.lang.String,int)
-meth public java.util.Enumeration<java.net.URL> findLocalResources(java.lang.String)
-meth public java.util.Enumeration<org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry> findLocalEntries(java.lang.String)
-meth public java.util.List<java.net.URL> findEntries(java.lang.String,java.lang.String,int)
-meth public org.eclipse.osgi.baseadaptor.BaseData getBaseData()
-meth public org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry findLocalEntry(java.lang.String)
-meth public org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry findLocalEntry(java.lang.String,int)
-meth public org.eclipse.osgi.baseadaptor.loader.BaseClassLoader getBaseClassLoader()
-meth public org.eclipse.osgi.baseadaptor.loader.ClasspathEntry getClasspath(java.lang.String,org.eclipse.osgi.baseadaptor.BaseData,java.security.ProtectionDomain)
-meth public org.eclipse.osgi.baseadaptor.loader.ClasspathEntry getExternalClassPath(java.lang.String,org.eclipse.osgi.baseadaptor.BaseData,java.security.ProtectionDomain)
-meth public org.eclipse.osgi.baseadaptor.loader.ClasspathEntry[] getHostClasspathEntries()
-meth public org.eclipse.osgi.baseadaptor.loader.FragmentClasspath[] getFragmentClasspaths()
-meth public static boolean addClassPathEntry(java.util.ArrayList<org.eclipse.osgi.baseadaptor.loader.ClasspathEntry>,java.lang.String,org.eclipse.osgi.baseadaptor.loader.ClasspathManager,org.eclipse.osgi.baseadaptor.BaseData,java.security.ProtectionDomain)
-meth public static void findClassPathEntry(java.util.ArrayList<org.eclipse.osgi.baseadaptor.loader.ClasspathEntry>,java.lang.String,org.eclipse.osgi.baseadaptor.loader.ClasspathManager,org.eclipse.osgi.baseadaptor.BaseData,java.security.ProtectionDomain)
-meth public void attachFragment(org.eclipse.osgi.framework.adaptor.BundleData,java.security.ProtectionDomain,java.lang.String[])
-meth public void close()
-meth public void initialize()
-supr java.lang.Object
-hfds LOCK_CLASSNAME,NULL_CLASS_RESULT,PROP_CLASSLOADER_LOCK,VALUE_CLASSNAME_LOCK,classNameLocks,classloader,classpath,currentlyDefining,data,emptyFragments,entries,fragments,isParallelClassLoader,loadedLibraries
-
-CLSS public org.eclipse.osgi.baseadaptor.loader.FragmentClasspath
-cons public init(org.eclipse.osgi.baseadaptor.BaseData,org.eclipse.osgi.baseadaptor.loader.ClasspathEntry[],java.security.ProtectionDomain)
-meth public java.security.ProtectionDomain getDomain()
-meth public org.eclipse.osgi.baseadaptor.BaseData getBundleData()
-meth public org.eclipse.osgi.baseadaptor.loader.ClasspathEntry[] getEntries()
-meth public void close()
-supr java.lang.Object
-hfds bundledata,domain,entries
-
-CLSS public abstract interface org.eclipse.osgi.baseadaptor.loader.ParallelClassLoader
-intf org.eclipse.osgi.baseadaptor.loader.BaseClassLoader
-meth public abstract boolean isParallelCapable()
-
-CLSS public abstract interface org.eclipse.osgi.event.BatchBundleListener
-intf org.osgi.framework.BundleListener
-meth public abstract void batchBegin()
-meth public abstract void batchEnd()
-
-CLSS public abstract interface org.eclipse.osgi.framework.adaptor.BundleClassLoader
-intf org.osgi.framework.BundleReference
-meth public abstract java.lang.Class<?> findLocalClass(java.lang.String) throws java.lang.ClassNotFoundException
-meth public abstract java.lang.Class<?> loadClass(java.lang.String) throws java.lang.ClassNotFoundException
-meth public abstract java.lang.ClassLoader getParent()
-meth public abstract java.net.URL findLocalResource(java.lang.String)
-meth public abstract java.net.URL getResource(java.lang.String)
-meth public abstract java.util.Collection<java.lang.String> listLocalResources(java.lang.String,java.lang.String,int)
-meth public abstract java.util.Collection<java.lang.String> listResources(java.lang.String,java.lang.String,int)
-meth public abstract java.util.Enumeration<java.net.URL> findLocalResources(java.lang.String)
-meth public abstract java.util.Enumeration<java.net.URL> getResources(java.lang.String) throws java.io.IOException
-meth public abstract java.util.List<java.net.URL> findEntries(java.lang.String,java.lang.String,int)
-meth public abstract org.eclipse.osgi.framework.adaptor.ClassLoaderDelegate getDelegate()
-meth public abstract void attachFragment(org.eclipse.osgi.framework.adaptor.BundleData,java.security.ProtectionDomain,java.lang.String[])
-meth public abstract void close()
-meth public abstract void initialize()
-
-CLSS public abstract interface org.eclipse.osgi.framework.adaptor.BundleData
-fld public final static int TYPE_BOOTCLASSPATH_EXTENSION = 4
-fld public final static int TYPE_COMPOSITEBUNDLE = 32
-fld public final static int TYPE_EXTCLASSPATH_EXTENSION = 16
-fld public final static int TYPE_FRAGMENT = 1
-fld public final static int TYPE_FRAMEWORK_EXTENSION = 2
-fld public final static int TYPE_SINGLETON = 8
-fld public final static int TYPE_SURROGATEBUNDLE = 64
-intf org.osgi.framework.BundleReference
-meth public abstract int getStartLevel()
-meth public abstract int getStatus()
-meth public abstract int getType()
-meth public abstract java.io.File getDataFile(java.lang.String)
-meth public abstract java.lang.String findLibrary(java.lang.String)
-meth public abstract java.lang.String getActivator()
-meth public abstract java.lang.String getDynamicImports()
-meth public abstract java.lang.String getExecutionEnvironment()
-meth public abstract java.lang.String getLocation()
-meth public abstract java.lang.String getSymbolicName()
-meth public abstract java.lang.String[] getClassPath() throws org.osgi.framework.BundleException
-meth public abstract java.net.URL getEntry(java.lang.String)
-meth public abstract java.util.Dictionary<java.lang.String,java.lang.String> getManifest() throws org.osgi.framework.BundleException
-meth public abstract java.util.Enumeration<java.lang.String> getEntryPaths(java.lang.String)
-meth public abstract java.util.Enumeration<java.net.URL> findLocalResources(java.lang.String)
-meth public abstract long getBundleID()
-meth public abstract long getLastModified()
-meth public abstract org.eclipse.osgi.framework.adaptor.BundleClassLoader createClassLoader(org.eclipse.osgi.framework.adaptor.ClassLoaderDelegate,org.eclipse.osgi.framework.adaptor.BundleProtectionDomain,java.lang.String[])
-meth public abstract org.osgi.framework.Version getVersion()
-meth public abstract void close() throws java.io.IOException
-meth public abstract void installNativeCode(java.lang.String[]) throws org.osgi.framework.BundleException
-meth public abstract void open() throws java.io.IOException
-meth public abstract void save() throws java.io.IOException
-meth public abstract void setBundle(org.osgi.framework.Bundle)
-meth public abstract void setStartLevel(int)
-meth public abstract void setStatus(int)
-
-CLSS public abstract interface org.eclipse.osgi.framework.adaptor.BundleOperation
-meth public abstract org.eclipse.osgi.framework.adaptor.BundleData begin() throws org.osgi.framework.BundleException
-meth public abstract void commit(boolean) throws org.osgi.framework.BundleException
-meth public abstract void undo() throws org.osgi.framework.BundleException
-
-CLSS public org.eclipse.osgi.framework.adaptor.BundleProtectionDomain
-cons public init(java.security.PermissionCollection)
-cons public init(java.security.PermissionCollection,java.security.CodeSource,org.osgi.framework.Bundle)
-intf org.osgi.framework.BundleReference
-meth public org.osgi.framework.Bundle getBundle()
-meth public void setBundle(org.osgi.framework.Bundle)
-supr java.security.ProtectionDomain
-hfds bundle
-
-CLSS public abstract interface org.eclipse.osgi.framework.adaptor.BundleWatcher
-fld public final static int END_ACTIVATION = 8
-fld public final static int END_DEACTIVATION = 32
-fld public final static int END_INSTALLING = 2
-fld public final static int END_UNINSTALLING = 128
-fld public final static int START_ACTIVATION = 4
-fld public final static int START_DEACTIVATION = 16
-fld public final static int START_INSTALLING = 1
-fld public final static int START_UNINSTALLING = 64
-meth public abstract void watchBundle(org.osgi.framework.Bundle,int)
-
-CLSS public abstract interface org.eclipse.osgi.framework.adaptor.ClassLoaderDelegate
-meth public abstract boolean isLazyTriggerSet()
-meth public abstract java.lang.Class<?> findClass(java.lang.String) throws java.lang.ClassNotFoundException
-meth public abstract java.lang.String findLibrary(java.lang.String)
-meth public abstract java.net.URL findResource(java.lang.String)
-meth public abstract java.util.Collection<java.lang.String> listResources(java.lang.String,java.lang.String,int)
-meth public abstract java.util.Enumeration<java.net.URL> findResources(java.lang.String) throws java.io.IOException
-meth public abstract void setLazyTrigger() throws org.osgi.framework.BundleException
-
-CLSS public abstract interface org.eclipse.osgi.framework.adaptor.ClassLoaderDelegateHook
-meth public abstract java.lang.Class<?> postFindClass(java.lang.String,org.eclipse.osgi.framework.adaptor.BundleClassLoader,org.eclipse.osgi.framework.adaptor.BundleData) throws java.lang.ClassNotFoundException
-meth public abstract java.lang.Class<?> preFindClass(java.lang.String,org.eclipse.osgi.framework.adaptor.BundleClassLoader,org.eclipse.osgi.framework.adaptor.BundleData) throws java.lang.ClassNotFoundException
-meth public abstract java.lang.String postFindLibrary(java.lang.String,org.eclipse.osgi.framework.adaptor.BundleClassLoader,org.eclipse.osgi.framework.adaptor.BundleData)
-meth public abstract java.lang.String preFindLibrary(java.lang.String,org.eclipse.osgi.framework.adaptor.BundleClassLoader,org.eclipse.osgi.framework.adaptor.BundleData) throws java.io.FileNotFoundException
-meth public abstract java.net.URL postFindResource(java.lang.String,org.eclipse.osgi.framework.adaptor.BundleClassLoader,org.eclipse.osgi.framework.adaptor.BundleData) throws java.io.FileNotFoundException
-meth public abstract java.net.URL preFindResource(java.lang.String,org.eclipse.osgi.framework.adaptor.BundleClassLoader,org.eclipse.osgi.framework.adaptor.BundleData) throws java.io.FileNotFoundException
-meth public abstract java.util.Enumeration<java.net.URL> postFindResources(java.lang.String,org.eclipse.osgi.framework.adaptor.BundleClassLoader,org.eclipse.osgi.framework.adaptor.BundleData) throws java.io.FileNotFoundException
-meth public abstract java.util.Enumeration<java.net.URL> preFindResources(java.lang.String,org.eclipse.osgi.framework.adaptor.BundleClassLoader,org.eclipse.osgi.framework.adaptor.BundleData) throws java.io.FileNotFoundException
-
-CLSS public abstract interface org.eclipse.osgi.framework.adaptor.EventPublisher
-meth public abstract void publishFrameworkEvent(int,org.osgi.framework.Bundle,java.lang.Throwable)
-
-CLSS public org.eclipse.osgi.framework.adaptor.FilePath
-cons public init(java.io.File)
-cons public init(java.lang.String)
-meth public boolean hasTrailingSlash()
-meth public boolean isAbsolute()
-meth public java.lang.String getDevice()
-meth public java.lang.String makeRelative(org.eclipse.osgi.framework.adaptor.FilePath)
-meth public java.lang.String toString()
-meth public java.lang.String[] getSegments()
-supr java.lang.Object
-hfds CURRENT_DIR,DEVICE_SEPARATOR,HAS_LEADING,HAS_TRAILING,NO_SEGMENTS,PARENT_DIR,SEPARATOR,UNC_SLASHES,WINDOWS,device,flags,segments
-
-CLSS public abstract interface org.eclipse.osgi.framework.adaptor.FrameworkAdaptor
-fld public final static java.lang.String FRAMEWORK_SYMBOLICNAME = "org.eclipse.osgi"
-meth public abstract int getInitialBundleStartLevel()
-meth public abstract java.lang.ClassLoader getBundleClassLoaderParent()
-meth public abstract java.net.URLConnection mapLocationToURLConnection(java.lang.String) throws org.osgi.framework.BundleException
-meth public abstract java.util.Enumeration<java.net.URL> findEntries(java.util.List<org.eclipse.osgi.framework.adaptor.BundleData>,java.lang.String,java.lang.String,int)
-meth public abstract java.util.Properties getProperties()
-meth public abstract long getTotalFreeSpace() throws java.io.IOException
-meth public abstract org.eclipse.osgi.framework.adaptor.BundleData createSystemBundleData() throws org.osgi.framework.BundleException
-meth public abstract org.eclipse.osgi.framework.adaptor.BundleData[] getInstalledBundles()
-meth public abstract org.eclipse.osgi.framework.adaptor.BundleOperation installBundle(java.lang.String,java.net.URLConnection)
-meth public abstract org.eclipse.osgi.framework.adaptor.BundleOperation uninstallBundle(org.eclipse.osgi.framework.adaptor.BundleData)
-meth public abstract org.eclipse.osgi.framework.adaptor.BundleOperation updateBundle(org.eclipse.osgi.framework.adaptor.BundleData,java.net.URLConnection)
-meth public abstract org.eclipse.osgi.framework.adaptor.BundleWatcher getBundleWatcher()
-meth public abstract org.eclipse.osgi.framework.adaptor.PermissionStorage getPermissionStorage() throws java.io.IOException
-meth public abstract org.eclipse.osgi.framework.log.FrameworkLog getFrameworkLog()
-meth public abstract org.eclipse.osgi.service.resolver.PlatformAdmin getPlatformAdmin()
-meth public abstract org.eclipse.osgi.service.resolver.State getState()
-meth public abstract void compactStorage() throws java.io.IOException
-meth public abstract void frameworkStart(org.osgi.framework.BundleContext) throws org.osgi.framework.BundleException
-meth public abstract void frameworkStop(org.osgi.framework.BundleContext) throws org.osgi.framework.BundleException
-meth public abstract void frameworkStopping(org.osgi.framework.BundleContext)
-meth public abstract void handleRuntimeError(java.lang.Throwable)
-meth public abstract void initialize(org.eclipse.osgi.framework.adaptor.EventPublisher)
-meth public abstract void initializeStorage() throws java.io.IOException
-meth public abstract void setInitialBundleStartLevel(int)
-
-CLSS public abstract interface org.eclipse.osgi.framework.adaptor.PermissionStorage
-meth public abstract java.lang.String[] getConditionalPermissionInfos() throws java.io.IOException
-meth public abstract java.lang.String[] getLocations() throws java.io.IOException
-meth public abstract java.lang.String[] getPermissionData(java.lang.String) throws java.io.IOException
-meth public abstract void saveConditionalPermissionInfos(java.lang.String[]) throws java.io.IOException
-meth public abstract void setPermissionData(java.lang.String,java.lang.String[]) throws java.io.IOException
-
-CLSS public abstract interface org.eclipse.osgi.framework.adaptor.StatusException
-fld public final static int CODE_ERROR = 8
-fld public final static int CODE_INFO = 2
-fld public final static int CODE_OK = 1
-fld public final static int CODE_WARNING = 4
-meth public abstract int getStatusCode()
-meth public abstract java.lang.Object getStatus()
 
 CLSS public abstract interface org.eclipse.osgi.framework.console.CommandInterpreter
 meth public abstract java.lang.Object execute(java.lang.String)
@@ -833,110 +285,6 @@ meth public final void close()
 meth public final void ungetService(org.osgi.framework.Bundle,org.osgi.framework.ServiceRegistration<java.lang.Object>,java.lang.Object)
 supr java.lang.Object
 hfds sessionRegistration
-
-CLSS public org.eclipse.osgi.framework.debug.Debug
-cons public init()
-fld public final static java.lang.String ECLIPSE_OSGI = "org.eclipse.osgi"
-fld public final static java.lang.String OPTION_DEBUG_BUNDLE_TIME = "org.eclipse.osgi/debug/bundleTime"
-fld public final static java.lang.String OPTION_DEBUG_EVENTS = "org.eclipse.osgi/debug/events"
-fld public final static java.lang.String OPTION_DEBUG_FILTER = "org.eclipse.osgi/debug/filter"
-fld public final static java.lang.String OPTION_DEBUG_GENERAL = "org.eclipse.osgi/debug"
-fld public final static java.lang.String OPTION_DEBUG_HOOKS = "org.eclipse.osgi/debug/hooks"
-fld public final static java.lang.String OPTION_DEBUG_LOADER = "org.eclipse.osgi/debug/loader"
-fld public final static java.lang.String OPTION_DEBUG_MANIFEST = "org.eclipse.osgi/debug/manifest"
-fld public final static java.lang.String OPTION_DEBUG_MESSAGE_BUNDLES = "org.eclipse.osgi/debug/messageBundles"
-fld public final static java.lang.String OPTION_DEBUG_PACKAGEADMIN = "org.eclipse.osgi/debug/packageadmin"
-fld public final static java.lang.String OPTION_DEBUG_PACKAGEADMIN_TIMING = "org.eclipse.osgi/debug/packageadmin/timing"
-fld public final static java.lang.String OPTION_DEBUG_PACKAGES = "org.eclipse.osgi/debug/packages"
-fld public final static java.lang.String OPTION_DEBUG_SECURITY = "org.eclipse.osgi/debug/security"
-fld public final static java.lang.String OPTION_DEBUG_SERVICES = "org.eclipse.osgi/debug/services"
-fld public final static java.lang.String OPTION_DEBUG_STARTLEVEL = "org.eclipse.osgi/debug/startlevel"
-fld public final static java.lang.String OPTION_MONITOR_ACTIVATION = "org.eclipse.osgi/monitor/activation"
-fld public static boolean DEBUG_BUNDLE_TIME
-fld public static boolean DEBUG_ENABLED
-fld public static boolean DEBUG_EVENTS
-fld public static boolean DEBUG_FILTER
-fld public static boolean DEBUG_GENERAL
-fld public static boolean DEBUG_HOOKS
-fld public static boolean DEBUG_LOADER
-fld public static boolean DEBUG_MANIFEST
-fld public static boolean DEBUG_MESSAGE_BUNDLES
-fld public static boolean DEBUG_PACKAGEADMIN
-fld public static boolean DEBUG_PACKAGEADMIN_TIMING
-fld public static boolean DEBUG_PACKAGES
-fld public static boolean DEBUG_SECURITY
-fld public static boolean DEBUG_SERVICES
-fld public static boolean DEBUG_STARTLEVEL
-fld public static boolean MONITOR_ACTIVATION
-fld public static java.io.PrintStream out
-meth public static void print(boolean)
-meth public static void print(char)
-meth public static void print(char[])
-meth public static void print(double)
-meth public static void print(float)
-meth public static void print(int)
-meth public static void print(java.lang.Object)
-meth public static void print(java.lang.String)
-meth public static void print(long)
-meth public static void printStackTrace(java.lang.Throwable)
-meth public static void println(boolean)
-meth public static void println(char)
-meth public static void println(char[])
-meth public static void println(double)
-meth public static void println(float)
-meth public static void println(int)
-meth public static void println(java.lang.Object)
-meth public static void println(java.lang.String)
-meth public static void println(long)
-supr java.lang.Object
-
-CLSS public org.eclipse.osgi.framework.debug.FrameworkDebugOptions
-fld protected boolean verboseDebug
-fld protected final static java.util.Map<java.lang.String,org.eclipse.osgi.service.debug.DebugTrace> debugTraceCache
-fld protected java.io.File outFile
-fld public final static java.lang.String PROP_TRACEFILE = "osgi.tracefile"
-intf org.eclipse.osgi.service.debug.DebugOptions
-intf org.osgi.util.tracker.ServiceTrackerCustomizer<org.eclipse.osgi.service.debug.DebugOptionsListener,org.eclipse.osgi.service.debug.DebugOptionsListener>
-meth public boolean getBooleanOption(java.lang.String,boolean)
-meth public boolean isDebugEnabled()
-meth public final java.io.File getFile()
-meth public final org.eclipse.osgi.service.debug.DebugTrace newDebugTrace(java.lang.String)
-meth public final org.eclipse.osgi.service.debug.DebugTrace newDebugTrace(java.lang.String,java.lang.Class<?>)
-meth public int getIntegerOption(java.lang.String,int)
-meth public java.lang.String getOption(java.lang.String)
-meth public java.lang.String getOption(java.lang.String,java.lang.String)
-meth public java.util.Map<java.lang.String,java.lang.String> getOptions()
-meth public org.eclipse.osgi.service.debug.DebugOptionsListener addingService(org.osgi.framework.ServiceReference<org.eclipse.osgi.service.debug.DebugOptionsListener>)
-meth public static org.eclipse.osgi.framework.debug.FrameworkDebugOptions getDefault()
-meth public void modifiedService(org.osgi.framework.ServiceReference<org.eclipse.osgi.service.debug.DebugOptionsListener>,org.eclipse.osgi.service.debug.DebugOptionsListener)
-meth public void removeOption(java.lang.String)
-meth public void removedService(org.osgi.framework.ServiceReference<org.eclipse.osgi.service.debug.DebugOptionsListener>,org.eclipse.osgi.service.debug.DebugOptionsListener)
-meth public void setDebugEnabled(boolean)
-meth public void setFile(java.io.File)
-meth public void setOption(java.lang.String,java.lang.String)
-meth public void setOptions(java.util.Map<java.lang.String,java.lang.String>)
-meth public void setVerbose(boolean)
-meth public void start(org.osgi.framework.BundleContext)
-meth public void stop(org.osgi.framework.BundleContext)
-supr java.lang.Object
-hfds OPTIONS,OSGI_DEBUG,OSGI_DEBUG_VERBOSE,context,disabledOptions,listenerTracker,lock,options,singleton
-
-CLSS public org.eclipse.osgi.framework.debug.FrameworkDebugTraceEntry
-cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.String)
-cons public init(java.lang.String,java.lang.String,java.lang.String,java.lang.Throwable,java.lang.String)
-fld public final static java.lang.String DEFAULT_OPTION_PATH = "/debug"
-meth public final int getLineNumber()
-meth public final java.lang.String getBundleSymbolicName()
-meth public final java.lang.String getClassName()
-meth public final java.lang.String getMessage()
-meth public final java.lang.String getMethodName()
-meth public final java.lang.String getOptionPath()
-meth public final java.lang.String getThreadName()
-meth public final java.lang.Throwable getThrowable()
-meth public final long getTimestamp()
-meth public java.lang.String toString()
-supr java.lang.Object
-hfds bundleSymbolicName,className,lineNumber,message,methodName,optionPath,threadName,throwable,timestamp
 
 CLSS public org.eclipse.osgi.framework.eventmgr.CopyOnWriteIdentityMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
 cons public init()
@@ -967,7 +315,7 @@ cons public init()
 cons public init(int)
 meth public void addListener({org.eclipse.osgi.framework.eventmgr.EventListeners%0},{org.eclipse.osgi.framework.eventmgr.EventListeners%1})
 meth public void removeAllListeners()
-meth public void removeListener({org.eclipse.osgi.framework.eventmgr.EventListeners%1})
+meth public void removeListener({org.eclipse.osgi.framework.eventmgr.EventListeners%0})
 supr java.lang.Object
 hfds list
 
@@ -1022,7 +370,79 @@ meth public org.eclipse.osgi.framework.log.FrameworkLogEntry[] getChildren()
 supr java.lang.Object
 hfds bundleCode,children,context,entry,message,severity,stackCode,throwable
 
+CLSS public org.eclipse.osgi.framework.util.ArrayMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init(int)
+cons public init(java.util.List<{org.eclipse.osgi.framework.util.ArrayMap%0}>,java.util.List<{org.eclipse.osgi.framework.util.ArrayMap%1}>)
+intf java.util.Collection<{org.eclipse.osgi.framework.util.ArrayMap%0}>
+meth public <%0 extends java.lang.Object> {%%0}[] toArray({%%0}[])
+meth public boolean add({org.eclipse.osgi.framework.util.ArrayMap%0})
+meth public boolean addAll(java.util.Collection<? extends {org.eclipse.osgi.framework.util.ArrayMap%0}>)
+meth public boolean contains(java.lang.Object)
+meth public boolean containsAll(java.util.Collection<?>)
+meth public boolean isEmpty()
+meth public boolean remove(java.lang.Object)
+meth public boolean removeAll(java.util.Collection<?>)
+meth public boolean retainAll(java.util.Collection<?>)
+meth public int size()
+meth public java.lang.Object[] toArray()
+meth public java.util.Iterator<{org.eclipse.osgi.framework.util.ArrayMap%0}> iterator()
+meth public java.util.List<{org.eclipse.osgi.framework.util.ArrayMap%0}> getKeys()
+meth public java.util.List<{org.eclipse.osgi.framework.util.ArrayMap%1}> getValues()
+meth public void clear()
+meth public void put({org.eclipse.osgi.framework.util.ArrayMap%0},{org.eclipse.osgi.framework.util.ArrayMap%1})
+meth public void sort(java.util.Comparator<{org.eclipse.osgi.framework.util.ArrayMap%0}>)
+meth public {org.eclipse.osgi.framework.util.ArrayMap%0} getKey(int)
+meth public {org.eclipse.osgi.framework.util.ArrayMap%1} get({org.eclipse.osgi.framework.util.ArrayMap%0})
+meth public {org.eclipse.osgi.framework.util.ArrayMap%1} getValue(int)
+supr java.lang.Object
+hfds keys,values
+
+CLSS public org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap<%0 extends java.lang.Object, %1 extends java.lang.Object>
+cons public init()
+cons public init(int)
+cons public init(java.util.Dictionary<? extends {org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%0},? extends {org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%1}>)
+cons public init(java.util.Map<? extends {org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%0},? extends {org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%1}>)
+intf java.util.Map<{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%0},{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%1}>
+meth protected static int initialCapacity(int)
+meth public boolean containsKey(java.lang.Object)
+meth public boolean containsValue(java.lang.Object)
+meth public boolean equals(java.lang.Object)
+meth public boolean isEmpty()
+meth public int hashCode()
+meth public int size()
+meth public java.lang.String toString()
+meth public java.util.Collection<{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%1}> values()
+meth public java.util.Dictionary<{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%0},{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%1}> asUnmodifiableDictionary()
+meth public java.util.Enumeration<{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%0}> keys()
+meth public java.util.Enumeration<{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%1}> elements()
+meth public java.util.Map<{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%0},{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%1}> asUnmodifiableMap()
+meth public java.util.Set<java.util.Map$Entry<{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%0},{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%1}>> entrySet()
+meth public java.util.Set<{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%0}> keySet()
+meth public static <%0 extends java.lang.Object, %1 extends java.lang.Object> java.util.Dictionary<{%%0},{%%1}> unmodifiableDictionary(java.util.Dictionary<? extends {%%0},? extends {%%1}>)
+meth public static java.lang.Object findCommonKeyIndex(java.lang.String)
+meth public void clear()
+meth public void putAll(java.util.Map<? extends {org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%0},? extends {org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%1}>)
+meth public {org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%1} get(java.lang.Object)
+meth public {org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%1} put({org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%0},{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%1})
+meth public {org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%1} remove(java.lang.Object)
+supr java.util.Dictionary<{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%0},{org.eclipse.osgi.framework.util.CaseInsensitiveDictionaryMap%1}>
+hfds KEY_BUNDLE_ACTIVATIONPOLICY,KEY_BUNDLE_ACTIVATOR,KEY_BUNDLE_CLASSPATH,KEY_BUNDLE_DESCRIPTION,KEY_BUNDLE_DYNAMICIMPORT_PACKAGE,KEY_BUNDLE_EXPORT_PACKAGE,KEY_BUNDLE_FRAGMENT_HOST,KEY_BUNDLE_IMPORT_PACKAGE,KEY_BUNDLE_LICENSE,KEY_BUNDLE_LOCALIZATION,KEY_BUNDLE_MANIFESTVERSION,KEY_BUNDLE_NAME,KEY_BUNDLE_NATIVECODE,KEY_BUNDLE_PROVIDE_CAPABILITY,KEY_BUNDLE_REQUIREDEXECUTIONENVIRONMENT,KEY_BUNDLE_REQUIRE_BUNDLE,KEY_BUNDLE_REQUIRE_CAPABILITY,KEY_BUNDLE_SCM,KEY_BUNDLE_SYMBOLICNAME,KEY_BUNDLE_VENDOR,KEY_BUNDLE_VERSION,KEY_COMPONENT_ID,KEY_COMPONENT_NAME,KEY_EVENT_FILTER,KEY_EVENT_TOPICS,KEY_JAR_MANIFESTVERSION,KEY_JMX_OBJECTNAME,KEY_METATYPE_FACTORY_PID,KEY_METATYPE_PID,KEY_SERVICE_BUNDLE_ID,KEY_SERVICE_CHANGECOUNT,KEY_SERVICE_DESCRIPTION,KEY_SERVICE_ID,KEY_SERVICE_OBJECTCLASS,KEY_SERVICE_PID,KEY_SERVICE_RANKING,KEY_SERVICE_SCOPE,KEY_SERVICE_VENDER,entrySet,keySet,map
+hcls CaseInsensitiveKey,CaseInsentiveEntry,EntryIterator,EntrySet,KeyIterator,KeySet,UnmodifiableDictionary
+
+CLSS public org.eclipse.osgi.framework.util.FilePath
+cons public init(java.io.File)
+cons public init(java.lang.String)
+meth public boolean hasTrailingSlash()
+meth public boolean isAbsolute()
+meth public java.lang.String getDevice()
+meth public java.lang.String makeRelative(org.eclipse.osgi.framework.util.FilePath)
+meth public java.lang.String toString()
+meth public java.lang.String[] getSegments()
+supr java.lang.Object
+hfds CURRENT_DIR,DEVICE_SEPARATOR,HAS_LEADING,HAS_TRAILING,NO_SEGMENTS,PARENT_DIR,SEPARATOR,UNC_SLASHES,WINDOWS,device,flags,segments
+
 CLSS public org.eclipse.osgi.framework.util.Headers<%0 extends java.lang.Object, %1 extends java.lang.Object>
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init(int)
 cons public init(java.util.Dictionary<? extends {org.eclipse.osgi.framework.util.Headers%0},? extends {org.eclipse.osgi.framework.util.Headers%1}>)
 intf java.util.Map<{org.eclipse.osgi.framework.util.Headers%0},{org.eclipse.osgi.framework.util.Headers%1}>
@@ -1054,46 +474,18 @@ meth public abstract boolean compare(org.eclipse.osgi.framework.util.KeyedElemen
 meth public abstract int getKeyHashCode()
 meth public abstract java.lang.Object getKey()
 
-CLSS public org.eclipse.osgi.framework.util.KeyedHashSet
-cons public init()
-cons public init(boolean)
-cons public init(int)
-cons public init(int,boolean)
-cons public init(org.eclipse.osgi.framework.util.KeyedHashSet)
-fld public final static int MINIMUM_SIZE = 7
-meth protected void expand()
-meth protected void rehashTo(int)
-meth public boolean add(org.eclipse.osgi.framework.util.KeyedElement)
-meth public boolean contains(org.eclipse.osgi.framework.util.KeyedElement)
-meth public boolean containsKey(java.lang.Object)
-meth public boolean isEmpty()
-meth public boolean remove(org.eclipse.osgi.framework.util.KeyedElement)
-meth public boolean removeByKey(java.lang.Object)
-meth public int countCollisions()
-meth public int size()
-meth public java.lang.Object[] elements(java.lang.Object[])
-meth public java.lang.String toString()
-meth public java.util.Iterator<org.eclipse.osgi.framework.util.KeyedElement> iterator()
-meth public org.eclipse.osgi.framework.util.KeyedElement get(org.eclipse.osgi.framework.util.KeyedElement)
-meth public org.eclipse.osgi.framework.util.KeyedElement getByKey(java.lang.Object)
-meth public org.eclipse.osgi.framework.util.KeyedElement[] elements()
-meth public void addAll(org.eclipse.osgi.framework.util.KeyedElement[])
-meth public void clear()
-meth public void removeAll(org.eclipse.osgi.framework.util.KeyedElement[])
-supr java.lang.Object
-hfds capacity,elementCount,elements,replace
-hcls EquinoxSetIterator
-
 CLSS public org.eclipse.osgi.framework.util.ObjectPool
 cons public init()
-meth public static java.lang.Object intern(java.lang.Object)
+meth public static <%0 extends java.lang.Object> {%%0} intern({%%0})
 supr java.lang.Object
 hfds DEBUG_OBJECTPOOL_ADDS,DEBUG_OBJECTPOOL_DUPS,OPTION_DEBUG_OBJECTPOOL_ADDS,OPTION_DEBUG_OBJECTPOOL_DUPS,objectCache
 
 CLSS public org.eclipse.osgi.framework.util.SecureAction
+meth public !varargs void start(org.eclipse.osgi.container.Module,org.eclipse.osgi.container.Module$StartOptions[]) throws org.osgi.framework.BundleException
 meth public <%0 extends java.lang.Object> {%%0} getService(org.osgi.framework.ServiceReference<{%%0}>,org.osgi.framework.BundleContext)
 meth public boolean exists(java.io.File)
 meth public boolean isDirectory(java.io.File)
+meth public boolean mkdirs(java.io.File)
 meth public java.io.File getAbsoluteFile(java.io.File)
 meth public java.io.File getCanonicalFile(java.io.File) throws java.io.IOException
 meth public java.io.FileInputStream getFileInputStream(java.io.File) throws java.io.FileNotFoundException
@@ -1101,27 +493,41 @@ meth public java.io.FileOutputStream getFileOutputStream(java.io.File,boolean) t
 meth public java.lang.Class<?> forName(java.lang.String) throws java.lang.ClassNotFoundException
 meth public java.lang.Class<?> loadSystemClass(java.lang.String) throws java.lang.ClassNotFoundException
 meth public java.lang.String getCanonicalPath(java.io.File) throws java.io.IOException
+meth public java.lang.String getLocation(org.osgi.framework.Bundle)
 meth public java.lang.String getProperty(java.lang.String)
-meth public java.lang.String getProperty(java.lang.String,java.lang.String)
 meth public java.lang.String[] list(java.io.File)
 meth public java.lang.Thread createThread(java.lang.Runnable,java.lang.String,java.lang.ClassLoader)
 meth public java.net.URL getURL(java.lang.String,java.lang.String,int,java.lang.String,java.net.URLStreamHandler) throws java.net.MalformedURLException
 meth public java.util.Properties getProperties()
-meth public java.util.zip.ZipFile getZipFile(java.io.File) throws java.io.IOException
+meth public java.util.zip.ZipFile getZipFile(java.io.File,boolean) throws java.io.IOException
 meth public long lastModified(java.io.File)
 meth public long length(java.io.File)
+meth public org.osgi.framework.BundleContext getContext(org.osgi.framework.Bundle)
 meth public static java.security.PrivilegedAction<org.eclipse.osgi.framework.util.SecureAction> createSecureAction()
 meth public void open(org.osgi.util.tracker.ServiceTracker<?,?>)
-meth public void start(org.osgi.framework.Bundle) throws org.osgi.framework.BundleException
-meth public void start(org.osgi.framework.Bundle,int) throws org.osgi.framework.BundleException
 supr java.lang.Object
-hfds bootClassLoader,controlContext
+hfds controlContext
+hcls BootClassLoaderHolder
+
+CLSS public org.eclipse.osgi.framework.util.ThreadInfoReport
+cons public init(java.lang.String)
+meth public static java.lang.String getThreadDump(java.lang.String)
+supr java.lang.RuntimeException
+hfds serialVersionUID
 
 CLSS public abstract interface org.eclipse.osgi.service.datalocation.Location
+fld public final static java.lang.String CONFIGURATION_AREA_TYPE = "osgi.configuration.area"
 fld public final static java.lang.String CONFIGURATION_FILTER
 fld public final static java.lang.String ECLIPSE_HOME_FILTER
+fld public final static java.lang.String ECLIPSE_HOME_LOCATION_TYPE = "eclipse.home.location"
+fld public final static java.lang.String INSTALL_AREA_TYPE = "osgi.install.area"
 fld public final static java.lang.String INSTALL_FILTER
+fld public final static java.lang.String INSTANCE_AREA_TYPE = "osgi.instance.area"
 fld public final static java.lang.String INSTANCE_FILTER
+fld public final static java.lang.String SERVICE_PROPERTY_DEFAULT_URL = "defaultUrl"
+fld public final static java.lang.String SERVICE_PROPERTY_TYPE = "type"
+fld public final static java.lang.String SERVICE_PROPERTY_URL = "url"
+fld public final static java.lang.String USER_AREA_TYPE = "osgi.user.area"
 fld public final static java.lang.String USER_FILTER
 meth public abstract boolean allowsDefault()
 meth public abstract boolean isLocked() throws java.io.IOException
@@ -1181,6 +587,7 @@ fld public final static java.lang.String ARCH_X86 = "x86"
 fld public final static java.lang.String ARCH_X86_64 = "x86_64"
 fld public final static java.lang.String OS_AIX = "aix"
 fld public final static java.lang.String OS_EPOC32 = "epoc32"
+fld public final static java.lang.String OS_FREEBSD = "freebsd"
 fld public final static java.lang.String OS_HPUX = "hpux"
 fld public final static java.lang.String OS_LINUX = "linux"
 fld public final static java.lang.String OS_MACOSX = "macosx"
@@ -1213,15 +620,6 @@ meth public abstract java.lang.String setProperty(java.lang.String,java.lang.Str
 meth public abstract java.lang.String[] getCommandLineArgs()
 meth public abstract java.lang.String[] getFrameworkArgs()
 meth public abstract java.lang.String[] getNonFrameworkArgs()
-
-CLSS public abstract interface org.eclipse.osgi.service.internal.composite.CompositeModule
-meth public abstract boolean resolveContent()
-meth public abstract org.eclipse.osgi.framework.adaptor.ClassLoaderDelegate getDelegate()
-meth public abstract org.eclipse.osgi.service.resolver.BundleDescription getCompositeDescription()
-meth public abstract void refreshContent()
-meth public abstract void started(org.eclipse.osgi.service.internal.composite.CompositeModule)
-meth public abstract void stopped(org.eclipse.osgi.service.internal.composite.CompositeModule)
-meth public abstract void updateContent(java.io.InputStream) throws org.osgi.framework.BundleException
 
 CLSS public abstract interface org.eclipse.osgi.service.localization.BundleLocalization
 meth public abstract java.util.ResourceBundle getLocalization(org.osgi.framework.Bundle,java.lang.String)
@@ -1507,6 +905,7 @@ meth public abstract org.eclipse.osgi.service.resolver.VersionConstraint[] getUn
 
 CLSS public abstract interface org.eclipse.osgi.service.resolver.StateObjectFactory
 fld public final static org.eclipse.osgi.service.resolver.StateObjectFactory defaultFactory
+innr public static StateObjectFactoryProxy
 meth public abstract java.util.List<org.eclipse.osgi.service.resolver.BundleSpecification> createBundleSpecifications(java.lang.String)
 meth public abstract java.util.List<org.eclipse.osgi.service.resolver.ExportPackageDescription> createExportPackageDescriptions(java.lang.String)
 meth public abstract java.util.List<org.eclipse.osgi.service.resolver.GenericDescription> createGenericDescriptions(java.lang.String)
@@ -1519,6 +918,7 @@ meth public abstract org.eclipse.osgi.service.resolver.BundleDescription createB
 meth public abstract org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(long,java.lang.String,org.osgi.framework.Version,java.lang.String,org.eclipse.osgi.service.resolver.BundleSpecification[],org.eclipse.osgi.service.resolver.HostSpecification,org.eclipse.osgi.service.resolver.ImportPackageSpecification[],org.eclipse.osgi.service.resolver.ExportPackageDescription[],java.lang.String,java.lang.String[],org.eclipse.osgi.service.resolver.GenericSpecification[],org.eclipse.osgi.service.resolver.GenericDescription[],org.eclipse.osgi.service.resolver.NativeCodeSpecification)
 meth public abstract org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(long,java.lang.String,org.osgi.framework.Version,java.lang.String,org.eclipse.osgi.service.resolver.BundleSpecification[],org.eclipse.osgi.service.resolver.HostSpecification,org.eclipse.osgi.service.resolver.ImportPackageSpecification[],org.eclipse.osgi.service.resolver.ExportPackageDescription[],java.lang.String[],boolean)
 meth public abstract org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(long,java.lang.String,org.osgi.framework.Version,java.lang.String,org.eclipse.osgi.service.resolver.BundleSpecification[],org.eclipse.osgi.service.resolver.HostSpecification,org.eclipse.osgi.service.resolver.ImportPackageSpecification[],org.eclipse.osgi.service.resolver.ExportPackageDescription[],java.lang.String[],boolean,boolean,boolean,java.lang.String,java.lang.String,org.eclipse.osgi.service.resolver.GenericSpecification[],org.eclipse.osgi.service.resolver.GenericDescription[])
+meth public abstract org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(long,org.eclipse.osgi.service.resolver.BundleDescription)
 meth public abstract org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(org.eclipse.osgi.service.resolver.BundleDescription)
 meth public abstract org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(org.eclipse.osgi.service.resolver.State,java.util.Dictionary<java.lang.String,java.lang.String>,java.lang.String,long) throws org.osgi.framework.BundleException
 meth public abstract org.eclipse.osgi.service.resolver.BundleSpecification createBundleSpecification(java.lang.String,org.eclipse.osgi.service.resolver.VersionRange,boolean,boolean)
@@ -1543,6 +943,59 @@ meth public abstract org.eclipse.osgi.service.resolver.State readState(java.io.I
 meth public abstract void writeState(org.eclipse.osgi.service.resolver.State,java.io.DataOutputStream) throws java.io.IOException
 meth public abstract void writeState(org.eclipse.osgi.service.resolver.State,java.io.File) throws java.io.IOException
 meth public abstract void writeState(org.eclipse.osgi.service.resolver.State,java.io.OutputStream) throws java.io.IOException
+
+CLSS public static org.eclipse.osgi.service.resolver.StateObjectFactory$StateObjectFactoryProxy
+ outer org.eclipse.osgi.service.resolver.StateObjectFactory
+cons public init()
+intf org.eclipse.osgi.service.resolver.StateObjectFactory
+meth public java.util.List<org.eclipse.osgi.service.resolver.BundleSpecification> createBundleSpecifications(java.lang.String)
+meth public java.util.List<org.eclipse.osgi.service.resolver.ExportPackageDescription> createExportPackageDescriptions(java.lang.String)
+meth public java.util.List<org.eclipse.osgi.service.resolver.GenericDescription> createGenericDescriptions(java.lang.String)
+meth public java.util.List<org.eclipse.osgi.service.resolver.GenericSpecification> createGenericSpecifications(java.lang.String)
+meth public java.util.List<org.eclipse.osgi.service.resolver.HostSpecification> createHostSpecifications(java.lang.String)
+meth public java.util.List<org.eclipse.osgi.service.resolver.ImportPackageSpecification> createImportPackageSpecifications(java.lang.String)
+meth public org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(java.util.Dictionary<java.lang.String,java.lang.String>,java.lang.String,long) throws org.osgi.framework.BundleException
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(long,java.lang.String,org.osgi.framework.Version,java.lang.String,org.eclipse.osgi.service.resolver.BundleSpecification[],org.eclipse.osgi.service.resolver.HostSpecification,org.eclipse.osgi.service.resolver.ImportPackageSpecification[],org.eclipse.osgi.service.resolver.ExportPackageDescription[],boolean,boolean,boolean,java.lang.String,java.lang.String[],org.eclipse.osgi.service.resolver.GenericSpecification[],org.eclipse.osgi.service.resolver.GenericDescription[])
+meth public org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(long,java.lang.String,org.osgi.framework.Version,java.lang.String,org.eclipse.osgi.service.resolver.BundleSpecification[],org.eclipse.osgi.service.resolver.HostSpecification,org.eclipse.osgi.service.resolver.ImportPackageSpecification[],org.eclipse.osgi.service.resolver.ExportPackageDescription[],boolean,boolean,boolean,java.lang.String,java.lang.String[],org.eclipse.osgi.service.resolver.GenericSpecification[],org.eclipse.osgi.service.resolver.GenericDescription[],org.eclipse.osgi.service.resolver.NativeCodeSpecification)
+meth public org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(long,java.lang.String,org.osgi.framework.Version,java.lang.String,org.eclipse.osgi.service.resolver.BundleSpecification[],org.eclipse.osgi.service.resolver.HostSpecification,org.eclipse.osgi.service.resolver.ImportPackageSpecification[],org.eclipse.osgi.service.resolver.ExportPackageDescription[],java.lang.String,java.lang.String[],org.eclipse.osgi.service.resolver.GenericSpecification[],org.eclipse.osgi.service.resolver.GenericDescription[],org.eclipse.osgi.service.resolver.NativeCodeSpecification)
+meth public org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(long,java.lang.String,org.osgi.framework.Version,java.lang.String,org.eclipse.osgi.service.resolver.BundleSpecification[],org.eclipse.osgi.service.resolver.HostSpecification,org.eclipse.osgi.service.resolver.ImportPackageSpecification[],org.eclipse.osgi.service.resolver.ExportPackageDescription[],java.lang.String[],boolean)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(long,java.lang.String,org.osgi.framework.Version,java.lang.String,org.eclipse.osgi.service.resolver.BundleSpecification[],org.eclipse.osgi.service.resolver.HostSpecification,org.eclipse.osgi.service.resolver.ImportPackageSpecification[],org.eclipse.osgi.service.resolver.ExportPackageDescription[],java.lang.String[],boolean,boolean,boolean,java.lang.String,java.lang.String,org.eclipse.osgi.service.resolver.GenericSpecification[],org.eclipse.osgi.service.resolver.GenericDescription[])
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(long,org.eclipse.osgi.service.resolver.BundleDescription)
+meth public org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(org.eclipse.osgi.service.resolver.BundleDescription)
+meth public org.eclipse.osgi.service.resolver.BundleDescription createBundleDescription(org.eclipse.osgi.service.resolver.State,java.util.Dictionary<java.lang.String,java.lang.String>,java.lang.String,long) throws org.osgi.framework.BundleException
+meth public org.eclipse.osgi.service.resolver.BundleSpecification createBundleSpecification(java.lang.String,org.eclipse.osgi.service.resolver.VersionRange,boolean,boolean)
+meth public org.eclipse.osgi.service.resolver.BundleSpecification createBundleSpecification(org.eclipse.osgi.service.resolver.BundleSpecification)
+meth public org.eclipse.osgi.service.resolver.ExportPackageDescription createExportPackageDescription(java.lang.String,org.osgi.framework.Version,java.util.Map<java.lang.String,?>,java.util.Map<java.lang.String,?>,boolean,org.eclipse.osgi.service.resolver.BundleDescription)
+meth public org.eclipse.osgi.service.resolver.ExportPackageDescription createExportPackageDescription(org.eclipse.osgi.service.resolver.ExportPackageDescription)
+meth public org.eclipse.osgi.service.resolver.GenericDescription createGenericDescription(java.lang.String,java.lang.String,org.osgi.framework.Version,java.util.Map<java.lang.String,?>)
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public org.eclipse.osgi.service.resolver.GenericDescription createGenericDescription(java.lang.String,java.util.Map<java.lang.String,?>,java.util.Map<java.lang.String,java.lang.String>,org.eclipse.osgi.service.resolver.BundleDescription)
+meth public org.eclipse.osgi.service.resolver.GenericSpecification createGenericSpecification(java.lang.String,java.lang.String,java.lang.String,boolean,boolean) throws org.osgi.framework.InvalidSyntaxException
+meth public org.eclipse.osgi.service.resolver.HostSpecification createHostSpecification(java.lang.String,org.eclipse.osgi.service.resolver.VersionRange)
+meth public org.eclipse.osgi.service.resolver.HostSpecification createHostSpecification(org.eclipse.osgi.service.resolver.HostSpecification)
+meth public org.eclipse.osgi.service.resolver.ImportPackageSpecification createImportPackageSpecification(java.lang.String,org.eclipse.osgi.service.resolver.VersionRange,java.lang.String,org.eclipse.osgi.service.resolver.VersionRange,java.util.Map<java.lang.String,?>,java.util.Map<java.lang.String,?>,org.eclipse.osgi.service.resolver.BundleDescription)
+meth public org.eclipse.osgi.service.resolver.ImportPackageSpecification createImportPackageSpecification(org.eclipse.osgi.service.resolver.ImportPackageSpecification)
+meth public org.eclipse.osgi.service.resolver.NativeCodeDescription createNativeCodeDescription(java.lang.String[],java.lang.String[],java.lang.String[],org.eclipse.osgi.service.resolver.VersionRange[],java.lang.String[],java.lang.String) throws org.osgi.framework.InvalidSyntaxException
+meth public org.eclipse.osgi.service.resolver.NativeCodeSpecification createNativeCodeSpecification(org.eclipse.osgi.service.resolver.NativeCodeDescription[],boolean)
+meth public org.eclipse.osgi.service.resolver.State createState()
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public org.eclipse.osgi.service.resolver.State createState(boolean)
+meth public org.eclipse.osgi.service.resolver.State createState(org.eclipse.osgi.service.resolver.State)
+meth public org.eclipse.osgi.service.resolver.State readState(java.io.DataInputStream) throws java.io.IOException
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public org.eclipse.osgi.service.resolver.State readState(java.io.File) throws java.io.IOException
+meth public org.eclipse.osgi.service.resolver.State readState(java.io.InputStream) throws java.io.IOException
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public void writeState(org.eclipse.osgi.service.resolver.State,java.io.DataOutputStream) throws java.io.IOException
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+meth public void writeState(org.eclipse.osgi.service.resolver.State,java.io.File) throws java.io.IOException
+meth public void writeState(org.eclipse.osgi.service.resolver.State,java.io.OutputStream) throws java.io.IOException
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
+supr java.lang.Object
+hfds IMPL_NAME,implementation,monitor
 
 CLSS public org.eclipse.osgi.service.resolver.StateWire
 cons public init(org.eclipse.osgi.service.resolver.BundleDescription,org.eclipse.osgi.service.resolver.VersionConstraint,org.eclipse.osgi.service.resolver.BundleDescription,org.eclipse.osgi.service.resolver.BaseDescription)
@@ -1606,6 +1059,7 @@ meth public final void removeTrustAnchor(java.security.cert.Certificate) throws 
 meth public java.lang.String addTrustAnchor(java.security.cert.Certificate,java.lang.String) throws java.io.IOException,java.security.GeneralSecurityException
 meth public void removeTrustAnchor(java.lang.String) throws java.io.IOException,java.security.GeneralSecurityException
 supr java.lang.Object
+hfds trustEngineListener
 
 CLSS public abstract interface org.eclipse.osgi.service.urlconversion.URLConverter
 meth public abstract java.net.URL resolve(java.net.URL) throws java.io.IOException
@@ -1669,7 +1123,7 @@ meth public void open(boolean) throws java.io.IOException
 meth public void remove(java.lang.String) throws java.io.IOException
 meth public void update(java.lang.String[],java.lang.String[]) throws java.io.IOException
 supr java.lang.Object
-hfds FILETYPE_RELIABLEFILE,FILETYPE_STANDARD,LOCK_FILE,MANAGER_FOLDER,MAX_LOCK_WAIT,TABLE_FILE,base,instanceFile,instanceLocker,lockFile,lockMode,locker,managerRoot,open,openCleanup,readOnly,saveCleanup,secure,table,tableFile,tableStamp,tempCleanup,useReliableFiles
+hfds FILETYPE_RELIABLEFILE,FILETYPE_STANDARD,LOCK_FILE,MANAGER_FOLDER,MAX_LOCK_WAIT,TABLE_FILE,base,instanceFile,instanceLocker,lockFile,lockMode,locker,managerRoot,open,openCleanup,readOnly,saveCleanup,table,tableFile,tableStamp,tempCleanup,useReliableFiles
 hcls Entry
 
 CLSS public org.eclipse.osgi.util.ManifestElement
@@ -1684,6 +1138,7 @@ meth public java.util.Enumeration<java.lang.String> getDirectiveKeys()
 meth public java.util.Enumeration<java.lang.String> getKeys()
 meth public static java.lang.String[] getArrayFromList(java.lang.String)
 meth public static java.lang.String[] getArrayFromList(java.lang.String,java.lang.String)
+meth public static java.util.Map<java.lang.String,java.lang.String> parseBundleManifest(java.io.InputStream) throws java.io.IOException,org.osgi.framework.BundleException
 meth public static java.util.Map<java.lang.String,java.lang.String> parseBundleManifest(java.io.InputStream,java.util.Map<java.lang.String,java.lang.String>) throws java.io.IOException,org.osgi.framework.BundleException
 meth public static org.eclipse.osgi.util.ManifestElement[] parseHeader(java.lang.String,java.lang.String) throws org.osgi.framework.BundleException
 supr java.lang.Object
@@ -1691,9 +1146,10 @@ hfds attributes,directives,mainValue,valueComponents
 
 CLSS public abstract org.eclipse.osgi.util.NLS
 cons protected init()
+meth public !varargs static <%0 extends java.lang.Object> java.lang.String bind(java.lang.String,{%%0}[])
+ anno 0 java.lang.SafeVarargs()
 meth public static java.lang.String bind(java.lang.String,java.lang.Object)
 meth public static java.lang.String bind(java.lang.String,java.lang.Object,java.lang.Object)
-meth public static java.lang.String bind(java.lang.String,java.lang.Object[])
 meth public static void initializeMessages(java.lang.String,java.lang.Class<?>)
 supr java.lang.Object
 hfds ASSIGNED,EMPTY_ARGS,EXTENSION,IGNORE,PROP_WARNINGS,SEVERITY_ERROR,SEVERITY_WARNING,frameworkLog,ignoreWarnings,nlSuffixes
@@ -1706,11 +1162,6 @@ meth public static java.lang.String process(java.lang.String)
 meth public static java.lang.String process(java.lang.String,java.lang.String)
 supr java.lang.Object
 hfds COLON,DOT,FILE_SEP_BSLASH,FILE_SEP_FSLASH,INDEX_NOT_SET,IS_PROCESSING_NEEDED,LRE,LRM,PDF,delimiterString
-
-CLSS public abstract interface org.osgi.framework.BundleListener
- anno 0 java.lang.FunctionalInterface()
-intf java.util.EventListener
-meth public abstract void bundleChanged(org.osgi.framework.BundleEvent)
 
 CLSS public abstract interface org.osgi.framework.BundleReference
 meth public abstract org.osgi.framework.Bundle getBundle()
@@ -1763,9 +1214,4 @@ meth public abstract boolean equals(java.lang.Object)
 meth public abstract int hashCode()
 meth public abstract java.util.List<org.osgi.resource.Capability> getCapabilities(java.lang.String)
 meth public abstract java.util.List<org.osgi.resource.Requirement> getRequirements(java.lang.String)
-
-CLSS public abstract interface org.osgi.util.tracker.ServiceTrackerCustomizer<%0 extends java.lang.Object, %1 extends java.lang.Object>
-meth public abstract void modifiedService(org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTrackerCustomizer%0}>,{org.osgi.util.tracker.ServiceTrackerCustomizer%1})
-meth public abstract void removedService(org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTrackerCustomizer%0}>,{org.osgi.util.tracker.ServiceTrackerCustomizer%1})
-meth public abstract {org.osgi.util.tracker.ServiceTrackerCustomizer%1} addingService(org.osgi.framework.ServiceReference<{org.osgi.util.tracker.ServiceTrackerCustomizer%0}>)
 

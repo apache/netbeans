@@ -27,9 +27,9 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.jar.Manifest;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleFile;
-import org.eclipse.osgi.framework.adaptor.BundleData;
+import org.eclipse.osgi.storage.BundleInfo;
+import org.eclipse.osgi.storage.bundlefile.BundleEntry;
+import org.eclipse.osgi.storage.bundlefile.BundleFile;
 import org.openide.modules.ModuleInfo;
 import org.openide.util.Lookup;
 
@@ -38,8 +38,8 @@ import org.openide.util.Lookup;
  * @author Jaroslav Tulach <jtulach@netbeans.org>
  */
 final class NetigsoBundleFile extends BundleFile {
-    private final BundleData data;
-    NetigsoBundleFile(File base, BundleData data) {
+    private final BundleInfo data;
+    NetigsoBundleFile(File base, BundleInfo data) {
         super(base);
         this.data = data;
     }
@@ -94,6 +94,11 @@ final class NetigsoBundleFile extends BundleFile {
 
     @Override
     public Enumeration<String> getEntryPaths(String string) {
+        return Collections.enumeration(Collections.<String>emptyList());
+    }
+
+    @Override
+    public Enumeration<String> getEntryPaths(String path, boolean recurse) {
         return Collections.enumeration(Collections.<String>emptyList());
     }
 

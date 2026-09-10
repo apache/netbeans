@@ -22,8 +22,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Enumeration;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleEntry;
-import org.eclipse.osgi.baseadaptor.bundlefile.BundleFile;
+import org.eclipse.osgi.storage.bundlefile.BundleEntry;
+import org.eclipse.osgi.storage.bundlefile.BundleFile;
+import org.openide.util.Enumerations;
 
 /**
  *
@@ -33,6 +34,7 @@ final class EmptyBundleFile extends BundleFile {
     public static final BundleFile EMPTY = new EmptyBundleFile();
 
     private EmptyBundleFile() {
+        super(null);
     }
 
     @Override
@@ -61,5 +63,10 @@ final class EmptyBundleFile extends BundleFile {
     @Override
     public boolean containsDir(String string) {
         return false;
+    }
+
+    @Override
+    public Enumeration<String> getEntryPaths(String path, boolean recurse) {
+        return Enumerations.empty();
     }
 }

@@ -2594,8 +2594,7 @@ jobs:
     #  * nothing else failed (allows manual restarts)
     #  * the workflow got cancelled
     if: ${{ always() && needs.base-build.result == 'success' && (!contains(needs.*.result, 'failure') || cancelled()) }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
+    runs-on: ubuntu-slim
     steps:
 
       - name: Delete Workspace Artifact

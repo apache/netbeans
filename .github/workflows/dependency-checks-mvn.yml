@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-name: NetBeans Dependency Checks
+name: NetBeans Dependency Checks MVN
 
 on:
 #  pull_request:
@@ -57,9 +57,13 @@ jobs:
 
       - name: Check Dependencies
         run: |
-          DEPS=org.apache.maven:maven-artifact:3.9.11,org.apache.maven.indexer:search-backend-smo:7.1.6
-          mvn eu.maveniverse.maven.plugins:toolbox:0.13.7:gav-resolve-transitive -Dgav=$DEPS -DsinkSpec="flat(./lib)"
+          ant -quiet bootstrap
+          ant -quiet verify-libs-and-licenses
+          cd nbbuild/build/mavenpoms/
           echo "<pre>" >> $GITHUB_STEP_SUMMARY
-          java -cp "lib/*" .github/scripts/BinariesListUpdates.java ./ | tee -a $GITHUB_STEP_SUMMARY
+          mvn -B\
+           -Dorg.slf4j.simpleLogger.defaultLogLevel=warn\
+           -Dorg.slf4j.simpleLogger.log.eu.maveniverse.maven=info\
+           -DupToDate=true\
+           eu.maveniverse.maven.plugins:toolbox:0.15.17:libyear | tee -a $GITHUB_STEP_SUMMARY
           echo "</pre>" >> $GITHUB_STEP_SUMMARY
-          rm -Rf lib

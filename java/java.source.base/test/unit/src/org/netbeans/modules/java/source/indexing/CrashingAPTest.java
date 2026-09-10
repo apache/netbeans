@@ -56,6 +56,7 @@ import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.java.source.SourceUtils;
 import org.netbeans.api.java.source.Task;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.java.source.TestUtil;
 import org.netbeans.modules.java.source.usages.IndexUtil;
 import org.netbeans.spi.java.classpath.ClassPathProvider;
@@ -136,8 +137,8 @@ public class CrashingAPTest extends NbTestCase {
                                                      .stream()
                                                      .map(d -> d.getMessage(null))
                                                      .map(m -> firstLine(m))
-                                                     .collect(Collectors.toList());
-                    List<String> expected = Arrays.asList(Bundle.ERR_ProcessorException("org.netbeans.modules.java.source.indexing.CrashingAPTest$TestAP", "Crash"));
+                                                     .toList();
+                    List<String> expected = Arrays.asList(firstLine(Bundle.ERR_ProcessorException("org.netbeans.modules.java.source.indexing.CrashingAPTest$TestAP", "", "Crash", NoJavacHelper.REQUIRED_JAVAC_VERSION)));
                     assertEquals(expected, messages);
                 }
             },true);

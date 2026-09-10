@@ -29,6 +29,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -122,9 +123,10 @@ public class ProjectsRootNodeInitializedSoonerTest extends NbTestCase {
         }
         H h = new H();
         h.setLevel(Level.ALL);
-        OpenProjectList.LOGGER.addHandler(h);
-        OpenProjectList.LOGGER.setUseParentHandlers(false);
-        OpenProjectList.LOGGER.setLevel(Level.ALL);
+        Logger projectsRootNodeLOG = Logger.getLogger("org.netbeans.modules.project.ui.ProjectsRootNode");
+        projectsRootNodeLOG.addHandler(h);
+        projectsRootNodeLOG.setUseParentHandlers(false);
+        projectsRootNodeLOG.setLevel(Level.ALL);
 
         assertEquals("30 children", 30, logicalView.getChildren().getNodesCount(true));
 

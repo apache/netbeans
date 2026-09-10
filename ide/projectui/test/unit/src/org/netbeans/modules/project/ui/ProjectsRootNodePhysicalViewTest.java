@@ -34,6 +34,7 @@ import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.project.ui.actions.TestSupport;
+import org.netbeans.modules.projectapi.nb.TimedWeakReference;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
@@ -67,6 +68,8 @@ public class ProjectsRootNodePhysicalViewTest extends NbTestCase {
     @Override
     protected void setUp() throws Exception {
         clearWorkDir();
+
+        TimedWeakReference.TIMEOUT = 1;
         
         MockServices.setServices(TestSupport.TestProjectFactory.class);
         

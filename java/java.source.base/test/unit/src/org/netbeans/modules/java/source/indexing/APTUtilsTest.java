@@ -34,13 +34,19 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
+import javax.tools.JavaCompiler;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.classpath.JavaClassPathConstants;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery;
 import org.netbeans.api.java.queries.AnnotationProcessingQuery.Trigger;
+import org.netbeans.api.java.source.JavaSource;
+import org.netbeans.api.java.source.TestUtilities;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.NoJavacHelper;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.spi.java.classpath.ClassPathFactory;
@@ -53,7 +59,6 @@ import org.netbeans.spi.java.queries.SourceLevelQueryImplementation2;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.ChangeSupport;
-import org.openide.util.Lookup;
 
 /**
  *
@@ -175,6 +180,251 @@ public class APTUtilsTest extends NbTestCase {
         assertEquals(1, handler.awaitEvents(10, 2500));
     }
 
+
+    public void testBrokenAP() throws Exception {
+        APQ.result.setAnnotationProcessingEnabled(EnumSet.of(Trigger.ON_SCAN, Trigger.IN_EDITOR),
+                                                  Set.of("AnnotationProcessor"));
+        {
+            //broken init:
+            FileObject processorClassesDir =
+                    compileProcessor("""
+                                     import java.util.Set;
+                                     import javax.annotation.processing.AbstractProcessor;
+                                     import javax.annotation.processing.ProcessingEnvironment;
+                                     import javax.annotation.processing.RoundEnvironment;
+                                     import javax.annotation.processing.SupportedAnnotationTypes;
+                                     import javax.lang.model.element.TypeElement;
+
+                                     @SupportedAnnotationTypes("*")
+                                     public class AnnotationProcessor extends AbstractProcessor {
+
+                                         @Override
+                                         public void init(ProcessingEnvironment processingEnv) {
+                                             throw new IllegalStateException("Broken.");
+                                         }
+
+                                         @Override
+                                         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+                                             throw new IllegalStateException("Should not get here.");
+                                         }
+
+                                     }
+                                     """);
+            try {
+                processorPath.add(processorClassesDir);
+                FileObject test = FileUtil.createData(root1, "Test.java");
+                TestUtilities.copyStringToFile(test,
+                                               """
+                                               public class Test{}
+                                               """);
+                JavaSource source = JavaSource.forFileObject(test);
+                source.runUserActionTask(cc -> {
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    List<String> messages =
+                            cc.getDiagnostics()
+                              .stream()
+                              .map(d -> d.getMessage(null))
+                              .toList();
+                    String firstLine = firstLine(Bundle.ERR_ProcessorException("AnnotationProcessor", "", "Broken.", NoJavacHelper.REQUIRED_JAVAC_VERSION));
+                    if (messages.stream().noneMatch(msg -> msg.contains(firstLine))) {
+                        fail("Expected error not found, all messages: " + messages);
+                    }
+                    if (messages.stream().anyMatch(msg -> msg.contains("Should not get here"))) {
+                        fail("Unexpected error found, all messages: " + messages);
+                    }
+                }, true);
+            } finally {
+                processorPath.remove(processorClassesDir);
+            }
+        }
+
+        {
+            //broken process:
+            FileObject processorClassesDir =
+                    compileProcessor("""
+                                     import java.util.Set;
+                                     import javax.annotation.processing.AbstractProcessor;
+                                     import javax.annotation.processing.ProcessingEnvironment;
+                                     import javax.annotation.processing.RoundEnvironment;
+                                     import javax.annotation.processing.SupportedAnnotationTypes;
+                                     import javax.lang.model.element.TypeElement;
+
+                                     @SupportedAnnotationTypes("*")
+                                     public class AnnotationProcessor extends AbstractProcessor {
+                                         @Override
+                                         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+                                             throw new IllegalStateException("Broken.");
+                                         }
+
+                                     }
+                                     """);
+            try {
+                processorPath.add(processorClassesDir);
+                FileObject test = FileUtil.createData(root1, "Test.java");
+                TestUtilities.copyStringToFile(test,
+                                               """
+                                               public class Test{}
+                                               """);
+                JavaSource source = JavaSource.forFileObject(test);
+                source.runUserActionTask(cc -> {
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    List<String> messages =
+                            cc.getDiagnostics()
+                              .stream()
+                              .map(d -> d.getMessage(null))
+                              .toList();
+                    String firstLine = firstLine(Bundle.ERR_ProcessorException("AnnotationProcessor", "", "Broken.", NoJavacHelper.REQUIRED_JAVAC_VERSION));
+                    if (messages.stream().noneMatch(msg -> msg.contains(firstLine))) {
+                        fail("Expected error not found, all messages: " + messages);
+                    }
+                    if (messages.stream().anyMatch(msg -> msg.contains("Should not get here"))) {
+                        fail("Unexpected error found, all messages: " + messages);
+                    }
+                }, true);
+            } finally {
+                processorPath.remove(processorClassesDir);
+            }
+        }
+    }
+
+    public void testBrokenAPLombok() throws Exception {
+        APQ.result.setAnnotationProcessingEnabled(EnumSet.of(Trigger.ON_SCAN, Trigger.IN_EDITOR),
+                                                  Set.of("lombok.core.AnnotationProcessor"));
+        //lombok:
+        {
+            //broken init:
+            FileObject processorClassesDir =
+                    compileProcessor("""
+                                     package lombok.core;
+                                     import java.util.Set;
+                                     import javax.annotation.processing.AbstractProcessor;
+                                     import javax.annotation.processing.ProcessingEnvironment;
+                                     import javax.annotation.processing.RoundEnvironment;
+                                     import javax.annotation.processing.SupportedAnnotationTypes;
+                                     import javax.lang.model.element.TypeElement;
+
+                                     @SupportedAnnotationTypes("*")
+                                     public class AnnotationProcessor extends AbstractProcessor {
+
+                                         @Override
+                                         public void init(ProcessingEnvironment processingEnv) {
+                                             throw new IllegalStateException("Broken.");
+                                         }
+
+                                         @Override
+                                         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+                                             throw new IllegalStateException("Should not get here.");
+                                         }
+
+                                     }
+                                     """);
+            try {
+                processorPath.add(processorClassesDir);
+                FileObject test = FileUtil.createData(root1, "Test.java");
+                TestUtilities.copyStringToFile(test,
+                                               """
+                                               public class Test{}
+                                               """);
+                JavaSource source = JavaSource.forFileObject(test);
+                source.runUserActionTask(cc -> {
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    List<String> messages =
+                            cc.getDiagnostics()
+                              .stream()
+                              .map(d -> d.getMessage(null))
+                              .toList();
+                    String firstLine = firstLine(Bundle.ERR_ProcessorException("AnnotationProcessor", "", "Broken.", NoJavacHelper.REQUIRED_JAVAC_VERSION));
+                    if (messages.stream().noneMatch(msg -> msg.contains(firstLine))) {
+                        fail("Expected error not found, all messages: " + messages);
+                    }
+                    if (messages.stream().anyMatch(msg -> msg.contains("Should not get here"))) {
+                        fail("Unexpected error found, all messages: " + messages);
+                    }
+                }, true);
+            } finally {
+                processorPath.remove(processorClassesDir);
+            }
+        }
+
+        {
+            //broken process:
+            FileObject processorClassesDir =
+                    compileProcessor("""
+                                     package lombok.core;
+                                     import java.util.Set;
+                                     import javax.annotation.processing.AbstractProcessor;
+                                     import javax.annotation.processing.ProcessingEnvironment;
+                                     import javax.annotation.processing.RoundEnvironment;
+                                     import javax.annotation.processing.SupportedAnnotationTypes;
+                                     import javax.lang.model.element.TypeElement;
+
+                                     @SupportedAnnotationTypes("*")
+                                     public class AnnotationProcessor extends AbstractProcessor {
+                                         @Override
+                                         public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+                                             throw new IllegalStateException("Broken.");
+                                         }
+
+                                     }
+                                     """);
+            try {
+                processorPath.add(processorClassesDir);
+                FileObject test = FileUtil.createData(root1, "Test.java");
+                TestUtilities.copyStringToFile(test,
+                                               """
+                                               public class Test{}
+                                               """);
+                JavaSource source = JavaSource.forFileObject(test);
+                source.runUserActionTask(cc -> {
+                    cc.toPhase(JavaSource.Phase.RESOLVED);
+                    List<String> messages =
+                            cc.getDiagnostics()
+                              .stream()
+                              .map(d -> d.getMessage(null))
+                              .toList();
+                    String firstLine = firstLine(Bundle.ERR_ProcessorException("AnnotationProcessor", "", "Broken.", NoJavacHelper.REQUIRED_JAVAC_VERSION));
+                    if (messages.stream().noneMatch(msg -> msg.contains(firstLine))) {
+                        fail("Expected error not found, all messages: " + messages);
+                    }
+                    if (messages.stream().anyMatch(msg -> msg.contains("Should not get here"))) {
+                        fail("Unexpected error found, all messages: " + messages);
+                    }
+                }, true);
+            } finally {
+                processorPath.remove(processorClassesDir);
+            }
+        }
+    }
+    
+    private String firstLine(String m) {
+        int newLine = m.indexOf('\n');
+        if (newLine == (-1)) return m;
+        return m.substring(0, newLine);
+    }
+
+    private FileObject compileProcessor(String processorCode) throws Exception {
+        FileObject wdFO = FileUtil.toFileObject(getWorkDir());
+        FileObject processorSrcDir = FileUtil.createFolder(wdFO, "processor-src");
+        FileObject processorClassesDir = FileUtil.createFolder(wdFO, "processor-classes");
+        FileObject processorFO = FileUtil.createData(processorSrcDir, "AnnotationProcessor.java");
+        TestUtilities.copyStringToFile(processorFO,
+                                       processorCode);
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        try (StandardJavaFileManager fm = compiler.getStandardFileManager(null, null, null)) {
+            boolean result =
+                compiler.getTask(null,
+                                 null,
+                                 null,
+                                 List.of("-d", FileUtil.toFile(processorClassesDir).getAbsolutePath(),
+                                         "--release", "21"),
+                                 null,
+                                 fm.getJavaFileObjects(FileUtil.toPath(processorFO)))
+                        .call();
+            assertTrue(result);
+        }
+
+        return processorClassesDir;
+    }
 
     private static final class MockHandler extends Handler {
 
@@ -324,10 +574,16 @@ public class APTUtilsTest extends NbTestCase {
         
         private final ChangeSupport listeners = new ChangeSupport(this);
         private volatile Set<? extends Trigger> mode = Collections.emptySet();
+        private volatile Set<? extends String> apsToRun = null;
         
         
         void setAnnotationProcessingEnabled(Set<? extends Trigger> newMode) {
+            setAnnotationProcessingEnabled(newMode, null);
+        }
+
+        void setAnnotationProcessingEnabled(Set<? extends Trigger> newMode, Set<? extends String> newApsToRun) {
             this.mode = newMode;
+            this.apsToRun = newApsToRun;
             listeners.fireChange();
         }
 
@@ -338,7 +594,7 @@ public class APTUtilsTest extends NbTestCase {
 
         @Override
         public Iterable<? extends String> annotationProcessorsToRun() {
-            return null;
+            return apsToRun;
         }
 
         @Override
@@ -374,4 +630,7 @@ public class APTUtilsTest extends NbTestCase {
 
     }
 
+    static {
+        System.setProperty("SourcePath.no.source.filter", "true");
+    }
 }

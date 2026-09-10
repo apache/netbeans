@@ -1,0 +1,2 @@
+OpenIDE-Module: org.apache.sshd.sftp
+OpenIDE-Module-Specification-Version: 2.17.1

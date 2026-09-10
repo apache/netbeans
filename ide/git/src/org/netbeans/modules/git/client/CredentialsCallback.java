@@ -78,6 +78,15 @@ public class CredentialsCallback extends GitClientCallback {
             pwd = password.clone();
             Arrays.fill(password, (char) 0);
             credentialsReady = false;
+        } else if (passphrase != null) {
+            // the jgit apache mina client uses password instead of passphrase
+            // to unlock the identity file, an additional guard could be to
+            // check for prompt "Passphrase", but that is/could be a localized.
+            // As only ever either password _or_ passphrase are available, this
+            // should be save (see fetchCredentials)
+            pwd = passphrase.clone();
+            Arrays.fill(passphrase, (char) 0);
+            credentialsReady = false;
         }
         return pwd;
     }

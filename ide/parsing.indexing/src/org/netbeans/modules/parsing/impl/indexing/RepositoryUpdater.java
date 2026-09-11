@@ -111,7 +111,6 @@ import org.openide.util.Parameters;
 import org.openide.util.RequestProcessor;
 import org.openide.util.TopologicalSortException;
 import org.openide.util.Union2;
-import org.openide.util.lookup.ServiceProvider;
 
 import static org.netbeans.modules.parsing.impl.indexing.Debug.printCollection;
 import static org.netbeans.modules.parsing.impl.indexing.Debug.printMap;
@@ -119,6 +118,7 @@ import static org.netbeans.modules.parsing.impl.indexing.Debug.printMimeTypes;
 import org.netbeans.modules.parsing.impl.indexing.implspi.CacheFolderProvider;
 import org.netbeans.modules.parsing.impl.indexing.implspi.ContextProvider;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.lookup.ServiceProviders;
 /**
  *
@@ -1316,6 +1316,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
     private final Task worker;
 
     private RepositoryUpdater () {
+//        LOGGER.setLevel(Level.ALL);
         LOGGER.log(Level.FINE, "netbeans.indexing.notInterruptible={0}", NOT_INTERRUPTIBLE); //NOI18N
         LOGGER.log(Level.FINE, "netbeans.indexing.recursiveListeners={0}", rootsListeners.hasRecursiveListeners()); //NOI18N
         LOGGER.log(Level.FINE, "FILE_LOCKS_DELAY={0}", FILE_LOCKS_DELAY); //NOI18N
@@ -5953,8 +5954,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                     }
 
                     followUpWorksSorted = false;
-
-                    if (!scheduled && (protectedOwners.isEmpty() || offProtectedMode == Thread.currentThread())) {
+                    if (!scheduled && (isEmptyProtectedOwners() || offProtectedMode == Thread.currentThread())) {
                         scheduled = true;
                         LOGGER.fine("scheduled = true");    //NOI18N
                         WORKER.submit(this);
@@ -5966,6 +5966,11 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                 LOGGER.log(Level.FINE, "Waiting for {0}", work); //NOI18N
                 work.waitUntilDone();
             }
+        }
+
+        public boolean isEmptyProtectedOwners() {
+            protectedOwners.removeIf(Objects::isNull);
+            return protectedOwners.isEmpty();
         }
 
         void cancelAll(@NullAllowed final Runnable postCleanTask) throws TimeoutException {
@@ -6030,7 +6035,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
 
         public void exitProtectedMode(@NullAllowed Long id, @NullAllowed Runnable followupTask) {
             synchronized (todo) {
-                if (protectedOwners.isEmpty()) {
+                if (isEmptyProtectedOwners()) {
                     throw new IllegalStateException("Calling exitProtectedMode without enterProtectedMode"); //NOI18N
                 }
 
@@ -6046,7 +6051,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                     LOGGER.log(Level.FINE, "Exiting protected mode: {0}", protectedOwners.toString()); //NOI18N
                 }
 
-                if (protectedOwners.isEmpty()) {
+                if (isEmptyProtectedOwners()) {
                     // in normal mode again, restart all delayed jobs
                     final List<Runnable> tasks = followupTasks != null ? followupTasks : Collections.<Runnable>emptyList();
                     followupTasks = null;
@@ -6072,7 +6077,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
 
         public boolean isInProtectedMode() {
             synchronized (todo) {
-                return !protectedOwners.isEmpty();
+                return !isEmptyProtectedOwners();
             }
         }
 
@@ -6116,7 +6121,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
                             RunWhenScanFinishedSupport.performScan(() -> _run(), globalLookup);
                         } finally {
                             synchronized (todo) {
-                                if ((!protectedOwners.isEmpty() && offProtectedMode == null) || todo.isEmpty()) {
+                                if ((!isEmptyProtectedOwners() && offProtectedMode == null) || todo.isEmpty()) {
                                     scheduled = false;
                                     LOGGER.fine("scheduled = false");   //NOI18N
                                 } else {
@@ -6226,7 +6231,7 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
         private Work getWork () {
             synchronized (todo) {
                 Work w;
-                if ((protectedOwners.isEmpty() || offProtectedMode != null) && !todo.isEmpty()) {
+                if ((isEmptyProtectedOwners() || offProtectedMode != null) && !todo.isEmpty()) {
                     w = todo.remove(0);
 
                     if (w instanceof FileListWork && ((FileListWork) w).isFollowUpJob() && !followUpWorksSorted) {
@@ -6514,12 +6519,12 @@ public final class RepositoryUpdater implements PathRegistryListener, PropertyCh
 
         @Override
         public void enterProtectedMode() {
-            worker.enterProtectedMode(Thread.currentThread().getId());
+//            worker.enterProtectedMode(Thread.currentThread().getId());
         }
 
         @Override
         public void exitProtectedMode(Runnable followUpTask) {
-            worker.exitProtectedMode(Thread.currentThread().getId(), followUpTask);
+//            worker.exitProtectedMode(Thread.currentThread().getId(), followUpTask);
         }
 
         @Override

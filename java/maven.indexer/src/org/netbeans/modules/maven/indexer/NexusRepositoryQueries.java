@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -61,6 +62,7 @@ import org.apache.maven.search.backend.smo.SmoSearchBackend;
 import org.apache.maven.search.backend.smo.SmoSearchBackendFactory;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NullAllowed;
+import org.netbeans.jdk.fallback.lang.NBLazyConstant;
 import org.netbeans.modules.maven.indexer.api.NBArtifactInfo;
 import org.netbeans.modules.maven.indexer.api.NBGroupInfo;
 import org.netbeans.modules.maven.indexer.api.NBVersionInfo;
@@ -88,7 +90,12 @@ final class NexusRepositoryQueries implements
 
     private static final Logger LOGGER = Logger.getLogger(NexusRepositoryQueries.class.getName());
 
-    private SmoSearchBackend smo;
+    private final Supplier<SmoSearchBackend> smo = NBLazyConstant.of(() -> SmoSearchBackendFactory.create(
+            SmoSearchBackendFactory.DEFAULT_BACKEND_ID,
+            SmoSearchBackendFactory.DEFAULT_REPOSITORY_ID,
+            SmoSearchBackendFactory.DEFAULT_SMO_URI,
+            new Java11HttpClientTransport(SMORequestResult.REQUEST_TIMEOUT))
+    );
     private final NexusRepositoryIndexManager indexer;
 
     NexusRepositoryQueries(NexusRepositoryIndexManager indexer) {
@@ -887,16 +894,8 @@ final class NexusRepositoryQueries implements
         return toRet;
     }
 
-    synchronized SmoSearchBackend getSMO() {
-        if (smo == null) {
-            smo = SmoSearchBackendFactory.create(
-                    SmoSearchBackendFactory.DEFAULT_BACKEND_ID,
-                    SmoSearchBackendFactory.DEFAULT_REPOSITORY_ID,
-                    SmoSearchBackendFactory.DEFAULT_SMO_URI,
-                    new Java11HttpClientTransport(SMORequestResult.REQUEST_TIMEOUT)
-            );
-        }
-        return smo;
+    SmoSearchBackend getSMO() {
+        return smo.get();
     }
 
     private interface RepoAction {

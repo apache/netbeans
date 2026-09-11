@@ -1,5 +1,5 @@
 Name: Apache MINA SSHD
-Version: 2.17.1
+Version: 2.19.0
 License: Apache-2.0
 Origin: https://mina.apache.org/sshd-project/
 Description: Apache MINA SSHD is a 100% pure java library to support the SSH protocols on both the client and server side.

@@ -30,7 +30,6 @@ import org.netbeans.modules.docker.HttpUtils;
 import org.netbeans.modules.docker.DirectStreamResult;
 import org.netbeans.modules.docker.Demuxer;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,8 +44,11 @@ import java.net.ProxySelector;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.UnixDomainSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -78,8 +80,6 @@ import org.netbeans.modules.docker.DockerConfig;
 import org.netbeans.modules.docker.DockerUtils;
 import org.netbeans.modules.docker.Endpoint;
 import org.netbeans.modules.docker.StreamResult;
-import org.newsclub.net.unix.AFUNIXSocket;
-import org.newsclub.net.unix.AFUNIXSocketAddress;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Pair;
 import org.openide.util.Parameters;
@@ -1269,10 +1269,8 @@ public class DockerAction {
                 s.connect(new InetSocketAddress(realUrl.getHost(), port));
                 return Endpoint.forSocket(s);
             } else if ("file".equals(realUrl.getProtocol())) {
-                AFUNIXSocket s = AFUNIXSocket.newInstance();
-                AFUNIXSocketAddress sockAdd = AFUNIXSocketAddress.of(new File(realUrl.getFile()));
-                s.connect(sockAdd);
-                return Endpoint.forSocket(s);
+                SocketChannel channel = SocketChannel.open(UnixDomainSocketAddress.of(Path.of(realUrl.getFile())));
+                return Endpoint.forSocketChannel(channel);
             } else {
                 throw new IOException("Unknown protocol: " + realUrl.getProtocol());
             }

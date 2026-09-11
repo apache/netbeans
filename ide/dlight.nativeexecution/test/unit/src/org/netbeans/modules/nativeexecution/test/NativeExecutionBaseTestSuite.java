@@ -26,7 +26,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -64,17 +63,13 @@ public class NativeExecutionBaseTestSuite extends NbTestSuite {
 
     /**
      * Constructs an empty TestSuite.
-     * @param testClasses test classes to add.
-     * The <? extends NativeExecutionBaseTestCase> is probably too strong - <? extends TestCase> would be sufficient
-     * (the only check is the search for 2-parammeter constructor that takes String and ExecutinEnvironmant);
-     * the intention was rather to explain what it's used for than to restrict.
+     * @param testClass test classes to add.
      */
-    public NativeExecutionBaseTestSuite(Class<? extends NativeExecutionBaseTestCase>... testClasses) {
+    @SuppressWarnings("this-escape")
+    public NativeExecutionBaseTestSuite(Class<? extends NativeExecutionBaseTestCase> testClass) {
         super();
         this.defaultSection = null;
-        for (Class<? extends NativeExecutionBaseTestCase> testClass : testClasses) {
-            addTest(testClass);
-        }
+        addTest(testClass);
     }
 
     /**
@@ -91,18 +86,14 @@ public class NativeExecutionBaseTestSuite extends NbTestSuite {
      * Constructs TestSuite that adds tests specified by classes parameters
      * @param name suite name
      * @param defaultSection default section for @ForAllEnvironments annotation
-     * @param testClasses test class to add.
-     * The <? extends NativeExecutionBaseTestCase> is probably too strong - <? extends TestCase> would be sufficient
-     * (the only check is the search for 2-parammeter constructor that takes String and ExecutinEnvironmant);
-     * the intention was rather to explain what it's used for than to restrict.
+     * @param testClass test class to add.
      */
-    public NativeExecutionBaseTestSuite(String name, String defaultSection, 
-            Class<? extends NativeExecutionBaseTestCase>... testClasses) {
+    @SuppressWarnings("this-escape")
+    public NativeExecutionBaseTestSuite(String name, String defaultSection,
+            Class<? extends NativeExecutionBaseTestCase> testClass) {
 
         this(name, defaultSection);
-        for (Class<? extends NativeExecutionBaseTestCase> testClass : testClasses) {
-            addTest(testClass);
-        }
+        addTest(testClass);
     }
 
     /**
@@ -113,7 +104,7 @@ public class NativeExecutionBaseTestSuite extends NbTestSuite {
      * the intention was rather to explain what it's used for than to restrict.
      */
     protected final void addTest(Class<? extends NativeExecutionBaseTestCase> testClass)  {
-        
+
         TestClassData testData = findTestData(testClass);
         sortTestData(testData);
         if (testData.testMethods.isEmpty()) {
@@ -155,7 +146,7 @@ public class NativeExecutionBaseTestSuite extends NbTestSuite {
             }
         }
     }
-    
+
     public void addWarningTest(String testName, String warningText) {
         addTest(warning(testName, warningText));
     }
@@ -184,7 +175,7 @@ public class NativeExecutionBaseTestSuite extends NbTestSuite {
         /** The name of the method */
         public final String name;
 
-        /** 
+        /**
          * In the case the method is annotated with @ForAllEnvironments, contains it's section
          * (or default one in the case it isn't specified in the annotation);
          * if the method is not annotated with @ForAllEnvironments, contains null
@@ -214,12 +205,12 @@ public class NativeExecutionBaseTestSuite extends NbTestSuite {
     }
 
     private static class TestClassData {
-        
+
         // making fields public would be unsafe if this class wasn't private static :-)
         public List<TestMethodData> testMethods = new ArrayList<>();
         public Constructor<?> ordinaryConstructor = null;
         public Constructor<?> forAllEnvConstructor = null;
-        
+
         public boolean containsMethod(String name) {
             if (name != null) {
                 for (TestMethodData md : testMethods) {
@@ -280,17 +271,14 @@ public class NativeExecutionBaseTestSuite extends NbTestSuite {
         } catch (FileNotFoundException ex) {
             // silently: just no file => condition is false, that's it
             return false;
-        } catch (IOException ex) {
-            addWarningTest("Error getting condition for " + methodData.name + ": " + ex.getMessage());
-            return false;
-        } catch (RcFile.FormatException ex) {
+        } catch (IOException | RcFile.FormatException ex) {
             addWarningTest("Error getting condition for " + methodData.name + ": " + ex.getMessage());
             return false;
         }
     }
 
     /**
-     * Searches for 
+     * Searches for
      * - test methods
      * - constructors
      *
@@ -312,8 +300,8 @@ public class NativeExecutionBaseTestSuite extends NbTestSuite {
             for (Method method : superClass.getDeclaredMethods()) {
                 if (!result.containsMethod(method.getName())) {
                     ForAllEnvironments forAllEnvAnnotation = method.getAnnotation(ForAllEnvironments.class);
-                    
-                    if (method.getName().startsWith("test") 
+
+                    if (method.getName().startsWith("test")
                             || method.getAnnotation(org.junit.Test.class) != null
                             || forAllEnvAnnotation != null) {
                         if (!Modifier.isPublic(method.getModifiers())) {
@@ -365,14 +353,9 @@ public class NativeExecutionBaseTestSuite extends NbTestSuite {
 
         return result;
     }
-    
+
     private static void sortTestData(TestClassData data) {
-        data.testMethods.sort(new Comparator<TestMethodData>() {
-            @Override
-            public int compare(TestMethodData d1, TestMethodData d2) {
-                return d1.name.compareTo(d2.name);
-            }
-        });
+        data.testMethods.sort((TestMethodData d1, TestMethodData d2) -> d1.name.compareTo(d2.name));
     }
 
     protected static Test warning(String testName, final String message) {

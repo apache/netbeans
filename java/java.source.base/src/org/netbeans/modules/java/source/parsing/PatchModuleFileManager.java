@@ -156,7 +156,11 @@ final class PatchModuleFileManager implements JavaFileManager {
 
     @Override
     public boolean handleOption(String head, Iterator<String> tail) {
-        if (JavacParser.OPTION_PATCH_MODULE.equals(head)) {
+        if (head.startsWith(JavacParser.OPTION_PATCH_MODULE)) {
+            if (head.length() > JavacParser.OPTION_PATCH_MODULE.length() &&
+                head.charAt(JavacParser.OPTION_PATCH_MODULE.length()) == '=') {
+                tail = List.of(head.substring(JavacParser.OPTION_PATCH_MODULE.length() + 1)).iterator();
+            }
             final Pair<String,List<URL>> modulePatches = FileObjects.parseModulePatches(tail);
             if (modulePatches != null) {
                 addModulePatches(modulePatches.first(), modulePatches.second());

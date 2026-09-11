@@ -26,7 +26,7 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Enumeration;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarEntry;
@@ -84,28 +84,27 @@ public class ValidateClassFilesTest extends NbTestCase {
 
                     int classFileVersion = classFileVersions.get(file.getName());
 
-                    JarFile jf = new JarFile(file);
-                    Enumeration<JarEntry> en = jf.entries();
-                    while (en.hasMoreElements()) {
-                        JarEntry entry = en.nextElement();
-                        if (entry.getName().equals("module-info.class")) {
-                            continue;
-                        }
-                        if (entry.getName().startsWith("META-INF/versions/")) {
-                            continue;
-                        }
-                        if (entry.getName().startsWith("META-INF/ct.sym/")) {
-                            continue;
-                        }
-
-                        if (entry.getName().endsWith(".class")) {
-                            try (DataInputStream dis = new DataInputStream(jf.getInputStream(entry))) {
-                                long magic = dis.readInt();
-                                short minor = dis.readShort();
-                                short major = dis.readShort();
-
-                                if (magic != 0xcafebabe || major > classFileVersion) {
-                                    err.append("\n found version " + major + "." + minor + " in " + entry.getName() + " in " + file);
+                    try (JarFile jf = new JarFile(file)) {
+                        for (JarEntry entry : Collections.list(jf.entries())) {
+                            if (entry.getName().equals("module-info.class")) {
+                                continue;
+                            }
+                            if (entry.getName().startsWith("META-INF/versions/")) {
+                                continue;
+                            }
+                            if (entry.getName().startsWith("META-INF/ct.sym/")) {
+                                continue;
+                            }
+                            
+                            if (entry.getName().endsWith(".class")) {
+                                try (DataInputStream dis = new DataInputStream(jf.getInputStream(entry))) {
+                                    long magic = dis.readInt();
+                                    short minor = dis.readShort();
+                                    short major = dis.readShort();
+                                    
+                                    if (magic != 0xcafebabe || major > classFileVersion) {
+                                        err.append("\n found version " + major + "." + minor + " in " + entry.getName() + " in " + file);
+                                    }
                                 }
                             }
                         }

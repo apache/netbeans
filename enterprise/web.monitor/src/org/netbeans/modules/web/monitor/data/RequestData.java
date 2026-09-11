@@ -21,6 +21,12 @@ package org.netbeans.modules.web.monitor.data;
 
 import java.beans.PropertyChangeListener;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -541,7 +547,37 @@ public class RequestData extends BaseBean {
 	    }
 	}
 	return value;
-    }  
+    }
+    
+    public static Map<String, String[]> parseQueryString(String queryString) {
+        Map<String, List<String>> resultPrep = new HashMap<>();
+        StringTokenizer st = new StringTokenizer(queryString, "&");
+        while (st.hasMoreTokens()) {
+            try {
+                String pair = st.nextToken();
+                int pos = pair.indexOf('=');
+
+                String key;
+                String val;
+                if (pos >= 0) {
+                    key = URLDecoder.decode(pair.substring(0, pos), "UTF-8");
+                    val = URLDecoder.decode(pair.substring(pos + 1, pair.length()), "UTF-8");
+                } else {
+                    key = URLDecoder.decode(pair, "UTF-8");
+                    val = "";
+                }
+                resultPrep.computeIfAbsent(key, k -> new ArrayList<>())
+                          .add(val);
+            } catch (UnsupportedEncodingException ex) {
+                // Ignore - lets assume UTF-8 is supported everywhere
+            }
+        }
+        Map<String, String[]> result = new HashMap<>();
+        for (String key : resultPrep.keySet()) {
+            result.put(key, (String[]) resultPrep.get(key).toArray());
+        }
+        return result;
+    }
 
     // This method verifies that the mandatory properties are set
     public boolean verify()

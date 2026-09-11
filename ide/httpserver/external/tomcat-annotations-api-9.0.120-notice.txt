@@ -1,2 +1,0 @@
-Apache Tomcat
-Copyright 1999-2023 The Apache Software Foundation

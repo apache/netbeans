@@ -19,8 +19,8 @@
 
 package org.netbeans.modules.httpserver;
 
-import java.io.DataInputStream;
-import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URL;
 import org.netbeans.junit.NbTestCase;
 
@@ -43,8 +43,9 @@ public class ServletExecutionTest extends NbTestCase {
         assertTrue("HTTP server has to run", settings.isRunning());
         URL url = new URL("http", "localhost", settings.getPort(), "/servlet/org.netbeans.modules.servlettest.ModuleServlet");
         log("Connecting to "+url.toExternalForm());
-        InputStream is = url.openStream();
-        log(new DataInputStream(is).readLine());
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
+            log(reader.readLine());
+        }
     }
     
 }

@@ -29,7 +29,9 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ForLoopTree;
 import com.sun.source.util.SourcePositions;
 import com.sun.source.util.TreePath;
 import java.util.Set;
@@ -144,7 +146,8 @@ public class JavaCodeTemplateFilter implements CodeTemplateFilter {
                                         }
                                         case FOR_LOOP:
                                         case ENHANCED_FOR_LOOP:
-                                            if (!isRightParenthesisOfLoopPresent(controller, so)) {
+                                            if (!isInLoopBody(controller, tree, so)
+                                                    && !isRightParenthesisOfLoopPresent(controller, so)) {
                                                 treeKindCtx = null;
                                             }
                                             break;
@@ -176,6 +179,18 @@ public class JavaCodeTemplateFilter implements CodeTemplateFilter {
             return tokenId == null ? false : (tokenId == JavaTokenId.RPAREN);
         }
         return false;
+    }
+
+    private boolean isInLoopBody(CompilationController controller, Tree loop, int abbrevStartOffset) {
+        Tree statement;
+        if (loop.getKind() == Tree.Kind.FOR_LOOP) {
+            statement = ((ForLoopTree) loop).getStatement();
+        } else {
+            statement = ((EnhancedForLoopTree) loop).getStatement();
+        }
+        long statementStart = controller.getTrees().getSourcePositions()
+                .getStartPosition(controller.getCompilationUnit(), statement);
+        return statementStart >= 0 && abbrevStartOffset >= statementStart;
     }
     
     private TokenId skipNextWhitespaces(TokenSequence<?> tokenSequence) {

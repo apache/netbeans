@@ -26,6 +26,7 @@ import java.awt.image.ImageProducer;
 import java.beans.BeanInfo;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -275,8 +276,18 @@ public class ProjectsRootNodeTest extends NbTestCase {
         });
         Project prj = ProjectManager.getDefault().findProject(root);
         assertNotNull(prj);
+        var rootKeys = new ProjectsRootKeys(ProjectsRootNode.LOGICAL_VIEW) {
+            @Override
+            Project[] listProjects() {
+                return new Project[0];
+            }
+
+            @Override
+            void depthUpdated(ProjectsRootKeys.PrjInfo info) {
+            }
+        };
         System.setProperty("test.nodelay", "true");
-        ProjectsRootNode.BadgingNode node = new ProjectsRootNode.BadgingNode(null, new ProjectsRootNode.ProjectChildren.Pair(prj, ProjectsRootNode.LOGICAL_VIEW),
+        ProjectsRootNode.BadgingNode node = new ProjectsRootNode.BadgingNode(null, rootKeys.createInfo(prj, true),
                 new AbstractNode(Children.LEAF, Lookups.singleton(prj)) {
                     public @Override String getDisplayName() {return "Prj";}
                     public @Override String getHtmlDisplayName() {return "Prj";}
@@ -332,6 +343,43 @@ public class ProjectsRootNodeTest extends NbTestCase {
         assertEquals(new HashSet<FileObject>(Arrays.asList(k1, k2, k3)), fs.badgedFiles);
     }
 
+    public void testNestingVisualizedInBadgeNode() throws Exception {
+        var root = FileUtil.createMemoryFileSystem().getRoot();
+        var nested = root;
+        var projects = new ArrayList<Project>();
+        var sampleCount = 10;
+        for (var i = 0; i < sampleCount; i++) {
+            var fo = nested.createFolder("prj" + i);
+            Project prj = new TestProject(fo, null);
+            projects.add(prj);
+            nested = fo;
+        }
+        System.setProperty("test.nodelay", "true");
+        var rootKeys = new ProjectsRootKeys(ProjectsRootNode.LOGICAL_VIEW) {
+            @Override
+            Project[] listProjects() {
+                return projects.toArray(Project[]::new);
+            }
+
+            @Override
+            void depthUpdated(ProjectsRootKeys.PrjInfo info) {
+            }
+        };
+        var ch = new ProjectsRootNode.ProjectChildren(rootKeys);
+        var nodes = ch.getNodes(true);
+        assertEquals(sampleCount, nodes.length);
+        for (var i = 0; i < sampleCount; i++) {
+            var dn = nodes[i].getDisplayName();
+            var hdn = nodes[i].getHtmlDisplayName();
+
+            var displayNameIndentation = dn.chars().filter(c -> c == 0xbb).count();
+            var htmlNameIndentation = hdn.replaceAll("&#187;", "\u00bb").chars().filter(c -> c == 0xbb).count();
+
+            assertEquals("It is the expected depth: " + dn, i, displayNameIndentation);
+            assertEquals("Display name indentation and HTML indentation are the same: " + dn + " and " + hdn, displayNameIndentation, htmlNameIndentation);
+        }
+    }
+
     public void testIconAnnotated() throws IOException, Exception {
         final Image icon1 = ImageUtilities.loadImage("org/netbeans/modules/project/ui/resources/icon-1.png");
         final Image icon2 = ImageUtilities.loadImage("org/netbeans/modules/project/ui/resources/icon-2.png");
@@ -363,7 +411,17 @@ public class ProjectsRootNodeTest extends NbTestCase {
         ProjectIconAnnotatorImpl annotator = new ProjectIconAnnotatorImpl();
         MockLookup.setInstances(annotator);
         System.setProperty("test.nodelay", "true");
-        ProjectsRootNode.BadgingNode node = new ProjectsRootNode.BadgingNode(null, new ProjectsRootNode.ProjectChildren.Pair(prj, ProjectsRootNode.LOGICAL_VIEW),
+        var rootKeys = new ProjectsRootKeys(ProjectsRootNode.LOGICAL_VIEW) {
+            @Override
+            Project[] listProjects() {
+                return new Project[0];
+            }
+
+            @Override
+            void depthUpdated(ProjectsRootKeys.PrjInfo info) {
+            }
+        };
+        ProjectsRootNode.BadgingNode node = new ProjectsRootNode.BadgingNode(null, rootKeys.createInfo(prj, true),
                 new AbstractNode(Children.LEAF, Lookups.singleton(prj)), true);
         assertEquals(icon3, node.getIcon(BeanInfo.ICON_COLOR_16x16));
         assertEquals(icon2, node.getOpenedIcon(BeanInfo.ICON_COLOR_16x16));
@@ -397,9 +455,20 @@ public class ProjectsRootNodeTest extends NbTestCase {
             public @Override void removeChangeListener(ChangeListener listener) {}
         }));
         final LazyProject lp = new LazyProject(d.toURL(), "p", new ExtIcon());
+        var rootKeys = new ProjectsRootKeys(ProjectsRootNode.PHYSICAL_VIEW) {
+            @Override
+            Project[] listProjects() {
+                return new Project[0];
+            }
+
+            @Override
+            void depthUpdated(ProjectsRootKeys.PrjInfo info) {
+            }
+        };
+
         Children ch = new ProjectsRootNode.ProjectChildren(ProjectsRootNode.PHYSICAL_VIEW) {
             public @Override void addNotify() {
-                setKeys(Collections.singleton(new ProjectsRootNode.ProjectChildren.Pair(lp, ProjectsRootNode.PHYSICAL_VIEW)));
+                setKeys(Collections.singleton(rootKeys.createInfo(lp, false)));
             }
         };
         ProjectsRootNode.checkNoLazyNode(ch);

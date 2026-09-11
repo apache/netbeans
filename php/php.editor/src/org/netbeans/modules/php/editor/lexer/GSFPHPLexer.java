@@ -65,6 +65,12 @@ public final class GSFPHPLexer implements Lexer<PHPTokenId> {
             PHPTokenId tokenId = scanner.nextToken();
             Token<PHPTokenId> token = null;
             if (tokenId != null) {
+                if (tokenId == PHPTokenId.PHP_CONSTANT_ENCAPSED_STRING) {
+                   PHP5ColoringLexer.LexerState state = scanner.getState();
+                   if (state.heredoc != null && state.heredoc.equals("CSS")) {
+                       tokenId = PHPTokenId.T_EMBEDDED_CSS;
+                   }
+                }
                 token = tokenFactory.createToken(tokenId);
             }
             return token;

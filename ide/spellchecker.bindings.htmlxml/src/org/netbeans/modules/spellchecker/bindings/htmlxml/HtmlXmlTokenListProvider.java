@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.spellchecker.bindings.htmlxml;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -37,36 +36,29 @@ import org.netbeans.modules.spellchecker.spi.language.TokenListProvider;
  *
  * @author Poppenreiter, Riha
  */
-public class HtmlXmlTokenListProvider implements TokenListProvider {
+public final class HtmlXmlTokenListProvider implements TokenListProvider {
 
-    private static final Map<String, String> MIME_TO_SETTING_NAME = new HashMap<String, String>();
-    static {
-        MIME_TO_SETTING_NAME.put("text/html", "HTML"); //NOI18N
-        MIME_TO_SETTING_NAME.put("text/xhtml", "XHTML"); //NOI18N
-        MIME_TO_SETTING_NAME.put("text/x-jsp", "JSP"); //NOI18N
-        MIME_TO_SETTING_NAME.put("text/x-tag", "JSP"); //NOI18N
-        MIME_TO_SETTING_NAME.put("text/x-gsp", "GSP"); //NOI18N
-        MIME_TO_SETTING_NAME.put("text/x-php5", "PHP"); //NOI18N
-    }
+    private static final Map<String, String> MIME_TO_SETTING_NAME = Map.ofEntries(
+            Map.entry("text/html", "HTML"), //NOI18N
+            Map.entry("text/xhtml", "XHTML"), //NOI18N
+            Map.entry("text/x-jsp", "JSP"), //NOI18N
+            Map.entry("text/x-tag", "JSP"), //NOI18N
+            Map.entry("text/x-gsp", "GSP"), //NOI18N
+            Map.entry("text/x-php5", "PHP") //NOI18N
+    );
 
     /** Creates a new instance of RubyTokenListProvider */
     public HtmlXmlTokenListProvider() {
     }
 
+    @Override
     public TokenList findTokenList(Document doc) {
-        if (!(doc instanceof BaseDocument)) {
-            Logger.getLogger(HtmlXmlTokenListProvider.class.getName()).log(Level.INFO, null,
-                    new IllegalStateException("The given document is not an instance of the BaseDocument, is just " +  //NOI18N
-                    doc.getClass().getName()));
-            return null;
-        }
+        if (doc instanceof BaseDocument bdoc) {
+            //html
+            String docMimetype = NbEditorUtilities.getMimeType(doc);
 
-        //html
-        final BaseDocument bdoc = (BaseDocument) doc;
-        final String docMimetype = NbEditorUtilities.getMimeType(doc);
-        final AtomicReference<TokenList> ret = new AtomicReference<TokenList>();
-        doc.render(new Runnable() {
-            public void run() {
+            AtomicReference<TokenList> ret = new AtomicReference<>();
+            bdoc.render(() -> {
                 TokenHierarchy<?> th = TokenHierarchy.get(bdoc);
                 Set<LanguagePath> paths = th.languagePaths();
                 for(LanguagePath path : paths) {
@@ -76,17 +68,22 @@ public class HtmlXmlTokenListProvider implements TokenListProvider {
                         break;
                     }
                 }
+            });
+
+            if(ret.get() != null) {
+                return ret.get();
             }
-        });
-        if(ret.get() != null) {
-            return ret.get();
-        }
 
-        //xml
-        if ((docMimetype != null) && (docMimetype.contains("xml"))) { //NOI18N
-            return new XmlTokenList(bdoc);
-        }
+            //xml
+            if ((docMimetype != null) && (docMimetype.contains("xml"))) { //NOI18N
+                return new XmlTokenList(bdoc);
+            }
+        } else {
+            Logger.getLogger(HtmlXmlTokenListProvider.class.getName()).log(Level.INFO, null,
+                    new IllegalStateException("The given document is not an instance of the BaseDocument, is just " +  //NOI18N
+                    (doc != null ? doc.getClass().getName() : "<null>")));
 
+        }
         return null;
     }
 }

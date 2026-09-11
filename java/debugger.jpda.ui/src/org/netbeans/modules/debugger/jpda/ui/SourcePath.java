@@ -420,10 +420,15 @@ public class SourcePath {
                     convertSlash (csf.getSourcePath (stratumn)), true
                 );
                 if (url == null) {
-                    stratumn = csf.getDefaultStratum ();
                     url = getURL (
-                        convertSlash (csf.getSourcePath (stratumn)), true
+                        convertSlash (csf.getSourcePath (csf.getDefaultStratum())), true
                     );
+                    for (var anyStratum : csf.getAvailableStrata()) {
+                        if (url != null) {
+                            break;
+                        }
+                        url = getURL(convertSlash (csf.getSourcePath (anyStratum)), true);
+                    }
                 }
                 if (url == null) {
                     String message = NbBundle.getMessage(SourcePath.class,

@@ -54,7 +54,7 @@ public class NbInstallerCacheTest extends NbTestCase {
         ModuleManager mm = new ModuleManager(mmi, me);
         MockModule m = new MockModule(mm, me);
     
-        NbInstaller.Cache c = new NbInstaller.Cache();
+        NbInstaller.ManifestCache c = new NbInstaller.ManifestCache();
         assertEquals("1", c.findProperty(m, "one", true));
         assertEquals("One call to module", 1, m.cnt);
         assertNull(c.findProperty(m, "null", true));
@@ -65,7 +65,7 @@ public class NbInstallerCacheTest extends NbTestCase {
         m.cnt = 0;
         StampsTest.reset();
         
-        NbInstaller.Cache loaded = new NbInstaller.Cache();
+        NbInstaller.ManifestCache loaded = new NbInstaller.ManifestCache();
         assertEquals("1", loaded.findProperty(m, "one", true));
         assertEquals("No call to module", 0, m.cnt);
         assertNull(loaded.findProperty(m, "null", true));

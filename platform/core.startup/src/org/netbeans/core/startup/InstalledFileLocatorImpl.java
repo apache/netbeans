@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -62,7 +61,7 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
     private final File[] dirs;
     public InstalledFileLocatorImpl() {
         List<File> _dirs = computeDirs();
-        dirs = _dirs.toArray(new File[0]);
+        dirs = _dirs.toArray(File[]::new);
     }
     
     private static void addDir(List<File> _dirs, String d) {
@@ -99,41 +98,42 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
      */
     public static synchronized void prepareCache() {
         assert fileCache == null;
-        fileCache = new HashMap<String,Map<File,Set<String>>>();
-        clusterCache = new HashMap<String,List<File>>();
+        fileCache = new HashMap<>();
+        clusterCache = new HashMap<>();
         
         try {
             InputStream is = Stamps.getModulesJARs().asStream("all-files.dat");
             if (is == null) {
                 return;
             }
-            DataInputStream dis = new DataInputStream(is);
-            int filesSize = dis.readInt();
-            for (int i = 0; i < filesSize; i++) {
-                String key = dis.readUTF();
-                Map<File,Set<String>> fileToKids = new HashMap<File, Set<String>>();
-                int filesToKids = dis.readInt();
-                for (int j = 0; j < filesToKids; j++) {
-                    final String read = RelPaths.readRelativePath(dis);
-                    File f = new File(read);
-                    int kidsSize = dis.readInt();
-                    List<String> kids = new ArrayList<String>(kidsSize);
-                    for (int k = 0; k < kidsSize; k++) {
-                        kids.add(dis.readUTF());
+            try (DataInputStream dis = new DataInputStream(is)) {
+                int filesSize = dis.readInt();
+                for (int i = 0; i < filesSize; i++) {
+                    String key = dis.readUTF();
+                    Map<File, Set<String>> fileToKids = new HashMap<>();
+                    int filesToKids = dis.readInt();
+                    for (int j = 0; j < filesToKids; j++) {
+                        final String read = RelPaths.readRelativePath(dis);
+                        File f = new File(read);
+                        int kidsSize = dis.readInt();
+                        List<String> kids = new ArrayList<>(kidsSize);
+                        for (int k = 0; k < kidsSize; k++) {
+                            kids.add(dis.readUTF());
+                        }
+                        fileToKids.put(f, new HashSet<>(kids));
                     }
-                    fileToKids.put(f, new HashSet<String>(kids));
+                    fileCache.put(key, fileToKids);
                 }
-                fileCache.put(key, fileToKids);
-            }
-            int clusterSize = dis.readInt();
-            for (int i = 0; i < clusterSize; i++) {
-                String key = dis.readUTF();
-                int valueSize = dis.readInt();
-                List<File> values = new ArrayList<File>(valueSize);
-                for (int j = 0; j < valueSize; j++) {
-                    values.add(new File(RelPaths.readRelativePath(dis)));
+                int clusterSize = dis.readInt();
+                for (int i = 0; i < clusterSize; i++) {
+                    String key = dis.readUTF();
+                    int valueSize = dis.readInt();
+                    List<File> values = new ArrayList<>(valueSize);
+                    for (int j = 0; j < valueSize; j++) {
+                        values.add(new File(RelPaths.readRelativePath(dis)));
+                    }
+                    clusterCache.put(key, values);
                 }
-                clusterCache.put(key, values);
             }
         } catch (IOException ex) {
             LOG.log(Level.INFO, null, ex);
@@ -242,7 +242,7 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
                         } else if (files == null) {
                             files = f;
                         } else {
-                            files = new LinkedHashSet<File>(files);
+                            files = new LinkedHashSet<>(files);
                             files.addAll(f);
                         }
                     }
@@ -267,11 +267,11 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
                     assert owned(codeNameBase, dir, path);
                     File f = makeFile(dir, path);
                     if (single) {
-                        return Collections.singleton(f);
+                        return Set.of(f);
                     } else if (files == null) {
-                        files = Collections.singleton(f);
+                        files = Set.of(f);
                     } else {
-                        files = new LinkedHashSet<File>(files);
+                        files = new LinkedHashSet<>(files);
                         files.add(f);
                     }
                 }
@@ -282,11 +282,11 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
                 if (f.exists()) {
                     assert owned(codeNameBase, dir, path);
                     if (single) {
-                        return Collections.singleton(f);
+                        return Set.of(f);
                     } else if (files == null) {
-                        files = Collections.singleton(f);
+                        files = Set.of(f);
                     } else {
-                        files = new LinkedHashSet<File>(files);
+                        files = new LinkedHashSet<>(files);
                         files.add(f);
                     }
                 }
@@ -301,14 +301,14 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
             return Arrays.asList(dirs);
         }
         String codeNameBaseDashes = codeNameBase.replace('.', '-');
-        if (path.matches("(modules/(locale/)?)?" + codeNameBaseDashes + "(_[^/]+)?[.]jar")) { // NOI18N
+        if (isBaseInPath(codeNameBaseDashes, path)) {
             // Called very commonly during startup; cannot afford to do exact check each time.
             // Anyway if the module is there it is almost certainly installed in the same cluster.
             return Arrays.asList(dirs);
         }
         List<File> clusters = clusterCache != null ? clusterCache.get(codeNameBase) : null;
         if (clusters == null) {
-            clusters = new ArrayList<File>(1);
+            clusters = new ArrayList<>(1);
             String rel = "update_tracking/" + codeNameBaseDashes + ".xml"; // NOI18N
             for (File dir : dirs) {
                 File tracking = new File(dir, rel);
@@ -331,8 +331,29 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
         return clusters;
     }
 
+    private static final Pattern TAIL = Pattern.compile("(_[^/]+)?[.]jar"); // NOI18N
+
+    // hot section: avoids recompiling the pattern by unrolling the prefix manually
+    private static boolean isBaseInPath(String codeNameBaseDashes, String path) {
+//        return path.matches("(modules/(locale/)?)?" + codeNameBaseDashes + "(_[^/]+)?[.]jar");
+        int pos = 0;
+        if (path.startsWith("modules/")) { // NOI18N
+            pos += "modules/".length(); // NOI18N
+            if (path.startsWith("locale/", pos)) { // NOI18N
+                pos += "locale/".length(); // NOI18N
+            }
+        }
+        if (path.startsWith(codeNameBaseDashes, pos)) {
+            pos += codeNameBaseDashes.length();
+            if (TAIL.matcher(path.substring(pos)).matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private static String[] prefixAndName(String relativePath) {
-        if (relativePath.length() == 0) {
+        if (relativePath.isEmpty()) {
             throw new IllegalArgumentException("Cannot look up \"\" in InstalledFileLocator.locate"); // NOI18N
         }
         if (relativePath.charAt(0) == '/') {
@@ -359,7 +380,7 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
         assert Thread.holdsLock(InstalledFileLocatorImpl.class);
         Map<File,Set<String>> fileCachePerPrefix = fileCache.get(prefix);
         if (fileCachePerPrefix == null) {
-            fileCachePerPrefix = new HashMap<File,Set<String>>(dirs.length * 2);
+            fileCachePerPrefix = new HashMap<>(dirs.length * 2);
             for (int i = 0; i < dirs.length; i++) {
                 File root = dirs[i];
                 File d;
@@ -375,7 +396,7 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
                 if (isDir) {
                     String[] kids = d.list();
                     if (kids != null) {
-                        fileCachePerPrefix.put(root, new HashSet<String>(Arrays.asList(kids)));
+                        fileCachePerPrefix.put(root, new HashSet<>(Arrays.asList(kids)));
                     } else {
                         Util.err.log(Level.WARNING, "could not read files in {0} at {1}", new Object[] {d, findCaller()});
                     }
@@ -419,7 +440,7 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
                 LOG.log(Level.FINE, "No update tracking found in {0}", dir);
                 return true;
             }
-            ownershipByModule = new HashMap<String,Set<String>>();
+            ownershipByModule = new HashMap<>();
             ownershipByModuleByCluster.put(dir, ownershipByModule);
         }
         Set<String> ownership = ownershipByModule.get(codeNameBase);
@@ -429,15 +450,13 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
                 LOG.log(Level.WARNING, "no such module {0} at {1}", new Object[] {list, findCaller()});
                 return true;
             }
-            ownership = new HashSet<String>();
+            ownership = new HashSet<>();
             try {
                 // Could do a proper XML parse but likely too slow.
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.log(Level.FINE, "Parsing {0} due to {1}", new Object[] {list, path});
                 }
-                Reader r = new FileReader(list);
-                try {
-                    BufferedReader br = new BufferedReader(r);
+                try (BufferedReader br = new BufferedReader(new FileReader(list))) {
                     String line;
                     while ((line = br.readLine()) != null) {
                         Matcher m = FILE_PATTERN.matcher(line);
@@ -445,9 +464,6 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
                             ownership.add(m.group(1));
                         }
                     }
-                    br.close();
-                } finally {
-                    r.close();
                 }
             } catch (IOException x) {
                 LOG.log(Level.INFO, "could not parse " + list, x);
@@ -476,7 +492,7 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
         return true;
     }
     private static final Pattern FILE_PATTERN = Pattern.compile("\\s*<file.+name=[\"']([^\"']+)[\"'].*/>");
-    private static final Map<File,Map<String,Set<String>>> ownershipByModuleByCluster = new HashMap<File,Map<String,Set<String>>>();
+    private static final Map<File, Map<String, Set<String>>> ownershipByModuleByCluster = new HashMap<>();
 
     private static String findCaller() {
         for (StackTraceElement line : Thread.currentThread().getStackTrace()) {
@@ -492,7 +508,7 @@ public final class InstalledFileLocatorImpl extends InstalledFileLocator {
     }
 
     static List<File> computeDirs() {
-        List<File> _dirs = new ArrayList<File>();
+        List<File> _dirs = new ArrayList<>();
         addDir(_dirs, System.getProperty("netbeans.user")); // NOI18N
         String nbdirs = System.getProperty("netbeans.dirs"); // #27151
         if (nbdirs != null) {

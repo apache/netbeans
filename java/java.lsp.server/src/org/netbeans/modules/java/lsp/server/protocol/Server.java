@@ -407,6 +407,7 @@ public final class Server {
         private static final String NETBEANS_MAVEN_USER_SETTINGS = "maven.userSettings";
         private static final String NETBEANS_PROJECT_JDKHOME = "project.jdkhome";
         private static final String NETBEANS_JAVA_HINTS = "hints";
+        private static final String NETBEANS_DISABLE_PROJECT_PRIMING = "disableProjectPriming";
 
         // change to a greater throughput if the initialization waits on more processes than just (serialized) project open.
         private static final RequestProcessor SERVER_INIT_RP = new RequestProcessor(LanguageServerImpl.class.getName());
@@ -431,6 +432,7 @@ public final class Server {
          */
         // @GuardedBy(this)
         private final Map<Project, CompletableFuture<Void>> beingOpened = new HashMap<>();
+        private volatile boolean disableAutoProjectPriming = Boolean.getBoolean(NETBEANS_DISABLE_PROJECT_PRIMING);
 
         /**
          * Projects opened based on files. This registry avoids duplicate questions if
@@ -690,6 +692,10 @@ public final class Server {
             }
 
             LOG.log(Level.FINER, id + ": Opening projects: {0}", Arrays.asList(toOpen));
+            if (disableAutoProjectPriming) {
+                LOG.log(Level.FINER, "{0}: Project priming disabled by configuration.", id);
+                return primingBuilds.toArray(new CompletableFuture[0]);
+            }
 
             // before the projects are officialy 'opened', try to prime the projects
             for (Project p : toOpen) {

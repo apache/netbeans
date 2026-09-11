@@ -30,6 +30,7 @@ import org.netbeans.modules.j2ee.persistence.entitygenerator.GeneratedTables;
 import org.openide.filesystems.*;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.dbschema.SchemaElement;
+import org.netbeans.modules.j2ee.persistence.entitygenerator.DateTimeType;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.CollectionType;
 import org.netbeans.modules.j2ee.persistence.entitygenerator.EntityRelation.FetchType;
 
@@ -88,7 +89,8 @@ public class RelatedCMPHelper {
     private FetchType fetchType = FetchType.DEFAULT;
     private boolean regenTablesAttrs = false;
     private CollectionType collectionType = CollectionType.COLLECTION;
-    
+    private DateTimeType dateTimeType = DateTimeType.LEGACY;
+
     public RelatedCMPHelper(Project project, FileObject configFilesFolder, PersistenceGenerator persistenceGen) {
         this.project = project;
         this.configFilesFolder = configFilesFolder;
@@ -293,7 +295,15 @@ public class RelatedCMPHelper {
     public void setCollectionType(CollectionType type) {
         collectionType = type;
     }
-    
+
+    public DateTimeType getDateTimeType() {
+        return dateTimeType;
+    }
+
+    public void setDateTimeType(DateTimeType type) {
+        dateTimeType = type;
+    }
+
     /**
      * Public because used in J2EE functional tests.
      */

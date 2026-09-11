@@ -117,7 +117,7 @@ public final class FoldHierarchyTransactionImpl {
      * starting with folds with the highest priority
      * going to folds with the lowest priority.
      */
-    private List unblockedFoldLists = new ArrayList(4);
+    private List<List<Fold>> unblockedFoldLists = new ArrayList<>(4);
     
     /**
      * Maximum priority of the unblocked folds added
@@ -1191,9 +1191,9 @@ public final class FoldHierarchyTransactionImpl {
                 Fold blocked = (Fold)it.next();
                 int priority = getOperation(blocked).getPriority();
                 while (unblockedFoldLists.size() <= priority) {
-                    unblockedFoldLists.add(new ArrayList(4));
+                    unblockedFoldLists.add(new ArrayList<>(4));
                 }
-                ((List)unblockedFoldLists.get(priority)).add(blocked);
+                unblockedFoldLists.get(priority).add(blocked);
                 if (priority > unblockedFoldMaxPriority) {
                     unblockedFoldMaxPriority = priority;
                 }
@@ -1208,11 +1208,11 @@ public final class FoldHierarchyTransactionImpl {
         ApiPackageAccessor api = ApiPackageAccessor.get();
         if (unblockedFoldMaxPriority >= 0) { // some folds became unblocked
             for (int priority = unblockedFoldMaxPriority; priority >= 0; priority--) {
-                List foldList = (List)unblockedFoldLists.get(priority);
+                List<Fold> foldList = unblockedFoldLists.get(priority);
                 Fold rootFold = execution.getRootFold();
                 for (int i = foldList.size() - 1; i >= 0; i--) {
                     // Remove last fold from the list
-                    Fold unblocked = (Fold)foldList.remove(i);
+                    Fold unblocked = foldList.remove(i);
                     
                     if (!execution.isAddedOrBlocked(unblocked)) { // not yet processed
                         unblockedFoldMaxPriority = -1;

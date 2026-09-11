@@ -497,14 +497,7 @@ public class IntroduceParameterPlugin extends JavaRefactoringPlugin {
                 paramTable = new ChangeParametersRefactoring.ParameterInfo[parameters.size() + 1];
                 for (int originalIndex = 0; originalIndex < parameters.size(); originalIndex++) {
                     VariableElement param = parameters.get(originalIndex);
-                    VariableTree parTree = (VariableTree) info.getTrees().getTree(param);
-                    String typeRepresentation;
-                    if (method.isVarArgs() && originalIndex == parameters.size()-1) {
-                        typeRepresentation = parTree.getType().toString().replace("[]", "..."); // NOI18N
-                    } else {
-                        typeRepresentation = parTree.getType().toString();
-                    }
-                    paramTable[originalIndex] = new ChangeParametersRefactoring.ParameterInfo(originalIndex, param.getSimpleName().toString(), typeRepresentation, null);
+                    paramTable[originalIndex] = new ChangeParametersRefactoring.ParameterInfo(originalIndex, param.getSimpleName().toString(), ParameterInfo.parameterTypeFromSource(info, param), null);
                 }
                 index = paramTable.length - 1;
                 if (method.isVarArgs()) {

@@ -157,7 +157,7 @@ public class WebProjectJAXWSSupport extends ProjectJAXWSSupport /*implements JAX
             boolean addServletEntry = false;
             JAXWSSupport wss = JAXWSSupport.getJAXWSSupport(project.getProjectDirectory());
             if (wss != null) {
-                Map properties = wss.getAntProjectHelper().getStandardPropertyEvaluator().getProperties();
+                Map<String, String> properties = wss.getAntProjectHelper().getStandardPropertyEvaluator().getProperties();
                 if (properties != null) {
                     String serverInstance = (String)properties.get("j2ee.server.instance"); //NOI18N
                     if (serverInstance != null) {

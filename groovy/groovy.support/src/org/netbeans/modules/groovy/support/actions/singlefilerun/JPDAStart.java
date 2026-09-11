@@ -93,7 +93,7 @@ public class JPDAStart implements Runnable {
                     throw new RuntimeException("No trasports named " + getTransport() + " found!"); //NOI18N
                 }
 
-                final Map args = lc.defaultArguments();
+                final Map<String, Connector.Argument> args = lc.defaultArguments();
                 String address = lc.startListening(args);
                 try {
                     int port = Integer.parseInt(address.substring(address.indexOf(':') + 1));
@@ -105,7 +105,7 @@ public class JPDAStart implements Runnable {
                 }
                 LOG.log(Level.INFO, "Debug Port:{0}", lock[0]);  //NOI18N
 
-                final Map properties = new HashMap();
+                final Map<String, Object> properties = new HashMap<>();
 
                 ClassPath sourcePath = ClassPathSupport.createClassPath(fileObject.getParent());
 

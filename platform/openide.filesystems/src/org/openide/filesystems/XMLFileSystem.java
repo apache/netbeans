@@ -1122,13 +1122,13 @@ public final class XMLFileSystem extends AbstractFileSystem {
         Stack<ResourceElem> resElemStack = new Stack<ResourceElem>();
         Stack<String> elementStack = new Stack<String>();
         URL urlContext;
-        private Map dtdMap;
+        private Map<String, String> dtdMap;
         private ResourceElem topRE;
         private StringBuffer pcdata = new StringBuffer();
         private int weight;
         private String uri;
 
-        Handler(Map dtdMap, ResourceElem rootElem, boolean validate) {
+        Handler(Map<String, String> dtdMap, ResourceElem rootElem, boolean validate) {
             this.dtdMap = dtdMap;
             this.rootElem = rootElem;
             this.validate = validate;
@@ -1274,7 +1274,7 @@ public final class XMLFileSystem extends AbstractFileSystem {
         @Override
         public InputSource resolveEntity(String pid, String sid)
         throws SAXException {
-            String publicURL = (String) dtdMap.get(pid);
+            String publicURL = dtdMap.get(pid);
 
             if (publicURL != null) {
                 if (validate) {

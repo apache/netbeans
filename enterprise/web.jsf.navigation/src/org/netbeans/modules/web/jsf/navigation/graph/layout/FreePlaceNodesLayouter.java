@@ -83,7 +83,7 @@ public final class FreePlaceNodesLayouter {
     }
     
     
-    private final Map<String,Point> positions = new HashMap<String,Point> ();
+    private final Map<String, Point> positions = new HashMap<>();
     public void layoutNodesLocations( PageFlowScene scene, Collection<Page> nodes) {
         final Collection<Page> allNodes = scene.getNodes();
         for( Page node : nodes ) {
@@ -115,7 +115,7 @@ public final class FreePlaceNodesLayouter {
     
     private final int SEP_X = 250;
     private final int SEP_Y = 150;
-    private Point getNewComponentLocation(PageFlowScene scene, Map positions, Collection<Page> nodes) {
+    private Point getNewComponentLocation(PageFlowScene scene, Map<String, Point> positions, Collection<Page> nodes) {
         for (int a = 0; ; a++) {
             for (int b = 0; b <= a; b++) {
                 final int x =  SEP_Y + SEP_X * (a - b);
@@ -127,7 +127,7 @@ public final class FreePlaceNodesLayouter {
         }
     }
     
-    private boolean isThereEmptyPlace(PageFlowScene scene, Map positions, Collection<Page> nodes, int x, int y) {
+    private boolean isThereEmptyPlace(PageFlowScene scene, Map<String, Point> positions, Collection<Page> nodes, int x, int y) {
         final Rectangle rectangle = new Rectangle(x, y, 100, 150);
         if (nodes != null) {
             for( Page node : nodes) {

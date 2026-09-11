@@ -235,6 +235,7 @@ public abstract class AbstractFaceletsLibrary extends TagLibraryImpl implements 
         protected String componentType;
         protected String rendererType;
         protected Class handlerClass;
+        private Tag tag = null;
 
         protected Component(String name, String componentType, String rendererType, Class handlerClass) {
             super(name);
@@ -255,7 +256,15 @@ public abstract class AbstractFaceletsLibrary extends TagLibraryImpl implements 
             return handlerClass;
         }
 
-           @Override
+        @Override
+        public Tag getTag() {
+            if (tag == null) {
+                tag = ComponentTag.wrap(super.getTag());
+            }
+            return tag;
+        }
+
+        @Override
         public String[][] getDescription() {
                String[][] myDescr = new String[][]{{"type", "component"}, //NOI18N
                {"component type", getComponentType() == null ? "N/A" : getComponentType()}, //NOI18N
@@ -263,7 +272,6 @@ public abstract class AbstractFaceletsLibrary extends TagLibraryImpl implements 
                {"handler class", getHandlerClass() == null ? "N/A" : getHandlerClass().getName()}}; //NOI18N
             return merge(super.getDescription(), myDescr);
         }
-
 
     }
 
@@ -291,6 +299,7 @@ public abstract class AbstractFaceletsLibrary extends TagLibraryImpl implements 
     public class CompositeComponentTag extends NamedComponent {
 
         protected String resourceId;
+        private Tag tag = null;
 
         protected CompositeComponentTag(String name, String resourceId) {
             super(name);
@@ -299,6 +308,14 @@ public abstract class AbstractFaceletsLibrary extends TagLibraryImpl implements 
 
         public String getResourceId() {
             return resourceId;
+        }
+
+        @Override
+        public Tag getTag() {
+            if (tag == null) {
+                tag = ComponentTag.wrap(super.getTag());
+            }
+            return tag;
         }
 
         @Override

@@ -93,11 +93,16 @@ public class FaceletsLibrarySupportTest extends TestBaseForTestProject {
         assertEquals("test", comp.getName());
         Tag t2 = comp.getTag();
         assertNotNull(t2);
+        assertTrue(t2.hasNonGenenericAttributes());
 
         Attribute a2 = t2.getAttribute("testAttr");
         assertNotNull(a2);
         assertEquals("testAttr", a2.getName());
 
+        // verify CC has both UIComponent and CC default attributes
+        assertNotNull(t2.getAttribute("binding"));
+        assertNotNull(t2.getAttribute("rendered"));
+        assertNotNull(t2.getAttribute("transient"));
     }
 
     public void testCompositeComponentLibraryWithDescriptor() {
@@ -126,6 +131,10 @@ public class FaceletsLibrarySupportTest extends TestBaseForTestProject {
         assertNotNull(a);
         assertEquals("testAttr", a.getName());
 
+        // verify CC has both UIComponent and CC default attributes
+        assertNotNull(t.getAttribute("binding"));
+        assertNotNull(t.getAttribute("rendered"));
+        assertNotNull(t.getAttribute("transient"));
     }
 
     public void testClassBaseLibraryWithinCurrentProject() {
@@ -164,7 +173,18 @@ public class FaceletsLibrarySupportTest extends TestBaseForTestProject {
         Attribute a2 = t2.getAttribute("myattr");
         assertNotNull(a2);
         assertEquals("myattr", a2.getName());
-
+        
+        // TagHandlers must NOT have UIComponent default attributes
+        assertNull(t2.getAttribute("rendered"));
+        assertNull(t2.getAttribute("transient"));
+        
+        // mycomponent must have UIComponent default attributes
+        LibraryComponent uiComp = lib.getComponent("mycomponent");
+        assertNotNull(uiComp);
+        Tag uiTag = uiComp.getTag();
+        assertNotNull(uiTag.getAttribute("myattr"));
+        assertNotNull(uiTag.getAttribute("rendered"));
+        assertNotNull(uiTag.getAttribute("transient"));
     }
 
     public void testClassBaseLibraryFromLibraryProject() {

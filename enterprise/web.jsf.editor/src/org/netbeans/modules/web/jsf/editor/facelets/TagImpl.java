@@ -18,20 +18,21 @@
  */
 package org.netbeans.modules.web.jsf.editor.facelets;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+
 import org.netbeans.modules.web.jsfapi.api.Attribute;
+import org.netbeans.modules.web.jsfapi.api.Tag;
 
 /**
  *
  * @author mfukala@netbeans.org
  */
-public final class TagImpl extends GenericTag {
+public final class TagImpl implements Tag {
 
-    private String name;
-    private String description;
-    private Map<String, Attribute> attrs;
+    private final String name;
+    private final String description;
+    private final Map<String, Attribute> attrs;
 
     public TagImpl(String name, String description, Map<String, Attribute> attrs) {
         this.name = name;
@@ -56,16 +57,12 @@ public final class TagImpl extends GenericTag {
 
     @Override
     public Collection<Attribute> getAttributes() {
-        //merge with default attributes
-        Collection<Attribute> all = new ArrayList<>(super.getAttributes());
-        all.addAll(attrs.values());
-        return all;
+        return attrs.values();
     }
 
     @Override
     public Attribute getAttribute(String name) {
-        Attribute superA = super.getAttribute(name);
-        return superA != null ? superA : attrs.get(name);
+        return attrs.get(name);
     }
 
     @Override

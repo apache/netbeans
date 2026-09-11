@@ -78,11 +78,23 @@ public class PullFromUpstreamAction extends MultipleRepositoryAction {
                     Logger.getLogger(FetchFromUpstreamAction.class.getName()).log(Level.INFO, null, ex);
                 }
                 String errorLabel = Bundle.LBL_Pull_pullFromUpstreamFailed();
-                GitBranch trackedBranch = GitUtils.getTrackedBranch(info, errorLabel);
+                GitBranch activeBranch = info.getActiveBranch();
+                if (activeBranch == null) {
+                    return;
+                }
+                GitBranch trackedBranch = GitUtils.getTrackedBranch(info, null);
+
+                // If no tracked branch and multiple remotes, use full pull UI
+                if (trackedBranch == null && info.getRemotes().size() > 1) {
+                    SystemAction.get(PullAction.class).pull(repository, activeBranch);
+                    return;
+                }
+
                 if (trackedBranch == null) {
                     return;
                 }
-                GitRemoteConfig cfg = FetchUtils.getRemoteConfigForActiveBranch(trackedBranch, info, errorLabel);                        
+
+                GitRemoteConfig cfg = FetchUtils.getRemoteConfigForActiveBranch(trackedBranch, info, errorLabel);
                 if (cfg == null) {
                     return;
                 }

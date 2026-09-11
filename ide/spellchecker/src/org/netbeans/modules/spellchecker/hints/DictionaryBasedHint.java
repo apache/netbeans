@@ -32,45 +32,32 @@ import org.openide.util.NbBundle;
  *
  * @author Jan Lahoda
  */
-public final class DictionaryBasedHint implements EnhancedFix {
+public record DictionaryBasedHint(String original, String proposal, Document doc, Position[] span, String sortText) implements EnhancedFix {
 
-    private String original;
-    private Document doc;
-    private String proposal;
-    private Position[] span;
-    private String sortText;
-    
-    public DictionaryBasedHint(String original, String proposal, Document doc, Position[] span, String sortText) {
-        this.original = original;
-        this.doc = doc;
-        this.proposal = proposal;
-        this.span = span;
-        this.sortText = sortText;
-    }
-
+    @Override
     public String getText() {
         return NbBundle.getMessage(DictionaryBasedHint.class, "FIX_ChangeWord", original, proposal);
     }
 
+    @Override
     public ChangeInfo implement() {
         try {
-            NbDocument.runAtomicAsUser((StyledDocument) doc, new Runnable() {
-                public void run() {
-                    try {
-                        doc.remove(span[0].getOffset(), span[1].getOffset() - span[0].getOffset());
-                        doc.insertString(span[0].getOffset(), proposal, null);
-                    } catch (BadLocationException e) {
-                        ErrorManager.getDefault().notify(e);
-                    }
+            NbDocument.runAtomicAsUser((StyledDocument) doc, () -> {
+                try {
+                    doc.remove(span[0].getOffset(), span[1].getOffset() - span[0].getOffset());
+                    doc.insertString(span[0].getOffset(), proposal, null);
+                } catch (BadLocationException e) {
+                    ErrorManager.getDefault().notify(e);
                 }
             });
         } catch (BadLocationException e) {
             ErrorManager.getDefault().notify(e);
         }
-	
-	return null;
+
+        return null;
     }
 
+    @Override
     public CharSequence getSortText() {
         return sortText;
     }

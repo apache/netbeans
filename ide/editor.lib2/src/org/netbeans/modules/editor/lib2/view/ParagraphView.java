@@ -21,6 +21,8 @@ package org.netbeans.modules.editor.lib2.view;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -31,11 +33,18 @@ import javax.swing.JComponent;
 import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.text.AttributeSet;
+import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import javax.swing.text.Position.Bias;
 import javax.swing.text.View;
 import javax.swing.text.ViewFactory;
 import org.netbeans.lib.editor.util.swing.DocumentUtilities;
+import org.netbeans.modules.editor.lib2.highlighting.CompoundAttributes;
+import org.netbeans.modules.editor.lib2.highlighting.HighlightItem;
+import org.netbeans.modules.editor.lib2.highlighting.HighlightsList;
+import org.netbeans.modules.editor.lib2.highlighting.HighlightsReader;
+import org.netbeans.modules.editor.lib2.highlighting.HighlightingManager;
+import org.netbeans.spi.editor.highlighting.HighlightsContainer;
 
 
 /**
@@ -51,6 +60,12 @@ import org.netbeans.lib.editor.util.swing.DocumentUtilities;
  */
 
 public final class ParagraphView extends EditorView implements EditorView.Parent {
+
+    private static final String KEY_VIRTUAL_TEXT_BLOCK = "virtual-text-block"; // NOI18N
+    private static final String KEY_VIRTUAL_TEXT_BLOCK_ANCHOR_OFFSET = "virtual-text-block-anchor-offset"; // NOI18N
+    private static final String KEY_VIRTUAL_TEXT_BLOCK_TOOLTIP = "virtual-text-block-tooltip"; // NOI18N
+    private static final int BLOCK_HINT_BOTTOM_GAP = 2;
+    private static final int BLOCK_HINT_FONT_REDUCTION = 2;
 
     // -J-Dorg.netbeans.modules.editor.lib2.view.ParagraphView.level=FINE
     private static final Logger LOG = Logger.getLogger(ParagraphView.class.getName());
@@ -112,6 +127,14 @@ public final class ParagraphView extends EditorView implements EditorView.Parent
     ParagraphViewChildren children; // 40 + 4 = 44 bytes
     
     private int statusBits; // 44 + 4 = 48 bytes
+
+    private float blockHintHeight; // 48 + 4 = 52 bytes
+
+    private String blockHintText;
+
+    private String blockHintTooltip;
+
+    private int blockHintAnchorOffset = -1;
 
     public ParagraphView(Position startPos) {
         super(null);
@@ -252,9 +275,10 @@ public final class ParagraphView extends EditorView implements EditorView.Parent
         Rectangle2D pViewRect = ViewUtils.shapeAsRect(pAlloc);
         DocumentView docView = getDocumentView();
         children.updateLayout(docView, this);
+        updateBlockHint(docView);
         boolean spanUpdated = false;
         float newWidth = children.width();
-        float newHeight = children.height();
+        float newHeight = children.height() + blockHintHeight;
         float origWidth = getWidth();
         float origHeight = getHeight();
         if (newWidth != origWidth) {
@@ -306,7 +330,7 @@ public final class ParagraphView extends EditorView implements EditorView.Parent
     @Override
     public Shape getChildAllocation(int index, Shape alloc) {
         checkChildrenNotNull();
-        return children.getChildAllocation(index, alloc);
+        return children.getChildAllocation(index, getContentAllocation(alloc));
     }
 
     /**
@@ -350,26 +374,37 @@ public final class ParagraphView extends EditorView implements EditorView.Parent
     @Override
     public int getViewIndexChecked(double x, double y, Shape alloc) {
         checkChildrenNotNull();
-        return children.getViewIndex(this, x, y, alloc);
+        return children.getViewIndex(this, x, y, getContentAllocation(alloc));
     }
 
     @Override
     public Shape modelToViewChecked(int offset, Shape alloc, Bias bias) {
         checkChildrenNotNull();
-        return children.modelToViewChecked(this, offset, alloc, bias);
+        return children.modelToViewChecked(this, offset, getContentAllocation(alloc), bias);
     }
     
     @Override
     public int viewToModelChecked(double x, double y, Shape alloc, Bias[] biasReturn) {
         checkChildrenNotNull();
-        return children.viewToModelChecked(this, x, y, alloc, biasReturn);
+        Rectangle2D hintBounds = getBlockHintBounds(alloc);
+        if (hintBounds != null && hintBounds.contains(x, y)) {
+            return getStartOffset();
+        }
+        Shape contentAlloc = getContentAllocation(alloc);
+        Rectangle2D contentBounds = ViewUtils.shapeAsRect(contentAlloc);
+        if (y < contentBounds.getY()) {
+            y = contentBounds.getY();
+        }
+        return children.viewToModelChecked(this, x, y, contentAlloc, biasReturn);
     }
 
     @Override
     public void paint(Graphics2D g, Shape alloc, Rectangle clipBounds) {
         // The background is already cleared by BasicTextUI.paintBackground() which uses component.getBackground()
         checkChildrenNotNull();
-        children.paint(this, g, alloc, clipBounds);
+        Shape contentAlloc = getContentAllocation(alloc);
+        paintBlockHint(g, alloc, clipBounds);
+        children.paint(this, g, contentAlloc, clipBounds);
         
         if (getDocumentView().op.isGuideLinesEnable()) {
             DocumentView docView = getDocumentView();
@@ -434,10 +469,11 @@ public final class ParagraphView extends EditorView implements EditorView.Parent
                 float textsize = docView.op.getDefaultCharWidth() * prefixlength;
                 float tabwidth = docView.op.getDefaultCharWidth() * docView.op.getIndentLevelSize();
                 int rowHeight = (int) docView.op.getDefaultRowHeight();
+                Rectangle contentRect = contentAlloc.getBounds();
                 if (tabwidth > 0) {
-                    int x = alloc.getBounds().x;
-                    while (x < alloc.getBounds().x + alloc.getBounds().width && x < textsize) {
-                        g.drawLine(x, alloc.getBounds().y, x, alloc.getBounds().y + rowHeight);
+                    int x = contentRect.x;
+                    while (x < contentRect.x + contentRect.width && x < contentRect.x + textsize) {
+                        g.drawLine(x, contentRect.y, x, contentRect.y + rowHeight);
                         x += tabwidth;
                     } 
                 }
@@ -450,13 +486,31 @@ public final class ParagraphView extends EditorView implements EditorView.Parent
     @Override
     public JComponent getToolTip(double x, double y, Shape allocation) {
         checkChildrenNotNull();
-        return children.getToolTip(this, x, y, allocation);
+        Rectangle2D hintBounds = getBlockHintBounds(allocation);
+        if (hintBounds != null && hintBounds.contains(x, y)) {
+            return null;
+        }
+        Shape contentAllocation = getContentAllocation(allocation);
+        Rectangle2D contentBounds = ViewUtils.shapeAsRect(contentAllocation);
+        if (y < contentBounds.getY()) {
+            y = contentBounds.getY();
+        }
+        return children.getToolTip(this, x, y, contentAllocation);
     }
 
     @Override
     public String getToolTipTextChecked(double x, double y, Shape allocation) {
         checkChildrenNotNull();
-        return children.getToolTipTextChecked(this, x, y, allocation);
+        Rectangle2D hintBounds = getBlockHintBounds(allocation);
+        if (hintBounds != null && hintBounds.contains(x, y)) {
+            return blockHintTooltip;
+        }
+        Shape contentAllocation = getContentAllocation(allocation);
+        Rectangle2D contentBounds = ViewUtils.shapeAsRect(contentAllocation);
+        if (y < contentBounds.getY()) {
+            y = contentBounds.getY();
+        }
+        return children.getToolTipTextChecked(this, x, y, contentAllocation);
     }
 
     @Override
@@ -562,6 +616,150 @@ public final class ParagraphView extends EditorView implements EditorView.Parent
         if (children == null) {
             throw new IllegalStateException("Null children in " + getDumpId()); // NOI18N
         }
+    }
+
+    private Shape getContentAllocation(Shape alloc) {
+        Rectangle2D.Double bounds = ViewUtils.shape2Bounds(alloc);
+        if (blockHintHeight > 0f) {
+            bounds.y += blockHintHeight;
+            bounds.height = Math.max(0d, bounds.height - blockHintHeight);
+        }
+        return bounds;
+    }
+
+    private void updateBlockHint(DocumentView docView) {
+        AttributeSet attrs = getParagraphHintAttributes(docView);
+        String newText = (attrs != null) ? (String) attrs.getAttribute(KEY_VIRTUAL_TEXT_BLOCK) : null;
+        blockHintText = newText;
+        blockHintTooltip = (attrs != null) ? (String) attrs.getAttribute(KEY_VIRTUAL_TEXT_BLOCK_TOOLTIP) : null;
+        Integer anchorOffset = (attrs != null) ? (Integer) attrs.getAttribute(KEY_VIRTUAL_TEXT_BLOCK_ANCHOR_OFFSET) : null;
+        blockHintAnchorOffset = (anchorOffset != null) ? anchorOffset.intValue() : -1;
+        if (blockHintText != null) {
+            JTextComponent textComponent = docView.getTextComponent();
+            FontMetrics metrics = getBlockHintMetrics(textComponent, docView);
+            blockHintHeight = metrics.getHeight() + BLOCK_HINT_BOTTOM_GAP;
+        } else {
+            blockHintHeight = 0f;
+        }
+    }
+
+    private AttributeSet getParagraphHintAttributes(DocumentView docView) {
+        JTextComponent textComponent = docView.getTextComponent();
+        if (textComponent == null) {
+            return null;
+        }
+        int startOffset = getStartOffset();
+        int endOffset = Math.min(docView.getDocument().getLength(), startOffset + 1);
+        if (endOffset <= startOffset) {
+            return null;
+        }
+        HighlightingManager highlightingManager = HighlightingManager.getInstance(textComponent);
+        AttributeSet attrs = getParagraphHintAttributes(highlightingManager.getBottomHighlights(), startOffset, endOffset);
+        if (attrs != null) {
+            return attrs;
+        }
+        return getParagraphHintAttributes(highlightingManager.getTopHighlights(), startOffset, endOffset);
+    }
+
+    private AttributeSet getParagraphHintAttributes(HighlightsContainer highlightsContainer, int startOffset, int endOffset) {
+        HighlightsReader reader = new HighlightsReader(highlightsContainer, startOffset, endOffset);
+        reader.readUntil(endOffset);
+        HighlightsList highlights = reader.highlightsList();
+        if (highlights.size() == 0) {
+            return null;
+        }
+        for (int i = 0; i < highlights.size(); i++) {
+            AttributeSet attrs = findBlockHintAttributes(highlights.get(i).getAttributes());
+            if (attrs != null) {
+                return attrs;
+            }
+        }
+        return null;
+    }
+
+    private AttributeSet findBlockHintAttributes(AttributeSet attrs) {
+        if (attrs == null) {
+            return null;
+        }
+        if (attrs.getAttribute(KEY_VIRTUAL_TEXT_BLOCK) != null) {
+            return attrs;
+        }
+        if (attrs instanceof CompoundAttributes) {
+            HighlightItem[] items = ((CompoundAttributes) attrs).highlightItems();
+            for (HighlightItem item : items) {
+                AttributeSet nested = item.getAttributes();
+                if (nested != null && nested.getAttribute(KEY_VIRTUAL_TEXT_BLOCK) != null) {
+                    return nested;
+                }
+            }
+        }
+        return null;
+    }
+
+    private Rectangle2D getBlockHintBounds(Shape allocation) {
+        if (blockHintText == null || blockHintAnchorOffset < 0) {
+            return null;
+        }
+        Rectangle2D allocBounds = ViewUtils.shapeAsRect(allocation);
+        int anchorOffset = Math.max(getStartOffset(), Math.min(blockHintAnchorOffset, Math.max(getStartOffset(), getEndOffset() - 1)));
+        Shape anchorShape = children.modelToViewChecked(this, anchorOffset, getContentAllocation(allocation), Bias.Forward);
+        Rectangle2D anchorBounds = ViewUtils.shapeAsRect(anchorShape);
+        JTextComponent textComponent = getDocumentView().getTextComponent();
+        if (textComponent == null) {
+            return null;
+        }
+        FontMetrics metrics = getBlockHintMetrics(textComponent, getDocumentView());
+        return new Rectangle2D.Double(anchorBounds.getX(), allocBounds.getY(), metrics.stringWidth(blockHintText), blockHintHeight);
+    }
+
+    private void paintBlockHint(Graphics2D g, Shape alloc, Rectangle clipBounds) {
+        Rectangle2D hintBounds = getBlockHintBounds(alloc);
+        if (hintBounds == null || !hintBounds.intersects(clipBounds)) {
+            return;
+        }
+        JTextComponent textComponent = getDocumentView().getTextComponent();
+        if (textComponent == null) {
+            return;
+        }
+        Font originalFont = g.getFont();
+        Color originalColor = g.getColor();
+        Font font = getBlockHintFont(getDocumentView());
+        FontMetrics metrics = textComponent.getFontMetrics(font);
+        g.setFont(font);
+        g.setColor(getBlockHintColor(textComponent));
+        g.drawString(blockHintText, (float) hintBounds.getX(), (float) (hintBounds.getY() + metrics.getAscent()));
+        g.setFont(originalFont);
+        g.setColor(originalColor);
+    }
+
+    private Font getBlockHintFont(DocumentView docView) {
+        Font defaultFont = docView.op.getDefaultFont();
+        float size = Math.max(1f, defaultFont.getSize2D() - BLOCK_HINT_FONT_REDUCTION);
+        return defaultFont.deriveFont(size);
+    }
+
+    private FontMetrics getBlockHintMetrics(JTextComponent textComponent, DocumentView docView) {
+        return textComponent.getFontMetrics(getBlockHintFont(docView));
+    }
+
+    private Color getBlockHintColor(JTextComponent textComponent) {
+        Color foreground = textComponent.getForeground();
+        if (foreground == null) {
+            return Color.GRAY;
+        }
+        Color background = textComponent.getBackground();
+        if (background == null || foreground.equals(background)) {
+            return foreground;
+        }
+        return blend(foreground, background, 0.65f);
+    }
+
+    private Color blend(Color foreground, Color background, float foregroundWeight) {
+        float backgroundWeight = 1f - foregroundWeight;
+        return new Color(
+                Math.round(foreground.getRed() * foregroundWeight + background.getRed() * backgroundWeight),
+                Math.round(foreground.getGreen() * foregroundWeight + background.getGreen() * backgroundWeight),
+                Math.round(foreground.getBlue() * foregroundWeight + background.getBlue() * backgroundWeight));
     }
 
     /**

@@ -414,6 +414,45 @@ public class TreePathHandleTest extends NbTestCase {
         assertTrue(tp.getLeaf() == resolved.getLeaf());
         assertNotNull(handle.resolveElement(info));
     }
+
+    public void testResolveElementFallsBackFromBrokenSignature() throws Exception {
+        FileObject file = FileUtil.createData(sourceRoot, "test/Test.java");
+        String brokenCode = "package test;\n"
+                + "import other.MissingType;\n"
+                + "public class Test {\n"
+                + "    public MissingType test() {\n"
+                + "        return null;\n"
+                + "    }\n"
+                + "}\n";
+
+        writeIntoFile(file, brokenCode);
+
+        JavaSource js = JavaSource.forFileObject(file);
+        CompilationInfo brokenInfo = SourceUtilsTestUtil.getCompilationInfo(js, Phase.RESOLVED);
+
+        assertFalse("Expected unresolved type diagnostics", brokenInfo.getDiagnostics().isEmpty());
+
+        TreePath tp = brokenInfo.getTreeUtilities().pathFor(brokenCode.indexOf("return null"));
+        while (tp != null && tp.getLeaf().getKind() != Kind.METHOD) {
+            tp = tp.getParentPath();
+        }
+
+        assertNotNull(tp);
+
+        TreePathHandle handle = TreePathHandle.create(tp, brokenInfo);
+
+        writeIntoFile(FileUtil.createData(sourceRoot, "other/MissingType.java"),
+                "package other;\n"
+                + "public class MissingType {\n"
+                + "}\n");
+
+        SourceUtilsTestUtil.compileRecursively(sourceRoot);
+
+        CompilationInfo fixedInfo = SourceUtilsTestUtil.getCompilationInfo(js, Phase.RESOLVED);
+
+        assertTrue(fixedInfo.getDiagnostics().toString(), fixedInfo.getDiagnostics().isEmpty());
+        assertNotNull(handle.resolveElement(fixedInfo));
+    }
     
     public void testLocVar() throws Exception {
         FileObject file = FileUtil.createData(sourceRoot, "test/test.java");

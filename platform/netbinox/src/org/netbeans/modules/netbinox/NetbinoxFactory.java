@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 import org.eclipse.osgi.launch.EquinoxFactory;
 import org.netbeans.core.netigso.spi.NetigsoArchive;
 import org.openide.util.Utilities;
-import org.openide.util.lookup.ServiceProvider;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Constants;
 import org.osgi.framework.launch.Framework;
@@ -38,11 +37,13 @@ import org.osgi.framework.launch.FrameworkFactory;
  *
  * @author Jaroslav Tulach <jaroslav.tulach@netbeans.org>
  */
+/*
 @ServiceProvider(
     service=FrameworkFactory.class,
     supersedes={ "org.eclipse.osgi.launch.EquinoxFactory" },
     position=-10
 )
+*/
 public class NetbinoxFactory implements FrameworkFactory {
     static final Logger LOG = Logger.getLogger("org.netbeans.modules.netbinox"); // NOI18N
 

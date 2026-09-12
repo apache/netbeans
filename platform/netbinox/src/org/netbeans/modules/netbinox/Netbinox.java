@@ -20,11 +20,9 @@ package org.netbeans.modules.netbinox;
 
 import java.io.File;
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Level;
 import org.eclipse.osgi.launch.Equinox;
 import org.osgi.framework.Bundle;
@@ -47,11 +45,10 @@ import org.osgi.framework.ServiceRegistration;
 class Netbinox extends Equinox {
     private final String installArea;
 
-    public Netbinox(Map configuration) {
+    public Netbinox(Map<String,?> configuration) {
         super(configuration);
-        Object ia = configuration.get("osgi.install.area"); // NOI18N
-        if (ia instanceof String) {
-            installArea = (String)ia;
+        if (configuration.get("osgi.install.area") instanceof String area) { // NOI18N
+            installArea = area;
         } else {
             installArea = null;
         }

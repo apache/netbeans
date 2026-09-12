@@ -46,11 +46,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.api.debugger.DebuggerManager;
 import org.netbeans.api.debugger.DebuggerManagerAdapter;
 import org.netbeans.api.debugger.Session;
@@ -62,22 +62,20 @@ import org.netbeans.modules.debugger.jpda.jdi.ObjectReferenceWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.ReferenceTypeWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.StringReferenceWrapper;
 import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
-import org.openide.util.Exceptions;
 
 /**
  * A collector of shorted String values, that were too long.
  * For every shortened String one can find the original length
  * and the whole original content.
- * 
+ *
  * @author Martin Entlicher
  */
 public final class ShortenedStrings {
-    
-    private static final Map<String, StringInfo> infoStrings = new WeakHashMap<String, StringInfo>();
-    private static final Map<StringReference, StringValueInfo> stringsCache = new WeakHashMap<StringReference, StringValueInfo>();
-    private static final Set<StringReference> retrievingStrings = new HashSet<StringReference>();
-    private static final Map<VirtualMachine, Boolean> isLittleEndianCache =
-            new WeakHashMap<>();
+
+    private static final Map<String, StringInfo> infoStrings = new WeakHashMap<>();
+    private static final Map<StringReference, StringValueInfo> stringsCache = new WeakHashMap<>();
+    private static final Set<StringReference> retrievingStrings = new HashSet<>();
+    private static final Map<VirtualMachine, Boolean> isLittleEndianCache = new WeakHashMap<>();
 
     static {
         DebuggerManager.getDebuggerManager().addDebuggerListener(DebuggerManager.PROP_SESSIONS,
@@ -105,7 +103,7 @@ public final class ShortenedStrings {
     }
 
     private ShortenedStrings() {}
-    
+
     public static StringInfo getShortenedInfo(String s) {
         synchronized (infoStrings) {
             return infoStrings.get(s);
@@ -230,17 +228,17 @@ public final class ShortenedStrings {
                             continue;
                         }
                         Type type = f.type();
-                        if (type instanceof ArrayType) {
-                            String componentType = ((ArrayType)type).componentTypeName();
-                            if ("byte".equals(componentType)){
-                                isCompactImpl = true;
-                                valuesField = f;
-                            }
-                            else if ("char".equals(componentType)){
-                                valuesField = f;
-                            }
-                            else{
-                                continue;
+                        if (type instanceof ArrayType arrayType) {
+                            String componentType = arrayType.componentTypeName();
+                            switch (Optional.of(componentType).orElse("")) {
+                                case "byte" -> {
+                                    isCompactImpl = true;
+                                    valuesField = f;
+                                }
+                                case "char" -> valuesField = f;
+                                default -> {
+                                    continue;
+                                }
                             }
                             break;
                         }
@@ -277,8 +275,8 @@ public final class ShortenedStrings {
                         limit *= 2;
                     }
                     Value values = ObjectReferenceWrapper.getValue(sr, valuesField);
-                    if (values instanceof ArrayReference) {
-                        sa = (ArrayReference) values;
+                    if (values instanceof ArrayReference arrayReference) {
+                        sa = arrayReference;
                         saLength = ArrayReferenceWrapper.length(sa);
                         isShort = saLength <= limit;
                     } else {
@@ -286,9 +284,7 @@ public final class ShortenedStrings {
                     }
                 }
 
-            } catch (ClassNotPreparedExceptionWrapper cnpex) {
-                isShort = true;
-            } catch (ClassNotLoadedException cnlex) {
+            } catch (ClassNotPreparedExceptionWrapper | ClassNotLoadedException cnpex) {
                 isShort = true;
             }
             //System.err.println("isShort = "+isShort);
@@ -348,92 +344,6 @@ public final class ShortenedStrings {
             }
         }
         return string;
-    }
-
-    /**
-     * (Currently untested) Grab the char at the given index in the array.
-     * Returns -1 on an error. Note: returning int instead of char because
-     * exceptions are expensive and so is boxing into a Character
-     * @param sourceArray Backing array reference. May be a byte or char array
-     * @param index
-     * @param backing
-     * @param isLittleEndian
-     * @return
-     */
-    private static int charAt(ArrayReference sourceArray, int index,
-            InternalStringEncoding encoding, boolean isLittleEndian) throws
-            InternalExceptionWrapper, ObjectCollectedExceptionWrapper,
-            VMDisconnectedExceptionWrapper{
-        if (encoding == InternalStringEncoding.CHAR_ARRAY){
-            //that was easy
-            Value v = ArrayReferenceWrapper.getValue(sourceArray, index);
-            if (!(v instanceof CharValue)){
-                return -1;
-            }
-            return ((CharValue)v).charValue();
-        }
-        if (encoding == InternalStringEncoding.BYTE_ARRAY_LATIN1){
-            //that was also easy
-            Value v = ArrayReferenceWrapper.getValue(sourceArray, index);
-            if (!(v instanceof ByteValue)){
-                return -1;
-            }
-            char c = (char)((ByteValue)v).byteValue();
-            //strip off the sign value
-            c &= 0xff;
-            return c;
-        }
-        //uft16 it is
-        List<Value> vals = ArrayReferenceWrapper.getValues(sourceArray,
-                index * 2, 2);
-        Value left = vals.get(0);
-        Value right = vals.get(1);
-        if (!(left instanceof ByteValue && right instanceof ByteValue)){
-            return -1;
-        }
-        return utf16Combine(((ByteValue)left).byteValue(),
-                ((ByteValue)right).value(), isLittleEndian);
-    }
-
-    /**
-     * (Currently untested) Grab the char at the given index in the array.
-     * Returns -1 on an error. Note: returning int instead of char because
-     * exceptions are expensive and so is boxing into a Character
-     * @param sourceArray Backing array reference. May be a byte or char array
-     * @param index
-     * @param encoding
-     * @param isLittleEndian
-     * @return
-     */
-    private static int charAt(List<Value> sourceArray, int index,
-            InternalStringEncoding encoding, boolean isLittleEndian){
-        if (encoding == InternalStringEncoding.CHAR_ARRAY){
-            //that was easy
-            Value v = sourceArray.get(index);
-            if (!(v instanceof CharValue)){
-                return -1;
-            }
-            return ((CharValue)v).charValue();
-        }
-        if (encoding == InternalStringEncoding.BYTE_ARRAY_LATIN1){
-            //that was also easy
-            Value v = sourceArray.get(index);
-            if (!(v instanceof ByteValue)){
-                return -1;
-            }
-            char c = (char)((ByteValue)v).byteValue();
-            //strip off the sign value
-            c &= 0xff;
-            return c;
-        }
-        //uft16 it is
-        Value left = sourceArray.get(index * 2);
-        Value right = sourceArray.get((index * 2) + 1);
-        if (!(left instanceof ByteValue && right instanceof ByteValue)){
-            return -1;
-        }
-        return utf16Combine(((ByteValue)left).byteValue(),
-                ((ByteValue)right).value(), isLittleEndian);
     }
 
     /**
@@ -537,18 +447,6 @@ public final class ShortenedStrings {
         return c;
     }
 
-    private static int length(int arrayLength, InternalStringEncoding backingEncoding){
-        switch (backingEncoding) {
-            case CHAR_ARRAY:
-            case BYTE_ARRAY_LATIN1:
-                return arrayLength;
-            case BYTE_ARRAY_UTF16:
-                return arrayLength / 2;
-            default:
-                throw new AssertionError();
-        }
-    }
-
     public static class StringInfo {
 
         private final InternalStringEncoding backingEncoding;
@@ -582,18 +480,15 @@ public final class ShortenedStrings {
         public String getFullString() {
             try {
                 return StringReferenceWrapper.value(sr);
-            } catch (InternalExceptionWrapper ex) {
-                return null;
-            } catch (VMDisconnectedExceptionWrapper ex) {
-                return null;
-            } catch (ObjectCollectedExceptionWrapper ex) {
+            } catch (InternalExceptionWrapper | VMDisconnectedExceptionWrapper | ObjectCollectedExceptionWrapper ex) {
                 return null;
             }
         }
 
         public Reader getContent() {
             return new Reader() {
-                int pos = 0;
+                private int pos = 0;
+
                 @Override
                 public int read(char[] cbuf, int off, int len) throws IOException {
                     if (pos + len > length) {
@@ -622,18 +517,18 @@ public final class ShortenedStrings {
             };
         }
     }
-    
+
     private static class StringValueInfo {
         boolean isShort; // if true, StringReference.value() caches the value
         Reference<String> shortValueRef; // reference to the shortened version of the String value
-        
+
         StringValueInfo(boolean isShort) {
             this.isShort = isShort;
         }
-        
+
         StringValueInfo(String shortenedValue) {
             this.isShort = false;
-            this.shortValueRef = new WeakReference<String>(shortenedValue);
+            this.shortValueRef = new WeakReference<>(shortenedValue);
         }
     }
 

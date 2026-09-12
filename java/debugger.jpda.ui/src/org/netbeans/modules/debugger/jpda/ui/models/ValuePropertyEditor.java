@@ -42,17 +42,13 @@ import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
-import org.netbeans.api.debugger.jpda.Field;
 import org.netbeans.api.debugger.jpda.InvalidExpressionException;
-import org.netbeans.api.debugger.jpda.JPDAClassType;
 import org.netbeans.api.debugger.jpda.MutableVariable;
 import org.netbeans.api.debugger.jpda.ObjectVariable;
-import org.netbeans.api.debugger.jpda.Super;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.modules.debugger.jpda.expr.JDIVariable;
 import org.netbeans.modules.debugger.jpda.models.ShortenedStrings;
 import org.netbeans.spi.debugger.ContextProvider;
-import org.netbeans.spi.viewmodel.TableModel;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.explorer.propertysheet.ExPropertyEditor;
@@ -63,30 +59,29 @@ import org.openide.util.RequestProcessor;
 /**
  * Property editor of a variable, that delegates to the property editor
  * of the variable's mirror.
- * 
+ *
  * @author Martin Entlicher
  */
 class ValuePropertyEditor implements ExPropertyEditor {
-    
+
     private static final Logger logger = Logger.getLogger(ValuePropertyEditor.class.getName());
-    
-    private static final Set<Class> CLASSES_2_IGNORE = new HashSet<Class>(Arrays.asList(new Class[] {
+
+    private static final Set<Class> CLASSES_2_IGNORE = new HashSet<>(Arrays.asList(new Class[] {
                                                            Object.class,
                                                            java.io.File.class
                                                        }));
-    
-    private ContextProvider contextProvider;
+
+    private final ContextProvider contextProvider;
     private PropertyEditor delegatePropertyEditor;
     private Class mirrorClass;
     private Object currentValue;
     private Object delegateValue;
     private PropertyEnv env;
-    private final List<PropertyChangeListener> listeners = new ArrayList<PropertyChangeListener>();
-    private VariablesTableModel vtm;
-    private Validate validate = new Validate();
-    
-    private static final Map<Class, Boolean> classesWithPE = Collections.synchronizedMap(new WeakHashMap<Class, Boolean>());
-    
+    private final List<PropertyChangeListener> listeners = new ArrayList<>();
+    private final Validate validate = new Validate();
+
+    private static final Map<Class, Boolean> classesWithPE = Collections.synchronizedMap(new WeakHashMap<>());
+
     ValuePropertyEditor(ContextProvider contextProvider) {
         this.contextProvider = contextProvider;
     }
@@ -100,15 +95,13 @@ class ValuePropertyEditor implements ExPropertyEditor {
             Class<?> clazz = Class.forName(type);
             //return PropertyEditorManager.findEditor(clazz) != null;
             return hasPropertyEditorFor(clazz);
-        } catch (ClassNotFoundException ex) {
-            return false;
         } catch (ExceptionInInitializerError eie) {
             return false;
-        } catch (LinkageError le) {
+        } catch (LinkageError | ClassNotFoundException le) {
             return false;
         }
     }
-    
+
     private static boolean hasPropertyEditorFor(final Class clazz) {
         if (CLASSES_2_IGNORE.contains(clazz)) {
             return false;
@@ -124,38 +117,30 @@ class ValuePropertyEditor implements ExPropertyEditor {
         } else {
             final boolean[] has = new boolean[] { false };
             try {
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    @Override
-                    public void run() {
-                        has[0] = findThePropertyEditor(clazz) != null;
-                    }
+                SwingUtilities.invokeAndWait(() -> {
+                    has[0] = findThePropertyEditor(clazz) != null;
                 });
-            } catch (InterruptedException ex) {
-            } catch (InvocationTargetException ex) {
+            } catch (InterruptedException | InvocationTargetException ex) {
             }
             return has[0];
         }
     }
-    
+
     private static PropertyEditor findPropertyEditor(final Class clazz) {
         if (SwingUtilities.isEventDispatchThread()) {
             return findThePropertyEditor(clazz);
         } else {
             final PropertyEditor[] peRef = new PropertyEditor[] { null };
             try {
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    @Override
-                    public void run() {
-                        peRef[0] = findThePropertyEditor(clazz);
-                    }
+                SwingUtilities.invokeAndWait(() -> {
+                    peRef[0] = findThePropertyEditor(clazz);
                 });
-            } catch (InterruptedException ex) {
-            } catch (InvocationTargetException ex) {
+            } catch (InterruptedException | InvocationTargetException ex) {
             }
             return peRef[0];
         }
     }
-    
+
     private static PropertyEditor findThePropertyEditor(Class clazz) {
         PropertyEditor pe;
         if (Object.class.equals(clazz)) {
@@ -172,7 +157,7 @@ class ValuePropertyEditor implements ExPropertyEditor {
         classesWithPE.put(clazz, pe != null);
         return pe;
     }
-    
+
     /**
      * Test if the property editor can act on the provided value. We can never be sure. :-(
      * @param propertyEditor
@@ -188,7 +173,7 @@ class ValuePropertyEditor implements ExPropertyEditor {
         }
         return propertyEditor;
     }
-    
+
     @Override
     public void setValue(Object value) {
         logger.log(Level.FINE, "ValuePropertyEditor.setValue({0})", value);
@@ -207,11 +192,7 @@ class ValuePropertyEditor implements ExPropertyEditor {
         if (value instanceof String) {
             clazz = String.class;
             valueMirror = value;
-        } else if (value instanceof VariableWithMirror) {
-            valueMirror = ((VariableWithMirror) value).createMirrorObject();
-            clazz = valueMirror.getClass();
-        } else if (value instanceof Variable) {
-            Variable var = (Variable) value;
+        } else if (value instanceof Variable var) {
             valueMirror = VariablesTableModel.getMirrorFor(var);
             if (valueMirror != null) {
                 clazz = valueMirror.getClass();
@@ -220,7 +201,7 @@ class ValuePropertyEditor implements ExPropertyEditor {
                 valueMirror = VariablesTableModel.getValueOf(var);
             }
         } else {
-            throw new IllegalArgumentException(value.toString());
+            throw new IllegalArgumentException(String.valueOf(value));
         }
         boolean doAttach = false;
         if (delegatePropertyEditor == null || clazz != mirrorClass) {
@@ -294,47 +275,25 @@ class ValuePropertyEditor implements ExPropertyEditor {
             return currentValue;
         }
     }
-    
-    private void setOrigValue(Object obj) {
-        if (obj instanceof Variable) {
-            Variable var = (Variable) obj;
-            if (vtm == null) {
-                List<? extends TableModel> models = contextProvider.lookup("LocalsView", TableModel.class);
-                for (TableModel tm : models) {
-                    if (tm instanceof VariablesTableModel) {
-                        vtm = (VariablesTableModel) tm;
-                        break;
-                    }
-                }
-                if (vtm == null) {
-                    return ;
-                }
-            }
-            vtm.setOrigValue(var);
-        }
-    }
-    
+
     private void setVarFromMirror(final MutableVariable var, final Object mirror) {
-        Runnable run = new Runnable() {
-            @Override
-            public void run() {
-                String javaInitStr = delegatePropertyEditor.getJavaInitializationString();
-                boolean setFromMirror = false;
+        Runnable run = () -> {
+            String javaInitStr = delegatePropertyEditor.getJavaInitializationString();
+            boolean setFromMirror = false;
+            try {
+                var.setValue(javaInitStr);
+                if (mirror == null || ((JDIVariable) var).getJDIValue() != null) {
+                    setFromMirror = true;
+                } // false when mirror != null and JDI value is null (set value was not successful)
+            } catch (InvalidExpressionException ex) {
+                logger.log(Level.INFO, "InvalidExpressionException when evaluating "+javaInitStr+":", ex);
+            }
+            if (!setFromMirror) {
                 try {
-                    var.setValue(javaInitStr);
-                    if (mirror == null || ((JDIVariable) var).getJDIValue() != null) {
-                        setFromMirror = true;
-                    } // false when mirror != null and JDI value is null (set value was not successful)
-                } catch (InvalidExpressionException ex) {
-                    logger.log(Level.INFO, "InvalidExpressionException when evaluating "+javaInitStr+":", ex);
-                }
-                if (!setFromMirror) {
-                    try {
-                        var.setFromMirrorObject(mirror);
-                    } catch (InvalidObjectException ioex) {
-                        NotifyDescriptor nd = new NotifyDescriptor.Message(ioex.getLocalizedMessage(), NotifyDescriptor.ERROR_MESSAGE);
-                        DialogDisplayer.getDefault().notify(nd);
-                    }
+                    var.setFromMirrorObject(mirror);
+                } catch (InvalidObjectException ioex) {
+                    NotifyDescriptor nd = new NotifyDescriptor.Message(ioex.getLocalizedMessage(), NotifyDescriptor.ERROR_MESSAGE);
+                    DialogDisplayer.getDefault().notify(nd);
                 }
             }
         };
@@ -382,8 +341,8 @@ class ValuePropertyEditor implements ExPropertyEditor {
     @Override
     public Component getCustomEditor() {
         //System.err.println("ValuePropertyEditor.getCustomEditor() delegateValue = "+delegateValue);
-        if (delegateValue instanceof String) {
-            BigStringCustomEditor bsce = BigStringCustomEditor.createIfBig(delegatePropertyEditor, (String) delegateValue);
+        if (delegateValue instanceof String string) {
+            BigStringCustomEditor bsce = BigStringCustomEditor.createIfBig(delegatePropertyEditor, string);
             if (bsce != null) {
                 return bsce;
             }
@@ -403,33 +362,26 @@ class ValuePropertyEditor implements ExPropertyEditor {
         //System.out.println("ValuePropertyEditor.attachEnv("+env+"), feature descriptor = "+env.getFeatureDescriptor());
         env.setState(PropertyEnv.STATE_NEEDS_VALIDATION);
         env.addVetoableChangeListener(validate);
-        if (delegatePropertyEditor instanceof ExPropertyEditor) {
+        if (delegatePropertyEditor instanceof ExPropertyEditor exPropertyEditor) {
             //System.out.println("  attaches to "+delegatePropertyEditor);
-            if (delegateValue instanceof String) {
-                ShortenedStrings.StringInfo shortenedInfo = ShortenedStrings.getShortenedInfo((String) delegateValue);
+            if (delegateValue instanceof String string) {
+                ShortenedStrings.StringInfo shortenedInfo = ShortenedStrings.getShortenedInfo(string);
                 if (shortenedInfo != null) {
                     // The value is too large, do not allow editing!
                     FeatureDescriptor desc = env.getFeatureDescriptor();
-                    if (desc instanceof Node.Property){
-                        Node.Property prop = (Node.Property)desc;
+                    if (desc instanceof Node.Property prop){
                         // Need to make it uneditable
                         try {
                             Method forceNotEditableMethod = prop.getClass().getDeclaredMethod("forceNotEditable");
                             forceNotEditableMethod.setAccessible(true);
                             forceNotEditableMethod.invoke(prop);
-                        } catch (Exception ex){}
+                        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException | RuntimeException ex){}
                         //editable = prop.canWrite();
                     }
                 }
             }
-            ((ExPropertyEditor) delegatePropertyEditor).attachEnv(env);
+            exPropertyEditor.attachEnv(env);
             this.env = env;
-        }
-    }
-    
-    void checkPropertyEnv() {
-        if (env != null && delegatePropertyEditor instanceof ExPropertyEditor) {
-            ((ExPropertyEditor) delegatePropertyEditor).attachEnv(env);
         }
     }
 
@@ -467,99 +419,7 @@ class ValuePropertyEditor implements ExPropertyEditor {
                 }
             }
         }
-        
+
     }
-    
-    /**
-     * An artificial variable that holds the newly set mirror object.
-     */
-    static class VariableWithMirror implements MutableVariable, ObjectVariable {
-        
-        private Object mirror;
-        
-        VariableWithMirror(Object mirror) {
-            this.mirror = mirror;
-        }
 
-        @Override
-        public void setValue(String value) throws InvalidExpressionException {
-            throw new UnsupportedOperationException("Not supported.");
-        }
-
-        @Override
-        public void setFromMirrorObject(Object obj) {
-            this.mirror = obj;
-        }
-
-        @Override
-        public String getType() {
-            throw new UnsupportedOperationException("Not supported.");
-        }
-
-        @Override
-        public String getValue() {
-            throw new UnsupportedOperationException("Not supported.");
-        }
-
-        @Override
-        public Object createMirrorObject() {
-            return mirror;
-        }
-
-        @Override
-        public String getToStringValue() throws InvalidExpressionException {
-            throw new UnsupportedOperationException("Not supported.");
-        }
-
-        @Override
-        public Variable invokeMethod(String methodName, String signature, Variable[] arguments) throws NoSuchMethodException, InvalidExpressionException {
-            throw new UnsupportedOperationException("Not supported.");
-        }
-
-        @Override
-        public int getFieldsCount() {
-            throw new UnsupportedOperationException("Not supported.");
-        }
-
-        @Override
-        public Field getField(String name) {
-            throw new UnsupportedOperationException("Not supported.");
-        }
-
-        @Override
-        public Field[] getFields(int from, int to) {
-            throw new UnsupportedOperationException("Not supported.");
-        }
-
-        @Override
-        public Field[] getAllStaticFields(int from, int to) {
-            throw new UnsupportedOperationException("Not supported.");
-        }
-
-        @Override
-        public Field[] getInheritedFields(int from, int to) {
-            throw new UnsupportedOperationException("Not supported.");
-        }
-
-        @Override
-        public List<ObjectVariable> getReferringObjects(long maxReferrers) throws UnsupportedOperationException {
-            throw new UnsupportedOperationException("Not supported.");
-        }
-
-        @Override
-        public Super getSuper() {
-            throw new UnsupportedOperationException("Not supported.");
-        }
-
-        @Override
-        public JPDAClassType getClassType() {
-            throw new UnsupportedOperationException("Not supported.");
-        }
-
-        @Override
-        public long getUniqueID() {
-            throw new UnsupportedOperationException("Not supported.");
-        }
-        
-    }
 }

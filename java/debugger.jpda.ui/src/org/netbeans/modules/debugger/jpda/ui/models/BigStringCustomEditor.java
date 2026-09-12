@@ -49,12 +49,12 @@ import org.openide.util.RequestProcessor;
  * @author Martin Entlicher
  */
 class BigStringCustomEditor extends JPanel implements ActionListener {
-    
+
     static final int MAX_STRING_LENGTH = AbstractObjectVariable.MAX_STRING_LENGTH;
 
     private final StringInfo shortenedInfo;
     private final String fullString;
-    
+
     private BigStringCustomEditor(Component delegateCustomEditor, StringInfo shortenedInfo, int preferredShortLength) {
         this.shortenedInfo = shortenedInfo;
         this.fullString = null;
@@ -67,14 +67,14 @@ class BigStringCustomEditor extends JPanel implements ActionListener {
         int fullLength = shortenedInfo.getLength();
         init(delegateCustomEditor, shortLength, fullLength);
     }
-    
+
     private BigStringCustomEditor(Component delegateCustomEditor,
                                   String shortString, String fullString) {
         this.shortenedInfo = null;
         this.fullString = fullString;
         init(delegateCustomEditor, shortString.length(), fullString.length());
     }
-    
+
     static BigStringCustomEditor createIfBig(PropertyEditor propertyEditor, String value) {
         ShortenedStrings.StringInfo shortenedInfo = ShortenedStrings.getShortenedInfo(value);
         if (shortenedInfo != null) {
@@ -93,13 +93,13 @@ class BigStringCustomEditor extends JPanel implements ActionListener {
             return null;
         }
     }
-    
+
     private void init(Component contentComponent, int shortLength, int fullLength) {
         setLayout(new java.awt.BorderLayout());
         add(contentComponent, BorderLayout.CENTER);
         add(createSavePanel(shortLength, fullLength), BorderLayout.SOUTH);
     }
-    
+
     @NbBundle.Messages({"# {0} - number of displayed characters,",
                         "# {1} - total number of characters in the string,",
                        "MSG_TooLargeString=The String value is too large. Displaying {0} out of {1} characters."})
@@ -111,7 +111,7 @@ class BigStringCustomEditor extends JPanel implements ActionListener {
         panel.setBorder(new EmptyBorder(10, 12, 0, 11));
         return panel;
     }
-    
+
     @NbBundle.Messages("BTN_SaveValueToFile=&Save Value to File")
     private JButton createSaveButton() {
         JButton button = new JButton();
@@ -128,15 +128,12 @@ class BigStringCustomEditor extends JPanel implements ActionListener {
         fchb.setTitle(Bundle.DLG_SaveToFile());
         final File f = fchb.showSaveDialog();
         if (f != null) {
-            new RequestProcessor(BigStringCustomEditor.class).post(new Runnable() {
-                @Override
-                public void run() {
-                    save(f);
-                }
+            new RequestProcessor(BigStringCustomEditor.class).post(() -> {
+                save(f);
             });
         }
     }
-    
+
     private void save(File f) {
         Reader r;
         if (shortenedInfo != null) {
@@ -144,26 +141,11 @@ class BigStringCustomEditor extends JPanel implements ActionListener {
         } else {
             r = new StringReader(fullString);
         }
-        Writer w = null;
-        try {
-            w = new FileWriter(f);
-            final char[] BUFFER = new char[65536];
-            int len;
-            while ((len = r.read(BUFFER)) > 0) {
-                w.write(BUFFER, 0, len);
-            }
+        try (Writer w = new FileWriter(f); r) {
+            r.transferTo(w);
         } catch (IOException ioex) {
             NotifyDescriptor nd = new NotifyDescriptor.Message(ioex.getLocalizedMessage(), NotifyDescriptor.WARNING_MESSAGE);
             DialogDisplayer.getDefault().notifyLater(nd);
-        } finally {
-            if (w != null) {
-                try {
-                    w.close();
-                } catch (IOException ex) {}
-            }
-            try {
-                r.close();
-            } catch (IOException ex) {}
         }
     }
 }

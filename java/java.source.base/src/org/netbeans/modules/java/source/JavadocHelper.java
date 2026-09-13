@@ -19,6 +19,7 @@
 package org.netbeans.modules.java.source;
 
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+
 import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -51,8 +52,10 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -68,6 +71,7 @@ import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.parser.ParserDelegator;
+
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -825,6 +829,19 @@ binRoots:   for (URL binary : binaries) {
                                             throw x;
                                         }
                                         url = new URL(root, modName + "/" + pkgName + "/" + pageName + ".html");
+                                    } catch (IOException ioex) {
+                                        // no module-info, let's search Automatic-Module-Info in the manifest
+                                        URL manifestURL = new URL(binary, "META-INF/MANIFEST.MF"); // NOI18N
+                                        try (InputStream manifestStream = manifestURL.openStream()) {
+                                            Manifest manifest = new Manifest(manifestStream);
+                                            String amn = manifest.getMainAttributes().getValue("Automatic-Module-Name"); // NOI18N
+                                            if (amn == null || amn.isBlank()) {
+                                                throw x;
+                                            }
+                                            url = new URL(root, amn + "/" + pkgName + "/" + pageName + ".html");
+                                        } catch (IOException manifestException) {
+                                            throw x;
+                                        }
                                     }
                                 } else {
                                     // fallback to without module name

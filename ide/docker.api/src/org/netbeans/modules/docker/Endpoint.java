@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.nio.channels.Channels;
+import java.nio.channels.SocketChannel;
 
 /**
  *
@@ -53,4 +55,22 @@ public interface Endpoint extends Closeable {
         };
     }
 
+    public static Endpoint forSocketChannel(final SocketChannel channel) {
+        return new Endpoint() {
+            @Override
+            public InputStream getInputStream() throws IOException {
+                return Channels.newInputStream(channel);
+}
+
+            @Override
+            public OutputStream getOutputStream() throws IOException {
+                return Channels.newOutputStream(channel);
+            }
+
+            @Override
+            public void close() throws IOException {
+                channel.close();
+            }
+        };
+    }
 }

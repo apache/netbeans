@@ -30,7 +30,6 @@ import java.util.prefs.NodeChangeListener;
 import java.util.prefs.Preferences;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.annotations.common.NonNull;
-import org.newsclub.net.unix.AFUNIXSocket;
 import org.openide.util.ChangeSupport;
 import org.openide.util.NbPreferences;
 import org.openide.util.Parameters;
@@ -128,7 +127,7 @@ public final class DockerSupport {
     }
 
     public boolean isSocketSupported() {
-        return AFUNIXSocket.isSupported();
+        return true;
     }
 
     private boolean isInitialized() {

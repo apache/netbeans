@@ -946,6 +946,9 @@ final class JUnitOutputReader {
     }
 
     private void addStackTraceLine(Testcase testcase, String line, boolean validateST){
+        if (testcase ==null) {
+            return;
+        }
         Trouble trouble = testcase.getTrouble();
         if ((trouble == null) || (line == null) || (line.length() == 0) || (line.equals("null"))){  //NOI18N
             return;

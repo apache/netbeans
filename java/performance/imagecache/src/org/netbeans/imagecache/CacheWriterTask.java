@@ -39,7 +39,7 @@ import org.apache.tools.ant.types.Path;
  */
 public class CacheWriterTask extends Task {
     private File outDir = null;
-    private List paths = new ArrayList();
+    private List<Path> paths = new ArrayList<>();
     private boolean clean = true;
     /** Creates a new instance of CacheWriterTask */
     public CacheWriterTask() {
@@ -68,14 +68,14 @@ public class CacheWriterTask extends Task {
         if (outDir == null) {
             throw new BuildException ("Output directory for cache file must be specified");
         }
-        
+
         try {
             CacheWriter writer = new CacheWriter();
             writer.setDir(outDir.toString(), clean);
 
-            Iterator it = paths.iterator();
+            Iterator<Path> it = paths.iterator();
             while (it.hasNext()) {
-                Path curr = (Path) it.next();
+                Path curr = it.next();
                 String[] dirs = curr.list();
                 for (int i=0; i < dirs.length; i++) {
                     System.err.println("WriteDir " + dirs[i]);

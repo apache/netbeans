@@ -19,11 +19,13 @@
 
 package org.netbeans.modules.servlettest;
 
-import java.io.*;
-import java.net.*;
-
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /** Simple servlet to test functionality of internal HTTP server.
  *
@@ -33,6 +35,7 @@ public class ModuleServlet extends HttpServlet {
 
     /** Initializes the servlet.
      */
+    @Override
     public void init (ServletConfig config) throws ServletException {
         super.init (config);
     }
@@ -54,6 +57,7 @@ public class ModuleServlet extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      */
+    @Override
     protected void doGet (HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest (request, response);
@@ -63,6 +67,7 @@ public class ModuleServlet extends HttpServlet {
      * @param request servlet request
      * @param response servlet response
      */
+    @Override
     protected void doPost (HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest (request, response);
@@ -70,6 +75,7 @@ public class ModuleServlet extends HttpServlet {
     
     /** Returns a short description of the servlet.
      */
+    @Override
     public String getServletInfo () {
         return "Short description";
     }

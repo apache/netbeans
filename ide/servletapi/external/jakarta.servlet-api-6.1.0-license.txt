@@ -1,5 +1,5 @@
 Name: Servlet API
-Version: 4.0.4
+Version: 6.1.0
 License: EPL-v20
 Source: https://github.com/jakartaee/servlet
 Origin: https://projects.eclipse.org/projects/ee4j.servlet

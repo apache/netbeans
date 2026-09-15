@@ -19,13 +19,18 @@
 
 package org.netbeans.modules.httpserver;
 
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.ServerException;
 import java.util.Set;
-import javax.servlet.*;
-import javax.servlet.http.*;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -65,7 +70,7 @@ public class AccessFilter implements Filter {
         if (settings.getHostProperty ().getHost ().equals(HttpServerSettings.ANYHOST))
             return true;
 
-        Set hs = settings.getGrantedAddressesSet();
+        Set<String> hs = settings.getGrantedAddressesSet();
 
         if (hs.contains(request.getRemoteAddr().trim()))
             return true;

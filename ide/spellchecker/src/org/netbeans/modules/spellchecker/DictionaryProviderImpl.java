@@ -20,7 +20,6 @@ package org.netbeans.modules.spellchecker;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,19 +39,20 @@ import org.netbeans.modules.spellchecker.spi.dictionary.DictionaryProvider;
 import org.openide.ErrorManager;
 import org.openide.modules.InstalledFileLocator;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Jan Lahoda
  */
-@org.openide.util.lookup.ServiceProvider(service=org.netbeans.modules.spellchecker.spi.dictionary.DictionaryProvider.class)
+@ServiceProvider(service=DictionaryProvider.class)
 public class DictionaryProviderImpl implements DictionaryProvider {
     
     /** Creates a new instance of DictionaryProviderImpl */
     public DictionaryProviderImpl() {
     }
 
-    private Map<String, Dictionary> dictionaries = new HashMap<String, Dictionary>();
+    private final Map<String, Dictionary> dictionaries = new HashMap<>();
     
 //    public DictionaryImpl getDefault() {
 //        return getDictionary(Locale.getDefault());
@@ -62,6 +62,7 @@ public class DictionaryProviderImpl implements DictionaryProvider {
         dictionaries.clear();
     }
     
+    @Override
     public synchronized Dictionary getDictionary(Locale locale) {
         Iterator<String> suffixes = getLocalizingSuffixes(locale);
         
@@ -76,16 +77,12 @@ public class DictionaryProviderImpl implements DictionaryProvider {
     }
     
     public static synchronized Locale[] getInstalledDictionariesLocales() {
-        Collection<Locale> hardcoded = new HashSet<Locale>();
-        Collection<Locale> maskedHardcoded = new HashSet<Locale>();
-        Collection<Locale> user = new HashSet<Locale>();
+        Collection<Locale> hardcoded = new HashSet<>();
+        Collection<Locale> maskedHardcoded = new HashSet<>();
+        Collection<Locale> user = new HashSet<>();
         
         for (File dictDir : InstalledFileLocator.getDefault().locateAll("modules/dict", null, false)) {
-            File[] children = dictDir.listFiles(new FileFilter() {
-                public boolean accept(File pathname) {
-                    return pathname.isFile() && pathname.getName().startsWith("dictionary_");
-                }
-            });
+            File[] children = dictDir.listFiles((File pathname) -> pathname.isFile() && pathname.getName().startsWith("dictionary_"));
             
             if (children == null)
                 continue;
@@ -118,12 +115,12 @@ public class DictionaryProviderImpl implements DictionaryProvider {
 
         hardcoded.removeAll(maskedHardcoded);
         hardcoded.addAll(user);
-        return hardcoded.toArray(new Locale[0]);
+        return hardcoded.toArray(Locale[]::new);
     }
     
     private synchronized Dictionary createDictionary(Locale locale) {
         try {
-            List<URL> sources = new ArrayList<URL>();
+            List<URL> sources = new ArrayList<>();
             String suffix = getDictionaryStream(locale, sources);
             
             if (suffix == null) {
@@ -143,15 +140,15 @@ public class DictionaryProviderImpl implements DictionaryProvider {
     }
 
     static String getDictionaryStream(Locale locale, List<URL> streams) throws IOException {
-        Iterator suffixes = getLocalizingSuffixes(locale);
+        Iterator<String> suffixes = getLocalizingSuffixes(locale);
         
         while (suffixes.hasNext()) {
-            String currentSuffix = (String) suffixes.next();
+            String currentSuffix = suffixes.next();
             
             File file = InstalledFileLocator.getDefault().locate("modules/dict/dictionary" + currentSuffix + ".txt", null, false);
             
             if (file != null) {
-                streams.add(file.toURI().toURL());
+                streams.add(org.openide.util.Utilities.toURI(file).toURL());
                 return currentSuffix;
             }
 
@@ -204,7 +201,7 @@ public class DictionaryProviderImpl implements DictionaryProvider {
         return new LocaleIterator(locale);
     }
     
-    /** This class (enumeration) gives all localized sufixes using nextElement
+    /** This class (enumeration) gives all localized suffixes using nextElement
      * method. It goes through given Locale and continues through Locale.getDefault()
      * Example 1:
      *   Locale.getDefault().toString() -> "_en_US"
@@ -259,6 +256,7 @@ public class DictionaryProviderImpl implements DictionaryProvider {
         /** @return next sufix.
          * @exception NoSuchElementException if there is no more locale sufix.
          */
+        @Override
         public String next() throws NoSuchElementException {
             if (current == null)
                 throw new NoSuchElementException();
@@ -280,15 +278,7 @@ public class DictionaryProviderImpl implements DictionaryProvider {
             }
             else {
                 if (lastUnderbar == -1) {
-//                    if (defaultInProgress)
                         reset();
-//                    else {
-//                        // [PENDING] stuff with trying the default locale
-//                        // after the real one does not actually seem to work...
-//                        locale = Locale.getDefault();
-//                        current = '_' + locale.toString();
-//                        defaultInProgress = true;
-//                    }
                 }
                 else {
                     current = current.substring(0, lastUnderbar);
@@ -317,10 +307,12 @@ public class DictionaryProviderImpl implements DictionaryProvider {
         }
         
         /** Tests if there is any sufix.*/
+        @Override
         public boolean hasNext() {
             return (current != null);
         }
         
+        @Override
         public void remove() throws UnsupportedOperationException {
             throw new UnsupportedOperationException();
         }

@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="ide/libs.tomlj" default="build" basedir=".">
+<project name="rust/libs.tomlj" default="build" basedir=".">
     <import file="../../nbbuild/templates/projectized.xml"/>
 </project>

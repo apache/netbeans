@@ -49,9 +49,17 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="javaInlineHintReferenceCountCB" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="javaInlineHintVarTypeCB" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="javaInlineHintChainedTypesCB" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="javaInlineHintParameterNameCB" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="javaInlineHintReferenceCountMethodsCB" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="javaInlineHintReferenceCountTypesCB" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
                   </Group>
                   <Component id="javaInlineHintsCB" min="-2" max="-2" attributes="0"/>
@@ -71,6 +79,12 @@
               <Component id="javaInlineHintChainedTypesCB" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
               <Component id="javaInlineHintVarTypeCB" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+              <Component id="javaInlineHintReferenceCountCB" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+              <Component id="javaInlineHintReferenceCountMethodsCB" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+              <Component id="javaInlineHintReferenceCountTypesCB" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -95,6 +109,27 @@
       <Properties>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="org/netbeans/modules/java/editor/options/Bundle.properties" key="InlineHintsPanel.javaInlineHintVarTypeCB.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="javaInlineHintReferenceCountCB">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/java/editor/options/Bundle.properties" key="InlineHintsPanel.javaInlineHintReferenceCountCB.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="javaInlineHintReferenceCountMethodsCB">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/java/editor/options/Bundle.properties" key="InlineHintsPanel.javaInlineHintReferenceCountMethodsCB.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="javaInlineHintReferenceCountTypesCB">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="org/netbeans/modules/java/editor/options/Bundle.properties" key="InlineHintsPanel.javaInlineHintReferenceCountTypesCB.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

@@ -25,6 +25,25 @@
         <apidef name="JavaRefactoringAPI">Java Refactoring API</apidef>
     </apidefs>
     <changes>
+        <change id="JavaWhereUsedDirectReferences">
+            <api name="JavaRefactoringAPI"/>
+            <summary>Added direct-reference where-used support for Java methods and named types.</summary>
+            <version major="1" minor="95"/>
+            <date day="29" month="3" year="2025"/>
+            <author login="codeassistant"/>
+            <compatibility addition="yes"/>
+            <description>
+                <p>
+                    Added the <code>FIND_DIRECT_REFERENCES</code> query constant and the
+                    <code>JavaWhereUsedSupport</code> utility API to prepare direct-reference
+                    where-used queries, compute reference counts, and open prepared results
+                    without showing the parameter dialog.
+                </p>
+            </description>
+            <class package="org.netbeans.modules.refactoring.java.api" name="WhereUsedQueryConstants"/>
+            <class package="org.netbeans.modules.refactoring.java.api.ui" name="JavaWhereUsedSupport"/>
+            <issue number="999999"/>
+        </change>
         <change id="FilterDependency">
             <api name="JavaRefactoringAPI"/>
             <summary>Added BINARYFILE, DEPENDENCY, PLATFORM constants to JavaWhereUsedFilters.</summary>

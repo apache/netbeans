@@ -145,7 +145,7 @@
             </public-packages>
             <class-path-extension>
                 <runtime-relative-path>org-apache-sshd-osgi.jar</runtime-relative-path>
-                <binary-origin>external/sshd-osgi-2.17.1.jar</binary-origin>
+                <binary-origin>external/sshd-osgi-2.19.0.jar</binary-origin>
             </class-path-extension>
         </data>
     </configuration>

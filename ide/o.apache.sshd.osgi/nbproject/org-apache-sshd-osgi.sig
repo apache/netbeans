@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.17.1
+#Version 2.19.0
 
 CLSS public java.io.ByteArrayOutputStream
 cons public init()

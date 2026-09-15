@@ -61,16 +61,14 @@ public class MicroProjectHook extends ProjectHookImpl {
             }
         }
     }
-    
+
     private void updateMicroIcon() {
-        SpecialIcon specialIcon = project.getLookup().lookup(SpecialIcon.class);
-        MicroIcon microIcon;
-        if (specialIcon instanceof MicroIcon) {
-            microIcon = (MicroIcon) specialIcon;
-        } else {
-            return;
+        for (SpecialIcon specialIcon : project.getLookup().lookupAll(SpecialIcon.class)) {
+            if (specialIcon instanceof MicroIcon) {
+                ((MicroIcon) specialIcon).setProject(project);
+                return;
+            }
         }
-        microIcon.setProject(project);
     }
 
     private void addDeployOnSaveManager(Project project) {

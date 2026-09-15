@@ -27,13 +27,16 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import org.netbeans.modules.web.jsf.editor.index.CompositeComponentModel;
 import org.netbeans.modules.web.jsf.editor.index.JsfIndex;
 import org.netbeans.modules.web.jsfapi.api.Attribute;
 import org.netbeans.modules.web.jsfapi.api.LibraryType;
 import org.netbeans.modules.web.jsfapi.api.Tag;
+import org.netbeans.modules.web.jsfapi.spi.LibraryUtils;
 import org.openide.util.NbBundle;
 import org.openide.util.WeakListeners;
 
@@ -53,6 +56,7 @@ public class CompositeComponentLibrary extends FaceletsLibrary {
      */
     private final String compositeLibraryResourceFolderName;
     private final String defaultPrefix;
+    private final String defaultNamespace;
     private Map<String, CompositeComponent> compositeComponentsMap;
 
     //for cc libraries with facelets library descriptor, the constructor is called by Mojarra
@@ -65,6 +69,7 @@ public class CompositeComponentLibrary extends FaceletsLibrary {
         //since even if there's a descriptor for the library, it doesn't contain
         //such information
         this.defaultPrefix = generateVirtualLibraryPrefix();
+        this.defaultNamespace = LibraryUtils.getCompositeLibraryURL(this.compositeLibraryResourceFolderName, support.getJsfSupport().getJsfVersion());
 
         index().addChangeListener(new ChangeListener() {
             @Override
@@ -89,7 +94,7 @@ public class CompositeComponentLibrary extends FaceletsLibrary {
 
     @Override
     public String getDefaultNamespace() {
-        return getNamespace();
+        return defaultNamespace;
     }
 
     @Override

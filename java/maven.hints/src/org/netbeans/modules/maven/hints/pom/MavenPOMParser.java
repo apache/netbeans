@@ -23,6 +23,7 @@ import java.util.prefs.PreferenceChangeEvent;
 import java.util.prefs.PreferenceChangeListener;
 import java.util.prefs.Preferences;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.Document;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.editor.BaseDocument;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
@@ -76,9 +77,9 @@ public class MavenPOMParser extends Parser implements PreferenceChangeListener {
             return;
         }
         //#236116 passing document protects from looking it up later and causing a deadlock.
-        final BaseDocument document = (BaseDocument)snapshot.getSource().getDocument(false);
+        final Document document = snapshot.getSource().getDocument(false);
         final DataObject d = sFile.getLookup().lookup(DataObject.class);
-        ModelSource ms = Utilities.createModelSource(sFile, d, document);
+        ModelSource ms = Utilities.createModelSource(sFile, d, document instanceof BaseDocument bd ? bd : null);
         synchronized (this) {
             theModel = POMModelFactory.getDefault().getModel(ms);
             lastSnapshot = snapshot;

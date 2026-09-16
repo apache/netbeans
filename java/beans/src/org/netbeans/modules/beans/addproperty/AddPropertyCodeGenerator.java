@@ -175,10 +175,10 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
                             Element element;
                             if(tree.getKind() == Tree.Kind.VARIABLE && (element = trees.getElement(treePath)) != null &&
                                    element.getKind() == ElementKind.ENUM_CONSTANT) {
-                                int endPosition = (int) trees.getSourcePositions().getEndPosition(cut, tree);
+                                int endPosition = (int) trees.getSourcePositions().getEndPosition(tree);
                                 enumconstantEnd = Math.max(enumconstantEnd, endPosition);
                             } else if(otherStart == -1) {
-                                otherStart = (int) trees.getSourcePositions().getStartPosition(cut, tree);
+                                otherStart = (int) trees.getSourcePositions().getStartPosition(tree);
                             }
                         }
                         
@@ -187,7 +187,7 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
                         }
                         
                         if(otherStart == -1) {
-                            otherStart = (int) trees.getSourcePositions().getEndPosition(cut, clazz);
+                            otherStart = (int) trees.getSourcePositions().getEndPosition(clazz);
                         }
                         
                         int semicolon = scanForSemicolon(doc, offset, enumconstantEnd, otherStart);
@@ -202,14 +202,14 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
                                 offset[0] = semicolon + 1;
                             } else if(path.getLeaf().getKind() != Tree.Kind.ENUM) {
                                 Tree current = path.getLeaf();
-                                offset[0] = (int) trees.getSourcePositions().getEndPosition(cut, current);
+                                offset[0] = (int) trees.getSourcePositions().getEndPosition(current);
                             }
                         }
                         return;
                     }
                     
                     Tree current = path.getLeaf();
-                    offset[0] = (int) trees.getSourcePositions().getEndPosition(cut, current);
+                    offset[0] = (int) trees.getSourcePositions().getEndPosition(current);
                 }
             }, true);
         } catch (IOException ex) {
@@ -320,8 +320,8 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
 
         @Override
         public Void visitMemberSelect(MemberSelectTree node, Void p) {
-            int s = (int) wc.getTrees().getSourcePositions().getStartPosition(wc.getCompilationUnit(), node);
-            int e = (int) wc.getTrees().getSourcePositions().getEndPosition(wc.getCompilationUnit(), node);
+            int s = (int) wc.getTrees().getSourcePositions().getStartPosition(node);
+            int e = (int) wc.getTrees().getSourcePositions().getEndPosition(node);
 
             if (s >= start && e <= end) {
                 Element el = wc.getTrees().getElement(getCurrentPath());
@@ -342,8 +342,8 @@ public class AddPropertyCodeGenerator implements CodeGenerator {
             List<Tree> members = new LinkedList<Tree>();
             ClassTree classTree = node;
             for (Tree member : node.getMembers()) {
-                int s = (int) sourcePositions.getStartPosition(wc.getCompilationUnit(), member);
-                int e = (int) sourcePositions.getEndPosition(wc.getCompilationUnit(), member);
+                int s = (int) sourcePositions.getStartPosition(member);
+                int e = (int) sourcePositions.getEndPosition(member);
                 if (s >= start && e <= end) {
                     classTree = make.removeClassMember(classTree, member);
                     members.add(member);

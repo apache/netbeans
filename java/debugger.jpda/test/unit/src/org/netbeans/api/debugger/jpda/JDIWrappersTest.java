@@ -227,7 +227,7 @@ public class JDIWrappersTest extends NbTestCase {
                 if (type == null) {
                     System.err.println("Unknown type for '"+mst.getExpression()+"' in "+node);
                 } else if (isJDIType(type)) {
-                    long offset = trees.getSourcePositions().getStartPosition(cut, node);
+                    long offset = trees.getSourcePositions().getStartPosition(node);
                     long line = cut.getLineMap().getLineNumber(offset);
                     //int line = NbDocument.findLineNumber(doc, offset);
                     System.err.println("Method "+mst.getIdentifier().toString()+" is invoked on "+type+" in MethodInvocationTree '"+node+"' in file "+cut.getSourceFile()+", line = "+line);

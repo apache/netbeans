@@ -312,8 +312,8 @@ public final class SurroundWithHint extends CodeActionsProvider {
                     }
                 };
                 for (StatementTree st : ((BlockTree)tree).getStatements()) {
-                    if (sp.getStartPosition(info.getCompilationUnit(), st) >= startOffset) {
-                        if (sp.getEndPosition(info.getCompilationUnit(), st) <= endOffset) {
+                    if (sp.getStartPosition(st) >= startOffset) {
+                        if (sp.getEndPosition(st) <= endOffset) {
                             if (st.getKind() == Tree.Kind.VARIABLE) {
                                 Element e = trees.getElement(new TreePath(treePath, st));
                                 if (e != null && e.getKind() == ElementKind.LOCAL_VARIABLE) {
@@ -329,9 +329,9 @@ public final class SurroundWithHint extends CodeActionsProvider {
                 Collection<VariableTree> vals = vars.values();
                 for (VariableTree var : varList) {
                     if (!vals.contains(var)) {
-                        int start = (int) sp.getStartPosition(info.getCompilationUnit(), var.getType());
+                        int start = (int) sp.getStartPosition(var.getType());
                         int[] span = tu.findNameSpan(var);
-                        int end = span != null ? span[0] : (int) sp.getEndPosition(info.getCompilationUnit(), var.getType());
+                        int end = span != null ? span[0] : (int) sp.getEndPosition(var.getType());
                         edits.add(new TextEdit(new Range(Utils.createPosition(info.getCompilationUnit().getLineMap(), start), Utils.createPosition(info.getCompilationUnit().getLineMap(), end)), ""));
                     }
                 }

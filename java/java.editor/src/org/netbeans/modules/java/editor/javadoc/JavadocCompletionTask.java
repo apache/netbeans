@@ -244,7 +244,7 @@ public class JavadocCompletionTask<T> extends UserTask {
         int pos;
         String prefix;
         if (tag != null) {
-            pos = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+            pos = (int) jdctx.positions.getStartPosition(jdctx.comment, tag.getLeaf());
             prefix = JavadocCompletionUtils.getCharSequence(jdctx.doc, pos, caretOffset).toString();
         } else {
             prefix = ""; // NOI18N
@@ -258,7 +258,7 @@ public class JavadocCompletionTask<T> extends UserTask {
         int pos;
         String prefix;
         if (tag != null) {
-            pos = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf()) + 1;
+            pos = (int) jdctx.positions.getStartPosition(jdctx.comment, tag.getLeaf()) + 1;
             prefix = JavadocCompletionUtils.getCharSequence(jdctx.doc, pos, caretOffset).toString();
             anchorOffset = pos;
         } else {
@@ -297,12 +297,12 @@ public class JavadocCompletionTask<T> extends UserTask {
         new DocTreePathScanner<Void, Void>() {
             @Override
             public Void scan(DocTree node, Void p) {
-                long endPos = jdctx.positions.getEndPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, node);
-                long startPos = jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, node);
+                long endPos = jdctx.positions.getEndPosition(jdctx.comment, node);
+                long startPos = jdctx.positions.getStartPosition(jdctx.comment, node);
                 if (node.getKind() == Kind.ERRONEOUS && getCurrentPath() != null) {
                     String text = jdctx.javac.getText().substring((int) startPos, (int) endPos);
                     if (text.length() > 0 && text.charAt(0) == '{' && text.charAt(text.length() - 1) != '}') {
-                        endPos = jdctx.positions.getEndPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, getCurrentPath().getLeaf());
+                        endPos = jdctx.positions.getEndPosition(jdctx.comment, getCurrentPath().getLeaf());
                     }
                 }
                 if (node != null && startPos <= normalizedOffset && endPos >= normalizedOffset) {
@@ -403,7 +403,7 @@ public class JavadocCompletionTask<T> extends UserTask {
     private void insideSeeTag(DocTreePath tag, JavadocContext jdctx) {
         TokenSequence<JavadocTokenId> jdts = jdctx.jdts;
         assert jdts.token() != null;
-        int start = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+        int start = (int) jdctx.positions.getStartPosition(jdctx.comment, tag.getLeaf());
         boolean isThrowsKind = JavadocCompletionUtils.normalizedKind(tag.getLeaf()) == DocTree.Kind.THROWS;
         if (isThrowsKind && !(EXECUTABLE.contains(jdctx.commentFor.getKind()))) {
             // illegal tag in this context
@@ -433,7 +433,7 @@ public class JavadocCompletionTask<T> extends UserTask {
             // not java reference
             return;
         } else if (jdts.moveNext()) {
-            int end = (int) jdctx.positions.getEndPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+            int end = (int) jdctx.positions.getEndPosition(jdctx.comment, tag.getLeaf());
             insideReference(JavadocCompletionUtils.normalizedKind(tag.getLeaf()), jdts.offset(), end, jdctx);
         }
         if (noPrefix) {
@@ -450,8 +450,8 @@ public class JavadocCompletionTask<T> extends UserTask {
     private void insideReference(DocTreePath tag, JavadocContext jdctx) {
         ReferenceTree ref = (ReferenceTree) tag.getLeaf();
         DocTree.Kind kind = tag.getParentPath().getLeaf().getKind();
-        int start = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, ref);
-        int end = (int) jdctx.positions.getEndPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, ref);
+        int start = (int) jdctx.positions.getStartPosition(jdctx.comment, ref);
+        int end = (int) jdctx.positions.getEndPosition(jdctx.comment, ref);
         insideReference(kind, start, end, jdctx);
     }
 
@@ -513,7 +513,7 @@ public class JavadocCompletionTask<T> extends UserTask {
     private void insideParamTag(DocTreePath tag, JavadocContext jdctx) {
         TokenSequence<JavadocTokenId> jdts = jdctx.jdts;
         assert jdts.token() != null;
-        int start = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+        int start = (int) jdctx.positions.getStartPosition(jdctx.comment, tag.getLeaf());
         jdts.move(start);
         // @param
         if (!jdts.moveNext() || caretOffset <= jdts.offset() + jdts.token().length()) {
@@ -1241,7 +1241,7 @@ public class JavadocCompletionTask<T> extends UserTask {
 
         if (pos > 0 && pos <= text.length() && text.charAt(pos - 1) == '{') {
             if (tag != null && !JavadocCompletionUtils.isBlockTag(tag)) {
-                int start = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+                int start = (int) jdctx.positions.getStartPosition(jdctx.comment, tag.getLeaf());
                 if (start + 1 != caretOffset) {
                     return;
                 }
@@ -1260,7 +1260,7 @@ public class JavadocCompletionTask<T> extends UserTask {
     }
 
     void insideSnippet(DocTreePath tag, JavadocContext jdctx) {
-        int startPos = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+        int startPos = (int) jdctx.positions.getStartPosition(jdctx.comment, tag.getLeaf());
         String subStr = JavadocCompletionUtils.getCharSequence(jdctx.doc, startPos, caretOffset).toString();
         int index = subStr.lastIndexOf("\n");
         String markupLine = JavadocCompletionUtils.getCharSequence(jdctx.doc, (index + startPos), caretOffset).toString();

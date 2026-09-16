@@ -76,8 +76,8 @@ public class JavaReferenceTest extends JavadocTestSupport {
         DocTreePath path = info.getTreeUtilities().pathFor(javadocPath, dcTree, offset);
         assertNotNull(dump, path.getLeaf());
         int[] tagSpan = new int[] {
-            (int)sourcePositions.getStartPosition(javadocPath.getCompilationUnit(), dcTree, path.getLeaf()),
-            (int)sourcePositions.getEndPosition(javadocPath.getCompilationUnit(), dcTree, path.getLeaf())
+            (int)sourcePositions.getStartPosition(dcTree, path.getLeaf()),
+            (int)sourcePositions.getEndPosition(dcTree, path.getLeaf())
         };
 
         JavaReference ref = JavaReference.resolve(jdts, offset, tagSpan[1]);
@@ -93,8 +93,8 @@ public class JavaReferenceTest extends JavadocTestSupport {
         dump = insertPointer(code, offset);
         assertNotNull(dump, path.getLeaf());
         tagSpan = new int[] {
-            (int)sourcePositions.getStartPosition(javadocPath.getCompilationUnit(), dcTree, path.getLeaf()),
-            (int)sourcePositions.getEndPosition(javadocPath.getCompilationUnit(), dcTree, path.getLeaf())
+            (int)sourcePositions.getStartPosition(dcTree, path.getLeaf()),
+            (int)sourcePositions.getEndPosition(dcTree, path.getLeaf())
         };
 
         ref = JavaReference.resolve(jdts, offset, tagSpan[1]);
@@ -110,8 +110,8 @@ public class JavaReferenceTest extends JavadocTestSupport {
         dump = insertPointer(code, offset);
         assertNotNull(dump, path.getLeaf());
         tagSpan = new int[] {
-            (int)sourcePositions.getStartPosition(javadocPath.getCompilationUnit(), dcTree, path.getLeaf()),
-            (int)sourcePositions.getEndPosition(javadocPath.getCompilationUnit(), dcTree, path.getLeaf())
+            (int)sourcePositions.getStartPosition(dcTree, path.getLeaf()),
+            (int)sourcePositions.getEndPosition(dcTree, path.getLeaf())
         };
 
         ref = JavaReference.resolve(jdts, offset, tagSpan[1]);
@@ -127,8 +127,8 @@ public class JavaReferenceTest extends JavadocTestSupport {
         dump = insertPointer(code, offset);
         assertNotNull(dump, path.getLeaf());
         tagSpan = new int[] {
-            (int)sourcePositions.getStartPosition(javadocPath.getCompilationUnit(), dcTree, path.getLeaf()),
-            (int)sourcePositions.getEndPosition(javadocPath.getCompilationUnit(), dcTree, path.getLeaf())
+            (int)sourcePositions.getStartPosition(dcTree, path.getLeaf()),
+            (int)sourcePositions.getEndPosition(dcTree, path.getLeaf())
         };
 
         ref = JavaReference.resolve(jdts, offset, tagSpan[1]);
@@ -144,8 +144,8 @@ public class JavaReferenceTest extends JavadocTestSupport {
         dump = insertPointer(code, offset);
         assertNotNull(dump, path.getLeaf());
         tagSpan = new int[] {
-            (int)sourcePositions.getStartPosition(javadocPath.getCompilationUnit(), dcTree, path.getLeaf()),
-            (int)sourcePositions.getEndPosition(javadocPath.getCompilationUnit(), dcTree, path.getLeaf())
+            (int)sourcePositions.getStartPosition(dcTree, path.getLeaf()),
+            (int)sourcePositions.getEndPosition(dcTree, path.getLeaf())
         };
 
         ref = JavaReference.resolve(jdts, offset, tagSpan[1]);
@@ -161,8 +161,8 @@ public class JavaReferenceTest extends JavadocTestSupport {
         dump = insertPointer(code, offset);
         assertNotNull(dump, path.getLeaf());
         tagSpan = new int[] {
-            (int)sourcePositions.getStartPosition(javadocPath.getCompilationUnit(), dcTree, path.getLeaf()),
-            (int)sourcePositions.getEndPosition(javadocPath.getCompilationUnit(), dcTree, path.getLeaf())
+            (int)sourcePositions.getStartPosition(dcTree, path.getLeaf()),
+            (int)sourcePositions.getEndPosition(dcTree, path.getLeaf())
         };
 
         ref = JavaReference.resolve(jdts, offset, tagSpan[1]);

@@ -176,7 +176,7 @@ final class JavaMoveCodeElementAction extends BaseAction {
                 List<? extends Tree> children = null;
                 switch (leaf.getKind()) {
                     case BLOCK:
-                        if (endOffset < sp.getEndPosition(tp.getCompilationUnit(), leaf)) {
+                        if (endOffset < sp.getEndPosition(leaf)) {
                             children = ((BlockTree) leaf).getStatements();
                         }
                         break;
@@ -184,15 +184,15 @@ final class JavaMoveCodeElementAction extends BaseAction {
                     case INTERFACE:
                     case ANNOTATION_TYPE:
                     case ENUM:
-                        if (endOffset < sp.getEndPosition(tp.getCompilationUnit(), leaf)) {
+                        if (endOffset < sp.getEndPosition(leaf)) {
                             children = ((ClassTree) leaf).getMembers();
                         }
                         break;
                 }
                 if (children != null) {
                     for (Tree tree : children) {
-                        int startPos = (int) sp.getStartPosition(tp.getCompilationUnit(), tree);
-                        int endPos = (int) sp.getEndPosition(tp.getCompilationUnit(), tree);
+                        int startPos = (int) sp.getStartPosition(tree);
+                        int endPos = (int) sp.getEndPosition(tree);
                         if (endPos > startOffset) {
                             if (startPos < startOffset) {
                                 startOffset = getLineStart(doc, startPos);
@@ -258,8 +258,8 @@ final class JavaMoveCodeElementAction extends BaseAction {
                         break;
                     default:
                         offset = downward
-                                ? (int) sp.getEndPosition(destinationPath.getCompilationUnit(), leaf)
-                                : (int) sp.getStartPosition(destinationPath.getCompilationUnit(), leaf);
+                                ? (int) sp.getEndPosition(leaf)
+                                : (int) sp.getStartPosition(leaf);
                 }
             } else {
                 switch (leaf.getKind()) {
@@ -272,8 +272,8 @@ final class JavaMoveCodeElementAction extends BaseAction {
                         return destinationOffset;
                     default:
                         offset = downward
-                                ? (int) sp.getEndPosition(destinationPath.getCompilationUnit(), leaf)
-                                : (int) sp.getStartPosition(destinationPath.getCompilationUnit(), leaf);
+                                ? (int) sp.getEndPosition(leaf)
+                                : (int) sp.getStartPosition(leaf);
                 }
             }
         }

@@ -560,7 +560,7 @@ public class RenameTransformer extends RefactoringVisitor {
 
         final String originalName = getOldSimpleName(parameter);
         final int methodStart = (int) workingCopy.getTrees().getSourcePositions()
-                .getStartPosition(workingCopy.getCompilationUnit(), method);
+                .getStartPosition(method);
         final TokenSequence<JavaTokenId> tokenSequence = workingCopy.getTokenHierarchy().tokenSequence(JavaTokenId.language());
 
         //renaming in comments before the method/constructor
@@ -576,7 +576,7 @@ public class RenameTransformer extends RefactoringVisitor {
 
         //renaming in comments within the method/constructor declaration and body
         final int methodEnd = (int) workingCopy.getTrees().getSourcePositions()
-                .getEndPosition(workingCopy.getCompilationUnit(), method);
+                .getEndPosition(method);
 
         tokenSequence.move(methodStart);
         while (tokenSequence.moveNext() && tokenSequence.offset() < methodEnd) {

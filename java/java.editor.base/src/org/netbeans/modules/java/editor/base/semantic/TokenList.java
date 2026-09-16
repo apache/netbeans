@@ -147,7 +147,7 @@ public class TokenList {
             return ;
         }
 
-        long end = sourcePositions.getEndPosition(info.getCompilationUnit(), t);
+        long end = sourcePositions.getEndPosition(t);
 
         if (end == (-1))
             return ;
@@ -281,8 +281,8 @@ public class TokenList {
                     return ;
                 }
                 
-                ts.move((int)sourcePositions.getStartPosition(info.getCompilationUnit(), tree));
-                int end = (int)sourcePositions.getEndPosition(info.getCompilationUnit(), tree);
+                ts.move((int)sourcePositions.getStartPosition(tree));
+                int end = (int)sourcePositions.getEndPosition(tree);
                 
                 List<Token> tokens = null;
                 while(ts.moveNext() && ts.offset() <= end) {
@@ -316,7 +316,7 @@ public class TokenList {
                 }
                 
                 if (!tArgs.isEmpty()) {
-                    int offset = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tArgs.get(0));
+                    int offset = (int) info.getTrees().getSourcePositions().getStartPosition(tArgs.get(0));
                     
                     offset = info.getSnapshot().getOriginalOffset(offset);
                     

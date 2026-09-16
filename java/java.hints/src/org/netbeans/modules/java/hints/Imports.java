@@ -100,7 +100,7 @@ public class Imports {
             for (TreePathHandle h : violatingImports) {
                 TreePath currentPath = h.resolve(ctx.getInfo());
                 assert currentPath != null;
-                long currentPos = ctx.getInfo().getTrees().getSourcePositions().getStartPosition(currentPath.getCompilationUnit(), currentPath.getLeaf());
+                long currentPos = ctx.getInfo().getTrees().getSourcePositions().getStartPosition(currentPath.getLeaf());
                 
                 if (currentPos < pos) {
                     tp = currentPath;

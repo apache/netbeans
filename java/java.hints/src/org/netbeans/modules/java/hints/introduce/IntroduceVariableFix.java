@@ -67,8 +67,8 @@ final class IntroduceVariableFix extends IntroduceFixBase implements Fix {
         TreePath statement = original;
         for (TreePath p : candidates) {
             Tree leaf = p.getLeaf();
-            int leafStart = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), leaf);
-            int stPathStart = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), statement.getLeaf());
+            int leafStart = (int) info.getTrees().getSourcePositions().getStartPosition(leaf);
+            int stPathStart = (int) info.getTrees().getSourcePositions().getStartPosition(statement.getLeaf());
             if (leafStart < stPathStart) {
                 statement = p;
             }

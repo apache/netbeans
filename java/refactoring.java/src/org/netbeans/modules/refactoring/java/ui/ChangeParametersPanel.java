@@ -193,8 +193,8 @@ public class ChangeParametersPanel extends JPanel implements CustomRefactoringPa
                             MethodTree methodTree = (MethodTree) refactoredObj.resolve(info).getLeaf();
                             final long methodStart = info.getTreeUtilities().findNameSpan(methodTree)[0];
                             Tree tree = methodTree.getReturnType();
-                            returnSpan[0] = tree == null ? methodStart -1 : info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
-                            returnSpan[1] = tree == null ? methodStart -1 : info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
+                            returnSpan[0] = tree == null ? methodStart -1 : info.getTrees().getSourcePositions().getStartPosition(tree);
+                            returnSpan[1] = tree == null ? methodStart -1 : info.getTrees().getSourcePositions().getEndPosition(tree);
 
                             DataObject dob = DataObject.find(fileObject);
                             ((JEditorPane)singleLineEditor[1]).getDocument().putProperty(

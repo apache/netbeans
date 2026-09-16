@@ -141,7 +141,7 @@ class AST2Bytecode {
                                 Exceptions.printStackTrace(ioobex);
                             }
                         }
-                        int pos = (int) sp.getStartPosition(cu, node);
+                        int pos = (int) sp.getStartPosition(node);
                         if (pos == Diagnostic.NOPOS) {
                             // Bad positions => give it up.
                             return null;
@@ -152,7 +152,7 @@ class AST2Bytecode {
                                         (int) lineMap.getLineNumber(pos),
                                         (int) lineMap.getColumnNumber(pos)
                                 );
-                        pos = (int) sp.getEndPosition(cu, node);
+                        pos = (int) sp.getEndPosition(node);
                         if (pos == Diagnostic.NOPOS) {
                             // Bad positions => give it up.
                             return null;
@@ -296,7 +296,7 @@ class AST2Bytecode {
                             }
                         }
                         //System.err.println("AST2Bytecode: methodNameInBytecode = '"+methodNameInBytecode+"', methodNameInSource = '"+methodName+"'");
-                        pos = (int) sp.getEndPosition(cu, identifier);
+                        pos = (int) sp.getEndPosition(identifier);
                         if (pos == Diagnostic.NOPOS) {
                             // Bad positions => give it up.
                             return null;
@@ -310,7 +310,7 @@ class AST2Bytecode {
                         if (getStartPosFromMethodLength) {
                             pos = pos - methodName.length();
                         } else {
-                            pos = (int) sp.getStartPosition(cu, identifier);
+                            pos = (int) sp.getStartPosition(identifier);
                             if (pos == Diagnostic.NOPOS) {
                                 // Bad positions => give it up.
                                 return null;

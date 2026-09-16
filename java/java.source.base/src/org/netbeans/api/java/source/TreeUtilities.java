@@ -315,7 +315,7 @@ public final class TreeUtilities {
                     if ("super".equals(it.getName().toString())) {
                         SourcePositions sp = info.getTrees().getSourcePositions();
                         
-                        return sp.getEndPosition(cut, leaf) == (-1);
+                        return sp.getEndPosition(leaf) == (-1);
                     }
                 }
             }
@@ -435,15 +435,15 @@ public final class TreeUtilities {
             public Void scan(Tree tree, Void p) {
                 if (tree != null) {
                     CompilationUnitTree cut = getCurrentPath().getCompilationUnit();
-                    long startPos = sourcePositions.getStartPosition(cut, tree);
-                    long endPos = sourcePositions.getEndPosition(cut, tree);
+                    long startPos = sourcePositions.getStartPosition(tree);
+                    long endPos = sourcePositions.getEndPosition(tree);
                     if (endPos == (-1)) {
                         switch (tree.getKind()) {
                             case ASSIGNMENT:
                                 if (getCurrentPath().getLeaf().getKind() == Kind.ANNOTATION) {
                                     ExpressionTree value = ((AssignmentTree) tree).getExpression();
-                                    startPos = sourcePositions.getStartPosition(cut, value);
-                                    endPos = sourcePositions.getEndPosition(cut, value);
+                                    startPos = sourcePositions.getStartPosition(value);
+                                    endPos = sourcePositions.getEndPosition(value);
                                 }
                                 break;
                         }
@@ -484,7 +484,7 @@ public final class TreeUtilities {
 
             @Override
             public Void visitEnhancedForLoop(EnhancedForLoopTree node, Void p) {
-                int exprEndPos = (int) sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), node.getExpression());
+                int exprEndPos = (int) sourcePositions.getEndPosition(node.getExpression());
                 if (exprEndPos < pos) {
                     TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language()).subSequence(exprEndPos, pos);
                     boolean hasNonWhiteSpace;
@@ -508,7 +508,7 @@ public final class TreeUtilities {
         }
         
         if (path.getLeaf() == path.getCompilationUnit()) {
-            long endPos = sourcePositions.getEndPosition(path.getCompilationUnit(), path.getCompilationUnit());
+            long endPos = sourcePositions.getEndPosition(path.getCompilationUnit());
             if (pos > endPos) {
                 List<? extends Tree> classes = path.getCompilationUnit().getTypeDecls();
                 if (classes.size() == 1 && classes.getFirst() instanceof JCClassDecl clazz && (clazz.mods.flags & Flags.IMPLICIT_CLASS) != 0) {
@@ -541,7 +541,7 @@ public final class TreeUtilities {
                     if (path.getLeaf().getKind() == Tree.Kind.EMPTY_STATEMENT ||
                             path.getLeaf().getKind() == Tree.Kind.TRY ||
                             (path.getLeaf().getKind() == Tree.Kind.FOR_LOOP &&
-                            tokenList.offset() <= sourcePositions.getStartPosition(path.getCompilationUnit(), ((ForLoopTree)path.getLeaf()).getUpdate().getFirst())))
+                            tokenList.offset() <= sourcePositions.getStartPosition(((ForLoopTree)path.getLeaf()).getUpdate().getFirst())))
                         break;
                     if (path.getParentPath().getLeaf().getKind() == Tree.Kind.TRY &&
                         ((TryTree) path.getParentPath().getLeaf()).getResources().contains(path.getLeaf())) {
@@ -632,7 +632,7 @@ public final class TreeUtilities {
             @Override
             public Void scan(DocTree tree, TreePath p) {
                 if (tree != null) {
-                    if (sourcePositions.getStartPosition(p.getCompilationUnit(), getCurrentPath().getDocComment(), tree) < pos && sourcePositions.getEndPosition(p.getCompilationUnit(), getCurrentPath().getDocComment(), tree) >= pos) {
+                    if (sourcePositions.getStartPosition(getCurrentPath().getDocComment(), tree) < pos && sourcePositions.getEndPosition(getCurrentPath().getDocComment(), tree) >= pos) {
                         if (tree.getKind() == DocTree.Kind.ERRONEOUS) {
                             tree.accept(this, p);
                             throw new Result(getCurrentPath());
@@ -891,7 +891,7 @@ public final class TreeUtilities {
         if (stmts != null) {
             Tree tree = null;
             for (StatementTree st : stmts) {
-                if (sourcePositions.getStartPosition(root, st) < pos)
+                if (sourcePositions.getStartPosition(st) < pos)
                     tree = st;
             }
             if (tree != null)
@@ -1089,8 +1089,8 @@ public final class TreeUtilities {
     }
 
     private TokenSequence<JavaTokenId> tokensFor(Tree tree, SourcePositions sourcePositions, int farEnd) {
-        int start = (int)sourcePositions.getStartPosition(info.getCompilationUnit(), tree);
-        int end   = (int)sourcePositions.getEndPosition(info.getCompilationUnit(), tree);
+        int start = (int)sourcePositions.getStartPosition(tree);
+        int end   = (int)sourcePositions.getEndPosition(tree);
         
         return info.getTokenHierarchy().tokenSequence(JavaTokenId.language()).subSequence(start, Math.max(end, farEnd));
     }
@@ -1185,7 +1185,7 @@ public final class TreeUtilities {
         tokenSequence.move(pos);
         
         int startPos = -1;
-        int endPos = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), clazz);
+        int endPos = (int) info.getTrees().getSourcePositions().getEndPosition(clazz);
         while(tokenSequence.moveNext()) {
             if(tokenSequence.token().id() == JavaTokenId.LBRACE) {
                 startPos = tokenSequence.offset();
@@ -1401,7 +1401,7 @@ public final class TreeUtilities {
             return null;
         }
         
-        int pos = (int) info.getDocTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), docTree, ref);
+        int pos = (int) info.getDocTrees().getSourcePositions().getStartPosition(docTree, ref);
         
         if (pos < 0)
             return null;
@@ -2107,7 +2107,7 @@ public final class TreeUtilities {
             return true;
         }
 
-        int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+        int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(tree);
         tokenSequence.moveStart();
 
         int tokensLength = 0;
@@ -2140,8 +2140,8 @@ public final class TreeUtilities {
      * @since 2.37
      */
     public boolean hasError(@NonNull Tree tree, String... errors) {
-        long startPos = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
-        long endPos = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
+        long startPos = info.getTrees().getSourcePositions().getStartPosition(tree);
+        long endPos = info.getTrees().getSourcePositions().getEndPosition(tree);
 
         List<Diagnostic> diagnosticsList = info.getDiagnostics();
         for (Diagnostic d : diagnosticsList) {

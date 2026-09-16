@@ -66,7 +66,7 @@ public class ExpandEnhancedForLoop {
     public static ErrorDescription run(HintContext ctx) {
         TreePath tp = ctx.getPath();
         EnhancedForLoopTree efl = (EnhancedForLoopTree) tp.getLeaf();
-        long statementStart = ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getInfo().getCompilationUnit(), efl.getStatement());
+        long statementStart = ctx.getInfo().getTrees().getSourcePositions().getStartPosition(efl.getStatement());
         int caret = ctx.getCaretLocation();
 
         if (caret >= statementStart) {

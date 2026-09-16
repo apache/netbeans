@@ -510,8 +510,8 @@ public class Utilities {
 
             if (doc instanceof GuardedDocument) {
                 GuardedDocument bdoc = (GuardedDocument) doc;
-                int methodStart = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), method);
-                int methodEnd = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), method);
+                int methodStart = (int) info.getTrees().getSourcePositions().getStartPosition(method);
+                int methodEnd = (int) info.getTrees().getSourcePositions().getEndPosition(method);
 
                 return (bdoc.getGuardedBlockChain().compareBlock(methodStart, methodEnd) & MarkBlock.OVERLAP) != 0;
             }
@@ -893,8 +893,8 @@ public class Utilities {
             if (node.getValue() instanceof String)
                 return "...";
 
-            int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), node);
-            int end   = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), node);
+            int start = (int) info.getTrees().getSourcePositions().getStartPosition(node);
+            int end   = (int) info.getTrees().getSourcePositions().getEndPosition(node);
 
             if (start < 0 || end < 0 || end < start) {
                 return node.toString();
@@ -1955,11 +1955,9 @@ public class Utilities {
         }
         SourcePositions sp = ci.getTrees().getSourcePositions();
         
-        int invOffset = (int)sp.getEndPosition(ci.getCompilationUnit(), sel) - 1;
-        int origExpStart = (int)sp.getStartPosition(ci.getCompilationUnit(), 
-                origPath.getLeaf());
-        int origExpEnd = (int)sp.getEndPosition(ci.getCompilationUnit(), 
-                origPath.getLeaf());
+        int invOffset = (int)sp.getEndPosition(sel) - 1;
+        int origExpStart = (int)sp.getStartPosition(origPath.getLeaf());
+        int origExpEnd = (int)sp.getEndPosition(origPath.getLeaf());
         
         if (invOffset < 0 || origExpStart < 0 || origExpEnd < 0) {
             return false;
@@ -2070,7 +2068,7 @@ public class Utilities {
             return false;
         }
 
-        int baseIndex = (int)sp.getStartPosition(ci.getCompilationUnit(), exp.getLeaf());
+        int baseIndex = (int)sp.getStartPosition(exp.getLeaf());
         if (baseIndex < 0) {
             return false;
         }
@@ -2081,9 +2079,9 @@ public class Utilities {
         if (customPrefix != null) {
             sb.append(customPrefix);
         }
-        int valStart = (int)sp.getStartPosition(ci.getCompilationUnit(), valPath.getLeaf());
-        int valEnd = (int)sp.getEndPosition(ci.getCompilationUnit(), valPath.getLeaf());
-        int expEndPos = (int)sp.getEndPosition(ci.getCompilationUnit(), exp.getLeaf());
+        int valStart = (int)sp.getStartPosition(valPath.getLeaf());
+        int valEnd = (int)sp.getEndPosition(valPath.getLeaf());
+        int expEndPos = (int)sp.getEndPosition(exp.getLeaf());
         if (valStart < 0 || valEnd < 0 || expEndPos < 0) {
             return false;
         }

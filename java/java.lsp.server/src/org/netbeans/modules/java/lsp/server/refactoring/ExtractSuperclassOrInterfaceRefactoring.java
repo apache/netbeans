@@ -132,8 +132,8 @@ public final class ExtractSuperclassOrInterfaceRefactoring extends CodeRefactori
             if (!treeUtilities.isSynthetic(memberTreePath)) {
                 Element memberElm = trees.getElement(memberTreePath);
                 if (memberElm != null) {
-                    long startMember = sourcePositions.getStartPosition(info.getCompilationUnit(), member);
-                    long endMember = sourcePositions.getEndPosition(info.getCompilationUnit(), member);
+                    long startMember = sourcePositions.getStartPosition(member);
+                    long endMember = sourcePositions.getEndPosition(member);
                     boolean selected = offset > startMember && offset < endMember;
                     Set<Modifier> mods = memberElm.getModifiers();
                     if (memberElm.getKind() == ElementKind.FIELD) {

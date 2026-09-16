@@ -101,7 +101,7 @@ public final class LocationOpener {
                             System.out.println("Looking for methodName " + methodName);
                             for (Element child : methodElements) {
                                 if (child.getSimpleName().contentEquals(methodName)) {
-                                    long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, trees.getTree(child));
+                                    long pos = trees.getSourcePositions().getStartPosition(trees.getTree(child));
                                     System.out.println("Found method. LINE: " + pos);
                                     line[0] = (int) compilationUnitTree.getLineMap().getLineNumber(pos);
                                     break;
@@ -150,9 +150,7 @@ public final class LocationOpener {
                                 trees.getElement(trees.getPath(compilationUnitTree, tree)),
                                 classNames,0);
                         if (element != null) {
-                            long pos = trees.getSourcePositions().getStartPosition(
-                                    compilationUnitTree,
-                                    trees.getTree(element));
+                            long pos = trees.getSourcePositions().getStartPosition(trees.getTree(element));
                             line[0] = (int) compilationUnitTree.getLineMap().getLineNumber(pos);
                             break;
                         }

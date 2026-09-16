@@ -128,8 +128,8 @@ public class CaretListeningTask implements CancellableTask<CompilationInfo> {
             // can have single-char type declaration.
             TreePath tp2 = compilationInfo.getTreeUtilities().pathFor(lastPosition + 1);
             SourcePositions sp = compilationInfo.getTrees().getSourcePositions();
-            long e1 = sp.getEndPosition(compilationInfo.getCompilationUnit(), tp2.getLeaf());
-            long e2 = sp.getEndPosition(compilationInfo.getCompilationUnit(), tp.getLeaf());
+            long e1 = sp.getEndPosition(tp2.getLeaf());
+            long e2 = sp.getEndPosition(tp.getLeaf());
             // the "inner" member does not extend beyond the class
             if (e2 != -1 && e1 != -1 && e1 <= e2) {
                 TreePath p = tp2;

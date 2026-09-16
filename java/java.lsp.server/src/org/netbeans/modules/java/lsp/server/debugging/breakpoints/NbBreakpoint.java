@@ -200,7 +200,7 @@ public final class NbBreakpoint {
                 new TreePathScanner<Void, Void>() {
                     int idx = 0;
                     public Void visitLambdaExpression(LambdaExpressionTree tree, Void v) {
-                        int startPos = (int) cc.getTrees().getSourcePositions().getStartPosition(getCurrentPath().getCompilationUnit(), tree);
+                        int startPos = (int) cc.getTrees().getSourcePositions().getStartPosition(tree);
                         Position pos = Utils.createPosition(cc.getCompilationUnit().getLineMap(), startPos);
                         if (line == pos.getLine() + 1) {
                             if (column == pos.getCharacter() + 1) {

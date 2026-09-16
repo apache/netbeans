@@ -159,7 +159,7 @@ public final class CreateElement implements ErrorRule<Void> {
         if (CAST_KEY.equals(diagnosticKey) && errorPath.getParentPath() != null && errorPath.getParentPath().getLeaf().getKind() == Kind.METHOD_INVOCATION) {
             MethodInvocationTree mit = (MethodInvocationTree) errorPath.getParentPath().getLeaf();
             errorPath = new TreePath(errorPath.getParentPath(), mit.getMethodSelect());
-            offset = (int) info.getTrees().getSourcePositions().getStartPosition(errorPath.getCompilationUnit(), errorPath.getLeaf());
+            offset = (int) info.getTrees().getSourcePositions().getStartPosition(errorPath.getLeaf());
         }
 
         if (info.getElements().getTypeElement("java.lang.Object") == null) { // NOI18N
@@ -179,7 +179,7 @@ public final class CreateElement implements ErrorRule<Void> {
         boolean lookupMethodInvocation = true;
         boolean lookupNCT = true;
 
-        TreePath path = info.getTreeUtilities().pathFor(Math.max((int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), errorPath.getLeaf()), offset) + 1);
+        TreePath path = info.getTreeUtilities().pathFor(Math.max((int) info.getTrees().getSourcePositions().getStartPosition(errorPath.getLeaf()), offset) + 1);
 
         while(path != null) {
             Tree leaf = path.getLeaf();
@@ -344,7 +344,7 @@ public final class CreateElement implements ErrorRule<Void> {
                 LOG.log(Level.INFO, "Caused by source:\n==============\n" + 
                                     info.getSnapshot().getText().toString() + "\n==============\n");
                 LOG.log(Level.INFO, "Caused by error at offset " + offset + ", tree: " + methodInvocation.getLeaf().toString(), ex);
-                LOG.log(Level.INFO, "Invocation starts at " + info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), methodInvocation.getLeaf()));
+                LOG.log(Level.INFO, "Invocation starts at " + info.getTrees().getSourcePositions().getStartPosition(methodInvocation.getLeaf()));
                 throw ex;
             }
         }
@@ -499,7 +499,7 @@ public final class CreateElement implements ErrorRule<Void> {
                 ee = (ExecutableElement) info.getTrees().getElement(firstMethod);
             }
 
-            int identifierPos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), errorPath.getLeaf());
+            int identifierPos = (int) info.getTrees().getSourcePositions().getStartPosition(errorPath.getLeaf());
             if (ee != null && fixTypes.contains(ElementKind.PARAMETER) && !Utilities.isMethodHeaderInsideGuardedBlock(info, (MethodTree) firstMethod.getLeaf()))
                 result.add(new AddParameterOrLocalFix(info, type, simpleName, ElementKind.PARAMETER, identifierPos).toEditorFix());
             if ((firstMethod != null || firstInitializer != null || firstLambda != null) && fixTypes.contains(ElementKind.LOCAL_VARIABLE) && ErrorFixesFakeHint.enabled(ErrorFixesFakeHint.FixKind.CREATE_LOCAL_VARIABLE))

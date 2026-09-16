@@ -71,7 +71,7 @@ public class MicronautExpressionLanguageUtilities {
                         cc.toPhase(JavaSource.Phase.ELEMENTS_RESOLVED);
                         TreePath treePath = cc.getTreeUtilities().pathFor(offset);
                         if (treePath.getLeaf().getKind() == Tree.Kind.STRING_LITERAL) {
-                            int off = offset - (int) cc.getTrees().getSourcePositions().getStartPosition(treePath.getCompilationUnit(), treePath.getLeaf()) - 1;
+                            int off = offset - (int) cc.getTrees().getSourcePositions().getStartPosition(treePath.getLeaf()) - 1;
                             Matcher matcher = MicronautExpressionLanguageParser.MEXP_PATTERN.matcher((String) ((LiteralTree) treePath.getLeaf()).getValue());
                             while (matcher.find() && matcher.groupCount() == 1) {
                                 if (off >= matcher.start(1) && off <= matcher.end(1)) {

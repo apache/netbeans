@@ -128,7 +128,7 @@ public class ELDeclarationFinder implements DeclarationFinder {
                             Trees trees = controller.getTrees();
                             Tree tree = trees.getTree(element);
                             SourcePositions sourcePositions = trees.getSourcePositions();
-                            refs.offset = (int) sourcePositions.getStartPosition(controller.getCompilationUnit(), tree);
+                            refs.offset = (int) sourcePositions.getStartPosition(tree);
                         }
                     }, true);
                 }

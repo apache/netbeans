@@ -216,8 +216,8 @@ public class ResourceStringFoldProvider extends ParsingFoldSupport{
             final ClassPath cp = ClassPath.getClassPath(anchor, ClassPath.SOURCE);
             FileObject bundleFile = cp != null ? cp.findResource(bundle + ".properties") : null;
             SourcePositions spos = info.getTrees().getSourcePositions();
-            int start = (int)spos.getStartPosition(info.getCompilationUnit(), expr);
-            int end = (int)spos.getEndPosition(info.getCompilationUnit(), expr);
+            int start = (int)spos.getStartPosition(expr);
+            int end = (int)spos.getEndPosition(expr);
             
             if (start == -1 || end == -1) {
                 return;

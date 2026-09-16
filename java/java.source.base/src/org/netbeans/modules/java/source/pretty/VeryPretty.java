@@ -26,7 +26,6 @@ import com.sun.source.tree.LambdaExpressionTree.BodyKind;
 import com.sun.source.tree.MemberReferenceTree.ReferenceMode;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModuleTree;
-import com.sun.source.tree.PatternTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import static com.sun.source.tree.Tree.*;
@@ -72,17 +71,13 @@ import com.sun.source.doctree.UsesTree;
 import com.sun.source.doctree.ValueTree;
 import com.sun.source.doctree.VersionTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.YieldTree;
-import com.sun.source.util.DocTreePathScanner;
-import com.sun.source.util.DocTreeScanner;
 
 import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.*;
 import static com.sun.tools.javac.code.Flags.*;
 import com.sun.tools.javac.comp.Operators;
-import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.parser.Tokens;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
@@ -97,12 +92,8 @@ import com.sun.tools.javac.util.ListBuffer;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -128,7 +119,6 @@ import org.netbeans.modules.java.source.save.PositionEstimator;
 import org.netbeans.modules.java.source.save.Reformatter;
 import org.netbeans.modules.java.source.transform.FieldGroupTree;
 import org.netbeans.spi.java.classpath.support.ClassPathSupport;
-import org.openide.util.Exceptions;
 
 /** Prints out a tree as an indented Java source program.
  */
@@ -317,7 +307,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         return TreeInfo.getStartPos(oldT);
     }
     public int endPos(JCTree t) {
-        return TreeInfo.getEndPos(t, diffContext.origUnit.endPositions);
+        return TreeInfo.getEndPos(t);
     }
     
     private java.util.List<? extends StatementTree> getStatements(Tree tree) {
@@ -1830,7 +1820,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             needSpace();
         if (diffContext.origUnit != null && TreePath.getPath(diffContext.origUnit, tree.expr) != null) {
             int a = TreeInfo.getStartPos(tree.expr);
-            int b = TreeInfo.getEndPos(tree.expr, diffContext.origUnit.endPositions);
+            int b = TreeInfo.getEndPos(tree.expr);
             print(diffContext.origText.substring(a, b));
             return;
         }
@@ -1885,6 +1875,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             && diffContext.origUnit != null
             && (start = diffContext.trees.getSourcePositions().getStartPosition(diffContext.origUnit, tree)) >= 0 //#137564
             && (end = diffContext.getEndPosition(diffContext.origUnit, tree)) >= 0
+            && diffContext.isPartOfCompilationUnit(diffContext.origUnit, tree)
             && origText != null) {
             print(origText.substring((int) start, (int) end));
             return ;
@@ -1893,6 +1884,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             && diffContext.mainUnit != null
             && (start = diffContext.trees.getSourcePositions().getStartPosition(diffContext.mainUnit, tree)) >= 0 //#137564
             && (end = diffContext.getEndPosition(diffContext.mainUnit, tree)) >= 0
+            && diffContext.isPartOfCompilationUnit(diffContext.mainUnit, tree)
             && diffContext.mainCode != null) {
             print(diffContext.mainCode.substring((int) start, (int) end));
             return ;
@@ -2788,7 +2780,6 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             ClasspathInfo cpInfo = ClasspathInfo.create(JavaPlatformManager.getDefault().getDefaultPlatform().getBootstrapLibraries(), empty, empty);
             JavacTaskImpl javacTask = JavacParser.createJavacTask(cpInfo, null, null, null, null, null, null, null, Arrays.asList(FileObjects.memoryFileObject("", "Scratch.java", code)));
             com.sun.tools.javac.util.Context ctx = javacTask.getContext();
-            JavaCompiler.instance(ctx).genEndPos = true;
             CompilationUnitTree tree = javacTask.parse().iterator().next(); //NOI18N
             SourcePositions sp = JavacTrees.instance(ctx).getSourcePositions();
             ClassTree clazz = (ClassTree) tree.getTypeDecls().get(0);
@@ -3066,7 +3057,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
     }
 
     private void printIndentedStat(JCTree tree, BracesGenerationStyle redundantBraces, boolean spaceBeforeLeftBrace, WrapStyle wrapStat) {
-        if (fromOffset >= 0 && toOffset >= 0 && (TreeInfo.getStartPos(tree) < fromOffset || TreeInfo.getEndPos(tree, diffContext.origUnit.endPositions) > toOffset))
+        if (fromOffset >= 0 && toOffset >= 0 && (TreeInfo.getStartPos(tree) < fromOffset || TreeInfo.getEndPos(tree) > toOffset))
             redundantBraces = BracesGenerationStyle.LEAVE_ALONE;
 	switch(redundantBraces) {
         case GENERATE:

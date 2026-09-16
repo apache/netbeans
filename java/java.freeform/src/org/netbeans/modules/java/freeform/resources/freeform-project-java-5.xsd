@@ -44,6 +44,17 @@ Cf. http://projects.netbeans.org/buildsys/design.html#freeform
             <xsd:element name="unit-tests" minOccurs="0"><xsd:complexType/></xsd:element>
             <xsd:element name="classpath" minOccurs="0" maxOccurs="unbounded">
                 <!-- XXX use schema to declare that the mode must be unique within this group -->
+                <xsd:annotation>
+                    <xsd:documentation>
+                        A path (elements separated by ':' or ';') of directories and archives.
+                        A path element whose last component is a filename glob (containing
+                        '*' or '?') is expanded to the archives in the preceding directory
+                        whose names match, e.g. "build/lib/*" or "build/lib/*.jar" reference
+                        every JAR in "build/lib". This mirrors the wildcard classpath syntax
+                        of the java launcher and avoids having to list each JAR; the matching
+                        directory is watched so newly built JARs are picked up automatically.
+                    </xsd:documentation>
+                </xsd:annotation>
                 <xsd:complexType>
                     <xsd:simpleContent>
                         <xsd:extension base="substitutable-text">

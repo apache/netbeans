@@ -84,11 +84,8 @@ public class CTSymArchive extends CachingArchive {
                 dirname = i == -1 ? "" : name.substring(0, i);  //NOI18N
                 basename = name.substring(i+1);
             }
-            Set<String> content = pkgs.get(dirname);
-            if (content == null) {
-                pkgs.put(dirname, content = new HashSet<>());
-            }
-            content.add(basename);
+            pkgs.computeIfAbsent(dirname, k -> new HashSet<>())
+                .add(basename);
         }
     }
 

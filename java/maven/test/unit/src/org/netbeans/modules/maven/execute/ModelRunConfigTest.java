@@ -26,7 +26,6 @@ import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.api.customizer.ModelHandle2;
 import org.netbeans.modules.maven.configurations.M2ConfigProvider;
-import org.netbeans.modules.maven.execute.ModelRunConfig;
 import org.netbeans.modules.maven.execute.model.NetbeansActionMapping;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -242,7 +241,7 @@ public class ModelRunConfigTest extends NbTestCase {
                 + "            <plugin>\n"
                 + "                <groupId>org.codehaus.mojo</groupId>\n"
                 + "                <artifactId>exec-maven-plugin</artifactId>\n"
-                + "                <version>3.5.1</version>\n"
+                + "                <version>3.6.3</version>\n"
                 + "                <configuration>\n"
                 + "                    <executable>${java.home}/bin/java</executable>\n"
                 +                      argsString 

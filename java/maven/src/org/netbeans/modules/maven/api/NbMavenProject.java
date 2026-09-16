@@ -180,6 +180,9 @@ public final class NbMavenProject {
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
+            if (EmbedderFactory.PROP_USER_SETTINGS_XML.equals(evt.getPropertyName())) {
+                project.refreshUpdater();
+            }
             doFireReload();
         }
     }

@@ -598,7 +598,7 @@ public final class PersistenceManager implements PropertyChangeListener {
     private final Set<String> warnedIDs = Collections.synchronizedSet(new HashSet<>());
     /** Avoid printing dozens of warnings about the same ID in one IDE session. */
     private Level warningLevelForDeserTC(String id) {
-        return warnedIDs.add(id) ? Level.WARNING : Level.FINE;
+        return warnedIDs.add(id) ? Level.INFO : Level.FINE;
     }
     
     /** @return Searches for TopComponent with given string id and returns

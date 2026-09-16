@@ -651,13 +651,16 @@ public class Lambda {
 
         @Override
         protected void performRewrite(TransformationContext ctx) throws Exception {
+            WorkingCopy wc = ctx.getWorkingCopy();
+            TreeMaker make = wc.getTreeMaker();
             LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
 
             for (VariableTree var : let.getParameters()) {
-                TreePath typePath = TreePath.getPath(ctx.getPath(), var.getType());
-                if (ctx.getWorkingCopy().getTreeUtilities().isSynthetic(typePath)) {
-                    Tree imported = ctx.getWorkingCopy().getTreeMaker().Type(ctx.getWorkingCopy().getTrees().getTypeMirror(typePath));
-                    ctx.getWorkingCopy().rewrite(var.getType(), imported);
+                if (var.getType() == null || var.getType().getKind() == Kind.VAR_TYPE) {
+                    Tree newType = make.Type(wc.getTrees().getTypeMirror(new TreePath(ctx.getPath(), var)));
+                    VariableTree newVariable = Utilities.setVariableType(wc, var, newType);
+
+                    wc.rewrite(var, newVariable);
                 }
             }
         }
@@ -680,7 +683,10 @@ public class Lambda {
                 LambdaExpressionTree let = (LambdaExpressionTree) ctx.getPath().getLeaf();
                 TreeMaker make = ctx.getWorkingCopy().getTreeMaker();
                 let.getParameters().forEach((var) -> {
-                    ctx.getWorkingCopy().rewrite(var.getType(), make.Type("var")); // NOI18N
+                    Tree newType = make.Type("var"); //XXX: make.VarType()!
+                    VariableTree newVariable = Utilities.setVariableType(ctx.getWorkingCopy(), var, newType);
+
+                    ctx.getWorkingCopy().rewrite(var, newVariable); // NOI18N
                 });
             }
         }

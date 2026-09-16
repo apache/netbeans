@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.prefs.Preferences;
 import javax.swing.JComponent;
 import org.netbeans.api.annotations.common.CheckForNull;
@@ -55,6 +56,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.InfixExpression;
 import org.netbeans.modules.php.editor.parser.astnodes.LambdaFunctionDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
+import org.netbeans.modules.php.editor.parser.astnodes.PropertyHookDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.StaticFieldAccess;
 import org.netbeans.modules.php.editor.parser.astnodes.SwitchCase;
 import org.netbeans.modules.php.editor.parser.astnodes.Variable;
@@ -72,21 +74,19 @@ public class ImmutableVariablesHint extends HintRule implements CustomisableRule
     private static final String HINT_ID = "Immutable.Variables.Hint"; //NOI18N
     private static final String NUMBER_OF_ALLOWED_ASSIGNMENTS = "php.verification.number.of.allowed.assignments"; //NOI18N
     private static final int DEFAULT_NUMBER_OF_ALLOWED_ASSIGNMENTS = 1;
-    private static final List<String> UNCHECKED_VARIABLES = new ArrayList<>();
+    private static final Set<String> UNCHECKED_VARIABLES = Set.of(
+            "this", // NOI18N
+            "GLOBALS", // NOI18N
+            "_SERVER", // NOI18N
+            "_GET", // NOI18N
+            "_POST", // NOI18N
+            "_FILES", // NOI18N
+            "_COOKIE", // NOI18N
+            "_SESSION", // NOI18N
+            "_REQUEST", // NOI18N
+            "_ENV" // NOI18N
+    );
     private Preferences preferences;
-
-    static {
-        UNCHECKED_VARIABLES.add("this"); //NOI18N
-        UNCHECKED_VARIABLES.add("GLOBALS"); //NOI18N
-        UNCHECKED_VARIABLES.add("_SERVER"); //NOI18N
-        UNCHECKED_VARIABLES.add("_GET"); //NOI18N
-        UNCHECKED_VARIABLES.add("_POST"); //NOI18N
-        UNCHECKED_VARIABLES.add("_FILES"); //NOI18N
-        UNCHECKED_VARIABLES.add("_COOKIE"); //NOI18N
-        UNCHECKED_VARIABLES.add("_SESSION"); //NOI18N
-        UNCHECKED_VARIABLES.add("_REQUEST"); //NOI18N
-        UNCHECKED_VARIABLES.add("_ENV"); //NOI18N
-    }
 
     @Override
     public void invoke(PHPRuleContext context, List<Hint> hints) {
@@ -230,6 +230,16 @@ public class ImmutableVariablesHint extends HintRule implements CustomisableRule
         }
 
         @Override
+        public void visit(PropertyHookDeclaration node) {
+            if (CancelSupport.getDefault().isCancelled()) {
+                return;
+            }
+            parentNodes.push(node);
+            super.visit(node);
+            parentNodes.pop();
+        }
+
+        @Override
         public void visit(IfStatement node) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
@@ -326,8 +336,8 @@ public class ImmutableVariablesHint extends HintRule implements CustomisableRule
                 return;
             }
             Expression parameterName = functionParameter.getParameterName();
-            if (parameterName instanceof Variable) {
-                processVariableAssignment((Variable) parameterName);
+            if (parameterName instanceof Variable variable) {
+                processVariableAssignment(variable);
             }
         }
 
@@ -405,10 +415,10 @@ public class ImmutableVariablesHint extends HintRule implements CustomisableRule
             boolean retval = false;
             if (infixExpression.getOperator().equals(InfixExpression.OperatorType.CONCAT)) {
                 retval = true;
-            } else if (infixExpression.getLeft() instanceof InfixExpression) {
-                retval = containsConcatOperator((InfixExpression) infixExpression.getLeft());
-            } else if (infixExpression.getLeft() instanceof InfixExpression) {
-                retval = containsConcatOperator((InfixExpression) infixExpression.getRight());
+            } else if (infixExpression.getLeft() instanceof InfixExpression infixExpr) {
+                retval = containsConcatOperator(infixExpr);
+            } else if (infixExpression.getRight() instanceof InfixExpression infixExpr) {
+                retval = containsConcatOperator(infixExpr);
             }
             return retval;
         }
@@ -440,8 +450,8 @@ public class ImmutableVariablesHint extends HintRule implements CustomisableRule
         @CheckForNull
         private Identifier separateIdentifier(Variable variable) {
             Identifier retval = null;
-            if (variable.getName() instanceof Identifier) {
-                retval = (Identifier) variable.getName();
+            if (variable.getName() instanceof Identifier identifier) {
+                retval = identifier;
             }
             return retval;
         }

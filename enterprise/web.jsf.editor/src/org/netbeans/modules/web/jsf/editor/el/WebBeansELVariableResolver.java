@@ -23,10 +23,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModel;
-import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelAction;
 import org.netbeans.modules.j2ee.metadata.model.api.MetadataModelException;
 import org.netbeans.modules.parsing.api.Snapshot;
 import org.netbeans.modules.web.beans.api.model.WebBeansModel;
@@ -98,7 +99,8 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
 
     private List<WebBean> getWebBeans(FileObject target, ResolverContext context) {
         JsfSupportImpl jsfSupport = JsfSupportImpl.findFor(target);
-        if (jsfSupport == null) {
+        // CDI support was introduced in JSF 2.2, so skip the check for 2.1 or older
+        if (jsfSupport == null || jsfSupport.getJsfVersion().isAtMost(JsfVersion.JSF_2_1)) {
             return Collections.<WebBean>emptyList();
         } else {
             if (context.getContent(CONTENT_NAME) == null) {
@@ -131,10 +133,10 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
         return Collections.emptyList();
     }
 
-     private static final class WebBean {
+    private static final class WebBean {
 
-        private Element element;
-        private String name;
+        private final Element element;
+        private final String name;
 
         private WebBean(Element element, String name) {
             this.element = element;
@@ -146,8 +148,7 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
         }
 
         public String getBeanClassName() {
-            if (getElement() instanceof ExecutableElement) {
-                ExecutableElement methodElement = (ExecutableElement) getElement();
+            if (getElement() instanceof ExecutableElement methodElement) {
                 String returnType = methodElement.getReturnType().toString();
                 int genericOffset = returnType.indexOf('<');
                 return genericOffset == -1 ? returnType : returnType.substring(0, genericOffset);
@@ -161,8 +162,7 @@ public final class WebBeansELVariableResolver implements ELVariableResolver {
         }
 
         private String getEnclodingClass() {
-            if (getElement() instanceof ExecutableElement) {
-                ExecutableElement methodElement = (ExecutableElement) getElement();
+            if (getElement() instanceof ExecutableElement methodElement) {
                 return methodElement.getEnclosingElement().asType().toString();
             } else {
                 return getElement().asType().toString();

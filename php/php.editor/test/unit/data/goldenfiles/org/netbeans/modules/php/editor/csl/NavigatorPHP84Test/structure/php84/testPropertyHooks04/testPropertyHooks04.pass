@@ -1,0 +1,210 @@
+|-Test [824, 2641] : ESCAPED{Test}
+|--Interface1 [841, 943] : ESCAPED{Interface1}
+|---$i1_01 [866, 897] : ESCAPED{$i1_01}
+|----get [882, 885] : ESCAPED{get}ESCAPED{;}
+|----set [887, 890] : ESCAPED{set}ESCAPED{;}
+|---$i1_02 [910, 941] : ESCAPED{$i1_02}
+|----get [926, 929] : ESCAPED{get}ESCAPED{;}
+|----set [931, 934] : ESCAPED{set}ESCAPED{;}
+|--Interface2 [955, 1120] : ESCAPED{Interface2}<font color="#999999">::ESCAPED{Interface1}</font>
+|---(Inherited) $i1_01 [866, 897] : <font color="#7D694A">ESCAPED{$i1_01}</font>
+|----get [882, 885] : ESCAPED{get}ESCAPED{;}
+|----set [887, 890] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i1_02 [910, 941] : <font color="#7D694A">ESCAPED{$i1_02}</font>
+|----get [926, 929] : ESCAPED{get}ESCAPED{;}
+|----set [931, 934] : ESCAPED{set}ESCAPED{;}
+|---$i2_01 [999, 1030] : ESCAPED{$i2_01}
+|----get [1015, 1018] : ESCAPED{get}ESCAPED{;}
+|----set [1020, 1023] : ESCAPED{set}ESCAPED{;}
+|---$i2_02 [1043, 1074] : ESCAPED{$i2_02}
+|----get [1059, 1062] : ESCAPED{get}ESCAPED{;}
+|----set [1064, 1067] : ESCAPED{set}ESCAPED{;}
+|---$i2_03 [1087, 1118] : ESCAPED{$i2_03}
+|----get [1103, 1106] : ESCAPED{get}ESCAPED{;}
+|----set [1108, 1111] : ESCAPED{set}ESCAPED{;}
+|--Interface3 [1132, 1304] : ESCAPED{Interface3}<font color="#999999">::ESCAPED{Interface1}</font>
+|---(Inherited) $i1_01 [866, 897] : <font color="#7D694A">ESCAPED{$i1_01}</font>
+|----get [882, 885] : ESCAPED{get}ESCAPED{;}
+|----set [887, 890] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i1_02 [910, 941] : <font color="#7D694A">ESCAPED{$i1_02}</font>
+|----get [926, 929] : ESCAPED{get}ESCAPED{;}
+|----set [931, 934] : ESCAPED{set}ESCAPED{;}
+|---$i3_01 [1176, 1207] : ESCAPED{$i3_01}
+|----get [1192, 1195] : ESCAPED{get}ESCAPED{;}
+|----set [1197, 1200] : ESCAPED{set}ESCAPED{;}
+|---$i3_02 [1227, 1258] : ESCAPED{$i3_02}<font color="#999999">:ESCAPED{string}</font>
+|----get [1243, 1246] : ESCAPED{get}ESCAPED{;}
+|----set [1248, 1251] : ESCAPED{set}ESCAPED{;}
+|---$i3_03 [1271, 1302] : ESCAPED{$i3_03}
+|----get [1287, 1290] : ESCAPED{get}ESCAPED{;}
+|----set [1292, 1295] : ESCAPED{set}ESCAPED{;}
+|--Trait1 [1312, 1477] : ESCAPED{Trait1}<font color="#999999">#ESCAPED{Trait2}</font>
+|---$t1_01 [1353, 1366] : ESCAPED{$t1_01}<font color="#999999">:ESCAPED{int}</font>
+|----set [1360, 1365] : ESCAPED{set}ESCAPED{ {}}
+|---$t1_02 [1384, 1397] : ESCAPED{$t1_02}<font color="#999999">:ESCAPED{int}</font>
+|----get [1391, 1396] : ESCAPED{get}ESCAPED{ {}}
+|---$t1_03 [1417, 1436] : ESCAPED{$t1_03}<font color="#999999">:ESCAPED{int}</font>
+|----get [1424, 1429] : ESCAPED{get}ESCAPED{ {}}
+|----set [1430, 1435] : ESCAPED{set}ESCAPED{ {}}
+|---$t2_03 [1456, 1475] : ESCAPED{$t2_03}<font color="#999999">:ESCAPED{int}</font>
+|----get [1463, 1468] : ESCAPED{get}ESCAPED{ {}}
+|----set [1469, 1474] : ESCAPED{set}ESCAPED{ {}}
+|---(Inherited) $t2_01 [1510, 1529] : <font color="#7D694A">ESCAPED{$t2_01}</font><font color="#999999">:ESCAPED{int}</font>
+|----get [1517, 1522] : ESCAPED{get}ESCAPED{ {}}
+|----set [1523, 1528] : ESCAPED{set}ESCAPED{ {}}
+|---(Inherited) $t2_02 [1547, 1560] : <font color="#7D694A">ESCAPED{$t2_02}</font><font color="#999999">:ESCAPED{int}</font>
+|----set [1554, 1559] : ESCAPED{set}ESCAPED{ {}}
+|--Trait2 [1485, 1601] : ESCAPED{Trait2}
+|---$t2_01 [1510, 1529] : ESCAPED{$t2_01}<font color="#999999">:ESCAPED{int}</font>
+|----get [1517, 1522] : ESCAPED{get}ESCAPED{ {}}
+|----set [1523, 1528] : ESCAPED{set}ESCAPED{ {}}
+|---$t2_02 [1547, 1560] : ESCAPED{$t2_02}<font color="#999999">:ESCAPED{int}</font>
+|----set [1554, 1559] : ESCAPED{set}ESCAPED{ {}}
+|---$t2_03 [1580, 1599] : ESCAPED{$t2_03}<font color="#999999">:ESCAPED{int}</font>
+|----get [1587, 1592] : ESCAPED{get}ESCAPED{ {}}
+|----set [1593, 1598] : ESCAPED{set}ESCAPED{ {}}
+|--Trait3 [1609, 1719] : ESCAPED{Trait3}
+|---$t3_01 [1634, 1647] : ESCAPED{$t3_01}<font color="#999999">:ESCAPED{int}</font>
+|----get [1641, 1646] : ESCAPED{get}ESCAPED{ {}}
+|---$t3_02 [1665, 1684] : ESCAPED{$t3_02}<font color="#999999">:ESCAPED{int}</font>
+|----get [1672, 1677] : ESCAPED{get}ESCAPED{ {}}
+|----set [1678, 1683] : ESCAPED{set}ESCAPED{ {}}
+|---$t3_03 [1704, 1717] : ESCAPED{$t3_03}<font color="#999999">:ESCAPED{int}</font>
+|----set [1711, 1716] : ESCAPED{set}ESCAPED{ {}}
+|--AbstractClass [1736, 2131] : ESCAPED{AbstractClass}<font color="#999999">:ESCAPED{Interface2}ESCAPED{, }ESCAPED{Interface3}</font>
+|---(Inherited) $i1_01 [866, 897] : <font color="#7D694A">ESCAPED{$i1_01}</font>
+|----get [882, 885] : ESCAPED{get}ESCAPED{;}
+|----set [887, 890] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i1_02 [910, 941] : <font color="#7D694A">ESCAPED{$i1_02}</font>
+|----get [926, 929] : ESCAPED{get}ESCAPED{;}
+|----set [931, 934] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i2_01 [999, 1030] : <font color="#7D694A">ESCAPED{$i2_01}</font>
+|----get [1015, 1018] : ESCAPED{get}ESCAPED{;}
+|----set [1020, 1023] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i2_02 [1043, 1074] : <font color="#7D694A">ESCAPED{$i2_02}</font>
+|----get [1059, 1062] : ESCAPED{get}ESCAPED{;}
+|----set [1064, 1067] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i2_03 [1087, 1118] : <font color="#7D694A">ESCAPED{$i2_03}</font>
+|----get [1103, 1106] : ESCAPED{get}ESCAPED{;}
+|----set [1108, 1111] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i3_01 [1176, 1207] : <font color="#7D694A">ESCAPED{$i3_01}</font>
+|----get [1192, 1195] : ESCAPED{get}ESCAPED{;}
+|----set [1197, 1200] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i3_02 [1227, 1258] : <font color="#7D694A">ESCAPED{$i3_02}</font><font color="#999999">:ESCAPED{string}</font>
+|----get [1243, 1246] : ESCAPED{get}ESCAPED{;}
+|----set [1248, 1251] : ESCAPED{set}ESCAPED{;}
+|---$ac_01 [1798, 1929] : ESCAPED{$ac_01}
+|----get [1814, 1862] : ESCAPED{get}ESCAPED{ {}}
+|----set [1871, 1923] : ESCAPED{set}ESCAPED{ {}}
+|---$ac_02 [1942, 1965] : ESCAPED{$ac_02}
+|----get [1950, 1956] : ESCAPED{get}ESCAPED{ {}}
+|----set [1957, 1963] : ESCAPED{set}ESCAPED{ {}}
+|---$ac_03 [1978, 2001] : ESCAPED{$ac_03}
+|----get [1986, 1992] : ESCAPED{get}ESCAPED{ {}}
+|----set [1993, 1999] : ESCAPED{set}ESCAPED{ {}}
+|---$ac_04 [2014, 2019] : ESCAPED{$ac_04}
+|---$ac_05 [2036, 2041] : ESCAPED{$ac_05}
+|---$ac_private_01 [2056, 2083] : ESCAPED{$ac_private_01}
+|----get [2071, 2076] : ESCAPED{get}ESCAPED{ {}}
+|----set [2077, 2082] : ESCAPED{set}ESCAPED{ {}}
+|---$i3_03 [2096, 2129] : ESCAPED{$i3_03}
+|----get [2112, 2117] : ESCAPED{get}ESCAPED{ {}}
+|----set [2118, 2123] : ESCAPED{set}ESCAPED{ {}}
+|--AbstractTest [2148, 2214] : ESCAPED{AbstractTest}<font color="#999999">::ESCAPED{AbstractClass}</font>
+|---(Inherited) $i1_01 [866, 897] : <font color="#7D694A">ESCAPED{$i1_01}</font>
+|----get [882, 885] : ESCAPED{get}ESCAPED{;}
+|----set [887, 890] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i1_02 [910, 941] : <font color="#7D694A">ESCAPED{$i1_02}</font>
+|----get [926, 929] : ESCAPED{get}ESCAPED{;}
+|----set [931, 934] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i2_01 [999, 1030] : <font color="#7D694A">ESCAPED{$i2_01}</font>
+|----get [1015, 1018] : ESCAPED{get}ESCAPED{;}
+|----set [1020, 1023] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i2_02 [1043, 1074] : <font color="#7D694A">ESCAPED{$i2_02}</font>
+|----get [1059, 1062] : ESCAPED{get}ESCAPED{;}
+|----set [1064, 1067] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i2_03 [1087, 1118] : <font color="#7D694A">ESCAPED{$i2_03}</font>
+|----get [1103, 1106] : ESCAPED{get}ESCAPED{;}
+|----set [1108, 1111] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i3_01 [1176, 1207] : <font color="#7D694A">ESCAPED{$i3_01}</font>
+|----get [1192, 1195] : ESCAPED{get}ESCAPED{;}
+|----set [1197, 1200] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i3_02 [1227, 1258] : <font color="#7D694A">ESCAPED{$i3_02}</font><font color="#999999">:ESCAPED{string}</font>
+|----get [1243, 1246] : ESCAPED{get}ESCAPED{;}
+|----set [1248, 1251] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $ac_01 [1798, 1929] : <font color="#7D694A">ESCAPED{$ac_01}</font>
+|----get [1814, 1862] : ESCAPED{get}ESCAPED{ {}}
+|----set [1871, 1923] : ESCAPED{set}ESCAPED{ {}}
+|---(Inherited) $ac_02 [1942, 1965] : <font color="#7D694A">ESCAPED{$ac_02}</font>
+|----get [1950, 1956] : ESCAPED{get}ESCAPED{ {}}
+|----set [1957, 1963] : ESCAPED{set}ESCAPED{ {}}
+|---(Inherited) $ac_03 [1978, 2001] : <font color="#7D694A">ESCAPED{$ac_03}</font>
+|----get [1986, 1992] : ESCAPED{get}ESCAPED{ {}}
+|----set [1993, 1999] : ESCAPED{set}ESCAPED{ {}}
+|---(Inherited) $ac_04 [2014, 2019] : <font color="#7D694A">ESCAPED{$ac_04}</font>
+|---(Inherited) $ac_05 [2036, 2041] : <font color="#7D694A">ESCAPED{$ac_05}</font>
+|---(Inherited) $i3_03 [2096, 2129] : <font color="#7D694A">ESCAPED{$i3_03}</font>
+|----get [2112, 2117] : ESCAPED{get}ESCAPED{ {}}
+|----set [2118, 2123] : ESCAPED{set}ESCAPED{ {}}
+|---$prop [2201, 2205] : ESCAPED{$prop}<font color="#999999">:ESCAPED{int}</font>
+|--Child [2222, 2641] : ESCAPED{Child}<font color="#999999">::ESCAPED{AbstractTest}</font><font color="#999999">:ESCAPED{Interface1}</font><font color="#999999">#ESCAPED{Trait1}ESCAPED{, }ESCAPED{Trait3}</font>
+|---(Inherited) $i2_01 [999, 1030] : <font color="#7D694A">ESCAPED{$i2_01}</font>
+|----get [1015, 1018] : ESCAPED{get}ESCAPED{;}
+|----set [1020, 1023] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i2_02 [1043, 1074] : <font color="#7D694A">ESCAPED{$i2_02}</font>
+|----get [1059, 1062] : ESCAPED{get}ESCAPED{;}
+|----set [1064, 1067] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i2_03 [1087, 1118] : <font color="#7D694A">ESCAPED{$i2_03}</font>
+|----get [1103, 1106] : ESCAPED{get}ESCAPED{;}
+|----set [1108, 1111] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $i3_01 [1176, 1207] : <font color="#7D694A">ESCAPED{$i3_01}</font>
+|----get [1192, 1195] : ESCAPED{get}ESCAPED{;}
+|----set [1197, 1200] : ESCAPED{set}ESCAPED{;}
+|---(Inherited) $t1_01 [1353, 1366] : <font color="#7D694A">ESCAPED{$t1_01}</font><font color="#999999">:ESCAPED{int}</font>
+|----set [1360, 1365] : ESCAPED{set}ESCAPED{ {}}
+|---(Inherited) $t1_02 [1384, 1397] : <font color="#7D694A">ESCAPED{$t1_02}</font><font color="#999999">:ESCAPED{int}</font>
+|----get [1391, 1396] : ESCAPED{get}ESCAPED{ {}}
+|---(Inherited) $t1_03 [1417, 1436] : <font color="#7D694A">ESCAPED{$t1_03}</font><font color="#999999">:ESCAPED{int}</font>
+|----get [1424, 1429] : ESCAPED{get}ESCAPED{ {}}
+|----set [1430, 1435] : ESCAPED{set}ESCAPED{ {}}
+|---(Inherited) $t2_03 [1456, 1475] : <font color="#7D694A">ESCAPED{$t2_03}</font><font color="#999999">:ESCAPED{int}</font>
+|----get [1463, 1468] : ESCAPED{get}ESCAPED{ {}}
+|----set [1469, 1474] : ESCAPED{set}ESCAPED{ {}}
+|---(Inherited) $t2_01 [1510, 1529] : <font color="#7D694A">ESCAPED{$t2_01}</font><font color="#999999">:ESCAPED{int}</font>
+|----get [1517, 1522] : ESCAPED{get}ESCAPED{ {}}
+|----set [1523, 1528] : ESCAPED{set}ESCAPED{ {}}
+|---(Inherited) $t3_01 [1634, 1647] : <font color="#7D694A">ESCAPED{$t3_01}</font><font color="#999999">:ESCAPED{int}</font>
+|----get [1641, 1646] : ESCAPED{get}ESCAPED{ {}}
+|---(Inherited) $t3_02 [1665, 1684] : <font color="#7D694A">ESCAPED{$t3_02}</font><font color="#999999">:ESCAPED{int}</font>
+|----get [1672, 1677] : ESCAPED{get}ESCAPED{ {}}
+|----set [1678, 1683] : ESCAPED{set}ESCAPED{ {}}
+|---(Inherited) $t3_03 [1704, 1717] : <font color="#7D694A">ESCAPED{$t3_03}</font><font color="#999999">:ESCAPED{int}</font>
+|----set [1711, 1716] : ESCAPED{set}ESCAPED{ {}}
+|---(Inherited) $ac_01 [1798, 1929] : <font color="#7D694A">ESCAPED{$ac_01}</font>
+|----get [1814, 1862] : ESCAPED{get}ESCAPED{ {}}
+|----set [1871, 1923] : ESCAPED{set}ESCAPED{ {}}
+|---(Inherited) $ac_02 [1942, 1965] : <font color="#7D694A">ESCAPED{$ac_02}</font>
+|----get [1950, 1956] : ESCAPED{get}ESCAPED{ {}}
+|----set [1957, 1963] : ESCAPED{set}ESCAPED{ {}}
+|---(Inherited) $ac_04 [2014, 2019] : <font color="#7D694A">ESCAPED{$ac_04}</font>
+|---(Inherited) $ac_05 [2036, 2041] : <font color="#7D694A">ESCAPED{$ac_05}</font>
+|---(Inherited) $i3_03 [2096, 2129] : <font color="#7D694A">ESCAPED{$i3_03}</font>
+|----get [2112, 2117] : ESCAPED{get}ESCAPED{ {}}
+|----set [2118, 2123] : ESCAPED{set}ESCAPED{ {}}
+|---$prop [2312, 2425] : ESCAPED{$prop}<font color="#999999">:ESCAPED{int}</font>
+|----get [2327, 2355] : ESCAPED{get}ESCAPED{ {}}
+|----set [2364, 2419] : ESCAPED{set}ESCAPED{ {}}
+|---$i1_01 [2438, 2472] : ESCAPED{$i1_01}
+|----get [2454, 2459] : ESCAPED{get}ESCAPED{ {}}
+|----set [2460, 2465] : ESCAPED{set}ESCAPED{ {}}
+|---$i1_02 [2485, 2518] : ESCAPED{$i1_02}
+|----get [2501, 2506] : ESCAPED{get}ESCAPED{ {}}
+|----set [2507, 2512] : ESCAPED{set}ESCAPED{ {}}
+|---$i3_02 [2539, 2572] : ESCAPED{$i3_02}<font color="#999999">:ESCAPED{string}</font>
+|----get [2555, 2560] : ESCAPED{get}ESCAPED{ {}}
+|----set [2561, 2566] : ESCAPED{set}ESCAPED{ {}}
+|---$t2_02 [2590, 2603] : ESCAPED{$t2_02}<font color="#999999">:ESCAPED{int}</font>
+|----set [2597, 2602] : ESCAPED{set}ESCAPED{ {}}
+|---$ac_03 [2616, 2639] : ESCAPED{$ac_03}
+|----get [2624, 2630] : ESCAPED{get}ESCAPED{ {}}
+|----set [2631, 2637] : ESCAPED{set}ESCAPED{ {}}

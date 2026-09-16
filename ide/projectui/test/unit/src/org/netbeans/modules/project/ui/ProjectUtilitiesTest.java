@@ -23,20 +23,16 @@ import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.SwingUtilities;
 import javax.swing.text.BadLocationException;
 import junit.framework.Test;
-import junit.framework.TestSuite;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.MockServices;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.junit.NbTestSuite;
-import org.netbeans.junit.RandomlyFails;
 import org.netbeans.modules.project.ui.actions.TestSupport;
 import org.netbeans.spi.project.AuxiliaryConfiguration;
 import org.openide.cookies.EditorCookie;
@@ -49,7 +45,6 @@ import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.text.CloneableEditorSupport;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
-import org.openide.util.test.RestrictThreadCreation;
 import org.openide.windows.CloneableTopComponent;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -135,16 +130,6 @@ public class ProjectUtilitiesTest extends NbTestCase {
         (tc1_1_navigator = new SimpleTopComponent2 (do1_1_open, NAVIGATOR_MODE)).open ();
         
         ExitDialog.SAVE_ALL_UNCONDITIONALLY = true;
-
-        RestrictThreadCreation.permitStandard();
-        RestrictThreadCreation.permit(OpenProjectList.class.getName() + "$LoadOpenProjects.waitFinished",
-                OpenProjectList.class.getName() + "$LoadOpenProjects.resultChanged",
-                "org.openide.text.CloneableEditorSupport.prepareDocument",
-                "org.openide.text.CloneableEditor.initialize",
-                "org.openide.util.lookup.MetaInfServicesLookup.beforeLookup",
-                "org.netbeans.modules.project.ui.OpenProjectList.close",
-                "org.netbeans.modules.project.ui.OpenProjectList.doOpenProject");
-        RestrictThreadCreation.forbidNewThreads(false);
     }
     
     @SuppressWarnings("deprecation")

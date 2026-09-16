@@ -31,7 +31,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,7 +64,6 @@ import org.apache.tools.ant.taskdefs.Copy;
 import org.apache.tools.ant.taskdefs.ExecTask;
 import org.apache.tools.ant.taskdefs.Jar;
 import org.apache.tools.ant.taskdefs.SignJar;
-import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ZipFileSet;
@@ -1102,13 +1100,16 @@ public class MakeNBM extends Task {
     static void validateAgainstAUDTDs(InputSource input, final Path updaterJar, final Task task) throws IOException, SAXException {
         XMLUtil.parse(input, true, false, XMLUtil.rethrowHandler(), new EntityResolver() {
             ClassLoader loader = new AntClassLoader(task.getProject(), updaterJar);
+            @Override
             public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
                 String remote = "http://www.netbeans.org/dtds/";
                 if (systemId.startsWith(remote)) {
                     String rsrc = "org/netbeans/updater/resources/" + systemId.substring(remote.length());
-                    URL u = loader.getResource(rsrc);
-                    if (u != null) {
-                        return new InputSource(u.toString());
+                    InputStream entity = loader.getResourceAsStream(rsrc);
+                    if (entity != null) {
+                        try (entity) {
+                            return new InputSource(new ByteArrayInputStream(entity.readAllBytes()));
+                        }
                     } else {
                         task.log(rsrc + " not found in " + updaterJar, Project.MSG_WARN);
                     }

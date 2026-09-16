@@ -83,7 +83,7 @@ public class TomcatIncrementalDeployment extends IncrementalDeployment {
                 return f;
             }*/
         }
-        throw new IllegalArgumentException ("ModuleType:" + module == null ? null : module.getModuleType() + " Configuration:"+configuration); //NOI18N
+        throw new IllegalArgumentException("ModuleType:" + (module == null ? null : module.getModuleType()) + " Configuration:" + configuration); //NOI18N
     }
     
     @Override

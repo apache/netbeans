@@ -92,7 +92,6 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
 import org.netbeans.modules.java.source.builder.ElementsService;
 import org.netbeans.modules.java.source.base.SourceLevelUtils;
-import org.openide.util.Pair;
 import org.openide.util.Parameters;
 
 /**
@@ -756,8 +755,7 @@ public final class ElementUtilities {
                 }
             }
         }
-        Collections.reverse(overridable);
-        return overridable;
+        return overridable.reversed();
     }
 
     /**
@@ -881,7 +879,7 @@ public final class ElementUtilities {
                         if (paramIndex > lastParamStart) {
                             String type = parameters.substring(lastParamStart, paramIndex).replace("...", "[]");
                             //TODO: handle varargs
-                            types.add(info.getTypes().erasure(info.getTreeUtilities().parseType(type, info.getTopLevelElements().get(0)/*XXX*/)));
+                            types.add(info.getTypes().erasure(info.getTreeUtilities().parseType(type, info.getTopLevelElements().getFirst()/*XXX*/)));
                             lastParamStart = paramIndex + 1;
                         }
                         break;
@@ -1104,7 +1102,7 @@ public final class ElementUtilities {
         todo.add(module);
 
         while (!todo.isEmpty()) {
-            ModuleElement currentlyProcessing = todo.remove(todo.size() - 1);
+            ModuleElement currentlyProcessing = todo.removeLast();
 
             if (!seen.add(currentlyProcessing)) {
                 continue;
@@ -1231,12 +1229,7 @@ public final class ElementUtilities {
         }
         // if not defaults, prune the defaults out:
         if (!includeDefaults && element.getKind() == ElementKind.INTERFACE) {
-            for (Iterator<ExecutableElement> it = undef.iterator(); it.hasNext();) {
-                ExecutableElement ee = it.next();
-                if (ee.getModifiers().contains(Modifier.DEFAULT)) {
-                    it.remove();
-                }
-            }
+            undef.removeIf(ee -> ee.getModifiers().contains(Modifier.DEFAULT));
         }
         return undef;
     }

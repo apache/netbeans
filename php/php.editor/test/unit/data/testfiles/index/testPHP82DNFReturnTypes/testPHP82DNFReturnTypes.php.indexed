@@ -52,7 +52,7 @@ Not Searchable Keys:
 Document 5
 Searchable Keys:
   enum : testenum;TestEnum;1173;;;;1;;0;<TESTURL>/testPHP82DNFReturnTypes.php;
-  enum.case : case1;Case1;1193;?;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;
+  enum.case : case1;Case1;1193;?;0;<TESTURL>/testPHP82DNFReturnTypes.php;32;0;
   method : returntype;returnType;1220;;(\X&\Y)|\Z;1;0;<TESTURL>/testPHP82DNFReturnTypes.php;1;0;(X&Y)|Z;
   top : testenum
 

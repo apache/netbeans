@@ -434,12 +434,11 @@ public final class JavadocImports {
                             result[0] = trees.getElement(getCurrentPath());
                         } else {
                             long startPosition = positions.getStartPosition(javac.getCompilationUnit(), node);
-                            long endPosition = positions.getEndPosition(javac.getCompilationUnit(), node);
-                            if (startPosition == 0 && endPosition == -1) {//vanilla javac returns 0 for start and -1 for end positions
+                            if (startPosition == 0) {//vanilla javac returns 0 for start
                                 if (parentNode != null && parentNode.toString().contains(node.toString())) {
                                     long parentNodeStartPosition = positions.getStartPosition(javac.getCompilationUnit(), docComment, parentNode);
                                     startPosition = parentNode.toString().indexOf(node.toString()) + parentNodeStartPosition;
-                                    endPosition = startPosition + node.toString().length();
+                                    long endPosition = startPosition + node.toString().length();
                                     if (startPosition <= offset
                                             && endPosition >= offset) {
                                         result[0] = trees.getElement(getCurrentPath());

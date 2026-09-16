@@ -110,7 +110,7 @@ public class FindUsageVisitorTest extends TestCase {
 
     public int findUsageCountForItem(NamedReferenceable<SchemaComponent> ref) {
         long startTime = System.currentTimeMillis();
-        System.out.println("Finding Usage for " + ref.getName() == null? ref : ref.getName());
+        System.out.println("Finding Usage for " + (ref.getName() == null ? ref : ref.getName()));
         FindUsageVisitor usage = new FindUsageVisitor();
         Preview preview = usage.findUsages(Collections.singletonList(schema), ref);
         System.out.println(preview.getUsages().size() + " occurances found!!!");

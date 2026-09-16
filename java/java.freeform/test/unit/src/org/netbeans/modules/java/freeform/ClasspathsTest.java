@@ -22,9 +22,12 @@ package org.netbeans.modules.java.freeform;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -546,6 +549,122 @@ public class ClasspathsTest extends TestBase {
         assertEquals(3, l.cnt);
         assertTrue(cpe2.includes("stuff/"));
         assertTrue(cpe2.includes("whatever/"));
+    }
+
+    /** A "dir/*.jar" entry expands to every matching JAR in the directory (#116185). */
+    public void testWildcardClasspath() throws Exception {
+        clearWorkDir();
+        File d = getWorkDir();
+        AntProjectHelper helper = FreeformProjectGenerator.createProject(d, d, "prj", null);
+        Project p = ProjectManager.getDefault().findProject(helper.getProjectDirectory());
+        FileObject src = FileUtil.createFolder(new File(d, "src"));
+        File libDir = new File(d, "lib");
+        assertTrue("created lib dir", libDir.mkdirs());
+        File jarA = createJar(new File(libDir, "a.jar"));
+        File jarB = createJar(new File(libDir, "b.jar"));
+        createJar(new File(libDir, "readme.zip")); // does not match *.jar
+        configureCompileClasspath(helper, p, "src", "lib/*.jar");
+
+        ClassPath cp = ClassPath.getClassPath(src, ClassPath.COMPILE);
+        assertNotNull("have COMPILE classpath for src/", cp);
+        SortedSet<String> expected = new TreeSet<String>();
+        expected.add(jarRoot(jarA));
+        expected.add(jarRoot(jarB));
+        assertEquals("wildcard expanded to the matching jars", expected, urlsOfCp(cp));
+    }
+
+    /** A bare "dir/*" entry expands to the archives only, skipping other files. */
+    public void testWildcardClasspathIncludesOnlyArchives() throws Exception {
+        clearWorkDir();
+        File d = getWorkDir();
+        AntProjectHelper helper = FreeformProjectGenerator.createProject(d, d, "prj", null);
+        Project p = ProjectManager.getDefault().findProject(helper.getProjectDirectory());
+        FileObject src = FileUtil.createFolder(new File(d, "src"));
+        File libDir = new File(d, "lib");
+        assertTrue("created lib dir", libDir.mkdirs());
+        File jarA = createJar(new File(libDir, "a.jar"));
+        writeText(new File(libDir, "notes.txt"), "not an archive"); // must be skipped
+        configureCompileClasspath(helper, p, "src", "lib/*");
+
+        ClassPath cp = ClassPath.getClassPath(src, ClassPath.COMPILE);
+        assertNotNull("have COMPILE classpath for src/", cp);
+        assertEquals("only the archive was included",
+                Collections.singleton(jarRoot(jarA)), urlsOfCp(cp));
+    }
+
+    /** JARs produced after the project is opened are picked up without editing project.xml. */
+    public void testWildcardClasspathReactsToNewJars() throws Exception {
+        clearWorkDir();
+        File d = getWorkDir();
+        AntProjectHelper helper = FreeformProjectGenerator.createProject(d, d, "prj", null);
+        Project p = ProjectManager.getDefault().findProject(helper.getProjectDirectory());
+        FileObject src = FileUtil.createFolder(new File(d, "src"));
+        File libDir = new File(d, "lib");
+        assertTrue("created lib dir", libDir.mkdirs());
+        File jarA = createJar(new File(libDir, "a.jar"));
+        configureCompileClasspath(helper, p, "src", "lib/*.jar");
+
+        ClassPath cp = ClassPath.getClassPath(src, ClassPath.COMPILE);
+        assertNotNull("have COMPILE classpath for src/", cp);
+        assertEquals("initially just the one jar",
+                Collections.singleton(jarRoot(jarA)), urlsOfCp(cp));
+
+        // Wait for the classpath to fire rather than sleep-polling, so the test is
+        // deterministic: the directory listener coalesces for WILDCARD_REFRESH_DELAY
+        // before recomputing, after which the ClassPath fires an entries/roots change.
+        final CountDownLatch refreshed = new CountDownLatch(1);
+        cp.addPropertyChangeListener(new PropertyChangeListener() {
+            public @Override void propertyChange(PropertyChangeEvent e) {
+                if (ClassPath.PROP_ENTRIES.equals(e.getPropertyName())
+                        || ClassPath.PROP_ROOTS.equals(e.getPropertyName())) {
+                    refreshed.countDown();
+                }
+            }
+        });
+
+        // A build drops a new jar into the watched directory.
+        File jarB = createJar(new File(libDir, "b.jar"));
+        FileObject libFO = FileUtil.toFileObject(FileUtil.normalizeFile(libDir));
+        assertNotNull(libFO);
+        libFO.refresh(); // fire the filesystem event the directory listener waits for
+
+        assertTrue("wildcard classpath refreshed after a new jar appeared",
+                refreshed.await(10, TimeUnit.SECONDS));
+        assertTrue("newly built jar picked up by the wildcard classpath",
+                urlsOfCp(cp).contains(jarRoot(jarB)));
+    }
+
+    private void configureCompileClasspath(AntProjectHelper helper, Project p, String packageRoot, String classpath) throws Exception {
+        String ns = JavaProjectNature.NS_JAVA_LASTEST;
+        Element data = Util.getPrimaryConfigurationData(helper);
+        Document doc = data.getOwnerDocument();
+        Element jd = doc.createElementNS(ns, JavaProjectNature.EL_JAVA);
+        Element cu = (Element) jd.appendChild(doc.createElementNS(ns, "compilation-unit"));
+        cu.appendChild(doc.createElementNS(ns, "package-root")).appendChild(doc.createTextNode(packageRoot));
+        Element cpEl = (Element) cu.appendChild(doc.createElementNS(ns, "classpath"));
+        cpEl.setAttribute("mode", "compile");
+        cpEl.appendChild(doc.createTextNode(classpath));
+        p.getLookup().lookup(AuxiliaryConfiguration.class).putConfigurationFragment(jd, true);
+        ProjectManager.getDefault().saveProject(p);
+    }
+
+    private static String jarRoot(File jar) throws Exception {
+        return FileUtil.getArchiveRoot(Utilities.toURI(jar).toURL()).toExternalForm();
+    }
+
+    private static File createJar(File f) throws IOException {
+        try (ZipOutputStream zos = new ZipOutputStream(new java.io.FileOutputStream(f))) {
+            zos.putNextEntry(new ZipEntry("dummy")); // NOI18N
+            zos.write(new byte[] {1, 2, 3, 4});
+            zos.closeEntry();
+        }
+        return f;
+    }
+
+    private static void writeText(File f, String text) throws IOException {
+        try (java.io.Writer w = new java.io.FileWriter(f)) {
+            w.write(text);
+        }
     }
 
 }

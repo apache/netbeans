@@ -21,6 +21,8 @@ package org.netbeans.modules.maven.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.util.Enumeration;
 import java.util.SortedSet;
@@ -28,7 +30,6 @@ import java.util.Stack;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -40,9 +41,6 @@ import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataFolder;
-import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Utilities;
 
 /**
@@ -291,26 +289,29 @@ public final class FileUtilities {
      * @return either the settings.xml file or <code>null</code> if not available
      */
     public static File getUserSettingsFile(boolean forceCreate) {
-        if(!SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE.exists()) {
+        File userSettingsFile = EmbedderFactory.getUserSettingsXmlFile();
+        if (!userSettingsFile.exists()) {
             if(!forceCreate) {
                 return null;
             }
             
             try {
-                File fil = SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE.getParentFile();
-
-                DataFolder folder = DataFolder.findFolder(FileUtil.createFolder(fil));
-                // path to template...
+                File fil = userSettingsFile.getParentFile();
                 FileObject temp = FileUtil.getConfigFile("Maven2Templates/settings.xml"); //NOI18N
-                DataObject dobj = DataObject.find(temp);
-                dobj.createFromTemplate(folder);
-            } catch (DataObjectNotFoundException ex) {
-                ex.printStackTrace();
+                if (temp == null) {
+                    return null;
+                }
+                FileObject folder = FileUtil.createFolder(fil);
+                FileObject settingsFile = FileUtil.createData(folder, userSettingsFile.getName());
+                try (InputStream in = temp.getInputStream();
+                     OutputStream out = settingsFile.getOutputStream()) {
+                    FileUtil.copy(in, out);
+                }
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
-        return SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE;
+        return userSettingsFile;
     }
     
     private static void getSourcePackageNames (Project prj, SortedSet<String> result, boolean onlyRoots) {

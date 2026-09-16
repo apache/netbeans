@@ -26,7 +26,7 @@ import javax.lang.model.SourceVersion;
  */
 public class NoJavacHelper {
 
-    public static final int REQUIRED_JAVAC_VERSION = 26; // <- TODO: increment on every release
+    public static final int REQUIRED_JAVAC_VERSION = 27; // <- TODO: increment on every release
     private static final boolean HAS_WORKING_JAVAC;
 
     static {

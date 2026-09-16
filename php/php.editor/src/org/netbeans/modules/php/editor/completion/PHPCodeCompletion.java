@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -2331,7 +2332,9 @@ public class PHPCodeCompletion implements CodeCompletionHandler2 {
         Model model = request.result.getModel();
         Set<AliasedName> aliasedNames = ModelUtils.getAliasedNames(model, request.anchor);
 
-        for (final PhpElement element : request.index.getTopLevelElements(prefix, aliasedNames, Trait.ALIAS)) {
+        List<PhpElement> topLevelElements = new ArrayList<>(request.index.getTopLevelElements(prefix, aliasedNames, Trait.ALIAS));
+        topLevelElements.sort(Comparator.comparing(PhpElement::getName, String.CASE_INSENSITIVE_ORDER));
+        for (final PhpElement element : topLevelElements) {
             if (CancelSupport.getDefault().isCancelled()) {
                 return;
             }

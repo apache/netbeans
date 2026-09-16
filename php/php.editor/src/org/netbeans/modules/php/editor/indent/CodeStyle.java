@@ -109,6 +109,16 @@ public final class CodeStyle {
         return BracePlacement.valueOf(placement);
     }
 
+    public BracePlacement getFieldDeclBracePlacement() {
+        String placement = preferences.get(FIELD_DECL_BRACE_PLACEMENT, getDefaultAsString(FIELD_DECL_BRACE_PLACEMENT));
+        return BracePlacement.valueOf(placement);
+    }
+
+    public BracePlacement getPropertyHookDeclBracePlacement() {
+        String placement = preferences.get(PROPERTY_HOOK_DECL_BRACE_PLACEMENT, getDefaultAsString(PROPERTY_HOOK_DECL_BRACE_PLACEMENT));
+        return BracePlacement.valueOf(placement);
+    }
+
     public BracePlacement getIfBracePlacement() {
         String placement = preferences.get(IF_BRACE_PLACEMENT, getDefaultAsString(IF_BRACE_PLACEMENT));
         return BracePlacement.valueOf(placement);
@@ -208,6 +218,14 @@ public final class CodeStyle {
         return preferences.getInt(BLANK_LINES_BETWEEN_FIELDS, getDefaultAsInt(BLANK_LINES_BETWEEN_FIELDS));
     }
 
+    public int getBlankLinesBeforePropertyHooks() {
+        return preferences.getInt(BLANK_LINES_BEFORE_PROPERTY_HOOKS, getDefaultAsInt(BLANK_LINES_BEFORE_PROPERTY_HOOKS));
+    }
+
+    public int getBlankLinesBetweenPropertyHooks() {
+        return preferences.getInt(BLANK_LINES_BETWEEN_PROPERTY_HOOKS, getDefaultAsInt(BLANK_LINES_BETWEEN_PROPERTY_HOOKS));
+    }
+
     public int getBlankLinesAfterFields() {
         return preferences.getInt(BLANK_LINES_AFTER_FIELDS, getDefaultAsInt(BLANK_LINES_AFTER_FIELDS));
     }
@@ -218,6 +236,10 @@ public final class CodeStyle {
 
     public boolean getBlankLinesEmptyFunctionBody() {
         return preferences.getBoolean(BLANK_LINES_EMPTY_FUNCTION_BODY, getDefaultAsBoolean(BLANK_LINES_EMPTY_FUNCTION_BODY));
+    }
+
+    public boolean getBlankLinesEmptyPropertyHookBody() {
+        return preferences.getBoolean(BLANK_LINES_EMPTY_PROPERTY_HOOK_BODY, getDefaultAsBoolean(BLANK_LINES_EMPTY_PROPERTY_HOOK_BODY));
     }
 
     /**
@@ -384,6 +406,14 @@ public final class CodeStyle {
 
     public boolean spaceBeforeMethodDeclLeftBrace() {
         return preferences.getBoolean(SPACE_BEFORE_METHOD_DECL_LEFT_BRACE, getDefaultAsBoolean(SPACE_BEFORE_METHOD_DECL_LEFT_BRACE));
+    }
+
+    public boolean spaceBeforeFieldDeclLeftBrace() {
+        return preferences.getBoolean(SPACE_BEFORE_FIELD_DECL_LEFT_BRACE, getDefaultAsBoolean(SPACE_BEFORE_FIELD_DECL_LEFT_BRACE));
+    }
+
+    public boolean spaceBeforePropertyHookDeclLeftBrace() {
+        return preferences.getBoolean(SPACE_BEFORE_PROPERTY_HOOK_DECL_LEFT_BRACE, getDefaultAsBoolean(SPACE_BEFORE_PROPERTY_HOOK_DECL_LEFT_BRACE));
     }
 
     public boolean spaceBeforeIfLeftBrace() {

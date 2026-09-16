@@ -19,6 +19,8 @@
 package org.netbeans.modules.lsp.client.options;
 
 import java.awt.Component;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.beans.BeanInfo;
 import java.io.File;
 import java.util.ArrayList;
@@ -49,6 +51,14 @@ final class LanguageServersPanel extends javax.swing.JPanel {
         this.usedIds = new HashSet<>();
         initComponents();
         this.languagesList.addListSelectionListener(evt -> setEnableDisable());
+        this.languagesList.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+                    removeSelected();
+                }
+            }
+        });
         setEnableDisable();
     }
 
@@ -164,9 +174,23 @@ final class LanguageServersPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_editActionPerformed
 
     private void removeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeActionPerformed
-        languages.remove(languagesList.getSelectedIndex());
-        controller.changed();
+        removeSelected();
     }//GEN-LAST:event_removeActionPerformed
+
+    private void removeSelected() {
+        int idx = languagesList.getSelectedIndex();
+        if (idx == -1) {
+            return;
+        }
+        languages.remove(idx);
+        controller.changed();
+        
+        if (languages.getSize() > 0) {
+            int next = Math.min(idx, languages.getSize() - 1);
+            languagesList.setSelectedIndex(next);
+            languagesList.ensureIndexIsVisible(next);
+        }
+    }
 
     private LanguageDescription openCustomizeDialog(LanguageDescription desc, String title) {
         LanguageDescriptionPanel panel = new LanguageDescriptionPanel(desc, usedIds);

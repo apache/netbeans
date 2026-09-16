@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 2.87
+#Version 2.88
 
 CLSS public abstract interface !annotation com.google.common.annotations.GwtCompatible
  anno 0 com.google.common.annotations.GwtCompatible(boolean emulated=false, boolean serializable=false)
@@ -213,13 +213,9 @@ CLSS public abstract interface com.google.common.base.FinalizableReference
 meth public abstract void finalizeReferent()
 
 CLSS public com.google.common.base.FinalizableReferenceQueue
- anno 0 com.google.common.annotations.GwtIncompatible(java.lang.String value="")
-cons public init()
 intf java.io.Closeable
-meth public void close()
 supr java.lang.Object
-hfds FINALIZER_CLASS_NAME,frqRef,logger,queue,startFinalizer,threadStarted
-hcls DecoupledLoader,DirectLoader,FinalizerLoader,SystemLoader
+hfds FINALIZER_CLASS_NAME,finalizerStarter,frqRef,logger,queue,threadStarted
 
 CLSS public abstract com.google.common.base.FinalizableSoftReference
 intf com.google.common.base.FinalizableReference
@@ -8760,7 +8756,7 @@ meth public void importFromParent(java.lang.String)
 meth public void setParentClassLoader(java.lang.ClassLoader)
 meth public void setParentRealm(org.codehaus.plexus.classworlds.realm.ClassRealm)
 supr java.net.URLClassLoader
-hfds foreignImports,id,isParallelCapable,lockMap,parentClassLoader,parentImports,strategy,world
+hfds foreignImports,id,lockMap,parentClassLoader,parentImports,strategy,world
 
 CLSS public org.codehaus.plexus.classworlds.realm.DuplicateRealmException
 cons public init(org.codehaus.plexus.classworlds.ClassWorld,java.lang.String)
@@ -9164,6 +9160,7 @@ supr java.lang.Object
 hfds excludesPatterns,includesPatterns
 
 CLSS public org.codehaus.plexus.util.Base64
+ anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="")
 cons public init()
 meth public byte[] decode(byte[])
 meth public byte[] encode(byte[])
@@ -14843,14 +14840,19 @@ hfds LOG
 
 CLSS public final org.netbeans.modules.maven.embedder.EmbedderFactory
 fld public final static java.lang.String PROP_COMMANDLINE_PATH = "commandLineMavenPath"
+fld public final static java.lang.String PROP_USER_SETTINGS_XML = "userSettingsXml"
 meth public static boolean isOfflineException(java.lang.Throwable)
 meth public static boolean isProjectEmbedderLoaded()
 meth public static java.io.File getDefaultMavenHome()
+meth public static java.io.File getDefaultUserSettingsXmlFile()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static java.io.File getEffectiveMavenHome()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static java.io.File getEffectiveMavenHome(org.netbeans.api.project.ui.ProjectGroup)
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static java.io.File getMavenHome()
+ anno 0 org.netbeans.api.annotations.common.NonNull()
+meth public static java.io.File getUserSettingsXmlFile()
  anno 0 org.netbeans.api.annotations.common.NonNull()
 meth public static java.util.List<org.apache.maven.model.Model> createModelLineage(java.io.File,org.netbeans.modules.maven.embedder.MavenEmbedder) throws org.apache.maven.model.building.ModelBuildingException
  anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="")
@@ -14866,6 +14868,7 @@ meth public static org.netbeans.modules.maven.embedder.MavenEmbedder getProjectE
 meth public static void resetCachedEmbedders()
 meth public static void setGroupedMavenHome(org.netbeans.api.project.ui.ProjectGroup,java.io.File)
 meth public static void setMavenHome(java.io.File)
+meth public static void setUserSettingsXmlFile(java.io.File)
 supr java.lang.Object
 hfds LOG,ONLINE_LOCK,PROJECT_LOCK,PROP_DEFAULT_OPTIONS,RP,forbidden,online,project,projectLoaded,statics,warmupTask
 hcls NbLoggerManager

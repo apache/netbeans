@@ -223,17 +223,24 @@ public class NetigsoTest extends NetigsoHid {
         List<String> result = Netigso.splitExportPackages(exportPkgs);
         assertEquals(4, result.size());
         assertEquals("a.b", result.get(0));
-        assertEquals("a.b.c;version=\"1.0.0\";uses:=\"x.y.z,x.y.z.k\"", result.get(1));
-        assertEquals("a.b.c.d;version=\"1.0.0\"", result.get(2));
-        assertEquals("a.b.c.e;version=\"1.0.0\";uses:=\"x.y.z\"", result.get(3));
+        assertEquals("a.b.c", result.get(1));
+        assertEquals("a.b.c.d", result.get(2));
+        assertEquals("a.b.c.e", result.get(3));
 
         // Test that the \" are ignored.
         exportPkgs = "x.y.z,a.b.c;a=\"\\\"\",d.e.f";
         result = Netigso.splitExportPackages(exportPkgs);
         assertEquals(3, result.size());
         assertEquals("x.y.z", result.get(0));
-        assertEquals("a.b.c;a=\"\\\"\"", result.get(1));
+        assertEquals("a.b.c", result.get(1));
         assertEquals("d.e.f", result.get(2));
     }
 
+    public void testSplitExportMultiPackagePackages() {
+        String exportPkgs = "com.acme.foo;com.acme.bar;version=1.23";
+        List<String> result = Netigso.splitExportPackages(exportPkgs);
+        assertEquals(2, result.size());
+        assertEquals("com.acme.foo", result.get(0));
+        assertEquals("com.acme.bar", result.get(1));
+    }
 }

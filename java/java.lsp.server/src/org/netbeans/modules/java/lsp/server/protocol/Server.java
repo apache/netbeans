@@ -404,6 +404,7 @@ public final class Server {
 
         private static final String NETBEANS_FORMAT = "format";
         private static final String NETBEANS_JAVA_IMPORTS = "java.imports";
+        private static final String NETBEANS_MAVEN_USER_SETTINGS = "maven.userSettings";
         private static final String NETBEANS_PROJECT_JDKHOME = "project.jdkhome";
         private static final String NETBEANS_JAVA_HINTS = "hints";
 
@@ -1050,6 +1051,14 @@ public final class Server {
         }
 
         private void initializeOptions() {
+            // Request maven user settings from the client as early as possible.
+            // Project opening may already be in progress, so the first embedder
+            // can still be created with the default settings.xml path.
+            client.getClientConfigurationManager().getConfiguration(NETBEANS_MAVEN_USER_SETTINGS).thenAccept(c -> {
+                JsonPrimitive newMavenUserSettingsPath = c instanceof JsonPrimitive jp? jp : null;
+                workspaceService.updateMavenUserSettingsPreferences(newMavenUserSettingsPath);
+            });
+
             getWorkspaceProjects().thenAccept(projects -> {
                 List<String> defaultConfigs = List.of(NETBEANS_JAVA_HINTS, NETBEANS_PROJECT_JDKHOME);
                 List<String> projectConfigs = List.of(NETBEANS_FORMAT, NETBEANS_JAVA_IMPORTS);

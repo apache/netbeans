@@ -833,7 +833,7 @@ public class LambdaTest extends GeneratorTestMDRCompat {
                 new ErrorAwareTreeScanner<Void, Void>() {
                     @Override public Void visitLambdaExpression(LambdaExpressionTree node, Void p) {
                         for (VariableTree par : node.getParameters()) {
-                            workingCopy.rewrite(par.getType(), make.Identifier("String"));
+                            workingCopy.rewrite(par, make.Variable(par.getModifiers(), par.getName(), make.Identifier("String"), par.getInitializer()));
                         }
                         return super.visitLambdaExpression(node, p);
                     }

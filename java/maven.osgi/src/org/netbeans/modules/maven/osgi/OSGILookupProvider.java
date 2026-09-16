@@ -21,7 +21,6 @@
 package org.netbeans.modules.maven.osgi;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,14 +33,15 @@ import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.api.PluginPropertyUtils;
 import org.netbeans.spi.project.LookupProvider;
 import org.netbeans.spi.project.ui.RecommendedTemplates;
-import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
 /**
- * intentional manual implementation of lookupprovider. for packagings other then bundle but with bundle-maven-plugin configuration
+ * intentional manual implementation of lookupprovider. for packagings other
+ * then bundle but with bundle-maven-plugin configuration
  * we want to have some osgi related impls in the lookup.
+ *
  * @author mkleint
  */
 @LookupProvider.Registration(projectType="org-netbeans-modules-maven")
@@ -49,7 +49,7 @@ public class OSGILookupProvider implements LookupProvider {
 
     public OSGILookupProvider() {
     }
-    
+
     @Override
     public Lookup createAdditionalLookup(Lookup baseContext) {
         final InstanceContent ic = new InstanceContent();
@@ -57,34 +57,25 @@ public class OSGILookupProvider implements LookupProvider {
         assert prj != null;
         final AccessQueryImpl access = new AccessQueryImpl(prj);
         final ForeignClassBundlerImpl bundler = new ForeignClassBundlerImpl(prj);
-        final RecommendedTemplates templates = new RecommendedTemplates() {
-            @Override
-            public String[] getRecommendedTypes() {
-                return new String[] {"osgi"};
-            }
-        };
+        final RecommendedTemplates templates = () -> new String[] {"osgi"};
         NbMavenProject nbprj = prj.getLookup().lookup(NbMavenProject.class);
-        nbprj.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (NbMavenProject.PROP_PROJECT.equals(evt.getPropertyName())) {
-                    checkContent(prj, ic, access, bundler, templates);
-                }
+        nbprj.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if (NbMavenProject.PROP_PROJECT.equals(evt.getPropertyName())) {
+                checkContent(prj, ic, access, bundler, templates);
             }
-
         });
         checkContent(prj, ic, access, bundler, templates);
         return new AbstractLookup(ic);
     }
-    
+
     private void checkContent(Project prj, InstanceContent ic, AccessQueryImpl access, ForeignClassBundlerImpl bundler, RecommendedTemplates templates) {
         NbMavenProject nbprj = prj.getLookup().lookup(NbMavenProject.class);
         String effPackaging = nbprj.getPackagingType();
-        
+
         boolean needToCheckFelixProjectTypes = true;
-        if(!nbprj.isMavenProjectLoaded()) { 
-            // issue #262646 
-            // due to unfortunate ProjectManager.findPorjetc calls in awt, 
+        if(!nbprj.isMavenProjectLoaded()) {
+            // issue #262646
+            // due to unfortunate ProjectManager.findPorjetc calls in awt,
             // speed is essential during project init, so lets try to avoid
             // maven project loading if we can get the info faster from raw model.
             needToCheckFelixProjectTypes = false;
@@ -92,7 +83,7 @@ public class OSGILookupProvider implements LookupProvider {
             try {
                 model = nbprj.getRawModel();
             } catch (ModelBuildingException ex) {
-                // whatever happend, we can't use the model, 
+                // whatever happend, we can't use the model,
                 // lets try to follow up with loading the maven project
                 model = null;
                 Logger.getLogger(OSGILookupProvider.class.getName()).log(Level.FINE, null, ex);
@@ -106,7 +97,7 @@ public class OSGILookupProvider implements LookupProvider {
                         break;
                     }
                 }
-            } 
+            }
         }
         if(needToCheckFelixProjectTypes) {
             String[] types = PluginPropertyUtils.getPluginPropertyList(prj, OSGiConstants.GROUPID_FELIX, OSGiConstants.ARTIFACTID_BUNDLE_PLUGIN, "supportedProjectTypes", "supportedProjectType", /*"bundle" would not work for GlassFish parent POM*/null);

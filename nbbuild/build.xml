@@ -1736,6 +1736,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
       <zipfileset file="${nb.build.dir}/LICENSE" />
       <zipfileset dir="${nb.build.dir}/licenses" includes="**" prefix="licenses" /> 
       <zipfileset file="${source.zip.readme}" fullpath="README.md" erroronmissingarchive="false" />
+      <zipfileset file="${nb_all}/PACKAGING.md" erroronmissingarchive="false" />
       <zipfileset file="${nb_all}/nbbuild/build/gitinfo.properties" fullpath="nbbuild/gitinfo.properties" erroronmissingarchive="false" />
       <zipfileset file="${nb_all}/nbbuild/build/netbeansrelease.json" fullpath="nbbuild/netbeansrelease.json" erroronmissingarchive="false" />
     </zip>

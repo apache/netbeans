@@ -52,7 +52,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -147,7 +146,7 @@ public class ParameterNameProviderImpl {
                                     public Void visitMethod(MethodTree mt, Void v) {
                                         Element el = cc.getTrees().getElement(getCurrentPath());
                                         if (el != null && el.getKind() == ElementKind.METHOD) {
-                                            parametersInClass.put(computeKey(el), ((ExecutableElement) el).getParameters().stream().map(p -> p.getSimpleName().toString()).collect(Collectors.toList()));
+                                            parametersInClass.put(computeKey(el), ((ExecutableElement) el).getParameters().stream().map(p -> p.getSimpleName().toString()).toList());
                                         }
                                         return super.visitMethod(mt, v);
                                     }
@@ -185,7 +184,7 @@ public class ParameterNameProviderImpl {
             if (!DISABLE_ARTIFICAL_PARAMETER_NAMES) {
                 names = artificial_method2Parameters.computeIfAbsent(methodKey, mk -> {
                     Set<String> usedNames = new HashSet<>();
-                    return ((ExecutableElement) method).getParameters().stream().map(p -> generateReadableParameterName(p.asType().toString(), usedNames)).collect(Collectors.toList());
+                    return ((ExecutableElement) method).getParameters().stream().map(p -> generateReadableParameterName(p.asType().toString(), usedNames)).toList();
                 });
             } else {
                 names = Collections.emptyList();
@@ -203,7 +202,7 @@ public class ParameterNameProviderImpl {
 
 
     private static String computeKey(Element el) {
-        return Arrays.stream(SourceUtils.getJVMSignature(ElementHandle.create(el))).collect(Collectors.joining(":"));
+        return String.join(":", SourceUtils.getJVMSignature(ElementHandle.create(el)));
     }
 
     static void capCache(LinkedHashMap<String, ?> map) {

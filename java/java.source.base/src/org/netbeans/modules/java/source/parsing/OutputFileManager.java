@@ -258,7 +258,7 @@ public class OutputFileManager extends CachingFileManager {
                                     ml.getModuleName());
                             return Collections.singleton(oml);
                         })
-                        .collect(Collectors.toList());
+                        .toList();
             } else {
                 cachedModuleLocations = Collections.emptySet();
             }

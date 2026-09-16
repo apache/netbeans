@@ -42,6 +42,7 @@ import org.netbeans.modules.php.editor.model.nodes.InterfaceDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.MagicMethodDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.MethodDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.NamespaceDeclarationInfo;
+import org.netbeans.modules.php.editor.model.nodes.PropertyHookDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.SingleFieldDeclarationInfo;
 import org.netbeans.modules.php.editor.model.nodes.TraitDeclarationInfo;
 import org.netbeans.modules.php.editor.parser.astnodes.CaseDeclaration;
@@ -56,6 +57,7 @@ import org.netbeans.modules.php.editor.parser.astnodes.MethodDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.NamespaceDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.PHPDocMethodTag;
 import org.netbeans.modules.php.editor.parser.astnodes.Program;
+import org.netbeans.modules.php.editor.parser.astnodes.PropertyHookDeclaration;
 import org.netbeans.modules.php.editor.parser.astnodes.TraitDeclaration;
 
 /**
@@ -129,10 +131,20 @@ class ModelBuilder {
 
     void build(FieldsDeclaration node, OccurenceBuilder occurencesBuilder) {
         List<? extends SingleFieldDeclarationInfo> infos = SingleFieldDeclarationInfo.create(node);
-        for (SingleFieldDeclarationInfo sfdi : infos) {
-            FieldElementImpl fei = ModelElementFactory.create(sfdi, this);
-            occurencesBuilder.prepare(sfdi, fei);
+        for (SingleFieldDeclarationInfo info : infos) {
+            FieldElementImpl field = ModelElementFactory.create(info, this);
+            if (field.isHooked()) {
+                setCurrentScope(field);
+            }
+            occurencesBuilder.prepare(info, field);
         }
+    }
+
+    void build(PropertyHookDeclaration node, OccurenceBuilder occurencesBuilder) {
+        PropertyHookDeclarationInfo info = PropertyHookDeclarationInfo.create(node);
+        PropertyHookScopeImpl propertyHookScope = ModelElementFactory.create(info, this);
+        setCurrentScope(propertyHookScope);
+        occurencesBuilder.prepare(info, propertyHookScope);
     }
 
     void build(ConstantDeclaration node, OccurenceBuilder occurencesBuilder) {
@@ -338,6 +350,10 @@ class ModelBuilder {
             String fieldFQType = VariousUtils.qualifyTypeNames(fieldType, nodeInfo.getRange().getStart(), context.getCurrentScope());
             FieldElementImpl fei = new FieldElementImpl(context.getCurrentScope(), fieldType, fieldFQType, nodeInfo, isDeprecated, false);
             return fei;
+        }
+
+        static PropertyHookScopeImpl create(PropertyHookDeclarationInfo nodeInfo, ModelBuilder context) {
+            return new PropertyHookScopeImpl(context.getCurrentScope(), nodeInfo);
         }
 
         static ClassConstantElementImpl create(ClassConstantDeclarationInfo clsConst, ModelBuilder context) {

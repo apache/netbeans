@@ -22,20 +22,14 @@ import java.lang.Thread.State;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.management.openmbean.CompositeData;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.netbeans.lib.profiler.filters.InstrumentationFilter;
 import org.netbeans.lib.profiler.results.CCTNode;
-import sun.management.ThreadInfoCompositeData;
 import static org.junit.Assert.*;
 
 
@@ -82,11 +76,11 @@ public class StackTraceSnapshotBuilderTest {
     private Thread thread1;
     private Thread thread2;
 
-    private java.lang.management.ThreadInfo[] stack0;
-    private java.lang.management.ThreadInfo[] stackPlus;
-    private java.lang.management.ThreadInfo[] stackMinus;
-    private java.lang.management.ThreadInfo[] stackDif;
-    private java.lang.management.ThreadInfo[] stackDup;
+    private ThreadSample[] stack0;
+    private ThreadSample[] stackPlus;
+    private ThreadSample[] stackMinus;
+    private ThreadSample[] stackDif;
+    private ThreadSample[] stackDup;
     
 
     public StackTraceSnapshotBuilderTest() {
@@ -108,28 +102,28 @@ public class StackTraceSnapshotBuilderTest {
         thread1 = new Thread("Test thread 1");
         thread2 = new Thread("Test thread 2");
         
-        stack0 = new java.lang.management.ThreadInfo[] {
-                createThreadInfo(thread0, elements0),
-                createThreadInfo(thread1, elements0)
+        stack0 = new ThreadSample[] {
+                createThreadSample(thread0, elements0),
+                createThreadSample(thread1, elements0)
         };
 
-        stackPlus = new java.lang.management.ThreadInfo[] {
-                createThreadInfo(thread0, elementsPlus),
-                createThreadInfo(thread1, elements0),
-                createThreadInfo(thread2, elements0)
+        stackPlus = new ThreadSample[] {
+                createThreadSample(thread0, elementsPlus),
+                createThreadSample(thread1, elements0),
+                createThreadSample(thread2, elements0)
         };
 
-        stackMinus = new java.lang.management.ThreadInfo[] {
-                createThreadInfo(thread0, elementsMinus)
+        stackMinus = new ThreadSample[] {
+                createThreadSample(thread0, elementsMinus)
         };
 
-        stackDif = new java.lang.management.ThreadInfo[] {
-                createThreadInfo(thread0, elementsDif)
+        stackDif = new ThreadSample[] {
+                createThreadSample(thread0, elementsDif)
         };
 
-        stackDup = new java.lang.management.ThreadInfo[] {
-                createThreadInfo(thread0, elementsDup),
-                createThreadInfo(thread1, elements0)
+        stackDup = new ThreadSample[] {
+                createThreadSample(thread0, elementsDup),
+                createThreadSample(thread1, elements0)
         };
 
     }
@@ -272,6 +266,19 @@ public class StackTraceSnapshotBuilderTest {
         assertTrue(instance.threadIds.size() == stack0.length);
         assertTrue(instance.threadNames.size() == stack0.length);
         assertFalse(-1L == instance.currentDumpTimeStamp);
+    }
+
+    @Test
+    public void testAddStacktraceThreadInfo() {
+        ThreadMXBean tbean = ManagementFactory.getThreadMXBean();
+        ThreadInfo tinfo = tbean.getThreadInfo(Thread.currentThread().getId(), Integer.MAX_VALUE);
+
+        assertNotNull(tinfo);
+        instance.addStacktrace(new ThreadInfo[] { tinfo }, 0);
+
+        assertTrue(instance.threadIds.contains(tinfo.getThreadId()));
+        assertTrue(instance.threadNames.contains(tinfo.getThreadName()));
+        assertTrue(instance.lastStackTrace.get().containsKey(tinfo.getThreadId()));
     }
 
     @Test
@@ -732,8 +739,8 @@ public class StackTraceSnapshotBuilderTest {
     public void testReset() {
         System.out.println("reset");
         ThreadMXBean tbean = ManagementFactory.getThreadMXBean();
-        addStacktrace(tbean.getThreadInfo(tbean.getAllThreadIds(), Integer.MAX_VALUE), System.nanoTime());
-        addStacktrace(tbean.getThreadInfo(tbean.getAllThreadIds(), Integer.MAX_VALUE), System.nanoTime());
+        instance.addStacktrace(tbean.getThreadInfo(tbean.getAllThreadIds(), Integer.MAX_VALUE), System.nanoTime());
+        instance.addStacktrace(tbean.getThreadInfo(tbean.getAllThreadIds(), Integer.MAX_VALUE), System.nanoTime());
 
         instance.reset();
         assertTrue(instance.methodInfos.size()-1 == 0);
@@ -761,51 +768,49 @@ public class StackTraceSnapshotBuilderTest {
         assertFalse(instance.threadNames.contains(ignoredThread));
     }
 
-    private java.lang.management.ThreadInfo createThreadInfo(Thread t, StackTraceElement[] stack) {
-        try {
-            Constructor tinfoConstructor = java.lang.management.ThreadInfo.class.getDeclaredConstructor(
-                    Thread.class,Integer.TYPE,Object.class,Thread.class,Long.TYPE,Long.TYPE,
-                    Long.TYPE,Long.TYPE,StackTraceElement[].class);
-            tinfoConstructor.setAccessible(true);
-            ThreadInfo tinfo =  (ThreadInfo) tinfoConstructor.newInstance(t,0,null,null,0,0,0,0,stack);
-            setState(tinfo,State.RUNNABLE);
-            return tinfo;
-        } catch (NoSuchMethodException ex) {
-            Logger.getLogger(StackTraceSnapshotBuilderTest.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(StackTraceSnapshotBuilderTest.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(StackTraceSnapshotBuilderTest.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(StackTraceSnapshotBuilderTest.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(StackTraceSnapshotBuilderTest.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        return null;
+    private ThreadSample createThreadSample(Thread t, StackTraceElement[] stack) {
+        return new ThreadSample(t.getName(), t.getId(), State.RUNNABLE, stack);
     }
 
-    private void setState(java.lang.management.ThreadInfo tinfo, State s) {
-        try {
-            Field tstateField = tinfo.getClass().getDeclaredField("threadState");
-            tstateField.setAccessible(true);
-            tstateField.set(tinfo, s);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(StackTraceSnapshotBuilderTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(StackTraceSnapshotBuilderTest.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchFieldException ex) {
-            Logger.getLogger(StackTraceSnapshotBuilderTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    private void setState(ThreadSample tinfo, State s) {
+        tinfo.threadState = s;
     }
 
-    private void addStacktrace(java.lang.management.ThreadInfo[] tinfos, long time) {
-        java.lang.management.ThreadInfo[] newInfo = new java.lang.management.ThreadInfo[tinfos.length];
-        int i = 0;
-
-        for (java.lang.management.ThreadInfo tinfo : tinfos) {
-            CompositeData aaa = ThreadInfoCompositeData.toCompositeData(tinfo);
-            newInfo[i++] = ThreadInfo.from(aaa);
+    private void addStacktrace(ThreadSample[] tinfos, long time) {
+        StackTraceSnapshotBuilder.SampledThreadInfo[] samples =
+                new StackTraceSnapshotBuilder.SampledThreadInfo[tinfos.length];
+        for (int i = 0; i < tinfos.length; i++) {
+            samples[i] = tinfos[i].toSampledThreadInfo(instance.getFilter());
         }
-        instance.addStacktrace(newInfo, time);
+        instance.addStacktrace(samples, time);
+    }
+
+    private static final class ThreadSample {
+        private final String threadName;
+        private final long threadId;
+        private State threadState;
+        private final StackTraceElement[] stackTrace;
+
+        private ThreadSample(String threadName, long threadId, State threadState,
+                             StackTraceElement[] stackTrace) {
+            this.threadName = threadName;
+            this.threadId = threadId;
+            this.threadState = threadState;
+            this.stackTrace = stackTrace;
+        }
+
+        private long getThreadId() {
+            return threadId;
+        }
+
+        private String getThreadName() {
+            return threadName;
+        }
+
+        private StackTraceSnapshotBuilder.SampledThreadInfo toSampledThreadInfo(
+                InstrumentationFilter filter) {
+            return new StackTraceSnapshotBuilder.SampledThreadInfo(
+                    threadName, threadId, threadState, stackTrace, filter);
+        }
     }
 }

@@ -19,11 +19,9 @@
 package org.netbeans.modules.java.source.parsing;
 
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.PackageTree;
 import com.sun.tools.javac.api.JavacTaskImpl;
 import java.io.Closeable;
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.Collections;

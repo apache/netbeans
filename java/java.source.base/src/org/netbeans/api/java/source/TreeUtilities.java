@@ -511,7 +511,7 @@ public final class TreeUtilities {
             long endPos = sourcePositions.getEndPosition(path.getCompilationUnit(), path.getCompilationUnit());
             if (pos > endPos) {
                 List<? extends Tree> classes = path.getCompilationUnit().getTypeDecls();
-                if (classes.size() == 1 && classes.get(0) instanceof JCClassDecl clazz && (clazz.mods.flags & Flags.IMPLICIT_CLASS) != 0) {
+                if (classes.size() == 1 && classes.getFirst() instanceof JCClassDecl clazz && (clazz.mods.flags & Flags.IMPLICIT_CLASS) != 0) {
                     return new TreePath(path, clazz);
                 }
             }
@@ -541,7 +541,7 @@ public final class TreeUtilities {
                     if (path.getLeaf().getKind() == Tree.Kind.EMPTY_STATEMENT ||
                             path.getLeaf().getKind() == Tree.Kind.TRY ||
                             (path.getLeaf().getKind() == Tree.Kind.FOR_LOOP &&
-                            tokenList.offset() <= sourcePositions.getStartPosition(path.getCompilationUnit(), ((ForLoopTree)path.getLeaf()).getUpdate().get(0))))
+                            tokenList.offset() <= sourcePositions.getStartPosition(path.getCompilationUnit(), ((ForLoopTree)path.getLeaf()).getUpdate().getFirst())))
                         break;
                     if (path.getParentPath().getLeaf().getKind() == Tree.Kind.TRY &&
                         ((TryTree) path.getParentPath().getLeaf()).getResources().contains(path.getLeaf())) {
@@ -772,7 +772,7 @@ public final class TreeUtilities {
      */
     public BlockTree parseStaticBlock(String block, SourcePositions[] sourcePositions) {
         return doParse("{ class C { " + block + " }", sourcePositions, "{ class C { ".length(), p -> {
-            JCClassDecl decl = (JCClassDecl) ((BlockTree) p.parseStatement()).getStatements().get(0);
+            JCClassDecl decl = (JCClassDecl) ((BlockTree) p.parseStatement()).getStatements().getFirst();
             return decl.defs.head.getKind() == Kind.BLOCK ? (BlockTree) decl.defs.head : null; //check result
         });
     }
@@ -804,7 +804,7 @@ public final class TreeUtilities {
             try {
                 CharBuffer buf = CharBuffer.wrap((text+"\u0000").toCharArray(), 0, text.length());
                 ParserFactory factory = ParserFactory.instance(context);
-                Parser parser = factory.newParser(buf, false, true, false, false);
+                Parser parser = factory.newParser(buf, false, true, false);
                 if (parser instanceof JavacParser javacParser) {
                     if (sourcePositions != null)
                         sourcePositions[0] = new ParserSourcePositions(javacParser, offset);
@@ -844,11 +844,20 @@ public final class TreeUtilities {
 
         @Override
         public long getStartPosition(CompilationUnitTree file, Tree tree) {
+            return getStartPosition(tree);
+        }
+
+        @Override
+        public long getStartPosition(Tree tree) {
             return parser.getStartPos((JCTree)tree) - offset;
         }
 
         @Override
         public long getEndPosition(CompilationUnitTree file, Tree tree) {
+            return getEndPosition(tree);
+        }
+        @Override
+        public long getEndPosition(Tree tree) {
             return parser.getEndPos((JCTree)tree) - offset;
         }
     }

@@ -6,59 +6,58 @@ Total alloc instances -1
 Total alloc bytes -1
 Classes size 474
 System properties: 
-java.runtime.name OpenJDK Runtime Environment
-java.vm.version 25.151-b12
-sun.boot.library.path /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64
-java.vendor.url http://java.oracle.com/
-java.vm.vendor Oracle Corporation
-path.separator :
+awt.toolkit sun.awt.X11.XToolkit
+file.encoding UTF-8
 file.encoding.pkg sun.io
+file.separator /
+java.awt.graphicsenv sun.awt.X11GraphicsEnvironment
+java.awt.printerjob sun.print.PSPrinterJob
+java.class.path /home/hector/Developments/Netbeans/incubator-netbeans/lib.profiler/test/qa-functional/data/projects/j2se-simple/build/classes
+java.class.version 52.0
+java.endorsed.dirs /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/endorsed
+java.ext.dirs /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext:/usr/java/packages/lib/ext
+java.home /usr/lib/jvm/java-8-openjdk-amd64/jre
+java.io.tmpdir /tmp
+java.library.path /usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/amd64:/usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/i386::/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+java.runtime.name OpenJDK Runtime Environment
+java.runtime.version 1.8.0_151-8u151-b12-0ubuntu0.16.04.2-b12
+java.specification.name Java Platform API Specification
+java.specification.vendor Oracle Corporation
+java.specification.version 1.8
+java.vendor Oracle Corporation
+java.vendor.url http://java.oracle.com/
+java.vendor.url.bug http://bugreport.sun.com/bugreport/
+java.version 1.8.0_151
+java.vm.info mixed mode
 java.vm.name OpenJDK 64-Bit Server VM
-sun.os.patch.level unknown
+java.vm.specification.name Java Virtual Machine Specification
+java.vm.specification.vendor Oracle Corporation
+java.vm.specification.version 1.8
+java.vm.vendor Oracle Corporation
+java.vm.version 25.151-b12
+line.separator \n
+os.arch amd64
+os.name Linux
+os.version 4.13.0-26-generic
+path.separator :
+sun.arch.data.model 64
+sun.boot.class.path /home/hector/Developments/Netbeans/incubator-netbeans/lib.profiler/test/qa-functional/data/projects/j2se-simple/${endorsed.classpath}:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jfr.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/classes
+sun.boot.library.path /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64
+sun.cpu.endian little
+sun.cpu.isalist
+sun.desktop gnome
+sun.io.unicode.encoding UnicodeLittle
+sun.java.command simple.Monitor
 sun.java.launcher SUN_STANDARD
+sun.jnu.encoding UTF-8
+sun.management.compiler HotSpot 64-Bit Tiered Compilers
+sun.os.patch.level unknown
 user.country US
 user.dir /home/hector/Developments/Netbeans/incubator-netbeans/lib.profiler/test/qa-functional/data/projects/j2se-simple
-java.vm.specification.name Java Virtual Machine Specification
-java.runtime.version 1.8.0_151-8u151-b12-0ubuntu0.16.04.2-b12
-java.awt.graphicsenv sun.awt.X11GraphicsEnvironment
-os.arch amd64
-java.endorsed.dirs /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/endorsed
-java.io.tmpdir /tmp
-line.separator 
-
-java.vm.specification.vendor Oracle Corporation
-os.name Linux
-sun.jnu.encoding UTF-8
-java.library.path /usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/amd64:/usr/lib/jvm/java-1.8.0-openjdk-amd64/jre/lib/i386::/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
-java.specification.name Java Platform API Specification
-java.class.version 52.0
-sun.management.compiler HotSpot 64-Bit Tiered Compilers
-os.version 4.13.0-26-generic
 user.home /home/hector
-user.timezone 
-java.awt.printerjob sun.print.PSPrinterJob
-file.encoding UTF-8
-java.specification.version 1.8
-user.name hector
-java.class.path /home/hector/Developments/Netbeans/incubator-netbeans/lib.profiler/test/qa-functional/data/projects/j2se-simple/build/classes
-java.vm.specification.version 1.8
-sun.arch.data.model 64
-sun.java.command simple.Monitor
-java.home /usr/lib/jvm/java-8-openjdk-amd64/jre
 user.language en
-java.specification.vendor Oracle Corporation
-awt.toolkit sun.awt.X11.XToolkit
-java.vm.info mixed mode
-java.version 1.8.0_151
-java.ext.dirs /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext:/usr/java/packages/lib/ext
-sun.boot.class.path /home/hector/Developments/Netbeans/incubator-netbeans/lib.profiler/test/qa-functional/data/projects/j2se-simple/${endorsed.classpath}:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jfr.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/classes
-java.vendor Oracle Corporation
-file.separator /
-java.vendor.url.bug http://bugreport.sun.com/bugreport/
-sun.io.unicode.encoding UnicodeLittle
-sun.cpu.endian little
-sun.desktop gnome
-sun.cpu.isalist 
+user.name hector
+user.timezone
  Id 0xd6ffd630 Class simple.Producer SuperClass java.lang.Thread Instance size 183 Instance count 2 All Instances Size 366
   Static Field name <classLoader> type object value 3606861808
    Ref object sun.misc.Launcher$AppClassLoader#1
@@ -43796,7 +43795,7 @@ sun.cpu.isalist
   Static Field name MIN_EXPONENT type int value -126
   Static Field name MAX_EXPONENT type int value 127
   Static Field name MIN_VALUE type float value 1.4E-45
-  Static Field name MIN_NORMAL type float value 1.17549435E-38
+  Static Field name MIN_NORMAL type float value 1.1754944E-38
   Static Field name MAX_VALUE type float value 3.4028235E38
   Static Field name NaN type float value NaN
   Static Field name NEGATIVE_INFINITY type float value -Infinity

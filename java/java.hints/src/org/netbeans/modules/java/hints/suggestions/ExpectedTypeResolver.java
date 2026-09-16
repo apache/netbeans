@@ -85,6 +85,7 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.UsesTree;
+import com.sun.source.tree.VarTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
@@ -310,6 +311,11 @@ public class ExpectedTypeResolver implements TreeVisitor<List<? extends TypeMirr
             this.expectedTree = new TreePath(getCurrentPath(), node.getType());
             return Collections.singletonList(info.getTrees().getTypeMirror(getCurrentPath()));
         }
+        return null;
+    }
+
+    @Override
+    public List<? extends TypeMirror> visitVarType(VarTypeTree node, Object p) {
         return null;
     }
 

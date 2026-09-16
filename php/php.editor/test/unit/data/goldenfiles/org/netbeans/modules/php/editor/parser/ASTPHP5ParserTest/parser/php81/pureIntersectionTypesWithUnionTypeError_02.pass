@@ -157,9 +157,27 @@
             <ASTError start='848' end='893'/>
             <ASTError start='894' end='895'/>
             <ASTError start='896' end='901'/>
-            <ASTError start='904' end='938'/>
-            <EmptyStatement start='938' end='939'/>
-            <ASTError start='0' end='939'/>
+            <ASTError start='904' end='908'/>
+            <Block start='909' end='945' isCurly='true'>
+                <ExpressionStatement start='919' end='939'>
+                    <Assignment start='919' end='938' operator='EQUAL'>
+                        <FieldAccess start='919' end='930' isNullsafe='false'>
+                            <Variable start='919' end='924' isDollared='true'>
+                                <Identifier start='920' end='924' name='this'/>
+                            </Variable>
+                            <Field>
+                                <Variable start='926' end='930' isDollared='false'>
+                                    <Identifier start='926' end='930' name='test'/>
+                                </Variable>
+                            </Field>
+                        </FieldAccess>
+                        <Variable start='933' end='938' isDollared='true'>
+                            <Identifier start='934' end='938' name='test'/>
+                        </Variable>
+                    </Assignment>
+                </ExpressionStatement>
+            </Block>
+            <ASTError start='0' end='945'/>
         </Statements>
     </Program>
 </testresult>

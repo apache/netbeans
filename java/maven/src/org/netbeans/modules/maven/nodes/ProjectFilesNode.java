@@ -34,13 +34,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.modules.maven.M2AuxilaryConfigImpl;
 import org.netbeans.modules.maven.NbMavenProjectImpl;
 import org.netbeans.modules.maven.api.FileUtilities;
 import org.netbeans.modules.maven.api.NbMavenProject;
 import org.netbeans.modules.maven.configurations.M2Configuration;
+import org.netbeans.modules.maven.embedder.EmbedderFactory;
 import static org.netbeans.modules.maven.nodes.Bundle.*;
 import org.netbeans.modules.maven.spi.nodes.NodeUtils;
 import org.openide.cookies.EditCookie;
@@ -78,7 +78,7 @@ public class ProjectFilesNode extends AnnotatedAbstractNode {
     @Override
     public Action[] getActions(boolean context) {
         Collection<Action> col = new ArrayList<Action>();
-        if (!SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE.exists()) {
+        if (!EmbedderFactory.getUserSettingsXmlFile().exists()) {
             col.add(new AddSettingsXmlAction());
         }
         return col.toArray(new Action[0]);
@@ -163,7 +163,7 @@ public class ProjectFilesNode extends AnnotatedAbstractNode {
                 }
             }
             keys.add(d.getFileObject(M2AuxilaryConfigImpl.CONFIG_FILE_NAME));
-            keys.add(FileUtil.toFileObject(SettingsXmlConfigurationProcessor.DEFAULT_USER_SETTINGS_FILE));
+            keys.add(FileUtil.toFileObject(EmbedderFactory.getUserSettingsXmlFile()));
             keys.removeAll(Collections.singleton(null));
             return true;
         }

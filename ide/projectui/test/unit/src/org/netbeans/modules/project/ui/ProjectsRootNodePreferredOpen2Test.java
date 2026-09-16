@@ -19,14 +19,11 @@
 
 package org.netbeans.modules.project.ui;
 
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.netbeans.junit.Log;
 import org.netbeans.modules.project.ui.actions.TestSupport.TestProject;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
-import org.openide.loaders.DataObject;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -55,8 +52,6 @@ public class ProjectsRootNodePreferredOpen2Test extends ProjectsRootNodePreferre
         log = Log.enable("", Level.WARNING);
         Logger.getLogger("org.netbeans.ui").setLevel(Level.OFF);
         Logger.getLogger("org.openide.util").setLevel(Level.OFF);
-         //compute project root node children in sync mode
-        System.setProperty("test.projectnode.sync", "true");
     }
 
     @Override

@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 3.42
+#Version 3.43
 
 CLSS public abstract interface java.io.Serializable
 
@@ -497,8 +497,10 @@ supr org.netbeans.api.debugger.jpda.AbstractDICookie
 hfds args,launchingConnector,mainClassName,suspend
 
 CLSS public org.netbeans.api.debugger.jpda.LineBreakpoint
+fld public final static int LAMBDA_INDEX_STOP_OUTSIDE = -1
 fld public final static java.lang.String PROP_CONDITION = "condition"
 fld public final static java.lang.String PROP_INSTANCE_FILTERS = "instanceFilters"
+fld public final static java.lang.String PROP_LAMBDA_INDEXES = "lambdaIndexes"
 fld public final static java.lang.String PROP_LINE_NUMBER = "lineNumber"
 fld public final static java.lang.String PROP_PREFERRED_CLASS_NAME = "classNamePreferred"
 fld public final static java.lang.String PROP_SOURCE_NAME = "sourceName"
@@ -507,6 +509,7 @@ fld public final static java.lang.String PROP_STRATUM = "stratum"
 fld public final static java.lang.String PROP_THREAD_FILTERS = "threadFilters"
 fld public final static java.lang.String PROP_URL = "url"
 meth public int getLineNumber()
+meth public int[] getLambdaIndexes()
 meth public java.lang.String getCondition()
 meth public java.lang.String getPreferredClassName()
 meth public java.lang.String getSourceName()
@@ -519,6 +522,7 @@ meth public org.netbeans.api.debugger.jpda.ObjectVariable[] getInstanceFilters(o
 meth public static org.netbeans.api.debugger.jpda.LineBreakpoint create(java.lang.String,int)
 meth public void setCondition(java.lang.String)
 meth public void setInstanceFilters(org.netbeans.api.debugger.jpda.JPDADebugger,org.netbeans.api.debugger.jpda.ObjectVariable[])
+meth public void setLambdaIndexes(int[])
 meth public void setLineNumber(int)
 meth public void setPreferredClassName(java.lang.String)
 meth public void setSourceName(java.lang.String)
@@ -527,7 +531,7 @@ meth public void setStratum(java.lang.String)
 meth public void setThreadFilters(org.netbeans.api.debugger.jpda.JPDADebugger,org.netbeans.api.debugger.jpda.JPDAThread[])
 meth public void setURL(java.lang.String)
 supr org.netbeans.api.debugger.jpda.JPDABreakpoint
-hfds LOG,className,condition,instanceFilters,lineNumber,sourceName,sourcePath,stratum,threadFilters,url
+hfds LOG,className,condition,instanceFilters,lambdaIndexes,lineNumber,sourceName,sourcePath,stratum,threadFilters,url
 hcls LineBreakpointImpl
 
 CLSS public final org.netbeans.api.debugger.jpda.ListeningDICookie

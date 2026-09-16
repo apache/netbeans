@@ -19,13 +19,13 @@
 
 package org.netbeans.libs.git.jgit.commands;
 
-import com.jcraft.jsch.JSchException;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.sshd.common.SshException;
 import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.errors.UnsupportedCredentialItem;
@@ -40,6 +40,7 @@ import org.eclipse.jgit.util.SystemReader;
 import org.netbeans.libs.git.GitException;
 import org.netbeans.libs.git.jgit.GitClassFactory;
 import org.netbeans.libs.git.progress.ProgressMonitor;
+import org.eclipse.jgit.internal.transport.sshd.AuthenticationCanceledException;
 
 /**
  *
@@ -223,14 +224,10 @@ abstract class TransportCommand extends GitCommand {
         } else if ((pos = message.toLowerCase().indexOf(": auth cancel")) != -1) { //NOI18N
             String repositoryUrl = message.substring(0, pos);
             throw new GitException.AuthorizationException(repositoryUrl, message, e);
-        } else if (e.getCause() instanceof JSchException) {
-            if (message.contains("timeout:") || message.contains("ProxyHTTP")
-                    || message.contains("ProxySOCKS4")
-                    || message.contains("ProxySOCKS5")) { //NOI18N
-                throw new GitException(message, e);
-            } else {
-                throw new GitException.AuthorizationException(uri.toString(), message, e);
-            }
+        } else if (e.getCause() instanceof AuthenticationCanceledException) {
+            throw new GitException.AuthorizationException(uri.toString(), message, e);
+        } else if (e.getCause() instanceof SshException && e.getCause().getMessage().contains("No more authentication methods available")) {
+            throw new GitException.AuthorizationException(uri.toString(), message, e);
         } else {
             throw new GitException(message, e);
         }

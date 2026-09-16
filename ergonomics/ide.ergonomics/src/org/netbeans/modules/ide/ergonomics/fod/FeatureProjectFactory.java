@@ -25,6 +25,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,7 +39,6 @@ import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.xml.parsers.DocumentBuilder;
 import org.netbeans.api.autoupdate.UpdateElement;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.Project;
@@ -63,8 +63,6 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.util.lookup.ServiceProvider;
 import org.w3c.dom.Document;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.filesystems.FileUtil;
@@ -72,6 +70,8 @@ import org.openide.loaders.DataFolder;
 import org.openide.nodes.FilterNode;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor.Task;
+import org.openide.xml.XMLUtil;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -116,20 +116,15 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
             }
             File f = FileUtil.toFile(fo);
             try {
-                DocumentBuilder b = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-                if (f != null) {
-                    doc = b.parse(f);
-                } else {
-                    InputStream is = fo.getInputStream();
-                    doc = b.parse(is);
+                InputStream is = f != null ? new FileInputStream(f) : fo.getInputStream();
+                try (is) {
+                    doc = XMLUtil.parse(new InputSource(is), false, false, true, null, null);
                 }
                 if (doms == null) {
                     doms = new HashMap<String,Document>();
                 }
                 doms.put(relative, doc);
                 return doc;
-            } catch (ParserConfigurationException parserConfigurationException) {
-                LOG.log(Level.WARNING, "Cannot configure XML parser", parserConfigurationException); // NOI18N
             } catch (SAXException sAXException) {
                 LOG.log(Level.INFO, "XML broken in " + f, sAXException); // NOI18N
             } catch (Exception any) {

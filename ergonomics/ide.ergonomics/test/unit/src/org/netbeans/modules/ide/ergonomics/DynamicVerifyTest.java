@@ -129,7 +129,8 @@ public class DynamicVerifyTest extends NbTestCase {
             "org.netbeans.libs.javafx.linux.aarch64",
             "org.netbeans.libs.javafx.macosx",
             "org.netbeans.libs.javafx.macosx.aarch64",
-            "org.netbeans.libs.javafx.win"));
+            "org.netbeans.libs.javafx.win",
+            "org.netbeans.libs.jsobject"));
 
         System.out.println(featureItem.getModuleCodeNames());
         assertTrue(

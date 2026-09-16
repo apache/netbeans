@@ -1,17 +1,17 @@
 [[893,894]-Syntax error
  unexpected:	|
- expected:	variable, &, )] 893-894:Syntax error
+ expected:	variable, &, ), ..., &] 893-894:Syntax error
  unexpected:	|
- expected:	variable, &, )
+ expected:	variable, &, ), ..., &
 [[896,901]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	variable '$test'] 896-901:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	variable '$test'
 [[901,902]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	)] 901-902:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	)
-[[938,939]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	;] 938-939:POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	;
-[[944,945]-POSSIBLE Syntax Error (check preceding valid syntax error)
- unexpected:	}] 944-945:POSSIBLE Syntax Error (check preceding valid syntax error)
+[[909,910]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	{] 909-910:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	{
+[[947,948]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 947-948:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	}

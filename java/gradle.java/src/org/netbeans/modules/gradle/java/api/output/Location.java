@@ -197,7 +197,7 @@ public final class Location {
                 ret.append(className.replace('.', '/'));
             }
             ret.append(".java");
-            return Location.parseLocation(ret.toString() + ":" + line != null ? line : methodName);
+            return Location.parseLocation(ret.toString() + ":" + (line != null ? line : methodName));
         } else {
             return null;
         }

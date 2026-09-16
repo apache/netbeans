@@ -30,12 +30,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.JLabel;
@@ -45,6 +47,7 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.plaf.UIResource;
 import javax.xml.namespace.QName;
+
 import org.apache.maven.model.InputLocation;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.component.configurator.expression.ExpressionEvaluator;
@@ -87,6 +90,7 @@ import static org.netbeans.modules.maven.api.Constants.HINT_COMPILE_ON_SAVE;
 import static org.netbeans.modules.maven.api.Constants.HINT_JDK_PLATFORM;
 import static org.netbeans.modules.maven.api.Constants.PLUGIN_COMPILER;
 import static org.netbeans.modules.maven.api.Constants.SOURCE_PARAM;
+import org.netbeans.modules.maven.options.MavenSettings;
 
 /**
  *
@@ -95,6 +99,23 @@ import static org.netbeans.modules.maven.api.Constants.SOURCE_PARAM;
 public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider {
 
     private static final Logger LOG = Logger.getLogger(CompilePanel.class.getName());
+
+    private static JavaPlatform getDefaultMavenPlatform() {
+        String mavenDefaultJdk = MavenSettings.getDefault().getDefaultJdk();
+        if (mavenDefaultJdk != null && !mavenDefaultJdk.isEmpty()) {
+            for (JavaPlatform platform : JavaPlatformManager.getDefault().getInstalledPlatforms()) {
+                if (platform.isValid() && Objects.equals(platform.getProperties().get("platform.ant.name"), mavenDefaultJdk)) {
+                    return platform;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static JavaPlatform getDefaultPlatform() {
+        JavaPlatform defaultMavenPlatform = getDefaultMavenPlatform();
+        return defaultMavenPlatform == null ? JavaPlatform.getDefault() : defaultMavenPlatform;
+    }
 
     private final ModelHandle2 handle;
     private final Project project;
@@ -317,7 +338,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
                 }
                 if (val != null) {
                     if (val.equals(DEFAULT_PLATFORM_VALUE)) {
-                        return Union2.createFirst(JavaPlatformManager.getDefault().getDefaultPlatform());
+                        return Union2.createFirst(getDefaultPlatform());
                     }
                     return Optional.ofNullable(BootClassPathImpl.getActivePlatform(val))
                             .filter(JavaPlatform::isValid)
@@ -334,7 +355,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
 
             @Override
             public Union2<JavaPlatform, String> getDefaultValue() {
-                return Union2.createFirst(JavaPlatformManager.getDefault().getDefaultPlatform());
+                return Union2.createFirst(getDefaultPlatform());
             }
 
             @Override
@@ -342,12 +363,12 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
                 handle.removePOMModification(operation);
                 modifiedValue = null;
                 final Union2<JavaPlatform, String> platf = value == null ?
-                        Union2.createFirst(JavaPlatformManager.getDefault().getDefaultPlatform()) :
+                        Union2.createFirst(getDefaultPlatform()) :
                         value;
                 final String platformId;
                 if (platf.hasFirst()) {
                     final JavaPlatform jp = platf.first();
-                    platformId = JavaPlatformManager.getDefault().getDefaultPlatform().equals(jp) ?
+                    platformId = getDefaultPlatform().equals(jp) ?
                             null :
                             jp.getProperties().get("platform.ant.name"); //NOI18N
                 } else {
@@ -375,9 +396,15 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
         platformComboBoxUpdater.ancestorRemoved(null);
     }
 
-    private Pair<String,JavaPlatform> getSelPlatform () {
+    private Pair<String, JavaPlatform> getSelPlatform() {
         String platformId = project.getLookup().lookup(AuxiliaryProperties.class).get(HINT_JDK_PLATFORM, true);
-        return Pair.of(platformId,BootClassPathImpl.getActivePlatform(platformId));
+        if (platformId == null) {
+            JavaPlatform defaultMavenPlatform = getDefaultMavenPlatform();
+            if (defaultMavenPlatform != null) {
+                platformId = defaultMavenPlatform.getProperties().get("platform.ant.name");
+            }
+        }
+        return Pair.of(platformId, BootClassPathImpl.getActivePlatform(platformId));
     }
 
     @SuppressWarnings("unchecked")
@@ -908,6 +935,19 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
         return null;
     }
 
+    @NbBundle.Messages({
+        "# {0} - platform display name",
+        "TXT_MavenDefaultPlatformFmt={0} (Maven default)"
+    })
+    private static String getDisplayName(JavaPlatform javaPlatform) {
+        if (Objects.equals(javaPlatform, getDefaultMavenPlatform())
+                && !Objects.equals(javaPlatform, JavaPlatform.getDefault())) {
+            return Bundle.TXT_MavenDefaultPlatformFmt(javaPlatform.getDisplayName());
+        } else {
+            return javaPlatform.getDisplayName();
+        }
+    }
+
     static class PlatformsModel extends AbstractListModel implements ComboBoxModel, PropertyChangeListener {
 
         private static final long serialVersionUID = 1L;
@@ -988,11 +1028,21 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
         }
 
         private static String displayName(Union2<JavaPlatform, String> item) {
-            return item.hasFirst() ? item.first().getDisplayName() : item.second();
+            if (item.hasFirst()) {
+                return getDisplayName(item.first());
+            } else {
+                return item.second();
+            }
         }
 
         private Pair<String, JavaPlatform> getSelPlatform() {
             String platformId = project.getLookup().lookup(AuxiliaryProperties.class).get(HINT_JDK_PLATFORM, true);
+            if (platformId == null) {
+                JavaPlatform defaultMavenPlatform = getDefaultMavenPlatform();
+                if (defaultMavenPlatform != null) {
+                    platformId = defaultMavenPlatform.getProperties().get("platform.ant.name");
+                }
+            }
             return Pair.of(platformId, BootClassPathImpl.getActivePlatform(platformId));
         }
     }
@@ -1017,7 +1067,7 @@ public class CompilePanel extends javax.swing.JPanel implements HelpCtx.Provider
             if (value instanceof Union2) {
                 final Union2<JavaPlatform,String> u2 = (Union2<JavaPlatform,String>) value;
                 if (u2.hasFirst()) {
-                    strValue = u2.first().getDisplayName();
+                    strValue = getDisplayName(u2.first());
                 } else {
                     strValue = "<html><font color=\"#A40000\">" //NOI18N
                             + Bundle.TXT_BrokenPlatformFmt(u2.second());

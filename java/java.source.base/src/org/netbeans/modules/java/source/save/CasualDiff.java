@@ -544,14 +544,14 @@ public class CasualDiff {
         if (t instanceof FieldGroupTree) {
             FieldGroupTree fgt = (FieldGroupTree)t;
             VariableTree vt = fgt.getVariables().get(fgt.getVariables().size() - 1);
-            return TreeInfo.getEndPos((JCTree)vt, oldTopLevel.endPositions);
+            return TreeInfo.getEndPos((JCTree)vt);
         }
         int endPos = diffContext.getEndPosition(oldTopLevel, t);
 
         if (endPos == Position.NOPOS) {
             if (t instanceof JCAssign) {
                 // [NETBEANS-4299], might be a synthetic annotation attribute, try rhs
-                endPos = TreeInfo.getEndPos(((JCAssign)t).rhs, oldTopLevel.endPositions);
+                endPos = TreeInfo.getEndPos(((JCAssign)t).rhs);
             } else {
                 endPos = getOldPos(t);
             }

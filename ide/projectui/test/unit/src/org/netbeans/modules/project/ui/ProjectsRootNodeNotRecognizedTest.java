@@ -53,9 +53,6 @@ public class ProjectsRootNodeNotRecognizedTest extends NbTestCase {
 
     @RandomlyFails // NB-Core-Build #4346: child at 0
     public void testBadgingNodeIsOKIfProjectIsNoLongerRecognized() throws Exception{
-        
-        //compute project root node children in sync mode
-        System.setProperty("test.projectnode.sync", "true");        
         //prepearing project
         MockLookup.setInstances(new TestFactory());
         down = new CountDownLatch(1);
@@ -80,7 +77,7 @@ public class ProjectsRootNodeNotRecognizedTest extends NbTestCase {
         OpenProjectListSettings.getInstance().setOpenProjectsIcons(icons);
 
         Node logicalView = new ProjectsRootNode(ProjectsRootNode.PHYSICAL_VIEW);
-        assertEquals("2 children", 2, logicalView.getChildren().getNodesCount());
+        assertEquals("2 children", 2, logicalView.getChildren().getNodesCount(true));
         assertNotNull("Still lazy project", logicalView.getChildren().getNodeAt(0).getLookup().lookup(LazyProject.class));
 
         // let project open code run

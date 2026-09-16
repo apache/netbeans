@@ -444,7 +444,7 @@ public final class GeneratedFilesHelper {
             ByteArrayInputStream in2 = new ByteArrayInputStream(resultData);
             InputSource is = new InputSource(in2);
 
-            Document doc = XMLUtil.parse(is, false, true, null, null);
+            Document doc = XMLUtil.parse(is, false, true, true, null, null);
             Element el = doc.getDocumentElement();
             Node firstSubnode = el.getFirstChild();
             //TODO check if first one is text and use it as indentation..
@@ -495,11 +495,7 @@ public final class GeneratedFilesHelper {
             XMLUtil.write(doc, out, "UTF-8"); //NOI18N
             return out.toByteArray();
         }
-        catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-            return resultData;
-        }
-        catch (SAXException ex) {
+        catch (IOException | SAXException ex) {
             Exceptions.printStackTrace(ex);
             return resultData;
         }

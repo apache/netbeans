@@ -24,7 +24,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import org.netbeans.api.java.source.support.ErrorAwareTreeScanner;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import java.util.HashSet;
 import java.util.Set;
 

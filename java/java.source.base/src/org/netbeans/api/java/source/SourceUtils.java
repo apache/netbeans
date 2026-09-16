@@ -611,7 +611,7 @@ public class SourceUtils {
         ClassPath sourcePath = ClassPathSupport.createClassPath(sourceRoots);
         LinkedList<FileObject> folders = new LinkedList<>(sourcePath.findAllResources(pkgName));
         if (isPkg) {
-            return folders.isEmpty() ? binary : folders.get(0);
+            return folders.isEmpty() ? binary : folders.getFirst();
         }
         final boolean caseSensitive = isCaseSensitive ();
         final List<String> fnames = new ArrayList<>();
@@ -621,7 +621,7 @@ public class SourceUtils {
         }
         folders.addFirst(binary);
         if (fnames.size() == 1) {
-            FileObject match = findMatchingChild(fnames.get(0), folders, caseSensitive);
+            FileObject match = findMatchingChild(fnames.getFirst(), folders, caseSensitive);
             if (match != null) {
                 return match;
             }
@@ -1087,7 +1087,7 @@ public class SourceUtils {
         if (params.size() > 1) {
             return false;
         } else if (params.size() == 1) {
-            TypeMirror param = params.get(0).asType();
+            TypeMirror param = params.getFirst().asType();
             if (param.getKind() != TypeKind.ARRAY) {
                 return false;
             }
@@ -1439,7 +1439,7 @@ public class SourceUtils {
     @NonNull
     private static Set<URL> mapToURLs(
         @NonNull final Collection<? extends FileObject> fos) {
-        final Set<URL> res = new HashSet<>(fos.size());
+        final Set<URL> res = HashSet.newHashSet(fos.size());
         for (FileObject fo : fos) {
             res.add(fo.toURL());
         }
@@ -1530,7 +1530,7 @@ public class SourceUtils {
                 }
             } catch (IOException ioe) {}
             if (!lines.isEmpty()) {
-                return lines.get(0);
+                return lines.getFirst();
             }
         }
         if(fqnForNestedClass != null) {

@@ -20,17 +20,14 @@ package org.netbeans.modules.java.source.builder;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
-import org.netbeans.api.java.source.*;
 
 import com.sun.source.tree.*;
 
 import com.sun.tools.javac.code.*;
-import com.sun.tools.javac.code.Symbol.*;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.*;
 import com.sun.tools.javac.util.*;
 
-import static com.sun.tools.javac.tree.JCTree.*;
 
 /**
  * A javac abstract syntax tree which maps all nodes to a single root.

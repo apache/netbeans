@@ -38,8 +38,7 @@ public class PhpStructureScanner implements StructureScanner {
     @Override
     public List<? extends StructureItem> scan(final ParserResult info) {
         List<? extends StructureItem> result = Collections.<StructureItem>emptyList();
-        if (info instanceof PHPParseResult) {
-            PHPParseResult phpParseResult = (PHPParseResult) info;
+        if (info instanceof PHPParseResult phpParseResult) {
             result = NavigatorScanner.create(phpParseResult.getModel(Model.Type.COMMON), isResolveDeprecatedElements()).scan();
         }
         return result;

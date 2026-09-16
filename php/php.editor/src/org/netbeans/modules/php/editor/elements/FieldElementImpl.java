@@ -32,10 +32,12 @@ import org.netbeans.modules.php.editor.api.NameKind;
 import org.netbeans.modules.php.editor.api.PhpElementKind;
 import org.netbeans.modules.php.editor.api.PhpModifiers;
 import org.netbeans.modules.php.editor.api.elements.FieldElement;
+import org.netbeans.modules.php.editor.api.elements.PropertyHookElement;
 import org.netbeans.modules.php.editor.api.elements.TypeElement;
 import org.netbeans.modules.php.editor.api.elements.TypeResolver;
 import org.netbeans.modules.php.editor.index.PHPIndexer;
 import org.netbeans.modules.php.editor.index.Signature;
+import org.netbeans.modules.php.editor.model.impl.PropertyHookSignatureItem;
 import org.netbeans.modules.php.editor.model.impl.Type;
 import org.netbeans.modules.php.editor.model.impl.VariousUtils;
 import org.netbeans.modules.php.editor.model.nodes.ASTNodeInfo;
@@ -47,7 +49,7 @@ import org.openide.util.Parameters;
 /**
  * @author Radek Matous
  */
-public final class FieldElementImpl extends PhpElementImpl implements FieldElement {
+public final class FieldElementImpl extends PhpElementImpl implements FieldElement.HookedFieldElement {
 
     public static final String IDX_FIELD = PHPIndexer.FIELD_FIELD;
 
@@ -59,6 +61,7 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
     private final Type.Kind typeKind;
     @NullAllowed
     private final String declaredType;
+    private final List<PropertyHookElement> propertyHooks;
 
     private FieldElementImpl(
             final TypeElement enclosingType,
@@ -72,7 +75,8 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
             final boolean isDeprecated,
             final boolean isAnnotation,
             Type.Kind typeKind,
-            String declaredType
+            String declaredType,
+            List<PropertyHookElement> propertyHooks
     ) {
         super(FieldElementImpl.getName(fieldName, true), enclosingType.getName(), fileUrl, offset, elementQuery, isDeprecated);
         this.modifiers = PhpModifiers.fromBitMask(flags);
@@ -82,6 +86,7 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
         this.isAnnotation = isAnnotation;
         this.typeKind = typeKind;
         this.declaredType = declaredType;
+        this.propertyHooks = List.copyOf(propertyHooks);
     }
 
     public static Set<FieldElement> fromSignature(final TypeElement type,
@@ -109,10 +114,27 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
         final FieldSignatureParser signParser = new FieldSignatureParser(sig);
         FieldElement retval = null;
         if (matchesQuery(query, signParser)) {
-            retval = new FieldElementImpl(type, signParser.getFieldName(),
-                    signParser.getOffset(), signParser.getFlags(), signParser.getFileUrl(),
-                    indexScopeQuery, signParser.getTypes(), signParser.getFQTypes(), signParser.isDeprecated(), signParser.isAnnotation(), signParser.getTypeKind(), signParser.getDeclaredType());
-
+            List<PropertyHookElement> propertyHooks = PropertyHookElementImpl.fromSignatureItems(
+                    signParser.getPropertyHookSignatrueItem(),
+                    FieldElementImpl.getName(signParser.getFieldName(), true),
+                    signParser.getFileUrl(),
+                    indexScopeQuery
+            );
+            retval = new FieldElementImpl(
+                    type,
+                    signParser.getFieldName(),
+                    signParser.getOffset(),
+                    signParser.getFlags(),
+                    signParser.getFileUrl(),
+                    indexScopeQuery,
+                    signParser.getTypes(),
+                    signParser.getFQTypes(),
+                    signParser.isDeprecated(),
+                    signParser.isAnnotation(),
+                    signParser.getTypeKind(),
+                    signParser.getDeclaredType(),
+                    propertyHooks
+            );
         }
         return retval;
     }
@@ -126,9 +148,21 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
         for (SingleFieldDeclarationInfo info : fields) {
             final String fieldType = VariousUtils.getFieldTypeFromPHPDoc(fileQuery.getResult().getProgram(), info.getOriginalNode());
             Set<TypeResolver> types = fieldType != null ? TypeResolverImpl.parseTypes(fieldType) : null;
-            retval.add(new FieldElementImpl(type, info.getName(), info.getRange().getStart(),
-                    info.getAccessModifiers().toFlags(), fileQuery.getURL().toString(), fileQuery,
-                    types, types, VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node), false, Type.Kind.fromTypes(fieldType), info.getFieldType()));
+            retval.add(new FieldElementImpl(
+                    type,
+                    info.getName(),
+                    info.getRange().getStart(),
+                    info.getAccessModifiers().toFlags(),
+                    fileQuery.getURL().toString(),
+                    fileQuery,
+                    types,
+                    types,
+                    VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node),
+                    false,
+                    Type.Kind.fromTypes(fieldType),
+                    info.getFieldType(),
+                    PropertyHookElementImpl.fromNode(info.getPropertyHooks(), info.getName(), fileQuery.getURL().toString(), fileQuery))
+            );
         }
         return retval;
     }
@@ -152,7 +186,8 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
                 VariousUtils.isDeprecatedFromPHPDoc(fileQuery.getResult().getProgram(), node),
                 false,
                 Type.Kind.NORMAL,
-                null
+                null,
+                List.of()
         );
     }
 
@@ -165,7 +200,7 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
                 ? Collections.<TypeResolver>singleton(new TypeResolverImpl(fldType.getFullyQualifiedName(), false))
                 : Collections.<TypeResolver>emptySet();
         FieldElementImpl retval = new FieldElementImpl(type, field.getName(), field.getOffset(),
-                PhpModifiers.NO_FLAGS, null, elementQuery, typeResolvers, typeResolvers, false, false, Type.Kind.NORMAL, null);
+                PhpModifiers.NO_FLAGS, null, elementQuery, typeResolvers, typeResolvers, false, false, Type.Kind.NORMAL, null, List.of());
         retval.setFileObject(field.getFile());
         return retval;
     }
@@ -193,6 +228,7 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
         sb.append(isDeprecated() ? 1 : 0).append(Separator.SEMICOLON);
         sb.append(getFilenameUrl()).append(Separator.SEMICOLON);
         sb.append(isAnnotation() ? 1 : 0).append(Separator.SEMICOLON);
+        sb.append(PropertyHookSignatureItem.getSignatureFromElements(propertyHooks)).append(Separator.SEMICOLON);
         checkSignature(sb);
         return sb.toString();
     }
@@ -250,6 +286,7 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
             assert getInstanceFQTypes().size() == parser.getFQTypes().size();
             assert isDeprecated() == parser.isDeprecated();
             assert isAnnotation() == parser.isAnnotation();
+            assert PropertyHookSignatureItem.getSignatureFromElements(propertyHooks).equals(parser.getPropertyHookSignature());
         }
     }
 
@@ -301,6 +338,16 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
         return isAnnotation;
     }
 
+    @Override
+    public boolean isHooked() {
+        return !propertyHooks.isEmpty();
+    }
+
+    @Override
+    public List<PropertyHookElement> getPropertyHooks() {
+        return propertyHooks;
+    }
+
     private static class FieldSignatureParser {
 
         private final Signature signature;
@@ -349,6 +396,14 @@ public final class FieldElementImpl extends PhpElementImpl implements FieldEleme
 
         boolean isAnnotation() {
             return signature.integer(8) == 1;
+        }
+
+        String getPropertyHookSignature() {
+            return signature.string(9);
+        }
+
+        List<PropertyHookSignatureItem> getPropertyHookSignatrueItem () {
+            return PropertyHookSignatureItem.fromSignature(getPropertyHookSignature());
         }
 
         Type.Kind getTypeKind() {

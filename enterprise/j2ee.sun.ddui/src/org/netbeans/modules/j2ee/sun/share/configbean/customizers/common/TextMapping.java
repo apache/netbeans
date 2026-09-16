@@ -75,8 +75,8 @@ public class TextMapping {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 17 * hash + this.xmlText != null ? this.xmlText.hashCode() : 0;
-        hash = 17 * hash + this.displayText != null ? this.displayText.hashCode() : 0;
+        hash = 17 * hash + (this.xmlText != null ? this.xmlText.hashCode() : 0);
+        hash = 17 * hash + (this.displayText != null ? this.displayText.hashCode() : 0);
         return hash;
     }
 

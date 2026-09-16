@@ -50,7 +50,9 @@ public class AddDefaultCase implements ErrorRule<Void> {
 
     private static final Set<String> CODES = Set.of(
             "compiler.err.not.exhaustive",
-            "compiler.err.not.exhaustive.statement"
+            "compiler.err.not.exhaustive.details",
+            "compiler.err.not.exhaustive.statement",
+            "compiler.err.not.exhaustive.statement.details"
     );
 
     private static final String THROW_ISE = "throw new IllegalStateException(\"Unexpected value: \" + %1$s);";

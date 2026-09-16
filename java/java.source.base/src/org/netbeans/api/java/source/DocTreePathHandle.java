@@ -237,7 +237,7 @@ public final class DocTreePathHandle {
             this.position = position;
             this.treePathHandle = treePathHandle;
             if (kindPath != null) {
-                this.kind = kindPath.kindPath.get(0);
+                this.kind = kindPath.kindPath.getFirst();
             } else {
                 this.kind = null;
             }

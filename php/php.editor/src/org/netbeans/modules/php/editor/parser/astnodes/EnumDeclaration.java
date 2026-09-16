@@ -104,6 +104,6 @@ public class EnumDeclaration extends TypeDeclaration {
         for (Expression expression : getInterfaces()) {
             sb.append(expression).append(","); // NOI18N
         }
-        return sbAttributes.toString() + "enum " + getName() + backingType == null ? "" : ": " + backingType + " implements " + sb + getBody(); // NOI18N
+        return sbAttributes.toString() + "enum " + getName() + (backingType == null ? "" : ": " + backingType) + " implements " + sb + getBody(); // NOI18N
     }
 }

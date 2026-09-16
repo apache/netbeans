@@ -4,10 +4,10 @@
 [[35,40]-Syntax error
  unexpected:	variable '$this'
  after:	{
- expected:	case, function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public, readonly] 35-40:Syntax error
+ expected:	case, function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public, #[, readonly, public(set), protected(set), private(set)] 35-40:Syntax error
  unexpected:	variable '$this'
  after:	{
- expected:	case, function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public, readonly
+ expected:	case, function, const, use, var, }, VAR_COMMENT, static, abstract, final, private, protected, public, #[, readonly, public(set), protected(set), private(set)
 [[72,80]-POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	function] 72-80:POSSIBLE Syntax Error (check preceding valid syntax error)
  unexpected:	function

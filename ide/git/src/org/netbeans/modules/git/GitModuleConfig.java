@@ -28,10 +28,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.SequencedMap;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.logging.Level;
 import java.util.prefs.Preferences;
+import javax.swing.SortOrder;
 import org.netbeans.libs.git.GitURI;
 import org.netbeans.modules.git.FileInformation.Mode;
 import org.netbeans.modules.git.ui.repository.RepositoryInfo;
@@ -68,6 +73,8 @@ public final class GitModuleConfig {
     private static final String GURI_PASSPHRASE           = "guri_passphrase";
     private static final String PROP_STATUS_VIEW_MODE = "statusViewMode"; //NOI18N
     private static final String PROP_DIFF_VIEW_MODE = "diffViewMode"; //NOI18N
+    private static final String KEY_SORTING = "sortingStatus."; //NOI18N
+    private static final String SORTING_SEPARATOR = "###"; //NOI18N
     private static final String DELIMITER               = "<=~=>";              // NOI18N
     private static final String KEY_SHOW_HISTORY_MERGES = "showHistoryMerges"; //NOI18N
     private static final String KEY_SHOW_FILE_INFO = "showFileInfo"; //NOI18N
@@ -465,6 +472,50 @@ public final class GitModuleConfig {
 
     public void setDiffViewMode (int value) {
         getPreferences().putInt(PROP_DIFF_VIEW_MODE, value);
+    }
+
+    public SequencedMap<String, SortOrder> getSortingStatus (String panel) {
+        SequencedMap<String, SortOrder> sortingState = new LinkedHashMap<>();
+        String packed = getPreferences().get(KEY_SORTING + panel, null);
+        if (packed != null) {
+            String[] tokens = packed.split(SORTING_SEPARATOR);
+            for (int i = 0; i + 1 < tokens.length; i += 2) {
+                try {
+                    sortingState.put(tokens[i], toSortOrder(Integer.parseInt(tokens[i + 1])));
+                } catch (NumberFormatException ex) {
+                    // ignore
+                }
+            }
+        }
+        return sortingState;
+    }
+
+    public void setSortingStatus (String panel, Map<String, SortOrder> sortingState) {
+        StringJoiner packed = new StringJoiner(SORTING_SEPARATOR);
+        for (Map.Entry<String, SortOrder> e : sortingState.entrySet()) {
+            packed.add(e.getKey()).add(Integer.toString(toSortingState(e.getValue())));
+        }
+        if (packed.length() > 0) {
+            getPreferences().put(KEY_SORTING + panel, packed.toString());
+        } else {
+            getPreferences().remove(KEY_SORTING + panel);
+        }
+    }
+
+    private static int toSortingState (SortOrder order) {
+        return switch (order) {
+            case ASCENDING -> 1;
+            case DESCENDING -> -1;
+            case UNSORTED -> 0;
+        };
+    }
+
+    private static SortOrder toSortOrder (int sortingState) {
+        return switch (sortingState) {
+            case 1 -> SortOrder.ASCENDING;
+            case -1 -> SortOrder.DESCENDING;
+            default -> SortOrder.UNSORTED;
+        };
     }
 
     public int getStatusViewMode (int def) {

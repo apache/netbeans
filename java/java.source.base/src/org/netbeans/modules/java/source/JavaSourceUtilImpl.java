@@ -48,7 +48,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ModuleElement;
@@ -245,7 +244,7 @@ public final class JavaSourceUtilImpl extends org.netbeans.modules.java.preproce
                     StreamSupport.stream(attributed.spliterator(), false)
                             .filter((e) -> e.getKind().isClass() || e.getKind().isInterface())
                             .map((e) -> (TypeElement)e)
-                            .collect(Collectors.toList()));
+                            .toList());
             final Map<String,byte[]> result = new HashMap<>();
             for (JavaFileObject jfo : generated) {
                 if (jfo instanceof OutputFileManager.MemOutFileObject) {

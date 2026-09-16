@@ -46,11 +46,11 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.netbeans.modules.xml.retriever.catalog.Utilities;
 import org.netbeans.modules.xml.xam.dom.DocumentModel;
 import org.netbeans.modules.xml.retriever.catalog.CatalogAttribute;
 import org.netbeans.modules.xml.retriever.catalog.CatalogElement;
 import org.netbeans.modules.xml.retriever.catalog.CatalogEntry;
+import org.netbeans.modules.xml.retriever.impl.Util;
 import org.openide.cookies.EditorCookie;
 import org.openide.cookies.SaveCookie;
 import org.openide.filesystems.FileLock;
@@ -377,10 +377,10 @@ public class CatalogFileWrapperDOMImpl  implements EntityResolver, CatalogFileWr
     
     public synchronized void sync() throws IOException {
         logger.finer("ENTER");
-        DocumentBuilderFactory dBuilderFact = DocumentBuilderFactory.newInstance();
-        //dBuilderFact.setValidating(true);
         DocumentBuilder dBuilder = null;
         try {
+            DocumentBuilderFactory dBuilderFact = Util.createEntityIgnoringDBF();
+            //dBuilderFact.setValidating(true);
             dBuilder = dBuilderFact.newDocumentBuilder();
         } catch (ParserConfigurationException ex) {
             assignStateAndFirePropChangeEvent(DocumentModel.State.NOT_WELL_FORMED);

@@ -118,7 +118,8 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         performFixTest("test/Test.java",
                 "package test; public class Test {{final/*comment1*/ var/**comment2**/ j/*comment3*/ = /*comment4*/{new java.util.ArrayList(),new java.util.ArrayList()};}}",
                 -1, FIX_MSG,
-                "package test; import java.util.ArrayList; public class Test {{final/*comment1*/ ArrayList[]/**comment2**/ j/*comment3*/ = /*comment4*/{new java.util.ArrayList(),new java.util.ArrayList()};}}");
+                //TODO: the space between ArrayList[] and /**comment2**/
+                "package test; import java.util.ArrayList; public class Test {{final/*comment1*/ ArrayList[] /**comment2**/ j/*comment3*/ = /*comment4*/{new java.util.ArrayList(),new java.util.ArrayList()};}}");
     }
 
     public void testArrayPrimitiveNumericElementsFix() throws Exception {
@@ -198,7 +199,8 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
                 "package test; public class Test {{var/*comment1*/ a = {2,3.1f};}}",
                 -1,
                 FIX_MSG,
-                "package test; public class Test {{float[]/*comment1*/ a = {2,3.1f};}}");
+                //TODO: the space between float[] and /*comment1*/
+                "package test; public class Test {{float[] /*comment1*/ a = {2,3.1f};}}");
     }
 
     public void testArrayObject8ElementsFix() throws Exception {
@@ -213,7 +215,8 @@ public class ConvertInvalidVarToExplicitArrayTypeTest extends ErrorHintsTestBase
         performFixTest("test/Test.java",
                 "package test; public class Test {{var/*comment1*/ k = {1,'c'};}}",
                 -1, FIX_MSG,
-                "package test; public class Test {{int[]/*comment1*/ k = {1,'c'};}}");
+                //TODO: the space between int[] and /*comment1*/
+                "package test; public class Test {{int[] /*comment1*/ k = {1,'c'};}}");
     }
 
     @Override

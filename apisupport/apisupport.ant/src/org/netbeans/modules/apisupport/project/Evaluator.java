@@ -90,7 +90,7 @@ public final class Evaluator implements PropertyEvaluator, PropertyChangeListene
     public static final String CP = "cp";
     public static final String NBJDK_BOOTCLASSPATH = "nbjdk.bootclasspath";
     public static final String NBJDK_BOOTCLASSPATH_MODULAR = "nbjdk.bootclasspath.modular"; //NOI18N
-    static final String NBJDK_HOME = "nbjdk.home"; // NOI18N
+    public static final String NBJDK_HOME = "nbjdk.home"; // NOI18N
     public static final String RUN_CP = "run.cp";
     private static final SpecificationVersion JDK9 = new SpecificationVersion("9"); //NOI18N
     private static final String JAVACAPI_CNB = "org.netbeans.libs.javacapi";

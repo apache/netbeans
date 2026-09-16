@@ -762,7 +762,7 @@ public class CatalogModelImpl implements CatalogModel {
         //create LSInput object
         DOMImplementation domImpl = null;
         try {
-            domImpl =  DocumentBuilderFactory.newInstance().newDocumentBuilder().getDOMImplementation();
+            domImpl =  Util.createEntityIgnoringDBF().newDocumentBuilder().getDOMImplementation();
         } catch (ParserConfigurationException ex) {
             return null;
         }

@@ -93,9 +93,6 @@ public class ProjectsRootNodePreferredFromPopupTest extends NbTestCase {
         OpenProjectListSettings.getInstance().setOpenProjectsURLs(list);
         OpenProjectListSettings.getInstance().setOpenProjectsDisplayNames(names);
         OpenProjectListSettings.getInstance().setOpenProjectsIcons(icons);
-        
-         //compute project root node children in sync mode
-        System.setProperty("test.projectnode.sync", "true");
     }
 
     public void testPreferencesInOpenCanBeChanged() throws InterruptedException, IOException, Exception {
@@ -103,16 +100,16 @@ public class ProjectsRootNodePreferredFromPopupTest extends NbTestCase {
         L listener = new L();
         logicalView.addNodeListener(listener);
         
-        assertEquals("10 children", 10, logicalView.getChildren().getNodesCount());
+        assertEquals("10 children", 10, logicalView.getChildren().getNodesCount(true));
         listener.assertEvents("None", 0);
         assertEquals("No project opened yet", 0, TestProjectOpenedHookImpl.opened);
         
-        for (Node n : logicalView.getChildren().getNodes()) {
+        for (Node n : logicalView.getChildren().getNodes(true)) {
             TestSupport.TestProject p = n.getLookup().lookup(TestSupport.TestProject.class);
             assertNull("No project of this type, yet", p);
         }
         
-        Node midNode = logicalView.getChildren().getNodes()[5];
+        Node midNode = logicalView.getChildren().getNodes(true)[5];
         {
             TestSupport.TestProject p = midNode.getLookup().lookup(TestSupport.TestProject.class);
             assertNull("No project of this type, yet", p);
@@ -141,7 +138,7 @@ public class ProjectsRootNodePreferredFromPopupTest extends NbTestCase {
         {
             TestSupport.TestProject p = null;
             for (int i = 0; i < 10; i++) {
-                Node midNode2 = logicalView.getChildren().getNodes()[5];
+                Node midNode2 = logicalView.getChildren().getNodes(true)[5];
                 p = midNode.getLookup().lookup(TestSupport.TestProject.class);
                 if (p != null) {
                     break;
@@ -158,7 +155,7 @@ public class ProjectsRootNodePreferredFromPopupTest extends NbTestCase {
         assertEquals("All projects opened", 10, TestProjectOpenedHookImpl.opened);
         
 
-        for (Node n : logicalView.getChildren().getNodes()) {
+        for (Node n : logicalView.getChildren().getNodes(true)) {
             TestSupport.TestProject p = n.getLookup().lookup(TestSupport.TestProject.class);
             assertNotNull("Nodes have correct project of this type", p);
         }

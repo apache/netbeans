@@ -20,6 +20,7 @@
 package org.netbeans.modules.apisupport.project.queries;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,6 +36,9 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import org.apache.tools.ant.module.api.support.ActionUtils;
 import org.netbeans.api.java.classpath.ClassPath;
+import org.netbeans.api.java.classpath.ClassPath.Entry;
+import org.netbeans.api.java.classpath.JavaClassPathConstants;
+import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.modules.apisupport.project.InstalledFileLocatorImpl;
@@ -1070,12 +1074,17 @@ public class ClassPathProviderImplTest extends TestBase {
         assertEquals(p.getHelper().resolveFile("build/cluster/modules/ext/y.jar").getAbsolutePath(), cp.toString());
     }
 
-    //JDK9+: it is unclear how bootclasspath prepend should work for modular platforms, as whether that works
-    //is mostly dependent on the source level:
-    public void JDK_9_testBootClasspath() throws Exception {
+    public void testBootClasspath() throws Exception {
         NbModuleProject p = generateStandaloneModule("prj");
-        ClassPath boot = ClassPath.getClassPath(p.getSourceDirectory(), ClassPath.BOOT);
-        // XXX test that it is sane... although by default, ${nbjdk.home} will be undefined
+        ClassPathProvider cpp = p.getLookup().lookup(ClassPathProvider.class);
+
+        ClassPath boot = cpp.findClassPath(p.getSourceDirectory(), ClassPath.BOOT);
+        ClassPath moduleBoot = cpp.findClassPath(p.getSourceDirectory(), JavaClassPathConstants.MODULE_BOOT_PATH);
+        assertEquals(JavaPlatform.getDefault().getBootstrapLibraries().toString(ClassPath.PathConversionMode.PRINT), boot.toString(ClassPath.PathConversionMode.PRINT));
+        assertEquals(JavaPlatform.getDefault().getBootstrapLibraries().toString(ClassPath.PathConversionMode.PRINT), moduleBoot.toString(ClassPath.PathConversionMode.PRINT));
+
+        //a weak test that bootclasspath.prepend is reflected in the bootpath for source level <= 8
+        //note this does not mean requires.nb.javac=true is reflected correctly:
         FileObject xtra = TestFileUtils.writeZipFile(FileUtil.toFileObject(getWorkDir()), "xtra.jar", "META-INF/MANIFEST.MF:Manifest-Version: 1.0\n\n");
         EditableProperties ep = p.getHelper().getProperties(AntProjectHelper.PROJECT_PROPERTIES_PATH);
         ep.put(ClassPathProviderImpl.BOOTCLASSPATH_PREPEND, FileUtil.toFile(xtra).getAbsolutePath());

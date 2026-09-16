@@ -19,8 +19,6 @@
 
 package org.netbeans.api.java.source;
 
-import com.sun.tools.javac.api.JavacTaskImpl;
-import com.sun.tools.javac.util.Log;
 
 import java.io.*;
 import java.lang.ref.WeakReference;

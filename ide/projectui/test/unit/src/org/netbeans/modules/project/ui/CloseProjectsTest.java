@@ -104,8 +104,6 @@ public class CloseProjectsTest extends NbTestCase {
         OpenProjectListSettings.getInstance().setOpenProjectsURLs(list);
         OpenProjectListSettings.getInstance().setOpenProjectsDisplayNames(names);
         OpenProjectListSettings.getInstance().setOpenProjectsIcons(icons);
-         //compute project root node children in sync mode
-        System.setProperty("test.projectnode.sync", "true");
     }
 
     public void testClose() throws Exception {
@@ -113,11 +111,11 @@ public class CloseProjectsTest extends NbTestCase {
         L listener = new L();
         logicalView.addNodeListener(listener);
         
-        assertEquals("30 children", 30, logicalView.getChildren().getNodesCount());
+        assertEquals("30 children", 30, logicalView.getChildren().getNodesCount(true));
         listener.assertEvents("None", 0);
         assertEquals("No project opened yet", 0, TestProjectOpenedHookImpl.opened);
         
-        Node[] nodeArray = logicalView.getChildren().getNodes();
+        Node[] nodeArray = logicalView.getChildren().getNodes(true);
         Project[] arr = new Project[nodeArray.length];
         int i = 0;
         for (Node n : nodeArray) {
@@ -133,7 +131,7 @@ public class CloseProjectsTest extends NbTestCase {
             i++;
         }
         ProjectsRootNode.ProjectChildren.RP.post(new Runnable() {public @Override void run() {}}).waitFinished();
-        assertEquals("Just fifteen left nodes", 15, logicalView.getChildren().getNodesCount());
+        assertEquals("Just fifteen left nodes", 15, logicalView.getChildren().getNodesCount(true));
 
         // let the project open hook run
         down.countDown();
@@ -141,7 +139,7 @@ public class CloseProjectsTest extends NbTestCase {
         OpenProjects.getDefault().close(arr);
         
         ProjectsRootNode.ProjectChildren.RP.post(new Runnable() {public @Override void run() {}}).waitFinished();
-        assertEquals("View is empty", 0, logicalView.getChildren().getNodesCount());
+        assertEquals("View is empty", 0, logicalView.getChildren().getNodesCount(true));
     }
     
     private static class L implements NodeListener {

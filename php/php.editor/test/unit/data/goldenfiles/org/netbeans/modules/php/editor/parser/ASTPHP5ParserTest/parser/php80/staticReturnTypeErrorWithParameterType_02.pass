@@ -60,7 +60,10 @@
         <Statements>
             <ASTError start='815' end='866'/>
             <ASTError start='866' end='879'/>
-            <ASTError start='882' end='894'/>
+            <ASTError start='882' end='886'/>
+            <Block start='887' end='894' isCurly='true'>
+            </Block>
+            <ASTError start='0' end='894'/>
         </Statements>
     </Program>
 </testresult>

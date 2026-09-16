@@ -1,0 +1,10 @@
+[[865,866]-Syntax error
+ unexpected:	;
+ after:	variable '$prop1'
+ expected:	{, =] 865-866:Syntax error
+ unexpected:	;
+ after:	variable '$prop1'
+ expected:	{, =
+[[867,868]-POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}] 867-868:POSSIBLE Syntax Error (check preceding valid syntax error)
+ unexpected:	}

@@ -53,6 +53,8 @@ public class JavaFXWizardIterator {
     private static WizardDescriptor.InstantiatingIterator<?> definedFXArchetype(String g, String a, String v, String name) {
         Map<String, String> props = new HashMap<>();
         props.put("add-debug-configuration", "Y");
+        props.put("javafx-version", "21.0.9");
+        props.put("javafx-maven-plugin-version", "0.0.8");
         return ArchetypeWizards.definedArchetype(g, a, v, null, name, props);
     }
     

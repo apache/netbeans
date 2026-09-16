@@ -251,6 +251,26 @@ public class ConfigBuilderProvider {
             = new Config.Next(GlassFishVersion.GF_8_0_0,
                     ConfigBuilderProvider.class.getResource("GlassFishV8_0_0.xml"));
 
+    /** Library builder configuration since GlassFish 8.0.1. */
+    private static final Config.Next CONFIG_V8_0_1
+            = new Config.Next(GlassFishVersion.GF_8_0_1,
+                    ConfigBuilderProvider.class.getResource("GlassFishV8_0_0.xml"));
+
+    /** Library builder configuration since GlassFish 8.0.2. */
+    private static final Config.Next CONFIG_V8_0_2
+            = new Config.Next(GlassFishVersion.GF_8_0_2,
+                    ConfigBuilderProvider.class.getResource("GlassFishV8_0_0.xml"));
+
+    /** Library builder configuration since GlassFish 8.0.3. */
+    private static final Config.Next CONFIG_V8_0_3
+            = new Config.Next(GlassFishVersion.GF_8_0_3,
+                    ConfigBuilderProvider.class.getResource("GlassFishV8_0_0.xml"));
+
+    /** Library builder configuration since GlassFish 8.0.4. */
+    private static final Config.Next CONFIG_V8_0_4
+            = new Config.Next(GlassFishVersion.GF_8_0_4,
+                    ConfigBuilderProvider.class.getResource("GlassFishV8_0_0.xml"));
+
     /** Library builder configuration for GlassFish cloud. */
     private static final Config config
             = new Config(CONFIG_V3, CONFIG_V4, CONFIG_V4_1, CONFIG_V5, 
@@ -266,7 +286,8 @@ public class ConfigBuilderProvider {
                          CONFIG_V7_0_18, CONFIG_V7_0_19, CONFIG_V7_0_20,
                          CONFIG_V7_0_21, CONFIG_V7_0_22, CONFIG_V7_0_23,
                          CONFIG_V7_0_24, CONFIG_V7_0_25, CONFIG_V7_1_0,
-                         CONFIG_V8_0_0);
+                         CONFIG_V8_0_0, CONFIG_V8_0_1, CONFIG_V8_0_2,
+                         CONFIG_V8_0_3, CONFIG_V8_0_4);
 
     /** Builders array for each server instance. */
     private static final ConcurrentMap<GlassFishServer, ConfigBuilder> builders

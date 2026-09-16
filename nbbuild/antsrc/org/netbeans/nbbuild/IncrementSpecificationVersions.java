@@ -32,6 +32,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -90,21 +91,29 @@ public final class IncrementSpecificationVersions extends Task {
             }
             try {
                 File pp = new File(dir, "nbproject" + File.separatorChar + "project.properties");
+                boolean specVersionIncrementBlocked = false;
                 if (pp.isFile()) {
-                    String[] lines = gulp(pp, "ISO-8859-1");
-                    for (int i = 0; i < lines.length; i++) {
-                        Matcher m1 = Pattern.compile("(spec\\.version\\.base=)(.+)").matcher(lines[i]);
-                        if (m1.matches()) {
-                            String old = m1.group(2);
-                            String nue = increment(old, stickyLevel, false);
-                            if (nue != null) {
-                                lines[i] = m1.group(1) + nue;
-                                spit(pp, "ISO-8859-1", lines);
-                                log("Incrementing " + old + " -> " + nue + " in " + pp);
-                            } else {
-                                log(pp + ":" + (i + 1) + ": Unsupported old version number " + old + " (must be x.y.0 in trunk or x.y.z in branch); skipping", Project.MSG_WARN);
+                    Properties projectProperties = new Properties();
+                    try (InputStream is = new FileInputStream(pp)) {
+                        projectProperties.load(is);
+                        specVersionIncrementBlocked = Boolean.valueOf(projectProperties.getProperty("spec.version.blockAutomaticUpdate"));
+                    }
+                    if(! specVersionIncrementBlocked) {
+                        String[] lines = gulp(pp, "ISO-8859-1");
+                        for (int i = 0; i < lines.length; i++) {
+                            Matcher m1 = Pattern.compile("(spec\\.version\\.base=)(.+)").matcher(lines[i]);
+                            if (m1.matches()) {
+                                String old = m1.group(2);
+                                String nue = increment(old, stickyLevel, false);
+                                if (nue != null) {
+                                    lines[i] = m1.group(1) + nue;
+                                    spit(pp, "ISO-8859-1", lines);
+                                    log("Incrementing " + old + " -> " + nue + " in " + pp);
+                                } else {
+                                    log(pp + ":" + (i + 1) + ": Unsupported old version number " + old + " (must be x.y.0 in trunk or x.y.z in branch); skipping", Project.MSG_WARN);
+                                }
+                                continue MODULE;
                             }
-                            continue MODULE;
                         }
                     }
                 } else {
@@ -113,7 +122,7 @@ public final class IncrementSpecificationVersions extends Task {
                     }
                 }
                 File mf = new File(dir, "manifest.mf");
-                if (mf.isFile()) {
+                if (mf.isFile() && (! specVersionIncrementBlocked)) {
                     String[] lines = gulp(mf, "UTF-8");
                     for (int i = 0; i < lines.length; i++) {
                         Matcher m1 = Pattern.compile("(OpenIDE-Module-Specification-Version: )(.+)").matcher(lines[i]);

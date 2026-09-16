@@ -780,7 +780,8 @@
                 <attr name="displayName" bundlevalue="org.netbeans.core.ui.options.general.Bundle#General.Options.Export.displayName"/>
             </file>
             <file name="Other">
-                <attr name="include" stringvalue="config/Preferences/.*"/>
+                 <!-- var/attributes.xml is filtered in org.netbeans.upgrade.CopyFiles -->
+                <attr name="include" stringvalue="config/Preferences/.*|var/attributes.xml"/>
                 <attr name="displayName" bundlevalue="org.netbeans.core.ui.options.general.Bundle#Other.Options.Export.displayName"/>
             </file>
         </folder>

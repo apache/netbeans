@@ -3,4 +3,4 @@ AutoUpdate-Show-In-Client: true
 OpenIDE-Module: org.netbeans.modules.kotlin.editor
 OpenIDE-Module-Layer: org/netbeans/modules/kotlin/editor/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/netbeans/modules/kotlin/editor/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.28
+OpenIDE-Module-Specification-Version: 1.29

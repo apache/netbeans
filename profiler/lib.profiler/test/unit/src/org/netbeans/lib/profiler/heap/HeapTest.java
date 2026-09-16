@@ -19,8 +19,6 @@
 package org.netbeans.lib.profiler.heap;
 
 import java.io.BufferedOutputStream;
-import java.util.Map;
-import java.util.Date;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -36,6 +34,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -45,6 +44,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.TreeSet;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -248,10 +248,12 @@ public class HeapTest {
         Collection classes = heap.getAllClasses();
         out.println("Classes size " + classes.size());
         out.println("System properties: ");
-        for (Object en : heap.getSystemProperties().entrySet()) {
-            Map.Entry entry = (Map.Entry) en;
-
-            out.println(entry.getKey() + " " + entry.getValue());
+        Properties properties = heap.getSystemProperties();
+        for (String key : new TreeSet<>(properties.stringPropertyNames())) {
+            String value = properties.getProperty(key)
+                    .replace("\r", "\\r")
+                    .replace("\n", "\\n");
+            out.println(key + (value.isEmpty() ? "" : " " + value));
         }
         for (Object c : classes) {
             JavaClass jc = (JavaClass) c;

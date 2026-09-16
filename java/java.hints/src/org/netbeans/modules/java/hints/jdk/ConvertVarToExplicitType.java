@@ -118,17 +118,9 @@ public class ConvertVarToExplicitType {
                 EnhancedForLoopTree elfTree = (EnhancedForLoopTree) statementPath.getLeaf();
                 ExpressionTree expTree = elfTree.getExpression();
                 VariableTree vtt = elfTree.getVariable();
-                String elfTreeVariable = elfTree.getVariable().getType().toString();
-                if (expTree == null) {
-                    return;
-                }
+                TypeMirror type = wc.getTrees().getTypeMirror(new TreePath(statementPath, vtt));
                 //VariableTree with null ExpressionTree as no initialization required
-                VariableTree newVariableTree = make.Variable(
-                        vtt.getModifiers(),
-                        vtt.getName(),
-                        make.Type(elfTreeVariable),
-                        null
-                );
+                VariableTree newVariableTree = Utilities.setVariableType(wc, vtt, make.Type(type));
                 StatementTree statement = ((EnhancedForLoopTree) statementPath.getLeaf()).getStatement();
                 EnhancedForLoopTree newElfTree = make.EnhancedForLoop(newVariableTree, expTree, statement);
                 wc.rewrite(elfTree, newElfTree);

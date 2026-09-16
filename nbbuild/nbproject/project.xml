@@ -211,14 +211,14 @@
                 <classpath mode="compile">${ant.core.lib}:${nb_all}/platform/javahelp/external/jhall-2.0_05.jar:${nb_all}/nbbuild/external/json-simple-1.1.1.jar:${nb_all}/nbbuild/external/jsoup-1.15.3.jar</classpath>
                 <built-to>${nb.build.dir}/antclasses</built-to>
                 <built-to>${nbantext.jar}</built-to>
-                <source-level>11</source-level>
+                <source-level>17</source-level>
             </compilation-unit>
             <compilation-unit>
                 <package-root>test/unit/src</package-root>
                 <unit-tests/>
                 <classpath mode="compile">${test.unit.cp}</classpath>
                 <built-to>${nb.build.dir}/test/unit/classes</built-to>
-                <source-level>11</source-level>
+                <source-level>17</source-level>
             </compilation-unit>
         </java-data>
     </configuration>

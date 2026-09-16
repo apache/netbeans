@@ -256,3 +256,165 @@ WHITESPACE      " ", la=1
 IDENTIFIER      "throwsx", la=1
 ----- EOF -----
 
+.t.e.s.t. Var
+INT             "int", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "v", la=1
+WHITESPACE      " ", la=1
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "2", la=1
+SEMICOLON       ";"
+WHITESPACE      "\n", la=1
+INT             "int", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "va", la=1
+WHITESPACE      " ", la=1
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "2", la=1
+SEMICOLON       ";"
+WHITESPACE      "\n", la=1
+INT             "int", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "var", la=3
+WHITESPACE      " ", la=2
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "2", la=1
+SEMICOLON       ";"
+WHITESPACE      "\n", la=1
+INT             "int", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "vari", la=1
+WHITESPACE      " ", la=1
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "2", la=1
+SEMICOLON       ";"
+WHITESPACE      "\n", la=1
+INT             "int", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "variable", la=1
+WHITESPACE      " ", la=1
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "2", la=1
+SEMICOLON       ";"
+WHITESPACE      "\n", la=1
+VAR             "var", la=3
+WHITESPACE      " ", la=2
+IDENTIFIER      "v", la=1
+WHITESPACE      " ", la=1
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "2", la=1
+SEMICOLON       ";"
+WHITESPACE      "\n", la=1
+VAR             "var", la=4
+WHITESPACE      " ", la=3
+IDENTIFIER      "va", la=1
+WHITESPACE      " ", la=1
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "2", la=1
+SEMICOLON       ";"
+WHITESPACE      "\n", la=1
+VAR             "var", la=7
+WHITESPACE      " ", la=6
+IDENTIFIER      "var", la=3
+WHITESPACE      " ", la=2
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "2", la=1
+SEMICOLON       ";"
+WHITESPACE      "\n", la=1
+VAR             "var", la=6
+WHITESPACE      " ", la=5
+IDENTIFIER      "vari", la=1
+WHITESPACE      " ", la=1
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "2", la=1
+SEMICOLON       ";"
+WHITESPACE      "\n", la=1
+VAR             "var", la=10
+WHITESPACE      " ", la=9
+IDENTIFIER      "variable", la=1
+WHITESPACE      " ", la=1
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "2", la=1
+SEMICOLON       ";"
+WHITESPACE      "\n", la=1
+IDENTIFIER      "vari", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "x", la=1
+WHITESPACE      " ", la=1
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "2", la=1
+SEMICOLON       ";"
+WHITESPACE      "\n", la=1
+IDENTIFIER      "variable", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "x", la=1
+WHITESPACE      " ", la=1
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "2", la=1
+SEMICOLON       ";"
+WHITESPACE      "\n", la=1
+FOR             "for", la=1
+WHITESPACE      " ", la=1
+LPAREN          "("
+VAR             "var", la=3
+WHITESPACE      " ", la=2
+IDENTIFIER      "i", la=1
+WHITESPACE      " ", la=1
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "0", la=1
+SEMICOLON       ";"
+WHITESPACE      " ", la=1
+IDENTIFIER      "i", la=1
+WHITESPACE      " ", la=1
+LT              "<", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "10", la=1
+SEMICOLON       ";"
+WHITESPACE      " ", la=1
+IDENTIFIER      "i", la=1
+PLUSPLUS        "++"
+RPAREN          ")"
+WHITESPACE      " ", la=1
+LBRACE          "{"
+RBRACE          "}"
+WHITESPACE      "\n", la=1
+FOR             "for", la=1
+WHITESPACE      " ", la=1
+LPAREN          "("
+INT             "int", la=1
+WHITESPACE      " ", la=1
+IDENTIFIER      "var", la=3
+WHITESPACE      " ", la=2
+EQ              "=", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "0", la=1
+SEMICOLON       ";"
+WHITESPACE      " ", la=1
+IDENTIFIER      "var", la=3
+WHITESPACE      " ", la=2
+LT              "<", la=1
+WHITESPACE      " ", la=1
+INT_LITERAL     "10", la=1
+SEMICOLON       ";"
+WHITESPACE      " ", la=1
+IDENTIFIER      "var", la=2
+PLUSPLUS        "++"
+RPAREN          ")"
+WHITESPACE      " ", la=1
+LBRACE          "{"
+RBRACE          "}"
+----- EOF -----
+

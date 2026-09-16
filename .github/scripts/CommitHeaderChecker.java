@@ -28,9 +28,10 @@ import java.util.List;
 
 import static java.util.stream.Gatherers.fold;
 import static java.util.stream.Gatherers.scan;
-import static java.util.stream.Gatherers.windowSliding;
 
-record Commit(int index, String from, String date, String subject, String blank) {}
+static final Pattern robots = Pattern.compile("(gpt|claude|gemini|llama|mistral|command|grok|qwen|deepseek)");
+
+record Commit(int index, String from, String date, String subject, List<String> msg) {}
 record Result(int total, boolean green) {}
 
 // checks commit headers for valid author, email and commit msg formatting
@@ -66,14 +67,32 @@ void main(String[] args) throws IOException, InterruptedException {
             .followRedirects(Redirect.NORMAL).build()) {
 
         result = client.send(request, BodyHandlers.ofLines()).body()
-            // 5 line window, From/Date/Subject and extra line for blank line / overflow check
-            // "From" can be two lines if the name is very long
-            .gather(windowSliding(5))
+            // gather commit header + message as List of lines
+            .gather(
+                Gatherer.<String, List<String>, List<String>>ofSequential(
+                    ArrayList::new,
+                    (window, line, downstream) -> {
+                        if (line.startsWith("From: ")) { // window start
+                            window.add(line);
+                        } else if (!window.isEmpty()) {
+                            if (line.equals("---")) { // window end (separator after message)
+                                downstream.push(List.copyOf(window));
+                                window.clear();
+                            } else {
+                                window.add(line);
+                            }
+                        }
+                        return true;
+                    }
+                )
+            )
             .filter(w -> isCommitHeader(w))
+            // map to indexed commits
             .gather(scan(
-                () -> new Commit(-1, "", "", "", ""),
+                () -> new Commit(-1, "", "", "", List.of()),
                 (c, w) -> createCommit(c.index+1, w)))
             .peek(System.out::println)
+            // check commits and store as result
             .gather(fold(
                 () -> new Result(0, true),
                 (r, c) -> new Result(r.total+1, r.green & checkCommit(c))))
@@ -90,7 +109,7 @@ void main(String[] args) throws IOException, InterruptedException {
 // Subject: [PATCH] Mail Validator
 private static boolean isCommitHeader(List<String> lines) {
     int i = 0;
-    return lines.size() == 5
+    return lines.size() >= 4
         && lines.get(i++).startsWith("From: ") // "From" can be two lines in some cases
         &&(lines.get(i++).startsWith("Date: ") || lines.get(i++).startsWith("Date: "))
         && lines.get(i++).startsWith("Subject: ");
@@ -99,14 +118,15 @@ private static boolean isCommitHeader(List<String> lines) {
 private static Commit createCommit(int index, List<String> lines) {
     int i = 0;
     return lines.get(1).startsWith("Date: ") // "From" can be two lines in some cases
-      ? new Commit(index, lines.get(i++), lines.get(i++), lines.get(i++), lines.get(i++))
-      : new Commit(index, lines.get(i++) + lines.get(i++), lines.get(i++), lines.get(i++), lines.get(i++));
+      ? new Commit(index, lines.get(i++), lines.get(i++), lines.get(i++), lines.subList(i, lines.size()))
+      : new Commit(index, lines.get(i++) + lines.get(i++), lines.get(i++), lines.get(i++), lines.subList(i, lines.size()));
 }
 
 boolean checkCommit(Commit c) {
     return checkNameAndEmail(c.index, c.from)
          & checkSubject(c.index, c.subject)
-         & checkBlankLineAfterSubject(c.index, c.blank);
+         & checkBlankLineAfterSubject(c.index, c.msg)
+         & checkHumanCoAuthors(c.index, c.msg);
 }
 
 boolean checkNameAndEmail(int i, String from) {
@@ -152,12 +172,23 @@ boolean checkSubject(int i, String subject) {
 }
 
 // there should be a blank line after the subject line, some subjects can overflow though.
-boolean checkBlankLineAfterSubject(int i, String blank) {
+boolean checkBlankLineAfterSubject(int i, List<String> msg) {
 // disabled since this would produce too many warnings due to overflowing subject lines
 //    if (!blank.isBlank()) {
 //        log("::warning::blank line after subject recommended in commit " + i + " (is subject over 50 char limit?)");
 // //       return false;
 //    }
+    return true;
+}
+
+boolean checkHumanCoAuthors(int i, List<String> msg) {
+    for (String line : msg) {
+        String lower = line.toLowerCase(Locale.ROOT);
+        if ((lower.startsWith("co-authored-by:") || lower.startsWith("generated-by:")) && robots.matcher(lower).find()) {
+            log("::error::please use 'Assisted-by: MODEL_NAME MODEL_VERSION' in commit " + i);
+            return false;
+        }
+    }
     return true;
 }
 

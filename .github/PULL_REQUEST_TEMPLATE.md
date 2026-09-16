@@ -13,7 +13,12 @@ By opening a pull request you confirm that, unless explicitly stated otherwise, 
  - are all your own work, and you have the right to contribute them.
  - are contributed solely under the terms and conditions of the Apache License 2.0 (see section 5 of the license for more information).
 
-Please make sure (eg. `git log`) that all commits have a valid name and email address for you in the Author field.
+### LLMs, Commit messages and PR description:
+
+ - Please make sure (eg. `git log`) that all commits have a valid name and email address for you in the Author field.
+ - LLM assisted commits should be attributed with an `Assisted-by: MODEL_NAME MODEL_VERSION` line appended to the commit message.
+   - Please mention coding assistance in the PR description too (eg. by adding the same `Assisted-by` line from above)
+   - Please describe the changes in your own words - we'd like to know you understand the changes being made!
 
 If you're a first time contributor, see the Contributing guidelines for more information.
 

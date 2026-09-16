@@ -25,6 +25,13 @@ under the License.
     </tools>
     <java version="21">
         <platform version="21"/>
+        <platform version="22"/>
+        <platform version="23"/>
+        <platform version="24"/>
+        <platform version="25"/>
+        <!-- optimistic -->
+        <platform version="26"/>
+        <platform version="27"/>
     </java>
     <javaee version="11.0.0">
         <profile version="9.0.0" type="web"/>

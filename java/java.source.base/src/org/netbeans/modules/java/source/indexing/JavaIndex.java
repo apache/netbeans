@@ -43,7 +43,6 @@ import org.netbeans.modules.java.source.usages.ClassIndexManager;
 import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.impl.indexing.SPIAccessor;
-import org.netbeans.modules.parsing.lucene.support.IndexManager;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;

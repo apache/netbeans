@@ -149,8 +149,8 @@ public class MethodExitDetector extends CancellableTreePathScanner<Boolean, Stac
     }
     
     private void addHighlightFor(Tree t) {
-        int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), t);
-        int end   = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), t);
+        int start = (int) info.getTrees().getSourcePositions().getStartPosition(t);
+        int end   = (int) info.getTrees().getSourcePositions().getEndPosition(t);
         
         highlights.add(new int[] {start, end});
     }

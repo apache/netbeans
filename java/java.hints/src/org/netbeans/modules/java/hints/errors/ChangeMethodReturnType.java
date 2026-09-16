@@ -89,7 +89,7 @@ public class ChangeMethodReturnType implements ErrorRule<Void> {
         TypeMirror targetType; 
 
         if (treePath.getLeaf().getKind() == Kind.METHOD_INVOCATION || treePath.getLeaf().getKind() == Kind.CONDITIONAL_EXPRESSION) {
-            String expression = info.getText().substring((int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), treePath.getLeaf()), (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), treePath.getLeaf()));
+            String expression = info.getText().substring((int) info.getTrees().getSourcePositions().getStartPosition(treePath.getLeaf()), (int) info.getTrees().getSourcePositions().getEndPosition(treePath.getLeaf()));
             Scope s = info.getTrees().getScope(treePath);
             ExpressionTree expr = info.getTreeUtilities().parseExpression(expression, new SourcePositions[1]);
 

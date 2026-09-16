@@ -183,8 +183,8 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
         if (TreeUtilities.CLASS_TREE_KINDS.contains(leaf.getKind()) || leaf.getKind().toString().equals(RECORD)) {
             CompilationUnitTree cut = info.getCompilationUnit();
             // do not offer for class declarations without body
-            long start = info.getTrees().getSourcePositions().getStartPosition(cut, leaf);
-            long end = info.getTrees().getSourcePositions().getEndPosition(cut, leaf);
+            long start = info.getTrees().getSourcePositions().getStartPosition(leaf);
+            long end = info.getTrees().getSourcePositions().getEndPosition(leaf);
             for (Diagnostic d : info.getDiagnostics()) {
                 long position = d.getPosition();
                 if (d.getCode().equals(PREMATURE_EOF_CODE) && position > start && position < end) {
@@ -476,7 +476,7 @@ public final class ImplementAllAbstractMethods implements ErrorRule<Object>, Ove
     }
     
     private static boolean generateClassBody2(WorkingCopy copy, TreePath p) throws Exception {
-        int insertOffset = (int) copy.getTrees().getSourcePositions().getEndPosition(copy.getCompilationUnit(), p.getLeaf());
+        int insertOffset = (int) copy.getTrees().getSourcePositions().getEndPosition(p.getLeaf());
         if (insertOffset == -1) {
             return false;
         }

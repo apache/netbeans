@@ -1155,14 +1155,12 @@ public class FlowTest extends NbTestCase {
                     .add((int) info
                     .getTrees()
                     .getSourcePositions()
-                    .getStartPosition(info
-                    .getCompilationUnit(), dead));
+                    .getStartPosition(dead));
             actual
                     .add((int) info
                     .getTrees()
                     .getSourcePositions()
-                    .getEndPosition(info
-                    .getCompilationUnit(), dead));
+                    .getEndPosition(dead));
         }
 
         assertEquals(goldenSpans, actual);
@@ -1202,8 +1200,8 @@ public class FlowTest extends NbTestCase {
         TreePath tp = info.getTreeUtilities().pathFor((span[0] + span[1]) / 2);
         
         while (tp != null) {
-            long s = info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
-            long e = info.getTrees().getSourcePositions().getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
+            long s = info.getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
+            long e = info.getTrees().getSourcePositions().getEndPosition(tp.getLeaf());
             
             if (span[0] == s && span[1] == e) break;
             

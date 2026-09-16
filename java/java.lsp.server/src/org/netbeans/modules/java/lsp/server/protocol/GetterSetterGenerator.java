@@ -217,8 +217,8 @@ public final class GetterSetterGenerator extends CodeActionsProvider {
 
         for (Tree m : clazz.getMembers()) {
             if (m.getKind() != Tree.Kind.VARIABLE) continue;
-            int start = (int) info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), m);
-            int end   = (int) info.getTrees().getSourcePositions().getEndPosition(tp.getCompilationUnit(), m);
+            int start = (int) info.getTrees().getSourcePositions().getStartPosition(m);
+            int end   = (int) info.getTrees().getSourcePositions().getEndPosition(m);
 
             if (all || intersects(start, end, selectionStart, selectionEnd)) {
                 selectedFields.add((VariableElement) info.getTrees().getElement(new TreePath(tp, m)));

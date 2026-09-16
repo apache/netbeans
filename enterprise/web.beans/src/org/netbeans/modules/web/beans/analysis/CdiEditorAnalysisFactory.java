@@ -186,8 +186,8 @@ public class CdiEditorAnalysisFactory extends CdiEditorAwareJavaSourceTaskFactor
     public static List<Integer> getElementPosition(CompilationInfo info, Tree tree){
         SourcePositions srcPos = info.getTrees().getSourcePositions();
         
-        int startOffset = (int) srcPos.getStartPosition(info.getCompilationUnit(), tree);
-        int endOffset = (int) srcPos.getEndPosition(info.getCompilationUnit(), tree);
+        int startOffset = (int) srcPos.getStartPosition(tree);
+        int endOffset = (int) srcPos.getEndPosition(tree);
         
         Tree startTree = null;
         
@@ -201,8 +201,7 @@ public class CdiEditorAnalysisFactory extends CdiEditorAwareJavaSourceTaskFactor
         }
         
         if (startTree != null){
-            int searchStart = (int) srcPos.getEndPosition(info.getCompilationUnit(),
-                    startTree);
+            int searchStart = (int) srcPos.getEndPosition(startTree);
             
             TokenSequence<?> tokenSequence = info.getTreeUtilities().tokensFor(tree);
             

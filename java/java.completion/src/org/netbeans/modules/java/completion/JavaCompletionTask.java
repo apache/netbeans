@@ -525,14 +525,14 @@ public final class JavaCompletionTask<T> extends BaseTask {
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
         Tree pkg = root.getPackageName();
-        if (pkg == null || offset <= sourcePositions.getStartPosition(root, root)) {
+        if (pkg == null || offset <= sourcePositions.getStartPosition(root)) {
             addKeywordsForCU(env);
             return;
         }
-        if (offset <= sourcePositions.getStartPosition(root, pkg)) {
+        if (offset <= sourcePositions.getStartPosition(pkg)) {
             addPackages(env, null, true);
         } else {
-            TokenSequence<JavaTokenId> first = findFirstNonWhitespaceToken(env, (int) sourcePositions.getEndPosition(root, pkg), offset);
+            TokenSequence<JavaTokenId> first = findFirstNonWhitespaceToken(env, (int) sourcePositions.getEndPosition(pkg), offset);
             if (first != null && first.token().id() == JavaTokenId.SEMICOLON) {
                 addKeywordsForCU(env);
             }
@@ -543,7 +543,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         int offset = env.getOffset();
         TreePath path = env.getPath();
         CompilationController controller = env.getController();
-        int startPos = (int) env.getSourcePositions().getStartPosition(env.getRoot(), path.getLeaf());
+        int startPos = (int) env.getSourcePositions().getStartPosition(path.getLeaf());
         String headerText = controller.getText().substring(startPos, offset);
         int idx = headerText.indexOf('{'); //NOI18N
         if (idx >= 0) {
@@ -560,10 +560,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
         if (exp.getModuleNames() != null) {
-            int startPos = (int) sourcePositions.getStartPosition(root, exp);
+            int startPos = (int) sourcePositions.getStartPosition(exp);
             Tree lastModule = null;
             for (Tree mdl : exp.getModuleNames()) {
-                int implPos = (int) sourcePositions.getEndPosition(root, mdl);
+                int implPos = (int) sourcePositions.getEndPosition(mdl);
                 if (implPos == Diagnostic.NOPOS || offset <= implPos) {
                     break;
                 }
@@ -580,7 +580,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         Tree name = exp.getPackageName();
         if (name != null) {
-            int extPos = (int) sourcePositions.getEndPosition(root, name);
+            int extPos = (int) sourcePositions.getEndPosition(name);
             if (extPos != Diagnostic.NOPOS && offset > extPos) {
                 TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, extPos + 1, offset);
                 if (last != null && last.token().id() == JavaTokenId.TO) {
@@ -601,10 +601,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
         if (op.getModuleNames() != null) {
-            int startPos = (int) sourcePositions.getStartPosition(root, op);
+            int startPos = (int) sourcePositions.getStartPosition(op);
             Tree lastModule = null;
             for (Tree mdl : op.getModuleNames()) {
-                int implPos = (int) sourcePositions.getEndPosition(root, mdl);
+                int implPos = (int) sourcePositions.getEndPosition(mdl);
                 if (implPos == Diagnostic.NOPOS || offset <= implPos) {
                     break;
                 }
@@ -621,7 +621,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         Tree name = op.getPackageName();
         if (name != null) {
-            int extPos = (int) sourcePositions.getEndPosition(root, name);
+            int extPos = (int) sourcePositions.getEndPosition(name);
             if (extPos != Diagnostic.NOPOS && offset > extPos) {
                 TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, extPos + 1, offset);
                 if (last != null && last.token().id() == JavaTokenId.TO) {
@@ -642,10 +642,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
         if (prov.getImplementationNames() != null) {
-            int startPos = (int) sourcePositions.getStartPosition(root, prov);
+            int startPos = (int) sourcePositions.getStartPosition(prov);
             Tree lastImpl = null;
             for (Tree impl : prov.getImplementationNames()) {
-                int implPos = (int) sourcePositions.getEndPosition(root, impl);
+                int implPos = (int) sourcePositions.getEndPosition(impl);
                 if (implPos == Diagnostic.NOPOS || offset <= implPos) {
                     break;
                 }
@@ -661,7 +661,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         Tree serv = prov.getServiceName();
         if (serv != null) {
-            int extPos = (int) sourcePositions.getEndPosition(root, serv);
+            int extPos = (int) sourcePositions.getEndPosition(serv);
             if (extPos != Diagnostic.NOPOS && offset > extPos) {
                 TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, extPos + 1, offset);
                 if (last != null && last.token().id() == JavaTokenId.WITH) {
@@ -686,7 +686,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         RequiresTree req = (RequiresTree) path.getLeaf();
         Tree name = req.getModuleName();
         if (name != null) {
-            int extPos = (int) env.getSourcePositions().getEndPosition(env.getRoot(), name);
+            int extPos = (int) env.getSourcePositions().getEndPosition(name);
             if (extPos != Diagnostic.NOPOS && offset > extPos) {
                 return;
             }
@@ -706,7 +706,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         UsesTree uses = (UsesTree) path.getLeaf();
         Tree name = uses.getServiceName();
         if (name != null) {
-            int extPos = (int) env.getSourcePositions().getEndPosition(env.getRoot(), name);
+            int extPos = (int) env.getSourcePositions().getEndPosition(name);
             if (extPos != Diagnostic.NOPOS && offset > extPos) {
                 return;
             }
@@ -719,7 +719,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         int offset = env.getOffset();
         PackageTree pt = (PackageTree) env.getPath().getLeaf();
         SourcePositions sourcePositions = env.getSourcePositions();
-        if (offset <= sourcePositions.getStartPosition(env.getRoot(), pt.getPackageName())) {
+        if (offset <= sourcePositions.getStartPosition(pt.getPackageName())) {
             addPackages(env, null, true);
         }
     }
@@ -732,11 +732,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
         if (im.isModule()) {
-            if (offset >= sourcePositions.getStartPosition(root, im.getQualifiedIdentifier())) {
+            if (offset >= sourcePositions.getStartPosition(im.getQualifiedIdentifier())) {
                 addModuleNamesFromGraph(env, null);
             }
         } else {
-        if (offset <= sourcePositions.getStartPosition(root, im.getQualifiedIdentifier())) {
+        if (offset <= sourcePositions.getStartPosition(im.getQualifiedIdentifier())) {
             TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, im, offset);
             if (last != null && last.token().id() == JavaTokenId.IMPORT) {
                 if (Utilities.startsWith(STATIC_KEYWORD, prefix)) {
@@ -768,9 +768,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
         CompilationController controller = env.getController();
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
-        int startPos = (int) sourcePositions.getEndPosition(root, cls.getModifiers());
+        int startPos = (int) sourcePositions.getEndPosition(cls.getModifiers());
         if (startPos <= 0) {
-            startPos = (int) sourcePositions.getStartPosition(root, cls);
+            startPos = (int) sourcePositions.getStartPosition(cls);
         }
         String headerText = controller.getText().substring(startPos, offset);
         int idx = headerText.indexOf('{'); //NOI18N
@@ -787,7 +787,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         List<? extends Tree> permits = cls.getPermitsClause();
         permits = permits == null ? new ArrayList<>() : permits;
         for (Tree perm : permits) {
-            int permPos = (int) sourcePositions.getEndPosition(root, perm);
+            int permPos = (int) sourcePositions.getEndPosition(perm);
             if (permPos == Diagnostic.NOPOS || offset <= permPos) {
                 break;
             }
@@ -805,7 +805,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         Tree lastImpl = null;
         for (Tree impl : cls.getImplementsClause()) {
-            int implPos = (int) sourcePositions.getEndPosition(root, impl);
+            int implPos = (int) sourcePositions.getEndPosition(impl);
             if (implPos == Diagnostic.NOPOS || offset <= implPos) {
                 break;
             }
@@ -829,7 +829,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         Tree ext = cls.getExtendsClause();
         if (ext != null) {
-            int extPos = (int) sourcePositions.getEndPosition(root, ext);
+            int extPos = (int) sourcePositions.getEndPosition(ext);
             if (extPos != Diagnostic.NOPOS && offset > extPos) {
                 TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, extPos + 1, offset);
                 if (last != null && last.token().id() == JavaTokenId.IMPLEMENTS) {
@@ -851,7 +851,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         TypeParameterTree lastTypeParam = null;
         for (TypeParameterTree tp : cls.getTypeParameters()) {
-            int tpPos = (int) sourcePositions.getEndPosition(root, tp);
+            int tpPos = (int) sourcePositions.getEndPosition(tp);
             if (tpPos == Diagnostic.NOPOS || offset <= tpPos) {
                 break;
             }
@@ -933,7 +933,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
             return;
         }
-        lastNonWhitespaceToken = findLastNonWhitespaceToken(env, (int) sourcePositions.getStartPosition(root, cls), offset);
+        lastNonWhitespaceToken = findLastNonWhitespaceToken(env, (int) sourcePositions.getStartPosition(cls), offset);
         if (lastNonWhitespaceToken != null && lastNonWhitespaceToken.token().id() == JavaTokenId.AT) {
             addKeyword(env, INTERFACE_KEYWORD, SPACE, false);
             addTypes(env, EnumSet.of(ANNOTATION_TYPE), null);
@@ -954,7 +954,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         CompilationController controller = env.getController();
         Tree type = var.getType();
         int typePos = type.getKind() == Tree.Kind.ERRONEOUS && ((ErroneousTree) type).getErrorTrees().isEmpty()
-                ? (int) sourcePositions.getEndPosition(root, type) : (int) sourcePositions.getStartPosition(root, type);
+                ? (int) sourcePositions.getEndPosition(type) : (int) sourcePositions.getStartPosition(type);
         if (offset <= typePos) {
             Tree parent = path.getParentPath().getLeaf();
             if (parent.getKind() == Tree.Kind.CATCH) {
@@ -1005,7 +1005,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         controller.toPhase(Phase.RESOLVED);
         Tree init = unwrapErrTree(var.getInitializer());
         if (init == null) {
-            TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, (int) sourcePositions.getEndPosition(root, type), offset);
+            TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, (int) sourcePositions.getEndPosition(type), offset);
             if (last == null || last.token().id() == JavaTokenId.COMMA) {
                 insideExpression(env, new TreePath(path, type));
             } else if (last.token().id() == JavaTokenId.EQ) {
@@ -1013,12 +1013,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 addValueKeywords(env);
             }
         } else {
-            int pos = (int) sourcePositions.getStartPosition(root, init);
+            int pos = (int) sourcePositions.getStartPosition(init);
             if (pos < 0) {
                 return;
             }
             if (offset <= pos) {
-                TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, (int) sourcePositions.getEndPosition(root, type), offset);
+                TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, (int) sourcePositions.getEndPosition(type), offset);
                 if (last == null) {
                     insideExpression(env, new TreePath(path, type));
                 } else if (last.token().id() == JavaTokenId.EQ) {
@@ -1038,11 +1038,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
         CompilationController controller = env.getController();
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
-        int startPos = (int) sourcePositions.getStartPosition(root, mth);
+        int startPos = (int) sourcePositions.getStartPosition(mth);
         Tree lastTree = null;
         int state = 0;
         for (Tree thr : mth.getThrows()) {
-            int thrPos = (int) sourcePositions.getEndPosition(root, thr);
+            int thrPos = (int) sourcePositions.getEndPosition(thr);
             if (thrPos == Diagnostic.NOPOS || offset <= thrPos) {
                 break;
             }
@@ -1052,7 +1052,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         if (lastTree == null) {
             for (VariableTree param : mth.getParameters()) {
-                int parPos = (int) sourcePositions.getEndPosition(root, param);
+                int parPos = (int) sourcePositions.getEndPosition(param);
                 if (parPos == Diagnostic.NOPOS || offset <= parPos) {
                     break;
                 }
@@ -1064,7 +1064,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (lastTree == null) {
             Tree retType = mth.getReturnType();
             if (retType != null) {
-                int retPos = (int) sourcePositions.getEndPosition(root, retType);
+                int retPos = (int) sourcePositions.getEndPosition(retType);
                 if (retPos != Diagnostic.NOPOS && offset > retPos) {
                     lastTree = retType;
                     startPos = retPos;
@@ -1074,7 +1074,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         if (lastTree == null) {
             for (TypeParameterTree tp : mth.getTypeParameters()) {
-                int tpPos = (int) sourcePositions.getEndPosition(root, tp);
+                int tpPos = (int) sourcePositions.getEndPosition(tp);
                 if (tpPos == Diagnostic.NOPOS || offset <= tpPos) {
                     break;
                 }
@@ -1086,7 +1086,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (lastTree == null) {
             Tree mods = mth.getModifiers();
             if (mods != null) {
-                int modsPos = (int) sourcePositions.getEndPosition(root, mods);
+                int modsPos = (int) sourcePositions.getEndPosition(mods);
                 if (modsPos != Diagnostic.NOPOS && offset > modsPos) {
                     lastTree = mods;
                     startPos = modsPos;
@@ -1275,7 +1275,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         CompilationController controller = env.getController();
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
-        int typeEndPos = (int) sourcePositions.getEndPosition(root, ann.getAnnotationType());
+        int typeEndPos = (int) sourcePositions.getEndPosition(ann.getAnnotationType());
         if (offset <= typeEndPos) {
             TreePath parentPath = path.getParentPath();
             if (parentPath.getLeaf().getKind() == Tree.Kind.MODIFIERS
@@ -1311,7 +1311,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (annTypeElement != null && annTypeElement.getKind() == ANNOTATION_TYPE) {
             HashSet<String> names = new HashSet<>();
             for (ExpressionTree arg : ann.getArguments()) {
-                if (arg.getKind() == Tree.Kind.ASSIGNMENT && sourcePositions.getEndPosition(root, ((AssignmentTree) arg).getExpression()) < offset) {
+                if (arg.getKind() == Tree.Kind.ASSIGNMENT && sourcePositions.getEndPosition(((AssignmentTree) arg).getExpression()) < offset) {
                     ExpressionTree var = ((AssignmentTree) arg).getVariable();
                     if (var.getKind() == Tree.Kind.IDENTIFIER) {
                         names.add(((IdentifierTree) var).getName().toString());
@@ -1367,7 +1367,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         AnnotatedTypeTree att = (AnnotatedTypeTree) env.getPath().getLeaf();
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
-        int pos = (int) sourcePositions.getStartPosition(root, att.getUnderlyingType());
+        int pos = (int) sourcePositions.getStartPosition(att.getUnderlyingType());
         if (pos >= 0 && pos < offset) {
             insideExpression(env, new TreePath(env.getPath(), att.getUnderlyingType()));
         } else {
@@ -1432,7 +1432,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     addTypes(env, EnumSet.of(INTERFACE, ANNOTATION_TYPE), null);
                     break;
                 case IDENTIFIER:
-                    if (ts.offset() == env.getSourcePositions().getStartPosition(env.getRoot(), tp)) {
+                    if (ts.offset() == env.getSourcePositions().getStartPosition(tp)) {
                         addKeyword(env, EXTENDS_KEYWORD, SPACE, false);
                     }
                     break;
@@ -1456,7 +1456,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         CompilationUnitTree root = env.getRoot();
                         int index = 0;
                         for (Tree arg : ta.getTypeArguments()) {
-                            int parPos = (int) sourcePositions.getEndPosition(root, arg);
+                            int parPos = (int) sourcePositions.getEndPosition(arg);
                             if (parPos == Diagnostic.NOPOS || offset <= parPos) {
                                 break;
                             }
@@ -1542,7 +1542,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         BlockTree bl = (BlockTree) env.getPath().getLeaf();
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
-        int blockPos = (int) sourcePositions.getStartPosition(root, bl);
+        int blockPos = (int) sourcePositions.getStartPosition(bl);
         String text = env.getController().getText().substring(blockPos, offset);
         if (text.indexOf('{') < 0) { //NOI18N
             addMemberModifiers(env, Collections.singleton(STATIC), false);
@@ -1551,7 +1551,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         StatementTree last = null;
         for (StatementTree stat : bl.getStatements()) {
-            int pos = (int) sourcePositions.getStartPosition(root, stat);
+            int pos = (int) sourcePositions.getStartPosition(stat);
             if (pos == Diagnostic.NOPOS || offset <= pos) {
                 break;
             }
@@ -1597,7 +1597,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         CompilationController controller = env.getController();
         CompilationUnitTree root = env.getRoot();
         SourcePositions sourcePositions = env.getSourcePositions();
-        int expEndPos = (int) sourcePositions.getEndPosition(root, fa.getExpression());
+        int expEndPos = (int) sourcePositions.getEndPosition(fa.getExpression());
         boolean afterDot = false;
         boolean afterLt = false;
         int openLtNum = 0;
@@ -1677,7 +1677,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             boolean inModuleNameInImport = false;
             if (withinModuleName(env) || (inModuleNameInImport = withinModuleNameInImport(env))) {
                 String fqnPrefix = fa.getExpression().toString() + '.';
-                anchorOffset = (int) sourcePositions.getStartPosition(root, fa);
+                anchorOffset = (int) sourcePositions.getStartPosition(fa);
                 if (inModuleNameInImport) {
                     addModuleNamesFromGraph(env, fqnPrefix);
                 } else {
@@ -1777,7 +1777,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                         exs = controller.getTreeUtilities().getUncaughtExceptions(new TreePath(path, ((MethodTree) parent).getBody()));
                         Trees trees = controller.getTrees();
                         for (ExpressionTree thr : ((MethodTree) parent).getThrows()) {
-                            if (sourcePositions.getEndPosition(root, thr) >= offset) {
+                            if (sourcePositions.getEndPosition(thr) >= offset) {
                                 break;
                             }
                             TypeMirror t = trees.getTypeMirror(new TreePath(path, thr));
@@ -1808,7 +1808,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     Trees trees = controller.getTrees();
                     boolean first = true;
                     for (Tree bound : tpt.getBounds()) {
-                        int pos = (int) sourcePositions.getEndPosition(root, bound);
+                        int pos = (int) sourcePositions.getEndPosition(bound);
                         if (offset <= pos) {
                             break;
                         }
@@ -2131,7 +2131,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             CompilationUnitTree root = env.getRoot();
             int lastTokenEndOffset = ts != null ? ts.offset() + ts.token().length() : -1;
             for (ExpressionTree arg : mi.getArguments()) {
-                int pos = (int) sp.getEndPosition(root, arg);
+                int pos = (int) sp.getEndPosition(arg);
                 if (lastTokenEndOffset == pos) {
                     insideExpression(env, new TreePath(path, arg));
                     break;
@@ -2350,7 +2350,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
     private void insideIf(Env env) throws IOException {
         IfTree iff = (IfTree) env.getPath().getLeaf();
-        if (env.getSourcePositions().getEndPosition(env.getRoot(), iff.getCondition()) <= env.getOffset()) {
+        if (env.getSourcePositions().getEndPosition(iff.getCondition()) <= env.getOffset()) {
             TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, iff, env.getOffset());
             if (last != null && (last.token().id() == JavaTokenId.RPAREN || last.token().id() == JavaTokenId.ELSE)) {
                 localResult(env);
@@ -2361,7 +2361,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
     private void insideWhile(Env env) throws IOException {
         WhileLoopTree wlt = (WhileLoopTree) env.getPath().getLeaf();
-        if (env.getSourcePositions().getEndPosition(env.getRoot(), wlt.getCondition()) <= env.getOffset()) {
+        if (env.getSourcePositions().getEndPosition(wlt.getCondition()) <= env.getOffset()) {
             TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, wlt, env.getOffset());
             if (last != null && last.token().id() == JavaTokenId.RPAREN) {
                 localResult(env);
@@ -2372,7 +2372,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
     private void insideDoWhile(Env env) throws IOException {
         DoWhileLoopTree dwlt = (DoWhileLoopTree) env.getPath().getLeaf();
-        if (env.getSourcePositions().getEndPosition(env.getRoot(), dwlt.getStatement()) <= env.getOffset()) {
+        if (env.getSourcePositions().getEndPosition(dwlt.getStatement()) <= env.getOffset()) {
             TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, dwlt, env.getOffset());
             if (last != null && (last.token().id() == JavaTokenId.RBRACE || last.token().id() == JavaTokenId.SEMICOLON)) {
                 addKeyword(env, WHILE_KEYWORD, null, false);
@@ -2389,7 +2389,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         Tree lastTree = null;
         int lastTreePos = offset;
         for (Tree update : fl.getUpdate()) {
-            int pos = (int) sourcePositions.getEndPosition(root, update);
+            int pos = (int) sourcePositions.getEndPosition(update);
             if (pos == Diagnostic.NOPOS || offset <= pos) {
                 break;
             }
@@ -2397,7 +2397,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             lastTreePos = pos;
         }
         if (lastTree == null) {
-            int pos = (int) sourcePositions.getEndPosition(root, fl.getCondition());
+            int pos = (int) sourcePositions.getEndPosition(fl.getCondition());
             if (pos != Diagnostic.NOPOS && pos < offset) {
                 lastTree = fl.getCondition();
                 lastTreePos = pos;
@@ -2405,7 +2405,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         if (lastTree == null) {
             for (Tree init : fl.getInitializer()) {
-                int pos = (int) sourcePositions.getEndPosition(root, init);
+                int pos = (int) sourcePositions.getEndPosition(init);
                 if (pos == Diagnostic.NOPOS || offset <= pos) {
                     break;
                 }
@@ -2455,8 +2455,8 @@ public final class JavaCompletionTask<T> extends BaseTask {
         EnhancedForLoopTree efl = (EnhancedForLoopTree) path.getLeaf();
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
-        if (sourcePositions.getStartPosition(root, efl.getExpression()) >= offset) {
-            TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, (int) sourcePositions.getEndPosition(root, efl.getVariable()), offset);
+        if (sourcePositions.getStartPosition(efl.getExpression()) >= offset) {
+            TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, (int) sourcePositions.getEndPosition(efl.getVariable()), offset);
             if (last != null && last.token().id() == JavaTokenId.COLON) {
                 env.insideForEachExpression();
                 addKeyword(env, NEW_KEYWORD, SPACE, false);
@@ -2464,7 +2464,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
             return;
         }
-        TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, (int) sourcePositions.getEndPosition(root, efl.getExpression()), offset);
+        TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, (int) sourcePositions.getEndPosition(efl.getExpression()), offset);
         if (last != null && last.token().id() == JavaTokenId.RPAREN) {
             addKeywordsForStatement(env);
         } else {
@@ -2487,12 +2487,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
         }
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
-        if (sourcePositions.getStartPosition(root, exprTree) < offset) {
+        if (sourcePositions.getStartPosition(exprTree) < offset) {
             CaseTree lastCase = null;
             List<? extends CaseTree> cases = path.getLeaf().getKind() == Kind.SWITCH ? ((SwitchTree) path.getLeaf()).getCases()
                                                                                      : ((SwitchExpressionTree) path.getLeaf()).getCases();
             for (CaseTree t : cases) {
-                int pos = (int) sourcePositions.getStartPosition(root, t);
+                int pos = (int) sourcePositions.getStartPosition(t);
                 if (pos == Diagnostic.NOPOS || offset <= pos) {
                     break;
                 }
@@ -2501,7 +2501,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             if (lastCase != null) {
                 List<? extends StatementTree> statements = lastCase.getStatements();
                 if (statements == null) {
-                    int pos = (int) sourcePositions.getStartPosition(root, lastCase.getBody());
+                    int pos = (int) sourcePositions.getStartPosition(lastCase.getBody());
                     if (pos != Diagnostic.NOPOS && pos < offset) {
                         addKeyword(env, CASE_KEYWORD, SPACE, false);
                         addKeyword(env, DEFAULT_KEYWORD, COLON, false);
@@ -2509,7 +2509,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 } else {
                     Tree last = null;
                     for (StatementTree stat : statements) {
-                        int pos = (int) sourcePositions.getStartPosition(root, stat);
+                        int pos = (int) sourcePositions.getStartPosition(stat);
                         if (pos == Diagnostic.NOPOS || offset <= pos) {
                             break;
                         }
@@ -2567,8 +2567,8 @@ public final class JavaCompletionTask<T> extends BaseTask {
             }
         }
 
-        if (firstCaseLabelTree != null && ((sourcePositions.getStartPosition(root, firstCaseLabelTree) >= offset)
-                || (caseErroneousTree != null && caseErroneousTree.getKind() == Tree.Kind.ERRONEOUS && ((ErroneousTree) caseErroneousTree).getErrorTrees().isEmpty() && sourcePositions.getEndPosition(root, caseErroneousTree) >= offset))) {
+        if (firstCaseLabelTree != null && ((sourcePositions.getStartPosition(firstCaseLabelTree) >= offset)
+                || (caseErroneousTree != null && caseErroneousTree.getKind() == Tree.Kind.ERRONEOUS && ((ErroneousTree) caseErroneousTree).getErrorTrees().isEmpty() && sourcePositions.getEndPosition(caseErroneousTree) >= offset))) {
             if (firstCaseLabelTree.getKind() == Kind.CONSTANT_CASE_LABEL && ((ConstantCaseLabelTree) firstCaseLabelTree).getConstantExpression().getKind() == Kind.NULL_LITERAL) {
                 addKeyword(env, DEFAULT_KEYWORD, null, false);
             } else if (firstCaseLabelTree.getKind() != Kind.DEFAULT_CASE_LABEL && (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH || parentPath.getLeaf().getKind() == Kind.SWITCH_EXPRESSION)) {
@@ -2736,7 +2736,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
         Tree exp = unwrapErrTree(pa.getExpression());
-        if (exp == null || env.getOffset() <= sourcePositions.getStartPosition(root, exp)) {
+        if (exp == null || env.getOffset() <= sourcePositions.getStartPosition(exp)) {
             if (!options.contains(Options.ALL_COMPLETION) && path.getParentPath().getLeaf().getKind() != Tree.Kind.SWITCH) {
                 Set<? extends TypeMirror> smarts = getSmartTypes(env);
                 if (smarts != null) {
@@ -2809,10 +2809,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
         ArrayAccessTree aat = (ArrayAccessTree) env.getPath().getLeaf();
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
-        int aaTextStart = (int) sourcePositions.getEndPosition(root, aat.getExpression());
+        int aaTextStart = (int) sourcePositions.getEndPosition(aat.getExpression());
         if (aaTextStart != Diagnostic.NOPOS) {
             Tree expr = unwrapErrTree(aat.getIndex());
-            if (expr == null || offset <= (int) sourcePositions.getStartPosition(root, expr)) {
+            if (expr == null || offset <= (int) sourcePositions.getStartPosition(expr)) {
                 String aatText = env.getController().getText().substring(aaTextStart, offset);
                 int bPos = aatText.indexOf('['); //NOI18N
                 if (bPos > -1) {
@@ -2833,7 +2833,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             Tree last = null;
             int lastPos = offset;
             for (Tree init : nat.getInitializers()) {
-                int pos = (int) sourcePositions.getEndPosition(root, init);
+                int pos = (int) sourcePositions.getEndPosition(init);
                 if (pos == Diagnostic.NOPOS || offset <= pos) {
                     break;
                 }
@@ -2890,10 +2890,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
         AssignmentTree as = (AssignmentTree) path.getLeaf();
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
-        int asTextStart = (int) sourcePositions.getEndPosition(root, as.getVariable());
+        int asTextStart = (int) sourcePositions.getEndPosition(as.getVariable());
         if (asTextStart != Diagnostic.NOPOS) {
             Tree expr = unwrapErrTree(as.getExpression());
-            if (expr == null || offset <= (int) sourcePositions.getStartPosition(root, expr)) {
+            if (expr == null || offset <= (int) sourcePositions.getStartPosition(expr)) {
                 CompilationController controller = env.getController();
                 String asText = controller.getText().substring(asTextStart, offset);
                 int eqPos = asText.indexOf('='); //NOI18N
@@ -2918,10 +2918,10 @@ public final class JavaCompletionTask<T> extends BaseTask {
         CompoundAssignmentTree cat = (CompoundAssignmentTree) env.getPath().getLeaf();
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
-        int catTextStart = (int) sourcePositions.getEndPosition(root, cat.getVariable());
+        int catTextStart = (int) sourcePositions.getEndPosition(cat.getVariable());
         if (catTextStart != Diagnostic.NOPOS) {
             Tree expr = unwrapErrTree(cat.getExpression());
-            if (expr == null || offset <= (int) sourcePositions.getStartPosition(root, expr)) {
+            if (expr == null || offset <= (int) sourcePositions.getStartPosition(expr)) {
                 String catText = env.getController().getText().substring(catTextStart, offset);
                 int eqPos = catText.indexOf('='); //NOI18N
                 if (eqPos > -1) {
@@ -2952,11 +2952,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
         BinaryTree bi = (BinaryTree) path.getLeaf();
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
-        int pos = (int) sourcePositions.getEndPosition(root, bi.getRightOperand());
+        int pos = (int) sourcePositions.getEndPosition(bi.getRightOperand());
         if (pos != Diagnostic.NOPOS && pos < offset) {
             return;
         }
-        pos = (int) sourcePositions.getEndPosition(root, bi.getLeftOperand());
+        pos = (int) sourcePositions.getEndPosition(bi.getLeftOperand());
         if (pos != Diagnostic.NOPOS) {
             TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, pos, offset);
             if (last != null) {
@@ -2986,7 +2986,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         ConditionalExpressionTree co = (ConditionalExpressionTree) env.getPath().getLeaf();
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
-        int coTextStart = (int) sourcePositions.getStartPosition(root, co);
+        int coTextStart = (int) sourcePositions.getStartPosition(co);
         if (coTextStart != Diagnostic.NOPOS) {
             TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, coTextStart, env.getOffset());
             if (last != null && (last.token().id() == JavaTokenId.QUESTION || last.token().id() == JavaTokenId.COLON)) {
@@ -3088,7 +3088,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         Tree et = exPath.getLeaf();
         Tree parent = exPath.getParentPath().getLeaf();
         final CompilationController controller = env.getController();
-        int endPos = (int) env.getSourcePositions().getEndPosition(env.getRoot(), et);
+        int endPos = (int) env.getSourcePositions().getEndPosition(et);
         if (endPos != Diagnostic.NOPOS && endPos < offset) {
             TokenSequence<JavaTokenId> last = findLastNonWhitespaceToken(env, endPos, offset);
             if (last != null && last.token().id() != JavaTokenId.COMMA) {
@@ -3224,12 +3224,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
         if (et.getKind() == Tree.Kind.PARENTHESIZED) {
             exp = ((ParenthesizedTree) et).getExpression();
         } else if (et.getKind() == Tree.Kind.TYPE_CAST) {
-            if (env.getSourcePositions().getEndPosition(env.getRoot(), ((TypeCastTree) et).getType()) <= offset) {
+            if (env.getSourcePositions().getEndPosition(((TypeCastTree) et).getType()) <= offset) {
                 exp = ((TypeCastTree) et).getType();
             }
         } else if (et.getKind() == Tree.Kind.ASSIGNMENT) {
             Tree t = ((AssignmentTree) et).getExpression();
-            if (t.getKind() == Tree.Kind.PARENTHESIZED && env.getSourcePositions().getEndPosition(env.getRoot(), t) < offset) {
+            if (t.getKind() == Tree.Kind.PARENTHESIZED && env.getSourcePositions().getEndPosition(t) < offset) {
                 exp = ((ParenthesizedTree) t).getExpression();
             }
         }
@@ -3360,9 +3360,9 @@ public final class JavaCompletionTask<T> extends BaseTask {
         CompilationController controller = env.getController();
         SourcePositions sourcePositions = env.getSourcePositions();
         CompilationUnitTree root = env.getRoot();
-        int startPos = (int) sourcePositions.getEndPosition(root, cls.getModifiers());
+        int startPos = (int) sourcePositions.getEndPosition(cls.getModifiers());
         if (startPos <= 0) {
-            startPos = (int) sourcePositions.getStartPosition(root, cls);
+            startPos = (int) sourcePositions.getStartPosition(cls);
         }
         String headerText = controller.getText().substring(startPos, offset);
         int idx = headerText.indexOf('{'); //NOI18N
@@ -3375,7 +3375,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TreeUtilities tu = controller.getTreeUtilities();
         Tree lastImpl = null;
         for (Tree impl : cls.getImplementsClause()) {
-            int implPos = (int) sourcePositions.getEndPosition(root, impl);
+            int implPos = (int) sourcePositions.getEndPosition(impl);
             if (implPos == Diagnostic.NOPOS || offset <= implPos) {
                 break;
             }
@@ -3399,7 +3399,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 Set<Modifier> modifierSet = modifiers.getFlags();
 
                 if (!modifierSet.contains(Modifier.STATIC)) {
-                    int paramPos = (int) sourcePositions.getEndPosition(root, member);
+                    int paramPos = (int) sourcePositions.getEndPosition(member);
                     if (paramPos == Diagnostic.NOPOS || offset <= paramPos) {
                         break;
                     }
@@ -3410,7 +3410,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
 
         TypeParameterTree lastTypeParam = null;
         for (TypeParameterTree tp : cls.getTypeParameters()) {
-            int tpPos = (int) sourcePositions.getEndPosition(root, tp);
+            int tpPos = (int) sourcePositions.getEndPosition(tp);
             if (tpPos == Diagnostic.NOPOS || offset <= tpPos) {
                 break;
             }
@@ -3489,7 +3489,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
             return;
         }
 
-        lastNonWhitespaceToken = findLastNonWhitespaceToken(env, (int) sourcePositions.getStartPosition(root, cls), offset);
+        lastNonWhitespaceToken = findLastNonWhitespaceToken(env, (int) sourcePositions.getStartPosition(cls), offset);
         if (lastNonWhitespaceToken != null && lastNonWhitespaceToken.token().id() == JavaTokenId.AT) {
             addKeyword(env, INTERFACE_KEYWORD, SPACE, false);
             addTypes(env, EnumSet.of(ANNOTATION_TYPE), null);
@@ -4797,7 +4797,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TreePath path = env.getPath();
         CompilationUnitTree root = env.getRoot();
         SourcePositions sourcePositions = env.getSourcePositions();
-        List<Tree> argTypes = getArgumentsUpToPos(env, mit.getArguments(), (int) sourcePositions.getEndPosition(root, mit.getMethodSelect()), env.getOffset(), true);
+        List<Tree> argTypes = getArgumentsUpToPos(env, mit.getArguments(), (int) sourcePositions.getEndPosition(mit.getMethodSelect()), env.getOffset(), true);
         if (argTypes != null) {
             controller.toPhase(Phase.RESOLVED);
             TypeMirror[] types = new TypeMirror[argTypes.size()];
@@ -4891,7 +4891,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         TreePath path = env.getPath();
         CompilationUnitTree root = env.getRoot();
         SourcePositions sourcePositions = env.getSourcePositions();
-        List<Tree> argTypes = getArgumentsUpToPos(env, nct.getArguments(), (int) sourcePositions.getEndPosition(root, nct.getIdentifier()), env.getOffset(), true);
+        List<Tree> argTypes = getArgumentsUpToPos(env, nct.getArguments(), (int) sourcePositions.getEndPosition(nct.getIdentifier()), env.getOffset(), true);
         if (argTypes != null) {
             controller.toPhase(Phase.RESOLVED);
             TypeMirror[] types = new TypeMirror[argTypes.size()];
@@ -4980,7 +4980,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         boolean beforePublicClass = true;
         for (Tree t : cu.getTypeDecls()) {
             if (TreeUtilities.CLASS_TREE_KINDS.contains(t.getKind())) {
-                int pos = (int) sourcePositions.getEndPosition(cu, t);
+                int pos = (int) sourcePositions.getEndPosition(t);
                 if (pos != Diagnostic.NOPOS && offset >= pos) {
                     beforeAnyClass = false;
                     if (((ClassTree) t).getModifiers().getFlags().contains(Modifier.PUBLIC)) {
@@ -4989,7 +4989,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     }
                 }
             } else if (t.getKind() == Tree.Kind.MODULE) {
-                int pos = (int) sourcePositions.getEndPosition(cu, t);
+                int pos = (int) sourcePositions.getEndPosition(t);
                 if (pos != Diagnostic.NOPOS && offset >= pos) {
                     beforeAnyClass = false;
                 }                
@@ -5010,8 +5010,8 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 break;
             }
             Tree pd = cu.getPackageName();
-            if (!mdlInfo && ((pd != null && offset <= sourcePositions.getStartPosition(cu, cu))
-                    || (pd == null && (firstImport == null || sourcePositions.getStartPosition(cu, firstImport) >= offset)))) {
+            if (!mdlInfo && ((pd != null && offset <= sourcePositions.getStartPosition(cu))
+                    || (pd == null && (firstImport == null || sourcePositions.getStartPosition(firstImport) >= offset)))) {
                 kws.add(PACKAGE_KEYWORD);
             }
         }
@@ -5105,7 +5105,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     CompilationUnitTree root = env.getRoot();
                     SourcePositions sourcePositions = env.getSourcePositions();
                     for (CaseTree t : ((SwitchTree) tp.getLeaf()).getCases()) {
-                        if (sourcePositions.getStartPosition(root, t) >= env.getOffset()) {
+                        if (sourcePositions.getStartPosition(t) >= env.getOffset()) {
                             break;
                         }
                         lastCase = t;
@@ -5129,7 +5129,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     root = env.getRoot();
                     sourcePositions = env.getSourcePositions();
                     for (CaseTree t : ((SwitchExpressionTree) tp.getLeaf()).getCases()) {
-                        if (sourcePositions.getStartPosition(root, t) >= env.getOffset()) {
+                        if (sourcePositions.getStartPosition(t) >= env.getOffset()) {
                             break;
                         }
                         lastCase = t;
@@ -5383,12 +5383,12 @@ public final class JavaCompletionTask<T> extends BaseTask {
         Tree currentMember = null;
         int nextMemberPos = (int) Diagnostic.NOPOS;
         for (Tree member : cls.getMembers()) {
-            int pos = (int) sourcePositions.getStartPosition(root, member);
+            int pos = (int) sourcePositions.getStartPosition(member);
             if (pos >= caretOffset) {
                 nextMemberPos = pos;
                 break;
             }
-            pos = (int) sourcePositions.getEndPosition(root, member);
+            pos = (int) sourcePositions.getEndPosition(member);
             if (caretOffset < pos) {
                 currentMember = member;
                 nextMemberPos = pos;
@@ -5880,7 +5880,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     TryTree tt = (TryTree) tree;
                     BlockTree tryBlock = tt.getBlock();
                     SourcePositions sourcePositions = env.getSourcePositions();
-                    if (tryBlock != null && sourcePositions.getStartPosition(env.getRoot(), tryBlock) <= offset) {
+                    if (tryBlock != null && sourcePositions.getStartPosition(tryBlock) <= offset) {
                         return null;
                     }
                     TypeElement te = controller.getElements().getTypeElement("java.lang.AutoCloseable"); //NOI18N
@@ -5908,25 +5908,25 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     }
                     sourcePositions = env.getSourcePositions();
                     CompilationUnitTree root = env.getRoot();
-                    if (cond != null && sourcePositions.getEndPosition(root, cond) < offset) {
+                    if (cond != null && sourcePositions.getEndPosition(cond) < offset) {
                         return null;
                     }
                     Tree lastInit = null;
                     for (Tree init : fl.getInitializer()) {
-                        if (sourcePositions.getEndPosition(root, init) >= offset) {
+                        if (sourcePositions.getEndPosition(init) >= offset) {
                             return null;
                         }
                         lastInit = init;
                     }
                     String text;
                     if (lastInit == null) {
-                        text = controller.getText().substring((int) sourcePositions.getStartPosition(root, fl), offset).trim();
+                        text = controller.getText().substring((int) sourcePositions.getStartPosition(fl), offset).trim();
                         int idx = text.indexOf('('); //NOI18N
                         if (idx >= 0) {
                             text = text.substring(idx + 1);
                         }
                     } else {
-                        text = controller.getText().substring((int) sourcePositions.getEndPosition(root, lastInit), offset).trim();
+                        text = controller.getText().substring((int) sourcePositions.getEndPosition(lastInit), offset).trim();
                     }
                     return ";".equals(text) ? Collections.<TypeMirror>singleton(controller.getTypes().getPrimitiveType(TypeKind.BOOLEAN)) : null; //NOI18N
                 case ENHANCED_FOR_LOOP:
@@ -5945,14 +5945,14 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     } else {
                         sourcePositions = env.getSourcePositions();
                         root = env.getRoot();
-                        if (efl.getVariable() == null || sourcePositions.getEndPosition(root, efl.getVariable()) > offset) {
-                            text = controller.getText().substring((int) sourcePositions.getStartPosition(root, efl), offset).trim();
+                        if (efl.getVariable() == null || sourcePositions.getEndPosition(efl.getVariable()) > offset) {
+                            text = controller.getText().substring((int) sourcePositions.getStartPosition(efl), offset).trim();
                             int idx = text.indexOf('('); //NOI18N
                             if (idx >= 0) {
                                 text = text.substring(idx + 1);
                             }
                         } else {
-                            text = controller.getText().substring((int) sourcePositions.getEndPosition(root, efl.getVariable()), offset).trim();
+                            text = controller.getText().substring((int) sourcePositions.getEndPosition(efl.getVariable()), offset).trim();
                         }
                         if (!":".equals(text)) {
                             return null;
@@ -6002,7 +6002,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     MethodInvocationTree mi = (MethodInvocationTree) tree;
                     sourcePositions = env.getSourcePositions();
                     root = env.getRoot();
-                    List<Tree> argTypes = getArgumentsUpToPos(env, mi.getArguments(), (int) sourcePositions.getEndPosition(root, mi.getMethodSelect()), lastTree != null ? (int) sourcePositions.getStartPosition(root, lastTree) : offset, true);
+                    List<Tree> argTypes = getArgumentsUpToPos(env, mi.getArguments(), (int) sourcePositions.getEndPosition(mi.getMethodSelect()), lastTree != null ? (int) sourcePositions.getStartPosition(lastTree) : offset, true);
                     if (argTypes != null) {
                         TypeMirror[] args = new TypeMirror[argTypes.size()];
                         int j = 0;
@@ -6081,14 +6081,14 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     NewClassTree nc = (NewClassTree) tree;
                     sourcePositions = env.getSourcePositions();
                     root = env.getRoot();
-                    int idEndPos = (int) sourcePositions.getEndPosition(root, nc.getIdentifier());
+                    int idEndPos = (int) sourcePositions.getEndPosition(nc.getIdentifier());
                     if (idEndPos < 0) {
-                        idEndPos = (int) sourcePositions.getStartPosition(root, nc);
+                        idEndPos = (int) sourcePositions.getStartPosition(nc);
                     }
                     if (idEndPos < 0 || idEndPos >= offset || controller.getText().substring(idEndPos, offset).indexOf('(') < 0) {
                         break;
                     }
-                    argTypes = getArgumentsUpToPos(env, nc.getArguments(), idEndPos, lastTree != null ? (int) sourcePositions.getStartPosition(root, lastTree) : offset, true);
+                    argTypes = getArgumentsUpToPos(env, nc.getArguments(), idEndPos, lastTree != null ? (int) sourcePositions.getStartPosition(lastTree) : offset, true);
                     if (argTypes != null) {
                         trees = controller.getTrees();
                         TypeMirror[] args = new TypeMirror[argTypes.size()];
@@ -6144,7 +6144,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     }
                     sourcePositions = env.getSourcePositions();
                     root = env.getRoot();
-                    int typeEndPos = (int) sourcePositions.getEndPosition(root, arrayType);
+                    int typeEndPos = (int) sourcePositions.getEndPosition(arrayType);
                     if (typeEndPos > offset) {
                         break;
                     }
@@ -6167,7 +6167,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     return null;
                 case LAMBDA_EXPRESSION:
                     LambdaExpressionTree let = (LambdaExpressionTree) tree;
-                    int pos = (int) env.getSourcePositions().getStartPosition(env.getRoot(), let.getBody());
+                    int pos = (int) env.getSourcePositions().getStartPosition(let.getBody());
                     if (offset <= pos && findLastNonWhitespaceToken(env, tree, offset).token().id() != JavaTokenId.ARROW
                             || lastTree != null && lastTree.getKind() == Tree.Kind.BLOCK) {
                         break;
@@ -6183,7 +6183,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case CASE:
                     CaseTree ct = (CaseTree) tree;
                     ExpressionTree exp = ct.getExpression();
-                    if (exp != null && env.getSourcePositions().getEndPosition(env.getRoot(), exp) >= offset) {
+                    if (exp != null && env.getSourcePositions().getEndPosition(exp) >= offset) {
                         parentPath = path.getParentPath();
                         if (parentPath.getLeaf().getKind() == Tree.Kind.SWITCH) {
                             exp = ((SwitchTree) parentPath.getLeaf()).getExpression();
@@ -6194,11 +6194,11 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     return null;
                 case ANNOTATION:
                     AnnotationTree ann = (AnnotationTree) tree;
-                    pos = (int) env.getSourcePositions().getStartPosition(env.getRoot(), ann.getAnnotationType());
+                    pos = (int) env.getSourcePositions().getStartPosition(ann.getAnnotationType());
                     if (offset <= pos) {
                         break;
                     }
-                    pos = (int) env.getSourcePositions().getEndPosition(env.getRoot(), ann.getAnnotationType());
+                    pos = (int) env.getSourcePositions().getEndPosition(ann.getAnnotationType());
                     if (offset < pos) {
                         break;
                     }
@@ -6233,7 +6233,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case RIGHT_SHIFT_ASSIGNMENT:
                 case UNSIGNED_RIGHT_SHIFT_ASSIGNMENT:
                     CompoundAssignmentTree cat = (CompoundAssignmentTree) tree;
-                    pos = (int) env.getSourcePositions().getEndPosition(env.getRoot(), cat.getVariable());
+                    pos = (int) env.getSourcePositions().getEndPosition(cat.getVariable());
                     if (offset <= pos) {
                         break;
                     }
@@ -6253,7 +6253,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case XOR:
                 case REMAINDER:
                     BinaryTree bt = (BinaryTree) tree;
-                    pos = (int) env.getSourcePositions().getEndPosition(env.getRoot(), bt.getLeftOperand());
+                    pos = (int) env.getSourcePositions().getEndPosition(bt.getLeftOperand());
                     if (offset <= pos) {
                         break;
                     }
@@ -6269,7 +6269,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case CONDITIONAL_AND:
                 case CONDITIONAL_OR:
                     bt = (BinaryTree) tree;
-                    pos = (int) env.getSourcePositions().getEndPosition(env.getRoot(), bt.getLeftOperand());
+                    pos = (int) env.getSourcePositions().getEndPosition(bt.getLeftOperand());
                     if (offset <= pos) {
                         break;
                     }
@@ -6279,7 +6279,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case EQUAL_TO:
                 case NOT_EQUAL_TO:
                     bt = (BinaryTree) tree;
-                    pos = (int) env.getSourcePositions().getEndPosition(env.getRoot(), bt.getLeftOperand());
+                    pos = (int) env.getSourcePositions().getEndPosition(bt.getLeftOperand());
                     if (offset <= pos) {
                         break;
                     }
@@ -6302,7 +6302,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                     return Collections.singleton(tm);
                 case PLUS_ASSIGNMENT:
                     cat = (CompoundAssignmentTree) tree;
-                    pos = (int) env.getSourcePositions().getEndPosition(env.getRoot(), cat.getVariable());
+                    pos = (int) env.getSourcePositions().getEndPosition(cat.getVariable());
                     if (offset <= pos) {
                         break;
                     }
@@ -6327,7 +6327,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case DIVIDE_ASSIGNMENT:
                 case MINUS_ASSIGNMENT:
                     cat = (CompoundAssignmentTree) tree;
-                    pos = (int) env.getSourcePositions().getEndPosition(env.getRoot(), cat.getVariable());
+                    pos = (int) env.getSourcePositions().getEndPosition(cat.getVariable());
                     if (offset <= pos) {
                         break;
                     }
@@ -6349,7 +6349,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case MINUS:
                 case MULTIPLY:
                     bt = (BinaryTree) tree;
-                    pos = (int) env.getSourcePositions().getEndPosition(env.getRoot(), bt.getLeftOperand());
+                    pos = (int) env.getSourcePositions().getEndPosition(bt.getLeftOperand());
                     if (offset <= pos) {
                         break;
                     }
@@ -6370,7 +6370,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
                 case EXPRESSION_STATEMENT:
                     exp = ((ExpressionStatementTree) tree).getExpression();
                     if (exp.getKind() == Tree.Kind.PARENTHESIZED) {
-                        text = controller.getText().substring((int) env.getSourcePositions().getStartPosition(env.getRoot(), exp), offset).trim();
+                        text = controller.getText().substring((int) env.getSourcePositions().getStartPosition(exp), offset).trim();
                         if (text.endsWith(")")) //NOI18N
                         {
                             return null;
@@ -6817,7 +6817,7 @@ public final class JavaCompletionTask<T> extends BaseTask {
         boolean isFirstParamVarType = false;
 
         VariableTree firstParamTree = let.getParameters().get(0);
-        int firstParamStartPos = (int) env.getSourcePositions().getStartPosition(env.getRoot(), firstParamTree);
+        int firstParamStartPos = (int) env.getSourcePositions().getStartPosition(firstParamTree);
         TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(env, let, env.getOffset());
         ts.move(firstParamStartPos);
         ts.movePrevious();

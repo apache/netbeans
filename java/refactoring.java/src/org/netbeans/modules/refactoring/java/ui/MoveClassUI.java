@@ -310,8 +310,8 @@ public class MoveClassUI implements RefactoringUI, RefactoringUIBypass {
                         continue;
                     }
                     Tree leaf = path.getLeaf();
-                    long start = sourcePositions.getStartPosition(info.getCompilationUnit(), leaf);
-                    long end = sourcePositions.getEndPosition(info.getCompilationUnit(), leaf);
+                    long start = sourcePositions.getStartPosition(leaf);
+                    long end = sourcePositions.getEndPosition(leaf);
                     if ((start >= startOffset && start <= endOffset)
                             || (end >= startOffset && end <= endOffset)) {
                         tphs.add(TreePathHandle.create(ele, info));
@@ -332,8 +332,8 @@ public class MoveClassUI implements RefactoringUI, RefactoringUIBypass {
 
             for (TypeElement typeElement : topLevelElements) {
                 ClassTree topLevelClass = trees.getTree(typeElement);
-                long startPosition = sourcePositions.getStartPosition(compilationUnit, topLevelClass);
-                long endPosition = sourcePositions.getEndPosition(compilationUnit, topLevelClass);
+                long startPosition = sourcePositions.getStartPosition(topLevelClass);
+                long endPosition = sourcePositions.getEndPosition(topLevelClass);
                 if (position > startPosition && position < endPosition) {
                     for (Element element : typeElement.getEnclosedElements()) {
                         /* We need to go through all members to see if the position
@@ -341,8 +341,8 @@ public class MoveClassUI implements RefactoringUI, RefactoringUIBypass {
                          * TreePath we could get the type of the member instead
                          * of the member itself.*/
                         Tree member = trees.getTree(element);
-                        long startMember = sourcePositions.getStartPosition(compilationUnit, member);
-                        long endMember = sourcePositions.getEndPosition(compilationUnit, member);
+                        long startMember = sourcePositions.getStartPosition(member);
+                        long endMember = sourcePositions.getEndPosition(member);
                         if (position > startMember && position < endMember) {
                             TreePathHandle tph = TreePathHandle.create(element, info);
                             return new MoveMembersUI(tph);

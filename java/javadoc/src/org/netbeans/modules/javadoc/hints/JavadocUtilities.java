@@ -208,7 +208,7 @@ public class JavadocUtilities {
         if (guards != null) {
             try {
                 final int startOff = (int) javac.getTrees().getSourcePositions().
-                        getStartPosition(javac.getCompilationUnit(), node);
+                        getStartPosition(node);
                 final Position startPos = doc.createPosition(startOff);
 
                 for (GuardedSection guard : guards.getGuardedSections()) {
@@ -279,18 +279,18 @@ public class JavadocUtilities {
     private static boolean isInHeader(CompilationInfo info, ClassTree tree, int offset) {
         CompilationUnitTree cut = info.getCompilationUnit();
         SourcePositions sp = info.getTrees().getSourcePositions();
-        long lastKnownOffsetInHeader = sp.getStartPosition(cut, tree);
+        long lastKnownOffsetInHeader = sp.getStartPosition(tree);
         
         List<? extends Tree> impls = tree.getImplementsClause();
         List<? extends TypeParameterTree> typeparams;
         if (impls != null && !impls.isEmpty()) {
-            lastKnownOffsetInHeader= sp.getEndPosition(cut, impls.get(impls.size() - 1));
+            lastKnownOffsetInHeader= sp.getEndPosition(impls.get(impls.size() - 1));
         } else if ((typeparams = tree.getTypeParameters()) != null && !typeparams.isEmpty()) {
-            lastKnownOffsetInHeader= sp.getEndPosition(cut, typeparams.get(typeparams.size() - 1));
+            lastKnownOffsetInHeader= sp.getEndPosition(typeparams.get(typeparams.size() - 1));
         } else if (tree.getExtendsClause() != null) {
-            lastKnownOffsetInHeader = sp.getEndPosition(cut, tree.getExtendsClause());
+            lastKnownOffsetInHeader = sp.getEndPosition(tree.getExtendsClause());
         } else if (tree.getModifiers() != null) {
-            lastKnownOffsetInHeader = sp.getEndPosition(cut, tree.getModifiers());
+            lastKnownOffsetInHeader = sp.getEndPosition(tree.getModifiers());
         }
         
         TokenSequence<JavaTokenId> ts = info.getTreeUtilities().tokensFor(tree);
@@ -309,22 +309,22 @@ public class JavadocUtilities {
     private static boolean isInHeader(CompilationInfo info, MethodTree tree, int offset) {
         CompilationUnitTree cut = info.getCompilationUnit();
         SourcePositions sp = info.getTrees().getSourcePositions();
-        long lastKnownOffsetInHeader = sp.getStartPosition(cut, tree);
+        long lastKnownOffsetInHeader = sp.getStartPosition(tree);
         
         List<? extends ExpressionTree> throwz;
         List<? extends VariableTree> params;
         List<? extends TypeParameterTree> typeparams;
         
         if ((throwz = tree.getThrows()) != null && !throwz.isEmpty()) {
-            lastKnownOffsetInHeader = sp.getEndPosition(cut, throwz.get(throwz.size() - 1));
+            lastKnownOffsetInHeader = sp.getEndPosition(throwz.get(throwz.size() - 1));
         } else if ((params = tree.getParameters()) != null && !params.isEmpty()) {
-            lastKnownOffsetInHeader = sp.getEndPosition(cut, params.get(params.size() - 1));
+            lastKnownOffsetInHeader = sp.getEndPosition(params.get(params.size() - 1));
         } else if ((typeparams = tree.getTypeParameters()) != null && !typeparams.isEmpty()) {
-            lastKnownOffsetInHeader = sp.getEndPosition(cut, typeparams.get(typeparams.size() - 1));
+            lastKnownOffsetInHeader = sp.getEndPosition(typeparams.get(typeparams.size() - 1));
         } else if (tree.getReturnType() != null) {
-            lastKnownOffsetInHeader = sp.getEndPosition(cut, tree.getReturnType());
+            lastKnownOffsetInHeader = sp.getEndPosition(tree.getReturnType());
         } else if (tree.getModifiers() != null) {
-            lastKnownOffsetInHeader = sp.getEndPosition(cut, tree.getModifiers());
+            lastKnownOffsetInHeader = sp.getEndPosition(tree.getModifiers());
         }
         
         TokenSequence<JavaTokenId> ts = info.getTreeUtilities().tokensFor(tree);

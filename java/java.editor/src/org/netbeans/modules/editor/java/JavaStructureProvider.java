@@ -66,8 +66,8 @@ public class JavaStructureProvider implements StructureProvider {
                         Element el = trees.getElement(tp);
                         if (el != null && el.getKind() == ElementKind.PACKAGE) {
                             Builder builder = StructureProvider.newBuilder(el.getSimpleName().toString(), ElementHeaders.javaKind2Structure(el));
-                            int start = (int) cc.getTrees().getSourcePositions().getStartPosition(cu, cu.getPackage());
-                            int end = (int) cc.getTrees().getSourcePositions().getEndPosition(cu, cu.getPackage());
+                            int start = (int) cc.getTrees().getSourcePositions().getStartPosition(cu.getPackage());
+                            int end = (int) cc.getTrees().getSourcePositions().getEndPosition(cu.getPackage());
 
                             builder.expandedStartOffset(start).selectionStartOffset(start);
                             builder.expandedEndOffset(end).selectionEndOffset(end);

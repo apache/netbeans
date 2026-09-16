@@ -92,7 +92,7 @@ public class Ifs {
                "FIX_InvertIf=Invert If"})
     public static ErrorDescription computeWarning(HintContext ctx) {
         TreePath cond = ctx.getVariables().get("$cond");
-        long conditionEnd = ctx.getInfo().getTrees().getSourcePositions().getEndPosition(cond.getCompilationUnit(), cond.getParentPath().getLeaf());
+        long conditionEnd = ctx.getInfo().getTrees().getSourcePositions().getEndPosition(cond.getParentPath().getLeaf());
         if (ctx.getCaretLocation() > conditionEnd) return null;
 
         // parenthesized, then if
@@ -242,7 +242,7 @@ public class Ifs {
     public static ErrorDescription toOrIf(HintContext ctx) {
         SourcePositions sp = ctx.getInfo().getTrees().getSourcePositions();
         CompilationUnitTree cut = ctx.getInfo().getCompilationUnit();
-        boolean caretAccepted = ctx.getCaretLocation() <= sp.getStartPosition(cut, ctx.getPath().getLeaf()) + 2 || caretInsideToLevelElseKeyword(ctx);
+        boolean caretAccepted = ctx.getCaretLocation() <= sp.getStartPosition(ctx.getPath().getLeaf()) + 2 || caretInsideToLevelElseKeyword(ctx);
         if (!caretAccepted) return null;
         return ErrorDescriptionFactory.forSpan(ctx, ctx.getCaretLocation(), ctx.getCaretLocation(), Bundle.ERR_ToOrIf(), JavaFixUtilities.rewriteFix(ctx, Bundle.FIX_ToOrIf(), ctx.getPath(), "if ($cond1 || $cond2) $then; else $else$;"));
     }
@@ -252,7 +252,7 @@ public class Ifs {
     public static ErrorDescription splitIfCondition(HintContext ctx) {
         SourcePositions sp = ctx.getInfo().getTrees().getSourcePositions();
         CompilationUnitTree cut = ctx.getInfo().getCompilationUnit();
-        if (!caretInsidePreviousToken(ctx, sp.getStartPosition(cut, ctx.getVariables().get("$cond2").getLeaf()), JavaTokenId.BARBAR)) return null;
+        if (!caretInsidePreviousToken(ctx, sp.getStartPosition(ctx.getVariables().get("$cond2").getLeaf()), JavaTokenId.BARBAR)) return null;
         String target = "if ($cond1) $then; else if ($cond2) $then; else $else$;";
         return ErrorDescriptionFactory.forSpan(ctx, ctx.getCaretLocation(), ctx.getCaretLocation(), Bundle.ERR_splitIfCondition(), JavaFixUtilities.rewriteFix(ctx, Bundle.FIX_splitIfCondition(), ctx.getPath(), target));
     }
@@ -261,7 +261,7 @@ public class Ifs {
         IfTree it = (IfTree) ctx.getPath().getLeaf();
         SourcePositions sp = ctx.getInfo().getTrees().getSourcePositions();
         CompilationUnitTree cut = ctx.getInfo().getCompilationUnit();
-        int elsePos = (int) sp.getStartPosition(cut, it.getElseStatement());
+        int elsePos = (int) sp.getStartPosition(it.getElseStatement());
         
         
         return caretInsidePreviousToken(ctx, elsePos, JavaTokenId.ELSE);
@@ -293,7 +293,7 @@ public class Ifs {
     public static ErrorDescription mergeIfs(HintContext ctx) {
         int caret = ctx.getCaretLocation();
         IfTree st = (IfTree) ctx.getPath().getLeaf();
-        int conditionEnd = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getPath().getCompilationUnit(), st.getCondition());
+        int conditionEnd = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(st.getCondition());
         
         if (caret > conditionEnd) return null;
         
@@ -309,8 +309,8 @@ public class Ifs {
         boolean braces = CodeStyle.getDefault(ctx.getInfo().getFileObject()).redundantIfBraces() != BracesGenerationStyle.ELIMINATE;
         TreePath toSplit = null;
         TreePath left = ctx.getVariables().get("$firstCondition"); // NOI18N
-        long leftStart = ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getPath().getCompilationUnit(), left.getLeaf());
-        long leftEnd   = ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getPath().getCompilationUnit(), left.getLeaf());
+        long leftStart = ctx.getInfo().getTrees().getSourcePositions().getStartPosition(left.getLeaf());
+        long leftEnd   = ctx.getInfo().getTrees().getSourcePositions().getEndPosition(left.getLeaf());
 
         if (leftStart <= caret && caret <= leftEnd) {
             toSplit = left;
@@ -319,8 +319,8 @@ public class Ifs {
         TreePath right = ctx.getVariables().get("$secondCondition"); // NOI18N
         
         if (toSplit == null) {
-            long rightStart = ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getPath().getCompilationUnit(), right.getLeaf());
-            long rightEnd   = ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getPath().getCompilationUnit(), right.getLeaf());
+            long rightStart = ctx.getInfo().getTrees().getSourcePositions().getStartPosition(right.getLeaf());
+            long rightEnd   = ctx.getInfo().getTrees().getSourcePositions().getEndPosition(right.getLeaf());
 
             if (rightStart > caret || caret > rightEnd) {
                 return null;

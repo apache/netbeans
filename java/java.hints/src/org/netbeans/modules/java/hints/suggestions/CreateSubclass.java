@@ -98,7 +98,7 @@ public class CreateSubclass {
         ClassTree cls = (ClassTree) tp.getLeaf();
         CompilationInfo info = context.getInfo();
         SourcePositions sourcePositions = info.getTrees().getSourcePositions();
-        long startPos = sourcePositions.getStartPosition(tp.getCompilationUnit(), cls);
+        long startPos = sourcePositions.getStartPosition(cls);
         if (startPos > Integer.MAX_VALUE) {
             return null;
         }

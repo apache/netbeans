@@ -128,8 +128,8 @@ public class WrongStringComparison {
         SourcePositions sp = info.getTrees().getSourcePositions();
         Scope s = info.getTrees().getScope(sourcePathParent);
         
-        String leftText = info.getText().substring((int) sp.getStartPosition(info.getCompilationUnit(), left), (int) sp.getEndPosition(info.getCompilationUnit(), left) + 1);
-        String rightText = info.getText().substring((int) sp.getStartPosition(info.getCompilationUnit(), right), (int) sp.getEndPosition(info.getCompilationUnit(), right) + 1);
+        String leftText = info.getText().substring((int) sp.getStartPosition(left), (int) sp.getEndPosition(left) + 1);
+        String rightText = info.getText().substring((int) sp.getStartPosition(right), (int) sp.getEndPosition(right) + 1);
         String code = leftText + " != " + rightText + " && (" + leftText + "== null || !" + leftText + ".equals(" + rightText + "))"; // NOI18N
         ExpressionTree correct = info.getTreeUtilities().parseExpression(code, new SourcePositions[1]);
 
@@ -137,7 +137,7 @@ public class WrongStringComparison {
 
         TreePath correctPath = new TreePath(sourcePathParent.getParentPath(), correct);
         
-        String originalCode = info.getText().substring((int) sp.getStartPosition(info.getCompilationUnit(), sourcePathParent.getLeaf()), (int) sp.getEndPosition(info.getCompilationUnit(), sourcePathParent.getLeaf()) + 1);
+        String originalCode = info.getText().substring((int) sp.getStartPosition(sourcePathParent.getLeaf()), (int) sp.getEndPosition(sourcePathParent.getLeaf()) + 1);
         ExpressionTree original = info.getTreeUtilities().parseExpression(originalCode, new SourcePositions[1]);
         
         info.getTreeUtilities().attributeTree(original, s);

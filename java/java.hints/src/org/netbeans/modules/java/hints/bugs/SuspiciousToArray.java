@@ -103,8 +103,8 @@ public class SuspiciousToArray {
                 
         StringBuilder sb = new StringBuilder();
         if (!colPathSynthetic) {
-            int posStart = (int)ci.getTrees().getSourcePositions().getStartPosition(ci.getCompilationUnit(), colPath.getLeaf());
-            int posEnd = (int)ci.getTrees().getSourcePositions().getEndPosition(ci.getCompilationUnit(), colPath.getLeaf());
+            int posStart = (int)ci.getTrees().getSourcePositions().getStartPosition(colPath.getLeaf());
+            int posEnd = (int)ci.getTrees().getSourcePositions().getEndPosition(colPath.getLeaf());
             sb.append(ci.getSnapshot().getText().subSequence(posStart, posEnd)).append(".");
         }
         // iterator.next is about the only method, which _returns_ something typed by collection type parameter - 

@@ -335,7 +335,7 @@ public class InlineMethodTransformer extends RefactoringVisitor {
                     return value;
                 } else {
                     SourcePositions positions = workingCopy.getTrees().getSourcePositions();
-                    long startPosition = positions.getStartPosition(workingCopy.getCompilationUnit(), node);
+                    long startPosition = positions.getStartPosition(node);
                     long lineNumber = workingCopy.getCompilationUnit().getLineMap().getLineNumber(startPosition);
                     String source = FileUtil.getFileDisplayName(workingCopy.getFileObject()) + ':' + lineNumber;
                     problem = JavaPluginUtils.chainProblems(problem,
@@ -350,14 +350,14 @@ public class InlineMethodTransformer extends RefactoringVisitor {
             if (element != null && element.getKind() == ElementKind.FIELD) {
                 if (!newStatementList.isEmpty()) {
                     SourcePositions positions = workingCopy.getTrees().getSourcePositions();
-                    long startPosition = positions.getStartPosition(workingCopy.getCompilationUnit(), node);
+                    long startPosition = positions.getStartPosition(node);
                     long lineNumber = workingCopy.getCompilationUnit().getLineMap().getLineNumber(startPosition);
                     String source = FileUtil.getFileDisplayName(workingCopy.getFileObject()) + ':' + lineNumber;
                     problem = JavaPluginUtils.chainProblems(problem,
                             new Problem(false, WRN_InlineMethodMultipleLines(source)));
                 } else if (lastStatement instanceof StatementTree) {
                     SourcePositions positions = workingCopy.getTrees().getSourcePositions();
-                    long startPosition = positions.getStartPosition(workingCopy.getCompilationUnit(), node);
+                    long startPosition = positions.getStartPosition(node);
                     long lineNumber = workingCopy.getCompilationUnit().getLineMap().getLineNumber(startPosition);
                     String source = FileUtil.getFileDisplayName(workingCopy.getFileObject()) + ':' + lineNumber;
                     problem = JavaPluginUtils.chainProblems(problem,
@@ -376,7 +376,7 @@ public class InlineMethodTransformer extends RefactoringVisitor {
                     if(parent.getKind() == EXPRESSION_STATEMENT) {
                     } else {
                         SourcePositions positions = workingCopy.getTrees().getSourcePositions();
-                        long startPosition = positions.getStartPosition(workingCopy.getCompilationUnit(), node);
+                        long startPosition = positions.getStartPosition(node);
                         long lineNumber = workingCopy.getCompilationUnit().getLineMap().getLineNumber(startPosition);
                         String source = FileUtil.getFileDisplayName(workingCopy.getFileObject()) + ':' + lineNumber;
                         problem = JavaPluginUtils.chainProblems(problem,
@@ -771,7 +771,7 @@ public class InlineMethodTransformer extends RefactoringVisitor {
                         default:
                             result = make.EmptyStatement();
                             SourcePositions positions = workingCopy.getTrees().getSourcePositions();
-                            long startPosition = positions.getStartPosition(workingCopy.getCompilationUnit(), node);
+                            long startPosition = positions.getStartPosition(node);
                             long lineNumber = workingCopy.getCompilationUnit().getLineMap().getLineNumber(startPosition);
                             String source = FileUtil.getFileDisplayName(workingCopy.getFileObject()) + ':' + lineNumber;
                             problem = JavaPluginUtils.chainProblems(problem,

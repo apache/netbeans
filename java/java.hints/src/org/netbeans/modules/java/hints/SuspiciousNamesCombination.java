@@ -144,8 +144,8 @@ public class SuspiciousNamesCombination extends AbstractHint {
             String         actualName      = getName(arg);
             
             if (isConflicting(info, declarationName, actualName)) {
-                long start = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), arg);
-                long end   = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), arg);
+                long start = info.getTrees().getSourcePositions().getStartPosition(arg);
+                long end   = info.getTrees().getSourcePositions().getEndPosition(arg);
                 
                 if (start != (-1) && end != (-1)) {
                     result.add(ErrorDescriptionFactory.createErrorDescription(getSeverity().toEditorSeverity(), "Suspicious names combination", info.getFileObject(), (int) start, (int) end));
@@ -163,8 +163,8 @@ public class SuspiciousNamesCombination extends AbstractHint {
         String actualName      = getName(at.getExpression());
         
         if (isConflicting(info, declarationName, actualName)) {
-            long start = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), at.getVariable());
-            long end   = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), at.getVariable());
+            long start = info.getTrees().getSourcePositions().getStartPosition(at.getVariable());
+            long end   = info.getTrees().getSourcePositions().getEndPosition(at.getVariable());
             
             if (start != (-1) && end != (-1)) {
                 return Collections.singletonList(ErrorDescriptionFactory.createErrorDescription(getSeverity().toEditorSeverity(), "Suspicious names combination", info.getFileObject(), (int) start, (int) end));

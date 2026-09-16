@@ -900,8 +900,8 @@ final class VanillaCompileWorker extends CompileWorker {
             }
 
             private SortedMap<Long, List<Diagnostic<? extends JavaFileObject>>> treeDiags(Tree node) {
-                long start = trees.getSourcePositions().getStartPosition(cut, node);
-                long end = trees.getSourcePositions().getEndPosition(cut, node);
+                long start = trees.getSourcePositions().getStartPosition(node);
+                long end = trees.getSourcePositions().getEndPosition(node);
                 SortedMap<Long, List<Diagnostic<? extends JavaFileObject>>> classDiags = start < end ? diags.subMap(start, end) : new TreeMap<>();
                 return classDiags;
             }

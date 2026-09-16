@@ -298,14 +298,14 @@ public class GoToSupport {
 
         if (elpath != null) {
             Tree tree = elpath.getLeaf();
-            long startPos = controller.getTrees().getSourcePositions().getStartPosition(controller.getCompilationUnit(), tree);
+            long startPos = controller.getTrees().getSourcePositions().getStartPosition(tree);
 
             if (startPos != (-1)) {
                 //check if the caret is inside the declaration itself, as jump in this case is not very usefull:
                 if (isCaretInsideDeclarationName(controller, tree, elpath, offset)) {
                     return new GoToTarget(-1, -1, null, null, null, null, null, null, false);
                 } else {
-                    long endPos = controller.getTrees().getSourcePositions().getEndPosition(controller.getCompilationUnit(), tree);
+                    long endPos = controller.getTrees().getSourcePositions().getEndPosition(tree);
                     //#71272: it is necessary to translate the offset:
                     return new GoToTarget(controller.getSnapshot().getOriginalOffset((int) startPos),
                                           controller.getSnapshot().getOriginalOffset((int) endPos),

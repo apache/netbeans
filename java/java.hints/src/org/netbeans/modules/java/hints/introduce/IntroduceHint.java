@@ -136,8 +136,8 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
                 && (leaf.getKind() != Kind.VARIABLE || ((VariableTree) leaf).getInitializer() == null))
                continue;
 
-            long treeStart = ci.getTrees().getSourcePositions().getStartPosition(ci.getCompilationUnit(), leaf);
-            long treeEnd   = ci.getTrees().getSourcePositions().getEndPosition(ci.getCompilationUnit(), leaf);
+            long treeStart = ci.getTrees().getSourcePositions().getStartPosition(leaf);
+            long treeEnd   = ci.getTrees().getSourcePositions().getEndPosition(leaf);
 
             if (treeStart != start || treeEnd != end) {
                 continue;
@@ -851,7 +851,7 @@ public class IntroduceHint implements CancellableTask<CompilationInfo> {
         TypeMirror tm = info.getTrees().getTypeMirror(path);
         
         if (tm != null && tm.getKind() == TypeKind.NULL) {
-            List<? extends TypeMirror> targetType = CreateElementUtilities.resolveType(new HashSet<ElementKind>(), info, path.getParentPath(), path.getLeaf(), (int) info.getTrees().getSourcePositions().getStartPosition(path.getCompilationUnit(), path.getLeaf()), new TypeMirror[1], new int[1]);
+            List<? extends TypeMirror> targetType = CreateElementUtilities.resolveType(new HashSet<ElementKind>(), info, path.getParentPath(), path.getLeaf(), (int) info.getTrees().getSourcePositions().getStartPosition(path.getLeaf()), new TypeMirror[1], new int[1]);
             
             if (targetType != null && !targetType.isEmpty()) {
                 tm = targetType.get(0);

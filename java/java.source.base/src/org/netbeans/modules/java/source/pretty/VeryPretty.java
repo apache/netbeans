@@ -1873,7 +1873,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         long start, end;
         if (   diffContext != null
             && diffContext.origUnit != null
-            && (start = diffContext.trees.getSourcePositions().getStartPosition(diffContext.origUnit, tree)) >= 0 //#137564
+            && (start = diffContext.trees.getSourcePositions().getStartPosition(tree)) >= 0 //#137564
             && (end = diffContext.getEndPosition(diffContext.origUnit, tree)) >= 0
             && diffContext.isPartOfCompilationUnit(diffContext.origUnit, tree)
             && origText != null) {
@@ -1882,7 +1882,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
         }
         if (   diffContext != null
             && diffContext.mainUnit != null
-            && (start = diffContext.trees.getSourcePositions().getStartPosition(diffContext.mainUnit, tree)) >= 0 //#137564
+            && (start = diffContext.trees.getSourcePositions().getStartPosition(tree)) >= 0 //#137564
             && (end = diffContext.getEndPosition(diffContext.mainUnit, tree)) >= 0
             && diffContext.isPartOfCompilationUnit(diffContext.mainUnit, tree)
             && diffContext.mainCode != null) {
@@ -2760,7 +2760,7 @@ public final class VeryPretty extends JCTree.Visitor implements DocTreeVisitor<V
             }
             Object tag = tree2Tag.get(p.remove(0));
             if (tag != null) {
-                tag2Span.put(tag, new int[] {out.length() + initialOffset + (int) sp.getStartPosition(fake, node), out.length() + initialOffset + (int) sp.getEndPosition(fake, node)});
+                tag2Span.put(tag, new int[] {out.length() + initialOffset + (int) sp.getStartPosition(node), out.length() + initialOffset + (int) sp.getEndPosition(node)});
             }
             return super.scan(node, p);
         }

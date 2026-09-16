@@ -167,8 +167,8 @@ public class Tiny {
             return null;
         }
 
-        int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getInfo().getCompilationUnit(), toSearch.getLeaf());
-        int end   = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getInfo().getCompilationUnit(), toSearch.getLeaf());
+        int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(toSearch.getLeaf());
+        int end   = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(toSearch.getLeaf());
         final String literal = ctx.getInfo().getText().substring(start, end);
 
         Fix f = new JavaFix(ctx.getInfo(), toSearch) {
@@ -315,7 +315,7 @@ public class Tiny {
                 return null;
             }
             
-            List<? extends TypeMirror> assignedTo = CreateElementUtilities.resolveType(EnumSet.noneOf(ElementKind.class), ctx.getInfo(), ctx.getPath().getParentPath(), ctx.getPath().getLeaf(), (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getPath().getCompilationUnit(), ctx.getPath().getLeaf()), new TypeMirror[1], new int[1]);
+            List<? extends TypeMirror> assignedTo = CreateElementUtilities.resolveType(EnumSet.noneOf(ElementKind.class), ctx.getInfo(), ctx.getPath().getParentPath(), ctx.getPath().getLeaf(), (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getPath().getLeaf()), new TypeMirror[1], new int[1]);
             
             if (assignedTo != null && assignedTo.size() == 1) {
                 if (t.isSubtype(t.erasure(assignedTo.get(0)), t.erasure(coll.asType())))
@@ -518,7 +518,7 @@ public class Tiny {
             return paramTypeOfExecutable(trees.getElement(new TreePath(path, nct)).asType(), index);
         } else {
 
-            int pos = (int) trees.getSourcePositions().getStartPosition(path.getCompilationUnit(), leaf);
+            int pos = (int) trees.getSourcePositions().getStartPosition(leaf);
             List<? extends TypeMirror> type = CreateElementUtilities.resolveType(
                     EnumSet.noneOf(ElementKind.class), ctx.getInfo(), parent, leaf, pos, new TypeMirror[1], new int[1]);
 

@@ -425,17 +425,17 @@ public class ExpectedTypeResolver implements TreeVisitor<List<? extends TypeMirr
                 Scope s = info.getTrees().getScope(getCurrentPath());
                 SourcePositions pos = info.getTrees().getSourcePositions();
                 StringBuilder sb = new StringBuilder();
-                int posFirst = (int)pos.getStartPosition(info.getCompilationUnit(), theExpression.getLeaf());
-                int posSecond = (int)pos.getStartPosition(info.getCompilationUnit(), otherExpression);
+                int posFirst = (int)pos.getStartPosition(theExpression.getLeaf());
+                int posSecond = (int)pos.getStartPosition(otherExpression);
                 
                 if (posFirst < 0 || posSecond < 0) {
                     // LOMBOK
                     return null;
                 }
                 String first = info.getText().substring(posFirst, 
-                        (int)pos.getEndPosition(info.getCompilationUnit(), theExpression.getLeaf()));
+                        (int)pos.getEndPosition(theExpression.getLeaf()));
                 String second = info.getText().substring(posSecond, 
-                        (int)pos.getEndPosition(info.getCompilationUnit(), otherExpression));
+                        (int)pos.getEndPosition(otherExpression));
                 sb.append(first).append("+").append(second);
                 ExpressionTree expr = info.getTreeUtilities().parseExpression(sb.toString(), new SourcePositions[1]);
                 TypeMirror targetType = purify(info, info.getTreeUtilities().attributeTree(expr, s));

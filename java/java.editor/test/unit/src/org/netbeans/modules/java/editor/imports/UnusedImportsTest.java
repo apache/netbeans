@@ -681,8 +681,8 @@ public class UnusedImportsTest extends NbTestCase {
                 
                 for (TreePath unused : new UnusedImports().process(parameter, new AtomicBoolean())) {
                     realSpans.add(new int[]{
-                                (int) parameter.getTrees().getSourcePositions().getStartPosition(unused.getCompilationUnit(), unused.getLeaf()),
-                                (int) parameter.getTrees().getSourcePositions().getEndPosition(unused.getCompilationUnit(), unused.getLeaf())
+                                (int) parameter.getTrees().getSourcePositions().getStartPosition(unused.getLeaf()),
+                                (int) parameter.getTrees().getSourcePositions().getEndPosition(unused.getLeaf())
                     });
                 }
             }

@@ -815,7 +815,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                     if (kind == Tree.Kind.ERRONEOUS) {
                         return ;
                     }
-                    int startOffs = (int)positions.getStartPosition(compUnit, tree);
+                    int startOffs = (int)positions.getStartPosition(tree);
                     int outerLineNumber = LineDocumentUtils.getLineIndex(doc, startOffs) + 1;
                     if (outerLineNumber == lineNumber) return;
                     if (kind == Tree.Kind.COMPILATION_UNIT || TreeUtilities.CLASS_TREE_KINDS.contains(kind)) return;
@@ -824,7 +824,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                         Tree previousTree = null;
                         int previousTreeEndOffset = -1;
                         for (StatementTree sTree : blockTree.getStatements()) {
-                            int end = (int)positions.getStartPosition(compUnit, sTree);
+                            int end = (int)positions.getStartPosition(sTree);
                             if (end <= rowStartOffset && end > previousTreeEndOffset) {
                                 previousTree = sTree;
                                 previousTreeEndOffset = end;
@@ -841,7 +841,7 @@ public class LineBreakpointImpl extends ClassBasedBreakpoint {
                                 return;
                             }
                         }
-                        startOffs = (int)positions.getStartPosition(compUnit, previousTree);
+                        startOffs = (int)positions.getStartPosition(previousTree);
                         outerLineNumber = LineDocumentUtils.getLineIndex(doc, startOffs) + 1;
                     } // if
                     result[0] = outerLineNumber;

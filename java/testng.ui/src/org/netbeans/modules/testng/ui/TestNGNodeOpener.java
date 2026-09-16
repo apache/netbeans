@@ -91,7 +91,7 @@ public final class TestNGNodeOpener extends NodeOpener {
                                     List<? extends ExecutableElement> methodElements = methodsIn(element.getEnclosedElements());
                                     for (Element child : methodElements) {
                                         if (child.getSimpleName().contentEquals(((TestNGMethodNode) node).getTestcase().getTestName())) {
-                                            long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, trees.getTree(child));
+                                            long pos = trees.getSourcePositions().getStartPosition(trees.getTree(child));
                                             line[0] = compilationUnitTree.getLineMap().getLineNumber(pos);
                                             break;
                                         }

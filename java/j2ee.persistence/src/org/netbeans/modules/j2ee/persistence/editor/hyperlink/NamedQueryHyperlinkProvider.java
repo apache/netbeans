@@ -213,7 +213,7 @@ public class NamedQueryHyperlinkProvider implements HyperlinkProviderExt {
                     }
                     if(foundAm != null) {
                         TreePath tree = trees.getPath(entityElement, foundAm, get);
-                        int startOffset = (int) trees.getSourcePositions().getStartPosition(parameter.getCompilationUnit(), tree.getLeaf());
+                        int startOffset = (int) trees.getSourcePositions().getStartPosition(tree.getLeaf());
                         UiUtils.open(ent, startOffset );
                     }
                 }, true);

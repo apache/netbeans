@@ -177,7 +177,7 @@ public class ComputeAnnotations extends JavaParserResultTask<Result> {
                     case METHOD ->
                         info.getTreeUtilities().findNameSpan((MethodTree) t);
                     default ->
-                        new int[]{(int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), t), -1};
+                        new int[]{(int) info.getTrees().getSourcePositions().getStartPosition(t), -1};
                 };
                 
                 if (elementNameSpan == null) continue;

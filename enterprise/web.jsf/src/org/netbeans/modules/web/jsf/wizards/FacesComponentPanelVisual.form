@@ -95,7 +95,9 @@
     </Component>
     <Component class="javax.swing.JTextField" name="tagNamespaceTextField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="http://xmlns.jcp.org/jsf/component" noResource="true"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="jakartaNamespace ? DEFAULT_COMPONENT_NS_JAKARTA : DEFAULT_COMPONENT_NS" type="code"/>
+        </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="tagNameTextField">

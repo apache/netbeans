@@ -30,12 +30,18 @@ public class FacesComponentPanelVisual extends javax.swing.JPanel implements Cha
 
     private static final long serialVersionUID = 1L;
 
+    private static final String DEFAULT_COMPONENT_NS = "http://xmlns.jcp.org/jsf/component"; //NOI18N
+    private static final String DEFAULT_COMPONENT_NS_JAKARTA = "jakarta.faces.component"; //NOI18N
+
     private final ChangeSupport changeSupport = new ChangeSupport(this);
+
+    private final boolean jakartaNamespace;
 
     /**
      * Creates new form FacesComponentPanelVisual
      */
-    public FacesComponentPanelVisual() {
+    public FacesComponentPanelVisual(boolean jakartaNamespace) {
+        this.jakartaNamespace = jakartaNamespace;
         initComponents();
     }
 
@@ -59,7 +65,7 @@ public class FacesComponentPanelVisual extends javax.swing.JPanel implements Cha
         tagNamespaceLabel.setLabelFor(tagNamespaceTextField);
         org.openide.awt.Mnemonics.setLocalizedText(tagNamespaceLabel, org.openide.util.NbBundle.getMessage(FacesComponentPanelVisual.class, "FacesComponentPanelVisual.tagNamespaceLabel.text")); // NOI18N
 
-        tagNamespaceTextField.setText("http://xmlns.jcp.org/jsf/component"); // NOI18N
+        tagNamespaceTextField.setText(jakartaNamespace ? DEFAULT_COMPONENT_NS_JAKARTA : DEFAULT_COMPONENT_NS);
 
         org.openide.awt.Mnemonics.setLocalizedText(sampleCodeCheckBox, org.openide.util.NbBundle.getMessage(FacesComponentPanelVisual.class, "FacesComponentPanelVisual.sampleCodeCheckBox.text")); // NOI18N
 

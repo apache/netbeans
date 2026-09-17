@@ -53,7 +53,9 @@ import org.openide.util.NbBundle;
 public class FacesComponentIterator implements TemplateWizard.Iterator {
 
     private static final long serialVersionUID = 1L;
-    private static final String DEFAULT_COMPONENT_NS = "http://xmlns.jcp.org/jsf/component"; //NOI18N
+    private static final Set<String> DEFAULT_COMPONENT_NAMESPACES = Set.of(
+            "http://xmlns.jcp.org/jsf/component", //NOI18N
+            "jakarta.faces.component"); //NOI18N
 
     private transient WizardDescriptor.Panel[] panels;
     private int index;
@@ -75,7 +77,7 @@ public class FacesComponentIterator implements TemplateWizard.Iterator {
         if (!tagName.isEmpty() && !tagName.equals(tagNameForClassName(targetName))) {
             templateProperties.put("tagName", tagName); //NOI18N
         }
-        if (!tagNamespace.isEmpty() && !tagNamespace.equals(DEFAULT_COMPONENT_NS)) {
+        if (!tagNamespace.isEmpty() && !DEFAULT_COMPONENT_NAMESPACES.contains(tagNamespace)) {
             templateProperties.put("tagNamespace", tagNamespace); //NOI18N
         }
         if (createSampleCode) {

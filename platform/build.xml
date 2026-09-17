@@ -19,6 +19,6 @@
     under the License.
 
 -->
-<project name="IDE Cluster" basedir="../nbbuild" default="build-nozip">
-    <description>Java Cluster build script</description>
+<project name="Platform Cluster" basedir="nbbuild" default="build-platform">
+    <description>NetBeans Platofrm build script.</description>
 </project>

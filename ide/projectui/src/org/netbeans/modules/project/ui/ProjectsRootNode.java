@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.project.ui;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -44,6 +45,7 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.UIManager;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -790,8 +792,9 @@ public class ProjectsRootNode extends AbstractNode {
                     LOG.log(Level.INFO, null, e);
                 }
             }
+            var indentText = ProjectsLaF.indentationPrefix(false);
             for (var i = 0; i < pair.depth(); i++) {
-                original = "\u00BB " + original;
+                original = indentText + original;
             }
             return original;
         }
@@ -840,8 +843,11 @@ public class ProjectsRootNode extends AbstractNode {
                 }
             }
             var html = isMainAsync()? "<b>" + htmlName + "</b>" : htmlName;
-            for (var i = 0; i < pair.depth(); i++) {
-                html = "<font color='#7f7f7f'>&#187; </font>" + html;
+            String indentText = ProjectsLaF.indentationPrefix(true);
+            if (indentText != null) {
+                for (var i = 0; i < pair.depth(); i++) {
+                    html = indentText + html;
+                }
             }
             return html;
         }

@@ -19,12 +19,14 @@
 
 package org.netbeans.modules.project.ui;
 
+import java.awt.Color;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -39,7 +41,7 @@ import org.openide.util.test.MockLookup;
 
 public class OpenProjectListNestedTest extends NbTestCase {
     static final Logger LOG = Logger.getLogger("test.OpenProjectListNestedTest");
-    
+
     public OpenProjectListNestedTest(String testName) {
         super(testName);
     }
@@ -53,6 +55,33 @@ public class OpenProjectListNestedTest extends NbTestCase {
     protected void setUp() throws Exception {
         OpenProjects.getDefault().close(OpenProjects.getDefault().openProjects().get());
         OpenProjectList.waitProjectsFullyOpen();
+    }
+
+    public void testIndentationDefaultsNoHTML() throws Exception {
+        UIManager.getDefaults().remove("nb.project.identation.char");
+        UIManager.getDefaults().remove("nb.project.indentation.color");
+        String displayName = ProjectsLaF.indentationPrefix(false);
+        assertEquals("\u00bb ", displayName);
+    }
+
+    public void testIndentationDefaultsInHTML() throws Exception {
+        UIManager.getDefaults().remove("nb.project.identation.char");
+        UIManager.getDefaults().remove("nb.project.indentation.color");
+        String displayName = ProjectsLaF.indentationPrefix(true);
+        assertEquals("<font color='#808080'>&#187; </font>", displayName);
+    }
+
+    public void testIndentationWithChangedColorInHTML() throws Exception {
+        UIManager.getDefaults().remove("nb.project.identation.char");
+        UIManager.getDefaults().put("nb.project.indentation.color", Color.red);
+        String displayName = ProjectsLaF.indentationPrefix(true);
+        assertEquals("<font color='#ff0000'>&#187; </font>", displayName);
+    }
+
+    public void testIndentationDisabled() throws Exception {
+        UIManager.getDefaults().put("nb.project.identation.char", -1);
+        assertNull(ProjectsLaF.indentationPrefix(false));
+        assertNull(ProjectsLaF.indentationPrefix(true));
     }
 
     public void testOpenNestedProjects() throws Exception {
@@ -105,7 +134,7 @@ public class OpenProjectListNestedTest extends NbTestCase {
         assertEquals("Initially empty", 0, OpenProjects.getDefault().openProjects().get().length);
 
         OpenProjects.getDefault().open(new Project[] { mainPrj }, true);
-        
+
         List<Project> arr = Arrays.asList(OpenProjects.getDefault().openProjects().get());
         if (withSubprojects) {
             assertEquals("Both projects open", 2, arr.size());

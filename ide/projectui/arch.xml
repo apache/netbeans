@@ -493,6 +493,22 @@
           branding file in your application.
       </api>
   </p>
+  <p>
+      There is a support for indenting nested projects since
+      <a href="https://github.com/apache/netbeans/pull/9627">PR-9627</a> which can be controlled by two <code>UIManager</code>
+      properties:
+  </p>
+  <ul>
+      <li>
+          <api group="javax.swing.UIManager" name="nb.project.identation.char" type="export" category="private">
+              The UTF value of a character to use for indentation. The value can be set to <code>-1</code> to
+              disable indentation altogether.</api>
+      </li>
+      <li>
+          <api group="javax.swing.UIManager" name="nb.project.indentation.color" type="export" category="private">
+              The color to use when rendering the indentation character in HTML.</api>
+      </li>
+  </ul>
  </answer>
 
 

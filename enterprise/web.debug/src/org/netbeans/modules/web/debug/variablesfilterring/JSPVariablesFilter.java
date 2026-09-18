@@ -319,7 +319,7 @@ public class JSPVariablesFilter implements TreeModelFilter {
 //---------------------------------------------------------------------------------------    
     
     public static class ImplicitLocals {
-        private List locals = new ArrayList ();
+        private List<LocalVariable> locals = new ArrayList<>();
         private static HashSet<String> localsNames = null;
 
         public static boolean isImplicitLocal(String aLocalName) {
@@ -343,7 +343,7 @@ public class JSPVariablesFilter implements TreeModelFilter {
             locals.add (local);
         }
         
-        List getLocals () {
+        List<LocalVariable> getLocals () {
             return locals;
         }
         
@@ -358,7 +358,7 @@ public class JSPVariablesFilter implements TreeModelFilter {
     }
     
     public static class AttributeMap {// extends java.util.HashMap {
-        private ArrayList attributes = new ArrayList();
+        private ArrayList<Attribute> attributes = new ArrayList<>();
         private ObjectVariable owner = null;
         private String ownerName = null;
 
@@ -391,7 +391,7 @@ public class JSPVariablesFilter implements TreeModelFilter {
                 throw new UnknownOwnerNameException(aOwnerName);
         }
         
-        public ArrayList getAttributes() { return attributes; }
+        public ArrayList<Attribute> getAttributes() { return attributes; }
         public String getOwnerName() { return ownerName; }
         
         public class Attribute {

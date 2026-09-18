@@ -79,7 +79,7 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
                                     Element element = trees.getElement(trees.getPath(compilationUnitTree, tree));
                                     if (element != null && element.getKind() == ElementKind.CLASS && element.getSimpleName().contentEquals(mi.topLevelClass())) {
                                         element = resolveNestedClass(mi.nestedClasses(), element);
-                                        long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, trees.getTree(element));
+                                        long pos = trees.getSourcePositions().getStartPosition(trees.getTree(element));
                                         line[0] = compilationUnitTree.getLineMap().getLineNumber(pos);
                                         break;
                                     }
@@ -122,7 +122,7 @@ public final class MavenJUnitNodeOpener extends NodeOpener {
                                 for (Element child : methodElements) {
                                     String name = node.getTestcase().getName(); // package.name.method.name
                                     if (child.getSimpleName().contentEquals(name.substring(name.lastIndexOf(".") + 1))) {
-                                        long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, trees.getTree(child));
+                                        long pos = trees.getSourcePositions().getStartPosition(trees.getTree(child));
                                         line[0] = compilationUnitTree.getLineMap().getLineNumber(pos);
                                         break;
                                     }

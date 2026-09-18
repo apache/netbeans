@@ -2051,8 +2051,8 @@ public class JavaSourceTest extends NbTestCase {
         @Override
         public Void visitMethod(MethodTree node, Void p) {
             assert cu != null;
-            int startPos = (int) pos.getStartPosition(cu, node.getBody());
-            int endPos = (int) pos.getEndPosition(cu, node.getBody());
+            int startPos = (int) pos.getStartPosition(node.getBody());
+            int endPos = (int) pos.getEndPosition(node.getBody());
             if (methodName.equals(node.getName().toString()) && startPos >=0) {
                 try {
                     result = Pair.<DocPositionRegion,MethodTree>of(new DocPositionRegion(doc,startPos,endPos),node);

@@ -72,7 +72,7 @@ class MethodArgumentsScanner extends ErrorAwareTreeScanner<MethodArgument[], Obj
     
     @Override
     public MethodArgument[] visitMethodInvocation(MethodInvocationTree node, Object p) {
-        if (!methodInvocation || offset != positions.getEndPosition(tree, node.getMethodSelect())) {
+        if (!methodInvocation || offset != positions.getEndPosition(node.getMethodSelect())) {
             return super.visitMethodInvocation(node, p);
             /*MethodArgument[] r = scan(node.getTypeArguments(), p);
             r = scanAndReduce(node.getMethodSelect(), p, r);
@@ -93,7 +93,7 @@ class MethodArgumentsScanner extends ErrorAwareTreeScanner<MethodArgument[], Obj
     
     @Override
     public MethodArgument[] visitNewClass(NewClassTree node, Object p) {
-        if (!methodInvocation || offset != positions.getEndPosition(tree, node.getIdentifier())) {
+        if (!methodInvocation || offset != positions.getEndPosition(node.getIdentifier())) {
             return super.visitNewClass(node, p);
         }
         List<? extends ExpressionTree> args = node.getArguments();
@@ -104,8 +104,8 @@ class MethodArgumentsScanner extends ErrorAwareTreeScanner<MethodArgument[], Obj
 
     @Override
     public MethodArgument[] visitMethod(MethodTree node, Object p) {
-        long startMethod = positions.getStartPosition(tree, node);
-        long endMethod = positions.getEndPosition(tree, node);
+        long startMethod = positions.getStartPosition(node);
+        long endMethod = positions.getEndPosition(node);
         if (methodInvocation || startMethod == Diagnostic.NOPOS || endMethod == Diagnostic.NOPOS ||
                                 !(offset >= lineMap.getLineNumber(startMethod) &&
                                  (offset <= lineMap.getLineNumber(endMethod)))) {
@@ -117,8 +117,8 @@ class MethodArgumentsScanner extends ErrorAwareTreeScanner<MethodArgument[], Obj
         arguments = new MethodArgument[n];
         for (int i = 0; i < n; i++) {
             VariableTree var = args.get(i);
-            long startOffset = positions.getStartPosition(tree, var);
-            long endOffset = positions.getEndPosition(tree, var);
+            long startOffset = positions.getStartPosition(var);
+            long endOffset = positions.getEndPosition(var);
             if (startOffset == Diagnostic.NOPOS || endOffset == Diagnostic.NOPOS) {
                 return new MethodArgument[] {};
             }
@@ -146,8 +146,8 @@ class MethodArgumentsScanner extends ErrorAwareTreeScanner<MethodArgument[], Obj
         MethodArgument[] arguments = new MethodArgument[n];
         for (int i = 0; i < n; i++) {
             Tree var = args.get(i);
-            long startOffset = positions.getStartPosition(tree, var);
-            long endOffset = positions.getEndPosition(tree, var);
+            long startOffset = positions.getStartPosition(var);
+            long endOffset = positions.getEndPosition(var);
             if (startOffset == Diagnostic.NOPOS || endOffset == Diagnostic.NOPOS) {
                 return new MethodArgument[] {};
             }

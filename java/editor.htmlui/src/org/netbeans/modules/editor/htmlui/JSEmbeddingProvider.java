@@ -108,8 +108,8 @@ public final class JSEmbeddingProvider extends JavaParserResultTask<Parser.Resul
                     final TokenSequence<?> seq = tk.tokenSequence(java);
                     if (seq != null) {
                         for (LiteralTree lt : result) {
-                            final int start = (int) sp.getStartPosition(cu, lt);
-                            final int end = (int) sp.getEndPosition(cu, lt);
+                            final int start = (int) sp.getStartPosition(lt);
+                            final int end = (int) sp.getEndPosition(lt);
                             seq.move(start);
                             while (seq.moveNext() && seq.offset() < end) {
                                 if (

@@ -318,8 +318,8 @@ public class Utils {
     }
 
     public static Range treeRange(CompilationInfo info, Tree tree) {
-        long start = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
-        long end   = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree);
+        long start = info.getTrees().getSourcePositions().getStartPosition(tree);
+        long end   = info.getTrees().getSourcePositions().getEndPosition(tree);
         if (end == (-1)) {
             end = start;
         }

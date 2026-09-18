@@ -322,8 +322,8 @@ implements PropertyChangeListener {
                         Tree tree = path.getLeaf();
                         if (tree.equals(lastTree)) continue;
 
-                        long startOffs = positions.getStartPosition(compUnit, tree);
-                        long endOffs = positions.getEndPosition(compUnit, tree);
+                        long startOffs = positions.getStartPosition(tree);
+                        long endOffs = positions.getEndPosition(tree);
                         if (outerTree == null && startOffs < rowStartOffset) {
                             outerTree = tree;
                             outerTreePath = path;
@@ -360,13 +360,13 @@ implements PropertyChangeListener {
 
                     if (execTree == null || !isBreakable(execTreePath)) {
                         if (outerTree != null && isBreakable(outerTreePath)) {
-                            long offs = positions.getStartPosition(compUnit, outerTree);
+                            long offs = positions.getStartPosition(outerTree);
                             result[0] = LineDocumentUtils.getLineIndex(doc, (int)offs) + 1;
                         } else {
                             if (outerTree instanceof BlockTree) {
                                 Tree pTree = outerTreePath.getParentPath().getLeaf();
                                 if (pTree instanceof MethodTree) {
-                                    long endOffs = positions.getEndPosition(compUnit, pTree);
+                                    long endOffs = positions.getEndPosition(pTree);
                                     if (endOffs <= rowEndOffset) {
                                         return; // i.e. result[0] is original lineNumber - allow toggle breakpoint at method end
                                     }

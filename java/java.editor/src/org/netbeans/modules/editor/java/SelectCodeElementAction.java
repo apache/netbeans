@@ -227,8 +227,8 @@ final class SelectCodeElementAction extends BaseAction {
 	    final TreeUtilities treeUtilities = ci.getTreeUtilities();
             TreePath tp = treeUtilities.pathFor(caretPos);
             for (Tree tree: tp) {
-                int startPos = (int)sp.getStartPosition(tp.getCompilationUnit(), tree);
-                int endPos = (int)sp.getEndPosition(tp.getCompilationUnit(), tree);
+                int startPos = (int)sp.getStartPosition(tree);
+                int endPos = (int)sp.getEndPosition(tree);
                 positions.add(new SelectionInfo(startPos, endPos));
 
                 //support content selection within the string literal too

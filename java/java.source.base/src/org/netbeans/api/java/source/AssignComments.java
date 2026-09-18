@@ -337,7 +337,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
     }
 
     private void lookForInline(TokenSequence<JavaTokenId> seq, Tree tree) {
-        seq.move((int) positions.getEndPosition(unit, tree));
+        seq.move((int) positions.getEndPosition(tree));
         CommentsCollection result = new CommentsCollection();
         while (seq.moveNext()) {
             if (seq.token().id() == JavaTokenId.WHITESPACE) {
@@ -403,7 +403,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
     }
     
     private int countIndent(TokenSequence<JavaTokenId> seq, Tree tree) {
-        int st = (int)positions.getStartPosition(unit, tree);
+        int st = (int)positions.getStartPosition(tree);
         int save = seq.offset();
         int nl = -1;
         seq.move(st);
@@ -434,7 +434,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
     
     private void lookForTrailing(TokenSequence<JavaTokenId> seq, Tree tree) {
         //TODO: [RKo] This does not work correctly... need improvemetns.
-        seq.move((int) positions.getEndPosition(unit, tree));
+        seq.move((int) positions.getEndPosition(tree));
         List<TrailingCommentsDataHolder> comments = new LinkedList<TrailingCommentsDataHolder>();
         int maxLines = 0;
         int newlines = 0;
@@ -488,7 +488,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
                     TreePath tp = info.getTreeUtilities().pathFor(seq.offset() + 1);
                     // traverse up to last parent that claims the position
                     while (tp.getParentPath() != null && 
-                           positions.getStartPosition(info.getCompilationUnit(), tp.getParentPath().getLeaf()) == seq.offset()) {
+                           positions.getStartPosition(tp.getParentPath().getLeaf()) == seq.offset()) {
                         tp = tp.getParentPath();
                     }
                     if (tp != null && JAVADOC_KINDS.contains(tp.getLeaf().getKind())) {
@@ -535,7 +535,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
                 tokenIndexAlreadyAdded = idx;
             }
         } else {
-            int end = (int) positions.getEndPosition(unit, tree);
+            int end = (int) positions.getEndPosition(tree);
             seq.move(end); seq.moveNext();
         }
     }
@@ -624,7 +624,7 @@ class AssignComments extends ErrorAwareTreeScanner<Void, Void> {
      * @return position where to start 
      */
     private int findInterestingStart(JCTree tree) {
-        int pos = (int) positions.getStartPosition(unit, tree);
+        int pos = (int) positions.getStartPosition(tree);
         if (pos <= 0) return 0;
         seq.move(pos);
         boolean previousSucceeded;

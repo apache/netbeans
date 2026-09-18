@@ -363,7 +363,7 @@ public class Tiny {
     }
     
     private static int indent(HintContext ctx, Tree t) {
-        long start = ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getInfo().getCompilationUnit(), t);
+        long start = ctx.getInfo().getTrees().getSourcePositions().getStartPosition(t);
         LineMap lm = ctx.getInfo().getCompilationUnit().getLineMap();
         // see defect #240493; incorrect data may be provided by Lombok processing.
         if (start == -1) {

@@ -67,8 +67,8 @@ public class ImplementMethods {
         Tree found = null;
         
         for (Tree cand : candidate) {
-            if (   ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getInfo().getCompilationUnit(), cand) <= ctx.getCaretLocation()
-                && ctx.getCaretLocation() <= ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getInfo().getCompilationUnit(), cand)) {
+            if (   ctx.getInfo().getTrees().getSourcePositions().getStartPosition(cand) <= ctx.getCaretLocation()
+                && ctx.getCaretLocation() <= ctx.getInfo().getTrees().getSourcePositions().getEndPosition(cand)) {
                 found = cand;
                 break;
             }

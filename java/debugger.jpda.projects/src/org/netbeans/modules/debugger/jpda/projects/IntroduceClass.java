@@ -78,7 +78,7 @@ class IntroduceClass {
         }
         CompilationUnitTree compilationUnit = treePath.getCompilationUnit();
         SourcePositions sourcePositions = info.getTrees().getSourcePositions();
-        long endPosition = sourcePositions.getEndPosition(compilationUnit, method.getLeaf());
+        long endPosition = sourcePositions.getEndPosition(method.getLeaf());
         if (TreeUtilities.CLASS_TREE_KINDS.contains(method.getLeaf().getKind())) {
             // We're in a class, generate before it's end:
             this.classGeneratePosition = endPosition - 1;
@@ -102,7 +102,7 @@ class IntroduceClass {
                         ExecutableType eType = (ExecutableType) type;
                         type = eType.getReturnType();
                         // Check that it ends with a semicolon:
-                        long lsEnd = sourcePositions.getEndPosition(compilationUnit, lastStatement);
+                        long lsEnd = sourcePositions.getEndPosition(lastStatement);
                         if (lsEnd < 0) {
                             lsEnd = this.snippetCode.length() - 1;
                         } else {
@@ -119,7 +119,7 @@ class IntroduceClass {
             if (type != null && TypeKind.VOID != type.getKind()) {
                 returnType = type.toString();
                 // Prepend a return statement:
-                long lsBegin = sourcePositions.getStartPosition(compilationUnit, lastStatement);
+                long lsBegin = sourcePositions.getStartPosition(lastStatement);
                 // Make it relative to the beginning of the code snippet:
                 lsBegin -= codeOffset;
                 StringBuilder code = new StringBuilder(this.snippetCode)

@@ -322,7 +322,7 @@ public final class CreateElementUtilities {
             
             if (doc != null) {//XXX
                 int bodyStart = Utilities.findBodyStart(info, parent.getLeaf(), info.getCompilationUnit(), info.getTrees().getSourcePositions(), doc);
-                int bodyEnd   = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), parent.getLeaf());
+                int bodyEnd   = (int) info.getTrees().getSourcePositions().getEndPosition(parent.getLeaf());
 
                 types.add(ElementKind.PARAMETER);
                 types.add(ElementKind.LOCAL_VARIABLE);

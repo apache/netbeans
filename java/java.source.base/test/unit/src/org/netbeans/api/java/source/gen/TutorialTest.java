@@ -359,8 +359,8 @@ public class TutorialTest extends GeneratorTestBase {
                 // get SourcePositions instance for your working copy and
                 // fetch out start and end position.
                 SourcePositions sp = workingCopy.getTrees().getSourcePositions();
-                int start = (int) sp.getStartPosition(cut, body);
-                int end = (int) sp.getEndPosition(cut, body);
+                int start = (int) sp.getStartPosition(body);
+                int end = (int) sp.getEndPosition(body);
                 // get body text from source text
                 String bodyText = workingCopy.getText().substring(start, end);
                 MethodTree modified = make.Method(

@@ -413,7 +413,7 @@ public final class  UiUtils {
                 Tree elTree = v.declTree;
                 
                 if (elTree != null)
-                    result[0] = (int)info.getTrees().getSourcePositions().getStartPosition(cu, elTree);
+                    result[0] = (int)info.getTrees().getSourcePositions().getStartPosition(elTree);
             }
         },true);
         return result[0];

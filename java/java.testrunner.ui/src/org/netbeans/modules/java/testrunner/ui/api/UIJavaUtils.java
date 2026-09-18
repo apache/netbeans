@@ -136,7 +136,7 @@ public final class UIJavaUtils {
 						List<? extends ExecutableElement> methodElements = ElementFilter.methodsIn(element.getEnclosedElements());
 						for (Element child : methodElements) {
 						    if (node.getTestcase().getName().endsWith(child.getSimpleName().toString())) {
-							long pos = trees.getSourcePositions().getStartPosition(compilationUnitTree, trees.getTree(child));
+							long pos = trees.getSourcePositions().getStartPosition(trees.getTree(child));
 							line[0] = compilationUnitTree.getLineMap().getLineNumber(pos);
 							break;
 						    }

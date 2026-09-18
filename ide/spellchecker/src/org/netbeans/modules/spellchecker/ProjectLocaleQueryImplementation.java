@@ -23,23 +23,25 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.spellchecker.spi.LocaleQueryImplementation;
 import org.openide.filesystems.FileObject;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Jan Lahoda
  */
-@org.openide.util.lookup.ServiceProvider(service=org.netbeans.modules.spellchecker.spi.LocaleQueryImplementation.class, position=1000)
+@ServiceProvider(service=LocaleQueryImplementation.class, position=1000)
 public class ProjectLocaleQueryImplementation implements LocaleQueryImplementation {
 
     /** Creates a new instance of ProjectLocaleQueryImplementation */
     public ProjectLocaleQueryImplementation() {
     }
 
+    @Override
     public Locale findLocale(FileObject file) {
         Project p = FileOwnerQuery.getOwner(file);
         
         if (p != null) {
-            LocaleQueryImplementation i = (LocaleQueryImplementation) p.getLookup().lookup(LocaleQueryImplementation.class);
+            LocaleQueryImplementation i = p.getLookup().lookup(LocaleQueryImplementation.class);
             
             if (i != null) {
                 return i.findLocale(file);

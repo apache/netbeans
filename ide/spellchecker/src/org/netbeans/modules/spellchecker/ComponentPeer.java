@@ -59,7 +59,6 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Highlighter;
-import javax.swing.text.Highlighter.HighlightPainter;
 import javax.swing.text.JTextComponent;
 import javax.swing.text.Position;
 import org.netbeans.api.editor.mimelookup.MimeLookup;
@@ -97,18 +96,22 @@ import org.openide.util.WeakListeners;
  *
  * @author Jan Lahoda
  */
-public class ComponentPeer implements PropertyChangeListener, DocumentListener, ChangeListener, CaretListener, AncestorListener {
+public final class ComponentPeer implements PropertyChangeListener, DocumentListener, ChangeListener, CaretListener, AncestorListener {
+
+    private record Range(int start, int end) {}
 
     private static final Logger LOG = Logger.getLogger(ComponentPeer.class.getName());
-    
+
     private DocumentListener weakDocL;
-    
+    private final static String SPELLCHECKER_ERROR_HIGHLIGHTS = "spellchecker-error-highlights"; //NOI18N
+
     public static void assureInstalled(JTextComponent pane) {
         if (pane.getClientProperty(ComponentPeer.class) == null) {
             pane.putClientProperty(ComponentPeer.class, new ComponentPeer(pane));
         }
     }
 
+    @Override
     public synchronized void propertyChange(PropertyChangeEvent evt) {
         if (document != pane.getDocument()) {
             if (document != null) {
@@ -130,45 +133,18 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
     private Document document;
 
     private static final RequestProcessor WORKER = new RequestProcessor("Spellchecker", 1, false, false);
-    
-    private final RequestProcessor.Task checker = WORKER.create(new Runnable() {
-        public void run() {
-            try {
-                process();
-            } catch (BadLocationException e) {
-                Exceptions.printStackTrace(e);
-            }
-        }
-    });
 
-    private final RequestProcessor.Task updateVisibleSpans = WORKER.create(new Runnable() {
-        public void run() {
-            try {
-                SwingUtilities.invokeAndWait(new Runnable() {
-                    public void run() {
-                        updateCurrentVisibleSpan();
-                        reschedule();
-                    }
-                });
-            } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (InvocationTargetException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-    });
+    private final RequestProcessor.Task checker = WORKER.create(this::process);
 
-    private final RequestProcessor.Task computeHint = WORKER.create(new Runnable() {
-        public void run() {
-            computeHint();
-        }
-    });
-    
+    private final RequestProcessor.Task updateVisibleSpans = WORKER.create(this::updateVisibleSpan);
+
+    private final RequestProcessor.Task computeHint = WORKER.create(this::computeHint);
+
     public void reschedule() {
         cancel();
         checker.schedule(100);
     }
-    
+
     private synchronized Document getDocument() {
         return document;
     }
@@ -176,7 +152,6 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
     /** Creates a new instance of ComponentPeer */
     private ComponentPeer(JTextComponent pane) {
         this.pane = pane;
-//        reschedule();
         pane.addPropertyChangeListener(this);
         pane.addCaretListener(this);
         pane.addAncestorListener(this);
@@ -186,57 +161,56 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
 
         ancestorAdded(null);
     }
-    
+
     private Component parentWithListener;
 
-    private int[] computeVisibleSpan() {
+    private Range computeVisibleSpan() {
         Component parent = pane.getParent();
-        
+
         if (parent instanceof JLayeredPane) {
             parent = parent.getParent();
         }
 
-        if (parent instanceof JViewport) {
-            JViewport vp = (JViewport) parent;
+        if (parent instanceof JViewport vp) {
 
             Point start = vp.getViewPosition();
             Dimension size = vp.getExtentSize();
             Point end = new Point((int) (start.getX() + size.getWidth()), (int) (start.getY() + size.getHeight()));
 
-            int startPosition = pane.viewToModel(start);
-            int endPosition = pane.viewToModel(end);
+            int startPosition = pane.viewToModel2D(start);
+            int endPosition = pane.viewToModel2D(end);
 
             if (parentWithListener != vp) {
                 vp.addChangeListener(WeakListeners.change(this, vp));
                 parentWithListener = vp;
             }
-            return new int[] {startPosition, endPosition};
+            return new Range(startPosition, endPosition);
         }
 
-        return new int[] {0, pane.getDocument().getLength()};
+        return new Range(0, pane.getDocument().getLength());
     }
 
     private void updateCurrentVisibleSpan() {
         //check possible change in visible rect:
-        int[] newSpan = computeVisibleSpan();
-        
+        Range newSpan = computeVisibleSpan();
+
         synchronized (this) {
-            if (currentVisibleRange == null || currentVisibleRange[0] != newSpan[0] || currentVisibleRange[1] != newSpan[1]) {
+            if (!newSpan.equals(currentVisibleRange)) {
                 currentVisibleRange = newSpan;
                 reschedule();
             }
         }
     }
 
-    private int[] currentVisibleRange;
+    private Range currentVisibleRange;
 
-    private synchronized int[] getCurrentVisibleSpan() {
+    private synchronized Range getCurrentVisibleSpan() {
         return currentVisibleRange;
     }
 
     private final Object tokenListLock = new Object();
     private TokenList tokenList;
-    
+
     private TokenList getTokenList(Document doc) {
         synchronized(tokenListLock) {
             if (tokenList == null) {
@@ -249,22 +223,22 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
             return tokenList;
         }
     }
-    
-    private void process() throws BadLocationException {
+
+    private void process() {
         final Document _document = getDocument();
-        
+
         if (_document.getLength() == 0)
             return ;
-        
-        final List<int[]> localHighlights = new LinkedList<int[]>();
-        
+
+        List<Range> localHighlights = new LinkedList<>();
+
         long startTime = System.currentTimeMillis();
-        
+
         try {
             resume();
-            
+
             final TokenList _tokenList = getTokenList(_document);
-            
+
             if (_tokenList == null) {
                 //nothing to do:
                 return ;
@@ -274,139 +248,128 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
 
             if (d == null)
                 return ;
-            
-            final int[] span = getCurrentVisibleSpan();
+
+            Range span = getCurrentVisibleSpan();
 
             if (span == null) {
                 //not initialized yet:
                 doUpdateCurrentVisibleSpan();
                 return ;
             }
-            
-            if (span[0] == (-1)) {
+
+            if (span.start == -1) {
                 return ;
             }
 
-            final boolean[] cont = new boolean [1];
-            
-            _document.render(new Runnable() {
-                public void run() {
-                    if (isCanceled()) {
-                        cont[0] = false;
-                        return;
-                    } else {
-                        _tokenList.setStartOffset(span[0]);
-                        cont[0] = true;
-                    }
+            AtomicBoolean cont = new AtomicBoolean();
+
+            _document.render(() -> {
+                if (isCanceled()) {
+                    cont.set(false);;
+                    return;
+                } else {
+                    _tokenList.setStartOffset(span.start);
+                    cont.set(true);
                 }
             });
-            
-            if (!cont[0]) {
+
+            if (!cont.get()) {
                 return ;
             }
 
             final CharSequence[] word = new CharSequence[1];
-            
+
             while (!isCanceled()) {
-                _document.render(new Runnable() {
-                    public void run() {
-                        if (isCanceled()) {
-                            cont[0] = false;
+                _document.render(() -> {
+                    if (isCanceled()) {
+                        cont.set(false);
+                        return ;
+                    }
+                    cont.set(_tokenList.nextWord());
+                    if (cont.get()) {
+                        if (_tokenList.getCurrentWordStartOffset() > span.end) {
+                            cont.set(false);
                             return ;
                         }
-                        
-                        if (cont[0] = _tokenList.nextWord()) {
-                            if (_tokenList.getCurrentWordStartOffset() > span[1]) {
-                                cont[0] = false;
-                                return ;
-                            }
-                            
-                            word[0] = _tokenList.getCurrentWordText();
-                        }
+
+                        word[0] = _tokenList.getCurrentWordText();
                     }
                 });
-                
-                if (!cont[0])
+
+                if (!cont.get())
                     break;
-                
+
                 LOG.log(Level.FINER, "going to test word: {0}", word[0]);
-                
+
                 if (word[0].length() < 2) {
                     //ignore single letter words
                     LOG.log(Level.FINER, "too short");
                     continue;
                 }
-                
+
                 ValidityType validity = d.validateWord(word[0]);
-                
+
                 LOG.log(Level.FINER, "validity: {0}", validity);
 
                 switch (validity) {
                     case PREFIX_OF_VALID:
                     case BLACKLISTED:
                     case INVALID:
-                        _document.render(new Runnable() {
-                            public void run() {
-                                if (!isCanceled()) {
-                                    localHighlights.add(new int[] {_tokenList.getCurrentWordStartOffset(), _tokenList.getCurrentWordStartOffset() + word[0].length()});
-                                }
+                        _document.render(() -> {
+                            if (!isCanceled()) {
+                                localHighlights.add(new Range(_tokenList.getCurrentWordStartOffset(), _tokenList.getCurrentWordStartOffset() + word[0].length()));
                             }
-                        });
+                });
                 }
             }
         } finally {
             if (!isCanceled()) {
                 if (!(pane instanceof JEditorPane)) {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            _document.render(new Runnable() {
-                                public void run() {
-                                    if (isCanceled()) {
-                                        return;
-                                    }
-                                    try {
-                                        Highlighter h = pane.getHighlighter();
-
-                                        if (h != null) {
-                                            List<Object> oldTags = (List<Object>) pane.getClientProperty(ErrorHighlightPainter.class);
-
-                                            if (oldTags != null) {
-                                                for (Object tag : oldTags) {
-                                                    h.removeHighlight(tag);
-                                                }
-                                            }
-
-                                            List<Object> newTags = new LinkedList<Object>();
-                                            for (int[] current : localHighlights) {
-                                                newTags.add(h.addHighlight(current[0], current[1], new ErrorHighlightPainter()));
-                                            }
-
-                                            pane.putClientProperty(ErrorHighlightPainter.class, newTags);
-                                        }
-                                    } catch (BadLocationException e) {
-                                        Exceptions.printStackTrace(e);
-                                    }
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    final OffsetsBag paneBag = SpellcheckerHighlightLayerFactory.getBag(pane);
-                    _document.render(new Runnable() {
-                        public void run() {
+                    SwingUtilities.invokeLater(() -> {
+                        _document.render(() -> {
                             if (isCanceled()) {
                                 return;
                             }
-                            OffsetsBag localHighlightsBag = new OffsetsBag(_document);
-
-                            for (int[] current : localHighlights) {
-                                localHighlightsBag.addHighlight(current[0], current[1], ERROR);
+                            try {
+                                Highlighter h = pane.getHighlighter();
+                                
+                                if (h != null) {
+                                    @SuppressWarnings("unchecked")
+                                    List<Object> oldTags = (List<Object>) pane.getClientProperty(SPELLCHECKER_ERROR_HIGHLIGHTS);
+                                    
+                                    if (oldTags != null) {
+                                        for (Object tag : oldTags) {
+                                            h.removeHighlight(tag);
+                                        }
+                                    }
+                                    
+                                    List<Object> newTags = new LinkedList<>();
+                                    for (Range current : localHighlights) {
+                                        newTags.add(h.addHighlight(current.start, current.end, this::paintErrorHighlights));
+                                    }
+                                    
+                                    pane.putClientProperty(SPELLCHECKER_ERROR_HIGHLIGHTS, newTags);
+                                }
+                            } catch (BadLocationException e) {
+                                Exceptions.printStackTrace(e);
                             }
-                            paneBag.setHighlights(localHighlightsBag);
+                        });
+                    });
+                } else {
+                    final OffsetsBag paneBag = SpellcheckerHighlightLayerFactory.getBag(pane);
+                    _document.render(() -> {
+                        if (isCanceled()) {
+                            return;
                         }
+                        OffsetsBag localHighlightsBag = new OffsetsBag(_document);
+                        
+                        for (Range current : localHighlights) {
+                            localHighlightsBag.addHighlight(current.start, current.end, ERROR);
+                        }
+                        paneBag.setHighlights(localHighlightsBag);
                     });
                 }
-                
+
                 FileObject file = NbEditorUtilities.getFileObject(_document);
 
                 if (file != null) {
@@ -418,43 +381,36 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
     }
 
     private static Set<Document> knownDocuments = Collections.newSetFromMap(new WeakHashMap<>());
-    private static Map<Locale, DictionaryImpl> locale2UsersLocalDictionary = new HashMap<Locale, DictionaryImpl>();
-    private static Map<Project, Reference<DictionaryImpl>> project2Reference = new WeakHashMap<Project, Reference<DictionaryImpl>>();
-    
+    private static Map<Locale, DictionaryImpl> locale2UsersLocalDictionary = new HashMap<>();
+    private static Map<Project, Reference<DictionaryImpl>> project2Reference = new WeakHashMap<>();
+
     public static synchronized DictionaryImpl getUsersLocalDictionary(Locale locale) {
-        DictionaryImpl d = locale2UsersLocalDictionary.get(locale);
-        
-        if (d != null)
-            return d;
-        
-        File cache = new File(Places.getUserDirectory(), "private-dictionary-" + locale.toString());
-        
-        locale2UsersLocalDictionary.put(locale, d = new DictionaryImpl(cache, locale));
-        
-        return d;
+        return locale2UsersLocalDictionary.computeIfAbsent(locale, (l) ->
+                new DictionaryImpl(new File(Places.getUserDirectory(), "private-dictionary-" + l), l)
+        );
     }
-    
+
     public static synchronized DictionaryImpl getProjectDictionary(Project p, Locale locale) {
         Reference<DictionaryImpl> r = project2Reference.get(p);
         DictionaryImpl d = r != null ? r.get() : null;
-        
+
         if (d == null) {
             AuxiliaryConfiguration ac = ProjectUtils.getAuxiliaryConfiguration(p);
-            project2Reference.put(p, new WeakReference<DictionaryImpl>(d = new DictionaryImpl(p, ac, locale)));
+            project2Reference.put(p, new WeakReference<>(d = new DictionaryImpl(p, ac, locale)));
         }
-        
+
         return d;
     }
-    
+
     public static synchronized Dictionary getDictionary(Document doc) {
         Dictionary result = (Dictionary) doc.getProperty(CompoundDictionary.class);
-        
+
         if (result != null) {
             return result;
         }
-        
+
         Locale locale;
-        
+
         FileObject file = NbEditorUtilities.getFileObject(doc);
 
         if (file != null) {
@@ -462,20 +418,20 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
         } else {
             locale = DefaultLocaleQueryImplementation.getDefaultLocale();
         }
-        
+
         if (locale == null) {
             locale = Locale.getDefault();
         }
-        
+
         Dictionary d = ACCESSOR.lookupDictionary(locale);
-        
+
         if (d == null)
             return null; //XXX
-        
-        List<Dictionary> dictionaries = new LinkedList<Dictionary>();
-        
+
+        List<Dictionary> dictionaries = new LinkedList<>();
+
         dictionaries.add(getUsersLocalDictionary(locale));
-        
+
         if (file != null) {
             Project p = FileOwnerQuery.getOwner(file);
 
@@ -487,14 +443,14 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
                 }
             }
         }
-        
+
         dictionaries.add(d);
-        
-        result = CompoundDictionary.create(dictionaries.toArray(new Dictionary[0]));
+
+        result = new CompoundDictionary(dictionaries);
 
         doc.putProperty(CompoundDictionary.class, result);
         knownDocuments.add(doc);
-        
+
         return result;
     }
 
@@ -521,14 +477,17 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
 
     private static final AttributeSet ERROR = AttributesUtilities.createImmutable(EditorStyleConstants.WaveUnderlineColor, Color.RED, EditorStyleConstants.Tooltip, NbBundle.getMessage(ComponentPeer.class, "TP_MisspelledWord"));
 
+    @Override
     public void insertUpdate(DocumentEvent e) {
         documentUpdate();
     }
 
+    @Override
     public void removeUpdate(DocumentEvent e) {
         documentUpdate();
     }
 
+    @Override
     public void changedUpdate(DocumentEvent e) {
     }
 
@@ -536,7 +495,7 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
         doUpdateCurrentVisibleSpan();
         cancel();
     }
-    
+
     private void doUpdateCurrentVisibleSpan() {
         //#156490: updateCurrentVisibleSpan invokes viewToModel, which may throw StateInvariantError
         //if the starting position of view disappeared from the document in the current change (before the views are adjusted)
@@ -544,6 +503,7 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
         updateVisibleSpans.schedule(250);
     }
 
+    @Override
     public void stateChanged(ChangeEvent e) {
         if (e.getSource() == tokenList) {
             reschedule();
@@ -551,19 +511,31 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
             doUpdateCurrentVisibleSpan();
         }
     }
-    
+
+    @Override
     public void caretUpdate(CaretEvent e) {
         synchronized (this) {
             lastCaretPosition = e.getDot();
         }
-        
+
         LOG.fine("scheduling hints computation");
-        
+
         computeHint.schedule(100);
     }
-    
+
     private int lastCaretPosition = -1;
-            
+
+    private void updateVisibleSpan() {
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                updateCurrentVisibleSpan();
+                reschedule();
+            });
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Exceptions.printStackTrace(ex);
+        }        
+    }
+
     private void computeHint() {
         LOG.entering(ComponentPeer.class.getName(), "computeHint");
 
@@ -578,45 +550,43 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
         }
 
         final Dictionary d = ComponentPeer.getDictionary(_document);
-        
+
         if (d == null) {
             LOG.fine("dictionary == null");
             LOG.exiting(ComponentPeer.class.getName(), "computeHint");
             return ;
         }
-        
+
         final int[] lastCaretPositionCopy = new int[1];
         final Position[] span = new Position[2];
         final CharSequence[]   word = new CharSequence[1];
-        
+
         synchronized (this) {
             lastCaretPositionCopy[0] = lastCaretPosition;
         }
-        
-        _document.render(new Runnable() {
-            public void run() {
-                LOG.log(Level.FINE, "lastCaretPosition={0}", lastCaretPositionCopy[0]);
-                l.setStartOffset(lastCaretPositionCopy[0]);
-                
-                if (!l.nextWord()) {
-                    LOG.log(Level.FINE, "l.nextWord() == false");
-                    return ;
-                }
-                
-                int currentWSO = l.getCurrentWordStartOffset();
-                CharSequence w = l.getCurrentWordText();
-                int length     = w.length();
-                
-                LOG.log(Level.FINE, "currentWSO={0}, w={1}, length={2}", new Object[] {currentWSO, w, length});
-                
-                if (currentWSO <= lastCaretPositionCopy[0] && (currentWSO + length) >= lastCaretPositionCopy[0]) {
-                    try {
-                        span[0] = _document.createPosition(currentWSO);
-                        span[1] = _document.createPosition(currentWSO + length);
-                        word[0] = w;
-                    } catch (BadLocationException e) {
-                        LOG.log(Level.INFO, null, e);
-                    }
+
+        _document.render(() -> {
+            LOG.log(Level.FINE, "lastCaretPosition={0}", lastCaretPositionCopy[0]);
+            l.setStartOffset(lastCaretPositionCopy[0]);
+
+            if (!l.nextWord()) {
+                LOG.log(Level.FINE, "l.nextWord() == false");
+                return ;
+            }
+
+            int currentWSO = l.getCurrentWordStartOffset();
+            CharSequence w = l.getCurrentWordText();
+            int length     = w.length();
+
+            LOG.log(Level.FINE, "currentWSO={0}, w={1}, length={2}", new Object[] {currentWSO, w, length});
+
+            if (currentWSO <= lastCaretPositionCopy[0] && (currentWSO + length) >= lastCaretPositionCopy[0]) {
+                try {
+                    span[0] = _document.createPosition(currentWSO);
+                    span[1] = _document.createPosition(currentWSO + length);
+                    word[0] = w;
+                } catch (BadLocationException e) {
+                    LOG.log(Level.INFO, null, e);
                 }
             }
         });
@@ -628,38 +598,38 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
                 span[0] = span[1] = null;
             }
         }
-        
-        List<Fix> result = new ArrayList<Fix>();
-        
+
+        List<Fix> result = new ArrayList<>();
+
         LOG.log(Level.FINE, "word={0}", word[0]);
-        
+
         if (span[0] != null && span[1] != null) {
             String currentWord = word[0].toString();
-            
+
             for (String proposal : d.findProposals(currentWord)) {
                 result.add(new DictionaryBasedHint(currentWord, proposal, _document, span, "0" + currentWord));
             }
-            
+
             FileObject file = NbEditorUtilities.getFileObject(_document);
 
             if (file != null) {
                 Project p = FileOwnerQuery.getOwner(file);
                 Locale locale = LocaleQuery.findLocale(file);
-                
+
                 if (p != null) {
                     DictionaryImpl projectDictionary = getProjectDictionary(p, locale);
-                    
+
                     if (projectDictionary != null) {
                         String displayName = NbBundle.getMessage(ComponentPeer.class, "FIX_ToProjectDictionary");
                         result.add(new AddToDictionaryHint(this, projectDictionary, currentWord, displayName, "1" + currentWord));
                     }
                 }
-            
+
                 String displayName = NbBundle.getMessage(ComponentPeer.class, "FIX_ToPrivateDictionary");
 
                 result.add(new AddToDictionaryHint(this, getUsersLocalDictionary(locale), currentWord, displayName, "2" + currentWord));
             }
-            
+
             if (!result.isEmpty()) {
                 String displayName = NbBundle.getMessage(ComponentPeer.class, "ERR_MisspelledWord");
                 HintsController.setErrors(_document, ComponentPeer.class.getName(), Collections.singletonList(ErrorDescriptionFactory.createErrorDescription(Severity.HINT, displayName, result, _document, span[0], span[1])));
@@ -670,79 +640,76 @@ public class ComponentPeer implements PropertyChangeListener, DocumentListener, 
             HintsController.setErrors(_document, ComponentPeer.class.getName(), Collections.<ErrorDescription>emptyList());
         }
     }
-    
+
     public static LookupAccessor ACCESSOR = new LookupAccessor() {
+        @Override
         public Dictionary lookupDictionary(Locale locale) {
             for (DictionaryProvider p : Lookup.getDefault().lookupAll(DictionaryProvider.class)) {
                 Dictionary d = p.getDictionary(locale);
-                
+
                 if (d != null)
                     return d;
             }
-            
+
             return null;
         }
+
+        @Override
         public TokenList lookupTokenList(Document doc) {
             Object mimeTypeObj = doc.getProperty("mimeType");
-            String mimeType = "text/plain";
-            
-            if (mimeTypeObj instanceof String) {
-                mimeType = (String) mimeTypeObj;
-            }
-            
+            String mimeType = mimeTypeObj instanceof String s ? s : "text/plain";
+
             for (TokenListProvider p : MimeLookup.getLookup(MimePath.get(mimeType)).lookupAll(TokenListProvider.class)) {
                 TokenList l = p.findTokenList(doc);
-                
+
                 if (l != null)
                     return l;
             }
-            
+
             return null;
-            
+
         }
     };
 
+    @Override
     public void ancestorAdded(AncestorEvent event) {
         if (pane.getParent() != null)
             doUpdateCurrentVisibleSpan();
     }
 
+    @Override
     public void ancestorRemoved(AncestorEvent event) {}
 
+    @Override
     public void ancestorMoved(AncestorEvent event) {}
-    
-    private class ErrorHighlightPainter implements HighlightPainter {
-        private ErrorHighlightPainter() {
-        }
 
-        public void paint(Graphics g, int p0, int p1, Shape bounds, JTextComponent c) {
-            g.setColor(Color.RED);
-            
-            try {
-                Rectangle start = pane.modelToView(p0);
-                Rectangle end = pane.modelToView(p1);
+    private void paintErrorHighlights(Graphics g, int p0, int p1, Shape bounds, JTextComponent c) {
+        g.setColor(Color.RED);
 
-                if (start.x < 0) {
-                    LOG.log(Level.INFO, "#182545: negative view position: {0} for: {1}", new Object[] {start, p0});
-                    return;
-                }
+        try {
+            Rectangle start = pane.modelToView(p0);
+            Rectangle end = pane.modelToView(p1);
 
-                int waveLength = end.x + end.width - start.x;
-                if (waveLength > 0) {
-                    int[] wf = {0, 0, -1, -1};
-                    int[] xArray = new int[waveLength + 1];
-                    int[] yArray = new int[waveLength + 1];
-
-                    int yBase = (int) (start.y + start.height - 2);
-                    for (int i = 0; i <= waveLength; i++) {
-                        xArray[i] = start.x + i;
-                        yArray[i] = yBase + wf[xArray[i] % 4];
-                    }
-                    g.drawPolyline(xArray, yArray, waveLength);
-                }
-            } catch (BadLocationException e) {
-                Exceptions.printStackTrace(e);
+            if (start.x < 0) {
+                LOG.log(Level.INFO, "#182545: negative view position: {0} for: {1}", new Object[] {start, p0});
+                return;
             }
+
+            int waveLength = end.x + end.width - start.x;
+            if (waveLength > 0) {
+                int[] wf = {0, 0, -1, -1};
+                int[] xArray = new int[waveLength + 1];
+                int[] yArray = new int[waveLength + 1];
+
+                int yBase = start.y + start.height - 2;
+                for (int i = 0; i <= waveLength; i++) {
+                    xArray[i] = start.x + i;
+                    yArray[i] = yBase + wf[xArray[i] % 4];
+                }
+                g.drawPolyline(xArray, yArray, waveLength);
+            }
+        } catch (BadLocationException e) {
+            Exceptions.printStackTrace(e);
         }
     }
 

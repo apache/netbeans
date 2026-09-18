@@ -1096,6 +1096,63 @@
                 <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-UndoAction.instance"/>
             </file>
         </folder>
+        <folder name="VSCode">
+            <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.defaults.Bundle"/>
+            <file name="D-B.shadow">
+                <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-logical-tab-action.instance"/>
+            </file>
+            <file name="D-BACK_QUOTE.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/ShowTerminalTCAction.instance"/>
+            </file>
+            <file name="D-O.shadow">
+                <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-OpenProject.instance"/>
+            </file>
+            <file name="D-P.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-jumpto-file-FileSearchAction.instance"/>
+            </file>
+            <file name="D-S.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
+            </file>
+            <file name="D-S-F.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-search-FindInFilesAction.instance"/>
+            </file>
+            <file name="DS-E.shadow">
+                <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-logical-tab-action.instance"/>
+            </file>
+            <file name="DS-G.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-ide-ServicesTabAction.instance"/>
+            </file>
+            <file name="DS-H.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-search-ReplaceInFilesAction.instance"/>
+            </file>
+            <file name="DS-O.shadow">
+                <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-OpenProject.instance"/>
+            </file>
+            <file name="DS-P.shadow">
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-quicksearch-QuickSearchAction.instance"/>
+            </file>
+            <file name="F2.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+            </file>
+            <file name="F5.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-DebugMainProjectAction.instance"/>
+            </file>
+            <file name="F9.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>
+            </file>
+            <file name="F10.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOverAction.instance"/>
+            </file>
+            <file name="F11.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepIntoAction.instance"/>
+            </file>
+            <file name="S-F5.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-KillAction.instance"/>
+            </file>
+            <file name="S-F11.shadow">
+                <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOutAction.instance"/>
+            </file>
+        </folder>
         </folder>
         <folder name="Editors">
 
@@ -1187,6 +1244,14 @@
                     <folder name="Defaults">
                         <file name="org-netbeans-modules-defaults-keybindings.xml" url="Idea-keybindings.xml"/>
                         <file name="org-netbeans-modules-editor-keybindings-mac.xml" url="Idea-keybindings-mac.xml">
+                            <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
+                        </file>
+                    </folder>
+                </folder>
+                <folder name="VSCode">
+                    <folder name="Defaults">
+                        <file name="org-netbeans-modules-defaults-keybindings.xml" url="VSCode-keybindings.xml"/>
+                        <file name="org-netbeans-modules-editor-keybindings-mac.xml" url="VSCode-keybindings-mac.xml">
                             <attr name="nbeditor-settings-targetOS" stringvalue="OS_MAC"/>
                         </file>
                     </folder>

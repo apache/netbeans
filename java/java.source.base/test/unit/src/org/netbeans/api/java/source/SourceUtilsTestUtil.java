@@ -30,6 +30,10 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
 import org.junit.Assert;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -71,6 +75,9 @@ import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 import org.openide.util.lookup.ServiceProvider;
 import org.xml.sax.SAXException;
+
+import static junit.framework.TestCase.assertTrue;
+import org.netbeans.modules.java.source.indexing.JavaBinaryIndexer;
 
 /**
  *
@@ -446,6 +453,60 @@ public final class SourceUtilsTestUtil extends ProxyLookup {
         }                
         
     }
+
+    public static void compile(FileObject src, FileObject classes, String sourceLevel, String... extraOpts) throws IOException {
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        try (StandardJavaFileManager fm = compiler.getStandardFileManager(null, null, null)) {
+            List<File> sources = new ArrayList<>();
+
+            for (Enumeration<? extends FileObject> en = src.getChildren(true); en.hasMoreElements(); ) {
+                FileObject c = en.nextElement();
+
+                if (c.isData() && "text/x-java".equals(c.getMIMEType())) {
+                    sources.add(FileUtil.toFile(c));
+                }
+            }
+
+            Iterable<? extends JavaFileObject> sourceFileObjects = fm.getJavaFileObjectsFromFiles(sources);
+            List<String> options = new ArrayList<>();
+
+            options.addAll(List.of("--release", sourceLevel, "-d"));
+            options.addAll(List.of(FileUtil.toFile(classes).getAbsolutePath()));
+            options.addAll(List.of(extraOpts));
+
+            assertTrue(compiler.getTask(null, fm, null, options, null, sourceFileObjects).call());
+        }
+    }
+
+    public static FileObject writeFiles(FileObject src,
+                                  FileDescription... fileNameAndContent) throws Exception {
+        FileObject firstFile = null;
+
+        for (FileDescription fileDescription : fileNameAndContent) {
+            FileObject f = writeFile(src,
+                                     fileDescription.path(),
+                                     fileDescription.content());
+
+            if (firstFile == null) {
+                firstFile = f;
+            }
+        }
+
+        return firstFile;
+    }
+
+    public static FileObject writeFile(FileObject root,
+                                 String path,
+                                 String content) throws Exception {
+        FileObject file = FileUtil.createData(root, path);
+
+        TestUtilities.copyStringToFile(FileUtil.toFile(file), content);
+
+        return file;
+    }
+
+
+    public record FileDescription(String path, String content) {}
 
     @ServiceProvider(service=MimeDataProvider.class)
     public static final class JavacParserProvider implements MimeDataProvider {

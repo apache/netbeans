@@ -43,6 +43,7 @@ public class ComponentImpl extends PersistentObject implements Component,  Refre
     private Boolean createTag;
 
     private static final String DEFAULT_COMPONENT_NS = "http://xmlns.jcp.org/jsf/component"; //NOI18N
+    private static final String DEFAULT_COMPONENT_NS_JAKARTA = "jakarta.faces.component"; //NOI18N
 
     protected ComponentImpl(AnnotationModelHelper helper, TypeElement typeElement) {
         super(helper, typeElement);
@@ -90,9 +91,11 @@ public class ComponentImpl extends PersistentObject implements Component,  Refre
     public boolean refresh(TypeElement typeElement) {
         Map<String, ? extends AnnotationMirror> types = getHelper().getAnnotationsByType(
                 getHelper().getCompilationController().getElements().getAllAnnotationMirrors(typeElement));
+        boolean jakartaPackage = true;
         AnnotationMirror annotationMirror = types.get("jakarta.faces.component.FacesComponent"); //NOI18N
         if (annotationMirror == null) {
             annotationMirror = types.get("javax.faces.component.FacesComponent"); // NOI18N
+            jakartaPackage = false;
         }
         if (annotationMirror == null) {
             return false;
@@ -111,7 +114,7 @@ public class ComponentImpl extends PersistentObject implements Component,  Refre
         }
         namespace = parseResult.get("namespace", String.class);     //NOI18N
         if (namespace == null) {
-            namespace = DEFAULT_COMPONENT_NS;
+            namespace = jakartaPackage ? DEFAULT_COMPONENT_NS_JAKARTA : DEFAULT_COMPONENT_NS;
         }
         tagName = parseResult.get("tagName", String.class);         //NOI18N
         if (tagName == null) {

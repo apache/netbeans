@@ -40,6 +40,7 @@ import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.java.source.parsing.CachingArchiveProvider;
 import org.netbeans.modules.java.source.usages.ClassIndexImpl;
 import org.netbeans.modules.java.source.usages.ClassIndexManager;
+import org.netbeans.modules.parsing.api.indexing.IndexingManager;
 import org.netbeans.modules.parsing.impl.indexing.CacheFolder;
 import org.netbeans.modules.parsing.impl.indexing.SPIAccessor;
 import org.netbeans.modules.parsing.spi.indexing.Context;
@@ -317,10 +318,18 @@ public final class JavaIndex {
             @NonNull final URL root,
             final boolean testForInitialized) {
         assert root != null;
-        final ClassIndexImpl uq = ClassIndexManager.getDefault().getUsagesQuery(root, !testForInitialized);
-        return uq != null &&
-            (!testForInitialized || uq.getState() == ClassIndexImpl.State.INITIALIZED) &&
-            uq.getType() == ClassIndexImpl.Type.SOURCE;
+        ClassIndexImpl uq = ClassIndexManager.getDefault().getUsagesQuery(root, true);
+        if (uq == null || uq.getType() != ClassIndexImpl.Type.SOURCE) {
+            return false;
+        }
+        if (testForInitialized) {
+            if (uq.getState() == ClassIndexImpl.State.NEW) {
+                IndexingManager.getDefault().refreshIndex(root, null);
+            }
+            return uq.getState() == ClassIndexImpl.State.INITIALIZED;
+        } else {
+            return true;
+        }
     }
 
     public static boolean hasBinaryCache(

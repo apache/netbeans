@@ -22,6 +22,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +35,7 @@ import org.netbeans.api.java.source.TreePathHandle;
 import org.netbeans.modules.refactoring.api.Problem;
 import org.netbeans.modules.refactoring.api.RefactoringSession;
 import org.netbeans.modules.refactoring.api.RenameRefactoring;
+import static org.netbeans.modules.refactoring.java.test.RefactoringTestBase.writeFilesAndWaitForScan;
 import org.netbeans.modules.refactoring.java.ui.JavaRenameProperties;
 import org.netbeans.modules.refactoring.spi.impl.UndoManager;
 import org.openide.filesystems.FileObject;
@@ -48,6 +50,66 @@ public class RenameTest extends RefactoringTestBase {
     public RenameTest(String name) {
         super(name);
     }
+
+    public void testIssue9563() throws Exception {
+        String testCode = """
+                package t;
+                import java.util.Set;
+                import java.util.function.Consumer;
+                import java.util.Spliterator;
+
+                interface T|est extends Comparable<Test>, Iterable<Test>, Spliterator<Test>,Consumer<Test>, Cloneable { }
+                """;
+        TestInput splitCode = TestUtilities.splitCodeAndPos(testCode);
+        writeFilesAndWaitForScan(src,
+                new File("Test.java", splitCode.code()
+                ));
+
+        JavaRenameProperties props = new JavaRenameProperties();
+        performRename(src.getFileObject("Test.java"), splitCode.pos(), "NewName", props, true);
+        verifyContent(src,
+                new File("Test.java",
+                        """
+                package t;
+                import java.util.Set;
+                import java.util.function.Consumer;
+                import java.util.Spliterator;
+
+                interface NewName extends Comparable<NewName>,Iterable<NewName>,Spliterator<NewName>,Consumer<NewName>, Cloneable { }
+                """
+                )
+        );
+    }
+
+    /* Make sure non generic is handled properly. */
+    public void testIssue9563NoGeneric() throws Exception {
+        String testCode = """
+                package t;
+                import java.io.Serializable;
+                import java.util.RandomAccess;
+                
+                interface Te|st extends RandomAccess, Serializable, Cloneable { }
+                """;
+        TestInput splitCode = TestUtilities.splitCodeAndPos(testCode);
+        writeFilesAndWaitForScan(src,
+                new File("Test.java", splitCode.code()
+                ));
+
+        JavaRenameProperties props = new JavaRenameProperties();
+        performRename(src.getFileObject("Test.java"), splitCode.pos(), "NewName", props, true);
+        verifyContent(src,
+                new File("Test.java",
+                        """
+                package t;
+                import java.io.Serializable;
+                import java.util.RandomAccess;
+
+                interface NewName extends RandomAccess, Serializable, Cloneable { }
+                """
+                )
+        );
+    }
+
     
     public void testStaticImportDoubled() throws Exception {
         writeFilesAndWaitForScan(src, new File("Test.java", "import static java.util.Objects.requireNonNull;\n"

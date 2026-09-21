@@ -119,7 +119,7 @@ final class TemplateChooserPanelGUI extends javax.swing.JPanel implements Proper
         DefaultComboBoxModel projectsModel;
         if (includeTemplatesWithProjects) {
             Project openProjects[] = OpenProjectList.getDefault().getOpenProjects();
-            Arrays.sort(openProjects, OpenProjectList.projectByDisplayName());
+            Arrays.sort(openProjects, OpenProjectList.projectByPath());
             projectsModel = new DefaultComboBoxModel( openProjects );
             selectProject(p);
         } else {

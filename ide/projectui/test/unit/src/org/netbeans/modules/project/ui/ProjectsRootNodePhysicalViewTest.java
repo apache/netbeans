@@ -133,7 +133,7 @@ public class ProjectsRootNodePhysicalViewTest extends NbTestCase {
         
         for (Node n : view.getChildren().getNodes(true)) {
             TestSupport.TestProject p = n.getLookup().lookup(TestSupport.TestProject.class);
-            assertNull("No project of this type, yet", p);
+            assertNull("No project of this type, yet: " + n, p);
         }
         
         // let project open code run

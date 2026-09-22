@@ -28,14 +28,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.Writer;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import org.netbeans.modules.debugger.jpda.models.AbstractObjectVariable;
-import org.netbeans.modules.debugger.jpda.models.ShortenedStrings;
 import org.netbeans.modules.debugger.jpda.models.ShortenedStrings.StringInfo;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -50,45 +47,19 @@ import org.openide.util.RequestProcessor;
  */
 class BigStringCustomEditor extends JPanel implements ActionListener {
 
-    static final int MAX_STRING_LENGTH = AbstractObjectVariable.MAX_STRING_LENGTH;
-
     private final StringInfo shortenedInfo;
-    private final String fullString;
 
-    private BigStringCustomEditor(Component delegateCustomEditor, StringInfo shortenedInfo, int preferredShortLength) {
+    private BigStringCustomEditor(Component delegateCustomEditor, StringInfo shortenedInfo) {
         this.shortenedInfo = shortenedInfo;
-        this.fullString = null;
-        int shortLength;
-        if (preferredShortLength >= 0) {
-            shortLength = preferredShortLength;
-        } else {
-            shortLength = shortenedInfo.getShortLength();
-        }
+        int shortLength = shortenedInfo.getShortenedString().length();
         int fullLength = shortenedInfo.getLength();
         init(delegateCustomEditor, shortLength, fullLength);
     }
 
-    private BigStringCustomEditor(Component delegateCustomEditor,
-                                  String shortString, String fullString) {
-        this.shortenedInfo = null;
-        this.fullString = fullString;
-        init(delegateCustomEditor, shortString.length(), fullString.length());
-    }
-
-    static BigStringCustomEditor createIfBig(PropertyEditor propertyEditor, String value) {
-        ShortenedStrings.StringInfo shortenedInfo = ShortenedStrings.getShortenedInfo(value);
+    static BigStringCustomEditor createIfBig(PropertyEditor propertyEditor, StringInfo shortenedInfo) {
         if (shortenedInfo != null) {
-            if (!(shortenedInfo.getShortLength() > MAX_STRING_LENGTH)) {
-                return new BigStringCustomEditor(propertyEditor.getCustomEditor(), shortenedInfo, -1);
-            } else {
-                String shortText = value.substring(0, MAX_STRING_LENGTH) + "...";
-                propertyEditor.setValue(shortText);
-                return new BigStringCustomEditor(propertyEditor.getCustomEditor(), shortenedInfo, shortText.length() - 3);
-            }
-        } else if (value.length() > MAX_STRING_LENGTH) {
-            String shortText = value.substring(0, MAX_STRING_LENGTH) + "...";
-            propertyEditor.setValue(shortText);
-            return new BigStringCustomEditor(propertyEditor.getCustomEditor(), shortText, value);
+            propertyEditor.setValue(shortenedInfo.getShortenedString() + "...");
+            return new BigStringCustomEditor(propertyEditor.getCustomEditor(), shortenedInfo);
         } else {
             return null;
         }
@@ -135,13 +106,7 @@ class BigStringCustomEditor extends JPanel implements ActionListener {
     }
 
     private void save(File f) {
-        Reader r;
-        if (shortenedInfo != null) {
-            r = shortenedInfo.getContent();
-        } else {
-            r = new StringReader(fullString);
-        }
-        try (Writer w = new FileWriter(f); r) {
+        try (Writer w = new FileWriter(f); Reader r = shortenedInfo.getContent()) {
             r.transferTo(w);
         } catch (IOException ioex) {
             NotifyDescriptor nd = new NotifyDescriptor.Message(ioex.getLocalizedMessage(), NotifyDescriptor.WARNING_MESSAGE);

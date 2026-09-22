@@ -511,14 +511,20 @@ public class AbstractObjectVariable extends AbstractVariable implements ObjectVa
             if (sr == null) {
                 return null;
             }
-            String str = ShortenedStrings.getStringWithLengthControl(sr);
+            Object stringData = ShortenedStrings.getStringWithLengthControl(sr);
+            String str;
+            if (stringData instanceof ShortenedStrings.StringInfo si) {
+                str = si.getShortenedString() + "...";
+            } else {
+                str = (String) stringData;
+            }
             if (addQuotation) {
                 str = "\"" + str + "\""; // NOI18N
             }
             return str;
         } catch (InternalExceptionWrapper | ClassNotPreparedExceptionWrapper |
                 ClassNotLoadedException | IncompatibleThreadStateException |
-                InvalidTypeException | InvocationException ex) {
+                InvalidTypeException | InvocationException | InterruptedException ex) {
             return ex.getLocalizedMessage();
         } catch (VMDisconnectedExceptionWrapper ex) {
             return NbBundle.getMessage(AbstractVariable.class, "MSG_Disconnected");

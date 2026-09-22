@@ -139,8 +139,12 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
         }
         try {
             if (v instanceof StringReference stringReference) {
-                String str = ShortenedStrings.getStringWithLengthControl(stringReference);
-                return "\"" + str + "\"";
+                Object str = ShortenedStrings.getStringWithLengthControl(stringReference);
+                if(str instanceof ShortenedStrings.StringInfo si) {
+                    return "\"" + si.getShortenedString() + "...\"";
+                } else {
+                    return "\"" + str + "\"";
+                }
             }
             if (v instanceof ClassObjectReference classObjectReference) {
                 return "class " + ReferenceTypeWrapper.name(ClassObjectReferenceWrapper.reflectedType(classObjectReference));
@@ -154,7 +158,7 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
                 VMDisconnectedExceptionWrapper | ClassNotLoadedException |
                 ClassNotPreparedExceptionWrapper |
                 IncompatibleThreadStateException | InvalidTypeException |
-                InvocationException e) {
+                InvocationException | InterruptedException e) {
             return "";
         }
     }

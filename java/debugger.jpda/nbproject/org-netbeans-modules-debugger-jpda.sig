@@ -1,5 +1,5 @@
 #Signature file v4.1
-#Version 1.142.0
+#Version 1.143.0
 
 CLSS public abstract interface com.sun.source.tree.TreeVisitor<%0 extends java.lang.Object, %1 extends java.lang.Object>
 meth public abstract {com.sun.source.tree.TreeVisitor%0} visitAnnotatedType(com.sun.source.tree.AnnotatedTypeTree,{com.sun.source.tree.TreeVisitor%1})
@@ -189,6 +189,7 @@ intf java.lang.Comparable<{java.lang.Enum%0}>
 intf java.lang.constant.Constable
 meth protected final java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected final void finalize()
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="18")
 meth public final boolean equals(java.lang.Object)
 meth public final int compareTo({java.lang.Enum%0})
 meth public final int hashCode()
@@ -223,7 +224,7 @@ CLSS public java.lang.Object
 cons public init()
 meth protected java.lang.Object clone() throws java.lang.CloneNotSupportedException
 meth protected void finalize() throws java.lang.Throwable
- anno 0 java.lang.Deprecated(boolean forRemoval=false, java.lang.String since="9")
+ anno 0 java.lang.Deprecated(boolean forRemoval=true, java.lang.String since="9")
 meth public boolean equals(java.lang.Object)
 meth public final java.lang.Class<?> getClass()
 meth public final void notify()
@@ -3013,19 +3014,19 @@ hfds methodName
 
 CLSS public final org.netbeans.modules.debugger.jpda.models.ShortenedStrings
 innr public static StringInfo
-meth public static org.netbeans.modules.debugger.jpda.models.ShortenedStrings$StringInfo getShortenedInfo(java.lang.String)
 supr java.lang.Object
-hfds infoStrings,isLittleEndianCache,retrievingStrings,stringsCache
-hcls InternalStringEncoding,StringValueInfo
+hfds isLittleEndianCache,retrievingStrings,stringCache
+hcls InternalStringEncoding
 
 CLSS public static org.netbeans.modules.debugger.jpda.models.ShortenedStrings$StringInfo
  outer org.netbeans.modules.debugger.jpda.models.ShortenedStrings
 meth public int getLength()
-meth public int getShortLength()
+meth public int getShortendLength()
 meth public java.io.Reader getContent()
 meth public java.lang.String getFullString()
+meth public java.lang.String getShortendString()
 supr java.lang.Object
-hfds backingEncoding,chars,isLittleEndian,length,shortLength,sr
+hfds backingEncoding,chars,isLittleEndian,length,shortendString,sr
 
 CLSS public org.netbeans.modules.debugger.jpda.models.ThreadsCache
 cons public init(org.netbeans.modules.debugger.jpda.JPDADebuggerImpl)

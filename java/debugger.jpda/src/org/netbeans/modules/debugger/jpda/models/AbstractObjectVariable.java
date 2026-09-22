@@ -511,7 +511,13 @@ public class AbstractObjectVariable extends AbstractVariable implements ObjectVa
             if (sr == null) {
                 return null;
             }
-            String str = ShortenedStrings.getStringWithLengthControl(sr);
+            Object stringData = ShortenedStrings.getStringWithLengthControl(sr);
+            String str;
+            if(stringData instanceof ShortenedStrings.StringInfo si) {
+                str = si.getShortendString();
+            } else {
+                str = (String) stringData;
+            }
             if (addQuotation) {
                 str = "\"" + str + "\""; // NOI18N
             }

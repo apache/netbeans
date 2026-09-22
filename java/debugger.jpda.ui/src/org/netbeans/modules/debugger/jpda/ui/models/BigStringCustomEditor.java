@@ -35,7 +35,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import org.netbeans.modules.debugger.jpda.models.AbstractObjectVariable;
-import org.netbeans.modules.debugger.jpda.models.ShortenedStrings;
 import org.netbeans.modules.debugger.jpda.models.ShortenedStrings.StringInfo;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -50,8 +49,6 @@ import org.openide.util.RequestProcessor;
  */
 class BigStringCustomEditor extends JPanel implements ActionListener {
 
-    static final int MAX_STRING_LENGTH = AbstractObjectVariable.MAX_STRING_LENGTH;
-
     private final StringInfo shortenedInfo;
     private final String fullString;
 
@@ -62,33 +59,20 @@ class BigStringCustomEditor extends JPanel implements ActionListener {
         if (preferredShortLength >= 0) {
             shortLength = preferredShortLength;
         } else {
-            shortLength = shortenedInfo.getShortLength();
+            shortLength = shortenedInfo.getShortendLength();
         }
         int fullLength = shortenedInfo.getLength();
         init(delegateCustomEditor, shortLength, fullLength);
     }
 
-    private BigStringCustomEditor(Component delegateCustomEditor,
-                                  String shortString, String fullString) {
-        this.shortenedInfo = null;
-        this.fullString = fullString;
-        init(delegateCustomEditor, shortString.length(), fullString.length());
-    }
-
-    static BigStringCustomEditor createIfBig(PropertyEditor propertyEditor, String value) {
-        ShortenedStrings.StringInfo shortenedInfo = ShortenedStrings.getShortenedInfo(value);
+    static BigStringCustomEditor createIfBig(PropertyEditor propertyEditor, StringInfo shortenedInfo) {
         if (shortenedInfo != null) {
-            if (!(shortenedInfo.getShortLength() > MAX_STRING_LENGTH)) {
+            if (!(shortenedInfo.getShortendLength() > AbstractObjectVariable.MAX_STRING_LENGTH)) {
                 return new BigStringCustomEditor(propertyEditor.getCustomEditor(), shortenedInfo, -1);
             } else {
-                String shortText = value.substring(0, MAX_STRING_LENGTH) + "...";
-                propertyEditor.setValue(shortText);
-                return new BigStringCustomEditor(propertyEditor.getCustomEditor(), shortenedInfo, shortText.length() - 3);
+                propertyEditor.setValue(shortenedInfo.getShortendString());
+                return new BigStringCustomEditor(propertyEditor.getCustomEditor(), shortenedInfo, shortenedInfo.getShortendLength() - 3);
             }
-        } else if (value.length() > MAX_STRING_LENGTH) {
-            String shortText = value.substring(0, MAX_STRING_LENGTH) + "...";
-            propertyEditor.setValue(shortText);
-            return new BigStringCustomEditor(propertyEditor.getCustomEditor(), shortText, value);
         } else {
             return null;
         }

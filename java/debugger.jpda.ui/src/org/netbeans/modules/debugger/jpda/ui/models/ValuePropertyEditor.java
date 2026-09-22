@@ -48,6 +48,7 @@ import org.netbeans.api.debugger.jpda.ObjectVariable;
 import org.netbeans.api.debugger.jpda.Variable;
 import org.netbeans.modules.debugger.jpda.expr.JDIVariable;
 import org.netbeans.modules.debugger.jpda.models.ShortenedStrings;
+import org.netbeans.modules.debugger.jpda.models.ShortenedStrings.StringInfo;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -146,7 +147,11 @@ class ValuePropertyEditor implements ExPropertyEditor {
         if (Object.class.equals(clazz)) {
             pe = null;
         } else {
-            pe = PropertyEditorManager.findEditor(clazz);
+            if(clazz == StringInfo.class) {
+                pe = PropertyEditorManager.findEditor(String.class);
+            } else {
+                pe = PropertyEditorManager.findEditor(clazz);
+            }
             if (pe == null) {
                 Class sclazz = clazz.getSuperclass();
                 if (sclazz != null) {
@@ -341,8 +346,8 @@ class ValuePropertyEditor implements ExPropertyEditor {
     @Override
     public Component getCustomEditor() {
         //System.err.println("ValuePropertyEditor.getCustomEditor() delegateValue = "+delegateValue);
-        if (delegateValue instanceof String string) {
-            BigStringCustomEditor bsce = BigStringCustomEditor.createIfBig(delegatePropertyEditor, string);
+        if (delegateValue instanceof StringInfo si) {
+            BigStringCustomEditor bsce = BigStringCustomEditor.createIfBig(delegatePropertyEditor, si);
             if (bsce != null) {
                 return bsce;
             }
@@ -364,20 +369,17 @@ class ValuePropertyEditor implements ExPropertyEditor {
         env.addVetoableChangeListener(validate);
         if (delegatePropertyEditor instanceof ExPropertyEditor exPropertyEditor) {
             //System.out.println("  attaches to "+delegatePropertyEditor);
-            if (delegateValue instanceof String string) {
-                ShortenedStrings.StringInfo shortenedInfo = ShortenedStrings.getShortenedInfo(string);
-                if (shortenedInfo != null) {
-                    // The value is too large, do not allow editing!
-                    FeatureDescriptor desc = env.getFeatureDescriptor();
-                    if (desc instanceof Node.Property prop){
-                        // Need to make it uneditable
-                        try {
-                            Method forceNotEditableMethod = prop.getClass().getDeclaredMethod("forceNotEditable");
-                            forceNotEditableMethod.setAccessible(true);
-                            forceNotEditableMethod.invoke(prop);
-                        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException | RuntimeException ex){}
-                        //editable = prop.canWrite();
-                    }
+            if (delegateValue instanceof StringInfo si) {
+                // The value is too large, do not allow editing!
+                FeatureDescriptor desc = env.getFeatureDescriptor();
+                if (desc instanceof Node.Property prop){
+                    // Need to make it uneditable
+                    try {
+                        Method forceNotEditableMethod = prop.getClass().getDeclaredMethod("forceNotEditable");
+                        forceNotEditableMethod.setAccessible(true);
+                        forceNotEditableMethod.invoke(prop);
+                    } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException | RuntimeException ex){}
+                    //editable = prop.canWrite();
                 }
             }
             exPropertyEditor.attachEnv(env);

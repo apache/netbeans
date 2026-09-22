@@ -39,8 +39,6 @@ import com.sun.jdi.Value;
 import com.sun.jdi.VirtualMachine;
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.HashSet;
@@ -72,8 +70,7 @@ import org.netbeans.modules.debugger.jpda.jdi.VMDisconnectedExceptionWrapper;
  */
 public final class ShortenedStrings {
 
-    private static final Map<String, StringInfo> infoStrings = new WeakHashMap<>();
-    private static final Map<StringReference, StringValueInfo> stringsCache = new WeakHashMap<>();
+    private static final Map<StringReference, Object> stringCache = new WeakHashMap<>();
     private static final Set<StringReference> retrievingStrings = new HashSet<>();
     private static final Map<VirtualMachine, Boolean> isLittleEndianCache = new WeakHashMap<>();
 
@@ -84,17 +81,23 @@ public final class ShortenedStrings {
             @Override
             public void sessionRemoved(Session session) {
                 // Clean up. WeakHashMap does not clean up if not touched. :-(
+                // When all sessions are closed clear remaining entries, else
+                // use side effect of WeakHashMap#size to cleanup stale references
                 int n = DebuggerManager.getDebuggerManager().getSessions().length;
                 if (n == 0) {
-                    synchronized (infoStrings) {
-                        infoStrings.clear();
-                    }
-                    synchronized (stringsCache) {
-                        stringsCache.clear();
+                    synchronized (stringCache) {
+                        stringCache.clear();
                         retrievingStrings.clear();
                     }
                     synchronized (isLittleEndianCache) {
                         isLittleEndianCache.clear();
+                    }
+                } else {
+                    synchronized (stringCache) {
+                        stringCache.size();
+                    }
+                    synchronized (isLittleEndianCache) {
+                        isLittleEndianCache.size();
                     }
                 }
             }
@@ -103,12 +106,6 @@ public final class ShortenedStrings {
     }
 
     private ShortenedStrings() {}
-
-    public static StringInfo getShortenedInfo(String s) {
-        synchronized (infoStrings) {
-            return infoStrings.get(s);
-        }
-    }
 
     private static boolean isLittleEndian(VirtualMachine virtualMachine) throws
             InvalidTypeException, IncompatibleThreadStateException,
@@ -165,37 +162,20 @@ public final class ShortenedStrings {
         }
     }
 
-    private static void register(String shortedString, StringReference sr,
-            int length, ArrayReference chars, InternalStringEncoding backingEncoding,
-            boolean isLittleEndian) {
-        StringInfo si = new StringInfo(sr, shortedString.length() - 3, length,
-                chars, backingEncoding, isLittleEndian);
-        synchronized (infoStrings) {
-            infoStrings.put(shortedString, si);
-        }
-    }
-
-    static String getStringWithLengthControl(StringReference sr) throws
+    static Object getStringWithLengthControl(StringReference sr) throws
             InternalExceptionWrapper, VMDisconnectedExceptionWrapper,
             ObjectCollectedExceptionWrapper, ClassNotLoadedException,
             ClassNotPreparedExceptionWrapper, IncompatibleThreadStateException,
             InvalidTypeException, InvocationException {
         boolean retrieved = false;
-        synchronized (stringsCache) {
-            StringValueInfo svi = stringsCache.get(sr);
-            if (svi != null) {
-                if (svi.isShort) {
-                    return StringReferenceWrapper.value(sr);
-                } else {
-                    String str = svi.shortValueRef.get();
-                    if (str != null) {
-                        return str;
-                    }
-                }
+        synchronized (stringCache) {
+            Object data = stringCache.get(sr);
+            if (data != null) {
+                return data;
             }
             if (retrievingStrings.contains(sr)) {
                 try {
-                    stringsCache.wait();
+                    stringCache.wait();
                 } catch (InterruptedException ex) {}
                 retrieved = true;
             } else {
@@ -205,8 +185,8 @@ public final class ShortenedStrings {
         if (retrieved) {
             return getStringWithLengthControl(sr);
         }
-        String string = null;
-        boolean isShort = true;
+        Object result = null;
+        boolean isShort;
         InternalStringEncoding backingEncoding = InternalStringEncoding.CHAR_ARRAY;
         try {
             ReferenceType st = ObjectReferenceWrapper.referenceType(sr);
@@ -289,7 +269,7 @@ public final class ShortenedStrings {
             }
             //System.err.println("isShort = "+isShort);
             if (isShort) {
-                string = StringReferenceWrapper.value(sr);
+                result = StringReferenceWrapper.value(sr);
             } else {
                 assert sa != null;
                 int l = AbstractObjectVariable.MAX_STRING_LENGTH;
@@ -313,9 +293,11 @@ public final class ShortenedStrings {
                 }
                 String shortedString = new String(characters);
                 int stringLength = isUTF16 ? saLength / 2 : saLength;
-                ShortenedStrings.register(shortedString, sr, stringLength, sa,
-                        backingEncoding, isLittleEndian);
-                string = shortedString;
+                StringInfo si = new StringInfo(sr, shortedString, stringLength, sa, backingEncoding, isLittleEndian);
+                synchronized (stringCache) {
+                    stringCache.put(sr, si);
+                }
+                result = si;
             }
         }
         catch (ClassNotLoadedException | ClassNotPreparedExceptionWrapper |
@@ -329,21 +311,13 @@ public final class ShortenedStrings {
             throw e;
         }
         finally {
-            synchronized (stringsCache) {
-                if (string != null) {
-                    StringValueInfo svi;
-                    if (isShort) {
-                        svi = new StringValueInfo(isShort);
-                    } else {
-                        svi = new StringValueInfo(string);
-                    }
-                    stringsCache.put(sr, svi);
-                }
+            synchronized (stringCache) {
                 retrievingStrings.remove(sr);
-                stringsCache.notifyAll();
+                stringCache.put(sr, result);
+                stringCache.notifyAll();
             }
         }
-        return string;
+        return result;
     }
 
     /**
@@ -452,15 +426,15 @@ public final class ShortenedStrings {
         private final InternalStringEncoding backingEncoding;
         private final boolean isLittleEndian;
         private final StringReference sr;
-        private final int shortLength;
         private final int length;
         private final ArrayReference chars;
+        private final String shortendString;
 
-        private StringInfo(StringReference sr, int shortLength, int length,
+        private StringInfo(StringReference sr, String shortString, int length,
                 ArrayReference chars, InternalStringEncoding backingEncoding,
                 boolean isLittleEndian) {
             this.sr = sr;
-            this.shortLength = shortLength;
+            this.shortendString = shortString;
             this.length = length;
             this.chars = chars;
             this.backingEncoding = backingEncoding;
@@ -469,8 +443,12 @@ public final class ShortenedStrings {
             this.isLittleEndian = isLittleEndian;
         }
 
-        public int getShortLength() {
-            return shortLength;
+        public String getShortendString() {
+            return this.shortendString;
+        }
+
+        public int getShortendLength() {
+            return shortendString.length();
         }
 
         public int getLength() {
@@ -515,20 +493,6 @@ public final class ShortenedStrings {
                 public void close() throws IOException {
                 }
             };
-        }
-    }
-
-    private static class StringValueInfo {
-        boolean isShort; // if true, StringReference.value() caches the value
-        Reference<String> shortValueRef; // reference to the shortened version of the String value
-
-        StringValueInfo(boolean isShort) {
-            this.isShort = isShort;
-        }
-
-        StringValueInfo(String shortenedValue) {
-            this.isShort = false;
-            this.shortValueRef = new WeakReference<>(shortenedValue);
         }
     }
 

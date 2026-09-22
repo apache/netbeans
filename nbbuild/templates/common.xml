@@ -760,11 +760,12 @@
 
     <target name="-do-junit" depends="test-init,-setup-continue-after-failing">
         <property name="test.jms.flags" value=""/>
+        <property name="test.threads" value="1"/>
         <macrodef name="junit-impl">
             <attribute name="test.type"/>
             <attribute name="disable.apple.ui" default="false"/>
             <sequential>
-                <junit showoutput="true" fork="true" failureproperty="tests.failed" errorproperty="tests.failed" filtertrace="${test.filter.trace}" tempdir="${build.test.@{test.type}.results.dir}" timeout="${test.timeout}" jvm="${test.nbjdk.java}">
+                <junit showoutput="true" fork="true" threads="${test.threads}" failureproperty="tests.failed" errorproperty="tests.failed" filtertrace="${test.filter.trace}" tempdir="${build.test.@{test.type}.results.dir}" timeout="${test.timeout}" jvm="${test.nbjdk.java}">
                     <batchtest todir="${build.test.@{test.type}.results.dir}">
                         <fileset dir="${build.test.@{test.type}.classes.dir}" includes="${test.includes}" excludes="${test.excludes}"/>
                     </batchtest>

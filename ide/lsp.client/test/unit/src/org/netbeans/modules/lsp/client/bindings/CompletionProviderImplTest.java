@@ -111,8 +111,10 @@ public class CompletionProviderImplTest extends NbTestCase {
                 new TestTextDocumentService() {
                     @Override
                     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams position) {
+                        CompletionItem item = new CompletionItem("to-be-resolved");
+                        item.setFilterText("insert");
                         return CompletableFuture.completedFuture(Either.forLeft(List.of(
-                            new CompletionItem("to-be-resolved")
+                            item
                         )));
                     }
                     @Override
@@ -141,8 +143,10 @@ public class CompletionProviderImplTest extends NbTestCase {
                 new TestTextDocumentService() {
                     @Override
                     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams position) {
+                        CompletionItem item = new CompletionItem("to-be-resolved");
+                        item.setFilterText("insert");
                         return CompletableFuture.completedFuture(Either.forLeft(List.of(
-                            new CompletionItem("to-be-resolved")
+                            item
                         )));
                     }
                     @Override
@@ -171,8 +175,10 @@ public class CompletionProviderImplTest extends NbTestCase {
                 new TestTextDocumentService() {
                     @Override
                     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams position) {
+                        CompletionItem item = new CompletionItem("to-be-resolved");
+                        item.setFilterText("insert");
                         return CompletableFuture.completedFuture(Either.forLeft(List.of(
-                            new CompletionItem("to-be-resolved")
+                            item
                         )));
                     }
                     @Override
@@ -201,8 +207,10 @@ public class CompletionProviderImplTest extends NbTestCase {
                 new TestTextDocumentService() {
                     @Override
                     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams position) {
+                        CompletionItem item = new CompletionItem("to-be-resolved");
+                        item.setFilterText("insert");
                         return CompletableFuture.completedFuture(Either.forLeft(List.of(
-                            new CompletionItem("to-be-resolved")
+                                item
                         )));
                     }
                     @Override
@@ -227,7 +235,7 @@ public class CompletionProviderImplTest extends NbTestCase {
 
         runCompletionTest(
                 """
-                foo.ins|
+                foo.|
                 """,
                 new TestTextDocumentService() {
                     @Override
@@ -303,6 +311,66 @@ public class CompletionProviderImplTest extends NbTestCase {
                     assertEquals(0, items.size());
                 });
         assertFalse(notInvoked.get());
+    }
+
+    public void testFiltering() throws IOException {
+        List<String> actualItems = new ArrayList<>();
+        CompletionValidator printItems = (c, items) -> {
+            actualItems.addAll(printCompletionItems(items));
+        };
+        TextDocumentService textDocumentService;
+        textDocumentService =
+            new TestTextDocumentService() {
+                @Override
+                public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams position) {
+                    List<CompletionItem> result = new ArrayList<>();
+
+                    {
+                        CompletionItem resultItem = new CompletionItem("addTest1");
+
+                        result.add(resultItem);
+                    }
+                    {
+                        CompletionItem resultItem = new CompletionItem("X: addTest2");
+
+                        resultItem.setFilterText("addTest2");
+                        result.add(resultItem);
+                    }
+                    {
+                        CompletionItem resultItem = new CompletionItem("removeTest1");
+
+                        result.add(resultItem);
+                    }
+                    {
+                        CompletionItem resultItem = new CompletionItem("X: removeTest2");
+
+                        resultItem.setFilterText("removeTest2");
+                        result.add(resultItem);
+                    }
+
+                    return CompletableFuture.completedFuture(Either.forLeft(result));
+                }
+            };
+
+        actualItems.clear();
+        runCompletionTest("""
+                foo.|
+                """,
+                textDocumentService, printItems);
+        assertEquals(List.of("addTest1",
+                             "X: addTest2",
+                             "removeTest1",
+                             "X: removeTest2"),
+                     actualItems);
+
+        actualItems.clear();
+        runCompletionTest("""
+                foo.add|
+                """,
+                textDocumentService, printItems);
+        assertEquals(List.of("addTest1",
+                             "X: addTest2"),
+                     actualItems);
     }
 
     public void testNoResolveProvider() throws IOException {
@@ -466,7 +534,7 @@ public class CompletionProviderImplTest extends NbTestCase {
         JEditorPane c = new JEditorPane();
         c.setEditorKit(new NbEditorKit());
         c.setDocument(doc);
-        c.setCaretPosition(4);
+        c.setCaretPosition(caret);
         runCompletion.accept(c);
     }
 

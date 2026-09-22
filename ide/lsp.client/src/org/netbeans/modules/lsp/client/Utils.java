@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -186,9 +187,10 @@ public class Utils {
      *                   document.
      */
     public static void applyEditsNoLock(Document doc, List<? extends TextEdit> edits, Integer startLimit, Integer endLimit) {
-        edits
-         .stream()
-         .sorted(rangeReverseSort)
+        List<TextEdit> sorted = new ArrayList<>(edits);
+        Collections.sort(sorted, rangeSort);
+        Collections.reverse(sorted);
+        sorted
          .forEach(te -> {
             try {
                 int start = Utils.getOffset(doc, te.getRange().getStart());
@@ -315,15 +317,15 @@ public class Utils {
         }
     }
 
-    private static final Comparator<TextEdit> rangeReverseSort = (s1, s2) -> {
+    private static final Comparator<TextEdit> rangeSort = (s1, s2) -> {
         int l1 = s1.getRange().getEnd().getLine();
         int l2 = s2.getRange().getEnd().getLine();
         int c1 = s1.getRange().getEnd().getCharacter();
         int c2 = s2.getRange().getEnd().getCharacter();
         if (l1 != l2) {
-            return l2 - l1;
+            return l1 - l2;
         } else {
-            return c2 - c1;
+            return c1 - c2;
         }
     };
 

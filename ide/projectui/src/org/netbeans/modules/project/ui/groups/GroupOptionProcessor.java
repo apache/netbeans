@@ -36,21 +36,21 @@ public class GroupOptionProcessor implements ArgsProcessor {
     )
     @Messages({
         "GroupOptionProcessor.open.name=--open-group NAME",
-        "GroupOptionProcessor.open.desc=open a project group by shortened or full name (or unique substring)"
+        "GroupOptionProcessor.open.desc=open a workspace by shortened or full name (or unique substring)"
     })
     public String openOption;
     @Arg(longName="close-group")
     @Description(
         shortDescription="#GroupOptionProcessor.close.desc"
     )
-    @Messages("GroupOptionProcessor.close.desc=close any open project group")
+    @Messages("GroupOptionProcessor.close.desc=close any open workspace")
     public boolean closeOption;
 
     @Arg(longName="list-groups")
     @Description(
         shortDescription="#GroupOptionProcessor.list.desc"
     )
-    @Messages("GroupOptionProcessor.list.desc=list available project groups")
+    @Messages("GroupOptionProcessor.list.desc=list available workspaces")
     public boolean listOption;
 
     @Messages({

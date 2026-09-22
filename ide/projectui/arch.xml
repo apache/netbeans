@@ -623,7 +623,7 @@
    <li>
     <api group="cli" name="group" type="export" category="devel">
      <p>
-         Can use <code>--open-group <i>NAME</i></code> to open a project group at startup, or <code>--close-group</code>.
+         Can use <code>--open-group <i>NAME</i></code> to open a workspace at startup, or <code>--close-group</code>.
      </p>
     </api>
     </li>
@@ -1155,7 +1155,7 @@
      </api>
      <api type="export" group="preferences" category="private" name="org.netbeans.modules.projectui.groups">
          <p>
-             Project groups. See <code>Group</code>.
+             Workspaces. See <code>Group</code>.
          </p>
      </api>
  </answer>

@@ -74,7 +74,7 @@ import org.openide.windows.WindowSystemEvent;
 import org.openide.windows.WindowSystemListener;
 
 /**
- * Represents a project group.
+ * Represents a project group aka workspace.
  * Static methods represent set of groups and group selection.
  * @author Jesse Glick
  */
@@ -149,7 +149,7 @@ public abstract class Group {
      * Set the currently active group (or null).
      */
     @Messages({
-        "# {0} - internal group info", "Group.UI.setActiveGroup=Selecting project group: {0}",
+        "# {0} - internal group info", "Group.UI.setActiveGroup=Selecting workspace: {0}",
         "#NOI18N", "Group.UI.setActiveGroup_ICON_BASE=org/netbeans/modules/project/ui/resources/openProject.png"
     })
     public static void setActiveGroup(Group nue, boolean isNewGroup) {

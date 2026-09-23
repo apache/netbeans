@@ -273,7 +273,7 @@ public final class ShortenedStrings {
             } else {
                 assert sa != null;
                 int l = AbstractObjectVariable.MAX_STRING_LENGTH;
-                char[] characters = new char[l + 3];
+                char[] characters = new char[l];
                 //is it little or big endian?
                 //checking if the encoding is Utf16 to avoid a call to
                 //`isLittleEndian` if it isn't Utf16
@@ -286,10 +286,6 @@ public final class ShortenedStrings {
                 }
                 catch (IOException ioe){
                     return ERROR_RESULT;
-                }
-                // Add 3 dots:
-                for (int i = l; i < (l + 3); i++) {
-                    characters[i] = '.';
                 }
                 String shortedString = new String(characters);
                 int stringLength = isUTF16 ? saLength / 2 : saLength;
@@ -428,13 +424,13 @@ public final class ShortenedStrings {
         private final StringReference sr;
         private final int length;
         private final ArrayReference chars;
-        private final String shortendString;
+        private final String shortenedString;
 
-        private StringInfo(StringReference sr, String shortString, int length,
+        private StringInfo(StringReference sr, String shortenedString, int length,
                 ArrayReference chars, InternalStringEncoding backingEncoding,
                 boolean isLittleEndian) {
             this.sr = sr;
-            this.shortendString = shortString;
+            this.shortenedString = shortenedString;
             this.length = length;
             this.chars = chars;
             this.backingEncoding = backingEncoding;
@@ -443,12 +439,8 @@ public final class ShortenedStrings {
             this.isLittleEndian = isLittleEndian;
         }
 
-        public String getShortendString() {
-            return this.shortendString;
-        }
-
-        public int getShortendLength() {
-            return shortendString.length();
+        public String getShortenedString() {
+            return this.shortenedString;
         }
 
         public int getLength() {

@@ -513,8 +513,8 @@ public class AbstractObjectVariable extends AbstractVariable implements ObjectVa
             }
             Object stringData = ShortenedStrings.getStringWithLengthControl(sr);
             String str;
-            if(stringData instanceof ShortenedStrings.StringInfo si) {
-                str = si.getShortendString();
+            if (stringData instanceof ShortenedStrings.StringInfo si) {
+                str = si.getShortenedString() + "...";
             } else {
                 str = (String) stringData;
             }

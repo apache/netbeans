@@ -141,7 +141,7 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
             if (v instanceof StringReference stringReference) {
                 Object str = ShortenedStrings.getStringWithLengthControl(stringReference);
                 if(str instanceof ShortenedStrings.StringInfo si) {
-                    return "\"" + si.getShortendString() + "\"";
+                    return "\"" + si.getShortenedString() + "...\"";
                 } else {
                     return "\"" + str + "\"";
                 }

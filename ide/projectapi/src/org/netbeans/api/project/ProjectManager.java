@@ -141,6 +141,22 @@ public final class ProjectManager {
         }
         return impl.findProject(projectDirectory);
     }
+
+    /** @since 1.111 */
+    @NonNull
+    public Project findProjectOrFallback(@NonNull FileObject projectDirectory) throws IOException, IllegalArgumentException {
+        if (projectDirectory == null) {
+            throw new IllegalArgumentException("Attempted to pass a null directory to findProject"); // NOI18N
+        }
+        if (!projectDirectory.isFolder()) {
+            throw new IllegalArgumentException("Attempted to pass a non-directory to findProject: " + projectDirectory); // NOI18N
+        }
+        if (impl instanceof ProjectManagerImplementation.WithFallback implV2) {
+            return implV2.findProjectOrFallback(projectDirectory);
+        } else {
+            throw new IllegalArgumentException("Cannot create fallback project for " + projectDirectory); // NOI18N
+        }
+    }
         
     
     /**

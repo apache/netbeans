@@ -65,6 +65,7 @@ public class ProjectManagerTest extends NbTestCase {
     private FileObject goodproject2;
     private FileObject badproject;
     private FileObject mysteryproject;
+    private FileObject justADir;
     private ProjectManager pm;
 
     protected @Override Level logLevel() {
@@ -82,6 +83,7 @@ public class ProjectManagerTest extends NbTestCase {
         badproject = scratch.createFolder("bad");
         badproject.createFolder("testproject").createData("broken");
         mysteryproject = scratch.createFolder("mystery");
+        justADir = scratch.createFolder("justADir");
         MockLookup.setInstances(TestUtil.testProjectFactory());
         pm = ProjectManager.getDefault();
         NbProjectManagerAccessor.reset();
@@ -206,6 +208,27 @@ public class ProjectManagerTest extends NbTestCase {
         assertFalse("Should not have been able to load mysteryproject", pm.isProject(mysteryproject));
     }
     
+    public void testIsFallbackProject() throws Exception {
+        var nothing = pm.findProject(justADir);
+        assertNull("No project is found for just a dir", nothing);
+        var generic = pm.findProjectOrFallback(justADir);
+        assertNotNull("But one can ask for a fallback project", generic);
+
+        var then = pm.findProject(justADir);
+        assertSame("since then findProject works for just a dir", generic, then);
+
+        var ref = new WeakReference<>(generic);
+        generic = null;
+        then = null;
+        // give the references time to disappear
+        Thread.sleep(TimedWeakReference.TIMEOUT);
+
+        assertGC("The fallback project gets GCed when no longer used", ref);
+
+        var nothingAgain = pm.findProject(justADir);
+        assertNull("Since then, findProject again returns null", nothingAgain);
+    }
+
     public void testIsProject2() throws Exception {
         ProjectManager.Result r = pm.isProject2(goodproject);
         assertNotNull("Should have recognized goodproject", r);

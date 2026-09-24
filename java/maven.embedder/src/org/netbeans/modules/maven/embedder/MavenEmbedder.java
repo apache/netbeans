@@ -48,7 +48,6 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
-import org.apache.maven.cli.configuration.SettingsXmlConfigurationProcessor;
 import org.apache.maven.execution.DefaultMavenExecutionRequest;
 import org.apache.maven.execution.DefaultMavenExecutionResult;
 import org.apache.maven.execution.MavenExecutionRequest;
@@ -644,7 +643,15 @@ public final class MavenEmbedder {
             DefaultMirrorSelector mirrorSelector = new DefaultMirrorSelector();
             Settings _settings = getSettings();
             for (Mirror m : _settings.getMirrors()) {
-                mirrorSelector.add(m.getId(), m.getUrl(), m.getLayout(), false, m.getMirrorOf(), m.getMirrorOfLayouts());
+                mirrorSelector.add(
+                        m.getId(),
+                        m.getUrl(),
+                        m.getLayout(),
+                        false,
+                        false,
+                        m.getMirrorOf(),
+                        m.getMirrorOfLayouts()
+                );
             }
             session.setMirrorSelector(mirrorSelector);
             SettingsDecryptionResult decryptionResult = settingsDecrypter.decrypt(new DefaultSettingsDecryptionRequest(_settings));

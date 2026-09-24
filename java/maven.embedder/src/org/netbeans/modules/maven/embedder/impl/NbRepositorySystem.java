@@ -31,6 +31,20 @@ import org.eclipse.aether.collection.DependencyCollectionException;
 import org.eclipse.aether.collection.DependencyGraphTransformationContext;
 import org.eclipse.aether.collection.DependencyGraphTransformer;
 import org.eclipse.aether.DefaultRepositorySystemSession;
+import org.eclipse.aether.impl.ArtifactDescriptorReader;
+import org.eclipse.aether.impl.ArtifactResolver;
+import org.eclipse.aether.impl.DependencyCollector;
+import org.eclipse.aether.impl.Deployer;
+import org.eclipse.aether.impl.Installer;
+import org.eclipse.aether.impl.LocalRepositoryProvider;
+import org.eclipse.aether.impl.MetadataResolver;
+import org.eclipse.aether.impl.RemoteRepositoryManager;
+import org.eclipse.aether.impl.RepositorySystemLifecycle;
+import org.eclipse.aether.impl.RepositorySystemValidator;
+import org.eclipse.aether.impl.VersionRangeResolver;
+import org.eclipse.aether.impl.VersionResolver;
+import org.eclipse.aether.spi.artifact.decorator.ArtifactDecoratorFactory;
+import org.eclipse.aether.spi.synccontext.SyncContextFactory;
 
 /**
  * another piece of experimental code meant to replace the dependency-tree codebase
@@ -41,6 +55,16 @@ import org.eclipse.aether.DefaultRepositorySystemSession;
  * @author mkleint
  */
 public class NbRepositorySystem extends DefaultRepositorySystem {
+
+    public NbRepositorySystem(VersionResolver versionResolver, VersionRangeResolver versionRangeResolver,
+            ArtifactResolver artifactResolver, MetadataResolver metadataResolver, ArtifactDescriptorReader artifactDescriptorReader,
+            DependencyCollector dependencyCollector, Installer installer, Deployer deployer, LocalRepositoryProvider localRepositoryProvider,
+            SyncContextFactory syncContextFactory, RemoteRepositoryManager remoteRepositoryManager, RepositorySystemLifecycle repositorySystemLifecycle,
+            Map<String, ArtifactDecoratorFactory> artifactDecoratorFactories, RepositorySystemValidator repositorySystemValidator) {
+        super(versionResolver, versionRangeResolver, artifactResolver, metadataResolver, artifactDescriptorReader, dependencyCollector,
+                installer, deployer, localRepositoryProvider, syncContextFactory, remoteRepositoryManager, repositorySystemLifecycle,
+                artifactDecoratorFactories, repositorySystemValidator);
+    }
 
     @Override
     public CollectResult collectDependencies(RepositorySystemSession session, CollectRequest request) throws DependencyCollectionException {

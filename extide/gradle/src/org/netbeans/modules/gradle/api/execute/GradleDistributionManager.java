@@ -104,9 +104,10 @@ public final class GradleDistributionManager {
         GradleVersion.version("8.14"),// JDK-24
         GradleVersion.version("9.1.0"),// JDK-25
         GradleVersion.version("9.4.0"),// JDK-26
+        GradleVersion.version("9.8.0") // JDK-27
     };
 
-    private static final GradleVersion LAST_KNOWN_GRADLE = GradleVersion.version("9.6.1"); //NOI18N
+    private static final GradleVersion LAST_KNOWN_GRADLE = GradleVersion.version("9.8.0"); //NOI18N
 
     private static final int LATEST_SUPPORTED_MAJOR = 9;
 
@@ -125,12 +126,7 @@ public final class GradleDistributionManager {
      */
     public static GradleDistributionManager get(File gradleUserHome) {
         File home = gradleUserHome != null ? gradleUserHome : GradleSettings.getDefault().getGradleUserHome();
-        GradleDistributionManager ret = CACHE.get(home);
-        if (ret == null) {
-            ret = new GradleDistributionManager(home);
-            CACHE.put(home, ret);
-        }
-        return ret;
+        return CACHE.computeIfAbsent(home, GradleDistributionManager::new);
     }
 
     /**

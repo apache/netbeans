@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -39,6 +40,11 @@ import org.netbeans.junit.NbTestCase;
 import org.openide.modules.Dependency;
 
 public class ValidateClassFilesTest extends NbTestCase {
+
+    private static final List<String> ignoreList = List.of(
+            "jline-terminal-ffm-" // maven.embedder: provider only loaded on JDK 22+ (TODO: remove after JDK 25 bump)
+    );
+
     public ValidateClassFilesTest(String name) {
         super(name);
     }
@@ -77,6 +83,12 @@ public class ValidateClassFilesTest extends NbTestCase {
             public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
                 final File file = path.toFile();
                 if (file.getName().endsWith(".jar")) {
+                    
+                    for (String ignore : ignoreList) {
+                        if (file.getName().startsWith(ignore)) {
+                            return FileVisitResult.CONTINUE;
+                        }
+                    }
 
                     if(! classFileVersions.containsKey(file.getName())) {
                         return FileVisitResult.CONTINUE;

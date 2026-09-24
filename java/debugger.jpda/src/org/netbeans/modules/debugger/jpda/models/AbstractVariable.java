@@ -158,7 +158,7 @@ public class AbstractVariable implements JDIVariable, Customizer, Cloneable {
                 VMDisconnectedExceptionWrapper | ClassNotLoadedException |
                 ClassNotPreparedExceptionWrapper |
                 IncompatibleThreadStateException | InvalidTypeException |
-                InvocationException e) {
+                InvocationException | InterruptedException e) {
             return "";
         }
     }

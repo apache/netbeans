@@ -115,7 +115,7 @@ public class VariableMirrorTranslator {
                 } catch (ClassNotFoundException | ClassNotLoadedException |
                         ClassNotPreparedExceptionWrapper |
                         InvalidTypeException | InvocationException |
-                        IncompatibleThreadStateException ex) {
+                        IncompatibleThreadStateException | InterruptedException ex) {
                     //nom
                 }
             } else {

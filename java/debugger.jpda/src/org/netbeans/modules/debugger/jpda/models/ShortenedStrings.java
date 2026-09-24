@@ -166,7 +166,7 @@ public final class ShortenedStrings {
             InternalExceptionWrapper, VMDisconnectedExceptionWrapper,
             ObjectCollectedExceptionWrapper, ClassNotLoadedException,
             ClassNotPreparedExceptionWrapper, IncompatibleThreadStateException,
-            InvalidTypeException, InvocationException {
+            InvalidTypeException, InvocationException, InterruptedException {
         boolean retrieved = false;
         synchronized (stringCache) {
             Object data = stringCache.get(sr);
@@ -174,9 +174,7 @@ public final class ShortenedStrings {
                 return data;
             }
             if (retrievingStrings.contains(sr)) {
-                try {
-                    stringCache.wait();
-                } catch (InterruptedException ex) {}
+                stringCache.wait();
                 retrieved = true;
             } else {
                 retrievingStrings.add(sr);

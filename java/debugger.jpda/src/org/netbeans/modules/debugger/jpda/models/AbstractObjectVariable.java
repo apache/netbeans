@@ -524,7 +524,7 @@ public class AbstractObjectVariable extends AbstractVariable implements ObjectVa
             return str;
         } catch (InternalExceptionWrapper | ClassNotPreparedExceptionWrapper |
                 ClassNotLoadedException | IncompatibleThreadStateException |
-                InvalidTypeException | InvocationException ex) {
+                InvalidTypeException | InvocationException | InterruptedException ex) {
             return ex.getLocalizedMessage();
         } catch (VMDisconnectedExceptionWrapper ex) {
             return NbBundle.getMessage(AbstractVariable.class, "MSG_Disconnected");

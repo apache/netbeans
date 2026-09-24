@@ -19,15 +19,10 @@
 
 package org.netbeans.modules.debugger.jpda.ui.models;
 
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.util.*;
@@ -46,28 +41,21 @@ import org.netbeans.spi.debugger.DebuggerServiceRegistration;
 import org.netbeans.spi.debugger.ui.ColumnModelRegistration;
 import org.netbeans.spi.debugger.ui.ColumnModelRegistrations;
 import org.netbeans.spi.debugger.ui.EditorContextDispatcher;
-import org.netbeans.spi.viewmodel.CheckNodeModel;
 import org.netbeans.spi.viewmodel.CheckNodeModelFilter;
 import org.netbeans.spi.viewmodel.ColumnModel;
-import org.netbeans.spi.viewmodel.ExtendedNodeModel;
-import org.netbeans.spi.viewmodel.ExtendedNodeModelFilter;
 import org.netbeans.spi.viewmodel.ModelEvent;
 import org.netbeans.spi.viewmodel.Models;
 import org.netbeans.spi.viewmodel.NodeActionsProvider;
-import org.netbeans.spi.viewmodel.TableModel;
 import org.netbeans.spi.viewmodel.TreeModel;
 import org.netbeans.spi.viewmodel.ModelListener;
 import org.netbeans.spi.viewmodel.NodeModel;
 import org.netbeans.spi.viewmodel.NodeModelFilter;
 import org.netbeans.spi.viewmodel.UnknownTypeException;
-import org.openide.DialogDisplayer;
 import org.openide.ErrorManager;
-import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
-import org.openide.util.datatransfer.PasteType;
 
 
 /**

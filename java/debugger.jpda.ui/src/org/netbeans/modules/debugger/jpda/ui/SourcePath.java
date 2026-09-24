@@ -55,42 +55,37 @@ import org.openide.util.NbBundle;
  *
  * @author Jan Jancura
  */
-public class SourcePath {
-
-    private ContextProvider         contextProvider;
-    private SourcePathProvider      sourcePathProvider;
-    private JPDADebugger            debugger;
+public final class SourcePath {
+    private final SourcePathProvider sourcePathProvider;
+    private final JPDADebugger debugger;
     
 
     public SourcePath (ContextProvider contextProvider) {
-        this.contextProvider = contextProvider;
         debugger = contextProvider.lookupFirst(null, JPDADebugger.class);
-        getContext();// To initialize the source path provider
+        sourcePathProvider = findSourcePathProvider(contextProvider);
     }
 
     private SourcePathProvider getContext () {
-        if (sourcePathProvider == null) {
-            List l = contextProvider.lookup (null, SourcePathProvider.class);
-            sourcePathProvider = (SourcePathProvider) l.get (0);
-            int i, k = l.size ();
-            for (i = 1; i < k; i++) {
-                sourcePathProvider = new CompoundContextProvider (
-                    (SourcePathProvider) l.get (i), 
-                    sourcePathProvider
-                );
-            }
-            //initSourcePaths ();
-        }
         return sourcePathProvider;
     }
-    
+
+    private static SourcePathProvider findSourcePathProvider(ContextProvider contextProvider) {
+        var l = contextProvider.lookup(null, SourcePathProvider.class);
+        var spp = (SourcePathProvider) l.get(0);
+        int i, k = l.size();
+        for (i = 1; i < k; i++) {
+            spp = new CompoundContextProvider(l.get(i), spp);
+        }
+        return spp;
+    }
+
     static SourcePathProvider getDefaultContext() {
         List providers = DebuggerManager.getDebuggerManager().
                 lookup("netbeans-JPDASession", SourcePathProvider.class);
         for (Iterator it = providers.iterator(); it.hasNext(); ) {
             Object provider = it.next();
             // Hack - find our provider:
-            if (provider.getClass().getName().equals("org.netbeans.modules.debugger.jpda.projects.SourcePathProviderImpl")) {
+            if (provider != null && provider.getClass().getName().equals("org.netbeans.modules.debugger.jpda.projects.SourcePathProviderImpl")) {
                 return (SourcePathProvider) provider;
             }
         }

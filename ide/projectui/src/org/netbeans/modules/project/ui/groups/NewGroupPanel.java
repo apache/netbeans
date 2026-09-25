@@ -43,7 +43,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
 /**
- * Panel permitting user to create a new project group aka workspace.
+ * Panel permitting user to create a new project group.
  * Applicable in advanced mode.
  * @author Jesse Glick
  */

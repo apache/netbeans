@@ -70,7 +70,7 @@
             <description>
                 <p>
                     <code>@ProjectCustomizer.CompositeCategoryProvider.Registration</code> annotation now accepts "Groups" projectType parameter value which
-                    adds a panel to the workspace customizer. Implementations can expect an instance of <code>org.netbeans.api.project.ui.ProjectGroup</code> in the lookup 
+                    adds a panel to the Project Group customizer. Implementations can expect an instance of <code>org.netbeans.api.project.ui.ProjectGroup</code> in the lookup 
                     passed to the provider. NO central storing procedure in place, each panel is expected to set it's own values in <code>Category.setStoreListener</code>
                 </p>
             </description>

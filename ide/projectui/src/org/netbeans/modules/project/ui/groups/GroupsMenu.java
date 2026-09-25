@@ -53,7 +53,7 @@ import org.openide.util.lookup.Lookups;
     @ActionReference(path = "Menu/File", position = 1100),
     @ActionReference(path = ProjectsRootNode.ACTIONS_FOLDER, position = 600, separatorAfter = 700)
 })
-@Messages("GroupsMenu.label=Workspace &Manager...")
+@Messages("GroupsMenu.label=Project Gro&ups...")
 public class GroupsMenu extends AbstractAction {
     
     private static final RequestProcessor RP = new RequestProcessor(GroupsMenu.class.getName());
@@ -72,8 +72,8 @@ public class GroupsMenu extends AbstractAction {
      * Create (and open) a new group.
      */
     @Messages({
-        "GroupsMenu.new_title=Create New Workspace",
-        "GroupsMenu.new_create=Create Workspace",
+        "GroupsMenu.new_title=Create New Group",
+        "GroupsMenu.new_create=Create Group",
         "GroupsMenu.new_close=Close"
     })
     private static void newGroup() {
@@ -116,9 +116,9 @@ public class GroupsMenu extends AbstractAction {
      * Manage groups.
      */
     @Messages({
-        "GroupsMenu.manage_title=Manage Workspaces",
-        "GroupsMenu.manage_select_group=&Select Workspace",
-        "GroupsMenu.manage_new_group=&New Workspace...",
+        "GroupsMenu.manage_title=Manage Groups",
+        "GroupsMenu.manage_select_group=&Select Group",
+        "GroupsMenu.manage_new_group=&New Group...",
         "GroupsMenu.manage_remove=&Remove",
         "GroupsMenu.manage_close=Close",
         "GroupsMenu.manage_properties=&Properties",
@@ -155,7 +155,7 @@ public class GroupsMenu extends AbstractAction {
     /**
      * Open a properties dialog for the group, according to its type.
      */
-    @Messages("GroupsMenu.properties_title=Workspace Properties")
+    @Messages("GroupsMenu.properties_title=Project Group Properties")
     static void openProperties(Group g) {
         Lookup context = Lookups.fixed(new Object[] { g, BaseUtilities.ACCESSOR.createGroup(g.getName(), g.prefs()) });
         Dialog dialog = ProjectCustomizer.createCustomizerDialog("Projects/Groups/Customizer", //NOI18N

@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
 import org.netbeans.spi.debugger.ContextProvider;
 
 import org.netbeans.api.debugger.DebuggerManager;
@@ -46,6 +45,7 @@ import org.openide.ErrorManager;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Exceptions;
+import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 
 /**
@@ -55,7 +55,7 @@ import org.openide.util.NbBundle;
  *
  * @author Jan Jancura
  */
-public final class SourcePath {
+public class SourcePath {
     private final SourcePathProvider sourcePathProvider;
     private final JPDADebugger debugger;
     
@@ -388,17 +388,7 @@ public final class SourcePath {
             StatusDisplayer.getDefault().setStatusText(message);
             return ;
         }
-        final int ln = lineNumber;
-        final String u = url;
-        SwingUtilities.invokeLater (new Runnable () {
-            public void run () {
-                EditorContextBridge.getContext().showSource (
-                    u,
-                    ln,
-                    debugger
-                );
-            }
-        });
+        handleShowSource(url, lineNumber, null);
     }
 
     /** Do not call in AWT */
@@ -449,15 +439,23 @@ public final class SourcePath {
         }
         lineNumber = csf.getLineNumber (stratumn);
         if (lineNumber < 1) lineNumber = 1;
-        final int ln = lineNumber;
-        final String u = url;
-        SwingUtilities.invokeLater (new Runnable () {
-            public void run () {
-                EditorContextBridge.getContext().showSource (
-                    u,
-                    ln,
+        handleShowSource(url, lineNumber, null);
+    }
+
+    /** Really talks to the editor to open a line.
+     * @param url URL to the file to open
+     * @param lineNumber line in the file to open
+     * @param onFailure {@code null} or a callback that's made when opening fails
+     */
+    protected void handleShowSource(String url, int lineNumber, Runnable onFailure) {
+        Mutex.EVENT.readAccess(() -> {
+            boolean success = EditorContextBridge.getContext().showSource (
+                    url,
+                    lineNumber,
                     debugger
-                );
+            );
+            if (!success && onFailure != null) {
+                onFailure.run();
             }
         });
     }
@@ -488,18 +486,11 @@ public final class SourcePath {
         
         final int ln = lineNumber;
         final String u = url;
-        SwingUtilities.invokeLater (new Runnable () {
-            public void run () {
-                boolean success = EditorContextBridge.getContext().showSource (
-                    u,
-                    ln,
-                    debugger
-                );
-                if (reportUnknownSource && !success) {
-                    String message = NbBundle.getMessage(SourcePath.class, "No_URL_Warning", sourcePath);
-                    NotifyDescriptor d = new NotifyDescriptor.Message(message, NotifyDescriptor.WARNING_MESSAGE);
-                    DialogDisplayer.getDefault().notifyLater(d);
-                }
+        handleShowSource(u, ln, () -> {
+            if (reportUnknownSource) {
+                String message = NbBundle.getMessage(SourcePath.class, "No_URL_Warning", sourcePath);
+                NotifyDescriptor d = new NotifyDescriptor.Message(message, NotifyDescriptor.WARNING_MESSAGE);
+                DialogDisplayer.getDefault().notifyLater(d);
             }
         });
     }

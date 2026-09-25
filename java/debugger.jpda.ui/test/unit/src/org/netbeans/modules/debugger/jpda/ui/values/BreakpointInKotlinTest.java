@@ -40,6 +40,7 @@ public class BreakpointInKotlinTest extends NbTestCase {
     private JPDASupport support;
     private DebuggerManager dm = DebuggerManager.getDebuggerManager();
 
+    private static final String KOTLIN_HI_NAME = "Hi.kt";
     private static final String CLASS_NAME = "HiKt";
     private static final String CLASS_EXCEPTION_NAME = "java.lang.AssertionError";
     private static final String KOTLIN_HI_SRC = """
@@ -141,7 +142,7 @@ public class BreakpointInKotlinTest extends NbTestCase {
         var dir = getWorkDir();
         var clazz = new File(dir, CLASS_NAME + ".class");
         Files.write(clazz.toPath(), KOTLIN_HI_CODE);
-        src = new File(dir, CLASS_NAME + ".kt");
+        src = new File(dir, KOTLIN_HI_NAME);
         Files.write(src.toPath(), KOTLIN_HI_SRC.getBytes());
     }
 
@@ -165,7 +166,7 @@ public class BreakpointInKotlinTest extends NbTestCase {
         dm.addBreakpoint(eb1);
 
         System.setProperty ("test.dir.src", getWorkDirPath());
-        support = JPDASupport.attach(new String[0], CLASS_EXCEPTION_NAME, new String[0], new File[]{ getWorkDir() });
+        support = JPDASupport.attach(new String[0], CLASS_NAME, new String[0], new File[]{ getWorkDir() });
 
         for (;;) {
             support.waitState(JPDADebugger.STATE_STOPPED);
@@ -221,8 +222,25 @@ public class BreakpointInKotlinTest extends NbTestCase {
             // now the PR-9433 bugfix test
             //
 
-            var sourcePath = new SourcePath(dm.getCurrentSession());
+            var sourcePath = new SourcePath(dm.getCurrentSession()) {
+                private String showUrl;
+                private int showLine;
+
+
+                @Override
+                protected void handleShowSource(String url, int lineNumber, Runnable onFailure) {
+                    assertNull("Only one URL to open", showUrl);
+                    assertNotNull("New URL is provided", url);
+                    showUrl = url;
+                    showLine = lineNumber;
+                    assertNull("No callback right now in the test", onFailure);
+                }
+
+            };
             sourcePath.showSource(stack[0], null);
+
+            assertNotNull("Opening a URL", sourcePath.showUrl);
+            assertEquals("Line provided", topmost, sourcePath.showLine);
         }
 
         public void assertOneHit() throws Throwable {

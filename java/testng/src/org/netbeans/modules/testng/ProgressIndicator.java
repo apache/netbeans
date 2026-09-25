@@ -41,11 +41,11 @@ final class ProgressIndicator implements Cancellable {
     private final ProgressHandle progressHandle;
     private volatile boolean cancelled = false;
 
-    @NbBundle.Messages({"LBL_generator_progress_title=Generating TestNG tests"})
+    @NbBundle.Messages({"LBL_testng_generator_progress_title=Generating TestNG tests"})
     ProgressIndicator() {
 //        String msg = NbBundle.getMessage(ProgressIndicator.class,
 //                                        "LBL_generator_progress_title");//NOI18N
-        String msg = Bundle.LBL_generator_progress_title();
+        String msg = Bundle.LBL_testng_generator_progress_title();
         progressHandle = ProgressHandle.createHandle(msg);
     }
 

@@ -331,7 +331,7 @@ public final class JPDASupport implements DebuggerManagerListener {
     
     private static Object[] createServices (String sourceRoot) {
         try {
-            Map map = new HashMap ();
+            var map = new HashMap<String, Object>();
             URL sourceUrl = new File(sourceRoot).toURI().toURL();
             String sourceUrlStr = sourceUrl.toString() + "/";
             sourceUrl = new URL(sourceUrlStr);

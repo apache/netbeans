@@ -260,12 +260,16 @@ public final class JPDASupport implements DebuggerManagerListener {
     }
 
     public void doFinish () {
+        doFinish(0);
+    }
+
+    public void doFinish (int exitCode) {
         if (jpdaDebugger == null) return;
         debuggerEngine.getActionsManager ().
             doAction (ActionsManager.ACTION_KILL);
         waitState (JPDADebugger.STATE_DISCONNECTED);
         try {
-            processIO.join();
+            processIO.join(exitCode);
         } catch (InterruptedException ex) {
             // Interrupted
         }
@@ -327,7 +331,7 @@ public final class JPDASupport implements DebuggerManagerListener {
     
     private static Object[] createServices (String sourceRoot) {
         try {
-            Map map = new HashMap ();
+            var map = new HashMap<String, Object>();
             URL sourceUrl = new File(sourceRoot).toURI().toURL();
             String sourceUrlStr = sourceUrl.toString() + "/";
             sourceUrl = new URL(sourceUrlStr);
@@ -519,10 +523,10 @@ public final class JPDASupport implements DebuggerManagerListener {
             (threadErr = new SimplePipe(System.out, err)).start();
         }
 
-        private void join() throws InterruptedException {
+        private void join(int exitCode) throws InterruptedException {
             threadOut.join();
             threadErr.join();
-            assertEquals(0, p.waitFor());
+            assertEquals("Proper exit code", exitCode, p.waitFor());
         }
     }
 

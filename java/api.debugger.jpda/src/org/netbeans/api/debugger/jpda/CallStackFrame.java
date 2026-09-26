@@ -20,7 +20,6 @@
 package org.netbeans.api.debugger.jpda;
 
 import com.sun.jdi.AbsentInformationException;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 import org.netbeans.spi.debugger.jpda.EditorContext.Operation;
 

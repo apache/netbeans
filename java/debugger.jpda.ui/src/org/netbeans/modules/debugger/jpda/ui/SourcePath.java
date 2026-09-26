@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
 import org.netbeans.spi.debugger.ContextProvider;
 
 import org.netbeans.api.debugger.DebuggerManager;
@@ -46,6 +45,7 @@ import org.openide.ErrorManager;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Exceptions;
+import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 
 /**
@@ -56,41 +56,36 @@ import org.openide.util.NbBundle;
  * @author Jan Jancura
  */
 public class SourcePath {
-
-    private ContextProvider         contextProvider;
-    private SourcePathProvider      sourcePathProvider;
-    private JPDADebugger            debugger;
+    private final SourcePathProvider sourcePathProvider;
+    private final JPDADebugger debugger;
     
 
     public SourcePath (ContextProvider contextProvider) {
-        this.contextProvider = contextProvider;
         debugger = contextProvider.lookupFirst(null, JPDADebugger.class);
-        getContext();// To initialize the source path provider
+        sourcePathProvider = findSourcePathProvider(contextProvider);
     }
 
     private SourcePathProvider getContext () {
-        if (sourcePathProvider == null) {
-            List l = contextProvider.lookup (null, SourcePathProvider.class);
-            sourcePathProvider = (SourcePathProvider) l.get (0);
-            int i, k = l.size ();
-            for (i = 1; i < k; i++) {
-                sourcePathProvider = new CompoundContextProvider (
-                    (SourcePathProvider) l.get (i), 
-                    sourcePathProvider
-                );
-            }
-            //initSourcePaths ();
-        }
         return sourcePathProvider;
     }
-    
+
+    private static SourcePathProvider findSourcePathProvider(ContextProvider contextProvider) {
+        var l = contextProvider.lookup(null, SourcePathProvider.class);
+        var spp = (SourcePathProvider) l.get(0);
+        int i, k = l.size();
+        for (i = 1; i < k; i++) {
+            spp = new CompoundContextProvider(l.get(i), spp);
+        }
+        return spp;
+    }
+
     static SourcePathProvider getDefaultContext() {
         List providers = DebuggerManager.getDebuggerManager().
                 lookup("netbeans-JPDASession", SourcePathProvider.class);
         for (Iterator it = providers.iterator(); it.hasNext(); ) {
             Object provider = it.next();
             // Hack - find our provider:
-            if (provider.getClass().getName().equals("org.netbeans.modules.debugger.jpda.projects.SourcePathProviderImpl")) {
+            if (provider != null && provider.getClass().getName().equals("org.netbeans.modules.debugger.jpda.projects.SourcePathProviderImpl")) {
                 return (SourcePathProvider) provider;
             }
         }
@@ -393,17 +388,7 @@ public class SourcePath {
             StatusDisplayer.getDefault().setStatusText(message);
             return ;
         }
-        final int ln = lineNumber;
-        final String u = url;
-        SwingUtilities.invokeLater (new Runnable () {
-            public void run () {
-                EditorContextBridge.getContext().showSource (
-                    u,
-                    ln,
-                    debugger
-                );
-            }
-        });
+        handleShowSource(url, lineNumber, null);
     }
 
     /** Do not call in AWT */
@@ -420,10 +405,15 @@ public class SourcePath {
                     convertSlash (csf.getSourcePath (stratumn)), true
                 );
                 if (url == null) {
-                    stratumn = csf.getDefaultStratum ();
                     url = getURL (
-                        convertSlash (csf.getSourcePath (stratumn)), true
+                        convertSlash (csf.getSourcePath (csf.getDefaultStratum())), true
                     );
+                    for (var anyStratum : csf.getAvailableStrata()) {
+                        if (url != null) {
+                            break;
+                        }
+                        url = getURL(convertSlash (csf.getSourcePath (anyStratum)), true);
+                    }
                 }
                 if (url == null) {
                     String message = NbBundle.getMessage(SourcePath.class,
@@ -449,15 +439,23 @@ public class SourcePath {
         }
         lineNumber = csf.getLineNumber (stratumn);
         if (lineNumber < 1) lineNumber = 1;
-        final int ln = lineNumber;
-        final String u = url;
-        SwingUtilities.invokeLater (new Runnable () {
-            public void run () {
-                EditorContextBridge.getContext().showSource (
-                    u,
-                    ln,
+        handleShowSource(url, lineNumber, null);
+    }
+
+    /** Really talks to the editor to open a line.
+     * @param url URL to the file to open
+     * @param lineNumber line in the file to open
+     * @param onFailure {@code null} or a callback that's made when opening fails
+     */
+    protected void handleShowSource(String url, int lineNumber, Runnable onFailure) {
+        Mutex.EVENT.readAccess(() -> {
+            boolean success = EditorContextBridge.getContext().showSource (
+                    url,
+                    lineNumber,
                     debugger
-                );
+            );
+            if (!success && onFailure != null) {
+                onFailure.run();
             }
         });
     }
@@ -488,18 +486,11 @@ public class SourcePath {
         
         final int ln = lineNumber;
         final String u = url;
-        SwingUtilities.invokeLater (new Runnable () {
-            public void run () {
-                boolean success = EditorContextBridge.getContext().showSource (
-                    u,
-                    ln,
-                    debugger
-                );
-                if (reportUnknownSource && !success) {
-                    String message = NbBundle.getMessage(SourcePath.class, "No_URL_Warning", sourcePath);
-                    NotifyDescriptor d = new NotifyDescriptor.Message(message, NotifyDescriptor.WARNING_MESSAGE);
-                    DialogDisplayer.getDefault().notifyLater(d);
-                }
+        handleShowSource(u, ln, () -> {
+            if (reportUnknownSource) {
+                String message = NbBundle.getMessage(SourcePath.class, "No_URL_Warning", sourcePath);
+                NotifyDescriptor d = new NotifyDescriptor.Message(message, NotifyDescriptor.WARNING_MESSAGE);
+                DialogDisplayer.getDefault().notifyLater(d);
             }
         });
     }

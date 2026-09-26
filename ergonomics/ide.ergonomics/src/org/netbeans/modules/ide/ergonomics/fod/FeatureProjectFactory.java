@@ -44,6 +44,8 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.ProjectManager;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.SubprojectProvider;
@@ -65,6 +67,8 @@ import org.openide.util.lookup.ServiceProvider;
 import org.w3c.dom.Document;
 import org.netbeans.api.project.ui.OpenProjects;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
+import org.openide.awt.Notification;
+import org.openide.awt.NotificationDisplayer;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
 import org.openide.nodes.FilterNode;
@@ -520,7 +524,7 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
         } // end of FeatureOpenHook
     } // end of FeatureNonProject
     private static final class FeatureDelegate
-    implements Lookup.Provider, ProjectInformation, LogicalViewProvider {
+    implements Lookup.Provider, ProjectInformation, LogicalViewProvider, Sources {
         private final FileObject dir;
         private final PropertyChangeSupport support;
         Lookup delegate;
@@ -528,6 +532,7 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
         private final Lookup hooks = new AbstractLookup(ic);
         private final FeatureNonProject.FeatureOpenHook hook;
         private List<RootNode> lvs;
+        private Notification openingPrj;
 
 
         public FeatureDelegate(FileObject dir, FeatureNonProject feature) {
@@ -634,6 +639,38 @@ implements ProjectFactory, PropertyChangeListener, Runnable {
                 return lvp.findPath(root, target);
             }
             return null;
+        }
+
+        @NbBundle.Messages({
+            "MSG_OnMissingSourceGroup=Project initialization requested",
+            "# {0} - name of the project",
+            "MSG_FullyInitializeProject=Should we open the {0} project and initialize it fully?",
+        })
+        @Override
+        public SourceGroup[] getSourceGroups(String type) {
+            var src = delegate.lookup(Sources.class);
+            if (src != null && src != this) {
+                return src.getSourceGroups(type);
+            }
+            Project prj = getLookup().lookup(Project.class);
+            if (prj != null && openingPrj == null) {
+                openingPrj = NotificationDisplayer.getDefault().notify(
+                    Bundle.MSG_OnMissingSourceGroup(), loadIcon(),
+                    Bundle.MSG_FullyInitializeProject(getDisplayName()),
+                    (ev) -> {
+                        OpenProjects.getDefault().open(new Project[] { prj }, false);
+                    }
+                );
+            }
+            return new SourceGroup[0];
+        }
+
+        @Override
+        public void addChangeListener(ChangeListener listener) {
+        }
+
+        @Override
+        public void removeChangeListener(ChangeListener listener) {
         }
     }
 

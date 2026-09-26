@@ -189,7 +189,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
                                 + (metaAnnotated.second() != null ? " <: @" + metaAnnotated.second().getAnnotationType().asElement().getSimpleName() : "")
                                 + ") " + node.getSimpleName();
                         int[] span = cc.getTreeUtilities().findNameSpan(node);
-                        ret.add(new SymbolLocation(name, (int) sp.getStartPosition(treePath.getCompilationUnit(), node), (int) sp.getEndPosition(treePath.getCompilationUnit(), node), span[0], span[1]));
+                        ret.add(new SymbolLocation(name, (int) sp.getStartPosition(node), (int) sp.getEndPosition(node), span[0], span[1]));
                     } else {
                         path = getPath((TypeElement) cls);
                     }
@@ -210,7 +210,7 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
                 TreePath treePath = this.getCurrentPath();
                 if (functionName != null && functionName.contentEquals(node.getName())) {
                     int[] span = cc.getTreeUtilities().findNameSpan(node);
-                    ret.add(new SymbolLocation("@/ -- POST", (int) sp.getStartPosition(treePath.getCompilationUnit(), node), (int) sp.getEndPosition(treePath.getCompilationUnit(), node), span[0], span[1]));
+                    ret.add(new SymbolLocation("@/ -- POST", (int) sp.getStartPosition(node), (int) sp.getEndPosition(node), span[0], span[1]));
                 } else if (path != null) {
                     Element mth = cc.getTrees().getElement(treePath);
                     MthIterator it = new MthIterator(mth, cc.getElements(), cc.getTypes());
@@ -238,10 +238,10 @@ public final class MicronautSymbolFinder extends EmbeddingIndexer implements Pro
                                     if (selectEndpointAnnotation) {
                                         Tree tree = cc.getTrees().getTree(ee, ann);
                                         if (tree != null) {
-                                            span = new int[] {(int) sp.getStartPosition(treePath.getCompilationUnit(), tree), (int) sp.getEndPosition(treePath.getCompilationUnit(), tree)};
+                                            span = new int[] {(int) sp.getStartPosition(tree), (int) sp.getEndPosition(tree)};
                                         }
                                     }
-                                    ret.add(new SymbolLocation(name, (int) sp.getStartPosition(treePath.getCompilationUnit(), node), (int) sp.getEndPosition(treePath.getCompilationUnit(), node), span[0], span[1]));
+                                    ret.add(new SymbolLocation(name, (int) sp.getStartPosition(node), (int) sp.getEndPosition(node), span[0], span[1]));
                                 }
                                 return null;
                             }

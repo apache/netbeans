@@ -108,8 +108,8 @@ public final class JavaTooltipTask extends BaseTask {
                 MethodInvocationTree mi = (MethodInvocationTree) tree;
                 CompilationUnitTree root = env.getRoot();
                 SourcePositions sourcePositions = env.getSourcePositions();
-                int startPos = lastTree != null ? (int) sourcePositions.getStartPosition(root, lastTree) : offset;
-                List<Tree> argTypes = getArgumentsUpToPos(env, mi.getArguments(), (int) sourcePositions.getEndPosition(root, mi.getMethodSelect()), startPos, false);
+                int startPos = lastTree != null ? (int) sourcePositions.getStartPosition(lastTree) : offset;
+                List<Tree> argTypes = getArgumentsUpToPos(env, mi.getArguments(), (int) sourcePositions.getEndPosition(mi.getMethodSelect()), startPos, false);
                 if (argTypes != null) {
                     controller.toPhase(JavaSource.Phase.RESOLVED);
                     final Trees trees = controller.getTrees();
@@ -173,7 +173,7 @@ public final class JavaTooltipTask extends BaseTask {
                         }
                     }
                     toolTipIndex = types.length;
-                    startPos = (int) sourcePositions.getEndPosition(env.getRoot(), mi.getMethodSelect());
+                    startPos = (int) sourcePositions.getEndPosition(mi.getMethodSelect());
                     String text = controller.getText().substring(startPos, offset);
                     int idx = text.indexOf('('); //NOI18N
                     anchorOffset = idx < 0 ? startPos : startPos + controller.getSnapshot().getOriginalOffset(idx);
@@ -188,8 +188,8 @@ public final class JavaTooltipTask extends BaseTask {
                 NewClassTree nc = (NewClassTree) tree;
                 CompilationUnitTree root = env.getRoot();
                 SourcePositions sourcePositions = env.getSourcePositions();
-                int startPos = lastTree != null ? (int) sourcePositions.getStartPosition(root, lastTree) : offset;
-                int pos = (int) sourcePositions.getEndPosition(root, nc.getIdentifier());
+                int startPos = lastTree != null ? (int) sourcePositions.getStartPosition(lastTree) : offset;
+                int pos = (int) sourcePositions.getEndPosition(nc.getIdentifier());
                 List<Tree> argTypes = getArgumentsUpToPos(env, nc.getArguments(), pos, startPos, false);
                 if (argTypes != null) {
                     controller.toPhase(JavaSource.Phase.RESOLVED);
@@ -219,7 +219,7 @@ public final class JavaTooltipTask extends BaseTask {
                     toolTipIndex = types.length;
                     if (pos < 0) {
                         path = path.getParentPath();
-                        pos = (int) sourcePositions.getStartPosition(root, path.getLeaf());
+                        pos = (int) sourcePositions.getStartPosition(path.getLeaf());
                     }
                     String text = controller.getText().substring(pos, offset);
                     int idx = text.indexOf('('); //NOI18N
@@ -262,7 +262,7 @@ public final class JavaTooltipTask extends BaseTask {
                     toolTipIndex = -1;
                     CompilationUnitTree root = env.getRoot();
                     SourcePositions sourcePositions = env.getSourcePositions();
-                    int pos = (int) sourcePositions.getEndPosition(root, at.getAnnotationType());
+                    int pos = (int) sourcePositions.getEndPosition(at.getAnnotationType());
                     String text = controller.getText().substring(pos, offset);
                     int idx = text.indexOf('('); //NOI18N
                     anchorOffset = idx < 0 ? pos : pos + controller.getSnapshot().getOriginalOffset(idx);

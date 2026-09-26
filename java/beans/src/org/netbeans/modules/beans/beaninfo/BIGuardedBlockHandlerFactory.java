@@ -118,7 +118,7 @@ public final class BIGuardedBlockHandlerFactory implements GuardedBlockHandlerFa
             TreePath decl = trees.getPath(element);
             if (decl != null) {
                 SourcePositions sourcePositions = trees.getSourcePositions();
-                long declBegin = sourcePositions.getStartPosition(decl.getCompilationUnit(), decl.getLeaf());
+                long declBegin = sourcePositions.getStartPosition(decl.getLeaf());
                 FileObject fo = SourceUtils.getFile(element, javac.getClasspathInfo());
                 Document doc = javac.getDocument();
                 GuardedSectionManager guards = GuardedSectionManager.getInstance((StyledDocument) doc);

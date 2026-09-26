@@ -138,9 +138,7 @@ public class ClassEncapsulation {
                         controller.toPhase(JavaSource.Phase.PARSED);
                         final TreePath tp = handle.resolve(controller);
                         if (tp != null && TreeUtilities.CLASS_TREE_KINDS.contains(tp.getLeaf().getKind())) {
-                            position[0] = (int) controller.getTrees().getSourcePositions().getStartPosition(
-                                    tp.getCompilationUnit(),
-                                    (ClassTree)tp.getLeaf())+1;
+                            position[0] = (int) controller.getTrees().getSourcePositions().getStartPosition((ClassTree)tp.getLeaf())+1;
                         }
                     }
                 }, true);

@@ -134,7 +134,7 @@ abstract class BaseTask extends UserTask {
             return null; //TODO: member reference???
         }
         for (ExpressionTree e : args) {
-            int pos = (int) sourcePositions.getEndPosition(root, e);
+            int pos = (int) sourcePositions.getEndPosition(e);
             if (pos != Diagnostic.NOPOS && (position > pos || !strict && position == pos)) {
                 startPos = pos;
                 ret.add(e);
@@ -186,7 +186,7 @@ abstract class BaseTask extends UserTask {
     }
 
     TokenSequence<JavaTokenId> findLastNonWhitespaceToken(Env env, Tree tree, int position) {
-        int startPos = (int) env.getSourcePositions().getStartPosition(env.getRoot(), tree);
+        int startPos = (int) env.getSourcePositions().getStartPosition(tree);
         return findLastNonWhitespaceToken(env, startPos, position);
     }
 
@@ -348,8 +348,8 @@ abstract class BaseTask extends UserTask {
         } else if (parent != null && tree.getKind() == Tree.Kind.BLOCK
                 && (parent.getKind() == Tree.Kind.METHOD || TreeUtilities.CLASS_TREE_KINDS.contains(parent.getKind()))) {
             controller.toPhase(withinAnonymousOrLocalClass(tu, path) ? JavaSource.Phase.RESOLVED : JavaSource.Phase.ELEMENTS_RESOLVED);
-            int blockPos = (int) sourcePositions.getStartPosition(root, tree);
-            String blockText = fixStringTemplates(path, controller.getText().substring(blockPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(root, tree)));
+            int blockPos = (int) sourcePositions.getStartPosition(tree);
+            String blockText = fixStringTemplates(path, controller.getText().substring(blockPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(tree)));
             final SourcePositions[] sp = new SourcePositions[1];
             final StatementTree block = (((BlockTree) tree).isStatic() ? tu.parseStaticBlock(blockText, sp) : tu.parseStatement(blockText, sp));
             if (block == null) {
@@ -410,7 +410,7 @@ abstract class BaseTask extends UserTask {
                         break;
                     case CONDITIONAL_AND: case CONDITIONAL_OR:
                         BinaryTree bt = (BinaryTree) last;
-                        if (sourcePositions.getStartPosition(path.getCompilationUnit(), bt.getRightOperand()) == offset &&
+                        if (sourcePositions.getStartPosition(bt.getRightOperand()) == offset &&
                             bt.getRightOperand().getKind() == Kind.ERRONEOUS) {
                             last = bt.getRightOperand();
                         }
@@ -418,7 +418,7 @@ abstract class BaseTask extends UserTask {
                 }
                 if (stmts != null) {
                     for (StatementTree st : stmts) {
-                        if (sourcePositions.getEndPosition(root, st) <= offset) {
+                        if (sourcePositions.getEndPosition(st) <= offset) {
                             last = st;
                         }
                     }
@@ -438,10 +438,10 @@ abstract class BaseTask extends UserTask {
                 if (blockPath.getLeaf().getKind() == Tree.Kind.BLOCK) {
                     if (blockPath.getParentPath().getLeaf().getKind() == Tree.Kind.METHOD
                             || TreeUtilities.CLASS_TREE_KINDS.contains(blockPath.getParentPath().getLeaf().getKind())) {
-                        final int blockPos = (int) sourcePositions.getStartPosition(root, blockPath.getLeaf());
+                        final int blockPos = (int) sourcePositions.getStartPosition(blockPath.getLeaf());
                         final String blockText = upToOffset && getCaretInSnapshot() > offset
-                                ? controller.getText().substring(blockPos, offset) + whitespaceString(getCaretInSnapshot() - offset) + controller.getText().substring(getCaretInSnapshot(), (int) sourcePositions.getEndPosition(root, blockPath.getLeaf()))
-                                : controller.getText().substring(blockPos, (int) sourcePositions.getEndPosition(root, blockPath.getLeaf()));
+                                ? controller.getText().substring(blockPos, offset) + whitespaceString(getCaretInSnapshot() - offset) + controller.getText().substring(getCaretInSnapshot(), (int) sourcePositions.getEndPosition(blockPath.getLeaf()))
+                                : controller.getText().substring(blockPos, (int) sourcePositions.getEndPosition(blockPath.getLeaf()));
                         final SourcePositions[] sp = new SourcePositions[1];
                         final StatementTree block = (((BlockTree) blockPath.getLeaf()).isStatic() ? tu.parseStaticBlock(blockText, sp) : tu.parseStatement(blockText, sp));
                         if (block == null) {
@@ -453,7 +453,7 @@ abstract class BaseTask extends UserTask {
                             return null;
                         }
                         lambdaBody = ((LambdaExpressionTree) path.getLeaf()).getBody();
-                        bodyPos = (int) sourcePositions.getStartPosition(root, lambdaBody);
+                        bodyPos = (int) sourcePositions.getStartPosition(lambdaBody);
                         if (bodyPos >= offset) {
                             TokenSequence<JavaTokenId> ts = controller.getTokenHierarchy().tokenSequence(JavaTokenId.language());
                             ts.move(offset);
@@ -483,7 +483,7 @@ abstract class BaseTask extends UserTask {
             }
             if (scope == null) {
                 scope = controller.getTrees().getScope(new TreePath(path, lambdaBody));
-                bodyPos = (int) sourcePositions.getStartPosition(root, lambdaBody);
+                bodyPos = (int) sourcePositions.getStartPosition(lambdaBody);
                 if (bodyPos >= offset) {
                     TokenSequence<JavaTokenId> ts = controller.getTokenHierarchy().tokenSequence(JavaTokenId.language());
                     ts.move(offset);
@@ -503,7 +503,7 @@ abstract class BaseTask extends UserTask {
                     }
                 }
             }
-            String bodyText = controller.getText().substring(bodyPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(root, lambdaBody));
+            String bodyText = controller.getText().substring(bodyPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(lambdaBody));
             final SourcePositions[] sp = new SourcePositions[1];
             final Tree body = bodyText.charAt(0) == '{' ? tu.parseStatement(bodyText, sp) : tu.parseExpression(bodyText, sp);
             final Tree fake = body instanceof ExpressionTree ? new ExpressionStatementTree() {
@@ -577,7 +577,7 @@ abstract class BaseTask extends UserTask {
                 }
                 if (stmts != null) {
                     for (StatementTree st : stmts) {
-                        if (sourcePositions.getEndPosition(root, st) <= offset) {
+                        if (sourcePositions.getEndPosition(st) <= offset) {
                             last = st;
                         }
                     }
@@ -595,8 +595,8 @@ abstract class BaseTask extends UserTask {
             }
             controller.toPhase(withinAnonymousOrLocalClass(tu, path) ? JavaSource.Phase.RESOLVED : JavaSource.Phase.ELEMENTS_RESOLVED);
             Scope scope = controller.getTrees().getScope(path);
-            final int initPos = (int) sourcePositions.getStartPosition(root, tree);
-            String initText = controller.getText().substring(initPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(root, tree));
+            final int initPos = (int) sourcePositions.getStartPosition(tree);
+            String initText = controller.getText().substring(initPos, upToOffset ? offset : (int) sourcePositions.getEndPosition(tree));
             if (initText.length() > 0) {
                 final SourcePositions[] sp = new SourcePositions[1];
                 final ExpressionTree init = tu.parseVariableInitializer(initText, sp);
@@ -618,7 +618,7 @@ abstract class BaseTask extends UserTask {
                 };
                 sourcePositions = new SourcePositionsImpl(fake, sourcePositions, sp[0], initPos, upToOffset ? offset : -1);
                 path = tu.pathFor(new TreePath(pPath, fake), offset, sourcePositions);
-                if (upToOffset && sp[0].getEndPosition(root, init) + initPos > offset) {
+                if (upToOffset && sp[0].getEndPosition(init) + initPos > offset) {
                     scope = tu.reattributeTreeTo(init, scope, path.getLeaf());
                 } else {
                     tu.reattributeTree(init, scope);
@@ -627,12 +627,12 @@ abstract class BaseTask extends UserTask {
             return new Env(offset, prefix, controller, path, sourcePositions, scope);
         } else if (parent != null && TreeUtilities.CLASS_TREE_KINDS.contains(parent.getKind()) && tree.getKind() == Tree.Kind.VARIABLE
                 && ((VariableTree) tree).getInitializer() != null && orig == path
-                && sourcePositions.getStartPosition(root, ((VariableTree) tree).getInitializer()) >= 0
-                && sourcePositions.getStartPosition(root, ((VariableTree) tree).getInitializer()) <= offset) {
+                && sourcePositions.getStartPosition(((VariableTree) tree).getInitializer()) >= 0
+                && sourcePositions.getStartPosition(((VariableTree) tree).getInitializer()) <= offset) {
             controller.toPhase(withinAnonymousOrLocalClass(tu, path) ? JavaSource.Phase.RESOLVED : JavaSource.Phase.ELEMENTS_RESOLVED);
             tree = ((VariableTree) tree).getInitializer();
             Scope scope = controller.getTrees().getScope(new TreePath(path, tree));
-            final int initPos = (int) sourcePositions.getStartPosition(root, tree);
+            final int initPos = (int) sourcePositions.getStartPosition(tree);
             String initText = controller.getText().substring(initPos, offset);
             if (initText.length() > 0) {
                 final SourcePositions[] sp = new SourcePositions[1];
@@ -989,7 +989,7 @@ abstract class BaseTask extends UserTask {
                     tp = tp.getParentPath();
                 }
                 if (tp.getLeaf().getKind() == Tree.Kind.EXPRESSION_STATEMENT) {
-                    assignToVarPos = getController().getSnapshot().getOriginalOffset((int) getSourcePositions().getStartPosition(getRoot(), tree));
+                    assignToVarPos = getController().getSnapshot().getOriginalOffset((int) getSourcePositions().getStartPosition(tree));
                 } else if (tp.getLeaf().getKind() == Tree.Kind.BLOCK) {
                     assignToVarPos = getController().getSnapshot().getOriginalOffset(offset);
                 } else {

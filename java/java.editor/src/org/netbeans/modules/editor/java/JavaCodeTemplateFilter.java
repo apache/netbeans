@@ -98,7 +98,7 @@ public class JavaCodeTemplateFilter implements CodeTemplateFilter {
                                                 String selectedText = controller.getText().substring(so, eo).trim();
                                                 SourcePositions[] sp = new SourcePositions[1];
                                                 ExpressionTree expr = selectedText.length() > 0 ? tu.parseExpression(selectedText, sp) : null;
-                                                if (expr != null && expr.getKind() != Tree.Kind.IDENTIFIER && !Utilities.containErrors(expr) && sp[0].getEndPosition(null, expr) >= selectedText.length()) {
+                                                if (expr != null && expr.getKind() != Tree.Kind.IDENTIFIER && !Utilities.containErrors(expr) && sp[0].getEndPosition(expr) >= selectedText.length()) {
                                                     stringCtx = EXPRESSION;
                                                 }
                                             }
@@ -118,8 +118,8 @@ public class JavaCodeTemplateFilter implements CodeTemplateFilter {
                                             } else {
                                                 SourcePositions sp = controller.getTrees().getSourcePositions();
                                                 List<? extends CaseLabelTree> labels = ((CaseTree)tree).getLabels();
-                                                int startPos = labels.isEmpty() ? (int) sp.getEndPosition(controller.getCompilationUnit(), labels.get(labels.size() - 1))
-                                                        : (int)sp.getStartPosition(controller.getCompilationUnit(), tree);
+                                                int startPos = labels.isEmpty() ? (int) sp.getEndPosition(labels.get(labels.size() - 1))
+                                                        : (int)sp.getStartPosition(tree);
                                                 String headerText = controller.getText().substring(startPos, so);
                                                 int idx = headerText.indexOf(':');
                                                 if (idx < 0) {
@@ -130,9 +130,9 @@ public class JavaCodeTemplateFilter implements CodeTemplateFilter {
                                         }
                                         case CLASS: {
                                             SourcePositions sp = controller.getTrees().getSourcePositions();
-                                            int startPos = (int)sp.getEndPosition(controller.getCompilationUnit(), ((ClassTree)tree).getModifiers());
+                                            int startPos = (int)sp.getEndPosition(((ClassTree)tree).getModifiers());
                                             if (startPos <= 0) {
-                                                startPos = (int)sp.getStartPosition(controller.getCompilationUnit(), tree);
+                                                startPos = (int)sp.getStartPosition(tree);
                                             }
                                             String headerText = controller.getText().substring(startPos, so);
                                             int idx = headerText.indexOf('{'); //NOI18N

@@ -86,8 +86,8 @@ class FindMethodRegionsVisitor extends SimpleTreeVisitor<Void,Void> implements R
         public Void visitMethod(MethodTree node, Void p) {            
             assert cu != null;
             if (!canceled.get()) {
-                int startPos = (int) pos.getStartPosition(cu, node.getBody());
-                int endPos = (int) pos.getEndPosition(cu, node.getBody());
+                int startPos = (int) pos.getStartPosition(node.getBody());
+                int endPos = (int) pos.getEndPosition(node.getBody());
                 if (startPos >=0) {
                     try {
                         posRegions.add(Pair.<DocPositionRegion,MethodTree>of(new DocPositionRegion(doc,startPos,endPos),node));

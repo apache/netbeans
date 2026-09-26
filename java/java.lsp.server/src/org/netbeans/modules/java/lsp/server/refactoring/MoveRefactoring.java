@@ -504,13 +504,13 @@ public final class MoveRefactoring extends CodeRefactoring {
         CompilationUnitTree compilationUnit = info.getCompilationUnit();
         for (TypeElement typeElement : topLevelElements) {
             ClassTree topLevelClass = trees.getTree(typeElement);
-            long startPosition = sourcePositions.getStartPosition(compilationUnit, topLevelClass);
-            long endPosition = sourcePositions.getEndPosition(compilationUnit, topLevelClass);
+            long startPosition = sourcePositions.getStartPosition(topLevelClass);
+            long endPosition = sourcePositions.getEndPosition(topLevelClass);
             if (offset > startPosition && offset < endPosition) {
                 for (Element element : typeElement.getEnclosedElements()) {
                     Tree member = trees.getTree(element);
-                    long startMember = sourcePositions.getStartPosition(compilationUnit, member);
-                    long endMember = sourcePositions.getEndPosition(compilationUnit, member);
+                    long startMember = sourcePositions.getStartPosition(member);
+                    long endMember = sourcePositions.getEndPosition(member);
                     if (offset > startMember && offset < endMember) {
                         return element;
                     }

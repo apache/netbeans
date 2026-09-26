@@ -297,8 +297,8 @@ public class JavacParserTest extends NbTestCase {
                     public Void scan(Tree tree, long[] parentSpan) {
                         if (tree == null) return null;
                         if (parameter.getTreeUtilities().isSynthetic(new TreePath(getCurrentPath(), tree))) return null;
-                        long start = parameter.getTrees().getSourcePositions().getStartPosition(parameter.getCompilationUnit(), tree);
-                        long end   = parameter.getTrees().getSourcePositions().getEndPosition(parameter.getCompilationUnit(), tree);
+                        long start = parameter.getTrees().getSourcePositions().getStartPosition(tree);
+                        long end   = parameter.getTrees().getSourcePositions().getEndPosition(tree);
                         assertTrue(start <= end);
                         if (parentSpan != null) {
                             assertTrue(parentSpan[0] <= start);
@@ -388,8 +388,8 @@ public class JavacParserTest extends NbTestCase {
                     public Void scan(Tree tree, long[] parentSpan) {
                         if (tree == null) return null;
                         if (parameter.getTreeUtilities().isSynthetic(new TreePath(getCurrentPath(), tree))) return null;
-                        long start = parameter.getTrees().getSourcePositions().getStartPosition(parameter.getCompilationUnit(), tree);
-                        long end   = parameter.getTrees().getSourcePositions().getEndPosition(parameter.getCompilationUnit(), tree);
+                        long start = parameter.getTrees().getSourcePositions().getStartPosition(tree);
+                        long end   = parameter.getTrees().getSourcePositions().getEndPosition(tree);
                         assertTrue(tree.toString() + ":" + start + "-" + end, start <= end);
                         if (parentSpan != null) {
                             assertTrue(parentSpan[0] <= start);

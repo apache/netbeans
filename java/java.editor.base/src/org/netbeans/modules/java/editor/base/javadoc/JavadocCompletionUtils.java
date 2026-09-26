@@ -180,7 +180,7 @@ public final class JavadocCompletionUtils {
         if (tree == null)
             return null;
 
-        int elementStartOffset = (int) javac.getTrees().getSourcePositions().getStartPosition(javac.getCompilationUnit(), tree);
+        int elementStartOffset = (int) javac.getTrees().getSourcePositions().getStartPosition(tree);
         TokenSequence<JavaTokenId> s = SourceUtils.getJavaTokenSequence(javac.getTokenHierarchy(), elementStartOffset);
         if (s == null) {
             return null;

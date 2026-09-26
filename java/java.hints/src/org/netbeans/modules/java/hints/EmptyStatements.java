@@ -143,8 +143,8 @@ public class EmptyStatements {
         }
         
     private static ErrorDescription createErrorDescription(HintContext ctx, final Tree leaf, final List<Fix> fixes, Kind treeKind) {
-        int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getInfo().getCompilationUnit(), leaf);
-        int end = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getInfo().getCompilationUnit(), leaf);
+        int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(leaf);
+        int end = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(leaf);
         return org.netbeans.spi.java.hints.ErrorDescriptionFactory.forSpan(ctx, start, end, getDisplayName(treeKind), fixes.toArray(new Fix[0]));
     }
 }

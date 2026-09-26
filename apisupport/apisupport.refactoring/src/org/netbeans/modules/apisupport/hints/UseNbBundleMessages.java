@@ -154,7 +154,7 @@ public class UseNbBundleMessages {
             key = literal.substring(1);
             // at.variable iof IdentifierTree, not VariableTree, so TreeUtilities.findNameSpan cannot be used
             SourcePositions sp = compilationInfo.getTrees().getSourcePositions();
-            span = new int[] {(int) sp.getStartPosition(compilationInfo.getCompilationUnit(), tree), (int) sp.getEndPosition(compilationInfo.getCompilationUnit(), tree)};
+            span = new int[] {(int) sp.getStartPosition(tree), (int) sp.getEndPosition(tree)};
             mit = null;
         }
         if (compilationInfo.getClasspathInfo().getClassPath(PathKind.COMPILE).findResource("org/openide/util/NbBundle$Messages.class") == null) {

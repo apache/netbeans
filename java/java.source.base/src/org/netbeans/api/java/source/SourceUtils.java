@@ -1333,7 +1333,7 @@ public class SourceUtils {
                     if (TreeUtilities.CLASS_TREE_KINDS.contains(parent.getLeaf().getKind())) {
                         boolean isStatic = ((VariableTree)path.getLeaf()).getModifiers().getFlags().contains(Modifier.STATIC);
                         for(Tree member : ((ClassTree)parent.getLeaf()).getMembers()) {
-                            if (member.getKind() == Tree.Kind.VARIABLE && sourcePositions.getStartPosition(path.getCompilationUnit(), member) >= pos &&
+                            if (member.getKind() == Tree.Kind.VARIABLE && sourcePositions.getStartPosition(member) >= pos &&
                                     (isStatic || !((VariableTree)member).getModifiers().getFlags().contains(Modifier.STATIC))) {
                                 el = trees.getElement(new TreePath(parent, member));
                                 if (el != null) {
@@ -1345,7 +1345,7 @@ public class SourceUtils {
                     break;
                 case ENHANCED_FOR_LOOP:
                     EnhancedForLoopTree efl = (EnhancedForLoopTree)path.getLeaf();
-                    if (sourcePositions.getEndPosition(path.getCompilationUnit(), efl.getExpression()) >= pos) {
+                    if (sourcePositions.getEndPosition(efl.getExpression()) >= pos) {
                         el = trees.getElement(new TreePath(path, efl.getVariable()));
                         if (el != null) {
                             refs.add(el);

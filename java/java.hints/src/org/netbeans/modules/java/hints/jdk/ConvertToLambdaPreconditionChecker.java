@@ -741,7 +741,7 @@ public class ConvertToLambdaPreconditionChecker {
     }
 
     private int getSourceStartFromTree(Tree tree) {
-        return (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+        return (int) info.getTrees().getSourcePositions().getStartPosition(tree);
     }
 
     private List<TypeMirror> getTypesFromElements(List<? extends VariableElement> elements) {

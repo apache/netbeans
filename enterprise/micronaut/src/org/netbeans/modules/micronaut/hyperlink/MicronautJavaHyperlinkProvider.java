@@ -166,7 +166,7 @@ public class MicronautJavaHyperlinkProvider implements HyperlinkProviderExt {
                     for (ExpressionTree arg : annotation.getArguments()) {
                         if (arg.getKind() == Tree.Kind.ASSIGNMENT) {
                             ExpressionTree expression = ((AssignmentTree) arg).getExpression();
-                            if (expression.getKind() == Tree.Kind.STRING_LITERAL && sp.getStartPosition(path.getCompilationUnit(), expression) < offset && sp.getEndPosition(path.getCompilationUnit(), expression) >= offset) {
+                            if (expression.getKind() == Tree.Kind.STRING_LITERAL && sp.getStartPosition(expression) < offset && sp.getEndPosition(expression) >= offset) {
                                 literal = (LiteralTree) expression;
                             }
                         }
@@ -179,8 +179,8 @@ public class MicronautJavaHyperlinkProvider implements HyperlinkProviderExt {
                         if ("io.micronaut.context.annotation.Property".contentEquals(name)) {
                             ret[0] = (String) literal.getValue();
                             if (span != null) {
-                                span[0] = (int) sp.getStartPosition(path.getCompilationUnit(), literal) + 1;
-                                span[1] = (int) sp.getEndPosition(path.getCompilationUnit(), literal) - 1;
+                                span[0] = (int) sp.getStartPosition(literal) + 1;
+                                span[1] = (int) sp.getEndPosition(literal) - 1;
                             }
                         } else if ("io.micronaut.context.annotation.Value".contentEquals(name)) {
                             String value = (String) literal.getValue();
@@ -188,8 +188,8 @@ public class MicronautJavaHyperlinkProvider implements HyperlinkProviderExt {
                             if (matcher.find()) {
                                 ret[0] = matcher.group(1);
                                 if (span != null) {
-                                    span[0] = (int) sp.getStartPosition(path.getCompilationUnit(), literal) + matcher.start(1) + 1;
-                                    span[1] = (int) sp.getStartPosition(path.getCompilationUnit(), literal) + matcher.end(1) + 1;
+                                    span[0] = (int) sp.getStartPosition(literal) + matcher.start(1) + 1;
+                                    span[1] = (int) sp.getStartPosition(literal) + matcher.end(1) + 1;
                                 }
                             }
                         }

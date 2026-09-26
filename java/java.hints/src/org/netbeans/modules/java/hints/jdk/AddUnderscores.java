@@ -49,8 +49,8 @@ public class AddUnderscores {
     @TriggerTreeKind({Kind.INT_LITERAL, Kind.LONG_LITERAL})
     public static ErrorDescription hint(HintContext ctx) {
         TreePath tp = ctx.getPath();
-        int end = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
-        int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
+        int end = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(tp.getLeaf());
+        int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
         TokenSequence<?> ts = ctx.getInfo().getTokenHierarchy().tokenSequence();
         ts.move(end);
         if (!ts.movePrevious()) return null;

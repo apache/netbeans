@@ -1013,11 +1013,11 @@ public class Reindenter implements IndentTask {
     }
 
     private int getStartPosition(Tree last) {
-        return (int) sp.getStartPosition(cut, last);
+        return (int) sp.getStartPosition(last);
     }
 
     private int getEndPosition(Tree last) {
-        int result = (int) sp.getEndPosition(cut, last);
+        int result = (int) sp.getEndPosition(last);
 
         if (result == -1) {
             //see JDK-8364015:

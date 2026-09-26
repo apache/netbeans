@@ -184,8 +184,8 @@ public class VanillaPartialReparser implements PartialReparser {
 //                return false;
 //            }
             final JavacTrees jt = JavacTrees.instance(task);
-            final int origStartPos = (int) jt.getSourcePositions().getStartPosition(cu, orig.getBody());
-            final int origEndPos = (int) jt.getSourcePositions().getEndPosition(cu, orig.getBody());
+            final int origStartPos = (int) jt.getSourcePositions().getStartPosition(orig.getBody());
+            final int origEndPos = (int) jt.getSourcePositions().getEndPosition(orig.getBody());
             if (origStartPos < 0) {
                 LOGGER.log(Level.WARNING, "Javac returned startpos: {0} < 0", new Object[]{origStartPos});  //NOI18N
                 return false;
@@ -227,7 +227,7 @@ public class VanillaPartialReparser implements PartialReparser {
                             newBody);
                         return false;
                     }
-                    final int newEndPos = (int) jt.getSourcePositions().getEndPosition(cu, block);
+                    final int newEndPos = (int) jt.getSourcePositions().getEndPosition(block);
                     if (newEndPos != origStartPos + newBody.length()) {
                         return false;
                     }
@@ -514,8 +514,8 @@ public class VanillaPartialReparser implements PartialReparser {
                     } else {
                         TreePath tp = new TreePath(getCurrentPath(), tree);
                         dump.append(tree.getKind()).append(":");
-                        dump.append(Trees.instance(info.getJavacTask()).getSourcePositions().getStartPosition(tp.getCompilationUnit(), tree)).append(":");
-                        dump.append(Trees.instance(info.getJavacTask()).getSourcePositions().getEndPosition(tp.getCompilationUnit(), tree)).append(":");
+                        dump.append(Trees.instance(info.getJavacTask()).getSourcePositions().getStartPosition(tree)).append(":");
+                        dump.append(Trees.instance(info.getJavacTask()).getSourcePositions().getEndPosition(tree)).append(":");
                         dump.append(String.valueOf(Trees.instance(info.getJavacTask()).getElement(tp))).append(":");
                         dump.append(normalizeCapture(String.valueOf(Trees.instance(info.getJavacTask()).getTypeMirror(tp)))).append(":");
                         dump.append(",");

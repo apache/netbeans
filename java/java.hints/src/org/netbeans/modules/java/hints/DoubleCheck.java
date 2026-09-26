@@ -142,10 +142,7 @@ public class DoubleCheck {
                 TreePathHandle.create(samePath, compilationInfo),
                 style).toEditorFix();
         }
-        int span = (int)compilationInfo.getTrees().getSourcePositions().getStartPosition(
-            compilationInfo.getCompilationUnit(),
-            synch
-        );
+        int span = (int)compilationInfo.getTrees().getSourcePositions().getStartPosition(synch);
         if (fix == null && fix2 == null) {
             return null;
         }

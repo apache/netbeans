@@ -332,10 +332,10 @@ public final class JPDAMethodChooserUtils {
                                 Tree falseTree = ternaryOpTree.getFalseExpression();
                                 //long condStart = positions.getStartPosition(compUnit, condTree);
                                 //long condEnd = positions.getEndPosition(compUnit, condTree);
-                                long trueStart = positions.getStartPosition(compUnit, trueTree);
-                                long trueEnd = positions.getEndPosition(compUnit, trueTree);
-                                long falseStart = positions.getStartPosition(compUnit, falseTree);
-                                long falseEnd = positions.getEndPosition(compUnit, falseTree);
+                                long trueStart = positions.getStartPosition(trueTree);
+                                long trueEnd = positions.getEndPosition(trueTree);
+                                long falseStart = positions.getStartPosition(falseTree);
+                                long falseEnd = positions.getEndPosition(falseTree);
 
                                 if (trueStart <= offset && offset <= trueEnd) {
                                     if (pcOffset < trueStart) {
@@ -352,8 +352,8 @@ public final class JPDAMethodChooserUtils {
                                     tree.getKind() == Tree.Kind.CONDITIONAL_OR) {
                                 BinaryTree binaryTree = (BinaryTree)tree;
                                 Tree rightTree = binaryTree.getRightOperand();
-                                long rightStart = positions.getStartPosition(compUnit, rightTree);
-                                long rightEnd = positions.getEndPosition(compUnit, rightTree);
+                                long rightStart = positions.getStartPosition(rightTree);
+                                long rightEnd = positions.getEndPosition(rightTree);
 
                                 if (rightStart <= offset && offset <= rightEnd) {
                                     if (pcOffset < rightStart) {

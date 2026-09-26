@@ -202,12 +202,12 @@ public final class JavadocImports {
                         String[] splitPkgCls = jdctx.typeElement.toString().split("\\.");
                         if (splitPkgCls.length > 0) {
                             String endMemberName = splitPkgCls[splitPkgCls.length - 1];
-                            long startPosition = trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), docComment, node);
+                            long startPosition = trees.getSourcePositions().getStartPosition(docComment, node);
                             startPosition = jdctx.typeElement.toString().indexOf(endMemberName) + startPosition + ((TextTree) node).getBody().indexOf(jdctx.typeElement.toString());
                             handleUsage((int) startPosition);
                         }
                     } else if (jdctx.variableElements.contains(toFind)) {
-                        long startPosition = trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), docComment, node);
+                        long startPosition = trees.getSourcePositions().getStartPosition(docComment, node);
                         startPosition += ((TextTree) node).getBody().indexOf(toFind.toString());
                         handleUsage((int) startPosition);
                     }
@@ -222,7 +222,7 @@ public final class JavadocImports {
                         String[] splitPkgCls = jdctx.typeElement.toString().split("\\.");
                         if (splitPkgCls.length > 0) {
                             String endMemberName = splitPkgCls[splitPkgCls.length - 1];
-                            long startPosition = trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), docComment, node);
+                            long startPosition = trees.getSourcePositions().getStartPosition(docComment, node);
                             startPosition = jdctx.typeElement.toString().indexOf(endMemberName) + startPosition + ((TextTree) node).getBody().indexOf(jdctx.typeElement.toString());
                             handleUsage((int) startPosition);
                         }
@@ -244,9 +244,9 @@ public final class JavadocImports {
                     @Override
                     public Void visitIdentifier(IdentifierTree node, Void p) {
                         if (toFind.equals(trees.getElement(getCurrentPath()))) {
-                            int startPosition = (int) trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), node);//vanilla javac returns 0 here for start positions
+                            int startPosition = (int) trees.getSourcePositions().getStartPosition(node);//vanilla javac returns 0 here for start positions
                             if (startPosition == 0 && parentNode.toString().contains(node.toString())) {
-                                long parentNodeStartPosition = trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), docComment, parentNode);
+                                long parentNodeStartPosition = trees.getSourcePositions().getStartPosition(docComment, parentNode);
                                 startPosition = (int) (parentNode.toString().indexOf(node.toString()) + parentNodeStartPosition);
                             }
                             handleUsage(startPosition);
@@ -262,7 +262,7 @@ public final class JavadocImports {
                                 String[] splitPkgCls = node.toString().split("\\.");
                                 if (splitPkgCls.length > 0) {
                                     String endMemberName = splitPkgCls[splitPkgCls.length - 1];
-                                    long startPosition = trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), docComment, parentNode);
+                                    long startPosition = trees.getSourcePositions().getStartPosition(docComment, parentNode);
                                     startPosition = parentNode.toString().indexOf(endMemberName) + startPosition;
                                     handleUsage((int) startPosition);
                                 }
@@ -306,7 +306,7 @@ public final class JavadocImports {
             public Void visitParam(ParamTree node, Void p) {
                 if (   node.getName() != null
                     && toFind.equals(paramElementFor(trees.getElement(forElement), node))) {
-                    handleUsage((int) trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), docComment, node.getName()));
+                    handleUsage((int) trees.getSourcePositions().getStartPosition(docComment, node.getName()));
                     return null;
                 }
                 return super.visitParam(node, p);
@@ -371,8 +371,8 @@ public final class JavadocImports {
 
                 if (node != null && node.getKind() == com.sun.source.doctree.DocTree.Kind.ERRONEOUS && ((ErroneousTree) node).getBody().endsWith("@")) {
                     prevTagError = true;
-                    if (positions.getStartPosition(javac.getCompilationUnit(), docComment, node) <= offset
-                            && positions.getEndPosition(javac.getCompilationUnit(), docComment, node) >= offset) {
+                    if (positions.getStartPosition(docComment, node) <= offset
+                            && positions.getEndPosition(docComment, node) >= offset) {
                         JavadocContext jdctx = new JavadocContext();
                         processDocTreeNode(docTreePath, node, p, trees, getCurrentPath(), docComment, ((ErroneousTree) node).getBody(), jdctx, javac);
                         if (!jdctx.variableElements.isEmpty()) {
@@ -383,13 +383,13 @@ public final class JavadocImports {
                     return super.scan(node, p);
                 }
                 if (node != null && node.getKind() == com.sun.source.doctree.DocTree.Kind.TEXT && prevTagError
-                        && positions.getStartPosition(javac.getCompilationUnit(), docComment, node) <= offset
-                        && positions.getEndPosition(javac.getCompilationUnit(), docComment, node) >= offset) {
+                        && positions.getStartPosition(docComment, node) <= offset
+                        && positions.getEndPosition(docComment, node) >= offset) {
                     JavadocContext jdctx = new JavadocContext();
                     processDocTreeNode(docTreePath, node, p, trees, getCurrentPath(), docComment, ((TextTree) node).getBody(), jdctx, javac);
 
                     if (jdctx.typeElement != null) {
-                        long startPosition = positions.getStartPosition(javac.getCompilationUnit(), docComment, node);
+                        long startPosition = positions.getStartPosition(docComment, node);
                         startPosition = node.toString().indexOf(jdctx.typeElement.getSimpleName().toString()) + startPosition;
                         long endPosition = startPosition + jdctx.typeElement.getSimpleName().toString().length();
                         if (startPosition <= offset
@@ -397,7 +397,7 @@ public final class JavadocImports {
                             result[0] = jdctx.typeElement;
                             return null;
                         }
-                        startPosition = node.toString().indexOf(jdctx.typeElement.getEnclosingElement().toString()) + positions.getStartPosition(javac.getCompilationUnit(), docComment, node);
+                        startPosition = node.toString().indexOf(jdctx.typeElement.getEnclosingElement().toString()) + positions.getStartPosition(docComment, node);
                         endPosition = startPosition + jdctx.typeElement.getEnclosingElement().toString().length();
                         if (startPosition <= offset
                                 && endPosition >= offset) {
@@ -411,8 +411,8 @@ public final class JavadocImports {
                 prevTagError = false;
 
                 if (node != null
-                        && positions.getStartPosition(javac.getCompilationUnit(), docComment, node) <= offset
-                        && positions.getEndPosition(javac.getCompilationUnit(), docComment, node) >= offset) {
+                        && positions.getStartPosition(docComment, node) <= offset
+                        && positions.getEndPosition(docComment, node) >= offset) {
                     return super.scan(node, p);
                 }
 
@@ -429,14 +429,14 @@ public final class JavadocImports {
                 }
                 new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override public Void visitIdentifier(IdentifierTree node, Void p) {
-                        if (positions.getStartPosition(javac.getCompilationUnit(), node) <= offset
-                                && positions.getEndPosition(javac.getCompilationUnit(), node) >= offset) {
+                        if (positions.getStartPosition(node) <= offset
+                                && positions.getEndPosition(node) >= offset) {
                             result[0] = trees.getElement(getCurrentPath());
                         } else {
-                            long startPosition = positions.getStartPosition(javac.getCompilationUnit(), node);
+                            long startPosition = positions.getStartPosition(node);
                             if (startPosition == 0) {//vanilla javac returns 0 for start
                                 if (parentNode != null && parentNode.toString().contains(node.toString())) {
-                                    long parentNodeStartPosition = positions.getStartPosition(javac.getCompilationUnit(), docComment, parentNode);
+                                    long parentNodeStartPosition = positions.getStartPosition(docComment, parentNode);
                                     startPosition = parentNode.toString().indexOf(node.toString()) + parentNodeStartPosition;
                                     long endPosition = startPosition + node.toString().length();
                                     if (startPosition <= offset
@@ -460,7 +460,7 @@ public final class JavadocImports {
                                 String[] splitPkgCls = node.toString().split("\\.");
                                 if (splitPkgCls.length > 0) {
                                     String endMemberName = splitPkgCls[splitPkgCls.length - 1];
-                                    long startPosition = positions.getStartPosition(javac.getCompilationUnit(), docComment, parentNode);
+                                    long startPosition = positions.getStartPosition(docComment, parentNode);
                                     startPosition = parentNode.toString().indexOf(endMemberName) + startPosition;
                                     long endPosition = startPosition + node.toString().length();
                                     if (startPosition <= offset
@@ -490,8 +490,8 @@ public final class JavadocImports {
             public Void visitParam(ParamTree node, Void p) {
                 //XXX: getElement for the param's identifier???
                 if (   node.getName() != null
-                    && positions.getStartPosition(javac.getCompilationUnit(), docComment, node.getName()) <= offset
-                    && positions.getEndPosition(javac.getCompilationUnit(), docComment, node.getName()) >= offset) {
+                    && positions.getStartPosition(docComment, node.getName()) <= offset
+                    && positions.getEndPosition(docComment, node.getName()) >= offset) {
                     result[0] = paramElementFor(trees.getElement(tp), node);
                     
                     return null;
@@ -522,8 +522,8 @@ public final class JavadocImports {
         new DocTreePathScanner<Void, Void>() {
             @Override public Void scan(DocTree node, Void p) {
                 if (   node != null
-                    && positions.getStartPosition(javac.getCompilationUnit(), docComment, node) <= offset
-                    && positions.getEndPosition(javac.getCompilationUnit(), docComment, node) >= offset) {
+                    && positions.getStartPosition(docComment, node) <= offset
+                    && positions.getEndPosition(docComment, node) >= offset) {
                     return super.scan(node, p);
                 }
                 
@@ -539,8 +539,8 @@ public final class JavadocImports {
                 }
                 new ErrorAwareTreePathScanner<Void, Void>() {
                     @Override public Void visitIdentifier(IdentifierTree node, Void p) {
-                        if (   positions.getStartPosition(javac.getCompilationUnit(), node) <= offset
-                            && positions.getEndPosition(javac.getCompilationUnit(), node) >= offset) {
+                        if (   positions.getStartPosition(node) <= offset
+                            && positions.getEndPosition(node) >= offset) {
                             handleUsage(offset);
                         }
                         return null;
@@ -585,8 +585,8 @@ public final class JavadocImports {
             public Void visitParam(ParamTree node, Void p) {
                 //XXX: getElement for the param's identifier???
                 if (   node.getName() != null
-                    && positions.getStartPosition(javac.getCompilationUnit(), docComment, node.getName()) <= offset
-                    && positions.getEndPosition(javac.getCompilationUnit(), docComment, node.getName()) >= offset) {
+                    && positions.getStartPosition(docComment, node.getName()) <= offset
+                    && positions.getEndPosition(docComment, node.getName()) >= offset) {
                     result[0] = findNameTokenOfParamTag(offset, getJavadocTS(javac, offset));
                     
                     return null;
@@ -821,7 +821,7 @@ public final class JavadocImports {
                 result[0] = new DocTreePath(path, node);
                 jdctx.doc = javac.getDocument();
                 jdctx.javac = javac;
-                long startPosition = trees.getSourcePositions().getStartPosition(javac.getCompilationUnit(), dcComment, node);
+                long startPosition = trees.getSourcePositions().getStartPosition(dcComment, node);
                 int errorBodyLength = body.trim().length();
                 int caretOffset = (int) startPosition + errorBodyLength;
                 TreePath javadocFor = result[0].getTreePath();
@@ -868,7 +868,7 @@ public final class JavadocImports {
     private static void insideTag(DocTreePath tag, JavadocContext jdctx, int caretOffset) {
         TokenSequence<JavadocTokenId> jdts = jdctx.jdts;
         assert jdts.token() != null;
-        int start = (int) jdctx.positions.getStartPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+        int start = (int) jdctx.positions.getStartPosition(jdctx.comment, tag.getLeaf());
 
         boolean isThrowsKind = JavadocCompletionUtils.normalizedKind(tag.getLeaf()) == DocTree.Kind.THROWS;
         if (isThrowsKind && !(EXECUTABLE.contains(jdctx.commentFor.getKind()))) {
@@ -905,7 +905,7 @@ public final class JavadocImports {
             // not java reference
             return;
         } else if (jdts.moveNext()) {
-            int end = (int) jdctx.positions.getEndPosition(jdctx.javac.getCompilationUnit(), jdctx.comment, tag.getLeaf());
+            int end = (int) jdctx.positions.getEndPosition(jdctx.comment, tag.getLeaf());
             insideReference(JavadocCompletionUtils.normalizedKind(tag.getLeaf()), jdts.offset(), end, jdctx, caretOffset);
         }
 

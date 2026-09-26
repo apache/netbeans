@@ -130,8 +130,8 @@ public class HintsUtils {
     public static TextSpan getUnderlineSpan(CompilationInfo info, Tree tree) {
         SourcePositions srcPos = info.getTrees().getSourcePositions();
 
-        int startOffset = (int) srcPos.getStartPosition(info.getCompilationUnit(), tree);
-        int endOffset = (int) srcPos.getEndPosition(info.getCompilationUnit(), tree);
+        int startOffset = (int) srcPos.getStartPosition(tree);
+        int endOffset = (int) srcPos.getEndPosition(tree);
 
         Tree startSearchingForNameIndentifierBehindThisTree = null;
 
@@ -145,8 +145,7 @@ public class HintsUtils {
         }
 
         if (startSearchingForNameIndentifierBehindThisTree != null) {
-            int searchStart = (int) srcPos.getEndPosition(info.getCompilationUnit(),
-                    startSearchingForNameIndentifierBehindThisTree);
+            int searchStart = (int) srcPos.getEndPosition(startSearchingForNameIndentifierBehindThisTree);
 
             TokenSequence tokenSequence = info.getTreeUtilities().tokensFor(tree);
 

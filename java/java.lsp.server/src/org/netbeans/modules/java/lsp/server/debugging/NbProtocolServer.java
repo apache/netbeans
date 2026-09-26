@@ -667,7 +667,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                     private boolean inLambda;
                     public Void scan(Tree tree, Void v) {
                         if (tree != null && !inLambda && tree.getKind() != Tree.Kind.COMPILATION_UNIT) {
-                            int startPos = (int) cc.getTrees().getSourcePositions().getStartPosition(getCurrentPath().getCompilationUnit(), tree);
+                            int startPos = (int) cc.getTrees().getSourcePositions().getStartPosition(tree);
                             if (startPos != (-1)) {
                                 Position pos = Utils.createPosition(cc.getCompilationUnit().getLineMap(), startPos);
 
@@ -677,7 +677,7 @@ public final class NbProtocolServer implements IDebugProtocolServer, LspSession.
                         return super.scan(tree, v);
                     }
                     public Void visitLambdaExpression(LambdaExpressionTree tree, Void v) {
-                        int startPos = (int) cc.getTrees().getSourcePositions().getStartPosition(getCurrentPath().getCompilationUnit(), tree);
+                        int startPos = (int) cc.getTrees().getSourcePositions().getStartPosition(tree);
                         Position pos = Utils.createPosition(cc.getCompilationUnit().getLineMap(), startPos);
                         int line = pos.getLine();
 

@@ -281,8 +281,8 @@ public final class ElementOpen {
                         final TreePath tp = toOpen.resolve(cc);
                         if (tp != null) {
                             final SourcePositions sourcePos = cc.getTrees().getSourcePositions();
-                            pos[0] = sourcePos.getStartPosition(cc.getCompilationUnit(), tp.getLeaf());
-                            pos[1] = sourcePos.getEndPosition(cc.getCompilationUnit(), tp.getLeaf());
+                            pos[0] = sourcePos.getStartPosition(tp.getLeaf());
+                            pos[1] = sourcePos.getEndPosition(tp.getLeaf());
                         }
                     }
                 }, true);
@@ -568,15 +568,15 @@ public final class ElementOpen {
 
     static void fillInTreePositions(CompilationInfo info, Tree forTree, Object[] target) {
         CompilationUnitTree cu = info.getCompilationUnit();
-        target[1] = (int)info.getTrees().getSourcePositions().getStartPosition(cu, forTree);
-        target[2] = (int)info.getTrees().getSourcePositions().getEndPosition(cu, forTree);
+        target[1] = (int)info.getTrees().getSourcePositions().getStartPosition(forTree);
+        target[2] = (int)info.getTrees().getSourcePositions().getEndPosition(forTree);
         int[] span = null;
         switch(forTree.getKind()) {
             case CLASS:
                 if ((int) target[1] >= 0 && (int) target[2] == -1) {
                     // Compact Source file (JEP 512)  issue implicit class end position not found in code 
                     // see JDK-8364015
-                    target[2] = (int) info.getTrees().getSourcePositions().getEndPosition(cu, cu);
+                    target[2] = (int) info.getTrees().getSourcePositions().getEndPosition(cu);
                 }
             case INTERFACE:
             case ENUM:

@@ -304,7 +304,7 @@ public final class CreateElementUtilities {
             
             if (doc != null) {//XXX
                 int bodyStart = findBodyStart(parent.getLeaf(), info.getCompilationUnit(), info.getTrees().getSourcePositions(), doc);
-                int bodyEnd   = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), parent.getLeaf());
+                int bodyEnd   = (int) info.getTrees().getSourcePositions().getEndPosition(parent.getLeaf());
 
                 types.add(ElementKind.PARAMETER);
                 types.add(ElementKind.LOCAL_VARIABLE);
@@ -321,8 +321,8 @@ public final class CreateElementUtilities {
     }
     
     private static int findBodyStartImpl(Tree cltree, CompilationUnitTree cu, SourcePositions positions, Document doc) {
-        int start = (int)positions.getStartPosition(cu, cltree);
-        int end   = (int)positions.getEndPosition(cu, cltree);
+        int start = (int)positions.getStartPosition(cltree);
+        int end   = (int)positions.getEndPosition(cltree);
         
         if (start == (-1) || end == (-1)) {
             return -1;

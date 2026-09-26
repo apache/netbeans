@@ -295,8 +295,8 @@ public class HintsInvoker {
         TreePath path = info.getTreeUtilities().pathFor((from + to) / 2);
 
         while (path.getLeaf().getKind() != Kind.COMPILATION_UNIT) {
-            int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), path.getLeaf());
-            int end = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), path.getLeaf());
+            int start = (int) info.getTrees().getSourcePositions().getStartPosition(path.getLeaf());
+            int end = (int) info.getTrees().getSourcePositions().getEndPosition(path.getLeaf());
 
             if (start <= from && end >= to) {
                 break;
@@ -703,8 +703,8 @@ public class HintsInvoker {
             Document doc = info.getDocument();
 
             if (doc instanceof GuardedDocument gdoc) {
-                int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree.getLeaf());
-                int end = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree.getLeaf());
+                int start = (int) info.getTrees().getSourcePositions().getStartPosition(tree.getLeaf());
+                int end = (int) info.getTrees().getSourcePositions().getEndPosition(tree.getLeaf());
                 boolean[] ret = { false };
                 gdoc.render(() -> {
                     // MarkBlockChain should only be accessed under doc's readlock to guarantee a stability of the offsets.

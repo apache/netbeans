@@ -19,6 +19,7 @@
 
 package org.netbeans.modules.project.ui;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -44,6 +45,7 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.UIManager;
 import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -790,10 +792,8 @@ public class ProjectsRootNode extends AbstractNode {
                     LOG.log(Level.INFO, null, e);
                 }
             }
-            for (var i = 0; i < pair.depth(); i++) {
-                original = "\u00BB " + original;
-            }
-            return original;
+            String indentText = ProjectsLaF.indentationPrefix(false, pair.depth());
+            return indentText + original;
         }
 
         /** Get display name used for logging as original display name can cause deadlock issue #160512 */
@@ -839,11 +839,9 @@ public class ProjectsRootNode extends AbstractNode {
                     LOG.log(Level.INFO, null, e);
                 }
             }
-            var html = isMainAsync()? "<b>" + htmlName + "</b>" : htmlName;
-            for (var i = 0; i < pair.depth(); i++) {
-                html = "<font color='#7f7f7f'>&#187; </font>" + html;
-            }
-            return html;
+            String html = isMainAsync()? "<b>" + htmlName + "</b>" : htmlName;
+            String indentText = ProjectsLaF.indentationPrefix(true, pair.depth());
+            return indentText + html;
         }
 
         public @Override Image getIcon(int type) {

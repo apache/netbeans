@@ -182,6 +182,12 @@ public interface ProjectManagerImplementation {
      */
     void saveAllProjects() throws IOException;
 
+    /** @since 1.111 */
+    interface WithFallback extends ProjectManagerImplementation {
+        @NonNull
+        Project findProjectOrFallback(@NonNull FileObject projectDirectory) throws IOException, IllegalArgumentException;
+    }
+
     /**
      * Callback to notify the {@link ProjectManager} about changes.
      */

@@ -22,7 +22,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -50,6 +49,7 @@ public final class PtyNativeProcess extends AbstractNativeProcess {
     }
 
     @Override
+    @SuppressWarnings({"deprecation", "AssignmentToForLoopParameter"})
     protected void create() throws Throwable {
         ExecutionEnvironment env = info.getExecutionEnvironment();
         Pty pty = info.getPty();
@@ -116,7 +116,7 @@ public final class PtyNativeProcess extends AbstractNativeProcess {
         info.setCommandLine(null);
         final String path = PtyUtility.getInstance().getPath(env);
         info.setExecutable(path);
-        info.setArguments(newArgs.toArray(new String[0]));
+        info.setArguments(newArgs.toArray(String[]::new));
 
         // no need to preload unbuffer in case of running in internal terminal
         info.setUnbuffer(false);
@@ -145,9 +145,8 @@ public final class PtyNativeProcess extends AbstractNativeProcess {
 
         String pidLine = null;
         String ttyLine = null;
-        String line;
 
-        while ((line = readLine(inputStream)) != null) {
+        for(String line = readLine(inputStream); line != null; line = readLine(inputStream)) {
             line = line.trim();
             if (line.isEmpty()) {
                 break;

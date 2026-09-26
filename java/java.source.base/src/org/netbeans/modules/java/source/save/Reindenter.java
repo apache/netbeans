@@ -274,16 +274,8 @@ public class Reindenter implements IndentTask {
                     parsedTree = TreeUtilitiesAccessor.getInstance().parseStatement(javacTask, "{" + text + "}", psp);
                     sp = new SourcePositions() {
                         @Override
-                        public long getStartPosition(CompilationUnitTree file, Tree tree) {
-                            return getStartPosition(tree);
-                        }
-                        @Override
                         public long getStartPosition(Tree tree) {
                             return currentEmbeddingStartOffset + psp[0].getStartPosition(tree) - 1;
-                        }
-                        @Override
-                        public long getEndPosition(CompilationUnitTree file, Tree tree) {
-                            return getEndPosition(tree);
                         }
                         @Override
                         public long getEndPosition(Tree tree) {

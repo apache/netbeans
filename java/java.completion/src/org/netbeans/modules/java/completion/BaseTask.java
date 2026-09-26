@@ -716,11 +716,6 @@ abstract class BaseTask extends UserTask {
         }
 
         @Override
-        public long getStartPosition(CompilationUnitTree compilationUnitTree, Tree tree) {
-            return getStartPosition(tree);
-        }
-
-        @Override
         public long getStartPosition(Tree tree) {
             if (tree == root) {
                 return startOffset;
@@ -728,11 +723,6 @@ abstract class BaseTask extends UserTask {
             found = false;
             scan(root, tree);
             return found ? modified.getStartPosition(tree) + startOffset : original.getStartPosition(tree);
-        }
-
-        @Override
-        public long getEndPosition(CompilationUnitTree compilationUnitTree, Tree tree) {
-            return getEndPosition(tree);
         }
 
         @Override

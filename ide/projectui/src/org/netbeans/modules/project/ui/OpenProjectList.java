@@ -123,11 +123,7 @@ public final class OpenProjectList {
      */
     static final Mutex MUTEX = new Mutex();
     
-    public static Comparator<Project> projectByDisplayName() {
-        return new ProjectByDisplayNameComparator();
-    }
-
-    static Comparator<? super Project> projectByPath() {
+    public static Comparator<? super Project> projectByPath() {
         return new ProjectByPathComparator();
     }
 
@@ -1926,49 +1922,6 @@ public final class OpenProjectList {
         
     }
     
-    private static class ProjectByDisplayNameComparator implements Comparator<Project> {
-        
-        private static final Comparator<Object> COLLATOR = Collator.getInstance();
-
-        // memoize results since it could be called >1 time per project:
-        private final Map<Project,String> names = new HashMap<Project,String>();
-        private String getDisplayName(Project p) {
-            String n = names.get(p);
-            if (n == null) {
-                n = ProjectUtils.getInformation(p).getDisplayName();
-                names.put(p, n);
-            }
-            return n;
-        }
-        
-        @Override
-        public int compare(Project p1, Project p2) {
-//            Uncoment to make the main project be the first one
-//            but then needs to listen to main project change
-//            if ( OpenProjectList.getDefault().isMainProject( p1 ) ) {
-//                return -1;
-//            }
-//            
-//            if ( OpenProjectList.getDefault().isMainProject( p2 ) ) {
-//                return 1;
-//            }
-            
-            String n1 = getDisplayName(p1);
-            String n2 = getDisplayName(p2);
-            if (n1 != null && n2 != null) {
-                return COLLATOR.compare(n1, n2);
-            } else if (n1 == null && n2 != null) {
-                log(Level.WARNING, p1 + ": ProjectInformation.getDisplayName() should not return null!");
-                return -1;
-            } else if (n1 != null && n2 == null) {
-                log(Level.WARNING, p2 + ": ProjectInformation.getDisplayName() should not return null!");
-                return 1;
-            }
-            return 0; // both null
-            
-        }
-        
-    }
     private static class ProjectByPathComparator implements Comparator<Project> {
         @Override
         public int compare(Project p1, Project p2) {

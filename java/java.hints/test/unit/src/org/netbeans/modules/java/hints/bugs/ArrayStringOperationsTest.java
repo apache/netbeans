@@ -37,36 +37,36 @@ public class ArrayStringOperationsTest extends NbTestCase {
      */
     public void testDetectArrayStrings() throws Exception {
         HintTest.create()
-                .input(
-                "package test;\n" +
-                "\n" +
-                "import java.io.PrintStream;\n" +
-                "import java.text.MessageFormat;\n" +
-                "import java.util.Locale;\n" +
-                "\n" +
-                "public class Test {\n" +
-                "    private int[] intArr;\n" +
-                "    private Object[] objArr;\n" +
-                "    private PrintStream stream;\n" +
-                "    \n" +
-                "    public void test() {\n" +
-                "        String si = intArr.toString();\n" +
-                "        String so = objArr.toString();\n" +
-                "        // this is OK\n" +
-                "        String s2 = String.format(\"ee\", objArr);\n" +
-                "        String s1 = String.format(\"ee\", intArr, 2);\n" +
-                "        String s3 = MessageFormat.format(\"eee\", intArr);\n" +
-                "        stream.format(\"ee\", intArr);\n" +
-                "        // not ok, not a last parameter\n" +
-                "        stream.format(\"ee\", objArr, 2);\n" +
-                "        System.err.format(Locale.getDefault(), \"ee\", objArr, 1);\n" +
-                "        stream.print(intArr);\n" +
-                "        stream.println(intArr);\n" +
-                "        s1 = s2 + intArr;\n" +
-                "        s1 = objArr + s2;\n" +
-                "    }\n" +
-                "}"
-                )
+                .input("""
+                       package test;
+
+                       import java.io.PrintStream;
+                       import java.text.MessageFormat;
+                       import java.util.Locale;
+
+                       public class Test {
+                           private int[] intArr;
+                           private Object[] objArr;
+                           private PrintStream stream;
+
+                           public void test() {
+                               String si = intArr.toString();
+                               String so = objArr.toString();
+                               // this is OK
+                               String s2 = String.format(\"ee\", objArr);
+                               String s1 = String.format(\"ee\", intArr, 2);
+                               String s3 = MessageFormat.format(\"eee\", intArr);
+                               stream.format(\"ee\", intArr);
+                               // not ok, not a last parameter
+                               stream.format(\"ee\", objArr, 2);
+                               System.err.format(Locale.getDefault(), \"ee\", objArr, 1);
+                               stream.print(intArr);
+                               stream.println(intArr);
+                               s1 = s2 + intArr;
+                               s1 = objArr + s2;
+                           }
+                       }
+                       """)
                 .run(ArrayStringConversions.class).
                 assertWarnings(
                 "12:20-12:37:verifier:toString() called on array instance",
@@ -78,11 +78,31 @@ public class ArrayStringOperationsTest extends NbTestCase {
                 "21:53-21:59:verifier:Array instance passed as parameter to a formatter function", 
                 "22:21-22:27:verifier:Array instance printed on PrintStream",
                 "23:23-23:29:verifier:Array instance printed on PrintStream",
-                "24:18-24:24:verifier:Array concatenated with String", 
+                "24:18-24:24:verifier:Array concatenated with String",
                 "25:13-25:19:verifier:Array concatenated with String"
                 );
+        if (Runtime.version().feature() >= 25) {
+            HintTest.create()
+                    .input("""
+                           package test;
+
+                           public class Test {
+                               private int[] intArr;
+
+                               public void test() {
+                                   IO.print(intArr);
+                                   IO.println(intArr);
+                               }
+                           }
+                           """)
+                    .run(ArrayStringConversions.class).
+                    assertWarnings(
+                            "6:17-6:23:verifier:Array instance printed with java.lang.IO",
+                            "7:19-7:25:verifier:Array instance printed with java.lang.IO"
+                    );
+        }
     }
-    
+
     /**
      * .toString() is converted in a different way than Array passing, check the fix is OK
      * @throws Exception 

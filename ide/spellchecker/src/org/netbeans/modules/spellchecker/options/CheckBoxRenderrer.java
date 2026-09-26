@@ -32,52 +32,44 @@ import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
+public final class CheckBoxRenderrer extends JCheckBox implements ListCellRenderer, Serializable {
 
-public class CheckBoxRenderrer extends JCheckBox implements ListCellRenderer, Serializable {
+    private static final Border DEFAULT_NO_FOCUS_BORDER = new EmptyBorder(1, 1, 1, 1);
 
-    private static final Border SAFE_NO_FOCUS_BORDER = new EmptyBorder (1, 1, 1, 1);
-    private static final Border DEFAULT_NO_FOCUS_BORDER = new EmptyBorder (1, 1, 1, 1);
+    protected static Border noFocusBorder = DEFAULT_NO_FOCUS_BORDER;
 
-    protected static Border     noFocusBorder = DEFAULT_NO_FOCUS_BORDER;
-
-    public CheckBoxRenderrer () {
-        super ();
-        setOpaque (true);
-        setBorder (getNoFocusBorder ());
-        setName ("List.cellRenderer");
+    public CheckBoxRenderrer() {
+        super();
+        setOpaque(true);
+        setBorder(getNoFocusBorder());
+        setName("List.cellRenderer");
     }
 
-    private Border getNoFocusBorder () {
+    private Border getNoFocusBorder() {
         Border border = UIManager.getBorder("List.cellNoFocusBorder");
-        if (System.getSecurityManager () != null) {
-            if (border != null) {
-                return border;
-            }
-            return SAFE_NO_FOCUS_BORDER;
-        } else {
-            if (border != null &&
-                (noFocusBorder == null ||
-                noFocusBorder == DEFAULT_NO_FOCUS_BORDER)) {
-                return border;
-            }
-            return noFocusBorder;
+        if (border != null
+                && (noFocusBorder == null
+                || noFocusBorder == DEFAULT_NO_FOCUS_BORDER)) {
+            return border;
         }
+        return noFocusBorder;
     }
 
-    public Component getListCellRendererComponent (
-        JList                   list,
-        Object                  value,
-        int                     index,
-        boolean                 isSelected,
-        boolean                 cellHasFocus
+    @Override
+    public Component getListCellRendererComponent(
+            JList list,
+            Object value,
+            int index,
+            boolean isSelected,
+            boolean cellHasFocus
     ) {
-        setComponentOrientation (list.getComponentOrientation ());
+        setComponentOrientation(list.getComponentOrientation());
 
         Color bg = null;
         Color fg = null;
 
-        JList.DropLocation dropLocation = list.getDropLocation ();
-        if (dropLocation != null && !dropLocation.isInsert () && dropLocation.getIndex () == index) {
+        JList.DropLocation dropLocation = list.getDropLocation();
+        if (dropLocation != null && !dropLocation.isInsert() && dropLocation.getIndex() == index) {
 
             bg = UIManager.getColor("List.dropCellBackground");
             fg = UIManager.getColor("List.dropCellForeground");
@@ -86,19 +78,19 @@ public class CheckBoxRenderrer extends JCheckBox implements ListCellRenderer, Se
         }
 
         if (isSelected) {
-            setBackground (bg == null ? list.getSelectionBackground () : bg);
-            setForeground (fg == null ? list.getSelectionForeground () : fg);
+            setBackground(bg == null ? list.getSelectionBackground() : bg);
+            setForeground(fg == null ? list.getSelectionForeground() : fg);
         } else {
-            setBackground (list.getBackground ());
-            setForeground (list.getForeground ());
+            setBackground(list.getBackground());
+            setForeground(list.getForeground());
         }
 
         String name = (String) value;
-        setText (name.substring (1));
-        setSelected (name.charAt (0) == '+');
+        setText(name.substring(1));
+        setSelected(name.charAt(0) == '+');
 
-        setEnabled (list.isEnabled ());
-        setFont (list.getFont ());
+        setEnabled(list.isEnabled());
+        setFont(list.getFont());
 
         Border border = null;
         if (cellHasFocus) {
@@ -109,10 +101,10 @@ public class CheckBoxRenderrer extends JCheckBox implements ListCellRenderer, Se
                 border = UIManager.getBorder("List.focusCellHighlightBorder");
             }
         } else {
-            border = getNoFocusBorder ();
+            border = getNoFocusBorder();
         }
         if (border != null) { //#189786: rarely, the border is null - reasons are unknown
-            setBorder (border);
+            setBorder(border);
         } else {
             Logger.getLogger(CheckBoxRenderrer.class.getName()).log(Level.INFO, "Cannot set any border");
         }
@@ -121,83 +113,81 @@ public class CheckBoxRenderrer extends JCheckBox implements ListCellRenderer, Se
     }
 
     @Override
-    public boolean isOpaque () {
-        Color back = getBackground ();
-        Component p = getParent ();
+    public boolean isOpaque() {
+        Color back = getBackground();
+        Component p = getParent();
         if (p != null) {
-            p = p.getParent ();
+            p = p.getParent();
         }
         // p should now be the JList.
-        boolean colorMatch = (back != null) && (p != null) &&
-            back.equals (p.getBackground ()) &&
-            p.isOpaque ();
-        return !colorMatch && super.isOpaque ();
+        boolean colorMatch = (back != null) && (p != null)
+                && back.equals(p.getBackground())
+                && p.isOpaque();
+        return !colorMatch && super.isOpaque();
     }
 
     @Override
-    public void validate () {
+    public void validate() {
     }
 
     @Override
-    public void invalidate () {
+    public void invalidate() {
     }
 
     @Override
-    public void repaint () {
+    public void repaint() {
     }
 
     @Override
-    public void revalidate () {
+    public void revalidate() {
     }
 
     @Override
-    public void repaint (long tm, int x, int y, int width, int height) {
+    public void repaint(long tm, int x, int y, int width, int height) {
     }
 
     @Override
-    public void repaint (Rectangle r) {
+    public void repaint(Rectangle r) {
     }
 
     @Override
-    protected void firePropertyChange (String propertyName, Object oldValue, Object newValue) {
-        // Strings get interned...
-        if (propertyName == "text" || ((propertyName == "font" || propertyName == "foreground") &&
-            oldValue != newValue &&
-            getClientProperty (javax.swing.plaf.basic.BasicHTML.propertyKey) != null)
-        ) {
-            super.firePropertyChange (propertyName, oldValue, newValue);
+    protected void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+        if ("text".equals(propertyName) || (("font".equals(propertyName) || "foreground".equals(propertyName))
+                && oldValue != newValue
+                && getClientProperty(javax.swing.plaf.basic.BasicHTML.propertyKey) != null)) {
+            super.firePropertyChange(propertyName, oldValue, newValue);
         }
     }
 
     @Override
-    public void firePropertyChange (String propertyName, byte oldValue, byte newValue) {
+    public void firePropertyChange(String propertyName, byte oldValue, byte newValue) {
     }
 
     @Override
-    public void firePropertyChange (String propertyName, char oldValue, char newValue) {
+    public void firePropertyChange(String propertyName, char oldValue, char newValue) {
     }
 
     @Override
-    public void firePropertyChange (String propertyName, short oldValue, short newValue) {
+    public void firePropertyChange(String propertyName, short oldValue, short newValue) {
     }
 
     @Override
-    public void firePropertyChange (String propertyName, int oldValue, int newValue) {
+    public void firePropertyChange(String propertyName, int oldValue, int newValue) {
     }
 
     @Override
-    public void firePropertyChange (String propertyName, long oldValue, long newValue) {
+    public void firePropertyChange(String propertyName, long oldValue, long newValue) {
     }
 
     @Override
-    public void firePropertyChange (String propertyName, float oldValue, float newValue) {
+    public void firePropertyChange(String propertyName, float oldValue, float newValue) {
     }
 
     @Override
-    public void firePropertyChange (String propertyName, double oldValue, double newValue) {
+    public void firePropertyChange(String propertyName, double oldValue, double newValue) {
     }
 
     @Override
-    public void firePropertyChange (String propertyName, boolean oldValue, boolean newValue) {
+    public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
     }
 }

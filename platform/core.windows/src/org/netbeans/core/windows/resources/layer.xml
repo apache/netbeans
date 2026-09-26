@@ -64,6 +64,7 @@
             <file name="org-netbeans-core-windows-actions-NextTabAction.instance"/>
             <file name="org-netbeans-core-windows-actions-PreviousTabAction.instance"/>
             <file name="org-netbeans-core-windows-actions-CloseAllButThisAction.instance"/>
+            <file name="org-netbeans-core-windows-actions-CloseAllRightOfThisAction.instance"/>
             <file name="org-netbeans-core-windows-actions-ToggleFullScreenAction.instance"/>
             <file name="org-netbeans-core-windows-actions-UndockWindowAction.instance"/>
             <file name="org-netbeans-core-windows-actions-DockWindowAction.instance"/>
@@ -256,6 +257,10 @@
             <file name="CloseAllButThisAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseAllButThisAction.instance"/>
                 <attr name="position" intvalue="20600"/>
+            </file>
+            <file name="CloseAllRightOfThisAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseAllRightOfThisAction.instance"/>
+                <attr name="position" intvalue="20625"/>
             </file>
             <file name="GroupsMenuAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/GroupsMenuAction.instance"/>

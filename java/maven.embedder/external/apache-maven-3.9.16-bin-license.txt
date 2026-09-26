@@ -1,6 +1,6 @@
 Name: Apache Maven Distribution
 Description: Apache Maven Distribution
-Version: 3.9.16
+Version: 3.10.0-rc-1
 License: Apache-2.0
 Origin: Apache Software Foundation
 URL: https://maven.apache.org/

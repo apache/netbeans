@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.logging.Level;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.codehaus.plexus.util.FileUtils;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.maven.embedder.EmbedderFactory;
@@ -64,7 +65,7 @@ public class AbstractProjectClassPathImplTest extends NbTestCase {
         try {
             EmbedderFactory.getProjectEmbedder().resolveArtifact(a, Collections.emptyList(), EmbedderFactory.getProjectEmbedder().getLocalRepository());
             fail();
-        } catch (ArtifactNotFoundException ex) {
+        } catch (ArtifactNotFoundException | ArtifactResolutionException ex) {
             // the downloaded artifact was not found, expected as only -SNAPSHOT is installed.
         }
         assertEquals(installed, a.getFile());

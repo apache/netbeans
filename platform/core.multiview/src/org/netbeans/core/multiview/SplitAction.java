@@ -55,7 +55,7 @@ public class SplitAction extends AbstractAction implements Presenter.Menu, Prese
 	this.useSplitName = useSplitName;
     }
 
-    static Action createSplitAction(Map map) {
+    static Action createSplitAction(Map<String, Object> map) {
 	if(!isSplitingEnabled()) {
 	    return null;
 	}

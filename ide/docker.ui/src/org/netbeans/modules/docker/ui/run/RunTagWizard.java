@@ -18,6 +18,9 @@
  */
 package org.netbeans.modules.docker.ui.run;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import org.netbeans.modules.docker.api.PortMapping;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -50,6 +53,7 @@ import org.openide.util.Utilities;
 import org.netbeans.modules.docker.api.ActionStreamResult;
 import org.netbeans.modules.docker.ui.output.OutputUtils;
 import org.openide.NotifyDescriptor;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -66,11 +70,11 @@ public class RunTagWizard {
     public static final String INTERACTIVE_PROPERTY = "interactive";
 
     public static final String TTY_PROPERTY = "tty";
-    
+
     public static final String PRIVILEGED_PROPERTY = "privileged";
-    
+
     public static final String VOLUMES_PROPERTY = "mountVolumes";
-    
+
     public static final String VOLUMES_TABLE_PROPERTY = "volumesTable";
 
     public static final String RANDOM_BIND_PROPERTY = "portRandom";
@@ -78,6 +82,10 @@ public class RunTagWizard {
     public static final String PORT_MAPPING_PROPERTY = "portMapping";
 
     public static final boolean RANDOM_BIND_DEFAULT = false;
+
+    public static final String ENV_ENTRIES = "envEntries";
+
+    public static final String ENV_FILE = "envFile";
 
     private static final Logger LOGGER = Logger.getLogger(RunTagWizard.class.getName());
 
@@ -89,6 +97,7 @@ public class RunTagWizard {
 
     @NbBundle.Messages({
         "MSG_ReceivingImageInfo=Receiving Image Details",
+        "# {0} - Image being run",
         "LBL_Run=Run {0}"
     })
     public void show() {
@@ -98,6 +107,7 @@ public class RunTagWizard {
         List<WizardDescriptor.Panel<WizardDescriptor>> panels = new ArrayList<>();
         panels.add(new RunContainerPropertiesPanel(info));
         panels.add(new RunPortBindingsPanel(info));
+        panels.add(new RunEnvironmentPanel());
         String[] steps = new String[panels.size()];
         for (int i = 0; i < panels.size(); i++) {
             JComponent c = (JComponent) panels.get(i).getComponent();
@@ -118,6 +128,7 @@ public class RunTagWizard {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void run(final DockerTag tag, final WizardDescriptor wiz) {
         final Boolean portRandom = (Boolean) wiz.getProperty(RANDOM_BIND_PROPERTY);
         List<PortMapping> mappingVar = (List<PortMapping>) wiz.getProperty(PORT_MAPPING_PROPERTY);
@@ -138,80 +149,104 @@ public class RunTagWizard {
             volumesTableVar = new HashMap<>();
         }
         final Map<String, String> volumesTable = volumesTableVar;
+        final List<EnvEntry> envEntries = (List<EnvEntry>) wiz.getProperty(ENV_ENTRIES);
+        final String envFileString = (String) wiz.getProperty(ENV_FILE);
 
-        RequestProcessor.getDefault().post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    DockerAction remote = new DockerAction(tag.getImage().getInstance());
-                    JSONObject config = new JSONObject();
-                    if (user != null) {
-                        config.put("User", user);
-                    }
-                    if (interactive) {
-                        config.put("OpenStdin", true);
-                        config.put("StdinOnce", true);
-                        config.put("AttachStdin", true);
-                    }
-                    if (tty) {
-                        config.put("Tty", true);
-                    }
-
-                    String[] parsed = command == null ? new String[]{} : Utilities.parseParameters(command);
-                    config.put("Image", getImage(tag));
-                    JSONArray cmdArray = new JSONArray();
-                    cmdArray.addAll(Arrays.asList(parsed));
-                    config.put("Cmd", cmdArray);
-                    config.put("AttachStdout", true);
-                    config.put("AttachStderr", true);
-                    Map<String, List<PortMapping>> bindings = new HashMap<>();
-                    for (PortMapping m : mapping) {
-                        String str = m.getPort() + "/" + m.getType().name().toLowerCase(Locale.ENGLISH);
-                        List<PortMapping> list = bindings.get(str);
-                        if (list == null) {
-                            list = new ArrayList<>();
-                            bindings.put(str, list);
-                        }
-                        list.add(m);
-                    }
-
-                    JSONObject hostConfig = new JSONObject();
-                    config.put("HostConfig", hostConfig);
-                    if (privileged) {
-                        hostConfig.put("Privileged", true);
-                    }
-                    hostConfig.put("PublishAllPorts", randomBind);
-                    if (!randomBind && !bindings.isEmpty()) {
-                        JSONObject portBindings = new JSONObject();
-                        hostConfig.put("PortBindings", portBindings);
-
-                        for (Map.Entry<String, List<PortMapping>> e : bindings.entrySet()) {
-                            JSONArray arr = new JSONArray();
-                            for (PortMapping m : e.getValue()) {
-                                JSONObject o = new JSONObject();
-                                o.put("HostIp", m.getHostAddress());
-                                o.put("HostPort", m.getHostPort() != null ? m.getHostPort().toString() : "");
-                                arr.add(o);
-                            }
-                            portBindings.put(e.getKey(), arr);
-                        }
-                    }
-                    if (mountVolumes) {
-                        JSONArray binds = new JSONArray();
-                        hostConfig.put("Binds", binds);
-                        for (String target : volumesTable.keySet()) {
-                            binds.add(volumesTable.get(target) + ":" + target);
-                        }
-                    }
-                    Pair<DockerContainer, ActionStreamResult> result = remote.run(name, config);
-
-                    OutputUtils.openTerminal(result.first(), result.second(), interactive, true, null);
-                } catch (Exception ex) {
-                    LOGGER.log(Level.INFO, null, ex);
-                    String msg = ex.getLocalizedMessage();
-                    NotifyDescriptor desc = new NotifyDescriptor.Message(msg, NotifyDescriptor.ERROR_MESSAGE);
-                    DialogDisplayer.getDefault().notify(desc);
+        RequestProcessor.getDefault().post(() -> {
+            try {
+                DockerAction remote = new DockerAction(tag.getImage().getInstance());
+                JSONObject config = new JSONObject();
+                if (user != null) {
+                    config.put("User", user);
                 }
+                if (interactive) {
+                    config.put("OpenStdin", true);
+                    config.put("StdinOnce", true);
+                    config.put("AttachStdin", true);
+                }
+                if (tty) {
+                    config.put("Tty", true);
+                }
+
+                String[] parsed = command == null ? new String[]{} : Utilities.parseParameters(command);
+                config.put("Image", getImage(tag));
+                JSONArray cmdArray = new JSONArray();
+                cmdArray.addAll(Arrays.asList(parsed));
+                config.put("Cmd", cmdArray);
+                config.put("AttachStdout", true);
+                config.put("AttachStderr", true);
+                Map<String, List<PortMapping>> bindings = new HashMap<>();
+                for (PortMapping m : mapping) {
+                    String str = m.getPort() + "/" + m.getType().name().toLowerCase(Locale.ENGLISH);
+                    List<PortMapping> list = bindings.get(str);
+                    if (list == null) {
+                        list = new ArrayList<>();
+                        bindings.put(str, list);
+                    }
+                    list.add(m);
+                }
+
+                JSONObject hostConfig = new JSONObject();
+                config.put("HostConfig", hostConfig);
+                if (privileged) {
+                    hostConfig.put("Privileged", true);
+                }
+                hostConfig.put("PublishAllPorts", randomBind);
+                if (!randomBind && !bindings.isEmpty()) {
+                    JSONObject portBindings = new JSONObject();
+                    hostConfig.put("PortBindings", portBindings);
+
+                    for (Map.Entry<String, List<PortMapping>> e : bindings.entrySet()) {
+                        JSONArray arr = new JSONArray();
+                        for (PortMapping m : e.getValue()) {
+                            JSONObject o = new JSONObject();
+                            o.put("HostIp", m.getHostAddress());
+                            o.put("HostPort", m.getHostPort() != null ? m.getHostPort().toString() : "");
+                            arr.add(o);
+                        }
+                        portBindings.put(e.getKey(), arr);
+                    }
+                }
+                if (mountVolumes) {
+                    JSONArray binds = new JSONArray();
+                    hostConfig.put("Binds", binds);
+                    for (String target : volumesTable.keySet()) {
+                        binds.add(volumesTable.get(target) + ":" + target);
+                    }
+                }
+                JSONArray env = new JSONArray();
+                if (envEntries != null) {
+                    for (EnvEntry envEntry : envEntries) {
+                        env.add(envEntry.toEnvString());
+                    }
+                }
+                // Docker CLI only supports a limited subset of the full dotenv
+                // options. It expects a file where each file is considered a
+                // single variable declaration in the form key=value and comment
+                // lines are started with #
+                if(envFileString != null && ! envFileString.isBlank()) {
+                    File envFileFile = new File(envFileString);
+                    if (envFileFile.canRead()) {
+                        try {
+                            Files.readAllLines(envFileFile.toPath())
+                                    .stream()
+                                    .filter(line -> !line.startsWith("#"))
+                                    .filter(line -> line.contains("="))
+                                    .forEach(line -> env.add(line));
+                        } catch (IOException ex) {
+                            LOGGER.log(Level.WARNING, "Failed to read .env-File: " + envFileString, ex);
+                        }
+                    }
+                }
+                config.put("Env", env);
+                Pair<DockerContainer, ActionStreamResult> result = remote.run(name, config);
+
+                OutputUtils.openTerminal(result.first(), result.second(), interactive, true, null);
+            } catch (DockerException | RuntimeException ex) {
+                LOGGER.log(Level.INFO, null, ex);
+                String msg = ex.getLocalizedMessage();
+                NotifyDescriptor desc = new NotifyDescriptor.Message(msg, NotifyDescriptor.ERROR_MESSAGE);
+                DialogDisplayer.getDefault().notify(desc);
             }
         });
     }

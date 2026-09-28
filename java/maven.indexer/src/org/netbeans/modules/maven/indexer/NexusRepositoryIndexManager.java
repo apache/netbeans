@@ -302,6 +302,15 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
     public void removeIndexingContext(IndexingContext context, boolean deleteFiles) throws IOException {
         if (indexingContexts.remove(context.getId()) != null ) {
             indexer.closeIndexingContext( context, deleteFiles );
+            for (IndexCreator creator : context.getIndexCreators()) {
+                if (creator instanceof AutoCloseable cleanup) {
+                    try {
+                        cleanup.close();
+                    } catch (Exception ex) {
+                        LOGGER.log(Level.WARNING, "cleanup failed", ex);
+                    }
+                }
+            }
         }
     }
 
@@ -336,7 +345,7 @@ public final class NexusRepositoryIndexManager implements RepositoryIndexerImple
                     new MinimalArtifactInfoIndexCreator(),
                     new MavenArchetypeArtifactInfoIndexCreator(),
                     new MavenPluginArtifactInfoIndexCreator(),
-                    new ArtifactDependencyIndexCreator(),
+                    new ArtifactDependencyIndexCreator(info),
                     new ClassDependencyIndexCreator()
                 );
             } else {

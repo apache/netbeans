@@ -221,6 +221,7 @@
                 <package>org.apache.maven.project.path</package>
                 <package>org.apache.maven.repository</package>
                 <package>org.apache.maven.repository.legacy</package>
+                <package>org.apache.maven.repository.supplier</package>
                 <package>org.apache.maven.settings</package>
                 <package>org.apache.maven.settings.building</package>
                 <package>org.apache.maven.settings.crypto</package>

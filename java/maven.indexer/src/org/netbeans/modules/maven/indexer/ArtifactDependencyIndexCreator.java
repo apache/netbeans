@@ -20,6 +20,7 @@
 package org.netbeans.modules.maven.indexer;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -27,15 +28,14 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.InvalidArtifactRTException;
-import org.apache.maven.artifact.repository.ArtifactRepository;
+
 import org.apache.maven.index.ArtifactContext;
 import org.apache.maven.index.ArtifactInfo;
 import org.apache.maven.index.Field;
@@ -43,18 +43,19 @@ import org.apache.maven.index.IndexerField;
 import org.apache.maven.index.IndexerFieldVersion;
 import org.apache.maven.index.creator.AbstractIndexCreator;
 import org.apache.maven.index.creator.MinimalArtifactInfoIndexCreator;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.model.building.ModelBuildingRequest;
-import org.apache.maven.project.MavenProject;
-import org.apache.maven.project.ProjectBuildingException;
-import org.apache.maven.project.ProjectBuildingRequest;
-import org.apache.maven.project.ProjectBuildingResult;
-import org.netbeans.modules.maven.embedder.EmbedderFactory;
-import org.netbeans.modules.maven.embedder.MavenEmbedder;
-import org.netbeans.modules.maven.indexer.api.RepositoryPreferences;
-import org.openide.util.Exceptions;
+import org.apache.maven.repository.supplier.RepositorySystemSupplier;
+import org.apache.maven.repository.supplier.SessionBuilderSupplier;
 
-class ArtifactDependencyIndexCreator extends AbstractIndexCreator {
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.artifact.DefaultArtifact;
+import org.eclipse.aether.graph.Dependency;
+import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.aether.resolution.ArtifactDescriptorRequest;
+import org.eclipse.aether.resolution.ArtifactDescriptorException;
+
+public final class ArtifactDependencyIndexCreator extends AbstractIndexCreator {
 
     private static final Logger LOG = Logger.getLogger(ArtifactDependencyIndexCreator.class.getName());
 
@@ -67,40 +68,53 @@ class ArtifactDependencyIndexCreator extends AbstractIndexCreator {
     private static final IndexerField FLD_NB_DEPENDENCY_ARTIFACT = new IndexerField(new Field(null, NS, NB_DEPENDENCY_ARTIFACT, "Dependency artifact"), IndexerFieldVersion.V3, NB_DEPENDENCY_ARTIFACT, "Dependency artifact", IndexerField.KEYWORD_NOT_STORED);
     private static final IndexerField FLD_NB_DEPENDENCY_VERSION = new IndexerField(new Field(null, NS, NB_DEPENDENCY_VERSION, "Dependency version"), IndexerFieldVersion.V3, NB_DEPENDENCY_VERSION, "Dependency version", IndexerField.KEYWORD_NOT_STORED);
 
-    private final List<ArtifactRepository> remoteRepos;
-    private final Map<ArtifactInfo, List<Dependency>> dependenciesByArtifact = new WeakHashMap<>();
-    private final MavenEmbedder embedder;
+    private final RepositorySystem repositorySystem;
+    private final RepositorySystemSession repositorySession;
+    private final List<RemoteRepository> remoteRepositories;
 
-    ArtifactDependencyIndexCreator() {
+    private final Map<ArtifactInfo, List<Dependency>> dependenciesByArtifact = new WeakHashMap<>();
+
+    public ArtifactDependencyIndexCreator() {
         super(ArtifactDependencyIndexCreator.class.getName(), Arrays.asList(MinimalArtifactInfoIndexCreator.ID));
-        embedder = EmbedderFactory.getProjectEmbedder();
-        remoteRepos = RepositoryPreferences.getInstance().remoteRepositories(embedder);
+
+        this.repositorySystem = new RepositorySystemSupplier().get();
+        
+        // TODO
+        this.repositorySession = new SessionBuilderSupplier(repositorySystem).get()
+                .withLocalRepositoryBaseDirectories(Path.of(System.getProperty("user.home"), ".m2", "repository"))
+                .build();
+        this.remoteRepositories = List.of(
+            new RemoteRepository.Builder("central", "default", "https://repo.maven.apache.org/maven2/").build()
+        );
     }
 
-    @Override public void populateArtifactInfo(ArtifactContext context) throws IOException {
+    @Override
+    public void populateArtifactInfo(ArtifactContext context)  throws IOException {
+
         ArtifactInfo ai = context.getArtifactInfo();
         if (ai.getClassifier() != null) {
             return;
         }
         try {
-            MavenProject mp = load(ai);
-            if (mp != null) {
-                List<Dependency> dependencies = mp.getDependencies();
-                LOG.log(Level.FINER, "Successfully loaded project model from repository for {0} with {1} dependencies", new Object[] {ai, dependencies.size()});
-                dependenciesByArtifact.put(ai, dependencies);
-            }
-        } catch (InvalidArtifactRTException ex) {
-            Exceptions.printStackTrace(ex);
+            List<Dependency> deps = getDirectDependencies(ai);
+            LOG.log(Level.FINER, "Successfully loaded project descriptor for {0} with {1} dependencies", new Object[]{ai, deps.size()});
+            dependenciesByArtifact.put(ai, deps);
+        } catch (ArtifactDescriptorException | RuntimeException ex) {
+            LOG.log(Level.FINER, "Failed to load artifact descriptor for " + ai, ex);
         }
     }
-    
-    @Override public void updateDocument(ArtifactInfo ai, Document doc) {
+
+    @Override
+    public void updateDocument(ArtifactInfo ai, Document doc) {
         List<Dependency> dependencies = dependenciesByArtifact.get(ai);
+        // TODO
+        System.out.println("xxxx " + ai +" "+ dependencies);
         if (dependencies != null) {
-            for (Dependency d : dependencies) {
-                doc.add(FLD_NB_DEPENDENCY_GROUP.toField(d.getGroupId()));
-                doc.add(FLD_NB_DEPENDENCY_ARTIFACT.toField(d.getArtifactId()));
-                doc.add(FLD_NB_DEPENDENCY_VERSION.toField(d.getVersion()));
+            for (Dependency dependency : dependencies) {
+                Artifact artifact = dependency.getArtifact();
+                doc.add(FLD_NB_DEPENDENCY_GROUP.toField(artifact.getGroupId()));
+                doc.add(FLD_NB_DEPENDENCY_ARTIFACT.toField(artifact.getArtifactId()));
+                doc.add(FLD_NB_DEPENDENCY_VERSION.toField(artifact.getVersion()));
             }
         }
     }
@@ -117,30 +131,27 @@ class ArtifactDependencyIndexCreator extends AbstractIndexCreator {
         return List.of(FLD_NB_DEPENDENCY_GROUP, FLD_NB_DEPENDENCY_ARTIFACT, FLD_NB_DEPENDENCY_VERSION);
     }
 
-    private MavenProject load(ArtifactInfo ai) {
-        try {
-            Artifact projectArtifact = embedder.createArtifact(ai.getGroupId(), ai.getArtifactId(), ai.getVersion(), ai.getPackaging() != null ? ai.getPackaging() : "jar");
-            ProjectBuildingRequest dpbr = embedder.createMavenExecutionRequest().getProjectBuildingRequest();
-            //mkleint: remote repositories don't matter we use project embedder.
-            dpbr.setRemoteRepositories(remoteRepos);
-            dpbr.setProcessPlugins(false);
-            dpbr.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);
+    private List<Dependency> getDirectDependencies(ArtifactInfo ai) throws ArtifactDescriptorException {
 
-            ProjectBuildingResult res = embedder.buildProject(projectArtifact, dpbr);
-            if (res.getProject() != null) {
-                return res.getProject();
-            } else {
-                LOG.log(Level.FINER, "No project model from repository for {0}: {1}", new Object[] {ai, res.getProblems()});
-            }
-        } catch (ProjectBuildingException ex) {
-            LOG.log(Level.FINER, "Failed to load project model from repository for {0}: {1}", new Object[] {ai, ex});
-        } catch (Exception exception) {
-            LOG.log(Level.FINER, "Failed to load project model from repository for " + ai, exception);
-        }
-        return null;
+        String extension = ai.getPackaging() != null ? ai.getPackaging() : "jar";
+
+        Artifact artifact = new DefaultArtifact(
+                ai.getGroupId(),
+                ai.getArtifactId(),
+                ai.getClassifier(),
+                extension,
+                ai.getVersion()
+        );
+
+        ArtifactDescriptorRequest request = new ArtifactDescriptorRequest();
+        request.setArtifact(artifact);
+        request.setRepositories(remoteRepositories);
+        return repositorySystem.readArtifactDescriptor(repositorySession, request)
+                               .getDependencies();
     }
-    
-    @Override public boolean updateArtifactInfo(Document doc, ArtifactInfo ai) {
+
+    @Override
+    public boolean updateArtifactInfo(Document doc, ArtifactInfo ai) {
         return false;
     }
 

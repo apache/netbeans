@@ -395,6 +395,15 @@ public final class EmbedderFactory {
             return toRet;
         }
     }
+
+    /**
+     * Returns a copy of the static system properties shared by all embedder
+     * instances, without requiring an embedder to be created.
+     * @return a copy of the static system properties
+     */
+    public static Properties getStaticSystemProperties() {
+        return cloneStaticProps();
+    }
     
     @SuppressWarnings("element-type-mismatch")
     static Properties excludeNetBeansProperties(Properties props) {

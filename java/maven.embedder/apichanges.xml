@@ -112,6 +112,20 @@ is the proper place.
             <class package="org.netbeans.modules.maven.embedder" name="EmbedderFactory"/>
             <class package="org.netbeans.modules.maven.embedder" name="DependencyTreeFactory"/>
         </change>
+        <change id="embedder-static-system-properties">
+            <api name="general"/>
+            <summary>EmbedderFactory exposes the static system properties without an embedder instance</summary>
+            <version major="2" minor="90"/>
+            <date day="15" month="11" year="2026"/>
+            <author login="mbien"/>
+            <compatibility addition="yes"/>
+            <description>
+                New <a href="@TOP@/org/netbeans/modules/maven/embedder/EmbedderFactory.html#getStaticSystemProperties--">EmbedderFactory.getStaticSystemProperties()</a>
+                returns a copy of the static system properties shared by all embedder
+                instances, without requiring an embedder to be created.
+            </description>
+            <class package="org.netbeans.modules.maven.embedder" name="EmbedderFactory"/>
+        </change>
     </changes>
 
     <!-- Now the surrounding HTML text and document structure: -->

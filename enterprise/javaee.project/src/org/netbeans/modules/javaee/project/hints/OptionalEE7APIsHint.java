@@ -96,8 +96,8 @@ public class OptionalEE7APIsHint {
             return null;
         }
         Tree t = treePath.getLeaf();
-        int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), t);
-        int end = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), t);
+        int start = (int) info.getTrees().getSourcePositions().getStartPosition(t);
+        int end = (int) info.getTrees().getSourcePositions().getEndPosition(t);
         // #205936
         if (start == -1 || end == -1 || end < start) {
             return null;

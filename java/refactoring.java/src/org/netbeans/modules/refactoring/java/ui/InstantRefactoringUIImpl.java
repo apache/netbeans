@@ -225,8 +225,8 @@ public final class InstantRefactoringUIImpl implements InstantRefactoringUI {
                                     if (path != null) {
                                         DocCommentTree docComment = ((DocTrees) info.getTrees()).getDocCommentTree(path);
                                         DocTreePath docTreePath = info.getTreeUtilities().pathFor(new DocTreePath(path, docComment), caret);
-                                        long start = docSourcePositions.getStartPosition(info.getCompilationUnit(), docComment, docTreePath.getLeaf());
-                                        long end = docSourcePositions.getEndPosition(info.getCompilationUnit(), docComment, docTreePath.getLeaf());
+                                        long start = docSourcePositions.getStartPosition(docComment, docTreePath.getLeaf());
+                                        long end = docSourcePositions.getEndPosition(docComment, docTreePath.getLeaf());
                                         adjustedCaret[0] = (int) (start + ((end - start) / 2) + 1);
                                         docPath[0] = docTreePath;
                                     }
@@ -245,8 +245,8 @@ public final class InstantRefactoringUIImpl implements InstantRefactoringUI {
                         Tree.Kind parentKind = path[0].getParentPath().getLeaf().getKind();
 
                         if (leafKind == Tree.Kind.ARRAY_TYPE && parentKind == Tree.Kind.VARIABLE) {
-                            long typeEnd = docSourcePositions.getEndPosition(info.getCompilationUnit(), path[0].getLeaf());
-                            long variableEnd = docSourcePositions.getEndPosition(info.getCompilationUnit(), path[0].getLeaf());
+                            long typeEnd = docSourcePositions.getEndPosition(path[0].getLeaf());
+                            long variableEnd = docSourcePositions.getEndPosition(path[0].getLeaf());
 
                             if (typeEnd == variableEnd) {
                                 path[0] = path[0].getParentPath();
@@ -272,12 +272,12 @@ public final class InstantRefactoringUIImpl implements InstantRefactoringUI {
                     //</editor-fold>
 
                     long start = docPath[0] != null
-                            ? docSourcePositions.getStartPosition(info.getCompilationUnit(), docPath[0].getDocComment(), docPath[0].getLeaf())
-                            : docSourcePositions.getStartPosition(info.getCompilationUnit(), path[0].getLeaf());
+                            ? docSourcePositions.getStartPosition(docPath[0].getDocComment(), docPath[0].getLeaf())
+                            : docSourcePositions.getStartPosition(path[0].getLeaf());
 
                     long end = docPath[0] != null
-                            ? docSourcePositions.getEndPosition(info.getCompilationUnit(), docPath[0].getDocComment(), docPath[0].getLeaf())
-                            : docSourcePositions.getEndPosition(info.getCompilationUnit(), path[0].getLeaf());
+                            ? docSourcePositions.getEndPosition(docPath[0].getDocComment(), docPath[0].getLeaf())
+                            : docSourcePositions.getEndPosition(path[0].getLeaf());
 
                     if (!(start <= caret && caret <= end)) {
                         return null;

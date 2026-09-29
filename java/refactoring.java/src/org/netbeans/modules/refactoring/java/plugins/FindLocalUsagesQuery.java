@@ -159,7 +159,7 @@ public class FindLocalUsagesQuery extends CancellableTreePathScanner<Void, Void>
 
         final String originalName = parameter.getSimpleName().toString();
         final int methodStart = (int) info.getTrees().getSourcePositions()
-                .getStartPosition(info.getCompilationUnit(), method);
+                .getStartPosition(method);
         final TokenSequence<JavaTokenId> tokenSequence = info.getTokenHierarchy().tokenSequence(JavaTokenId.language());
 
         //renaming in comments before the method/constructor
@@ -175,7 +175,7 @@ public class FindLocalUsagesQuery extends CancellableTreePathScanner<Void, Void>
 
         //renaming in comments within the method/constructor declaration and body
         final int methodEnd = (int) info.getTrees().getSourcePositions()
-                .getEndPosition(info.getCompilationUnit(), method);
+                .getEndPosition(method);
 
         tokenSequence.move(methodStart);
         while (tokenSequence.moveNext() && tokenSequence.offset() < methodEnd) {
@@ -237,8 +237,8 @@ public class FindLocalUsagesQuery extends CancellableTreePathScanner<Void, Void>
         Element el = info.getTrees().getElement(getCurrentPath());
         if (toFind.equals(el)) {
             try {
-                long start = sp.getStartPosition(info.getCompilationUnit(), tree);
-                long end = sp.getEndPosition(info.getCompilationUnit(), tree);
+                long start = sp.getStartPosition(tree);
+                long end = sp.getEndPosition(tree);
                 if(start != Diagnostic.NOPOS) {
                     MutablePositionRegion region = createRegion(doc, (int) start, (int) end);
                     usages.add(region);
@@ -425,7 +425,7 @@ public class FindLocalUsagesQuery extends CancellableTreePathScanner<Void, Void>
                 String text = node.getBody();
                 String name = toFind.getSimpleName().toString();
                 if(text.contains(name)) {
-                    int start = (int) sourcePositions.getStartPosition(info.getCompilationUnit(), currentDocPath.getDocComment(), node);
+                    int start = (int) sourcePositions.getStartPosition(currentDocPath.getDocComment(), node);
                     int length = name.length();
                     int offset = -1;
                     do {
@@ -452,8 +452,8 @@ public class FindLocalUsagesQuery extends CancellableTreePathScanner<Void, Void>
                 DocSourcePositions sp = trees.getSourcePositions();
                 CompilationUnitTree cut = info.getCompilationUnit();
                 DocCommentTree docComment = getCurrentPath().getDocComment();
-                long start = sp.getStartPosition(cut, docComment, node);
-                long end = sp.getEndPosition(cut, docComment, node);
+                long start = sp.getStartPosition(docComment, node);
+                long end = sp.getEndPosition(docComment, node);
                 if(start != Diagnostic.NOPOS && end != Diagnostic.NOPOS) {
                     try {
                         MutablePositionRegion region = createRegion(doc, (int)start, (int)end);

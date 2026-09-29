@@ -197,7 +197,7 @@ public final class RelationshipMappingWhereUsed extends JavaRefactoringPlugin {
                                                             }
                                                             SourcePositions sp = ci.getTrees().getSourcePositions();
                                                             CompilationUnitTree unit = ci.getCompilationUnit();
-                                                            refactoringElementsBag.add(whereUsedQuery, new RelationshipAnnotationWhereUsedRefactoringElement(ci.getFileObject(), an, var.getSimpleName().toString(), (int) sp.getStartPosition(unit, t), (int) sp.getEndPosition(unit, t)));
+                                                            refactoringElementsBag.add(whereUsedQuery, new RelationshipAnnotationWhereUsedRefactoringElement(ci.getFileObject(), an, var.getSimpleName().toString(), (int) sp.getStartPosition(t), (int) sp.getEndPosition(t)));
                                                         }
                                                     }
                                                 }

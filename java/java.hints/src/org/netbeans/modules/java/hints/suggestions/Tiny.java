@@ -101,8 +101,8 @@ public class Tiny {
                 selectEnd = span[1];
                 break;
             case IDENTIFIER:
-                selectStart = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getInfo().getCompilationUnit(), select);
-                selectEnd   = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getInfo().getCompilationUnit(), select);
+                selectStart = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(select);
+                selectEnd   = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(select);
                 break;
             default:
                 Logger.getLogger(Tiny.class.getName()).log(Level.FINE, "flipEquals: unexpected method select kind: {0}", select.getKind());
@@ -131,8 +131,8 @@ public class Tiny {
     @Hint(displayName = "#DN_org.netbeans.modules.java.hints.suggestions.Tiny.convertToDifferentBase", description = "#DESC_org.netbeans.modules.java.hints.suggestions.Tiny.convertToDifferentBase", category="suggestions", hintKind=Kind.ACTION, severity=Severity.HINT)
     @TriggerTreeKind({Tree.Kind.INT_LITERAL, Tree.Kind.LONG_LITERAL})
     public static ErrorDescription convertToDifferentBase(HintContext ctx) {
-        int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getInfo().getCompilationUnit(), ctx.getPath().getLeaf());
-        int end   = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getInfo().getCompilationUnit(), ctx.getPath().getLeaf());
+        int start = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getPath().getLeaf());
+        int end   = (int) ctx.getInfo().getTrees().getSourcePositions().getEndPosition(ctx.getPath().getLeaf());
         String code = ctx.getInfo().getText().substring(start, end);
         int currentRadix = 10;
         
@@ -195,7 +195,7 @@ public class Tiny {
                         throw new IllegalStateException();
                 }
             } else if (leaf.getKind() == Tree.Kind.LONG_LITERAL) {
-                int  end = (int) wc.getTrees().getSourcePositions().getEndPosition(wc.getCompilationUnit(), leaf);
+                int  end = (int) wc.getTrees().getSourcePositions().getEndPosition(leaf);
                 
                 suffix = wc.getText().substring(end - 1, end);
                 long value = ((Number) leaf.getValue()).longValue();
@@ -298,7 +298,7 @@ public class Tiny {
     public static ErrorDescription fillSwitch(HintContext ctx) {
         int caret = ctx.getCaretLocation();
         SwitchTree st = (SwitchTree) ctx.getPath().getLeaf();
-        int switchStart = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getPath().getCompilationUnit(), st);
+        int switchStart = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(st);
         LineMap lm = ctx.getPath().getCompilationUnit().getLineMap();
 
         if (lm.getLineNumber(caret) != lm.getLineNumber(switchStart)) return null;

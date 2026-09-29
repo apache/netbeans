@@ -1530,8 +1530,8 @@ public class CopyFinderTest extends NbTestCase {
             Tree t = path.getLeaf();
             SourcePositions sp = info.getTrees().getSourcePositions();
 
-            if (   start == sp.getStartPosition(info.getCompilationUnit(), t)
-                && end   == sp.getEndPosition(info.getCompilationUnit(), t)) {
+            if (   start == sp.getStartPosition(t)
+                && end   == sp.getEndPosition(t)) {
                 break;
             }
 
@@ -1549,8 +1549,8 @@ public class CopyFinderTest extends NbTestCase {
             int   index = 0;
 
             for (TreePath tp : result) {
-                dupes[index++] = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tp.getLeaf());
-                dupes[index++] = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tp.getLeaf());
+                dupes[index++] = (int) info.getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
+                dupes[index++] = (int) info.getTrees().getSourcePositions().getEndPosition(tp.getLeaf());
             }
 
             assertTrue("Was: " + Arrays.toString(dupes) + " should have been: " + Arrays.toString(duplicates), Arrays.equals(duplicates, dupes));
@@ -1608,8 +1608,8 @@ public class CopyFinderTest extends NbTestCase {
 
         for (Entry<String, TreePath> e : result.values().iterator().next().variables.entrySet()) {
             int[] span = new int[] {
-                (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), e.getValue().getLeaf()),
-                (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), e.getValue().getLeaf())
+                (int) info.getTrees().getSourcePositions().getStartPosition(e.getValue().getLeaf()),
+                (int) info.getTrees().getSourcePositions().getEndPosition(e.getValue().getLeaf())
             };
 
             actual.put(e.getKey(), span);
@@ -1642,8 +1642,8 @@ public class CopyFinderTest extends NbTestCase {
             int i = 0;
 
             for (TreePath tp : e.getValue()) {
-                span[i++] = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tp.getLeaf());
-                span[i++] = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tp.getLeaf());
+                span[i++] = (int) info.getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
+                span[i++] = (int) info.getTrees().getSourcePositions().getEndPosition(tp.getLeaf());
             }
 
             actualMulti.put(e.getKey(), span);
@@ -1743,8 +1743,8 @@ public class CopyFinderTest extends NbTestCase {
         for (Entry<TreePath, VariableAssignments> e : result.entrySet()) {
             List<? extends StatementTree> parentStatements = CopyFinder.getStatements(e.getKey());
             int dupeStart = parentStatements.indexOf(e.getKey().getLeaf());
-            int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), parentStatements.get(dupeStart));
-            int endPos = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), parentStatements.get(dupeStart + searchFor.size() - 1));
+            int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(parentStatements.get(dupeStart));
+            int endPos = (int) info.getTrees().getSourcePositions().getEndPosition(parentStatements.get(dupeStart + searchFor.size() - 1));
 
             realSpans.add(Arrays.asList(startPos, endPos));
         }
@@ -1765,8 +1765,8 @@ public class CopyFinderTest extends NbTestCase {
 
             BlockTree b = (BlockTree) gtp.getParentPath().getLeaf();
 
-            int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), b.getStatements().get(stmts[0]));
-            int endPos = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), b.getStatements().get(stmts[1]));
+            int startPos = (int) info.getTrees().getSourcePositions().getStartPosition(b.getStatements().get(stmts[0]));
+            int endPos = (int) info.getTrees().getSourcePositions().getEndPosition(b.getStatements().get(stmts[1]));
 
             goldenSpans.add(Arrays.asList(startPos, endPos));
         }

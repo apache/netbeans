@@ -61,7 +61,7 @@ public class ComputeInlineValues {
         new CancellableTreePathScanner<Void, Tree>(cancel) {
             @Override
             public Void visitVariable(VariableTree node, Tree relevantPointTree) {
-                int end = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), node);
+                int end = (int) info.getTrees().getSourcePositions().getEndPosition(node);
                 if (end < donePos) {
                     int[] span = info.getTreeUtilities().findNameSpan(node);
 
@@ -80,8 +80,8 @@ public class ComputeInlineValues {
 
                 if (el != null && el.getKind().isVariable() &&
                     el.getKind() != ElementKind.ENUM_CONSTANT) {
-                    int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), node);
-                    int end = (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), node);
+                    int start = (int) info.getTrees().getSourcePositions().getStartPosition(node);
+                    int end = (int) info.getTrees().getSourcePositions().getEndPosition(node);
 
                     if (start != (-1) && end != (-1)) {
                         int lineEnd = (int) (lm.getStartPosition(lm.getLineNumber(end) + 1) - 1);
@@ -109,7 +109,7 @@ public class ComputeInlineValues {
             @Override
             public Void scan(Tree tree, Tree relevantPointTree) {
                 if (tree != null) {
-                    int start = (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree);
+                    int start = (int) info.getTrees().getSourcePositions().getStartPosition(tree);
 
                     if (start > upcomingPos) {
                         return null;

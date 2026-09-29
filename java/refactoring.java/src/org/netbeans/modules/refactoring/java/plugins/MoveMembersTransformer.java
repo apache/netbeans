@@ -189,7 +189,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
             rewrite(oldT, newT);
         } else {
             SourcePositions positions = workingCopy.getTrees().getSourcePositions();
-            long startPosition = positions.getStartPosition(workingCopy.getCompilationUnit(), node);
+            long startPosition = positions.getStartPosition(node);
             long lineNumber = workingCopy.getCompilationUnit().getLineMap().getLineNumber(startPosition);
             String source = FileUtil.getFileDisplayName(workingCopy.getFileObject()) + ':' + lineNumber;
             problem = JavaPluginUtils.chainProblems(problem, new Problem(false, NbBundle.getMessage(MoveMembersRefactoringPlugin.class, "WRN_NoAccessor", source))); //NOI18N
@@ -227,7 +227,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
                 });
                 if (!vars.iterator().hasNext()) {
                     SourcePositions positions = workingCopy.getTrees().getSourcePositions();
-                    long startPosition = positions.getStartPosition(workingCopy.getCompilationUnit(), node);
+                    long startPosition = positions.getStartPosition(node);
                     long lineNumber = workingCopy.getCompilationUnit().getLineMap().getLineNumber(startPosition);
                     String source = FileUtil.getFileDisplayName(workingCopy.getFileObject()) + ':' + lineNumber;
                     problem = JavaPluginUtils.chainProblems(problem, new Problem(false, NbBundle.getMessage(MoveMembersRefactoringPlugin.class, "WRN_NoAccessor", source))); //NOI18N
@@ -268,7 +268,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
             });
             if (!vars.iterator().hasNext()) {
                 SourcePositions positions = workingCopy.getTrees().getSourcePositions();
-                    long startPosition = positions.getStartPosition(workingCopy.getCompilationUnit(), node);
+                    long startPosition = positions.getStartPosition(node);
                     long lineNumber = workingCopy.getCompilationUnit().getLineMap().getLineNumber(startPosition);
                     String source = FileUtil.getFileDisplayName(workingCopy.getFileObject()) + ':' + lineNumber;
                     problem = JavaPluginUtils.chainProblems(problem, new Problem(false, NbBundle.getMessage(MoveMembersTransformer.class, "WRN_NoAccessor", source))); //NOI18N
@@ -356,7 +356,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
                         problem = JavaPluginUtils.chainProblems(problem, new Problem(false, NbBundle.getMessage(MoveMembersTransformer.class, "WRN_NoAccessor", NbBundle.getMessage(MoveMembersTransformer.class, "TXT_DelegatingMethod"))));
                     } else {
                         SourcePositions positions = workingCopy.getTrees().getSourcePositions();
-                        long startPosition = positions.getStartPosition(workingCopy.getCompilationUnit(), node);
+                        long startPosition = positions.getStartPosition(node);
                         long lineNumber = workingCopy.getCompilationUnit().getLineMap().getLineNumber(startPosition);
                         String source = FileUtil.getFileDisplayName(workingCopy.getFileObject()) + ':' + lineNumber;
                         problem = JavaPluginUtils.chainProblems(problem, new Problem(false, NbBundle.getMessage(MoveMembersTransformer.class, "WRN_NoAccessor", source))); //NOI18N
@@ -392,7 +392,7 @@ public class MoveMembersTransformer extends RefactoringVisitor {
                     if (enclosingElement.equals(target)) {
                         if(inStatic) {
                             SourcePositions positions = workingCopy.getTrees().getSourcePositions();
-                            long startPosition = positions.getStartPosition(workingCopy.getCompilationUnit(), node);
+                            long startPosition = positions.getStartPosition(node);
                             long lineNumber = workingCopy.getCompilationUnit().getLineMap().getLineNumber(startPosition);
                             String source = FileUtil.getFileDisplayName(workingCopy.getFileObject()) + ':' + lineNumber;
                             problem = JavaPluginUtils.chainProblems(problem, new Problem(false, NbBundle.getMessage(MoveMembersTransformer.class, "WRN_NoAccessor", source))); //NOI18N

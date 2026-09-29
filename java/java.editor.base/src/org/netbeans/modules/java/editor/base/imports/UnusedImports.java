@@ -209,7 +209,7 @@ public class UnusedImports {
 
         @Override
         public Void visitIdentifier(IdentifierTree tree, Void d) {
-            if (info.getTrees().getSourcePositions().getStartPosition(getCurrentPath().getCompilationUnit(), tree) < 0)
+            if (info.getTrees().getSourcePositions().getStartPosition(tree) < 0)
                 return null;
             
             typeUsed(info.getTrees().getElement(getCurrentPath()), getCurrentPath(), getCurrentPath().getParentPath().getLeaf().getKind() == Kind.METHOD_INVOCATION);

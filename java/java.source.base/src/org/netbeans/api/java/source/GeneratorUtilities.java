@@ -290,9 +290,9 @@ public final class GeneratorUtilities {
                         idx = i;
                         continue;
                     }
-                    int pos = (int)(lastMember != null ? sp.getEndPosition(compilationUnit, lastMember) : sp.getStartPosition( compilationUnit,clazz));
+                    int pos = (int)(lastMember != null ? sp.getEndPosition(lastMember) : sp.getStartPosition(clazz));
                     pos = guards.adjustPosition(pos, true);
-                    long treePos = sp.getStartPosition(compilationUnit, tree);
+                    long treePos = sp.getStartPosition(tree);
                     if (treePos < 0 || pos <= treePos) {
                         idx = i;
                     }
@@ -346,15 +346,15 @@ public final class GeneratorUtilities {
         Tree lastMember = null;
         Tree nextMember = null;
         for (Tree tree : clazz.getMembers()) {
-            if (offset <= sp.getStartPosition(copy.getCompilationUnit(), tree)) {
+            if (offset <= sp.getStartPosition(tree)) {
                 DocumentGuards guards = LineDocumentUtils.as(doc, DocumentGuards.class);
                 if (doc == null || guards == null) {
                     nextMember = tree;
                     break;
                 }
-                int pos = (int)(lastMember != null ? sp.getEndPosition(copy.getCompilationUnit(), lastMember) : sp.getStartPosition(copy.getCompilationUnit(), clazz));
+                int pos = (int)(lastMember != null ? sp.getEndPosition(lastMember) : sp.getStartPosition(clazz));
                 pos = guards.adjustPosition(pos, true);
-                if (pos <= sp.getStartPosition(copy.getCompilationUnit(), tree)) {
+                if (pos <= sp.getStartPosition(tree)) {
                     nextMember = tree;
                     break;
                 }
@@ -454,7 +454,7 @@ public final class GeneratorUtilities {
                 gu.copyComments(from, tree, false);
                 break;
         }
-        boolean before = (int)wc.getTrees().getSourcePositions().getStartPosition(wc.getCompilationUnit(), from) >= offset;
+        boolean before = (int)wc.getTrees().getSourcePositions().getStartPosition(from) >= offset;
         if (fromIdx >=0 && toIdx >= 0 && toIdx - fromIdx > 0) {
             for (int i = toIdx - 1; i >= fromIdx; i--) {
                 tm.removeComment(tree, i, before);

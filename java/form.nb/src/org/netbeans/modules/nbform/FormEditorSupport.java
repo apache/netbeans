@@ -929,8 +929,8 @@ public final class FormEditorSupport extends DataEditorSupport implements Editor
                                 for (AnnotationTree annotation : modifiers.getAnnotations()) {
                                     if (annotation.getAnnotationType().toString().contains("SuppressWarnings")) { // NOI18N
                                         SourcePositions sp = wcopy.getTrees().getSourcePositions();
-                                        positions[0] = (int)sp.getStartPosition(cu, annotation);
-                                        positions[1] = (int)sp.getEndPosition(cu, annotation);
+                                        positions[0] = (int)sp.getStartPosition(annotation);
+                                        positions[1] = (int)sp.getEndPosition(annotation);
                                         // We cannot use the following code because
                                         // part of the modifier is in guarded block
                                         //ModifiersTree newModifiers = wcopy.getTreeMaker().removeModifiersAnnotation(method.getModifiers(), annotation);

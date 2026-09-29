@@ -256,7 +256,7 @@ public class TreeNavigatorProviderImpl implements NavigatorPanel {
             @Override
             public Void scan(Tree tree, Void p) {
                 if (tree != null) {
-                    if (sourcePositions.getStartPosition(getCurrentPath().getCompilationUnit(), tree) < pos && sourcePositions.getEndPosition(getCurrentPath().getCompilationUnit(), tree) >= pos) {
+                    if (sourcePositions.getStartPosition(tree) < pos && sourcePositions.getEndPosition(tree) >= pos) {
                         super.scan(tree, p);
                         throw new Result(new TreePath(getCurrentPath(), tree));
                     }

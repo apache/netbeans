@@ -133,8 +133,8 @@ public class WrongPackageSuggestion extends AbstractHint {
         long endPos;
         
         if (hasPackageClause) {
-            startPos = info.getTrees().getSourcePositions().getStartPosition(tree, tree.getPackageName());
-            endPos   = info.getTrees().getSourcePositions().getEndPosition(tree, tree.getPackageName());
+            startPos = info.getTrees().getSourcePositions().getStartPosition(tree.getPackageName());
+            endPos   = info.getTrees().getSourcePositions().getEndPosition(tree.getPackageName());
         } else {
             startPos = 0;
             endPos   = 1;

@@ -125,8 +125,8 @@ public class ElementGripFactory {
 
         public static Interval createInterval(TreePath tp, CompilationInfo info, Interval root, Interval p, FileObject parentFile) {
             Tree t = tp.getLeaf();
-            long start = info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), t);
-            long end = info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), t);
+            long start = info.getTrees().getSourcePositions().getStartPosition(t);
+            long end = info.getTrees().getSourcePositions().getEndPosition(t);
             Element current = info.getTrees().getElement(tp);
             Tree.Kind kind = tp.getLeaf().getKind();
             if (!TreeUtilities.CLASS_TREE_KINDS.contains(kind) && kind != Tree.Kind.METHOD) {

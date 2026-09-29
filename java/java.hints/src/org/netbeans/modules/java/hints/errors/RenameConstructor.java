@@ -87,16 +87,16 @@ public class RenameConstructor implements ErrorRule<Void> {
                 }
             }
             CompilationUnitTree cut = treePath.getCompilationUnit();
-            int startPos = (int) trees.getSourcePositions().getStartPosition(cut, mt);
-            int modEndPos = (int) trees.getSourcePositions().getEndPosition(cut, mt.getModifiers());
-            int typeEndPos = (int) trees.getSourcePositions().getEndPosition(cut, mt.getReturnType());
+            int startPos = (int) trees.getSourcePositions().getStartPosition(mt);
+            int modEndPos = (int) trees.getSourcePositions().getEndPosition(mt.getModifiers());
+            int typeEndPos = (int) trees.getSourcePositions().getEndPosition(mt.getReturnType());
             int namePos = typeEndPos != (-1) ? typeEndPos
                                              : modEndPos != (-1) ? modEndPos
                                                                  : startPos;
             String originalName = mt.getName().toString();
             //XXX!!!
             TokenSequence<?> ts = compilationInfo.getTokenHierarchy().tokenSequence();
-            int end = (int) trees.getSourcePositions().getEndPosition(cut, mt);
+            int end = (int) trees.getSourcePositions().getEndPosition(mt);
             ts.move(namePos);
             while (ts.moveNext() && ts.offset() < end) {
                 if (ts.token().id() == JavaTokenId.IDENTIFIER) {

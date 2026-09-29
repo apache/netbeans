@@ -111,11 +111,11 @@ public class Utilities {
     }
     
     private static Token<JavaTokenId> findIdentifierSpanImpl(CompilationInfo info, Tree decl, Tree lastLeft, List<? extends Tree> firstRight, String name, CompilationUnitTree cu, SourcePositions positions) {
-        int declStart = (int) positions.getStartPosition(cu, decl);
+        int declStart = (int) positions.getStartPosition(decl);
         
         lastLeft = normalizeLastLeftTree(lastLeft);
         
-        int start = lastLeft != null ? (int)positions.getEndPosition(cu, lastLeft) : declStart;
+        int start = lastLeft != null ? (int)positions.getEndPosition(lastLeft) : declStart;
         
         if (start == (-1)) {
             start = declStart;
@@ -124,13 +124,13 @@ public class Utilities {
             }
         }
         
-        int end = (int)positions.getEndPosition(cu, decl);
+        int end = (int)positions.getEndPosition(decl);
 
         for (Tree t : firstRight) {
             if (t == null)
                 continue;
 
-            int proposedEnd = (int)positions.getStartPosition(cu, t);
+            int proposedEnd = (int)positions.getStartPosition(t);
 
             if (proposedEnd != (-1) && proposedEnd < end)
                 end = proposedEnd;
@@ -145,7 +145,7 @@ public class Utilities {
             //public static String s() [] {}
             //(meaning: method returning array of Strings)
             //use a conservative start value:
-            start = (int) positions.getStartPosition(cu, decl);
+            start = (int) positions.getStartPosition(decl);
         }
 
         if (start == end) {
@@ -157,8 +157,8 @@ public class Utilities {
     }
     
     private static Token<JavaTokenId> findIdentifierSpanImpl(CompilationInfo info, MemberSelectTree tree, CompilationUnitTree cu, SourcePositions positions) {
-        int start = (int)positions.getStartPosition(cu, tree);
-        int endPosition = (int)positions.getEndPosition(cu, tree);
+        int start = (int)positions.getStartPosition(tree);
+        int endPosition = (int)positions.getEndPosition(tree);
         
         if (start == (-1) || endPosition == (-1))
             return null;
@@ -188,8 +188,8 @@ public class Utilities {
     }
     
     private static Token<JavaTokenId> findIdentifierSpanImpl(CompilationInfo info, MemberReferenceTree tree, CompilationUnitTree cu, SourcePositions positions) {
-        int start = (int)positions.getStartPosition(cu, tree);
-        int endPosition = (int)positions.getEndPosition(cu, tree);
+        int start = (int)positions.getStartPosition(tree);
+        int endPosition = (int)positions.getEndPosition(tree);
         
         if (start == (-1) || endPosition == (-1))
             return null;
@@ -219,8 +219,8 @@ public class Utilities {
     }
     
     private static Token<JavaTokenId> findIdentifierSpanImpl(CompilationInfo info, IdentifierTree tree, CompilationUnitTree cu, SourcePositions positions) {
-        int start = (int)positions.getStartPosition(cu, tree);
-        int endPosition = (int)positions.getEndPosition(cu, tree);
+        int start = (int)positions.getStartPosition(tree);
+        int endPosition = (int)positions.getEndPosition(tree);
         
         if (start == (-1) || endPosition == (-1))
             return null;
@@ -311,10 +311,10 @@ public class Utilities {
             CompilationUnitTree cu = info.getCompilationUnit();
             ModifiersTree mods = ((ClassTree) leaf).getModifiers();
             
-            int start = mods != null ? (int)positions.getEndPosition(cu, mods) : -1;
+            int start = mods != null ? (int)positions.getEndPosition(mods) : -1;
             if (start == (-1))
-                start = (int)positions.getStartPosition(cu, leaf);
-            int end = (int)positions.getEndPosition(cu, leaf);
+                start = (int)positions.getStartPosition(leaf);
+            int end = (int)positions.getEndPosition(leaf);
 
             if (start == (-1) || end == (-1)) {
                 return null;
@@ -339,8 +339,8 @@ public class Utilities {
             
             SourcePositions positions = info.getTrees().getSourcePositions();
             CompilationUnitTree cu = info.getCompilationUnit();
-            int start = (int)positions.getStartPosition(cu, leaf);
-            int end   = (int)positions.getEndPosition(cu, leaf);
+            int start = (int)positions.getStartPosition(leaf);
+            int end   = (int)positions.getEndPosition(leaf);
             
             if (start == (-1) || end == (-1)) {
                 return null;
@@ -356,8 +356,8 @@ public class Utilities {
             
             SourcePositions positions = info.getTrees().getSourcePositions();
             CompilationUnitTree cu = info.getCompilationUnit();
-            int start = (int)positions.getStartPosition(cu, leaf);
-            int end   = (int)positions.getEndPosition(cu, leaf);
+            int start = (int)positions.getStartPosition(leaf);
+            int end   = (int)positions.getEndPosition(leaf);
             
             if (start == (-1) || end == (-1)) {
                 return null;
@@ -373,8 +373,8 @@ public class Utilities {
             
             SourcePositions positions = info.getTrees().getSourcePositions();
             CompilationUnitTree cu = info.getCompilationUnit();
-            int start = (int)positions.getStartPosition(cu, leaf);
-            int end   = (int)positions.getStartPosition(cu, ((LabeledStatementTree) leaf).getStatement());
+            int start = (int)positions.getStartPosition(leaf);
+            int end   = (int)positions.getStartPosition(((LabeledStatementTree) leaf).getStatement());
             
             if (start == (-1) || end == (-1)) {
                 return null;
@@ -434,7 +434,7 @@ public class Utilities {
                 continue;
             }
             if (o instanceof Tree tree) {
-                int offset = (int)pos.getEndPosition(cu, tree);
+                int offset = (int)pos.getEndPosition(tree);
                 if (offset >= 0) {
                     return offset;
                 }
@@ -443,7 +443,7 @@ public class Utilities {
                 if (!set.isEmpty()) {
                     // assume that the compiler will fake a single item in otherwise empty list; it should not add a fake item after some real Tree items.
                     Tree t = set.get(set.size() - 1);
-                    int offset = (int)pos.getEndPosition(cu, t);
+                    int offset = (int)pos.getEndPosition(t);
                     if (offset >= 0) {
                         return offset;
                     }
@@ -454,8 +454,8 @@ public class Utilities {
     }
     
     private static int findBodyStartImpl(CompilationInfo info, Tree cltree, CompilationUnitTree cu, SourcePositions positions, Document doc) {
-        int start = (int)positions.getStartPosition(cu, cltree);
-        int end   = (int)positions.getEndPosition(cu, cltree);
+        int start = (int)positions.getStartPosition(cltree);
+        int end   = (int)positions.getEndPosition(cltree);
         
         if (start == (-1) || end == (-1)) {
             return -1;
@@ -518,8 +518,8 @@ public class Utilities {
     }
     
     private static int findLastBracketImpl(Tree tree, CompilationUnitTree cu, SourcePositions positions, Document doc) {
-        int start = (int)positions.getStartPosition(cu, tree);
-        int end   = (int)positions.getEndPosition(cu, tree);
+        int start = (int)positions.getStartPosition(tree);
+        int end   = (int)positions.getEndPosition(tree);
         
         if (start == (-1) || end == (-1)) {
             return -1;
@@ -571,8 +571,8 @@ public class Utilities {
             return findIdentifierSpan(info, doc, tree);
         }
         
-        int start = (int) positions.getStartPosition(cu, leaf);
-        int end = (int) positions.getEndPosition(cu, leaf);
+        int start = (int) positions.getStartPosition(leaf);
+        int end = (int) positions.getEndPosition(leaf);
         
         if (start == Diagnostic.NOPOS || end == Diagnostic.NOPOS) {
             return null;

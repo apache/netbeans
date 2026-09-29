@@ -327,8 +327,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                         // the path may be the else branch of the if
                         if (block == ifTree.getElseStatement()) {
                             // the related region is the if statement up to the 'then' statement
-                            final int[] elseStart = { (int)ctrl.getTrees().getSourcePositions().getStartPosition(
-                                    ctrl.getCompilationUnit(), ifTree.getElseStatement())};
+                            final int[] elseStart = { (int)ctrl.getTrees().getSourcePositions().getStartPosition(ifTree.getElseStatement())};
 
                             // must use lexer to iterate backwards from block start to 'else' keyword. The keyword position
                             // is not a part of the Tree
@@ -353,16 +352,13 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                                 }
                             });
                             // the context is the else statement up to the brace position
-                            int ifStart = (int)ctrl.getTrees().getSourcePositions().getStartPosition(
-                                    ctrl.getCompilationUnit(), ifTree);
+                            int ifStart = (int)ctrl.getTrees().getSourcePositions().getStartPosition(ifTree);
                             int ifEnd;
                             
                             if (ifTree.getThenStatement().getKind() == Tree.Kind.BLOCK) {
-                                ifEnd = (int)ctrl.getTrees().getSourcePositions().getStartPosition(
-                                    ctrl.getCompilationUnit(), ifTree.getThenStatement());
+                                ifEnd = (int)ctrl.getTrees().getSourcePositions().getStartPosition(ifTree.getThenStatement());
                             } else {
-                                ifEnd = (int)ctrl.getTrees().getSourcePositions().getEndPosition(
-                                    ctrl.getCompilationUnit(), ifTree.getCondition());
+                                ifEnd = (int)ctrl.getTrees().getSourcePositions().getEndPosition(ifTree.getCondition());
                             }
                             BraceContext rel = BraceContext.create(
                                     context.getDocument().createPosition(ifStart),
@@ -381,8 +377,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                     case CASE:
                     {
                         // take start of the command as the context
-                        long start = ctrl.getTrees().getSourcePositions().getStartPosition(
-                                ctrl.getCompilationUnit(), path.getLeaf());
+                        long start = ctrl.getTrees().getSourcePositions().getStartPosition(path.getLeaf());
                         ret[0] = BraceContext.create(
                             context.getDocument().createPosition((int)start),
                             context.getDocument().createPosition(position));
@@ -390,8 +385,7 @@ public final class JavaBracesMatcher implements BracesMatcher, BracesMatcherFact
                     }
                     case CLASS:
                     {
-                        long start = ctrl.getTrees().getSourcePositions().getStartPosition(
-                                ctrl.getCompilationUnit(), block != null ? block : path.getLeaf());
+                        long start = ctrl.getTrees().getSourcePositions().getStartPosition(block != null ? block : path.getLeaf());
                         ret[0] = BraceContext.create(
                             context.getDocument().createPosition((int)start),
                             context.getDocument().createPosition(position));

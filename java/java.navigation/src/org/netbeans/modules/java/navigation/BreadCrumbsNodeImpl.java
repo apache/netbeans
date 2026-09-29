@@ -164,7 +164,7 @@ public class BreadCrumbsNodeImpl implements BreadcrumbsElement {
     public static BreadCrumbsNodeImpl createBreadcrumbs(BreadCrumbsNodeImpl parent, final CompilationInfo info, TreePath path, boolean elseSection) {
         final Trees trees = info.getTrees();
         final SourcePositions sp = trees.getSourcePositions();
-        int[] pos = new int[] {(int) sp.getStartPosition(path.getCompilationUnit(), path.getLeaf()), (int) sp.getEndPosition(path.getCompilationUnit(), path.getLeaf())};
+        int[] pos = new int[] {(int) sp.getStartPosition(path.getLeaf()), (int) sp.getEndPosition(path.getLeaf())};
             final Tree leaf = path.getLeaf();
             switch (leaf.getKind()) {
                 case COMPILATION_UNIT:
@@ -329,16 +329,16 @@ public class BreadCrumbsNodeImpl implements BreadcrumbsElement {
                     int elseStart = pos[1] + 1;
                     if (it.getElseStatement() != null) {
                         TokenSequence<JavaTokenId> ts = info.getTokenHierarchy().tokenSequence(JavaTokenId.language());
-                        ts.move(elseStart = (int) sp.getStartPosition(path.getCompilationUnit(), it.getElseStatement()));
+                        ts.move(elseStart = (int) sp.getStartPosition(it.getElseStatement()));
                         boolean success;
                         while ((success = ts.movePrevious()) && ts.token().id() != JavaTokenId.ELSE)
                             ;
                         elseStart = success ? Math.min(ts.offset(), elseStart) : elseStart;
                     }
                     if (elseSection) {
-                        int endPos = (int) sp.getEndPosition(path.getCompilationUnit(), it.getElseStatement());
+                        int endPos = (int) sp.getEndPosition(it.getElseStatement());
                         if (it.getElseStatement().getKind() == Kind.IF) {
-                            endPos = (int) sp.getStartPosition(path.getCompilationUnit(), it.getElseStatement()) - 1;
+                            endPos = (int) sp.getStartPosition(it.getElseStatement()) - 1;
                         }
                         pos = new int[] {elseStart, endPos};
                     } else {

@@ -535,8 +535,8 @@ public class PartialReparseTest extends NbTestCase {
                         }
                     }
                     result.add(new TreeDescription(tree.getKind(),
-                                                   info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), tree),
-                                                   info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), tree),
+                                                   info.getTrees().getSourcePositions().getStartPosition(tree),
+                                                   info.getTrees().getSourcePositions().getEndPosition(tree),
                                                    elDesc.toString(),
                                                    String.valueOf(info.getTrees().getTypeMirror(tp)),
                                                    info.getTrees().getDocComment(tp)));

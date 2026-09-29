@@ -107,7 +107,7 @@ public class ConvertToDiamondBulkHint {
         if (ctx.getMultiVariables().get("$tparams$").isEmpty()) return null;
         
         TreePath clazz = ctx.getVariables().get("$clazz");
-        long start = ctx.getInfo().getTrees().getSourcePositions().getStartPosition(clazz.getCompilationUnit(), clazz.getLeaf());
+        long start = ctx.getInfo().getTrees().getSourcePositions().getStartPosition(clazz.getLeaf());
 
         ctx.getVariables().put("$init", ctx.getPath());
         

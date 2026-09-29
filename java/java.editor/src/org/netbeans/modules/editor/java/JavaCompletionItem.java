@@ -1255,7 +1255,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
             }
             if (path != null) {
                 Trees trees = info.getTrees();
-                int pos = (int)trees.getSourcePositions().getStartPosition(path.getCompilationUnit(), path.getLeaf().getKind() == Tree.Kind.VARIABLE ? ((VariableTree)path.getLeaf()).getType() : path.getLeaf());
+                int pos = (int)trees.getSourcePositions().getStartPosition(path.getLeaf().getKind() == Tree.Kind.VARIABLE ? ((VariableTree)path.getLeaf()).getType() : path.getLeaf());
                 if (pos >= 0) {
                     Scope scope = tu.scopeFor(pos);
                     String stmt = info.getText().substring(pos, offset);
@@ -1572,7 +1572,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                     TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                     if (this.startOffset < 0) {
                         if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
-                            this.startOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
+                            this.startOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
                         }
                     }
                     this.castText = "(" + AutoImport.resolveImport(info, tp, castType) + (CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")"); //NOI18N
@@ -1876,7 +1876,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                     TreePath tp = info.getTreeUtilities().pathFor(substitutionOffset);
                     if (this.startOffset < 0) {
                         if (tp != null && tp.getLeaf().getKind() == Tree.Kind.MEMBER_SELECT) {
-                            this.startOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
+                            this.startOffset = (int)info.getTrees().getSourcePositions().getStartPosition(tp.getLeaf());
                         }
                     }
                     this.castText = "(" + AutoImport.resolveImport(info, tp, castType) + (CodeStyle.getDefault(info.getDocument()).spaceAfterTypeCast() ? ") " : ")"); //NOI18N
@@ -4583,7 +4583,7 @@ public abstract class JavaCompletionItem implements CompletionItem {
                             }
                             if (t != null) {
                                 SourcePositions sp = controller.getTrees().getSourcePositions();
-                                int endPos = (int)sp.getEndPosition(controller.getCompilationUnit(), t);
+                                int endPos = (int)sp.getEndPosition(t);
                                 TokenSequence<JavaTokenId> ts = findLastNonWhitespaceToken(controller.getTokenHierarchy().tokenSequence(JavaTokenId.language()), embeddedOffset, endPos);
                                 if (ts != null) {
                                     if (ts.token().id() == JavaTokenId.SEMICOLON) {

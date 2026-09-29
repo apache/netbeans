@@ -401,8 +401,8 @@ public final class ContextAnalyzer {
                 continue;
             }
 
-            long treeStart = ci.getTrees().getSourcePositions().getStartPosition(ci.getCompilationUnit(), leaf);
-            long treeEnd   = ci.getTrees().getSourcePositions().getEndPosition(ci.getCompilationUnit(), leaf);
+            long treeStart = ci.getTrees().getSourcePositions().getStartPosition(leaf);
+            long treeEnd   = ci.getTrees().getSourcePositions().getEndPosition(leaf);
 
             if (start != end) {
                 if (treeStart != start || treeEnd != end) {

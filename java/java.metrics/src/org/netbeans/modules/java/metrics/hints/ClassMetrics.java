@@ -223,8 +223,8 @@ public class ClassMetrics {
             CompilationInfo info = ctx.getInfo();
             SourcePositions pos = info.getTrees().getSourcePositions();
             NewClassTree nct = (NewClassTree)ctx.getPath().getLeaf();
-            long start = pos.getStartPosition(info.getCompilationUnit(), nct);
-            long mstart = pos.getStartPosition(info.getCompilationUnit(), nct.getClassBody());
+            long start = pos.getStartPosition(nct);
+            long mstart = pos.getStartPosition(nct.getClassBody());
             return ErrorDescriptionFactory.forSpan(ctx, 
                     (int)start, (int)mstart,
                     TEXT_ClassAnonymousTooComplex(complexity));
@@ -396,8 +396,8 @@ public class ClassMetrics {
         if (anon) {
             CompilationInfo info = ctx.getInfo();
             SourcePositions pos = info.getTrees().getSourcePositions();
-            long start = pos.getStartPosition(info.getCompilationUnit(), path.getParentPath().getLeaf());
-            long mstart = pos.getStartPosition(info.getCompilationUnit(), path.getLeaf());
+            long start = pos.getStartPosition(path.getParentPath().getLeaf());
+            long mstart = pos.getStartPosition(path.getLeaf());
             return ErrorDescriptionFactory.forSpan(ctx, (int)start, (int)mstart,
                     TEXT_AnonClassManyMethods(methodCount));
         } else {

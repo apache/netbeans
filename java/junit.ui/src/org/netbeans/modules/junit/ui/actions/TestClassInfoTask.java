@@ -129,7 +129,7 @@ public final class TestClassInfoTask implements Task<CompilationController> {
         TreeUtilities treeUtilities = info.getTreeUtilities();
         int[] classNameSpan = treeUtilities.findNameSpan((ClassTree) clazz.getLeaf());
         int clazzPreferred = classNameSpan != null ? classNameSpan[0]
-                                                   : (int) trees.getSourcePositions().getStartPosition(clazz.getCompilationUnit(), clazz.getLeaf());
+                                                   : (int) trees.getSourcePositions().getStartPosition(clazz.getLeaf());
         TypeElement typeElement = (TypeElement) trees.getElement(clazz);
         TypeElement testcase = elements.getTypeElement(TESTCASE);
         NestedClass nc = getNestedClass(info, typeElement);
@@ -152,9 +152,9 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                 }
                 if (testMethod) {
                     SourcePositions sp = trees.getSourcePositions();
-                    int start = (int) sp.getStartPosition(tp.getCompilationUnit(), tp.getLeaf());
+                    int start = (int) sp.getStartPosition(tp.getLeaf());
                     int preferred = treeUtilities.findNameSpan((MethodTree) tp.getLeaf())[0];
-                    int end = (int) sp.getEndPosition(tp.getCompilationUnit(), tp.getLeaf());
+                    int end = (int) sp.getEndPosition(tp.getLeaf());
                     Document doc = info.getSnapshot().getSource().getDocument(false);
                     try {
                         result.add(new TestMethod(elements.getBinaryName(typeElement).toString(),
@@ -292,8 +292,8 @@ public final class TestClassInfoTask implements Task<CompilationController> {
                     if (el.getKind() == ElementKind.METHOD) {
                         for (TestMethod tm : testMethods) {
                             if (tm.method().getMethodName().contentEquals(el.getSimpleName())
-                                    && tm.start().getOffset() == sp.getStartPosition(path.getCompilationUnit(), path.getLeaf())
-                                    && tm.end().getOffset() == sp.getEndPosition(path.getCompilationUnit(), path.getLeaf())) {
+                                    && tm.start().getOffset() == sp.getStartPosition(path.getLeaf())
+                                    && tm.end().getOffset() == sp.getEndPosition(path.getLeaf())) {
                                 return true;
                             }
                         }

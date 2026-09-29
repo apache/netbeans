@@ -523,8 +523,8 @@ public class DeclarativeHintsParser {
                         Element e = parameter.getTrees().getElement(new TreePath(tp, t));
 
                         if (e.getKind() != ElementKind.ENUM_CONSTANT) {
-                            int start = (int) positions[0].getStartPosition(null, t) + offset;
-                            int end = (int) positions[0].getEndPosition(null, t) + offset;
+                            int start = (int) positions[0].getStartPosition(t) + offset;
+                            int end = (int) positions[0].getEndPosition(t) + offset;
                             errors.add(ErrorDescriptionFactory.createErrorDescription(Severity.ERROR, "Cannot resolve enum constant", file, start, end));
                             break;
                         }

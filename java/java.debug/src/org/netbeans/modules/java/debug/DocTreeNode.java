@@ -84,12 +84,12 @@ public class DocTreeNode extends AbstractNode implements OffsetProvider {
 
     @Override
     public int getStart() {
-        return (int) ((DocTrees)info.getTrees()).getSourcePositions().getStartPosition(info.getCompilationUnit(), docComment, tree);
+        return (int) ((DocTrees)info.getTrees()).getSourcePositions().getStartPosition(docComment, tree);
     }
 
     @Override
     public int getEnd() {
-        return (int) ((DocTrees)info.getTrees()).getSourcePositions().getEndPosition(info.getCompilationUnit(), docComment, tree);
+        return (int) ((DocTrees)info.getTrees()).getSourcePositions().getEndPosition(docComment, tree);
     }
 
     @Override

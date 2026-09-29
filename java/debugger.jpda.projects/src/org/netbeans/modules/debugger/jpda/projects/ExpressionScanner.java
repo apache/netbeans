@@ -98,22 +98,22 @@ class ExpressionScanner extends ErrorAwareTreeScanner<List<Tree>, ExpressionScan
         if (!checkBounds) {
             return true;
         }
-        int startLine = (int) lineMap.getLineNumber(positions.getStartPosition(tree, aTree));
+        int startLine = (int) lineMap.getLineNumber(positions.getStartPosition(aTree));
         if (startLine == lineNumber) {
             return true;
         } else {
             //return false;
             return startLine < lineNumber &&
-                   lineMap.getLineNumber(positions.getEndPosition(tree, aTree)) >= lineNumber;
+                   lineMap.getLineNumber(positions.getEndPosition(aTree)) >= lineNumber;
         }
     }
     
     private boolean isCurrentTree(Tree aTree) {
-        int startLine = (int) lineMap.getLineNumber(positions.getStartPosition(tree, aTree));
+        int startLine = (int) lineMap.getLineNumber(positions.getStartPosition(aTree));
         if (startLine == Diagnostic.NOPOS) {
             return false;
         }
-        int endLine = (int) lineMap.getLineNumber(positions.getEndPosition(tree, aTree));
+        int endLine = (int) lineMap.getLineNumber(positions.getEndPosition(aTree));
         if (endLine == Diagnostic.NOPOS) {
             return false;
         }

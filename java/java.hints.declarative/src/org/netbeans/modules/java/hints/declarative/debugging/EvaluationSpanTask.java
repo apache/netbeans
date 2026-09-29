@@ -265,8 +265,8 @@ public class EvaluationSpanTask extends JavaParserResultTask<Result> {
         for ( ; tp != null; tp = tp.getParentPath()) {
             Tree leaf = tp.getLeaf();
 
-            long treeStart = ci.getTrees().getSourcePositions().getStartPosition(ci.getCompilationUnit(), leaf);
-            long treeEnd   = ci.getTrees().getSourcePositions().getEndPosition(ci.getCompilationUnit(), leaf);
+            long treeStart = ci.getTrees().getSourcePositions().getStartPosition(leaf);
+            long treeEnd   = ci.getTrees().getSourcePositions().getEndPosition(leaf);
 
             if (treeStart != start || treeEnd != end) {
                 continue;

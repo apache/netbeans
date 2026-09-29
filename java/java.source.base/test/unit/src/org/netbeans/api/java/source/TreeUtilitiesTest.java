@@ -650,8 +650,8 @@ public class TreeUtilitiesTest extends NbTestCase {
                 final SourcePositions[] sp = new SourcePositions[1];
                 BlockTree block = parameter.getTreeUtilities().parseStaticBlock("static { }", sp);
                 assertNotNull(block);
-                assertEquals(0, sp[0].getStartPosition(null, block));
-                assertEquals(10, sp[0].getEndPosition(null, block));
+                assertEquals(0, sp[0].getStartPosition(block));
+                assertEquals(10, sp[0].getEndPosition(block));
                 assertNull(parameter.getTreeUtilities().parseStaticBlock("static", new SourcePositions[1]));
             }
         }, true);

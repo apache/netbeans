@@ -134,8 +134,8 @@ public class EmbeddableEJBContainerHint extends AbstractHint {
                 getDisplayName(),
                 fixes,
                 info.getFileObject(),
-                (int) info.getTrees().getSourcePositions().getStartPosition(info.getCompilationUnit(), t),
-                (int) info.getTrees().getSourcePositions().getEndPosition(info.getCompilationUnit(), t)));
+                (int) info.getTrees().getSourcePositions().getStartPosition(t),
+                (int) info.getTrees().getSourcePositions().getEndPosition(t)));
     }
 
     @Override

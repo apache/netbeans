@@ -436,8 +436,8 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
                     CompilationUnitTree unitTree = controller.getCompilationUnit();
                     // is offset it package name section?
                     Tree packgTree = unitTree.getPackageName();
-                    if (offset >= positions.getStartPosition(unitTree, packgTree) &&
-                            offset <= positions.getEndPosition(unitTree, packgTree)) {
+                    if (offset >= positions.getStartPosition(packgTree) &&
+                            offset <= positions.getEndPosition(packgTree)) {
                         isValid[0] = false;
                         return;
                     }
@@ -449,8 +449,8 @@ public class ToolTipAnnotation extends Annotation implements Runnable {
                         return;
                     }
                     // check for comments and other non-supported elements
-                    int startPos = (int)positions.getStartPosition(unitTree, tree);
-                    int endPos = (int)positions.getEndPosition(unitTree, tree);
+                    int startPos = (int)positions.getStartPosition(tree);
+                    int endPos = (int)positions.getEndPosition(tree);
                     int startLine = LineDocumentUtils.getLineIndex((LineDocument) doc, startPos);
                     int endLine = LineDocumentUtils.getLineIndex((LineDocument) doc, endPos);
                     int line = LineDocumentUtils.getLineIndex((LineDocument) doc, offset);

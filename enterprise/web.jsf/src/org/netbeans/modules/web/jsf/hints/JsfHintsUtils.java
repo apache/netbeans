@@ -75,8 +75,8 @@ public class JsfHintsUtils {
      */
     public static TextSpan getUnderlineSpan(CompilationInfo info, Tree tree) {
         SourcePositions srcPos = info.getTrees().getSourcePositions();
-        int startOffset = (int) srcPos.getStartPosition(info.getCompilationUnit(), tree);
-        int endOffset = (int) srcPos.getEndPosition(info.getCompilationUnit(), tree);
+        int startOffset = (int) srcPos.getStartPosition(tree);
+        int endOffset = (int) srcPos.getEndPosition(tree);
         return new TextSpan(startOffset, endOffset);
     }
 

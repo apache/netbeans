@@ -50,7 +50,7 @@ public class ConvertTextBlockToString {
         if (ts == null) {
             return null;
         }
-        int textBlockIndex = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getPath().getCompilationUnit(), ctx.getPath().getLeaf());
+        int textBlockIndex = (int) ctx.getInfo().getTrees().getSourcePositions().getStartPosition(ctx.getPath().getLeaf());
         if (textBlockIndex == -1) {
             return null;
         }

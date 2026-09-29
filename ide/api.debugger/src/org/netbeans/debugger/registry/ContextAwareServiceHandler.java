@@ -24,14 +24,10 @@ import org.netbeans.spi.debugger.ContextAwareService;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 import org.netbeans.spi.debugger.ContextProvider;
 import org.netbeans.spi.debugger.DebuggerServiceRegistration;
-import org.openide.util.Lookup;
 
 /**
  * Handler of context aware services that implement one or more interfaces.

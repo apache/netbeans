@@ -20,6 +20,7 @@
 package org.netbeans.modules.maven.model;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import org.netbeans.junit.Log;
 import org.netbeans.junit.NbTestCase;
@@ -48,39 +49,44 @@ public class UtilitiesTest extends NbTestCase {
 
     public void testPerformPOMModelOperations() throws Exception {
         FileObject pom = TestFileUtils.writeFile(FileUtil.toFileObject(getWorkDir()), "p0m.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>grp</groupId>\n" +
-                "    <artifactId>art</artifactId>\n" +
-                "    <version>1.0</version>\n" +
-                "</project>\n");
-        Utilities.performPOMModelOperations(pom, Collections.singletonList(new ModelOperation<POMModel>() {
-            public @Override void performOperation(POMModel model) {
-                model.getProject().addModule("child1");
-                model.getProject().addModule("child2");
-            }
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <version>1.0</version>
+                </project>
+                """);
+        Utilities.performPOMModelOperations(pom, List.of((POMModel model) -> {
+            model.getProject().addModule("child1");
+            model.getProject().addModule("child2");
         }));
-        assertEquals("<project xmlns='http://maven.apache.org/POM/4.0.0'>\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>grp</groupId>\n" +
-                "    <artifactId>art</artifactId>\n" +
-                "    <version>1.0</version>\n" +
-                "    <modules>\n" +
-                "        <module>child1</module>\n" +
-                "        <module>child2</module>\n" +
-                "    </modules>\n" +
-                "</project>\n",
+        assertEquals(
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <version>1.0</version>
+                    <modules>
+                        <module>child1</module>
+                        <module>child2</module>
+                    </modules>
+                </project>
+                """,
                 pom.asText().replace("\r\n", "\n"));
     }
 
     public void testPerformNothing() throws Exception {
         FileObject pom = TestFileUtils.writeFile(FileUtil.toFileObject(getWorkDir()), "p0m.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>\n" +
-                "    <modelVersion>4.0.0</modelVersion>\n" +
-                "    <groupId>grp</groupId>\n" +
-                "    <artifactId>art</artifactId>\n" +
-                "    <version>1.0</version>\n" +
-                "</project>\n");
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <version>1.0</version>
+                </project>
+                """);
         CharSequence log = Log.enable(logRoot(), Level.FINE);
         Utilities.performPOMModelOperations(pom, Collections.<ModelOperation<POMModel>>emptyList());
         assertFalse(log.toString(), log.toString().contains("changes in"));

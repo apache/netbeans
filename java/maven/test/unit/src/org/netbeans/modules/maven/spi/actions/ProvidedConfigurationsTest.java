@@ -57,16 +57,18 @@ public class ProvidedConfigurationsTest extends NbTestCase {
     private FileObject pomFile;
     
     private void setupOKProject() throws Exception {
-        File f = TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), 
-             "<project xmlns='http://maven.apache.org/POM/4.0.0'>"
-            + "<properties>"
-            + " <exec.mainClass>org.netbeans.modules.maven.test.Clazz</exec.mainClass>"
-            + "</properties>"
-            + "  <modelVersion>4.0.0</modelVersion>" 
-            + "  <artifactId>m</artifactId>" 
-            + "  <groupId>g</groupId>"
-            + "    <version>0</version>"
-            + "</project>");
+        File f = TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"),
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <properties>
+                        <exec.mainClass>org.netbeans.modules.maven.test.Clazz</exec.mainClass>
+                    </properties>
+                    <modelVersion>4.0.0</modelVersion>
+                    <artifactId>m</artifactId>
+                    <groupId>g</groupId>
+                    <version>0</version>
+                </project>
+                """);
         
         pomFile = FileUtil.toFileObject(f);
         
@@ -164,27 +166,26 @@ public class ProvidedConfigurationsTest extends NbTestCase {
         setupOKProject();
         try (OutputStream o = pomFile.getParent().createAndOpen("nbactions.xml");
             OutputStreamWriter w = new OutputStreamWriter(o)) {
-            w.write(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "    <actions>\n" +
-                "        <action>\n" +
-                "            <actionName>run-extra</actionName>\n" +
-                "            <packagings>\n" +
-                "                <packaging>jar</packaging>\n" +
-                "            </packagings>\n" +
-                "            <goals>\n" +
-                "                <goal>boo:boo</goal>\n" +
-                "            </goals>\n" +
-                "            <properties>\n" +
-                "                <exec.vmArgs></exec.vmArgs>\n" +
-                "                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>\n" +
-                "                <exec.appArgs></exec.appArgs>\n" +
-                "                <exec.mainClass>${packageClassName}</exec.mainClass>\n" +
-                "            </properties>\n" +
-                "        </action>\n" +
-                "    </actions>\n" +
-                ""
-            );
+            w.write("""
+                    <?xml version="1.0" encoding="UTF-8"?>
+                        <actions>
+                            <action>
+                                <actionName>run-extra</actionName>
+                                <packagings>
+                                    <packaging>jar</packaging>
+                                </packagings>
+                                <goals>
+                                    <goal>boo:boo</goal>
+                                </goals>
+                                <properties>
+                                    <exec.vmArgs></exec.vmArgs>
+                                    <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                                    <exec.appArgs></exec.appArgs>
+                                    <exec.mainClass>${packageClassName}</exec.mainClass>
+                                </properties>
+                            </action>
+                        </actions>
+                    """);
         }
         Project p = FileOwnerQuery.getOwner(pomFile);
         NbMavenProjectImpl pimpl = p.getLookup().lookup(NbMavenProjectImpl.class);
@@ -200,27 +201,26 @@ public class ProvidedConfigurationsTest extends NbTestCase {
         setupOKProject();
         try (OutputStream o = pomFile.getParent().createAndOpen("nbactions-micronaut-auto.xml");
             OutputStreamWriter w = new OutputStreamWriter(o)) {
-            w.write(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                "    <actions>\n" +
-                "        <action>\n" +
-                "            <actionName>run-extra</actionName>\n" +
-                "            <packagings>\n" +
-                "                <packaging>jar</packaging>\n" +
-                "            </packagings>\n" +
-                "            <goals>\n" +
-                "                <goal>moo:moo</goal>\n" +
-                "            </goals>\n" +
-                "            <properties>\n" +
-                "                <exec.vmArgs></exec.vmArgs>\n" +
-                "                <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>\n" +
-                "                <exec.appArgs></exec.appArgs>\n" +
-                "                <exec.mainClass>${packageClassName}</exec.mainClass>\n" +
-                "            </properties>\n" +
-                "        </action>\n" +
-                "    </actions>\n" +
-                ""
-            );
+            w.write("""
+                    <?xml version="1.0" encoding="UTF-8"?>
+                        <actions>
+                            <action>
+                                <actionName>run-extra</actionName>
+                                <packagings>
+                                    <packaging>jar</packaging>
+                                </packagings>
+                                <goals>
+                                    <goal>moo:moo</goal>
+                                </goals>
+                                <properties>
+                                    <exec.vmArgs></exec.vmArgs>
+                                    <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
+                                    <exec.appArgs></exec.appArgs>
+                                    <exec.mainClass>${packageClassName}</exec.mainClass>
+                                </properties>
+                            </action>
+                        </actions>
+                    """);
         }
         Project p = FileOwnerQuery.getOwner(pomFile);
         NbMavenProjectImpl pimpl = p.getLookup().lookup(NbMavenProjectImpl.class);

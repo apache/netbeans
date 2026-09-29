@@ -50,14 +50,28 @@ public class MavenFileOwnerQueryImplTest extends NbTestCase {
 
     public void testMultipleVersions() throws Exception {
         File prj10 = new File(getWorkDir(), "prj10");
-        TestFileUtils.writeFile(new File(prj10, "pom.xml"), "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>prj</artifactId>"
-                + "<packaging>jar</packaging><version>1.0</version></project>");
+        TestFileUtils.writeFile(new File(prj10, "pom.xml"), 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>prj</artifactId>
+                    <packaging>jar</packaging>
+                    <version>1.0</version>
+                </project>
+                """);
         NbMavenProjectImpl p10 = (NbMavenProjectImpl) ProjectManager.getDefault().findProject(FileUtil.toFileObject(prj10));
         File prj11 = new File(getWorkDir(), "prj11");
-        TestFileUtils.writeFile(new File(prj11, "pom.xml"), "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>prj</artifactId>"
-                + "<packaging>jar</packaging><version>1.1</version></project>");
+        TestFileUtils.writeFile(new File(prj11, "pom.xml"), 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>prj</artifactId>
+                    <packaging>jar</packaging>
+                    <version>1.1</version>
+                </project>
+                """);
         NbMavenProjectImpl p11 = (NbMavenProjectImpl) ProjectManager.getDefault().findProject(FileUtil.toFileObject(prj11));
         MavenFileOwnerQueryImpl foq = MavenFileOwnerQueryImpl.getInstance();
         File repo = EmbedderFactory.getProjectEmbedder().getLocalRepositoryFile();

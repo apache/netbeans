@@ -47,9 +47,46 @@ public class ModelHandle2Test extends NbTestCase {
     }
 
     public void testModifyActiveConfig() throws Exception { // #200772
-        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion><groupId>g</groupId><artifactId>a</artifactId><version>0</version><profiles><profile><id>jetty</id></profile></profiles></project>");
-        TestFileUtils.writeFile(d, "nbactions.xml", "<actions><action><actionName>run</actionName><goals><goal>package</goal></goals></action></actions>");
-        FileObject nbactionsJetty = TestFileUtils.writeFile(d, "nbactions-jetty.xml", "<actions><action><displayName>Jetty</displayName><actionName>run</actionName><goals><goal>jetty:run</goal></goals><properties><someprop>v</someprop></properties></action></actions>");
+        TestFileUtils.writeFile(d, "pom.xml",
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>a</artifactId>
+                    <version>0</version>
+                    <profiles>
+                        <profile>
+                            <id>jetty</id>
+                        </profile>
+                    </profiles>
+                </project>
+                """);
+        TestFileUtils.writeFile(d, "nbactions.xml", 
+                """
+                <actions>
+                    <action>
+                        <actionName>run</actionName>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                    </action>
+                </actions>
+                """);
+        FileObject nbactionsJetty = TestFileUtils.writeFile(d, "nbactions-jetty.xml",
+                """
+                <actions>
+                    <action>
+                        <displayName>Jetty</displayName>
+                        <actionName>run</actionName>
+                        <goals>
+                            <goal>jetty:run</goal>
+                        </goals>
+                        <properties>
+                            <someprop>v</someprop>
+                        </properties>
+                    </action>
+                </actions>
+                """);
         Project project = ProjectManager.getDefault().findProject(d);
         M2ConfigProvider cp = project.getLookup().lookup(M2ConfigProvider.class);
         for (M2Configuration c : cp.getConfigurations()) {
@@ -71,13 +108,48 @@ public class ModelHandle2Test extends NbTestCase {
     }
     
     public void testModifyActiveConfigInOneFile() throws Exception { // #200772
-        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion><groupId>g</groupId><artifactId>a</artifactId><version>0</version><profiles><profile><id>jetty</id></profile></profiles></project>");
-        TestFileUtils.writeFile(d, "nbactions.xml", "<actions><action><actionName>run</actionName><goals><goal>package</goal></goals></action>" +
-            "<profiles><profile><id>jetty</id><actions><action><displayName>Jetty</displayName>"
-                + "<actionName>run</actionName><goals><goal>jetty:run</goal></goals>"
-                + "<properties><someprop>v</someprop></properties></action>"
-                + "</actions></profile></profiles>"
-                + "</actions>");
+        TestFileUtils.writeFile(d, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>a</artifactId>
+                    <version>0</version>
+                    <profiles>
+                        <profile>
+                            <id>jetty</id>
+                        </profile>
+                    </profiles>
+                </project>
+                """);
+        TestFileUtils.writeFile(d, "nbactions.xml", 
+                """
+                <actions>
+                    <action>
+                        <actionName>run</actionName>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                    </action>
+                    <profiles>
+                        <profile>
+                            <id>jetty</id>
+                            <actions>
+                                <action>
+                                    <displayName>Jetty</displayName>
+                                    <actionName>run</actionName>
+                                    <goals>
+                                        <goal>jetty:run</goal>
+                                    </goals>
+                                    <properties>
+                                        <someprop>v</someprop>
+                                    </properties>
+                                </action>
+                            </actions>
+                        </profile>
+                    </profiles>
+                </actions>
+                """);
         Project project = ProjectManager.getDefault().findProject(d);
         M2ConfigProvider cp = project.getLookup().lookup(M2ConfigProvider.class);
         M2Configuration conf = null;
@@ -113,13 +185,49 @@ public class ModelHandle2Test extends NbTestCase {
     }
     
     public void testConfigInOneFileFallbacksToBaseProfile() throws Exception { // #229192
-        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion><groupId>g</groupId><artifactId>a</artifactId><version>0</version><profiles><profile><id>jetty</id></profile></profiles></project>");
-        TestFileUtils.writeFile(d, "nbactions.xml", "<actions><action><actionName>debug</actionName><displayName>DbgJtt</displayName><goals><goal>package</goal></goals></action>" +
-            "<profiles><profile><id>jetty</id><actions><action><displayName>Jetty</displayName>"
-                + "<actionName>run</actionName><goals><goal>jetty:run</goal></goals>"
-                + "<properties><someprop>v</someprop></properties></action>"
-                + "</actions></profile></profiles>"
-                + "</actions>");
+        TestFileUtils.writeFile(d, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>a</artifactId>
+                    <version>0</version>
+                    <profiles>
+                        <profile>
+                            <id>jetty</id>
+                        </profile>
+                    </profiles>
+                </project>
+                """);
+        TestFileUtils.writeFile(d, "nbactions.xml", 
+                """
+                <actions>
+                    <action>
+                        <actionName>debug</actionName>
+                        <displayName>DbgJtt</displayName>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                    </action>
+                    <profiles>
+                        <profile>
+                            <id>jetty</id>
+                            <actions>
+                                <action>
+                                    <displayName>Jetty</displayName>
+                                    <actionName>run</actionName>
+                                    <goals>
+                                        <goal>jetty:run</goal>
+                                    </goals>
+                                    <properties>
+                                        <someprop>v</someprop>
+                                    </properties>
+                                </action>
+                            </actions>
+                        </profile>
+                    </profiles>
+                </actions>
+                """);
         Project project = ProjectManager.getDefault().findProject(d);
         M2ConfigProvider cp = project.getLookup().lookup(M2ConfigProvider.class);
         M2Configuration conf = null;
@@ -152,65 +260,66 @@ public class ModelHandle2Test extends NbTestCase {
 
     public void testJettyDebugSingle() throws Exception { // #
         TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion><groupId>g</groupId><artifactId>a</artifactId><version>0</version><profiles><profile><id>jetty</id></profile></profiles></project>");
-        TestFileUtils.writeFile(d, "nbactions.xml", 
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-"<actions>\n" +
-"        <action>\n" +
-"            <actionName>run.single.main</actionName>\n" +
-"            <packagings>\n" +
-"                <packaging>*</packaging>\n" +
-"            </packagings>\n" +
-"            <goals>\n" +
-"                <goal>process-classes</goal>\n" +
-"                <goal>org.codehaus.mojo:exec-maven-plugin:3.6.3:exec</goal>\n" +
-"            </goals>\n" +
-"            <properties>\n" +
-"                <exec.args>-classpath %classpath ${packageClassName}</exec.args>\n" +
-"                <exec.executable>java</exec.executable>\n" +
-"                <exec.classpathScope>${classPathScope}</exec.classpathScope>\n" +
-"            </properties>\n" +
-"        </action>\n" +
-"        <action>\n" +
-"            <actionName>debug.single.main</actionName>\n" +
-"            <packagings>\n" +
-"                <packaging>*</packaging>\n" +
-"            </packagings>\n" +
-"            <goals>\n" +
-"                <goal>process-classes</goal>\n" +
-"                <goal>org.codehaus.mojo:exec-maven-plugin:3.6.3:exec</goal>\n" +
-"            </goals>\n" +
-"            <properties>\n" +
-"                <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>\n" +
-"                <exec.executable>java</exec.executable>\n" +
-"                <exec.classpathScope>${classPathScope}</exec.classpathScope>\n" +
-"                <jpda.listen>true</jpda.listen>\n" +
-"            </properties>\n" +
-"        </action>\n" +
-"</actions>\n" +
-""
-        );
-        FileObject nbactionsJetty = TestFileUtils.writeFile(d, "nbactions-jetty.xml", 
-"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-"<actions>\n" +
-"        <action>\n" +
-"            <actionName>debug.single.main</actionName>\n" +
-"            <packagings>\n" +
-"                <packaging>*</packaging>\n" +
-"            </packagings>\n" +
-"            <goals>\n" +
-"                <goal>process-classes</goal>\n" +
-"                <goal>org.codehaus.mojo:exec-maven-plugin:3.6.3:exec</goal>\n" +
-"            </goals>\n" +
-"            <properties>\n" +
-"                <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>\n" +
-"                <exec.executable>java</exec.executable>\n" +
-"                <exec.classpathScope>${classPathScope}</exec.classpathScope>\n" +
-"                <jpda.listen>true</jpda.listen>\n" +
-"            </properties>\n" +
-"        </action>\n" +
-"    </actions>\n" +
-""
-        );
+        TestFileUtils.writeFile(d, "nbactions.xml",
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <actions>
+                    <action>
+                        <actionName>run.single.main</actionName>
+                        <packagings>
+                            <packaging>*</packaging>
+                        </packagings>
+                        <goals>
+                            <goal>process-classes</goal>
+                            <goal>org.codehaus.mojo:exec-maven-plugin:3.6.3:exec</goal>
+                        </goals>
+                        <properties>
+                            <exec.args>-classpath %classpath ${packageClassName}</exec.args>
+                            <exec.executable>java</exec.executable>
+                            <exec.classpathScope>${classPathScope}</exec.classpathScope>
+                        </properties>
+                    </action>
+                    <action>
+                        <actionName>debug.single.main</actionName>
+                        <packagings>
+                            <packaging>*</packaging>
+                        </packagings>
+                        <goals>
+                            <goal>process-classes</goal>
+                            <goal>org.codehaus.mojo:exec-maven-plugin:3.6.3:exec</goal>
+                        </goals>
+                        <properties>
+                            <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>
+                            <exec.executable>java</exec.executable>
+                            <exec.classpathScope>${classPathScope}</exec.classpathScope>
+                            <jpda.listen>true</jpda.listen>
+                        </properties>
+                    </action>
+                </actions>
+                """);
+
+        TestFileUtils.writeFile(d, "nbactions-jetty.xml",
+                """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <actions>
+                        <action>
+                            <actionName>debug.single.main</actionName>
+                            <packagings>
+                                <packaging>*</packaging>
+                            </packagings>
+                            <goals>
+                                <goal>process-classes</goal>
+                                <goal>org.codehaus.mojo:exec-maven-plugin:3.6.3:exec</goal>
+                            </goals>
+                            <properties>
+                                <exec.args>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>
+                                <exec.executable>java</exec.executable>
+                                <exec.classpathScope>${classPathScope}</exec.classpathScope>
+                                <jpda.listen>true</jpda.listen>
+                            </properties>
+                        </action>
+                    </actions>
+                """);
         Project project = ProjectManager.getDefault().findProject(d);
         M2ConfigProvider cp = project.getLookup().lookup(M2ConfigProvider.class);
         for (M2Configuration c : cp.getConfigurations()) {

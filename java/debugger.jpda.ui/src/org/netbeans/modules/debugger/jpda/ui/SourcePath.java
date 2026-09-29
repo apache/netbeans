@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.SwingUtilities;
 import org.netbeans.spi.debugger.ContextProvider;
 
 import org.netbeans.api.debugger.DebuggerManager;
@@ -46,6 +45,7 @@ import org.openide.ErrorManager;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Exceptions;
+import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 
 /**
@@ -56,41 +56,36 @@ import org.openide.util.NbBundle;
  * @author Jan Jancura
  */
 public class SourcePath {
-
-    private ContextProvider         contextProvider;
-    private SourcePathProvider      sourcePathProvider;
-    private JPDADebugger            debugger;
+    private final SourcePathProvider sourcePathProvider;
+    private final JPDADebugger debugger;
     
 
     public SourcePath (ContextProvider contextProvider) {
-        this.contextProvider = contextProvider;
         debugger = contextProvider.lookupFirst(null, JPDADebugger.class);
-        getContext();// To initialize the source path provider
+        sourcePathProvider = findSourcePathProvider(contextProvider);
     }
 
     private SourcePathProvider getContext () {
-        if (sourcePathProvider == null) {
-            List l = contextProvider.lookup (null, SourcePathProvider.class);
-            sourcePathProvider = (SourcePathProvider) l.get (0);
-            int i, k = l.size ();
-            for (i = 1; i < k; i++) {
-                sourcePathProvider = new CompoundContextProvider (
-                    (SourcePathProvider) l.get (i), 
-                    sourcePathProvider
-                );
-            }
-            //initSourcePaths ();
-        }
         return sourcePathProvider;
     }
-    
+
+    private static SourcePathProvider findSourcePathProvider(ContextProvider contextProvider) {
+        var l = contextProvider.lookup(null, SourcePathProvider.class);
+        var spp = (SourcePathProvider) l.get(0);
+        int i, k = l.size();
+        for (i = 1; i < k; i++) {
+            spp = new CompoundContextProvider(l.get(i), spp);
+        }
+        return spp;
+    }
+
     static SourcePathProvider getDefaultContext() {
         List providers = DebuggerManager.getDebuggerManager().
                 lookup("netbeans-JPDASession", SourcePathProvider.class);
         for (Iterator it = providers.iterator(); it.hasNext(); ) {
             Object provider = it.next();
             // Hack - find our provider:
-            if (provider.getClass().getName().equals("org.netbeans.modules.debugger.jpda.projects.SourcePathProviderImpl")) {
+            if (provider != null && provider.getClass().getName().equals("org.netbeans.modules.debugger.jpda.projects.SourcePathProviderImpl")) {
                 return (SourcePathProvider) provider;
             }
         }
@@ -244,7 +239,7 @@ public class SourcePath {
         } catch (AbsentInformationException e) {}
         try {
             return sourceAvailable (
-                convertSlash (t.getSourcePath (stratumn)), global
+                toPath (t.getSourcePath (stratumn)), global
             );
         } catch (AbsentInformationException e) {
             return sourceAvailable (
@@ -277,7 +272,7 @@ public class SourcePath {
         }
         try {
             return sourceAvailable (
-                convertSlash (csf.getSourcePath (stratumn)), true
+                toPath (csf.getSourcePath (stratumn)), true
             );
         } catch (AbsentInformationException e) {
             return sourceAvailable (
@@ -306,12 +301,12 @@ public class SourcePath {
         if (url == null) {
             String sourcePath;
             try {
-                sourcePath = convertSlash (csf.getSourcePath (stratumn));
-                url = getURL(sourcePath, true);
+                sourcePath = toPath (csf.getSourcePath (stratumn));
+                url = findURLForStackFrame(csf, stratumn);
                 if (url == null) {
                     String ds = csf.getDefaultStratum();
-                    sourcePath = convertSlash (csf.getSourcePath (ds));
-                    url = getURL(sourcePath, true);
+                    sourcePath = toPath (csf.getSourcePath (ds));
+                    url = findURLForStackFrame(csf, ds);
                 }
             } catch (AbsentInformationException e) {
                 sourcePath = convertClassNameToRelativePath (csf.getClassName ());
@@ -336,7 +331,7 @@ public class SourcePath {
             if (callStacks.length > 0) {
                 url = getURL(callStacks[0], stratum, sourcePathPtr);
             } else {
-                String sourcePath = convertSlash (t.getSourcePath (stratum));
+                String sourcePath = toPath (t.getSourcePath (stratum));
                 url = getURL (sourcePath, true);
                 if (sourcePathPtr != null) {
                     sourcePathPtr[0] = sourcePath;
@@ -393,37 +388,31 @@ public class SourcePath {
             StatusDisplayer.getDefault().setStatusText(message);
             return ;
         }
-        final int ln = lineNumber;
-        final String u = url;
-        SwingUtilities.invokeLater (new Runnable () {
-            public void run () {
-                EditorContextBridge.getContext().showSource (
-                    u,
-                    ln,
-                    debugger
-                );
-            }
-        });
+        handleShowSource(url, lineNumber, null);
     }
 
     /** Do not call in AWT */
     public void showSource (CallStackFrame csf, String stratumn) {
         String url = null;
         int lineNumber;
-        JPDAClassType classType = ((CallStackFrameImpl) csf).getClassType();
-        if (classType != null) {
+        if (csf instanceof CallStackFrameImpl impl && impl.getClassType() instanceof JPDAClassType classType) {
             url = getClassURL(classType, stratumn);
         }
         if (url == null) {
             try {
-                url = getURL (
-                    convertSlash (csf.getSourcePath (stratumn)), true
-                );
+                url = findURLForStackFrame (csf, stratumn);
                 if (url == null) {
                     stratumn = csf.getDefaultStratum ();
-                    url = getURL (
-                        convertSlash (csf.getSourcePath (stratumn)), true
-                    );
+                    url = findURLForStackFrame (csf, stratumn);
+                    if (url == null) {
+                        for (var anyStratum : csf.getAvailableStrata()) {
+                            url = findURLForStackFrame(csf, anyStratum);
+                            if (url != null) {
+                                stratumn = anyStratum;
+                                break;
+                            }
+                        }
+                    }
                 }
                 if (url == null) {
                     String message = NbBundle.getMessage(SourcePath.class,
@@ -449,15 +438,43 @@ public class SourcePath {
         }
         lineNumber = csf.getLineNumber (stratumn);
         if (lineNumber < 1) lineNumber = 1;
-        final int ln = lineNumber;
-        final String u = url;
-        SwingUtilities.invokeLater (new Runnable () {
-            public void run () {
-                EditorContextBridge.getContext().showSource (
-                    u,
-                    ln,
+        handleShowSource(url, lineNumber, null);
+    }
+
+    private String findURLForStackFrame(CallStackFrame csf, String stratumn)
+    throws AbsentInformationException {
+        String fullPath = toPath(csf.getSourcePath (stratumn));
+        String name = csf.getSourceName(stratumn);
+        if (fullPath != null) {
+            int slash = fullPath.lastIndexOf('/');
+            String fromPath = getURL (fullPath, true);
+            if (fromPath != null) {
+                return fromPath;
+            }
+            String fullName = fullPath.substring(0, slash + 1) + name;
+            String fromFullName = getURL(fullName, true);
+            if (fromFullName != null) {
+                return fromFullName;
+            }
+        }
+        String fromName = getURL(name, true);
+        return fromName;
+    }
+
+    /** Really talks to the editor to open a line.
+     * @param url URL to the file to open
+     * @param lineNumber line in the file to open
+     * @param onFailure {@code null} or a callback that's made when opening fails
+     */
+    protected void handleShowSource(String url, int lineNumber, Runnable onFailure) {
+        Mutex.EVENT.readAccess(() -> {
+            boolean success = EditorContextBridge.getContext().showSource (
+                    url,
+                    lineNumber,
                     debugger
-                );
+            );
+            if (!success && onFailure != null) {
+                onFailure.run();
             }
         });
     }
@@ -488,24 +505,22 @@ public class SourcePath {
         
         final int ln = lineNumber;
         final String u = url;
-        SwingUtilities.invokeLater (new Runnable () {
-            public void run () {
-                boolean success = EditorContextBridge.getContext().showSource (
-                    u,
-                    ln,
-                    debugger
-                );
-                if (reportUnknownSource && !success) {
-                    String message = NbBundle.getMessage(SourcePath.class, "No_URL_Warning", sourcePath);
-                    NotifyDescriptor d = new NotifyDescriptor.Message(message, NotifyDescriptor.WARNING_MESSAGE);
-                    DialogDisplayer.getDefault().notifyLater(d);
-                }
+        handleShowSource(u, ln, () -> {
+            if (reportUnknownSource) {
+                String message = NbBundle.getMessage(SourcePath.class, "No_URL_Warning", sourcePath);
+                NotifyDescriptor d = new NotifyDescriptor.Message(message, NotifyDescriptor.WARNING_MESSAGE);
+                DialogDisplayer.getDefault().notifyLater(d);
             }
         });
     }
 
-    static String convertSlash (String original) {
-        return original.replace (File.separatorChar, '/');
+    static String toPath (String original) {
+        if (original == null) {
+            return null;
+        } else {
+            String slashes = original.replace (File.separatorChar, '/');
+            return slashes;
+        }
     }
 
     public static String convertClassNameToRelativePath (

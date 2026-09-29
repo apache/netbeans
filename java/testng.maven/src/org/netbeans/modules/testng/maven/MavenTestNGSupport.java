@@ -98,7 +98,7 @@ public class MavenTestNGSupport extends TestNGSupportImplementation {
                     if (!hasEffectiveDependency(groupID, artifactID, p.getLookup().lookup(NbMavenProject.class))) {
                         fixJUnitDependency(model, p.getLookup().lookup(NbMavenProject.class));
                         Dependency dep = ModelUtils.checkModelDependency(model, groupID, artifactID, true);
-                        dep.setVersion("6.8.1"); //NOI18N
+                        dep.setVersion("7.12.0"); //NOI18N
                         dep.setScope("test"); //NOI18N
                     }
                 }

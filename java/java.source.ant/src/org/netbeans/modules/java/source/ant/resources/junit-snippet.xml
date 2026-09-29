@@ -171,7 +171,7 @@
                     </syspropertyset>
                     <arg line="${testng.mode}"/>
                     <arg line="-d ${test.result.dir}"/>
-                    <arg line="-listener org.testng.reporters.VerboseReporter"/>
+                    <arg line="-verbose 5"/>
                     <arg line="${testng.cmd.args}"/>
                 </java>
                 <delete dir="${test.result.dir}" quiet="true"/>

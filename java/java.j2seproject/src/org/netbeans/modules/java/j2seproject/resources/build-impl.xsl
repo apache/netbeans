@@ -1148,8 +1148,8 @@ is divided into following sections:
                         </union>
                         <taskdef name="testng" classname="org.testng.TestNGAntTask" classpath="${{run.test.classpath}}"/>
                         <testng>
-                            <xsl:attribute name="listeners">org.testng.reporters.VerboseReporter</xsl:attribute>
                             <xsl:attribute name="mode">${testng.mode}</xsl:attribute>
+                            <xsl:attribute name="verbose">5</xsl:attribute>
                             <xsl:attribute name="classfilesetref">test.set</xsl:attribute>
                             <xsl:attribute name="workingDir">${work.dir}</xsl:attribute> <!-- #47474: match <java> --> 
                             <xsl:attribute name="failureProperty">tests.failed</xsl:attribute>
@@ -1369,7 +1369,7 @@ is divided into following sections:
                                 <jvmarg value="-ea"/>
                                 <arg line="${{testng.debug.mode}}"/>
                                 <arg line="-d ${{build.test.results.dir}}"/>
-                                <arg line="-listener org.testng.reporters.VerboseReporter"/>
+                                <arg line="-verbose 5"/>
                                 <arg line="${{testng.cmd.args}}"/>
                             </customizeDebuggee>
                         </j2seproject3:debug>

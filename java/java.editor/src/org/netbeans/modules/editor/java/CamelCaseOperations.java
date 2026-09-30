@@ -227,12 +227,11 @@ import static org.netbeans.modules.editor.java.JavaKit.JAVA_MIME_TYPE;
         }
 
         @MimeRegistrations({
-            @MimeRegistration(mimeType = JAVA_MIME_TYPE, service = CamelCaseInterceptor.Factory.class),
-            @MimeRegistration(mimeType = "text/x-javadoc", service = CamelCaseInterceptor.Factory.class), //NOI18N
-            @MimeRegistration(mimeType = "text/x-java-string", service = CamelCaseInterceptor.Factory.class), //NOI18N
-            @MimeRegistration(mimeType = "text/x-java-character", service = CamelCaseInterceptor.Factory.class) //NOI18N
+            @MimeRegistration(mimeType = JAVA_MIME_TYPE, service = CamelCaseInterceptor.Factory.class, position = 730),
+            @MimeRegistration(mimeType = "text/x-javadoc", service = CamelCaseInterceptor.Factory.class, position = 730), //NOI18N
+            @MimeRegistration(mimeType = "text/x-java-string", service = CamelCaseInterceptor.Factory.class, position = 730), //NOI18N
+            @MimeRegistration(mimeType = "text/x-java-character", service = CamelCaseInterceptor.Factory.class, position = 730) //NOI18N
         })
-        @MimeRegistration(mimeType = JAVA_MIME_TYPE, service = CamelCaseInterceptor.Factory.class)
         public static class JavaFactory implements CamelCaseInterceptor.Factory {
 
             @Override

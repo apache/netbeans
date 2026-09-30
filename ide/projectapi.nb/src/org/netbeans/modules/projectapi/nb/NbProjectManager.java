@@ -391,7 +391,7 @@ public final class NbProjectManager implements ProjectManagerImplementation.With
         for (ProjectFactory factory : factories.allInstances()) {
             Project p = factory.loadProject(dir, state);
             if (p == null && fallback) {
-                p = new GenericPrj(dir);
+                p = new FallbackProject(dir);
             }
             if (p != null) {
                 if (TIMERS.isLoggable(Level.FINE)) {

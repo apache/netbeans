@@ -33,6 +33,9 @@ import org.netbeans.modules.projectapi.nb.NbProjectManagerAccessor;
 import org.netbeans.modules.projectapi.nb.TimedWeakReference;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.Mutex;
 import org.openide.util.test.MockLookup;
 
@@ -227,6 +230,45 @@ public class ProjectManagerTest extends NbTestCase {
 
         var nothingAgain = pm.findProject(justADir);
         assertNull("Since then, findProject again returns null", nothingAgain);
+    }
+
+    public void testFallbackProjectLookup() throws Exception {
+        FileObject lookupDir = FileUtil.createFolder(FileUtil.getConfigRoot(), "Projects/org-netbeans-modules-project-fallback/Lookup");
+
+        var nothing = pm.findProject(justADir);
+        assertNull("No project is found for just a dir", nothing);
+        var generic = pm.findProjectOrFallback(justADir);
+        assertNotNull("But one can ask for a fallback project", generic);
+
+        var then = pm.findProject(justADir);
+        assertSame("since then findProject works for just a dir", generic, then);
+
+        Sources src = then.getLookup().lookup(Sources.class);
+        assertNotNull("sources are provided", src);
+        SourceGroup[] genSrc = src.getSourceGroups(Sources.TYPE_GENERIC);
+        assertNotNull("They support the generic sources", genSrc);
+        assertEquals("They support the generic sources", 1, genSrc.length);
+        assertEquals("root is project root", then.getProjectDirectory(), genSrc[0].getRootFolder());
+
+        MockLookuptype notFoundInLookup = then.getLookup().lookup(MockLookuptype.class);
+        assertNull("No MockLookuptype found in project's lookup", notFoundInLookup);
+
+        {
+            // create a registration in the lookup
+            FileObject mockLookupType = FileUtil.createData(lookupDir, MockLookuptype.class.getName().replace(".", "-") + ".instance");
+            MockLookuptype found = FileUtil.getConfigObject(mockLookupType.getPath(), MockLookuptype.class);
+            assertNotNull("MockLookuptype is registered in the lookup directory", found);
+        }
+
+        MockLookuptype foundInLookup = then.getLookup().lookup(MockLookuptype.class);
+        assertNotNull("MockLookuptype also found in project's lookup", foundInLookup);
+    }
+
+    public static final class MockLookuptype implements org.netbeans.spi.project.LookupProvider {
+        @Override
+        public Lookup createAdditionalLookup(Lookup baseContext) {
+            return Lookups.singleton(this);
+        }
     }
 
     public void testIsProject2() throws Exception {

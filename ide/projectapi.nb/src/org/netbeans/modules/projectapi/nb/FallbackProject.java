@@ -19,17 +19,23 @@
 package org.netbeans.modules.projectapi.nb;
 
 import org.netbeans.api.project.Project;
+import org.netbeans.spi.project.support.GenericSources;
+import org.netbeans.spi.project.support.LookupProviderSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
-final class GenericPrj implements Project {
+final class FallbackProject implements Project {
+    private static final String DASHNAME = "org-netbeans-modules-project-fallback"; // NOI18N
+
     private final FileObject dir;
     private final Lookup lkp;
 
-    public GenericPrj(FileObject dir) {
+    public FallbackProject(FileObject dir) {
         this.dir = dir;
-        this.lkp = Lookups.fixed(this);
+        var sources = GenericSources.genericOnly(this);
+        Lookup basicLookup = Lookups.fixed(this, dir, sources);
+        this.lkp = LookupProviderSupport.createCompositeLookup(basicLookup, "Projects/" + DASHNAME + "/Lookup");
     }
 
     @Override

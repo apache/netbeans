@@ -390,9 +390,6 @@ public final class NbProjectManager implements ProjectManagerImplementation.With
         ProjectStateImpl state = new ProjectStateImpl();
         for (ProjectFactory factory : factories.allInstances()) {
             Project p = factory.loadProject(dir, state);
-            if (p == null && fallback) {
-                p = new FallbackProject(dir);
-            }
             if (p != null) {
                 if (TIMERS.isLoggable(Level.FINE)) {
                     LogRecord rec = new LogRecord(Level.FINE, "Project"); // NOI18N
@@ -404,7 +401,14 @@ public final class NbProjectManager implements ProjectManagerImplementation.With
                 return p;
             }
         }
-        return null;
+        if (fallback) {
+            FallbackProject p = new FallbackProject(dir);
+            proj2Factory.put(p, null);
+            state.attach(p);
+            return p;
+        } else {
+            return null;
+        }
     }
     
 
@@ -509,11 +513,28 @@ public final class NbProjectManager implements ProjectManagerImplementation.With
                 LoadStatus.NO_SUCH_PROJECT.wrap(),
                 LoadStatus.SOME_SUCH_PROJECT.wrap(),
             }));
-            // XXX remove everything too? but then e.g. AntProjectFactorySingleton
-            // will stay while its delegates are changed, which does no good
-            // XXX should there be any way to signal that a particular
-            // folder should be "reloaded" by a new factory?
         }
+        MUTEX.postReadRequest(() -> {
+            synchronized (dir2Proj) {
+                // check if FallbackProject is still needed
+
+                Iterator<Map.Entry<FileObject, Union2<Reference<Project>, LoadStatus>>> it = dir2Proj.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<FileObject, Union2<Reference<Project>, LoadStatus>> entry = it.next();
+                    if (entry.getValue().hasFirst() && entry.getValue().first().get() instanceof FallbackProject fallback) {
+                        Result result = checkForProject(fallback.getProjectDirectory());
+                        if (result != null) {
+                            it.remove();
+                        }
+                    }
+                }
+            }
+        });
+
+        // XXX remove everything too? but then e.g. AntProjectFactorySingleton
+        // will stay while its delegates are changed, which does no good
+        // XXX should there be any way to signal that a particular
+        // folder should be "reloaded" by a new factory?
     }
     
     private final class ProjectStateImpl implements ProjectState {

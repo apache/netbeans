@@ -31,12 +31,14 @@ import org.netbeans.junit.Log;
 import org.netbeans.junit.NbTestCase;
 import org.netbeans.modules.projectapi.nb.NbProjectManagerAccessor;
 import org.netbeans.modules.projectapi.nb.TimedWeakReference;
+import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
-import org.openide.util.lookup.Lookups;
 import org.openide.util.Mutex;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 import org.openide.util.test.MockLookup;
 
 /* XXX tests needed:
@@ -237,37 +239,100 @@ public class ProjectManagerTest extends NbTestCase {
 
         var nothing = pm.findProject(justADir);
         assertNull("No project is found for just a dir", nothing);
-        var generic = pm.findProjectOrFallback(justADir);
-        assertNotNull("But one can ask for a fallback project", generic);
+        var fallbackProject = pm.findProjectOrFallback(justADir);
+        assertNotNull("But one can ask for a fallback project", fallbackProject);
 
-        var then = pm.findProject(justADir);
-        assertSame("since then findProject works for just a dir", generic, then);
+        var theProject = pm.findProject(justADir);
+        assertSame("since then findProject works for just a dir", fallbackProject, theProject);
 
-        Sources src = then.getLookup().lookup(Sources.class);
+        Sources src = theProject.getLookup().lookup(Sources.class);
         assertNotNull("sources are provided", src);
         SourceGroup[] genSrc = src.getSourceGroups(Sources.TYPE_GENERIC);
         assertNotNull("They support the generic sources", genSrc);
         assertEquals("They support the generic sources", 1, genSrc.length);
-        assertEquals("root is project root", then.getProjectDirectory(), genSrc[0].getRootFolder());
+        assertEquals("root is project root", theProject.getProjectDirectory(), genSrc[0].getRootFolder());
 
-        MockLookuptype notFoundInLookup = then.getLookup().lookup(MockLookuptype.class);
+        MockLookupForProject notFoundInLookup = theProject.getLookup().lookup(MockLookupForProject.class);
         assertNull("No MockLookuptype found in project's lookup", notFoundInLookup);
 
         {
             // create a registration in the lookup
-            FileObject mockLookupType = FileUtil.createData(lookupDir, MockLookuptype.class.getName().replace(".", "-") + ".instance");
-            MockLookuptype found = FileUtil.getConfigObject(mockLookupType.getPath(), MockLookuptype.class);
-            assertNotNull("MockLookuptype is registered in the lookup directory", found);
+            FileObject mockLookupType = FileUtil.createData(lookupDir, MockLookupForProject.class.getName().replace(".", "-") + ".instance");
+            MockLookupForProject found = FileUtil.getConfigObject(mockLookupType.getPath(), MockLookupForProject.class);
+            assertNotNull("MockLookupForProject is registered in the lookup directory", found);
         }
 
-        MockLookuptype foundInLookup = then.getLookup().lookup(MockLookuptype.class);
-        assertNotNull("MockLookuptype also found in project's lookup", foundInLookup);
+        MockLookupForProject mockLookup = theProject.getLookup().lookup(MockLookupForProject.class);
+        assertNotNull("MockLookupForProject also found in project's lookup", mockLookup);
+
+        ActionProvider ap = theProject.getLookup().lookup(ActionProvider.class);
+        assertNotNull("There are always actions for a project being merged together", ap);
+        {
+            var ap1 = new ActionProvider() {
+                @Override
+                public String[] getSupportedActions() {
+                    return new String[] { "jedna", "dva" };
+                }
+
+                @Override
+                public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
+                    throw new UnsupportedOperationException(command);
+                }
+
+                @Override
+                public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
+                    return false;
+                }
+            };
+
+            var ap2 = new ActionProvider() {
+                @Override
+                public String[] getSupportedActions() {
+                    return new String[] { "odin", "dva" };
+                }
+
+                @Override
+                public void invokeAction(String command, Lookup context) throws IllegalArgumentException {
+                    throw new UnsupportedOperationException(command);
+                }
+
+                @Override
+                public boolean isActionEnabled(String command, Lookup context) throws IllegalArgumentException {
+                    return false;
+                }
+            };
+
+            mockLookup.ic.add(ap1);
+
+            String[] ap1Actions = theProject.getLookup().lookup(ActionProvider.class).getSupportedActions();
+            assertEquals("Found two actions", 2, ap1Actions.length);
+
+            mockLookup.ic.add(ap2);
+            String[] bothActions = theProject.getLookup().lookup(ActionProvider.class).getSupportedActions();
+            assertEquals("Found three actions", 3, bothActions.length);
+
+            assertSame("Action provider instance stays the same", ap, theProject.getLookup().lookup(ActionProvider.class));
+
+            ProjectInformation info = ProjectUtils.getInformation(theProject);
+            assertNotNull("Cannot be null", info);
+            assertEquals(theProject.getProjectDirectory().getNameExt(), info.getName());
+            assertEquals("Folder " + justADir.getNameExt(), info.getDisplayName());
+            assertNotNull("Icon is provided", info.getIcon());
+            assertSame("Same icon as the group icon", info.getIcon(), genSrc[0].getIcon(true));
+        }
     }
 
-    public static final class MockLookuptype implements org.netbeans.spi.project.LookupProvider {
+    public static final class MockLookupForProject implements org.netbeans.spi.project.LookupProvider {
+        final InstanceContent ic = new InstanceContent();
+        private final Lookup lkp = new AbstractLookup(ic);
+        {
+            ic.add(this);
+        }
+
+
         @Override
         public Lookup createAdditionalLookup(Lookup baseContext) {
-            return Lookups.singleton(this);
+            return lkp;
         }
     }
 

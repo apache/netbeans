@@ -18,23 +18,41 @@
  */
 package org.netbeans.modules.projectapi.nb;
 
+import java.beans.PropertyChangeListener;
+import javax.swing.Icon;
+import javax.swing.event.ChangeListener;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectInformation;
+import org.netbeans.api.project.SourceGroup;
+import org.netbeans.api.project.Sources;
 import org.netbeans.spi.project.support.GenericSources;
 import org.netbeans.spi.project.support.LookupProviderSupport;
 import org.openide.filesystems.FileObject;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.Lookups;
 
-final class FallbackProject implements Project {
+final class FallbackProject implements Project, ProjectInformation, Sources {
     private static final String DASHNAME = "org-netbeans-modules-project-fallback"; // NOI18N
+    private static final String ICON = "org/netbeans/modules/projectapi/nb/fallback.svg"; // NOI18N
 
     private final FileObject dir;
     private final Lookup lkp;
+    private final SourceGroup genericGroup;
 
     public FallbackProject(FileObject dir) {
         this.dir = dir;
-        var sources = GenericSources.genericOnly(this);
-        Lookup basicLookup = Lookups.fixed(this, dir, sources);
+        this.genericGroup = GenericSources.group(
+            this, dir,
+            Sources.TYPE_GENERIC, getDisplayName(),
+            getIcon(), getIcon()
+        );
+        Lookup basicLookup = Lookups.fixed(
+            this,
+                dir,
+            LookupProviderSupport.createActionProviderMerger()
+        );
         this.lkp = LookupProviderSupport.createCompositeLookup(basicLookup, "Projects/" + DASHNAME + "/Lookup");
     }
 
@@ -46,6 +64,57 @@ final class FallbackProject implements Project {
     @Override
     public Lookup getLookup() {
         return lkp;
+    }
+
+    @Override
+    public String getName() {
+        return dir.getNameExt();
+    }
+
+    @Override
+    @NbBundle.Messages({
+        "# {0} - name of the folder",
+        "CTL_FallbackProjectDisplayName=Folder {0}"
+    })
+    public String getDisplayName() {
+        return Bundle.CTL_FallbackProjectDisplayName(getName());
+    }
+
+    @Override
+    public Icon getIcon() {
+        Icon icon = ImageUtilities.loadIcon(ICON);
+        assert icon != null;
+        return icon;
+    }
+
+    @Override
+    public Project getProject() {
+        return this;
+    }
+
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    }
+
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+    }
+
+    @Override
+    public SourceGroup[] getSourceGroups(String type) {
+        if (Sources.TYPE_GENERIC.equals(type)) {
+            return new SourceGroup[] { genericGroup };
+        } else {
+            return new SourceGroup[0];
+        }
+    }
+
+    @Override
+    public void addChangeListener(ChangeListener listener) {
+    }
+
+    @Override
+    public void removeChangeListener(ChangeListener listener) {
     }
 
 }

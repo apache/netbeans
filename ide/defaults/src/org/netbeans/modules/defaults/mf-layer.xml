@@ -947,7 +947,7 @@
                 <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-KillAction.instance"/>
             </file>
             <file name="C-F4.shadow">
-                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-CloseWindowAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/System/org-netbeans-core-actions-SystemExit.instance"/>
             </file>
             <file name="C-F8.shadow">
                 <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-ToggleBreakpointAction.instance"/>

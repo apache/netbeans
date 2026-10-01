@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+
+<!DOCTYPE bindings PUBLIC "-//NetBeans//DTD Editor KeyBindings settings 1.1//EN" "http://www.netbeans.org/dtds/EditorKeyBindings-1_1.dtd">
+
+<!--
+    This file modifies keybindings from VSCode-keybindings.xml to make them work on Mac OS.
+-->
+
+<bindings>
+    <bind key="C-A" remove="true"/>
+    <bind actionName="select-all" key="M-A"/>
+
+    <bind key="C-BACK_SPACE" remove="true"/>
+    <bind actionName="remove-word-previous" key="A-BACK_SPACE"/>
+
+    <bind key="C-C" remove="true"/>
+    <bind actionName="copy-to-clipboard" key="M-C"/>
+
+    <bind key="C-D" remove="true"/>
+    <bind actionName="addCaretSelectNext" key="M-D"/>
+
+    <bind key="C-DELETE" remove="true"/>
+    <bind actionName="remove-word-next" key="A-DELETE"/>
+
+    <bind key="C-END" remove="true"/>
+    <bind actionName="caret-end" key="M-DOWN"/>
+
+    <bind key="C-EQUALS" remove="true"/>
+    <bind actionName="zoom-text-in" key="M-EQUALS"/>
+
+    <bind key="C-F" remove="true"/>
+    <bind actionName="find" key="M-F"/>
+
+    <bind key="C-H" remove="true"/>
+    <bind actionName="replace" key="MA-F"/>
+
+    <bind key="C-HOME" remove="true"/>
+    <bind actionName="caret-begin" key="M-UP"/>
+
+    <bind key="C-LEFT" remove="true"/>
+    <bind actionName="caret-previous-word" key="A-LEFT"/>
+
+    <bind key="C-MINUS" remove="true"/>
+    <bind actionName="zoom-text-out" key="M-MINUS"/>
+
+    <bind key="C-RIGHT" remove="true"/>
+    <bind actionName="caret-next-word" key="A-RIGHT"/>
+
+    <bind key="C-SLASH" remove="true"/>
+    <bind actionName="toggle-comment" key="M-SLASH"/>
+
+    <bind key="C-U" remove="true"/>
+    <bind actionName="remove-last-caret" key="M-U"/>
+
+    <bind key="C-V" remove="true"/>
+    <bind actionName="paste-from-clipboard" key="M-V"/>
+
+    <bind key="C-X" remove="true"/>
+    <bind actionName="cut-to-clipboard" key="M-X"/>
+
+    <bind key="C-Y" remove="true"/>
+
+    <bind key="C-Z" remove="true"/>
+    <bind actionName="undo" key="M-Z"/>
+
+    <bind key="CS-END" remove="true"/>
+    <bind actionName="selection-end" key="MS-DOWN"/>
+
+    <bind key="CS-HOME" remove="true"/>
+    <bind actionName="selection-begin" key="MS-UP"/>
+
+    <bind key="CS-LEFT" remove="true"/>
+    <bind actionName="selection-previous-word" key="AS-LEFT"/>
+
+    <bind key="CS-L" remove="true"/>
+    <bind actionName="addCaretSelectAll" key="MS-L"/>
+
+    <bind key="CS-RIGHT" remove="true"/>
+    <bind actionName="selection-next-word" key="AS-RIGHT"/>
+
+    <bind key="CS-V" remove="true"/>
+    <bind actionName="clipboard-history" key="MS-V"/>
+
+    <bind key="CS-Z" remove="true"/>
+    <bind actionName="redo" key="MS-Z"/>
+
+    <bind actionName="caret-begin-line" key="M-LEFT"/>
+    <bind actionName="caret-end-line" key="M-RIGHT"/>
+    <bind actionName="find-next" key="M-G"/>
+    <bind actionName="find-previous" key="MS-G"/>
+    <bind actionName="selection-begin-line" key="MS-LEFT"/>
+    <bind actionName="selection-end-line" key="MS-RIGHT"/>
+</bindings>

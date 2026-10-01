@@ -40,6 +40,7 @@ public class HighlightsLayerFactoryImpl implements HighlightsLayerFactory {
             HighlightsLayer.create(SemanticHighlighter.class.getName() + "-1", ZOrder.SYNTAX_RACK.forPosition(1000), false,semantic),
             HighlightsLayer.create(SemanticHighlighter.class.getName() + "-2", ZOrder.SYNTAX_RACK.forPosition(1500), false, SemanticHighlighter.getImportHighlightsBag(context.getDocument())),
             HighlightsLayer.create(SemanticHighlighter.class.getName() + "-3", ZOrder.SYNTAX_RACK.forPosition(1600), false, HighlightsContainers.inlineHintsSettingAwareContainer(context.getDocument(), SemanticHighlighter.getPreTextBag(context.getDocument()))),
+            HighlightsLayer.create(ReferenceCountHintsTask.class.getName(), ZOrder.SYNTAX_RACK.forPosition(1650), false, ReferenceCountHintsTask.getBag(context.getDocument())),
             //the mark occurrences layer should be "above" current row and "below" the search layers:
             HighlightsLayer.create(MarkOccurrencesHighlighter.class.getName(), ZOrder.SHOW_OFF_RACK.forPosition(20), true, MarkOccurrencesHighlighter.getHighlightsBag(context.getDocument())),
             //"above" mark occurrences, "below" search layers:

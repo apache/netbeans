@@ -182,8 +182,28 @@ public interface ProjectManagerImplementation {
      */
     void saveAllProjects() throws IOException;
 
-    /** @since 1.111 */
+    /**
+     * Enhanced version of {@link ProjectManagerImplementation} that supports
+     * <em>project fallback</em>. Used by
+     * {@link ProjectManager#findProjectOrFallback} method.
+     *
+     * @since 1.111
+     */
     interface WithFallback extends ProjectManagerImplementation {
+        /**
+         * Find a project corresponding to a given directory. Creates a
+         * <em>fallback project</em> if no real project recognizes provided
+         * directory.
+         *
+         * @param projectDirectory the project top directory
+         * @return the project (object identity may or may not vary between
+         * calls)
+         * @throws IOException if the project was recognized but could not be
+         * loaded
+         * @throws IllegalArgumentException if the supplied file object is
+         * {@code null} or not a folder
+         * @see ProjectManager#findProjectOrFallback
+         */
         @NonNull
         Project findProjectOrFallback(@NonNull FileObject projectDirectory) throws IOException, IllegalArgumentException;
     }

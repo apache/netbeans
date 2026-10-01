@@ -19,8 +19,8 @@
     under the License.
 
 -->
-<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
-  <!ENTITY api-questions SYSTEM "../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
+<!DOCTYPE api-answers PUBLIC "-//NetBeans//DTD Arch Answers//EN" "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch.dtd" [
+  <!ENTITY api-questions SYSTEM "../../nbbuild/antsrc/org/netbeans/nbbuild/Arch-api-questions.xml">
 ]>
 
 <api-answers
@@ -37,12 +37,12 @@
             <hint>
             What will be API for
             <a href="http://openide.netbeans.org/tutorial/api-design.html#design.apiandspi">
-                clients and what support API</a>? 
+                clients and what support API</a>?
             What parts will be pluggable?
             How will plug-ins be registered? Please use <code>&lt;api type="export"/&gt;</code>
             to describe your general APIs.
-            If possible please provide 
-            simple diagrams. 
+            If possible please provide
+            simple diagrams.
             </hint>
         </question>
 -->
@@ -59,7 +59,7 @@
     into the project lookup (rather than global lookup).
     The implementations will be consulted only in the case the relevant file
     belongs to that project (according to <code>org.netbeans.api.project.FileOwnerQuery</code>).
-    This helps avoid the need to consult irrelevant query implementations.   
+    This helps avoid the need to consult irrelevant query implementations.
   </api>
  </answer>
 
@@ -68,12 +68,12 @@
 <!--
         <question id="arch-quality" when="init">
             How the <a href="http://www.netbeans.org/community/guidelines/q-evangelism.html">quality</a>
-            of your code will be tested and 
+            of your code will be tested and
             how future regressions are going to be prevented?
             <hint>
             What kind of testing
             you want to use? What/how much area of functionality
-            should be covered by the tests? 
+            should be covered by the tests?
             </hint>
         </question>
 -->
@@ -91,7 +91,7 @@
             <hint>
             Please express your estimates of how long the design, implementation,
             stabilization are likely to last. How many people will be needed to
-            implement this and what is the expected milestone the work should be 
+            implement this and what is the expected milestone the work should be
             ready.
             </hint>
         </question>
@@ -127,8 +127,8 @@
         <question id="arch-what" when="init">
             What is this project good for?
             <hint>
-            Please provide here a few lines describing the project, 
-            what problem it should solve, provide links to documentation, 
+            Please provide here a few lines describing the project,
+            what problem it should solve, provide links to documentation,
             specifications, etc.
             </hint>
         </question>
@@ -147,7 +147,7 @@
         <question id="compat-i18n" when="impl">
             Is your module correctly internationalized?
             <hint>
-            Correct internationalization means that it obeys instructions 
+            Correct internationalization means that it obeys instructions
             at <a href="http://www.netbeans.org/download/dev/javadoc/org-openide-modules/org/openide/modules/doc-files/i18n-branding.html">
             NetBeans I18N pages</a>.
             </hint>
@@ -163,7 +163,7 @@
 
 <!--
         <question id="compat-standards" when="init">
-            Does the module implement or define any standards? Is the 
+            Does the module implement or define any standards? Is the
             implementation exact or does it deviate somehow?
         </question>
 -->
@@ -181,7 +181,7 @@
             versions of itself? Can you correctly read all old settings? Will future
             versions be able to read your current settings? Can you read
             or politely ignore settings stored by a future version?
-            
+
             <hint>
             Very helpful for reading settings is to store version number
             there, so future versions can decide whether how to read/convert
@@ -201,7 +201,7 @@
         <question id="dep-jre" when="final">
             Which version of JRE do you need (1.2, 1.3, 1.4, etc.)?
             <hint>
-            It is expected that if your module runs on 1.x that it will run 
+            It is expected that if your module runs on 1.x that it will run
             on 1.x+1 if no, state that please. Also describe here cases where
             you run different code on different versions of JRE and why.
             </hint>
@@ -269,7 +269,7 @@
 <!--
         <question id="dep-non-nb" when="init">
             What other projects outside NetBeans does this one depend on?
-            
+
             <hint>
             Some non-NetBeans projects are packaged as NetBeans modules
             (see <a href="http://libs.netbeans.org/">libraries</a>) and
@@ -316,10 +316,10 @@ Nothing.
             <hint>
             If your module consists of just one module JAR file, just confirm that.
             If it uses more than one JAR, describe where they are located, how
-            they refer to each other. 
+            they refer to each other.
             If it consist of module JAR(s) and other files, please describe
-            what is their purpose, why other files are necessary. Please 
-            make sure that installation/uninstallation leaves the system 
+            what is their purpose, why other files are necessary. Please
+            make sure that installation/uninstallation leaves the system
             in state as it was before installation.
             </hint>
         </question>
@@ -352,7 +352,7 @@ Nothing.
         <question id="deploy-packages" when="init">
             Are packages of your module made inaccessible by not declaring them
             public?
-            
+
             <hint>
             NetBeans module system allows restriction of access rights to
             public classes of your module from other modules. This prevents
@@ -361,7 +361,7 @@ Nothing.
             public packages
             </a>). If you do not restrict access to your classes you are
             making it too easy for other people to misuse your implementation
-            details, that is why you should have good reason for not 
+            details, that is why you should have good reason for not
             restricting package access.
             </hint>
         </question>
@@ -412,7 +412,7 @@ Nothing.
         <question id="exec-component" when="impl">
             Is execution of your code influenced by any (string) property
             of any of your components?
-            
+
             <hint>
             Often <code>JComponent.getClientProperty</code>, <code>Action.getValue</code>
             or <code>PropertyDescriptor.getValue</code>, etc. are used to influence
@@ -453,7 +453,7 @@ Nothing.
 
 <!--
         <question id="exec-privateaccess" when="final">
-            Are you aware of any other parts of the system calling some of 
+            Are you aware of any other parts of the system calling some of
             your methods by reflection?
             <hint>
             If so, describe the "contract" as an API. Likely private or friend one, but
@@ -491,16 +491,16 @@ Nothing.
         <question id="exec-property" when="impl">
             Is execution of your code influenced by any environment or
             Java system (<code>System.getProperty</code>) property?
-            
+
             <hint>
-            If there is a property that can change the behavior of your 
-            code, somebody will likely use it. You should describe what it does 
+            If there is a property that can change the behavior of your
+            code, somebody will likely use it. You should describe what it does
             and the <a href="http://openide.netbeans.org/tutorial/api-design.html#life">stability category</a>
             of this API. You may use
             <pre>
                 &lt;api type="export" group="property" name="id" category="private" url="http://..."&gt;
                     description of the property, where it is used, what it influence, etc.
-                &lt;/api&gt;            
+                &lt;/api&gt;
             </pre>
             </hint>
         </question>
@@ -572,7 +572,7 @@ Nothing.
         <question id="format-clipboard" when="impl">
             Which data flavors (if any) does your code read from or insert to
             the clipboard (by access to clipboard on means calling methods on <code>java.awt.datatransfer.Transferable</code>?
-            
+
             <hint>
             Often Node's deal with clipboard by usage of <code>Node.clipboardCopy, Node.clipboardCut and Node.pasteTypes</code>.
             Check your code for overriding these methods.
@@ -591,7 +591,7 @@ Nothing.
         <question id="format-dnd" when="impl">
             Which protocols (if any) does your code understand during Drag &amp; Drop?
             <hint>
-            Often Node's deal with clipboard by usage of <code>Node.drag, Node.getDropType</code>. 
+            Often Node's deal with clipboard by usage of <code>Node.drag, Node.getDropType</code>.
             Check your code for overriding these methods. Btw. if they are not overridden, they
             by default delegate to <code>Node.clipboardCopy, Node.clipboardCut and Node.pasteTypes</code>.
             </hint>
@@ -623,9 +623,9 @@ Nothing.
         <question id="lookup-lookup" when="init">
             Does your module use <code>org.openide.util.Lookup</code>
             or any similar technology to find any components to communicate with? Which ones?
-            
+
             <hint>
-            Please describe the interfaces you are searching for, where 
+            Please describe the interfaces you are searching for, where
             are defined, whether you are searching for just one or more of them,
             if the order is important, etc. Also classify the stability of such
             API contract.
@@ -748,15 +748,15 @@ Nothing.
 <!--
         <question id="perf-progress" when="final">
             Does your module execute any long-running tasks?
-            
-            <hint>Long running tasks should never block 
+
+            <hint>Long running tasks should never block
             AWT thread as it badly hurts the UI
             <a href="http://performance.netbeans.org/responsiveness/issues.html">
             responsiveness</a>.
             Tasks like connecting over
             network, computing huge amount of data, compilation
             be done asynchronously (for example
-            using <code>RequestProcessor</code>), definitively it should 
+            using <code>RequestProcessor</code>), definitively it should
             not block AWT thread.
             </hint>
         </question>
@@ -772,11 +772,11 @@ Nothing.
 <!--
         <question id="perf-scale" when="init">
             Which external criteria influence the performance of your
-            program (size of file in editor, number of files in menu, 
+            program (size of file in editor, number of files in menu,
             in source directory, etc.) and how well your code scales?
             <hint>
-            Please include some estimates, there are other more detailed 
-            questions to answer in later phases of implementation. 
+            Please include some estimates, there are other more detailed
+            questions to answer in later phases of implementation.
             </hint>
         </question>
 -->
@@ -838,9 +838,9 @@ Nothing.
 <!--
         <question id="resources-file" when="final">
             Does your module use <code>java.io.File</code> directly?
-            
+
             <hint>
-            NetBeans provide a logical wrapper over plain files called 
+            NetBeans provide a logical wrapper over plain files called
             <code>org.openide.filesystems.FileObject</code> that
             provides uniform access to such resources and is the preferred
             way that should be used. But of course there can be situations when
@@ -859,21 +859,29 @@ Nothing.
 <!--
         <question id="resources-layer" when="final">
             Does your module provide own layer? Does it create any files or
-            folders in it? What it is trying to communicate by that and with which 
+            folders in it? What it is trying to communicate by that and with which
             components?
-            
+
             <hint>
-            NetBeans allows automatic and declarative installation of resources 
+            NetBeans allows automatic and declarative installation of resources
             by module layers. Module register files into appropriate places
             and other components use that information to perform their task
             (build menu, toolbar, window layout, list of templates, set of
-            options, etc.). 
+            options, etc.).
             </hint>
         </question>
 -->
  <answer id="resources-layer">
   <p>
-   No.
+      <api group="layer" category="stable" type="export" name="org-netbeans-modules-project-fallback">
+          The <a href="@TOP@org/netbeans/api/project/ProjectManager.html#findProjectOrFallback(org.openide.filesystems.FileObject)">ProjectManager.findProjectOrFallack</a>
+          method provides access to <em>fallback generic project</em> representing
+          directories that would otherwise have no project associated. This project
+          exposes its configuration via layer, at <code>Projects/org-netbeans-modules-project-fallback</code>
+          folder. More details are provided in the Javadoc of
+          <a href="@TOP@org/netbeans/api/project/ProjectManager.html#findProjectOrFallback(org.openide.filesystems.FileObject)">findProjectOrFallack</a>
+          method.
+      </api>
   </p>
  </answer>
 
@@ -883,7 +891,7 @@ Nothing.
         <question id="resources-mask" when="final">
             Does your module mask/hide/override any resources provided by other modules in
             their layers?
-            
+
             <hint>
             If you mask a file provided by another module, you probably depend
             on that and do not want the other module to (for example) change
@@ -903,10 +911,10 @@ Nothing.
 <!--
         <question id="resources-read" when="final">
             Does your module read any resources from layers? For what purpose?
-            
+
             <hint>
             As this is some kind of intermodule dependency, it is a kind of API.
-            Please describe it and classify according to 
+            Please describe it and classify according to
             <a href="http://openide.netbeans.org/tutorial/api-design.html#categories">
             common stability categories</a>.
             </hint>

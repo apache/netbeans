@@ -2,7 +2,8 @@
 
 /**
  * 
- * @param type $alias^
+ * @param type $alias
+ * @return void^
  */
 function func($alias) {
     $blah = "/blee/*";

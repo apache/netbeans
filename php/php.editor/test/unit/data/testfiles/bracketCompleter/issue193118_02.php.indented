@@ -1,7 +1,8 @@
 <?php
 
 /**
- * ^
+ * 
+ * @return void^
  */
 function f(){
   $r= '/./*';

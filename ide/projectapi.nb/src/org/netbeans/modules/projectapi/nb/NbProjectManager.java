@@ -439,7 +439,12 @@ public final class NbProjectManager implements ProjectManagerImplementation.With
                     if (LoadStatus.NO_SUCH_PROJECT.is(o)) {
                         return null;
                     } else if (o != null) {
-                        // Reference<Project> or SOME_SUCH_PROJECT
+                        if (o.hasFirst() && o.first().get() instanceof Project existingProject) {
+                            // Reference<Project>
+                            ProjectInformation info = ProjectUtils.getInformation(existingProject);
+                            return new Result(info.getIcon());
+                        }
+                        // SOME_SUCH_PROJECT
                         // rather check for result than load project and lookup projectInformation for icon.
                         return checkForProject(projectDirectory);
                     }

@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -98,6 +99,7 @@ import org.netbeans.spi.project.support.ant.PropertyProvider;
 import org.netbeans.spi.project.support.ant.PropertyUtils;
 import org.netbeans.spi.project.support.ant.ReferenceHelper;
 import org.netbeans.spi.project.ui.PrivilegedTemplates;
+import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.netbeans.spi.project.ui.RecommendedTemplates;
 import org.netbeans.spi.project.ui.support.UILookupMergerSupport;
 import org.netbeans.spi.queries.FileBuiltQueryImplementation;
@@ -117,6 +119,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import org.netbeans.spi.whitelist.support.WhiteListQueryMergerSupport;
+import org.openide.filesystems.FileAttributeEvent;
+import org.openide.filesystems.FileChangeListener;
+import org.openide.filesystems.FileEvent;
+import org.openide.filesystems.FileRenameEvent;
 import org.openide.filesystems.URLMapper;
 import org.openide.loaders.DataObject;
 import org.openide.modules.SpecificationVersion;
@@ -278,6 +284,144 @@ public final class J2SEProject implements Project {
     public AntProjectHelper getAntProjectHelper() {
         return helper;
     }
+    
+    private static class SiteRootFolderListener implements FileChangeListener {
+
+        private final J2SEProject p;
+        private final FileObject siteRootFolder;
+
+        SiteRootFolderListener(J2SEProject p) {
+            this.p = p;
+            siteRootFolder = p.getProjectDirectory();
+        }
+
+        @Override
+        public void fileFolderCreated(FileEvent fe) {
+            checkPreprocessors(fe.getFile());
+        }
+
+        @Override
+        public void fileDataCreated(FileEvent fe) {
+            checkPreprocessors(fe.getFile());
+        }
+
+        @Override
+        public void fileChanged(FileEvent fe) {
+            checkPreprocessors(fe.getFile());
+        }
+
+        @Override
+        public void fileDeleted(FileEvent fe) {
+            checkPreprocessors(fe.getFile());
+        }
+
+        @Override
+        public void fileRenamed(FileRenameEvent fe) {
+            // XXX: notify BrowserReload about filename change
+            checkPreprocessors(fe.getFile(), fe.getName(), fe.getExt());
+        }
+
+        @Override
+        public void fileAttributeChanged(FileAttributeEvent fe) {
+        }
+        
+        private void checkPreprocessors(FileObject fileObject) {
+            try {
+                ClassLoader globalCl = Lookup.getDefault().lookup(ClassLoader.class);
+                Class<?> clazz = Class.forName("org.netbeans.modules.web.common.api.CssPreprocessors", true, globalCl);
+                Object instance = clazz.getMethod("getDefault").invoke(null);
+                Method processMethod = clazz.getMethod("process",  Project.class, FileObject.class);
+                processMethod.invoke(instance, p, fileObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void checkPreprocessors(FileObject fileObject, String originalName, String originalExtension) {
+            try {
+                ClassLoader globalCl = Lookup.getDefault().lookup(ClassLoader.class);
+                Class<?> clazz = Class.forName("org.netbeans.modules.web.common.api.CssPreprocessors", true, globalCl);
+                Object instance = clazz.getMethod("getDefault").invoke(null);
+                Method processMethod = clazz.getMethod("process",   Project.class, FileObject.class, String.class, String.class);
+                processMethod.invoke(instance, p, fileObject, originalName, originalExtension);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+//        private void checkPreprocessors(FileObject fileObject) {
+//            CssPreprocessors.getDefault().process(p, fileObject);
+//        }
+//
+//        private void checkPreprocessors(FileObject fileObject, String originalName, String originalExtension) {
+//            CssPreprocessors.getDefault().process(p, fileObject, originalName, originalExtension);
+//        }
+    }
+    
+    private static class OpenHookImpl extends ProjectOpenedHook implements PropertyChangeListener {
+        private final J2SEProject project;
+        private FileChangeListener siteRootChangesListener;
+
+        // @GuardedBy("this")
+        private File siteRootFolder;
+
+
+        public OpenHookImpl(J2SEProject project) {
+            this.project = project;
+        }
+
+        @Override
+        protected void projectOpened() {
+            addSiteRootListener();
+        }
+
+      
+        @Override
+        protected void projectClosed() {
+            removeSiteRootListener();
+        }
+
+        private synchronized void addSiteRootListener() {
+            assert siteRootFolder == null : "Should not be listening to " + siteRootFolder;
+            FileObject siteRoot = project.getProjectDirectory();
+            if (siteRoot == null) {
+                return;
+            }
+            siteRootFolder = FileUtil.toFile(siteRoot);
+            if (siteRootFolder == null) {
+                // should not happen
+                LOG.log(Level.WARNING, "File not found for FileObject: {0}", siteRoot);
+                return;
+            }
+            siteRootChangesListener = new SiteRootFolderListener(project);
+            FileUtil.addRecursiveListener(siteRootChangesListener, siteRootFolder);
+        }
+
+        private synchronized void removeSiteRootListener() {
+            if (siteRootFolder == null) {
+                // no listener
+                return;
+            }
+            try {
+                FileUtil.removeRecursiveListener(siteRootChangesListener, siteRootFolder);
+            } catch (IllegalArgumentException ex) {
+                // #216349
+                LOG.log(Level.INFO, null, ex);
+            }
+            siteRootFolder = null;
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            // change in project properties
+//            if (ClientSideProjectConstants.PROJECT_SITE_ROOT_FOLDER.equals(evt.getPropertyName())) {
+                synchronized (this) {
+                    removeSiteRootListener();
+                    addSiteRootListener();
+                }
+//            }
+        }
+     }
 
     private Lookup createLookup(final AuxiliaryConfiguration aux, final ProjectOperations.Callback opsCallback) {
         final PlatformChangedHook platformChangedHook = new PlatformChangedHook();
@@ -289,6 +433,7 @@ public final class J2SEProject implements Project {
             helper.createCacheDirectoryProvider(),
             helper.createAuxiliaryProperties(),
             refHelper.createSubprojectProvider(),
+            new OpenHookImpl(this),
             LogicalViewProviders.createBuilder(
                 this,
                 eval,

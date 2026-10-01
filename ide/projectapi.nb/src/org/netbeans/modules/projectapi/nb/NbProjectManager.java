@@ -488,7 +488,7 @@ public final class NbProjectManager implements ProjectManagerImplementation.With
     private Result checkForProject(FileObject dir) {
         assert dir != null;
         assert dir.isFolder() : dir;
-        assert getMutex().isReadAccess();
+        assert getMutex().isReadAccess() || getMutex().isWriteAccess();
         Iterator<? extends ProjectFactory> it = factories.allInstances().iterator();
         while (it.hasNext()) {
             ProjectFactory factory = it.next();
@@ -519,7 +519,7 @@ public final class NbProjectManager implements ProjectManagerImplementation.With
                 LoadStatus.SOME_SUCH_PROJECT.wrap(),
             }));
         }
-        MUTEX.postReadRequest(() -> {
+        MUTEX.postWriteRequest(() -> {
             synchronized (dir2Proj) {
                 // check if FallbackProject is still needed
 
@@ -530,6 +530,7 @@ public final class NbProjectManager implements ProjectManagerImplementation.With
                         Result result = checkForProject(fallback.getProjectDirectory());
                         if (result != null) {
                             it.remove();
+                            proj2Factory.remove(fallback);
                         }
                     }
                 }

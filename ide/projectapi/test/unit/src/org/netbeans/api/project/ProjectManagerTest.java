@@ -350,6 +350,31 @@ public class ProjectManagerTest extends NbTestCase {
         assertEquals("Nested files also have an owner", fallback, FileOwnerQuery.getOwner(nested));
     }
 
+    public void testFallbackReplacedAfterClearNonProjectCacheUnderWriteAccess() throws Exception {
+        Project fallback = pm.findProjectOrFallback(justADir);
+        Project real = ProjectManager.mutex().writeAccess((Mutex.ExceptionAction<Project>) () -> {
+            // what project generators do: create metadata, clear cache, find project
+            justADir.createFolder("testproject");
+            pm.clearNonProjectCache();
+            return pm.findProject(justADir);
+        });
+        Project outside = pm.findProject(justADir);
+        assertNotNull("Project is found when mutex.writeAccess ends", outside);
+        assertNotSame("Outside project replaces the fallback", fallback, outside);
+        assertNotNull(real);
+        assertNotSame("Real project replaces the fallback", fallback, real);
+        assertSame("Outside and real are the same", outside, real);
+    }
+
+    public void testReplacedFallbackIsNoLongerValid() throws Exception {
+        Project fallback = pm.findProjectOrFallback(justADir);
+        justADir.createFolder("testproject");
+        pm.clearNonProjectCache();
+        Project real = pm.findProject(justADir);
+        assertNotSame(fallback, real);
+        assertFalse("Replaced fallback should not be valid anymore", pm.isValid(fallback));
+    }
+
     public void testIsProject2() throws Exception {
         ProjectManager.Result r = pm.isProject2(goodproject);
         assertNotNull("Should have recognized goodproject", r);

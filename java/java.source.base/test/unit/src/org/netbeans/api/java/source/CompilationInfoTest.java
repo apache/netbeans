@@ -22,17 +22,23 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.List;
 import javax.lang.model.SourceVersion;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.tools.Diagnostic;
 import org.junit.Test;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.java.lexer.JavaTokenId;
 import org.netbeans.api.java.source.CompilationInfo.CacheClearPolicy;
 import org.netbeans.api.java.source.JavaSource.Phase;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.api.lexer.TokenHierarchy;
 import org.netbeans.junit.NbTestCase;
+import org.netbeans.modules.java.source.indexing.TransactionContext;
+import org.netbeans.modules.java.source.usages.ClassIndexManager;
 import org.openide.cookies.EditorCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -157,6 +163,83 @@ public class CompilationInfoTest extends NbTestCase {
                 assertNull(parameter.getCachedValue("1"));
                 assertNull(parameter.getCachedValue("2"));
                 assertNull(parameter.getCachedValue("3"));
+            }
+        }, true);
+    }
+
+    public void testPatchModule() throws Exception {
+        clearWorkDir();
+
+        FileObject wd = FileUtil.toFileObject(getWorkDir());
+
+        FileObject patchDir = FileUtil.createFolder(wd, "patch");
+        FileObject patch = FileUtil.createData(patchDir, "java/lang/Patched.java");
+        TestUtilities.copyStringToFile(patch, """
+                                              package java.lang;
+                                              public class Patched {
+                                              }
+                                              """);
+
+        FileObject srcDir = FileUtil.createFolder(wd, "src");
+        FileObject source = FileUtil.createData(srcDir, "Test.java");
+        String code = """
+                      public class Test {
+                          private Patched p;
+                      }
+                      """;
+
+        FileObject classesDir = FileUtil.createFolder(wd, "classes");
+        FileObject cacheDir = FileUtil.createFolder(wd, "cache");
+
+        SourceUtilsTestUtil.prepareTest(srcDir,
+                                        classesDir,
+                                        cacheDir,
+                                        new FileObject[0]);
+
+        initSourceQuery(List.of(patchDir.toURL())); //force creation of usages query
+
+        SourceUtilsTestUtil.setSourceLevel(srcDir, "17");
+        JavaSource js = JavaSource.forFileObject(source);
+
+        for (List<String> options : List.of(List.of("--patch-module", "java.base=" + FileUtil.toFile(patchDir).getAbsolutePath()),
+                                            List.of("--patch-module=java.base=" + FileUtil.toFile(patchDir).getAbsolutePath()))) {
+            TestUtilities.copyStringToFile(source, code); //force reparse
+            js.runUserActionTask(new Task<CompilationController>() {
+                public void run(CompilationController parameter) throws Exception {
+                    parameter.toPhase(Phase.RESOLVED);
+                    assertEquals(List.of("compiler.err.cant.resolve.location"),
+                                 parameter.getDiagnostics().stream().filter(d -> d.getKind() == Diagnostic.Kind.ERROR).map(d -> d.getCode()).toList());
+                }
+            }, true);
+
+            SourceUtilsTestUtil.setCompilerOptions(srcDir, options);
+            TestUtilities.copyStringToFile(source, code); //force reparse
+
+            js.runUserActionTask(new Task<CompilationController>() {
+                public void run(CompilationController parameter) throws Exception {
+                    parameter.toPhase(Phase.RESOLVED);
+                    assertEquals(List.of(),
+                                 parameter.getDiagnostics().stream().filter(d -> d.getKind() == Diagnostic.Kind.ERROR).map(d -> d.getCode()).toList());
+                }
+            }, true);
+            SourceUtilsTestUtil.setCompilerOptions(srcDir, List.of());
+        }
+    }
+
+    private static final void initSourceQuery(final Collection<URL> urls) throws IOException {
+        final ClasspathInfo cpInfo = ClasspathInfo.create(ClassPath.EMPTY, ClassPath.EMPTY, ClassPath.EMPTY);
+        final ClassIndexManager mgr  = ClassIndexManager.getDefault();
+        final JavaSource js = JavaSource.create(cpInfo);
+        js.runUserActionTask(new Task<CompilationController>() {
+            public void run(CompilationController parameter) throws Exception {
+                for (final URL url : urls) {
+                    TransactionContext ctx = TransactionContext.beginStandardTransaction(url, false, ()->true, false);
+                    try {
+                        mgr.createUsagesQuery(url, true);
+                    } finally {
+                        ctx.commit();
+                    }
+                }
             }
         }, true);
     }

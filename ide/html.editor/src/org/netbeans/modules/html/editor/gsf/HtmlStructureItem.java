@@ -19,6 +19,8 @@
 package org.netbeans.modules.html.editor.gsf;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.swing.ImageIcon;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.modules.csl.api.*;
@@ -91,13 +93,15 @@ final class HtmlStructureItem implements StructureItem {
     public String getHtml(HtmlFormatter formatter) {
         formatter.appendHtml(getName());
         if (idAttributeValue != null) {
-            formatter.appendHtml("&nbsp;<font color=808080>id=");
-            formatter.appendText(idAttributeValue);
+            // INFO: https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors
+            formatter.appendHtml("<font color=808080>#"); //NOI18N
+            formatter.appendText(idAttributeValue); //NOI18N
             formatter.appendHtml("</font>"); //NOI18N
         }
         if (classAttributeValue != null) {
-            formatter.appendHtml("&nbsp;<font color=808080>class=");
-            formatter.appendText(classAttributeValue);
+            // INFO: https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors
+            formatter.appendHtml("<font color=808080>"); //NOI18N
+            formatter.appendText(cleanupClasslist(classAttributeValue)); //NOI18N
             formatter.appendHtml("</font>"); //NOI18N
         }
         return formatter.getText();
@@ -247,6 +251,22 @@ final class HtmlStructureItem implements StructureItem {
             }
         }
         return collected;
+    }
+
+    /**
+     * Cleans up the classlist from unsupported classes with the generic pattern of '@@@'
+     * Other syntax like handlebars will not be removed
+     * and will be generted to their representation (e.g. .{{myclass}}) but doesn't get a weird result
+     * 
+     * @param classAttributeValue list of all classes got from the correspondig tag
+     * @return cleaned css selector like classlist (e.g. .my.multi.classes)
+     */
+    private String cleanupClasslist(String classAttributeValue) {
+        return Arrays.asList(classAttributeValue.trim().split(" ")).stream().filter(item -> {
+            return !item.isEmpty() && !item.contains("@@@");
+        }).map(item -> {
+            return "." + item;
+        }).collect(Collectors.joining(""));
     }
 
     public static interface Task {

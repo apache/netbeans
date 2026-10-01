@@ -86,17 +86,31 @@ public class NbMavenProjectImplTest extends NbTestCase {
         FileObject pd = wd.getFileObject("prj-war");
         Project prj = ProjectManager.getDefault().findProject(pd);
         ((NbMavenProjectImpl) prj).attachUpdater();
-        TestFileUtils.writeFile(pd, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>prj-war</artifactId>"
-                + "<packaging>jar</packaging><version>1.0</version></project>");
+        TestFileUtils.writeFile(pd, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>prj-war</artifactId>
+                    <packaging>jar</packaging>
+                    <version>1.0</version>
+                </project>
+                """);
         assertEquals("[base, jar]", prj.getLookup().lookup(I.class).m());
     }
     
     private void assertLookupObject(String result, String packaging) throws Exception {
         FileObject pd = wd.createFolder("prj-" + packaging);
-        TestFileUtils.writeFile(pd, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>prj-" + packaging + "</artifactId>"
-                + "<packaging>" + packaging + "</packaging><version>1.0</version></project>");
+        TestFileUtils.writeFile(pd, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>prj-PKG</artifactId>
+                    <packaging>PKG</packaging>
+                    <version>1.0</version>
+                </project>
+                """.replace("PKG", packaging));
         assertEquals(result, ProjectManager.getDefault().findProject(pd).getLookup().lookup(I.class).m());
     }
     public interface I {
@@ -128,7 +142,7 @@ public class NbMavenProjectImplTest extends NbTestCase {
         public @Override I merge(final Lookup lookup) {
             return new I() {
                 public @Override String m() {
-                    Set<String> results = new TreeSet<String>();
+                    Set<String> results = new TreeSet<>();
                     for (I i : lookup.lookupAll(I.class)) {
                         results.add(i.m());
                     }
@@ -142,9 +156,15 @@ public class NbMavenProjectImplTest extends NbTestCase {
     @RandomlyFails
     public void testMemoryReleased() throws Exception {
         TimedWeakReference.TIMEOUT = 0;
-        TestFileUtils.writeFile(wd, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>g</groupId><artifactId>a</artifactId>"
-                + "<version>0</version></project>");
+        TestFileUtils.writeFile(wd, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>a</artifactId>
+                    <version>0</version>
+                </project>
+                """);
         Project p = ProjectManager.getDefault().findProject(wd);
         ((NbMavenProjectImpl) p).attachUpdater();
         /* Want to avoid leaks even if this is not called for some reason:
@@ -160,17 +180,57 @@ public class NbMavenProjectImplTest extends NbTestCase {
     }
 
     public void testMavenConfig() throws Exception {
-        TestFileUtils.writeFile(wd, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>prj</artifactId><version>1.0</version>"
-                + "<properties><java>1.5</java><testJava>1.5</testJava></properties>"
-                + "<build><plugins><plugin><artifactId>maven-compiler-plugin</artifactId><version>2.1</version>"
-                + "<configuration><source>${java}</source><testSource>${testJava}</testSource></configuration></plugin></plugins></build>"
-                + "<profiles>"
-                + "<profile><id>new</id><properties><java>1.6</java></properties></profile>"
-                + "<profile><id>testNew</id><properties><testJava>1.6</testJava></properties></profile>"
-                + "<profile><id>java8</id><activation><property><name>java8</name><value>true</value></property></activation><properties><java>1.8</java></properties></profile>"
-                + "</profiles>"
-                + "</project>");
+        TestFileUtils.writeFile(wd, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>prj</artifactId>
+                    <version>1.0</version>
+                    <properties>
+                        <java>1.5</java>
+                        <testJava>1.5</testJava>
+                    </properties>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>2.1</version>
+                                <configuration>
+                                    <source>${java}</source>
+                                    <testSource>${testJava}</testSource>
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                    <profiles>
+                        <profile>
+                            <id>new</id>
+                            <properties>
+                                <java>1.6</java>
+                            </properties>
+                        </profile>
+                        <profile>
+                            <id>testNew</id>
+                            <properties>
+                                <testJava>1.6</testJava>
+                            </properties>
+                        </profile>
+                        <profile>
+                            <id>java8</id>
+                            <activation>
+                                <property>
+                                    <name>java8</name>
+                                    <value>true</value>
+                                </property>
+                            </activation>
+                            <properties>
+                                <java>1.8</java>
+                            </properties>
+                        </profile>
+                    </profiles>
+                </project>
+                """);
         FileObject source = TestFileUtils.writeFile(wd, "src/main/java/p/C.java", "package p; class C {}");
         FileObject test = TestFileUtils.writeFile(wd, "src/test/java/p/CTest.java", "package p; class CTest {}");
         ((NbMavenProjectImpl) ProjectManager.getDefault().findProject(wd)).attachUpdater();
@@ -178,30 +238,41 @@ public class NbMavenProjectImplTest extends NbTestCase {
         SourceLevelQuery.Result testSlqr = SourceLevelQuery.getSourceLevel2(test);
         assertEquals("1.5", slqr.getSourceLevel());
         assertEquals("1.5", testSlqr.getSourceLevel());
+
         writeMavenConfig("-Pnew");
         assertEquals("1.6", slqr.getSourceLevel());
+
         writeMavenConfig("-P new");
         assertEquals("1.6", slqr.getSourceLevel());
+
         writeMavenConfig("--activate-profiles new");
         assertEquals("1.6", slqr.getSourceLevel());
         assertEquals("1.5", testSlqr.getSourceLevel());
+
         writeMavenConfig("--activate-profiles=testNew");
         assertEquals("1.5", slqr.getSourceLevel());
         assertEquals("1.6", testSlqr.getSourceLevel());
+
         writeMavenConfig("--activate-profiles new,testNew");
         assertEquals("1.6", slqr.getSourceLevel());
         assertEquals("1.6", testSlqr.getSourceLevel());
+
         wd.getFileObject(".mvn/maven.config").delete();
         assertEquals("1.5", slqr.getSourceLevel());
         assertEquals("1.5", testSlqr.getSourceLevel());
+
         writeMavenConfig("-Djava=1.7");
         assertEquals("1.7", slqr.getSourceLevel());
+
         writeMavenConfig("-D java=1.7");
         assertEquals("1.7", slqr.getSourceLevel());
+
         writeMavenConfig("--define java=1.6");
         assertEquals("1.6", slqr.getSourceLevel());
+
         writeMavenConfig("-Djava8");
         assertEquals("1.8", slqr.getSourceLevel());
+
         writeMavenConfig("-Djava8\n-PtestNew\n");
         assertEquals("1.8", slqr.getSourceLevel());
         assertEquals("1.6", testSlqr.getSourceLevel());
@@ -209,20 +280,53 @@ public class NbMavenProjectImplTest extends NbTestCase {
 
     public void testMavenConfigReactor() throws Exception {
         writeMavenConfig("-Pnew");
-        TestFileUtils.writeFile(wd, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>parent</artifactId><version>1.0</version><packaging>pom</packaging>"
-                + "<modules><module>mod</module></modules>"
-                + "</project>");
-        TestFileUtils.writeFile(wd, "mod/pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
-                + "<parent><groupId>test</groupId><artifactId>parent</artifactId><version>1.0</version></parent>"
-                + "<artifactId>prj</artifactId>"
-                + "<properties><java>1.5</java><testJava>1.5</testJava></properties>"
-                + "<build><plugins><plugin><artifactId>maven-compiler-plugin</artifactId><version>2.1</version>"
-                + "<configuration><source>${java}</source><testSource>${testJava}</testSource></configuration></plugin></plugins></build>"
-                + "<profiles>"
-                + "<profile><id>new</id><properties><java>1.6</java></properties></profile>"
-                + "</profiles>"
-                + "</project>");
+        TestFileUtils.writeFile(wd, "pom.xml",
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>parent</artifactId>
+                    <version>1.0</version>
+                    <packaging>pom</packaging>
+                    <modules>
+                        <module>mod</module>
+                    </modules>
+                </project>
+                """);
+        TestFileUtils.writeFile(wd, "mod/pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <parent>
+                    <groupId>test</groupId>
+                    <artifactId>parent</artifactId>
+                    <version>1.0</version></parent>
+                    <artifactId>prj</artifactId>
+                    <properties>
+                        <java>1.5</java>
+                        <testJava>1.5</testJava>
+                    </properties>
+                    <build>
+                        <plugins>
+                        <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>2.1</version>
+                        <configuration>
+                            <source>${java}</source>
+                            <testSource>${testJava}</testSource>
+                        </configuration>
+                        </plugin></plugins>
+                    </build>
+                    <profiles>
+                        <profile>
+                            <id>new</id>
+                            <properties>
+                                <java>1.6</java>
+                            </properties>
+                        </profile>
+                    </profiles>
+                </project>
+                """);
         FileObject source = TestFileUtils.writeFile(wd, "mod/src/main/java/p/C.java", "package p; class C {}");
         SourceLevelQuery.Result slqr = SourceLevelQuery.getSourceLevel2(source);
         assertEquals("1.6", slqr.getSourceLevel());
@@ -252,19 +356,40 @@ public class NbMavenProjectImplTest extends NbTestCase {
      * Checks that a service registered against a maven plugin is not present by default.
      */
     public void testPluginServiceNotPresent() throws Exception {
-        TestFileUtils.writeFile(wd, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>parent</artifactId><version>1.0</version><packaging>pom</packaging>"
-                + "</project>");
+        TestFileUtils.writeFile(wd, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>parent</artifactId>
+                    <version>1.0</version>
+                    <packaging>pom</packaging>
+                </project>
+                """);
         
         Project p = FileOwnerQuery.getOwner(wd);
         assertNull(p.getLookup().lookup(PS.class));
     }
     
     public void testPluginServicePresentWithPlugin() throws Exception {
-        TestFileUtils.writeFile(wd, "pom.xml", "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>test</groupId><artifactId>parent</artifactId><version>1.0</version><packaging>pom</packaging>"
-                + "<build><plugins><plugin><artifactId>test.plugin</artifactId><groupId>org.netbeans.modules.maven</groupId></plugin></plugins></build>"
-                + "</project>");
+        TestFileUtils.writeFile(wd, "pom.xml", 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>test</groupId>
+                    <artifactId>parent</artifactId>
+                    <version>1.0</version>
+                    <packaging>pom</packaging>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <artifactId>test.plugin</artifactId>
+                                <groupId>org.netbeans.modules.maven</groupId>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """);
         
         Project p = FileOwnerQuery.getOwner(wd);
         PS ps = p.getLookup().lookup(PS.class);

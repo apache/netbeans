@@ -19,7 +19,7 @@
 
 package org.netbeans.modules.maven.execute;
 
-import java.util.Collections;
+import java.util.List;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.junit.NbTestCase;
@@ -30,6 +30,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.test.TestFileUtils;
 
+@SuppressWarnings("null")
 public class ReactorCheckerTest extends NbTestCase {
 
     public ReactorCheckerTest(String name) {
@@ -46,8 +47,15 @@ public class ReactorCheckerTest extends NbTestCase {
     }
     
     private FileObject project(String subdir, String body) throws Exception {
-        TestFileUtils.writeFile(d, (subdir != null ? subdir + "/" : "") + "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'><modelVersion>4.0.0</modelVersion>" + body + "</project>");
+        TestFileUtils.writeFile(
+                d,
+                (subdir != null ? subdir + "/" : "") + "pom.xml",
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                <modelVersion>4.0.0</modelVersion>
+                %s
+                </project>
+                """.formatted(body));
         return subdir != null ? d.getFileObject(subdir) : d;
     }
 
@@ -60,22 +68,73 @@ public class ReactorCheckerTest extends NbTestCase {
     }
 
     public void testFindReactorStandalone() throws Exception {
-        project(null, "<groupId>g</groupId><artifactId>m</artifactId><version>0</version>");
+        project(null, 
+                """
+                <groupId>g</groupId>
+                <artifactId>m</artifactId>
+                <version>0</version>
+                """);
         NbMavenProject p = load(null);
         assertEquals(p, ReactorChecker.findReactor(p));
     }
 
     public void testFindReactorFromDirectChild() throws Exception {
-        project(null, "<groupId>g</groupId><artifactId>p</artifactId><version>0</version><packaging>pom</packaging><modules><module>m</module></modules>");
-        project("m", "<parent><groupId>g</groupId><artifactId>p</artifactId><version>0</version></parent><artifactId>m</artifactId>");
+        project(null, 
+                """
+                <groupId>g</groupId>
+                <artifactId>p</artifactId>
+                <version>0</version>
+                <packaging>pom</packaging>
+                <modules>
+                    <module>m</module>
+                </modules>
+                """);
+        project("m", 
+                """
+                <parent>
+                    <groupId>g</groupId>
+                    <artifactId>p</artifactId>
+                    <version>0</version>
+                </parent>
+                <artifactId>m</artifactId>
+                """);
         NbMavenProject p = load(null);
         assertEquals(p, ReactorChecker.findReactor(load("m")));
     }
 
     public void testFindReactorFromIndirectChild() throws Exception {
-        project(null, "<groupId>g</groupId><artifactId>super</artifactId><version>0</version><packaging>pom</packaging><modules><module>sub</module></modules>");
-        project("sub", "<parent><groupId>g</groupId><artifactId>super</artifactId><version>0</version></parent><artifactId>sub</artifactId><packaging>pom</packaging><modules><module>m</module></modules>");
-        project("sub/m", "<parent><groupId>g</groupId><artifactId>sub</artifactId><version>0</version></parent><artifactId>m</artifactId>");
+        project(null, 
+                """
+                <groupId>g</groupId>
+                <artifactId>super</artifactId>
+                <version>0</version>
+                <packaging>pom</packaging>
+                <modules>
+                    <module>sub</module>
+                </modules>
+                """);
+        project("sub", 
+                """
+                <parent>
+                    <groupId>g</groupId>
+                    <artifactId>super</artifactId>
+                    <version>0</version>
+                </parent>
+                <artifactId>sub</artifactId>
+                <packaging>pom</packaging>
+                <modules>
+                    <module>m</module>
+                </modules>
+                """);
+        project("sub/m", 
+                """
+                <parent>
+                    <groupId>g</groupId>
+                    <artifactId>sub</artifactId>
+                    <version>0</version>
+                </parent>
+                <artifactId>m</artifactId>
+                """);
         NbMavenProject p = load(null);
         assertEquals(p, ReactorChecker.findReactor(load("sub")));
         assertEquals(p, ReactorChecker.findReactor(load("sub/m")));
@@ -83,68 +142,233 @@ public class ReactorCheckerTest extends NbTestCase {
 
     public void testFindReactorFromExplicitParentPath() throws Exception {
         // PENDING: uses unique artifact coordinates g:px:0 instead of g:p:0, see NETBEANS-5316
-        project("root", "<groupId>g</groupId><artifactId>px</artifactId><version>0</version><packaging>pom</packaging><modules><module>../m</module></modules>");
-        project("m", "<parent><groupId>g</groupId><artifactId>px</artifactId><version>0</version><relativePath>../root/pom.xml</relativePath></parent><artifactId>m</artifactId>");
+        project("root", 
+                """
+                <groupId>g</groupId>
+                <artifactId>px</artifactId>
+                <version>0</version>
+                <packaging>pom</packaging>
+                <modules>
+                    <module>../m</module>
+                </modules>
+                """);
+        project("m", 
+                """
+                <parent>
+                    <groupId>g</groupId>
+                    <artifactId>px</artifactId>
+                    <version>0</version>
+                    <relativePath>../root/pom.xml</relativePath>
+                </parent>
+                <artifactId>m</artifactId>
+                """);
         NbMavenProject p = load("root");
         assertEquals(p, ReactorChecker.findReactor(load("m")));
     }
 
     public void testFindReactorWrongParentVersion() throws Exception {
-        project(null, "<groupId>g</groupId><artifactId>p</artifactId><version>0</version><packaging>pom</packaging><modules><module>m</module></modules>");
-        project("m", "<parent><groupId>g</groupId><artifactId>p</artifactId><version>1</version></parent><artifactId>m</artifactId>");
+        project(null,
+                """
+                <groupId>g</groupId>
+                <artifactId>p</artifactId>
+                <version>0</version>
+                <packaging>pom</packaging>
+                <modules>
+                    <module>m</module>
+                </modules>
+                """);
+        project("m",
+                """
+                <parent>
+                    <groupId>g</groupId>
+                    <artifactId>p</artifactId>
+                    <version>1</version>
+                </parent>
+                <artifactId>m</artifactId>
+                """);
         NbMavenProject m = load("m");
         assertEquals(load(null), ReactorChecker.findReactor(m));
     }
 
     public void testFindReactorNonexistentParent() throws Exception {
-        project("m", "<parent><groupId>g</groupId><artifactId>p</artifactId><version>0</version></parent><artifactId>m</artifactId>");
+        project("m",
+                """
+                <parent>
+                    <groupId>g</groupId>
+                    <artifactId>p</artifactId>
+                    <version>0</version>
+                </parent>
+                <artifactId>m</artifactId>
+                """);
         NbMavenProject m = load("m");
         assertEquals(m, ReactorChecker.findReactor(m));
     }
 
     public void testFindReactorNonexistentSiteParent() throws Exception {
-        project(null, "<parent><groupId>site</groupId><artifactId>parent</artifactId><version>0</version></parent><groupId>g</groupId><artifactId>p</artifactId><version>0</version><packaging>pom</packaging><modules><module>m</module></modules>");
-        project("m", "<parent><groupId>g</groupId><artifactId>p</artifactId><version>0</version></parent><artifactId>m</artifactId>");
+        project(null,
+                """
+                <parent>
+                    <groupId>site</groupId>
+                    <artifactId>parent</artifactId>
+                    <version>0</version>
+                </parent>
+                <groupId>g</groupId>
+                <artifactId>p</artifactId>
+                <version>0</version>
+                <packaging>pom</packaging>
+                <modules>
+                    <module>m</module>
+                </modules>
+                """);
+        project("m", 
+                """
+                <parent>
+                    <groupId>g</groupId>
+                    <artifactId>p</artifactId>
+                    <version>0</version>
+                </parent>
+                <artifactId>m</artifactId>
+                """);
         NbMavenProject p = load(null);
         assertEquals(p, ReactorChecker.findReactor(load("m")));
     }
 
     public void testFindReactorNonAggregatorParent() throws Exception {
-        project("parent", "<groupId>g</groupId><artifactId>p</artifactId><version>0</version><packaging>pom</packaging>");
-        project("m", "<parent><groupId>g</groupId><artifactId>p</artifactId><version>0</version><relativePath>../parent/pom.xml</relativePath></parent><artifactId>m</artifactId>");
+        project("parent", 
+                """
+                <groupId>g</groupId>
+                <artifactId>p</artifactId>
+                <version>0</version>
+                <packaging>pom</packaging>
+                """);
+        project("m",
+                """
+                <parent>
+                    <groupId>g</groupId>
+                    <artifactId>p</artifactId>
+                    <version>0</version>
+                    <relativePath>../parent/pom.xml</relativePath>
+                </parent>
+                <artifactId>m</artifactId>
+                """);
         NbMavenProject m = load("m");
         assertEquals(m, ReactorChecker.findReactor(m));
     }
 
     public void testFindReactorAggregatorPlusPureParent() throws Exception {
-        project(null, "<groupId>g</groupId><artifactId>r</artifactId><version>0</version><packaging>pom</packaging><modules><module>m</module></modules>");
-        project("parent", "<groupId>g</groupId><artifactId>p</artifactId><version>0</version><packaging>pom</packaging>");
-        project("m", "<parent><groupId>g</groupId><artifactId>p</artifactId><version>0</version><relativePath>../parent/pom.xml</relativePath></parent><artifactId>m</artifactId>");
+        project(null, 
+                """
+                <groupId>g</groupId>
+                <artifactId>r</artifactId>
+                <version>0</version>
+                <packaging>pom</packaging>
+                <modules>
+                    <module>m</module>
+                </modules>
+                """);
+        project("parent", 
+                """
+                <groupId>g</groupId>
+                <artifactId>p</artifactId>
+                <version>0</version>
+                <packaging>pom</packaging>
+                """);
+        project("m", 
+                """
+                <parent>
+                    <groupId>g</groupId>
+                    <artifactId>p</artifactId>
+                    <version>0</version>
+                    <relativePath>../parent/pom.xml</relativePath>
+                </parent>
+                <artifactId>m</artifactId>
+                """);
         NbMavenProject p = load(null);
         assertEquals(p, ReactorChecker.findReactor(load("m")));
     }
 
     public void testFindReactorParentDoesNotListMe() throws Exception {
-        project(null, "<groupId>g</groupId><artifactId>p</artifactId><version>0</version><packaging>pom</packaging><modules><module>other</module></modules>");
-        project("m", "<parent><groupId>g</groupId><artifactId>p</artifactId><version>0</version></parent><artifactId>m</artifactId>");
+        project(null, 
+                """
+                <groupId>g</groupId>
+                <artifactId>p</artifactId>
+                <version>0</version>
+                <packaging>pom</packaging>
+                <modules>
+                    <module>other</module>
+                </modules>
+                """);
+        project("m", 
+                """
+                <parent>
+                    <groupId>g</groupId>
+                    <artifactId>p</artifactId>
+                    <version>0</version>
+                </parent>
+                <artifactId>m</artifactId>
+                """);
         NbMavenProject m = load("m");
         assertEquals(m, ReactorChecker.findReactor(m));
     }
 
     public void testFindReactorParentListsMeOnlyInInactiveProfile() throws Exception {
-        project(null, "<groupId>g</groupId><artifactId>p</artifactId><version>0</version><packaging>pom</packaging><profiles><profile><id>inactive</id><modules><module>m</module></modules></profile></profiles>");
-        project("m", "<parent><groupId>g</groupId><artifactId>p</artifactId><version>0</version></parent><artifactId>m</artifactId>");
+        project(null, 
+                """
+                <groupId>g</groupId>
+                <artifactId>p</artifactId>
+                <version>0</version>
+                <packaging>pom</packaging>
+                <profiles>
+                    <profile>
+                        <id>inactive</id>
+                        <modules>
+                            <module>m</module>
+                        </modules>
+                    </profile>
+                </profiles>
+                """);
+        project("m", 
+                """
+                <parent>
+                    <groupId>g</groupId>
+                    <artifactId>p</artifactId>
+                    <version>0</version>
+                </parent>
+                <artifactId>m</artifactId>
+                """);
         NbMavenProject m = load("m");
         assertEquals(m, ReactorChecker.findReactor(m));
     }
 
     public void testFindReactorParentListsMeInSelectedProfile() throws Exception {
-        project(null, "<groupId>g</groupId><artifactId>p</artifactId><version>0</version><packaging>pom</packaging><profiles><profile><id>sel</id><modules><module>m</module></modules></profile></profiles>");
-        project("m", "<parent><groupId>g</groupId><artifactId>p</artifactId><version>0</version></parent><artifactId>m</artifactId>");
+        project(null, 
+                """
+                <groupId>g</groupId>
+                <artifactId>p</artifactId>
+                <version>0</version>
+                <packaging>pom</packaging>
+                <profiles>
+                    <profile>
+                        <id>sel</id>
+                        <modules>
+                            <module>m</module>
+                        </modules>
+                    </profile>
+                </profiles>
+                """);
+        project("m", 
+                """
+                <parent>
+                    <groupId>g</groupId>
+                    <artifactId>p</artifactId>
+                    <version>0</version>
+                </parent>
+                <artifactId>m</artifactId>
+                """);
         M2ConfigProvider cp = ProjectManager.getDefault().findProject(d).getLookup().lookup(M2ConfigProvider.class);
         boolean found = false;
         for (M2Configuration cfg : cp.getConfigurations()) {
-            if (cfg.getActivatedProfiles().equals(Collections.singletonList("sel"))) {
+            if (cfg.getActivatedProfiles().equals(List.of("sel"))) {
                 cp.setActiveConfiguration(cfg);
                 found = true;
                 break;

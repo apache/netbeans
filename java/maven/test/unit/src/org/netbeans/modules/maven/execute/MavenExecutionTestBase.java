@@ -177,34 +177,44 @@ public class MavenExecutionTestBase extends NbTestCase {
     }
     
     protected FileObject createPom(String argsString, String propString) throws IOException {
-         pom = TestFileUtils.writeFile(FileUtil.toFileObject(getWorkDir()), "pom.xml", "<project xmlns='http://maven.apache.org/POM/4.0.0'>\n"
-                + "    <modelVersion>4.0.0</modelVersion>\n"
-                + "    <groupId>grp</groupId>\n"
-                + "    <artifactId>art</artifactId>\n"
-                + "    <version>1.0</version>\n"
-                +      propString
-                + "    <build>\n"
-                + "        <plugins>\n"
-                + "            <plugin>\n"
-                + "                <groupId>org.codehaus.mojo</groupId>\n"
-                + "                <artifactId>exec-maven-plugin</artifactId>\n"
-                + "                <version>3.6.3</version>\n"
-                + "                <configuration>\n"
-                +                      argsString 
-                + "                </configuration>\n"
-                + "            </plugin>\n"      
-                + "        </plugins>\n"
-                + "    </build>\n"
-                + "</project>\n");
+         pom = TestFileUtils.writeFile(FileUtil.toFileObject(getWorkDir()), "pom.xml", 
+                 """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <version>1.0</version>
+                        PROPS
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>exec-maven-plugin</artifactId>
+                                <version>3.6.3</version>
+                                <configuration>
+                                    ARGS
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """.replace("PROPS", propString).replace("ARGS", argsString));
         return pom;
     }
     
     protected void createPomWithArguments() throws Exception {
-        pom = createPom("<arguments>"
-                    + "<argument>-DsomeProperty=${AA}</argument>"
-                    + "<argument>-classpath</argument>"
-                    + "<classpath></classpath>"
-                + "</arguments>", "<properties><AA>blah</AA></properties>");
+        pom = createPom("""
+                <arguments>
+                    <argument>-DsomeProperty=${AA}</argument>
+                    <argument>-classpath</argument>
+                    <classpath></classpath>
+                </arguments>
+                """,
+                """
+                <properties>
+                    <AA>blah</AA>
+                </properties>
+                """);
     }
 
     protected NetbeansActionMapping getActionMapping(String aName) {
@@ -366,7 +376,7 @@ public class MavenExecutionTestBase extends NbTestCase {
         
         @Override
         public List<String> getArguments(Lookup context, StartupExtender.StartMode mode) {
-            return vmArg == null ? Collections.emptyList() : Collections.singletonList(vmArg);
+            return vmArg == null ? Collections.emptyList() : List.of(vmArg);
         }
     }
     

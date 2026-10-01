@@ -151,12 +151,14 @@ public class ModelUtilsTest extends NbTestCase {
 
     public void testAddModelRepository() throws Exception { // #212336
         FileObject pom = TestFileUtils.writeFile(FileUtil.toFileObject(getWorkDir()), "pom.xml",
-                "<project xmlns='http://maven.apache.org/POM/4.0.0'>\n"
-                + "    <modelVersion>4.0.0</modelVersion>\n"
-                + "    <groupId>grp</groupId>\n"
-                + "    <artifactId>art</artifactId>\n"
-                + "    <version>1.0</version>\n"
-                + "</project>\n");
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <version>1.0</version>
+                </project>
+                """);
         final MavenProject mp = ProjectManager.getDefault().findProject(pom.getParent()).getLookup().lookup(NbMavenProject.class).getMavenProject();
         Utilities.performPOMModelOperations(pom, Collections.singletonList(new ModelOperation<POMModel>() {
             @Override public void performOperation(POMModel model) {
@@ -169,19 +171,21 @@ public class ModelUtilsTest extends NbTestCase {
                 assertNull(added);
             }
         }));
-        assertEquals("<project xmlns='http://maven.apache.org/POM/4.0.0'>\n"
-                + "    <modelVersion>4.0.0</modelVersion>\n"
-                + "    <groupId>grp</groupId>\n"
-                + "    <artifactId>art</artifactId>\n"
-                + "    <version>1.0</version>\n"
-                + "    <repositories>\n"
-                + "        <repository>\n"
-                + "            <url>http://nowhere.net/maven2/</url>\n"
-                // XXX would be nice to fix IdPOMComponentImpl to put <id> first
-                + "            <id>nowhere.net</id>\n"
-                + "        </repository>\n"
-                + "    </repositories>\n"
-                + "</project>\n",
+        assertEquals(
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <version>1.0</version>
+                    <repositories>
+                        <repository>
+                            <url>http://nowhere.net/maven2/</url>
+                            <id>nowhere.net</id>
+                        </repository>
+                    </repositories>
+                </project>
+                """,
                 pom.asText().replace("\r\n", "\n"));
     }
     

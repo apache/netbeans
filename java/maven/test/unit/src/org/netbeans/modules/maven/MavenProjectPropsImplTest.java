@@ -51,7 +51,15 @@ public class MavenProjectPropsImplTest extends NbTestCase {
         });
         clearWorkDir();
         d = FileUtil.toFileObject(getWorkDir());
-        TestFileUtils.writeFile(d, "pom.xml", "<project><modelVersion>4.0.0</modelVersion><groupId>g</groupId><artifactId>a</artifactId><version>0</version></project>");
+        TestFileUtils.writeFile(d, "pom.xml",
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>a</artifactId>
+                    <version>0</version>
+                </project>
+                """);
         prj = ProjectManager.getDefault().findProject(d);
         p = ProjectUtils.getPreferences(prj, MavenProjectPropsImplTest.class, true);
     }
@@ -69,7 +77,13 @@ public class MavenProjectPropsImplTest extends NbTestCase {
     public void testHintPackaging() throws Exception {
         NbMavenProject nbmp = prj.getLookup().lookup(NbMavenProject.class);
         assertEquals("jar", nbmp.getPackagingType());
-        TestFileUtils.writeFile(d, "nb-configuration.xml", "<project-shared-configuration><properties xmlns='http://www.netbeans.org/ns/maven-properties-data/1'><netbeans.hint.packaging>war</netbeans.hint.packaging></properties></project-shared-configuration>");
+        TestFileUtils.writeFile(d, "nb-configuration.xml",
+                """
+                <project-shared-configuration>
+                    <properties xmlns='http://www.netbeans.org/ns/maven-properties-data/1'>
+                    <netbeans.hint.packaging>war</netbeans.hint.packaging></properties>
+                </project-shared-configuration>
+                """);
         assertEquals("war", nbmp.getPackagingType());
     }
 

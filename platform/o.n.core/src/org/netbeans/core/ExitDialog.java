@@ -55,6 +55,7 @@ import org.openide.util.NbBundle;
  */
 
 public class ExitDialog extends JPanel implements java.awt.event.ActionListener {
+    private static final String CONFIRM_EXIT_PREFERENCE = "confirmExit"; // NOI18N
     private static final boolean isAqua = "Aqua".equals(UIManager.getLookAndFeel().getID());
 
     private static Object[] exitOptions;
@@ -199,6 +200,16 @@ public class ExitDialog extends JPanel implements java.awt.event.ActionListener 
         return innerShowDialog();
     }
 
+    public static boolean isExitConfirmationEnabled() {
+        return org.openide.util.NbPreferences.forModule(ExitDialog.class)
+                .getBoolean(CONFIRM_EXIT_PREFERENCE, true);
+    }
+
+    public static void setExitConfirmationEnabled(boolean enabled) {
+        org.openide.util.NbPreferences.forModule(ExitDialog.class)
+                .putBoolean(CONFIRM_EXIT_PREFERENCE, enabled);
+    }
+
     /**
      * Opens the ExitDialog.
      */
@@ -256,6 +267,9 @@ public class ExitDialog extends JPanel implements java.awt.event.ActionListener 
         }
 
         else {
+            if (!isExitConfirmationEnabled()) {
+                return true;
+            }
             ResourceBundle bundle = NbBundle.getBundle(ExitDialog.class);
             Object exit = bundle.getString("CTL_ExitConfirmationExit");
             Object saveAndExit = bundle.getString("CTL_ExitConfirmationSaveAll");

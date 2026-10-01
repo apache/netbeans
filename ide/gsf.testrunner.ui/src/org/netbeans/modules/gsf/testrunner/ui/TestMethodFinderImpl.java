@@ -135,7 +135,7 @@ public final class TestMethodFinderImpl extends EmbeddingIndexer {
         }
     }
 
-    @MimeRegistration(mimeType="", service=EmbeddingIndexerFactory.class) //NOI18N
+    @MimeRegistration(mimeType = "", service = EmbeddingIndexerFactory.class, position = 810) //NOI18N
     public static class Factory extends EmbeddingIndexerFactory {
 
         @Override

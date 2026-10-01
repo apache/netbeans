@@ -307,7 +307,7 @@ public class JavaBinaryIndexer extends BinaryIndexer {
             return content == null || content.length == 0;
         }
 
-        @MimeRegistration(mimeType="", service=BinaryIndexerFactory.class)
+        @MimeRegistration(mimeType = "", service = BinaryIndexerFactory.class, position = 1060)
         public static Factory register() {
             return NoJavacHelper.hasWorkingJavac() ? new Factory() : null;
         }

@@ -538,7 +538,7 @@ public class VanillaPartialReparser implements PartialReparser {
             return MIRROR_PATTERN.matcher(s).replaceAll("capture");
         }
 
-        @MimeRegistration(service=TaskFactory.class, mimeType="text/x-java")
+        @MimeRegistration(service = TaskFactory.class, mimeType = "text/x-java", position = 1090)
         public static final class FactoryImpl extends TaskFactory {
 
             @Override

@@ -252,6 +252,20 @@ public class PhysicalView {
             return isProjectDir ? HINT_project(dir) : HINT_group(dir);
         }
 
+        @Override
+        public Image getIcon(int type) {
+            Icon icon = group.getIcon(false);
+            return icon == null ? super.getIcon(type) : ImageUtilities.icon2Image(icon);
+        }
+
+        @Override
+        public Image getOpenedIcon(int type) {
+            Icon icon = group.getIcon(true);
+            return icon == null ? super.getOpenedIcon(type) : ImageUtilities.icon2Image(icon);
+        }
+
+
+
         public @Override boolean canRename() {
             return false;
         }

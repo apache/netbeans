@@ -77,7 +77,7 @@ public class DirectoryGroup extends Group {
         }
         if (fo != null && fo.isFolder()) {
             try {
-                Project p = ProjectManager.getDefault().findProject(fo);
+                Project p = ProjectManager.getDefault().findProjectOrFallback(fo);
                 if (p != null) {
                     projects.add(p);
                     if (h != null) {

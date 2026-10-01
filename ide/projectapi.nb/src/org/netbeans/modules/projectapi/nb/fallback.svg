@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+
+-->
+<svg id="New_Vector" xmlns="http://www.w3.org/2000/svg" width="16" height="16" version="1.1" viewBox="0 0 16 16">
+  <!-- Generator: Adobe Illustrator 29.0.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 186)  -->
+  <defs>
+    <style>
+      .st0 {
+        fill: #fff;
+        opacity: .5;
+      }
+
+      .st1 {
+        fill: #eeba75;
+      }
+
+      .st2 {
+        opacity: .33;
+      }
+
+      .st3 {
+        fill: #bfd6e8;
+      }
+    </style>
+  </defs>
+  <g>
+    <g>
+      <polygon class="st3" points="13 15 0 15 0 0 6 0 7.5 2 13 2 13 15"/>
+      <g class="st2">
+        <path d="M5.5,1l1.2,1.6.3.4h5v11H1V1h4.5M6,0H0v15h13V2h-5.5l-1.5-2h0Z"/>
+      </g>
+    </g>
+    <polygon class="st3" points="13 15 0 15 3 7 16 7 13 15"/>
+    <path class="st2" d="M12,7v.5H2.812L0,15h13l3-8h-4ZM12.307,14H.909l2.25-6h11.398l-2.25,6Z"/>
+  </g>
+  <polygon class="st1" points="9 7 15.988 7 15.988 1.4 14.989 0 9.998 0 9 1.4 9 7"/>
+  <polygon class="st0" points="15.988 1.4 14.989 0 9.998 0 9 1.4 10 1.711 14.988 1.711 15.988 1.4"/>
+  <g class="st2">
+    <path d="M14.47.985l.518.727v4.304h-4.988V1.711l.518-.727h3.951M14.989,0h-4.991l-.998,1.4v5.6h6.988V1.4L14.989,0h0Z"/>
+  </g>
+</svg>

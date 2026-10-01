@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import org.netbeans.core.WindowSystem;
+import org.netbeans.core.windows.EditorOnlyDisplayer;
 import org.netbeans.core.windows.ModeImpl;
 import org.netbeans.core.windows.PersistenceHandler;
 import org.netbeans.core.windows.RegistryImpl;
@@ -43,7 +44,6 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
-import org.openide.windows.Mode;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 import org.openide.windows.TopComponentGroup;
@@ -122,6 +122,9 @@ public class ResetWindowsAction implements ActionListener {
                 } catch( IOException ioE ) {
                     ErrorManager.getDefault().notify( ErrorManager.INFORMATIONAL, ioE );
                 }
+
+                // Reset the "Show Editor Toolbar" setting.
+                EditorOnlyDisplayer.setShowEditorToolbar(true);
                 
                 //reset the window system
                 ws.hide();

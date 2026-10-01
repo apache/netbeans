@@ -465,12 +465,12 @@ public class DomainEditor {
     static final String[] sysDatasources = {"jdbc/__TimerPool", "jdbc/__CallFlowPool"}; //NOI18N
     
 
-    public HashMap<String,Map> getSunDatasourcesFromXml(){
-        HashMap<String, Map> dSources = new HashMap<>();
+    public HashMap<String, Map<String, String>> getSunDatasourcesFromXml(){
+        HashMap<String, Map<String, String>> dSources = new HashMap<>();
         Document domainDoc = getDomainDocument();
         if (domainDoc != null) {
             Map<String,NamedNodeMap> dsMap = getDataSourcesAttrMap(domainDoc);
-            HashMap<String,Node> cpMap = getConnPoolsNodeMap(domainDoc);
+            Map<String,Node> cpMap = getConnPoolsNodeMap(domainDoc);
             dsMap.keySet().removeAll(Arrays.asList(sysDatasources));
             String[] ds = dsMap.keySet().toArray(new String[dsMap.size()]);
 
@@ -485,7 +485,7 @@ public class DomainEditor {
         return dSources;
     }
 
-    private Map<String,String> getPoolValues(Map<String, Node> cpMap, String poolName) {
+    private Map<String, String> getPoolValues(Map<String, Node> cpMap, String poolName) {
         Map<String,String> pValues = new HashMap<>();
         Node cpNode = cpMap.get(poolName);
         NamedNodeMap cpAttrMap = cpNode.getAttributes();
@@ -532,8 +532,8 @@ public class DomainEditor {
         return pValues;
     }
 
-    public HashMap<String,Map> getConnPoolsFromXml(){
-        HashMap<String, Map> pools = new HashMap<>();
+    public HashMap<String, Map<String, String>> getConnPoolsFromXml(){
+        HashMap<String, Map<String, String>> pools = new HashMap<>();
         Document domainDoc = getDomainDocument();
         if (domainDoc != null) {
             HashMap<String,Node> cpMap = getConnPoolsNodeMap(domainDoc);
@@ -547,8 +547,8 @@ public class DomainEditor {
         return pools;
     }
     
-    private HashMap<String,NamedNodeMap> getDataSourcesAttrMap(Document domainDoc){
-        HashMap<String,NamedNodeMap> dataSourceMap = new HashMap<String,NamedNodeMap>();
+    private Map<String, NamedNodeMap> getDataSourcesAttrMap(Document domainDoc){
+        Map<String,NamedNodeMap> dataSourceMap = new HashMap<>();
         updateWithSampleDataSource(domainDoc);
         NodeList dataSourceNodeList = domainDoc.getElementsByTagName(CONST_JDBC);
         for(int i=0; i<dataSourceNodeList.getLength(); i++){

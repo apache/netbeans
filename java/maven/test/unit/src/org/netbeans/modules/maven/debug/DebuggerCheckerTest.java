@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import static junit.framework.TestCase.fail;
 import org.apache.maven.project.MavenProject;
 import org.netbeans.api.project.Project;

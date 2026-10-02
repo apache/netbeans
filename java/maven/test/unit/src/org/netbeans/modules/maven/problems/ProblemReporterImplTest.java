@@ -21,7 +21,7 @@ package org.netbeans.modules.maven.problems;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Set;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
 import org.apache.maven.artifact.handler.DefaultArtifactHandler;
@@ -52,10 +52,18 @@ public class ProblemReporterImplTest extends NbTestCase { // #175472
     }
 
     public void testMissingParent() throws Exception {
-        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), "<project xmlns='http://maven.apache.org/POM/4.0.0'><modelVersion>4.0.0</modelVersion>" +
-            "<parent><groupId>g</groupId><artifactId>par</artifactId><version>0</version></parent>" +
-            "<artifactId>m</artifactId>" +
-            "</project>");
+        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <parent>
+                        <groupId>g</groupId>
+                        <artifactId>par</artifactId>
+                        <version>0</version>
+                    </parent>
+                    <artifactId>m</artifactId>
+                </project>
+                """);
         Project p = ProjectManager.getDefault().findProject(FileUtil.toFileObject(getWorkDir()));
         assertEquals("g:m:jar:0", p.getLookup().lookup(NbMavenProject.class).getMavenProject().getId());
         ProblemReporterImpl pr = getReporter(p);
@@ -65,7 +73,7 @@ public class ProblemReporterImplTest extends NbTestCase { // #175472
         waitForReports();
         assertFalse(problems.isEmpty());
         
-        assertEquals(Collections.singleton(a2f(new DefaultArtifact("g", "par", "0", null, "pom", null, new DefaultArtifactHandler("pom")))), pr.getMissingArtifactFiles());
+        assertEquals(Set.of(a2f(new DefaultArtifact("g", "par", "0", null, "pom", null, new DefaultArtifactHandler("pom")))), pr.getMissingArtifactFiles());
     }
     
     private File a2f(Artifact a) {
@@ -76,31 +84,58 @@ public class ProblemReporterImplTest extends NbTestCase { // #175472
     }
 
     public void testMissingPlugin() throws Exception {
-        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), "<project xmlns='http://maven.apache.org/POM/4.0.0'><modelVersion>4.0.0</modelVersion>" +
-            "<groupId>g</groupId><artifactId>m</artifactId><version>0</version>" +
-            "<build><plugins><plugin><groupId>g</groupId><artifactId>plug</artifactId><version>0</version><extensions>true</extensions></plugin></plugins></build>" +
-            "</project>");
+        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>m</artifactId>
+                    <version>0</version>
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>g</groupId>
+                                <artifactId>plug</artifactId>
+                                <version>0</version>
+                                <extensions>true</extensions>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """);
         Project p = ProjectManager.getDefault().findProject(FileUtil.toFileObject(getWorkDir()));
         ProblemReporterImpl pr = getReporter(p);
         MavenModelProblemsProvider mpp = new MavenModelProblemsProvider(p);
         Collection<? extends ProjectProblemsProvider.ProjectProblem> problems = mpp.getProblems();
         waitForReports();
         assertFalse(problems.isEmpty());
-        assertEquals(Collections.singleton(a2f(new DefaultArtifact("g", "plug", "0", null, "jar", null, new DefaultArtifactHandler("jar")))), pr.getMissingArtifactFiles());
+        assertEquals(Set.of(a2f(new DefaultArtifact("g", "plug", "0", null, "jar", null, new DefaultArtifactHandler("jar")))), pr.getMissingArtifactFiles());
     }
 
     public void testMissingDependency() throws Exception {
-        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), "<project xmlns='http://maven.apache.org/POM/4.0.0'><modelVersion>4.0.0</modelVersion>" +
-            "<groupId>g</groupId><artifactId>m</artifactId><version>0</version>" +
-            "<dependencies><dependency><groupId>g</groupId><artifactId>b</artifactId><version>1.0-SNAPSHOT</version></dependency></dependencies>" +
-            "</project>");
+        TestFileUtils.writeFile(new File(getWorkDir(), "pom.xml"), 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>g</groupId>
+                    <artifactId>m</artifactId>
+                    <version>0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>g</groupId>
+                            <artifactId>b</artifactId>
+                            <version>1.0-SNAPSHOT</version>
+                        </dependency>
+                    </dependencies>
+                </project>
+                """);
         Project p = ProjectManager.getDefault().findProject(FileUtil.toFileObject(getWorkDir()));
         ProblemReporterImpl pr = getReporter(p);
         MavenModelProblemsProvider mpp = new MavenModelProblemsProvider(p);
         Collection<? extends ProjectProblemsProvider.ProjectProblem> problems = mpp.getProblems();
         waitForReports();
         assertFalse(problems.isEmpty());
-        assertEquals(Collections.singleton(a2f(new DefaultArtifact("g", "b", "1.0-SNAPSHOT", "compile", "jar", null, new DefaultArtifactHandler("jar")))), pr.getMissingArtifactFiles());
+        assertEquals(Set.of(a2f(new DefaultArtifact("g", "b", "1.0-SNAPSHOT", "compile", "jar", null, new DefaultArtifactHandler("jar")))), pr.getMissingArtifactFiles());
     }
 
     // XXX write test for FCL and reloading (requires modifications to local repo)

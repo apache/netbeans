@@ -46,179 +46,235 @@ public class ModelRunConfigTest extends NbTestCase {
     }
 
     public void testExecArgsOne() throws Exception {
-        assertArgs("    <arguments>\n"                          
-                 + "        <argument>-lollipop</argument>\n"
-                 + "    </arguments>\n", 
+        assertArgs(
+                """
+                    <arguments>
+                        <argument>-lollipop</argument>
+                    </arguments>
+                """,
                 (args) -> assertEquals("-lollipop", args));        
     } 
     
     public void testExecArgsMore() throws Exception {
-        assertArgs("    <arguments>\n"                          
-                 + "        <argument>-lollipop</argument>\n"
-                 + "        <argument>-lollipop2</argument>\n"
-                 + "    </arguments>\n", 
+        assertArgs(
+                """
+                    <arguments>
+                        <argument>-lollipop</argument>
+                        <argument>-lollipop2</argument>
+                    </arguments>
+                """,
                 (args) -> assertEquals("-lollipop -lollipop2", args));
     } 
 
     public void testExecArgsClasspath() throws Exception {
-        assertArgs("    <arguments>\n"                          
-                 + "        <argument>-lollipop</argument>\n"
-                 + "        <argument>-classpath</argument>\n"
-                 + "        <classpath/>\n"
-                 + "    </arguments>\n", 
+        assertArgs(
+                """
+                    <arguments>
+                        <argument>-lollipop</argument>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                    </arguments>
+                """,
                 (args) -> assertEquals("-lollipop ___CP___", args));
     } 
 
     public void testExecArgsClasspathMainClass() throws Exception {
-        assertArgs("    <arguments>\n"                          
-                 + "        <argument>-lollipop</argument>\n"
-                 + "        <argument>-classpath</argument>\n"
-                 + "        <classpath/>\n"
-                 + "        <argument>org.project.Main</argument>\n"
-                 + "    </arguments>\n", 
+        assertArgs(
+                """
+                    <arguments>
+                        <argument>-lollipop</argument>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>org.project.Main</argument>
+                    </arguments>
+                """,
                 (args) -> assertEquals("-lollipop ___CP___ org.project.Main", args));
     } 
     
     public void testExecArgsClasspathDeps() throws Exception {
-        assertArgs("    <arguments>\n"                          
-                 + "        <argument>-lollipop</argument>\n"
-                 + "        <argument>-classpath</argument>\n"
-                 + "        <classpath>\n"
-                 + "            <dependency>org.main:org.main.project</dependency>\n"                
-                 + "        </classpath>\n"
-                 + "        <argument>org.project.Main</argument>\n"
-                 + "    </arguments>\n", 
+        assertArgs(
+                """
+                    <arguments>
+                        <argument>-lollipop</argument>
+                        <argument>-classpath</argument>
+                        <classpath>
+                            <dependency>org.main:org.main.project</dependency>
+                        </classpath>
+                        <argument>org.project.Main</argument>
+                    </arguments>
+                """,
                 (args) -> assertNull(args));
     } 
     
     public void testExecArgsCPDeps() throws Exception {
-        assertArgs("    <arguments>\n"                          
-                 + "        <argument>-lollipop</argument>\n"
-                 + "        <argument>-cp</argument>\n"
-                 + "        <classpath>\n"
-                 + "            <dependency>org.main:org.main.project</dependency>\n"                
-                 + "        </classpath>\n"
-                 + "        <argument>org.project.Main</argument>\n"
-                 + "    </arguments>\n", 
+        assertArgs(
+                """
+                    <arguments>
+                        <argument>-lollipop</argument>
+                        <argument>-cp</argument>
+                        <classpath>
+                            <dependency>org.main:org.main.project</dependency>
+                        </classpath>
+                        <argument>org.project.Main</argument>
+                    </arguments>
+                """,
                 (args) -> assertNull(args));
     } 
     
     public void testExecArgsCPNoDeps() throws Exception {
-        assertArgs("    <arguments>\n"                          
-                 + "        <argument>-lollipop</argument>\n"
-                 + "        <argument>-cp</argument>\n"
-                 + "        <classpath>\n"
-                 + "            <dependency></dependency>\n"                
-                 + "        </classpath>\n"
-                 + "        <argument>org.project.Main</argument>\n"
-                 + "        <argument>-lollipop2</argument>\n"
-                 + "    </arguments>\n", 
+        assertArgs(
+                """
+                    <arguments>
+                        <argument>-lollipop</argument>
+                        <argument>-cp</argument>
+                        <classpath>
+                            <dependency></dependency>
+                        </classpath>
+                        <argument>org.project.Main</argument>
+                        <argument>-lollipop2</argument>
+                    </arguments>
+                """,
                 (args) -> assertEquals("-lollipop org.project.Main -lollipop2", args));
     } 
     
     public void testExecArgsCP() throws Exception {
-        assertArgs("    <arguments>\n"                          
-                 + "        <argument>-lollipop</argument>\n"
-                 + "        <argument>-classpath</argument>\n"
-                 + "        <classpath/>\n"
-                 + "    </arguments>\n", 
+        assertArgs(
+                """
+                    <arguments>
+                        <argument>-lollipop</argument>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                    </arguments>
+                """,
                 (args) -> assertEquals("-lollipop ___CP___", args));
     } 
 
     public void testExecArgsCPMainClass() throws Exception {
-        assertArgs("    <arguments>\n"                          
-                 + "        <argument>-lollipop</argument>\n"
-                 + "        <argument>-classpath</argument>\n"
-                 + "        <classpath/>\n"
-                 + "        <argument>org.project.Main</argument>\n"
-                 + "    </arguments>\n", 
+        assertArgs(
+                """
+                    <arguments>
+                        <argument>-lollipop</argument>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>org.project.Main</argument>
+                    </arguments>
+                """,
                 (args) -> assertEquals("-lollipop ___CP___ org.project.Main", args));
     } 
     
     public void testExecArgsAfterCP() throws Exception {    
-        assertArgs("    <arguments>\n"                          
-                 + "        <argument>-lollipop</argument>\n"
-                 + "        <argument>-classpath</argument>\n"
-                 + "        <classpath/>\n"
-                 + "        <argument>org.project.Main</argument>\n"
-                 + "        <argument>-lollipop2</argument>\n"
-                 + "    </arguments>\n", 
+        assertArgs(
+                """
+                    <arguments>
+                        <argument>-lollipop</argument>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>org.project.Main</argument>
+                        <argument>-lollipop2</argument>
+                    </arguments>
+                """,
                 (args) -> assertEquals("-lollipop ___CP___ org.project.Main -lollipop2", args));
     } 
     
     public void testExecArgsUnresolvedProperty() throws Exception {    
-        assertArgs("    <arguments>\n"                          
-                 + "        <argument>${prop}</argument>\n"
-                 + "        <argument>-classpath</argument>\n"
-                 + "        <classpath/>\n"
-                 + "        <argument>org.project.Main</argument>\n"
-                 + "        <argument>-lollipop2</argument>\n"
-                 + "    </arguments>\n", 
+        assertArgs(
+                """
+                    <arguments>
+                        <argument>${prop}</argument>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>org.project.Main</argument>
+                        <argument>-lollipop2</argument>
+                    </arguments>
+                """,
                 (args) -> assertEquals("___CP___ org.project.Main -lollipop2", args));
     } 
     
     public void testExecArgsUnresolvedEmbProperty() throws Exception {    
-        assertArgs("    <arguments>\n"                          
-                 + "        <argument>emb${prop}</argument>\n"
-                 + "        <argument>-classpath</argument>\n"
-                 + "        <classpath/>\n"
-                 + "        <argument>org.project.Main</argument>\n"
-                 + "        <argument>-lollipop2</argument>\n"
-                 + "    </arguments>\n", 
+        assertArgs(
+                """
+                    <arguments>
+                        <argument>emb${prop}</argument>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>org.project.Main</argument>
+                        <argument>-lollipop2</argument>
+                    </arguments>
+                """,
                 (args) -> assertEquals("___CP___ org.project.Main -lollipop2", args));
     } 
     
     public void testExecArgsResolvedProperty() throws Exception {    
-        assertArgs("    <arguments>\n"                          
-                 + "        <argument>${prop}</argument>\n"
-                 + "        <argument>-classpath</argument>\n"
-                 + "        <classpath/>\n"
-                 + "        <argument>org.project.Main</argument>\n"
-                 + "        <argument>-lollipop2</argument>\n"
-                 + "    </arguments>\n",
-                   "    <properties>\n"
-                 + "        <prop>-propValue</prop>\n"                         
-                 + "    </properties>\n",
+        assertArgs(
+                """
+                    <arguments>
+                        <argument>${prop}</argument>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>org.project.Main</argument>
+                        <argument>-lollipop2</argument>
+                    </arguments>
+                """,
+                """
+                    <properties>
+                        <prop>-propValue</prop>
+                    </properties>
+                """,
                 (args) -> assertEquals("-propValue ___CP___ org.project.Main -lollipop2", args));
     } 
     
     public void testExecArgsResolvedEmbProperty() throws Exception {    
-        assertArgs("    <arguments>\n"                          
-                 + "        <argument>-emb${prop}</argument>\n"
-                 + "        <argument>-classpath</argument>\n"
-                 + "        <classpath/>\n"
-                 + "        <argument>org.project.Main</argument>\n"
-                 + "        <argument>-lollipop2</argument>\n"
-                 + "    </arguments>\n",
-                   "    <properties>\n"
-                 + "        <prop>PropValue</prop>\n"                         
-                 + "    </properties>\n",
+        assertArgs(
+                """
+                    <arguments>
+                        <argument>-emb${prop}</argument>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>org.project.Main</argument>
+                        <argument>-lollipop2</argument>
+                    </arguments>
+                """,
+                """
+                    <properties>
+                        <prop>PropValue</prop>
+                    </properties>
+                """,
                 (args) -> assertEquals("-embPropValue ___CP___ org.project.Main -lollipop2", args));
     } 
     
     public void testExecArgsNone() throws Exception {    
-        assertArgs("",
-                 (args) -> assertNull(args));        
+        assertArgs(
+                "",
+                (args) -> assertNull(args));        
     } 
     
     public void testExecArgsNoArgument() throws Exception {    
-        assertArgs("    <arguments>\n"                                           
-                 + "    </arguments>\n",
-                 (args) -> assertNull(args));        
+        assertArgs(
+                """
+                    <arguments>
+                    </arguments>
+                """,
+                (args) -> assertNull(args));        
     } 
     
     public void testExecArgsBogusTag() throws Exception {        
-        assertArgs("    <arguments>\n"                                           
-                 +  "       <bogus/>"
-                 + "    </arguments>\n",
+        assertArgs(
+                """
+                    <arguments>
+                       <bogus/>
+                    </arguments>
+                """,
                  (args) -> assertNull(args));        
     } 
     
     public void testExecArgsBogusValue() throws Exception {        
-        assertArgs("    <arguments>\n"                                           
-                 +  "       <bogus>bogus</bogus>"
-                 + "    </arguments>\n",
-                 (args) -> assertNull(args));        
+        assertArgs(
+                """
+                    <arguments>
+                       <bogus>bogus</bogus>
+                    </arguments>
+                """,
+                (args) -> assertNull(args));        
     }
     
     private interface AssertArgs {
@@ -230,26 +286,29 @@ public class ModelRunConfigTest extends NbTestCase {
     }
     
     private void assertArgs(String argsString, String propString, AssertArgs a) throws IOException {
-        FileObject pom = TestFileUtils.writeFile(FileUtil.toFileObject(getWorkDir()), "pom.xml", "<project xmlns='http://maven.apache.org/POM/4.0.0'>\n"
-                + "    <modelVersion>4.0.0</modelVersion>\n"
-                + "    <groupId>grp</groupId>\n"
-                + "    <artifactId>art</artifactId>\n"
-                + "    <version>1.0</version>\n"
-                +      propString
-                + "    <build>\n"
-                + "        <plugins>\n"
-                + "            <plugin>\n"
-                + "                <groupId>org.codehaus.mojo</groupId>\n"
-                + "                <artifactId>exec-maven-plugin</artifactId>\n"
-                + "                <version>3.6.3</version>\n"
-                + "                <configuration>\n"
-                + "                    <executable>${java.home}/bin/java</executable>\n"
-                +                      argsString 
-                + "                </configuration>\n"
-                + "            </plugin>\n"      
-                + "        </plugins>\n"
-                + "    </build>\n"
-                + "</project>\n");
+        FileObject pom = TestFileUtils.writeFile(FileUtil.toFileObject(getWorkDir()), "pom.xml", 
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>grp</groupId>
+                    <artifactId>art</artifactId>
+                    <version>1.0</version>
+                    PROPS
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.codehaus.mojo</groupId>
+                                <artifactId>exec-maven-plugin</artifactId>
+                                <version>3.6.3</version>
+                                <configuration>
+                                    <executable>${java.home}/bin/java</executable>
+                                    ARGS
+                                </configuration>
+                            </plugin>
+                        </plugins>
+                    </build>
+                </project>
+                """.replace("PROPS", propString).replace("ARGS", argsString));
         
         Project project = ProjectManager.getDefault().findProject(pom.getParent());        
         NetbeansActionMapping mapp = ModelHandle2.getMapping("run", project, project.getLookup().lookup(M2ConfigProvider.class).getActiveConfiguration());

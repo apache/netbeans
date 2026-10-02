@@ -18,13 +18,12 @@
  */
 package org.netbeans.modules.maven.pom;
 
-import org.codehaus.plexus.util.StringOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -45,8 +44,6 @@ import org.netbeans.modules.maven.model.settings.Settings;
 import org.netbeans.modules.maven.model.settings.SettingsModel;
 import org.netbeans.modules.maven.model.settings.SettingsModelFactory;
 import org.netbeans.modules.xml.xam.ModelSource;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -196,13 +193,10 @@ public class ModelTest extends TestCase {
         URL url = getClass().getClassLoader().getResource(templateName);
         File templateFile = org.openide.util.Utilities.toFile(url.toURI());
         assertTrue(templateFile.exists());
-        FileObject fo = FileUtil.toFileObject(templateFile);
-        FileInputStream str = new FileInputStream(templateFile);
-        StringOutputStream out = new StringOutputStream();
-        str.transferTo(out);
+        String out = Files.readString(templateFile.toPath());
         String dir = System.getProperty("java.io.tmpdir");
         File sourceFile = new File(dir, templateName);
-        ModelSource source = Utilities.createModelSourceForMissingFile(sourceFile, true, out.toString(), "text/xml");
+        ModelSource source = Utilities.createModelSourceForMissingFile(sourceFile, true, out, "text/xml");
         assertTrue(source.isEditable());
         return source;
     }

@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.netbeans.api.java.queries.JavadocForBinaryQuery;
 import org.netbeans.api.java.queries.SourceForBinaryQuery;
 import org.netbeans.api.project.ProjectManager;
@@ -94,9 +93,16 @@ public class RepositoryForBinaryQueryImplTest extends NbTestCase{
         
         //now create project
         File prj10 = new File(getWorkDir(), "prj10");
-        TestFileUtils.writeFile(new File(prj10, "pom.xml"), "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>nbtest</groupId><artifactId>testprj</artifactId>"
-                + "<packaging>jar</packaging><version>1.0</version></project>");
+        TestFileUtils.writeFile(new File(prj10, "pom.xml"), 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>nbtest</groupId>
+                    <artifactId>testprj</artifactId>
+                    <packaging>jar</packaging>
+                    <version>1.0</version>
+                </project>
+                """);
         //create main source root.
         File prjroot = new File(new File(new File(prj10, "src"), "main"), "java");
         prjroot.mkdirs();
@@ -114,11 +120,19 @@ public class RepositoryForBinaryQueryImplTest extends NbTestCase{
         assertEquals(FileUtil.toFileObject(prjroot), result.getRoots()[0]);
         
         //overwrite the pom file to point to different 
-        TestFileUtils.writeFile(new File(prj10, "pom.xml"), "<project><modelVersion>4.0.0</modelVersion>"
-                + "<groupId>nbtest</groupId><artifactId>testprj</artifactId>"
-                + "<packaging>jar</packaging><version>1.0</version>"
-                + "<build><sourceDirectory>src/main2/java</sourceDirectory></build>"
-                + "</project>");
+        TestFileUtils.writeFile(new File(prj10, "pom.xml"), 
+                """
+                <project>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>nbtest</groupId>
+                    <artifactId>testprj</artifactId>
+                    <packaging>jar</packaging>
+                    <version>1.0</version>
+                    <build>
+                        <sourceDirectory>src/main2/java</sourceDirectory>
+                    </build>
+                </project>
+                """);
         //manually reload the project, only opened projects listen on pom.xml changes.
         p10.fireProjectReload();
         

@@ -39,6 +39,7 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import org.netbeans.api.actions.Savable;
 import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Mnemonics;
 import org.openide.nodes.Node;
@@ -53,6 +54,7 @@ import org.openide.util.NbBundle;
  */
 
 public class ExitDialog extends JPanel implements java.awt.event.ActionListener {
+    private static final String CONFIRM_EXIT_PREFERENCE = "confirmExit"; // NOI18N
     private static final boolean isAqua = "Aqua".equals(UIManager.getLookAndFeel().getID());
 
     private static Object[] exitOptions;
@@ -197,6 +199,16 @@ public class ExitDialog extends JPanel implements java.awt.event.ActionListener 
         return innerShowDialog();
     }
 
+    public static boolean isExitConfirmationEnabled() {
+        return org.openide.util.NbPreferences.forModule(ExitDialog.class)
+                .getBoolean(CONFIRM_EXIT_PREFERENCE, true);
+    }
+
+    public static void setExitConfirmationEnabled(boolean enabled) {
+        org.openide.util.NbPreferences.forModule(ExitDialog.class)
+                .putBoolean(CONFIRM_EXIT_PREFERENCE, enabled);
+    }
+
     /**
      * Opens the ExitDialog.
      */
@@ -252,8 +264,24 @@ public class ExitDialog extends JPanel implements java.awt.event.ActionListener 
             return result;
 
         }
-        else
-            return true;
+
+        else {
+            if (!isExitConfirmationEnabled()) {
+                return true;
+            }
+            ResourceBundle bundle = NbBundle.getBundle(ExitDialog.class);
+            Object exit = bundle.getString("CTL_ExitConfirmationExit");
+            Object cancel = bundle.getString("CTL_ExitConfirmationCancel");
+            NotifyDescriptor descriptor = new NotifyDescriptor(
+                    bundle.getString("MSG_ExitConfirmation"),
+                    bundle.getString("TTL_ExitConfirmation"),
+                    NotifyDescriptor.YES_NO_OPTION,
+                    NotifyDescriptor.QUESTION_MESSAGE,
+                    new Object[] { exit, cancel },
+                    cancel);
+            Object choice = DialogDisplayer.getDefault().notify(descriptor);
+            return exit.equals(choice);
+        }
     }
 
     /** Renderer used in list box of exit dialog

@@ -402,9 +402,11 @@ public final class NbProjectManager implements ProjectManagerImplementation.With
             }
         }
         if (fallback) {
-            FallbackProject p = new FallbackProject(dir);
+            FallbackProject p = new FallbackProject(dir, state);
             proj2Factory.put(p, null);
             state.attach(p);
+            // need to clear ownership caches
+            callBack.notifyDeleted(p);
             return p;
         } else {
             return null;
@@ -531,6 +533,7 @@ public final class NbProjectManager implements ProjectManagerImplementation.With
                         if (result != null) {
                             it.remove();
                             proj2Factory.remove(fallback);
+                            fallback.notifyDeleted();
                         }
                     }
                 }

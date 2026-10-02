@@ -25,6 +25,7 @@ import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.api.project.Sources;
+import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.support.GenericSources;
 import org.netbeans.spi.project.support.LookupProviderSupport;
 import org.openide.filesystems.FileObject;
@@ -38,11 +39,13 @@ final class FallbackProject implements Project, ProjectInformation, Sources {
     private static final String ICON = "org/netbeans/modules/projectapi/nb/fallback.svg"; // NOI18N
 
     private final FileObject dir;
+    private final ProjectState state;
     private final Lookup lkp;
     private final SourceGroup genericGroup;
 
-    public FallbackProject(FileObject dir) {
+    public FallbackProject(FileObject dir, ProjectState state) {
         this.dir = dir;
+        this.state = state;
         this.genericGroup = GenericSources.group(
             this, dir,
             Sources.TYPE_GENERIC, getDisplayName(),
@@ -117,4 +120,7 @@ final class FallbackProject implements Project, ProjectInformation, Sources {
     public void removeChangeListener(ChangeListener listener) {
     }
 
+    void notifyDeleted() {
+        state.notifyDeleted();
+    }
 }

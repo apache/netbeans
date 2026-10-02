@@ -40,7 +40,6 @@ import javax.swing.border.LineBorder;
 import org.netbeans.api.actions.Savable;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
-import org.openide.LifecycleManager;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.Mnemonics;
 import org.openide.nodes.Node;
@@ -272,20 +271,16 @@ public class ExitDialog extends JPanel implements java.awt.event.ActionListener 
             }
             ResourceBundle bundle = NbBundle.getBundle(ExitDialog.class);
             Object exit = bundle.getString("CTL_ExitConfirmationExit");
-            Object saveAndExit = bundle.getString("CTL_ExitConfirmationSaveAll");
             Object cancel = bundle.getString("CTL_ExitConfirmationCancel");
             NotifyDescriptor descriptor = new NotifyDescriptor(
                     bundle.getString("MSG_ExitConfirmation"),
                     bundle.getString("TTL_ExitConfirmation"),
-                    NotifyDescriptor.YES_NO_CANCEL_OPTION,
+                    NotifyDescriptor.YES_NO_OPTION,
                     NotifyDescriptor.QUESTION_MESSAGE,
-                    new Object[] { exit, saveAndExit, cancel },
+                    new Object[] { exit, cancel },
                     cancel);
             Object choice = DialogDisplayer.getDefault().notify(descriptor);
-            if (saveAndExit.equals(choice)) {
-                LifecycleManager.getDefault().saveAll();
-            }
-            return exit.equals(choice) || saveAndExit.equals(choice);
+            return exit.equals(choice);
         }
     }
 

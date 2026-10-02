@@ -65,7 +65,7 @@ import org.openide.util.spi.MutexImplementation;
  * @author Jesse Glick
  */
 @ServiceProvider(service = ProjectManagerImplementation.class, position = 1000)
-public final class NbProjectManager implements ProjectManagerImplementation.WithFallback {
+public final class NbProjectManager implements ProjectManagerImplementation {
     
     // XXX need to figure out how to convince the system that a Project object is modified
     // so that Save All and the exit dialog work... could temporarily use a DataLoader
@@ -216,9 +216,9 @@ public final class NbProjectManager implements ProjectManagerImplementation.With
     }
 
     @Override
-    public Project findProjectOrFallback(FileObject projectDirectory) throws IOException, IllegalArgumentException {
-        var found = findProjectImpl(projectDirectory, true);
-        assert found != null;
+    public Project findProject(FileObject projectDirectory, FindOptions options) throws IOException, IllegalArgumentException {
+        var found = findProjectImpl(projectDirectory, options.isFallbackAllowed());
+        assert !options.isFallbackAllowed() || found != null;
         return found;
     }
 

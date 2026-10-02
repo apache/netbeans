@@ -21,6 +21,7 @@ package org.netbeans.api.project;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -144,7 +145,7 @@ public final class ProjectManager {
         if (!projectDirectory.isFolder()) {
             throw new IllegalArgumentException("Attempted to pass a non-directory to findProject: " + projectDirectory); // NOI18N
         }
-        return impl.findProject(projectDirectory);
+        return impl.findProject(projectDirectory, ProjectManagerImplementation.FindOptions.DEFAULT);
     }
 
     /** Finds a project corresponding to the given directory. This method behaves
@@ -188,11 +189,9 @@ public final class ProjectManager {
         if (!projectDirectory.isFolder()) {
             throw new IllegalArgumentException("Attempted to pass a non-directory to findProject: " + projectDirectory); // NOI18N
         }
-        if (impl instanceof ProjectManagerImplementation.WithFallback implV2) {
-            return implV2.findProjectOrFallback(projectDirectory);
-        } else {
-            throw new IllegalArgumentException("Cannot create fallback project for " + projectDirectory); // NOI18N
-        }
+        Project prj = impl.findProject(projectDirectory, ProjectManagerImplementation.FindOptions.WITH_FALLBACK);
+        Objects.requireNonNull(prj, "Must create a fallback project"); // NOI18N
+        return prj;
     }
         
     

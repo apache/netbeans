@@ -133,6 +133,31 @@ public interface ProjectManagerImplementation {
     ProjectManager.Result isProject(@NonNull FileObject projectDirectory) throws IllegalArgumentException;
 
     /**
+     * Find a project corresponding to a given directory. Honors additional
+     * {@code options}, like {@link FindOptions#WITH_FALLBACK}.
+     *
+     * @param projectDirectory the project top directory
+     * @param options when {@link FindOptions#WITH_FALLBACK} then a
+     * <em>fallback project</em> is created if no real project recognizes provided
+     * directory.
+     * @return the project (object identity may or may not vary between
+     * calls) or {@code null}
+     * @throws IOException if the project was recognized but could not be
+     * loaded
+     * @throws IllegalArgumentException if the supplied file object is
+     * {@code null} or not a folder
+     * @see ProjectManager#findProjectOrFallback
+     * @since 1.111
+     */
+    @CheckForNull
+    default Project findProject(
+        @NonNull FileObject projectDirectory,
+        @NonNull FindOptions options
+    ) throws IOException, IllegalArgumentException {
+        return findProject(projectDirectory);
+    }
+
+    /**
      * Clear the cached list of folders thought <em>not</em> to be projects.
      * This may be useful after creating project metadata in a folder, etc.
      * Cached project objects, i.e. folders that <em>are</em> known to be
@@ -182,30 +207,33 @@ public interface ProjectManagerImplementation {
      */
     void saveAllProjects() throws IOException;
 
-    /**
-     * Enhanced version of {@link ProjectManagerImplementation} that supports
-     * <em>project fallback</em>. Used by
-     * {@link ProjectManager#findProjectOrFallback} method.
-     *
+    /** Additional info for enhanced
+     * {@link #findProject(org.openide.filesystems.FileObject, org.netbeans.spi.project.ProjectManagerImplementation.FindOptions)}
+     * method.
      * @since 1.111
      */
-    interface WithFallback extends ProjectManagerImplementation {
-        /**
-         * Find a project corresponding to a given directory. Creates a
-         * <em>fallback project</em> if no real project recognizes provided
-         * directory.
-         *
-         * @param projectDirectory the project top directory
-         * @return the project (object identity may or may not vary between
-         * calls)
-         * @throws IOException if the project was recognized but could not be
-         * loaded
-         * @throws IllegalArgumentException if the supplied file object is
-         * {@code null} or not a folder
-         * @see ProjectManager#findProjectOrFallback
+    public static final class FindOptions {
+        /** Standard behavior. Just like {@link ProjectManagerImplementation#findProject(org.openide.filesystems.FileObject)}.
+         * @since 1.111
          */
-        @NonNull
-        Project findProjectOrFallback(@NonNull FileObject projectDirectory) throws IOException, IllegalArgumentException;
+        public static final FindOptions DEFAULT = new FindOptions();
+        /** Enhanced behavior. Never returns {@code null} from {@link ProjectManagerImplementation#findProject(org.openide.filesystems.FileObject, org.netbeans.spi.project.ProjectManagerImplementation.FindOptions)}
+         * when this option is provided in there.
+         * @since 1.111
+         */
+        public static final FindOptions WITH_FALLBACK = new FindOptions();
+
+        private FindOptions() {
+        }
+
+        /** Check whether creating fallback project is allowed.
+         *
+         * @return {@code true} if a <em>fallback project</em> shall be created
+         * @since 1.111
+         */
+        public boolean isFallbackAllowed() {
+            return this == WITH_FALLBACK;
+        }
     }
 
     /**

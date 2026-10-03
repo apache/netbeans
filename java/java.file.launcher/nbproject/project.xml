@@ -273,21 +273,6 @@
                         <specification-version>9.29</specification-version>
                     </run-dependency>
                 </dependency>
-                <dependency>
-                    <code-name-base>org.openide.util.ui.svg</code-name-base>
-                    <build-prerequisite/>
-                    <run-dependency>
-                        <specification-version>1.28</specification-version>
-                    </run-dependency>
-                </dependency>
-                <dependency>
-                    <code-name-base>org.netbeans.modules.maven</code-name-base>
-                    <build-prerequisite/>
-                    <run-dependency>
-                        <release-version>2</release-version>
-                        <specification-version>2.174</specification-version>
-                    </run-dependency>
-                </dependency>
             </module-dependencies>
             <test-dependencies>
                 <test-type>
@@ -313,6 +298,14 @@
                     <test-dependency>
                         <code-name-base>org.netbeans.modules.projectapi.nb</code-name-base>
                         <compile-dependency/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.openide.util.ui.svg</code-name-base>
+                        <recursive/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.maven</code-name-base>
+                        <recursive/>
                     </test-dependency>
                 </test-type>
             </test-dependencies>

@@ -21,6 +21,7 @@ package org.netbeans.api.project;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +30,10 @@ import org.netbeans.api.annotations.common.CheckForNull;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.modules.projectapi.SPIAccessor;
 import org.netbeans.modules.projectapi.SimpleFileOwnerQueryImplementation;
+import org.netbeans.spi.project.ActionProvider;
 import org.netbeans.spi.project.FileOwnerQueryImplementation;
+import org.netbeans.spi.project.LookupMerger;
+import org.netbeans.spi.project.LookupProvider;
 import org.netbeans.spi.project.ProjectFactory;
 import org.netbeans.spi.project.ProjectManagerImplementation;
 import org.openide.filesystems.FileObject;
@@ -108,10 +112,12 @@ public final class ProjectManager {
     }
         
     /**
-     * Find an open project corresponding to a given project directory.
-     * Will be created in memory if necessary.
+     * Finds a project corresponding to a given directory, if there is any.
+     * If the directory <em>is not recognized</em>, then a {@code null} is
+     * returned. If the directory is recognized, but there is no instance
+     * of a {@link Project} representing it, a new project is created.
      * <p>
-     * Acquires read access.
+     * Acquires {@link #mutex() read access}.
      * </p>
      * <p>
      * It is <em>not</em> guaranteed that the returned instance will be identical
@@ -125,7 +131,7 @@ public final class ProjectManager {
      * </p>
      * @param projectDirectory the project top directory
      * @return the project (object identity may or may not vary between calls)
-     *         or null if the directory is not recognized as a project by any
+     *         or {@code null} if the directory is not recognized as a project by any
      *         registered {@link ProjectFactory}
      *         (might be null even if {@link #isProject} returns true)
      * @throws IOException if the project was recognized but could not be loaded
@@ -139,7 +145,53 @@ public final class ProjectManager {
         if (!projectDirectory.isFolder()) {
             throw new IllegalArgumentException("Attempted to pass a non-directory to findProject: " + projectDirectory); // NOI18N
         }
-        return impl.findProject(projectDirectory);
+        return impl.findProject(projectDirectory, ProjectManagerImplementation.FindOptions.DEFAULT);
+    }
+
+    /** Finds a project corresponding to the given directory. This method behaves
+     * exactly as {@link #findProject}, just instead of {@code null} it returns
+     * the <em>fallback project</em> - e.g. if the directory isn't recognized as a project,
+     * a <em>fallback project</em> is created and registered with the directory.
+     *
+     * <h2>Fallback Project</h2>
+     * <p>
+     * The <em>fallback project</em> is dummy representation of a folder on
+     * disk, but it can be extended via {@link LookupMerger} mechanism. The
+     * project uses {@code org-netbeans-modules-project-fallback} ID.
+     * </p>
+     * <p>
+     * For example its {@link Project#getLookup()} can be extended by registering
+     * instance of {@link LookupProvider} into
+     * {@code Projects/org-netbeans-modules-project-fallback/Lookup}
+     * configuration directory. Either via {@code layer.xml}, or annotations
+     * that generate the layer like
+     * </p>
+     * <pre>
+     * @ProjectServiceProvider(service = LookupProvider.class, projectTypes = {
+     *   @LookupProvider.Registration.ProjectType(id = "org-netbeans-modules-project-fallback", position = 11000)
+     * })
+     * </pre>
+     * <p>
+     * It is also possible to register {@link ActionProvider} via such a lookup.
+     * </p>
+     * 
+     * @param projectDirectory the project top directory
+     * @return the project (object identity may or may not vary between calls)
+     * @throws IOException if the project was recognized but could not be loaded
+     * @throws IllegalArgumentException if the supplied file object is null or not a folder
+     * @since 1.111
+     */
+    @NonNull
+    public Project findProjectOrFallback(@NonNull FileObject projectDirectory) throws IOException, IllegalArgumentException {
+        if (projectDirectory == null) {
+            throw new IllegalArgumentException("Attempted to pass a null directory to findProject"); // NOI18N
+        }
+        if (!projectDirectory.isFolder()) {
+            throw new IllegalArgumentException("Attempted to pass a non-directory to findProject: " + projectDirectory); // NOI18N
+        }
+        Project prj = impl.findProject(projectDirectory, ProjectManagerImplementation.FindOptions.WITH_FALLBACK);
+        Objects.requireNonNull(prj, "Must create a fallback project"); // NOI18N
+        return prj;
     }
         
     

@@ -90,7 +90,7 @@ public final class NbProjectManager implements ProjectManagerImplementation {
             }
         });
     }
-    
+
     private static enum LoadStatus {
         /**
          * Marker for a directory which is known to not be a project.
@@ -212,6 +212,17 @@ public final class NbProjectManager implements ProjectManagerImplementation {
      */
     @Override
     public Project findProject(final FileObject projectDirectory) throws IOException, IllegalArgumentException {
+        return findProjectImpl(projectDirectory, false);
+    }
+
+    @Override
+    public Project findProject(FileObject projectDirectory, FindOptions options) throws IOException, IllegalArgumentException {
+        var found = findProjectImpl(projectDirectory, options.isFallbackAllowed());
+        assert !options.isFallbackAllowed() || found != null;
+        return found;
+    }
+
+    private Project findProjectImpl(FileObject projectDirectory, boolean fallback) throws IOException, IllegalArgumentException {
         Parameters.notNull("projectDirectory", projectDirectory);   //NOI18N
         try {
             return getMutex().readAccess(new Mutex.ExceptionAction<Project>() {
@@ -250,11 +261,17 @@ public final class NbProjectManager implements ProjectManagerImplementation {
                         assert !LoadStatus.LOADING_PROJECT.is(o);
                         wasSomeSuchProject = LoadStatus.SOME_SUCH_PROJECT.is(o);
                         if (LoadStatus.NO_SUCH_PROJECT.is(o)) {
-                            if (LOG.isLoggable(Level.FINE)) {
-                                LOG.log(Level.FINE, "findProject({0}) in {1}: NO_SUCH_PROJECT", new Object[] {projectDirectory, Thread.currentThread().getName()});
+                            if (fallback) {
+                                // treat a not checked project yet
+                                o = null;
+                            } else {
+                                if (LOG.isLoggable(Level.FINE)) {
+                                    LOG.log(Level.FINE, "findProject({0}) in {1}: NO_SUCH_PROJECT", new Object[]{projectDirectory, Thread.currentThread().getName()});
+                                }
+                                return null;
                             }
-                            return null;
-                        } else if (o != null && !LoadStatus.SOME_SUCH_PROJECT.is(o)) {
+                        }
+                        if (o != null && !LoadStatus.SOME_SUCH_PROJECT.is(o)) {
                             Project p = o.first().get();
                             if (p != null) {
                                 if (LOG.isLoggable(Level.FINE)) {
@@ -285,7 +302,7 @@ public final class NbProjectManager implements ProjectManagerImplementation {
                     }
                     boolean resetLP = false;
                     try {
-                        Project p = createProject(projectDirectory);
+                        Project p = createProject(projectDirectory, fallback);
                         //Thread.dumpStack();
                         synchronized (dir2Proj) {
                             dir2Proj.notifyAll();
@@ -366,7 +383,7 @@ public final class NbProjectManager implements ProjectManagerImplementation {
      * @return a project made from it, or null if it is not recognized
      * @throws IOException if there was a problem loading the project
      */
-    private Project createProject(FileObject dir) throws IOException {
+    private Project createProject(FileObject dir, boolean fallback) throws IOException {
         assert dir != null;
         assert dir.isFolder();
         assert getMutex().isReadAccess();
@@ -384,7 +401,16 @@ public final class NbProjectManager implements ProjectManagerImplementation {
                 return p;
             }
         }
-        return null;
+        if (fallback) {
+            FallbackProject p = new FallbackProject(dir, state);
+            proj2Factory.put(p, null);
+            state.attach(p);
+            // need to clear ownership caches
+            callBack.notifyDeleted(p);
+            return p;
+        } else {
+            return null;
+        }
     }
     
 
@@ -415,7 +441,12 @@ public final class NbProjectManager implements ProjectManagerImplementation {
                     if (LoadStatus.NO_SUCH_PROJECT.is(o)) {
                         return null;
                     } else if (o != null) {
-                        // Reference<Project> or SOME_SUCH_PROJECT
+                        if (o.hasFirst() && o.first().get() instanceof Project existingProject) {
+                            // Reference<Project>
+                            ProjectInformation info = ProjectUtils.getInformation(existingProject);
+                            return new Result(info.getIcon());
+                        }
+                        // SOME_SUCH_PROJECT
                         // rather check for result than load project and lookup projectInformation for icon.
                         return checkForProject(projectDirectory);
                     }
@@ -459,7 +490,7 @@ public final class NbProjectManager implements ProjectManagerImplementation {
     private Result checkForProject(FileObject dir) {
         assert dir != null;
         assert dir.isFolder() : dir;
-        assert getMutex().isReadAccess();
+        assert getMutex().isReadAccess() || getMutex().isWriteAccess();
         Iterator<? extends ProjectFactory> it = factories.allInstances().iterator();
         while (it.hasNext()) {
             ProjectFactory factory = it.next();
@@ -489,11 +520,30 @@ public final class NbProjectManager implements ProjectManagerImplementation {
                 LoadStatus.NO_SUCH_PROJECT.wrap(),
                 LoadStatus.SOME_SUCH_PROJECT.wrap(),
             }));
-            // XXX remove everything too? but then e.g. AntProjectFactorySingleton
-            // will stay while its delegates are changed, which does no good
-            // XXX should there be any way to signal that a particular
-            // folder should be "reloaded" by a new factory?
         }
+        MUTEX.postWriteRequest(() -> {
+            synchronized (dir2Proj) {
+                // check if FallbackProject is still needed
+
+                Iterator<Map.Entry<FileObject, Union2<Reference<Project>, LoadStatus>>> it = dir2Proj.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<FileObject, Union2<Reference<Project>, LoadStatus>> entry = it.next();
+                    if (entry.getValue().hasFirst() && entry.getValue().first().get() instanceof FallbackProject fallback) {
+                        Result result = checkForProject(fallback.getProjectDirectory());
+                        if (result != null) {
+                            it.remove();
+                            proj2Factory.remove(fallback);
+                            fallback.notifyDeleted();
+                        }
+                    }
+                }
+            }
+        });
+
+        // XXX remove everything too? but then e.g. AntProjectFactorySingleton
+        // will stay while its delegates are changed, which does no good
+        // XXX should there be any way to signal that a particular
+        // folder should be "reloaded" by a new factory?
     }
     
     private final class ProjectStateImpl implements ProjectState {

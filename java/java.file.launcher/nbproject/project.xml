@@ -299,6 +299,14 @@
                         <code-name-base>org.netbeans.modules.projectapi.nb</code-name-base>
                         <compile-dependency/>
                     </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.openide.util.ui.svg</code-name-base>
+                        <recursive/>
+                    </test-dependency>
+                    <test-dependency>
+                        <code-name-base>org.netbeans.modules.maven</code-name-base>
+                        <recursive/>
+                    </test-dependency>
                 </test-type>
             </test-dependencies>
             <friend-packages>

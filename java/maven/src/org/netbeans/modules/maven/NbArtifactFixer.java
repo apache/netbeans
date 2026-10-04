@@ -90,6 +90,7 @@ public class NbArtifactFixer implements ArtifactFixer {
                 if (pom != null) {
                     //instead of workarounds down the road, we set the artifact's file here.
                     // some stacktraces to maven/aether do set it after querying our code, but some don't for reasons unknown to me.
+                    // TODO Artifact is copy on write -> this isn't doing anything!
                     artifact.setFile(pom);
                     return pom;
                 }
@@ -107,6 +108,7 @@ public class NbArtifactFixer implements ArtifactFixer {
             File f = createFallbackPOM(artifact.getGroupId(), artifact.getArtifactId(), artifact.getVersion());
             //instead of workarounds down the road, we set the artifact's file here.
             // some stacktraces to maven/aether do set it after querying our code, but some don't for reasons unknown to me.
+            // TODO Artifact is copy on write -> this isn't doing anything!
             artifact.setFile(f);
             Set<Artifact> s = CAPTURE_PLACEHOLDER_ARTIFACTS.get();
             if (s != null) {

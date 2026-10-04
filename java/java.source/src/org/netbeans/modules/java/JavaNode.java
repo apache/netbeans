@@ -64,6 +64,7 @@ import org.netbeans.api.java.source.CompilationController;
 import org.netbeans.api.java.source.JavaSource;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.queries.FileBuiltQuery;
 import org.netbeans.api.queries.FileBuiltQuery.Status;
 import org.netbeans.modules.classfile.Access;
@@ -242,7 +243,7 @@ public final class JavaNode extends DataNode implements ChangeListener {
         Project parentProject = FileOwnerQuery.getOwner(super.getDataObject().getPrimaryFile());
         DataObject dObj = super.getDataObject();
         // If any of the parent folders is a project, user won't have the option to specify these attributes to the java files.
-        if (parentProject == null) {
+        if (parentProject == null || ProjectUtils.getSources(parentProject).getSourceGroups("java").length == 0) {
             Sheet.Set ss = new Sheet.Set();
             ss.setName("runFileArguments"); // NOI18N
             ss.setDisplayName(getMessage(JavaNode.class, "LBL_JavaNode_without_project_run")); // NOI18N

@@ -101,6 +101,8 @@ import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.impl.VersionResolver;
 import org.eclipse.aether.internal.impl.EnhancedLocalRepositoryManagerFactory;
+import org.eclipse.aether.internal.impl.collect.bf.BfDependencyCollector;
+import org.eclipse.aether.internal.impl.session.DefaultCloseableSession;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.NoLocalRepositoryManagerException;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
@@ -253,7 +255,16 @@ public final class MavenEmbedder {
             ProjectBuildingRequest configuration = req.getProjectBuildingRequest();
             configuration.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL);
             configuration.setResolveDependencies(true);
-            configuration.setRepositorySession(maven.newRepositorySession(req));
+            
+            RepositorySystemSession session = maven.newRepositorySession(req);
+            
+            // TODO this forces single threaded dependency collection since NbArtifactFixer heavily
+            // uses ThreadLocals and doesn't expect the thread to change between collectPlaceholderArtifacts() and resolve()
+            DefaultRepositorySystemSession mutable = new DefaultRepositorySystemSession(session);
+            mutable.setConfigProperty(BfDependencyCollector.CONFIG_PROP_THREADS, 1);
+            configuration.setRepositorySession(mutable);
+            // end
+            
             ProjectBuildingResult projectBuildingResult = projectBuilder.build(pomFile, configuration);
             result.setProject(projectBuildingResult.getProject());
             result.setDependencyResolutionResult(projectBuildingResult.getDependencyResolutionResult());

@@ -91,6 +91,23 @@ public final class SingleSourceFileUtil {
         return true;
     }
 
+    /**
+     * Find a Java-like project that owns the file.
+     *
+     * @param file the file to find project for
+     * @return the project (if it has some Java sources) or {@code null} otherwise
+     */
+    public static Project findJavaOwner(FileObject file) {
+        Project owner = FileOwnerQuery.getOwner(file);
+        if (owner != null) {
+            SourceGroup[] javaSources = ProjectUtils.getSources(owner).getSourceGroups("java"); // NOI18N
+            if (javaSources.length > 0) {
+                return owner;
+            }
+        }
+        return null;
+    }
+
     public static boolean isSupportedFile(FileObject file) {
         if (file == null) {
             return false;
@@ -101,13 +118,10 @@ public final class SingleSourceFileUtil {
             if (MultiSourceRootProvider.DISABLE_MULTI_SOURCE_ROOT) {
                 return false;
             }
-            Project owner = FileOwnerQuery.getOwner(file);
+            Project owner = findJavaOwner(file);
             if (owner != null) {
-                SourceGroup[] javaSources = ProjectUtils.getSources(owner).getSourceGroups("java"); // NOI18N
-                if (javaSources.length > 0) {
-                    // no Single Java file support in Java projects
-                    return false;
-                }
+                // no Single Java file support in Java projects
+                return false;
             }
             return !file.getFileSystem().isReadOnly()
                     && !(dirFile != null

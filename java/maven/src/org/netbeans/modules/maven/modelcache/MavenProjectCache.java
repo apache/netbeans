@@ -109,17 +109,14 @@ public final class MavenProjectCache {
     private static final String ATTR_IGNORE_ON_LOAD = "ignoreOnModelLoad"; // NOI18N
     
     //File is referenced during lifetime of the Project. FileObject cannot be used as with rename it changes value@!!!
-    private static final Map<File, WeakReference<MavenProject>> file2Project = new WeakHashMap<File, WeakReference<MavenProject>>();
-    private static final Map<File, Mutex> file2Mutex = new WeakHashMap<File, Mutex>();
+    private static final Map<File, WeakReference<MavenProject>> file2Project = new WeakHashMap<>();
+    private static final Map<File, Mutex> file2Mutex = new WeakHashMap<>();
     
     public static void clearMavenProject(final File pomFile) {
         Mutex mutex = getMutex(pomFile);
-        mutex.writeAccess(new Action<MavenProject>() {
-            @Override
-            public MavenProject run() {
-                file2Project.remove(pomFile);
-                return null;
-            }
+        mutex.writeAccess(() -> {
+            file2Project.remove(pomFile);
+            return null;
         });
     }
     
@@ -152,7 +149,7 @@ public final class MavenProjectCache {
                     }
                 }
                 MavenProject mp = loadOriginalMavenProject(pomFile);
-                file2Project.put(pomFile, new WeakReference<MavenProject>(mp));
+                file2Project.put(pomFile, new WeakReference<>(mp));
                 return mp;
             }
         });
@@ -196,9 +193,10 @@ public final class MavenProjectCache {
      * @param p project
      * @return set of placeholder artifacts.
      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static Collection<Artifact> getPlaceholderArtifacts(MavenProject p) {
         Object o = p.getContextValue(CONTEXT_PLACEHOLDER_ARTIFACTS);
-        return o instanceof Collection ? (Collection)o : Collections.emptySet();
+        return o instanceof Collection c ? c : Collections.emptySet();
     }
     
     /**
@@ -206,6 +204,7 @@ public final class MavenProjectCache {
      * @param project
      * @return 
      */
+    @SuppressWarnings("unchecked")
     public static Collection<String> getUnknownBuildParticipantsClassNames(MavenProject project) {
         return (Collection<String>) project.getContextValue(CONTEXT_PARTICIPANTS);
     }
@@ -235,11 +234,16 @@ public final class MavenProjectCache {
         long startLoading = System.currentTimeMillis();
         
         try {
-            res = NbArtifactFixer.collectPlaceholderArtifacts(() -> projectEmbedder.readProjectWithDependencies(req, true), (c) -> 
-                c.forEach(a -> {
-                    // artifact fixer only injects POMs.
-                    placeholders.add(projectEmbedder.createArtifactWithClassifier(a.getGroupId(), a.getArtifactId(), a.getVersion(), a.getExtension(), a.getClassifier())); // NOI18N
-                }
+            res = NbArtifactFixer.collectPlaceholderArtifacts(
+                    () -> projectEmbedder.readProjectWithDependencies(req, true),
+                    set -> set.forEach(a -> {
+                        // artifact fixer only injects POMs.
+                        placeholders.add(
+                                projectEmbedder.createArtifactWithClassifier(
+                                        a.getGroupId(), a.getArtifactId(), a.getVersion(), a.getExtension(), a.getClassifier()
+                                )
+                        );
+                    }
             ));
             newproject = res.getProject();
             
@@ -346,8 +350,8 @@ public final class MavenProjectCache {
         active = config.getActiveConfiguration();
         if (ctx != null && ctx.getConfiguration() != null) {
             ProjectConfiguration cfg = ctx.getConfiguration();
-            if (cfg instanceof M2Configuration) {
-                active = (M2Configuration)cfg;
+            if (cfg instanceof M2Configuration m2c) {
+                active = m2c;
             }
         }
         
@@ -464,14 +468,11 @@ public final class MavenProjectCache {
         MavenProject partial = null;
         
         for (Throwable t : result.getExceptions()) {
-            if (t instanceof ProjectBuildingException) {
-                ProjectBuildingException pbe = (ProjectBuildingException)t;
-                if (pbe.getResults() != null) {
-                    for (ProjectBuildingResult res : pbe.getResults()) {
-                        if (projectFile.equals(res.getPomFile())) {
-                            partial = res.getProject();
-                            break;
-                        }
+            if (t instanceof ProjectBuildingException pbe && pbe.getResults() != null) {
+                for (ProjectBuildingResult res : pbe.getResults()) {
+                    if (projectFile.equals(res.getPomFile())) {
+                        partial = res.getProject();
+                        break;
                     }
                 }
             }
@@ -515,8 +516,8 @@ public final class MavenProjectCache {
     
     public static MavenProject getPartialProject(MavenProject prj) {
         Object o = prj.getContextValue(CONTEXT_PARTIAL_PROJECT);
-        if (o instanceof MavenProject) {
-            return (MavenProject)o;
+        if (o instanceof MavenProject mavenProject) {
+            return mavenProject;
         } else {
             return null;
         }

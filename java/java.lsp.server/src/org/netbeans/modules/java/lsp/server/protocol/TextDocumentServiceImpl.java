@@ -2149,12 +2149,12 @@ public class TextDocumentServiceImpl implements TextDocumentService, LanguageCli
                 Document originalDoc = server.getOpenedDocuments().getDocument(uri);
                 long originalVersion = documentVersion(originalDoc);
                 AtomicReference<Document> docHolder = new AtomicReference<>(originalDoc);
-                List<Diagnostic> result = Collections.emptyList();
+                List<Diagnostic> result = new ArrayList<>();
                 if (types.contains(ErrorProvider.Kind.ERRORS)) {
-                    result = computeDiags(uri, -1, ErrorProvider.Kind.ERRORS, originalVersion, docHolder);
+                    result.addAll(computeDiags(uri, -1, ErrorProvider.Kind.ERRORS, originalVersion, docHolder));
                 }
                 if (types.contains(ErrorProvider.Kind.HINTS)) {
-                    result = computeDiags(uri, -1, ErrorProvider.Kind.HINTS, originalVersion, docHolder);
+                    result.addAll(computeDiags(uri, -1, ErrorProvider.Kind.HINTS, originalVersion, docHolder));
                 }
                 r.complete(result);
             } catch (ThreadDeath td) {

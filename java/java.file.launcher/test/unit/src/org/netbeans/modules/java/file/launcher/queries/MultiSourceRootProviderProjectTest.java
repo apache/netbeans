@@ -18,30 +18,19 @@
  */
 package org.netbeans.modules.java.file.launcher.queries;
 
-import org.netbeans.modules.java.file.launcher.actions.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import static junit.framework.TestCase.assertEquals;
-import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
-import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
-/**
- *
- * @author Sarvesh Kesharwani
- */
 public class MultiSourceRootProviderProjectTest extends NbTestCase {
 
     private FileObject javaFO;
@@ -53,8 +42,10 @@ public class MultiSourceRootProviderProjectTest extends NbTestCase {
     @Override
     protected void setUp() throws Exception {
         clearWorkDir();
-        File f1 = new File(getWorkDir(), "TestSingleJavaFile.java");
-        try (FileWriter w = new FileWriter(f1)) {
+        FileObject root = FileUtil.toFileObject(getWorkDir());
+        root.setAttribute("fallback", true);
+        javaFO = root.createData("TestSingleJavaFile.java");
+        try (var w = new OutputStreamWriter(javaFO.getOutputStream())) {
             w.write(
                     """
                 public class TestSingleJavaFile {
@@ -65,11 +56,9 @@ public class MultiSourceRootProviderProjectTest extends NbTestCase {
                 """
             );
         }
-        javaFO = FileUtil.toFileObject(f1);
-        assertNotNull("FileObject found: " + f1, javaFO);
     }
 
-    public void testSingleFileRunAvailableInNoProject() throws Exception {
+    public void testMultiSourceRootInNoProject() throws Exception {
         FileObject fallbackDir = FileUtil.toFileObject(getWorkDir());
 
         Lookup lkp = Lookups.fixed(javaFO);
@@ -80,9 +69,9 @@ public class MultiSourceRootProviderProjectTest extends NbTestCase {
         assertTrue("Path contains", path.contains(javaFO));
     }
 
-    public void testSingleFileRunAvailableInFallbackProject() throws Exception {
+    public void testMultiSourceRootInFallbackProject() throws Exception {
         FileObject fallbackDir = FileUtil.toFileObject(getWorkDir());
-        Project fallback = ProjectManager.getDefault().findProjectOrFallback(fallbackDir);
+        Project fallback = ProjectManager.getDefault().findProject(fallbackDir);
         assertNotNull("Fallback project found", fallback);
         final SourceGroup[] srcGroups = ProjectUtils.getSources(fallback).getSourceGroups("java");
         assertEquals("No Java sources in there", 0, srcGroups.length);
@@ -93,7 +82,7 @@ public class MultiSourceRootProviderProjectTest extends NbTestCase {
         assertTrue("Path contains", path.contains(javaFO));
     }
 
-    public void testSingleFileRunDisableInAMavenProject() throws Exception {
+    public void testMultiSourceRootInAMavenProject() throws Exception {
         FileObject mavenDir = FileUtil.toFileObject(getWorkDir());
         FileObject pom = mavenDir.createData("pom.xml");
         try (var os = pom.getOutputStream()) {

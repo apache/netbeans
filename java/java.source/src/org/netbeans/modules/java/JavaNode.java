@@ -242,8 +242,9 @@ public final class JavaNode extends DataNode implements ChangeListener {
         // "single-file" java programs
         Project parentProject = FileOwnerQuery.getOwner(super.getDataObject().getPrimaryFile());
         DataObject dObj = super.getDataObject();
-        // If any of the parent folders is a project, user won't have the option to specify these attributes to the java files.
         if (parentProject == null || ProjectUtils.getSources(parentProject).getSourceGroups("java").length == 0) {
+            // only provide thise java.filelauncher project properties
+            // when the file is non in a Java-like project
             Sheet.Set ss = new Sheet.Set();
             ss.setName("runFileArguments"); // NOI18N
             ss.setDisplayName(getMessage(JavaNode.class, "LBL_JavaNode_without_project_run")); // NOI18N

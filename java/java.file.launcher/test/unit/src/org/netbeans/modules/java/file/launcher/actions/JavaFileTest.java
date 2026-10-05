@@ -19,9 +19,8 @@
 package org.netbeans.modules.java.file.launcher.actions;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import static junit.framework.TestCase.assertEquals;
 import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
 import org.netbeans.api.project.Project;
@@ -51,8 +50,10 @@ public class JavaFileTest extends NbTestCase {
     @Override
     protected void setUp() throws Exception {
         clearWorkDir();
-        File f1 = new File(getWorkDir(), "TestSingleJavaFile.java");
-        try (FileWriter w = new FileWriter(f1)) {
+        FileObject root = FileUtil.toFileObject(getWorkDir());
+        root.setAttribute("fallback", true);
+        javaFO = root.createData("TestSingleJavaFile.java");
+        try (var w = new OutputStreamWriter(javaFO.getOutputStream())) {
             w.write(
                     """
                 public class TestSingleJavaFile {
@@ -63,8 +64,6 @@ public class JavaFileTest extends NbTestCase {
                 """
             );
         }
-        javaFO = FileUtil.toFileObject(f1);
-        assertNotNull("FileObject found: " + f1, javaFO);
     }
 
 
@@ -108,7 +107,7 @@ public class JavaFileTest extends NbTestCase {
 
     public void testSingleFileRunAvailableInFallbackProject() throws Exception {
         FileObject fallbackDir = FileUtil.toFileObject(getWorkDir());
-        Project fallback = ProjectManager.getDefault().findProjectOrFallback(fallbackDir);
+        Project fallback = ProjectManager.getDefault().findProject(fallbackDir);
         assertNotNull("Fallback project found", fallback);
         final SourceGroup[] srcGroups = ProjectUtils.getSources(fallback).getSourceGroups("java");
         assertEquals("No Java sources in there", 0, srcGroups.length);

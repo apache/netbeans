@@ -2181,7 +2181,7 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
         
         <taskdef uri="antlib:org.apache.rat.anttasks" resource="org/apache/rat/anttasks/antlib.xml">
             <classpath>
-                <pathelement location="external/apache-rat-0.15.jar"/>
+                <pathelement location="external/apache-rat-0.18.jar"/>
             </classpath>
         </taskdef>
         
@@ -2192,22 +2192,10 @@ It is possible to use -Ddebug.port=3234 -Ddebug.pause=y to start the system in d
             <excludesfile name="build/rat-exclusions-licenseinfo.txt" />
         </fileset>
         
-        <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" reportfile="build/rat-report.txt">
-            <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
-                Licensed to the Apache Software Foundation (ASF) under one or more contributor 
-                license agreements; and to You under the Apache License, Version 2.0.
-            </rat:fullTextMatcher>
-            <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
-
+        <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" outputStyle="plain-rat" outputfile="nbbuild/build/rat-report.txt">
             <resources refid="rat.files" />
         </rat:report>
-        <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" format="xml" reportfile="build/rat-report.xml">
-            <rat:fullTextMatcher licenseFamilyCategory="AL" licenseFamilyName="Apache License 2.0 Short header">
-                Licensed to the Apache Software Foundation (ASF) under one or more contributor
-                license agreements; and to You under the Apache License, Version 2.0.
-            </rat:fullTextMatcher>
-            <rat:approvedLicense familyName="Apache License 2.0 Short header"/>
-
+        <rat:report xmlns:rat="antlib:org.apache.rat.anttasks" outputStyle="xml" outputfile="nbbuild/build/rat-report.xml">
             <resources refid="rat.files" />
         </rat:report>
         <taskdef name="rattotest" classname="org.netbeans.nbbuild.RatReportTask" classpath="${build.ant.classes.dir}"/>

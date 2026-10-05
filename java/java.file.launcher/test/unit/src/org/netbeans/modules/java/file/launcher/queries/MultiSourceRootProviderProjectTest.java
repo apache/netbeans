@@ -16,34 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.netbeans.modules.java.file.launcher.actions;
+package org.netbeans.modules.java.file.launcher.queries;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import static junit.framework.TestCase.assertEquals;
-import org.netbeans.api.extexecution.base.ExplicitProcessParameters;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.project.SourceGroup;
 import org.netbeans.junit.NbTestCase;
-import org.netbeans.modules.java.file.launcher.SingleSourceFileUtil;
-import org.netbeans.spi.project.ActionProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
 
-/**
- *
- * @author Sarvesh Kesharwani
- */
-public class JavaFileTest extends NbTestCase {
+public class MultiSourceRootProviderProjectTest extends NbTestCase {
 
     private FileObject javaFO;
 
-    public JavaFileTest(String name) {
+    public MultiSourceRootProviderProjectTest(String name) {
         super(name);
     }
 
@@ -66,62 +58,31 @@ public class JavaFileTest extends NbTestCase {
         }
     }
 
-
-
-    public void testSingleJavaSourceRun() throws Exception {
-        SingleJavaSourceRunActionProvider runActionProvider = new SingleJavaSourceRunActionProvider();
-        LaunchProcess process = runActionProvider.invokeActionHelper("run.single", javaFO, ExplicitProcessParameters.empty());
-        BufferedReader reader
-                = new BufferedReader(new InputStreamReader(process.call().getInputStream()));
-        StringBuilder builder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            builder.append(line);
-        }
-        String result = builder.toString();
-        assertEquals("hello world", result);
-        FileObject[] siblings = javaFO.getParent().getChildren();
-        if (isJDK11OrNewer()) {
-            assertEquals("No other sibling", 1, siblings.length);
-            assertEquals(javaFO, siblings[0]);
-        } else {
-            assertEquals("One other sibling created", 2, siblings.length);
-            if (javaFO.equals(siblings[0])) {
-                assertEquals("TestSingleJavaFile.class", siblings[1].getNameExt());
-            } else {
-                assertEquals("TestSingleJavaFile.class", siblings[0].getNameExt());
-            }
-        }
-    }
-    public void testSingleFileRunAvailableInNoProject() throws Exception {
+    public void testMultiSourceRootInNoProject() throws Exception {
         FileObject fallbackDir = FileUtil.toFileObject(getWorkDir());
 
         Lookup lkp = Lookups.fixed(javaFO);
 
-        SingleJavaSourceRunActionProvider ap = new SingleJavaSourceRunActionProvider();
-        boolean runEnabled = ap.isActionEnabled(ActionProvider.COMMAND_RUN_SINGLE, lkp);
-        assertTrue("Run is enabled in Java-less project", runEnabled);
-        boolean debugEnabled = ap.isActionEnabled(ActionProvider.COMMAND_DEBUG_SINGLE, lkp);
-        assertTrue("Run is enabled in Java-less project", debugEnabled);
+        var provider = new MultiSourceRootProvider();
+        ClassPath path = provider.findClassPath(javaFO, ClassPath.SOURCE);
+        assertNotNull("Path found", path);
+        assertTrue("Path contains", path.contains(javaFO));
     }
 
-    public void testSingleFileRunAvailableInFallbackProject() throws Exception {
+    public void testMultiSourceRootInFallbackProject() throws Exception {
         FileObject fallbackDir = FileUtil.toFileObject(getWorkDir());
         Project fallback = ProjectManager.getDefault().findProject(fallbackDir);
         assertNotNull("Fallback project found", fallback);
         final SourceGroup[] srcGroups = ProjectUtils.getSources(fallback).getSourceGroups("java");
         assertEquals("No Java sources in there", 0, srcGroups.length);
 
-        Lookup lkp = Lookups.fixed(javaFO);
-
-        SingleJavaSourceRunActionProvider ap = new SingleJavaSourceRunActionProvider();
-        boolean runEnabled = ap.isActionEnabled(ActionProvider.COMMAND_RUN_SINGLE, lkp);
-        assertTrue("Run is enabled in Java-less project", runEnabled);
-        boolean debugEnabled = ap.isActionEnabled(ActionProvider.COMMAND_DEBUG_SINGLE, lkp);
-        assertTrue("Run is enabled in Java-less project", debugEnabled);
+        var provider = new MultiSourceRootProvider();
+        ClassPath path = provider.findClassPath(javaFO, ClassPath.SOURCE);
+        assertNotNull("Path found", path);
+        assertTrue("Path contains", path.contains(javaFO));
     }
 
-    public void testSingleFileRunDisableInAMavenProject() throws Exception {
+    public void testMultiSourceRootInAMavenProject() throws Exception {
         FileObject mavenDir = FileUtil.toFileObject(getWorkDir());
         FileObject pom = mavenDir.createData("pom.xml");
         try (var os = pom.getOutputStream()) {
@@ -141,16 +102,8 @@ public class JavaFileTest extends NbTestCase {
         assertEquals("It has sources", 1, srcGroups.length);
         assertTrue("Empty.java belongs in there", srcGroups[0].contains(emptyJava));
 
-        Lookup lkp = Lookups.fixed(javaFO);
-
-        SingleJavaSourceRunActionProvider ap = new SingleJavaSourceRunActionProvider();
-        boolean runEnabled = ap.isActionEnabled(ActionProvider.COMMAND_RUN_SINGLE, lkp);
-        assertFalse("Single File Run is disabled in Java project", runEnabled);
-        boolean debugEnabled = ap.isActionEnabled(ActionProvider.COMMAND_DEBUG_SINGLE, lkp);
-        assertFalse("Single File Debug is disabled in Java project", debugEnabled);
-    }
-
-    private boolean isJDK11OrNewer() {
-        return SingleSourceFileUtil.findJavaVersion() >= 11;
+        var provider = new MultiSourceRootProvider();
+        ClassPath path = provider.findClassPath(javaFO, ClassPath.SOURCE);
+        assertNull("No Path for maven project", path);
     }
 }

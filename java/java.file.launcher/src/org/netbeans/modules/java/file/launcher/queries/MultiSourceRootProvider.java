@@ -489,7 +489,7 @@ public class MultiSourceRootProvider implements ClassPathProvider {
         private final URL[] roots;
         private final AtomicReference<String> lastCheckedAsIncluded = new AtomicReference<>();
 
-        public RootPathResourceImplementation(FileObject root) {
+        RootPathResourceImplementation(FileObject root) {
             this.root = root.toURL();
             this.roots = new URL[] {this.root};
         }
@@ -507,7 +507,7 @@ public class MultiSourceRootProvider implements ClassPathProvider {
             }
             FileObject fo = URLMapper.findFileObject(root);
             fo = fo != null ? fo.getFileObject(resource) : null;
-            boolean included = fo == null || FileOwnerQuery.getOwner(fo) == null;
+            boolean included = fo == null || SingleSourceFileUtil.findJavaOwner(fo) == null;
             if (included) {
                 lastCheckedAsIncluded.set(resource);
             }

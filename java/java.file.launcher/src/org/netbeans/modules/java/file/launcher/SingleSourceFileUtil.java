@@ -33,6 +33,9 @@ import javax.swing.event.ChangeListener;
 import org.netbeans.api.java.platform.JavaPlatform;
 import org.netbeans.api.java.platform.JavaPlatformManager;
 import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectUtils;
+import org.netbeans.api.project.SourceGroup;
 import org.netbeans.modules.java.file.launcher.queries.MultiSourceRootProvider;
 import org.netbeans.modules.java.file.launcher.spi.SingleFileOptionsQueryImplementation;
 import org.netbeans.spi.java.queries.CompilerOptionsQueryImplementation;
@@ -88,6 +91,23 @@ public final class SingleSourceFileUtil {
         return true;
     }
 
+    /**
+     * Find a Java-like project that owns the file.
+     *
+     * @param file the file to find project for
+     * @return the project (if it has some Java sources) or {@code null} otherwise
+     */
+    public static Project findJavaOwner(FileObject file) {
+        Project owner = FileOwnerQuery.getOwner(file);
+        if (owner != null) {
+            SourceGroup[] javaSources = ProjectUtils.getSources(owner).getSourceGroups("java"); // NOI18N
+            if (javaSources.length > 0) {
+                return owner;
+            }
+        }
+        return null;
+    }
+
     public static boolean isSupportedFile(FileObject file) {
         if (file == null) {
             return false;
@@ -95,9 +115,15 @@ public final class SingleSourceFileUtil {
         try {
             FileObject dir = file.getParent();
             File dirFile = dir != null ? FileUtil.toFile(dir) : null;
-            return !MultiSourceRootProvider.DISABLE_MULTI_SOURCE_ROOT
-                    && FileOwnerQuery.getOwner(file) == null
-                    && !file.getFileSystem().isReadOnly()
+            if (MultiSourceRootProvider.DISABLE_MULTI_SOURCE_ROOT) {
+                return false;
+            }
+            Project owner = findJavaOwner(file);
+            if (owner != null) {
+                // no Single Java file support in Java projects
+                return false;
+            }
+            return !file.getFileSystem().isReadOnly()
                     && !(dirFile != null
                     && dirFile.getName().startsWith("vcs-")
                     && dirFile.getAbsolutePath().startsWith(System.getProperty("java.io.tmpdir")));

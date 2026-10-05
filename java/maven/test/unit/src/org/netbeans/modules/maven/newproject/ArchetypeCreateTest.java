@@ -49,11 +49,13 @@ public final class ArchetypeCreateTest extends NbTestCase {
 
         final FileObject template = root.createData("template.txt");
         try (OutputStream os = template.getOutputStream()) {
-            os.write(("\n"
-                    + "archetypeArtifactId=maven-archetype-quickstart\n"
-                    + "archetypeGroupId=org.apache.maven.archetypes\n"
-                    + "archetypeVersion=1.4\n"
-                    + "\n").getBytes(StandardCharsets.UTF_8));
+            os.write(
+                """
+                archetypeArtifactId=maven-archetype-quickstart
+                archetypeGroupId=org.apache.maven.archetypes
+                archetypeVersion=1.4
+                """.getBytes(StandardCharsets.UTF_8)
+            );
         }
 
         final FileObject targetFolder = root.createFolder("targetFolder");

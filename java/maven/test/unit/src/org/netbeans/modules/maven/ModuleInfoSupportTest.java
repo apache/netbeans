@@ -71,10 +71,12 @@ public class ModuleInfoSupportTest extends NbTestCase {
                 "module test.dummy2x {}"
         );
         FileObject moduleInfo = TestFileUtils.writeFile(workDir, "module-info.java",
-                "module Mavenproject {"
-                + "    requires test.dummy;\n"
-                + "    requires test.dummy2x;\n"
-                + "\n}");
+                """
+                module Mavenproject {
+                    requires test.dummy;
+                    requires test.dummy2x;
+                }
+                """);
 
         ToolProvider.getSystemJavaCompiler().run(
                 System.in,

@@ -41,26 +41,29 @@ public class TemplateAttrProviderTest extends NbTestCase {
         System.setProperty("test.load.sync", "true");
         FileObject d = FileUtil.toFileObject(getWorkDir());
         TestFileUtils.writeFile(d, "pom.xml",
-"<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd'>\n" +
-"    <modelVersion>4.0.0</modelVersion>\n" +
-"    <groupId>testgrp</groupId>\n" +
-"    <artifactId>testart</artifactId>\n" +
-"    <version>1.0</version>\n" +
-"    <name>Test</name>\n" +
-"    <licenses>\n" +
-"        <license>\n" +
-"            <name>Apache 2.0</name>\n" +
-"            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>\n" +
-"        </license>\n" +
-"    </licenses>\n" +
-"    <organization>\n" +
-"        <name>Yoyodyne Corp.</name>\n" +
-"    </organization>\n" +
-"</project>\n" +
-"");
+                """
+                <project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd'>
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>testgrp</groupId>
+                    <artifactId>testart</artifactId>
+                    <version>1.0</version>
+                    <name>Test</name>
+                    <licenses>
+                        <license>
+                            <name>Apache 2.0</name>
+                            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+                        </license>
+                    </licenses>
+                    <organization>
+                        <name>Yoyodyne Corp.</name>
+                    </organization>
+                </project>
+                """);
         String attrs = ProjectManager.getDefault().findProject(d).getLookup().lookup(CreateFromTemplateAttributesProvider.class).attributesFor(null, DataFolder.findFolder(d), null).toString();
-        assertTrue("Expected {displayName=Test, license=apache20, name=testart, organization=Yoyodyne Corp.} but was " + attrs,
-                attrs.contains("displayName=Test") && attrs.contains("license=apache20") && attrs.contains("name=testart") && attrs.contains("organization=Yoyodyne Corp."));
+        assertTrue(
+                "Expected {displayName=Test, license=apache20, name=testart, organization=Yoyodyne Corp.} but was " + attrs,
+                attrs.contains("displayName=Test") && attrs.contains("license=apache20") && attrs.contains("name=testart") && attrs.contains("organization=Yoyodyne Corp.")
+        );
     }
 
 }

@@ -41,7 +41,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -94,12 +93,13 @@ public class SearchClassDependencyInRepo implements ErrorRule<Void> {
 
     @Override
     public Set<String> getCodes() {
-        return new HashSet<String>(Arrays.asList(
-                MODULE_DOES_NOT_READ, 
-                "compiler.err.cant.resolve",//NOI18N
-                "compiler.err.cant.resolve.location",//NOI18N
-                "compiler.err.doesnt.exist",//NOI18N
-                "compiler.err.not.stmt"));//NOI18N
+        return Set.of(
+                MODULE_DOES_NOT_READ,
+                "compiler.err.cant.resolve", //NOI18N
+                "compiler.err.cant.resolve.location", //NOI18N
+                "compiler.err.doesnt.exist", //NOI18N
+                "compiler.err.not.stmt" //NOI18N
+        );
 
     }
 
@@ -445,17 +445,7 @@ public class SearchClassDependencyInRepo implements ErrorRule<Void> {
         cancel.set(true);
     }
 
-    static final class MavenFixImport implements EnhancedFix {
-
-        private final Project mavProj;
-        private final NBVersionInfo nbvi;
-        private final boolean test;
-
-        public MavenFixImport(Project mavProj, NBVersionInfo nbvi, boolean test) {
-            this.mavProj = mavProj;
-            this.nbvi = nbvi;
-            this.test = test;
-        }
+    static record MavenFixImport(Project mavProj, NBVersionInfo nbvi, boolean test) implements EnhancedFix {
 
         @Override
         public CharSequence getSortText() {
@@ -476,28 +466,12 @@ public class SearchClassDependencyInRepo implements ErrorRule<Void> {
             ModelUtils.addDependency(mavProj.getProjectDirectory().getFileObject("pom.xml"), nbvi.getGroupId(), nbvi.getArtifactId(),
                     nbvi.getVersion(), nbvi.getType(), test ? "test" : null, null, true);//NOI18N
 
-            RequestProcessor.getDefault().post(new Runnable() {
-
-                @Override
-                public void run() {
-                    mavProj.getLookup().lookup(NbMavenProject.class).triggerDependencyDownload();
-                }
-            });
+            RequestProcessor.getDefault().post(mavProj.getLookup().lookup(NbMavenProject.class)::triggerDependencyDownload);
             return null;
         }
     }
 
-    static final class MavenSearchFix implements EnhancedFix {
-
-        private final Project mavProj;
-        private final String clazz;
-        private final boolean test;
-
-        public MavenSearchFix(Project mavProj, String clazz, boolean test) {
-            this.mavProj = mavProj;
-            this.clazz = clazz;
-            this.test = test;
-        }
+    static record MavenSearchFix(Project mavProj, String clazz, boolean test) implements EnhancedFix {
 
         @Override
         public CharSequence getSortText() {
@@ -540,13 +514,7 @@ public class SearchClassDependencyInRepo implements ErrorRule<Void> {
                         ModelUtils.addDependency(mavProj.getProjectDirectory().getFileObject("pom.xml"), nbvi.getGroupId(), nbvi.getArtifactId(),
                                 nbvi.getVersion(), nbvi.getType(), test ? "test" : null, null, true);//NOI18N
 
-                        RequestProcessor.getDefault().post(new Runnable() {
-                            
-                            @Override
-                            public void run() {
-                                mavProj.getLookup().lookup(NbMavenProject.class).triggerDependencyDownload();
-                            }
-                        });
+                        RequestProcessor.getDefault().post(mavProj.getLookup().lookup(NbMavenProject.class)::triggerDependencyDownload);
                     }
                 }
             };
@@ -559,17 +527,7 @@ public class SearchClassDependencyInRepo implements ErrorRule<Void> {
         }
     }
     
-    static final class AddRequiresFix implements EnhancedFix {
-
-        private final NbMavenProject prj;
-        private final String moduleName;
-        private final Artifact artifact;
-
-        public AddRequiresFix(NbMavenProject prj, String moduleName, Artifact artifact) {
-            this.prj = prj;
-            this.moduleName = moduleName;
-            this.artifact = artifact;
-        }
+    static record AddRequiresFix(NbMavenProject prj, String moduleName, Artifact artifact) implements EnhancedFix {
 
         @Override
         public CharSequence getSortText() {

@@ -49,6 +49,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.prefs.Preferences;
 import javax.swing.Icon;
 import org.netbeans.api.annotations.common.NonNull;
 import org.netbeans.api.annotations.common.NullAllowed;
@@ -1690,9 +1691,21 @@ public final class OpenProjectList {
         }
     }
 
+    private static boolean checkFirstRun() {
+        Preferences prefs = OpenProjectListSettings.getInstance().getPreferences();
+        String prefKey = "projectListVersion"; // NOI18N
+        String build = System.getProperty("netbeans.buildnumber", "0"); // NOI18N
+        if (!prefs.get(prefKey, "").equals(build)) {
+            prefs.put(prefKey, build);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     final class LoadingCallback implements OpenProjectsLoading.Callback {
         @Override
-        public void updateGlobalState(List<Project> lazilyOpenedProjects, Project lazyMainProject, boolean checkFirstRun) {
+        public void updateGlobalState(List<Project> lazilyOpenedProjects, Project lazyMainProject) {
             assert MUTEX.isWriteAccess();
 
             List<String> recentTemplates = new ArrayList<String>(OpenProjectListSettings.getInstance().getRecentTemplates());
@@ -1712,7 +1725,7 @@ public final class OpenProjectList {
                     // else PROPERTY_MAIN_PROJECT would be fired spuriously
                     pchSupport.firePropertyChange(OpenProjectList.PROPERTY_MAIN_PROJECT, null, main);
                 }
-                if (checkFirstRun && opened.length > 0) {
+                if (checkFirstRun() && opened.length > 0) {
                     OpenProjectList.OPENING_RP.execute(() -> {
                         for (Project p : opened) {
                             Project del = p.getLookup().lookup(Project.class);
@@ -1747,6 +1760,18 @@ public final class OpenProjectList {
         @Override
         public void beginOpening(Project p) {
             addModuleInfo(p);
+        }
+
+        @Override
+        public List<URL> getOpenProjectsURLs() {
+            final boolean loadProjectsOnStart = "true".equals(Bundle.LOAD_PROJECTS_ON_START());
+            List<URL> urls = loadProjectsOnStart ? OpenProjectListSettings.getInstance().getOpenProjectsURLs() : Collections.emptyList();
+            return urls;
+        }
+
+        @Override
+        public URL getMainProjectURL() {
+            return OpenProjectListSettings.getInstance().getMainProjectURL();
         }
     }
 }

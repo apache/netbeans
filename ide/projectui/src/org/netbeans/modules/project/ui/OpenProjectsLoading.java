@@ -21,7 +21,6 @@ package org.netbeans.modules.project.ui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -33,7 +32,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
-import java.util.prefs.Preferences;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -51,10 +49,25 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 
+/** Helper class used while asynchronously loading projects. Primarily used
+ * when loading projects after startup. This class shall however be usable
+ * when switching list of open projects after opening a new {@link Group}.
+ * <p>
+ * <h3>How it Should Work?</h3>
+ *
+ * When there is a needed to change the list of opened projects, then let's
+ * instantiate this class and pass instance of {@link Callback} into its
+ * constructor. Then let the class do its work via {@link #run()}.
+ * When another request to open/modify projects is needed, throw this instance
+ * away and create new one. Repeat.
+ *
+ * 
+ */
 final class OpenProjectsLoading implements Runnable, LookupListener {
     static final RequestProcessor RP = new RequestProcessor("Load Open Projects"); // NOI18N
     private final RequestProcessor.Task TASK = RP.create(this);
     private volatile int action;
+    /** @GuardedBy("MUTEX.writeAccess") */
     private final LinkedList<Project> toOpenProjects = new LinkedList<>();
     private List<Project> lazilyOpenedProjects;
     private Project lazyMainProject;
@@ -67,7 +80,7 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
 
     @NbBundle.Messages(value = "CAP_Opening_Projects=Opening Projects")
     @SuppressWarnings(value = "LeakingThisInConstructor")
-    public OpenProjectsLoading(int action, Callback callback) {
+    OpenProjectsLoading(int action, Callback callback) {
         this.outer = callback;
         this.action = action;
         currentFiles = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
@@ -151,23 +164,11 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
             @Override
             public Void run() {
                 OpenProjectsLogging.log(Level.FINER, "openProjects changed: {0}", lazilyOpenedProjects); // NOI18N
-                outer.updateGlobalState(lazilyOpenedProjects, lazyMainProject, checkFirstRun());
+                outer.updateGlobalState(lazilyOpenedProjects, lazyMainProject);
                 OpenProjectsLogging.log(Level.FINER, "updateGlobalState, applied"); // NOI18N
                 return null;
             }
         });
-    }
-
-    private boolean checkFirstRun() {
-        Preferences prefs = OpenProjectListSettings.getInstance().getPreferences();
-        String prefKey = "projectListVersion"; // NOI18N
-        String build = System.getProperty("netbeans.buildnumber", "0"); // NOI18N
-        if (!prefs.get(prefKey, "").equals(build)) {
-            prefs.put(prefKey, build);
-            return true;
-        } else {
-            return false;
-        }
     }
 
     boolean closeBeforeOpen(final Project[] arr) {
@@ -192,9 +193,9 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
 
     @NbBundle.Messages(value = {"#NOI18N", "LOAD_PROJECTS_ON_START=true"})
     private void loadInBackground() {
+        assert lazilyOpenedProjects == null;
         lazilyOpenedProjects = new ArrayList<>();
-        final boolean loadProjectsOnStart = "true".equals(Bundle.LOAD_PROJECTS_ON_START());
-        List<URL> urls = loadProjectsOnStart ? OpenProjectListSettings.getInstance().getOpenProjectsURLs() : Collections.emptyList();
+        List<URL> urls = outer.getOpenProjectsURLs();
         final List<Project> initial = new ArrayList<>();
         final Collection<Project> projects = urls2Projects(urls);
         OpenProjectList.MUTEX.writeAccess(new Mutex.Action<Void>() {
@@ -206,7 +207,7 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
                 return null;
             }
         });
-        final URL mainProjectURL = OpenProjectListSettings.getInstance().getMainProjectURL();
+        final URL mainProjectURL = outer.getMainProjectURL();
         int max = OpenProjectList.MUTEX.writeAccess(new Mutex.Action<Integer>() {
             @Override
             public Integer run() {
@@ -328,7 +329,7 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
      */
     sealed interface Callback permits OpenProjectList.LoadingCallback {
         /** Called when computation of project opening is finished */
-        public void updateGlobalState(List<Project> lazilyOpenedProjects, Project lazyMainProject, boolean checkFirstRun);
+        public void updateGlobalState(List<Project> lazilyOpenedProjects, Project lazyMainProject);
 
         /** Notifies a project that's about to be open */
         public void beginOpening(Project p);
@@ -339,5 +340,9 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
          * @return {@code true} if the project has successfully been opened, {@code false} if something failed}
          */
         public boolean finishOpening(Project p);
+
+        public List<URL> getOpenProjectsURLs();
+
+        public URL getMainProjectURL();
     }
 }

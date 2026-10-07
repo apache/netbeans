@@ -1110,10 +1110,13 @@
             <file name="D-P.shadow">
                 <attr name="originalFile" stringvalue="Actions/Tools/org-netbeans-modules-jumpto-file-FileSearchAction.instance"/>
             </file>
+            <file name="D-PERIOD.shadow">
+                <attr name="originalFile" stringvalue="Actions/Source/org-netbeans-modules-editor-hints-FixAction.instance"/>
+            </file>
             <file name="D-S.shadow">
                 <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
             </file>
-            <file name="D-S-F.shadow">
+            <file name="DS-F.shadow">
                 <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-search-FindInFilesAction.instance"/>
             </file>
             <file name="DS-E.shadow">
@@ -1126,7 +1129,7 @@
                 <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-search-ReplaceInFilesAction.instance"/>
             </file>
             <file name="DS-O.shadow">
-                <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-OpenProject.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-jumpto-symbol-GoToSymbol.instance"/>
             </file>
             <file name="DS-P.shadow">
                 <attr name="originalFile" stringvalue="Actions/Edit/org-netbeans-modules-quicksearch-QuickSearchAction.instance"/>
@@ -1151,6 +1154,9 @@
             </file>
             <file name="S-F11.shadow">
                 <attr name="originalFile" stringvalue="Actions/Debug/org-netbeans-modules-debugger-ui-actions-StepOutAction.instance"/>
+            </file>
+            <file name="S-F12.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-modules-refactoring-spi-impl-FindUsagesOpenAction.instance"/>
             </file>
         </folder>
         </folder>

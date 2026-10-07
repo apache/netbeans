@@ -53,8 +53,10 @@
     <bind actionName="find-next" key="F3"/>
     <bind actionName="find-previous" key="S-F3"/>
     <bind actionName="format" key="AS-F"/>
+    <bind actionName="format" key="C-K$C-F"/>
     <bind actionName="goto" key="C-G"/>
     <bind actionName="goto-declaration" key="F12"/>
+    <bind actionName="goto-source" key="A-F12"/>
     <bind actionName="insert-break" key="ENTER"/>
     <bind actionName="insert-tab" key="TAB"/>
     <bind actionName="match-brace" key="CS-BACK_SLASH"/>
@@ -68,9 +70,12 @@
     <bind actionName="redo" key="CS-Z"/>
     <bind actionName="remove-line" key="CS-K"/>
     <bind actionName="remove-tab" key="S-TAB"/>
+    <bind actionName="remove-trailing-spaces" key="C-K$C-X"/>
     <bind actionName="remove-word-next" key="C-DELETE"/>
     <bind actionName="remove-word-previous" key="C-BACK_SPACE"/>
     <bind actionName="replace" key="C-H"/>
+    <bind actionName="scroll-down" key="C-DOWN"/>
+    <bind actionName="scroll-up" key="C-UP"/>
     <bind actionName="select-all" key="C-A"/>
     <bind actionName="selection-backward" key="S-LEFT"/>
     <bind actionName="selection-begin" key="CS-HOME"/>
@@ -84,8 +89,12 @@
     <bind actionName="selection-page-up" key="S-PAGE_UP"/>
     <bind actionName="selection-previous-word" key="CS-LEFT"/>
     <bind actionName="selection-up" key="S-UP"/>
+    <bind actionName="shift-line-left" key="C-OPEN_BRACKET"/>
+    <bind actionName="shift-line-right" key="C-CLOSE_BRACKET"/>
     <bind actionName="start-new-line" key="C-ENTER"/>
     <bind actionName="start-new-line" key="S-ENTER"/>
+    <bind actionName="comment" key="C-K$C-C"/>
+    <bind actionName="uncomment" key="C-K$C-U"/>
     <bind actionName="toggle-comment" key="C-SLASH"/>
     <bind actionName="toggle-typing-mode" key="INSERT"/>
     <bind actionName="undo" key="C-Z"/>
@@ -96,8 +105,15 @@
     <bind actionName="add-caret-down" key="CA-DOWN"/>
     <bind actionName="add-caret-up" key="CA-UP"/>
     <bind actionName="remove-last-caret" key="C-U"/>
+    <bind actionName="select-element-next" key="AS-RIGHT"/>
+    <bind actionName="select-element-previous" key="AS-LEFT"/>
     <bind actionName="zoom-text-in" key="C-EQUALS"/>
     <bind actionName="zoom-text-out" key="C-MINUS"/>
+
+    <bind actionName="collapse-fold" key="CS-OPEN_BRACKET"/>
+    <bind actionName="expand-fold" key="CS-CLOSE_BRACKET"/>
+    <bind actionName="collapse-all-folds" key="C-K$C-OPEN_BRACKET"/>
+    <bind actionName="expand-all-folds" key="C-K$C-CLOSE_BRACKET"/>
 
     <!-- java -->
     <bind actionName="complete-line" key="CS-ENTER"/>

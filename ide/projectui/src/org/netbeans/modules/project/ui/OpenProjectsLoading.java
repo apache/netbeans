@@ -46,7 +46,6 @@ import org.openide.util.LookupListener;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
-import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 
 /** Helper class used while asynchronously loading projects. Primarily used
@@ -63,7 +62,7 @@ import org.openide.util.WeakListeners;
  *
  * 
  */
-final class OpenProjectsLoading implements Runnable, LookupListener {
+final class OpenProjectsLoading implements Runnable, LookupListener, OpenProjectList.Loading {
     static final RequestProcessor RP = new RequestProcessor("Load Open Projects"); // NOI18N
     private final RequestProcessor.Task TASK = RP.create(this);
     private volatile int action;
@@ -80,15 +79,16 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
 
     @NbBundle.Messages(value = "CAP_Opening_Projects=Opening Projects")
     @SuppressWarnings(value = "LeakingThisInConstructor")
-    OpenProjectsLoading(int action, Callback callback) {
+    OpenProjectsLoading(int action, Callback callback, Lookup.Result<FileObject> currentFiles) {
         this.outer = callback;
         this.action = action;
-        currentFiles = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
+        this.currentFiles = currentFiles;
         currentFiles.addLookupListener(WeakListeners.create(LookupListener.class, this, currentFiles));
         progress = ProgressHandle.createHandle(Bundle.CAP_Opening_Projects());
     }
 
-    final boolean waitFinished(long timeout) {
+    @Override
+    public final boolean waitFinished(long timeout) {
         OpenProjectsLogging.log(Level.FINER, "waitFinished, action {0}", action); // NOI18N
         if (action == 0) {
             run();
@@ -143,7 +143,8 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
         }
     }
 
-    final void preferredProject(final Set<FileObject> lazyPDirs) {
+    @Override
+    public final void preferredProject(final Set<FileObject> lazyPDirs) {
         OpenProjectList.MUTEX.writeAccess((Mutex.Action<Void>) () -> {
             for (Project p : new ArrayList<Project>(toOpenProjects)) {
                 FileObject dir = p.getProjectDirectory();
@@ -171,7 +172,8 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
         });
     }
 
-    boolean closeBeforeOpen(final Project[] arr) {
+    @Override
+    public boolean closeBeforeOpen(final Project[] arr) {
         return OpenProjectList.MUTEX.writeAccess(new Mutex.Action<Boolean>() {
             @Override
             public Boolean run() {
@@ -278,7 +280,8 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
         resChangedTask.schedule(50);
     }
 
-    final void enter() {
+    @Override
+    public final void enter() {
         try {
             enteredGuard.lock();
             entered++;
@@ -287,7 +290,8 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
         }
     }
 
-    final void exit() {
+    @Override
+    public final void exit() {
         try {
             enteredGuard.lock();
             if (--entered == 0) {

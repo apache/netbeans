@@ -184,7 +184,7 @@ public abstract class Group {
             }
         } else {
             OpenProjectListSettings settings = OpenProjectListSettings.getInstance();
-            settings.setOpenProjectsURLsAsStrings(nue != null ? nue.projectPaths() : getProjectPathsByPreferences(noneGroupPref));
+            settings.setOpenProjectsURLsAsStrings(nue != null ? nue.projectPaths() : Collections.emptyList());
             settings.setMainProjectURL(nue != null ? nue.prefs().get(KEY_MAIN, null) : null);
             
             WindowManager.getDefault().addWindowSystemListener(new WindowSystemListener() {
@@ -476,6 +476,7 @@ public abstract class Group {
     public Set<Project> getProjects() {
         return getProjects(null, 0, 0);
     }
+
     private Set<Project> getProjects(ProgressHandle h, int start, int end) {
         if (h != null) {
             h.progress("", start);
@@ -577,8 +578,7 @@ public abstract class Group {
                 oldOpen.add(real != null ? real : open);
             }
 
-            //TODO switching to no group always clears the opened project list.
-            Set<Project> newOpen = g != null ? g.getProjects(h, 10, 100) : getProjectsByPreferences(noneGroupPref, h, 10, 100);
+            Set<Project> newOpen = g != null ? g.getProjects(h, 10, 100) : Collections.emptySet();
             final Set<Project> toClose = new HashSet<Project>(oldOpen);
             toClose.removeAll(newOpen);
             final Set<Project> toOpen = new HashSet<Project>(newOpen);

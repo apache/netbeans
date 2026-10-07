@@ -18,7 +18,6 @@
  */
 package org.netbeans.modules.project.ui;
 
-import java.beans.PropertyChangeEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,10 +28,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -43,7 +38,6 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
-import static org.netbeans.modules.project.ui.OpenProjectList.MUTEX;
 import org.netbeans.modules.project.ui.groups.Group;
 import org.openide.ErrorManager;
 import org.openide.filesystems.FileObject;
@@ -57,10 +51,10 @@ import org.openide.util.RequestProcessor;
 import org.openide.util.Utilities;
 import org.openide.util.WeakListeners;
 
-final class OpenProjectsLoading implements Runnable, LookupListener, Future<Project[]> {
+final class OpenProjectsLoading implements Runnable, LookupListener {
     static final RequestProcessor RP = new RequestProcessor("Load Open Projects"); // NOI18N
-    final RequestProcessor.Task TASK = RP.create(this);
-    private int action;
+    private final RequestProcessor.Task TASK = RP.create(this);
+    private volatile int action;
     private final LinkedList<Project> toOpenProjects = new LinkedList<>();
     private List<Project> lazilyOpenedProjects;
     private List<String> recentTemplates;
@@ -74,9 +68,9 @@ final class OpenProjectsLoading implements Runnable, LookupListener, Future<Proj
 
     @NbBundle.Messages(value = "CAP_Opening_Projects=Opening Projects")
     @SuppressWarnings(value = "LeakingThisInConstructor")
-    public OpenProjectsLoading(int a, final Callback outer) {
-        this.outer = outer;
-        action = a;
+    public OpenProjectsLoading(int action, Callback callback) {
+        this.outer = callback;
+        this.action = action;
         currentFiles = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
         currentFiles.addLookupListener(WeakListeners.create(LookupListener.class, this, currentFiles));
         progress = ProgressHandle.createHandle(Bundle.CAP_Opening_Projects());
@@ -305,61 +299,8 @@ final class OpenProjectsLoading implements Runnable, LookupListener, Future<Proj
         }
     }
 
-    @Override
-    public boolean cancel(boolean mayInterruptIfRunning) {
-        return false;
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return false;
-    }
-
-    @Override
     public boolean isDone() {
         return TASK.isFinished() && entered == 0;
-    }
-
-    private Project[] getOpenProjects() {
-        return MUTEX.readAccess(new Mutex.Action<Project[]>() {
-            public @Override Project[] run() {
-                return lazilyOpenedProjects.toArray(new Project[0]);
-            }
-        });
-    }
-
-
-    @Override
-    public Project[] get() throws InterruptedException, ExecutionException {
-        waitFinished(0);
-        try {
-            enteredGuard.lock();
-            while (entered > 0) {
-                enteredZeroed.await();
-            }
-        } finally {
-            enteredGuard.unlock();
-        }
-        return getOpenProjects();
-    }
-
-    @Override
-    public Project[] get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
-        long ms = unit.convert(timeout, TimeUnit.MILLISECONDS);
-        if (!waitFinished(timeout)) {
-            throw new TimeoutException();
-        }
-        try {
-            enteredGuard.lock();
-            if (entered > 0) {
-                if (!enteredZeroed.await(ms, TimeUnit.MILLISECONDS)) {
-                    throw new TimeoutException();
-                }
-            }
-        } finally {
-            enteredGuard.unlock();
-        }
-        return getOpenProjects();
     }
 
     private static Set<Project> urls2Projects(Collection<URL> urls) {

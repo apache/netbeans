@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,7 +42,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -204,7 +206,37 @@ public final class OpenProjectList {
     }
 
     public Future<Project[]> openProjectsAPI() {
-        return LOAD;
+        return new Future<Project[]>() {
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning) {
+                return false;
+            }
+
+            @Override
+            public boolean isCancelled() {
+                return false;
+            }
+
+            @Override
+            public boolean isDone() {
+                return LOAD.isDone();
+            }
+
+            @Override
+            public Project[] get() throws InterruptedException, ExecutionException {
+                LOAD.waitFinished(0L);
+                return getOpenProjects();
+            }
+
+            @Override
+            public Project[] get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+                if (LOAD.waitFinished(unit.toMillis(timeout))) {
+                    return getOpenProjects();
+                } else {
+                    throw new TimeoutException();
+                }
+            }
+        };
     }
 
     final Project unwrapProject(Project wrap) {

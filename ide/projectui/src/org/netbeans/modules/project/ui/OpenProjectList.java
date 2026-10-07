@@ -1692,8 +1692,10 @@ public final class OpenProjectList {
 
     final class LoadingCallback implements OpenProjectsLoading.Callback {
         @Override
-        public void updateGlobalState(List<Project> lazilyOpenedProjects, Project lazyMainProject, List<String> recentTemplates, boolean checkFirstRun) {
+        public void updateGlobalState(List<Project> lazilyOpenedProjects, Project lazyMainProject, boolean checkFirstRun) {
             assert MUTEX.isWriteAccess();
+
+            List<String> recentTemplates = new ArrayList<String>(OpenProjectListSettings.getInstance().getRecentTemplates());
 
             openProjects = lazilyOpenedProjects;
             if (lazyMainProject != null) {

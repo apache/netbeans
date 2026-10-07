@@ -57,7 +57,6 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
     private volatile int action;
     private final LinkedList<Project> toOpenProjects = new LinkedList<>();
     private List<Project> lazilyOpenedProjects;
-    private List<String> recentTemplates;
     private Project lazyMainProject;
     private Lookup.Result<FileObject> currentFiles;
     private int entered;
@@ -152,7 +151,7 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
             @Override
             public Void run() {
                 OpenProjectsLogging.log(Level.FINER, "openProjects changed: {0}", lazilyOpenedProjects); // NOI18N
-                outer.updateGlobalState(lazilyOpenedProjects, lazyMainProject, recentTemplates, checkFirstRun());
+                outer.updateGlobalState(lazilyOpenedProjects, lazyMainProject, checkFirstRun());
                 OpenProjectsLogging.log(Level.FINER, "updateGlobalState, applied"); // NOI18N
                 return null;
             }
@@ -207,7 +206,6 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
                 return null;
             }
         });
-        recentTemplates = new ArrayList<String>(OpenProjectListSettings.getInstance().getRecentTemplates());
         final URL mainProjectURL = OpenProjectListSettings.getInstance().getMainProjectURL();
         int max = OpenProjectList.MUTEX.writeAccess(new Mutex.Action<Integer>() {
             @Override
@@ -330,7 +328,7 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
      */
     sealed interface Callback permits OpenProjectList.LoadingCallback {
         /** Called when computation of project opening is finished */
-        public void updateGlobalState(List<Project> lazilyOpenedProjects, Project lazyMainProject, List<String> recentTemplates, boolean checkFirstRun);
+        public void updateGlobalState(List<Project> lazilyOpenedProjects, Project lazyMainProject, boolean checkFirstRun);
 
         /** Notifies a project that's about to be open */
         public void beginOpening(Project p);
@@ -341,7 +339,5 @@ final class OpenProjectsLoading implements Runnable, LookupListener {
          * @return {@code true} if the project has successfully been opened, {@code false} if something failed}
          */
         public boolean finishOpening(Project p);
-
-
     }
 }

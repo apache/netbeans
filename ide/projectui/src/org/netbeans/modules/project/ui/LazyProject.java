@@ -23,6 +23,7 @@ import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.logging.Level;
 import javax.swing.Action;
 import javax.swing.Icon;
 import org.netbeans.api.project.Project;
@@ -55,7 +56,7 @@ Project, ProjectInformation, LogicalViewProvider, RecommendedTemplates {
     ExtIcon icon;
     private FileObject fo;
 
-    public LazyProject(URL url, String displayName, ExtIcon icon) {
+    LazyProject(URL url, String displayName, ExtIcon icon) {
         super();
         this.url = url;
         this.displayName = displayName;
@@ -69,7 +70,7 @@ Project, ProjectInformation, LogicalViewProvider, RecommendedTemplates {
         }
         fo = URLMapper.findFileObject(url);
         if (fo == null) {
-            OpenProjectList.LOGGER.warning("Project dir with " + url + " not found!");
+            OpenProjectsLogging.LOGGER.log(Level.WARNING, "Project dir with {0} not found!", url);
             fo = FileUtil.createMemoryFileSystem().getRoot();
         }
         return fo;

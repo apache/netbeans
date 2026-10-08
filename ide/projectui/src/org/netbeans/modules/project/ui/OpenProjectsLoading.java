@@ -76,12 +76,16 @@ final class OpenProjectsLoading implements Runnable, LookupListener, OpenProject
     private final Condition enteredZeroed = enteredGuard.newCondition();
     private final ProgressHandle progress;
     private final Callback outer;
+    private final List<URL> urls;
+    private final URL mainProjectURL;
 
     @NbBundle.Messages(value = "CAP_Opening_Projects=Opening Projects")
     @SuppressWarnings(value = "LeakingThisInConstructor")
-    OpenProjectsLoading(Callback callback, Lookup.Result<FileObject> currentFiles) {
+    OpenProjectsLoading(Callback callback, Lookup.Result<FileObject> currentFiles, List<URL> prjUrls, URL mainPrj) {
         this.outer = callback;
         this.currentFiles = currentFiles;
+        this.urls = prjUrls;
+        this.mainProjectURL = mainPrj;
         currentFiles.addLookupListener(WeakListeners.create(LookupListener.class, this, currentFiles));
         progress = ProgressHandle.createHandle(Bundle.CAP_Opening_Projects());
     }
@@ -196,7 +200,6 @@ final class OpenProjectsLoading implements Runnable, LookupListener, OpenProject
     private void loadInBackground() {
         assert lazilyOpenedProjects == null;
         lazilyOpenedProjects = new ArrayList<>();
-        List<URL> urls = outer.getOpenProjectsURLs();
         final List<Project> initial = new ArrayList<>();
         final Collection<Project> projects = urls2Projects(urls);
         OpenProjectList.MUTEX.writeAccess(new Mutex.Action<Void>() {
@@ -208,7 +211,6 @@ final class OpenProjectsLoading implements Runnable, LookupListener, OpenProject
                 return null;
             }
         });
-        final URL mainProjectURL = outer.getMainProjectURL();
         int max = OpenProjectList.MUTEX.writeAccess(new Mutex.Action<Integer>() {
             @Override
             public Integer run() {
@@ -343,9 +345,5 @@ final class OpenProjectsLoading implements Runnable, LookupListener, OpenProject
          * @return {@code true} if the project has successfully been opened, {@code false} if something failed}
          */
         public boolean finishOpening(Project p);
-
-        public List<URL> getOpenProjectsURLs();
-
-        public URL getMainProjectURL();
     }
 }

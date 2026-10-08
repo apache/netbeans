@@ -157,8 +157,11 @@ public final class OpenProjectList {
 
     OpenProjectList() {
         Lookup.Result<FileObject> selectedFiles = Utilities.actionsGlobalContext().lookupResult(FileObject.class);
-        LOAD = new OpenProjectsLoading(new LoadingCallback(), selectedFiles);
-        openProjects = new ArrayList<Project>();
+        boolean loadProjectsOnStart = "true".equals(Bundle.LOAD_PROJECTS_ON_START());
+        List<URL> urls = loadProjectsOnStart ? OpenProjectListSettings.getInstance().getOpenProjectsURLs() : Collections.emptyList();
+        URL main = OpenProjectListSettings.getInstance().getMainProjectURL();
+        LOAD = new OpenProjectsLoading(new LoadingCallback(), selectedFiles, urls, main);
+        openProjects = loadProjectList();
         openProjectsModuleInfos = new HashMap<ModuleInfo, List<Project>>();
         infoListener = new PropertyChangeListener() {
             @Override
@@ -170,6 +173,7 @@ public final class OpenProjectList {
         };
         pchSupport = new PropertyChangeSupport( this );
         recentProjects = new RecentProjectList(10); // #47134
+        recentProjects.load();
         recentTemplates = new ArrayList<String>();
         projectGroupSupport = new ArrayList<ProjectGroupChangeListener>();
     }
@@ -180,14 +184,15 @@ public final class OpenProjectList {
     public static OpenProjectList getDefault() {
         return MUTEX.readAccess(new Mutex.Action<OpenProjectList>() {
             public @Override OpenProjectList run() {
+                boolean newlyCreated = false;
                 synchronized (OpenProjectList.class) { // must be read access, but must not run concurrently
                     if (INSTANCE == null) {
+                        newlyCreated = true;
                         INSTANCE = new OpenProjectList();
-                        INSTANCE.openProjects = loadProjectList();
-                        // Load recent project list
-                        INSTANCE.recentProjects.load();
-                        WindowManager.getDefault().invokeWhenUIReady(INSTANCE.LOAD);
                     }
+                }
+                if (newlyCreated) {
+                    WindowManager.getDefault().invokeWhenUIReady(INSTANCE.LOAD);
                 }
                 return INSTANCE;
             }
@@ -1762,18 +1767,6 @@ public final class OpenProjectList {
         @Override
         public void beginOpening(Project p) {
             addModuleInfo(p);
-        }
-
-        @Override
-        public List<URL> getOpenProjectsURLs() {
-            final boolean loadProjectsOnStart = "true".equals(Bundle.LOAD_PROJECTS_ON_START());
-            List<URL> urls = loadProjectsOnStart ? OpenProjectListSettings.getInstance().getOpenProjectsURLs() : Collections.emptyList();
-            return urls;
-        }
-
-        @Override
-        public URL getMainProjectURL() {
-            return OpenProjectListSettings.getInstance().getMainProjectURL();
         }
     }
 }
